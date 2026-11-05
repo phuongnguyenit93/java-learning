@@ -1,299 +1,299 @@
 summaries:
 - id: lifecycle-001
-  title: Tạo đối tượng và cấp phát tài nguyên
+  title: Object Creation and Resource Allocation
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Tạo đối tượng và cấp phát tài nguyên**
+    **Object Creation and Resource Allocation**
 
-    Nhận ra đối tượng Java, biến tham chiếu và tài nguyên bên ngoài JVM có cách hình thành, sử dụng và kết thúc khác nhau. Bài học giúp dự đoán hệ quả của `new`, gán alias, mở file và chuyển giao quyền sở hữu tài nguyên trước khi xây dựng các lớp có vòng đời an toàn.
+    Recognize that Java objects, reference variables, and resources outside the JVM are created, used, and disposed of in different ways. This lesson helps you predict the consequences of `new`, alias assignments, opening files, and transferring resource ownership before designing classes with safe lifecycles.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Tạo đối tượng và trạng thái ban đầu
+    ### Object Creation and Initial State
 
-    1. Với các biến `first`, `alias` và `second`, làm thế nào xác định có bao nhiêu đối tượng được tạo và phép gán nào chỉ sao chép tham chiếu?
-    2. Khi thực thi `new`, các trường instance nhận giá trị mặc định và được khởi tạo bằng initializer, constructor ra sao; vì sao không thể suy vị trí vật lý tuyệt đối từ mô hình heap/stack?
+    1. Given the variables `first`, `alias`, and `second`, how can you determine how many objects are created and which assignments merely copy references?
+    2. When `new` executes, how do instance fields receive default values and then initialization through initializers and constructors? Why can't the heap/stack model establish absolute physical memory locations?
 
-    ### Vòng đời tài nguyên và cách phòng lỗi
+    ### Resource Lifecycles and Error Prevention
 
-    1. Vì sao `reader = null` hoặc gọi `System.gc()` không đủ để đóng file dù đối tượng có thể trở thành ứng viên GC?
-    2. Khi `try-with-resources` gặp lỗi trong thân `try` và trong `close()`, ngoại lệ chính, suppressed exception và thứ tự đóng được xác định như thế nào?
-    3. Nếu constructor mở tài nguyên rồi ném exception hoặc một registry `static` giữ listener, cần xử lý ownership và tham chiếu ra sao?
+    1. Why is `reader = null` or a call to `System.gc()` insufficient to close a file, even if the object becomes eligible for GC?
+    2. If `try-with-resources` encounters failures both in the `try` body and during `close()`, how are the primary exception, suppressed exceptions, and closing order determined?
+    3. If a constructor opens a resource and then throws an exception, or a `static` registry retains a listener, how should ownership and references be handled?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Phân tích tham chiếu và instance | Dự đoán kết quả `==`, alias và thay đổi trạng thái trong ví dụ `Customer` có hai instance và ba biến tham chiếu. |
-    | Giải thích các bước khởi tạo | Phân biệt cấp phát object, giá trị mặc định của field, initializer và constructor với biến local chưa gán. |
-    | Tách tài nguyên heap và ngoài heap | Chỉ ra trong tình huống đọc file phần nào được GC xử lý và phần nào phải gọi `close()` đúng thời điểm. |
-    | Sử dụng try-with-resources | Viết đoạn đọc tệp có tự động đóng stream và xử lý việc xóa tệp tạm riêng; giải thích suppressed exception. |
-    | Phân tích đối tượng còn reachable | Xác định vì sao alias, cache hoặc registry sống lâu có thể giữ object và cách loại tham chiếu không còn cần. |
+    | Analyze references and instances | Predict `==` results, aliases, and state changes in a `Customer` example with two instances and three reference variables. |
+    | Explain initialization steps | Distinguish object allocation, default field values, initializers, and constructors from unassigned local variables. |
+    | Distinguish heap and non-heap resources | Identify which parts of a file-reading scenario are handled by GC and which require timely calls to `close()`. |
+    | Use try-with-resources | Write file-reading code that closes the stream automatically and handles temporary-file deletion separately; explain suppressed exceptions. |
+    | Analyze reachable objects | Identify why aliases, caches, or long-lived registries can retain objects and how to remove references that are no longer needed. |
 - id: lifecycle-002
-  title: Hàm khởi tạo và thiết lập trạng thái hợp lệ
+  title: Constructors and Establishing Valid State
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Hàm khởi tạo và thiết lập trạng thái hợp lệ**
+    **Constructors and Establishing Valid State**
 
-    Thiết kế constructor bảo vệ bất biến của lớp ngay khi khởi tạo thành công, thay vì để đối tượng ở trạng thái tạm thời sai. Bài học sử dụng ràng buộc sức chứa, email duy nhất, defensive copy, `final` và compact constructor của `record` để kiểm tra tính nhất quán của dữ liệu.
+    Design constructors that preserve class invariants as soon as initialization succeeds instead of leaving objects in a temporarily invalid state. This lesson uses capacity constraints, unique email addresses, defensive copying, `final`, and compact constructors for `record` types to validate data consistency.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Bất biến và kiểm tra đầu vào
+    ### Invariants and Input Validation
 
-    1. Làm thế nào xác định invariant cho `CourseEnrollment` từ mã khóa học, sức chứa và danh sách email, rồi tổ chức bước kiểm tra trước khi gán field?
-    2. Vì sao mọi constructor overload và phương thức tạo đối tượng mới phải dẫn về cùng quy tắc bảo vệ invariant?
+    1. How can you derive invariants for `CourseEnrollment` from the course code, capacity, and email list, then organize validation before assigning fields?
+    2. Why must every constructor overload and object-creation method enforce the same invariant-protection rules?
 
-    ### Bảo vệ trạng thái và lỗi khởi tạo
+    ### State Protection and Initialization Failures
 
-    1. Khi caller thay đổi một `List` đã truyền vào constructor, khác biệt giữa giữ trực tiếp list và dùng `List.copyOf()` là gì; giới hạn sao chép nông nằm ở đâu?
-    2. Constructor ném `IllegalArgumentException` thì phép gán bên gọi và những side effect ngoài JVM phát sinh trước đó có hành vi gì?
-    3. Tại sao `final`, `record` hay kiểm tra dữ liệu vẫn không cho phép công bố `this` trước khi quá trình khởi tạo hoàn tất?
+    1. If a caller modifies a `List` passed to a constructor, how does retaining that list differ from using `List.copyOf()`, and where do the limits of shallow copying arise?
+    2. When a constructor throws `IllegalArgumentException`, what happens to the caller's assignment and any earlier side effects outside the JVM?
+    3. Why do `final`, `record`, and data validation still not make it safe to publish `this` before initialization finishes?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Xây dựng invariant | Liệt kê các trạng thái hợp lệ/không hợp lệ của đăng ký khóa học và thiết kế validation phù hợp. |
-    | Kiểm tra nhiều đường khởi tạo | Giải thích cách constructor hai tham số, ba tham số và `withStudent()` cùng từ chối vượt sức chứa hoặc email trùng. |
-    | Bảo vệ dữ liệu mutable | Phân tích hoặc sửa một lớp giữ list đầu vào bằng defensive copy và tránh lộ collection có thể sửa. |
-    | Đánh giá tính bất biến | Phân biệt `private final`, immutable collection và việc phần tử bên trong vẫn có thể mutable. |
-    | Dự đoán lỗi constructor | Giải thích kết quả tạo object thành công/thất bại và nhận diện side effect hoặc `this` escape không được rollback tự động. |
+    | Define invariants | List valid and invalid course-enrollment states and design appropriate validation. |
+    | Check multiple initialization paths | Explain how two-argument and three-argument constructors and `withStudent()` all reject excess capacity or duplicate email addresses. |
+    | Protect mutable data | Analyze or fix a class that retains an input list by using defensive copies and avoiding exposure of mutable collections. |
+    | Evaluate immutability | Distinguish `private final`, immutable collections, and the possibility that their contained elements remain mutable. |
+    | Predict constructor failures | Explain successful and failed object creation and identify side effects or `this` escape that are not automatically rolled back. |
 - id: lifecycle-003
-  title: Khởi tạo mặc định, tham số và nhiều cách khởi tạo
+  title: Default, Parameterized, and Overloaded Constructors
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Khởi tạo mặc định, tham số và nhiều cách khởi tạo**
+    **Default, Parameterized, and Overloaded Constructors**
 
-    Phân biệt constructor mặc định do compiler sinh, constructor không tham số tự viết, constructor có tham số và các overload. Bài học giúp lựa chọn cách tạo dễ đọc, đảm bảo `final` field và invariant qua `this(...)`/`super(...)`, đồng thời xử lý lỗi biên dịch khi chữ ký khởi tạo không phù hợp.
+    Distinguish compiler-generated default constructors, explicitly written no-arg constructors, parameterized constructors, and overloads. This lesson helps you choose readable creation APIs, ensure `final` fields and invariants through `this(...)`/`super(...)`, and resolve compilation errors caused by incompatible constructor signatures.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Các loại constructor và overload
+    ### Constructor Types and Overloading
 
-    1. Trong điều kiện nào compiler tự sinh default constructor, và vì sao khai báo `Ticket(int)` khiến `new Ticket()` không còn hợp lệ nếu không viết no-arg?
-    2. Java phân giải overload bằng danh sách tham số ra sao, và khi nào `null` hoặc nhiều chữ ký kiểu tham chiếu tạo lời gọi mơ hồ?
+    1. Under what conditions does the compiler generate a default constructor, and why does declaring `Ticket(int)` make `new Ticket()` invalid unless a no-arg constructor is written?
+    2. How does Java resolve overloads from argument lists, and when can `null` or multiple reference-type signatures make a call ambiguous?
 
-    ### Chuỗi khởi tạo và thiết kế API
+    ### Constructor Chaining and API Design
 
-    1. `this(...)` khác `super(...)` thế nào; vì sao constructor con cần gọi được constructor cha phù hợp và không thể tạo chuỗi `this(...)` vòng tròn?
-    2. Khi nào overload trở nên khó đọc và nên dùng static factory có tên hay Builder thay cho nhiều tham số cùng kiểu?
-    3. Vì sao setter sau khi tạo không tương đương chạy lại constructor, và field `final` phải được gán ra sao trên mỗi đường khởi tạo?
+    1. How does `this(...)` differ from `super(...)`? Why must a subclass constructor be able to invoke a suitable superclass constructor, and why are circular `this(...)` chains forbidden?
+    2. When do overloads become hard to read, making a named static factory or Builder preferable to multiple parameters of the same type?
+    3. Why is calling a setter after creation not equivalent to rerunning the constructor, and how must `final` fields be assigned on every initialization path?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Chẩn đoán default/no-arg | Dự đoán các lệnh `new` biên dịch thành công hay lỗi sau khi thêm constructor có tham số. |
-    | Thiết kế overload hợp lệ | Viết các overload rõ nghĩa và phát hiện cặp chữ ký mơ hồ khi truyền `null`. |
-    | Điều phối constructor chaining | Mô phỏng chuỗi gọi `this(...)` và `super(...)`, chỉ ra nơi kiểm tra invariant chung. |
-    | Đảm bảo khởi tạo trường | Sửa ví dụ gán nhầm tham số cho chính nó hoặc bỏ sót phép gán trường `final`. |
-    | Chọn giao diện tạo phù hợp | Giải thích bằng tình huống khi constructor, static factory có tên hoặc Builder giúp lời gọi rõ ràng hơn. |
+    | Diagnose default/no-arg behavior | Predict which `new` expressions compile or fail after a parameterized constructor is added. |
+    | Design valid overloads | Write clear overloads and detect ambiguous signature pairs when `null` is passed. |
+    | Coordinate constructor chaining | Trace `this(...)` and `super(...)` calls and identify where shared invariants are checked. |
+    | Ensure field initialization | Fix examples that accidentally assign a parameter to itself or omit an assignment to a `final` field. |
+    | Choose an appropriate creation API | Explain, through scenarios, when a constructor, named static factory, or Builder makes a call clearer. |
 - id: lifecycle-004
-  title: Thứ tự khởi tạo trong quan hệ kế thừa
+  title: Initialization Order in Inheritance
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Thứ tự khởi tạo trong quan hệ kế thừa**
+    **Initialization Order in Inheritance**
 
-    Dự đoán thứ tự khởi tạo thực tế khi lớp con kế thừa lớp cha, bao gồm `static` initializer, instance field, initialization block và constructor. Bài học giúp truy vết output, sửa lỗi `super(...)` và tránh gọi phương thức override khi trạng thái lớp con còn mang giá trị mặc định.
+    Predict the actual initialization order when a subclass extends a superclass, including `static` initializers, instance fields, initialization blocks, and constructors. This lesson helps you trace output, fix `super(...)` errors, and avoid calling overridden methods while subclass state still holds default values.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Trình tự lớp cha và lớp con
+    ### Superclass and Subclass Initialization Sequence
 
-    1. Khi chạy `new Child()` lần đầu và lần thứ hai, phần `static` của Parent/Child và phần instance nào được chạy, theo thứ tự văn bản nào?
-    2. Vì sao `new Child()` tạo một đối tượng Child có phần trạng thái kế thừa chứ không tự sinh thêm một instance Parent riêng?
+    1. On the first and second executions of `new Child()`, which `static` parts of Parent/Child and which instance parts run, and in what source-code order?
+    2. Why does `new Child()` create one Child object containing inherited state rather than a separate additional Parent instance?
 
-    ### Constructor chaining và lỗi khởi tạo
+    ### Constructor Chaining and Initialization Failures
 
-    1. Điều gì xảy ra khi lớp cha chỉ có constructor có tham số nhưng lớp con không gọi `super(argument)`?
-    2. Tại sao một override của lớp con được gọi trong constructor cha có thể quan sát giá trị `0`/`null` dù lớp con khai báo field initializer khác?
-    3. Khi phép khởi tạo thất bại giữa chuỗi constructor, phần code nào đã chạy và vì sao không được coi object là khởi tạo thành công?
+    1. What happens when a superclass has only a parameterized constructor, but the subclass does not call `super(argument)`?
+    2. Why can an override in a subclass, invoked from a superclass constructor, observe `0`/`null` even though the subclass declares a different field initializer?
+    3. If initialization fails partway through a constructor chain, which code has already run, and why must the object not be considered successfully initialized?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Truy vết khởi tạo | Lập bảng log đúng thứ tự `static`, instance initializer và constructor cho hai lần tạo đối tượng kế thừa. |
-    | Phân biệt class/instance initialization | Giải thích vì sao `static` thường chạy một lần mỗi lần khởi tạo lớp, còn phần instance chạy mỗi lần `new`. |
-    | Sửa lời gọi constructor cha | Chọn `super(...)` hợp lệ khi cha không có no-arg truy cập được và lý giải lỗi biên dịch. |
-    | Phân tích dynamic dispatch sớm | Dự đoán giá trị field con khi override chạy trong constructor cha và sửa thiết kế bằng helper không thể override. |
-    | Đánh giá chain nhiều cấp | Mô phỏng trình tự từ tổ tiên tới lớp cụ thể mà không giả định có nhiều instance riêng biệt. |
+    | Trace initialization | Produce a correctly ordered log of `static` initialization, instance initializers, and constructors across two creations of an inherited object. |
+    | Distinguish class/instance initialization | Explain why `static` initialization normally runs once per class initialization, while instance initialization runs on every `new`. |
+    | Fix superclass constructor calls | Choose a valid `super(...)` when the superclass has no accessible no-arg constructor, and explain the compilation error. |
+    | Analyze early dynamic dispatch | Predict subclass field values when an override runs from a superclass constructor, and fix the design with a non-overridable helper. |
+    | Evaluate multilevel chains | Trace initialization from the ancestor to the concrete class without assuming multiple separate instances are created. |
 - id: lifecycle-005
-  title: Hàm tạo tĩnh, Factory và Builder
+  title: Static Factory Methods, Factories, and Builders
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Hàm tạo tĩnh, Factory và Builder**
+    **Static Factory Methods, Factories, and Builders**
 
-    Chọn cơ chế tạo đối tượng theo yêu cầu API: constructor trực tiếp, static factory có tên, Factory lựa chọn implementation hoặc Builder cấu hình nhiều tùy chọn. Bài học phân biệt Simple Factory với Factory Method pattern và nhận ra việc trả về object có sẵn, bean do Spring quản lý hoặc bản sao được bảo vệ.
+    Choose an object-creation mechanism based on API requirements: a direct constructor, a named static factory, a Factory that selects an implementation, or a Builder that configures many options. This lesson distinguishes Simple Factory from the Factory Method pattern and covers returning an existing object, a Spring-managed bean, or a protected copy.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Các cơ chế tạo đối tượng
+    ### Object-Creation Mechanisms
 
-    1. Vì sao `Temperature.celsius(...)` và `fahrenheit(...)` diễn đạt ý nghĩa rõ hơn hai constructor cùng danh sách kiểu tham số?
-    2. Static factory có bắt buộc tạo instance mới không, và nó khác Factory riêng cũng như Factory Method pattern có thể override ở điểm nào?
+    1. Why do `Temperature.celsius(...)` and `fahrenheit(...)` convey meaning more clearly than two constructors with the same parameter-type list?
+    2. Must a static factory create a new instance, and how does it differ from a separate Factory and an overridable Factory Method pattern?
 
-    ### Thiết kế Builder và tích hợp
+    ### Builder Design and Integration
 
-    1. Một Builder mutable thu thập giá trị ở những bước nào; khi gọi `build()`, phải xác thực và sao chép danh sách ra sao để object kết quả không bị sửa theo Builder?
-    2. Trong tình huống nào chọn constructor, factory chọn `Notifier` theo kênh hoặc Builder cho `SearchRequest`, và mỗi cách có chi phí thiết kế gì?
-    3. Vì sao trong ứng dụng Spring không nên `new` tùy tiện các service cần injection/proxy, và một factory chọn bean sẵn có khác gì tạo đối tượng mới?
+    1. At which steps does a mutable Builder collect values? When `build()` is called, how should lists be validated and copied so later Builder changes do not modify the resulting object?
+    2. In which scenarios would you choose a constructor, a factory that selects a `Notifier` by channel, or a Builder for `SearchRequest`, and what are the design costs of each?
+    3. Why should a Spring application avoid indiscriminately using `new` for services that require injection/proxies, and how does a factory that selects an existing bean differ from creating a new object?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Lựa chọn mẫu khởi tạo | Ghép tình huống hai đơn vị nhiệt độ, chọn kênh thông báo, và nhiều tham số tùy chọn với cách tạo thích hợp. |
-    | Phân biệt thuật ngữ Factory | Giải thích bằng code vai trò của static factory, Simple Factory và Factory Method dùng subclass. |
-    | Thiết kế Builder có kiểm tra | Tạo luồng fluent `builder(...).page(...).addTag(...).build()` với validation và bản sao collection ở kết quả. |
-    | Kiểm soát danh tính và chia sẻ | Phân tích API factory trả cached instance so với instance mới mà không dựa sai vào `==` để so sánh giá trị. |
-    | Xác định giới hạn tích hợp | Nhận diện Builder không tự thread-safe và factory chọn bean Spring được quản lý thay vì khởi tạo lại service. |
+    | Choose a creation pattern | Match scenarios involving two temperature units, notification-channel selection, and many optional parameters to suitable creation methods. |
+    | Distinguish Factory terminology | Explain in code the roles of a static factory, Simple Factory, and a subclass-based Factory Method. |
+    | Design a validated Builder | Build a fluent `builder(...).page(...).addTag(...).build()` flow with validation and a copy of the collection in the result. |
+    | Control identity and sharing | Analyze factory APIs that return cached versus new instances without misusing `==` for value comparisons. |
+    | Identify integration limitations | Recognize that Builders are not inherently thread-safe and that factories can select managed Spring beans rather than recreate services. |
 - id: lifecycle-006
-  title: Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ
+  title: Object Lifetime, Reachability, and Memory Reclamation
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ**
+    **Object Lifetime, Reachability, and Memory Reclamation**
 
-    Hiểu lifetime của object thông qua các đường tham chiếu từ GC roots, thay vì nhầm scope của biến với thời điểm thu gom. Bài học cung cấp cách phân tích strong/weak/soft/phantom reference, cache, listener, `ThreadLocal`, chu trình tham chiếu và sử dụng heap dump để tìm đối tượng bị giữ quá lâu.
+    Understand object lifetime through reference paths from GC roots rather than confusing variable scope with the moment of garbage collection. This lesson shows how to analyze strong/weak/soft/phantom references, caches, listeners, `ThreadLocal`, reference cycles, and heap dumps to identify objects retained too long.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Reachability và lifetime
+    ### Reachability and Lifetime
 
-    1. Vì sao `a = null`, ra khỏi scope và GC thu hồi bộ nhớ là ba sự kiện khác nhau; một alias hoặc registry `static` ảnh hưởng tới object thế nào?
-    2. GC roots và đồ thị object quyết định khả năng truy cập ra sao; vì sao hai object chỉ trỏ lẫn nhau mà không có đường root vẫn có thể bị thu gom?
+    1. Why are `a = null`, leaving scope, and GC reclaiming memory three separate events, and how does an alias or `static` registry affect the object?
+    2. How do GC roots and the object graph determine reachability, and why can two objects referencing only each other still be collected when no root path reaches them?
 
-    ### Tham chiếu đặc biệt và chẩn đoán
+    ### Special References and Diagnostics
 
-    1. Khác biệt giữa strong, soft, weak và phantom references là gì, và vì sao `WeakReference.get()` sau khi bỏ strong reference không có kết quả cố định?
-    2. Một cache không giới hạn, listener không unregister hoặc `ThreadLocal` trong thread pool có thể gây retention bằng những đường nào?
-    3. Khi heap tăng dài hạn, làm sao dùng heap dump, retained graph và GC roots để tìm nơi đang giữ object thay vì dựa vào `System.gc()`?
+    1. What is the difference between strong, soft, weak, and phantom references, and why does `WeakReference.get()` have no predetermined result after a strong reference is removed?
+    2. Through what reference paths can an unbounded cache, a listener that was never unregistered, or a `ThreadLocal` in a thread pool cause retention?
+    3. When heap usage grows over time, how can you use a heap dump, retained-object graph, and GC roots to find what retains objects instead of relying on `System.gc()`?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Vẽ đồ thị tham chiếu | Xác định object nào còn reachable qua alias, collection hoặc static field sau từng phép gán/xóa. |
-    | Phân biệt thời điểm vòng đời | Giải thích được object eligible for GC, đã thu hồi, đã close resource là những trạng thái độc lập. |
-    | Phân tích weak reference | Dự đoán các kết quả có thể của `WeakReference` mà không giả định GC có lịch cố định. |
-    | Phát hiện giữ tham chiếu quá lâu | Xác định và đề xuất loại bỏ retention từ cache, listener hoặc `ThreadLocal` gắn với luồng sống dài. |
-    | Điều tra memory leak | Đề xuất quy trình dùng heap dump/GC root path để kiểm chứng nguyên nhân object bị giữ. |
+    | Draw reference graphs | Identify which objects remain reachable through aliases, collections, or static fields after each assignment/removal. |
+    | Distinguish lifecycle stages | Explain why being eligible for GC, having memory reclaimed, and having a resource closed are independent states. |
+    | Analyze weak references | Predict possible `WeakReference` outcomes without assuming a fixed GC schedule. |
+    | Detect excessive retention | Identify and propose ways to eliminate retention through caches, listeners, or `ThreadLocal` values associated with long-lived threads. |
+    | Investigate memory leaks | Propose a process using heap dumps and GC-root paths to verify what is retaining objects. |
 - id: lifecycle-007
-  title: Thu gom rác và quản lý bộ nhớ thủ công
+  title: Garbage Collection and Manual Memory Management
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Thu gom rác và quản lý bộ nhớ thủ công**
+    **Garbage Collection and Manual Memory Management**
 
-    Phân định việc GC tự thu hồi bộ nhớ object Java với trách nhiệm ứng dụng quản lý bộ nhớ native và tài nguyên OS. Bài học giới thiệu reachability, các pha GC ở mức khái niệm, những ngộ nhận về `System.gc()`/`finalize()`, FFM `Arena` ở JDK 22+ và công cụ quan sát heap, metaspace, off-heap.
+    Distinguish GC's automatic reclamation of Java object memory from the application's responsibility for managing native memory and OS resources. This lesson introduces reachability, GC phases at a conceptual level, misconceptions about `System.gc()`/`finalize()`, FFM `Arena` in JDK 22+, and tools for observing heap, metaspace, and off-heap memory.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Cơ chế quản lý bộ nhớ
+    ### Memory-Management Mechanisms
 
-    1. Vì sao GC có thể thu hồi một chu trình object không còn reachable nhưng không thể thu hồi cache vẫn bị tham chiếu dù dữ liệu đã hết ích lợi?
-    2. GC ở mức khái niệm tìm object còn sống, thu hồi và có thể di chuyển object như thế nào; vì sao không nên suy diễn lịch chạy GC từ `System.gc()`?
+    1. Why can GC reclaim a cycle of unreachable objects but not a cache that remains referenced even after its data is no longer useful?
+    2. At a conceptual level, how does GC find live objects, reclaim memory, and potentially move objects? Why should you not infer GC scheduling from `System.gc()`?
 
-    ### Heap, native memory và điều tra
+    ### Heap, Native Memory, and Investigation
 
-    1. Java heap, stack, metaspace, direct/native memory và file descriptor thuộc những cơ chế quản lý khác nhau ra sao?
-    2. Với JDK 22+, vòng đời bộ nhớ cấp phát qua `Arena.ofConfined()` và `Arena.close()` khác gì object heap thông thường?
-    3. Khi gặp `Java heap space`, `Metaspace`, lỗi direct buffer hoặc process RSS tăng, cần dùng những chỉ số/công cụ nào để khoanh vùng thay vì mặc định kết luận heap leak?
+    1. How do the management mechanisms differ for the Java heap, stack, metaspace, direct/native memory, and file descriptors?
+    2. In JDK 22+, how does the lifetime of memory allocated through `Arena.ofConfined()` and `Arena.close()` differ from that of ordinary heap objects?
+    3. When you encounter `Java heap space`, `Metaspace`, direct-buffer errors, or growing process RSS, which metrics and tools should you use to narrow down the cause instead of assuming a heap leak?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Giải thích phạm vi GC | Chỉ ra phần GC có thể thu hồi và phần phải đóng/giải phóng theo hợp đồng API. |
-    | Phân tích bộ nhớ còn giữ | Giải thích bằng cache hoặc đồ thị roots tại sao GC chạy nhiều mà retained heap không giảm. |
-    | Nhận biết giới hạn API | Phân biệt `System.gc()` là gợi ý, `finalize()` không đáng tin và `Arena` cần JDK 22 trở lên. |
-    | Phân loại sự cố bộ nhớ | Tách heap pressure, class-loader/metaspace, direct buffer và native thread/resource issues từ triệu chứng. |
-    | Thiết kế bước chẩn đoán | Lựa chọn GC log, `jcmd`, JFR, NMT hoặc heap dump theo vấn đề cần chứng minh. |
+    | Explain the scope of GC | Identify which memory GC can reclaim and which resources must be closed or released according to API contracts. |
+    | Analyze retained memory | Use a cache or root graph to explain why retained heap memory may not shrink despite frequent GC. |
+    | Recognize API limitations | Distinguish `System.gc()` as a hint, `finalize()` as unreliable, and `Arena` as requiring JDK 22 or later. |
+    | Classify memory problems | Distinguish heap pressure, class-loader/metaspace problems, direct-buffer issues, and native thread/resource issues from their symptoms. |
+    | Design diagnostic steps | Choose GC logs, `jcmd`, JFR, NMT, or heap dumps based on what needs to be demonstrated. |
 - id: lifecycle-008
-  title: Đóng tài nguyên và giới hạn của hàm hủy
+  title: Resource Cleanup and the Limits of Finalizers
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Đóng tài nguyên và giới hạn của hàm hủy**
+    **Resource Cleanup and the Limits of Finalizers**
 
-    Đóng đúng thời điểm những tài nguyên có quyền sở hữu rõ ràng như stream, JDBC connection và socket. Bài học làm rõ `AutoCloseable`/`Closeable`, try-with-resources, thứ tự đóng ngược, suppressed exceptions và lý do `finalize()` hay `Cleaner` không thay thế cho `close()`.
+    Close clearly owned resources such as streams, JDBC connections, and sockets at the right time. This lesson explains `AutoCloseable`/`Closeable`, try-with-resources, reverse closing order, suppressed exceptions, and why `finalize()` or `Cleaner` cannot replace `close()`.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Đóng tài nguyên và exception
+    ### Resource Closing and Exceptions
 
-    1. Vì sao object Java không còn reachable vẫn có thể để file descriptor hay JDBC connection bị giữ, kể cả khi GC hoạt động?
-    2. Với `try (A a = ...; B b = ...)`, tài nguyên đóng theo thứ tự nào khi thân `try` ném lỗi hoặc bước khởi tạo B thất bại?
-    3. Nếu cả xử lý chính và `close()` cùng lỗi, khi nào ngoại lệ bị suppressed và cần đọc `getSuppressed()` ra sao?
+    1. Why can an unreachable Java object still leave a file descriptor or JDBC connection open, even when GC runs?
+    2. With `try (A a = ...; B b = ...)`, in what order are resources closed if the `try` body throws an exception or initialization of B fails?
+    3. If both the main operation and `close()` fail, when is an exception suppressed, and how should `getSuppressed()` be examined?
 
-    ### Hợp đồng ownership và giới hạn
+    ### Ownership Contracts and Limitations
 
-    1. `AutoCloseable` khác `Closeable` ở hợp đồng ngoại lệ và tính an toàn khi đóng nhiều lần như thế nào?
-    2. Khi nhận một reader chỉ để mượn hoặc `Connection` do pool cung cấp, ai được phép đóng và `close()` có ý nghĩa gì?
-    3. Vì sao `finalize()`, `Cleaner` và `System.gc()` không thể bảo đảm cleanup đúng hạn; một lớp tự triển khai `AutoCloseable` cần lưu ý trạng thái và thread-safety nào?
+    1. How do `AutoCloseable` and `Closeable` differ in their exception contracts and guarantees about repeated closing?
+    2. When given a borrowed reader or a pooled `Connection`, who is allowed to close it, and what does `close()` mean?
+    3. Why can't `finalize()`, `Cleaner`, and `System.gc()` guarantee timely cleanup, and what state and thread-safety concerns must a custom `AutoCloseable` class address?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Viết phạm vi tài nguyên an toàn | Tổ chức `try-with-resources` cho file hoặc các tài nguyên JDBC lồng nhau đúng quyền sở hữu. |
-    | Dự đoán thứ tự cleanup | Xác định thứ tự đóng ngược và cách đóng tài nguyên đã mở nếu bước khai báo tiếp theo ném lỗi. |
-    | Phân tích lỗi kép | Chỉ ra primary exception và suppressed exceptions từ một ví dụ xử lý và đóng cùng thất bại. |
-    | Thiết kế hợp đồng close | Phân biệt `AutoCloseable`, `Closeable`, idempotence và ngăn dùng resource đã đóng. |
-    | Đánh giá trách nhiệm sở hữu | Xác định khi nào phải đóng, chỉ mượn, hoặc trả connection về pool mà không nhầm với GC/finalization. |
+    | Write safe resource scopes | Organize `try-with-resources` for files or nested JDBC resources according to ownership. |
+    | Predict cleanup order | Determine reverse closing order and how already-open resources are closed if a later declaration throws an exception. |
+    | Analyze simultaneous failures | Identify the primary and suppressed exceptions in an example where both processing and closing fail. |
+    | Design closing contracts | Distinguish `AutoCloseable`, `Closeable`, and idempotence, and prevent use of resources after closing. |
+    | Evaluate ownership responsibilities | Determine when to close, merely borrow, or return a connection to a pool without confusing these actions with GC/finalization. |
 - id: lifecycle-009
-  title: Tránh để đối tượng chưa khởi tạo xong bị sử dụng
+  title: Preventing Use of Partially Initialized Objects
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Tránh để đối tượng chưa khởi tạo xong bị sử dụng**
+    **Preventing Use of Partially Initialized Objects**
 
-    Nhận diện và ngăn tham chiếu `this` thoát khỏi constructor khi trạng thái còn chưa sẵn sàng, kể cả trong callback đồng bộ và khi lớp cha gọi override. Bài học liên hệ constructor exception, thread start, Java Memory Model, final-field semantics và safe publication để thiết kế factory tạo xong rồi mới đăng ký hoặc kích hoạt.
+    Detect and prevent `this` references from escaping constructors before object state is ready, including through synchronous callbacks and overridden methods invoked by superclasses. This lesson connects constructor exceptions, thread starts, the Java Memory Model, final-field semantics, and safe publication to the design of factories that register or activate objects only after creation is complete.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Phát hiện sử dụng object quá sớm
+    ### Detecting Premature Object Use
 
-    1. Những thao tác nào như đăng ký listener, giữ `this` trong registry, truyền lambda hay start thread trong constructor có thể làm lộ object trước khi khởi tạo hoàn tất?
-    2. Tại sao callback đăng ký ngay hoặc override của lớp con được gọi trong constructor cha có thể đọc field `null`/`0` dù field khai báo initializer hoặc `final`?
+    1. Which actions, such as registering listeners, storing `this` in a registry, passing a lambda, or starting a thread in a constructor, can expose an object before initialization is complete?
+    2. Why can an immediately invoked registration callback or subclass override called by a superclass constructor read `null`/`0` field values despite declared field initializers or `final`?
 
-    ### Công bố an toàn và xử lý lỗi
+    ### Safe Publication and Error Handling
 
-    1. Vì sao constructor ném lỗi sau khi đã lưu `this` vào registry vẫn có thể để lại object dở dang, và cách đăng ký sau khi tạo thành công cần xử lý lỗi ra sao?
-    2. `Thread.start()` và ghi/đọc `volatile` tạo quan hệ happens-before nào; vì sao vẫn phải đồng bộ thay đổi mutable sau khi công bố?
-    3. Final-field semantics hỗ trợ điều gì và không bảo đảm điều gì khi object hoặc collection lồng nhau là mutable?
+    1. Why can a constructor that throws after storing `this` in a registry leave behind a partially initialized object, and how should post-construction registration handle failures?
+    2. What happens-before relationships are established by `Thread.start()` and `volatile` writes/reads, and why do later mutable changes still require synchronization?
+    3. What do final-field semantics support, and what do they not guarantee when objects or nested collections are mutable?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Nhận diện this escape | Khoanh vùng các chỗ constructor công bố `this` qua listener, static collection, callback hoặc task. |
-    | Truy vết lỗi khởi tạo sớm | Dự đoán `null`, `0` hoặc exception khi callback/override được gọi trước phần initializer của lớp con. |
-    | Thiết kế factory an toàn | Chuyển thao tác register/start sang sau khi constructor trả thành công và nêu phương án cleanup nếu đăng ký thất bại. |
-    | Giải thích safe publication | Phân tích quan hệ happens-before từ `Thread.start()` hoặc volatile và giới hạn đối với mutable state. |
-    | Kiểm tra hợp đồng final | Giải thích vì sao field `final` không cứu được `this escape` hoặc bảo đảm immutable sâu. |
+    | Identify this escape | Locate places where constructors publish `this` through listeners, static collections, callbacks, or tasks. |
+    | Trace early initialization failures | Predict `null`, `0`, or exceptions when a callback/override executes before subclass initializers. |
+    | Design safe factories | Move register/start operations until after the constructor returns successfully, and describe cleanup if registration fails. |
+    | Explain safe publication | Analyze happens-before relationships established by `Thread.start()` or volatile operations and their limits for mutable state. |
+    | Verify final-field contracts | Explain why `final` fields cannot prevent `this escape` or guarantee deep immutability. |

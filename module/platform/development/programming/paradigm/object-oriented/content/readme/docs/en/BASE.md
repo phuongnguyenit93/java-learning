@@ -1,7 +1,7 @@
-# Lập trình hướng đối tượng (OOP)
+# Object-Oriented Programming (OOP)
 
-Lập trình hướng đối tượng (Object-Oriented Programming, OOP) là cách tổ chức chương trình quanh các đối tượng có trạng thái, hành vi và trách nhiệm rõ ràng. Khi tiếp cận bài toán bằng OOP, ta xác định những đối tượng tham gia, công việc của từng đối tượng và cách chúng phối hợp để đáp ứng yêu cầu.
+Object-oriented programming (OOP) organizes programs around objects with clearly defined state, behavior, and responsibilities. When approaching a problem with OOP, we identify the objects involved, each object's responsibilities, and how they collaborate to meet the requirements.
 
-Tài liệu này dành cho người bắt đầu học OOP trong Java hoặc muốn hệ thống hóa tư duy thiết kế. Lộ trình gồm tám mốc: tư duy OOP; lớp và đối tượng; đóng gói; trừu tượng; kế thừa và kết hợp; đa hình; thiết kế đối tượng; thực hành tổng hợp. Người học đi từ việc nhận diện và mô hình hóa đối tượng đến tổ chức quan hệ, phân chia trách nhiệm và áp dụng các khái niệm vào một bài toán nhỏ.
+This material is intended for people who are beginning to learn OOP in Java or want to organize their understanding of object-oriented design. The learning path has eight milestones: object-oriented thinking; classes and objects; encapsulation; abstraction; inheritance and composition; polymorphism; object design; and integrated practice. Learners progress from identifying and modeling objects to organizing relationships, assigning responsibilities, and applying the concepts to a small problem.
 
-Sau khi hoàn thành, bạn có thể phân biệt lớp với đối tượng, quản lý trạng thái qua đóng gói, sử dụng trừu tượng và đa hình, lựa chọn kế thừa hoặc kết hợp phù hợp, đồng thời xây dựng và kiểm tra một mô hình OOP đơn giản. Trọng tâm là hiểu vì sao đưa ra từng quyết định thiết kế, nhận ra phụ thuộc không cần thiết và cải thiện khả năng thay đổi của chương trình.
+By the end, you will be able to distinguish classes from objects, manage state through encapsulation, use abstraction and polymorphism, choose appropriately between inheritance and composition, and build and test a simple OOP model. The focus is on understanding the reasons behind each design decision, recognizing unnecessary dependencies, and improving how easily a program can be changed.

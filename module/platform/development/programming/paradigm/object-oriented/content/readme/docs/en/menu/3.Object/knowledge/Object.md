@@ -1,59 +1,59 @@
 <a id="back-to-top"></a>
 
-# Đối tượng
+# Objects
 
 ## Menu
-- [Danh tính, trạng thái và hành vi của đối tượng](#object-001)
-- [Tham chiếu, giá trị và cách truyền đối tượng](#object-002)
-- [Nhiều tham chiếu cùng trỏ đến một đối tượng](#object-003)
-- [Phân biệt cùng đối tượng với bằng nhau về giá trị](#object-004)
-- [Đối tượng có thể thay đổi và đối tượng bất biến](#object-005)
-- [Sao chép nông và sao chép sâu](#object-006)
-- [Chia sẻ đối tượng và tác động của thay đổi trạng thái](#object-007)
-- [Giá trị rỗng và đối tượng chưa tồn tại](#object-008)
-- [Theo dõi tương tác của các đối tượng trong một tình huống](#object-009)
+- [Object Identity, State, and Behavior](#object-001)
+- [References, Values, and Passing Objects](#object-002)
+- [Multiple References to the Same Object](#object-003)
+- [Object Identity vs. Value Equality](#object-004)
+- [Mutable and Immutable Objects](#object-005)
+- [Shallow and Deep Copies](#object-006)
+- [Object Sharing and the Effects of State Changes](#object-007)
+- [Null Values and Objects That Do Not Exist](#object-008)
+- [Tracing Object Interactions in a Scenario](#object-009)
 
-## <a id="object-001">Danh tính, trạng thái và hành vi của đối tượng</a>
+## <a id="object-001">Object Identity, State, and Behavior</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Danh tính, trạng thái và hành vi của đối tượng trong Java
+# Object Identity, State, and Behavior in Java
 
-Khi nói **đối tượng (object)** trong lập trình hướng đối tượng (OOP), ta không chỉ nói về một tập hợp các biến và hàm. Một đối tượng là một thực thể cụ thể trong lúc chương trình chạy, có **danh tính**, có **trạng thái** và cung cấp **hành vi**. Ba khía cạnh này giúp ta mô hình hóa các thực thể như đơn hàng, tài khoản ngân hàng, giỏ hàng, người chơi hoặc thiết bị trong phần mềm.
+In object-oriented programming (OOP), an **object** is more than a collection of variables and functions. It is a concrete entity at runtime with **identity**, **state**, and **behavior**. These three aspects help us model entities such as orders, bank accounts, shopping carts, players, and devices in software.
 
-Hãy hình dung hai đơn hàng cùng của khách Lan, cùng chứa một quyển sổ và đều có trạng thái “Đã xác nhận”. Chúng có thể trông hoàn toàn giống nhau về dữ liệu, nhưng vẫn là **hai đơn hàng khác nhau**. Ngược lại, cùng một đơn hàng lúc mới tạo có trạng thái “Nháp”, sau khi xác nhận chuyển thành “Đã xác nhận”, nhưng nó vẫn là **chính đơn hàng đó**.
+Imagine two orders belonging to the same customer, Lan, each containing a notebook and both marked “Confirmed.” They may have identical data yet remain **two different orders**. Conversely, an order may start as “Draft” and later become “Confirmed” while remaining **the same order**.
 
-Đó là sự khác biệt cốt lõi:
+This is the essential distinction:
 
-- **Danh tính (identity):** Đây là đối tượng nào? Nó có phải chính đối tượng đang được tham chiếu ở nơi khác không?
-- **Trạng thái (state):** Tại thời điểm này đối tượng đang giữ những dữ liệu gì?
-- **Hành vi (behavior):** Đối tượng có thể thực hiện những thao tác gì, trả lời được những câu hỏi gì, và được phép thay đổi trạng thái theo quy tắc nào?
+- **Identity:** Which object is this? Is it the very same object referenced elsewhere?
+- **State:** What data does the object hold at this moment?
+- **Behavior:** Which operations can the object perform, which questions can it answer, and under what rules may it change its state?
 
-## 1. So sánh ba khía cạnh
+## 1. Comparing the Three Aspects
 
-| Khía cạnh | Câu hỏi cần trả lời | Ví dụ với `Order` | Có thể thay đổi theo thời gian? |
+| Aspect | Question to answer | Example with `Order` | Can it change over time? |
 |---|---|---|---|
-| **Danh tính** | Đây có phải *cùng một đối tượng*? | Hai biến cùng trỏ đến một `Order` | Danh tính của một object không đổi trong thời gian nó tồn tại |
-| **Trạng thái** | Object hiện có những dữ liệu nào? | Danh sách món, trạng thái `DRAFT`/`CONFIRMED` | Có thể thay đổi nếu thiết kế cho phép |
-| **Hành vi** | Object có thể làm gì? | `addItem()`, `confirm()`, `cancel()` | Các phương thức được định nghĩa bởi kiểu; kết quả/hành động có thể phụ thuộc trạng thái |
+| **Identity** | Is it *the same object*? | Two variables refer to one `Order` | An object's identity does not change during its lifetime |
+| **State** | What data does the object currently contain? | Item list, `DRAFT`/`CONFIRMED` status | May change if the design allows it |
+| **Behavior** | What can the object do? | `addItem()`, `confirm()`, `cancel()` | Methods are defined by its type; results/actions may depend on state |
 
-Một cách nhìn khác: **danh tính** cho phép theo dõi *cùng một đối tượng qua thời gian*; **trạng thái** mô tả *nó đang như thế nào*; **hành vi** quy định *nó có thể phản ứng ra sao*.
+Put another way, **identity** lets us track *the same object over time*; **state** describes *its current condition*; **behavior** defines *how it can respond*.
 
-### Ví dụ đời thường
+### Everyday Example
 
-Một chiếc thẻ ra vào có mã thẻ riêng. Hôm nay nó ở trạng thái hoạt động, ngày mai có thể bị khóa. Hành vi `unlock()` chỉ hợp lệ khi người thực hiện có quyền, và hành vi `enter()` phải kiểm tra trạng thái hiện hành. Việc khóa thẻ không biến nó thành một thẻ khác.
+An access card has its own identifier. It may be active today and blocked tomorrow. The `unlock()` behavior is valid only when the person performing it is authorized, and `enter()` must check the current state. Blocking the card does not turn it into another card.
 
-Trong hệ thống phần mềm, cần phân biệt hai loại danh tính:
+In software systems, distinguish two kinds of identity:
 
-1. **Danh tính của đối tượng Java:** một instance cụ thể đang tồn tại trong bộ nhớ JVM, được nhận biết khi so sánh tham chiếu bằng `==`.
-2. **Danh tính nghiệp vụ:** mã đơn hàng, UUID, số tài khoản… dùng để theo dõi cùng thực thể nghiệp vụ giữa database, lần chạy ứng dụng và các dịch vụ. Hai đối tượng Java khác nhau vẫn có thể mô tả cùng một bản ghi nghiệp vụ.
+1. **Java object identity:** a particular instance existing in JVM memory, distinguished when comparing references with `==`.
+2. **Business identity:** an order ID, UUID, account number, and so on, used to track the same business entity across databases, application executions, and services. Two distinct Java objects can represent the same business record.
 
-Hai khái niệm này có liên quan nhưng **không tương đương**.
+These concepts are related but **not equivalent**.
 
-## 2. Đối tượng, lớp và tham chiếu
+## 2. Objects, Classes, and References
 
-**Lớp (class)** mô tả kiểu dữ liệu và các thao tác; **đối tượng (object)** là instance cụ thể của kiểu đó; **biến tham chiếu (reference variable)** là cách mã Java trỏ tới đối tượng.
+A **class** describes a type and its operations; an **object** is a concrete instance of that type; a **reference variable** is how Java code refers to that object.
 
 ~~~java
 Order first = new Order("Lan");
@@ -61,12 +61,12 @@ Order second = new Order("Lan");
 Order alias = first;
 ~~~
 
-Trong đoạn này:
+In this snippet:
 
-- `new Order("Lan")` được gọi hai lần, tạo hai instance riêng biệt: `first` và `second`.
-- `alias = first` chỉ sao chép **giá trị tham chiếu**. Không có `new`, nên không tạo đối tượng thứ ba.
-- `first == second` là `false`; `first == alias` là `true`.
-- Nếu `alias` gọi một phương thức làm đổi trạng thái, `first` cũng sẽ quan sát được sự thay đổi đó vì cả hai cùng trỏ đến **một object**.
+- `new Order("Lan")` is executed twice, creating two separate instances referenced by `first` and `second`.
+- `alias = first` only copies **the reference value**. Without `new`, no third object is created.
+- `first == second` is `false`; `first == alias` is `true`.
+- If `alias` invokes a state-changing method, `first` also observes the change because both refer to **one object**.
 
 ~~~mermaid
 flowchart LR
@@ -75,20 +75,20 @@ flowchart LR
     S["Biến second"] --> B["Order object #2<br/>customer: Lan<br/>status: DRAFT"]
 ~~~
 
-Đây là mô hình quan hệ tham chiếu, không phải sơ đồ vị trí bộ nhớ vật lý của JVM. Số lượng biến tham chiếu **không bằng** số lượng đối tượng.
+This models reference relationships, not physical JVM memory locations. The number of reference variables **does not equal** the number of objects.
 
-Lưu ý thêm: `Order x;` mới chỉ *khai báo* một biến tham chiếu cục bộ; nó chưa tạo đối tượng nào và phải được gán trước khi đọc. `Order x = null;` cũng không tạo đối tượng: `null` biểu thị hiện không trỏ tới đối tượng nào.
+Also note that `Order x;` merely *declares* a local reference variable; it creates no object and must be assigned before being read. `Order x = null;` creates no object either: `null` indicates that the reference currently points to none.
 
-## 3. Ví dụ Java hoàn chỉnh: một đơn hàng có danh tính, trạng thái và hành vi
+## 3. Complete Java Example: An Order with Identity, State, and Behavior
 
-Ví dụ dưới đây mô hình hóa một đơn hàng với các quy tắc:
+The following example models an order with these rules:
 
-- Mỗi instance có một mã định danh `UUID` được tạo khi khởi tạo.
-- Đơn hàng lưu tên khách hàng, danh sách mặt hàng và trạng thái hiện hành.
-- Chỉ đơn hàng ở trạng thái nháp mới được thêm mặt hàng hoặc xác nhận.
-- Đơn hàng rỗng không được xác nhận; chỉ đơn hàng đã xác nhận mới được hủy.
+- Each instance receives a `UUID` identifier when it is created.
+- The order stores the customer name, item list, and current status.
+- Items can be added and the order confirmed only while it is in draft.
+- An empty order cannot be confirmed; only a confirmed order can be canceled.
 
-Lưu toàn bộ vào **`Demo.java`**, chạy bằng **Java 17+**:
+Save the entire example as **`Demo.java`** and run it with **Java 17+**:
 
 ~~~java
 import java.util.ArrayList;
@@ -198,14 +198,14 @@ final class Order {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac Demo.java
 java Demo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 first == second: false
@@ -218,17 +218,17 @@ first.equals(second): false
 alias after cancel: CANCELLED
 ~~~
 
-### Phân tích từ ví dụ
+### Analyzing the Example
 
-**Danh tính:** `first` và `second` được tạo từ hai biểu thức `new`, nên chúng là hai instance khác nhau dù ban đầu có cùng tên khách hàng, trạng thái và danh sách mặt hàng trống. `alias` và `first` trỏ cùng một instance, bởi vậy `first == alias` là `true`. Mã `id` giúp nhận diện đơn hàng ở tầng nghiệp vụ, nhưng không phải nguyên nhân làm phép so sánh `==` đúng hay sai.
+**Identity:** `first` and `second` are created by separate `new` expressions, so they are distinct instances even though they initially share a customer name, status, and empty item list. `alias` and `first` refer to the same instance, so `first == alias` is `true`. The `id` identifies an order at the business level but does not determine the result of the `==` reference comparison.
 
-**Trạng thái:** bộ dữ liệu `id`, `customer`, `items` và `status` mô tả trạng thái của từng `Order`. Sau `alias.addItem("Sổ tay")`, danh sách mặt hàng của `first` thay đổi nhưng `second` vẫn giữ danh sách trống. Sau `first.confirm()`, biến `alias` đọc được trạng thái `CONFIRMED` vì cùng trỏ đến đối tượng ấy.
+**State:** the `id`, `customer`, `items`, and `status` values describe the state of each `Order`. After `alias.addItem("Sổ tay")`, the item list seen through `first` changes, while `second` still has an empty list. After `first.confirm()`, `alias` sees status `CONFIRMED` because it references the same object.
 
-**Hành vi:** `addItem()`, `confirm()`, `cancel()` là những việc một đối tượng `Order` được phép thực hiện. Chúng áp dụng quy tắc nghiệp vụ trước khi sửa field. Các phương thức `getStatus()` và `getItems()` là hành vi truy vấn, không cần thay đổi trạng thái.
+**Behavior:** `addItem()`, `confirm()`, and `cancel()` are operations an `Order` object provides. They enforce business rules before modifying fields. The `getStatus()` and `getItems()` methods are queries that need not change state.
 
-**Tính đóng gói:** các field được khai báo `private`; bên ngoài không thể viết `first.status = ...` hoặc trực tiếp chèn một phần tử vào danh sách nội bộ. Các phương thức công khai là cổng kiểm soát trạng thái hợp lệ. `final class` ở ví dụ giữ thiết kế đơn giản và ngăn lớp con thay đổi quy tắc bằng kế thừa.
+**Encapsulation:** fields are declared `private`; external code cannot write `first.status = ...` or directly insert an element into the internal list. Public methods provide controlled entry points for valid state changes. The example uses a `final class` to keep the design simple and prevent subclasses from changing its rules through inheritance.
 
-### Hành vi tạo thành chuyển trạng thái
+### Behaviors Define State Transitions
 
 ~~~mermaid
 stateDiagram-v2
@@ -238,11 +238,11 @@ stateDiagram-v2
     CONFIRMED --> CANCELLED: cancel()
 ~~~
 
-Sơ đồ chỉ vẽ **các chuyển trạng thái hợp lệ được cài đặt**. Ví dụ, `cancel()` ở trạng thái `DRAFT` hoặc `addItem()` ở trạng thái `CONFIRMED` đều ném `IllegalStateException` và không thực hiện chuyển trạng thái mong muốn. Một đối tượng có thể giữ nguyên danh tính xuyên suốt các trạng thái `DRAFT → CONFIRMED → CANCELLED`.
+The diagram shows only **implemented valid state transitions**. For example, `cancel()` in `DRAFT` or `addItem()` in `CONFIRMED` throws `IllegalStateException` rather than performing the requested transition. An object retains its identity throughout `DRAFT → CONFIRMED → CANCELLED`.
 
-## 4. Nhận diện đúng danh tính của đối tượng
+## 4. Identifying an Object Correctly
 
-Khi theo dõi một đối tượng qua các lần thay đổi trạng thái, cần đặt câu hỏi **“có còn là chính instance ấy không?”**. Với hai biến tham chiếu, Java dùng `==` để trả lời câu hỏi đó. Một phép so sánh **theo giá trị** lại phụ thuộc vào hợp đồng `equals()` của lớp:
+When tracking an object through state changes, ask **“Is this still the very same instance?”**. For two reference variables, Java uses `==` to answer that question. A **value-based** comparison, however, depends on the class's `equals()` contract:
 
 ~~~java
 Order first = new Order("Lan");
@@ -253,21 +253,21 @@ System.out.println(first == alias);   // true: cùng một instance
 System.out.println(first == another); // false: hai instance
 ~~~
 
-Ở lớp `Order` mẫu, `equals()` không được override nên mặc định cũng kiểm tra identity. Với một value object, chẳng hạn `record Point(int x, int y) {}`, hai instance khác nhau có cùng tọa độ lại có thể `equals()` bằng `true`.
+In the sample `Order` class, `equals()` is not overridden, so it also checks identity by default. For a value object such as `record Point(int x, int y) {}`, two different instances with the same coordinates can instead compare `equals()` as `true`.
 
-**Danh tính nghiệp vụ** như `orderId` cũng là khái niệm riêng: hai đối tượng Java được nạp từ cùng một bản ghi có thể cùng ID nhưng không cùng instance. Đừng dùng `System.identityHashCode()` làm mã đơn hàng: nó không bảo đảm duy nhất hoặc bền vững. Khi cần so sánh theo giá trị và làm khóa collection, phải thiết kế `equals()/hashCode()` có hợp đồng nhất quán. Phần này được đào sâu ở bài về *cùng đối tượng và bằng nhau về giá trị*.
+**Business identity**, such as `orderId`, is another distinct concept: two Java objects loaded from the same record may have the same ID but be different instances. Do not use `System.identityHashCode()` as an order identifier: it is neither guaranteed unique nor persistent. When comparing values or using objects as collection keys, design `equals()/hashCode()` with a consistent contract. The lesson on *object identity versus value equality* explores this further.
 
-## 5. Trạng thái không chỉ là giá trị của một biến
+## 5. State Is More Than the Value of One Variable
 
-Trạng thái của đối tượng có thể gồm:
+An object's state can include:
 
-- **Giá trị đơn giản:** `int quantity`, `boolean active`, `OrderStatus status`.
-- **Tham chiếu tới các đối tượng khác:** `List<String> items`, `Customer customer`, `Address shippingAddress`.
-- **Giá trị được suy ra:** `getItemCount()` có thể tính từ `items.size()` thay vì giữ một field đếm riêng.
+- **Simple values:** `int quantity`, `boolean active`, `OrderStatus status`.
+- **References to other objects:** `List<String> items`, `Customer customer`, `Address shippingAddress`.
+- **Derived values:** `getItemCount()` can calculate its result from `items.size()` instead of maintaining a separate counter field.
 
-Mỗi `Order` chứa một field `items` riêng. Tuy nhiên, tham chiếu là một phần của trạng thái: hai đối tượng *vẫn có thể cùng trỏ tới một danh sách* nếu chương trình cố tình chia sẻ nó. Vì thế, câu “mỗi đối tượng có field riêng” **không có nghĩa** mọi dữ liệu được tham chiếu bên trong đều tự động được sao chép sâu.
+Each `Order` has its own `items` field. However, references are part of state: two objects *can still refer to the same list* if the program intentionally shares it. Thus, “each object has its own field” **does not mean** that all referenced data is automatically deep-copied.
 
-### Ví dụ rò rỉ trạng thái nội bộ
+### Example of Exposing Internal State
 
 ~~~java
 class UnsafeCart {
@@ -279,23 +279,23 @@ class UnsafeCart {
 }
 ~~~
 
-Khi đó code bên ngoài có thể gọi `cart.getItems().add("Mặt hàng bất kỳ")` mà không đi qua quy tắc `addItem()`. Đây là **representation exposure**: đối tượng mất quyền kiểm soát trạng thái của mình.
+External code can then call `cart.getItems().add("Mặt hàng bất kỳ")` without passing through the rules in `addItem()`. This is **representation exposure**: the object loses control of its state.
 
-Trong `Order` mẫu, `List.copyOf(items)` cung cấp một snapshot không thể chỉnh sửa qua các thao tác của `List`. Do các phần tử của danh sách là `String` bất biến, nó phù hợp với ví dụ. Nếu danh sách chứa các đối tượng *có thể thay đổi*, sao chép danh sách vẫn chưa đủ để bảo đảm **deep immutability**; cần cân nhắc bản sao phòng vệ của cả phần tử hoặc thiết kế các phần tử bất biến.
+In the sample `Order`, `List.copyOf(items)` provides a snapshot that cannot be modified through `List` operations. Because the elements are immutable `String` values, this works for the example. If the list contained *mutable* objects, copying the list alone would not guarantee **deep immutability**; consider defensive copies of the elements or making the elements immutable.
 
-### Bất biến của đối tượng (*invariant*)
+### Object Invariants
 
-Invariant là điều luôn phải đúng ở những điểm mà đối tượng được sử dụng hợp lệ. Với `Order`:
+An invariant is a condition that must hold whenever an object is in a valid, usable state. For `Order`:
 
-- `customer` không được `null` hoặc rỗng.
-- `id` được thiết lập khi tạo và không bị gán lại.
-- `items` không chứa tên mặt hàng rỗng hoặc `null`.
-- Một đơn `CONFIRMED` phải có ít nhất một mặt hàng.
-- Không được thêm mặt hàng sau khi rời trạng thái `DRAFT`.
+- `customer` must not be `null` or blank.
+- `id` is initialized at construction and never reassigned.
+- `items` must not contain blank or `null` item names.
+- A `CONFIRMED` order must contain at least one item.
+- No items can be added once the order leaves `DRAFT`.
 
-Constructor thiết lập trạng thái ban đầu hợp lệ; các phương thức thay đổi trạng thái có trách nhiệm bảo vệ invariant. Nếu chỉ có dữ liệu mà không có hành vi kiểm tra, trạng thái sai có thể xuất hiện ở khắp nơi trong hệ thống.
+The constructor establishes valid initial state, and state-changing methods are responsible for preserving the invariants. With data but no validating behavior, invalid state can spread throughout the system.
 
-### `final` không tự động khiến toàn bộ object bất biến
+### `final` Does Not Automatically Make an Entire Object Immutable
 
 ~~~java
 final class Notebook {
@@ -307,36 +307,36 @@ final class Notebook {
 }
 ~~~
 
-`final class` ngăn kế thừa, còn `final` trên field tham chiếu ngăn gán field đó sang đối tượng khác. Cả hai **không tự động** ngăn sửa nội dung của đối tượng được tham chiếu. Một immutable object cần thiết kế để không có cách quan sát thấy trạng thái của nó thay đổi sau khi tạo, đồng thời phải xét các tham chiếu tới dữ liệu mutable.
+A `final class` cannot be subclassed, while `final` on a reference field prevents that field from being reassigned. Neither **automatically** prevents modification of the referenced object's contents. An immutable object must be designed so that no observable state change is possible after construction, accounting for any references to mutable data.
 
-## 6. Hành vi là hợp đồng, không chỉ là một hàm có tên
+## 6. Behavior Is a Contract, Not Just a Named Function
 
-Một phương thức đối tượng thường bao gồm:
+An object method generally has:
 
-1. **Điều kiện trước (precondition):** Khi nào lời gọi hợp lệ? Ví dụ `confirm()` chỉ chạy khi đơn ở `DRAFT` và có hàng.
-2. **Tác động (effect):** Thay đổi trạng thái hoặc trả dữ liệu gì? Ví dụ chuyển `status` thành `CONFIRMED`.
-3. **Điều kiện sau (postcondition):** Điều gì phải đúng khi thành công? Ví dụ đơn đã xác nhận và có ít nhất một mặt hàng.
-4. **Xử lý tình huống sai:** Ném exception hoặc trả một kết quả lỗi có cấu trúc theo quy ước API.
+1. **Preconditions:** When is the call valid? For example, `confirm()` works only when the order is `DRAFT` and contains items.
+2. **Effects:** What state changes or data does it return? For example, it changes `status` to `CONFIRMED`.
+3. **Postconditions:** What must be true after success? For example, the order is confirmed and has at least one item.
+4. **Invalid-case handling:** Throw an exception or return a structured error result according to the API's conventions.
 
-**Hành vi thay đổi trạng thái** (command):
+**State-changing behavior** (command):
 
 ~~~java
 order.addItem("Bút"); // Có thể làm thay đổi items.
 order.confirm();       // Có thể đổi status.
 ~~~
 
-**Hành vi truy vấn trạng thái** (query):
+**State-querying behavior** (query):
 
 ~~~java
 OrderStatus current = order.getStatus();
 List<String> lines = order.getItems();
 ~~~
 
-Trong nhiều thiết kế, tách bạch “lệnh” và “truy vấn” giúp dễ kiểm thử và hiểu code: việc hỏi trạng thái không nên âm thầm thay đổi trạng thái quan sát được nếu không có lý do rõ ràng. Đây là hướng dẫn thiết kế, không phải hạn chế cú pháp Java.
+In many designs, separating “commands” from “queries” makes code easier to understand and test: asking for state should not silently change observable state without a clear reason. This is a design guideline, not a restriction imposed by Java syntax.
 
-### Vì sao `this` quan trọng?
+### Why Does `this` Matter?
 
-Trong một instance method, `this` tham chiếu tới đối tượng nhận lời gọi:
+Inside an instance method, `this` refers to the object receiving the call:
 
 ~~~java
 class Counter {
@@ -364,13 +364,13 @@ System.out.println(a.getValue()); // 2
 System.out.println(b.getValue()); // 1
 ~~~
 
-Phương thức có cùng mã cài đặt trong lớp, nhưng mỗi lời gọi tác động lên **đối tượng nhận lời gọi khác nhau**. Trong phương thức instance, có thể bỏ `this.` khi không gây mơ hồ tên biến; viết rõ `this.value` giúp nhấn mạnh field của object.
+The method has the same implementation in the class, but each call acts on **a different receiving object**. Inside an instance method, `this.` can be omitted when names are unambiguous; explicitly writing `this.value` emphasizes that the field belongs to the object.
 
-Phương thức `static` không có `this` ngầm định và thuộc về lớp. Ví dụ `main` là static vì JVM có thể gọi nó mà không cần tạo `Demo`. Khi học về danh tính và trạng thái của đối tượng, đừng nhầm field static dùng chung với trạng thái instance của từng đối tượng.
+A `static` method has no implicit `this` and belongs to the class. For example, `main` is static because the JVM can invoke it without creating a `Demo` instance. When learning about object identity and state, do not confuse shared static fields with per-instance state.
 
-## 7. Cùng hành vi được gọi theo kiểu thực tế của đối tượng
+## 7. Selecting Behavior Based on the Actual Object Type
 
-OOP còn cho phép một biến có kiểu interface hoặc lớp cha tham chiếu những đối tượng thuộc các lớp cụ thể khác nhau. Lúc gọi instance method đã được override, Java chọn implementation theo **kiểu đối tượng thực tế** (*dynamic dispatch*).
+OOP also lets a variable declared with an interface or superclass type reference objects of different concrete classes. When invoking an overridden instance method, Java selects the implementation based on **the actual object type** (*dynamic dispatch*).
 
 ~~~java
 interface Notification {
@@ -395,15 +395,15 @@ Notification channel = new SmsNotification();
 System.out.println(channel.message()); // Gửi SMS.
 ~~~
 
-Biến `channel` có kiểu khai báo `Notification`, nhưng tham chiếu một instance `SmsNotification`. Hành vi `message()` được triển khai bởi kiểu cụ thể. Cần phân biệt điều này với phương thức `static`: static method không tham gia override theo cơ chế dispatch này.
+Variable `channel` is declared as `Notification` but refers to a `SmsNotification` instance. The concrete type implements `message()`. Contrast this with `static` methods, which are not overridden through this dispatch mechanism.
 
-### Danh tính không được quyết định bởi hành vi giống nhau
+### Identical Behavior Does Not Determine Identity
 
-Hai `SmsNotification` đều trả “Gửi SMS” nhưng vẫn là hai object độc lập nếu được tạo bằng hai lần `new`. Việc chúng phản hồi giống nhau không khiến `a == b` thành `true`. Ngược lại, một đối tượng có thể phản hồi khác nhau ở các thời điểm khác nhau do trạng thái thay đổi mà không mất danh tính.
+Two `SmsNotification` instances can both return the message “Send SMS” (translated from the example output) yet remain independent objects if constructed by two separate `new` expressions. Responding identically does not make `a == b` evaluate to `true`. Conversely, one object may respond differently over time as its state changes without losing its identity.
 
-## 8. Hành vi nhận đối tượng khác: biến tham số không phải biến của caller
+## 8. Methods Receiving Other Objects: Parameters Are Not the Caller's Variables
 
-Một hành vi có thể nhận tham chiếu tới đối tượng khác. Java **luôn truyền tham số theo giá trị**: khi đối số là một tham chiếu, phương thức nhận **bản sao giá trị tham chiếu** ấy. Ví dụ sau là các phương thức đặt trong lớp Java phù hợp:
+A method can receive a reference to another object. Java **always passes arguments by value**: when an argument is a reference, the method receives **a copy of that reference value**. The following methods belong inside a suitable Java class:
 
 ~~~java
 static void addOne(Counter counter) {
@@ -415,47 +415,47 @@ static void replace(Counter counter) {
 }
 ~~~
 
-Khi người gọi truyền cùng một `Counter`, `addOne` có thể làm nó tăng; `replace` không tự đổi biến tham chiếu của người gọi. Cách truyền tham số, ví dụ thực thi và những trường hợp swap được giải thích kỹ ở bài *Tham chiếu, giá trị và cách truyền đối tượng*. Ở đây hãy gắn nguyên tắc đó với trách nhiệm của hành vi: **phương thức có được phép sửa đối tượng nhận vào không?**
+When the caller passes the same `Counter`, `addOne` can increment it; `replace` does not reassign the caller's reference variable. Parameter passing, runnable examples, and swap scenarios are covered in *References, Values, and Passing Objects*. Here, connect that principle to behavioral responsibility: **Is the method allowed to modify the object it receives?**
 
-## 9. Danh tính tồn tại trong vòng đời của instance
+## 9. Identity Exists Throughout an Instance's Lifetime
 
-Đối tượng được tạo, khởi tạo trạng thái hợp lệ, nhận lời gọi và có thể đổi trạng thái nhiều lần mà vẫn là **cùng instance**. Khi nó không còn *reachable* từ các GC roots, bộ thu gom rác có thể thu hồi bộ nhớ vào một thời điểm không xác định. Gán một biến bằng `null` không xóa đối tượng nếu vẫn có đường tham chiếu khác tới nó.
+An object is created, initialized to a valid state, receives calls, and may change state repeatedly while remaining **the same instance**. Once it is no longer *reachable* from GC roots, the garbage collector may reclaim its memory at an unspecified time. Assigning `null` to one variable does not delete the object if another reference path still reaches it.
 
-Danh tính Java chỉ có ý nghĩa trong vòng đời instance ở JVM đang chạy. Để theo dõi một thực thể sau khi tải lại dữ liệu hoặc chạy chương trình lần khác, cần dùng **mã định danh nghiệp vụ** và dữ liệu được lưu rõ ràng. Các trường hợp `null`, biến chưa gán và object không còn truy cập được có phần phân tích riêng ở bài *Giá trị rỗng và đối tượng chưa tồn tại*.
+Java object identity applies to an instance's lifetime in the running JVM. To track an entity after reloading data or restarting the program, use a **business identifier** and explicitly persisted data. The lesson *Null Values and Objects That Do Not Exist* separately examines `null`, unassigned variables, and unreachable objects.
 
-## 10. Giữ trạng thái và hành vi nhất quán
+## 10. Keeping State and Behavior Consistent
 
-Một đối tượng có hành vi tốt bảo đảm các *invariant* đã công bố. Khi kiểm tra thiết kế `Order`, hãy hỏi:
+An object with well-designed behavior enforces its stated *invariants*. When reviewing the `Order` design, ask:
 
-1. **Ai được đổi trạng thái?** Nếu trả thẳng `ArrayList` nội bộ, caller có thể bỏ qua kiểm tra `addItem()`. Trả snapshot hoặc hành vi công khai phù hợp sẽ tránh việc này.
-2. **Điều kiện của phương thức có rõ không?** `confirm()` chỉ thành công khi đơn đang `DRAFT` và đã có mặt hàng; gọi sai phải có kết quả lỗi nhất quán.
-3. **Thông tin quan sát được có khớp quy tắc không?** `getStatus()` không được ngầm thay đổi trạng thái trong ví dụ; `cancel()` phải chuyển đúng từ `CONFIRMED` sang `CANCELLED`.
-4. **Có nhiều luồng cập nhật cùng instance không?** Kiểm tra rồi ghi ở các phương thức riêng lẻ không tự thành thao tác nguyên tử. Với truy cập đồng thời, cần ownership hoặc đồng bộ hóa phù hợp.
+1. **Who may change state?** Returning the internal `ArrayList` directly lets callers bypass `addItem()` validation. Return a snapshot or expose an appropriate public operation instead.
+2. **Are method conditions clear?** `confirm()` succeeds only when the order is `DRAFT` and has items; invalid calls must produce consistent errors.
+3. **Does observable information match the rules?** In this example, `getStatus()` must not silently alter state; `cancel()` must transition from `CONFIRMED` to `CANCELLED`.
+4. **Can multiple threads update the same instance?** Checking and then writing inside separate methods does not automatically create an atomic operation. Concurrent access requires suitable ownership or synchronization.
 
-`private` che giấu field, `final` ngăn gán lại field tham chiếu, còn tính bất biến và an toàn đồng thời đòi hỏi thiết kế rộng hơn. Đây là các lựa chọn triển khai để phục vụ **hợp đồng hành vi**, không thay đổi danh tính của `Order`.
+`private` hides fields, and `final` prevents reassignment of reference fields; immutability and concurrency safety require broader design. These implementation decisions support **behavioral contracts** without changing `Order`'s identity.
 
-## 11. Cách nhận diện trong bài toán thực tế
+## 11. Applying the Concepts to Real Problems
 
-Xét hệ thống quản lý máy bán hàng tự động:
+Consider a vending-machine management system:
 
-| Thực thể | Danh tính | Trạng thái | Hành vi |
+| Entity | Identity | State | Behavior |
 |---|---|---|---|
-| `VendingMachine` | Mã máy duy nhất trong hệ thống | Hàng còn lại, tiền tạm giữ, chế độ bảo trì | `insertMoney()`, `selectProduct()`, `dispense()` |
-| `BankAccount` | Số tài khoản nghiệp vụ | Số dư, trạng thái phong tỏa | `deposit()`, `withdraw()`, `freeze()` |
-| `GameCharacter` | ID nhân vật | Máu, vị trí, trang bị | `move()`, `attack()`, `heal()` |
-| `Order` | Mã đơn hàng | Mặt hàng, tình trạng xử lý | `addItem()`, `confirm()`, `cancel()` |
+| `VendingMachine` | Unique machine identifier within the system | Remaining stock, held money, maintenance mode | `insertMoney()`, `selectProduct()`, `dispense()` |
+| `BankAccount` | Business account number | Balance, frozen status | `deposit()`, `withdraw()`, `freeze()` |
+| `GameCharacter` | Character ID | Health, location, equipment | `move()`, `attack()`, `heal()` |
+| `Order` | Order ID | Items, processing status | `addItem()`, `confirm()`, `cancel()` |
 
-Khi thiết kế class, hãy đặt ba câu hỏi theo thứ tự:
+When designing a class, ask three questions in order:
 
-1. **Đối tượng nào cần được theo dõi như một thực thể riêng?** Quyết định ranh giới danh tính và có cần ID nghiệp vụ không.
-2. **Những dữ liệu nào mô tả trạng thái của chính đối tượng đó?** Xác định field, quan hệ tới đối tượng khác, và invariant cần duy trì.
-3. **Những thao tác hợp lệ nào được phép với trạng thái ấy?** Xây dựng phương thức có ý nghĩa nghiệp vụ, kiểm tra precondition và bảo đảm postcondition.
+1. **Which object must be tracked as a distinct entity?** Define the identity boundary and whether a business ID is needed.
+2. **Which data describes that object's state?** Identify its fields, relationships to other objects, and invariants to preserve.
+3. **Which valid operations may affect that state?** Define meaningful domain methods, verify preconditions, and guarantee postconditions.
 
-Nếu một thao tác được đặt ở một lớp khác nhưng liên tục cần lấy toàn bộ dữ liệu nội bộ để ra quyết định, nên xem lại liệu hành vi ấy có thuộc trách nhiệm của đối tượng đang nắm giữ trạng thái hay không. Tuy nhiên, tương tác liên đối tượng, domain service và lưu trữ vẫn có chỗ đứng khi một quy tắc không thuộc riêng một thực thể.
+If an operation lives in another class but repeatedly needs all of an object's internal data to make decisions, reconsider whether the behavior belongs to the state-owning object. However, object collaboration, domain services, and persistence remain appropriate where rules do not belong exclusively to one entity.
 
-## 12. Tự kiểm tra kiến thức
+## 12. Check Your Understanding
 
-**Bài 1: Hai biến, mấy đối tượng?**
+**Exercise 1: Two Variables—How Many Objects?**
 
 ~~~java
 Order x = new Order("Minh");
@@ -463,11 +463,11 @@ Order y = x;
 Order z = new Order("Minh");
 ~~~
 
-Hỏi: có bao nhiêu `Order` instance? `x == y` và `x == z` lần lượt bằng gì?
+Question: How many `Order` instances exist? What are the respective results of `x == y` and `x == z`?
 
-**Đáp án:** Có hai instance. `x == y` là `true` vì cùng tham chiếu; `x == z` là `false` vì hai lần tạo riêng.
+**Answer:** There are two instances. `x == y` is `true` because they reference the same object; `x == z` is `false` because the objects were created separately.
 
-**Bài 2: Thay đổi trạng thái có làm đổi danh tính?**
+**Exercise 2: Does Changing State Change Identity?**
 
 ~~~java
 Order order = new Order("Hà");
@@ -477,17 +477,17 @@ order.addItem("Balo");
 order.confirm();
 ~~~
 
-Hỏi: `savedRef == order` còn là `true` không? `savedRef.getStatus()` trả gì?
+Question: Is `savedRef == order` still `true`? What does `savedRef.getStatus()` return?
 
-**Đáp án:** Vẫn `true`; trạng thái quan sát qua `savedRef` là `CONFIRMED`. Việc cập nhật trạng thái không sinh object mới trong ví dụ này.
+**Answer:** It remains `true`; `savedRef` sees status `CONFIRMED`. Updating state does not create a new object in this example.
 
-**Bài 3: Hành vi và invariant**
+**Exercise 3: Behavior and Invariants**
 
-Hỏi: `new Order("Hà").confirm()` có hợp lệ không?
+Question: Is `new Order("Hà").confirm()` valid?
 
-**Đáp án:** Không. Đơn chưa có mặt hàng nên `confirm()` ném `IllegalStateException`. Hành vi bảo vệ invariant “đơn đã xác nhận phải có ít nhất một mặt hàng”.
+**Answer:** No. The order has no items, so `confirm()` throws `IllegalStateException`. This behavior enforces the invariant that a confirmed order must contain at least one item.
 
-**Bài 4: So sánh giá trị**
+**Exercise 4: Value Comparison**
 
 ~~~java
 record Size(int width, int height) {}
@@ -495,52 +495,52 @@ Size a = new Size(10, 20);
 Size b = new Size(10, 20);
 ~~~
 
-Hỏi: `a == b` và `a.equals(b)` trả gì?
+Question: What do `a == b` and `a.equals(b)` return?
 
-**Đáp án:** `false` và `true`. Chúng là hai instance nhưng biểu diễn cùng giá trị.
+**Answer:** `false` and `true`, respectively. They are two instances representing the same value.
 
-**Bài 5: Mã nghiệp vụ có chứng minh hai biến trỏ cùng object?**
+**Exercise 5: Does a Business ID Prove Two Variables Refer to the Same Object?**
 
-Hỏi: hai đối tượng `Order` khác nhau được nạp từ database với cùng một `orderId` thì phép `==` có nhất thiết trả `true` không?
+Question: If two different `Order` objects are loaded from a database with the same `orderId`, must `==` return `true`?
 
-**Đáp án:** Không. Cùng mã nghiệp vụ có thể là hai biểu diễn trong bộ nhớ khác nhau. Cần xác định quy tắc so sánh theo ID ở tầng nghiệp vụ, tránh nhầm với reference identity.
+**Answer:** No. The same business identifier can have multiple in-memory representations. Define ID-based comparison rules at the business level instead of confusing them with reference identity.
 
-## Điểm cốt lõi cần ghi nhớ
+## Key Points to Remember
 
-Một **đối tượng Java** giữ danh tính xuyên suốt thời gian tồn tại, có trạng thái được biểu diễn bằng các field và các đối tượng liên quan, đồng thời cung cấp hành vi thông qua phương thức. Nhiều biến có thể trỏ cùng một đối tượng; nhiều đối tượng có thể mang trạng thái giống nhau. Hành vi tốt giúp chuyển trạng thái một cách có kiểm soát và duy trì invariant. Khi thiết kế OOP, phân biệt rõ **cùng object**, **cùng giá trị**, và **cùng thực thể nghiệp vụ** sẽ tránh rất nhiều lỗi trong thao tác dữ liệu, kiểm thử và tích hợp hệ thống.
+A **Java object** retains its identity throughout its lifetime, has state represented by its fields and related objects, and exposes behavior through methods. Many variables can refer to one object; many objects can have identical state. Well-designed behaviors control state transitions and maintain invariants. In OOP design, distinguishing **the same object**, **the same value**, and **the same business entity** prevents many problems in data handling, testing, and system integration.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="object-002">Tham chiếu, giá trị và cách truyền đối tượng</a>
+## <a id="object-002">References, Values, and Passing Objects</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tham chiếu, giá trị và cách truyền đối tượng trong Java
+# References, Values, and Passing Objects in Java
 
-Trong Java, khi làm việc với **đối tượng (object)**, chúng ta thường gặp các câu hỏi:
+When working with **objects** in Java, we often encounter these questions:
 
-- Vì sao `b = a` nhưng sửa `b` lại khiến dữ liệu đọc qua `a` thay đổi?
-- Vì sao truyền một đối tượng vào phương thức rồi gán `obj = new ...` lại không thay thế được đối tượng ở nơi gọi?
-- Java truyền tham số **theo giá trị (pass-by-value)** hay **theo tham chiếu (pass-by-reference)**?
+- Why does assigning `b = a` mean changes made through `b` also appear when reading through `a`?
+- Why does passing an object to a method and then assigning `obj = new ...` fail to replace the caller's object?
+- Does Java pass arguments **by value** or **by reference**?
 
-Câu trả lời nằm ở sự phân biệt giữa **giá trị của biến**, **tham chiếu đến đối tượng** và **bản thân đối tượng**. Hiểu đúng ba khái niệm này giúp tránh lỗi khi thiết kế API, cập nhật trạng thái, xử lý collection và truyền dữ liệu giữa các lớp.
+The answers depend on distinguishing **the value of a variable**, **a reference to an object**, and **the object itself**. Understanding these distinctions helps prevent errors in API design, state updates, collections, and data passing between classes.
 
-## 1. Giá trị của biến primitive và biến kiểu tham chiếu
+## 1. Values of Primitive and Reference Variables
 
-Java có hai nhóm kiểu dữ liệu chính:
+Java has two main categories of data types:
 
-| Nhóm | Ví dụ | Giá trị lưu trong biến | Khi gán sang biến cùng kiểu |
+| Category | Examples | Value stored in the variable | When assigned to another variable of the same type |
 |---|---|---|---|
-| Kiểu nguyên thủy (*primitive*) | `int`, `long`, `boolean`, `double`, `char` | Giá trị nguyên thủy, ví dụ `42` | Sao chép giá trị đó |
-| Kiểu tham chiếu (*reference type*) | `Student`, `String`, `int[]`, `List<String>` | Một giá trị tham chiếu chỉ đến đối tượng, hoặc `null` | Sao chép **giá trị tham chiếu**, không sao chép đối tượng |
+| Primitive type | `int`, `long`, `boolean`, `double`, `char` | A primitive value, such as `42` | Copies that value |
+| Reference type | `Student`, `String`, `int[]`, `List<String>` | A reference value pointing to an object, or `null` | Copies **the reference value**, not the object |
 
-Ví dụ với kiểu nguyên thủy:
+Example using a primitive type:
 
 ```java
 int a = 10;
@@ -551,9 +551,9 @@ System.out.println(a); // 10
 System.out.println(b); // 20
 ```
 
-Mỗi biến có giá trị riêng, nên sửa `b` không làm `a` thay đổi.
+Each variable has its own value, so changing `b` does not change `a`.
 
-Với đối tượng:
+With an object:
 
 ```java
 class Student {
@@ -573,9 +573,9 @@ System.out.println(first.name);  // Bình
 System.out.println(second.name); // Bình
 ```
 
-`first` và `second` là **hai biến**, nhưng đang cùng tham chiếu đến **một đối tượng `Student`**. Việc thay đổi trường `name` của đối tượng ấy có thể quan sát từ cả hai biến.
+`first` and `second` are **two variables** but refer to **one `Student` object**. Changing that object's `name` field is observable through both variables.
 
-### Hình dung quan hệ tham chiếu
+### Visualizing Reference Relationships
 
 ```mermaid
 flowchart LR
@@ -583,13 +583,13 @@ flowchart LR
     B["second"] --> O
 ```
 
-Sơ đồ diễn tả quan hệ logic giữa biến và đối tượng; nó **không** phải cam kết chính xác về địa chỉ vật lý, bố trí stack/heap hoặc cách JVM tối ưu bộ nhớ.
+The diagram describes logical relationships between variables and objects; it **does not** specify exact physical addresses, stack/heap layout, or how the JVM optimizes memory.
 
-> **Điểm cần nhớ:** `Student second = first;` tạo một biến tham chiếu mới cùng trỏ đến đối tượng hiện có. Chỉ lệnh `new Student(...)` trong ví dụ mới tạo đối tượng `Student` mới.
+> **Remember:** `Student second = first;` creates another reference variable pointing to an existing object. Only `new Student(...)` in this example creates a new `Student` object.
 
-## 2. Phân biệt thay đổi đối tượng và gán lại tham chiếu
+## 2. Distinguishing Object Mutation from Reference Reassignment
 
-Đây là hai thao tác rất khác nhau.
+These are very different operations.
 
 ```java
 class Wallet {
@@ -622,7 +622,7 @@ System.out.println(a.getBalance()); // 150
 System.out.println(b.getBalance()); // 5
 ```
 
-**Trước khi `b = new Wallet(5)`:**
+**Before `b = new Wallet(5)`:**
 
 ```mermaid
 flowchart LR
@@ -630,7 +630,7 @@ flowchart LR
     B["b"] --> W1
 ```
 
-**Sau khi `b = new Wallet(5)`:**
+**After `b = new Wallet(5)`:**
 
 ```mermaid
 flowchart LR
@@ -638,19 +638,19 @@ flowchart LR
     B["b"] --> W2["Wallet #2<br/>balance = 5"]
 ```
 
-`b.deposit(50)` gọi phương thức trên đối tượng `Wallet #1`, vì vậy `a` cũng quan sát được số dư mới. Còn phép gán `b = new Wallet(5)` chỉ thay đổi **đối tượng mà biến `b` tham chiếu**; nó không thay đổi `a`.
+`b.deposit(50)` invokes a method on the `Wallet #1` object, so `a` also observes the new balance. Assigning `b = new Wallet(5)` only changes **which object variable `b` references**; it does not affect `a`.
 
-Tình huống nhiều biến cùng tham chiếu đến một đối tượng được gọi là **aliasing** (các bí danh/tham chiếu dùng chung). Aliasing không nhất thiết sai, nhưng cần kiểm soát nếu đối tượng có trạng thái thay đổi được.
+When several variables reference the same object, this is called **aliasing**. Aliasing is not inherently wrong, but it needs careful management when the object has mutable state.
 
-## 3. Java luôn truyền tham số theo giá trị (*pass-by-value*)
+## 3. Java Always Passes Arguments by Value
 
-**Trong Java, mọi đối số được truyền vào phương thức theo giá trị.** Điều đó có nghĩa: tham số của phương thức nhận một **bản sao giá trị** từ biểu thức đối số ở nơi gọi.
+**In Java, every method argument is passed by value.** A method parameter receives **a copy of the value** produced by the argument expression at the call site.
 
-- Với `int`, bản sao là số nguyên.
-- Với `Student`, bản sao là **giá trị tham chiếu đến đối tượng `Student`**.
-- Java **không** hỗ trợ kiểu truyền tham số bằng cách tạo một biến tham số là bí danh trực tiếp của biến tham chiếu ở phía caller.
+- For `int`, the copy is the integer value.
+- For `Student`, the copy is **the reference value to the `Student` object**.
+- Java **does not** pass parameters by making a parameter variable a direct alias of the caller's reference variable.
 
-### 3.1. Truyền kiểu primitive: sửa tham số không tác động tới caller
+### 3.1. Passing a Primitive: Changing the Parameter Does Not Affect the Caller
 
 ```java
 public class PrimitiveParameterDemo {
@@ -668,18 +668,18 @@ public class PrimitiveParameterDemo {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Trong method: 15
 Sau lời gọi: 5
 ```
 
-Tham số `number` bắt đầu bằng giá trị `5` do `value` cung cấp, sau đó được thay đổi thành `15`. Biến `value` bên ngoài vẫn là `5`.
+Parameter `number` starts with the `5` value supplied by `value` and is then changed to `15`. The caller's `value` variable remains `5`.
 
-### 3.2. Truyền đối tượng: có thể sửa trạng thái đối tượng dùng chung
+### 3.2. Passing an Object: Shared Object State Can Be Modified
 
-Ví dụ hoàn chỉnh có thể chạy độc lập:
+A complete standalone runnable example:
 
 ```java
 public class ReferenceParameterDemo {
@@ -723,23 +723,23 @@ public class ReferenceParameterDemo {
 }
 ```
 
-Ở `depositTo(account)`, tham số `account` bên trong phương thức và biến `account` ở `main` nhận các giá trị tham chiếu cùng chỉ đến một `Account`. Gọi `deposit(20)` làm thay đổi đối tượng dùng chung, nên `main` nhìn thấy số dư `120`.
+With `depositTo(account)`, the method's `account` parameter and the `account` variable in `main` have reference values pointing to the same `Account`. Calling `deposit(20)` changes the shared object, so `main` sees balance `120`.
 
-Ở `replaceLocally(account)`, lệnh `account = new Account(999)` chỉ gán lại **biến tham số cục bộ**. Biến `account` trong `main` vẫn tham chiếu đến đối tượng có số dư `120`.
+In `replaceLocally(account)`, assigning `account = new Account(999)` only reassigns **the local parameter variable**. The `account` variable in `main` still references the object with balance `120`.
 
-| Thao tác trong phương thức | Thay đổi biến tham chiếu ở caller? | Có thể làm caller nhìn thấy thay đổi trạng thái? |
+| Operation inside the method | Changes the caller's reference variable? | Can the caller observe a state change? |
 |---|---|---|
-| `account = new Account(...)` | Không | Không, nếu chỉ thực hiện phép gán này |
-| `account = null` | Không | Không, nếu chỉ thực hiện phép gán này |
-| `account.deposit(20)` | Không | Có, vì sửa đối tượng mà cả hai cùng tham chiếu |
-| `account.balance = ...` (nếu field truy cập được) | Không | Có, vì sửa trạng thái đối tượng |
-| `account = someOtherReference` | Không | Không, nếu chỉ gán lại tham số |
+| `account = new Account(...)` | No | No, if this assignment is the only operation |
+| `account = null` | No | No, if this assignment is the only operation |
+| `account.deposit(20)` | No | Yes, because it modifies an object both references point to |
+| `account.balance = ...` (if the field is accessible) | No | Yes, because it modifies object state |
+| `account = someOtherReference` | No | No, if it only reassigns the parameter |
 
-**Không nên kết luận “Java truyền đối tượng theo tham chiếu”** chỉ vì có thể sửa đối tượng qua tham số. Điều được sao chép chính là giá trị tham chiếu; phương thức không thể gán lại biến tham chiếu của caller.
+**Do not conclude that “Java passes objects by reference”** simply because a method can modify an object through its parameter. The reference value is what gets copied; a method cannot reassign the caller's reference variable.
 
-## 4. Thử hoán đổi hai đối tượng qua phương thức
+## 4. Attempting to Swap Two Objects Through a Method
 
-Một cách kiểm chứng quy tắc truyền theo giá trị là thử viết hàm `swap`:
+One way to verify pass-by-value is to try writing a `swap` function:
 
 ```java
 static void swap(Account left, Account right) {
@@ -758,9 +758,9 @@ System.out.println(a.getBalance()); // 10
 System.out.println(b.getBalance()); // 20
 ```
 
-Phương thức `swap` chỉ hoán đổi **hai biến tham số cục bộ** `left` và `right`. Hai biến `a`, `b` ở caller không bị gán lại, nên thứ tự tham chiếu của chúng giữ nguyên.
+The `swap` method swaps only **the two local parameter variables**, `left` and `right`. The caller's `a` and `b` variables are not reassigned, so their references remain in their original order.
 
-Nếu mục đích là cập nhật đối tượng mà caller sẽ sử dụng, API nên **trả đối tượng mới**:
+If the goal is to update which object the caller uses, the API should **return the new object**:
 
 ```java
 static Account accountWithBonus(Account original, int bonus) {
@@ -773,11 +773,11 @@ a = accountWithBonus(a, 25);
 System.out.println(a.getBalance()); // 125
 ```
 
-Ở đây việc thay đổi biến `a` được thực hiện **tại nơi gọi**, nơi có quyền quyết định nhận kết quả trả về.
+Here, `a` is reassigned **at the call site**, where the caller decides whether to accept the returned result.
 
-## 5. Biến tham chiếu không nhất thiết đang trỏ tới object
+## 5. A Reference Variable Does Not Necessarily Point to an Object
 
-Giá trị `null` nghĩa là biến tham chiếu hiện không trỏ đến instance nào. Nó không phải một đối tượng rỗng; gọi phương thức instance qua `null` có thể gây `NullPointerException`.
+The `null` value means a reference variable currently points to no instance. It is not an empty object; invoking an instance method through `null` can cause a `NullPointerException`.
 
 ~~~java
 Student student = null;
@@ -786,11 +786,11 @@ if (student != null) {
 }
 ~~~
 
-Phải phân biệt `Student student;` là biến **cục bộ chưa được gán** (không được đọc trước khi gán) với `Student student = null;` là biến đã được gán giá trị `null`. Field kiểu tham chiếu nếu không khởi tạo tường minh có giá trị mặc định `null`. Bài *Giá trị rỗng và đối tượng chưa tồn tại* phân tích các trường hợp vắng mặt và cách xử lý API sâu hơn.
+Distinguish `Student student;`, an **unassigned local variable** (which cannot be read before assignment), from `Student student = null;`, a variable explicitly assigned `null`. Reference-type fields default to `null` if not explicitly initialized. *Null Values and Objects That Do Not Exist* examines absence and API-handling strategies in greater detail.
 
-## 6. Giá trị tham chiếu được sao chép cho cả chuỗi, mảng và collection
+## 6. Reference Values Are Also Copied for Strings, Arrays, and Collections
 
-`String`, mảng và `List` đều là kiểu tham chiếu; truyền chúng vào phương thức cũng là **truyền bản sao giá trị tham chiếu**, giống như với `Student`. Khả năng thấy thay đổi phụ thuộc **đối tượng đó có mutable hay không**:
+`String`, arrays, and `List` are all reference types; passing them to methods also **copies their reference values**, just as with `Student`. Whether changes are visible depends on **whether the referenced object is mutable**:
 
 ~~~java
 String text = "Java";
@@ -804,11 +804,11 @@ sharedScores[0] = 10;
 System.out.println(scores[0]);            // 10
 ~~~
 
-`String` bất biến nên phép nối không sửa chuỗi ban đầu; mảng mutable nên sửa phần tử qua alias được quan sát từ cả hai biến. Với `List<Student>`, các thao tác `add/get` truyền và trả tham chiếu đến `Student`, không tự động tạo bản sao sâu.
+`String` is immutable, so concatenation does not alter the original string; arrays are mutable, so changes through an alias are visible from both variables. With `List<Student>`, `add/get` operations pass and return references to `Student` objects rather than automatically producing deep copies.
 
-Điều này giải thích vì sao khi truyền dữ liệu cho thư viện, ta phải đọc hợp đồng xem phương thức chỉ đọc dữ liệu, sửa tại chỗ hay trả đối tượng mới. Bài *Mutable/Immutable* và *Sao chép nông/sâu* sẽ trình bày chi tiết hai thiết kế.
+This is why, when passing data to a library, you must check whether its contract says the method only reads, mutates in place, or returns a new object. The lessons on *Mutable/Immutable Objects* and *Shallow/Deep Copying* examine these designs in detail.
 
-## 7. `final` chỉ kiểm soát phép gán lại tham chiếu
+## 7. `final` Only Restricts Reference Reassignment
 
 ~~~java
 final StringBuilder message = new StringBuilder("Xin chào");
@@ -816,11 +816,11 @@ message.append(" Java"); // Hợp lệ: sửa object.
  // message = new StringBuilder("Khác"); // Không hợp lệ: gán lại final.
 ~~~
 
-`final` không biến object thành immutable. Đặt `final` cho tham số chỉ ngăn code trong phương thức gán lại **chính biến tham số**; bên trong vẫn có thể gọi hành vi làm đổi trạng thái đối tượng mutable mà nó tham chiếu.
+`final` does not make an object immutable. Declaring a parameter `final` only prevents code inside the method from reassigning **that parameter variable**; the method can still call operations that mutate the referenced object.
 
-## 8. Thiết kế API khi không muốn sửa đối tượng của caller
+## 8. Designing APIs That Do Not Mutate the Caller's Objects
 
-Một phương thức nhận object mutable có thể sửa object ấy dù caller không đổi biến tham chiếu. Vì vậy hợp đồng API cần nói rõ **có mutation hay không**. Nếu phải nhận và giữ mảng từ caller, có thể tạo bản sao phòng vệ:
+A method receiving a mutable object can modify it without reassigning the caller's reference variable. An API contract should therefore state clearly **whether mutation occurs**. When accepting and retaining an array from a caller, consider making a defensive copy:
 
 ~~~java
 final class ScoreReport {
@@ -836,11 +836,11 @@ final class ScoreReport {
 }
 ~~~
 
-`int[].clone()` tạo mảng mới, sao chép các phần tử nguyên thủy; caller sửa mảng cũ hay kết quả getter cũng không sửa được mảng nội bộ. Nếu phần tử là đối tượng mutable, việc clone mảng chỉ sao chép **tham chiếu phần tử**, cần chính sách sao chép phù hợp. Đây là hệ quả của quy tắc pass-by-value và ownership, không phải ngoại lệ đối với nó.
+`int[].clone()` creates a new array and copies its primitive elements; modifications to the caller's original array or the getter's returned array cannot affect the internal array. If elements are mutable objects, cloning the array copies only **element references**, so an appropriate copying policy is needed. This follows from pass-by-value and ownership rules; it is not an exception to them.
 
-## 9. Đừng dùng phép so sánh tham chiếu để hỏi về nội dung
+## 9. Do Not Use Reference Comparison to Check Content
 
-Với hai giá trị tham chiếu, `==` kiểm tra cùng instance (hoặc cùng `null`), còn `equals()` kiểm tra bình đẳng theo hợp đồng lớp:
+For two reference values, `==` checks whether they refer to the same instance (or both are `null`), while `equals()` checks equality according to the class contract:
 
 ~~~java
 String a = new String("OOP");
@@ -849,24 +849,24 @@ System.out.println(a == b);      // false
 System.out.println(a.equals(b)); // true
 ~~~
 
-Hợp đồng `equals/hashCode` được triển khai và kiểm chứng trong bài *Phân biệt cùng đối tượng với bằng nhau về giá trị*. Khi viết phương thức truyền đối tượng, hãy chỉ dùng loại so sánh đúng với yêu cầu nghiệp vụ.
+The `equals/hashCode` contract is implemented and verified in *Object Identity vs. Value Equality*. When writing methods that pass objects, use the comparison appropriate to the business requirement.
 
-## 10. Các lỗi tư duy hay gặp
+## 10. Common Misconceptions
 
-| Nhận định | Đúng hay sai? | Giải thích |
+| Claim | True or false? | Explanation |
 |---|---|---|
-| `obj2 = obj1` tạo bản sao đối tượng | Sai | Chỉ sao chép giá trị tham chiếu |
-| Java truyền tham số đối tượng bằng pass-by-reference | Sai | Java truyền **bản sao giá trị tham chiếu** |
-| Phương thức sửa field trên đối tượng truyền vào thì caller có thể thấy thay đổi | Đúng | Vì cùng đối tượng được tham chiếu |
-| Phương thức gán lại tham số bằng `new` sẽ thay đổi biến tham chiếu của caller | Sai | Tham số là biến cục bộ độc lập |
-| `final MyType x` đảm bảo đối tượng bất biến | Sai | Chỉ ngăn gán lại biến `x` |
-| `new ArrayList<>(old)` sao chép sâu phần tử | Sai | Đây là bản sao nông |
-| Mọi `equals()` đều so sánh nội dung | Sai | Phụ thuộc hợp đồng/triển khai của lớp |
-| Một biến tham chiếu bằng `null` đang trỏ tới một đối tượng rỗng | Sai | `null` nghĩa là không có tham chiếu tới đối tượng nào |
+| `obj2 = obj1` creates a copy of the object | False | It copies only the reference value |
+| Java passes object parameters by reference | False | Java passes **a copy of the reference value** |
+| Modifying a passed object's field can be visible to the caller | True | Both references point to the same object |
+| Reassigning a parameter with `new` changes the caller's reference variable | False | The parameter is an independent local variable |
+| `final MyType x` guarantees that the object is immutable | False | It only prevents reassignment of `x` |
+| `new ArrayList<>(old)` deep-copies elements | False | This is a shallow copy |
+| Every `equals()` compares content | False | It depends on the class's contract and implementation |
+| A reference variable holding `null` points to an empty object | False | `null` means no object is referenced |
 
-## 11. Bài tập tự kiểm tra
+## 11. Self-Assessment Exercises
 
-### Bài 1 — Dự đoán kết quả
+### Exercise 1 — Predict the Output
 
 ```java
 class Box {
@@ -886,9 +886,9 @@ modify(original);
 System.out.println(original.value);
 ```
 
-**Đáp án: `15`.** Lệnh `box.value += 5` sửa `Box(10)` ban đầu thành `15`. Sau đó `box = new Box(100)` chỉ làm tham số `box` tham chiếu đối tượng mới; lệnh `box.value++` chỉ sửa đối tượng mới thành `101`. Biến `original` vẫn trỏ đến đối tượng ban đầu.
+**Answer: `15`.** `box.value += 5` changes the original `Box(10)` to `15`. Then `box = new Box(100)` makes only the `box` parameter reference a new object; `box.value++` changes that new object's value to `101`. The `original` variable still refers to the original object.
 
-### Bài 2 — Hai mảng có độc lập không?
+### Exercise 2 — Are the Two Arrays Independent?
 
 ```java
 int[][] matrix = {{1, 2}, {3, 4}};
@@ -898,48 +898,48 @@ copy[0][0] = 99;
 System.out.println(matrix[0][0]);
 ```
 
-**Đáp án: `99`.** `clone()` chỉ sao chép mảng ngoài; các phần tử `int[]` bên trong vẫn được dùng chung. Muốn sao chép từng hàng, cần tạo các mảng con mới, ví dụ lặp `copy[i] = matrix[i].clone()`.
+**Answer: `99`.** `clone()` copies only the outer array; the inner `int[]` elements are still shared. To copy each row, create new inner arrays, for example by repeating `copy[i] = matrix[i].clone()`.
 
-### Bài 3 — Thiết kế API an toàn
+### Exercise 3 — Designing a Safe API
 
-Một lớp `Classroom` nhận `List<Student>` từ constructor và cung cấp `getStudents()`. Hãy xác định những đường nào khiến code bên ngoài có thể thay đổi trạng thái nội bộ. Gợi ý: kiểm tra tham chiếu `List` đầu vào, tham chiếu danh sách trả về và tham chiếu các phần tử `Student`. Đề xuất cách thiết kế: dùng bản sao danh sách, API truy vấn chỉ đọc, và cân nhắc kiểu phần tử bất biến hoặc sao chép dữ liệu cần thiết.
+A `Classroom` class accepts `List<Student>` in its constructor and provides `getStudents()`. Identify every path through which external code could modify its internal state. Hint: examine the incoming `List` reference, the returned list reference, and references to the `Student` elements. Propose a design using list copies, read-only query APIs, and either immutable element types or copies of the required data.
 
 ---
 
-**Ghi nhớ:** Giá trị của biến kiểu đối tượng là một **tham chiếu**. Phép gán và lời gọi phương thức sao chép giá trị tham chiếu đó; chúng không tự động sao chép đối tượng. **Java luôn pass-by-value.** Một phương thức có thể sửa đối tượng dùng chung thông qua tham chiếu nhận được, nhưng việc gán lại tham số không thể gán lại biến của caller. Nắm vững điều này giúp xử lý đúng aliasing, immutable objects, mảng, collection và thiết kế API có kiểm soát.
+**Remember:** The value of an object-typed variable is a **reference**. Assignments and method calls copy that reference value; they do not automatically copy the object. **Java is always pass-by-value.** A method can modify a shared object through the reference it receives, but reassigning its parameter cannot reassign the caller's variable. Understanding this is essential for aliasing, immutable objects, arrays, collections, and controlled API design.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="object-003">Nhiều tham chiếu cùng trỏ đến một đối tượng</a>
+## <a id="object-003">Multiple References to the Same Object</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Nhiều tham chiếu cùng trỏ đến một đối tượng trong Java
+# Multiple References to the Same Object in Java
 
-Trong lập trình hướng đối tượng (OOP), một **đối tượng (object)** có thể được truy cập thông qua **nhiều biến tham chiếu (reference variables)**. Điều này thường xảy ra khi gán một biến đối tượng cho biến khác, truyền đối tượng vào phương thức, lấy đối tượng từ collection hoặc trả về đối tượng qua getter.
+In object-oriented programming (OOP), **one object** can be accessed through **multiple reference variables**. This commonly occurs when assigning one object variable to another, passing an object to a method, retrieving one from a collection, or returning one through a getter.
 
-Điểm quan trọng: **sao chép tham chiếu không tạo ra đối tượng mới**. Khi hai biến cùng tham chiếu đến một đối tượng có thể thay đổi (mutable), việc cập nhật trạng thái đối tượng qua một biến sẽ được nhìn thấy qua biến còn lại.
+The key point: **copying a reference does not create a new object**. When two variables refer to the same mutable object, a state change through either reference is visible through the other.
 
-## 1. Tham chiếu khác với đối tượng như thế nào?
+## 1. How Does a Reference Differ from an Object?
 
-Với khai báo:
+Consider this declaration:
 
 ~~~java
 Student student = new Student("An");
 ~~~
 
-- `new Student("An")` tạo một đối tượng `Student` mới.
-- `student` là biến tham chiếu dùng để truy cập đối tượng đó.
-- Biến tham chiếu không chứa bản sao của toàn bộ `Student`; nó mang giá trị tham chiếu đến đối tượng.
-- Nếu khai báo thêm `Student another = student;`, Java sao chép **giá trị tham chiếu**, không tạo `Student` thứ hai.
+- `new Student("An")` creates a new `Student` object.
+- `student` is a reference variable used to access that object.
+- The reference variable does not contain a complete copy of the `Student`; it holds a reference value to the object.
+- Adding `Student another = student;` copies **the reference value** rather than creating a second `Student`.
 
-Ví dụ:
+For example:
 
 ~~~java
 Student a = new Student("An");
@@ -952,9 +952,9 @@ flowchart LR
     B["Tham chiếu b"] --> O
 ~~~
 
-Sơ đồ là **mô hình khái niệm** về quan hệ tham chiếu, không mô tả vị trí bộ nhớ vật lý hoặc địa chỉ thật. Cả `a` và `b` đều truy cập **cùng một instance**.
+The diagram is **a conceptual model** of reference relationships, not a depiction of physical memory locations or actual addresses. Both `a` and `b` access **the same instance**.
 
-So sánh với kiểu nguyên thủy:
+Compare this with a primitive type:
 
 ~~~java
 int x = 10;
@@ -965,9 +965,9 @@ System.out.println(x); // 10
 System.out.println(y); // 20
 ~~~
 
-Trong ví dụ `int`, thay đổi `y` không ảnh hưởng `x` vì chúng là hai biến chứa giá trị riêng. Với biến tham chiếu, hai biến có thể cùng dẫn đến một đối tượng nên kết quả phụ thuộc vào việc ta **thay đổi đối tượng** hay **gán lại biến tham chiếu**.
+In the `int` example, changing `y` does not affect `x` because each variable holds its own value. Reference variables, however, can point to the same object, so the outcome depends on whether you **mutate the object** or **reassign a reference variable**.
 
-## 2. Ví dụ chạy được: hai tham chiếu cùng quan sát một thay đổi
+## 2. Runnable Example: Two References Observe the Same Change
 
 `Main.java`:
 
@@ -1010,20 +1010,20 @@ public class Main {
 }
 ~~~
 
-Giải thích từng lệnh:
+Step-by-step explanation:
 
-1. `new Student("An")` tạo **một** đối tượng, `first` trỏ đến nó.
-2. `second = first` chép giá trị tham chiếu; vẫn chỉ có **một** đối tượng.
-3. `second.setName("Bình")` thay đổi thuộc tính `name` trên đối tượng ấy.
-4. Vì `first` trỏ đến cùng đối tượng, `first.getName()` cũng trả về `Bình`.
+1. `new Student("An")` creates **one** object, referenced by `first`.
+2. `second = first` copies its reference value; there is still only **one** object.
+3. `second.setName("Bình")` modifies the `name` property of that object.
+4. Because `first` refers to the same object, `first.getName()` also returns `Bình`.
 
-Điều này được gọi là **aliasing**: nhiều tham chiếu đóng vai trò các “tên” khác nhau để truy cập cùng một đối tượng.
+This is **aliasing**: several references act as different “names” for accessing the same object.
 
-## 3. Phân biệt thay đổi trạng thái và gán lại tham chiếu
+## 3. Distinguishing State Changes from Reference Reassignment
 
-Hai thao tác dưới đây tạo ra kết quả hoàn toàn khác nhau.
+The following operations produce very different results.
 
-### Trường hợp A: thay đổi chính đối tượng
+### Case A: Modifying the Object Itself
 
 ~~~java
 Student a = new Student("An");
@@ -1035,9 +1035,9 @@ System.out.println(a.getName()); // Chi
 System.out.println(a == b);      // true
 ~~~
 
-`b.setName(...)` tác động lên **đối tượng được trỏ tới**. Cả `a` và `b` vẫn cùng trỏ đến đối tượng ban đầu.
+`b.setName(...)` acts on **the referenced object**. Both `a` and `b` continue to refer to the original object.
 
-### Trường hợp B: gán lại biến tham chiếu
+### Case B: Reassigning a Reference Variable
 
 ~~~java
 Student a = new Student("An");
@@ -1056,30 +1056,30 @@ flowchart LR
     B["b"] --> O2["Student #2\nname = Dung"]
 ~~~
 
-Phép gán `b = new Student(...)` chỉ thay **giá trị của biến b**. Nó không sửa `a` và cũng không xóa hay tự thay thế đối tượng mà `a` đang trỏ tới.
+Assigning `b = new Student(...)` changes only **variable b's value**. It neither changes `a` nor deletes or automatically replaces the object referenced by `a`.
 
-Một phép gán nữa có thể khiến hai biến lại trỏ chung:
+Another assignment can make the variables share a reference again:
 
 ~~~java
 b = a;
 System.out.println(a == b); // true
 ~~~
 
-Bảng phân biệt:
+Comparison:
 
-| Câu lệnh | Có tạo đối tượng mới? | `a` có bị thay tham chiếu? | Có thể thấy thay đổi qua `a`? |
+| Statement | Creates a new object? | Reassigns `a`? | Can a change be observed through `a`? |
 | --- | --- | --- | --- |
-| `Student b = a;` | Không | Không | Hai biến đang chia sẻ cùng instance |
-| `b.setName("Chi");` | Không | Không | Có, `a.getName()` cũng thấy “Chi” |
-| `b = new Student("Dung");` | Có | Không | Không; `a` vẫn chỉ đến instance cũ |
-| `b = null;` | Không | Không | Không; chỉ `b` thôi không còn trỏ đến instance |
-| `a = b;` | Không | Có | `a` trỏ đến instance mà `b` đang trỏ tới |
+| `Student b = a;` | No | No | Both variables share the same instance |
+| `b.setName("Chi");` | No | No | Yes, `a.getName()` also sees “Chi” |
+| `b = new Student("Dung");` | Yes | No | No; `a` still points to the old instance |
+| `b = null;` | No | No | No; only `b` stops referencing the instance |
+| `a = b;` | No | Yes | `a` points to the instance currently referenced by `b` |
 
-**Quy tắc nhớ:** gọi phương thức làm thay đổi trạng thái qua một tham chiếu sẽ ảnh hưởng đến đối tượng chung; gán lại một biến tham chiếu chỉ tác động lên chính biến ấy.
+**Rule to remember:** invoking a state-changing method through a reference affects the shared object; reassigning a reference variable affects only that variable.
 
-## 4. Làm sao chứng minh có đúng cùng một instance?
+## 4. How Can You Verify That References Point to the Same Instance?
 
-Trong Java, `a == b` trên tham chiếu xác nhận hai biến cùng trỏ đến **một đối tượng** (hoặc đều là `null`). Nếu tạo hai instance chứa cùng dữ liệu, chúng vẫn khác identity:
+In Java, `a == b` compares references to confirm whether they point to **the same object** (or are both `null`). Two instances with identical data can still have different identities:
 
 ~~~java
 record Point(int x, int y) {}
@@ -1092,11 +1092,11 @@ System.out.println(a == b);     // false
 System.out.println(a.equals(b)); // true: Point so sánh giá trị
 ~~~
 
-`equals()` trả lời một câu hỏi **khác**: lớp có coi hai giá trị là tương đương không? Nó không phải phép thử alias. Hợp đồng `equals/hashCode`, `String` và các collection được đào sâu ở bài tiếp theo.
+`equals()` answers a **different** question: does the class consider these values equivalent? It is not an alias test. The next lesson explores the `equals/hashCode` contract, `String`, and collections.
 
-## 5. Aliasing có thể xảy ra bên trong cùng một lời gọi phương thức
+## 5. Aliasing Can Occur Within a Single Method Call
 
-Java truyền đối số **theo giá trị**. Khi đối số là object, tham số nhận bản sao giá trị tham chiếu, nên hai tham số còn có thể trỏ tới **cùng một object**:
+Java passes arguments **by value**. When arguments reference objects, parameters receive copies of reference values, so two parameters can even point to **the same object**:
 
 ~~~java
 static void incrementBoth(Box x, Box y) {
@@ -1109,13 +1109,13 @@ incrementBoth(box, box);
 System.out.println(box.value); // 2
 ~~~
 
-Đoạn này giả sử lớp `Box` có field `int value` và constructor nhận giá trị đầu. Dù phương thức khai báo **hai biến tham số**, caller truyền cùng một object hai lần. Khi phương thức làm thay đổi cả `x.value` và `y.value`, hai lệnh đều tác động lên `box`. Đây là hệ quả quan trọng khi thiết kế API nhận nhiều đối tượng và giả định sai rằng chúng độc lập.
+This snippet assumes `Box` has an `int value` field and a constructor accepting an initial value. Although the method declares **two parameter variables**, the caller passes the same object twice. When the method modifies both `x.value` and `y.value`, both statements act on `box`. This matters when designing APIs accepting several objects and incorrectly assuming those objects are independent.
 
-Gán `x = new Box(...)` bên trong phương thức lại chỉ đổi tham số `x`; biến tham chiếu phía caller không bị gán lại. Bài *Tham chiếu, giá trị và cách truyền đối tượng* có ví dụ đầy đủ về pass-by-value và hoán đổi tham số.
+Assigning `x = new Box(...)` inside the method only changes the `x` parameter, not the caller's reference variable. *References, Values, and Passing Objects* provides complete pass-by-value and parameter-swapping examples.
 
-## 6. Nhiều tham chiếu xuất hiện tự nhiên trong chương trình
+## 6. Multiple References Arise Naturally in Programs
 
-### Qua collection
+### Through a Collection
 
 ~~~java
 import java.util.ArrayList;
@@ -1133,9 +1133,9 @@ fromList.setName("Hoa");
 System.out.println(student.getName());   // Hoa
 ~~~
 
-`List<Student>` giữ các phần tử dưới dạng tham chiếu đến đối tượng `Student`, không tự tạo bản sao sâu của từng đối tượng khi `add` hoặc `get`.
+`List<Student>` stores elements as references to `Student` objects; it does not automatically deep-copy each object when `add` or `get` is called.
 
-### Qua quan hệ giữa các đối tượng
+### Through Relationships Between Objects
 
 ~~~java
 class Address {
@@ -1163,9 +1163,9 @@ e1.address.city = "Đà Nẵng";
 System.out.println(e2.address.city); // Đà Nẵng
 ~~~
 
-Ở ví dụ này, hai `Employee` là **hai đối tượng khác nhau**, nhưng trường `address` của chúng lại trỏ đến **cùng một đối tượng Address**. Đây là chia sẻ tham chiếu theo quan hệ đối tượng; không phải mọi thuộc tính của `e1` và `e2` đều chia sẻ.
+In this example, the two `Employee` instances are **different objects**, but their `address` fields reference **the same Address object**. This is reference sharing through an object relationship; it does not mean every attribute of `e1` and `e2` is shared.
 
-Sơ đồ:
+Diagram:
 
 ~~~mermaid
 flowchart LR
@@ -1173,9 +1173,9 @@ flowchart LR
     E2["Employee e2"] --> A
 ~~~
 
-Trong hệ thống thực tế, chia sẻ `Address` có thể đúng nếu hai nhân viên cùng tham chiếu một bản ghi địa chỉ chung; nhưng có thể là **bug** nếu mỗi người cần một địa chỉ độc lập.
+In a real system, sharing `Address` may be appropriate if both employees refer to a shared address record, but it can be **a bug** if each employee needs an independent address.
 
-## 7. Cần phân biệt alias với bản sao chứa các alias bên trong
+## 7. Distinguishing Aliases from Copies That Contain Shared References
 
 ~~~java
 List<Student> original = new ArrayList<>();
@@ -1186,17 +1186,17 @@ System.out.println(original == copied);             // false
 System.out.println(original.get(0) == copied.get(0)); // true
 ~~~
 
-`copied` là **một đối tượng List khác**, nhưng phần tử `Student` vẫn là đối tượng được chia sẻ; gọi `copied.get(0).setName("Lan")` có thể làm `original.get(0).getName()` trả `"Lan"`. Ngược lại, thêm phần tử vào `copied` không tự thay đổi cấu trúc `original`.
+`copied` is **a separate List object**, but the `Student` element is still shared; calling `copied.get(0).setName("Lan")` can make `original.get(0).getName()` return `"Lan"`. Conversely, adding elements to `copied` does not automatically change the structure of `original`.
 
-Đây là lý do **“hai container khác nhau” không bảo đảm “mọi đối tượng bên trong khác nhau”**. Cách tạo bản sao nông, bản sao sâu, bảo toàn shared references và xử lý đồ thị vòng nằm ở bài *Sao chép nông và sao chép sâu*.
+This is why **“two different containers” does not guarantee “all contained objects are different.”** The lesson *Shallow and Deep Copies* covers shallow and deep copying, preserving shared references, and handling cyclic object graphs.
 
-## 8. Chia sẻ đối tượng bất biến thì sao?
+## 8. What About Sharing Immutable Objects?
 
-Một đối tượng immutable như `String` hoặc `LocalDate` vẫn có thể có nhiều alias. Điểm khác là nội dung của chính instance ấy không bị sửa qua alias. Ví dụ `String b = a; b = b.toUpperCase();` gán `b` sang chuỗi kết quả, không thay chuỗi mà `a` đang tham chiếu.
+An immutable object such as `String` or `LocalDate` can still have multiple aliases. The difference is that the instance's contents cannot be changed through an alias. For example, `String b = a; b = b.toUpperCase();` assigns the resulting string to `b` without modifying the string referenced by `a`.
 
-`final Student owner = new Student("An");` cũng không ngăn `Student alias = owner; alias.setName("Bình");`: `final` chỉ ngăn **gán lại biến `owner`**. Khi cần tránh tác dụng phụ do nhiều alias, phải xét khả năng thay đổi trạng thái và cách công khai tham chiếu, như trình bày ở bài *Mutable/Immutable*.
+`final Student owner = new Student("An");` also does not prevent `Student alias = owner; alias.setName("Bình");`: `final` only prevents **reassigning the `owner` variable**. To avoid side effects from multiple aliases, consider mutability and reference exposure, as discussed in *Mutable/Immutable Objects*.
 
-## 9. Khi một alias không còn giữ đối tượng
+## 9. When an Alias Stops Referencing an Object
 
 ~~~java
 Student first = new Student("An");
@@ -1206,20 +1206,20 @@ first = null;
 System.out.println(second.getName()); // An
 ~~~
 
-Đặt `first = null` chỉ bỏ **một đường tham chiếu**. Đối tượng vẫn có thể truy cập qua `second`. Khi không còn đường tham chiếu mạnh có thể truy cập từ GC roots, object *có thể* đủ điều kiện thu gom rác; điều này không bảo đảm được thu gom ngay. Bài *Giá trị rỗng và đối tượng chưa tồn tại* phân biệt chi tiết `null`, biến chưa khởi tạo và sự tồn tại của thực thể.
+Assigning `first = null` removes only **one reference path**. The object remains accessible through `second`. Once no strong reference path from GC roots can reach the object, it *may* become eligible for garbage collection, but immediate collection is not guaranteed. *Null Values and Objects That Do Not Exist* distinguishes `null`, uninitialized variables, and object existence in more detail.
 
-## 10. Những lỗi thực tế và cách phòng tránh
+## 10. Practical Mistakes and How to Prevent Them
 
-**Lỗi 1 — Vô tình thay đổi dữ liệu gốc khi chỉ muốn thử nghiệm:**
+**Mistake 1 — Accidentally Changing Original Data While Experimenting:**
 
 ~~~java
 Student draft = originalStudent;
 draft.setName("Tên thử"); // originalStudent cũng bị thay đổi
 ~~~
 
-Nếu muốn một đối tượng độc lập, hãy tạo bản sao phù hợp (constructor sao chép, factory hoặc mapping có chủ đích), thay vì chỉ gán một biến tham chiếu.
+If you need an independent object, create an appropriate copy (using a copy constructor, factory, or deliberate mapping) rather than merely assigning another reference variable.
 
-**Lỗi 2 — Làm lộ mutable field qua getter:**
+**Mistake 2 — Exposing a Mutable Field Through a Getter:**
 
 ~~~java
 class Team {
@@ -1231,11 +1231,11 @@ class Team {
 }
 ~~~
 
-Có thể trả về `List.copyOf(members)` nếu muốn bảo vệ cấu trúc danh sách khỏi việc sửa từ bên ngoài. Tuy nhiên, vì các phần tử `Student` vẫn mutable, người gọi **vẫn có thể** sửa tên của từng `Student` qua tham chiếu được trả về. Muốn read-only hoàn toàn, cần trả về các DTO/value object bất biến hoặc bản sao bảo vệ mọi trạng thái cần thiết.
+Return `List.copyOf(members)` to protect the list structure from external modification. However, because `Student` elements remain mutable, callers **can still** modify each `Student`'s name through returned references. For fully read-only data, return immutable DTOs/value objects or protective copies of all necessary state.
 
-**Lỗi 3 — Nhầm chia sẻ tham chiếu với lỗi đồng thời:**
+**Mistake 3 — Confusing Reference Sharing with Concurrency Bugs:**
 
-Khi nhiều **luồng** cùng giữ tham chiếu đến một đối tượng mutable, có thể phát sinh data race, lost update hoặc trạng thái không nhất quán. Việc nhiều alias cùng tồn tại **không tự động tạo ra race condition**; vấn đề xuất hiện khi thao tác đồng thời không được phối hợp.
+When several **threads** hold references to a mutable object, data races, lost updates, or inconsistent state may occur. Merely having multiple aliases **does not automatically create a race condition**; the problem arises when concurrent operations are not coordinated.
 
 ~~~java
 class Counter {
@@ -1251,9 +1251,9 @@ class Counter {
 }
 ~~~
 
-`synchronized` ở đây bảo vệ truy cập vào trạng thái `Counter` khi các luồng sử dụng cùng instance và các đường truy cập đều tuân thủ cùng cơ chế đồng bộ. Trong các hệ thống đa tiến trình hoặc nhiều service, cần cơ chế phối hợp phù hợp ở tầng dữ liệu/phân tán.
+Here, `synchronized` protects access to `Counter` state when threads use the same instance and all access paths obey the same synchronization mechanism. Systems spanning multiple processes or services need appropriate coordination at the data/distributed layer.
 
-**Lỗi 4 — Đổi tham chiếu nhưng tưởng đã thay dữ liệu trong collection:**
+**Mistake 4 — Reassigning a Reference and Assuming a Collection Changed:**
 
 ~~~java
 Student s = new Student("An");
@@ -1266,55 +1266,55 @@ System.out.println(group.get(0).getName()); // An
 System.out.println(group.get(0) == s);      // false
 ~~~
 
-`group` vẫn chứa tham chiếu đến `Student("An")` ban đầu. Nếu muốn thay phần tử trong danh sách, cần thao tác trực tiếp trên danh sách, ví dụ `group.set(0, s)`.
+`group` still contains a reference to the original `Student("An")`. To replace a list element, modify the list itself, for example with `group.set(0, s)`.
 
-## 11. Bộ câu hỏi tự kiểm tra
+## 11. Self-Assessment Questions
 
-**Câu 1:** Nếu `Student b = a;`, trong bộ nhớ có bao nhiêu đối tượng `Student` mới được tạo bởi riêng câu lệnh này?
+**Question 1:** Given `Student b = a;`, how many new `Student` objects does that statement itself create in memory?
 
-**Đáp án:** Không có. Đây là phép sao chép giá trị tham chiếu, không chứa `new`.
+**Answer:** None. It copies a reference value and contains no `new` expression.
 
-**Câu 2:** `a == b` là `true`. Nếu gọi `b.setName("Minh")`, kết quả `a.getName()` thay đổi không?
+**Question 2:** `a == b` is `true`. If `b.setName("Minh")` is called, does the result of `a.getName()` change?
 
-**Đáp án:** Có, nếu setter thay đổi thuộc tính `name` của đối tượng chung và lệnh thành công. Hai biến trỏ cùng instance.
+**Answer:** Yes, provided the setter successfully changes the shared object's `name` property. Both variables reference the same instance.
 
-**Câu 3:** Sau `b = new Student("Khác")`, liệu `a` tự trỏ đến đối tượng mới không?
+**Question 3:** After `b = new Student("Khác")`, does `a` automatically refer to the new object?
 
-**Đáp án:** Không. Chỉ `b` được gán lại; `a` vẫn giữ tham chiếu cũ.
+**Answer:** No. Only `b` is reassigned; `a` retains its previous reference.
 
-**Câu 4:** `new ArrayList<>(oldList)` có tách biệt hoàn toàn mọi `Student` bên trong không?
+**Question 4:** Does `new ArrayList<>(oldList)` completely separate all the contained `Student` objects?
 
-**Đáp án:** Không. Nó tạo một List khác, song giữ cùng tham chiếu phần tử. Cần sao chép từng đối tượng mutable nếu cần trạng thái độc lập.
+**Answer:** No. It creates another list but retains the same element references. Copy each mutable object if independent state is required.
 
-**Câu 5:** Java có truyền đối tượng theo tham chiếu (pass-by-reference) không?
+**Question 5:** Does Java pass objects by reference?
 
-**Đáp án:** Không. Java truyền **bản sao giá trị tham chiếu** theo cơ chế pass-by-value. Phương thức có thể sửa đối tượng chung nhưng không thể gán lại biến tham chiếu của người gọi chỉ bằng cách gán tham số.
+**Answer:** No. Java passes **a copy of the reference value** using pass-by-value. A method can modify a shared object but cannot reassign the caller's reference variable merely by assigning to a parameter.
 
-**Câu 6:** Hai đối tượng khác instance nhưng có dữ liệu giống nhau có `== true` không?
+**Question 6:** Can two distinct instances with identical data satisfy `== true`?
 
-**Đáp án:** Không, nếu thật sự là hai instance khác nhau. `equals()` có thể `true` nếu kiểu dữ liệu có định nghĩa bình đẳng theo nội dung.
+**Answer:** No, if they truly are different instances. `equals()` may evaluate to `true` if the type defines content-based equality.
 
-Khi đọc hoặc viết code Java, hãy tự hỏi: **“Có bao nhiêu đối tượng đang tồn tại, biến nào đang giữ tham chiếu đến đối tượng nào, và câu lệnh sắp chạy đang sửa trạng thái đối tượng hay chỉ gán lại tham chiếu?”** Ba câu hỏi đó giúp giải thích phần lớn hiện tượng aliasing và tránh việc cập nhật dữ liệu ngoài ý muốn.
+When reading or writing Java code, ask: **“How many objects exist? Which variables reference which objects? Is the next statement changing object state or only reassigning a reference?”** These questions explain most aliasing behavior and help prevent unintended data changes.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="object-004">Phân biệt cùng đối tượng với bằng nhau về giá trị</a>
+## <a id="object-004">Object Identity vs. Value Equality</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phân biệt cùng đối tượng và bằng nhau về giá trị trong Java
+# Distinguishing Object Identity from Value Equality in Java
 
-> **Chủ đề:** OOP → Đối tượng. Hai biến tham chiếu có thể **trỏ đến cùng một đối tượng** hoặc trỏ đến **hai đối tượng khác nhau nhưng có dữ liệu tương đương**. Đây là hai câu hỏi độc lập. Phân biệt đúng giúp tránh lỗi khi so sánh `String`, thiết kế lớp, xử lý danh sách và dùng `HashSet`/`HashMap`.
+> **Topic:** OOP → Objects. Two reference variables may **point to the same object** or to **two distinct objects with equivalent data**. These are independent questions. Understanding the distinction prevents mistakes when comparing `String` values, designing classes, working with lists, and using `HashSet`/`HashMap`.
 
-## 1. Hai câu hỏi khác nhau: identity và equality
+## 1. Two Different Questions: Identity and Equality
 
-Giả sử tạo hai đối tượng đều chứa tọa độ `(3, 5)`:
+Suppose two objects are created with the coordinates `(3, 5)`:
 
 ```java
 Point a = new Point(3, 5);
@@ -1322,9 +1322,9 @@ Point b = new Point(3, 5);
 Point alias = a;
 ```
 
-- **Cùng đối tượng (object identity):** `a` và `alias` cùng tham chiếu đến **một instance**. Khi đó `a == alias` là `true`.
-- **Bằng nhau về giá trị (value equality):** `a` và `b` có thể là **hai instance** nhưng có cùng `x`, `y`. Nếu lớp `Point` cài đặt `equals()` để so sánh tọa độ, `a.equals(b)` là `true`.
-- **Không cùng đối tượng** không đồng nghĩa **khác giá trị**. `a == b` thường là `false`, mặc dù nội dung hai đối tượng như nhau.
+- **Object identity:** `a` and `alias` refer to **one instance**. Consequently, `a == alias` is `true`.
+- **Value equality:** `a` and `b` can be **two instances** with identical `x` and `y` values. If `Point` implements `equals()` to compare coordinates, `a.equals(b)` is `true`.
+- **Different objects** do not necessarily have **different values**. `a == b` is generally `false` even when the objects contain identical data.
 
 ```mermaid
 flowchart LR
@@ -1334,21 +1334,21 @@ flowchart LR
     P1 <-. "equals: cùng tọa độ" .-> P2
 ```
 
-`a == alias` kiểm tra hai tham chiếu có cùng đích hay không. `a.equals(b)` hỏi lớp `Point` có coi hai instance là tương đương về mặt giá trị hay không.
+`a == alias` checks whether two references point to the same object. `a.equals(b)` asks whether `Point` considers two instances equivalent in value.
 
-| Phép so sánh | Câu hỏi được trả lời | Trường hợp |
+| Comparison | Question answered | Meaning |
 |---|---|---|
-| `a == b` khi `a`, `b` là tham chiếu | Có cùng instance không? | Object identity |
-| `a != b` khi là tham chiếu | Có trỏ đến hai đối tượng khác nhau không? | Khác identity |
-| `a.equals(b)` | Có bằng nhau theo quy tắc `equals` của lớp không? | Value/logical equality |
-| `Objects.equals(a, b)` | Có bằng nhau mà xử lý an toàn cả `null` không? | Equality có thể null |
-| `x == y` khi `x`, `y` là kiểu nguyên thủy | Hai **giá trị nguyên thủy** có bằng nhau không? | So sánh giá trị, không có identity đối tượng |
+| `a == b` when `a` and `b` are references | Are they the same instance? | Object identity |
+| `a != b` for references | Do they refer to different objects? | Different identity |
+| `a.equals(b)` | Are they equal under the class's `equals` rule? | Value/logical equality |
+| `Objects.equals(a, b)` | Are they equal, with safe handling of `null`? | Null-safe equality |
+| `x == y` when `x` and `y` are primitives | Are the two **primitive values** equal? | Value comparison, not object identity |
 
-Cần nhớ: kiểu nguyên thủy như `int`, `boolean` không phải đối tượng; `==` với kiểu nguyên thủy là phép so sánh **giá trị**. Điểm khác biệt identity/value equality xuất hiện rõ khi so sánh **tham chiếu đối tượng**.
+Remember that primitives such as `int` and `boolean` are not objects; `==` compares their **values**. The identity/value-equality distinction is especially important when comparing **object references**.
 
-## 2. Vì sao hai đối tượng có cùng trường dữ liệu vẫn có thể `equals() == false`?
+## 2. Why Can Two Objects with Identical Fields Still Have `equals() == false`?
 
-Mỗi lớp Java đều kế thừa `equals(Object)` từ `java.lang.Object`. Nếu lớp **không ghi đè**, cách cài đặt mặc định của `Object.equals` chỉ công nhận **cùng một instance**.
+Every Java class inherits `equals(Object)` from `java.lang.Object`. If it **does not override** that method, the default `Object.equals` implementation considers only **the same instance** equal.
 
 ```java
 class Book {
@@ -1365,9 +1365,9 @@ System.out.println(first == second);      // false
 System.out.println(first.equals(second)); // false
 ```
 
-Hai đối tượng có giá trị trường `isbn` giống nhau, nhưng `Book` không định nghĩa equality theo `isbn`, nên `equals` thừa hưởng hành vi so sánh identity.
+The objects have identical `isbn` field values, but `Book` does not define equality based on `isbn`, so `equals` retains identity-based behavior.
 
-Ngược lại:
+By contrast:
 
 ```java
 Book sameBook = first;
@@ -1375,13 +1375,13 @@ System.out.println(first == sameBook);      // true
 System.out.println(first.equals(sameBook)); // true
 ```
 
-**Điều kiện quan trọng:** `equals()` không tự động so sánh tất cả trường dữ liệu của mọi lớp. Quy tắc equality là một phần của thiết kế lớp.
+**Important distinction:** `equals()` does not automatically compare every field of every class. Equality rules are part of the class design.
 
-## 3. Ví dụ hoàn chỉnh: cài đặt `equals()` và `hashCode()` cho lớp giá trị
+## 3. Complete Example: Implementing `equals()` and `hashCode()` for a Value Class
 
-Ta xây dựng `Point` như một **value object**: hai điểm bằng nhau khi hai tọa độ bằng nhau. Lớp được khai báo `final` để không phải giải quyết thêm tình huống lớp con thay đổi quy tắc equality; trường `final` để giá trị không đổi sau khi khởi tạo.
+We design `Point` as a **value object**: two points are equal when both coordinates match. The class is declared `final` to avoid subclasses altering its equality rules; its fields are `final` so the values cannot change after initialization.
 
-Lưu đoạn mã dưới đây thành `EqualityDemo.java` (Java 17+):
+Save the following code as `EqualityDemo.java` (Java 17+):
 
 ```java
 import java.util.HashMap;
@@ -1447,7 +1447,7 @@ public class EqualityDemo {
 }
 ```
 
-Kết quả mong đợi, đúng theo thứ tự các dòng `println`:
+Expected output, in the same order as the `println` statements:
 
 ```text
 false
@@ -1459,9 +1459,9 @@ true
 Điểm A
 ```
 
-Ở đây `a` và `b` được tạo bằng hai lần `new` nên là hai instance khác nhau. Nhưng chúng có cùng `x`, `y` nên `equals` trả `true` và `hashCode` trả cùng mã băm. `HashSet` chỉ giữ một phần tử tương đương trong `a` và `b`; `HashMap` có thể tìm giá trị đã lưu bằng một khóa tương đương.
+Here, `a` and `b` are created by separate `new` expressions, making them distinct instances. But their `x` and `y` values match, so `equals` returns `true` and `hashCode` returns the same hash. `HashSet` retains only one equivalent entry from `a` and `b`; `HashMap` can retrieve a stored value using an equivalent key.
 
-### Đọc từng dòng trong `equals()`
+### Reading `equals()` Line by Line
 
 ```java
 @Override
@@ -1472,46 +1472,46 @@ public boolean equals(Object obj) {
 }
 ```
 
-1. `this == obj`: tối ưu trường hợp hai tham chiếu là cùng một đối tượng; chính nó phải bằng chính nó.
-2. `instanceof Point other`: chỉ chấp nhận đối tượng thuộc loại được so sánh và gán tham chiếu đã kiểm tra vào `other` (pattern matching có từ Java 16); `null instanceof Point` là `false`.
-3. So sánh **các trường tạo nên giá trị** của `Point`. Vì `x` và `y` là `int`, sử dụng `==` là đúng.
+1. `this == obj`: a fast path when two references point to the same object; an object must equal itself.
+2. `instanceof Point other`: accepts only objects of the relevant type and binds the checked reference to `other` (pattern matching has been available since Java 16); `null instanceof Point` is `false`.
+3. Compare **the fields defining the value** of `Point`. Since `x` and `y` are `int` values, using `==` is correct.
 
-Đừng viết `public boolean equals(Point other)` khi mục đích là ghi đè `Object.equals(Object)`: đó chỉ là một phương thức **overload**, không thay thế `equals(Object)` mà các collection Java sử dụng. Hãy dùng `@Override` để trình biên dịch phát hiện sai chữ ký.
+Do not write `public boolean equals(Point other)` when your goal is to override `Object.equals(Object)`: that would be an **overload**, not a replacement for the `equals(Object)` used by Java collections. Use `@Override` so the compiler catches incorrect signatures.
 
-Lựa chọn `instanceof` hay `getClass()` cần xét inheritance. Với lớp `Point` ở trên đã `final`, không thể có lớp con nên không phát sinh vấn đề subclass. Với lớp có thể kế thừa, cần thiết kế equality sao cho **đối xứng** và **bắc cầu**, tránh để lớp cha và lớp con định nghĩa hai bộ tiêu chí khác nhau.
+Choosing between `instanceof` and `getClass()` requires considering inheritance. Because `Point` above is `final`, no subclasses can create additional equality problems. For inheritable classes, design equality to be **symmetric** and **transitive**, avoiding conflicting equality criteria in parent and child classes.
 
-## 4. Hợp đồng `equals()`: không chỉ cần “so sánh đúng trường”
+## 4. The `equals()` Contract: More Than Comparing the Right Fields
 
-Java quy định một số tính chất của `equals()` cho các tham chiếu không null:
+Java specifies several properties of `equals()` for non-null references:
 
-| Tính chất | Yêu cầu | Ví dụ |
+| Property | Requirement | Example |
 |---|---|---|
-| Phản xạ (reflexive) | `x.equals(x)` là `true` | Điểm bằng chính nó |
-| Đối xứng (symmetric) | `x.equals(y)` và `y.equals(x)` cho cùng kết quả | Không được phụ thuộc chiều gọi |
-| Bắc cầu (transitive) | Nếu `x.equals(y)` và `y.equals(z)` thì `x.equals(z)` | Bình đẳng phải nhất quán qua ba đối tượng |
-| Nhất quán (consistent) | Không đổi kết quả khi dữ liệu dùng cho equality không thay đổi | Gọi lại không bất ngờ đổi kết quả |
-| Với `null` | `x.equals(null)` phải là `false` | Null không là một Point |
+| Reflexive | `x.equals(x)` is `true` | A point equals itself |
+| Symmetric | `x.equals(y)` and `y.equals(x)` produce the same result | Equality cannot depend on call direction |
+| Transitive | If `x.equals(y)` and `y.equals(z)`, then `x.equals(z)` | Equality must remain consistent across three objects |
+| Consistent | Results remain unchanged while data used for equality stays the same | Repeated calls do not unexpectedly change results |
+| Non-null vs. `null` | `x.equals(null)` must be `false` | Null is not a Point |
 
-Nếu quy tắc equality phụ thuộc vào trạng thái **mutable**, kết quả so sánh có thể đổi sau khi cập nhật trường. Điều đó không tự động vi phạm tính nhất quán (vì trạng thái đã đổi), nhưng là nguồn lỗi lớn khi đối tượng nằm trong collection dạng hash.
+If equality depends on **mutable** state, comparison results may change after fields are updated. This does not automatically violate consistency (because the state changed), but it is a major source of errors when such objects are used in hash-based collections.
 
-**Ví dụ vi phạm đối xứng:** lớp cha cho phép so sánh với mọi đối tượng con, trong khi lớp con đòi thêm trường phụ và chỉ bằng đối tượng cùng lớp con. Khi đó `parent.equals(child)` có thể là `true` còn `child.equals(parent)` là `false`. Không nên cài đặt quy tắc như vậy.
+**Example of broken symmetry:** a parent class considers its child objects equal, while the child requires an additional field and accepts only objects of the same child class. Then `parent.equals(child)` might be `true` while `child.equals(parent)` is `false`. Avoid such rules.
 
-## 5. Vì sao phải ghi đè `hashCode()` cùng `equals()`?
+## 5. Why Must `hashCode()` Be Overridden Alongside `equals()`?
 
-`hashCode()` trả về một `int` dùng trong cấu trúc dữ liệu dạng hash. Hợp đồng cốt lõi:
+`hashCode()` returns an `int` used by hash-based data structures. Its core contract is:
 
-> **Nếu `a.equals(b)` là `true`, thì `a.hashCode() == b.hashCode()` bắt buộc phải đúng.**
+> **If `a.equals(b)` is `true`, then `a.hashCode() == b.hashCode()` must also be true.**
 
-Chiều ngược lại **không** được đảm bảo: hai đối tượng **không bằng nhau** vẫn có thể trùng mã băm (hash collision). Một mã băm chỉ giúp tra cứu nhanh, không thay thế `equals()`.
+The reverse is **not** guaranteed: two **unequal** objects can share the same hash code (a hash collision). Hash codes support efficient lookup; they do not replace `equals()`.
 
-| Tình huống | Hợp lệ? | Giải thích |
+| Situation | Valid? | Explanation |
 |---|---|---|
-| `equals` true, hash code giống | Bắt buộc | Hợp đồng của `Object` |
-| `equals` false, hash code giống | Có thể | Hash collision |
-| `equals` false, hash code khác | Có thể | Trường hợp phổ biến |
-| `equals` true, hash code khác | **Sai** | Phá hoạt động của `HashSet`/`HashMap` |
+| `equals` true, same hash code | Required | `Object` contract |
+| `equals` false, same hash code | Possible | Hash collision |
+| `equals` false, different hash codes | Possible | Common case |
+| `equals` true, different hash codes | **Invalid** | Breaks `HashSet`/`HashMap` behavior |
 
-Khi ghi đè `equals`, gần như luôn cần ghi đè `hashCode` dựa trên **cùng bộ dữ liệu**. Ví dụ `Objects.hash(x, y)` phù hợp để học và cho các lớp nhỏ. Ở đường chạy rất nhạy hiệu năng, có thể tính hash thủ công để tránh chi phí không cần thiết.
+When overriding `equals`, you almost always need to override `hashCode` using **the same data fields**. `Objects.hash(x, y)` is useful for learning and small classes. In performance-critical paths, calculating the hash manually can avoid unnecessary overhead.
 
 ```java
 @Override
@@ -1522,9 +1522,9 @@ public int hashCode() {
 }
 ```
 
-Kết quả tính bằng công thức trên có thể khác với `Objects.hash(x, y)`, nhưng cả hai đều đúng nếu các đối tượng cùng `x`, `y` luôn có cùng hash code. Không bắt buộc các thuật toán băm khác nhau phải cho cùng số.
+The formula above may produce a different number from `Objects.hash(x, y)`, but both are valid if objects with the same `x` and `y` always produce the same hash code. Different hashing algorithms need not return identical numbers.
 
-### Lỗi rất khó phát hiện: dùng đối tượng mutable làm key
+### A Subtle Bug: Using a Mutable Object as a Key
 
 ```java
 final class MutableKey {
@@ -1554,11 +1554,11 @@ key.code = 2; // Thay đổi trường quyết định equality/hashCode
 String result = map.get(key); // Có thể không tìm được giá trị đã lưu
 ```
 
-Bảng băm xác định vị trí dựa vào mã băm khi thêm phần tử. Đổi trường `code` có thể làm `hashCode()` đổi, khiến tra cứu dựa trên trạng thái mới không tìm đúng vị trí cũ. **Giải pháp:** dùng key bất biến hoặc bảo đảm không sửa trường tham gia equality/hashCode trong suốt thời gian làm key.
+A hash table determines a storage location using the hash code when inserting an entry. Changing `code` can change `hashCode()`, causing lookup based on the new state to miss the original location. **Solution:** use immutable keys or ensure that fields involved in equality/hashCode are not modified while the object is used as a key.
 
-## 6. `String`: lỗi phổ biến nhất của toán tử `==`
+## 6. `String`: The Most Common Misuse of `==`
 
-`String` đã ghi đè `equals()` để so sánh **nội dung ký tự**. Cách viết đúng khi so sánh giá trị chuỗi là `equals`, hoặc `equalsIgnoreCase` nếu yêu cầu không phân biệt chữ hoa/chữ thường.
+`String` overrides `equals()` to compare **character contents**. Use `equals` to compare string values, or `equalsIgnoreCase` when case-insensitive comparison is required.
 
 ```java
 String s1 = new String("Java");
@@ -1570,7 +1570,7 @@ System.out.println(s1 == s3);       // true: cùng tham chiếu
 System.out.println(s1.equals(s2));  // true: cùng nội dung
 ```
 
-Với chuỗi literal:
+For string literals:
 
 ```java
 String left = "Java";
@@ -1578,7 +1578,7 @@ String right = "Java";
 System.out.println(left == right); // true do cơ chế intern của literal
 ```
 
-Java có **string pool/interning** giúp các literal tương đương tham chiếu cùng chuỗi đã intern. Vì vậy `==` trên chuỗi *đôi khi* trả `true`, khiến lỗi bị che giấu. **Không dùng `==` để kiểm tra nội dung chuỗi**, vì giá trị cũng có thể đến từ file, API, bàn phím, `new String(...)` hoặc một phép biến đổi.
+Java uses a **string pool/interning**, allowing equivalent literals to reference the same interned string. Thus, `==` between strings *sometimes* returns `true` and hides a bug. **Do not use `==` to compare string contents**, because values can also come from files, APIs, keyboard input, `new String(...)`, or transformations.
 
 ```java
 String status = null;
@@ -1589,23 +1589,23 @@ System.out.println("READY".equals(status));           // false
 // status.equals("READY") sẽ ném NullPointerException nếu status null.
 ```
 
-`Objects.equals(a, b)` là null-safe: `true` khi cả hai cùng null, `false` khi chỉ một bên null, còn khi cả hai có giá trị sẽ gọi `a.equals(b)`.
+`Objects.equals(a, b)` is null-safe: it returns `true` if both are null, `false` if only one is null, and otherwise calls `a.equals(b)`.
 
-## 7. Những loại đối tượng có quy tắc equality khác nhau
+## 7. Different Types Have Different Equality Rules
 
-| Loại dữ liệu | `==` | `equals()` hoặc cách thích hợp |
+| Data type | `==` | `equals()` or an appropriate alternative |
 |---|---|---|
-| `int`, `boolean`... | So sánh giá trị nguyên thủy | Không gọi `equals` trên primitive |
-| `String` | Cùng instance chuỗi | `String.equals` so sánh nội dung |
-| `StringBuilder` | Cùng instance | Kế thừa `Object.equals`: không so sánh nội dung; dùng `toString().equals(...)` hoặc `contentEquals` khi phù hợp |
-| `List<String>` | Cùng instance danh sách | `List.equals` so sánh phần tử theo thứ tự |
-| `Set<String>` | Cùng instance tập hợp | `Set.equals` so sánh phần tử, không phụ thuộc thứ tự |
-| `int[]`, `String[]` | Cùng instance mảng | `Arrays.equals` so sánh phần tử |
-| Mảng lồng nhau | Cùng instance mảng ngoài | `Arrays.deepEquals` khi cần so sánh lồng nhau |
-| `record` Java | Cùng instance record | `equals` được tạo từ các thành phần (components) |
-| `enum` | So sánh hằng enum | `==` phù hợp vì mỗi enum constant là một instance duy nhất |
+| `int`, `boolean`, etc. | Compares primitive values | Primitives do not have `equals` |
+| `String` | Same string instance | `String.equals` compares contents |
+| `StringBuilder` | Same instance | Inherits `Object.equals`, not content comparison; use `toString().equals(...)` or `contentEquals` as appropriate |
+| `List<String>` | Same list instance | `List.equals` compares elements in order |
+| `Set<String>` | Same set instance | `Set.equals` compares elements regardless of order |
+| `int[]`, `String[]` | Same array instance | `Arrays.equals` compares elements |
+| Nested arrays | Same outer-array instance | Use `Arrays.deepEquals` for nested comparisons |
+| Java `record` | Same record instance | Generated `equals` compares record components |
+| `enum` | Compares enum constants | `==` is appropriate because each enum constant is a unique instance |
 
-**Một số ví dụ cụ thể:**
+**Concrete examples:**
 
 ```java
 import java.util.Arrays;
@@ -1629,9 +1629,9 @@ List<String> list2 = List.of("A", "B");
 System.out.println(list1.equals(list2));      // true
 ```
 
-`Arrays.equals(x, y)` ở ví dụ hai chiều so sánh các phần tử là **mảng con**, mà mảng con dùng identity khi gọi `equals`. `Arrays.deepEquals` đi sâu vào các mảng lồng nhau. Với mảng có phần tử là object, `Arrays.equals` áp dụng quy tắc equality của phần tử; với mảng nguyên thủy, nó so sánh từng giá trị.
+In the two-dimensional example, `Arrays.equals(x, y)` compares elements that are **nested arrays**, which use identity-based `equals`. `Arrays.deepEquals` traverses nested arrays. For arrays of objects, `Arrays.equals` applies the elements' equality rules; for primitive arrays, it compares individual values.
 
-### `BigDecimal`: cùng giá trị số học chưa chắc `equals` true
+### `BigDecimal`: Numerically Equal Values May Not Have `equals` True
 
 ```java
 import java.math.BigDecimal;
@@ -1643,13 +1643,13 @@ System.out.println(one.equals(another));       // false
 System.out.println(one.compareTo(another) == 0);// true
 ```
 
-`BigDecimal.equals` xét cả **giá trị không chia tỷ lệ (unscaled value)** và **scale**, nên `1.0` khác `1.00` về `equals`, dù so sánh độ lớn toán học bằng nhau qua `compareTo`. Đây là ví dụ cho thấy **“bằng nhau” tùy thuộc hợp đồng của kiểu dữ liệu**.
+`BigDecimal.equals` compares both **the unscaled value** and **the scale**, so `1.0` differs from `1.00` under `equals` even though their mathematical magnitude matches under `compareTo`. This illustrates that **“equality” depends on a type's contract**.
 
-Khi dùng `BigDecimal` làm key trong hash collection, cần nhất quán cách chuẩn hóa scale hoặc hiểu rõ luật `equals`/`hashCode`. `TreeSet` mặc định dựa vào thứ tự `compareTo`, còn `HashSet` dựa vào `equals` và `hashCode`, nên hành vi loại trùng có thể khác nhau với những giá trị scale khác nhau.
+When using `BigDecimal` as a key in hash-based collections, standardize the scale consistently or understand its `equals`/`hashCode` rules. `TreeSet` normally relies on `compareTo` ordering, while `HashSet` uses `equals` and `hashCode`, so deduplication may differ for values with different scales.
 
-## 8. `record`: cách diễn đạt value object ngắn gọn
+## 8. `record`: A Concise Way to Express a Value Object
 
-Từ Java 16, `record` có thể dùng để mô tả một nhóm dữ liệu với các thành phần được xác định ngay trong khai báo. Java tự sinh constructor, accessor, `equals`, `hashCode` và `toString` tương ứng:
+Since Java 16, `record` can describe a data group whose components are defined directly in the declaration. Java automatically generates the corresponding constructor, accessors, `equals`, `hashCode`, and `toString`:
 
 ```java
 record Coordinate(int x, int y) {}
@@ -1662,9 +1662,9 @@ System.out.println(first.equals(second)); // true
 System.out.println(first.hashCode() == second.hashCode()); // true
 ```
 
-Với record này, equality phù hợp với ý tưởng cùng tọa độ nghĩa là cùng giá trị. Nhưng lưu ý: record chỉ ngăn gán lại **tham chiếu trường**; nó không tự làm bất biến sâu các đối tượng mutable được chứa trong trường. Nếu một record có thành phần là mảng, equality mặc định của thành phần mảng vẫn là so sánh tham chiếu, không tự động so sánh nội dung mảng.
+For this record, equality matches the idea that equal coordinates represent equal values. But a record only prevents reassignment of **field references**; it does not automatically make contained mutable objects deeply immutable. If a record component is an array, its default equality still compares array references rather than array contents.
 
-Ví dụ:
+For example:
 
 ```java
 record Bytes(byte[] data) {}
@@ -1675,29 +1675,29 @@ Bytes two = new Bytes(new byte[] {1, 2});
 System.out.println(one.equals(two)); // false: mảng con khác identity
 ```
 
-Do đó, trước khi chọn record, hãy xác định đúng **khái niệm giá trị** của từng thành phần; cân nhắc defensive copy và thiết kế equality riêng khi có collection hoặc mảng mutable.
+Therefore, before choosing a record, define **the meaning of value** for each component; consider defensive copying and custom equality when mutable collections or arrays are involved.
 
-## 9. Phân biệt entity với value object trong thiết kế OOP
+## 9. Distinguishing Entities from Value Objects in OOP Design
 
-Không phải mọi đối tượng cùng dữ liệu hiển thị đều nên coi là bằng nhau.
+Not every pair of objects with identical displayed data should be considered equal.
 
-**Value object** có ý nghĩa chủ yếu bởi các thuộc tính cấu thành: `Coordinate(3,5)`, khoảng ngày tháng, một cặp tọa độ, hoặc một cấu trúc cấu hình. Hai instance với cùng giá trị có thể được coi là tương đương.
+A **value object** is defined primarily by its component properties: `Coordinate(3,5)`, a date range, a pair of coordinates, or a configuration structure. Two instances with the same values can be considered equivalent.
 
-**Entity** có danh tính nghiệp vụ độc lập với thuộc tính thay đổi: hai tài khoản có thể cùng tên chủ tài khoản và cùng số dư nhưng **không phải cùng tài khoản**. Với entity, cần xác định identity nghiệp vụ, chẳng hạn mã tài khoản, thay vì so sánh tùy tiện mọi trường dữ liệu.
+An **entity** has business identity independent of mutable attributes: two accounts may have the same owner name and balance but **are not the same account**. For an entity, define business identity, such as an account number, rather than comparing arbitrary fields.
 
-| Tình huống | Cùng object identity? | Equality mong muốn |
+| Situation | Same object identity? | Desired equality |
 |---|---|---|
-| Hai biến cùng trỏ tới một `BankAccount` | Có | Có |
-| Hai `Coordinate(3,5)` tạo riêng | Không | Có, nếu theo tọa độ |
-| Hai tài khoản cùng số dư 100.000 nhưng ID khác | Không | Thường không |
-| Hai object biểu diễn cùng account ID qua hai lần tải | Không nhất thiết | Phụ thuộc hợp đồng entity trong ứng dụng |
-| Hai DTO có trường giống nhau | Không nhất thiết | Phụ thuộc việc DTO có định nghĩa value equality hay không |
+| Two variables reference the same `BankAccount` | Yes | Yes |
+| Two separately created `Coordinate(3,5)` objects | No | Yes, if based on coordinates |
+| Two accounts with balance 100.000 but different IDs | No | Usually no |
+| Two objects represent the same account ID after separate loads | Not necessarily | Depends on the application's entity contract |
+| Two DTOs have the same fields | Not necessarily | Depends on whether the DTO defines value equality |
 
-Đối với entity được lưu vào cơ sở dữ liệu, quy tắc `equals`/`hashCode` cần xử lý cả tình trạng ID chưa được gán, proxy của ORM và vòng đời thực thể; không nên áp dụng máy móc `Objects.equals(id, other.id)` vì hai entity mới đều có `id == null` có thể bị coi là bằng nhau. Chỉ cần nắm trong phạm vi OOP căn bản: **quy tắc equality là quyết định thiết kế dựa trên ý nghĩa của đối tượng**.
+For database-persisted entities, `equals`/`hashCode` rules must account for unassigned IDs, ORM proxies, and entity lifecycles. Do not mechanically apply `Objects.equals(id, other.id)`: two newly created entities with `id == null` might be incorrectly considered equal. For basic OOP, remember that **equality is a design decision based on the object's meaning**.
 
-## 10. Kiểm tra null, wrapper và những bẫy thường gặp
+## 10. Null Checks, Wrappers, and Common Pitfalls
 
-**Không gọi `equals` trên tham chiếu null:**
+**Do not call `equals` on a null reference:**
 
 ```java
 String input = null;
@@ -1707,7 +1707,7 @@ boolean ok = Objects.equals(input, "OK"); // false
 boolean alsoOk = "OK".equals(input);      // false
 ```
 
-**Tránh dùng `==` cho giá trị boxed như `Integer`:**
+**Avoid `==` for boxed values such as `Integer`:**
 
 ```java
 Integer p = Integer.valueOf(1000);
@@ -1717,9 +1717,9 @@ System.out.println(p.equals(q)); // true
 // p == q không phải hợp đồng so sánh giá trị; kết quả tùy identity.
 ```
 
-Một số giá trị boxed nhỏ có thể được cache và làm `==` trả `true`; điều đó không chứng minh hai biến đều phải là cùng instance ở mọi trường hợp. Nếu cần so sánh nội dung, dùng `equals`; nếu một bên có thể null, dùng `Objects.equals`. Nếu ép kiểu tự động unbox `Integer` null sang `int`, có thể gặp `NullPointerException`.
+Some small boxed values may be cached, causing `==` to return `true`; this does not mean the variables must reference the same instance in every situation. For content comparison, use `equals`; when either side can be null, use `Objects.equals`. Automatically unboxing a null `Integer` into `int` can throw `NullPointerException`.
 
-**Không dựa vào mã băm để suy ra identity hoặc equality:**
+**Do not infer identity or equality from hash codes:**
 
 ```java
 boolean equal = a.equals(b);                // Câu hỏi về equality
@@ -1727,11 +1727,11 @@ boolean same = a == b;                      // Câu hỏi về identity
 boolean sameHash = a.hashCode() == b.hashCode(); // Chỉ câu hỏi về mã băm
 ```
 
-`sameHash == true` **không** chứng minh `equal == true`. Còn `System.identityHashCode(obj)` cũng không phải địa chỉ bộ nhớ hay định danh duy nhất tuyệt đối: các đối tượng khác nhau vẫn có thể trùng số này.
+`sameHash == true` **does not** prove `equal == true`. Likewise, `System.identityHashCode(obj)` is neither a memory address nor an absolutely unique identifier: different objects may return the same number.
 
-## 11. Tự kiểm tra và bài tập
+## 11. Self-Assessment and Exercises
 
-**Câu 1 — đoán kết quả:**
+**Question 1 — Predict the Output:**
 
 ```java
 String a = new String("oop");
@@ -1742,49 +1742,49 @@ System.out.println(a.equals(b));
 System.out.println(a == c);
 ```
 
-Đáp án lần lượt: `false`, `true`, `true`. Hai `new String` tạo hai instance riêng, nhưng cùng nội dung; `c` tham chiếu lại đúng `a`.
+Answers in order: `false`, `true`, `true`. Two `new String` expressions create separate instances with the same content; `c` refers to exactly the same object as `a`.
 
-**Câu 2 — sửa lỗi:** Một lớp `ProductCode` chỉ có trường `String code` nhưng `new ProductCode("P01").equals(new ProductCode("P01"))` đang là `false`. Hãy viết lại lớp sao cho equality dựa trên `code`, bổ sung `hashCode`, kiểm thử bằng `HashSet`.
+**Question 2 — Fix a Bug:** A `ProductCode` class only has a `String code` field, but `new ProductCode("P01").equals(new ProductCode("P01"))` currently returns `false`. Rewrite the class so equality is based on `code`, add `hashCode`, and test it with `HashSet`.
 
-**Câu 3 — giải thích:** Vì sao `Arrays.equals(new int[]{1,2}, new int[]{1,2})` là `true`, còn `new int[]{1,2}.equals(new int[]{1,2})` là `false`? Liên hệ với phương thức `equals` mặc định của `Object`.
+**Question 3 — Explain:** Why is `Arrays.equals(new int[]{1,2}, new int[]{1,2})` `true`, while `new int[]{1,2}.equals(new int[]{1,2})` is `false`? Relate this to the default `equals` method inherited from `Object`.
 
-**Câu 4 — thiết kế:** Hai `Customer` có cùng tên và ngày sinh nhưng ID khác nhau. Bạn có nên cho `equals` trả `true`? Hãy xác định đó là entity hay value object trước khi chọn các trường tham gia equality.
+**Question 4 — Design:** Two `Customer` objects have the same name and birth date but different IDs. Should `equals` return `true`? Decide whether the model is an entity or a value object before choosing equality fields.
 
-**Câu 5 — hash collections:** Dùng một đối tượng có trường mutable làm key `HashMap` rồi thay đổi trường tham gia `hashCode`. Hãy giải thích vì sao có thể không tra được giá trị và đề xuất cách sửa.
+**Question 5 — Hash Collections:** Use an object with a mutable field as a `HashMap` key and then change a field used by `hashCode`. Explain why lookup may fail and propose a fix.
 
 ---
 
-**Ghi nhớ:**
+**Remember:**
 
-- Với **tham chiếu**, `==` hỏi **“có phải cùng instance?”**; với **kiểu nguyên thủy**, `==` so sánh **giá trị**.
-- `equals` hỏi **“có bằng nhau theo hợp đồng của lớp?”**; nhiều lớp phải tự định nghĩa hợp đồng này.
-- Ghi đè `equals` phải đồng bộ `hashCode`, nhất là khi sử dụng `HashSet` hoặc `HashMap`.
-- Hai đối tượng bằng nhau về giá trị **không nhất thiết** là cùng một đối tượng. Quy tắc equality cần phù hợp với bản chất entity/value object của dữ liệu.
+- For **references**, `==` asks **“Are these the same instance?”**; for **primitives**, `==` compares **values**.
+- `equals` asks **“Are these equal under the class contract?”**; many classes must define this contract themselves.
+- Overriding `equals` requires a consistent `hashCode` implementation, particularly with `HashSet` or `HashMap`.
+- Objects equal in value **need not** be the same object. Equality rules should reflect whether the data represents an entity or a value object.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="object-005">Đối tượng có thể thay đổi và đối tượng bất biến</a>
+## <a id="object-005">Mutable and Immutable Objects</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đối tượng có thể thay đổi (Mutable) và đối tượng bất biến (Immutable) trong Java
+# Mutable and Immutable Objects in Java
 
-Trong lập trình hướng đối tượng, **trạng thái của đối tượng** (*object state*) là những giá trị mà đối tượng đang giữ, chẳng hạn tên người dùng, danh sách sản phẩm hoặc số dư. Dựa vào khả năng thay đổi trạng thái **sau khi đã khởi tạo**, ta thường phân biệt:
+In object-oriented programming, **object state** refers to the values an object holds, such as a username, product list, or balance. Depending on whether its state can change **after initialization**, we distinguish:
 
-- **Mutable object (đối tượng có thể thay đổi):** đối tượng cho phép thay đổi trạng thái quan sát được mà không cần tạo đối tượng thay thế.
-- **Immutable object (đối tượng bất biến):** sau khi đối tượng được tạo hợp lệ, trạng thái quan sát được của chính đối tượng đó không thay đổi. Muốn có giá trị mới, chương trình thường tạo một đối tượng mới.
+- **Mutable object:** its observable state can change without creating a replacement object.
+- **Immutable object:** once successfully constructed, its observable state never changes. To obtain a new value, the program generally creates another object.
 
-Điểm cần phân biệt: **thay đổi biến tham chiếu** khác với **thay đổi đối tượng mà biến đang tham chiếu**. Biến có thể được gán sang đối tượng khác, trong khi đối tượng cũ vẫn bất biến.
+The critical distinction is that **reassigning a reference variable** is not the same as **modifying the object it references**. A variable can be redirected to another object while the original object remains immutable.
 
-## 1. Nhìn nhanh qua `String` và `StringBuilder`
+## 1. A Quick Comparison of `String` and `StringBuilder`
 
-Java có hai kiểu quen thuộc minh họa rất rõ sự khác biệt:
+Two familiar Java types illustrate the difference:
 
 ```java
 String title = "Java";
@@ -1799,10 +1799,10 @@ builder.append(" OOP");
 System.out.println(builder);      // Java OOP
 ```
 
-- `String` là **immutable**: `concat()` tạo hoặc trả về một chuỗi khác; nội dung chuỗi `"Java"` ban đầu không đổi.
-- `StringBuilder` là **mutable**: `append()` cập nhật trạng thái bên trong chính đối tượng `builder`.
+- `String` is **immutable**: `concat()` creates or returns another string; the original `"Java"` content stays unchanged.
+- `StringBuilder` is **mutable**: `append()` updates the internal state of the `builder` object itself.
 
-Một trường hợp dễ nhầm:
+A commonly confusing case:
 
 ```java
 String message = "A";
@@ -1810,24 +1810,24 @@ message = message + "B";
 System.out.println(message); // AB
 ```
 
-Dòng gán không hề sửa chuỗi `"A"`. Biến `message` nhận tham chiếu đến chuỗi kết quả `"AB"`. **Có thể gán lại biến** không đồng nghĩa với **đối tượng có thể thay đổi**.
+The assignment does not modify the string `"A"`. Variable `message` receives a reference to the resulting string `"AB"`. **A variable being reassignable** does not mean **its object is mutable**.
 
-| Tiêu chí | Mutable object | Immutable object |
+| Criterion | Mutable object | Immutable object |
 | --- | --- | --- |
-| Trạng thái sau khởi tạo | Có thể thay đổi | Không thay đổi qua API và các tham chiếu được chia sẻ |
-| Cách cập nhật | Thường sửa đối tượng hiện tại | Thường tạo đối tượng chứa giá trị mới |
-| Tham chiếu cùng trỏ đến một đối tượng | Cùng quan sát các thay đổi | Cùng nhìn thấy một trạng thái cố định |
-| Ví dụ Java | `StringBuilder`, `ArrayList`, `Date` | `String`, `Integer`, `LocalDate`, `BigDecimal` |
-| Lợi thế thường gặp | Cập nhật liên tục, ít tạo bản sao | Dễ suy luận, chia sẻ và kiểm thử |
-| Điều cần lưu ý | Trạng thái bị thay đổi ngoài dự kiến | Chi phí tạo giá trị mới và sao chép có thể tăng |
+| State after initialization | Can change | Cannot change through APIs or shared references |
+| Update approach | Usually modifies the current object | Usually creates an object containing the new value |
+| Multiple references to one object | All observe its changes | All observe a fixed state |
+| Java examples | `StringBuilder`, `ArrayList`, `Date` | `String`, `Integer`, `LocalDate`, `BigDecimal` |
+| Typical advantages | Frequent updates with fewer copies | Easier reasoning, sharing, and testing |
+| Key consideration | Unexpected state changes | Costs of creating values and copying may increase |
 
-Các ví dụ bất biến trong bảng là các lớp thư viện được thiết kế bất biến. Một lớp tự viết chỉ bất biến nếu **toàn bộ trạng thái quan sát được** thật sự được bảo vệ, không đơn giản là có `final`.
+The immutable examples above are library classes designed for immutability. A custom class is immutable only if **all observable state** is genuinely protected—not merely because it uses `final`.
 
-## 2. Ví dụ Java hoàn chỉnh: giỏ hàng mutable và immutable
+## 2. Complete Java Example: Mutable and Immutable Shopping Carts
 
-Ví dụ sau đặt cả hai thiết kế cạnh nhau. Lớp `MutableCart` bổ sung sản phẩm ngay trên đối tượng đang có. Lớp `ImmutableCart` trả về **một giỏ hàng mới** sau mỗi lần thêm sản phẩm.
+The following example places both designs side by side. `MutableCart` adds products to the existing object; `ImmutableCart` returns **a new cart** after each addition.
 
-Đặt toàn bộ mã vào **`Main.java`**; có thể biên dịch bằng Java 17 hoặc Java 21.
+Put all code into **`Main.java`**; it can be compiled with Java 17 or Java 21.
 
 ```java
 import java.util.ArrayList;
@@ -1921,14 +1921,14 @@ public class Main {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 1
@@ -1940,15 +1940,15 @@ false
 Không thể sửa danh sách kết quả
 ```
 
-**Điều cần quan sát:**
+**What to Observe:**
 
-1. `mutable` và `anotherReference` cùng trỏ đến một `MutableCart`; `addProduct()` làm cả hai tham chiếu thấy số sản phẩm là 1.
-2. `empty`, `one`, `two` lần lượt giữ **ba thể hiện `ImmutableCart`** với 0, 1, 2 sản phẩm. Mỗi lần `withAddedProduct()` tạo đối tượng mới, không sửa các giỏ cũ.
-3. `one == two` bằng `false` vì chúng là hai đối tượng khác nhau.
-4. Constructor `ImmutableCart` lấy bản sao danh sách đầu vào: sửa `source` sau đó không làm thay đổi `snapshot`.
-5. `snapshot.products()` không cho phép `add()`, tránh sửa cấu trúc danh sách từ bên ngoài.
+1. `mutable` and `anotherReference` refer to the same `MutableCart`; after `addProduct()`, both observe a product count of 1.
+2. `empty`, `one`, and `two` hold **three `ImmutableCart` instances**, with 0, 1, and 2 products respectively. Each `withAddedProduct()` call creates a new object without modifying older carts.
+3. `one == two` is `false` because they are distinct objects.
+4. The `ImmutableCart` constructor copies the input list: later changes to `source` do not affect `snapshot`.
+5. `snapshot.products()` disallows `add()`, preventing callers from changing the list structure.
 
-Sơ đồ minh họa sự khác nhau về tham chiếu:
+The diagram illustrates the reference differences:
 
 ```mermaid
 flowchart LR
@@ -1959,20 +1959,20 @@ flowchart LR
     T["two"] --> I2["ImmutableCart #3<br/>[Sách Java, Bút]"]
 ```
 
-**Không thể kết luận một lớp là immutable chỉ vì không có setter.** Nếu lớp trả trực tiếp một danh sách nội bộ có thể sửa, gọi `getItems().add(...)` cũng làm trạng thái thay đổi dù không có phương thức `setItems()`.
+**A class is not necessarily immutable just because it has no setters.** If it exposes a mutable internal list directly, calling `getItems().add(...)` still changes state even without a `setItems()` method.
 
-## 3. Vì sao `final` chưa đủ để tạo immutable object?
+## 3. Why Is `final` Insufficient to Make an Object Immutable?
 
-`final` được áp dụng ở nhiều vị trí, mỗi vị trí có ý nghĩa khác nhau:
+`final` can appear in several places, with different meanings:
 
-| Khai báo | Điều `final` bảo đảm | Điều `final` không bảo đảm |
+| Declaration | What `final` guarantees | What `final` does not guarantee |
 | --- | --- | --- |
-| `final int count` | Trường không thể được gán lại sau khi khởi tạo đúng quy tắc | Không nói gì về các trường khác của đối tượng |
-| `final List<String> items` | Trường `items` không được trỏ sang danh sách khác | Có thể vẫn gọi `items.add(...)` |
-| `final class Cart` | Lớp không thể bị kế thừa | Trường và nội dung của đối tượng vẫn có thể thay đổi |
-| `final Cart cart` | Biến `cart` không thể được gán lại | Bản thân đối tượng `cart` vẫn có thể mutable |
+| `final int count` | The field cannot be reassigned after valid initialization | Nothing about other object fields |
+| `final List<String> items` | The `items` field cannot point to another list | `items.add(...)` may still be allowed |
+| `final class Cart` | The class cannot be subclassed | Its fields and contents can still change |
+| `final Cart cart` | Variable `cart` cannot be reassigned | Object `cart` itself can still be mutable |
 
-Ví dụ:
+For example:
 
 ```java
 final List<String> names = new ArrayList<>();
@@ -1980,11 +1980,11 @@ names.add("An");       // Hợp lệ: sửa nội dung của list
 // names = new ArrayList<>(); // Lỗi biên dịch: không được gán lại biến final
 ```
 
-Với một đối tượng **thực sự bất biến**, cần bảo vệ *đường truy cập đến mọi trạng thái có thể thay đổi*, gồm cả các đối tượng lồng bên trong.
+For a **truly immutable** object, protect *every access path to mutable state*, including nested objects.
 
-## 4. Defensive copy: bảo vệ dữ liệu đầu vào và đầu ra
+## 4. Defensive Copying: Protecting Input and Output Data
 
-Giả sử ta viết như sau:
+Suppose we write:
 
 ```java
 final class UnsafeSchedule {
@@ -2000,7 +2000,7 @@ final class UnsafeSchedule {
 }
 ```
 
-Lớp có `final` và không có setter nhưng **không bất biến**:
+The class uses `final` and has no setter, yet it **is not immutable**:
 
 ```java
 List<String> input = new ArrayList<>(List.of("OOP"));
@@ -2011,7 +2011,7 @@ schedule.lessons().add("Spring Boot"); // Sửa qua getter
 System.out.println(schedule.lessons()); // [OOP, Concurrency, Spring Boot]
 ```
 
-Cách sửa phù hợp với danh sách chứa các phần tử immutable, chẳng hạn `String`:
+A suitable fix for a list of immutable elements, such as `String`:
 
 ```java
 final class Schedule {
@@ -2027,9 +2027,9 @@ final class Schedule {
 }
 ```
 
-`List.copyOf(lessons)` cung cấp một danh sách **không thể sửa cấu trúc** và không bị ảnh hưởng bởi việc thêm, xóa phần tử vào danh sách đầu vào sau đó. Phương thức này không chấp nhận phần tử `null`. Vì `String` cũng immutable, mẫu `Schedule` có thể giữ trạng thái danh sách ổn định.
+`List.copyOf(lessons)` produces a list whose **structure cannot be modified** and is unaffected by later additions or removals from the input list. This method rejects `null` elements. Because `String` is also immutable, the sample `Schedule` can maintain stable list state.
 
-Tuy nhiên, `List.copyOf()` **không tự sao chép sâu các đối tượng phần tử**. Nếu phần tử là đối tượng mutable, một tham chiếu khác vẫn có thể chỉnh sửa phần tử đó.
+However, `List.copyOf()` **does not deep-copy element objects**. If an element is mutable, another reference may still modify it.
 
 ```java
 final class MutableTask {
@@ -2044,9 +2044,9 @@ System.out.println(snapshot.get(0).status); // DONE
 // snapshot.add(new MutableTask());          // UnsupportedOperationException
 ```
 
-Danh sách không thể thêm/xóa phần tử, nhưng trạng thái `MutableTask` vẫn đổi được. Khi cần bất biến xuyên suốt, hãy dùng phần tử immutable, thực hiện sao chép sâu phù hợp, hoặc thiết kế lại mô hình dữ liệu.
+Elements cannot be added to or removed from the list, but `MutableTask` state can still change. For deep immutability, use immutable elements, make suitable deep copies, or redesign the data model.
 
-### `List.copyOf`, `List.of`, `Collections.unmodifiableList` khác nhau ra sao?
+### How Do `List.copyOf`, `List.of`, and `Collections.unmodifiableList` Differ?
 
 ```java
 List<String> original = new ArrayList<>(List.of("A"));
@@ -2060,19 +2060,19 @@ System.out.println(snapshot); // [A]
 System.out.println(literal);  // [A]
 ```
 
-| API | Ý nghĩa chính | Có nhìn thấy sửa đổi danh sách gốc? |
+| API | Primary meaning | Does it reflect changes to the original list? |
 | --- | --- | --- |
-| `Collections.unmodifiableList(list)` | Tạo **view chỉ đọc** của list; chặn sửa qua view | **Có**, khi list gốc thay đổi |
-| `List.copyOf(list)` | Tạo danh sách bất biến về cấu trúc, là snapshot của nội dung | **Không**, đối với thay đổi cấu trúc của list gốc |
-| `List.of(...)` | Tạo trực tiếp danh sách không sửa được | Không có list gốc mutable cần theo dõi |
+| `Collections.unmodifiableList(list)` | Creates a **read-only view** that blocks modifications through the view | **Yes**, when the original list changes |
+| `List.copyOf(list)` | Creates a structurally immutable list representing a snapshot of the contents | **No**, for structural changes to the original list |
+| `List.of(...)` | Creates an unmodifiable list directly | There is no mutable original list to track |
 
-Cả ba không bảo đảm phần tử bên trong bất biến. Ngoài ra, `List.copyOf()` có thể tái sử dụng một danh sách vốn đã không thể sửa được; không nên dựa vào việc nó **luôn** tạo đối tượng list mới. “Snapshot” ở đây nói đến **nội dung quan sát được**, không cam kết danh tính đối tượng khác nhau.
+None of these guarantees immutable elements. Also, `List.copyOf()` may reuse a list that is already unmodifiable; do not assume it **always** creates a new list object. “Snapshot” here refers to **observable contents**, not a guarantee of distinct object identity.
 
-## 5. `record` có tự động immutable không?
+## 5. Are `record` Instances Automatically Immutable?
 
-Java `record` thuận tiện để định nghĩa đối tượng dữ liệu: trình biên dịch sinh các trường `private final`, constructor chuẩn, accessor và các phương thức như `equals()`, `hashCode()`, `toString()`. Tuy nhiên, **record chỉ bảo đảm trường tham chiếu không bị gán lại, không tự bảo đảm bất biến sâu**.
+Java `record` declarations are convenient for data objects: the compiler generates `private final` fields, a canonical constructor, accessors, and methods such as `equals()`, `hashCode()`, and `toString()`. However, **records only ensure reference fields cannot be reassigned; they do not automatically provide deep immutability**.
 
-Ví dụ chưa an toàn:
+An unsafe example:
 
 ```java
 record UnsafeInvoice(List<String> products) {}
@@ -2084,7 +2084,7 @@ data.add("Bút");
 System.out.println(invoice.products()); // [Sách, Bút]
 ```
 
-Một cách thiết kế tốt hơn khi từng sản phẩm được biểu diễn bởi dữ liệu bất biến:
+A better design when each product is represented by immutable data:
 
 ```java
 import java.util.List;
@@ -2106,13 +2106,13 @@ record Invoice(List<LineItem> lines) {
 }
 ```
 
-Ở đây `LineItem` có `String` bất biến và số nguyên nguyên thủy; `Invoice` sao chép danh sách trong compact constructor. Vì các phần tử `LineItem` cũng bất biến, không có đường thông thường để sửa dữ liệu đã khởi tạo. Accessor `lines()` trả danh sách không cho phép thêm hoặc xóa.
+Here, `LineItem` contains an immutable `String` and a primitive integer; `Invoice` copies the list in its compact constructor. Because `LineItem` elements are also immutable, ordinary code cannot modify the initialized data. Accessor `lines()` returns a list that does not permit additions or removals.
 
-**Lưu ý:** `record` không tự bảo vệ nếu thành phần của nó chứa `StringBuilder`, mảng, `Date`, `List<MutableTask>` hoặc đối tượng mutable khác. Cần xử lý các thành phần này riêng.
+**Note:** A `record` does not automatically protect components containing `StringBuilder`, arrays, `Date`, `List<MutableTask>`, or other mutable objects. Those components need special handling.
 
-## 6. Immutable object không đồng nghĩa với không bao giờ có giá trị mới
+## 6. Immutability Does Not Mean New Values Cannot Be Produced
 
-Với đối tượng bất biến, một thao tác “cập nhật” thường có dạng:
+With an immutable object, an “update” often looks like this:
 
 ```java
 java.time.LocalDate original = java.time.LocalDate.of(2026, 10, 15);
@@ -2122,9 +2122,9 @@ System.out.println(original); // 2026-10-15
 System.out.println(nextWeek); // 2026-10-22
 ```
 
-`original` không đổi; `plusDays(7)` trả về một giá trị mới. Tương tự, `BigDecimal.add()`, `String.replace()`, `ImmutableCart.withAddedProduct()` không làm thay đổi đối tượng nhận lời gọi.
+`original` stays unchanged; `plusDays(7)` returns a new value. Similarly, `BigDecimal.add()`, `String.replace()`, and `ImmutableCart.withAddedProduct()` do not mutate their receiver objects.
 
-Vì thế cần **giữ lại kết quả trả về**:
+Therefore, you must **retain the returned result**:
 
 ```java
 String name = "java";
@@ -2135,11 +2135,11 @@ name = name.toUpperCase();
 System.out.println(name); // JAVA
 ```
 
-Đây là khác biệt đáng nhớ so với những API mutable trả về `void` hoặc trả `this` để thay đổi ngay trên đối tượng.
+This differs from mutable APIs that return `void` or `this` after modifying the current object.
 
-## 7. Ảnh hưởng đến chia sẻ tham chiếu và xử lý nhiều luồng
+## 7. Effects on Reference Sharing and Multithreading
 
-Khi nhiều thành phần cùng dùng một đối tượng mutable, thành phần này có thể quan sát trạng thái do thành phần khác vừa sửa:
+When multiple components share a mutable object, one component can observe state another has just changed:
 
 ```java
 StringBuilder shared = new StringBuilder("A");
@@ -2148,16 +2148,16 @@ alias.append("B");
 System.out.println(shared); // AB
 ```
 
-Đó là hệ quả của việc chia sẻ tham chiếu. Trong môi trường nhiều luồng, **cùng chỉnh sửa mutable state mà không đồng bộ đúng cách** có thể gây race condition và kết quả khó đoán. Bất biến giúp giảm đáng kể vấn đề này vì trạng thái sau khởi tạo không bị sửa.
+That follows from shared references. In a multithreaded environment, **modifying shared mutable state without proper synchronization** can cause race conditions and unpredictable results. Immutability substantially reduces this risk because the initialized state does not change.
 
-Nhưng cần hiểu chính xác:
+But be precise:
 
-- **Immutable object** hữu ích khi chia sẻ dữ liệu đọc giữa nhiều luồng; không có thao tác cập nhật nội bộ để tranh chấp.
-- Để quan sát được trạng thái khởi tạo đúng trong môi trường đa luồng, vẫn cần quan tâm đến quy tắc khởi tạo và **safe publication** của Java Memory Model. Việc phát tán `this` trước khi constructor hoàn thành là đặc biệt nguy hiểm.
-- **Tham chiếu đến immutable object vẫn có thể thay đổi**: nếu nhiều luồng gán vào cùng một biến chia sẻ, cần cơ chế đồng bộ/visibility thích hợp như `volatile`, lock hoặc atomic reference tùy bài toán.
-- **Immutable wrapper** không tự làm cho một phần tử mutable, dịch vụ ngoài hay toàn bộ quy trình nghiệp vụ trở nên thread-safe.
+- **Immutable objects** are useful for sharing read-only data across threads; there are no internal updates to contend over.
+- To observe correctly initialized state across threads, Java Memory Model initialization rules and **safe publication** still matter. Letting `this` escape before the constructor completes is especially dangerous.
+- **A reference to an immutable object can still change**: if multiple threads assign to the same shared variable, suitable synchronization/visibility mechanisms such as `volatile`, locks, or atomic references may be needed.
+- **An immutable wrapper** does not automatically make a mutable element, external service, or complete business process thread-safe.
 
-Ví dụ chia sẻ cấu hình immutable:
+Example of sharing immutable configuration:
 
 ```java
 record AppConfig(String endpoint, int timeoutSeconds) {
@@ -2169,13 +2169,13 @@ record AppConfig(String endpoint, int timeoutSeconds) {
 }
 ```
 
-Sau khi được khởi tạo và công bố an toàn, một `AppConfig` có thể được nhiều luồng đọc mà không cần khóa chỉ để ngăn việc sửa hai trường của nó. Nếu ứng dụng muốn đổi cấu hình, có thể tạo `AppConfig` mới rồi thay thế tham chiếu chia sẻ bằng cơ chế phù hợp.
+Once correctly initialized and safely published, an `AppConfig` can be read by multiple threads without locking solely to prevent modification of its two fields. To update configuration, the application can create a new `AppConfig` and replace the shared reference using an appropriate mechanism.
 
-## 8. Tại sao mutable object đôi khi nguy hiểm khi làm khóa của `HashMap`?
+## 8. Why Can Mutable Objects Be Dangerous as `HashMap` Keys?
 
-`HashMap` và `HashSet` dựa vào `hashCode()` và `equals()` để tìm khóa hoặc phần tử. Nếu một đối tượng mutable được dùng làm khóa, và các trường tham gia `hashCode()`/ `equals()` thay đổi sau khi đưa vào map/set, việc tìm lại có thể thất bại.
+`HashMap` and `HashSet` use `hashCode()` and `equals()` to locate keys or elements. If a mutable object is used as a key and its `hashCode()`/ `equals()` fields change after insertion, later lookups may fail.
 
-Ví dụ về thiết kế rủi ro:
+Example of a risky design:
 
 ```java
 import java.util.Objects;
@@ -2200,43 +2200,43 @@ class MutableKey {
 }
 ```
 
-Nếu thêm một `MutableKey("A")` vào `HashSet` rồi gán `key.code = "B"`, hash dùng để tra cứu có thể khác hash khi chèn vào, nên `contains(key)` có thể trả về `false`. Giải pháp tốt là khóa có các giá trị tham gia so sánh **ổn định trong thời gian nằm trong map/set**; dùng immutable value object là lựa chọn phổ biến.
+If a `MutableKey("A")` is inserted into a `HashSet` and later assigned `key.code = "B"`, the lookup hash may differ from the insertion hash, so `contains(key)` can return `false`. Prefer keys whose comparison values **remain stable throughout their time in the map/set**; immutable value objects are a common choice.
 
-Trường hợp cần thay đổi khóa, nên xóa mục bằng giá trị khóa cũ khi còn tra cứu được và chèn lại với khóa mới, thay vì tự sửa trạng thái đã được dùng để phân vùng hash.
+If a key must change, remove the entry while its old key value is still usable and reinsert it with a new key, rather than mutating state that determines hash-bucket placement.
 
-## 9. Chọn mutable hay immutable theo nhu cầu
+## 9. Choosing Mutable or Immutable Based on Requirements
 
-Không có quy tắc “mọi đối tượng đều phải bất biến”. Tùy vào cách sử dụng:
+There is no rule that “every object must be immutable.” The choice depends on usage:
 
-| Tình huống | Thiết kế thường phù hợp | Lý do |
+| Situation | Often appropriate design | Reason |
 | --- | --- | --- |
-| DTO chứa cấu hình, giá trị tiền, ngày giờ | Immutable | Giá trị có ngữ nghĩa ổn định, dễ chia sẻ |
-| Value object như tọa độ, mã định danh, khoảng thời gian | Immutable | Tránh thay đổi bất ngờ, hỗ trợ so sánh theo giá trị |
-| Bộ đệm để ghép chuỗi nhiều lần | Mutable, ví dụ `StringBuilder` | Cập nhật nhiều lần trong một vòng xử lý |
-| Đối tượng quản lý trạng thái đang diễn ra, như giỏ hàng trong một phiên | Mutable có kiểm soát hoặc immutable có thao tác trả bản mới | Phụ thuộc tần suất cập nhật và yêu cầu chia sẻ |
-| Snapshot sự kiện hoặc dữ liệu truyền giữa các thành phần | Immutable | Bảo vệ ảnh chụp dữ liệu tại thời điểm tạo |
-| Cấu trúc lớn được cập nhật rất thường xuyên | Cân nhắc mutable hoặc persistent data structure | Tránh chi phí sao chép toàn bộ sau mỗi cập nhật |
+| DTOs containing configuration, monetary values, dates | Immutable | Stable value semantics and easy sharing |
+| Value objects such as coordinates, identifiers, intervals | Immutable | Prevent unexpected changes and support value equality |
+| Buffers for repeated string concatenation | Mutable, e.g. `StringBuilder` | Many updates within one processing cycle |
+| Objects managing evolving state, such as a session shopping cart | Controlled mutable or immutable objects returning new versions | Depends on update frequency and sharing needs |
+| Event snapshots or data passed between components | Immutable | Preserve data as it existed when captured |
+| Large structures updated frequently | Consider mutable or persistent data structures | Avoid copying everything after each update |
 
-**Chi phí:** Ví dụ `ImmutableCart` sao chép cả list mỗi lần thêm sản phẩm, có thể tốn thời gian và bộ nhớ khi list lớn. Những hệ thống cần cập nhật dữ liệu thường xuyên có thể dùng cấu trúc mutable được đóng gói kỹ, hoặc cấu trúc dữ liệu bất biến có **structural sharing** (tái sử dụng các phần không thay đổi) thay vì sao chép toàn bộ. Không nên mặc định rằng “immutable” luôn nhanh hơn hoặc luôn chậm hơn; phải nhìn vào thao tác và tải thực tế.
+**Costs:** For example, `ImmutableCart` copies the entire list for every added product, which can take time and memory with large lists. Systems requiring frequent updates may use carefully encapsulated mutable structures or immutable data structures with **structural sharing** (reusing unchanged portions) instead of full copies. Do not assume immutable designs are always faster or slower; evaluate real operations and workloads.
 
-**Đóng gói vẫn cần thiết với mutable object.** Lớp mutable tốt nên giữ các trường `private`, kiểm soát thay đổi bằng phương thức có kiểm tra tính hợp lệ, và tránh trả các tham chiếu nội bộ có thể bị sửa tùy ý. Ví dụ `MutableCart.products()` trả snapshot, dù bản thân giỏ hàng vẫn mutable.
+**Mutable objects still need encapsulation.** A well-designed mutable class should keep fields `private`, control updates through validated methods, and avoid exposing internal references for arbitrary modification. For example, `MutableCart.products()` returns a snapshot even though the cart itself remains mutable.
 
-## 10. Những lỗi thường gặp và cách sửa
+## 10. Common Mistakes and Fixes
 
-| Lỗi | Tác động | Cách khắc phục |
+| Mistake | Effect | Fix |
 | --- | --- | --- |
-| Nghĩ `final List` làm danh sách bất biến | Mã vẫn gọi `add/remove` được | Dùng `List.copyOf` khi cần snapshot; kiểm soát cách truy cập |
-| Lưu trực tiếp mutable list do caller truyền vào | Caller sửa list làm đối tượng đổi trạng thái | Defensive copy trong constructor |
-| Trả trực tiếp mutable list nội bộ | Caller sửa gián tiếp qua getter | Trả snapshot hoặc thiết kế API chỉ đọc phù hợp |
-| Dùng `List.copyOf` rồi cho rằng phần tử cũng immutable | Phần tử mutable vẫn thay đổi | Dùng phần tử immutable hoặc sao chép sâu |
-| Gọi phương thức của immutable object rồi bỏ kết quả | Giá trị ban đầu không thay đổi | Lưu giá trị được trả về |
-| Cho rằng `record` luôn bất biến sâu | Thành phần record có thể vẫn mutable | Defensive copy, thiết kế thành phần bất biến |
-| Dùng đối tượng mutable có hash thay đổi làm map key | Có thể không tìm thấy khóa đã thêm | Dùng khóa có `equals/hashCode` ổn định |
-| Cho rằng immutable tự giải quyết mọi concurrency issue | Biến tham chiếu chung hoặc dependency khác vẫn có race | Kết hợp safe publication và đồng bộ nơi cần thiết |
+| Assuming `final List` makes a list immutable | Code can still call `add/remove` | Use `List.copyOf` for snapshots and control access |
+| Storing a caller's mutable list directly | Caller changes the list, modifying object state | Defensive copy in the constructor |
+| Returning a mutable internal list directly | Caller mutates it through the getter | Return a snapshot or use a suitable read-only API |
+| Assuming `List.copyOf` makes elements immutable | Mutable elements can still change | Use immutable elements or deep-copy them |
+| Discarding the result of an immutable object's method | The original value remains unchanged | Retain the returned value |
+| Assuming `record` always guarantees deep immutability | Record components can be mutable | Defensive copying and immutable component design |
+| Using a mutable object with a changing hash as a map key | Inserted key may become unfindable | Use keys with stable `equals/hashCode` |
+| Assuming immutability solves all concurrency issues | Shared reference variables or dependencies may still race | Combine safe publication and synchronization where necessary |
 
-## 11. Tự kiểm tra kiến thức
+## 11. Check Your Understanding
 
-**Câu 1.** Kết quả là gì?
+**Question 1.** What is the output?
 
 ```java
 String a = "Hi";
@@ -2245,47 +2245,47 @@ a = a.concat("!");
 System.out.println(b);
 ```
 
-**Đáp án:** `Hi`. `a` được gán sang chuỗi kết quả mới, còn `b` vẫn tham chiếu đến chuỗi ban đầu.
+**Answer:** `Hi`. `a` is reassigned to the new result string, while `b` still references the original string.
 
-**Câu 2.** Nếu `List<String> input` được đưa vào constructor của lớp có trường `private final List<String> data;`, gán `this.data = input;` đã đủ bất biến chưa?
+**Question 2.** If `List<String> input` is passed to a constructor for a class containing `private final List<String> data;`, is assigning `this.data = input;` enough to guarantee immutability?
 
-**Đáp án:** Chưa. Caller vẫn có thể sửa `input`, ảnh hưởng trực tiếp đến `data`. Có thể dùng `List.copyOf(input)` khi phần tử cũng immutable và yêu cầu là lưu snapshot.
+**Answer:** No. The caller can still modify `input`, directly affecting `data`. Use `List.copyOf(input)` when elements are also immutable and the requirement is to store a snapshot.
 
-**Câu 3.** Vì sao `return this` trong một phương thức thay đổi trường khác với `return new ImmutableCart(updated)`?
+**Question 3.** Why does `return this` from a field-modifying method differ from `return new ImmutableCart(updated)`?
 
-**Đáp án:** `return this` trả lại chính đối tượng nhận lời gọi (có thể đã thay đổi trạng thái), còn `return new ...` đưa ra một thể hiện khác, cho phép giữ đối tượng cũ nguyên trạng.
+**Answer:** `return this` returns the receiving object itself (possibly with modified state), while `return new ...` produces a different instance, allowing the original to remain unchanged.
 
-**Câu 4.** Một `record Event(List<MutableTask> tasks)` có bất biến sâu chỉ nhờ dùng `List.copyOf(tasks)` không?
+**Question 4.** Does `record Event(List<MutableTask> tasks)` become deeply immutable merely by using `List.copyOf(tasks)`?
 
-**Đáp án:** Không. Danh sách không thêm/xóa được nhưng từng `MutableTask` vẫn có thể bị sửa thông qua tham chiếu khác.
+**Answer:** No. The list cannot be structurally modified, but each `MutableTask` may still be changed through another reference.
 
-**Câu 5.** Khi thiết kế một cấu hình được hàng chục luồng cùng đọc, nên chú ý điều gì?
+**Question 5.** What matters when designing configuration read concurrently by dozens of threads?
 
-**Đáp án:** Ưu tiên mô hình bất biến nếu phù hợp; khởi tạo đầy đủ; công bố đối tượng an toàn; đồng bộ khi thay thế tham chiếu chia sẻ nếu có cập nhật cấu hình. Bất biến của giá trị không thay thế mọi cơ chế đồng bộ trong toàn hệ thống.
+**Answer:** Prefer an immutable model when appropriate; initialize it fully; publish it safely; and synchronize replacement of a shared reference when configuration changes. Value immutability does not replace all system-wide synchronization.
 
-**Ghi nhớ:** Mutable và immutable mô tả **khả năng thay đổi trạng thái của đối tượng**, không phải khả năng gán lại tên biến. Để tự thiết kế đối tượng bất biến trong Java, cần kiểm soát mọi đường thay đổi trạng thái: constructor, trường, phần tử lồng nhau, đối số nhận vào và dữ liệu trả ra. Còn khi chọn mutable, hãy đặt việc thay đổi trạng thái dưới các phương thức có quy tắc rõ ràng.
+**Remember:** Mutable and immutable describe **whether an object's state can change**, not whether a variable name can be reassigned. To design an immutable Java object, control every path to state changes: constructors, fields, nested elements, incoming arguments, and returned data. For mutable objects, place state changes behind methods with explicit rules.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="object-006">Sao chép nông và sao chép sâu</a>
+## <a id="object-006">Shallow and Deep Copies</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Sao chép nông và sao chép sâu trong Java
+# Shallow and Deep Copying in Java
 
-Khi tạo một đối tượng mới từ một đối tượng có sẵn, câu hỏi quan trọng là: **đối tượng mới có chia sẻ những đối tượng con có thể thay đổi với đối tượng ban đầu hay không?** Đây là điểm phân biệt giữa **sao chép nông (shallow copy)** và **sao chép sâu (deep copy)**.
+When creating a new object from an existing one, the key question is: **Does the new object share mutable child objects with the original?** This distinguishes a **shallow copy** from a **deep copy**.
 
-Một chương trình quản lý đơn hàng có thể cần tạo bản sao để tính phí vận chuyển thử nghiệm. Nếu bản sao vẫn chia sẻ địa chỉ giao hàng hoặc danh sách sản phẩm có thể thay đổi với đơn gốc, một thao tác tưởng chỉ sửa bản sao có thể vô tình sửa luôn đơn gốc.
+An order-management program might make a copy to experiment with shipping costs. If that copy shares a mutable shipping address or product list with the original order, an operation intended to modify only the copy may accidentally change the original.
 
-## 1. Ba thao tác dễ nhầm lẫn
+## 1. Three Commonly Confused Operations
 
-Xét lớp đơn giản:
+Consider these simple classes:
 
 ```java
 class Address {
@@ -2307,29 +2307,29 @@ class Customer {
 }
 ```
 
-Giả sử đã có:
+Suppose we have:
 
 ```java
 Customer original = new Customer("Mai", new Address("Đà Nẵng"));
 ```
 
-Có ba khả năng:
+There are three possibilities:
 
-| Cách làm | Tạo `Customer` mới? | Tạo `Address` mới? | Có thể chia sẻ trạng thái có thể thay đổi? |
+| Approach | Creates a new `Customer`? | Creates a new `Address`? | Can mutable state still be shared? |
 |---|:---:|:---:|:---:|
-| `Customer alias = original;` | Không | Không | Có, chính cùng một đối tượng |
-| `new Customer(original.name, original.address)` | Có | Không | Có, chung `Address` |
-| `new Customer(original.name, new Address(original.address.city))` | Có | Có | Không, đối với đồ thị đối tượng cụ thể trong ví dụ |
+| `Customer alias = original;` | No | No | Yes, they are the very same object |
+| `new Customer(original.name, original.address)` | Yes | No | Yes, they share `Address` |
+| `new Customer(original.name, new Address(original.address.city))` | Yes | Yes | No, for the specific object graph in this example |
 
-**Gán tham chiếu không phải là sao chép đối tượng.** Phép gán `alias = original` chỉ sao chép giá trị tham chiếu và khiến hai biến trỏ đến cùng một đối tượng.
+**Assigning a reference is not copying an object.** `alias = original` only copies a reference value, making both variables point to the same object.
 
-**Sao chép nông** tạo đối tượng ngoài (*outer object*) mới, nhưng các trường kiểu tham chiếu thường giữ cùng đối tượng bên trong. Những trường kiểu nguyên thủy, nếu có, nhận bản sao giá trị.
+A **shallow copy** creates a new *outer object*, but reference fields generally refer to the same nested objects. Any primitive fields receive copies of their values.
 
-**Sao chép sâu** tạo đối tượng ngoài mới và sao chép tiếp những đối tượng con cần độc lập, để thao tác trên dữ liệu có thể thay đổi ở bản sao không ảnh hưởng đến đối tượng nguồn. Mức “sâu” cần được xác định theo ranh giới sở hữu dữ liệu, không nhất thiết sao chép mọi thứ mà đối tượng tham chiếu tới trong toàn hệ thống.
+A **deep copy** creates a new outer object and also copies the child objects that must be independent, so modifying mutable data in the copy does not affect the source. The required “depth” depends on data-ownership boundaries; you need not duplicate everything the object references across the entire system.
 
-## 2. Nhìn bằng sơ đồ tham chiếu
+## 2. Visualizing Reference Relationships
 
-**Sao chép nông:**
+**Shallow copy:**
 
 ```mermaid
 flowchart LR
@@ -2337,9 +2337,9 @@ flowchart LR
     S["shallow: Customer mới"] --> A
 ```
 
-Hai đối tượng `Customer` khác nhau nhưng chung một đối tượng `Address`.
+Two distinct `Customer` objects share a single `Address` object.
 
-**Sao chép sâu đối với cấu trúc này:**
+**Deep copy for this structure:**
 
 ```mermaid
 flowchart LR
@@ -2347,9 +2347,9 @@ flowchart LR
     D["deep: Customer mới"] --> B["Address #2<br/>city = Đà Nẵng"]
 ```
 
-Các sơ đồ mô tả **quan hệ tham chiếu theo logic**; chúng không biểu diễn vị trí bộ nhớ vật lý mà JVM bắt buộc phải sử dụng.
+The diagrams show **logical reference relationships**, not physical memory locations that the JVM must use.
 
-## 3. Ví dụ Java chạy độc lập: hai kiểu sao chép
+## 3. Standalone Java Example: Two Copying Approaches
 
 File `CopyDemo.java`:
 
@@ -2438,21 +2438,21 @@ public class CopyDemo {
 }
 ```
 
-Giải thích:
+Explanation:
 
-1. `shallowCopy` khởi tạo `Customer` mới, nhưng đưa **chính tham chiếu** `source.address` vào constructor.
-2. `deepCopy` khởi tạo `Customer` mới **và** một `Address` mới qua copy constructor.
-3. Khi gọi `original.moveTo("Hà Nội")`, `shallow` nhìn thấy thay đổi vì chung `Address`; `deep` không bị ảnh hưởng.
+1. `shallowCopy` constructs a new `Customer` but passes **the same reference** from `source.address` into the constructor.
+2. `deepCopy` constructs a new `Customer` **and** a new `Address` using a copy constructor.
+3. After `original.moveTo("Hà Nội")`, `shallow` observes the change because it shares `Address`; `deep` remains unaffected.
 
-Trong ví dụ trên, việc sao chép tham chiếu tới `String name` vẫn an toàn đối với nội dung tên vì `String` là immutable (không thay đổi nội dung sau khi được tạo). Nếu trường `name` được thay bằng một đối tượng tùy chỉnh có thể thay đổi, ta phải cân nhắc sao chép cả đối tượng đó.
+In the example, copying the reference to `String name` is safe for the name's contents because `String` is immutable (its contents never change after creation). If `name` were a custom mutable object, we would need to consider copying it as well.
 
-**Lưu ý thực tế:** Phương thức `getAddressForDemo()` cố ý để lộ tham chiếu để quan sát sự khác biệt. Một API sản xuất nên cân nhắc không trả trực tiếp tham chiếu nội bộ nếu muốn giữ tính độc lập của trạng thái.
+**Practical note:** `getAddressForDemo()` deliberately exposes a reference to demonstrate the difference. Production APIs should consider avoiding direct exposure of internal references when state independence matters.
 
-## 4. Bản sao nông bằng constructor và Object.clone()
+## 4. Shallow Copies with Constructors and Object.clone()
 
-Java không có cú pháp chung kiểu `deepcopy(object)` áp dụng đúng cho mọi đồ thị đối tượng.
+Java has no universal `deepcopy(object)` syntax that works correctly for every object graph.
 
-Một cách minh bạch là viết **copy constructor** hoặc phương thức factory:
+One explicit approach is to write a **copy constructor** or factory method:
 
 ```java
 class Point {
@@ -2471,13 +2471,13 @@ class Point {
 }
 ```
 
-Vì `Point` chỉ chứa hai trường nguyên thủy, copy constructor này cho ra hai đối tượng độc lập về trạng thái. Không có tham chiếu đến đối tượng con mutable cần sao chép thêm.
+Because `Point` has only two primitive fields, this copy constructor creates two objects with independent state. There are no references to mutable child objects that need further copying.
 
-### Object.clone() có phải sao chép sâu?
+### Does Object.clone() Perform a Deep Copy?
 
-**Không.** Hành vi của `Object.clone()` mặc định tạo một đối tượng mới bằng cách sao chép các trường; với trường tham chiếu, nó sao chép **giá trị tham chiếu**. Vì vậy kết quả thường là **shallow copy**.
+**No.** The default `Object.clone()` behavior creates a new object by copying its fields; for reference fields, it copies **the reference values**. Thus, the result is generally a **shallow copy**.
 
-Ví dụ minh họa:
+An illustrative example:
 
 ```java
 class Inventory implements Cloneable {
@@ -2507,7 +2507,7 @@ b.quantities[0] = 99;
 System.out.println(a.quantities[0]);       // 99
 ```
 
-`Cloneable` là giao diện đánh dấu cho cơ chế `Object.clone()`; bản thân nó **không định nghĩa** một phương thức `clone()` công khai. Nếu muốn sao chép sâu trường mảng, có thể thay đổi bản sao sau khi gọi `super.clone()`:
+`Cloneable` is a marker interface for the `Object.clone()` mechanism; it **does not declare** a public `clone()` method itself. To deep-copy the array field, you can modify the clone after calling `super.clone()`:
 
 ```java
 @Override
@@ -2522,13 +2522,13 @@ public Inventory clone() {
 }
 ```
 
-Với `int[]`, `clone()` của mảng tạo mảng mới và sao chép các giá trị nguyên thủy nên đủ độc lập. Với `Product[]` có các `Product` mutable, mảng mới vẫn giữ cùng tham chiếu đến từng `Product`: muốn bản sao sâu hơn, phải sao chép các phần tử tương ứng.
+For `int[]`, the array's `clone()` creates a new array and copies primitive values, providing sufficient independence. With `Product[]` containing mutable `Product` objects, the new array still holds references to those same `Product` instances; a deeper copy requires copying the relevant elements.
 
-Do những yêu cầu đặc biệt và khả năng khó kiểm soát của `Object.clone()` trong hệ phân cấp kế thừa, copy constructor hoặc factory chuyên biệt thường dễ đọc, dễ kiểm tra hơn. Tuy nhiên, chọn cách nào còn tùy hợp đồng của lớp và API đang sử dụng.
+Given the special requirements and potential complexity of `Object.clone()` in inheritance hierarchies, copy constructors or specialized factories are often easier to read and verify. The right choice still depends on the class contract and the APIs involved.
 
-## 5. List, Set, Map: sao chép collection chưa chắc sao chép phần tử
+## 5. List, Set, Map: Copying a Collection Does Not Necessarily Copy Its Elements
 
-Đây là nguồn lỗi rất phổ biến trong Java.
+This is a very common source of Java bugs.
 
 ```java
 import java.util.ArrayList;
@@ -2572,16 +2572,16 @@ public class ListCopyDemo {
 }
 ```
 
-Có **hai cấp độc lập** cần phân biệt:
+Distinguish **two levels of independence**:
 
-- **Cấu trúc collection:** `new ArrayList<>(original)` tạo danh sách khác, nên `add` hoặc `remove` trên danh sách mới không tự thay đổi cấu trúc danh sách cũ.
-- **Đối tượng phần tử:** các phần tử ban đầu có thể vẫn được chia sẻ. Sửa trạng thái của `Item` sẽ xuất hiện ở cả hai danh sách shallow.
+- **Collection structure:** `new ArrayList<>(original)` creates a different list, so `add` or `remove` on the new list does not automatically change the original list's structure.
+- **Element objects:** the original elements may still be shared. Modifying an `Item` object is visible through both shallowly copied lists.
 
-Các thao tác `new HashSet<>(source)`, `new HashMap<>(source)` cũng cần được hiểu tương tự: chúng tạo container mới, nhưng thường vẫn giữ tham chiếu tới key, value hoặc element gốc.
+The same principle applies to `new HashSet<>(source)` and `new HashMap<>(source)`: they create new containers but generally retain references to the original keys, values, or elements.
 
-### List.copyOf có phải deep copy?
+### Does List.copyOf Perform a Deep Copy?
 
-`List.copyOf(source)` tạo ra danh sách có giao diện **không cho sửa cấu trúc** (và từ chối phần tử `null`). Điều đó **không** biến các phần tử mutable thành immutable và không tạo bản sao sâu cho chúng:
+`List.copyOf(source)` creates a list whose interface **disallows structural changes** (and rejects `null` elements). It **does not** make mutable elements immutable or produce deep copies of them:
 
 ```java
 List<StringBuilder> source = new ArrayList<>();
@@ -2594,11 +2594,11 @@ source.get(0).append("!");
 System.out.println(snapshot.get(0)); // A!
 ```
 
-Tương tự, `Collections.unmodifiableList(source)` trả một **view không cho sửa qua view**, nhưng nó còn có thể phản ánh thay đổi cấu trúc của danh sách `source` bên dưới. Để chụp cấu trúc tại thời điểm hiện tại, có thể kết hợp sao chép container và bao không cho sửa; để cách ly trạng thái phần tử, vẫn cần giải pháp riêng.
+Likewise, `Collections.unmodifiableList(source)` returns **a view that blocks modification through the view**, but it may still reflect structural changes to the underlying `source` list. To capture the structure at a particular time, copy the container and optionally wrap it as unmodifiable; isolating element state requires a separate solution.
 
-## 6. Sao chép mảng một chiều và mảng nhiều chiều
+## 6. Copying One-Dimensional and Multidimensional Arrays
 
-### Mảng chứa kiểu nguyên thủy
+### Arrays of Primitive Values
 
 ```java
 int[] scores = {8, 9, 10};
@@ -2610,11 +2610,11 @@ System.out.println(scores[0]); // 8
 System.out.println(copied[0]); // 0
 ```
 
-Mảng đích là đối tượng mới. Vì các phần tử là `int`, việc sao chép trực tiếp từng giá trị đã bảo đảm độc lập về dữ liệu trong mảng.
+The destination array is a new object. Because its elements are `int` values, copying each primitive value provides independent array data.
 
-### Mảng hai chiều
+### Two-Dimensional Arrays
 
-Java biểu diễn `int[][]` dưới dạng một **mảng chứa các tham chiếu đến mảng con**:
+Java represents `int[][]` as **an array containing references to inner arrays**:
 
 ```java
 int[][] grid = {{1, 2}, {3, 4}};
@@ -2625,9 +2625,9 @@ shallow[0][0] = 99;
 System.out.println(grid[0][0]); // 99
 ```
 
-`grid.clone()` chỉ tạo mảng ngoài mới; cả hai mảng ngoài còn dùng chung các hàng `int[]`.
+`grid.clone()` creates only a new outer array; both outer arrays still share the same `int[]` rows.
 
-Sao chép từng hàng để tách biệt:
+Copy each row to make them independent:
 
 ```java
 int[][] deep = new int[grid.length][];
@@ -2640,13 +2640,13 @@ System.out.println(grid[0][0]); // 99
 System.out.println(deep[0][0]); // 7
 ```
 
-Với mảng lồng sâu hơn hoặc các phần tử là đối tượng mutable, cần tiếp tục sao chép theo cấu trúc thực tế. Dấu ngoặc `[][]` không khiến Java tự động sao chép sâu.
+For more deeply nested arrays or mutable object elements, further copying must follow the actual structure. The `[][]` notation does not make Java deep-copy data automatically.
 
-## 7. Deep copy là sao chép đồ thị đối tượng
+## 7. Deep Copying Is Copying an Object Graph
 
-Một đối tượng có thể tham chiếu đến nhiều đối tượng con; các đối tượng con lại tham chiếu tới nhau. Khi đó, đơn giản gọi copy constructor đệ quy có thể chưa đủ.
+An object can refer to multiple child objects that, in turn, refer to one another. Simply invoking copy constructors recursively may therefore be insufficient.
 
-Ví dụ:
+For example:
 
 ```text
 Department
@@ -2654,16 +2654,16 @@ Department
   └── staff[0] -> Employee #1
 ```
 
-Nếu deep copy cả `leader` lẫn `staff[0]` bằng cách tạo hai `Employee` mới riêng rẽ, bản sao mất đi quan hệ **cả hai trường cùng trỏ đến một nhân viên** vốn tồn tại trong đối tượng nguồn.
+If `leader` and `staff[0]` are deep-copied into two separate new `Employee` objects, the copy loses the original relationship in which **both fields point to the same employee**.
 
-Thực tế có hai đặc điểm cần cân nhắc:
+Two graph properties matter:
 
-1. **Shared references:** nhiều đường tham chiếu tới cùng một đối tượng nên tiếp tục trỏ tới cùng **một bản sao tương ứng**, nếu hợp đồng yêu cầu bảo toàn cấu trúc đồ thị.
-2. **Cycles:** các đối tượng tham chiếu vòng (A → B → A). Đệ quy tạo mới ngây thơ có thể lặp vô hạn và gây `StackOverflowError`.
+1. **Shared references:** multiple paths to one source object should continue to point to the same **corresponding copy** if the contract requires preserving graph structure.
+2. **Cycles:** objects may reference one another in a loop (A → B → A). Naive recursive construction can recurse indefinitely and cause `StackOverflowError`.
 
-Cách sao chép đồ thị thường cần **bảng ánh xạ đối tượng nguồn → đối tượng đã sao chép**, dựa vào danh tính đối tượng, đồng thời ghi bản sao vào bảng **trước khi** đi sâu vào các tham chiếu con.
+Graph copying commonly needs **a mapping from source objects to copied objects**, based on object identity, with each copy entered in the map **before** recursively processing child references.
 
-### Ví dụ xử lý vòng tham chiếu với IdentityHashMap
+### Example: Handling Cyclic References with IdentityHashMap
 
 File `GraphCopyDemo.java`:
 
@@ -2717,15 +2717,15 @@ public class GraphCopyDemo {
 }
 ```
 
-`IdentityHashMap` so sánh key theo **danh tính đối tượng (`==`)** thay vì hợp đồng `equals()`. Điều đó phù hợp cho bài toán bảo toàn cấu trúc đồ thị: hai đối tượng gốc khác nhau nhưng có nội dung bằng nhau vẫn cần hai bản sao khác nhau. Thuật toán trên phù hợp với `Node` chỉ có `label` là `String` immutable và tham chiếu `next`; lớp thực tế có thể cần sao chép thêm các field mutable khác.
+`IdentityHashMap` compares keys using **object identity (`==`)** rather than the `equals()` contract. This suits graph preservation: two distinct source objects with equal contents must still have separate copies. The algorithm works for `Node` with only a `label` that is an immutable `String` and a `next` reference; a real class might require additional copies of other mutable fields.
 
-Với đồ thị rất sâu, phiên bản đệ quy vẫn có nguy cơ tràn stack; có thể dùng thuật toán duyệt lặp với queue/stack nếu cần xử lý đồ thị lớn.
+For very deep graphs, recursive copying can still overflow the call stack; use iterative traversal with a queue or stack if large graphs must be handled.
 
-## 8. Defensive copy để bảo vệ trạng thái của lớp
+## 8. Defensive Copying to Protect Class State
 
-Một trường hợp thường cần sao chép là **ranh giới API**: lớp nhận dữ liệu có thể sửa từ bên ngoài nhưng muốn giữ trạng thái của mình ổn định.
+A frequent reason to copy data is at an **API boundary**: a class receives externally mutable data but needs to keep its own state stable.
 
-Giả sử báo cáo điểm chỉ lưu `int[]`:
+Suppose a score report only stores `int[]`:
 
 ```java
 import java.util.Objects;
@@ -2752,7 +2752,7 @@ public final class ScoreReport {
 }
 ```
 
-Cách sử dụng:
+Usage:
 
 ```java
 int[] input = {7, 8};
@@ -2765,52 +2765,52 @@ result[1] = 0;                 // Không làm đổi report
 System.out.println(report.total()); // 15
 ```
 
-**Sao chép khi nhận** tránh đối tượng gọi sửa dữ liệu sau khi giao cho `ScoreReport`. **Sao chép khi trả** tránh bên ngoài sửa dữ liệu bên trong thông qua getter.
+**Copying on input** prevents callers from modifying data after handing it to `ScoreReport`. **Copying on output** prevents callers from changing internal data through the getter.
 
-Vì `scores` là `int[]`, `clone()` là đủ. Nếu là `List<MutableStudent>`, chỉ sao chép list có thể vẫn lộ tham chiếu đến từng sinh viên mutable; cần tiếp tục sao chép phần tử, công khai DTO bất biến hoặc chỉ trả thông tin đã tính toán.
+Because `scores` is an `int[]`, `clone()` is sufficient. With `List<MutableStudent>`, copying the list alone could expose references to individual mutable students; copy the elements as well, expose immutable DTOs, or return only calculated information.
 
-Từ khóa `final` trên field `scores` chỉ ngăn gán lại tham chiếu của field; nó **không** tự ngăn sửa phần tử mảng. Chính defensive copy và việc không cho truy cập trực tiếp mới giúp kiểm soát trạng thái ở ví dụ này.
+The `final` keyword on field `scores` prevents reassignment of that field's reference; it **does not** itself prevent array-element changes. Defensive copies and restricted direct access are what protect the state in this example.
 
-## 9. Khi nào không cần deep copy?
+## 9. When Is Deep Copying Unnecessary?
 
-Sao chép sâu không phải lựa chọn mặc định trong mọi trường hợp. Hãy xét **mục đích**, **quyền sở hữu dữ liệu** và **tính mutable**:
+Deep copying should not be the default for every situation. Consider **purpose**, **data ownership**, and **mutability**:
 
-| Tình huống | Lựa chọn thường hợp lý | Lý do |
+| Situation | Often reasonable choice | Reason |
 |---|---|---|
-| Chỉ cần một tên khác cho cùng đối tượng | Gán tham chiếu | Cố ý chia sẻ dữ liệu; không tốn bản sao |
-| Tạo collection mới nhưng chia sẻ phần tử bất biến | Shallow copy container | Rẻ và thường đủ an toàn |
-| Tạo DTO độc lập khỏi đối tượng nghiệp vụ mutable | Deep copy các field cần độc lập | Sửa DTO không tác động dữ liệu nguồn |
-| Lưu `int[]` vào lớp muốn bảo vệ bất biến | Sao chép mảng khi nhận và trả | Chặn sửa ngoài ý muốn |
-| Đồ thị đối tượng có shared references hoặc cycles | Copy theo identity map có kiểm soát | Bảo toàn quan hệ và tránh lặp vô hạn |
-| Đối tượng là immutable (ví dụ `String`, `Integer`) | Có thể chia sẻ tham chiếu | Không thể sửa trạng thái đối tượng đó |
-| Đối tượng đại diện tài nguyên bên ngoài (socket, kết nối DB, lock) | Thiết kế lại hợp đồng, thường không deep copy | Không thể hoặc không nên nhân bản máy móc danh tính và tài nguyên |
-| Thực thể ORM/JPA đang được quản lý | Thiết kế DTO/snapshot tách biệt tùy mục đích | Sao chép entity tùy tiện có thể gây nhầm lẫn identity, quan hệ, trạng thái persistence |
+| Need another name for the same object | Assign a reference | Intentional data sharing with no copy cost |
+| Create a new collection while sharing immutable elements | Shallow-copy the container | Inexpensive and usually safe |
+| Create a DTO independent of a mutable domain object | Deep-copy fields that must be independent | Editing the DTO does not affect source data |
+| Store `int[]` in a class that protects invariants | Copy the array on input and output | Prevents unintended external changes |
+| An object graph contains shared references or cycles | Controlled copying using an identity map | Preserves relationships and avoids infinite recursion |
+| The object is immutable (such as `String` or `Integer`) | Sharing the reference may be safe | Its state cannot be modified |
+| The object represents an external resource (socket, database connection, lock) | Redesign the contract; usually avoid deep copies | Identity and resources cannot or should not be cloned mechanically |
+| A managed ORM/JPA entity | Design a separate DTO/snapshot for the specific purpose | Arbitrary entity copying can confuse identity, relationships, and persistence state |
 
-### Chi phí và giới hạn
+### Costs and Limitations
 
-Deep copy có thể tốn **thời gian và bộ nhớ**, đặc biệt khi đồ thị lớn. Nó còn đặt ra câu hỏi nghiệp vụ: trường nào thuộc dữ liệu sở hữu của đối tượng? Trường nào chỉ là tham chiếu tới một entity có danh tính riêng, tài nguyên dùng chung hoặc một service?
+Deep copying can consume **time and memory**, especially for large graphs. It also raises business questions: which fields are data owned by the object, and which merely reference an independently identified entity, shared resource, or service?
 
-Một bản sao “sâu hơn” không nhất thiết “đúng hơn” nếu nó làm mất quan hệ dùng chung có chủ đích, nhân bản thực thể nghiệp vụ hoặc tạo dữ liệu độc lập ngoài mong muốn. Ngược lại, shallow copy dễ gây hiệu ứng phụ nếu code tưởng bản sao hoàn toàn độc lập.
+A “deeper” copy is not necessarily “more correct” if it breaks intentional sharing, duplicates business entities, or creates unwanted independent data. Conversely, shallow copying can cause side effects when callers mistakenly assume complete independence.
 
-Hãy định nghĩa rõ trong API: **những cấp dữ liệu nào được sao chép, những cấp nào vẫn được chia sẻ và phía nào được phép thay đổi chúng**.
+Specify clearly in the API **which data levels are copied, which remain shared, and who is allowed to modify them**.
 
-## 10. Sai lầm thường gặp
+## 10. Common Misconceptions
 
-| Nhận định | Kết luận | Giải thích |
+| Claim | Verdict | Explanation |
 |---|---|---|
-| `b = a` là shallow copy | Sai | Đây chỉ là sao chép giá trị tham chiếu; không tạo đối tượng mới |
-| `new ArrayList<>(oldList)` luôn là deep copy | Sai | Container mới thường vẫn chia sẻ phần tử |
-| `Object.clone()` mặc định sao chép sâu | Sai | Bản sao các field tham chiếu vẫn trỏ tới đối tượng con gốc |
-| `int[].clone()` đủ tách biệt giá trị phần tử | Đúng | Các phần tử là primitive |
-| `Person[].clone()` làm bản sao `Person` mới | Sai | Các phần tử tham chiếu vẫn dùng chung |
-| `List.copyOf()` làm các phần tử mutable trở nên bất biến | Sai | Nó hạn chế sửa collection qua danh sách kết quả, không đóng băng phần tử |
-| Field `final` khiến đối tượng con bất biến | Sai | `final` chỉ giới hạn gán lại field đó |
-| Deep copy nhất thiết sao chép mọi thứ vô điều kiện | Sai | Cần quy định ranh giới và tôn trọng danh tính, tài nguyên dùng chung |
-| Có vòng tham chiếu thì copy đệ quy ngây thơ có thể lỗi | Đúng | Cần phát hiện đối tượng đã sao chép hoặc dùng thuật toán khác |
+| `b = a` is a shallow copy | False | It only copies a reference value; no new object is created |
+| `new ArrayList<>(oldList)` is always a deep copy | False | The new container commonly shares its elements |
+| `Object.clone()` deep-copies by default | False | Copied reference fields still point to the original child objects |
+| `int[].clone()` gives independent element values | True | Elements are primitives |
+| `Person[].clone()` creates new `Person` copies | False | Referenced elements remain shared |
+| `List.copyOf()` makes mutable elements immutable | False | It prevents modifying the collection through the result; it does not freeze elements |
+| A `final` field makes a child object immutable | False | `final` only restricts reassignment of that field |
+| Deep copying must copy everything unconditionally | False | Respect boundaries, identity, and shared resources |
+| Naive recursive copying can fail with cyclic references | True | Track already copied objects or use a different algorithm |
 
-## 11. Bài tập thực hành
+## 11. Practice Exercises
 
-### Bài 1: Dự đoán kết quả
+### Exercise 1: Predict the Output
 
 ```java
 class Category {
@@ -2833,9 +2833,9 @@ System.out.println(p1 == p2);
 System.out.println(p1.category == p2.category);
 ```
 
-**Đáp án:** `Phụ kiện`, `false`, `true`. Hai `Product` khác nhau nhưng cùng tham chiếu một `Category`. Thao tác tạo `Product` mới ở đây mang tính chất sao chép nông đối với field `category`.
+**Answer:** `Phụ kiện`, `false`, `true`. The two `Product` objects are distinct but share one `Category`. Creating the new `Product` here effectively performs a shallow copy of the `category` field.
 
-### Bài 2: Sao chép mảng hai chiều
+### Exercise 2: Copy a Two-Dimensional Array
 
 ```java
 int[][] a = {{1}, {2}};
@@ -2847,66 +2847,66 @@ System.out.println(a[0][0]);
 System.out.println(a[1][0]);
 ```
 
-**Đáp án:** `1` và `7`. Việc gán `b[0]` chỉ thay tham chiếu hàng đầu trong mảng ngoài `b`; nhưng `b[1]` và `a[1]` vẫn cùng tham chiếu đến hàng thứ hai nên sửa phần tử là tác động dùng chung.
+**Answer:** `1` and `7`. Assigning `b[0]` only replaces the first row reference in outer array `b`; however, `b[1]` and `a[1]` still point to the same second row, so an element change is shared.
 
-### Bài 3: Thiết kế hàm copy an toàn
+### Exercise 3: Design a Safe Copy Function
 
-Một đối tượng `Order` gồm `id: String`, `shippingAddress: Address`, `items: List<OrderItem>`, trong đó `Address` và `OrderItem` đều mutable. Yêu cầu tạo bản sao để người dùng chỉnh địa chỉ và số lượng sản phẩm thử nghiệm mà đơn gốc không thay đổi.
+An `Order` contains `id: String`, `shippingAddress: Address`, and `items: List<OrderItem>`, where `Address` and `OrderItem` are mutable. You must create a copy in which users can experiment with the address and product quantities without altering the original order.
 
-Gợi ý triển khai:
+Implementation hints:
 
-1. Tạo `Order` mới và giữ nguyên giá trị `id` nếu đặc tả cho phép giữ id; nếu đây là entity có danh tính nghiệp vụ, cân nhắc dùng id riêng hoặc DTO.
-2. Tạo `Address` mới từ dữ liệu địa chỉ gốc.
-3. Tạo `List` mới và từng `OrderItem` mới; tiếp tục sao chép các thành phần mutable được sở hữu bên trong mỗi item.
-4. Kiểm tra bằng phép so sánh tham chiếu `==` và bằng cách sửa bản sao rồi xác nhận đơn gốc không đổi.
+1. Create a new `Order` and retain its `id` value only if the specification permits it; if this is a business-identity entity, consider a separate ID or a DTO.
+2. Create a new `Address` from the original address data.
+3. Create a new `List` and new copies of each `OrderItem`; also copy mutable components owned within each item.
+4. Verify using reference comparison `==` and by modifying the copy, then checking that the original order remains unchanged.
 
-Tự hỏi thêm: nếu hai item ban đầu cùng tham chiếu đến một đối tượng `DiscountRule` mutable, có cần giữ việc dùng chung trong bản sao không? Câu trả lời phụ thuộc hợp đồng nghiệp vụ và là lý do phải xem dữ liệu như **một đồ thị**, không chỉ như cây đơn giản.
+Also ask: if two original items reference the same mutable `DiscountRule` object, should the copy preserve that sharing? The answer depends on the business contract, which is why data must be considered **a graph**, not just a simple tree.
 
 ---
 
-## Ghi nhớ
+## Remember
 
-- **Gán tham chiếu:** không tạo đối tượng mới.
-- **Shallow copy:** tạo đối tượng ngoài mới nhưng thường giữ tham chiếu tới các đối tượng con.
-- **Deep copy:** tạo thêm các đối tượng con cần độc lập theo phạm vi đã xác định.
-- `clone()`, copy constructor, tạo container mới hoặc `List.copyOf()` đều cần xét chính xác mức sao chép mà chúng thực sự thực hiện.
-- Quyết định sao chép cần dựa vào khả năng thay đổi dữ liệu, ý định chia sẻ, danh tính đối tượng và ranh giới API; kiểm tra bằng việc sửa bản sao và quan sát đối tượng nguồn.
+- **Reference assignment:** creates no new object.
+- **Shallow copy:** creates a new outer object while generally retaining references to child objects.
+- **Deep copy:** creates independent child objects where required by the defined scope.
+- For `clone()`, copy constructors, new containers, and `List.copyOf()`, determine precisely what level of copying each actually performs.
+- Base copying decisions on data mutability, intended sharing, object identity, and API boundaries; test by modifying the copy and observing the source.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="object-007">Chia sẻ đối tượng và tác động của thay đổi trạng thái</a>
+## <a id="object-007">Object Sharing and the Effects of State Changes</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Chia sẻ đối tượng và tác động của thay đổi trạng thái trong Java
+# Object Sharing and the Effects of State Changes in Java
 
-Một đối tượng có thể được nhiều thành phần của chương trình **cùng sử dụng**. Điều này rất hữu ích khi tất cả cần làm việc trên một trạng thái chung; nhưng nếu đối tượng có thể thay đổi (*mutable*), thao tác ở một nơi có thể tạo ra kết quả bất ngờ ở nơi khác.
+Multiple components of a program can **share one object**. This is useful when all need to work with common state, but if the object is *mutable*, an operation in one place can cause unexpected results elsewhere.
 
-Bài này tập trung vào ba câu hỏi thực tế:
+This lesson focuses on three practical questions:
 
-1. **Ai đang giữ tham chiếu tới đúng instance được thay đổi?**
-2. **Ai có quyền cập nhật trạng thái, và các bên còn lại quan sát thay đổi khi nào?**
-3. **Khi nào cần chia sẻ trạng thái đang sống (*live state*), khi nào cần một ảnh chụp (*snapshot*) độc lập?**
+1. **Who holds a reference to the specific instance being modified?**
+2. **Who may update its state, and when do other components observe the changes?**
+3. **When do we need shared *live state*, and when do we need an independent *snapshot*?**
 
-Phép gán `b = a` sao chép giá trị tham chiếu; nó không nhân bản object. Tuy nhiên, chỉ biết có nhiều alias là chưa đủ để thiết kế an toàn: cần hiểu **đường đi của tác động thay đổi** qua nhiều đối tượng và hợp đồng giữa các thành phần.
+Assignment `b = a` copies a reference value; it does not duplicate the object. However, knowing that multiple aliases exist is not enough for safe design: we must understand **how the effects of changes propagate** through objects and the contracts between components.
 
-## 1. Một thay đổi có thể lan qua các thành phần mà không cần gọi trực tiếp nhau
+## 1. A Change Can Affect Other Components Without Direct Calls Between Them
 
-Giả sử ứng dụng điều khiển nhiệt độ phòng có hai giao diện:
+Suppose a room-temperature control application has two interfaces:
 
-- `MobileControl` thay đổi nhiệt độ mục tiêu.
-- `WallDisplay` hiển thị nhiệt độ mục tiêu hiện tại.
-- Cả hai được khởi tạo với **cùng một `TemperaturePolicy`**, là đối tượng nắm trạng thái và kiểm tra giá trị hợp lệ.
+- `MobileControl` changes the target temperature.
+- `WallDisplay` displays the current target temperature.
+- Both receive **the same `TemperaturePolicy`** during construction; this object holds the state and validates permitted values.
 
-Khi điện thoại thay đổi mục tiêu từ 22°C lên 24°C, màn hình tường **không cần được truyền một bản sao mới của policy**. Lần tiếp theo `WallDisplay` đọc đối tượng được chia sẻ, nó thấy 24°C.
+When the phone changes the target from 22°C to 24°C, the wall display **does not need a new copy of the policy**. The next time `WallDisplay` reads the shared object, it sees 24°C.
 
-Điểm tinh tế: việc thay đổi object **không tự động ép giao diện vẽ lại**. Trong ví dụ, `render()` phải được gọi lại; UI thực tế cần cơ chế thông báo, event, polling hoặc cập nhật trạng thái phù hợp để biết lúc nào render.
+An important subtlety: modifying an object **does not automatically cause the UI to redraw**. In this example, `render()` must be invoked again; a real UI needs notifications, events, polling, or an appropriate state-update mechanism to know when to render.
 
 ~~~mermaid
 flowchart LR
@@ -2916,11 +2916,11 @@ flowchart LR
     P -. "lần đọc tiếp theo" .-> W
 ~~~
 
-Mũi tên biểu diễn **quan hệ tham chiếu và thao tác trên object**. Chúng không phải khẳng định về cách JVM bố trí bộ nhớ.
+The arrows represent **reference relationships and operations on objects**. They make no claim about JVM memory layout.
 
-## 2. Ví dụ Java hoàn chỉnh: trạng thái sống, snapshot và gán lại tham chiếu
+## 2. Complete Java Example: Live State, Snapshots, and Reference Reassignment
 
-Lưu vào `SharingScenario.java`, chạy với JDK 17+:
+Save as `SharingScenario.java` and run with JDK 17+:
 
 ~~~java
 import java.util.ArrayList;
@@ -3015,14 +3015,14 @@ public class SharingScenario {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac SharingScenario.java
 java SharingScenario
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 true
@@ -3034,35 +3034,35 @@ Mục tiêu: 24°C
 19
 ~~~
 
-### Vì sao kết quả này đúng?
+### Why Is This Output Correct?
 
-**Lần khởi tạo:** `shared`, field `policy` của `mobile` và field `policy` của `wall` đều trỏ tới cùng một `TemperaturePolicy`. Các đối tượng giao diện là hai instance khác nhau; **policy** mới là đối tượng được chia sẻ.
+**Initialization:** `shared`, the `policy` field of `mobile`, and the `policy` field of `wall` all reference the same `TemperaturePolicy`. The interface objects are distinct instances; **the policy** is what they share.
 
-**Lần cập nhật đầu tiên:** `mobile.changeTarget(24)` gọi `setTarget(24)` trên chính policy ấy. `wall.render()` đọc trường mới, vì thế trả `"Mục tiêu: 24°C"`. Không có `new TemperaturePolicy` trong quá trình cập nhật này.
+**First update:** `mobile.changeTarget(24)` calls `setTarget(24)` on that same policy. `wall.render()` reads the updated field and therefore returns `"Mục tiêu: 24°C"`. No `new TemperaturePolicy` is executed during this update.
 
-**Snapshot:** `oldRenderedText` là giá trị `String` đã được tạo lúc mục tiêu còn là 22. `String` bất biến, nên chuỗi này vẫn là `"Mục tiêu: 22°C"`. `oldHistory` là một snapshot cấu trúc của danh sách ở thời điểm còn trống, vì `List.copyOf` không phản ánh phần tử được thêm sau đó vào `history`. Các phần tử `String` ở đây cũng bất biến.
+**Snapshot:** `oldRenderedText` is the `String` created when the target was still 22. Since `String` is immutable, it remains `"Mục tiêu: 22°C"`. `oldHistory` is a structural snapshot taken while the list was empty, because `List.copyOf` does not reflect elements later appended to `history`. The `String` elements here are immutable too.
 
-**Lần gán lại:** sau khi `mobile = new MobileControl(replacement)`, chỉ biến `mobile` ở `main` trỏ đến một bộ điều khiển khác. `wall` tiếp tục giữ policy cũ ở mức 24, còn policy mới tăng từ 18 lên 19. Việc gán lại một biến không cập nhật mọi tham chiếu khác trong chương trình.
+**Reassignment:** after `mobile = new MobileControl(replacement)`, only the `mobile` variable in `main` refers to another controller. `wall` keeps the old policy at 24, while the new policy changes from 18 to 19. Reassigning one variable does not update every other reference in the program.
 
-## 3. Lập bảng tác động: đối tượng nào thật sự bị sửa?
+## 3. Impact Table: Which Object Actually Changes?
 
-| Thời điểm | Thao tác | Policy cũ mà `wall` giữ | Policy mới | Văn bản `oldRenderedText` |
+| Point in time | Operation | Old policy held by `wall` | New policy | Text in `oldRenderedText` |
 |---|---|---:|---:|---|
-| Khởi tạo | `new TemperaturePolicy(22)` | 22 | Chưa có | "Mục tiêu: 22°C" |
-| Sau điện thoại đổi | `mobile.changeTarget(24)` | 24 | Chưa có | "Mục tiêu: 22°C" |
-| Tạo bộ điều khiển khác | `mobile = new MobileControl(replacement)` | 24 | 18 | "Mục tiêu: 22°C" |
-| Điện thoại đổi lần nữa | `mobile.changeTarget(19)` | 24 | 19 | "Mục tiêu: 22°C" |
+| Initialization | `new TemperaturePolicy(22)` | 22 | Does not exist | "Target: 22°C" (translated) |
+| After phone update | `mobile.changeTarget(24)` | 24 | Does not exist | "Target: 22°C" (translated) |
+| Create another controller | `mobile = new MobileControl(replacement)` | 24 | 18 | "Target: 22°C" (translated) |
+| Phone updates again | `mobile.changeTarget(19)` | 24 | 19 | "Target: 22°C" (translated) |
 
-Bảng này tách hai loại trạng thái:
+The table distinguishes two forms of state:
 
-- **Trạng thái đang sống:** `wall.render()` lấy dữ liệu từ đối tượng `TemperaturePolicy` đang được `wall` tham chiếu **tại thời điểm gọi**.
-- **Giá trị đã chụp:** `oldRenderedText` và `oldHistory` giữ dữ liệu tại thời điểm lấy snapshot; chúng không tự cập nhật theo policy.
+- **Live state:** `wall.render()` reads data from the `TemperaturePolicy` that `wall` references **at call time**.
+- **Captured values:** `oldRenderedText` and `oldHistory` retain data from the snapshot moment; they do not update automatically with the policy.
 
-Khi debug, thay vì hỏi mơ hồ “vì sao màn hình sai?”, hãy xác định: **màn hình đang trỏ tới policy nào, đang dùng dữ liệu mới đọc hay dữ liệu được cache trước đó?**
+When debugging, rather than vaguely asking “Why is the display wrong?”, determine **which policy the display references and whether it uses freshly read or previously cached data**.
 
-## 4. Chia sẻ trực tiếp và chia sẻ qua cấu trúc lồng nhau
+## 4. Direct Sharing and Sharing Through Nested Structures
 
-Chia sẻ không chỉ xảy ra qua `TemperaturePolicy b = a`. Một instance cũng có thể đi qua constructor, getter, tham số phương thức hoặc collection.
+Sharing is not limited to `TemperaturePolicy b = a`. An instance may also be passed through constructors, getters, method parameters, or collections.
 
 ~~~java
 final class Device {
@@ -3081,18 +3081,18 @@ heater.policy.setTarget(23);
 System.out.println(airConditioner.policy.getTarget()); // 23
 ~~~
 
-Đoạn trên là minh họa ngắn đặt trong ngữ cảnh có thể truy cập các lớp ở ví dụ chính. **Hai `Device` khác nhau** vẫn giữ cùng đối tượng con `TemperaturePolicy`. Vì vậy không thể suy ra rằng “đã tạo hai đối tượng cha thì mọi trạng thái bên trong đều độc lập”.
+The snippet is a short illustration in a context where the main example's classes are accessible. **Two different `Device` objects** still hold the same child `TemperaturePolicy`. Creating two parent objects does not imply that all nested state is independent.
 
-Ngược lại, nếu mỗi thiết bị có một policy mới:
+Conversely, if each device gets a new policy:
 
 ~~~java
 Device heater = new Device(new TemperaturePolicy(22));
 Device airConditioner = new Device(new TemperaturePolicy(22));
 ~~~
 
-thì thay đổi policy của máy sưởi không làm đổi policy của máy lạnh. Hai đối tượng có cùng dữ liệu ban đầu vẫn có **danh tính khác nhau**.
+then changing the heater's policy does not affect the air conditioner's policy. Objects with identical initial data still have **different identities**.
 
-### Collection và registry cũng có thể giữ alias
+### Collections and Registries Can Hold Aliases Too
 
 ~~~java
 Map<String, TemperaturePolicy> registry = new HashMap<>();
@@ -3102,58 +3102,58 @@ TemperaturePolicy fromRegistry = registry.get("living-room");
 System.out.println(fromRegistry == policy); // true
 ~~~
 
-Đoạn này cần `import java.util.Map;` và `import java.util.HashMap;`, với biến `policy` đã khai báo. `Map.put/get` lưu và trả về **tham chiếu tới phần tử**, không tự nhân bản `TemperaturePolicy`.
+This snippet requires `import java.util.Map;` and `import java.util.HashMap;`, with `policy` already declared. `Map.put/get` stores and returns **element references**; it does not automatically duplicate `TemperaturePolicy`.
 
-Nếu sau đó `registry.put("living-room", new TemperaturePolicy(18))`, map trỏ sang policy mới tại key đó; một `WallDisplay` đã giữ tham chiếu tới policy cũ **không tự chuyển theo**. Đây là lỗi phổ biến khi thay đối tượng trong registry/cache nhưng các thành phần khác vẫn giữ tham chiếu cũ.
+If `registry.put("living-room", new TemperaturePolicy(18))` executes later, the map points to the new policy for that key; a `WallDisplay` that already holds the old policy **does not switch automatically**. This is a common error when replacing objects in registries/caches while other components retain old references.
 
-## 5. Ai sở hữu trạng thái? Hợp đồng quan trọng hơn cú pháp
+## 5. Who Owns the State? Contracts Matter More Than Syntax
 
-Khi truyền một đối tượng mutable giữa các thành phần, hãy nói rõ **ai được sửa** và **ai chỉ được quan sát**.
+When passing a mutable object between components, specify **who may modify it** and **who may only observe it**.
 
-| Kiểu hợp đồng | Ý nghĩa | Hệ quả người gọi cần biết |
+| Contract type | Meaning | Implications for callers |
 |---|---|---|
-| **Live shared object** | Hai bên giữ đúng một instance mutable | Mutation ở một bên có thể xuất hiện khi bên kia đọc lại |
-| **Read-only API trên live object** | Bên nhận chỉ được gọi phương thức đọc; nơi khác vẫn có thể sửa object | Kết quả đọc ở hai thời điểm vẫn có thể khác |
-| **Snapshot giá trị** | Bên nhận giữ dữ liệu tại một thời điểm | Giá trị cũ không tự phản ánh cập nhật mới |
-| **Independent mutable copy** | Bên nhận sở hữu bản sao các thành phần mutable cần thiết | Mutation của bản sao không ảnh hưởng dữ liệu nguồn trong phạm vi đã tách |
-| **Immutable value object** | Dữ liệu không thay đổi sau khởi tạo | An toàn hơn khi chia sẻ; cập nhật thường trả giá trị khác |
+| **Live shared object** | Both parties hold the same mutable instance | Mutations on one side may appear when the other reads again |
+| **Read-only API on a live object** | The recipient can only call read methods, while others may still mutate the object | Read results at two moments can differ |
+| **Value snapshot** | The recipient holds data captured at one point in time | Old values do not automatically reflect new updates |
+| **Independent mutable copy** | The recipient owns a copy of the necessary mutable components | Mutations to the copy do not affect source data within the separated scope |
+| **Immutable value object** | Data does not change after initialization | Safer to share; updates generally return another value |
 
-Ví dụ `getHistorySnapshot()` ở chương trình chính trả `List.copyOf(history)` vì lịch sử gồm `String` bất biến. Nếu lịch sử chứa đối tượng phần tử mutable, snapshot danh sách **không bảo đảm snapshot sâu của phần tử**. Muốn tách biệt hoàn toàn, cần một copy strategy phù hợp với các đối tượng con như bài *Sao chép nông và sao chép sâu* đã phân tích.
+In the main example, `getHistorySnapshot()` returns `List.copyOf(history)` because history entries are immutable `String` values. If history contained mutable element objects, the list snapshot **would not guarantee snapshots of those elements**. Full separation would require an appropriate copying strategy for children, as explained in *Shallow and Deep Copies*.
 
-Hãy tránh tên API mơ hồ kiểu `getData()` nếu người dùng không biết nhận một view đang sống, một bản sao hay một giá trị bất biến. Có thể chọn tên thể hiện ý định như `getHistorySnapshot()`, `currentTarget()`, `withUpdatedTarget(...)` và ghi rõ khả năng mutation trong tài liệu.
+Avoid vague API names such as `getData()` if users cannot tell whether they receive a live view, copy, or immutable value. Choose intention-revealing names such as `getHistorySnapshot()`, `currentTarget()`, and `withUpdatedTarget(...)`, and document mutation semantics explicitly.
 
-## 6. Thay đổi trạng thái không đồng nghĩa tự động phát ra thông báo
+## 6. State Changes Do Not Automatically Send Notifications
 
-Ví dụ `WallDisplay.render()` đọc dữ liệu hiện hành mỗi lần gọi; nhưng nếu màn hình chỉ render **một lần** và giữ chuỗi đó trong cache, thay đổi policy không khiến chuỗi cũ biến thành chuỗi mới.
+For example, `WallDisplay.render()` reads current data on every call, but if a display renders **only once** and caches the string, changing the policy does not transform that old string into a new one.
 
-Trong ứng dụng tương tác, có thể cần một trong những cơ chế sau:
+Interactive applications may require one of these mechanisms:
 
-- Giao diện chủ động **đọc lại** khi người dùng mở trang hoặc bấm Refresh.
-- Bên cập nhật **phát sự kiện** chứa dữ liệu thay đổi, bên quan tâm đăng ký nhận.
-- Một state manager quản lý subscription và thông báo khi state được cập nhật.
-- Dịch vụ khác truy xuất trạng thái mới qua API hoặc message, thay vì dựa vào tham chiếu chung trong cùng JVM.
+- The interface proactively **reads again** when a user opens a page or clicks Refresh.
+- The updating component **publishes an event** carrying change data, and interested components subscribe.
+- A state manager handles subscriptions and notifies observers when state changes.
+- Another service retrieves updated state through an API or message rather than relying on references shared within one JVM.
 
-Chia sẻ tham chiếu chỉ cho phép nhiều thành phần **truy cập cùng trạng thái** trong một tiến trình; nó không tự tạo cơ chế reactive UI, không tự thông báo qua mạng và không làm hai JVM chia sẻ một Java object.
+Shared references only let components **access the same state** within one process; they do not automatically create reactive UIs, send network notifications, or allow separate JVMs to share one Java object.
 
-Khi dùng event, hãy xác định event mang một snapshot bất biến hay tham chiếu đến object mutable: nếu chỉ chuyển cùng tham chiếu, nội dung có thể thay đổi **sau thời điểm phát sự kiện**, khiến người nhận quan sát giá trị khác dự kiến.
+When using events, decide whether each event carries an immutable snapshot or a reference to a mutable object: passing only a shared reference means its contents may change **after event publication**, causing recipients to observe unexpected values.
 
-## 7. Rủi ro ngoài ý muốn và cách giảm tác dụng phụ
+## 7. Unintended Risks and How to Reduce Side Effects
 
-Một số vấn đề phát sinh trực tiếp từ shared mutable state:
+Several problems arise directly from shared mutable state:
 
-**Sửa dữ liệu mà caller không biết.** Một helper `normalize(profile)` nhận `Profile` rồi sửa trực tiếp field có thể khiến đoạn code gọi helper quan sát profile đổi trạng thái. Nếu helper thực sự có quyền sửa, nên ghi rõ trong API; nếu chỉ chuẩn hóa dữ liệu để kiểm tra, hãy trả giá trị mới hoặc thao tác trên bản sao.
+**Modifying data without the caller's awareness.** A `normalize(profile)` helper that accepts a `Profile` and directly changes fields can cause its caller to observe unexpected profile changes. If mutation is permitted, document it in the API; if normalization is only for validation, return a new value or work on a copy.
 
-**Rò rỉ tham chiếu nội bộ.** Getter trả thẳng `List` mutable khiến code ngoài bỏ qua quy tắc `addItem/removeItem`. Trả danh sách unmodifiable chỉ chặn thao tác qua view; nếu có tham chiếu khác sửa list gốc, view vẫn có thể đổi. Snapshot với dữ liệu bất biến hoặc API truy vấn chuyên biệt là lựa chọn khác.
+**Leaking internal references.** A getter that returns a mutable `List` directly allows external code to bypass `addItem/removeItem` rules. An unmodifiable view only blocks changes through that view; another reference can still mutate the original list and alter the view's contents. Alternatives include snapshots of immutable data or dedicated query APIs.
 
-**Thay reference ở một nơi nhưng không thay ở nơi khác.** `registry.put(key, replacement)` cập nhật registry; các object đã cache `oldReference` vẫn nhìn vào instance cũ. Cần chiến lược cập nhật tham chiếu nhất quán hoặc một holder/service ổn định mà các bên cùng truy vấn.
+**Replacing a reference in one place but not elsewhere.** `registry.put(key, replacement)` updates the registry, but objects caching `oldReference` still see the old instance. Use a consistent reference-update strategy or a stable holder/service queried by all parties.
 
-**Giữ chia sẻ không có chủ đích quá lâu.** Một thành phần còn giữ tham chiếu có thể khiến trạng thái vẫn reachable dù phần khác đã bỏ nó. Đây là vấn đề vòng đời/ownership, không nên cố “giải phóng object” bằng `a = null` và giả định mọi alias khác biến mất.
+**Retaining unintended sharing too long.** A component holding a reference can keep state reachable after other components have released it. This is a lifecycle/ownership issue; do not try to “free an object” with `a = null` while assuming all other aliases disappear.
 
-Cần chọn thiết kế dựa trên **ý định nghiệp vụ**. Chia sẻ cùng đối tượng cài đặt service/cấu hình có thể đúng; sao chép máy móc mọi object có thể vừa tốn bộ nhớ vừa phá hỏng quan hệ chia sẻ mà hệ thống cần.
+Choose a design based on **business intent**. Sharing a service/configuration implementation may be correct; mechanically copying every object can waste memory and break relationships that the system deliberately needs.
 
-## 8. Khi nhiều luồng cùng thay đổi một object
+## 8. When Multiple Threads Modify the Same Object
 
-Các ví dụ trước thực thi tuần tự trong **một luồng**; aliasing và tác động lan truyền đã tồn tại. Khi hai luồng đồng thời cập nhật cùng đối tượng mutable, cần xét thêm **atomicity** và **visibility**.
+The earlier examples execute sequentially on **one thread**, yet aliasing and propagated effects already occur. When two threads update the same mutable object concurrently, **atomicity** and **visibility** become additional concerns.
 
 ~~~java
 class UnsafeCounter {
@@ -3169,9 +3169,9 @@ class UnsafeCounter {
 }
 ~~~
 
-Nếu hai luồng đều gọi `increment()`, cả hai có thể đọc cùng giá trị cũ rồi ghi trùng kết quả, dẫn tới **lost update**. Từ khóa `private` không giải quyết race condition.
+If two threads both call `increment()`, they may read the same old value and write the same result, causing a **lost update**. The `private` keyword does not eliminate race conditions.
 
-Với **một bộ đếm độc lập**, có thể dùng:
+For **one independent counter**, you can use:
 
 ~~~java
 import java.util.concurrent.atomic.AtomicInteger;
@@ -3189,7 +3189,7 @@ final class SafeCounter {
 }
 ~~~
 
-Nhưng với **nhiều field có invariant chung**, chỉ biến từng field thành atomic/volatile có thể vẫn để lộ trạng thái trung gian không hợp lệ. Ví dụ khoảng nhiệt độ phải thỏa `min <= max` có thể đóng gói như một giá trị bất biến rồi thay tham chiếu nguyên khối:
+For **multiple fields with a shared invariant**, making each field atomic/volatile may still expose invalid intermediate states. For example, a temperature range satisfying `min <= max` can be encapsulated as an immutable value and updated by replacing the entire reference:
 
 ~~~java
 record TemperatureRange(int min, int max) {
@@ -3214,78 +3214,78 @@ final class RangeConfiguration {
 }
 ~~~
 
-Đây là một ví dụ về **đọc snapshot nhất quán của một cặp giá trị** nhờ đối tượng bất biến và phép gán tham chiếu `volatile`. Nếu nhiều người ghi cần tránh ghi đè nhau hoặc thực hiện update dựa trên giá trị cũ, vẫn cần đồng bộ hoặc compare-and-set phù hợp. Không suy ra mọi nghiệp vụ đa luồng đã an toàn chỉ vì dùng immutable record.
+This demonstrates **reading a consistent snapshot of a pair of values** using an immutable object and `volatile` reference assignment. If multiple writers must avoid overwriting one another or update based on prior values, appropriate synchronization or compare-and-set is still needed. An immutable record alone does not make every multithreaded business operation safe.
 
-## 9. Phương pháp truy vết tác động trạng thái
+## 9. Method for Tracing the Effects of State Changes
 
-Khi gặp bug “tôi chỉ sửa A mà B cũng thay đổi”, hãy ghi bốn cột sau:
+When debugging “I only changed A, but B changed too,” record these four columns:
 
-| Bước | Ai thực hiện? | Tham chiếu đang trỏ tới instance nào? | Trạng thái quan sát được |
+| Step | Who acts? | Which instance does the reference point to? | Observable state |
 |---|---|---|---|
-| T0 | `main` tạo `shared` | `wall.policy → Policy #1` | target = 22 |
+| T0 | `main` creates `shared` | `wall.policy → Policy #1` | target = 22 |
 | T1 | `mobile.changeTarget(24)` | `mobile.policy → Policy #1` | target = 24 |
-| T2 | `wall.render()` | `wall.policy → Policy #1` | hiển thị 24 |
-| T3 | `mobile` gán sang controller khác | controller mới → Policy #2 | Policy #1 vẫn 24 |
-| T4 | controller mới thay Policy #2 | controller mới → Policy #2 | #2 = 19; #1 = 24 |
+| T2 | `wall.render()` | `wall.policy → Policy #1` | displays 24 |
+| T3 | `mobile` is reassigned to another controller | new controller → Policy #2 | Policy #1 remains 24 |
+| T4 | new controller changes Policy #2 | new controller → Policy #2 | #2 = 19; #1 = 24 |
 
-Sau đó kiểm tra lần lượt: (1) lệnh nào thực sự tạo `new` instance, (2) lệnh nào chỉ sao chép/gán lại tham chiếu, (3) phương thức nào sửa trạng thái, (4) ai đang giữ dữ liệu snapshot, (5) nếu có nhiều luồng, có thiếu cơ chế đồng bộ hay không.
+Then check in order: (1) which statement actually creates a `new` instance, (2) which merely copies/reassigns references, (3) which method changes state, (4) who holds snapshot data, and (5) whether synchronization is missing when multiple threads are involved.
 
-Với debugger, có thể đặt breakpoint ở `TemperaturePolicy.setTarget` và `WallDisplay.render`; kiểm tra **identity** của object được gọi, call stack và các field trước/sau. Log nên ghi tên đối tượng nghiệp vụ hoặc correlation ID theo yêu cầu, không dựa vào `identityHashCode` như mã duy nhất.
+In a debugger, set breakpoints at `TemperaturePolicy.setTarget` and `WallDisplay.render`; inspect the called object's **identity**, call stack, and fields before/after. Logs should include business entity names or correlation IDs as appropriate, not rely on `identityHashCode` as a unique identifier.
 
-## 10. Bài tập và đáp án
+## 10. Exercises and Answers
 
-**Bài 1 — Hiệu ứng lên các thành phần:** Hai `WallDisplay` cùng nhận một `TemperaturePolicy`. Một `MobileControl` thay target từ 20 thành 25. Khi hai màn hình gọi `render()` lại, chúng hiển thị gì?
+**Exercise 1 — Effects Across Components:** Two `WallDisplay` instances receive the same `TemperaturePolicy`. A `MobileControl` changes the target from 20 to 25. What do both displays show when they call `render()` again?
 
-**Đáp án:** Cả hai hiển thị 25°C nếu vẫn tham chiếu đúng instance được thay đổi và không áp dụng logic biến đổi khác. Nội dung render đã lưu trước đó không tự đổi.
+**Answer:** Both display 25°C if they still reference the modified instance and apply no other transformation. Previously cached rendered text does not change automatically.
 
-**Bài 2 — Snapshot có tự cập nhật không?** `List<String> history = policy.getHistorySnapshot();` được gọi khi lịch sử rỗng. Sau đó thêm một thay đổi vào policy. `history.size()` là bao nhiêu?
+**Exercise 2 — Does a Snapshot Update Automatically?** `List<String> history = policy.getHistorySnapshot();` is called when history is empty. A policy change is then recorded. What is `history.size()`?
 
-**Đáp án:** 0. Danh sách kết quả là snapshot cấu trúc tại thời điểm lấy, không phản ánh các phần tử thêm sau đó vào list nguồn.
+**Answer:** 0. The resulting list is a structural snapshot taken at that moment, not a view of elements added later to the source list.
 
-**Bài 3 — Thay thế trong map:** `WallDisplay` đã lưu `Policy #1`; map `registry` thay key bằng `Policy #2`. Không thay field của `WallDisplay`. Màn hình đọc object nào?
+**Exercise 3 — Replacing a Map Entry:** `WallDisplay` already holds `Policy #1`; the `registry` map replaces that key's value with `Policy #2`. The `WallDisplay` field is not changed. Which object does the display read?
 
-**Đáp án:** Vẫn đọc `Policy #1`. Map và màn hình giữ **hai biến tham chiếu độc lập**; gán lại giá trị tại key của map không tự đổi field trong màn hình.
+**Answer:** Still `Policy #1`. The map and the display hold **independent reference variables**; reassigning a map entry does not automatically change the display's field.
 
-**Bài 4 — Thiết kế hợp đồng:** Một dịch vụ muốn cho các màn hình thấy thay đổi cấu hình mới nhất nhưng không được tự ý sửa cấu hình. Nên cung cấp API nào?
+**Exercise 4 — Designing a Contract:** A service wants displays to see the latest configuration without being allowed to modify it arbitrarily. What API should it provide?
 
-**Gợi ý:** Cung cấp một service/holder làm chủ mutation, API truy vấn trạng thái hiện hành hoặc snapshot bất biến, và cơ chế thông báo phù hợp để trigger refresh. Không công khai tham chiếu mutable cho mọi caller. Nếu nhiều luồng, kiểm soát visibility và tính nguyên tử của state.
+**Hint:** Provide a service/holder that owns mutation, a query API returning current state or immutable snapshots, and a suitable notification mechanism to trigger refreshes. Do not expose mutable references to every caller. In multithreaded environments, control state visibility and atomicity.
 
-**Bài 5 — Đồng thời:** Vì sao `volatile int count` chưa đủ làm cho `count++` nguyên tử?
+**Exercise 5 — Concurrency:** Why is `volatile int count` insufficient to make `count++` atomic?
 
-**Đáp án:** `volatile` giúp visibility cho đọc/ghi field, nhưng `count++` gồm đọc, cộng và ghi riêng; hai luồng có thể chen ngang. Dùng atomic increment hoặc khóa khi cần tăng an toàn.
+**Answer:** `volatile` supports visibility for field reads/writes, but `count++` consists of separate read, addition, and write operations that threads can interleave. Use atomic increments or locking when safe incrementing is required.
 
-## Ghi nhớ
+## Remember
 
-**Chia sẻ object** là nhiều thành phần có đường tham chiếu tới đúng một instance. Nếu instance mutable, thay đổi qua một đường có thể được quan sát qua đường khác khi đọc lại. Muốn quản lý tác động có chủ đích, cần xác định **owner của trạng thái**, hợp đồng live reference hay snapshot, thời điểm cập nhật giao diện và cơ chế đồng bộ khi nhiều luồng cùng làm việc.
+**Object sharing** occurs when multiple components have reference paths to the same instance. If it is mutable, changes made through one path may be observed through another on the next read. To manage these effects deliberately, define **state ownership**, whether contracts expose live references or snapshots, when interfaces refresh, and how threads synchronize their work.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="object-008">Giá trị rỗng và đối tượng chưa tồn tại</a>
+## <a id="object-008">Null Values and Objects That Do Not Exist</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Giá trị rỗng và đối tượng chưa tồn tại trong Java
+# Null Values and Objects That Do Not Exist in Java
 
-Trong Java, một **biến tham chiếu** có thể đang trỏ đến một đối tượng hoặc có giá trị `null`. Khi nó bằng `null`, ta **không có đối tượng nào để truy cập thông qua tham chiếu đó**. Điều này khác với một đối tượng đã tồn tại nhưng có dữ liệu rỗng, và cũng khác với một biến cục bộ chưa được gán giá trị.
+In Java, a **reference variable** can either point to an object or hold `null`. When its value is `null`, **there is no object accessible through that reference**. This differs from an existing object containing empty data and from a local variable that has not yet been assigned.
 
-Chẳng hạn, trong ứng dụng bán hàng:
+For example, in a sales application:
 
-- Khách hàng đã tồn tại, nhưng `phoneNumber` chưa được cung cấp: thuộc tính có thể được biểu diễn bằng `null` nếu mô hình cho phép.
-- Khách hàng đã tồn tại và `phoneNumber = ""`: một đối tượng `String` có nội dung rỗng, không phải `null`.
-- Tra cứu mã khách hàng không thấy kết quả: hệ thống không tìm được thực thể đáp ứng điều kiện; một API có thể biểu diễn điều này bằng `Optional.empty()` hoặc `null`.
-- Khai báo `Customer customer;` trong phương thức mà chưa gán: **biến cục bộ chưa được khởi tạo**, không được phép đọc.
-- Gán `customer = null` sau khi dùng: chỉ thay đổi biến tham chiếu; đối tượng cũ chưa chắc biến mất vì nơi khác vẫn có thể đang giữ tham chiếu.
+- A customer exists but has not supplied a `phoneNumber`: the field may be represented by `null` if the model permits it.
+- A customer exists with `phoneNumber = ""`: there is a `String` object containing an empty string, not `null`.
+- A customer-ID lookup finds no result: no entity matches the search; an API may represent this using `Optional.empty()` or `null`.
+- Declaring `Customer customer;` inside a method without assigning it: this is **an uninitialized local variable** that cannot be read.
+- Assigning `customer = null` after using it: this changes only the reference variable; the old object may still exist because other code may retain references.
 
-Mục tiêu của bài là hiểu đúng **sự vắng mặt**, **vòng đời đối tượng** và **cách viết mã không bị lỗi truy cập `null`**.
+The goal of this lesson is to understand **absence**, **object lifecycles**, and **how to write code that avoids invalid `null` access**.
 
-## 1. `null` chính xác là gì?
+## 1. What Exactly Is `null`?
 
-`null` là giá trị đặc biệt của **null type** trong ngôn ngữ Java, có thể gán cho các kiểu tham chiếu thích hợp, chẳng hạn đối tượng, mảng, interface hay wrapper class. `null` không phải một instance được tạo bởi `new`.
+`null` is the special value of Java's **null type** and can be assigned to compatible reference types, such as objects, arrays, interfaces, and wrapper classes. `null` is not an instance created using `new`.
 
 ~~~java
 String title = null;
@@ -3294,9 +3294,9 @@ int[] scores = null;
 Runnable task = null;
 ~~~
 
-Các khai báo trên hợp lệ về mặt kiểu dữ liệu. Không có một đối tượng `String`, `Customer`, mảng hay `Runnable` nào được tạo ra bởi những phép gán `null` này.
+These declarations are type-correct. None creates a `String`, `Customer`, array, or `Runnable` object through assignment of `null`.
 
-Ngược lại, kiểu nguyên thủy (primitive) như `int`, `long`, `double`, `boolean`, `char` không nhận được `null`:
+By contrast, primitive types such as `int`, `long`, `double`, `boolean`, and `char` cannot hold `null`:
 
 ~~~java
 int quantity = 0;        // Hợp lệ: số nguyên có giá trị 0.
@@ -3304,18 +3304,18 @@ int quantity = 0;        // Hợp lệ: số nguyên có giá trị 0.
 Integer optionalCount = null; // Hợp lệ: Integer là kiểu tham chiếu.
 ~~~
 
-**Điểm mấu chốt:** `null` là một **giá trị của tham chiếu**, không phải một đối tượng “rỗng” có thể gọi phương thức. Khi viết `customer.getName()`, Java phải lấy đối tượng thông qua `customer`; nếu `customer == null`, phép gọi instance method này sẽ ném `NullPointerException`.
+**Key point:** `null` is a **reference value**, not an “empty” object on which methods can be called. With `customer.getName()`, Java must obtain the object through `customer`; if `customer == null`, invoking this instance method throws `NullPointerException`.
 
-## 2. Bốn tình huống thường bị nhầm
+## 2. Four Commonly Confused Situations
 
-| Tình huống | Ví dụ | Có đối tượng được tạo? | Điều cần hiểu |
+| Situation | Example | Is an object created? | What it means |
 |---|---|---|---|
-| Biến cục bộ chưa gán | `Customer c;` | Chưa tạo do câu khai báo đó | Không thể đọc `c` cho đến khi được gán hợp lệ trên mọi nhánh cần thiết |
-| Biến tham chiếu bằng `null` | `Customer c = null;` | Không tạo bởi phép gán này | `c` hiện không trỏ đến đối tượng |
-| Tham chiếu trỏ đến object | `Customer c = new Customer("Lan");` | Có, nếu khởi tạo thành công | Có một instance và `c` tham chiếu tới nó |
-| Đối tượng có dữ liệu rỗng | `String s = "";` hoặc `new ArrayList<>()` | Có một đối tượng tương ứng | Đối tượng tồn tại, chỉ nội dung đang rỗng |
+| Unassigned local variable | `Customer c;` | None created by this declaration | `c` cannot be read until it is properly assigned on every required path |
+| Reference variable holding `null` | `Customer c = null;` | None created by this assignment | `c` currently refers to no object |
+| Reference pointing to an object | `Customer c = new Customer("Lan");` | Yes, if construction succeeds | An instance exists and `c` refers to it |
+| Object with empty data | `String s = "";` or `new ArrayList<>()` | Yes, an appropriate object exists | The object exists; its contents happen to be empty |
 
-Xem ví dụ:
+Consider this example:
 
 ~~~java
 String a = null;
@@ -3329,15 +3329,15 @@ System.out.println(c.isEmpty());   // false
 System.out.println(c.isBlank());   // true (Java 11+)
 ~~~
 
-- `null`: không có tham chiếu đến `String`.
-- `""`: có chuỗi độ dài bằng 0.
-- `" "`: có chuỗi chứa khoảng trắng; nó không rỗng theo `isEmpty()` nhưng được xem là blank theo `isBlank()`.
+- `null`: there is no reference to a `String` object.
+- `""`: a string exists with length zero.
+- `" "`: a string contains a space; it is not empty under `isEmpty()` but is blank under `isBlank()`.
 
-Tương tự với collection: `List<String> names = null` nghĩa là hiện không có danh sách để dùng qua biến ấy; `List<String> names = List.of()` nghĩa là **có một danh sách, kích thước bằng 0**. Hai trường hợp có ý nghĩa khác nhau và không nên hoán đổi tùy tiện.
+Similarly, for collections, `List<String> names = null` means no list is currently accessible through that variable, while `List<String> names = List.of()` means **a list exists with size zero**. These situations have different meanings and should not be substituted arbitrarily.
 
-## 3. Biến cục bộ chưa khởi tạo khác `null` ra sao?
+## 3. How Does an Uninitialized Local Variable Differ from `null`?
 
-Biến cục bộ trong phương thức phải được **definitely assigned** trước khi sử dụng. Java kiểm tra điều này lúc biên dịch:
+A method's local variable must be **definitely assigned** before use. Java checks this at compile time:
 
 ~~~java
 void demo() {
@@ -3349,7 +3349,7 @@ void demo() {
 }
 ~~~
 
-Nếu ta gán `name = null;`, biến **đã được khởi tạo về mặt ngôn ngữ** nhưng giá trị tham chiếu của nó là `null`:
+If we assign `name = null;`, the variable **has been assigned according to the language rules**, but its reference value is `null`:
 
 ~~~java
 void demo() {
@@ -3358,17 +3358,17 @@ void demo() {
 }
 ~~~
 
-Với field của object, static field và phần tử mảng, Java cung cấp **giá trị mặc định** nếu chưa có phép gán khác:
+For object fields, static fields, and array elements, Java supplies **default values** unless other assignments are made:
 
-| Kiểu dữ liệu | Giá trị mặc định của field/phần tử mảng |
+| Data type | Default value of a field/array element |
 |---|---|
-| `byte`, `short`, `int`, `long` | Số 0 tương ứng |
-| `float`, `double` | Số 0.0 tương ứng |
+| `byte`, `short`, `int`, `long` | Corresponding numeric zero |
+| `float`, `double` | Corresponding 0.0 value |
 | `boolean` | `false` |
-| `char` | Ký tự `'\u005Cu0000'` (U+0000) |
-| Kiểu tham chiếu như `String`, `Customer`, mảng | `null` |
+| `char` | Character `'\u005Cu0000'` (U+0000) |
+| Reference types such as `String`, `Customer`, and arrays | `null` |
 
-Ví dụ:
+For example:
 
 ~~~java
 class Profile {
@@ -3384,11 +3384,11 @@ String[] labels = new String[2];
 System.out.println(labels[0] == null);     // true
 ~~~
 
-Giá trị mặc định **không áp dụng cho biến cục bộ thông thường**. Nên khởi tạo field có chủ đích qua constructor thay vì chỉ dựa vào mặc định, đặc biệt nếu `null` không phải trạng thái hợp lệ của đối tượng.
+Default values **do not apply to ordinary local variables**. Prefer intentional field initialization through constructors rather than relying on defaults, especially when `null` is not a valid object state.
 
-## 4. Phân biệt biến tham chiếu với chính đối tượng
+## 4. Distinguishing a Reference Variable from the Object Itself
 
-Hãy tưởng tượng biến tham chiếu là một “đường dẫn” đến đối tượng. Có thể có nhiều đường dẫn cùng tới một object; bỏ một đường dẫn không tự động xóa object.
+Think of a reference variable as a “path” to an object. Multiple paths can reach the same object; removing one path does not automatically delete it.
 
 ~~~java
 class Box {
@@ -3405,7 +3405,7 @@ System.out.println(first == null); // true
 System.out.println(alias.value);   // 42
 ~~~
 
-`new Box()` tạo một object, ban đầu cả `first` và `alias` đều có thể tham chiếu đến nó. Sau `first = null`, `alias` vẫn tham chiếu tới object ấy.
+`new Box()` creates one object, initially referenced by both `first` and `alias`. After `first = null`, `alias` still refers to that object.
 
 ~~~mermaid
 flowchart TD
@@ -3413,21 +3413,21 @@ flowchart TD
     B["Biến alias"] --> O["Đối tượng Box<br/>value = 42"]
 ~~~
 
-Sơ đồ biểu diễn tình huống **sau khi gán `first = null`**; không phải sơ đồ địa chỉ bộ nhớ thực tế.
+The diagram depicts the situation **after assigning `first = null`**; it does not represent actual memory addresses.
 
-Điều đó giải thích ba câu rất dễ nhầm:
+This clarifies three commonly confused statements:
 
-1. **“Biến bằng null”** chỉ nói về giá trị hiện tại của biến tham chiếu ấy.
-2. **“Đối tượng đã bị xóa”** không suy ra từ một phép gán `null`. Java không có lệnh `delete object` như cách một số ngôn ngữ quản lý tài nguyên.
-3. **“Đối tượng không còn reachable”** là khi không còn đường đi tham chiếu từ các GC roots đến object. Khi ấy object *có thể đủ điều kiện* để garbage collector thu hồi, nhưng thời điểm thu hồi không được bảo đảm.
+1. **“The variable is null”** only describes the reference variable's current value.
+2. **“The object has been deleted”** cannot be inferred from assigning `null`. Java has no `delete object` operation like some languages use for resource management.
+3. **“The object is no longer reachable”** means there is no reference path from GC roots to the object. It *may then become eligible* for garbage collection, but the collection time is not guaranteed.
 
-Đối tượng cũng có thể tồn tại trong bộ nhớ nhưng không còn tham chiếu mà mã chương trình có thể dùng để truy cập. Vì vậy cần phân biệt **khả năng truy cập** và **sự tồn tại vật lý trong bộ nhớ tại một thời điểm**.
+An object may also remain in memory while no reference accessible to program code can reach it. Thus, distinguish **reachability** from **physical presence in memory at a particular moment**.
 
-## 5. Ví dụ Java hoàn chỉnh: khách hàng có thể tìm thấy hoặc không
+## 5. Complete Java Example: A Customer May or May Not Be Found
 
-Dưới đây là một chương trình chạy được với **Java 17+**. Repository lưu sẵn một khách hàng; truy vấn ID tồn tại trả về `Optional<Customer>` chứa khách hàng, ID không tồn tại trả về `Optional.empty()`.
+The following program runs with **Java 17+**. The repository stores one customer; looking up an existing ID returns an `Optional<Customer>` containing that customer, while a missing ID returns `Optional.empty()`.
 
-Lưu vào **`Demo.java`**:
+Save it as **`Demo.java`**:
 
 ~~~java
 import java.util.Map;
@@ -3520,14 +3520,14 @@ public class Demo {
 }
 ~~~
 
-Chạy trong terminal:
+Run in a terminal:
 
 ~~~bash
 javac Demo.java
 java Demo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Có C01: true
@@ -3540,23 +3540,23 @@ Không có khách hàng C99
 Tên khớp: false
 ~~~
 
-### Giải thích từng tình huống
+### Explaining Each Situation
 
-**Trường hợp 1 — Khách hàng tồn tại:** repository có đối tượng `Customer("C01", "Lan")` và `findById("C01")` trả về `Optional` chứa tham chiếu đến đối tượng đó. `one` và `alias` được lấy từ cùng tham chiếu nên `one == alias` là `true`.
+**Case 1 — The customer exists:** the repository holds a `Customer("C01", "Lan")` object, and `findById("C01")` returns an `Optional` containing a reference to that object. `one` and `alias` are obtained from the same reference, so `one == alias` is `true`.
 
-**Trường hợp 2 — Khách hàng không tìm thấy:** `Map.get("C99")` trả về `null` vì bản đồ không có khóa ấy. `Optional.ofNullable(...)` chuyển nó thành `Optional.empty()`. Không có **kết quả truy vấn phù hợp**; điều này chưa nói gì về việc ở đâu đó trong toàn hệ thống có thể có đối tượng khác cùng thông tin hay không.
+**Case 2 — The customer is not found:** `Map.get("C99")` returns `null` because the map lacks that key. `Optional.ofNullable(...)` converts it to `Optional.empty()`. There is **no matching query result**; this alone says nothing about whether another object with the same information exists elsewhere in the system.
 
-**Trường hợp 3 — Khách hàng tồn tại nhưng chưa có địa chỉ:** đối tượng `Customer` vẫn tồn tại đầy đủ, nhưng field `shippingAddress` được phép ở trạng thái `null`. Getter bộc lộ khả năng thiếu dữ liệu bằng `Optional<String>`. Khách hàng “chưa cung cấp địa chỉ” không đồng nghĩa với “khách hàng không tồn tại”.
+**Case 3 — The customer exists but has no address:** the `Customer` object exists, but its `shippingAddress` field may contain `null`. The getter exposes possible absence through `Optional<String>`. “Address not provided” does not mean “customer does not exist.”
 
-**Trường hợp 4 — Dữ liệu bắt buộc không được null:** constructor gọi `Objects.requireNonNull` để từ chối `id` hay `name` rỗng theo nghĩa `null` ngay từ đầu. Bước `isBlank()` kiểm tra thêm chuỗi rỗng/khoảng trắng. Nhờ đó một object được xây dựng thành công không có trạng thái sai ở hai trường bắt buộc.
+**Case 4 — Required data must not be null:** the constructor calls `Objects.requireNonNull` to reject an `id` or `name` whose value is `null`. The `isBlank()` check also rejects empty or whitespace-only strings. Thus, an object constructed successfully cannot have invalid values in those two required fields.
 
-Trong ứng dụng thật, repository có thể truy vấn database thay vì `Map`; nguyên tắc biểu diễn dữ liệu vắng mặt vẫn tương tự.
+In a real application, the repository might query a database instead of a `Map`; the same principles for representing absent data apply.
 
-## 6. Vì sao xảy ra `NullPointerException`?
+## 6. Why Does `NullPointerException` Occur?
 
-`NullPointerException` (NPE) là lỗi runtime thường gặp khi chương trình cần dùng một giá trị tham chiếu `null` như thể nó trỏ tới đối tượng hợp lệ.
+`NullPointerException` (NPE) is a common runtime error that occurs when code attempts to use a `null` reference as though it pointed to a valid object.
 
-Ví dụ:
+For example:
 
 ~~~java
 String title = null;
@@ -3569,38 +3569,38 @@ int[] numbers = null;
 // System.out.println(numbers.length);  // NPE nếu truy cập độ dài mảng.
 ~~~
 
-Ở đây biến **có kiểu hợp lệ** nhưng không có object để truy cập. Compiler thường không chặn được các lời gọi ấy trong Java thông thường; lỗi phát sinh khi chạy đến câu lệnh.
+Here, the variable **has a valid type** but there is no object to access. In ordinary Java, the compiler generally cannot prevent these calls; the error occurs when execution reaches the statement.
 
-Cần phân biệt với lỗi khác:
+Distinguish it from other errors:
 
-| Tình huống | Kết quả |
+| Situation | Result |
 |---|---|
-| Đọc biến cục bộ chưa được gán | Lỗi biên dịch |
-| Gọi instance method trên `null` | `NullPointerException` |
-| Truy cập field instance qua `null` | `NullPointerException` |
-| Đọc phần tử mảng khi tham chiếu mảng là `null` | `NullPointerException` |
-| Mảng có thật nhưng dùng chỉ số vượt giới hạn | `ArrayIndexOutOfBoundsException` |
-| Gọi `Optional.empty().get()` | `NoSuchElementException` |
-| Tự dùng `Objects.requireNonNull(null)` | `NullPointerException` có chủ đích để báo dữ liệu bắt buộc thiếu |
+| Reading an unassigned local variable | Compile-time error |
+| Calling an instance method on `null` | `NullPointerException` |
+| Accessing an instance field through `null` | `NullPointerException` |
+| Reading an array element when the array reference is `null` | `NullPointerException` |
+| Accessing an existing array with an out-of-range index | `ArrayIndexOutOfBoundsException` |
+| Calling `Optional.empty().get()` | `NoSuchElementException` |
+| Explicitly using `Objects.requireNonNull(null)` | Intentional `NullPointerException` to report missing required data |
 
-Một NPE không có nghĩa là “object đã bị garbage collector xóa giữa chừng”. Nó chỉ cho biết thao tác hiện tại đã cố sử dụng tham chiếu `null` theo cách không hợp lệ.
+An NPE does not mean “the garbage collector deleted the object halfway through an operation.” It means the current operation attempted to use a `null` reference incorrectly.
 
-### Tự động unboxing cũng có thể gây NPE
+### Automatic Unboxing Can Also Cause an NPE
 
-Wrapper `Integer` có thể là `null`. Khi Java chuyển `Integer` sang `int` (auto-unboxing), nó cần lấy giá trị từ object:
+The `Integer` wrapper can be `null`. When Java converts an `Integer` to `int` (auto-unboxing), it must obtain a value from the object:
 
 ~~~java
 Integer quantity = null;
 // int total = quantity + 1; // NPE do unboxing quantity.
 ~~~
 
-Nếu một số lượng **bắt buộc phải có** thì thường dùng primitive `int` và quy tắc hợp lệ riêng. Nếu dữ liệu có thể vắng mặt, thiết kế cách biểu diễn sự vắng mặt rõ ràng và xử lý trước khi tính toán.
+If a quantity **must always be present**, a primitive `int` with separate validation rules is often suitable. If the data may be absent, represent that absence explicitly and handle it before calculating.
 
-## 7. Các cách phòng tránh `null` đúng mục đích
+## 7. Appropriate Strategies for Avoiding `null` Errors
 
-Không có một cách duy nhất cho mọi bài toán. Trước khi xử lý, cần xác định: **được phép thiếu dữ liệu hay thiếu dữ liệu là một lỗi?**
+No single approach fits every problem. First determine: **is missing data permitted, or is its absence an error?**
 
-### Cách 1 — Kiểm tra `null` tường minh
+### Approach 1 — Explicitly Check for `null`
 
 ~~~java
 String middleName = getMiddleName();
@@ -3612,9 +3612,9 @@ if (middleName != null) {
 }
 ~~~
 
-Cách này phù hợp khi API đã định nghĩa giá trị `null` là hợp lệ. Kiểm tra nên đặt gần nơi dereference và cần áp dụng cho đúng biến đang được sử dụng.
+This is appropriate when the API defines `null` as a valid value. Place the check near the dereference and apply it to the variable actually being used.
 
-Nếu chỉ muốn gọi hành vi khi có đối tượng:
+If you only want to invoke behavior when an object exists:
 
 ~~~java
 if (customer != null) {
@@ -3622,9 +3622,9 @@ if (customer != null) {
 }
 ~~~
 
-Đoạn `customer.sendWelcomeMessage()` là mã minh họa cho một lớp `Customer` có phương thức tương ứng; nó không thuộc lớp `Customer` trong `Demo.java` ở trên.
+The `customer.sendWelcomeMessage()` snippet illustrates a `Customer` class with that method; the `Customer` defined in `Demo.java` above does not provide it.
 
-### Cách 2 — Kiểm tra bằng `Objects.requireNonNull` cho dữ liệu bắt buộc
+### Approach 2 — Use `Objects.requireNonNull` for Required Data
 
 ~~~java
 import java.util.Objects;
@@ -3638,11 +3638,11 @@ class Product {
 }
 ~~~
 
-Nếu `sku == null`, constructor ném NPE với thông báo rõ ràng ngay tại nơi vi phạm hợp đồng. Kiểm tra này **không** từ chối `""` hoặc chuỗi chỉ chứa khoảng trắng; cần quy tắc riêng cho nội dung nếu bài toán yêu cầu.
+If `sku == null`, the constructor immediately throws an NPE with a clear message at the point of contract violation. This check **does not** reject `""` or whitespace-only strings; add a separate content rule if required.
 
-Có thể dùng `IllegalArgumentException` khi muốn phân loại đầu vào không hợp lệ theo quy ước ứng dụng. Điều quan trọng là hợp đồng đầu vào nhất quán và không để trạng thái bắt buộc bị thiếu đi sâu vào hệ thống.
+You may use `IllegalArgumentException` when application conventions classify invalid inputs that way. What matters is consistent input contracts and preventing missing required state from spreading deeper into the system.
 
-### Cách 3 — Sử dụng `Optional<T>` để biểu diễn kết quả có thể vắng mặt
+### Approach 3 — Use `Optional<T>` for Potentially Absent Results
 
 ~~~java
 Optional<Customer> result = repository.findById("C01");
@@ -3656,26 +3656,26 @@ Customer required = result.orElseThrow(
         () -> new IllegalStateException("Khách hàng không tồn tại"));
 ~~~
 
-`Optional<T>` là một object bao ngoài trạng thái **có giá trị** hoặc **không có giá trị**:
+`Optional<T>` is a wrapper object representing either **a present value** or **an absent value**:
 
-| API | Ý nghĩa |
+| API | Meaning |
 |---|---|
-| `Optional.of(value)` | Yêu cầu `value` khác `null`; nếu null sẽ ném NPE |
-| `Optional.ofNullable(value)` | Có thể tạo `Optional.empty()` nếu value null |
-| `Optional.empty()` | Không có giá trị |
-| `map(fn)` | Biến đổi giá trị nếu có; mapper trả null sẽ cho empty |
-| `orElse(defaultValue)` | Lấy giá trị hoặc giá trị mặc định |
-| `orElseGet(supplier)` | Chỉ tạo giá trị mặc định nếu đang empty |
-| `orElseThrow(...)` | Báo lỗi nếu không có giá trị |
-| `ifPresent(action)` | Thực hiện hành động nếu có giá trị |
+| `Optional.of(value)` | Requires `value` to be non-`null`; otherwise throws an NPE |
+| `Optional.ofNullable(value)` | May produce `Optional.empty()` if the value is null |
+| `Optional.empty()` | Represents no value |
+| `map(fn)` | Transforms a present value; a mapper returning null produces an empty result |
+| `orElse(defaultValue)` | Returns the value or a default |
+| `orElseGet(supplier)` | Creates the default only when empty |
+| `orElseThrow(...)` | Reports an error when no value exists |
+| `ifPresent(action)` | Performs an action when a value exists |
 
-**Bẫy:** `orElse(expensiveCall())` gọi `expensiveCall()` để tính đối số **dù Optional đã có giá trị**. Nếu muốn chỉ gọi khi thiếu, dùng `orElseGet(() -> expensiveCall())`.
+**Pitfall:** `orElse(expensiveCall())` evaluates `expensiveCall()` as an argument **even when the Optional has a value**. To call it only when absent, use `orElseGet(() -> expensiveCall())`.
 
-Không nên dùng `Optional.get()` thiếu kiểm tra trạng thái: `Optional.empty().get()` ném `NoSuchElementException`. Thường nên ưu tiên `orElse`, `orElseThrow`, `map` hoặc `ifPresent`.
+Avoid using `Optional.get()` without checking presence: `Optional.empty().get()` throws `NoSuchElementException`. Usually prefer `orElse`, `orElseThrow`, `map`, or `ifPresent`.
 
-**Thực hành:** `Optional` đặc biệt hữu ích làm **kiểu trả về** cho phương thức có thể không tìm thấy kết quả. Không nhất thiết thay mọi field, tham số, collection hoặc đối tượng bằng `Optional`. Tránh việc phương thức lúc trả `Optional.empty()`, lúc trả **chính `null` thay cho Optional**, vì người gọi lại phải xử lý thêm một tầng thiếu dữ liệu.
+**Practice:** `Optional` is particularly useful as a **return type** for methods whose result may be missing. There is no need to replace every field, parameter, collection, or object with `Optional`. Avoid methods that sometimes return `Optional.empty()` but at other times return **`null` instead of an Optional**, forcing callers to handle yet another level of absence.
 
-### Cách 4 — Trả collection rỗng khi hợp đồng là “có 0 hoặc nhiều phần tử”
+### Approach 4 — Return an Empty Collection When the Contract Allows “Zero or More Elements”
 
 ~~~java
 import java.util.List;
@@ -3685,7 +3685,7 @@ List<String> findTagsForProduct(String productId) {
 }
 ~~~
 
-Khi trả `List.of()` thay `null`, người gọi có thể xử lý thống nhất:
+Returning `List.of()` instead of `null` allows callers to handle results uniformly:
 
 ~~~java
 for (String tag : findTagsForProduct("P01")) {
@@ -3693,9 +3693,9 @@ for (String tag : findTagsForProduct("P01")) {
 }
 ~~~
 
-Với các API tra cứu nhiều phần tử, danh sách rỗng thường tự nhiên hơn `null`: kết quả tìm kiếm có **0 phần tử**. Tuy nhiên nếu “chưa tải dữ liệu”, “bị lỗi khi tải” và “tải thành công nhưng không có phần tử” là các trạng thái nghiệp vụ khác nhau, cần mô hình rõ chúng thay vì gộp hết thành danh sách rỗng.
+For APIs that retrieve multiple elements, an empty list is often more natural than `null`: the search simply has **zero results**. However, if “not yet loaded,” “load failed,” and “loaded successfully but empty” are distinct business states, model them explicitly rather than collapsing them all into an empty list.
 
-### Cách 5 — Viết so sánh chuỗi và đối tượng an toàn
+### Approach 5 — Compare Strings and Objects Safely
 
 ~~~java
 import java.util.Objects;
@@ -3707,11 +3707,11 @@ System.out.println(Objects.equals(status, "ACTIVE")); // false
 System.out.println(Objects.equals(null, null)); // true
 ~~~
 
-`status.equals("ACTIVE")` sẽ ném NPE nếu status null. Đối với so sánh nội dung object, dùng `equals()` theo hợp đồng của kiểu; `==` đối với hai tham chiếu kiểm tra **có cùng object không**, không so sánh nội dung thông thường.
+`status.equals("ACTIVE")` throws an NPE if status is null. To compare object contents, use `equals()` according to the type's contract; `==` between references checks **whether they point to the same object**, not ordinary content equality.
 
-## 8. Phát hiện `null` qua cú pháp Java và điều kiện an toàn
+## 8. Detecting `null` with Java Syntax and Safe Conditions
 
-### So sánh `== null` / `!= null`
+### Comparing with `== null` / `!= null`
 
 ~~~java
 if (customer == null) {
@@ -3721,11 +3721,11 @@ if (customer == null) {
 }
 ~~~
 
-So sánh với `null` bằng `==` là đúng. Không viết `customer.equals(null)`, vì có thể ném NPE khi customer null, và lại diễn tả sai mục đích kiểm tra tham chiếu.
+Comparing with `null` using `==` is correct. Do not write `customer.equals(null)`: it can throw an NPE when the customer reference is null and also expresses the wrong intent for reference checking.
 
-### Toán tử logic short-circuit
+### Short-Circuit Logical Operators
 
-Java đánh giá `&&` từ trái sang phải, và dừng khi điều kiện bên trái là `false`:
+Java evaluates `&&` from left to right and stops when the left condition is `false`:
 
 ~~~java
 if (customer != null && customer.isActive()) {
@@ -3733,18 +3733,18 @@ if (customer != null && customer.isActive()) {
 }
 ~~~
 
-`customer.isActive()` chỉ được gọi khi `customer != null`. Đây là mã minh họa cho lớp có phương thức `isActive()`.
+`customer.isActive()` is called only when `customer != null`. This illustrates a class with an `isActive()` method.
 
-Đổi chiều điều kiện có thể gây lỗi:
+Reversing the condition can cause an error:
 
 ~~~java
 // Sai: customer có thể bị dereference trước khi kiểm tra null.
 // if (customer.isActive() && customer != null) { ... }
 ~~~
 
-Tương tự, toán tử `||` dừng khi vế trái đúng, nên `customer == null || customer.isActive()` có thể chạy an toàn về mặt null dereference trong điều kiện đơn luồng và khi tham chiếu không bị thay đổi đồng thời. Tuy nhiên hãy viết điều kiện dễ đọc và tránh tác dụng phụ khi đánh giá.
+Similarly, the `||` operator stops when its left operand is true, so `customer == null || customer.isActive()` can avoid null dereferences under single-threaded conditions when the reference is not concurrently changed. Nevertheless, write readable conditions and avoid evaluation side effects.
 
-### `instanceof` khi biến null
+### `instanceof` with a Null Variable
 
 ~~~java
 Object value = null;
@@ -3752,25 +3752,25 @@ Object value = null;
 System.out.println(value instanceof String); // false
 ~~~
 
-`instanceof` với toán hạng `null` trả về `false`, không ném NPE. Nhưng điều đó không biến `null` thành đối tượng `String`.
+`instanceof` with a `null` operand evaluates to `false` without throwing an NPE. This does not make `null` a `String` object.
 
-### Java không có toán tử `?.` như một số ngôn ngữ khác
+### Java Does Not Have the `?.` Operator Found in Some Other Languages
 
-Cú pháp `customer?.getName()` **không phải cú pháp truy cập an toàn hợp lệ trong Java 17**. Cần kiểm tra `null`, dùng Optional, hoặc dùng một API mô hình hóa sự thiếu dữ liệu rõ ràng. Không nhầm cú pháp của Kotlin, C# hoặc JavaScript với Java.
+The syntax `customer?.getName()` **is not valid safe-access syntax in Java 17**. Check for `null`, use Optional, or design an API that explicitly models absent data. Do not confuse Kotlin, C#, or JavaScript syntax with Java.
 
-## 9. Khi nào một đối tượng “chưa tồn tại”?
+## 9. When Does an Object “Not Yet Exist”?
 
-Câu này có ít nhất ba ý nghĩa khác nhau:
+That phrase has several different meanings:
 
-| Ngữ cảnh | Ví dụ | Cách hiểu đúng |
+| Context | Example | Correct interpretation |
 |---|---|---|
-| Trong mã Java | `User u = null;` | Chưa có object `User` để truy cập bằng `u`; ở nơi khác vẫn có thể có User |
-| Trong kết quả truy vấn | `findById("C99")` trả empty | Không tìm thấy bản ghi theo điều kiện tại thời điểm truy vấn |
-| Trong quy trình nghiệp vụ | Chưa có đơn hàng cho giỏ hàng | Một đơn hàng có thể chưa được tạo hoặc lưu; cần quy tắc nghiệp vụ xác định |
-| Trong bộ nhớ JVM | Object không còn reachable | Có thể được GC thu hồi sau này; không suy ra ngay thời điểm |
-| Trong luồng điều khiển | Constructor chưa được gọi | Code hiện tại chưa tạo instance theo con đường ấy |
+| In Java code | `User u = null;` | No `User` object is accessible through `u`; a User may still exist elsewhere |
+| In a query result | `findById("C99")` returns empty | No matching record was found at query time |
+| In a business workflow | No order exists for a cart | An order may not yet have been created or persisted; business rules determine what that means |
+| In JVM memory | An object is no longer reachable | It may be reclaimed by GC later; the precise moment cannot be inferred |
+| In control flow | A constructor has not been called | The current code path has not created an instance that way |
 
-Ví dụ:
+For example:
 
 ~~~java
 Order order = null;
@@ -3779,11 +3779,11 @@ Order order = null;
 order = new Order(); // Tạo một instance nếu constructor thành công.
 ~~~
 
-Không thể nói từ `order == null` rằng “không tồn tại bất cứ Order nào trong chương trình”. Chỉ có thể nói **biến `order` hiện không trỏ tới một Order**.
+You cannot infer from `order == null` that “no Order exists anywhere in the program.” You can only say **the `order` variable currently points to no Order**.
 
-Mặt khác, nếu thực thể chưa có trong database, việc tạo `new Order()` trong bộ nhớ cũng **không tự động** tạo bản ghi trong database. Đối tượng Java và sự tồn tại của thực thể trong hệ thống lưu trữ là hai tầng khác nhau.
+Conversely, if an entity has no database record, creating `new Order()` in memory **does not automatically** create a database record. A Java object and the existence of a persisted entity belong to different layers.
 
-### Một đối tượng có thật nhưng trạng thái có trường null
+### An Existing Object Whose State Contains a Null Field
 
 ~~~java
 class Employee {
@@ -3800,11 +3800,11 @@ System.out.println(employee == null);             // false
 System.out.println(employee.managerName == null); // true
 ~~~
 
-Đây là trường hợp rất thực tế: **đối tượng nhân viên tồn tại**, nhưng thông tin quản lý trực tiếp chưa có. Việc một field bằng `null` không làm toàn bộ object trở thành null.
+This is a realistic scenario: **the employee object exists**, but direct-manager information is missing. A `null` field does not make the entire object null.
 
-## 10. Lựa chọn cách biểu diễn sự vắng mặt trong thiết kế OOP
+## 10. Choosing How to Represent Absence in OOP Design
 
-Trước khi chọn `null`, hãy đặt câu hỏi **vắng mặt có nghĩa gì với nghiệp vụ?**
+Before choosing `null`, ask **what absence means in the business domain**.
 
 ~~~mermaid
 flowchart TD
@@ -3817,7 +3817,7 @@ flowchart TD
     F -->|Không| H["Mô hình hóa nullable field hoặc trạng thái nghiệp vụ tường minh"]
 ~~~
 
-Sơ đồ là gợi ý thiết kế, không phải quy tắc tuyệt đối. Ví dụ nếu `null` có nghĩa “chưa tải”, `List.of()` có nghĩa “đã tải nhưng không có dữ liệu”, thì đổi `null` thành danh sách rỗng làm mất thông tin. Khi có nhiều trạng thái nghiệp vụ, cân nhắc một kiểu riêng:
+The diagram suggests design choices rather than absolute rules. For example, if `null` means “not yet loaded” and `List.of()` means “loaded but empty,” replacing `null` with an empty list loses information. With multiple business states, consider a dedicated type:
 
 ~~~java
 sealed interface LoadResult<T>
@@ -3828,38 +3828,38 @@ record NotFound<T>() implements LoadResult<T> {}
 record LoadFailed<T>(String reason) implements LoadResult<T> {}
 ~~~
 
-Các record trên minh họa rằng **“không tìm thấy” khác “không tải được”**. Với Java 17, sealed interface và record được hỗ trợ chính thức. Nếu cần trạng thái bất biến, nên kiểm tra các giá trị bắt buộc trong constructor của record tương ứng.
+The records illustrate that **“not found” differs from “loading failed.”** Java 17 fully supports sealed interfaces and records. If immutable state is required, validate mandatory values in the corresponding record constructors.
 
-### Phân biệt lỗi và trường hợp bình thường
+### Distinguishing Errors from Normal Cases
 
-- **ID không tìm thấy** có thể là kết quả bình thường: dùng `Optional.empty()` hoặc một kiểu kết quả tường minh.
-- **ID null khi hợp đồng yêu cầu bắt buộc** thường là lỗi từ người gọi: kiểm tra ngay, cung cấp thông báo phù hợp.
-- **Database kết nối thất bại** không tương đương với “không có khách hàng”: phải báo lỗi, tránh trả `Optional.empty()` làm người gọi hiểu sai.
-- **Danh sách tìm kiếm không có kết quả** thường được biểu diễn bằng collection rỗng.
-- **Thuộc tính tùy chọn chưa có** có thể cho phép null nội bộ, nhưng API nên thể hiện rõ hợp đồng dùng và tính hợp lệ.
+- **ID not found** can be an ordinary result: use `Optional.empty()` or an explicit result type.
+- **Null ID when the contract requires an ID** is generally a caller error: validate immediately and provide a suitable message.
+- **Database connection failure** is not equivalent to “no customer exists”: report the failure instead of returning `Optional.empty()` and misleading callers.
+- **A search with zero matches** is commonly represented by an empty collection.
+- **An optional attribute not yet supplied** may permit null internally, but the API should make its validity and usage contract clear.
 
-Trong hệ thống lớn, tài liệu API và kiểm thử giúp người dùng API biết khi nào cần xử lý sự vắng mặt.
+In larger systems, API documentation and tests help callers understand when they must handle absent data.
 
-## 11. Một số lỗi phổ biến cần tránh
+## 11. Common Mistakes to Avoid
 
-| Lỗi | Vấn đề | Cách sửa |
+| Mistake | Problem | Fix |
 |---|---|---|
-| Gọi `obj.method()` khi `obj` có thể null | NPE lúc chạy | Kiểm tra null hoặc thiết kế kiểu trả về an toàn |
-| Cho rằng `""` là `null` | Làm sai quy tắc dữ liệu | Phân biệt missing, empty và blank |
-| Sử dụng `Integer` có thể null trong biểu thức số học | Auto-unboxing có thể ném NPE | Kiểm tra/đặt mặc định theo nghiệp vụ trước khi tính |
-| Trả `null` thay vì danh sách không có phần tử | Người gọi phải phân nhánh ở nhiều nơi | Cân nhắc trả collection rỗng |
-| Trả `null` thay cho `Optional<T>` | Vi phạm hợp đồng, làm `Optional` mất ý nghĩa | Trả `Optional.empty()` khi không có kết quả |
-| Gọi `Optional.get()` thiếu kiểm tra | Có thể ném `NoSuchElementException` | Dùng `orElseThrow`, `orElse`, `map`… |
-| Bắt mọi NPE rồi âm thầm bỏ qua | Che khuất lỗi lập trình hoặc dữ liệu | Sửa nơi tạo/đọc giá trị null, fail fast khi cần |
-| Dùng `null` cho mọi trạng thái không rõ | Trộn “chưa nhập”, “không tồn tại”, “lỗi truy vấn” | Mô hình hóa rõ trạng thái nghiệp vụ |
-| Gán `x = null` rồi tin đối tượng đã bị hủy | Có thể còn alias hoặc GC chưa thu hồi | Hiểu reachability; quản lý tài nguyên qua cơ chế phù hợp |
-| Dùng `null` làm lý do bỏ qua đóng file/kết nối | Lộ tài nguyên bên ngoài heap | Dùng try-with-resources cho tài nguyên `AutoCloseable` |
+| Calling `obj.method()` when `obj` may be null | Runtime NPE | Check for null or design a safe return type |
+| Treating `""` as `null` | Incorrect data rules | Distinguish missing, empty, and blank |
+| Using a nullable `Integer` in arithmetic | Auto-unboxing may throw an NPE | Validate or provide a business-appropriate default before calculation |
+| Returning `null` instead of a list with no elements | Callers must branch in many places | Consider returning an empty collection |
+| Returning `null` instead of `Optional<T>` | Violates the contract and undermines `Optional` | Return `Optional.empty()` when no result exists |
+| Calling `Optional.get()` without checking | May throw `NoSuchElementException` | Use `orElseThrow`, `orElse`, `map`, etc. |
+| Catching every NPE and silently ignoring it | Hides programming or data errors | Fix where null values originate or are read; fail fast when needed |
+| Using `null` for every unclear state | Conflates “not entered,” “not present,” and “query failed” | Model business states explicitly |
+| Assigning `x = null` and assuming the object was destroyed | Other aliases may remain or GC may not have run | Understand reachability; manage resources appropriately |
+| Using `null` as a reason to skip closing files/connections | Leaks external resources outside the heap | Use try-with-resources for `AutoCloseable` resources |
 
-**Lưu ý:** garbage collector chỉ quản lý bộ nhớ của các đối tượng Java theo mô hình của JVM; không bảo đảm tự đóng đúng hạn file, socket hay kết nối database. Vì vậy tránh xem phép gán `null` là hành động giải phóng mọi loại tài nguyên.
+**Note:** the garbage collector manages Java object memory according to the JVM model; it does not guarantee timely closure of files, sockets, or database connections. Do not treat assigning `null` as releasing every kind of resource.
 
-## 12. Tự luyện tập và kiểm tra
+## 12. Practice and Self-Assessment
 
-### Bài 1 — Dự đoán kết quả
+### Exercise 1 — Predict the Output
 
 ~~~java
 String first = null;
@@ -3869,7 +3869,7 @@ System.out.println(second == null);
 System.out.println(second.length());
 ~~~
 
-**Đáp án:**
+**Answer:**
 
 ~~~text
 true
@@ -3877,9 +3877,9 @@ false
 0
 ~~~
 
-`second` trỏ đến một chuỗi rỗng, nên `length()` hợp lệ và trả 0.
+`second` refers to an empty string, so `length()` is valid and returns 0.
 
-### Bài 2 — Hai tham chiếu đến một đối tượng
+### Exercise 2 — Two References to One Object
 
 ~~~java
 class Note {
@@ -3892,37 +3892,37 @@ one = null;
 System.out.println(two.text);
 ~~~
 
-**Đáp án:** in `Ban đầu`. Phép gán `one = null` không xóa đối tượng mà `two` đang trỏ tới.
+**Answer:** Prints `Ban đầu`. Assigning `one = null` does not delete the object referenced by `two`.
 
-### Bài 3 — Lỗi xuất hiện ở giai đoạn nào?
+### Exercise 3 — At Which Stage Does the Error Occur?
 
 ~~~java
 String value;
 // System.out.println(value);
 ~~~
 
-**Đáp án:** nếu bỏ comment dòng đọc `value`, xảy ra **lỗi biên dịch**, vì biến cục bộ chưa được gán. Đây không phải NPE.
+**Answer:** Uncommenting the statement that reads `value` causes a **compile-time error** because the local variable has not been assigned. This is not an NPE.
 
-### Bài 4 — Wrapper và unboxing
+### Exercise 4 — Wrappers and Unboxing
 
 ~~~java
 Integer score = null;
 // int doubled = score * 2;
 ~~~
 
-**Đáp án:** nếu bỏ comment biểu thức tính toán, có thể ném NPE khi Java tự unbox `score` thành `int`.
+**Answer:** Uncommenting the calculation can throw an NPE when Java automatically unboxes `score` to `int`.
 
-### Bài 5 — API tìm kiếm
+### Exercise 5 — Search APIs
 
-Một phương thức `findUserById(id)` phải phân biệt “không tìm thấy” và “máy chủ database lỗi”. Có nên trả `Optional.empty()` cho cả hai?
+A `findUserById(id)` method must distinguish “not found” from “database server failure.” Should it return `Optional.empty()` for both?
 
-**Đáp án:** Không. `Optional.empty()` có thể biểu diễn không tìm thấy. Lỗi truy cập database cần được báo theo hợp đồng API (ví dụ exception hoặc kết quả lỗi tường minh) để không bị hiểu nhầm thành vắng mặt bình thường.
+**Answer:** No. `Optional.empty()` can represent “not found.” Database access failures must be reported according to the API contract (for example, through an exception or explicit error result) so they are not mistaken for normal absence.
 
-### Bài 6 — Viết một phương thức an toàn
+### Exercise 6 — Write a Safe Method
 
-Yêu cầu: nhận `String name`, trả `"(chưa có tên)"` nếu `name` bằng null hoặc toàn khoảng trắng; ngược lại trả chuỗi đã `trim()`.
+Requirement: accept `String name`, return `"(chưa có tên)"` when `name` is null or consists only of whitespace, and otherwise return the `trim()`-processed string.
 
-Gợi ý lời giải:
+Suggested solution:
 
 ~~~java
 static String displayName(String name) {
@@ -3933,67 +3933,67 @@ static String displayName(String name) {
 }
 ~~~
 
-Vế `name.isBlank()` chỉ được đánh giá nếu `name != null` nhờ cơ chế short-circuit của `||`, nên không gây NPE.
+The `name.isBlank()` expression is evaluated only if `name != null`, because of `||` short-circuiting, so it causes no NPE.
 
-## Ghi nhớ
+## Remember
 
-Trong Java, `null` biểu thị **không có đối tượng được tham chiếu qua giá trị tham chiếu hiện tại**; nó không phải đối tượng rỗng. Biến cục bộ chưa gán là một vấn đề *khởi tạo* được compiler kiểm tra. Chuỗi hoặc danh sách rỗng vẫn là **đối tượng có thật**. Một phép gán `null` không có nghĩa object đã bị hủy, và kết quả truy vấn vắng mặt không phải lúc nào cũng chứng minh thực thể chưa từng tồn tại.
+In Java, `null` means **the current reference value does not refer to any object**; it is not an empty object. An unassigned local variable is an *initialization* issue checked by the compiler. Empty strings and lists are still **real objects**. Assigning `null` does not mean an object has been destroyed, and a missing query result does not always prove the entity never existed.
 
-Khi thiết kế lớp và API, hãy xác định dữ liệu **bắt buộc**, **có thể thiếu hợp lệ**, **không tìm thấy** hay **xảy ra lỗi**; từ đó chọn `requireNonNull`, kiểm tra `null`, `Optional`, collection rỗng hoặc kiểu kết quả nghiệp vụ phù hợp. Điều này giúp hạn chế `NullPointerException` và giữ ý nghĩa đối tượng rõ ràng trong thiết kế OOP.
+When designing classes and APIs, distinguish **required data**, **legitimately absent data**, **not-found results**, and **errors**. Then choose `requireNonNull`, `null` checks, `Optional`, empty collections, or suitable domain result types. This reduces `NullPointerException` errors and keeps object semantics clear in OOP designs.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="object-009">Theo dõi tương tác của các đối tượng trong một tình huống</a>
+## <a id="object-009">Tracing Object Interactions in a Scenario</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Theo dõi tương tác của các đối tượng trong một tình huống (Java OOP)
+# Tracing Object Interactions in a Scenario (Java OOP)
 
-Khi chương trình hướng đối tượng xử lý một yêu cầu, công việc thường được chia cho nhiều **đối tượng (object)**. Mỗi đối tượng giữ một phần trạng thái và đảm nhận một trách nhiệm. Để hiểu chương trình thực sự chạy như thế nào, ta cần theo dõi **đối tượng nào nhận lời gọi, gọi tiếp đối tượng nào, dữ liệu nào được truyền đi, kết quả nào trả về và trạng thái nào thay đổi**.
+When an object-oriented program handles a request, the work is often divided among multiple **objects**. Each object owns part of the state and has a particular responsibility. To understand the actual execution, we need to trace **which object receives a call, which other object it calls, what data is passed, what results are returned, and which state changes occur**.
 
-Bài này dùng một tình huống đặt hàng nhỏ để đi từ mã Java đến bảng diễn tiến và **UML sequence diagram**. Những kỹ năng đó hữu ích khi đọc code người khác, debug, giải thích luồng xử lý trong phỏng vấn và thiết kế hệ thống có nhiều lớp.
+This lesson uses a small ordering scenario to connect Java code with execution timelines and **UML sequence diagrams**. These skills are useful when reading other people's code, debugging, explaining processing flows in interviews, and designing multilayer systems.
 
-## 1. Theo dõi đối tượng là theo dõi điều gì?
+## 1. What Does Tracing Objects Involve?
 
-Giả sử người dùng đặt mua **2 quyển sách**. Hệ thống cần:
+Suppose a customer orders **2 books**. The system must:
 
-1. Lấy tổng tiền từ giỏ hàng.
-2. Kiểm tra và giữ số lượng trong kho.
-3. Gọi bộ xử lý thanh toán.
-4. Tạo thông tin đơn hàng nếu thanh toán thành công.
-5. Gửi thông báo.
-6. Trả đơn hàng cho đoạn code đã yêu cầu đặt hàng.
+1. Obtain the total price from the cart.
+2. Check and reserve available inventory.
+3. Call the payment processor.
+4. Create the order information if payment succeeds.
+5. Send a notification.
+6. Return the order to the code that requested checkout.
 
-Các công việc này thuộc các đối tượng khác nhau:
+These tasks belong to different objects:
 
-| Đối tượng | Trách nhiệm | Trạng thái quan trọng |
+| Object | Responsibility | Important state |
 | --- | --- | --- |
-| `Cart` | Cung cấp mặt hàng, số lượng, đơn giá, tính tổng | SKU, số lượng, đơn giá |
-| `Inventory` | Quản lý số lượng tồn của từng mã hàng | Bản đồ SKU → số lượng |
-| `PaymentGateway` | Mô phỏng việc chấp nhận/từ chối thanh toán | Cấu hình kết quả mô phỏng |
-| `OrderService` | Điều phối trình tự đặt hàng | Tham chiếu đến các đối tượng cộng tác |
-| `Order` | Mang dữ liệu về đơn hàng đã tạo | Mã đơn, mặt hàng, số lượng, tiền, mã giao dịch |
-| `Notifier` | Gửi thông báo về đơn hàng | Trong ví dụ chỉ in log |
+| `Cart` | Provides item details, quantity, unit price, and total | SKU, quantity, unit price |
+| `Inventory` | Manages stock quantities for each SKU | SKU-to-quantity map |
+| `PaymentGateway` | Simulates approving or declining a payment | Simulated approval configuration |
+| `OrderService` | Coordinates the checkout sequence | References to collaborating objects |
+| `Order` | Holds data about the created order | Order ID, item, quantity, amount, transaction ID |
+| `Notifier` | Sends an order notification | Only prints logs in this example |
 
-**Lưu ý về cấp độ:** `Cart`, `Inventory` hay `OrderService` là *lớp* (class); `new Cart(...)`, `new Inventory(...)` là các *đối tượng cụ thể*. Các mũi tên trong sơ đồ tương tác diễn tả **lời gọi giữa những instance tại thời điểm chạy**, không phải quan hệ kế thừa giữa các class.
+**A note about abstraction levels:** `Cart`, `Inventory`, and `OrderService` are *classes*; `new Cart(...)` and `new Inventory(...)` create *concrete objects*. Arrows in interaction diagrams represent **runtime calls between instances**, not inheritance relationships between classes.
 
-Một đoạn theo dõi tốt trả lời được năm câu hỏi:
+A useful trace answers five questions:
 
-- **Ai khởi phát?** Ví dụ `main` gọi `OrderService.checkout(cart)`.
-- **Ai nhận?** Biến `service` đang trỏ tới một instance `OrderService`.
-- **Thông điệp/lời gọi là gì?** Tên phương thức và đối số, ví dụ `inventory.reserve("BOOK", 2)`.
-- **Kết quả nào được trả về?** Giá trị trả về hoặc ngoại lệ, ví dụ `"TX-001"`.
-- **Sau lời gọi, điều gì thay đổi?** Tồn kho từ 5 xuống 3; một `Order` mới được tạo.
+- **Who initiates the call?** For example, `main` invokes `OrderService.checkout(cart)`.
+- **Who receives it?** Variable `service` references an `OrderService` instance.
+- **What message/call is made?** The method name and arguments, such as `inventory.reserve("BOOK", 2)`.
+- **What result comes back?** A returned value or exception, such as `"TX-001"`.
+- **What changes afterward?** Stock decreases from 5 to 3; a new `Order` is created.
 
-## 2. Ví dụ đầy đủ: đặt hàng có nhiều đối tượng cộng tác
+## 2. Complete Example: Checkout with Multiple Collaborating Objects
 
-Chạy bằng **Java 11 trở lên**. Lưu toàn bộ đoạn mã vào một tệp `ObjectInteractionDemo.java`; mã chỉ dùng thư viện chuẩn Java.
+Run with **Java 11 or later**. Save the entire code sample in a single file named `ObjectInteractionDemo.java`; it uses only the Java standard library.
 
 ~~~java
 import java.math.BigDecimal;
@@ -4180,14 +4180,14 @@ public class ObjectInteractionDemo {
 }
 ~~~
 
-Để chạy:
+To run:
 
 ~~~bash
 javac ObjectInteractionDemo.java
 java ObjectInteractionDemo
 ~~~
 
-Kết quả với `new PaymentGateway(true)`:
+Output with `new PaymentGateway(true)`:
 
 ~~~text
 01 Main: gọi checkout(cart)
@@ -4203,40 +4203,40 @@ Kết quả với `new PaymentGateway(true)`:
 Tồn cuối: 3
 ~~~
 
-Ví dụ cố ý dùng một sản phẩm và mã đơn/giao dịch cố định để dễ quan sát. Trong ứng dụng thực, mã đơn và mã giao dịch cần được sinh hoặc nhận từ nguồn có bảo đảm phù hợp; tồn kho, thanh toán và thông báo thường cần cơ chế lưu trữ, xử lý lỗi, giao dịch và đồng thời phức tạp hơn.
+The example deliberately uses one product and fixed order/transaction identifiers for clarity. In production, order and transaction IDs must be generated or obtained from suitably reliable sources; inventory, payments, and notifications generally require more sophisticated persistence, error handling, transactions, and concurrency control.
 
-## 3. Đọc diễn tiến thực thi từ đầu đến cuối
+## 3. Reading the Execution Timeline from Start to Finish
 
-Bảng sau mô tả các **thông điệp chính** và sự thay đổi của mô hình, thay vì chỉ nhìn vào từng dòng code rời rạc.
+The following table describes the **main messages** and model changes rather than merely listing isolated lines of code.
 
-| Bước | Bên gọi → bên nhận | Phương thức/hoạt động | Kết quả và tác động |
+| Step | Caller → receiver | Method/operation | Result and effects |
 | --- | --- | --- | --- |
-| 1 | `Main → OrderService` | `checkout(cart)` | Bắt đầu yêu cầu đặt hàng |
-| 2 | `OrderService → Cart` | `total()` | Trả về `BigDecimal("200000")` |
-| 3 | `OrderService → Inventory` | `reserve("BOOK", 2)` | Giảm tồn `BOOK` từ 5 xuống 3 |
-| 4 | `OrderService → PaymentGateway` | `pay(200000)` | Trả mã giao dịch `"TX-001"` |
-| 5 | `OrderService` | `new Order(...)` | Tạo một đối tượng `Order` mới |
-| 6 | `OrderService → Notifier` | `send(order)` | Gửi thông báo (ở đây chỉ log) |
-| 7 | `OrderService → Main` | `return order` | Trả tham chiếu đến `Order` đã tạo |
+| 1 | `Main → OrderService` | `checkout(cart)` | Starts the checkout request |
+| 2 | `OrderService → Cart` | `total()` | Returns `BigDecimal("200000")` |
+| 3 | `OrderService → Inventory` | `reserve("BOOK", 2)` | Decreases `BOOK` stock from 5 to 3 |
+| 4 | `OrderService → PaymentGateway` | `pay(200000)` | Returns transaction ID `"TX-001"` |
+| 5 | `OrderService` | `new Order(...)` | Creates a new `Order` object |
+| 6 | `OrderService → Notifier` | `send(order)` | Sends a notification (only logs here) |
+| 7 | `OrderService → Main` | `return order` | Returns a reference to the created `Order` |
 
-Một bước có thể có **nhiều dòng log**. Ví dụ lời gọi `Inventory.reserve` được log ở bước 04, còn bước 05 log trạng thái mới sau khi xử lý. Số thứ tự trong console biểu thị **thứ tự sự kiện được ghi lại**, không nhất thiết bằng số lượng đối tượng hoặc số lượng lần gọi phương thức.
+One operation can produce **multiple log lines**. For example, the `Inventory.reserve` call is logged at step 04, and step 05 logs the updated state. Console sequence numbers represent **the order of recorded events**, not necessarily the number of objects or method calls.
 
-Một cách hữu ích để tự kiểm tra là viết bảng trạng thái:
+A useful way to verify the flow is to construct a state table:
 
-| Thời điểm | `cart.quantity` | `inventory.available("BOOK")` | Thanh toán | `order` |
+| Point in time | `cart.quantity` | `inventory.available("BOOK")` | Payment | `order` |
 | --- | ---: | ---: | --- | --- |
-| Trước `checkout` | 2 | 5 | Chưa gọi | Chưa có |
-| Sau `cart.total()` | 2 | 5 | Chưa gọi | Chưa có |
-| Sau `reserve` | 2 | 3 | Chưa gọi | Chưa có |
-| Sau `pay` thành công | 2 | 3 | Đã duyệt `TX-001` | Chưa được tạo |
-| Sau `new Order` | 2 | 3 | Đã duyệt | `ORD-001` |
-| Sau `return` | 2 | 3 | Đã duyệt | Biến `order` ở `main` trỏ đến đơn mới |
+| Before `checkout` | 2 | 5 | Not called | Does not exist |
+| After `cart.total()` | 2 | 5 | Not called | Does not exist |
+| After `reserve` | 2 | 3 | Not called | Does not exist |
+| After successful `pay` | 2 | 3 | Approved, `TX-001` | Not yet created |
+| After `new Order` | 2 | 3 | Approved | `ORD-001` |
+| After `return` | 2 | 3 | Approved | Variable `order` in `main` points to the new order |
 
-Lưu ý: `Cart.total()` chỉ tính và trả về một giá trị; nó **không** làm giảm tồn kho. Việc giảm tồn thuộc trách nhiệm của `Inventory.reserve`. Phân biệt như vậy giúp xác định đúng nơi phát sinh lỗi.
+Note: `Cart.total()` only calculates and returns a value; it **does not** reduce stock. Stock reduction is the responsibility of `Inventory.reserve`. Keeping these responsibilities distinct helps locate bugs accurately.
 
-## 4. UML sequence diagram: ai gọi ai, theo thứ tự nào?
+## 4. UML Sequence Diagram: Who Calls Whom, and in What Order?
 
-Sequence diagram mô tả sự tương tác theo **trục thời gian từ trên xuống dưới**. Mỗi cột đứng cho một đối tượng/actor; mũi tên ngang biểu diễn lời gọi hoặc phản hồi. Đối chiếu với nhánh thành công của chương trình:
+A sequence diagram represents interactions along **a top-to-bottom timeline**. Each column represents an object or actor; horizontal arrows represent calls or replies. Compare it with the program's successful path:
 
 ~~~mermaid
 sequenceDiagram
@@ -4262,27 +4262,27 @@ sequenceDiagram
     deactivate Service
 ~~~
 
-Cách đọc:
+How to read it:
 
-- **`Main → OrderService`**: đối tượng điều phối nhận yêu cầu từ code gọi.
-- **`OrderService → Cart`**: hỏi dữ liệu/tổng tiền, nhận kết quả.
-- **`OrderService → Inventory`**: yêu cầu thao tác trên trạng thái tồn kho.
-- **`OrderService → PaymentGateway`**: yêu cầu thanh toán và nhận mã giao dịch.
-- **`OrderService → Notifier`**: chuyển đối tượng đơn hàng cho bộ thông báo.
-- **Mũi tên trả về `order`**: đối tượng `Order` không tự nhân đôi khi được trả về; phương thức trả lại một **giá trị tham chiếu**.
+- **`Main → OrderService`**: the coordinator receives a request from the calling code.
+- **`OrderService → Cart`**: requests price information and receives the result.
+- **`OrderService → Inventory`**: requests an operation on inventory state.
+- **`OrderService → PaymentGateway`**: requests payment and receives a transaction ID.
+- **`OrderService → Notifier`**: passes the order object to the notification component.
+- **Return arrow for `order`**: the `Order` object is not duplicated when returned; the method returns **a reference value**.
 
-Các mũi tên trong ví dụ là **lời gọi đồng bộ**: bên gọi chờ phương thức được gọi hoàn tất rồi thực thi tiếp. Khi dùng hàng đợi, sự kiện bất đồng bộ, callback hoặc nhiều luồng, sơ đồ và cách lập luận về thứ tự cần được điều chỉnh theo cơ chế thực tế.
+These arrows show **synchronous calls**: the caller waits for a method to complete before continuing. When using queues, asynchronous events, callbacks, or multiple threads, both the diagram and the reasoning about order must reflect the actual execution mechanism.
 
-## 5. Các đối tượng giữ tham chiếu tới nhau ra sao?
+## 5. How Do Objects Hold References to One Another?
 
-Trong constructor:
+In the constructor:
 
 ~~~java
 OrderService service =
         new OrderService(inventory, payment, notifier);
 ~~~
 
-`service` là biến tham chiếu đến instance `OrderService`. Trong object đó có các field `inventory`, `payment` và `notifier` cũng giữ tham chiếu tới ba instance được tạo trong `main`.
+`service` is a reference variable pointing to an `OrderService` instance. Inside that object, the `inventory`, `payment`, and `notifier` fields also hold references to three instances created in `main`.
 
 ~~~mermaid
 flowchart LR
@@ -4293,36 +4293,36 @@ flowchart LR
     S -->|notifier| N["Notifier instance"]
 ~~~
 
-Vì `service.inventory` và biến `inventory` ở `main` cùng trỏ tới một instance nên:
+Because `service.inventory` and variable `inventory` in `main` refer to the same instance:
 
 ~~~java
 inventory.reserve("BOOK", 1);
 ~~~
 
-và:
+and:
 
 ~~~java
 // Bên trong OrderService:
 this.inventory.reserve("BOOK", 1);
 ~~~
 
-đều thao tác trên **cùng kho** nếu được gọi trong trạng thái hợp lệ. Đây là ví dụ về **nhiều tham chiếu cùng trỏ đến một đối tượng** phát sinh tự nhiên trong luồng tương tác.
+both calls operate on **the same inventory** if made in a valid state. This is a natural example of **multiple references pointing to the same object** during an interaction flow.
 
-Khi `OrderService.checkout` gọi `notifier.send(order)`, tham số `order` của `send` cũng nhận một bản sao giá trị tham chiếu đến **cùng đối tượng Order** được tạo trong `checkout`. Java truyền đối số **theo giá trị (pass-by-value)**, kể cả khi giá trị được truyền là tham chiếu.
+When `OrderService.checkout` calls `notifier.send(order)`, the `order` parameter of `send` receives a copy of the reference value to **the same Order object** created inside `checkout`. Java passes arguments **by value**, even when the value is a reference.
 
-Hai tham chiếu trỏ cùng instance không có nghĩa là chúng là cùng một *biến*. Gán lại một biến tham chiếu không tự thay giá trị tham chiếu trong biến còn lại.
+Two references pointing to the same instance do not imply they are the same *variable*. Reassigning one reference variable does not automatically change the reference value in the other.
 
-## 6. Theo dõi đường đi khi có ngoại lệ: thanh toán thất bại
+## 6. Tracing the Failure Path: Payment Declined
 
-Nếu thay trong `main`:
+If you change the following in `main`:
 
 ~~~java
 PaymentGateway payment = new PaymentGateway(false);
 ~~~
 
-`PaymentGateway.pay` sẽ ném `PaymentDeclinedException`. `OrderService.checkout` bắt đúng loại ngoại lệ này, gọi `inventory.release` để hoàn trả số hàng đã giữ, rồi ném lại ngoại lệ. Không tạo `Order`, không gọi `Notifier`.
+`PaymentGateway.pay` throws `PaymentDeclinedException`. `OrderService.checkout` catches that exception type, calls `inventory.release` to release reserved stock, then rethrows the exception. It creates no `Order` and never calls `Notifier`.
 
-Để quan sát kết quả mà chương trình không kết thúc bằng stack trace, trong `main` thay phần gọi `checkout` và in tồn cuối bằng:
+To observe the result without ending in a stack trace, inside `main` replace the `checkout` call and final inventory printout with:
 
 ~~~java
 Trace.log("Main: gọi checkout(cart)");
@@ -4335,7 +4335,7 @@ try {
 System.out.println("Tồn cuối: " + inventory.available("BOOK"));
 ~~~
 
-Kết quả nhánh này:
+Output for this path:
 
 ~~~text
 01 Main: gọi checkout(cart)
@@ -4370,19 +4370,19 @@ sequenceDiagram
     Service--xMain: ném lại ngoại lệ
 ~~~
 
-Đối chiếu **đường thành công** và **đường thất bại**:
+Compare **the successful path** and **the failure path**:
 
-| Điều kiện | Gọi `release`? | Tạo `Order`? | Gọi `Notifier`? | Tồn cuối |
+| Condition | Calls `release`? | Creates `Order`? | Calls `Notifier`? | Final stock |
 | --- | --- | --- | --- | ---: |
-| Thanh toán được duyệt | Không | Có | Có | 3 |
-| Thanh toán bị từ chối | Có | Không | Không | 5 |
-| Không đủ tồn ngay khi `reserve` | Không trong nhánh catch này | Không | Không | Không giảm so với ban đầu |
+| Payment approved | No | Yes | Yes | 3 |
+| Payment declined | Yes | No | No | 5 |
+| Insufficient stock at `reserve` | Not in this catch branch | No | No | Unchanged from initial stock |
 
-**Giới hạn ví dụ:** hoàn trả tồn kho ở đây chỉ mô phỏng một nhánh thất bại cụ thể trong chương trình **đơn luồng, trong bộ nhớ**. Ứng dụng thực phải xét lỗi mạng, timeout, thanh toán thành công nhưng mất phản hồi, nhiều người mua đồng thời, tính idempotent và giao dịch bền vững. Việc gọi `release` sau mọi lỗi một cách máy móc có thể sai, đặc biệt khi không biết chắc phía thanh toán đã xử lý hay chưa. Thông báo cũng thường được gửi bất đồng bộ và có cơ chế thử lại sau khi đơn hàng được lưu thành công.
+**Example limitations:** releasing inventory here models only one specific failure path in a **single-threaded, in-memory** program. Real applications must address network errors, timeouts, successful payments with lost responses, concurrent shoppers, idempotency, and durable transactions. Mechanically calling `release` after every error can be wrong, especially when it is uncertain whether the payment provider processed the transaction. Notifications are also often sent asynchronously with retries after successful order persistence.
 
-## 7. Call stack giúp giải thích thứ tự chạy
+## 7. How the Call Stack Explains Execution Order
 
-Giả sử đang đứng trong `Inventory.reserve` khi vừa được gọi từ `OrderService.checkout`:
+Suppose execution is inside `Inventory.reserve` after a call from `OrderService.checkout`:
 
 ~~~text
 [Đỉnh call stack]
@@ -4392,100 +4392,100 @@ ObjectInteractionDemo.main(...)
 [Đáy call stack]
 ~~~
 
-Lúc phương thức `reserve` trả về, frame tương ứng kết thúc và luồng chạy tiếp ở `checkout` sau dòng gọi `reserve`. Sau đó `checkout` gọi `PaymentGateway.pay`; trên stack xuất hiện frame của `pay`, rồi quay về `checkout` khi `pay` hoàn tất.
+When `reserve` returns, its stack frame ends, and execution resumes in `checkout` after the `reserve` call. Then `checkout` invokes `PaymentGateway.pay`; a `pay` frame appears on the stack, and control returns to `checkout` after `pay` finishes.
 
-Call stack trả lời câu hỏi **“hiện tại phương thức nào đang gọi phương thức nào?”**. Trong khi đó:
+The call stack answers **“Which method is currently calling which other method?”**. By contrast:
 
-- **Object diagram** trả lời “những instance nào tồn tại và tham chiếu tới nhau?”.
-- **Sequence diagram** trả lời “những lời gọi xảy ra theo trình tự nào?”.
-- **Bảng trạng thái** trả lời “giá trị trong từng đối tượng đổi ra sao?”.
-- **Log/breakpoint** cung cấp bằng chứng thực thi cụ thể để so với kỳ vọng.
+- **Object diagrams** answer “Which instances exist and reference one another?”
+- **Sequence diagrams** answer “In what order do calls occur?”
+- **State tables** answer “How do values inside each object change?”
+- **Logs/breakpoints** provide concrete execution evidence to compare against expectations.
 
-Không nên lẫn lộn **một frame trên stack** với **một đối tượng**. Một phương thức có thể được gọi nhiều lần trên cùng instance, và nhiều phương thức khác nhau có thể tác động lên một instance được chia sẻ.
+Do not confuse **a stack frame** with **an object**. A method may be invoked repeatedly on the same instance, and multiple different methods may act on one shared instance.
 
-## 8. Thực hành debug một luồng tương tác
+## 8. Practicing Debugging an Interaction Flow
 
-Trong IntelliJ IDEA, Eclipse hoặc VS Code có Java Debugger, hãy đặt breakpoint tại những điểm sau:
+In IntelliJ IDEA, Eclipse, or VS Code with a Java debugger, set breakpoints at the following locations:
 
-1. `OrderService.checkout`, ngay trước dòng `cart.total()`: kiểm tra tham số `cart` đang trỏ đến instance nào và có `quantity = 2` hay không.
-2. `Inventory.reserve`, trước `stock.put(...)`: kiểm tra `sku`, `quantity`, `before = 5`.
-3. Sau `inventory.reserve(...)` trong `checkout`: kiểm tra kho còn 3.
-4. Trong `PaymentGateway.pay`: xem `amount = 200000` và biến `approved`.
-5. Ngay trước `return order`: kiểm tra `order.id`, `order.amount`, `order.transactionId` cùng tồn kho cuối.
+1. `OrderService.checkout`, immediately before `cart.total()`: inspect which instance the `cart` parameter references and whether `quantity = 2`.
+2. `Inventory.reserve`, before `stock.put(...)`: inspect `sku`, `quantity`, and `before = 5`.
+3. After `inventory.reserve(...)` in `checkout`: verify that inventory is now 3.
+4. Inside `PaymentGateway.pay`: inspect `amount = 200000` and the `approved` flag.
+5. Immediately before `return order`: inspect `order.id`, `order.amount`, `order.transactionId`, and final stock.
 
-Khi debug, **Step Into** đi vào phương thức được gọi; **Step Over** thực thi lời gọi rồi quay lại dòng tiếp theo; **Step Out** chạy đến khi phương thức hiện tại trả quyền điều khiển cho bên gọi.
+During debugging, **Step Into** enters the called method; **Step Over** executes the call and moves to the next statement; **Step Out** runs until the current method returns control to its caller.
 
-Một bảng ghi chép rất hiệu quả khi điều tra lỗi:
+This table is useful when investigating defects:
 
-| Thời điểm | Đối tượng đang thực thi | Method | Input | Output/exception | Trạng thái trước → sau |
+| Point in time | Executing object | Method | Input | Output/exception | State before → after |
 | --- | --- | --- | --- | --- | --- |
-| T1 | `Cart` | `total` | Không có đối số | 200000 | Không đổi |
-| T2 | `Inventory` | `reserve` | BOOK, 2 | Hoàn tất | 5 → 3 |
-| T3 | `PaymentGateway` | `pay` | 200000 | TX-001 | Không đổi trong ví dụ |
-| T4 | `OrderService` | `checkout` | `cart` | `order` | Tạo đối tượng đơn |
-| T5 | `Notifier` | `send` | `order` | Hoàn tất | Chỉ log |
+| T1 | `Cart` | `total` | No arguments | 200000 | Unchanged |
+| T2 | `Inventory` | `reserve` | BOOK, 2 | Completed | 5 → 3 |
+| T3 | `PaymentGateway` | `pay` | 200000 | TX-001 | Unchanged in this example |
+| T4 | `OrderService` | `checkout` | `cart` | `order` | Creates an order object |
+| T5 | `Notifier` | `send` | `order` | Completed | Logs only |
 
-Trong ứng dụng lớn, hãy bổ sung **request ID/correlation ID** vào log để nối đúng các bước của cùng một yêu cầu; nếu nhiều request chạy đồng thời, chỉ dựa vào thứ tự các dòng log có thể dẫn đến kết luận sai. Tuy nhiên, không cần log mật khẩu, số thẻ hoặc dữ liệu nhạy cảm để hiểu lời gọi đối tượng.
+In larger applications, include **request IDs/correlation IDs** in logs to connect events belonging to one request; when several requests run concurrently, log-line order alone can be misleading. There is no need to log passwords, card numbers, or sensitive data merely to understand object calls.
 
-## 9. Những nhầm lẫn dễ mắc
+## 9. Common Misconceptions
 
-### Nhầm đối tượng chịu trách nhiệm cập nhật
+### Confusing Which Object Owns an Update
 
-Nếu giá trị tồn kho sai, cần kiểm tra nơi cập nhật `Inventory`, ví dụ `reserve` và `release`, thay vì chỉ nhìn nơi `main` in ra kết quả. `main` chỉ quan sát trạng thái.
+If the inventory count is wrong, inspect the updating `Inventory` object—for example, `reserve` and `release`—rather than looking only at the result printed by `main`. `main` merely observes state.
 
-### Nhầm lời gọi trả về với việc tạo đối tượng
+### Confusing a Returned Reference with Object Creation
 
 ~~~java
 Order order = service.checkout(cart);
 ~~~
 
-`checkout` tạo một `Order` và trả về tham chiếu tới nó. Câu lệnh ở `main` **không tự tạo thêm một Order thứ hai**. Tương tự, truyền `order` cho `Notifier.send` không tự nhân bản đối tượng.
+`checkout` creates an `Order` and returns a reference to it. The statement in `main` **does not create a second Order**. Likewise, passing `order` to `Notifier.send` does not duplicate that object.
 
-### Nhầm thứ tự code trong một phương thức với toàn bộ luồng
+### Confusing a Method's Statement Order with the Complete Flow
 
-Trong `checkout`, các dòng mã chạy tuần tự, nhưng mỗi lời gọi như `reserve` lại kích hoạt mã bên trong một đối tượng khác. Muốn biết trạng thái cuối phải đi **vào bên trong các phương thức nhận lời gọi**, không chỉ đọc tên phương thức.
+Within `checkout`, statements execute sequentially, but a call such as `reserve` executes code inside another object. To determine the final state, trace **into the invoked methods** rather than reading only their names.
 
-### Chỉ vẽ nhánh thành công
+### Diagramming Only the Successful Path
 
-Nếu `reserve` ném `IllegalStateException`, `payment.pay` và `new Order` sẽ không chạy. Nếu `pay` ném `PaymentDeclinedException`, nhánh `catch` chạy và `Order` chưa được tạo. Sơ đồ chỉ mô tả thành công mà bỏ qua ngoại lệ có thể che mất vấn đề rất quan trọng.
+If `reserve` throws `IllegalStateException`, neither `payment.pay` nor `new Order` runs. If `pay` throws `PaymentDeclinedException`, the `catch` branch executes and no `Order` is created. A diagram that shows only success and omits exceptions can conceal critical behavior.
 
-### Cho rằng diagram là bằng chứng đầy đủ
+### Treating a Diagram as Complete Proof
 
-Sơ đồ là mô hình do người thiết kế hoặc người đọc lập ra. Muốn xác minh chương trình thực chạy đúng sơ đồ, cần đối chiếu **mã, breakpoint, log và trạng thái**. Với luồng bất đồng bộ hoặc nhiều luồng, trình tự hoàn thành có thể khác giả định ban đầu.
+A diagram is a model created by a designer or reader. To verify that the program actually follows it, compare **code, breakpoints, logs, and state**. With asynchronous or multithreaded flows, completion order may differ from initial assumptions.
 
-## 10. Bài luyện tập và đáp án
+## 10. Exercises and Answers
 
-**Bài 1.** Giỏ có `quantity = 2`, tồn ban đầu `5`. Chạy nhánh thành công, sau `reserve` còn bao nhiêu và ai thực hiện cập nhật?
+**Exercise 1.** The cart has `quantity = 2` and initial inventory is `5`. On the successful path, how much remains after `reserve`, and who performs the update?
 
-**Đáp án:** Còn 3. Instance `Inventory` cập nhật trạng thái khi `OrderService` gọi `reserve("BOOK", 2)`.
+**Answer:** 3 remain. The `Inventory` instance updates its state when `OrderService` calls `reserve("BOOK", 2)`.
 
-**Bài 2.** Vì sao `Main` quan sát được tồn bằng 3 dù thao tác trừ tồn xảy ra trong `OrderService`?
+**Exercise 2.** Why can `Main` observe a stock level of 3 when the deduction happens inside `OrderService`?
 
-**Đáp án:** Biến `inventory` ở `main` và field `inventory` bên trong `service` trỏ đến **cùng một instance**. `Inventory.reserve` thay đổi trạng thái instance đó.
+**Answer:** The `inventory` variable in `main` and the `inventory` field inside `service` point to **the same instance**. `Inventory.reserve` modifies that instance's state.
 
-**Bài 3.** Nếu `new PaymentGateway(false)`, lời gọi `Notifier.send` có chạy không? Vì sao?
+**Exercise 3.** With `new PaymentGateway(false)`, does `Notifier.send` execute? Why?
 
-**Đáp án:** Không. `pay` ném `PaymentDeclinedException`, `catch` trả tồn và ném lại; luồng không đến phần tạo đơn/gửi thông báo.
+**Answer:** No. `pay` throws `PaymentDeclinedException`, and `catch` restores inventory and rethrows; control never reaches order creation or notification.
 
-**Bài 4.** `OrderService` gọi `notifier.send(order)`. `Notifier` có nhận bản sao độc lập của toàn bộ `Order` không?
+**Exercise 4.** `OrderService` calls `notifier.send(order)`. Does `Notifier` receive an independent copy of the entire `Order`?
 
-**Đáp án:** Không. Java truyền bản sao **giá trị tham chiếu** vào tham số, ban đầu cả bên gọi và bên nhận đều trỏ cùng đối tượng `Order`.
+**Answer:** No. Java passes a copy of **the reference value** to the parameter; the caller and receiver initially refer to the same `Order` object.
 
-**Bài 5.** Nếu muốn phân biệt hai lần checkout chạy đồng thời, điều gì cần bổ sung vào trace?
+**Exercise 5.** What should you add to a trace to distinguish two concurrent checkout requests?
 
-**Đáp án:** Một correlation/request ID gắn với từng checkout và được truyền theo các bước; trong chương trình nhiều luồng, cần thêm thông tin thread/request tùy hạ tầng. Counter `Trace.step` trong ví dụ đơn luồng không bảo đảm mô tả đúng nhiều request đồng thời.
+**Answer:** A correlation/request ID associated with each checkout and propagated through its steps; in multithreaded programs, add thread/request information appropriate to the infrastructure. The single-threaded example's `Trace.step` counter does not reliably describe concurrent requests.
 
-**Bài 6.** Khi lỗi “đã thu tiền nhưng chưa tạo đơn”, nên theo dõi những tương tác nào?
+**Exercise 6.** When the error is “payment collected but no order created,” which interactions should you trace?
 
-**Gợi ý đáp án:** Bắt đầu từ `PaymentGateway.pay` trả gì, có timeout/ngoại lệ không, `OrderService` xử lý gì sau đó, có gọi `new Order`, lưu đơn bền vững (nếu hệ thống thực có repository), và có nhánh thử lại/bù trừ hay không. Không suy đoán chỉ từ một dòng log “pay called”.
+**Suggested answer:** Start with what `PaymentGateway.pay` returned, whether it timed out or threw, what `OrderService` did afterward, whether `new Order` was invoked, whether the order was persisted (if the real system has a repository), and whether retry/compensation paths exist. Do not infer outcomes from a single “pay called” log line.
 
-## Tự hệ thống hóa
+## Putting It All Together
 
-Muốn phân tích một tình huống OOP, có thể lần lượt: **liệt kê các instance → tìm điểm bắt đầu → lần theo các lời gọi và giá trị trả về → ghi trạng thái trước/sau → xét nhánh lỗi → kiểm chứng bằng debugger/log → biểu diễn lại bằng sequence diagram**.
+To analyze an OOP scenario, proceed through these steps: **list the instances → identify the entry point → trace calls and return values → record before/after state → examine failure paths → verify with a debugger/logs → represent the flow in a sequence diagram**.
 
-Một sơ đồ tốt luôn gắn tên phương thức và đối tượng nhận lời gọi với **một tác động cụ thể**. Chính sự kết hợp giữa luồng gọi và trạng thái đối tượng mới giúp giải thích chính xác chương trình OOP vận hành.
+A good diagram always connects a method name and receiving object to **a concrete effect**. Understanding how call flow combines with object state is what lets us explain accurately how an OOP program operates.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

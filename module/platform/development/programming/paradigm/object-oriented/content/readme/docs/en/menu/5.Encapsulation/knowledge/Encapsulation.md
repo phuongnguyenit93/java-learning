@@ -1,34 +1,34 @@
 <a id="back-to-top"></a>
 
-# Đóng gói
+# Encapsulation
 
 ## Menu
-- [Ẩn thông tin và ranh giới của đối tượng](#encapsulation-001)
-- [Điều kiện bất biến của đối tượng](#encapsulation-002)
-- [Kiểm soát truy cập và thay đổi trạng thái](#encapsulation-003)
-- [Getter, setter và phương thức thể hiện ý định](#encapsulation-004)
-- [Kiểm tra đầu vào tại ranh giới đối tượng](#encapsulation-005)
-- [Ngăn lộ dữ liệu nội bộ có thể thay đổi](#encapsulation-006)
-- [Sao chép phòng vệ và biểu diễn bất biến](#encapsulation-007)
-- [Đóng gói hành vi thay vì chỉ bao bọc dữ liệu](#encapsulation-008)
-- [Ví dụ bảo vệ số dư và trạng thái đơn hàng](#encapsulation-009)
+- [Information hiding and object boundaries](#encapsulation-001)
+- [Object invariants](#encapsulation-002)
+- [Access control and state changes](#encapsulation-003)
+- [Getters, setters, and intention-revealing methods](#encapsulation-004)
+- [Input validation at object boundaries](#encapsulation-005)
+- [Preventing exposure of mutable internal data](#encapsulation-006)
+- [Defensive copying and immutable representations](#encapsulation-007)
+- [Encapsulating behavior rather than merely wrapping data](#encapsulation-008)
+- [Example: protecting account balances and order states](#encapsulation-009)
 
-## <a id="encapsulation-001">Ẩn thông tin và ranh giới của đối tượng</a>
+## <a id="encapsulation-001">Information hiding and object boundaries</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Ẩn thông tin và ranh giới của đối tượng trong Java OOP
+# Information hiding and object boundaries in Java OOP
 
-## 1. Tại sao đối tượng cần có ranh giới?
+## 1. Why do objects need boundaries?
 
-Khi thiết kế một đối tượng, ta không chỉ quyết định **nó lưu những dữ liệu gì** mà còn phải quyết định **mã bên ngoài được phép biết và làm những gì** với dữ liệu đó.
+When designing an object, we must decide not only **what data it stores** but also **what external code is allowed to know and do** with that data.
 
-Ví dụ, một giỏ hàng có các dòng sản phẩm, đơn giá và số lượng. Nếu mã bên ngoài có thể sửa trực tiếp danh sách, đặt số lượng âm hay thay đơn giá không qua kiểm tra, đối tượng giỏ hàng sẽ không còn tự bảo vệ được quy tắc của mình. Lỗi có thể xuất hiện ở bất kỳ nơi nào sử dụng giỏ hàng.
+For example, a shopping cart contains line items, unit prices, and quantities. If external code can directly edit its list, assign negative quantities, or change prices without validation, the cart can no longer enforce its own rules. Errors may then arise anywhere the cart is used.
 
-**Ẩn thông tin (information hiding)** là nguyên tắc chỉ công khai những gì người sử dụng lớp cần biết, đồng thời giấu các quyết định triển khai mà họ không cần phụ thuộc vào. **Ranh giới đối tượng (object boundary)** là tập những thao tác và dữ liệu được phép đi qua giao diện của đối tượng, cùng các quy tắc kiểm soát sự tương tác ấy.
+**Information hiding** means exposing only what a class's clients need to know while concealing implementation decisions they should not depend on. An **object boundary** defines the operations and data allowed to cross the object's interface, together with the rules governing those interactions.
 
-Hãy hình dung:
+Consider this diagram:
 
 ```mermaid
 flowchart LR
@@ -39,44 +39,44 @@ flowchart LR
     B -->|"Kết quả / snapshot / ngoại lệ"| A
 ```
 
-Mã bên ngoài yêu cầu **thêm hàng** hoặc **đổi số lượng**; nó không cần biết lớp sử dụng `ArrayList`, `LinkedHashMap` hay một cơ chế lưu trữ khác. Đối tượng giữ quyền quyết định khi nào trạng thái hợp lệ để thay đổi.
+External code requests **adding an item** or **changing a quantity**; it does not need to know whether the class uses an `ArrayList`, `LinkedHashMap`, or another storage mechanism. The object retains control over when and how its valid state may change.
 
-Đây là trọng tâm của **encapsulation (đóng gói)** trong OOP: đưa trạng thái và hành vi liên quan vào cùng lớp, kiểm soát truy cập và bảo vệ các điều kiện luôn đúng của đối tượng.
+This is the core of **encapsulation** in OOP: keeping related state and behavior together in one class, controlling access, and preserving the object's invariants.
 
-## 2. Phân biệt ẩn thông tin, đóng gói và phạm vi truy cập
+## 2. Distinguishing information hiding, encapsulation, and access control
 
-Ba khái niệm này liên quan nhưng không đồng nghĩa hoàn toàn:
+These three concepts are related, but they are not identical:
 
-| Khái niệm | Câu hỏi nó giải quyết | Ví dụ |
+| Concept | Question it addresses | Example |
 | --- | --- | --- |
-| **Đóng gói (encapsulation)** | Trạng thái và hành vi nào thuộc về cùng một đối tượng? | Giỏ hàng tự chứa danh sách mặt hàng và phương thức thêm/đổi số lượng |
-| **Ẩn thông tin (information hiding)** | Chi tiết nào người sử dụng lớp không cần biết? | Không lộ loại collection, cách tra cứu và cách tính trung gian |
-| **Kiểm soát truy cập (access control)** | Mã ở đâu được phép truy cập thành phần nào? | `private` cho field, `public` cho API, package-private cho thành phần nội bộ package |
+| **Encapsulation** | Which state and behaviors belong to the same object? | A shopping cart owns its line items and methods for adding items and changing quantities |
+| **Information hiding** | Which details do clients of the class not need to know? | Hide the collection type, lookup strategy, and intermediate calculations |
+| **Access control** | Which code may access which members? | `private` fields, `public` APIs, and package-private members for internal package collaboration |
 
-`private` là công cụ quan trọng, nhưng **chỉ đặt field thành `private` chưa đủ để ẩn thông tin tốt**. Nếu getter trả thẳng một danh sách có thể sửa và caller thay đổi danh sách đó, trạng thái vẫn bị lộ qua tham chiếu.
+`private` is an important tool, but **making fields `private` alone does not provide effective information hiding**. If a getter exposes a mutable list and a caller modifies it, the object's state is still exposed through that reference.
 
-### Các mức truy cập trong Java
+### Java access levels
 
-| Modifier | Lớp khai báo | Cùng package | Lớp con ở package khác | Mã bất kỳ ở package khác |
+| Modifier | Declaring class | Same package | Subclass in another package | Unrelated code in another package |
 | --- | --- | --- | --- | --- |
-| `private` | Có | Không | Không | Không |
-| Không ghi (package-private) | Có | Có | Không | Không |
-| `protected` | Có | Có | Có, theo quy tắc truy cập của Java dành cho kế thừa | Không |
-| `public` | Có | Có | Có | Có |
+| `private` | Yes | No | No | No |
+| Unspecified (package-private) | Yes | Yes | No | No |
+| `protected` | Yes | Yes | Yes, subject to Java's rules for inherited access | No |
+| `public` | Yes | Yes | Yes | Yes |
 
-Bảng mô tả quyền truy cập tới **thành phần của lớp**, giả sử bản thân lớp bao ngoài có thể được truy cập. Với `protected`, lớp con ở package khác không được truy cập tùy ý thông qua một tham chiếu bất kỳ của lớp cha; Java có quy tắc chặt chẽ hơn ở trường hợp đó.
+The table describes access to **class members**, assuming that the enclosing class itself is accessible. For `protected`, a subclass in a different package cannot access the member arbitrarily through any superclass reference; Java imposes stricter rules in that situation.
 
-Thông thường:
-- Field chứa trạng thái nội bộ được để `private`.
-- Những thao tác dành cho người dùng lớp được mở `public`.
-- Logic trợ giúp không cần công khai thì để `private`.
-- `protected` và package-private chỉ dùng khi có nhu cầu mở rộng hoặc cộng tác trong package rõ ràng.
+As a general rule:
+- Keep fields holding internal state `private`.
+- Expose operations intended for clients as `public`.
+- Keep helper logic that does not need to be exposed `private`.
+- Use `protected` and package-private only when there is a clear need for extension or collaboration within a package.
 
-Ẩn thông tin **không phải** cơ chế bảo mật để ngăn người có quyền chạy mã tùy ý hoặc sử dụng reflection. Nó là công cụ thiết kế API và giới hạn sự phụ thuộc giữa các phần mềm. Xác thực, phân quyền, bảo vệ dữ liệu nhạy cảm vẫn cần cơ chế riêng.
+Information hiding is **not** a security mechanism against someone who can execute arbitrary code or use reflection. It is an API design technique that limits dependencies between software components. Authentication, authorization, and protection of sensitive data require separate mechanisms.
 
-## 3. Thiết kế sai: đối tượng để bên ngoài tùy ý sửa
+## 3. Poor design: allowing external code to modify an object arbitrarily
 
-Ví dụ sau minh họa một mô hình dễ hỏng:
+The following example illustrates a fragile design:
 
 ```java
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ cart.itemCount = -100;                 // Dữ liệu không hợp lệ
 cart.productCodes.clear();            // Xóa hàng mà không qua quy tắc
 ```
 
-Vấn đề không chỉ là `public`. Nếu đổi sang field `private` nhưng vẫn cung cấp getter trả trực tiếp `List` mutable, caller vẫn có thể thay đổi:
+The problem goes beyond `public`. Even if the fields become `private`, callers can still modify state if a getter returns a mutable `List` directly:
 
 ```java
 class LeakyCart {
@@ -109,22 +109,22 @@ LeakyCart cart = new LeakyCart();
 cart.getProductCodes().add("KB01"); // Bỏ qua nghiệp vụ thêm sản phẩm
 ```
 
-Ranh giới bị phá vỡ vì caller có quyền ghi vào đối tượng mà lớp đang sở hữu, dù field đã được khai báo `private`.
+The boundary is broken because the caller can write to an object owned by the class, even though the field is declared `private`.
 
-Một cách thiết kế tốt hơn là hỏi: *“Người dùng lớp thực sự muốn thực hiện thao tác gì?”* Với giỏ hàng, câu trả lời là **thêm một mặt hàng hợp lệ**, **đổi số lượng hợp lệ**, **xem danh sách hàng** và **xem tổng tiền**, chứ không phải “lấy collection nội bộ để tùy ý sửa”.
+A better design starts by asking: *“What does a client of this class actually want to do?”* For a shopping cart, the answers are **add a valid item**, **change a quantity to a valid value**, **view the items**, and **view the total**—not “retrieve the internal collection and modify it freely.”
 
-## 4. Ví dụ hoàn chỉnh: đối tượng ShoppingCart tự bảo vệ trạng thái
+## 4. Complete example: a ShoppingCart that protects its own state
 
-Các quy tắc thiết kế:
+Design rules:
 
-1. Mỗi mã sản phẩm `sku` chỉ xuất hiện một lần trong giỏ.
-2. `sku` không rỗng; đơn giá tính bằng VND không âm; số lượng là số nguyên dương.
-3. Tổng giá trị giỏ luôn nằm trong giới hạn biểu diễn của `long`.
-4. Mã bên ngoài chỉ thay đổi giỏ qua phương thức công khai có kiểm tra.
-5. Khi một thao tác bị từ chối, dữ liệu hiện có phải giữ nguyên.
-6. Getter trả dữ liệu chỉ đọc ở dạng snapshot, không làm lộ collection có thể sửa.
+1. Each product code `sku` appears at most once in the cart.
+2. `sku` is nonblank; unit prices in VND are nonnegative; quantities are positive integers.
+3. The cart's total always fits within the range of `long`.
+4. External code can modify the cart only through validated public methods.
+5. If an operation is rejected, existing data must remain unchanged.
+6. Getters return read-only snapshots without exposing mutable collections.
 
-Tạo file **`ShoppingCart.java`** (Java 11 trở lên):
+Create **`ShoppingCart.java`** (Java 11 or later):
 
 ```java
 import java.util.ArrayList;
@@ -234,23 +234,23 @@ public final class ShoppingCart {
 }
 ```
 
-### Vì sao thiết kế này giữ được ranh giới?
+### Why does this design preserve the boundary?
 
-**Field `lines` là `private`:** caller không cần biết giỏ sử dụng `Map`. Lựa chọn `LinkedHashMap` giúp quản lý sản phẩm theo mã và giữ thứ tự thêm vào khi lấy danh sách. Đây là chi tiết triển khai; nếu tài liệu API cam kết thứ tự thì thứ tự cũng trở thành một phần của hợp đồng cần duy trì.
+**The `lines` field is `private`:** callers do not need to know that the cart uses a `Map`. Choosing `LinkedHashMap` allows products to be managed by code while preserving insertion order when listing items. This is an implementation detail; however, if the API documentation promises a particular order, that order becomes part of the contract and must be maintained.
 
-**`addItem()` và `changeQuantity()` thay cho setter tùy ý:** thao tác nào làm biến đổi giỏ đều có ngữ nghĩa rõ ràng. Caller không thể chèn trực tiếp `null` hay số lượng âm vào collection nội bộ.
+**`addItem()` and `changeQuantity()` replace unrestricted setters:** every operation that changes the cart has a clear meaning. Callers cannot insert `null` or a negative quantity directly into the internal collection.
 
-**Kiểm tra trước, cập nhật sau:** `Math.multiplyExact` và `Math.addExact` phát hiện phép tính tràn số. Trong các thao tác ở trên, tất cả kiểm tra có thể thất bại đều được thực hiện trước lệnh `put`, nên những lỗi kiểm tra thông thường không để lại giỏ ở trạng thái cập nhật dở.
+**Validate first, update second:** `Math.multiplyExact` and `Math.addExact` detect arithmetic overflow. In the operations above, all checks that can fail run before `put`, so ordinary validation failures cannot leave the cart partially updated.
 
-**`CartLine` là kiểu dữ liệu đọc bất biến:** các field của một dòng hàng có `private final`, toàn bộ là `String` bất biến hoặc kiểu nguyên thủy, constructor được kiểm soát, không có setter. Thay vì sửa `quantity` trong một `CartLine` cũ, `changeQuantity()` tạo một dòng mới rồi thay thế sau khi kiểm tra.
+**`CartLine` is an immutable data carrier for reading:** each line item has `private final` fields containing either an immutable `String` or a primitive value, a controlled constructor, and no setters. Rather than changing the `quantity` of an existing `CartLine`, `changeQuantity()` creates a replacement and installs it only after validation.
 
-**Getter trả snapshot:** `List.copyOf(lines.values())` trả một danh sách không cho thêm/xóa/thay thế phần tử qua tham chiếu trả về, và danh sách đó giữ nội dung ở thời điểm gọi. Các `CartLine` cũng bất biến nên không thể sửa gián tiếp các field của giỏ qua phần tử. Nếu phần tử là đối tượng mutable, riêng `List.copyOf` sẽ không tạo deep copy.
+**The getter returns a snapshot:** `List.copyOf(lines.values())` returns a list whose elements cannot be added, removed, or replaced through the returned reference; it also captures the contents at call time. Because `CartLine` objects are immutable, callers cannot indirectly modify cart fields through the elements. If the elements were mutable, `List.copyOf` alone would not perform a deep copy.
 
-**`private static normalizeSku()`:** đây là bước xử lý nội bộ, không nằm trong API công khai. Phương thức không cần trạng thái của một giỏ cụ thể nên sử dụng `static`.
+**`private static normalizeSku()`:** this is an internal processing step outside the public API. It does not depend on the state of a particular cart, so it is `static`.
 
-### Chạy thử hành vi
+### Try out the behavior
 
-Tạo file **`Main.java`**:
+Create **`Main.java`**:
 
 ```java
 import java.util.List;
@@ -286,14 +286,14 @@ public class Main {
 }
 ```
 
-Chạy từ thư mục chứa hai file:
+Run these commands from the directory containing both files:
 
 ```bash
 javac ShoppingCart.java Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 600000
@@ -305,67 +305,67 @@ Từ chối: Số lượng phải dương
 Snapshot không cho phép sửa
 ```
 
-Chú ý hai đối tượng `CartLine` trước và sau khi đổi số lượng là **hai instance khác nhau**. Biến `before` vẫn thấy số lượng `2`, trong khi giỏ hiện tại trả số lượng `3`. Snapshot cũ ổn định, không cho caller tự sửa trạng thái của giỏ.
+Notice that the `CartLine` objects before and after the quantity change are **two different instances**. The `before` variable still shows quantity `2`, while the current cart returns `3`. The earlier snapshot remains stable and does not let the caller alter the cart's state.
 
-Lưu ý kỹ thuật: mã minh họa cách bảo vệ bất biến **trong chương trình đơn luồng**. Giỏ hàng này chưa được thiết kế cho nhiều luồng đồng thời sửa; `LinkedHashMap` và chuỗi thao tác kiểm tra/cập nhật không tự an toàn khi có race condition.
+Technical note: this code illustrates invariant protection **in a single-threaded program**. The cart is not designed for concurrent mutations; neither `LinkedHashMap` nor the sequence of validation and update operations is inherently safe against race conditions.
 
-## 5. Ranh giới được quyết định bằng hợp đồng public
+## 5. Public contracts define object boundaries
 
-Một lớp tốt công khai **hành vi hữu ích và ổn định**, không bắt mã bên ngoài phụ thuộc vào chi tiết nội bộ.
+A well-designed class exposes **useful, stable behavior** without requiring external code to depend on internal details.
 
-Xét sự khác biệt:
+Compare these approaches:
 
-| API làm lộ triển khai | API che giấu triển khai |
+| API that exposes implementation | API that hides implementation |
 | --- | --- |
 | `getInternalMap().put(sku, line)` | `addItem(sku, price, quantity)` |
-| `setTotalVnd(value)` | `totalVnd()` tính kết quả từ các dòng hàng |
-| `getMutableLines().clear()` | Cung cấp `removeItem(sku)` nếu nghiệp vụ cần |
-| Caller tự kiểm tra giá/số lượng | Lớp tự kiểm tra tại mọi lối vào có thể thay đổi trạng thái |
-| Caller biết `LinkedHashMap` hay chỉ số phần tử | Caller biết mã sản phẩm và tác vụ nghiệp vụ |
+| `setTotalVnd(value)` | `totalVnd()` computes the result from line items |
+| `getMutableLines().clear()` | Provide `removeItem(sku)` when the business rules require it |
+| Callers validate prices and quantities themselves | The class validates every entry point that can change state |
+| Callers know about `LinkedHashMap` or element indexes | Callers know product codes and business operations |
 
-Việc công khai từng getter/setter cho mọi field thường biến lớp thành “túi dữ liệu” với quy tắc bị phân tán ra ngoài. Không phải mọi setter đều sai: setter hợp lý khi chính nó thể hiện quyền thay đổi hợp lệ, có kiểm tra rõ ràng và không làm rò rỉ trạng thái. Ví dụ `changeDisplayName(String name)` có thể phù hợp hơn setter tổng quát cho cả đối tượng cấu hình.
+Exposing getters and setters for every field often turns a class into a “data bag,” with its rules scattered among callers. Not every setter is wrong: a setter can be appropriate if it represents a permitted change, performs clear validation, and does not expose state. For example, `changeDisplayName(String name)` may be more suitable than a generic setter for an entire configuration object.
 
-### Bất biến: điều kiện nào phải luôn đúng?
+### Invariants: what conditions must always hold?
 
 Trong `ShoppingCart`:
 
-- Không có dòng hàng với `quantity <= 0`.
-- Không có dòng hàng với `unitPriceVnd < 0`.
-- Các mã hàng trong giỏ không trùng nhau.
-- Tổng tiền có thể được biểu diễn bằng kiểu `long`.
-- Mã ngoài lớp không thể thêm dòng hàng mà bỏ qua kiểm tra.
+- No line item has `quantity <= 0`.
+- No line item has `unitPriceVnd < 0`.
+- Product codes in the cart are unique.
+- The total can be represented by a `long`.
+- Code outside the class cannot add a line item without validation.
 
-Bất biến được thiết lập trong constructor hoặc thao tác tạo dòng hàng, sau đó được giữ trong mọi phương thức thay đổi trạng thái. Một phương thức mới trong tương lai, chẳng hạn `applyDiscount()` hoặc `removeItem()`, cũng phải tuân theo cùng các quy tắc liên quan.
+Invariants are established by the constructor or the operation that creates a line item, then maintained by every state-changing method. Any future method, such as `applyDiscount()` or `removeItem()`, must also comply with the relevant rules.
 
-Điều này quan trọng vì **một đối tượng có thể bị gọi từ nhiều nơi**: controller, service, test hoặc thành phần khác. Nếu quy tắc chỉ tồn tại ở controller, caller khác có thể bỏ qua. Lớp nên giữ các quy tắc cốt lõi của chính trạng thái mà nó sở hữu.
+This matters because **an object can be used from many places**: controllers, services, tests, or other components. If a rule exists only in a controller, another caller may bypass it. The class should enforce the core rules governing the state it owns.
 
-## 6. Ba con đường rò rỉ tham chiếu cần nhận diện
+## 6. Three reference leaks to watch for
 
-Một field `private final` chỉ che tên field và ngăn gán lại tham chiếu, chứ không khóa đối tượng mutable bên dưới. Khi xem API, hãy lần theo **quyền sở hữu tham chiếu** ở cả hai chiều:
+A `private final` field merely hides the field name and prevents reassignment of the reference; it does not freeze the underlying mutable object. When reviewing an API, trace **reference ownership** in both directions:
 
-| Đường rò rỉ | Hành vi caller có thể thực hiện | Hướng bảo vệ |
+| Leak path | What the caller can do | Protection strategy |
 | --- | --- | --- |
-| Getter trả `List`/mảng nội bộ | `getItems().clear()` đi vòng qua `removeItem()` | Snapshot, bản sao hoặc API truy vấn hẹp |
-| Constructor giữ collection do caller đưa | Caller giữ biến `input` rồi sửa sau khi khởi tạo | Sao chép lúc nhận nếu lớp cần quyền sở hữu độc lập |
-| List chỉ đọc nhưng chứa phần tử mutable | `getItems().get(0).setPrice(...)` | Bất biến hóa phần tử hoặc tạo snapshot giá trị |
+| Getter exposes an internal `List`/array | `getItems().clear()` bypasses `removeItem()` | Snapshot, copy, or a narrower query API |
+| Constructor retains a caller-supplied collection | Caller keeps the `input` variable and changes it after construction | Copy on input when the class needs independent ownership |
+| Read-only list contains mutable elements | `getItems().get(0).setPrice(...)` | Make elements immutable or create value snapshots |
 
-Ví dụ `List.copyOf(items)` không cho sửa cấu trúc list qua kết quả, nhưng **không sao chép sâu** phần tử. Còn `Collections.unmodifiableList(items)` chỉ là view, vẫn phản ánh thay đổi của list gốc. Vì vậy cần quyết định caller được quan sát *ảnh chụp tại thời điểm gọi* hay *dữ liệu đang sống*, và phần tử bên trong có an toàn để chia sẻ không.
+For example, `List.copyOf(items)` prevents changes to the returned list's structure but **does not deep-copy** its elements. By contrast, `Collections.unmodifiableList(items)` is only a view and still reflects changes to the original list. You must therefore decide whether callers should observe *a snapshot taken at call time* or *live data*, and whether the contained elements are safe to share.
 
-Đối với `ShoppingCart`, các dòng hàng là `CartLine` bất biến nên `getLines()` có thể trả snapshot mà không làm lộ đường sửa giỏ. Với mảng, `Date` hoặc đồ thị đối tượng mutable, cần chiến lược sao chép phù hợp tại từng ranh giới.
+For `ShoppingCart`, the line items are immutable `CartLine` objects, so `getLines()` can return a snapshot without exposing a way to modify the cart. Arrays, `Date` objects, and mutable object graphs require an appropriate copying strategy at each boundary.
 
-## 7. Ranh giới đối tượng cũng là ranh giới trách nhiệm
+## 7. Object boundaries also define responsibilities
 
-Ẩn thông tin không có nghĩa dồn mọi việc vào một lớp.
+Information hiding does not mean putting every responsibility into one class.
 
-Một `ShoppingCart` nên giữ các quy tắc cục bộ như số lượng dương, mã sản phẩm không trùng, và cách tính tổng từ các dòng hàng. Nhưng nó không nhất thiết nên tự thực hiện các công việc:
+A `ShoppingCart` should enforce local rules such as positive quantities, unique product codes, and computing totals from its line items. But it does not necessarily need to perform these tasks itself:
 
-- Đọc giá mới nhất từ cơ sở dữ liệu hoặc dịch vụ giá.
-- Kiểm tra token đăng nhập và quyền của người dùng.
-- Gửi email sau khi đặt hàng.
-- Gọi cổng thanh toán hoặc kiểm soát giao dịch phân tán.
-- Trả JSON hay hiển thị HTML.
+- Fetch the latest prices from a database or pricing service.
+- Validate login tokens and user permissions.
+- Send email after an order is placed.
+- Call a payment gateway or coordinate distributed transactions.
+- Return JSON or render HTML.
 
-Những công việc đó có thể thuộc về service, repository, controller hoặc adapter. Ranh giới tốt là **mỗi thành phần sở hữu đúng dữ liệu và quyết định mà nó có trách nhiệm**, rồi giao tiếp với thành phần khác bằng API rõ ràng.
+Those tasks may belong to a service, repository, controller, or adapter. A good boundary means **each component owns the data and decisions for which it is responsible**, and communicates with other components through clear APIs.
 
 ```mermaid
 flowchart LR
@@ -380,15 +380,15 @@ Lưu trữ"]
 Thanh toán"]
 ```
 
-Trong sơ đồ, giỏ hàng không cần biết HTTP request, database hay hệ thống thanh toán được triển khai thế nào. Tương tự, lớp khác không cần biết giỏ hàng dùng `Map`, cách kiểm tra dữ liệu hay tính tổng ra sao. Đây là lợi ích của việc giữ **ranh giới API** rõ ràng ở nhiều cấp độ.
+In the diagram, the cart does not need to know how HTTP requests, databases, or payment systems are implemented. Likewise, other classes do not need to know whether the cart uses a `Map` or how it validates data or calculates totals. This is the benefit of maintaining clear **API boundaries** at multiple levels.
 
-Một điểm cần phân biệt: field `private` vẫn có thể bị các phương thức trong **cùng lớp** thay đổi, kể cả thông qua tham chiếu tới instance khác của cùng lớp. Truy cập theo mức `private` được áp dụng cho mã của lớp khai báo, không được giới hạn riêng từng instance.
+One important distinction: a `private` field can still be modified by methods in **the same class**, including through a reference to another instance of that class. The `private` access level applies to code in the declaring class; it is not restricted to a particular instance.
 
-## 8. Ranh giới tốt giúp đổi triển khai mà ít ảnh hưởng nơi gọi
+## 8. Good boundaries allow implementation changes with less impact on callers
 
-Giả sử lúc đầu giỏ lưu dòng hàng bằng `List<CartLine>`, sau này đổi sang `Map<String, CartLine>` để tra cứu theo mã nhanh hơn.
+Suppose a cart initially stores line items in a `List<CartLine>` but later switches to a `Map<String, CartLine>` for faster lookups by code.
 
-Nếu API bên ngoài chỉ sử dụng:
+If the external API is used only as follows:
 
 ```java
 cart.addItem("KB-01", 250_000, 2);
@@ -396,33 +396,33 @@ cart.changeQuantity("KB-01", 3);
 long total = cart.totalVnd();
 ```
 
-thì nhiều thay đổi bên trong sẽ không buộc caller sửa mã. Tuy nhiên, bất cứ hành vi nào đã được công bố trong hợp đồng, như thứ tự dòng hàng, cách xử lý trùng mã hoặc loại ngoại lệ, đều phải được cân nhắc khi thay đổi triển khai.
+then many internal changes will not require callers to modify their code. However, any behavior published as part of the contract—such as line-item ordering, handling duplicate codes, or exception types—must still be considered when changing the implementation.
 
-Điều này thường gọi là **giảm sự phụ thuộc (coupling)** giữa client và chi tiết bên trong lớp. Lợi ích thực tế gồm:
-- Dễ thay cấu trúc dữ liệu hoặc thuật toán.
-- Dễ kiểm thử vì hành vi quan sát được có đầu vào, đầu ra và ngoại lệ rõ ràng.
-- Dễ tìm nguồn lỗi, vì trạng thái được thay đổi tại một số phương thức xác định.
-- Khó vô tình phá hỏng bất biến từ mã bên ngoài.
+This is commonly described as **reducing coupling** between clients and a class's internal details. Practical benefits include:
+- Data structures or algorithms can be replaced more easily.
+- Testing is easier because observable behavior has clear inputs, outputs, and exceptions.
+- Bugs are easier to locate because state changes occur in a defined set of methods.
+- External code is less likely to break invariants accidentally.
 
-**Ẩn thông tin không đồng nghĩa giấu hết mọi thứ.** Nếu không công khai hành vi nào có ích, lớp cũng khó sử dụng. Điểm cân bằng là API đủ biểu đạt nhu cầu nghiệp vụ, còn các quyết định triển khai không cần thiết được giữ riêng.
+**Information hiding does not mean hiding everything.** A class that exposes no useful behavior is also difficult to use. The balance is to provide an API expressive enough for business needs while keeping unnecessary implementation decisions private.
 
-## 9. Các sai lầm khi thiết kế ranh giới
+## 9. Common mistakes when designing boundaries
 
-| Sai lầm | Vì sao có vấn đề | Hướng sửa |
+| Mistake | Why it causes problems | Better approach |
 | --- | --- | --- |
-| Cho field trạng thái thành `public` | Caller thay đổi mà không qua kiểm tra | `private`, cung cấp hành vi có kiểm soát |
-| Thêm getter/setter cho toàn bộ field theo thói quen | Caller bị buộc biết cấu trúc nội bộ | Chỉ công khai dữ liệu và thao tác thực sự cần |
-| Getter trả danh sách mutable nội bộ | Caller có thể bỏ qua quy tắc cập nhật | Snapshot, immutable view hoặc copy phù hợp |
-| Dùng `final List<T>` rồi coi cả list bất biến | `final` chỉ cố định tham chiếu | Xác định tính mutable của collection và phần tử |
-| Constructor nhận list rồi giữ nguyên tham chiếu | Caller tiếp tục có thể thay đổi dữ liệu | Copy khi nhận nếu cần sở hữu độc lập |
-| Kiểm tra điều kiện sau khi đã ghi field | Ngoại lệ có thể để lại trạng thái không hợp lệ | Validate/compute trước, mutate sau |
-| Đưa truy vấn DB và HTTP vào domain object | Trộn nhiều trách nhiệm và tăng coupling | Tách service/repository/adapter |
-| Coi `private` là bảo mật dữ liệu | Access modifier không thay xác thực/phân quyền | Áp dụng bảo mật ở biên hệ thống và các lớp phù hợp |
-| Cho rằng lớp tốt mặc nhiên thread-safe | Ẩn dữ liệu không tạo sự đồng bộ | Thiết kế concurrency riêng khi có chia sẻ đa luồng |
+| Making a state field `public` | Callers can change it without validation | Use `private` fields and controlled operations |
+| Adding getters/setters for every field by habit | Callers become dependent on the internal structure | Expose only the data and operations actually needed |
+| Returning an internal mutable list from a getter | Callers can bypass update rules | Return an appropriate snapshot, immutable view, or copy |
+| Treating a `final List<T>` as an immutable list | `final` only prevents reassignment of the reference | Examine the mutability of the collection and its elements |
+| Keeping the reference to a list passed into a constructor | The caller can continue changing the data | Copy on input when independent ownership is required |
+| Checking conditions after writing to fields | An exception may leave state invalid | Validate and compute first, mutate afterward |
+| Putting DB queries and HTTP handling into a domain object | Responsibilities become mixed and coupling increases | Separate services, repositories, and adapters |
+| Treating `private` as data security | Access modifiers do not replace authentication or authorization | Enforce security at system boundaries and appropriate layers |
+| Assuming a well-designed class is automatically thread-safe | Hiding state does not provide synchronization | Design concurrency handling explicitly when state is shared across threads |
 
-## 10. Tự luyện và kiểm tra
+## 10. Practice and self-assessment
 
-### Câu 1: vì sao getter sau đây nguy hiểm?
+### Question 1: why is the following getter dangerous?
 
 ```java
 public List<CartLine> getLines() {
@@ -430,11 +430,11 @@ public List<CartLine> getLines() {
 }
 ```
 
-**Gợi ý:** Nếu `internalLines` là một `ArrayList` mutable do lớp sở hữu, caller có thể `clear()` hoặc `add()` vào danh sách mà không qua nghiệp vụ. Nếu `CartLine` cũng mutable, chỉ sửa kiểu trả về thành một view không sửa được vẫn chưa đủ để ngăn caller thay đổi phần tử.
+**Hint:** If `internalLines` is a mutable `ArrayList` owned by the class, callers can invoke `clear()` or `add()` without going through business logic. If `CartLine` is mutable too, merely returning an unmodifiable view is still insufficient to prevent callers from changing its elements.
 
-### Câu 2: thế nào là ranh giới hợp lý?
+### Question 2: what makes a reasonable boundary?
 
-Cho một đối tượng tài khoản có field `balance`. Chọn API phù hợp hơn:
+Consider an account object with a `balance` field. Choose the more appropriate API:
 
 ```java
 // Phương án A
@@ -444,9 +444,9 @@ account.setBalance(-500_000);
 account.withdraw(500_000);
 ```
 
-**Giải thích:** phương án B diễn đạt hành vi rút tiền và là chỗ thích hợp kiểm tra số tiền dương, đủ số dư hoặc các quy tắc khác. Một setter tự do thường không thể hiện mục đích thay đổi trạng thái và có thể phá bất biến.
+**Explanation:** option B expresses a withdrawal operation and provides an appropriate place to check for a positive amount, sufficient funds, and other rules. An unrestricted setter usually fails to express the purpose of a state change and can violate invariants.
 
-### Câu 3: phân biệt snapshot và live view
+### Question 3: distinguish snapshots from live views
 
 ```java
 List<String> source = new ArrayList<>();
@@ -462,56 +462,56 @@ System.out.println(liveView); // ?
 System.out.println(snapshot); // ?
 ```
 
-**Đáp án:** `liveView` in `[A, B]` vì là view phản ánh `source`; `snapshot` in `[A]` vì được tạo tại thời điểm trước khi thêm `"B"`. Cả hai không cho phép thêm phần tử qua chính tham chiếu đó, nhưng **không cùng ngữ nghĩa về khả năng quan sát thay đổi**.
+**Answer:** `liveView` prints `[A, B]` because it is a view that reflects `source`; `snapshot` prints `[A]` because it was created before `"B"` was added. Neither permits additions through its own reference, but they **have different semantics for observing changes**.
 
-### Câu 4: mở rộng lớp ShoppingCart
+### Question 4: extend ShoppingCart
 
-Hãy viết `removeItem(String sku)` với các yêu cầu: chuẩn hóa mã theo `normalizeSku`, báo lỗi khi mã không tồn tại và xóa đúng một dòng hàng. Sau đó viết một chương trình kiểm tra:
-1. Thêm hai sản phẩm, lưu snapshot từ `getLines()`.
-2. Xóa một sản phẩm qua `removeItem`.
-3. Kiểm tra số dòng và tổng tiền hiện tại.
-4. Kiểm tra snapshot cũ vẫn giữ các dòng hàng tại thời điểm chụp.
-5. Thử xóa một mã không tồn tại và kiểm tra giỏ không thay đổi.
+Write `removeItem(String sku)` with these requirements: normalize the code using `normalizeSku`, report an error if the code does not exist, and remove exactly one line item. Then write a program that checks the following:
+1. Add two products and save a snapshot from `getLines()`.
+2. Remove one product through `removeItem`.
+3. Check the current line count and total.
+4. Verify that the earlier snapshot still contains the line items present when it was taken.
+5. Try removing a nonexistent code and verify that the cart remains unchanged.
 
-Bài tập này buộc bạn suy nghĩ về **đường cập nhật trạng thái hợp lệ**, **API công khai** và **hành vi quan sát được** thay vì sửa trực tiếp collection.
+This exercise makes you reason about **valid paths for updating state**, **public APIs**, and **observable behavior**, instead of modifying the collection directly.
 
-## Các câu hỏi cốt lõi khi thiết kế lớp
+## Core questions when designing a class
 
-Khi đọc một lớp Java, hãy tự hỏi: (1) đối tượng này **sở hữu** trạng thái nào; (2) những điều kiện nào phải luôn đúng; (3) ai có thể thay đổi trạng thái, qua phương thức nào; (4) đầu vào/đầu ra có làm rò rỉ tham chiếu mutable không; và (5) nếu đổi triển khai bên trong, những caller nào buộc phải thay đổi?
+When reading a Java class, ask yourself: (1) what state does this object **own**; (2) which conditions must always hold; (3) who can change its state, and through which methods; (4) can its inputs or outputs leak mutable references; and (5) if the internal implementation changes, which callers would need to change?
 
-Thiết kế ranh giới đúng giúp đối tượng có thể **tự bảo vệ trạng thái**, thể hiện hành vi bằng API rõ ràng và cho phép các thành phần khác cộng tác mà không lệ thuộc vào chi tiết triển khai.
+A well-defined boundary allows an object to **protect its own state**, express behavior through a clear API, and collaborate with other components without depending on implementation details.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="encapsulation-002">Điều kiện bất biến của đối tượng</a>
+## <a id="encapsulation-002">Object invariants</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Điều kiện bất biến của đối tượng trong Java OOP
+# Object invariants in Java OOP
 
-Trong lập trình hướng đối tượng, một đối tượng có thể thay đổi trạng thái qua nhiều lời gọi phương thức. Tuy nhiên, **không phải mọi tổ hợp giá trị của các thuộc tính đều hợp lệ**. Ví dụ: số lượng hàng đã giữ để giao không thể âm hoặc lớn hơn tổng hàng hiện có. Những quy tắc phải luôn được bảo đảm tại các thời điểm đối tượng có thể được quan sát và sử dụng hợp lệ được gọi là **điều kiện bất biến của đối tượng** (*object invariants*).
+In object-oriented programming, an object's state may change through many method calls. However, **not every combination of field values is valid**. For example, the quantity of stock reserved for shipment cannot be negative or exceed the total stock on hand. Rules that must hold whenever an object can be legitimately observed and used are called **conditions that remain invariant for that object** (*object invariants*).
 
-Thiết kế lớp tốt không chỉ là khai báo `private` cho field; lớp cần **kiểm soát quá trình hình thành và thay đổi trạng thái** để các điều kiện bất biến luôn được duy trì.
+Good class design means more than declaring fields `private`; the class must **control how state is created and changed** so that its invariants are always preserved.
 
-## 1. Điều kiện bất biến là gì?
+## 1. What is an object invariant?
 
-**Object invariant** là một tập điều kiện logic mô tả trạng thái hợp lệ của **một instance**, phải đúng sau khi khởi tạo thành công và sau mỗi thao tác công khai hoàn thành bình thường. Với các phương thức có thể thất bại, thiết kế vững chắc thường yêu cầu trạng thái vẫn hợp lệ và, khi phù hợp, không thay đổi nếu thao tác bị từ chối.
+An **object invariant** is a set of logical conditions describing a valid state of **an instance**. It must hold after successful construction and after every public operation that completes normally. For operations that may fail, robust designs generally require that state remain valid and, where appropriate, unchanged when the operation is rejected.
 
-Ví dụ với sản phẩm trong kho:
+For an inventory item, for example:
 
-- `sku` không được `null` hoặc rỗng.
-- `unitPrice` phải lớn hơn 0.
-- `onHand` (hàng vật lý còn trong kho) không âm.
-- `reserved` (hàng đã giữ cho các đơn đang xử lý) không âm và **không vượt quá** `onHand`.
-- `available` (hàng còn có thể đặt) luôn bằng `onHand - reserved`, nên phải không âm.
+- `sku` must not be `null` or blank.
+- `unitPrice` must be greater than 0.
+- `onHand` (physical inventory on hand) must be nonnegative.
+- `reserved` (stock set aside for orders being processed) must be nonnegative and **must not exceed** `onHand`.
+- `available` (stock that can still be ordered) always equals `onHand - reserved`, so it must be nonnegative.
 
-Diễn đạt toán học:
+Mathematically:
 
 \[
 \text{onHand} \ge 0,\quad 0 \le \text{reserved} \le \text{onHand}
@@ -521,23 +521,23 @@ Diễn đạt toán học:
 \text{available} = \text{onHand} - \text{reserved} \ge 0
 \]
 
-Các điều kiện liên quan giữa **nhiều field** (như `reserved <= onHand`) thường là lý do quan trọng để **không cung cấp setter tùy ý cho từng field**.
+Conditions involving **multiple fields** (such as `reserved <= onHand`) are a key reason **not to provide unrestricted setters for individual fields**.
 
-### Phân biệt những khái niệm dễ nhầm
+### Distinguishing commonly confused concepts
 
-| Khái niệm | Câu hỏi nó trả lời | Ví dụ |
+| Concept | Question it answers | Example |
 | --- | --- | --- |
-| **Invariant** | Trạng thái nào của đối tượng là hợp lệ? | `0 <= reserved <= onHand` |
-| **Precondition** (tiền điều kiện) | Điều gì phải đúng trước khi gọi thao tác? | `quantity > 0`, đủ hàng còn bán được |
-| **Postcondition** (hậu điều kiện) | Sau thao tác thành công, kết quả phải thế nào? | Đặt giữ 2 sản phẩm làm `reserved` tăng 2 |
-| **Immutability** (tính không thể thay đổi) | Trạng thái quan sát được có bị thay đổi sau khi tạo không? | `String`, `LocalDate`, value object bất biến |
-| **Encapsulation** (đóng gói) | Ai được quyền đọc/sửa và bằng cách nào? | Field `private`, cập nhật qua `reserve()` |
+| **Invariant** | Which object states are valid? | `0 <= reserved <= onHand` |
+| **Precondition** | What must hold before invoking an operation? | `quantity > 0`, sufficient available stock |
+| **Postcondition** | What must hold after an operation succeeds? | Reserving 2 items increases `reserved` by 2 |
+| **Immutability** | Can observable state change after construction? | `String`, `LocalDate`, an immutable value object |
+| **Encapsulation** | Who can read or modify state, and how? | A `private` field updated through `reserve()` |
 
-**Invariant không đồng nghĩa với immutable.** Một đối tượng có thể *mutable* nhưng vẫn duy trì invariant qua mọi thao tác hợp lệ. Ngược lại, đối tượng immutable cũng cần được kiểm tra để **trạng thái ban đầu** của nó hợp lệ.
+**An invariant is not the same as immutability.** An object can be *mutable* while maintaining its invariant throughout every valid operation. Conversely, an immutable object must also be validated to ensure that its **initial state** is valid.
 
-## 2. Vì sao setter độc lập có thể phá vỡ invariant?
+## 2. Why can independent setters violate invariants?
 
-Giả sử một lớp cung cấp hai setter:
+Suppose a class exposes two setters:
 
 ~~~java
 class BadStock {
@@ -560,7 +560,7 @@ class BadStock {
 }
 ~~~
 
-Mỗi setter chỉ kiểm tra field của chính mình, nên vẫn cho phép:
+Each setter validates only its own field, so the following is still possible:
 
 ~~~java
 BadStock stock = new BadStock();
@@ -568,13 +568,13 @@ stock.setOnHand(2);
 stock.setReserved(5); // Hai giá trị đều không âm, nhưng trạng thái sai!
 ~~~
 
-Điều kiện `reserved <= onHand` bị phá vỡ. Chỉ thêm kiểm tra cho từng field là **chưa đủ**; những thay đổi có quan hệ phải được điều phối cùng nhau. Nếu kiểm tra `reserved <= onHand` bên trong từng setter, còn cần nghĩ về **thứ tự cập nhật** khi đổi từ một trạng thái hợp lệ sang trạng thái hợp lệ khác, đặc biệt trong chương trình đồng thời.
+The condition `reserved <= onHand` is violated. Adding a check for each field **is not sufficient**; related changes must be coordinated. Even if each setter checks `reserved <= onHand`, you must consider the **update order** when transitioning between two valid states, especially in concurrent programs.
 
-Hướng thiết kế tốt hơn là thể hiện các **hành vi nghiệp vụ** có ý nghĩa: `reserve`, `release`, `ship` và `restock`. Mỗi hành vi kiểm tra điều kiện phù hợp và cập nhật trạng thái một cách nhất quán.
+A better design exposes meaningful **business operations**: `reserve`, `release`, `ship`, and `restock`. Each operation checks the relevant conditions and updates state consistently.
 
-## 3. Ví dụ Java hoàn chỉnh: đối tượng kho luôn hợp lệ
+## 3. Complete Java example: an inventory object that stays valid
 
-Ví dụ sau chạy với **Java 11+**. Tạo tệp `InvariantDemo.java`.
+The following example runs on **Java 11+**. Create `InvariantDemo.java`.
 
 ~~~java
 import java.math.BigDecimal;
@@ -706,14 +706,14 @@ public class InvariantDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac InvariantDemo.java
 java InvariantDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Ban đầu: onHand=10, reserved=0, available=10
@@ -725,23 +725,23 @@ Hủy giữ 1: onHand=7, reserved=0, available=7
 Nhập 5: onHand=12, reserved=0, available=12
 ~~~
 
-### Tại sao từng phương thức giữ được invariant?
+### Why does each method preserve the invariant?
 
-| Hành vi | Điều kiện trước khi thay đổi | Công thức cập nhật | Vì sao vẫn hợp lệ? |
+| Operation | Condition before mutation | Update formula | Why does the result remain valid? |
 | --- | --- | --- | --- |
-| Tạo đối tượng | `sku` hợp lệ, giá dương, hàng đầu kỳ ≥ 0 | `reserved = 0` | `0 <= 0 <= onHand` |
-| `reserve(q)` | `q > 0` và `q <= onHand - reserved` | `reserved += q` | Giá trị mới của `reserved` không vượt `onHand` |
-| `release(q)` | `q > 0` và `q <= reserved` | `reserved -= q` | `reserved` mới không âm |
-| `ship(q)` | `q > 0` và `q <= reserved` | `reserved -= q; onHand -= q` | Cả hai giảm cùng lượng, `onHand` vẫn ≥ `reserved` |
-| `restock(q)` | `q > 0` và tổng không tràn số nguyên | `onHand += q` | Chỉ tăng tổng hàng, không giảm số còn bán được |
+| Construction | Valid `sku`, positive price, initial stock ≥ 0 | `reserved = 0` | `0 <= 0 <= onHand` |
+| `reserve(q)` | `q > 0` and `q <= onHand - reserved` | `reserved += q` | The new `reserved` does not exceed `onHand` |
+| `release(q)` | `q > 0` and `q <= reserved` | `reserved -= q` | The new `reserved` is nonnegative |
+| `ship(q)` | `q > 0` and `q <= reserved` | `reserved -= q; onHand -= q` | Both decrease by the same amount; `onHand` remains ≥ `reserved` |
+| `restock(q)` | `q > 0` and no integer overflow in the sum | `onHand += q` | Only total stock increases; available stock does not decrease |
 
-Mỗi phép cập nhật đều **xuất phát từ một trạng thái hợp lệ**. Nếu `reserve(7)` bị từ chối khi còn 6 hàng có thể đặt, phương thức ném ngoại lệ **trước bất kỳ thay đổi nào** nên trạng thái cũ được giữ nguyên.
+Every update **starts from a valid state**. If `reserve(7)` is rejected when only 6 units are available, the method throws an exception **before any change**, preserving the old state.
 
-Đặc biệt, `Math.addExact` giúp tránh overflow khi thêm hàng vào `int`. Nếu cộng vượt `Integer.MAX_VALUE`, một phép cộng `int` thông thường có thể cho kết quả âm; `addExact` ném `ArithmeticException` trước khi field bị cập nhật. Đây cũng là bảo vệ invariant.
+In particular, `Math.addExact` prevents overflow when adding stock to an `int`. If the sum exceeds `Integer.MAX_VALUE`, ordinary `int` addition could produce a negative result; `addExact` throws `ArithmeticException` before the field is updated. This also protects the invariant.
 
-## 4. Nhìn invariant dưới dạng luồng kiểm tra
+## 4. Viewing invariants as a validation flow
 
-Đối với thao tác `reserve(q)`:
+For the `reserve(q)` operation:
 
 ~~~mermaid
 flowchart TD
@@ -753,13 +753,13 @@ flowchart TD
     D --> G["Trạng thái hợp lệ\n0 <= reserved <= onHand"]
 ~~~
 
-Luồng lý tưởng là **kiểm tra → tính kết quả → cập nhật**. Khi một phương thức phải thay đổi nhiều field, hãy tránh để ngoại lệ có thể xảy ra *giữa các phép cập nhật* khiến đối tượng tồn tại ở trạng thái dở dang.
+The ideal sequence is **validate → compute the result → update state**. When a method must change several fields, avoid letting an exception occur *between updates* and leave the object partially changed.
 
-Ví dụ với phép chuyển số tiền giữa hai ví, không nên trừ ví A trước rồi mới kiểm tra có thể cộng vào ví B hay không. Với xử lý đơn luồng trong bộ nhớ, có thể **kiểm tra cả hai điều kiện**, tính trước số dư mới, rồi mới gán. Với cập nhật qua database, nhiều service hoặc xử lý đồng thời, cần transaction/locking hoặc cơ chế phù hợp để bảo đảm cập nhật nhóm.
+For example, when transferring money between two wallets, do not debit wallet A before checking whether wallet B can accept the credit. For single-threaded in-memory processing, you can **check both conditions**, compute both new balances, and then assign them. For database updates, multiple services, or concurrent processing, transactions, locking, or another suitable mechanism is needed to make the grouped update reliable.
 
-## 5. Invariant, constructor và vòng đời đối tượng
+## 5. Invariants, constructors, and the object lifecycle
 
-Một invariant không tự nhiên đúng chỉ vì các field được khai báo `private`. Lớp phải chủ động thiết lập nó khi khởi tạo.
+An invariant does not become true simply because fields are declared `private`. The class must explicitly establish it during construction.
 
 ~~~java
 public final class TemperatureRange {
@@ -779,9 +779,9 @@ public final class TemperatureRange {
 }
 ~~~
 
-Ở đây invariant là `min <= max`. Constructor kiểm tra trước khi cung cấp một đối tượng được khởi tạo thành công. Việc hai field đều `final` **không tự động kiểm chứng** mối quan hệ giữa chúng.
+Here the invariant is `min <= max`. The constructor checks it before allowing construction to succeed. Declaring both fields `final` **does not automatically validate** the relationship between them.
 
-Nếu constructor nhận những collection hay đối tượng mutable, nó cũng phải tránh để bên ngoài thay đổi “lén” trạng thái sau khi xây dựng.
+If a constructor accepts collections or mutable objects, it must also prevent external code from silently changing the constructed object's state afterward.
 
 ~~~java
 import java.util.List;
@@ -823,20 +823,20 @@ System.out.println(plan.getTopics()); // [OOP]
 plan.getTopics().clear();
 ~~~
 
-Invariant của `StudyPlan`: danh sách chủ đề không rỗng và mỗi phần tử là chuỗi hợp lệ. `List.copyOf` tạo danh sách không thể sửa, tách khỏi những thay đổi sau đó của collection nguồn. Vì các phần tử là `String` bất biến, đây là lựa chọn an toàn cho ví dụ. Với danh sách chứa **phần tử mutable**, `List.copyOf` chỉ sao chép **tham chiếu đến phần tử**, không bảo vệ toàn bộ object graph; cần bản sao sâu phù hợp hoặc các value object bất biến.
+The invariant of `StudyPlan` is that its topic list is nonempty and every element is a valid string. `List.copyOf` creates an unmodifiable list detached from later changes to the source collection. Because its elements are immutable `String` values, this is safe for the example. With **mutable elements**, `List.copyOf` copies only **references to the elements**, not the entire object graph; use appropriate deep copies or immutable value objects.
 
-**Tránh làm lộ `this` trong constructor**, ví dụ đăng ký đối tượng đang xây dựng vào một listener toàn cục trước khi mọi field/invariant được thiết lập. Thành phần khác có thể quan sát instance chưa hoàn tất, đặc biệt trong chương trình nhiều luồng.
+**Avoid leaking `this` from a constructor**, for example by registering a partially constructed object with a global listener before all fields and invariants have been established. Another component may observe the unfinished instance, especially in multithreaded programs.
 
-## 6. Khi đối tượng thay đổi, điều kiện vẫn phải đúng
+## 6. State can change while the invariant remains true
 
-Trở lại `StockItem`, xét hai trạng thái:
+Returning to `StockItem`, consider two states:
 
-- Trước `reserve(4)`: `onHand=10`, `reserved=0`, `available=10`.
+- Before `reserve(4)`: `onHand=10`, `reserved=0`, `available=10`.
 - Sau `reserve(4)`: `onHand=10`, `reserved=4`, `available=6`.
 
-**Cả hai trạng thái đều hợp lệ.** Đây là điểm phân biệt rõ với immutable object: giá trị của field thay đổi nhưng invariant được bảo toàn.
+**Both states are valid.** This clearly differs from an immutable object: field values change while the invariant is preserved.
 
-Một setter đặt số hàng đã giữ một cách tùy ý sẽ phá vỡ ranh giới này. Thay vì:
+An unrestricted setter for reserved stock would break this boundary. Instead of:
 
 ~~~java
 // Thiết kế dễ bị dùng sai:
@@ -845,7 +845,7 @@ public void setReserved(int newReserved) {
 }
 ~~~
 
-hãy cho phép thao tác theo ý nghĩa của miền nghiệp vụ:
+allow operations that express domain intent:
 
 ~~~java
 item.reserve(4);
@@ -853,11 +853,11 @@ item.release(1);
 item.ship(3);
 ~~~
 
-Một API có ý nghĩa thường khiến **trạng thái không hợp lệ khó biểu diễn và khó đạt tới hơn**. Cách đặt tên phương thức cũng giúp đọc code rõ hơn: “giao 3 đơn vị đã giữ” chính xác hơn “đặt reserved thành 1 và onHand thành 7”.
+A meaningful API often makes **invalid states harder to represent and reach**. Method names also make code clearer: “ship 3 reserved units” is more precise than “set reserved to 1 and onHand to 7.”
 
-### Có nên gọi `checkInvariant()` sau mọi phương thức?
+### Should `checkInvariant()` run after every method?
 
-Có thể dùng một hàm nội bộ để phát hiện sai sót trong quá trình phát triển:
+An internal helper can detect mistakes during development:
 
 ~~~java
 private void checkInvariant() {
@@ -867,15 +867,15 @@ private void checkInvariant() {
 }
 ~~~
 
-Nhưng hàm kiểm tra **không thay thế** thiết kế đúng. Nếu code đã ghi một phần trạng thái sai rồi mới ném ngoại lệ, kiểm tra ở cuối phương thức sẽ phát hiện vi phạm nhưng **không tự khôi phục** dữ liệu. Ưu tiên kiểm tra điều kiện và tính giá trị mới **trước khi ghi**.
+But the check **does not replace** sound design. If code has already written part of an invalid state before throwing an exception, a check at the end will detect the violation but **will not restore** the data. Prefer checking conditions and computing new values **before writing**.
 
-Lệnh `assert` của Java cũng không nên là cơ chế duy nhất xác thực dữ liệu nghiệp vụ: các assertion thường bị tắt nếu chương trình không chạy với tùy chọn `-ea`. Dữ liệu đầu vào sai nên bị từ chối qua logic kiểm tra rõ ràng, thường với `IllegalArgumentException` hoặc ngoại lệ miền nghiệp vụ phù hợp.
+Java's `assert` statement should not be the only mechanism for validating business inputs either: assertions are usually disabled unless the program runs with `-ea`. Invalid inputs should be rejected by explicit validation logic, typically through `IllegalArgumentException` or a suitable domain-specific exception.
 
-## 7. Ngoại lệ, thay đổi từng phần và tính nguyên tử
+## 7. Exceptions, partial updates, and atomicity
 
-Một phương thức tốt thường hướng tới nguyên tắc: **thành công thì chuyển sang trạng thái hợp lệ mới; thất bại thì đối tượng vẫn hợp lệ**. Đối với nhiều thao tác, ta còn mong **thất bại không làm thay đổi trạng thái** (*strong exception guarantee*), nhưng không phải API nào cũng bảo đảm mức này.
+A good method generally aims for this rule: **success moves to a new valid state; failure leaves the object valid**. For many operations, we also want **failure to leave state unchanged** (*strong exception guarantee*), although not every API promises that stronger guarantee.
 
-Ví dụ sai:
+Incorrect example:
 
 ~~~java
 public void unsafeReserve(int quantity) {
@@ -886,9 +886,9 @@ public void unsafeReserve(int quantity) {
 }
 ~~~
 
-Nếu ban đầu `onHand=10, reserved=4`, gọi `unsafeReserve(7)` khiến `reserved=11`, rồi ném ngoại lệ; invariant đã bị phá vỡ.
+If the initial values are `onHand=10, reserved=4`, calling `unsafeReserve(7)` causes `reserved=11` and then throws an exception; the invariant has already been violated.
 
-Cách đúng:
+Correct approach:
 
 ~~~java
 public void safeReserve(int quantity) {
@@ -902,23 +902,23 @@ public void safeReserve(int quantity) {
 }
 ~~~
 
-Tại thời điểm từ chối, chưa field nào bị sửa. Điều này rất quan trọng với service có nhiều bước, bởi **ném exception không tự động hoàn tác những phép gán Java đã thực hiện**.
+When the operation is rejected, no field has been modified. This matters in services with multiple steps because **throwing an exception does not automatically undo Java assignments already made**.
 
-Cần phân biệt ba phạm vi:
+Distinguish three scopes:
 
-| Phạm vi | Biện pháp thường dùng | Điều cần nhớ |
+| Scope | Common measures | Key consideration |
 | --- | --- | --- |
-| Một đối tượng trong một luồng | Guard condition, tính trước, gán hợp lệ | Có thể chứng minh invariant theo từng phương thức |
-| Nhiều luồng cùng dùng một đối tượng | Khóa/synchronization, cấu trúc dữ liệu đồng thời hoặc mô hình immutable | Kiểm tra và cập nhật phải được phối hợp như một thao tác |
-| Nhiều bảng/bản ghi hoặc hệ thống | Transaction, constraint, versioning/locking, idempotency, xử lý bù trừ | Kiểm tra riêng trong Java không đủ bảo đảm trạng thái dữ liệu chung |
+| One object in one thread | Guard conditions, precomputation, valid assignments | Invariants can be demonstrated method by method |
+| Multiple threads sharing one object | Locks/synchronization, concurrent data structures, or immutable models | Validation and update must be coordinated as one operation |
+| Multiple tables, records, or systems | Transactions, constraints, versioning/locking, idempotency, and compensating actions | Java-side checks alone cannot guarantee the consistency of shared data |
 
-## 8. Invariant và vấn đề đồng thời
+## 8. Invariants and concurrency
 
-Đoạn `StockItem` chính phía trên cố ý minh họa logic OOP trong **môi trường đơn luồng**. Nếu nhiều thread cùng gọi `reserve`, chúng có thể đồng thời nhìn thấy cùng số `available`, khiến điều kiện được kiểm tra trên trạng thái cũ rồi đều cập nhật.
+The `StockItem` example above deliberately illustrates OOP logic in a **single-threaded environment**. If multiple threads call `reserve`, they may simultaneously see the same `available` value, validate against an old state, and then both update it.
 
-Ví dụ: còn 1 sản phẩm, hai luồng đều muốn giữ 1. Nếu mỗi luồng độc lập đọc `available=1` trước khi ghi, quyết định “đủ hàng” có thể được đưa ra hai lần. `private` hoặc `final` **không tự tạo tính an toàn luồng**.
+For example, suppose 1 item remains and two threads each try to reserve 1. If both read `available=1` before either writes, the “enough stock” decision may be made twice. `private` and `final` **do not automatically provide thread safety**.
 
-Trong một đối tượng Java dùng chung, có thể bảo vệ toàn bộ thao tác đọc/ghi với cùng một khóa, chẳng hạn:
+For a shared Java object, you can protect the entire read/write operation with the same lock, for example:
 
 ~~~java
 public synchronized void reserve(int quantity) {
@@ -934,13 +934,13 @@ public synchronized int getAvailable() {
 }
 ~~~
 
-Đây chỉ là hai phương thức **minh họa** của cùng lớp `StockItem`. Để thread-safe hoàn chỉnh, **mọi đường đọc/ghi trạng thái chia sẻ** (bao gồm `release`, `ship`, `restock`, `getOnHand`, `getReserved` và snapshot có nhiều field) cũng phải tuân thủ chiến lược đồng bộ nhất quán. Với truy cập qua database hoặc nhiều instance server, `synchronized` trong một JVM không đủ; cần cơ chế điều phối tại nguồn dữ liệu.
+These are only two **illustrative** methods of the same `StockItem` class. For complete thread safety, **every read/write path for shared state** (including `release`, `ship`, `restock`, `getOnHand`, `getReserved`, and snapshots involving several fields) must follow a consistent synchronization strategy. For database access or multiple server instances, `synchronized` within one JVM is insufficient; coordination is needed at the data source.
 
-Một invariant có thể đúng ở đầu và cuối phương thức nhưng tạm thời không đúng giữa các câu lệnh. Nếu code khác có thể quan sát trạng thái trung gian, đó vẫn là lỗi thiết kế. Tránh làm lộ trạng thái trung gian, gọi callback ra bên ngoài trong lúc đang cập nhật, hoặc nhả khóa giữa chừng mà chưa khôi phục invariant.
+An invariant might hold at a method's start and end but be temporarily violated between statements. If other code can observe that intermediate state, it is still a design flaw. Avoid exposing intermediate state, invoking external callbacks midway through an update, or releasing a lock before the invariant has been restored.
 
-## 9. Kiểm thử invariant theo biên và sau thất bại
+## 9. Testing invariants at boundaries and after failures
 
-Không chỉ kiểm thử nhánh thành công: các ca vượt giới hạn, giá trị âm, bằng 0, và cập nhật bị từ chối thường là nơi lộ bug. Ví dụ với **JUnit 5** (lớp `StockItem` của chương trình phía trên):
+Test more than successful paths: out-of-range values, negative values, 0, and rejected updates often reveal bugs. For example, with **JUnit 5** (using the `StockItem` class from the program above):
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1005,64 +1005,64 @@ class StockItemTest {
 }
 ~~~
 
-Lưu ý: file test yêu cầu dependency JUnit Jupiter/Test runner tương ứng. Mã `InvariantDemo.java` ở phần 3 **không phụ thuộc JUnit** và chạy độc lập bằng `javac`/`java`. Trong dự án thực tế, có thể dùng **property-based testing** để sinh nhiều chuỗi thao tác `reserve → release → ship → restock` và khẳng định sau mỗi thao tác hợp lệ rằng `0 <= reserved <= onHand`.
+Note: the test file needs the corresponding JUnit Jupiter dependency and test runner. The `InvariantDemo.java` code in section 3 **does not depend on JUnit** and runs independently with `javac`/`java`. In a real project, **property-based testing** can generate many sequences of `reserve → release → ship → restock` operations and assert after each valid step that `0 <= reserved <= onHand`.
 
-## 10. Các lỗi thiết kế phổ biến
+## 10. Common design mistakes
 
-| Sai lầm | Hậu quả | Cách xử lý |
+| Mistake | Consequence | Solution |
 | --- | --- | --- |
-| Chỉ kiểm tra từng field riêng lẻ | Bỏ sót quan hệ giữa các field | Viết invariant của **toàn bộ đối tượng** trước khi thiết kế API |
-| Cho setter công khai không ràng buộc | Caller tạo trạng thái sai | Dùng thao tác có ý nghĩa nghiệp vụ với guard |
-| Kiểm tra sau khi đã ghi field | Ngoại lệ để lại trạng thái hỏng | Validate và tính trước, sau đó mới cập nhật |
-| Xem `final` đồng nghĩa “mọi thứ hợp lệ” | Quan hệ logic ban đầu vẫn có thể sai | Constructor phải xác thực |
-| Trả mutable collection nội bộ | Caller vượt qua quy tắc của lớp | Defensive copy, immutable view/value object khi phù hợp |
-| Dùng `assert` thay kiểm tra input | Kiểm tra có thể không chạy | Dùng exception/validation trong runtime bình thường |
-| Chỉ kiểm thử ca hợp lệ | Không phát hiện lỗi tại giới hạn | Kiểm thử biên, ngoại lệ, trạng thái sau thất bại |
-| Bỏ qua chia sẻ giữa các thread | Race condition phá invariant | Đồng bộ trọn thao tác hoặc dùng transaction đúng phạm vi |
+| Validating each field independently | Misses relationships between fields | Write the invariant for the **entire object** before designing the API |
+| Exposing unconstrained public setters | Callers can create invalid states | Use business operations with guards |
+| Validating after writing a field | Exceptions can leave state corrupted | Validate and compute first, then update |
+| Assuming `final` means “everything is valid” | Initial logical relationships may still be invalid | Validate in the constructor |
+| Returning an internal mutable collection | Callers can bypass class rules | Use defensive copies, immutable views, or value objects as appropriate |
+| Using `assert` instead of input validation | Checks may never execute | Use exceptions and validation in normal runtime execution |
+| Testing only valid cases | Boundary errors go undetected | Test boundaries, exceptions, and state after failures |
+| Ignoring sharing between threads | Race conditions violate invariants | Synchronize complete operations or use transactions at the right scope |
 
-## 11. Câu hỏi luyện tập
+## 11. Practice questions
 
-**1.** Với `onHand=8, reserved=5`, `reserve(3)` có được phép không? Sau thành công, các giá trị là gì?
+**1.** With `onHand=8, reserved=5`, is `reserve(3)` allowed? What are the values after it succeeds?
 
-**Đáp án:** Có vì `available = 8 - 5 = 3`. Sau đó `onHand=8, reserved=8, available=0`: invariant vẫn đúng tại biên.
+**Answer:** Yes, because `available = 8 - 5 = 3`. Afterward, `onHand=8, reserved=8, available=0`; the invariant still holds at the boundary.
 
-**2.** Nếu đang `onHand=8, reserved=5`, gọi `ship(6)` nên xảy ra điều gì?
+**2.** With `onHand=8, reserved=5`, what should happen if `ship(6)` is called?
 
-**Đáp án:** Bị từ chối vì chỉ 5 đơn vị đang được giữ. Trạng thái nên không đổi, không trừ `onHand` trước.
+**Answer:** Reject the operation because only 5 units are reserved. State should remain unchanged; do not decrement `onHand` first.
 
-**3.** `private final List<OrderLine> lines` có bảo đảm đối tượng chứa danh sách bất biến không?
+**3.** Does `private final List<OrderLine> lines` guarantee that the object contains an immutable list?
 
-**Đáp án:** Không. `final` chỉ ngăn gán lại tham chiếu field. Danh sách và từng `OrderLine` có thể mutable; cần kiểm soát mọi đường sửa hoặc dùng bản sao/vật chứa/phần tử bất biến.
+**Answer:** No. `final` only prevents reassignment of the field reference. Both the list and individual `OrderLine` elements may be mutable; you must control every mutation path or use immutable copies, containers, and elements.
 
-**4.** Vì sao một đối tượng mutable vẫn có thể duy trì invariant?
+**4.** Why can a mutable object still maintain an invariant?
 
-**Đáp án:** Invariant ràng buộc **tập trạng thái được phép**, chứ không cấm chuyển trạng thái. Phương thức được thiết kế để mọi lần chuyển trạng thái thành công đều kết thúc ở một trạng thái hợp lệ.
+**Answer:** An invariant constrains **the set of permitted states**; it does not prohibit transitions. Methods are designed so that every successful transition ends in a valid state.
 
-**5.** Có cần khóa nếu hệ thống dùng nhiều luồng cùng đặt một món hàng không?
+**5.** Is locking needed when multiple threads reserve the same inventory item?
 
-**Đáp án:** Cần một chiến lược phối hợp các thao tác kiểm tra/cập nhật: khóa, xử lý tuần tự, atomic/transaction hoặc cơ chế nhất quán tương ứng với nơi lưu trạng thái. Nếu trạng thái được lưu trong database có nhiều instance ứng dụng, chỉ khóa một object trong một JVM là không đủ.
+**Answer:** A strategy is needed to coordinate validation and updates: locking, serialized processing, atomic operations, transactions, or an equivalent consistency mechanism appropriate to where the state is stored. If state resides in a database accessed by multiple application instances, locking one object in one JVM is insufficient.
 
-Khi đọc hoặc viết một lớp Java, hãy tự hỏi: **“Điều kiện nào phải đúng đối với mọi instance hợp lệ? Constructor bảo đảm nó ra sao? Mỗi phương thức giữ được điều kiện ấy như thế nào, kể cả khi gặp lỗi?”** Ba câu hỏi này giúp biến nguyên tắc đóng gói thành những quy tắc thiết kế và kiểm thử cụ thể.
+When reading or writing a Java class, ask yourself: **“What must be true for every valid instance? How does the constructor guarantee it? How does each method preserve it, including when an error occurs?”** These three questions turn encapsulation into concrete design and testing rules.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="encapsulation-003">Kiểm soát truy cập và thay đổi trạng thái</a>
+## <a id="encapsulation-003">Access control and state changes</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kiểm soát truy cập và thay đổi trạng thái trong Java
+# Access control and state changes in Java
 
-> **OOP → Đóng gói (Encapsulation).** Một đối tượng không chỉ lưu dữ liệu: nó phải bảo vệ **những quy tắc luôn đúng** về dữ liệu đó. Java cung cấp các phạm vi truy cập (`private`, package-private, `protected`, `public`) để giới hạn mã nào được nhìn thấy hoặc gọi thành phần của lớp. Phần còn lại thuộc về thiết kế: chỉ cho phép thay đổi trạng thái qua những hành vi hợp lệ.
+> **OOP → Encapsulation.** An object does more than store data: it must protect **the rules that must always hold** for that data. Java provides access levels (`private`, package-private, `protected`, `public`) to restrict which code can see or invoke class members. The rest is a design decision: allow state changes only through valid operations.
 
-## 1. Vì sao không nên để ai cũng sửa trường dữ liệu?
+## 1. Why shouldn't everyone be allowed to modify fields?
 
-Xét một tài khoản đơn giản:
+Consider a simple account:
 
 ```java
 class UnsafeAccount {
@@ -1074,14 +1074,14 @@ account.balanceCents = 100_000;
 account.balanceCents = -9_999; // Biên dịch hợp lệ nhưng vi phạm quy tắc số dư
 ```
 
-Người sử dụng lớp có thể gán tùy ý, kể cả âm, dù ứng dụng quy định số dư không được âm. Khi nhiều nơi cùng sửa trực tiếp, lớp không kiểm soát được ai sửa, khi nào sửa và có kiểm tra dữ liệu hay không.
+A client of the class can assign any value, including a negative one, even if the application requires nonnegative balances. When many places modify state directly, the class cannot control who changes it, when, or whether the change is validated.
 
-Đóng gói giải quyết bằng cách tách:
+Encapsulation addresses this by separating:
 
-- **Trạng thái nội bộ (state)**: các trường mà đối tượng quản lý, ví dụ `balanceCents`.
-- **Giao diện công khai (public API)**: những thao tác bên ngoài được phép gọi, ví dụ `deposit(amount)`, `withdraw(amount)`, `getBalance()`.
-- **Bất biến (invariant)**: điều kiện phải được giữ sau mỗi thao tác hợp lệ, ví dụ `balanceCents >= 0`.
-- **Trách nhiệm kiểm tra**: chính lớp sở hữu dữ liệu kiểm tra trước khi thay đổi dữ liệu.
+- **Internal state**: fields managed by the object, such as `balanceCents`.
+- **Public interface (public API)**: operations external code is allowed to invoke, such as `deposit(amount)`, `withdraw(amount)`, and `getBalance()`.
+- **Invariants**: conditions that must hold after each valid operation, such as `balanceCents >= 0`.
+- **Validation responsibility**: the class that owns the data validates it before making changes.
 
 ```mermaid
 flowchart LR
@@ -1092,20 +1092,20 @@ flowchart LR
     C -. "Không thể gán trực tiếp" .-> S
 ```
 
-**Đóng gói không có nghĩa mọi lớp đều phải có getter và setter cho từng trường.** Nếu viết `private long balance` rồi cung cấp `public void setBalance(long value)` không giới hạn, mã bên ngoài vẫn có thể phá quy tắc nghiệp vụ. Điểm quan trọng là **kiểm soát đường đi của thay đổi trạng thái**.
+**Encapsulation does not mean every class needs getters and setters for every field.** If a class declares `private long balance` but exposes an unrestricted `public void setBalance(long value)`, external code can still violate business rules. What matters is **controlling the paths through which state changes**.
 
-## 2. Các mức truy cập trong Java
+## 2. Java access levels
 
-Java có bốn mức truy cập thường dùng cho thành phần của lớp:
+Java has four commonly used access levels for class members:
 
-| Modifier | Trong chính lớp | Lớp khác cùng package | Lớp con khác package | Lớp không liên quan khác package |
+| Modifier | Within the declaring class | Other class in the same package | Subclass in another package | Unrelated class in another package |
 |---|---|---|---|---|
-| `private` | Có | Không | Không | Không |
-| Không ghi modifier (**package-private**) | Có | Có | Không | Không |
-| `protected` | Có | Có | Có, với giới hạn truy cập kế thừa | Không |
-| `public` | Có | Có | Có | Có |
+| `private` | Yes | No | No | No |
+| No modifier (**package-private**) | Yes | Yes | No | No |
+| `protected` | Yes | Yes | Yes, subject to inherited-member access rules | No |
+| `public` | Yes | Yes | Yes | Yes |
 
-Ví dụ:
+Example:
 
 ```java
 package shop;
@@ -1120,21 +1120,21 @@ public class Product {
 }
 ```
 
-Một số điểm cần tránh hiểu nhầm:
+Important distinctions:
 
-- **`private`** giới hạn quyền truy cập ở mức khai báo lớp/những phạm vi được Java cho phép, kể cả mối quan hệ giữa lớp ngoài và lớp lồng nhau; không phải “chỉ đúng một phương thức”.
-- **Package-private** là trạng thái *không có từ khóa truy cập*, không phải từ khóa `default`. Các lớp trong cùng package có thể sử dụng thành phần đó nếu các điều kiện truy cập khác phù hợp.
-- **`protected`** cho phép truy cập từ cùng package; với subclass ở package khác, còn có những quy tắc hạn chế về đối tượng tham chiếu dùng để truy cập thành viên kế thừa.
-- **`public`** cho phép mã khác truy cập, miễn là lớp chứa nó cũng truy cập được và các ràng buộc về module (nếu dùng Java Module System) cho phép.
-- Lớp **top-level** thông thường chỉ được khai báo `public` hoặc package-private; `private` và `protected` không áp dụng trực tiếp cho top-level class.
+- **`private`** restricts access according to the declaring class and the scopes Java permits, including interactions between enclosing and nested classes; it does not mean “only within one method.”
+- **Package-private** means *no access modifier is specified*; it is not the `default` keyword. Classes in the same package may access the member when other access requirements are satisfied.
+- **`protected`** grants access within the same package; subclasses in other packages face additional restrictions on which object references can be used to access inherited members.
+- **`public`** makes members accessible to other code, provided the containing class is also accessible and any module restrictions (when using the Java Module System) permit it.
+- A normal **top-level** class may be declared only `public` or package-private; `private` and `protected` do not apply directly to top-level classes.
 
-Phạm vi càng rộng càng tạo nhiều điểm phụ thuộc. Thực tế thường bắt đầu bằng `private` cho trường dữ liệu, chỉ công khai những hành vi bên ngoài thật sự cần dùng. Không cần mặc định đặt tất cả phương thức là `public`.
+Wider visibility creates more points of dependency. In practice, start with `private` data fields and expose only behavior that external clients actually need. There is no need to make every method `public` by default.
 
-## 3. Kiểm soát thay đổi bằng phương thức có ý nghĩa nghiệp vụ
+## 3. Controlling changes through meaningful business methods
 
-Ví dụ hoàn chỉnh sau đây sử dụng đơn vị **cent** dưới dạng `long` để tránh lỗi nhị phân của `double` khi minh họa tiền tệ. Đây là ví dụ OOP trong bộ nhớ, chưa phải hệ thống giao dịch ngân hàng.
+The following complete example represents money in **cents** using `long`, avoiding the binary floating-point issues of `double` when illustrating monetary values. It is an in-memory OOP example, not a banking transaction system.
 
-Lưu thành `WalletDemo.java` và chạy bằng **Java 17+**:
+Save it as `WalletDemo.java` and run with **Java 17+**:
 
 ```java
 import java.util.ArrayList;
@@ -1218,14 +1218,14 @@ public class WalletDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac WalletDemo.java
 java WalletDemo
 ```
 
-Kết quả mong đợi:
+Expected output:
 
 ```text
 true
@@ -1237,23 +1237,23 @@ Không thể sửa lịch sử từ bên ngoài
 2
 ```
 
-### Bất biến được bảo vệ ra sao?
+### How are invariants protected?
 
-Lớp `Wallet` có bất biến: `balanceCents >= 0`.
+The `Wallet` class has the invariant `balanceCents >= 0`.
 
-| Thao tác | Điều kiện đầu vào | Khi thành công | Khi thất bại |
+| Operation | Input requirements | On success | On failure |
 |---|---|---|---|
-| `new Wallet(owner, opening)` | `owner` không rỗng; `opening >= 0` | Khởi tạo trạng thái hợp lệ | Ném `IllegalArgumentException` |
-| `deposit(amount)` | `amount > 0`; phép cộng không tràn `long` | Tăng số dư, ghi lịch sử | Đầu vào sai: `IllegalArgumentException`; tràn số: `ArithmeticException` |
-| `withdraw(amount)` | `amount > 0` | Đủ tiền: giảm số dư và trả `true` | Không đủ tiền: trả `false` mà không giảm số dư |
-| `balanceCents()` | Không có | Trả số dư hiện tại | Không thay đổi trạng thái |
-| `history()` | Không có | Trả bản sao danh sách không sửa được | Mã ngoài không thể `clear()` lịch sử nội bộ |
+| `new Wallet(owner, opening)` | Nonblank `owner`; `opening >= 0` | Constructs a valid state | Throws `IllegalArgumentException` |
+| `deposit(amount)` | `amount > 0`; addition must not overflow `long` | Increases balance and records history | Invalid input: `IllegalArgumentException`; overflow: `ArithmeticException` |
+| `withdraw(amount)` | `amount > 0` | Sufficient funds: decreases balance and returns `true` | Insufficient funds: returns `false` without decreasing balance |
+| `balanceCents()` | None | Returns current balance | Does not modify state |
+| `history()` | None | Returns an unmodifiable list copy | External code cannot `clear()` the internal history |
 
-Các phương thức thay đổi trạng thái dựa trên **ý nghĩa hành vi**: nạp và rút tiền. Lớp không cung cấp `setBalanceCents`, vì thao tác “đặt số dư bất kỳ” có thể bỏ qua kiểm tra nghiệp vụ và lịch sử.
+State-changing methods express **the meaning of the operation**: depositing and withdrawing money. The class does not expose `setBalanceCents`, because “set an arbitrary balance” could bypass business validation and transaction history.
 
-`Math.addExact` giúp phát hiện tràn `long`: nếu số dư đang gần `Long.MAX_VALUE`, phép cộng không âm thầm trở thành số âm. Các quy tắc kiểm tra này làm cho API khó bị dùng sai.
+`Math.addExact` detects `long` overflow: if the balance is near `Long.MAX_VALUE`, addition will not silently wrap into a negative number. These checks make the API harder to misuse.
 
-### Luồng rút tiền
+### Withdrawal flow
 
 ```mermaid
 flowchart TD
@@ -1266,13 +1266,13 @@ flowchart TD
     F --> G["return true"]
 ```
 
-Sơ đồ giúp thấy rõ **mỗi đường thay đổi trạng thái phải đi qua một quyết định hợp lệ**. Không phải mọi phương thức đều cần ném exception cho tất cả tình huống không thành công: “không đủ tiền” có thể là kết quả nghiệp vụ bình thường, nên ví dụ trả `false`.
+The diagram illustrates why **every path that changes state must pass through a valid decision**. Not every unsuccessful outcome needs to throw an exception: “insufficient funds” can be a normal business result, so this example returns `false`.
 
-**Giới hạn của ví dụ:** các thao tác trên `Wallet` chưa được đồng bộ cho nhiều luồng. Nếu nhiều thread có thể cùng nạp/rút, cần cơ chế bảo đảm tính nguyên tử và hiển thị bộ nhớ (ví dụ khóa phù hợp, hoặc giao dịch ở tầng lưu trữ). `private` **không tự mang lại thread safety**.
+**Limitation of the example:** the operations on `Wallet` are not synchronized for concurrent threads. If multiple threads may deposit or withdraw simultaneously, mechanisms are needed to ensure atomicity and memory visibility (such as appropriate locking or transactions at the storage layer). `private` **does not make code thread-safe by itself**.
 
-## 4. Quyền truy cập tên field khác quyền sửa đối tượng được tham chiếu
+## 4. Field-name access differs from the ability to mutate a referenced object
 
-Ngay cả khi danh sách là `private final`, getter trả trực tiếp `ArrayList` vẫn trao cho caller quyền thêm/xóa phần tử. Đây là một **đường vòng qua phương thức kiểm tra**:
+Even when a list is `private final`, a getter that returns its `ArrayList` directly lets callers add or remove elements. This creates **a way around the validation methods**:
 
 ```java
 private final List<String> members = new ArrayList<>();
@@ -1282,11 +1282,11 @@ public List<String> getMembers() {
 }
 ```
 
-Nếu constructor nhận danh sách từ bên ngoài, lớp còn phải quyết định việc sao chép **lúc nhận** để caller không tiếp tục sửa cùng instance. Khi phần tử là object mutable, `List.copyOf` chưa đủ để bảo vệ trạng thái sâu. Những rủi ro đó thuộc trách nhiệm thiết kế API, dù modifier của field đã đúng.
+If a constructor receives a list from outside, the class must also decide whether to copy it **when received** so the caller cannot continue modifying the same instance. When elements are mutable objects, `List.copyOf` is insufficient to protect the deeper state. These risks are part of API design even when the field's access modifier is correct.
 
-## 5. Accessor không được vô hiệu hóa quy tắc cập nhật
+## 5. Accessors must not undermine update rules
 
-Getter phục vụ nhu cầu **quan sát**; setter chỉ phù hợp nếu thuộc tính thật sự có thể thay đổi độc lập. Ví dụ đổi tên hiển thị có thể dùng `setDisplayName(name)` kèm kiểm tra `null`/chuỗi rỗng. Ngược lại, setter `setStatus("SHIPPED")` cho một đơn chưa thanh toán có thể bỏ qua quy trình nghiệp vụ dù field `status` là `private`.
+A getter supports **observation**; a setter is appropriate only when a property can truly change independently. For example, changing a display name may use `setDisplayName(name)` with `null`/blank-string validation. Conversely, calling `setStatus("SHIPPED")` on an unpaid order could bypass the business workflow even when the `status` field is `private`.
 
 ```java
 // Trích các phương thức trong một Order có status kiểu enum.
@@ -1305,15 +1305,15 @@ public void ship() {
 }
 ```
 
-`pay()` và `ship()` biểu đạt ý định và giữ kiểm tra ở nơi sở hữu dữ liệu. Trong một ứng dụng thực, việc xác nhận thanh toán từ hệ thống ngoài vẫn cần service đáng tin cậy; riêng tên phương thức không xác thực thanh toán. Tên getter/setter là quy ước Java, **không phải bằng chứng cho đóng gói đúng**.
+`pay()` and `ship()` communicate intent and enforce checks where the data is owned. In a real application, confirming payment through an external system still requires a trustworthy service; a method name alone cannot authenticate a payment. Getter/setter naming is a Java convention, **not proof of proper encapsulation**.
 
-## 6. Bất biến cần đúng từ lúc khởi tạo tới sau mỗi thao tác
+## 6. Invariants must hold from construction through every operation
 
-Một đối tượng có thể được đặt ở trạng thái sai **ngay trong constructor** nếu constructor bỏ qua kiểm tra. Đóng gói chỉ có tác dụng khi mọi đường tạo và sửa đối tượng đều giữ quy tắc.
+An object can enter an invalid state **during construction** if its constructor omits validation. Encapsulation works only when every path for creating and modifying an object preserves its rules.
 
-Ví dụ `Wallet` kiểm tra opening balance trong constructor, còn `deposit` và `withdraw` kiểm tra trước khi cập nhật số dư. Điều đó tránh trạng thái âm trong các đường thực thi bình thường.
+For example, `Wallet` validates the opening balance in its constructor, while `deposit` and `withdraw` validate before updating the balance. This avoids negative balances along normal execution paths.
 
-Một quy trình thiết kế đơn giản:
+A simple design process:
 
 ```mermaid
 flowchart TD
@@ -1324,19 +1324,19 @@ flowchart TD
     E --> F["Duy trì invariant và trả kết quả"]
 ```
 
-| Quy tắc thiết kế | Lý do |
+| Design guideline | Reason |
 |---|---|
-| Trường dữ liệu nội bộ thường `private` | Ngăn gán trực tiếp tùy tiện |
-| Dữ liệu bắt buộc kiểm tra tại constructor | Đối tượng hợp lệ từ khi bắt đầu sử dụng |
-| Mỗi phương thức sửa state kiểm tra điều kiện | Không phá invariant |
-| Ưu tiên phương thức có tên theo hành vi | Hạn chế thao tác sai trình tự |
-| Không để lộ collection/array mutable nội bộ | Bên ngoài không bỏ qua validation |
-| Chọn kết quả lỗi nhất quán | Người gọi biết khi nào thao tác bị từ chối |
-| Giữ đối tượng bất biến khi phù hợp | Giảm số trạng thái cần quản lý |
+| Keep internal data fields `private` in most cases | Prevent arbitrary direct assignments |
+| Validate required data in the constructor | Ensure the object is valid from the start |
+| Validate conditions in every state-changing method | Preserve invariants |
+| Prefer methods named after behaviors | Limit operations performed out of sequence |
+| Do not expose internal mutable collections or arrays | Prevent outside code from bypassing validation |
+| Choose consistent failure results | Let callers know when an operation is rejected |
+| Make objects immutable where appropriate | Reduce the number of states to manage |
 
-### Tránh “thay đổi nửa chừng”
+### Avoiding partial changes
 
-Giả sử một thao tác phải kiểm tra nhiều điều kiện:
+Suppose an operation must check several conditions:
 
 ```java
 void updateLimit(long newLimit) {
@@ -1352,23 +1352,23 @@ void updateLimit(long newLimit) {
 }
 ```
 
-Kiểm tra trước khi gán tránh để `limit` nhận giá trị sai rồi mới ném ngoại lệ. Nếu một nghiệp vụ thay đổi **nhiều đối tượng** hoặc có ghi database/API ngoài, cần cơ chế giao dịch/rollback phù hợp; riêng `private` và một phương thức Java không tự tạo tính nguyên tử giữa nhiều tài nguyên.
+Checking before assignment prevents an invalid value from being written to `limit` before an exception is thrown. If a business operation changes **multiple objects** or writes to an external database/API, it needs an appropriate transaction/rollback mechanism; `private` and a Java method alone do not provide atomicity across resources.
 
-## 7. Kiểm soát truy cập khác với bất biến (immutability)
+## 7. Access control versus immutability
 
-Đóng gói và bất biến có liên quan nhưng không đồng nhất:
+Encapsulation and immutability are related but distinct:
 
-| Khái niệm | Ý nghĩa | Ví dụ |
+| Concept | Meaning | Example |
 |---|---|---|
-| Encapsulation | Mã bên ngoài chỉ tương tác qua API được phép | `Wallet.deposit()`, `Wallet.withdraw()` |
-| Mutable object | Trạng thái có thể thay đổi, nhưng qua quy tắc | `Wallet` sau khi nạp/rút |
-| Immutable object | Trạng thái quan sát được không đổi sau khi tạo | `String`, một value object thiết kế đúng |
-| `final` field | Trường không thể gán lại sau khởi tạo theo quy tắc Java | `private final List<String> names` |
-| Unmodifiable collection | Không thể thay đổi collection qua các thao tác sửa của nó | Kết quả `List.copyOf(...)` |
+| Encapsulation | External code interacts only through permitted APIs | `Wallet.deposit()`, `Wallet.withdraw()` |
+| Mutable object | State can change, but only according to its rules | `Wallet` after depositing/withdrawing |
+| Immutable object | Observable state does not change after construction | `String`, a correctly designed value object |
+| `final` field | Under Java's rules, the field cannot be reassigned after initialization | `private final List<String> names` |
+| Unmodifiable collection | Its mutating operations cannot change the collection | Result of `List.copyOf(...)` |
 
-`private` **không có nghĩa immutable**; `final` **không làm bất biến sâu**; và một getter cũng không tự là read-only nếu nó trả tham chiếu tới object mutable.
+`private` **does not imply immutability**; `final` **does not provide deep immutability**; and a getter is not inherently read-only if it returns a reference to a mutable object.
 
-Ví dụ value object đơn giản:
+A simple value-object example:
 
 ```java
 public record RectangleSize(int width, int height) {
@@ -1384,13 +1384,13 @@ public record RectangleSize(int width, int height) {
 }
 ```
 
-`record` (Java 16+) tự tạo các thành phần `private final` và accessor `width()`, `height()`. **Compact constructor** kiểm tra invariant trước khi record được dùng. Với hai thành phần kiểu nguyên thủy, `RectangleSize` có trạng thái giá trị bất biến và rất phù hợp để truyền giữa các đối tượng.
+A `record` (Java 16+) automatically provides `private final` components and the `width()`, `height()` accessors. Its **compact constructor** validates the invariant before the record is used. With two primitive components, `RectangleSize` has immutable value state and is well suited for passing between objects.
 
-## 8. Đóng gói theo phạm vi trách nhiệm
+## 8. Encapsulation within the boundaries of responsibility
 
-Không phải cứ khai báo `private` là thiết kế tốt. Một lớp có thể có 20 trường `private` và 20 setter `public` để mã ngoài tự ghép logic nghiệp vụ. Khi đó, quy tắc vẫn bị phân tán.
+Declaring fields `private` does not automatically make a design good. A class may have 20 `private` fields and 20 `public` setters, leaving external code to assemble the business logic. The rules are still scattered.
 
-Ví dụ một API yếu yêu cầu caller tự kiểm tra:
+For example, a weak API makes callers validate state themselves:
 
 ```java
 if (account.getBalance() >= amount) {
@@ -1398,52 +1398,52 @@ if (account.getBalance() >= amount) {
 }
 ```
 
-Có ít nhất ba vấn đề: logic kiểm tra nằm ngoài lớp; mã khác có thể quên kiểm tra; hai bước đọc và ghi không nguyên tử nếu truy cập đồng thời.
+There are at least three problems: validation logic lives outside the class; other code can forget to validate; and the read and write steps are not atomic under concurrent access.
 
-API có hành vi `account.withdraw(amount)` giữ logic bên trong, nơi lớp sở hữu dữ liệu và biết invariant. Tuy nhiên, để an toàn khi nhiều thread cùng thao tác, phương thức đó vẫn phải được triển khai với cơ chế đồng bộ/giao dịch thích hợp.
+A behavior-oriented API such as `account.withdraw(amount)` keeps the logic inside the class that owns the data and knows its invariant. However, concurrent calls still require the method to use a suitable synchronization or transaction mechanism.
 
-**Cấp quyền nhỏ nhất (least visibility):** chỉ công khai những gì là hợp đồng của lớp. Một helper như `requirePositive` trong `Wallet` được để `private`, vì người gọi không cần biết chi tiết kiểm tra. Khi hai lớp hợp tác chặt trong cùng package, package-private có thể phù hợp hơn `public`. Không tăng phạm vi truy cập chỉ để “dễ gọi” nếu có cách thiết kế API rõ ràng hơn.
+**Least visibility:** expose only what belongs to the class's contract. A helper such as `requirePositive` in `Wallet` is `private` because callers do not need to know how validation is implemented. When two classes collaborate closely in one package, package-private visibility may be more appropriate than `public`. Do not widen access merely to make a member “easy to call” if a clearer API design is available.
 
-### Đặt tên theo ý định
+### Name methods by intent
 
-| Tên có thể gây hiểu sai | Tên thể hiện hành vi rõ hơn | Khi nào hữu ích? |
+| Potentially misleading name | More explicit behavioral name | When is it useful? |
 |---|---|---|
-| `setBalance(500)` | `deposit(500)` / `withdraw(500)` | Có quy tắc nạp/rút |
-| `setStatus(PAID)` | `pay()` | Có chuyển đổi trạng thái hợp lệ |
-| `setQuantity(q)` | `increaseStock(q)` / `reserve(q)` | Có điều kiện tồn kho |
-| `getInternalList()` | `listItems()` trả snapshot | Muốn đọc mà không sửa nội bộ |
+| `setBalance(500)` | `deposit(500)` / `withdraw(500)` | Deposit/withdrawal rules apply |
+| `setStatus(PAID)` | `pay()` | Valid state transitions are required |
+| `setQuantity(q)` | `increaseStock(q)` / `reserve(q)` | Inventory constraints apply |
+| `getInternalList()` | `listItems()` returns a snapshot | Data must be readable without allowing internal mutation |
 
-Tên phương thức không tự thi hành quy tắc: **implementation và kiểm thử** phải bảo đảm hành vi đúng.
+Method names do not enforce rules by themselves: **implementation and testing** must ensure the behavior is correct.
 
-## 9. Kiểm thử hành vi và ranh giới truy cập
+## 9. Testing behavior and access boundaries
 
-Một bài kiểm thử tốt không chỉ kiểm tra đầu ra bình thường. Nó còn cần kiểm tra **những trạng thái không được phép xuất hiện** và khả năng mã gọi can thiệp trái phép.
+A good test verifies more than ordinary outputs. It also checks **states that must never occur** and whether calling code can interfere inappropriately.
 
-Với `Wallet`, có thể xác minh bằng các tình huống sau:
+For `Wallet`, you can verify the following cases:
 
-| Tình huống | Kết quả mong đợi |
+| Scenario | Expected result |
 |---|---|
-| Khởi tạo ví với số dư âm | `IllegalArgumentException` |
-| `deposit(0)` hoặc `deposit(-1)` | `IllegalArgumentException`; số dư không đổi |
-| `deposit(Long.MAX_VALUE)` khi số dư dương | `ArithmeticException`; số dư không đổi |
-| `withdraw(amount)` lớn hơn số dư | `false`; không ghi giao dịch rút |
-| Rút số tiền hợp lệ, đủ số dư | `true`; số dư giảm đúng |
-| `wallet.history().clear()` | `UnsupportedOperationException`; lịch sử nội bộ vẫn nguyên |
-| `wallet.balanceCents = -10` từ mã ngoài | Lỗi biên dịch vì trường là `private` |
+| Construct a wallet with a negative balance | `IllegalArgumentException` |
+| `deposit(0)` or `deposit(-1)` | `IllegalArgumentException`; balance unchanged |
+| `deposit(Long.MAX_VALUE)` when balance is positive | `ArithmeticException`; balance unchanged |
+| `withdraw(amount)` exceeds the balance | `false`; no withdrawal record is added |
+| Withdraw a valid amount with sufficient funds | `true`; balance decreases correctly |
+| `wallet.history().clear()` | `UnsupportedOperationException`; internal history remains intact |
+| `wallet.balanceCents = -10` from external code | Compile-time error because the field is `private` |
 
-**Cần phân biệt kiểm tra quyền truy cập tại thời điểm biên dịch với xác thực quyền của người dùng.** `private`/`public` là quy tắc về khả năng mã Java truy cập thành phần lớp; chúng **không thay thế kiểm tra authentication/authorization** khi nhiều tài khoản người dùng truy cập một dịch vụ. Ví dụ, một phương thức `public withdraw(...)` vẫn cần lớp nghiệp vụ hoặc tầng API xác nhận đúng chủ tài khoản nếu chạy trong hệ thống đa người dùng.
+**Distinguish compile-time access checks from user authorization.** `private`/`public` determine whether Java code can access a class member; they **do not replace authentication/authorization checks** when multiple user accounts access a service. For example, a `public withdraw(...)` method still needs the business layer or API to verify the account owner in a multiuser system.
 
-## 10. Lỗi phổ biến cần tránh
+## 10. Common mistakes to avoid
 
-**Lỗi 1 — Trường public mutable**
+**Mistake 1 — Public mutable fields**
 
 ```java
 public int stock; // Ai cũng có thể gán giá trị âm
 ```
 
-Sửa bằng trường `private` và hành vi có kiểm tra, như `restock(int quantity)`, `reserve(int quantity)`.
+Fix this with `private` fields and validated operations, such as `restock(int quantity)` and `reserve(int quantity)`.
 
-**Lỗi 2 — Trường private nhưng setter không kiểm tra**
+**Mistake 2 — Private fields with unchecked setters**
 
 ```java
 private int stock;
@@ -1452,9 +1452,9 @@ public void setStock(int stock) {
 }
 ```
 
-Nếu nghiệp vụ yêu cầu tồn kho không âm, ít nhất phải kiểm tra và nên cân nhắc API hành vi.
+If the business rules require nonnegative inventory, at minimum validate the value and consider a behavior-oriented API.
 
-**Lỗi 3 — Getter trả collection mutable nội bộ**
+**Mistake 3 — Getter returns an internal mutable collection**
 
 ```java
 public List<String> getNames() {
@@ -1462,9 +1462,9 @@ public List<String> getNames() {
 }
 ```
 
-Sửa bằng snapshot `List.copyOf(names)` khi phần tử thích hợp, hoặc cung cấp giao diện chỉ đọc với hợp đồng rõ ràng; nhớ rằng unmodifiable view và snapshot không hoàn toàn giống nhau.
+Fix this with a snapshot such as `List.copyOf(names)` when the elements permit it, or expose a read-only interface with a clear contract; remember that unmodifiable views and snapshots are not exactly the same.
 
-**Lỗi 4 — Tin rằng `final` khiến toàn bộ object bất biến**
+**Mistake 4 — Assuming `final` makes the entire object immutable**
 
 ```java
 private final List<String> names = new ArrayList<>();
@@ -1472,9 +1472,9 @@ private final List<String> names = new ArrayList<>();
 // Nhưng vẫn cho phép: names.add("An");
 ```
 
-Muốn bất biến sâu, cần xem xét cả những object mà trường tham chiếu tới.
+Deep immutability requires considering the objects referenced by the fields as well.
 
-**Lỗi 5 — Trộn đọc/kiểm tra/ghi ở ngoài lớp**
+**Mistake 5 — Moving read/check/write operations outside the class**
 
 ```java
 if (wallet.balanceCents() >= amount) {
@@ -1482,73 +1482,73 @@ if (wallet.balanceCents() >= amount) {
 }
 ```
 
-Hãy đưa logic thay đổi vào phương thức của đối tượng có trách nhiệm; khi có đồng thời, cần thêm cơ chế nguyên tử phù hợp.
+Move mutation logic into the method of the responsible object; under concurrency, add a suitable atomicity mechanism.
 
-## 11. Bài tập tự luyện
+## 11. Practice exercises
 
-1. Tạo lớp `InventoryItem` với `private int stock` và constructor từ chối tồn kho âm. Viết `restock(int amount)`, `reserve(int amount)`, `getStock()`; không cung cấp setter đặt tồn kho tùy ý.
-2. Thêm trạng thái `RETURNED` cho `Order`. Định nghĩa chuyển đổi nào hợp lệ từ `SHIPPED`, kiểm tra điều kiện trong phương thức `returnOrder()` và cập nhật Mermaid.
-3. Cho một lớp nhận `List<String>` từ constructor rồi lưu thẳng tham chiếu. Hãy chứng minh bằng code rằng caller có thể sửa danh sách sau khi tạo lớp và viết bản defensive copy để ngăn hành vi đó.
-4. Nếu thay `String` trong `Team.members` bằng `Employee` có setter, `List.copyOf` đã đủ đóng gói chưa? Giải thích và đề xuất cách không làm lộ đối tượng mutable.
-5. Cho một dịch vụ có hai thread cùng rút từ một ví. Mô tả vì sao `private balanceCents` không ngăn race condition và cơ chế nào phải bổ sung để thao tác an toàn.
+1. Create an `InventoryItem` class with `private int stock` and a constructor that rejects negative stock. Write `restock(int amount)`, `reserve(int amount)`, and `getStock()`; do not expose a setter for arbitrary stock values.
+2. Add a `RETURNED` state to `Order`. Define which transition from `SHIPPED` is valid, check the condition in `returnOrder()`, and update the Mermaid diagram.
+3. Given a class whose constructor accepts a `List<String>` and stores the reference directly, demonstrate in code how the caller can modify the list after construction, then add a defensive copy to prevent this.
+4. If `String` elements in `Team.members` were replaced with `Employee` objects having setters, would `List.copyOf` still provide sufficient encapsulation? Explain and propose a way to avoid exposing mutable objects.
+5. Consider a service with two threads withdrawing from one wallet. Explain why `private balanceCents` does not prevent a race condition and what additional mechanism is needed for safe operations.
 
-**Ghi nhớ:** Đóng gói tốt nghĩa là **che giấu trạng thái cần bảo vệ, công khai hành vi phù hợp, kiểm tra trước khi sửa và không làm lộ đường vòng qua tham chiếu mutable**. Trường `private` là công cụ; invariant và hợp đồng phương thức mới quyết định đối tượng có luôn giữ được trạng thái hợp lệ hay không.
+**Remember:** Good encapsulation means **hiding state that needs protection, exposing suitable behavior, validating before mutation, and preventing mutable-reference shortcuts**. A `private` field is a tool; invariants and method contracts determine whether an object can keep its state valid.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="encapsulation-004">Getter, setter và phương thức thể hiện ý định</a>
+## <a id="encapsulation-004">Getters, setters, and intention-revealing methods</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Getter, setter và phương thức thể hiện ý định trong Java
+# Getters, setters, and intention-revealing methods in Java
 
-Trong lập trình hướng đối tượng, **đóng gói (encapsulation)** là cách một đối tượng kiểm soát việc bên ngoài đọc và thay đổi trạng thái của nó. Thay vì cho mọi nơi tùy ý sửa field, lớp cung cấp một **giao diện công khai (public API)** với những thao tác có ý nghĩa.
+In object-oriented programming, **encapsulation** is how an object controls external access to and modification of its state. Instead of allowing arbitrary field changes, a class exposes a **public API** with meaningful operations.
 
-Ba công cụ thường gặp:
+Three common tools are:
 
-- **Getter:** trả về thông tin mà người gọi được phép đọc, chẳng hạn `getBalance()` hoặc `isActive()`.
-- **Setter:** thay đổi một thuộc tính theo một hợp đồng đã xác định, chẳng hạn `setDisplayName(...)`.
-- **Phương thức thể hiện ý định:** mô tả *hành động nghiệp vụ* mà người gọi muốn làm, chẳng hạn `deposit(...)`, `withdraw(...)`, `confirm()`, `cancel()` hoặc `reschedule(...)`.
+- **Getter:** returns information that callers are allowed to read, such as `getBalance()` or `isActive()`.
+- **Setter:** changes a property according to a defined contract, such as `setDisplayName(...)`.
+- **Intention-revealing method:** describes the *business action* a caller wants to perform, such as `deposit(...)`, `withdraw(...)`, `confirm()`, `cancel()`, or `reschedule(...)`.
 
-Điểm quan trọng là **không phải cứ khai báo field `private` rồi tạo getter/setter cho mọi field là đã thiết kế đóng gói tốt**. Đóng gói tốt bảo vệ các *bất biến (invariant)* của đối tượng: những điều kiện phải luôn đúng sau khi đối tượng được tạo và sau mỗi thao tác thành công.
+The key point is that **declaring fields `private` and generating getters/setters for every field does not automatically produce good encapsulation**. Good encapsulation protects the object's *invariants*: conditions that must hold after construction and after each successful operation.
 
-Ví dụ, tài khoản ngân hàng không nên cho gọi `setBalance(-500)` hay `setBalance(999999)` từ bất kỳ đâu. API `deposit()` và `withdraw()` diễn tả rõ mục đích và là nơi kiểm tra điều kiện hợp lệ.
+For example, a bank account should not allow calls to `setBalance(-500)` or `setBalance(999999)` from anywhere. The APIs `deposit()` and `withdraw()` express the intent clearly and provide a place to validate the operation.
 
-## 1. Phân biệt getter, setter và phương thức có ý nghĩa nghiệp vụ
+## 1. Distinguishing getters, setters, and business-oriented methods
 
-| Thành phần | Mục đích | Ví dụ | Điều cần cân nhắc |
+| Member | Purpose | Example | Design consideration |
 |---|---|---|---|
-| Getter | Cho phép quan sát thông tin | `getName()`, `getBalance()` | Giá trị trả về có làm lộ dữ liệu có thể sửa không? |
-| Setter | Cho phép gán/đổi một thuộc tính | `setNickname("An")` | Giá trị mới có cần được xác thực? |
-| Phương thức thể hiện ý định | Thực hiện một hành động có quy tắc | `withdraw(500)`, `confirm()` | Điều kiện trước/sau của hành động là gì? |
-| Constructor/factory | Tạo đối tượng ở trạng thái hợp lệ | `new Account("A01")` | Có bắt buộc dữ liệu nào ngay từ đầu? |
-| Phương thức truy vấn suy ra | Trả lời câu hỏi từ trạng thái hiện có | `hasEnoughBalance(500)` | Có cần lưu thêm một field hay tính khi được hỏi? |
+| Getter | Allow information to be observed | `getName()`, `getBalance()` | Could the returned value expose mutable data? |
+| Setter | Assign or change a property | `setNickname("An")` | Does the new value require validation? |
+| Intention-revealing method | Perform an operation governed by rules | `withdraw(500)`, `confirm()` | What are the operation's preconditions and postconditions? |
+| Constructor/factory | Create an object in a valid state | `new Account("A01")` | Which data must be provided at creation? |
+| Derived query method | Answer a question about current state | `hasEnoughBalance(500)` | Should the answer be stored in a field or computed on demand? |
 
-Một tên phương thức diễn tả ý định giúp code gọi tự đọc được:
+An intention-revealing method makes calling code easier to understand:
 
 ~~~java
 account.deposit(200_000);
 account.withdraw(75_000);
 ~~~
 
-So sánh với cách gọi không nêu rõ nghiệp vụ:
+Compare that with a call that does not express the business operation:
 
 ~~~java
 account.setBalance(account.getBalance() + 200_000);
 account.setBalance(account.getBalance() - 75_000);
 ~~~
 
-Ở cách dùng setter, người gọi tự quyết định công thức, điều kiện hợp lệ và cách thay đổi tiền. Mỗi nơi có thể tính khác nhau, dẫn tới lỗi âm số dư, bỏ qua phí hoặc cập nhật sai khi nhiều thao tác cùng lúc.
+With setters, the caller decides the formula, valid conditions, and how money changes. Different callers may calculate differently, causing negative balances, missed fees, or incorrect updates when operations overlap.
 
-## 2. Vì sao một lớp có toàn getter/setter vẫn có thể đóng gói kém?
+## 2. Why can a class full of getters/setters still have weak encapsulation?
 
-Giả sử có lớp đơn hàng:
+Consider an order class:
 
 ~~~java
 public class Order {
@@ -1573,7 +1573,7 @@ public class Order {
 }
 ~~~
 
-Code bên ngoài có thể tạo những trạng thái không hợp lệ:
+External code can create invalid states:
 
 ~~~java
 Order order = new Order();
@@ -1582,23 +1582,23 @@ order.setStatus("CONFIRMED");  // Có thể xác nhận đơn hàng âm số lư
 order.setStatus("UNKNOWN");    // Không có trạng thái nghiệp vụ tương ứng.
 ~~~
 
-Field vẫn `private`, nhưng mọi quy tắc đã bị chuyển sang người gọi. Getter/setter dạng này gần giống truy cập field công khai, chỉ khác cú pháp.
+The fields are still `private`, but responsibility for all rules has moved to the caller. Such getters and setters resemble public field access with different syntax.
 
-Các vấn đề có thể phát sinh:
+Potential problems include:
 
-1. Không có nơi thống nhất kiểm tra giá trị đầu vào.
-2. Setter cho phép thay đổi trạng thái ở bất kỳ thời điểm nào, kể cả khi thao tác không hợp lệ.
-3. Hai thuộc tính phụ thuộc lẫn nhau có thể tạm thời rơi vào trạng thái mâu thuẫn.
-4. Tên `setStatus("CONFIRMED")` không nói vì sao chuyển trạng thái, ai được phép chuyển, hay cần điều kiện gì.
-5. Nếu nghiệp vụ đổi, rất khó tìm hết nơi đang sử dụng setter để bổ sung logic.
+1. There is no single place to validate input values.
+2. Setters allow state changes at any time, including when the operation is invalid.
+3. Two interdependent properties can temporarily become inconsistent.
+4. The name `setStatus("CONFIRMED")` says nothing about why the transition occurs, who may perform it, or which conditions are required.
+5. When business rules change, finding every setter call that needs updating becomes difficult.
 
-**Giải pháp không phải cấm mọi setter.** Setter vẫn phù hợp khi một thuộc tính thật sự được phép đổi độc lập và việc đổi đó không làm phá vỡ invariant của đối tượng. Vấn đề là chọn đúng quyền thay đổi và hợp đồng API.
+**The solution is not to ban all setters.** A setter is still suitable when a property can legitimately change independently and changing it does not violate the object's invariant. The task is to choose appropriate mutation permissions and API contracts.
 
-## 3. Ví dụ hoàn chỉnh: getter để đọc, hành vi để kiểm soát trạng thái
+## 3. Complete example: getters for reading, behaviors for controlling state
 
-Ví dụ này triển khai tài khoản ngân hàng đơn giản. Để tập trung vào nguyên tắc OOP, số tiền được biểu diễn bằng **`long` theo đơn vị đồng**, không dùng số thực để cộng trừ tiền. Chương trình không xử lý ngân hàng thật, giao dịch phân tán hoặc cập nhật đồng thời.
+This example implements a simple bank account. To focus on OOP concepts, money is represented as **`long` amounts in VND**, avoiding floating-point arithmetic for monetary additions and subtractions. The program does not handle actual banking, distributed transactions, or concurrent updates.
 
-Lưu thành **`Demo.java`** (Java 17+):
+Save as **`Demo.java`** (Java 17+):
 
 ~~~java
 public class Demo {
@@ -1727,14 +1727,14 @@ final class BankAccount {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac Demo.java
 java Demo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Tài khoản: A-101
@@ -1746,17 +1746,17 @@ Không thể đóng: Phải tất toán số dư trước khi đóng
 Đã đóng: true
 ~~~
 
-Dòng `Không thể đóng` minh họa quy tắc tài khoản còn 375.000 đồng thì `close()` từ chối **trước khi đổi trạng thái**. Sau đó chương trình rút hết số dư, đóng tài khoản thành công và in `Đã đóng: true`. Như vậy cùng một lần chạy kiểm chứng được cả đường từ chối lẫn đường thành công.
+The `Không thể đóng` line illustrates the rule that, with a balance of 375.000 VND, `close()` rejects the request **before changing state**. The program then withdraws the remaining balance, closes the account successfully, and prints `Đã đóng: true`. Thus, one run exercises both a rejected path and a successful path.
 
-Ví dụ này thể hiện ba điểm:
+This example demonstrates three points:
 
-- **Getter** chỉ cho phép đọc dữ liệu mà lớp quyết định công khai. Không có `setAccountNumber()`, bởi vì mã tài khoản không được phép đổi trong vòng đời đối tượng.
-- **Phương thức thể hiện ý định** như `deposit()`, `withdraw()`, `renameOwner()`, `close()` kiểm soát những thay đổi hợp lệ. Ví dụ `withdraw()` kiểm tra số tiền và số dư *trước* khi trừ; trường hợp thiếu tiền không làm thay đổi trạng thái.
-- **Invariant** như `balance >= 0` và “không được giao dịch sau khi đóng” được tập trung kiểm tra trong lớp. `Math.addExact()` cũng tránh lỗi tràn `long` âm thầm khi cộng tiền.
+- **Getters** only expose data that the class chooses to make readable. There is no `setAccountNumber()` because the account number must not change during the object's lifetime.
+- **Intention-revealing methods** such as `deposit()`, `withdraw()`, `renameOwner()`, and `close()` govern valid changes. For example, `withdraw()` checks the amount and balance *before* subtraction; insufficient funds leave the state unchanged.
+- **Invariants** such as `balance >= 0` and “no transactions after closing” are enforced centrally in the class. `Math.addExact()` also prevents silent `long` overflow when adding money.
 
-> Trong phần mềm tài chính thực tế, một đối tượng trong bộ nhớ chưa bảo đảm giao dịch an toàn khi nhiều luồng hoặc nhiều máy chủ truy cập. Việc kiểm tra số dư, ghi nhận giao dịch và chống cập nhật trùng phải được thiết kế ở tầng lưu trữ/giao dịch phù hợp.
+> In real financial software, an in-memory object alone does not guarantee transaction safety when multiple threads or servers access it. Checking balances, recording transactions, and preventing duplicate updates must be designed at the appropriate storage and transaction layer.
 
-### Sơ đồ quyền điều khiển trạng thái
+### State-control flow diagram
 
 ~~~mermaid
 flowchart LR
@@ -1769,18 +1769,18 @@ flowchart LR
     X["setBalance(value)"] -.->|"Không cung cấp"| S
 ~~~
 
-Code bên ngoài chỉ đề nghị một **hành động**; lớp quyết định liệu hành động có được phép và cập nhật dữ liệu nội bộ ra sao. Nhờ đó, khi điều kiện nghiệp vụ thay đổi, chỉ cần điều chỉnh hành vi ở nơi sở hữu trạng thái.
+External code only requests an **action**; the class decides whether to allow it and how to update internal data. Thus, when business rules change, the behavior can be updated where the state is owned.
 
-## 4. Getter không nhất thiết trả về field nguyên xi
+## 4. A getter need not return a field verbatim
 
-Getter có thể trả về:
+A getter can return:
 
-- Một **field** có thể quan sát an toàn.
-- Giá trị **được tính toán** từ các field khác.
-- Một **bản sao** hoặc dạng đọc được của trạng thái.
-- Một kiểu biểu diễn rõ sự vắng mặt của dữ liệu.
+- A **field** that is safe to expose.
+- A value **computed** from other fields.
+- A **copy** or read-only representation of state.
+- A representation that explicitly indicates missing data.
 
-Ví dụ, không cần lưu thêm `itemCount` nếu có thể tính từ danh sách:
+For example, there is no need to store an extra `itemCount` if it can be calculated from the list:
 
 ~~~java
 import java.util.ArrayList;
@@ -1807,19 +1807,19 @@ class ShoppingCart {
 }
 ~~~
 
-`getItemCount()` là một **phương thức truy vấn**, không cần có field `itemCount`. Cách tính trực tiếp tránh phải đồng bộ hai giá trị `items.size()` và `itemCount` sau mỗi lần thêm/xóa.
+`getItemCount()` is a **query method**; no `itemCount` field is required. Computing it directly avoids synchronizing `items.size()` and `itemCount` after every addition or removal.
 
-Một getter mang tên `getTotalPrice()` cũng có thể tính từ các mặt hàng, miễn là hợp đồng rõ ràng. Tuy nhiên, getter có truy vấn mạng/database tốn thời gian hoặc thay đổi trạng thái đáng kể có thể gây bất ngờ: nên đặt tên rõ ý định, chẳng hạn `fetchLatestPrice()` hoặc `refreshCache()`, nếu thao tác thực sự làm việc đó.
+A getter named `getTotalPrice()` can also calculate a result from line items, provided its contract is clear. However, a getter that performs an expensive network/database query or significantly changes state may surprise callers. Names such as `fetchLatestPrice()` or `refreshCache()` better express intent when those are the actual operations.
 
-### Không phải dữ liệu nội bộ nào cũng cần getter
+### Not all internal data needs a getter
 
-Ngay cả khi chỉ cho đọc, việc công khai toàn bộ dữ liệu nội bộ làm tăng sự phụ thuộc của code bên ngoài vào cấu trúc lớp. Nếu code ngoài chỉ cần biết “đơn hàng có thể thanh toán chưa?”, một API `canCheckout()` thường rõ ý nghĩa hơn việc yêu cầu người gọi lấy `status`, `items`, `shippingAddress` rồi tự kiểm tra cùng một quy tắc ở nhiều nơi.
+Even read-only exposure of all internal data makes external code more dependent on the class structure. If callers only need to know “can this order be checked out?”, a `canCheckout()` API often expresses the intent more clearly than making callers retrieve `status`, `items`, and `shippingAddress` and repeat the same checks in many places.
 
-Tuy vậy, các màn hình hiển thị, công cụ báo cáo và hệ thống serialization vẫn cần một số dữ liệu đọc được; getter là công cụ phù hợp khi thông tin đó thực sự thuộc giao diện lớp.
+Nevertheless, display screens, reporting tools, and serialization systems need some readable data. Getters are appropriate when that information genuinely belongs to the class's interface.
 
-## 5. Getter trả tham chiếu mutable phải có hợp đồng rõ ràng
+## 5. Getters returning mutable references need clear contracts
 
-Một getter có thể làm lộ trạng thái dù field là `private`:
+A getter can expose state even when its field is `private`:
 
 ```java
 class UnsafeBasket {
@@ -1832,20 +1832,20 @@ class UnsafeBasket {
 }
 ```
 
-Nếu lớp yêu cầu mỗi tên mặt hàng không rỗng, caller gọi `getItems().add("")` sẽ bỏ qua mọi kiểm tra của `addItem()`. Với `List<String>`, getter có thể dùng `List.copyOf(items)` để trả snapshot cấu trúc không sửa được; `String` bất biến nên an toàn để chia sẻ phần tử.
+If the class requires every item name to be nonblank, a caller invoking `getItems().add("")` bypasses validation in `addItem()`. With `List<String>`, the getter can return `List.copyOf(items)` as a structurally unmodifiable snapshot; immutable `String` elements are safe to share.
 
-Chọn cách trả theo nhu cầu: `Collections.unmodifiableList(items)` là view chỉ đọc nhưng phản ánh thay đổi từ list gốc; `List.copyOf(items)` là snapshot cấu trúc; `new ArrayList<>(items)` là bản sao caller có thể sửa riêng. **Cả ba đều không tự deep-copy phần tử mutable**. Nếu getter trả mảng, `Date` hoặc đối tượng con có setter, cần bảo vệ tham chiếu sâu hơn.
+Choose the returned form according to the need: `Collections.unmodifiableList(items)` is a read-only view that reflects changes in the source list; `List.copyOf(items)` is a structural snapshot; `new ArrayList<>(items)` is a separate copy that callers can modify. **None of these automatically deep-copies mutable elements**. A getter returning an array, `Date`, or a child object with setters requires further reference protection.
 
-## 6. Setter thích hợp trong trường hợp nào?
+## 6. When are setters appropriate?
 
-Một setter có thể phù hợp khi:
+A setter can be appropriate when:
 
-1. Thuộc tính thực sự được phép thay đổi độc lập.
-2. Cập nhật chỉ có một ý nghĩa rõ ràng.
-3. Có thể kiểm tra giá trị hợp lệ ngay trong setter.
-4. Không làm đối tượng rơi vào trạng thái sai hoặc mở ra thao tác bị cấm theo vòng đời.
+1. The property is genuinely allowed to change independently.
+2. The update has one clear meaning.
+3. The value can be validated within the setter.
+4. The change cannot create an invalid object state or permit actions forbidden by its lifecycle.
 
-Ví dụ người dùng đổi tên hiển thị:
+For example, a user changing a display name:
 
 ~~~java
 public final class Profile {
@@ -1869,13 +1869,13 @@ public final class Profile {
 }
 ~~~
 
-Ở đây `setDisplayName()` phù hợp vì đổi tên hiển thị là một cập nhật độc lập, quy tắc giá trị được kiểm soát tại cùng một điểm. Không có nghĩa setter phải cho phép mọi giá trị truyền vào.
+Here, `setDisplayName()` is appropriate because changing a display name is an independent update and the value rules are enforced at one point. This does not mean a setter should accept every value passed to it.
 
-Tùy ngữ cảnh nghiệp vụ, một tên `renameTo(...)` hoặc `changeDisplayName(...)` cũng có thể truyền đạt ý định tốt hơn, nhất là khi đổi tên cần kiểm tra quyền, lưu lịch sử hoặc phát sinh sự kiện.
+Depending on the business context, a name such as `renameTo(...)` or `changeDisplayName(...)` might communicate intent more clearly, especially if renaming requires authorization, audit history, or events.
 
-### Setter không nhất thiết là public
+### A setter need not be public
 
-Java cho phép:
+Java allows:
 
 ~~~java
 class Task {
@@ -1891,28 +1891,28 @@ class Task {
 }
 ~~~
 
-`private` setter có thể chỉ dùng nội bộ lớp. Ngoài ra có thể dùng package-private hoặc `protected` khi có nhu cầu thiết kế cụ thể. **Không có quy tắc bắt buộc getter và setter phải cùng mức truy cập**, hay cứ có getter thì phải có setter.
+A `private` setter may be used only within the class. Package-private or `protected` can also be appropriate for specific design needs. **There is no rule requiring getters and setters to have the same access level**, or requiring a setter whenever a getter exists.
 
-Với đối tượng bất biến (immutable), ta thường không cung cấp setter:
+Immutable objects usually have no setters:
 
 ~~~java
 public record Coordinates(int latitude, int longitude) {}
 ~~~
 
-`record` này là ví dụ cú pháp về một kiểu dữ liệu mang giá trị; component accessor có tên `latitude()` và `longitude()`, không phải `getLatitude()`. Mọi field component là final; nhưng record chứa tham chiếu tới dữ liệu mutable vẫn cần thiết kế bảo vệ sâu thêm nếu muốn bất biến thực sự.
+This `record` illustrates the syntax of a value carrier; its component accessors are named `latitude()` and `longitude()`, not `getLatitude()`. All component fields are final, but a record that references mutable data still needs deeper protection if true immutability is required.
 
-## 7. Khi nhiều field phụ thuộc nhau, dùng một hành vi nguyên khối
+## 7. When fields depend on each other, use one cohesive operation
 
-Giả sử lịch đặt phòng có `start` và `end`. Cho gọi hai setter độc lập có thể tạo trạng thái trung gian sai:
+Suppose a booking has `start` and `end` fields. Two independent setters can create an invalid intermediate state:
 
 ~~~java
 booking.setStart(newStart);
 booking.setEnd(newEnd);
 ~~~
 
-Nếu `newStart` đến sau `end` cũ, setter thứ nhất có thể khiến lịch không hợp lệ dù cặp giờ mới là hợp lệ. Nếu setter nào cũng tự kiểm tra toàn bộ invariant, cách cập nhật lần lượt có thể không thực hiện được.
+If `newStart` is later than the old `end`, the first setter may make the booking invalid even though the new pair of times is valid. If each setter enforces the full invariant, updating the two fields sequentially may become impossible.
 
-API mang ý định cho phép kiểm tra hai thông số **cùng lúc**:
+An intention-revealing API can validate both arguments **together**:
 
 ~~~java
 import java.time.LocalDateTime;
@@ -1951,18 +1951,18 @@ public final class Booking {
 }
 ~~~
 
-Ví dụ này bảo vệ invariant theo luồng thực thi tuần tự. Nếu nhiều luồng đồng thời đọc/sửa `Booking`, cần có chiến lược đồng bộ hoặc tính bất biến thích hợp để không quan sát cặp giá trị cập nhật dở dang.
+This example protects the invariant during sequential execution. If multiple threads concurrently read or modify `Booking`, a suitable synchronization or immutability strategy is needed to prevent observation of partially updated values.
 
-Ưu điểm của `reschedule(start, end)`:
+Benefits of `reschedule(start, end)`:
 
-- API thể hiện rõ nghiệp vụ **đổi lịch**.
-- Kiểm tra tính hợp lệ của cả hai tham số trước khi sửa.
-- Người gọi không cần biết thứ tự gán từng field.
-- Sau này có thể thêm điều kiện “không được đổi lịch khi đã hoàn thành” ở cùng một hành vi.
+- The API explicitly expresses the business operation of **rescheduling**.
+- Both arguments are validated before any mutation.
+- Callers do not need to know the field assignment order.
+- Future rules, such as “cannot reschedule after completion,” can be added to the same operation.
 
-## 8. Đặt tên theo chuyển trạng thái hợp lệ
+## 8. Name methods after valid state transitions
 
-Khi đối tượng có vòng đời, tránh `setStatus(anyValue)`. API như `confirm()`, `ship(trackingCode)`, `cancel()` cho biết **hành động** đang được yêu cầu và là nơi kiểm tra trạng thái hiện tại. Ví dụ một đơn nháp chỉ xác nhận được khi có dòng hàng; một đơn đã hủy không tự quay lại trạng thái mới nếu quy trình không cho phép.
+For objects with a lifecycle, avoid `setStatus(anyValue)`. APIs such as `confirm()`, `ship(trackingCode)`, and `cancel()` identify the requested **action** and provide a place to validate current state. For example, a draft order may be confirmed only if it contains line items; a canceled order should not revert to a new state unless the workflow permits it.
 
 ```java
 // Bên trong lớp Order, với enum Status { DRAFT, CONFIRMED, CANCELLED }.
@@ -1974,11 +1974,11 @@ public void confirm() {
 }
 ```
 
-Điểm khác với setter là **người gọi không chọn đích chuyển trạng thái tùy ý**. Tính idempotent (ví dụ gọi `cancel()` lần hai nên được chấp nhận hay từ chối) phải do hợp đồng nghiệp vụ quyết định; tên hành động không tự trả lời câu hỏi đó.
+Unlike a setter, an action-based API **does not let callers choose arbitrary target states**. Whether an operation should be idempotent (for example, whether a second `cancel()` should succeed or be rejected) is a business contract decision; the method name alone does not answer it.
 
-## 9. Getter và setter có nhất thiết “đơn giản” không?
+## 9. Must getters and setters be “simple”?
 
-Một getter thường nên có ý nghĩa **quan sát**, dễ dự đoán và không gây thay đổi nghiệp vụ bất ngờ. Setter có thể kiểm tra, chuẩn hóa dữ liệu, hoặc cập nhật thuộc tính khác khi thực sự cần duy trì invariant. Tuy nhiên, đặt các hành vi lớn hoặc tác dụng phụ khó thấy trong `setX()` có thể gây khó hiểu:
+A getter should generally express **observation**, be predictable, and avoid surprising business effects. A setter can validate or normalize data, or update another property when necessary to preserve an invariant. However, hiding major operations or subtle side effects inside `setX()` can be confusing:
 
 ~~~java
 // Dễ gây bất ngờ nếu setter này âm thầm gửi email,
@@ -1986,7 +1986,7 @@ Một getter thường nên có ý nghĩa **quan sát**, dễ dự đoán và kh
 customer.setEmail("new@example.com");
 ~~~
 
-Nếu đổi email phải trải qua xác minh, hãy thể hiện quy trình bằng các hành vi cụ thể:
+If changing an email requires verification, model the workflow with explicit operations:
 
 ~~~java
 customer.requestEmailChange("new@example.com");
@@ -1994,20 +1994,20 @@ customer.requestEmailChange("new@example.com");
 // customer.confirmEmailChange(verificationCode);
 ~~~
 
-Các tên trên chỉ minh họa thiết kế API: để chạy được phải có cài đặt lớp, quy trình xác minh và dữ liệu liên quan. Điểm thiết kế là **người đọc code hiểu điều gì đang được yêu cầu**, đồng thời các quy tắc quan trọng tập trung trong object hoặc service chịu trách nhiệm.
+These names only illustrate API design: executable code would require implementations of the class, verification workflow, and related data. The design goal is that **readers of the code understand what is being requested** while important rules remain in the responsible object or service.
 
-### Tách command và query theo ý nghĩa
+### Separating commands and queries by purpose
 
-- **Query:** `getBalance()`, `isClosed()`, `canWithdraw(amount)` — cung cấp thông tin.
-- **Command:** `deposit(amount)`, `close()`, `renameOwner(name)` — yêu cầu thay đổi trạng thái.
+- **Query:** `getBalance()`, `isClosed()`, `canWithdraw(amount)` — returns information.
+- **Command:** `deposit(amount)`, `close()`, `renameOwner(name)` — requests a state change.
 
-Phân biệt này là hướng dẫn thiết kế hữu ích, không phải quy tắc cú pháp bắt buộc của Java. Nếu query phải tính toán tốn kém, cache hoặc truy cập hệ thống bên ngoài, hợp đồng và tên phương thức nên giúp người gọi dự đoán chi phí.
+This distinction is a useful design guideline, not a mandatory Java syntax rule. When a query involves expensive computation, caching, or external systems, its contract and name should help callers anticipate the cost.
 
-Cũng đừng dựa hoàn toàn vào `canWithdraw()` rồi mới gọi `withdraw()` trong mã đa luồng: trạng thái có thể thay đổi giữa hai lần gọi (*time-of-check to time-of-use*). Chính lệnh `withdraw()` vẫn phải kiểm tra điều kiện tại thời điểm cập nhật.
+Do not rely solely on `canWithdraw()` followed by `withdraw()` in concurrent code: the state may change between calls (*time-of-check to time-of-use*). The `withdraw()` command must still validate conditions at update time.
 
-## 10. Getter/setter theo JavaBeans và nhu cầu framework
+## 10. JavaBeans getters/setters and framework requirements
 
-JavaBeans là một quy ước phổ biến cho tên accessor:
+JavaBeans is a widely used convention for accessor names:
 
 ~~~java
 public class PersonBean {
@@ -2032,24 +2032,24 @@ public class PersonBean {
 }
 ~~~
 
-Theo quy ước thường thấy, `getName()/setName()` ứng với property `name`, `isActive()/setActive()` ứng với boolean property `active`. Đây là **quy ước đặt tên/khám phá property** chứ không phải cú pháp đặc biệt. Java vẫn cho phép phương thức tên khác.
+Under the usual convention, `getName()/setName()` correspond to the `name` property, while `isActive()/setActive()` correspond to the boolean `active` property. This is **a naming/property-discovery convention**, not special syntax. Java still permits other method names.
 
-Một số thư viện/framework (như công cụ bean introspection, binding dữ liệu, serialization hoặc ORM) có thể dựa trên getter, setter, field access, constructor, record hoặc annotation tùy phiên bản/cấu hình. Vì vậy:
+Some libraries and frameworks (such as bean introspection, data binding, serialization, or ORM tools) may rely on getters, setters, field access, constructors, records, or annotations, depending on their version and configuration. Therefore:
 
-- Kiểm tra **hợp đồng thật** của framework trước khi mở thêm setter chỉ để “cho framework chạy”.
-- Không tự động kết luận mọi domain entity cần public setter cho tất cả field.
-- Nếu framework cần tạo object và gán field, có thể tách **DTO/binding model** với **domain model** thay vì làm lộ toàn bộ hành vi sửa trạng thái của domain.
-- Validation ở ranh giới API (ví dụ DTO) vẫn không thay thế các invariant phải luôn được bảo vệ bên trong domain object.
+- Check the framework's **actual contract** before exposing additional setters just to “make the framework work.”
+- Do not assume every domain entity needs public setters for all fields.
+- If a framework must instantiate objects and assign fields, consider separating a **DTO/binding model** from the **domain model** instead of exposing all domain state-changing operations.
+- Validation at the API boundary (such as on a DTO) still does not replace the invariants that the domain object must always maintain.
 
-### DTO có thể đơn giản, domain object cần luật
+### DTOs can be simple; domain objects need rules
 
-**DTO (Data Transfer Object)** dùng để chở dữ liệu qua lớp ứng dụng hoặc qua mạng. Nếu DTO chỉ chứa dữ liệu đầu vào/đầu ra, các accessor hoặc record thường đủ:
+A **DTO (Data Transfer Object)** carries data between application layers or across the network. For a DTO that merely holds input/output data, accessors or a record are often sufficient:
 
 ~~~java
 public record ChangeDisplayNameRequest(String displayName) {}
 ~~~
 
-Tầng xử lý phải kiểm tra và dùng hành vi trên domain model:
+The application layer must validate the request and use domain-model behavior:
 
 ~~~java
 // Ví dụ minh họa trong ứng dụng có User và UserRepository:
@@ -2060,13 +2060,13 @@ user.changeDisplayName(request.displayName());
 repository.save(user);
 ~~~
 
-Hai dòng cuối phụ thuộc vào `user`, `repository` và lớp được định nghĩa trong dự án thật. Mục đích là phân biệt **dữ liệu được yêu cầu** với **hành động được phép trên domain object**.
+The final two lines depend on `user`, `repository`, and classes defined in a real project. The purpose is to distinguish **requested data** from **permitted actions on a domain object**.
 
-## 11. Không lộ dữ liệu nhạy cảm qua getter
+## 11. Do not expose sensitive data through getters
 
-Việc một field `private` không có nghĩa nó nên được công khai bằng getter.
+A field being `private` does not mean it should be exposed through a getter.
 
-Ví dụ:
+For example:
 
 ~~~java
 final class UserCredentials {
@@ -2082,13 +2082,13 @@ final class UserCredentials {
 }
 ~~~
 
-Nếu có dữ liệu phải dùng cho logic xác thực, cung cấp một phương thức hoặc dịch vụ thích hợp cho thao tác xác thực thay vì bộc lộ dữ liệu nội bộ tùy tiện. Mức truy cập là một phần của thiết kế an toàn, nhưng an toàn thực tế còn phụ thuộc xử lý dữ liệu nhạy cảm, kiểm soát quyền và cơ chế xác thực.
+If data is needed for authentication logic, provide an appropriate method or service to perform authentication instead of exposing internal data indiscriminately. Access levels are part of secure design, but actual security also depends on handling sensitive data, access control, and authentication mechanisms.
 
-Cùng nguyên tắc áp dụng với token, khóa bí mật, dữ liệu cá nhân và thông tin triển khai nội bộ.
+The same principle applies to tokens, secret keys, personal data, and internal implementation details.
 
-## 12. Setter và đối tượng bất biến
+## 12. Setters and immutable objects
 
-Không phải mọi object đều cần thay đổi trạng thái sau khi tạo. Với kiểu dữ liệu biểu diễn giá trị, **immutable object** có nhiều lợi ích: dễ suy luận, dễ dùng làm value object, giảm rủi ro bị sửa từ nơi khác.
+Not every object needs to change state after construction. For types that represent values, **immutable objects** have many benefits: easier reasoning, convenient use as value objects, and less risk of modification from elsewhere.
 
 ~~~java
 import java.util.Objects;
@@ -2116,7 +2116,7 @@ public record Money(String currency, long minorUnits) {
 }
 ~~~
 
-`Money` này không có setter. `plus()` trả về **giá trị mới**, không sửa đối tượng hiện có:
+This `Money` class has no setters. `plus()` returns a **new value** rather than modifying the existing object:
 
 ~~~java
 Money price = new Money("VND", 50_000);
@@ -2127,31 +2127,31 @@ System.out.println(price.minorUnits()); // 50000
 System.out.println(total.minorUnits()); // 55000
 ~~~
 
-`minorUnits` là đơn vị tiền nhỏ nhất do hệ thống quy định; ví dụ dùng VND minh họa. Trong ứng dụng đa tiền tệ, cần quy ước rõ quy mô tiền tệ, làm tròn, giới hạn nghiệp vụ và xử lý số âm tùy loại giao dịch.
+`minorUnits` represents the smallest currency unit defined by the system; the example uses VND for illustration. Multicurrency applications need clear conventions for currency scales, rounding, business limits, and negative amounts based on transaction type.
 
-Một hành vi có ý nghĩa không nhất thiết phải **thay đổi** trạng thái của object; nó có thể trả về object mới như `plus()`.
+A meaningful operation does not necessarily **change** the object's state; it may return a new object, as `plus()` does.
 
-## 13. Chọn thiết kế theo nhu cầu
+## 13. Choose a design based on the need
 
-| Nhu cầu | API thường phù hợp | Vì sao |
+| Need | Typical suitable API | Why |
 |---|---|---|
-| Đọc tên chủ tài khoản | `getOwnerName()` | Chỉ cần quan sát |
-| Đổi nickname cho phép tự do trong giới hạn | `setNickname(...)` hoặc `renameTo(...)` | Một thuộc tính, có validation |
-| Cộng tiền vào tài khoản | `deposit(amount)` | Bảo vệ quy tắc và số dư |
-| Trừ tiền | `withdraw(amount)` | Kiểm tra số dư/điều kiện giao dịch |
-| Chuyển trạng thái đơn hàng | `confirm()`, `cancel()` | Ngăn chuyển trạng thái trái phép |
-| Đổi hai thời điểm phụ thuộc nhau | `reschedule(start, end)` | Kiểm tra trọn cặp dữ liệu |
-| Lấy danh sách mặt hàng | `getItems()` trả snapshot/read-only | Không làm lộ collection nội bộ |
-| Đọc số lượng phần tử | `getItemCount()` | Có thể tính, không cần field dư thừa |
-| Value object bất biến | Constructor + accessor + phương thức tạo giá trị mới | Không có lý do sửa tại chỗ |
-| Truyền dữ liệu qua API | DTO/record hoặc bean theo framework | Giao diện dữ liệu phù hợp nhiệm vụ |
-| Dữ liệu bí mật không cần công khai | Không cung cấp getter tùy tiện | Giảm bề mặt lộ dữ liệu |
+| Read the account holder's name | `getOwnerName()` | Observation only |
+| Change a nickname freely within limits | `setNickname(...)` or `renameTo(...)` | One property, with validation |
+| Add money to an account | `deposit(amount)` | Protects rules and the balance |
+| Subtract money | `withdraw(amount)` | Checks balance and transaction conditions |
+| Change an order's state | `confirm()`, `cancel()` | Prevents invalid transitions |
+| Change two interdependent times | `reschedule(start, end)` | Validates the pair together |
+| Retrieve line items | `getItems()` returns a snapshot/read-only value | Does not expose the internal collection |
+| Read the number of elements | `getItemCount()` | Can be calculated without a redundant field |
+| Immutable value object | Constructor + accessors + methods producing new values | No need for in-place changes |
+| Transfer data through an API | DTO/record or framework-appropriate bean | A data interface suited to the task |
+| Secret data that should not be public | Do not expose arbitrary getters | Reduces opportunities for data exposure |
 
-Không nên xem tên phương thức là tiêu chí duy nhất. Ví dụ `setBalance()` có thể đúng cho một công cụ quản trị hoặc dữ liệu mô phỏng với quyền hạn cụ thể, nhưng là API nguy hiểm nếu ai cũng được gọi vào một tài khoản đang hoạt động. Quyết định phụ thuộc **vai trò của lớp, hợp đồng và người gọi**.
+Method names alone are not sufficient design criteria. For example, `setBalance()` may be appropriate for an administration tool or simulation with specific permissions, but dangerous if anyone can call it on a live account. The decision depends on **the class's role, contract, and callers**.
 
-## 14. Tự kiểm tra kiến thức
+## 14. Knowledge self-check
 
-### Bài 1 — Phát hiện điểm yếu
+### Exercise 1 — Identify weaknesses
 
 ~~~java
 class InventoryItem {
@@ -2167,11 +2167,11 @@ class InventoryItem {
 }
 ~~~
 
-**Câu hỏi:** Có gì nguy hiểm nếu mọi module được gọi setter? Bạn sẽ thiết kế lại thế nào?
+**Question:** What is dangerous about allowing every module to call the setter? How would you redesign it?
 
-**Gợi ý:** Setter có thể đặt tồn kho âm hoặc thay số lượng mà không có lý do nghiệp vụ. Cân nhắc `receive(quantity)`, `reserve(quantity)`, `releaseReservation(quantity)` hay `ship(quantity)`, tùy quy trình. Mỗi hành vi phải xác thực số lượng và cập nhật theo quy tắc tồn kho.
+**Hint:** A setter may assign negative stock or change quantities without a business reason. Depending on the workflow, consider `receive(quantity)`, `reserve(quantity)`, `releaseReservation(quantity)`, or `ship(quantity)`. Each operation must validate its quantity and update according to inventory rules.
 
-### Bài 2 — Tại sao phải sao chép dữ liệu?
+### Exercise 2 — Why copy data?
 
 ~~~java
 import java.util.ArrayList;
@@ -2186,65 +2186,65 @@ class Course {
 }
 ~~~
 
-**Đáp án:** Getter trả chính list mutable, người gọi có thể `add/remove` bỏ qua quy tắc đăng ký lớp học. Nên trả snapshot chỉ đọc hoặc một kiểu dữ liệu quan sát phù hợp. Nếu phần tử mutable, xét thêm sao chép/bảo vệ phần tử.
+**Answer:** The getter returns the mutable list itself, allowing callers to use `add/remove` and bypass class-registration rules. Prefer a read-only snapshot or suitable observable data type. If elements are mutable, also consider copying or protecting them.
 
-### Bài 3 — Setter có phải luôn sai?
+### Exercise 3 — Are setters always wrong?
 
-**Đáp án:** Không. `setDisplayName()` có thể là API đơn giản và hợp lệ nếu việc đổi tên độc lập, có validation và không vi phạm vòng đời. Không cần tạo một lớp phức tạp chỉ để thay một trường dữ liệu đơn giản.
+**Answer:** No. `setDisplayName()` can be a simple, valid API if renaming is independent, validated, and compatible with the object's lifecycle. There is no need to create an elaborate class just to change a simple field.
 
-### Bài 4 — Thiết kế lịch hẹn
+### Exercise 4 — Design an appointment
 
-Có `start` và `end` với điều kiện `start < end`. Nên cung cấp `setStart()` và `setEnd()` độc lập không?
+With `start` and `end` and the condition `start < end`, should independent `setStart()` and `setEnd()` methods be exposed?
 
-**Đáp án:** Có nguy cơ tạo trạng thái trung gian không hợp lệ. `reschedule(start, end)` nhận cùng lúc hai giá trị, xác thực cả cặp rồi mới cập nhật sẽ phù hợp hơn.
+**Answer:** They risk creating an invalid intermediate state. `reschedule(start, end)` accepts both values at once, validates the pair, and updates them only afterward, making it more suitable.
 
-### Bài 5 — Getter và đa luồng
+### Exercise 5 — Getters and multithreading
 
-Trong một ứng dụng có nhiều luồng, nếu gọi `if (account.hasEnoughBalance(100))` rồi `account.withdraw(100)`, kiểm tra ban đầu có bảo đảm lệnh rút chắc chắn thành công không?
+In a multithreaded application, if you call `if (account.hasEnoughBalance(100))` followed by `account.withdraw(100)`, does the initial check guarantee the withdrawal will succeed?
 
-**Đáp án:** Không. Có thể có một giao dịch khác thay đổi số dư giữa hai lời gọi. `withdraw()` cần tự kiểm tra điều kiện cùng cập nhật trạng thái một cách an toàn theo mô hình đồng thời đã chọn.
+**Answer:** No. Another transaction may change the balance between the calls. `withdraw()` must validate the condition and update state safely under the chosen concurrency model.
 
-### Bài 6 — Value object
+### Exercise 6 — Value objects
 
-Một đối tượng `Coordinates` bất biến cần dịch chuyển 5 đơn vị theo trục x. Nên viết `setX(x + 5)` không?
+An immutable `Coordinates` object needs to move 5 units along the x-axis. Should it use `setX(x + 5)`?
 
-**Đáp án gợi ý:** Không cần setter; có thể cung cấp `translate(dx, dy)` trả về một `Coordinates` mới. Điều này giữ nguyên value object ban đầu và thể hiện ý định.
+**Suggested answer:** A setter is unnecessary; `translate(dx, dy)` could return a new `Coordinates` object. This preserves the original value object and expresses the operation's intent.
 
-## Cách suy nghĩ khi thiết kế API của một đối tượng
+## How to think about an object's API design
 
-Trước khi thêm getter, setter hoặc phương thức mới, hãy hỏi:
+Before adding a getter, setter, or another method, ask:
 
-1. **Người gọi có thực sự cần đọc dữ liệu này không?** Có thể trả thông tin ít hơn hoặc kết quả suy ra thay vì toàn bộ trạng thái nội bộ?
-2. **Có được phép sửa thuộc tính ấy độc lập không?** Nếu có, setter kèm validation là lựa chọn hợp lý.
-3. **Đây có phải một hành động nghiệp vụ?** Nếu có, đặt tên theo hành động như `confirm()`, `withdraw()`, `reschedule()`.
-4. **Có những điều kiện nào phải luôn đúng?** Đặt việc kiểm tra gần nơi cập nhật trạng thái và tránh làm lộ tham chiếu mutable.
-5. **Đối tượng có cần mutable không?** Nếu không, cân nhắc immutable class/record và phương thức trả về giá trị mới.
+1. **Does the caller really need to read this data?** Could a smaller amount of information or a derived answer replace exposing all internal state?
+2. **Can this property legitimately change independently?** If so, a setter with validation may be suitable.
+3. **Is this a business operation?** If so, use an action name such as `confirm()`, `withdraw()`, or `reschedule()`.
+4. **Which conditions must always hold?** Validate near the state update and avoid exposing mutable references.
+5. **Does this object need to be mutable?** If not, consider an immutable class/record and methods returning new values.
 
-**Thông điệp chính:** Getter và setter là **công cụ**, còn đóng gói là **nguyên tắc thiết kế**. Hãy công khai đúng những gì người gọi cần biết và những hành động họ được phép yêu cầu; giữ việc bảo vệ trạng thái và quy tắc nghiệp vụ ở nơi sở hữu chúng.
+**Key message:** Getters and setters are **tools**, while encapsulation is a **design principle**. Expose exactly what callers need to know and the operations they are permitted to request; keep protection of state and business rules with the component that owns them.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="encapsulation-005">Kiểm tra đầu vào tại ranh giới đối tượng</a>
+## <a id="encapsulation-005">Input validation at object boundaries</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kiểm tra đầu vào tại ranh giới đối tượng trong Java
+# Input validation at object boundaries in Java
 
-Trong lập trình hướng đối tượng (OOP), **đóng gói (encapsulation)** không dừng ở việc đặt field là `private`. Một lớp còn phải kiểm soát **những giá trị nào được phép đi vào đối tượng**, và **những thay đổi trạng thái nào được phép xảy ra**.
+In object-oriented programming (OOP), **encapsulation** involves more than making fields `private`. A class must also control **which values may enter the object** and **which state changes may occur**.
 
-Nếu đối tượng `BankAccount` có số dư không được âm, hoặc `Enrollment` chỉ nhận số tín chỉ từ 1 đến 30, các quy tắc này phải được bảo vệ ngay tại các điểm tạo và sử dụng đối tượng, kể cả khi dữ liệu không đến từ giao diện web.
+If a `BankAccount` cannot have a negative balance, or an `Enrollment` allows only 1 to 30 credits, those rules must be enforced at points where objects are created and used, even when the data does not come from a web interface.
 
-**Ranh giới đối tượng** là nơi dữ liệu hoặc yêu cầu thay đổi đi từ mã bên ngoài vào trạng thái do đối tượng sở hữu: constructor, static factory, setter, phương thức nghiệp vụ, phương thức nhận collection, v.v.
+An **object boundary** is where data or change requests cross from external code into state owned by the object: constructors, static factories, setters, business methods, methods accepting collections, and so on.
 
-## 1. Vì sao phải kiểm tra ngay tại ranh giới?
+## 1. Why validate at the boundary?
 
-Xét lớp chưa được bảo vệ:
+Consider an unprotected class:
 
 ```java
 class CourseEnrollment {
@@ -2264,7 +2264,7 @@ class CourseEnrollment {
 }
 ```
 
-Caller có thể tạo hoặc thay đổi đối tượng thành trạng thái vô nghĩa:
+Callers can create or modify the object into a meaningless state:
 
 ```java
 CourseEnrollment enrollment = new CourseEnrollment(-5);
@@ -2272,19 +2272,19 @@ enrollment.setCredits(999);
 System.out.println(enrollment.getCredits()); // 999
 ```
 
-Dù `credits` là `private`, lớp vẫn cho phép dữ liệu không hợp lệ đi qua API công khai. Vì vậy **`private` là công cụ giới hạn truy cập, còn kiểm tra đầu vào là công cụ bảo vệ quy tắc trạng thái**.
+Although `credits` is `private`, the class still accepts invalid data through its public API. Thus, **`private` restricts access, while input validation protects state rules**.
 
-Một đối tượng được thiết kế tốt cần duy trì các **bất biến (invariants)**: điều kiện phải đúng với trạng thái đối tượng ở những thời điểm có thể quan sát và sử dụng hợp lệ.
+A well-designed object maintains **invariants**: conditions that must hold whenever its state can legitimately be observed and used.
 
-Ví dụ quy tắc:
+Example rules:
 
-- Mã khóa học không được `null` hoặc rỗng sau khi bỏ khoảng trắng đầu/cuối.
-- Số tín chỉ phải nằm trong khoảng `1..30`.
-- Một lần cập nhật không được làm đối tượng chuyển sang trạng thái có số tín chỉ ngoài khoảng cho phép.
+- A course code must not be `null` or blank after trimming leading and trailing whitespace.
+- Credit count must be within `1..30`.
+- An update must not transition the object to a state with credits outside the permitted range.
 
-## 2. Kiểm tra trong constructor và khi cập nhật
+## 2. Validate in constructors and during updates
 
-Một cách triển khai trực tiếp:
+A straightforward implementation:
 
 ```java
 public final class CourseEnrollment {
@@ -2343,40 +2343,40 @@ public final class CourseEnrollment {
 }
 ```
 
-Ở đây, **cả hai đường nhận dữ liệu** đều dùng chung quy tắc:
+Here, **both paths that accept data** use the same rules:
 
-- Constructor gọi `requireCourseCode` và `requireCredits` để chỉ tạo đối tượng với giá trị hợp lệ.
-- Phương thức `changeCredits` kiểm tra giá trị mới trước khi gán; nếu tham số sai, field `credits` **giữ nguyên**.
+- The constructor calls `requireCourseCode` and `requireCredits` to create objects only with valid values.
+- The `changeCredits` method validates the new value before assignment; if the argument is invalid, the `credits` field **remains unchanged**.
 
-Có thể dùng phương thức trả về giá trị đã chuẩn hóa như `requireCourseCode` thay vì chỉ kiểm tra rồi trả `void`. Cách này bảo đảm giá trị được lưu chính là giá trị đã kiểm tra.
+A method such as `requireCourseCode` can return a normalized value instead of merely validating and returning `void`. That ensures the stored value is exactly the one that was validated.
 
-**Lưu ý:** `String.isBlank()` có từ Java 11; `String.strip()` cũng từ Java 11. Nếu dùng phiên bản Java cũ hơn, cần áp dụng API tương thích.
+**Note:** `String.isBlank()` was introduced in Java 11; `String.strip()` was also introduced in Java 11. Earlier Java versions require compatible alternatives.
 
-## 3. Phân loại quy tắc kiểm tra
+## 3. Categories of validation rules
 
-Không phải mọi phép kiểm tra đều có cùng mục đích.
+Not every check serves the same purpose.
 
-| Loại kiểm tra | Ví dụ | Vị trí thích hợp |
+| Validation type | Example | Appropriate location |
 |---|---|---|
-| **Không null** | `customerId` bắt buộc | Constructor, factory, method nhận dữ liệu |
-| **Cấu trúc/định dạng** | Mã sản phẩm không rỗng, mã đơn theo mẫu | Value object hoặc lớp sở hữu thuộc tính |
-| **Phạm vi giá trị** | `quantity > 0`, `discountPercent` trong `0..100` | Constructor và mutator |
-| **Quan hệ giữa các field** | `reservedSeats <= capacity` | Phương thức quản lý cả hai field |
-| **Trạng thái hiện tại** | Đơn hàng đã hủy không được thanh toán | Phương thức nghiệp vụ có quyền chuyển trạng thái |
-| **Quy tắc ngoài đối tượng** | Mã người dùng phải duy nhất trong DB | Service/repository và ràng buộc dữ liệu có thẩm quyền |
+| **Non-null** | `customerId` is required | Constructor, factory, or method accepting data |
+| **Structure/format** | Nonblank product code, order code following a pattern | Value object or class that owns the property |
+| **Value range** | `quantity > 0`, `discountPercent` within `0..100` | Constructor and mutators |
+| **Relationships between fields** | `reservedSeats <= capacity` | Method managing both fields |
+| **Current state** | A canceled order cannot be paid | Business method authorized to transition state |
+| **Rules external to the object** | User ID must be unique in the DB | Service/repository and authoritative data constraints |
 
-Cần tách:
+Distinguish:
 
-1. **Đầu vào không hợp lệ:** tham số tự nó sai (ví dụ `quantity = -1`).
-2. **Thao tác không hợp lệ ở trạng thái hiện tại:** tham số đúng nhưng không thể áp dụng lên đối tượng hiện tại (ví dụ đặt 5 chỗ khi chỉ còn 3 chỗ).
+1. **Invalid input:** the argument itself is invalid (for example, `quantity = -1`).
+2. **Operation invalid for the current state:** the argument is valid but cannot be applied to this object (for example, reserving 5 seats when only 3 remain).
 
-Sự phân biệt này giúp đặt tên phương thức, chọn exception và viết kiểm thử rõ ràng.
+This distinction helps make method names, exception choices, and tests clearer.
 
-## 4. Kiểm tra toàn bộ điều kiện trước khi thay đổi trạng thái
+## 4. Validate every condition before changing state
 
-Khi một thao tác cập nhật **nhiều field**, hãy bảo đảm không làm đối tượng dở dang nếu điều kiện thất bại.
+When an operation updates **multiple fields**, ensure that failed checks do not leave the object partially changed.
 
-### Thiết kế dễ gây trạng thái không nhất quán
+### A design that can leave state inconsistent
 
 ```java
 class UnsafeReservation {
@@ -2393,11 +2393,11 @@ class UnsafeReservation {
 }
 ```
 
-Lời gọi `reconfigure(1, 5)` sẽ ném exception **sau khi** gán `capacity = 1`, để lại `reserved = 2` lớn hơn sức chứa mới. Lớp không còn bảo đảm invariant.
+Calling `reconfigure(1, 5)` throws an exception **after** assigning `capacity = 1`, leaving `reserved = 2` greater than the new capacity. The class no longer preserves its invariant.
 
-### Kiểm tra trước, cập nhật sau
+### Validate first, update afterward
 
-File `Reservation.java` có thể chạy độc lập:
+The `Reservation.java` file can run on its own:
 
 ```java
 public final class Reservation {
@@ -2460,13 +2460,13 @@ public final class Reservation {
 }
 ```
 
-**Quy tắc quan trọng:** Thực hiện các phép kiểm tra có thể thất bại trước khi bắt đầu thay đổi những field liên quan, nếu thiết kế yêu cầu giữ nguyên trạng thái khi lỗi xảy ra (*strong exception safety* ở mức đối tượng).
+**Key rule:** Perform potentially failing checks before modifying related fields if the design requires state to remain unchanged when an error occurs (*strong exception safety* at the object level).
 
-Đoạn mã này giả định đối tượng được truy cập tuần tự. **Kiểm tra đầu vào không thay thế đồng bộ đa luồng.** Nếu nhiều thread được phép cập nhật cùng `Reservation`, phép kiểm tra và cập nhật phải được phối hợp bằng cơ chế đồng bộ thích hợp, nếu không hai thao tác hợp lệ riêng lẻ vẫn có thể vi phạm sức chứa khi chạy đồng thời.
+This code assumes sequential access to the object. **Input validation does not replace multithreaded synchronization.** If multiple threads may update the same `Reservation`, validation and mutation must be coordinated using appropriate synchronization; otherwise, individually valid operations may still exceed capacity when concurrent.
 
-## 5. Kiểm tra tại mọi đường thay đổi trạng thái, không chỉ setter
+## 5. Validate every state-changing path, not just setters
 
-Đôi khi một lớp không có setter nhưng vẫn có thể trở nên không hợp lệ qua các phương thức nghiệp vụ.
+Sometimes a class has no setters but can still become invalid through business methods.
 
 ```java
 public final class InventoryItem {
@@ -2510,15 +2510,15 @@ public final class InventoryItem {
 }
 ```
 
-Ở đây, không có `setStock(int)`. Caller chỉ được thực hiện hành vi **receive** hoặc **dispatch**, và đối tượng kiểm tra ý nghĩa của từng thao tác. Đây là đóng gói hành vi: API chỉ cho phép những chuyển đổi trạng thái hợp lệ.
+Here there is no `setStock(int)`. Callers can only perform **receive** or **dispatch** operations, and the object validates the meaning of each operation. This is behavioral encapsulation: the API permits only valid state transitions.
 
-Kiểm tra tràn số trong `receive` rất cần thiết vì với `int`, phép cộng vượt giới hạn có thể quay vòng sang số âm mà **không tự ném exception**. Một cách khác là dùng `Math.addExact` và xử lý `ArithmeticException`.
+Overflow checking in `receive` is essential because, for `int`, an out-of-range sum may wrap around to a negative value **without automatically throwing an exception**. Alternatively, use `Math.addExact` and handle `ArithmeticException`.
 
-## 6. Không tin dữ liệu mutable chỉ vì đã kiểm tra một lần
+## 6. Do not trust mutable input merely because it was validated once
 
-Một lỗi kín đáo xảy ra khi constructor **kiểm tra đối tượng đầu vào rồi giữ nguyên tham chiếu tới dữ liệu có thể thay đổi**. Caller có thể sửa dữ liệu đó về sau, đi vòng qua API kiểm tra.
+A subtle bug arises when a constructor **validates an input object and then retains the reference to mutable data**. Callers can subsequently modify that data and bypass the validated API.
 
-### Ví dụ lỗi với mảng
+### Example: an array bug
 
 ```java
 public class UnsafeScores {
@@ -2539,7 +2539,7 @@ public class UnsafeScores {
 }
 ```
 
-Vì đối tượng giữ mảng của caller, quy tắc điểm từ 0 đến 100 có thể bị phá vỡ:
+Because the object retains the caller's array, the requirement that scores be between 0 and 100 can be violated:
 
 ```java
 int[] input = {80, 90};
@@ -2549,7 +2549,7 @@ input[0] = -10;               // Đi vòng qua constructor
 result.getScores()[1] = 500; // Đi vòng qua getter
 ```
 
-### Defensive copy tại ranh giới vào và ra
+### Defensive copying at input and output boundaries
 
 ```java
 import java.util.Objects;
@@ -2595,13 +2595,13 @@ public final class Scores {
 }
 ```
 
-**Thứ tự `clone()` rồi validate trên bản sao** cũng có ý nghĩa: dữ liệu được kiểm tra là đúng dữ liệu lớp sắp lưu. Nếu caller có thể sửa mảng từ thread khác trong lúc thao tác, vẫn cần quy định rõ trách nhiệm đồng bộ khi chuyển giao dữ liệu; sao chép một mảng bị thay đổi đồng thời không mặc nhiên tạo snapshot nhất quán của toàn bộ dữ liệu.
+**Copying with `clone()` before validating the copy** is also important: the data being checked is exactly what the class is about to store. If another thread can modify the array during the operation, synchronization responsibilities for the data handoff must still be defined; copying an array concurrently being modified does not inherently yield a consistent snapshot of all its values.
 
-Với `List<String>`, có thể dùng `List.copyOf(input)` để lấy danh sách không sửa được qua API `List` và tách việc sửa cấu trúc qua danh sách đầu vào. Tuy nhiên nếu phần tử là đối tượng mutable (ví dụ `List<Address>`), `List.copyOf` **không sao chép sâu** từng phần tử. Cần tự bảo vệ các thành phần mutable do đối tượng sở hữu.
+With `List<String>`, `List.copyOf(input)` can create an unmodifiable list via the `List` API and detach its structure from changes made through the input list. However, if the elements are mutable (for example, `List<Address>`), `List.copyOf` **does not deep-copy** them. The object must also protect mutable components it owns.
 
-## 7. Chuẩn hóa dữ liệu và kiểm tra định dạng: làm đúng mức cần thiết
+## 7. Normalize data and validate formats only as needed
 
-Dữ liệu hợp lệ không nhất thiết phải giống nguyên văn dữ liệu đầu vào. Ví dụ mã khóa học có thể cho phép bỏ khoảng trắng đầu/cuối:
+Valid stored data need not match the input verbatim. For example, a course code may allow trimming surrounding whitespace:
 
 ```java
 private static String normalizeCode(String input) {
@@ -2617,20 +2617,20 @@ private static String normalizeCode(String input) {
 }
 ```
 
-Một số nguyên tắc:
+Some guidelines:
 
-- **Chuẩn hóa có chủ đích:** bỏ khoảng trắng hoặc chuẩn hóa mã theo hợp đồng nghiệp vụ. Không tự động viết thường toàn bộ thông tin nếu việc phân biệt chữ hoa/chữ thường có ý nghĩa.
-- **Validate đúng giá trị được lưu:** nếu chuẩn hóa, kiểm tra kết quả sau chuẩn hóa và chỉ lưu kết quả đó.
-- **Không kiểm tra giả tạo:** ví dụ kiểm tra email bằng `contains("@")` không phải giải pháp xác thực địa chỉ email đầy đủ. Nếu nghiệp vụ yêu cầu định dạng chặt chẽ, phải xác định quy tắc rõ và dùng giải pháp phù hợp.
-- **Thông báo lỗi cụ thể:** nêu field và quy tắc bị vi phạm để người gọi biết cách khắc phục, nhưng tránh nhúng dữ liệu nhạy cảm vào exception/log.
+- **Intentional normalization:** trim whitespace or normalize codes according to the business contract. Do not automatically lowercase everything if case distinctions are meaningful.
+- **Validate the value that will be stored:** if you normalize input, validate the normalized result and store only that result.
+- **Avoid superficial checks:** for example, testing an email with `contains("@")` does not fully validate an email address. If the business requires a strict format, define the rules and use an appropriate solution.
+- **Specific error messages:** identify the field and violated rule so the caller can correct the input, but avoid embedding sensitive data in exceptions or logs.
 
-Đối với Java `String`, `isBlank` xét ký tự khoảng trắng theo quy tắc Java; `strip` hỗ trợ loại bỏ whitespace Unicode tốt hơn `trim` trong nhiều trường hợp. Vẫn phải chọn chính sách chuẩn hóa theo sản phẩm và loại dữ liệu.
+For Java `String`, `isBlank` recognizes whitespace according to Java's rules; `strip` handles Unicode whitespace better than `trim` in many cases. The normalization policy still needs to match the product and data type.
 
-## 8. Value object: đặt quy tắc ở nơi có trách nhiệm sở hữu
+## 8. Value objects: keep rules with the responsible owner
 
-Nếu mã khóa học xuất hiện ở nhiều nơi và luôn có cùng quy tắc, hãy gói nó trong một **value object** thay vì lặp kiểm tra ở nhiều lớp.
+If course codes appear in many places and always follow the same rule, wrap them in a **value object** rather than repeating validation in multiple classes.
 
-Ví dụ Java 17+ với `record`:
+Java 17+ example using a `record`:
 
 ```java
 public record CourseCode(String value) {
@@ -2648,7 +2648,7 @@ public record CourseCode(String value) {
 }
 ```
 
-Cách dùng:
+Usage:
 
 ```java
 CourseCode code = new CourseCode(" JAVA101 ");
@@ -2657,13 +2657,13 @@ System.out.println(code.value()); // JAVA101
 // new CourseCode("abc"); // Ném IllegalArgumentException
 ```
 
-Trong **compact constructor** của record, Java tự gán các tham số thành component field sau phần thân constructor nếu hoàn thành bình thường. Vì thế việc gán lại tham số `value = value.strip()` tại đây hợp lệ và dẫn đến field lưu giá trị đã chuẩn hóa.
+In a record's **compact constructor**, Java automatically assigns parameters to component fields after the constructor body completes normally. Therefore, reassigning the parameter `value = value.strip()` here is valid and results in the normalized value being stored.
 
-Có thể dùng record để tránh lặp nhiều điều kiện liên quan đến một giá trị. Nhưng record chỉ phù hợp khi mô hình dữ liệu và ngữ nghĩa value object thích hợp. Record có thể chứa reference tới đối tượng mutable; việc dùng `record` tự nó không tạo tính bất biến sâu.
+A record can avoid repeating conditions tied to a single value. However, it is suitable only when the data model and value-object semantics fit. A record can contain references to mutable objects; using `record` alone does not provide deep immutability.
 
-## 9. Boundary của DTO, controller và domain có giống nhau?
+## 9. Are DTO, controller, and domain boundaries equivalent?
 
-Trong ứng dụng Java/Spring, dữ liệu đi qua nhiều ranh giới:
+In Java/Spring applications, data crosses multiple boundaries:
 
 ```mermaid
 flowchart LR
@@ -2673,16 +2673,16 @@ flowchart LR
     D --> E["Repository / DB"]
 ```
 
-Mỗi nơi có trách nhiệm riêng:
+Each boundary has its own responsibility:
 
-| Lớp/ranh giới | Kiểm tra điển hình | Mục đích |
+| Layer/boundary | Typical validation | Purpose |
 |---|---|---|
-| **DTO/controller** | Field bắt buộc ở request, kiểu/format dữ liệu, phản hồi lỗi cho client | Phản hồi người dùng sớm, rõ ràng |
-| **Application service** | Quyền thao tác, dữ liệu từ repository, điều phối nhiều đối tượng | Điều kiện sử dụng theo ca nghiệp vụ |
-| **Domain object** | Quy tắc để chính đối tượng luôn hợp lệ | Chặn mọi đường tạo/cập nhật sai, kể cả gọi trực tiếp |
-| **Repository/DB** | Unique constraint, foreign key, check constraint, tính nhất quán giao dịch | Bảo vệ sự thật dữ liệu qua nhiều tiến trình |
+| **DTO/controller** | Required request fields, data types/formats, error responses to clients | Give users early, clear feedback |
+| **Application service** | Authorization, repository data, coordinating multiple objects | Enforce conditions for use cases |
+| **Domain object** | Rules that keep the object itself valid | Reject invalid creation/update paths, even when called directly |
+| **Repository/DB** | Unique constraints, foreign keys, check constraints, transactional consistency | Protect data integrity across processes |
 
-Ví dụ với Spring Boot và Bean Validation (giả sử project đã khai báo phụ thuộc Jakarta Validation):
+For example, with Spring Boot and Bean Validation (assuming the project includes a Jakarta Validation dependency):
 
 ```java
 import jakarta.validation.constraints.Max;
@@ -2695,7 +2695,7 @@ public record EnrollRequest(
 ) {}
 ```
 
-Controller có thể kích hoạt validation:
+The controller can trigger validation:
 
 ```java
 import jakarta.validation.Valid;
@@ -2714,29 +2714,29 @@ class EnrollmentController {
 }
 ```
 
-`@Valid` giúp phản hồi request không hợp lệ tại HTTP boundary khi có integration Bean Validation thích hợp. Nhưng việc gọi trực tiếp:
+`@Valid` helps reject invalid requests at the HTTP boundary when Bean Validation is properly integrated. But a direct call such as:
 
 ```java
 new CourseEnrollment("JAVA101", -3);
 ```
 
-vẫn phải bị domain object từ chối, vì đối tượng có thể được khởi tạo từ message consumer, batch job, unit test hoặc một service khác mà **không đi qua HTTP controller**.
+must still be rejected by the domain object, since objects may be created by message consumers, batch jobs, unit tests, or other services that **do not pass through an HTTP controller**.
 
-**Không nên coi mọi validation đều phải lặp giống hệt ở tất cả các lớp.** Ở DTO có thể kiểm tra yêu cầu dữ liệu đầu vào; ở domain bắt buộc giữ invariant; ở database bảo vệ các ràng buộc cần tính nhất quán toàn cục. Mỗi lớp bảo vệ trách nhiệm của mình.
+**Not all validation needs to be repeated identically at every layer.** A DTO can validate input requirements; the domain must maintain invariants; and the database protects constraints requiring global consistency. Each layer enforces its own responsibilities.
 
-## 10. Chọn loại exception cho đúng ý nghĩa
+## 10. Choose exceptions that express the problem
 
-Java không bắt buộc một loại exception duy nhất cho mọi kiểm tra, nhưng một số quy ước thường dễ hiểu:
+Java does not require one exception type for every validation failure, but several conventions are common and clear:
 
-| Tình huống | Exception thường phù hợp | Ví dụ |
+| Situation | Common exception | Example |
 |---|---|---|
-| Tham số không được `null` | `NullPointerException` qua `Objects.requireNonNull` hoặc `IllegalArgumentException` theo API | `Objects.requireNonNull(name, "name")` |
-| Đối số có giá trị không hợp lệ | `IllegalArgumentException` | `credits = -1` |
-| Thao tác không hợp lệ với trạng thái hiện tại | `IllegalStateException` hoặc exception nghiệp vụ chuyên biệt | Thanh toán đơn đã hủy |
-| Truy cập phần tử ngoài giới hạn | `IndexOutOfBoundsException` | Chỉ số mảng/list sai |
-| Vi phạm quy tắc nghiệp vụ cần báo lỗi có cấu trúc | Exception nghiệp vụ riêng | `InsufficientStockException` |
+| Argument must not be `null` | `NullPointerException` via `Objects.requireNonNull` or `IllegalArgumentException`, depending on the API | `Objects.requireNonNull(name, "name")` |
+| Argument value is invalid | `IllegalArgumentException` | `credits = -1` |
+| Operation is invalid in the current state | `IllegalStateException` or a specific domain exception | Paying a canceled order |
+| Index is out of bounds | `IndexOutOfBoundsException` | Invalid array/list index |
+| Business-rule violation needs a structured error | Custom domain exception | `InsufficientStockException` |
 
-Một ví dụ rõ ràng:
+A clear example:
 
 ```java
 public void withdraw(long amount) {
@@ -2750,13 +2750,13 @@ public void withdraw(long amount) {
 }
 ```
 
-Ở đây giả sử `balance` là `long` không âm đã được constructor bảo vệ. `amount <= 0` là lỗi tham số; `amount > balance` là xung đột với trạng thái tài khoản hiện tại. Nếu cùng một thông tin được dùng để tạo phản hồi HTTP, lớp controller/exception handler có thể **ánh xạ lỗi** sang thông báo hoặc mã trạng thái thích hợp mà không đặt phụ thuộc HTTP vào domain object.
+Here, `balance` is assumed to be a nonnegative `long` protected by its constructor. `amount <= 0` is an argument error; `amount > balance` conflicts with the account's current state. If the same information is used to produce an HTTP response, a controller/exception handler can **map the error** to an appropriate message or status without introducing an HTTP dependency into the domain object.
 
-## 11. Kiểm tra đầu vào khác đồng bộ và transaction
+## 11. Input validation is different from synchronization and transactions
 
-Kiểm tra tại ranh giới giúp bảo vệ trạng thái **trong một luồng thực thi đã được phối hợp đúng**. Nó không tự giải quyết mọi vấn đề đồng thời hay nhất quán phân tán.
+Boundary checks protect state **within a properly coordinated execution flow**. They do not solve every concurrency or distributed-consistency problem.
 
-Ví dụ hai thread cùng thực hiện:
+For example, two threads both perform:
 
 ```java
 if (available >= 1) {
@@ -2764,29 +2764,29 @@ if (available >= 1) {
 }
 ```
 
-Nếu không có đồng bộ, hai thread có thể cùng nhìn thấy `available = 1` và cùng cho phép đặt chỗ. Quy tắc “không đặt vượt số chỗ” có thể bị phá vỡ ở cấp nghiệp vụ dù mỗi thread đã kiểm tra riêng.
+Without synchronization, both threads may see `available = 1` and both allow a reservation. The “do not overbook” business rule can be violated even if each thread validated independently.
 
-Khi trạng thái được chia sẻ đồng thời, cần kết hợp validation với **khóa/đồng bộ/atomic operation** thích hợp. Khi trạng thái nằm trong cơ sở dữ liệu hoặc nhiều service, có thể cần transaction, optimistic/pessimistic locking, unique constraint hoặc các cơ chế nhất quán khác tùy tình huống.
+When state is shared concurrently, validation must be combined with suitable **locking/synchronization/atomic operations**. When state is held in a database or distributed across services, transactions, optimistic/pessimistic locking, unique constraints, or other consistency mechanisms may be required.
 
-Tương tự, một constructor có thể kiểm tra `userId` không rỗng, nhưng không thể tự khẳng định mã đó là duy nhất trong toàn bộ database chỉ bằng cách kiểm tra field. Ràng buộc duy nhất phải được xác nhận tại nguồn dữ liệu có thẩm quyền.
+Similarly, a constructor can verify that `userId` is nonblank, but checking that field alone cannot establish uniqueness across the entire database. The unique constraint must be enforced at the authoritative data source.
 
-## 12. Những sai lầm dễ gặp
+## 12. Common mistakes
 
-| Sai lầm | Vì sao nguy hiểm? | Cách sửa |
+| Mistake | Why it is dangerous | Fix |
 |---|---|---|
-| Để field `private` rồi cho setter nhận mọi giá trị | Caller vẫn có thể tạo trạng thái sai | Validate ở từng mutator hoặc cung cấp operation theo nghiệp vụ |
-| Chỉ validate ở controller | Các đường tạo object khác có thể bỏ qua controller | Domain tự bảo vệ invariant |
-| Chỉ validate constructor, quên phương thức update | Đối tượng có thể hợp lệ lúc tạo nhưng sai sau đó | Tái sử dụng invariant khi đổi trạng thái |
-| Gán field trước rồi mới validate field khác | Exception có thể để lại trạng thái dở dang | Validate toàn bộ phương án mới trước khi commit |
-| Validate `List`/mảng rồi giữ nguyên tham chiếu mutable | Caller có thể sửa sau lúc kiểm tra | Defensive copy và kiểm soát getter |
-| Dùng `final` với `List` và tưởng list bất biến | `final` không ngăn sửa nội dung được tham chiếu | Immutable collection, defensive copy hoặc thiết kế API hẹp |
-| Chỉ kiểm tra số âm, không xét overflow | Tính toán có thể vượt miền giá trị | Kiểm tra điều kiện trước phép tính hoặc dùng `Math.*Exact` |
-| Lặp regex/logic kiểm tra ở nhiều nơi | Dễ lệch quy tắc giữa các đường sử dụng | Value object/helper với hợp đồng thống nhất |
-| Cho rằng validation loại bỏ race condition | Check và update có thể xen kẽ giữa thread | Đồng bộ nguyên tử theo invariant |
+| Making a field `private` but accepting any setter value | Callers can still create invalid states | Validate every mutator or expose business operations |
+| Validating only in the controller | Other construction paths can bypass the controller | Have the domain enforce its own invariant |
+| Validating only in the constructor, forgetting update methods | State may be valid initially but invalid later | Reapply invariants during state changes |
+| Assigning a field before validating another | Exceptions can leave state partially changed | Validate the entire proposed state before committing |
+| Validating a `List`/array but retaining its mutable reference | Callers can change it after validation | Use defensive copying and control getters |
+| Treating a `final` `List` as immutable | `final` does not prevent changes to referenced contents | Use immutable collections, defensive copies, or narrower APIs |
+| Checking only for negative numbers and ignoring overflow | Calculations can exceed the value range | Check conditions before arithmetic or use `Math.*Exact` |
+| Duplicating regex/validation logic in many places | Rules can diverge across entry points | Use value objects/helpers with a consistent contract |
+| Assuming validation eliminates race conditions | Checks and updates can interleave across threads | Make operations atomic with respect to the invariant |
 
-## 13. Bài tập tự kiểm tra
+## 13. Self-assessment exercises
 
-### Bài 1 — Tìm lỗi về tính nhất quán
+### Exercise 1 — Find the consistency bug
 
 ```java
 class Account {
@@ -2805,19 +2805,19 @@ class Account {
 }
 ```
 
-**Câu hỏi:** Với `transferOut(200)`, sau khi ném exception, `balance` là bao nhiêu?
+**Question:** After `transferOut(200)` throws an exception, what is the value of `balance`?
 
-**Đáp án:** `-100`. Vì phép trừ xảy ra trước khi kiểm tra. Sửa bằng cách kiểm tra `amount <= 0` và `amount > balance` **trước** khi gán `balance -= amount`.
+**Answer:** `-100`. The subtraction happens before validation. Fix this by checking `amount <= 0` and `amount > balance` **before** assigning `balance -= amount`.
 
-### Bài 2 — Kiểm tra cả quan hệ giữa các field
+### Exercise 2 — Validate relationships between fields
 
-Cho lớp `DateRange` lưu `LocalDate start` và `LocalDate end`, với bất biến `start <= end`. Hãy thiết kế constructor và phương thức `changeRange(start, end)` sao cho:
+Given a `DateRange` class storing `LocalDate start` and `LocalDate end` with the invariant `start <= end`, design a constructor and `changeRange(start, end)` method so that:
 
-1. Không chấp nhận `null`.
-2. Không chấp nhận `start` sau `end`.
-3. Nếu đầu vào sai, đối tượng giữ nguyên cả hai giá trị cũ.
+1. `null` is rejected.
+2. `start` later than `end` is rejected.
+3. Invalid input leaves both previous values unchanged.
 
-Gợi ý:
+Hint:
 
 ```java
 import java.time.LocalDate;
@@ -2846,43 +2846,43 @@ public final class DateRange {
 }
 ```
 
-`LocalDate` là kiểu giá trị immutable, nên trả trực tiếp tham chiếu tới `start`/`end` trong ví dụ không làm lộ đối tượng mutable. Khi cần an toàn trong đa luồng, vẫn phải xử lý cập nhật hai field như một thay đổi nhất quán trước các reader khác.
+`LocalDate` is an immutable value type, so directly returning references to `start`/`end` in this example does not expose mutable objects. For multithreaded safety, updates to both fields must still be handled as one consistent change relative to other readers.
 
-### Bài 3 — Ranh giới đối tượng ở đâu?
+### Exercise 3 — Where is the object boundary?
 
-Một chương trình nhận `CreateUserRequest` từ REST API, tạo `User` rồi lưu xuống DB. REST đã dùng `@NotBlank` cho `username`.
+A program receives a `CreateUserRequest` through a REST API, creates a `User`, then saves it to a DB. The REST layer already uses `@NotBlank` on `username`.
 
-**Hỏi:** Có cần kiểm tra `username` trong chính `User` không?
+**Question:** Must `username` also be validated inside `User`?
 
-**Đáp án:** Có, nếu “username không rỗng” là **bất biến** của `User`. Đối tượng `User` có thể được tạo từ các đường khác ngoài REST. Trong khi đó, điều kiện “username duy nhất trong hệ thống” cần repository/DB hoặc cơ chế nhất quán phù hợp để bảo vệ cạnh tranh giữa nhiều yêu cầu.
+**Answer:** Yes, if “nonblank username” is an **invariant** of `User`. The `User` object may be created through paths other than REST. Meanwhile, “username unique across the system” requires a repository/DB or another suitable consistency mechanism to handle competing requests.
 
 ---
 
-**Ghi nhớ:** Bảo vệ đóng gói bằng cách **kiểm tra đầu vào tại mọi ranh giới có thể tạo hoặc thay đổi trạng thái**, tập trung vào invariant do đối tượng sở hữu. Chuẩn hóa và kiểm tra trước khi lưu; nếu cập nhật nhiều field, kiểm tra toàn bộ trước khi commit; nếu nhận dữ liệu mutable, kiểm soát tham chiếu bằng defensive copy. Với quy tắc liên quan nhiều đối tượng, database hoặc nhiều thread, kết hợp cơ chế ở đúng tầng chịu trách nhiệm.
+**Remember:** Protect encapsulation by **validating input at every boundary that can create or modify state**, focusing on the invariants owned by the object. Normalize and validate before storage; for updates to multiple fields, validate the entire proposed change before committing; for mutable inputs, control references through defensive copies. For rules spanning multiple objects, databases, or threads, apply mechanisms at the responsible layer.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="encapsulation-006">Ngăn lộ dữ liệu nội bộ có thể thay đổi</a>
+## <a id="encapsulation-006">Preventing exposure of mutable internal data</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Ngăn lộ dữ liệu nội bộ có thể thay đổi trong Java
+# Preventing exposure of mutable internal data in Java
 
-Trong lập trình hướng đối tượng, **đóng gói (encapsulation)** nghĩa là đối tượng kiểm soát cách trạng thái của chính nó được truy cập và thay đổi. Một lỗi phổ biến là khai báo trường `private` nhưng lại trả trực tiếp đối tượng mutable đang nằm trong trường đó hoặc giữ nguyên tham chiếu mutable mà bên ngoài truyền vào.
+In object-oriented programming, **encapsulation** means an object controls how its own state is accessed and changed. A common mistake is declaring a field `private` but returning its mutable object directly or retaining an externally supplied mutable reference.
 
-Ví dụ, một lớp có quy tắc “danh sách học viên không vượt sức chứa” sẽ mất quyền kiểm soát nếu bên ngoài có thể gọi `getStudents().add(...)` mà không đi qua phương thức đăng ký có kiểm tra.
+For example, a class enforcing “student enrollment must not exceed capacity” loses control if external code can call `getStudents().add(...)` without going through its validated enrollment method.
 
-**Mục tiêu của bài:** nhận diện khi nào một tham chiếu làm lộ trạng thái nội bộ; sử dụng defensive copy, các giá trị bất biến và API có kiểm soát để bảo vệ invariant của đối tượng.
+**Lesson goal:** recognize when a reference exposes internal state, and use defensive copies, immutable values, and controlled APIs to protect object invariants.
 
-## 1. Vì sao `private` vẫn có thể không an toàn?
+## 1. Why can `private` still be unsafe?
 
-Xét lớp sau:
+Consider this class:
 
 ```java
 import java.util.List;
@@ -2900,7 +2900,7 @@ class UnsafeClassroom {
 }
 ```
 
-Trường `students` là `private final`, nhưng **đối tượng danh sách** vẫn có thể thay đổi. Có hai đường làm thay đổi dữ liệu bên trong mà không cần một setter nào:
+The `students` field is `private final`, but **the list object** is still mutable. There are two ways to change the underlying data without any setter:
 
 ```java
 List<String> input = new java.util.ArrayList<>(List.of("An"));
@@ -2913,7 +2913,7 @@ System.out.println(input);     // []
 System.out.println(room.getStudents()); // []
 ```
 
-Cùng một danh sách được giữ bởi `input`, trường `students` và kết quả `getStudents()`. Phép gán tham chiếu không sao chép đối tượng.
+The same list is referenced by `input`, the `students` field, and the result of `getStudents()`. Assigning a reference does not copy the object.
 
 ```mermaid
 flowchart LR
@@ -2923,18 +2923,18 @@ flowchart LR
     E["Caller .add/.clear"] --> L
 ```
 
-Dữ liệu bị lộ ở cả hai chiều:
+Data leaks in both directions:
 
-- **Đầu vào (inbound aliasing):** constructor hoặc setter lưu nguyên tham chiếu của caller; caller còn giữ nó và có thể sửa về sau.
-- **Đầu ra (outbound aliasing):** getter hay một phương thức trả trực tiếp tham chiếu nội bộ; caller sửa được đối tượng qua kết quả trả về.
+- **Inbound aliasing:** a constructor or setter stores the caller's reference unchanged; the caller retains it and can modify the data later.
+- **Outbound aliasing:** a getter or another method returns an internal reference directly, letting the caller modify the object through the result.
 
-Điều này không chỉ làm hỏng quy tắc nghiệp vụ. Nó còn gây lỗi khó tái hiện khi có nhiều thành phần cùng giữ tham chiếu, dẫn đến dữ liệu bị sửa ngoài dự kiến.
+This can do more than violate business rules. When several components retain the same reference, unexpected changes can cause bugs that are difficult to reproduce.
 
-## 2. Một thiết kế an toàn: sửa qua hành vi, đọc qua snapshot
+## 2. A safe design: mutate through behavior, read through snapshots
 
-Lớp dưới đây cho phép **thay đổi danh sách học viên có kiểm soát** qua `enroll()`, nhưng giữ quyền quyết định mọi thay đổi nội bộ. Constructor sao chép đầu vào; getter trả về **snapshot không thể sửa cấu trúc**.
+The following class allows **controlled changes to the student list** through `enroll()`, while retaining control of every internal change. The constructor copies its input; the getter returns **a structurally unmodifiable snapshot**.
 
-Lưu toàn bộ mã sau trong **`Main.java`**, chạy với Java 17 hoặc Java 21:
+Save all the following code in **`Main.java`** and run it with Java 17 or Java 21:
 
 ```java
 import java.util.ArrayList;
@@ -3041,14 +3041,14 @@ public class Main {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 [An]
@@ -3059,36 +3059,36 @@ Không thể sửa snapshot
 [1, 2, 3]
 ```
 
-Lưu ý về ý nghĩa của ví dụ:
+Important points about the example:
 
-- `new ArrayList<>(initialStudents)` tách **danh sách nội bộ** khỏi danh sách mà caller còn giữ.
-- `List.copyOf(students)` trả về danh sách không thể sửa cấu trúc với nội dung tại thời điểm gọi. Khi `book.enroll(...)` chạy, snapshot cũ `firstSnapshot` vẫn giữ `[An]`.
-- Những người học trong ví dụ được biểu diễn bằng `String`, vốn bất biến, nên không có đường sửa thêm qua từng phần tử.
-- `Attachment` cần `clone()` **cả khi nhận lẫn khi trả** mảng, vì `byte[]` luôn mutable.
-- Lớp `EnrollmentBook` **vẫn là mutable**: điều được bảo vệ là quyền thay đổi qua API kiểm soát, không phải cấm mọi thay đổi.
+- `new ArrayList<>(initialStudents)` separates **the internal list** from the list still held by the caller.
+- `List.copyOf(students)` returns a list whose structure cannot be modified and whose contents reflect the moment of the call. When `book.enroll(...)` runs, the old snapshot `firstSnapshot` still contains `[An]`.
+- The students in the example are represented by immutable `String` values, so there is no additional way to modify state through individual elements.
+- `Attachment` must `clone()` the array **both on input and on output**, because `byte[]` is always mutable.
+- The `EnrollmentBook` class **is still mutable**: what is protected is the right to change state through a controlled API, rather than a ban on all changes.
 
-## 3. Defensive copy ở đầu vào và đầu ra
+## 3. Defensive copies at input and output boundaries
 
-**Defensive copy** là tạo bản sao dữ liệu ở ranh giới tin cậy, để mã khác không thể sửa trạng thái mà đối tượng cần sở hữu độc lập.
+A **defensive copy** duplicates data at a trust boundary so other code cannot change state the object needs to own independently.
 
-| Ranh giới | Mã dễ làm lộ dữ liệu | Cách bảo vệ điển hình |
+| Boundary | Code that can leak data | Typical protection |
 | --- | --- | --- |
-| Constructor nhận list | `this.items = items;` | `this.items = List.copyOf(items);` hoặc `new ArrayList<>(items)` |
-| Setter nhận list | `this.items = items;` | Kiểm tra và sao chép trước khi lưu |
-| Getter trả list mutable | `return items;` | `return List.copyOf(items);` hoặc `new ArrayList<>(items)` |
-| Constructor nhận mảng | `this.bytes = bytes;` | `this.bytes = bytes.clone();` |
-| Getter trả mảng | `return bytes;` | `return bytes.clone();` |
-| Getter trả `Date` mutable | `return createdAt;` | Trả bản sao `new Date(createdAt.getTime())` hoặc thiết kế dùng `Instant` |
-| Trả `Map` nội bộ | `return scores;` | `Map.copyOf(scores)` nếu dữ liệu bên trong an toàn |
-| Trả object mutable lồng nhau | `return settings;` | Bản sao sâu phù hợp hoặc value object bất biến |
+| Constructor accepts a list | `this.items = items;` | `this.items = List.copyOf(items);` or `new ArrayList<>(items)` |
+| Setter accepts a list | `this.items = items;` | Validate and copy before storing |
+| Getter returns a mutable list | `return items;` | `return List.copyOf(items);` or `new ArrayList<>(items)` |
+| Constructor accepts an array | `this.bytes = bytes;` | `this.bytes = bytes.clone();` |
+| Getter returns an array | `return bytes;` | `return bytes.clone();` |
+| Getter returns mutable `Date` | `return createdAt;` | Return a copy via `new Date(createdAt.getTime())` or use `Instant` by design |
+| Returns an internal `Map` | `return scores;` | `Map.copyOf(scores)` if the contained data is safe |
+| Returns a nested mutable object | `return settings;` | An appropriate deep copy or immutable value object |
 
-**Không phải trường hợp nào cũng dùng `List.copyOf`.** Nếu lớp muốn sửa collection nội bộ, có thể lưu `new ArrayList<>(input)` và chỉ sao chép khi trả ra. Nếu bản thân collection nội bộ phải bất biến, có thể lưu `List.copyOf(input)`. Lựa chọn tùy vào hành vi mà lớp cần hỗ trợ.
+**`List.copyOf` is not the answer in every situation.** If the class needs to modify its internal collection, it can store `new ArrayList<>(input)` and make copies when returning data. If the internal collection should itself be immutable, it can store `List.copyOf(input)`. The choice depends on the behavior the class must support.
 
-`List.copyOf`, `Set.copyOf`, `Map.copyOf` không chấp nhận phần tử hoặc khóa/giá trị `null` tương ứng theo hợp đồng. Khi dữ liệu có `null` hợp lệ, cần chọn một cấu trúc và cách sao chép phù hợp khác, với hợp đồng API rõ ràng.
+`List.copyOf`, `Set.copyOf`, and `Map.copyOf` reject `null` elements or keys/values as specified by their contracts. When `null` is valid data, choose another appropriate structure and copying strategy with a clear API contract.
 
-## 4. Unmodifiable view không giống snapshot
+## 4. An unmodifiable view is not a snapshot
 
-Java có nhiều cách trả về dữ liệu chỉ đọc, nhưng hai cách sau không có cùng ý nghĩa:
+Java offers several ways to return read-only data, but these two approaches have different semantics:
 
 ```java
 import java.util.ArrayList;
@@ -3106,24 +3106,24 @@ System.out.println(view);     // [A, B]
 System.out.println(snapshot); // [A]
 ```
 
-| Cơ chế | Caller có `add/remove` qua kết quả? | Thay đổi cấu trúc của list gốc có hiện ra? |
+| Mechanism | Can callers invoke `add/remove` through the result? | Do structural changes to the source list become visible? |
 | --- | --- | --- |
-| `return internalList;` | Có, nếu list mutable | Có; caller còn sửa được trực tiếp |
-| `Collections.unmodifiableList(internalList)` | Không | **Có**: đây là view bám theo list gốc |
-| `List.copyOf(internalList)` | Không | **Không**: giữ nội dung snapshot tại lúc sao chép |
-| `new ArrayList<>(internalList)` | Có, trên bản sao riêng | **Không**: sửa bản sao không ảnh hưởng list gốc |
+| `return internalList;` | Yes, if the list is mutable | Yes; callers can also modify it directly |
+| `Collections.unmodifiableList(internalList)` | No | **Yes**: it is a view backed by the original list |
+| `List.copyOf(internalList)` | No | **No**: it preserves a snapshot of the contents at copy time |
+| `new ArrayList<>(internalList)` | Yes, on the independent copy | **No**: modifying the copy does not affect the original list |
 
-`Collections.unmodifiableList` rất hữu ích nếu chủ ý cho người dùng **quan sát trạng thái đang thay đổi** mà không cho sửa trực tiếp qua view. Tuy nhiên, nếu yêu cầu là “dữ liệu nhận được phải cố định sau lời gọi”, cần snapshot.
+`Collections.unmodifiableList` is useful when the intent is to let clients **observe changing state** without modifying it through the view. However, if the requirement is “the data returned must remain stable after the call,” a snapshot is needed.
 
-Một số lưu ý:
+A few considerations:
 
-- `List.copyOf` có thể tái sử dụng một list vốn đã không thể sửa được, nên đừng giả định nó luôn tạo **một đối tượng list mới**.
-- Cả unmodifiable view và snapshot **đều không tự biến phần tử mutable thành bất biến**.
-- `new ArrayList<>(...)` tạo list độc lập về cấu trúc nhưng caller **được phép sửa bản sao**. Điều này có thể là hợp đồng API hợp lệ nếu người nhận cần thao tác trên dữ liệu riêng.
+- `List.copyOf` may reuse a list that is already unmodifiable, so do not assume it always creates **a new list instance**.
+- Neither an unmodifiable view nor a snapshot **automatically makes mutable elements immutable**.
+- `new ArrayList<>(...)` creates a structurally independent list, but the caller **is allowed to modify the copy**. This is a valid API contract when the recipient needs to work with its own data.
 
-## 5. Một snapshot list vẫn có thể làm lộ phần tử
+## 5. A list snapshot can still expose its elements
 
-Khi phần tử mutable, `List.copyOf` và `new ArrayList<>(...)` chỉ sao chép **cấu trúc hoặc tham chiếu**, không tạo bản sao trạng thái từng phần tử:
+When elements are mutable, `List.copyOf` and `new ArrayList<>(...)` only copy **the structure or references**, not the state of each element:
 
 ```java
 class MutableLesson {
@@ -3138,11 +3138,11 @@ lesson.title = "Đã đổi";
 System.out.println(snapshot.get(0).title); // Đã đổi
 ```
 
-Vậy phải kiểm tra **quyền sửa phần tử** chứ không chỉ `add/remove` của container. Nếu cần giữ lịch sử hoặc bản chụp ổn định, hãy chuyển mỗi phần tử thành value object bất biến (ví dụ `record Lesson(String title)` với kiểm tra trong constructor) hoặc copy những thành phần mutable cần thiết. Chiến lược deep copy theo đồ thị và biểu diễn immutable được phân tích riêng ở bài kế tiếp.
+Therefore, inspect **permissions to modify elements**, not only the container's `add/remove` operations. If a stable history or snapshot is required, convert each element into an immutable value object (such as `record Lesson(String title)` with constructor validation) or copy the mutable components that need protection. Deep copying across an object graph and immutable representations are covered in the next lesson.
 
-## 6. Thiết kế API đóng gói: chỉ công bố hành vi cần thiết
+## 6. Encapsulated API design: expose only necessary behavior
 
-Thay vì trả thẳng `List<OrderLine>` mutable để bên gọi có thể tăng số lượng tùy ý, một lớp giỏ hàng nên cung cấp các hành vi:
+Instead of exposing a mutable `List<OrderLine>` that lets callers increase quantities arbitrarily, a shopping-cart class should provide operations such as:
 
 ```java
 void addItem(String sku, int quantity);
@@ -3151,67 +3151,67 @@ void removeItem(String sku);
 List<ItemView> getItems();  // ItemView là value object bất biến
 ```
 
-Bên trong mỗi phương thức, lớp kiểm tra các quy tắc như `quantity > 0`, không trùng mã hoặc không vượt giới hạn đặt hàng. Getter chỉ trả dữ liệu cần hiển thị, không trao cho caller quyền phá vỡ quy tắc nghiệp vụ.
+Within each method, the class validates rules such as `quantity > 0`, unique product codes, and order limits. Getters return only data needed for display without granting callers the ability to violate business rules.
 
-Không phải lúc nào getter cũng cần tạo toàn bộ bản sao lớn. Một API có thể trả:
+A getter does not always need to make a complete, large copy. An API may return:
 
-- Giá trị nguyên thủy hoặc immutable value (`int`, `String`, `LocalDate`).
-- Snapshot bất biến gồm các phần tử cũng bất biến.
-- Kết quả tính toán hoặc DTO chỉ chứa dữ liệu cần thiết.
-- Read-only view **nếu đã chủ đích chấp nhận dữ liệu thay đổi theo thời gian**.
-- Trình lặp/luồng dữ liệu có hợp đồng rõ về khả năng thay đổi và vòng đời.
+- Primitive or immutable values (`int`, `String`, `LocalDate`).
+- An immutable snapshot whose elements are also immutable.
+- Computed results or DTOs containing only necessary data.
+- A read-only view **when changes over time are intentionally acceptable**.
+- An iterator or data stream with a clear contract for mutability and lifecycle.
 
-Đừng công bố một trường `public final List<...>` chỉ vì trường đó không thể gán lại. Chính list vẫn có thể bị thêm, xóa hoặc sửa phần tử.
+Do not expose a `public final List<...>` field merely because it cannot be reassigned. The list itself may still allow elements to be added, removed, or modified.
 
-## 7. Nhận diện rò rỉ theo loại dữ liệu
+## 7. Recognizing leaks by data type
 
-| Kiểu dữ liệu | Đường rò rỉ phổ biến | Cách quan sát/phòng vệ |
+| Data type | Common leak path | Observation/protection strategy |
 | --- | --- | --- |
-| `byte[]`, `int[]` | Constructor giữ mảng, getter trả thẳng mảng | `clone()` ở cả hai chiều (phần tử nguyên thủy) |
-| `MutableItem[]` | Clone mảng nhưng phần tử vẫn chia sẻ | Xem tiếp trạng thái của từng phần tử |
-| `java.util.Date` | Caller gọi `setTime()` trên tham chiếu chung | Copy `new Date(date.getTime())`, hoặc dùng `Instant` |
-| `List<T>` | Getter trả `ArrayList`; constructor giữ input list | Snapshot/copy với chính sách phần tử phù hợp |
-| `Map<K,V>`, `Set<T>` | Trả nội bộ hoặc chia sẻ key/value mutable | `copyOf` chỉ bảo vệ cấu trúc; vẫn xét object lồng nhau |
+| `byte[]`, `int[]` | Constructor retains an array; getter returns it directly | `clone()` in both directions (primitive elements) |
+| `MutableItem[]` | Array is cloned but elements remain shared | Inspect the state of each element too |
+| `java.util.Date` | Caller invokes `setTime()` on a shared reference | Copy with `new Date(date.getTime())` or use `Instant` |
+| `List<T>` | Getter returns an `ArrayList`; constructor retains the input list | Snapshot/copy with a suitable element policy |
+| `Map<K,V>`, `Set<T>` | Exposes internal structures or shares mutable keys/values | `copyOf` protects only structure; nested objects still matter |
 
-Ví dụ `Collections.unmodifiableMap(internal)` chỉ là view, vẫn nhìn thấy cập nhật của map nội bộ. Ngược lại, `Map.copyOf(internal)` tạo snapshot cấu trúc theo hợp đồng nhưng không sao chép sâu key/value. Đặc biệt tránh thay đổi field tham gia `equals/hashCode` của key trong `HashMap`, vì tra cứu có thể hỏng.
+For example, `Collections.unmodifiableMap(internal)` is only a view and continues to reflect updates to the internal map. In contrast, `Map.copyOf(internal)` creates a structural snapshot under its contract but does not deep-copy keys/values. In particular, avoid changing fields involved in a key's `equals/hashCode` implementation in a `HashMap`, since lookups can break.
 
-Đối với API cũ buộc dùng `Date` và mảng, sao chép tại ranh giới thường cần thiết. Đối với mô hình mới, `Instant`, value object bất biến và API truy vấn hẹp thường làm quyền sở hữu dữ liệu dễ hiểu hơn.
+For legacy APIs that require `Date` or arrays, copying at boundaries is often necessary. For newer models, `Instant`, immutable value objects, and narrow query APIs usually make data ownership easier to understand.
 
-## 8. Giới hạn của defensive copy và những lỗi cần tránh
+## 8. Limits of defensive copying and common pitfalls
 
-| Nhầm lẫn | Hậu quả | Cách nghĩ đúng |
+| Misconception | Consequence | Correct approach |
 | --- | --- | --- |
-| Trường `private` đồng nghĩa không thể sửa từ bên ngoài | Vẫn lộ nếu giữ/trả tham chiếu mutable | Kiểm tra mọi đường vào/ra của tham chiếu |
-| Có `final` là dữ liệu bất biến | Chỉ chặn gán lại biến/trường | Bảo vệ chính đối tượng được tham chiếu |
-| `Collections.unmodifiableList()` tạo snapshot | Thấy thay đổi của backing list | Dùng `List.copyOf()` nếu cần nội dung cố định |
-| `List.copyOf()` sao chép luôn phần tử | Phần tử mutable vẫn bị sửa | Chọn immutable element hoặc deep copy |
-| Sao chép chỉ trong getter | Caller vẫn sửa qua tham chiếu constructor nhận | Phòng vệ cả đầu vào và đầu ra |
-| Sao chép chỉ trong constructor | Getter vẫn trả mảng/list nội bộ mutable | Không trả trực tiếp tham chiếu mutable |
-| Getter trả bản sao rồi sửa bản sao để cập nhật đối tượng | Thay đổi không tác động tới trạng thái thật | Cập nhật bằng phương thức nghiệp vụ |
-| Gọi `clone()` ở mọi nơi | Sao chép nông hoặc không hỗ trợ | Chọn chiến lược sao chép theo kiểu dữ liệu |
-| Copy collection trong lúc luồng khác đang sửa | Snapshot có thể lỗi hoặc không nhất quán | Phối hợp đồng bộ phù hợp trước khi chụp snapshot |
-| Tạo bản sao rất lớn cho mỗi lần đọc | Tăng CPU, bộ nhớ và áp lực GC | Xem xét immutable model, view có hợp đồng rõ hoặc API truy vấn hẹp |
+| A `private` field cannot be modified externally | Mutable references can still be retained or returned | Inspect every inbound and outbound reference path |
+| `final` makes data immutable | Only prevents reassignment of the variable/field | Protect the referenced object itself |
+| `Collections.unmodifiableList()` creates a snapshot | Changes to the backing list remain visible | Use `List.copyOf()` when stable contents are required |
+| `List.copyOf()` also copies elements | Mutable elements can still be modified | Use immutable elements or deep copies |
+| Copying only in a getter | The caller can still mutate through a constructor input reference | Defend both input and output boundaries |
+| Copying only in the constructor | The getter may still expose the internal mutable array/list | Do not return mutable references directly |
+| Modifying a returned copy to update the object | Changes do not affect the actual state | Update through business methods |
+| Calling `clone()` everywhere | Copies may be shallow or unsupported | Choose copying strategies based on the data type |
+| Copying a collection while another thread modifies it | The snapshot may fail or be inconsistent | Coordinate synchronization before taking the snapshot |
+| Creating a huge copy on every read | More CPU, memory, and GC pressure | Consider immutable models, views with explicit contracts, or narrow query APIs |
 
-**Defensive copy không tự làm lớp thread-safe.** Nếu một luồng cập nhật `ArrayList` trong khi luồng khác gọi `List.copyOf`, vẫn có thể có race condition, dữ liệu không nhất quán hoặc ngoại lệ. Khi nhiều luồng truy cập cùng trạng thái mutable, cần đồng bộ hoặc chọn cấu trúc dữ liệu phù hợp; snapshot phải được tạo dưới cơ chế bảo vệ trạng thái nhất quán.
+**Defensive copying does not make a class thread-safe by itself.** If one thread updates an `ArrayList` while another calls `List.copyOf`, race conditions, inconsistent data, or exceptions can still occur. Shared mutable state requires synchronization or appropriate data structures; snapshots must be taken under a mechanism that protects a consistent state.
 
-Một vấn đề tương tự có thể xuất hiện nếu caller đồng thời sửa collection trong lúc constructor đang sao chép nó. Nếu đầu vào được chia sẻ giữa nhiều luồng, bên gọi và bên nhận cần thỏa thuận về đồng bộ/ownership thay vì kỳ vọng `new ArrayList<>(input)` tự khắc phục tranh chấp.
+A similar problem occurs when a caller modifies a collection while the constructor is copying it. If the input is shared between threads, caller and receiver must agree on synchronization and ownership rather than expecting `new ArrayList<>(input)` to resolve races automatically.
 
-## 9. Chi phí hiệu năng và quyết định thiết kế
+## 9. Performance costs and design decisions
 
-Sao chép một list có `n` phần tử thường cần **O(n)** thời gian và bộ nhớ cho cấu trúc list sao chép. Nếu gọi một getter snapshot hàng nghìn lần trên collection rất lớn, chi phí có thể đáng kể. Nhưng bỏ phòng vệ chỉ để giảm cấp phát có thể phá invariant và gây lỗi khó kiểm soát.
+Copying a list of `n` elements typically takes **O(n)** time and memory for the copied list structure. If a snapshot getter is called thousands of times on a very large collection, the cost can be significant. But abandoning defensive protection solely to reduce allocations may violate invariants and create difficult bugs.
 
-Có thể cân nhắc:
+Possible approaches:
 
-- Chụp snapshot một lần ở ranh giới request hoặc transaction thay vì mỗi thao tác đọc nhỏ.
-- Trả về **dữ liệu tối thiểu** thực sự cần, như `size()`, `containsStudent(id)` hoặc một DTO được tính sẵn.
-- Mô hình dữ liệu bất biến, cache snapshot được cập nhật khi trạng thái thay đổi, hoặc persistent collection khi ứng dụng có yêu cầu rõ.
-- Giữ mutable state bên trong lớp và dùng thao tác nghiệp vụ để chỉnh sửa, thay vì trao trực tiếp collection cho mọi caller.
+- Capture a snapshot once at a request or transaction boundary rather than on every small read operation.
+- Return the **minimum data** actually needed, such as `size()`, `containsStudent(id)`, or a precomputed DTO.
+- Use immutable data models, cached snapshots updated when state changes, or persistent collections when application requirements justify them.
+- Keep mutable state inside the class and use business operations for changes instead of handing the collection directly to every caller.
 
-Bảo vệ trạng thái nên là **hợp đồng thiết kế có chủ đích**: caller được quyền quan sát gì, có được giữ kết quả lâu dài không, có được sửa bản trả ra không, và khi dữ liệu nội bộ thay đổi thì kết quả cũ có phản ánh thay đổi hay không?
+State protection should be **an intentional design contract**: what may the caller observe, can it retain the result, can it modify the returned data, and will older results reflect subsequent internal changes?
 
-## 10. Kiểm thử rò rỉ trạng thái nội bộ
+## 10. Testing internal-state leaks
 
-Có thể kiểm thử trực tiếp hai chiều rò rỉ dữ liệu cho một lớp như `EnrollmentBook`:
+Both directions of data leakage can be tested directly for a class such as `EnrollmentBook`:
 
 ```java
 List<String> input = new ArrayList<>(List.of("An"));
@@ -3239,66 +3239,66 @@ if (!snapshot.equals(List.of("An"))) {
 }
 ```
 
-Đoạn kiểm thử này dùng riêng trong một phương thức, ví dụ `main`, khi lớp `EnrollmentBook` đã được khai báo. Với trường chứa phần tử mutable, kiểm thử cần tiến thêm một bước: thay đổi trường của **phần tử** thông qua tham chiếu bên ngoài rồi xác nhận trạng thái bên trong vẫn được bảo vệ.
+This test code belongs inside a method such as `main`, after `EnrollmentBook` has been declared. When a field contains mutable elements, testing must go one step further: modify an **element's** fields through an external reference and verify that internal state remains protected.
 
-## 11. Câu hỏi tự kiểm tra
+## 11. Self-check questions
 
-**1.** `private final List<String> students;` rồi `return students;` đã đảm bảo đóng gói chưa?
+**1.** Does `private final List<String> students;` followed by `return students;` guarantee encapsulation?
 
-**Trả lời:** Chưa, nếu list là mutable. Caller có thể `add/remove/clear` trực tiếp qua tham chiếu được trả về.
+**Answer:** No, if the list is mutable. Callers can invoke `add/remove/clear` directly through the returned reference.
 
-**2.** Constructor dùng `this.students = List.copyOf(input)` nhưng getter trả `students`. Điều này có ổn không?
+**2.** A constructor uses `this.students = List.copyOf(input)` but the getter returns `students`. Is that safe?
 
-**Trả lời:** Có thể ổn khi các phần tử cũng bất biến (như `String`) và lớp giữ list không thể sửa cấu trúc. Tuy nhiên cần kiểm tra các đối tượng phần tử trước khi kết luận lớp bất biến sâu.
+**Answer:** It may be safe if the elements are also immutable (like `String`) and the class retains a structurally unmodifiable list. However, inspect the element objects before concluding that the class is deeply immutable.
 
-**3.** `Collections.unmodifiableList(internal)` có ngăn người đang giữ `internal` sửa nó không?
+**3.** Does `Collections.unmodifiableList(internal)` prevent someone holding `internal` from modifying it?
 
-**Trả lời:** Không. Nó chỉ ngăn thay đổi **qua view**; các cập nhật trên backing list vẫn được phản ánh trong view.
+**Answer:** No. It only prevents mutation **through the view**; updates to the backing list remain visible in that view.
 
-**4.** `byte[] getBytes() { return bytes.clone(); }` có đủ nếu constructor gán `this.bytes = input;` không?
+**4.** Is `byte[] getBytes() { return bytes.clone(); }` sufficient if the constructor assigns `this.bytes = input;`?
 
-**Trả lời:** Chưa. Caller còn giữ `input` và có thể sửa mảng nội bộ. Phải sao chép cả khi nhận vào.
+**Answer:** No. The caller still holds `input` and can modify the internal array. Copy the data on input as well.
 
-**5.** Một `List<MutableLesson>` đã `List.copyOf` có thể bị thay đổi tiêu đề một phần tử không?
+**5.** Can a `List<MutableLesson>` copied with `List.copyOf` still have an element's title changed?
 
-**Trả lời:** Có, nếu bên ngoài vẫn giữ tham chiếu đến chính `MutableLesson`. Cần phần tử bất biến hoặc sao chép sâu theo hợp đồng.
+**Answer:** Yes, if outside code still holds a reference to that same `MutableLesson`. Immutable elements or a deep copy are required by the contract.
 
-**6.** Nếu lớp cần cập nhật học viên, có bắt buộc biến nó thành immutable không?
+**6.** If a class must support student updates, does it have to become immutable?
 
-**Trả lời:** Không. Lớp có thể mutable nhưng trạng thái được đóng gói: dùng `enroll/remove` để kiểm tra quy tắc, và chỉ trả snapshot hoặc kết quả đọc an toàn.
+**Answer:** No. The class can be mutable with encapsulated state: use `enroll/remove` to enforce rules, and return only snapshots or safe read results.
 
-**Ghi nhớ:** Quyền truy cập `private` che tên trường, nhưng **không tự che đối tượng mutable** được trường tham chiếu. Để ngăn lộ dữ liệu nội bộ, kiểm soát tham chiếu ở **cả đầu vào và đầu ra**, cân nhắc trạng thái của các phần tử lồng nhau và công bố hành vi nghiệp vụ thay vì phát tán trực tiếp cấu trúc dữ liệu có thể sửa.
+**Remember:** `private` hides a field name but **does not hide the mutable object** it references. Prevent internal data leaks by controlling references at **both input and output boundaries**, accounting for nested element state, and exposing business behavior instead of distributing mutable data structures directly.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="encapsulation-007">Sao chép phòng vệ và biểu diễn bất biến</a>
+## <a id="encapsulation-007">Defensive copying and immutable representations</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Sao chép phòng vệ và biểu diễn bất biến trong Java
+# Defensive copying and immutable representations in Java
 
-Trong OOP, **đóng gói** không dừng ở việc khai báo field là `private`. Nếu một đối tượng giữ tham chiếu đến dữ liệu *có thể thay đổi* (mutable) do nơi khác sở hữu, hoặc trả tham chiếu mutable nội bộ qua getter, mã bên ngoài vẫn có thể phá vỡ trạng thái của đối tượng mà không cần gọi setter.
+In OOP, **encapsulation** does not stop at declaring fields `private`. If an object retains a reference to *mutable* data owned elsewhere, or exposes an internal mutable reference through a getter, external code can still violate the object's state without calling a setter.
 
-**Sao chép phòng vệ (defensive copying)** là tạo bản sao tại ranh giới nhận/trả dữ liệu để ngăn thay đổi ngoài ý muốn. **Biểu diễn bất biến (immutable representation)** là lựa chọn cách lưu và công bố trạng thái sao cho sau khi tạo xong, trạng thái có thể quan sát của đối tượng không đổi.
+**Defensive copying** creates copies at input/output boundaries to prevent unintended changes. An **immutable representation** stores and exposes state so that, after construction, the object's observable state remains unchanged.
 
-Hai kỹ thuật liên quan nhưng khác nhau:
+The two techniques are related but distinct:
 
-- Defensive copy kiểm soát **chia sẻ tham chiếu** với dữ liệu mutable.
-- Immutable representation kiểm soát **khả năng thay đổi trạng thái**; nó thường dùng kiểu bất biến, giá trị nguyên thủy và các collection snapshot của phần tử bất biến.
-- Có trường hợp cần bản sao khi nhận **và** khi trả; chỉ bảo vệ một chiều không đủ.
-- Một đối tượng có `private final` field vẫn có thể thay đổi trạng thái quan sát được nếu field ấy tham chiếu đối tượng mutable.
+- Defensive copying controls **reference sharing** for mutable data.
+- Immutable representation controls **the ability to change state**; it commonly uses immutable types, primitive values, and collection snapshots containing immutable elements.
+- Some cases require a copy on **both** input and output; protecting only one direction is insufficient.
+- An object with a `private final` field can still have changing observable state if that field references a mutable object.
 
-Bài này sử dụng Java 11+ (để dùng `String.isBlank()` và `List.copyOf()`). Ví dụ thực tế là chụp lại lịch sự kiện để lưu bản ghi cố định, ngay cả khi màn hình nhập liệu tiếp tục chỉnh sửa danh sách người tham gia.
+This lesson uses Java 11+ (for `String.isBlank()` and `List.copyOf()`). The practical example captures a fixed event schedule even while the input form continues to edit the attendee list.
 
-## 1. Vì sao `private final` chưa đảm bảo bất biến?
+## 1. Why doesn't `private final` guarantee immutability?
 
-Ví dụ sau có hai đường “rò rỉ” tham chiếu:
+The following example has two paths for reference “leaks”:
 
 ```java
 import java.util.Date;
@@ -3316,7 +3316,7 @@ public final class UnsafeReminder {
 }
 ```
 
-Đoạn sử dụng:
+Usage:
 
 ```java
 Date supplied = new Date(1_000L);
@@ -3329,9 +3329,9 @@ reminder.getRemindAt().setTime(3_000L); // Sửa qua tham chiếu getter làm l�
 System.out.println(reminder.getRemindAt().getTime()); // 3000
 ```
 
-Không có phương thức `setRemindAt` và field là `private final`, nhưng thời điểm nhắc vẫn thay đổi. `final` chỉ cấm gán lại biến `remindAt` thành một tham chiếu khác; nó **không đóng băng đối tượng `Date`** đang được tham chiếu.
+There is no `setRemindAt` method and the field is `private final`, yet the reminder time still changes. `final` only prevents reassigning the `remindAt` variable to another reference; it **does not freeze the referenced `Date` object**.
 
-Có hai đường cần kiểm soát:
+There are two paths to control:
 
 ```mermaid
 flowchart LR
@@ -3340,11 +3340,11 @@ flowchart LR
     D["setTime(...) từ caller"] --> B
 ```
 
-Với đối tượng mutable, đóng gói bị phá vỡ ngay cả khi không nhìn thấy field trực tiếp.
+With mutable objects, encapsulation can be broken even when the field is not directly visible.
 
-## 2. Defensive copy ở cả constructor và getter
+## 2. Defensive copies in both constructor and getter
 
-Thay vì chia sẻ cùng một `Date`, lớp tạo bản sao khi nhận đầu vào và khi trả kết quả:
+Instead of sharing the same `Date`, the class copies it when accepting input and when returning a result:
 
 ```java
 import java.util.Date;
@@ -3364,7 +3364,7 @@ public final class SafeReminder {
 }
 ```
 
-Kiểm chứng:
+Verification:
 
 ```java
 Date source = new Date(1_000L);
@@ -3377,17 +3377,17 @@ returned.setTime(3_000L);
 System.out.println(reminder.getRemindAt().getTime()); // 1000
 ```
 
-| Ranh giới | Cách làm | Lỗi được ngăn |
+| Boundary | Approach | Bug prevented |
 | --- | --- | --- |
-| **Đầu vào** | `new Date(remindAt.getTime())` | Caller sửa `source` sau khi truyền vào |
-| **Đầu ra** | `return new Date(remindAt.getTime())` | Caller sửa `Date` lấy qua getter |
-| Trạng thái nội bộ | `private final Date remindAt`; không cung cấp thao tác tự sửa | Mã bên ngoài không thay đổi thời điểm đã chụp |
+| **Input** | `new Date(remindAt.getTime())` | Caller modifies `source` after passing it in |
+| **Output** | `return new Date(remindAt.getTime())` | Caller modifies the `Date` obtained from the getter |
+| Internal state | `private final Date remindAt`; no self-mutating operation exposed | External code cannot change the captured time |
 
-Lớp này **bất biến theo hành vi có thể quan sát** nếu chính lớp không sửa `remindAt`: mọi lần gọi getter đều thể hiện một thời điểm. Tuy nhiên, biểu diễn bên trong vẫn dùng một đối tượng `Date` vốn mutable. Có cách biểu diễn đơn giản hơn ở phần tiếp theo.
+This class is **immutable in its observable behavior** if the class itself never modifies `remindAt`: every getter call reports the same instant. However, its internal representation still contains a mutable `Date`. The next section presents a simpler representation.
 
-### Chọn biểu diễn thực sự bất biến thay vì cứ sao chép
+### Prefer truly immutable representations over repeated copying
 
-Nếu mục đích chỉ là lưu một thời điểm, Java có kiểu `Instant` bất biến (`java.time`):
+If the goal is only to store a point in time, Java provides the immutable `Instant` type (`java.time`):
 
 ```java
 import java.time.Instant;
@@ -3410,13 +3410,13 @@ public final class Reminder {
 }
 ```
 
-Gọi `remindAt.plusSeconds(60)` trả một `Instant` mới; đối tượng `Instant` cũ không bị sửa. Vì thế không cần copy mỗi khi getter trả `Instant`. Một lựa chọn khác là lưu `private final long epochMillis` và chuyển đổi tại ranh giới API; primitive `long` không chứa tham chiếu tới trạng thái mutable.
+Calling `remindAt.plusSeconds(60)` returns a new `Instant`; the previous `Instant` object is not modified. Therefore, there is no need to copy each `Instant` returned by a getter. Another option is to store `private final long epochMillis` and convert at the API boundary; a primitive `long` cannot reference mutable state.
 
-**Nguyên tắc:** ưu tiên kiểu bất biến phù hợp nếu có. Defensive copy có ý nghĩa khi vẫn cần tương tác với API cung cấp kiểu mutable như `Date`, array hoặc collection có phần tử mutable.
+**Principle:** prefer a suitable immutable type when available. Defensive copying remains useful when working with APIs that expose mutable types such as `Date`, arrays, or collections with mutable elements.
 
-## 3. Bản sao nông (shallow copy) khác bản sao sâu (deep copy)
+## 3. Shallow copies versus deep copies
 
-Hãy xem một danh sách chứa các đối tượng mutable:
+Consider a list containing mutable objects:
 
 ```java
 import java.util.ArrayList;
@@ -3442,33 +3442,33 @@ copy.get(0).name = "Bình";
 System.out.println(input.get(0).name);        // Bình
 ```
 
-`new ArrayList<>(input)` tạo danh sách mới, nhưng chỉ **sao chép các tham chiếu phần tử**. Do đó hai danh sách có cấu trúc riêng, còn phần tử `GuestDraft` đầu tiên vẫn chia sẻ.
+`new ArrayList<>(input)` creates a new list but only **copies the element references**. The lists thus have separate structures but still share the first `GuestDraft` element.
 
-| Cách làm | Container có độc lập? | Phần tử mutable có độc lập? |
+| Technique | Is the container independent? | Are mutable elements independent? |
 | --- | --- | --- |
-| `List<T> b = a` | Không | Không |
-| `new ArrayList<>(a)` | Có | Không |
-| `List.copyOf(a)` | Có snapshot cấu trúc về mặt ngữ nghĩa, không sửa được | Không, nếu phần tử mutable |
-| Tạo list mới và copy mỗi phần tử mutable | Có | Có, đối với các phần tử đã sao chép đúng |
-| Tạo list mới chứa các giá trị vốn bất biến | Có | An toàn khi chia sẻ các giá trị bất biến |
+| `List<T> b = a` | No | No |
+| `new ArrayList<>(a)` | Yes | No |
+| `List.copyOf(a)` | Semantically a structurally independent, unmodifiable snapshot | No, if elements are mutable |
+| Create a new list and copy every mutable element | Yes | Yes, for elements copied correctly |
+| Create a new list containing inherently immutable values | Yes | Safe to share the immutable values |
 
-“Deep copy” không có nghĩa Java tự động sao chép toàn bộ mọi đối tượng có thể truy cập. Cần **xác định đồ thị đối tượng nào thuộc sở hữu của lớp**, phần nào mutable và phần nào phải tách khỏi caller. Với đồ thị có chu trình, quan hệ tham chiếu chung, tài nguyên ngoài hoặc thực thể định danh, deep copy tổng quát vừa khó vừa có thể sai ngữ nghĩa nghiệp vụ.
+“Deep copy” does not mean Java automatically clones every reachable object. You must **identify which parts of the object graph the class owns**, which parts are mutable, and which must be separated from the caller. With cycles, shared references, external resources, or identity-bearing entities, a general deep copy can be both difficult and semantically wrong.
 
-Ví dụ, sao chép một `BankAccount` “sâu” có thể làm xuất hiện hai instance cùng đại diện một tài khoản thật, gây hiểu nhầm rằng hai số dư độc lập là hợp lệ. Khi muốn lưu thông tin tài khoản tại một thời điểm, nên tạo **snapshot giá trị** (mã tài khoản, số dư đã quan sát, thời điểm), thay vì tự nhân bản thực thể nghiệp vụ.
+For example, a “deep” copy of a `BankAccount` might create two instances representing the same real account, misleadingly implying that independent balances are valid. To preserve account information at a point in time, create a **value snapshot** (account number, observed balance, timestamp) rather than duplicating the business entity.
 
-## 4. Ví dụ hoàn chỉnh: lịch sự kiện có bản chụp bất biến
+## 4. Complete example: an event schedule with an immutable snapshot
 
-Yêu cầu: form đăng ký sự kiện sử dụng `Date` mutable và danh sách `AttendeeDraft` có thể sửa tên. Sau khi xác nhận, tạo `EventSnapshot` giữ **thời điểm và danh sách người tham gia như ở lúc xác nhận**. Mọi thay đổi từ form sau đó không được làm biến đổi bản chụp.
+Requirement: an event-registration form uses a mutable `Date` and a list of `AttendeeDraft` objects whose names can change. After confirmation, create an `EventSnapshot` that retains **the event time and attendees as they were at confirmation**. Subsequent changes to the form must not alter the snapshot.
 
-Điều kiện thiết kế:
+Design requirements:
 
-1. Thời điểm sự kiện đã chụp không đổi.
-2. Danh sách tham gia không thể bị thêm/xóa qua API snapshot.
-3. Từng người tham gia trong snapshot cũng phải bất biến, không chỉ riêng list.
-4. Dữ liệu không hợp lệ bị từ chối lúc xây dựng; không lưu danh sách dở dang có thể bị caller sửa tiếp.
-5. Có thể đọc snapshot mà không cần caller sao chép thêm đối tượng.
+1. The captured event time never changes.
+2. Attendees cannot be added to or removed from the list through the snapshot API.
+3. Every attendee in the snapshot must also be immutable, not just the list.
+4. Invalid data is rejected during construction; no partially built list remains exposed to future caller modifications.
+5. The snapshot can be read without requiring callers to copy more objects.
 
-### Tệp `EventSnapshot.java`
+### File `EventSnapshot.java`
 
 ```java
 import java.util.ArrayList;
@@ -3560,16 +3560,16 @@ public final class EventSnapshot {
 }
 ```
 
-Quan sát cấu trúc:
+Inspecting the structure:
 
-- `EventSnapshot` là `final` và không cung cấp setter; hai field của nó là `private final`.
-- `Date` được copy ở constructor **và** getter. Nếu chỉ copy ở constructor nhưng getter trả thẳng field, caller vẫn sửa được; nếu chỉ copy ở getter, đối tượng đầu vào vẫn có thể tác động tới snapshot.
-- `List.copyOf(values)` tạo snapshot cấu trúc list không sửa được, trong khi các `Attendee` bên trong có `String` bất biến và field `final`.
-- `AttendeeDraft` là đối tượng mutable của bước nhập liệu. Constructor tạo **`Attendee` mới cho từng draft**, không giữ tham chiếu tới `AttendeeDraft`.
-- `requireText` kiểm tra dữ liệu tại thời điểm tạo. Mã bên ngoài không có cách sửa `id` hoặc `name` bên trong một `Attendee` đã chụp.
-- Mã lớp chính không trả thẳng một `ArrayList` mutable. Trả list bất biến chứa phần tử bất biến được vì caller không thể làm thay đổi trạng thái snapshot qua đường này.
+- `EventSnapshot` is `final` and exposes no setters; both fields are `private final`.
+- `Date` is copied in the constructor **and** getter. If only the constructor copied it but the getter returned the field, callers could still modify it; if only the getter copied it, the original input could still affect the snapshot.
+- `List.copyOf(values)` creates an unmodifiable structural snapshot, while each contained `Attendee` has an immutable `String` and `final` fields.
+- `AttendeeDraft` is a mutable object used during data entry. The constructor creates **a new `Attendee` for each draft** without retaining references to `AttendeeDraft`.
+- `requireText` validates data during construction. External code has no way to modify the captured `id` or `name` in an `Attendee`.
+- The main class does not directly expose a mutable `ArrayList`. Returning an immutable list of immutable elements is safe because callers cannot modify snapshot state through that path.
 
-### Tệp `Demo.java`
+### File `Demo.java`
 
 ```java
 import java.util.ArrayList;
@@ -3611,14 +3611,14 @@ public class Demo {
 }
 ```
 
-Biên dịch/chạy bằng JDK 11+:
+Compile/run with JDK 11+:
 
 ```bash
 javac EventSnapshot.java Demo.java
 java Demo
 ```
 
-Kết quả:
+Output:
 
 ```text
 1000
@@ -3627,17 +3627,17 @@ An
 Không cho sửa danh sách snapshot
 ```
 
-Sự khác biệt của ba loại dữ liệu rõ ràng:
+The three data types behave differently:
 
-| Dữ liệu | Sau khi sửa form | Snapshot trả về |
+| Data | After editing the form | Returned snapshot |
 | --- | --- | --- |
 | `dateFromForm` | 2000 | `getStartsAt().getTime() == 1000` |
-| `an.name` | Bình | `getAttendees().get(0).getName()` là An |
-| `formAttendees.size()` | 2 | `getAttendees().size()` là 1 |
-| `Date` trả từ getter | Caller đổi thành 3000 | Lần getter kế tiếp vẫn 1000 |
-| List từ getter | `clear()` ném ngoại lệ | Dữ liệu snapshot giữ nguyên |
+| `an.name` | Bình | `getAttendees().get(0).getName()` is An |
+| `formAttendees.size()` | 2 | `getAttendees().size()` is 1 |
+| `Date` returned by getter | Caller changes it to 3000 | Next getter call still returns 1000 |
+| List returned by getter | `clear()` throws an exception | Snapshot data remains unchanged |
 
-### Đường đi của dữ liệu
+### Data flow
 
 ```mermaid
 flowchart LR
@@ -3660,11 +3660,11 @@ flowchart LR
     CL -->|"getter trả list an toàn"| VIEW["List Attendee"]
 ```
 
-Sơ đồ minh họa ý nghĩa sở hữu dữ liệu, không mô tả địa chỉ bộ nhớ hay cấu trúc nội bộ của các lớp collection.
+The diagram illustrates data ownership; it does not represent memory addresses or the internal structure of collection classes.
 
-## 5. `Collections.unmodifiableList` và `List.copyOf` khác nhau ở điểm nào?
+## 5. How do `Collections.unmodifiableList` and `List.copyOf` differ?
 
-Hai API đều có thể làm caller không sửa list thông qua tham chiếu nhận được, nhưng **không bảo vệ cùng một kiểu thay đổi**.
+Both APIs can prevent callers from modifying a list through the received reference, but **they do not protect against the same kinds of changes**.
 
 ```java
 import java.util.ArrayList;
@@ -3683,16 +3683,16 @@ System.out.println(view);     // [A, B]
 System.out.println(snapshot); // [A]
 ```
 
-- `Collections.unmodifiableList(source)` tạo **view không cho sửa qua view**, nhưng vẫn theo dõi các thay đổi từ `source`.
-- `List.copyOf(source)` có ngữ nghĩa **snapshot cấu trúc** tại thời điểm gọi (có thể tái sử dụng một instance vốn đã không sửa được). Thêm/xóa vào list gốc sau đó không làm thay đổi list kết quả.
-- **Cả hai đều không tự deep copy các phần tử mutable.** Nếu list chứa `AttendeeDraft`, gọi `rename()` trên phần tử được chia sẻ vẫn có thể làm thay đổi dữ liệu quan sát qua list.
-- `List.copyOf` từ chối phần tử `null`. Khi cần giữ `null`, phải chọn biểu diễn hoặc chính sách validation khác một cách có chủ đích.
+- `Collections.unmodifiableList(source)` creates **a view that cannot be modified through that view**, but still reflects changes made to `source`.
+- `List.copyOf(source)` provides **structural snapshot semantics** at call time (it may reuse an existing unmodifiable instance). Subsequent additions/removals to the source list do not alter the result.
+- **Neither automatically deep-copies mutable elements.** If the list contains `AttendeeDraft` objects, calling `rename()` on a shared element can still change data observed through the list.
+- `List.copyOf` rejects `null` elements. When `null` must be retained, choose a different representation or validation policy deliberately.
 
-Với dữ liệu `List<String>` hoặc `List<Attendee>` bất biến như ví dụ trên, `List.copyOf` là lựa chọn gọn và an toàn để công bố snapshot; với `List<MutableItem>` phải xử lý phần tử trước.
+For immutable `List<String>` or `List<Attendee>` data such as the example above, `List.copyOf` is a concise, safe way to expose a snapshot. With `List<MutableItem>`, elements require additional protection.
 
-### Phương án getter trả bản sao của list mutable
+### Alternative: getters returning copies of mutable lists
 
-Nếu không thể thay thế element type, có thể cần copy mỗi phần tử cả khi nhận và khi trả:
+If the element type cannot be replaced, you may need to copy every element on both input and output:
 
 ```java
 import java.util.ArrayList;
@@ -3707,13 +3707,13 @@ static List<java.util.Date> copyDates(List<java.util.Date> input) {
 }
 ```
 
-Khi lưu `private final List<Date> dates = copyDates(input)`, getter nên trả `copyDates(dates)` nếu muốn tránh lộ từng `Date` mutable. Nhưng thiết kế này phải sao chép lặp lại và dễ quên ranh giới. Nếu chuyển sang `List<Instant>`, vừa gọn hơn vừa dễ giữ bất biến.
+When storing `private final List<Date> dates = copyDates(input)`, the getter should return `copyDates(dates)` to avoid exposing individual mutable `Date` objects. However, this design requires repeated copying and makes it easy to overlook a boundary. Switching to `List<Instant>` is simpler and makes immutability easier to maintain.
 
-## 6. Array, map, set và dữ liệu lồng nhau
+## 6. Arrays, maps, sets, and nested data
 
 ### Array
 
-Một array có thể thay đổi từng phần tử hoặc vị trí:
+An array allows changes to individual elements or positions:
 
 ```java
 public final class TagSet {
@@ -3729,19 +3729,19 @@ public final class TagSet {
 }
 ```
 
-Với `String[]`, clone đủ cho mục tiêu này vì mỗi `String` bất biến. Với `Date[]`, clone chỉ sao chép **các tham chiếu phần tử**, vẫn phải copy từng `Date` nếu cần độc lập hoàn toàn. Array đa chiều cũng tương tự: `matrix.clone()` chỉ tạo outer array mới.
+With `String[]`, cloning is sufficient for this purpose because each `String` is immutable. With `Date[]`, cloning only copies **element references**, so each `Date` must also be copied if complete independence is needed. The same applies to multidimensional arrays: `matrix.clone()` creates only a new outer array.
 
-Nên kiểm tra `null` và các bất biến của từng phần tử trong constructor của lớp dùng trong sản phẩm; ví dụ `TagSet` tập trung vào hành vi clone để dễ quan sát.
+In production classes, validate `null` and each element's invariants within the constructor; the `TagSet` example focuses on cloning behavior to make it easy to observe.
 
-### Map và Set
+### Maps and sets
 
-`Map.copyOf(map)` và `Set.copyOf(set)` tạo container không sửa được và tách cấu trúc khỏi các thay đổi tiếp theo của đầu vào; chúng **không tự deep copy** key/value/element mutable. Với `HashMap`, không nên dùng đối tượng làm key rồi thay đổi field tham gia `equals`/`hashCode`: thao tác tra cứu có thể không còn hoạt động đúng vì vị trí băm được quyết định theo hash cũ.
+`Map.copyOf(map)` and `Set.copyOf(set)` create unmodifiable containers structurally detached from later changes to their inputs; they **do not automatically deep-copy** mutable keys, values, or elements. With `HashMap`, do not use an object as a key and then change fields involved in `equals`/`hashCode`: lookups may stop working correctly because the bucket was chosen using the old hash.
 
 ### Object graph
 
-Nếu một `Order` giữ `List<OrderLine>`, mỗi `OrderLine` lại giữ `Product` có thể đổi giá, việc chỉ copy `Order` và `List` không đảm bảo tổng giá trị chụp vẫn cố định.
+If an `Order` holds a `List<OrderLine>` and each `OrderLine` holds a `Product` whose price can change, copying only the `Order` and `List` does not ensure that the captured total remains fixed.
 
-Trong trường hợp cần báo cáo cố định, hãy lưu:
+For a fixed report, store:
 
 ```java
 final class OrderLineSnapshot {
@@ -3758,23 +3758,23 @@ final class OrderLineSnapshot {
 }
 ```
 
-Các field ở đây là giá trị nguyên thủy hoặc `String` bất biến; không giữ đối tượng `Product` mutable. Trong sản phẩm thực tế cần bổ sung validation cho giá/số lượng và các chính sách số học. Ý tưởng quan trọng là **chụp những giá trị nghiệp vụ cần bất biến**, thay vì cố sao chép toàn bộ đồ thị đối tượng một cách mù quáng.
+The fields here are primitive values or immutable `String` objects; no mutable `Product` object is retained. Production code needs additional price/quantity validation and numerical policies. The key idea is to **capture business values that must remain immutable**, rather than blindly copying the entire object graph.
 
-## 7. Phân biệt “bất biến” với “không sửa được qua một tham chiếu”
+## 7. Distinguishing “immutable” from “unmodifiable through one reference”
 
-| Thuật ngữ | Ý nghĩa | Ví dụ |
+| Term | Meaning | Example |
 | --- | --- | --- |
-| **Mutable object** | Trạng thái của instance có thể thay đổi | `Date`, `ArrayList`, `StringBuilder` |
-| **Immutable object** | Trạng thái có thể quan sát không đổi sau khi tạo | `String`, `Instant`, một snapshot được thiết kế đúng |
-| **Unmodifiable view** | Không sửa container thông qua view, nhưng nguồn có thể thay đổi | `Collections.unmodifiableList(source)` |
-| **Structural snapshot** | Tách cấu trúc container ở thời điểm chụp | `List.copyOf(source)` |
-| **Shallow copy** | Copy lớp vỏ/container, giữ tham chiếu các phần tử | `new ArrayList<>(source)` |
-| **Defensive copy** | Copy ở ranh giới để bảo vệ quyền sở hữu và bất biến | `new Date(input.getTime())` trong constructor/getter |
-| **Deep copy theo phạm vi cần thiết** | Copy cả phần mutable bên trong cần tách khỏi bên ngoài | Đổi mỗi `AttendeeDraft` thành `Attendee` mới |
+| **Mutable object** | An instance's state can change | `Date`, `ArrayList`, `StringBuilder` |
+| **Immutable object** | Observable state remains unchanged after construction | `String`, `Instant`, a correctly designed snapshot |
+| **Unmodifiable view** | The container cannot be modified through the view, but its source may change | `Collections.unmodifiableList(source)` |
+| **Structural snapshot** | Captures a container's structure at a point in time | `List.copyOf(source)` |
+| **Shallow copy** | Copies the outer container but retains element references | `new ArrayList<>(source)` |
+| **Defensive copy** | Copies at boundaries to protect ownership and invariants | `new Date(input.getTime())` in a constructor/getter |
+| **Deep copy of the necessary parts** | Also copies mutable internals that must be separated from external code | Convert each `AttendeeDraft` into a new `Attendee` |
 
-Một lớp không tự động bất biến vì nó có tên `ImmutableSomething`, dùng `final class`, mọi field `private final`, hoặc getter trả collection không sửa được. Muốn kết luận bất biến phải xét **toàn bộ đường mà caller có thể sửa dữ liệu** và mọi tham chiếu mutable lồng nhau.
+A class is not automatically immutable because it is named `ImmutableSomething`, uses `final class`, declares every field `private final`, or returns an unmodifiable collection. To establish immutability, examine **every path through which a caller could modify data** and all nested mutable references.
 
-Trong Java 16+ có `record` giúp viết đối tượng chứa dữ liệu ngắn gọn, nhưng record cũng **không deep copy tự động**:
+Java 16+ provides `record` to simplify data-carrier types, but records also **do not deep-copy automatically**:
 
 ```java
 // Java 16+
@@ -3787,53 +3787,53 @@ public record TeamSnapshot(List<String> members) {
 }
 ```
 
-Ở đây record chụp lại cấu trúc `List<String>` trong canonical constructor; accessor trả về list đã không sửa được. Nếu thay `String` bằng đối tượng mutable, phải xử lý cả phần tử và có thể cần constructor/accessor tùy chỉnh. Cú pháp `record` chỉ giúp giảm boilerplate, không thay thế thiết kế quyền sở hữu dữ liệu.
+Here the record captures the structure of a `List<String>` in its canonical constructor; its accessor returns an already unmodifiable list. Replacing `String` with a mutable object would require handling the elements and possibly customizing the constructor/accessor. `record` syntax reduces boilerplate; it does not replace data-ownership design.
 
-## 8. Đưa việc sao chép vào đúng ranh giới
+## 8. Copy at the appropriate boundary
 
-Không phải mọi thứ đều cần sao chép. Copy tốn thời gian và bộ nhớ, nhất là với đồ thị lớn hoặc dữ liệu mà ứng dụng **cố ý chia sẻ**. Hãy chọn theo hợp đồng API.
+Not everything needs copying. Copies cost time and memory, especially for large object graphs or data an application **deliberately shares**. Choose according to the API contract.
 
-| Tình huống | Lựa chọn hợp lý |
+| Situation | Reasonable choice |
 | --- | --- |
-| Field nhận đối tượng mutable mà lớp muốn sở hữu độc lập | Defensive copy ở constructor/setter thích hợp |
-| Getter không được làm lộ đối tượng mutable nội bộ | Copy ở getter hoặc trả kiểu bất biến |
-| Danh sách giá trị bất biến cần snapshot | `List.copyOf` hoặc cách chụp tương đương |
-| Danh sách chứa phần tử mutable cần snapshot độc lập | Copy hoặc biến đổi từng phần tử thành giá trị bất biến |
-| Nhiều thành phần *cố ý* dùng chung một đối tượng nghiệp vụ | Định nghĩa rõ quyền sửa, đồng bộ và vòng đời; không copy tùy tiện |
-| Dữ liệu đã vốn bất biến như `String`, `Instant` | Chia sẻ tham chiếu thường an toàn |
-| Giao dịch lớn hoặc dữ liệu khối lượng cao | Cân nhắc cost copy, thiết kế value object/snapshot theo phạm vi cần thiết |
+| A field receives a mutable object that the class needs to own independently | Defensive copy in the appropriate constructor/setter |
+| A getter must not expose an internal mutable object | Copy in the getter or return an immutable type |
+| A list of immutable values needs a snapshot | `List.copyOf` or equivalent snapshot mechanism |
+| A list with mutable elements needs an independent snapshot | Copy or convert each element into an immutable value |
+| Multiple components *intentionally* share one business object | Define mutation rights, synchronization, and lifecycle; do not copy indiscriminately |
+| Data is inherently immutable, such as `String` or `Instant` | Sharing references is generally safe |
+| Large transactions or high-volume data | Consider copying cost and design value objects/snapshots for the necessary scope |
 
-Cần phân biệt **snapshot giá trị** với **identity của entity**. Một bản ghi giao dịch bất biến có thể lưu tài khoản nguồn/đích dưới dạng mã tài khoản và số tiền; không nhất thiết phải clone cả đối tượng tài khoản. Copy một thực thể định danh có thể tạo ra hai phiên bản trạng thái độc lập nhưng trùng ID, gây nhầm lẫn.
+Distinguish **value snapshots** from **entity identity**. An immutable transaction record may store source/destination account numbers and the amount without cloning entire account objects. Copying an identity-bearing entity can create two independently changing states with the same ID, causing confusion.
 
-## 9. Bất biến và đồng thời: lợi ích, nhưng không phải toàn bộ giải pháp
+## 9. Immutability and concurrency: benefits, but not a complete solution
 
-Đối tượng thực sự bất biến thường dễ chia sẻ giữa các luồng vì không có thao tác làm biến đổi trạng thái nội bộ sau khi tạo. Tuy vậy:
+Truly immutable objects are often easier to share between threads because their internal state cannot change after construction. Nevertheless:
 
-- Trong khi **đang dựng snapshot**, nếu luồng khác sửa `List` hoặc từng `AttendeeDraft` cùng lúc, kết quả copy có thể không nhất quán hoặc phép duyệt có thể lỗi. Cần lấy dữ liệu dưới khóa phù hợp, snapshot từ dữ liệu ổn định hoặc dùng quy trình đồng bộ ở nơi sở hữu dữ liệu.
-- Nếu ứng dụng có biến `currentSnapshot` bị thay thế liên tục bởi các luồng, việc **công bố tham chiếu mới** vẫn cần cơ chế hiển thị phù hợp như `volatile`, lock hoặc cấu trúc concurrent tương ứng. Bất biến của từng snapshot không tự đồng bộ việc gán tham chiếu.
-- Bất biến của một đối tượng không thay thế giao dịch database khi phải bảo đảm các bản ghi khác nhau thay đổi nguyên tử.
+- While **constructing a snapshot**, another thread modifying the `List` or individual `AttendeeDraft` objects may cause inconsistent copied data or iteration failures. Read under an appropriate lock, snapshot stable data, or coordinate access with the component that owns the data.
+- If an application repeatedly replaces a `currentSnapshot` reference across threads, **publishing the new reference** still requires appropriate memory-visibility mechanisms such as `volatile`, locks, or corresponding concurrent structures. Immutable individual snapshots do not synchronize reference assignments by themselves.
+- The immutability of one object does not replace database transactions when changes across several records must be atomic.
 
-Ví dụ `EventSnapshot` giả định form không bị một luồng khác sửa đồng thời trong lúc constructor đang sao chép. Nó cung cấp trạng thái ổn định **sau** khi tạo thành công.
+The `EventSnapshot` example assumes that another thread is not editing the form while the constructor copies it. The snapshot provides stable state **after** successful construction.
 
-## 10. Những lỗi hay gặp khi kiểm tra tính bất biến
+## 10. Common mistakes when assessing immutability
 
-| Cách viết hoặc nhận định | Rủi ro | Cách xử lý |
+| Code or assumption | Risk | Remedy |
 | --- | --- | --- |
-| `this.date = inputDate;` | Caller có thể sửa đối tượng nội bộ | Copy khi nhận hoặc chuyển sang kiểu bất biến |
-| `return date;` với `date` là `Date` | Getter lộ tham chiếu mutable | Copy khi trả |
-| `private final List<Item> items` | `final` không ngăn sửa list hoặc item | Xem rõ khả năng mutable của container và phần tử |
-| `Collections.unmodifiableList(input)` | Thay đổi từ `input` vẫn hiện qua view | Snapshot cấu trúc khi cần |
-| `List.copyOf(listOfMutableItems)` | Các phần tử còn chia sẻ | Chụp/copy từng phần tử |
-| `array.clone()` cho array đối tượng lồng nhau | Chỉ copy một tầng array | Copy đúng các tầng dữ liệu mutable cần cách ly |
-| Copy entity rồi giữ cùng định danh | Có thể tạo trạng thái trùng ID không nhất quán | Tạo value snapshot thay cho nhân bản entity |
-| Getter trả kiểu bất biến nhưng constructor giữ dữ liệu mutable | Thay đổi qua tham chiếu đầu vào vẫn lọt vào | Phòng vệ cả inbound lẫn outbound |
-| “Object đã immutable nên việc tạo nó từ dữ liệu đang bị thay đổi là an toàn” | Có thể chụp trạng thái không nhất quán | Đồng bộ quá trình đọc/chụp dữ liệu |
+| `this.date = inputDate;` | Caller can modify the internal object | Copy on input or switch to an immutable type |
+| `return date;` where `date` is a `Date` | Getter exposes a mutable reference | Copy on output |
+| `private final List<Item> items` | `final` does not prevent list or item mutation | Examine the mutability of both container and elements |
+| `Collections.unmodifiableList(input)` | Changes to `input` remain visible through the view | Take a structural snapshot when needed |
+| `List.copyOf(listOfMutableItems)` | Elements remain shared | Snapshot/copy each element |
+| `array.clone()` on an array of nested objects | Copies only one array level | Copy the mutable layers that need isolation |
+| Copying an entity while retaining its identity | Can create inconsistent states with duplicate IDs | Create a value snapshot instead of duplicating the entity |
+| Getter returns an immutable type but constructor retains mutable data | Changes through the input reference still propagate | Defend both inbound and outbound boundaries |
+| “The object is immutable, so constructing it from data being modified is safe” | May capture inconsistent state | Synchronize data reading/capture |
 
-## 11. Bài tập ứng dụng
+## 11. Applied exercises
 
-**Bài 1 — sửa lỗi rò rỉ tham chiếu**
+**Exercise 1 — Fix a reference leak**
 
-Cho lớp:
+Given the class:
 
 ```java
 public final class ExamSession {
@@ -3849,15 +3849,15 @@ public final class ExamSession {
 }
 ```
 
-Hãy viết lại constructor và getter để caller không sửa được `beginsAt` sau khi tạo, đồng thời từ chối `null`.
+Rewrite its constructor and getter so the caller cannot modify `beginsAt` after construction, and reject `null`.
 
-*Hướng dẫn:* dùng `Objects.requireNonNull`; tạo `new Date(input.getTime())` ở cả hai ranh giới.
+*Guide:* use `Objects.requireNonNull`; create `new Date(input.getTime())` at both boundaries.
 
-**Bài 2 — chọn đúng mức sao chép**
+**Exercise 2 — Choose the right copying depth**
 
-Giả sử có `List<StringBuilder> notes`. Bạn cần trả một snapshot mà bên ngoài không thể làm đổi nội dung ghi chú trong đối tượng nguồn. Viết phương thức chuyển từng `StringBuilder` thành `String` và trả `List.copyOf` kết quả. Giải thích tại sao `List.copyOf(notes)` riêng lẻ không đáp ứng yêu cầu.
+Suppose you have `List<StringBuilder> notes`. You must return a snapshot that cannot be used to change the original object's note contents. Write a method that converts each `StringBuilder` into a `String` and returns `List.copyOf` of the result. Explain why `List.copyOf(notes)` alone does not satisfy the requirement.
 
-**Bài 3 — đọc hiểu output**
+**Exercise 3 — Understand the output**
 
 ```java
 java.util.List<String> original =
@@ -3874,49 +3874,49 @@ System.out.println(view);
 System.out.println(snapshot);
 ```
 
-**Đáp án:** `view` in `[A, B]`, `snapshot` in `[A]`. Cả hai có thể ném `UnsupportedOperationException` khi caller cố `add(...)` qua chúng, nhưng view không tách cấu trúc khỏi list nguồn.
+**Answer:** `view` prints `[A, B]`, and `snapshot` prints `[A]`. Both may throw `UnsupportedOperationException` if a caller tries `add(...)` through them, but the view is not structurally detached from the source list.
 
-**Bài 4 — thiết kế hệ thống**
+**Exercise 4 — Design a system**
 
-Bạn có `Order` mutable và yêu cầu lập hóa đơn đã phát hành không thay đổi khi giá sản phẩm được cập nhật về sau. Hãy xác định dữ liệu nào nên chụp vào `InvoiceSnapshot` (mã hàng, tên, giá tại thời điểm bán, số lượng, thành tiền...), dữ liệu nào nên lưu bằng định danh tham chiếu, và ai chịu trách nhiệm bảo đảm snapshot được tạo từ một trạng thái giao dịch nhất quán.
+You have a mutable `Order`, and an issued invoice must remain unchanged when product prices are updated later. Identify which data should be captured in an `InvoiceSnapshot` (product code, name, price at sale time, quantity, line total, etc.), which data should be stored by reference identifier, and who is responsible for creating the snapshot from a consistent transactional state.
 
-*Gợi ý:* không sao chép cả entity `Product` mutable vào hóa đơn rồi hy vọng nó mãi giữ giá cũ. Biến thông tin cần thiết thành các giá trị bất biến và chốt chúng trong giao dịch nghiệp vụ phù hợp.
+*Hint:* do not copy an entire mutable `Product` entity into an invoice and assume it will preserve the old price. Convert the necessary information into immutable values and finalize them within an appropriate business transaction.
 
-### Tự kiểm tra khi thiết kế một lớp
+### Self-check when designing a class
 
-Khi một lớp cần giữ trạng thái ổn định, hãy trả lời:
+When a class needs to preserve stable state, ask:
 
-1. Trạng thái nào là **bất biến về nghiệp vụ**; trạng thái nào cần thay đổi có kiểm soát?
-2. Có field nào giữ `Date`, array, collection hoặc object mutable từ bên ngoài không?
-3. Caller còn giữ tham chiếu nào để sửa dữ liệu **sau khi đưa vào constructor**?
-4. Getter có trả ra trực tiếp một đối tượng mutable nội bộ không?
-5. Nếu collection đã snapshot, **các phần tử** có thật sự bất biến không?
-6. Có thể dùng `Instant`, `String`, kiểu giá trị riêng hay primitive thay cho một cấu trúc mutable không?
-7. Có cần copy đồng thời nhất quán và công bố an toàn giữa nhiều luồng không?
+1. Which state is **immutable by business rules**, and which needs controlled changes?
+2. Does any field retain an external `Date`, array, collection, or mutable object?
+3. Which references can callers still use to modify data **after passing it into the constructor**?
+4. Does a getter return an internal mutable object directly?
+5. Once a collection is snapshotted, are **its elements** truly immutable?
+6. Could `Instant`, `String`, a custom value type, or a primitive replace a mutable structure?
+7. Is a consistent concurrent copy and safe publication across threads needed?
 
-**Điểm cốt lõi:** sao chép phòng vệ tạo ranh giới sở hữu dữ liệu; biểu diễn bất biến giúp đối tượng giữ nguyên ý nghĩa theo thời gian. Khi phối hợp chúng đúng chỗ, lớp Java giữ được bất biến của mình mà vẫn cung cấp API dễ sử dụng và kiểm thử.
+**Core point:** defensive copying establishes data-ownership boundaries; immutable representations preserve an object's meaning over time. Used together at the right boundaries, they allow a Java class to maintain its invariants while providing an API that is easy to use and test.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="encapsulation-008">Đóng gói hành vi thay vì chỉ bao bọc dữ liệu</a>
+## <a id="encapsulation-008">Encapsulating behavior rather than merely wrapping data</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đóng gói hành vi thay vì chỉ bao bọc dữ liệu trong Java OOP
+# Encapsulating behavior rather than merely wrapping data in Java OOP
 
-**Đóng gói (encapsulation)** không dừng ở việc đặt các field thành `private` rồi tạo đủ getter/setter. Giá trị lớn hơn của đóng gói là để **đối tượng chịu trách nhiệm thực hiện những thao tác hợp lệ trên chính trạng thái của nó**. Code bên ngoài đưa ra một *ý định* như “xác nhận đơn hàng” hoặc “thêm sản phẩm”; đối tượng tự quyết định thao tác đó có được phép hay không và cập nhật những thuộc tính liên quan một cách nhất quán.
+**Encapsulation** involves more than making fields `private` and generating getters/setters. Its greater value is making **an object responsible for performing valid operations on its own state**. External code expresses an *intention*, such as “confirm an order” or “add a product”; the object decides whether the operation is allowed and updates related properties consistently.
 
-Ví dụ, thay vì yêu cầu bên gọi tự kiểm tra các điều kiện rồi `order.setStatus(CONFIRMED)`, hãy cho `Order` phương thức `confirm()`. Khi quy tắc xác nhận thay đổi, ta sửa tại nơi chịu trách nhiệm về đơn hàng.
+For example, instead of requiring callers to check conditions and then invoke `order.setStatus(CONFIRMED)`, give `Order` a `confirm()` method. When confirmation rules change, update them where the order's behavior is owned.
 
-## 1. Vì sao chỉ bao bọc dữ liệu là chưa đủ?
+## 1. Why is merely wrapping data insufficient?
 
-Xét một lớp đơn hàng đơn giản:
+Consider a simple order class:
 
 ~~~java
 import java.math.BigDecimal;
@@ -3943,7 +3943,7 @@ public class OrderData {
 }
 ~~~
 
-Dù các field đều `private`, lớp này vẫn cho phép:
+Although all fields are `private`, this class still allows:
 
 ~~~java
 OrderData order = new OrderData();
@@ -3952,7 +3952,7 @@ order.setStatus("CONFIRMED");
 order.setTotal(new BigDecimal("-90000"));
 ~~~
 
-Không có gì ngăn đơn hàng được xác nhận dù chưa có sản phẩm hoặc có tổng tiền âm. Toàn bộ hiểu biết về trạng thái hợp lệ có thể bị đẩy ra ngoài:
+Nothing prevents an order with no products or a negative total from being confirmed. All knowledge of valid states may be pushed outside:
 
 ~~~java
 // Mỗi đoạn code gọi tới OrderData có nguy cơ phải kiểm tra lại:
@@ -3963,32 +3963,32 @@ if (order.getTotal() != null &&
 }
 ~~~
 
-Nếu hệ thống có thêm quy tắc như “không thể thêm sản phẩm sau khi xác nhận”, “đơn hủy không thể xác nhận lại”, nhiều nơi sẽ phải tự nhớ và tự áp dụng. Cách thiết kế này thường được gọi là **anemic domain model** (mô hình miền chủ yếu chứa dữ liệu, ít hành vi nghiệp vụ).
+If the system adds rules such as “products cannot be added after confirmation” or “canceled orders cannot be confirmed again,” many callers must remember and enforce them independently. This design is often called an **anemic domain model** (a domain model that mainly carries data and has little business behavior).
 
-Vấn đề không nằm ở bản thân getter/setter. Chúng hoàn toàn phù hợp với nhiều kiểu dữ liệu truyền tải hoặc cấu hình đơn giản. Vấn đề xuất hiện khi **trạng thái mang quy tắc nghiệp vụ** nhưng mọi nơi đều được phép điều khiển nó thông qua các setter không có ràng buộc.
+The problem is not with getters/setters themselves. They suit many data-transfer types or simple configuration objects. The problem occurs when **state carries business rules** but every caller can control it through unconstrained setters.
 
-| Câu hỏi | Lớp chỉ bao bọc dữ liệu | Đối tượng đóng gói hành vi |
+| Question | Class that merely wraps data | Object that encapsulates behavior |
 | --- | --- | --- |
-| Ai quyết định trạng thái hợp lệ? | Thường là code gọi bên ngoài | Đối tượng sở hữu trạng thái |
-| Bên ngoài yêu cầu thay đổi thế nào? | `setStatus(...)`, `setTotal(...)` | `confirm()`, `addLine(...)`, `cancel()` |
-| Quy tắc nằm ở đâu? | Dễ bị lặp ở controller/service/UI | Tập trung quanh hành vi cần bảo vệ |
-| Khi có thêm quy tắc? | Phải tìm nhiều chỗ gán field | Cập nhật các phương thức liên quan |
-| Nguy cơ trạng thái sai? | Cao nếu quên kiểm tra | Giảm nếu mọi đường thay đổi được kiểm soát |
+| Who decides which states are valid? | Usually external calling code | The object that owns the state |
+| How does external code request a change? | `setStatus(...)`, `setTotal(...)` | `confirm()`, `addLine(...)`, `cancel()` |
+| Where do the rules live? | Easily duplicated across controllers/services/UIs | Centered around protected behavior |
+| What happens when rules are added? | Many field assignments must be found | Related behavior methods are updated |
+| Risk of invalid states? | High if checks are forgotten | Lower when all mutation paths are controlled |
 
-Một tên phương thức mô tả **hành động nghiệp vụ** thường truyền đạt ý định tốt hơn tên setter mô tả cách lưu dữ liệu.
+A method name describing **a business action** usually communicates intent more effectively than a setter name describing data storage.
 
-## 2. Ví dụ Java hoàn chỉnh: để Order tự quản lý vòng đời
+## 2. Complete Java example: let Order manage its own lifecycle
 
-Giả sử có các quy tắc sau:
+Suppose the following rules apply:
 
-- Đơn hàng mới ở trạng thái `DRAFT`.
-- Khi còn `DRAFT`, có thể thêm sản phẩm với SKU không rỗng, đơn giá dương và số lượng dương.
-- Chỉ xác nhận được một đơn `DRAFT` có ít nhất một dòng hàng.
-- Sau khi xác nhận, không thể thêm dòng hàng.
-- Chỉ đơn `CONFIRMED` mới có thể bị hủy; sau khi hủy, không thể xác nhận lại.
-- Tổng tiền được **tính từ các dòng hàng**, không cho code bên ngoài tự gán.
+- A new order starts in the `DRAFT` state.
+- While in `DRAFT`, products may be added with nonblank SKUs, positive unit prices, and positive quantities.
+- Only a `DRAFT` order with at least one line item can be confirmed.
+- No line items may be added after confirmation.
+- Only a `CONFIRMED` order can be canceled; once canceled, it cannot be confirmed again.
+- The total is **calculated from line items**, never assigned directly by external code.
 
-Đây là một mô hình minh họa độc lập, chưa tích hợp thanh toán, vận chuyển hoặc cơ sở dữ liệu. Chạy trên **Java 11+**; lưu toàn bộ vào tệp `EncapsulatedOrderDemo.java`.
+This is a self-contained illustrative model without payment, shipping, or database integration. Run it on **Java 11+**, saving everything in `EncapsulatedOrderDemo.java`.
 
 ~~~java
 import java.math.BigDecimal;
@@ -4138,14 +4138,14 @@ public class EncapsulatedOrderDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac EncapsulatedOrderDemo.java
 java EncapsulatedOrderDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Từ chối: Không thể xác nhận đơn hàng rỗng
@@ -4156,21 +4156,21 @@ Sau hủy: CANCELLED
 Số dòng hàng: 2
 ~~~
 
-Điểm đáng chú ý: `Order` tự thực thi quy tắc ở đúng nơi thay đổi trạng thái. Code gọi **không cần biết** cần gán field `status` ra sao hoặc nên cập nhật `total` cùng lúc với `lines` như thế nào.
+The key point: `Order` enforces each rule where its state actually changes. Calling code **does not need to know** how to assign the `status` field or how a `total` would be updated alongside `lines`.
 
-### Vì sao thiết kế này an toàn hơn?
+### Why is this design safer?
 
-**Không có `setStatus()`.** Người gọi chỉ thể hiện ý định `confirm()` hoặc `cancel()`; các trạng thái chuyển tiếp được kiểm tra.
+**No `setStatus()` method.** Callers express only the intent to `confirm()` or `cancel()`; state transitions are validated.
 
-**Không có `setTotal()`.** `getTotal()` tính từ dữ liệu nguồn, nên không có tình huống tổng đã được gán nhưng danh sách sản phẩm chưa thay đổi tương ứng.
+**No `setTotal()` method.** `getTotal()` computes its result from source data, preventing a separately assigned total from becoming inconsistent with the product list.
 
-**Không trả ra danh sách mutable nội bộ.** `getLines()` cung cấp snapshot cấu trúc dưới dạng `List.copyOf(lines)`. Nếu trả thẳng `lines`, code bên ngoài có thể gọi `clear()` để xóa sản phẩm khỏi một đơn đã xác nhận, vượt qua `requireDraft()`. Trong ví dụ, `OrderLine` cũng bất biến nên không thể lách quy tắc bằng cách sửa phần tử.
+**No exposure of an internal mutable list.** `getLines()` returns a structural snapshot via `List.copyOf(lines)`. If it returned `lines` directly, external code could call `clear()` to remove products from a confirmed order, bypassing `requireDraft()`. In this example, `OrderLine` is also immutable, so callers cannot circumvent the rules by modifying elements.
 
-**Kiểm tra trước khi ghi.** `addLine()` tạo và kiểm tra `OrderLine` trước khi thêm vào danh sách; `confirm()` và `cancel()` chỉ gán `status` sau khi các điều kiện được thỏa mãn. Khi bị từ chối, thao tác không để lại cập nhật dở dang.
+**Validate before writing.** `addLine()` creates and validates an `OrderLine` before appending it to the list; `confirm()` and `cancel()` assign `status` only after their conditions are satisfied. Rejected operations leave no partial updates.
 
-## 3. Theo dõi trạng thái bằng sơ đồ và bảng
+## 3. Tracking state through diagrams and tables
 
-Các bước chuyển trạng thái hợp lệ của `Order`:
+Valid state transitions of `Order`:
 
 ~~~mermaid
 stateDiagram-v2
@@ -4180,26 +4180,26 @@ stateDiagram-v2
     CONFIRMED --> CANCELLED : cancel()
 ~~~
 
-Những chuyển trạng thái **không có mũi tên** (như `CANCELLED → CONFIRMED` hoặc `CONFIRMED → DRAFT`) không được API trong ví dụ cho phép.
+Transitions **without arrows** (such as `CANCELLED → CONFIRMED` or `CONFIRMED → DRAFT`) are not permitted by the example API.
 
-| Trạng thái hiện tại | Lệnh gọi | Kết quả |
+| Current state | Call | Result |
 | --- | --- | --- |
-| `DRAFT`, chưa có dòng hàng | `confirm()` | Ném `IllegalStateException`; vẫn `DRAFT` |
-| `DRAFT`, có sản phẩm hợp lệ | `addLine(...)` | Thêm dòng hàng, vẫn `DRAFT` |
-| `DRAFT`, có sản phẩm | `confirm()` | Chuyển `CONFIRMED` |
-| `CONFIRMED` | `addLine(...)` | Bị từ chối; không thêm sản phẩm |
-| `CONFIRMED` | `cancel()` | Chuyển `CANCELLED` |
-| `CANCELLED` | `confirm()` hoặc `cancel()` | Bị từ chối |
+| `DRAFT`, no line items | `confirm()` | Throws `IllegalStateException`; remains `DRAFT` |
+| `DRAFT`, valid product provided | `addLine(...)` | Adds a line item; remains `DRAFT` |
+| `DRAFT`, contains products | `confirm()` | Transitions to `CONFIRMED` |
+| `CONFIRMED` | `addLine(...)` | Rejected; no product added |
+| `CONFIRMED` | `cancel()` | Transitions to `CANCELLED` |
+| `CANCELLED` | `confirm()` or `cancel()` | Rejected |
 
-**Invariant** (điều kiện cần luôn đúng với đối tượng ở trạng thái quan sát hợp lệ) của mô hình này bao gồm: mã đơn không rỗng; mọi `OrderLine` có SKU hợp lệ, giá và số lượng dương; danh sách không thể bị sửa trực tiếp từ code ngoài; trạng thái thuộc một trong ba giá trị enum; khi trạng thái là `CONFIRMED` hoặc `CANCELLED` thì đơn đã trải qua bước xác nhận với ít nhất một dòng hàng.
+This model's **invariants** (conditions that must hold whenever the object can validly be observed) include: nonblank order codes; valid SKUs, positive prices, and quantities for every `OrderLine`; a list that cannot be directly modified by external code; a state that belongs to one of the three enum values; and at least one line item from prior confirmation whenever the state is `CONFIRMED` or `CANCELLED`.
 
-Một phương thức có hành vi tốt nên giữ invariant trước và sau mỗi thao tác thành công. Với thao tác thất bại, nên từ chối **trước khi thay đổi trạng thái** khi điều đó khả thi.
+A well-designed behavior method should preserve invariants before and after every successful operation. For rejected operations, it should fail **before changing state** whenever feasible.
 
-## 4. “Tell, Don't Ask”: yêu cầu đối tượng làm việc thay vì lấy dữ liệu để tự làm
+## 4. “Tell, Don't Ask”: ask an object to act instead of extracting data to act on it
 
-Nguyên tắc **Tell, Don't Ask** khuyến khích gửi một yêu cầu nghiệp vụ tới đối tượng đang sở hữu dữ liệu, thay vì liên tục đọc trạng thái của nó rồi thao tác từ bên ngoài.
+The **Tell, Don't Ask** principle encourages sending a business request to the object that owns the data rather than repeatedly inspecting its state and performing the operation externally.
 
-**Cách dễ phân tán quy tắc:**
+**An approach that scatters rules:**
 
 ~~~java
 // Chỉ minh họa phong cách code: một kiểu Order khác có các setter này.
@@ -4209,51 +4209,51 @@ if (order.getStatus() == Status.DRAFT
 }
 ~~~
 
-**Cách thể hiện ý định:**
+**An intention-revealing approach:**
 
 ~~~java
 order.confirm();
 ~~~
 
-Phương thức `confirm()` chính là nơi định nghĩa các điều kiện và chuyển trạng thái. Khi quy tắc mới xuất hiện, ví dụ cần kiểm tra địa chỉ giao hàng trước khi xác nhận, hành vi xác nhận hoặc đối tượng cộng tác phù hợp có thể được mở rộng mà không phải tìm các lệnh `setStatus` trên khắp ứng dụng.
+The `confirm()` method defines the conditions and state transition. When new rules appear, such as checking the delivery address before confirmation, the confirmation behavior or an appropriate collaborator can be extended without searching for `setStatus` calls throughout the application.
 
-Điều này **không có nghĩa getter là xấu**. Getter rất hữu ích khi hiển thị, ghi log hoặc lập báo cáo:
+This **does not mean getters are bad**. Getters are useful for display, logging, and reporting:
 
 ~~~java
 System.out.println(order.getStatus());
 System.out.println(order.getTotal());
 ~~~
 
-Khác biệt nằm ở **mục đích**: *đọc để trình bày* là hợp lý; *đọc toàn bộ trạng thái để quyết định rồi tự gán các field mang nghiệp vụ* thường là tín hiệu cần xem lại trách nhiệm.
+The difference is **purpose**: *reading for presentation* is reasonable; *reading all state to make a business decision and then assigning several fields externally* often suggests misplaced responsibility.
 
-## 5. Giao diện hành vi tốt nên giấu cái gì?
+## 5. What should a good behavioral interface hide?
 
-Một API của đối tượng nên bộc lộ **những thao tác có nghĩa với miền nghiệp vụ**, đồng thời che giấu các chi tiết có thể thay đổi.
+An object's API should expose **operations meaningful to the business domain** while hiding implementation details that may change.
 
-| Thông tin / thao tác | Nên công khai? | Lý do |
+| Data/operation | Expose publicly? | Reason |
 | --- | --- | --- |
-| `getStatus()` | Có thể | Người dùng giao diện cần biết trạng thái |
-| `getTotal()` | Có thể | Hiển thị tổng tiền và đối soát |
-| `addLine(...)` | Có | Nói rõ hành động thêm sản phẩm, cho phép kiểm soát |
-| `confirm()`, `cancel()` | Có | Biểu đạt chuyển trạng thái theo nghiệp vụ |
-| `setStatus(Status)` | Không trong ví dụ | Cho phép bỏ qua quy trình xác nhận/hủy |
-| `setTotal(BigDecimal)` | Không | Có thể làm tổng tiền lệch khỏi dòng hàng |
-| `getMutableLines()` trả `ArrayList` nội bộ | Không | Caller có thể sửa danh sách mà không qua quy tắc |
-| Hàm trợ giúp `requireDraft()` | `private` | Là chi tiết thực thi quy tắc nội bộ |
+| `getStatus()` | Possibly | The UI needs to know the current state |
+| `getTotal()` | Possibly | Display totals and support reconciliation |
+| `addLine(...)` | Yes | Expresses adding a product and allows validation |
+| `confirm()`, `cancel()` | Yes | Express business state transitions |
+| `setStatus(Status)` | No in this example | Would bypass the confirmation/cancellation workflow |
+| `setTotal(BigDecimal)` | No | Could make the total inconsistent with line items |
+| `getMutableLines()` returns the internal `ArrayList` | No | Callers could modify the list without following rules |
+| Helper `requireDraft()` | `private` | Implements internal rules |
 
-Cũng cần tránh một thiết kế ngược lại: tạo phương thức như `setDataWithValidation()` chỉ đổi tên setter, trong khi bên ngoài vẫn quyết định toàn bộ luồng và trạng thái. Hãy đặt câu hỏi: **“Thao tác này đại diện cho hành động thực tế nào của đối tượng?”**
+Also avoid the opposite mistake: creating a method such as `setDataWithValidation()` that merely renames a setter while external code still decides the entire workflow and state. Ask: **“What real operation does this method represent for the object?”**
 
-Với đối tượng phức tạp, không nhất thiết mỗi câu lệnh đều trở thành một phương thức công khai. Chỉ bộc lộ các hành vi có ích đối với bên sử dụng và giữ chi tiết nội bộ ở mức `private` thích hợp.
+For complex objects, not every statement needs its own public method. Expose only behavior useful to clients and keep internal details at an appropriate `private` level.
 
-## 6. Phân định trách nhiệm giữa Entity và Service
+## 6. Dividing responsibilities between entities and services
 
-Đóng gói hành vi **không có nghĩa nhồi mọi logic của ứng dụng vào một entity**. Cần phân biệt:
+Behavioral encapsulation **does not mean cramming all application logic into one entity**. Distinguish:
 
-- **Entity / domain object**: bảo vệ trạng thái và quy tắc liên quan trực tiếp đến nó, ví dụ `Order.confirm()`, `Order.addLine()`, `Order.cancel()`.
-- **Application service**: điều phối một use case, kết hợp repository, cổng thanh toán, dịch vụ vận chuyển hoặc gửi thông báo.
-- **Infrastructure adapter**: thực hiện kết nối HTTP, database, message broker, v.v.
+- **Entity / domain object**: enforces its own state and directly related rules, such as `Order.confirm()`, `Order.addLine()`, and `Order.cancel()`.
+- **Application service**: coordinates a use case involving repositories, payment gateways, shipping services, or notifications.
+- **Infrastructure adapter**: handles HTTP, database, message broker, and other connections.
 
-Ví dụ một luồng xác nhận đơn hàng **chỉ ở mức minh họa kiến trúc**:
+For example, an order-confirmation flow **illustrating only the architecture**:
 
 ~~~java
 // Pseudocode: minh họa trách nhiệm, không phải đoạn chạy độc lập.
@@ -4266,27 +4266,27 @@ public void confirmOrder(String orderId) {
 }
 ~~~
 
-`Order` không cần biết cách kết nối database hay gửi email. `OrderService` (hoặc use-case service) không cần tự cài lại điều kiện “đơn hàng không rỗng và đang DRAFT” bằng cách đọc nhiều field của `Order`.
+`Order` does not need to know how to connect to databases or send emails. `OrderService` (or a use-case service) should not need to reimplement the “order has items and is in DRAFT” condition by reading multiple `Order` fields.
 
-**Lưu ý về tính nhất quán:** đoạn pseudo trên chỉ để minh họa phân chia trách nhiệm. Trong hệ thống thực, lưu đơn và phát sự kiện có thể thất bại ở các thời điểm khác nhau; có thể cần transaction, transactional outbox, retry hoặc cơ chế thích hợp. Chuyển quy tắc vào entity **không tự giải quyết** toàn bộ vấn đề giao dịch và hệ thống phân tán.
+**Consistency note:** the pseudocode only illustrates separation of responsibilities. In a real system, persisting orders and publishing events may fail at different times; transactions, transactional outboxes, retries, or other mechanisms may be needed. Moving rules into an entity **does not automatically solve** distributed-system and transaction problems.
 
-Một dấu hiệu rõ ràng về vị trí logic:
+A clear guide for locating logic:
 
-| Logic cần đặt | Nơi thường phù hợp |
+| Logic to enforce | Typical location |
 | --- | --- |
-| “Chỉ đơn nháp mới được thêm hàng” | `Order` |
-| “Không xác nhận đơn rỗng” | `Order` |
-| “Số tiền một dòng = giá × số lượng” | `OrderLine` |
-| “Tìm đơn trong database” | Repository |
-| “Gọi ngân hàng để thu tiền” | Payment gateway / service |
-| “Phối hợp xác nhận, lưu, phát sự kiện” | Application service |
-| “Quy tắc liên quan nhiều entity, không thuộc riêng entity nào” | Domain service hoặc quy trình nghiệp vụ thích hợp |
+| “Only draft orders can accept new items” | `Order` |
+| “Cannot confirm an empty order” | `Order` |
+| “Line total = price × quantity” | `OrderLine` |
+| “Find an order in the database” | Repository |
+| “Call the bank to collect payment” | Payment gateway / service |
+| “Coordinate confirmation, persistence, and event publishing” | Application service |
+| “Rules involving several entities but owned by none individually” | Domain service or an appropriate business workflow |
 
-Ranh giới này phụ thuộc miền nghiệp vụ; không phải một công thức bắt buộc cho mọi ứng dụng.
+The boundary depends on the business domain; there is no mandatory formula for every application.
 
-## 7. Tại sao dữ liệu cần được bảo vệ cả khi trả về?
+## 7. Why must returned data be protected too?
 
-Chỉ `private List<OrderLine> lines` **không đủ** nếu getter trả thẳng danh sách đó:
+Declaring `private List<OrderLine> lines` is **not sufficient** if a getter returns the list directly:
 
 ~~~java
 class UnsafeOrder {
@@ -4298,29 +4298,29 @@ class UnsafeOrder {
 }
 ~~~
 
-Đoạn gọi có thể sửa trạng thái đối tượng mà không thông qua hành vi đã thiết kế:
+Calling code can modify object state without using the designed behavior:
 
 ~~~java
 UnsafeOrder order = new UnsafeOrder();
 order.getSkus().add("ITEM-001");
 ~~~
 
-Các lựa chọn thường dùng:
+Common choices include:
 
-| Cách cung cấp dữ liệu | Tác động |
+| How data is exposed | Effect |
 | --- | --- |
-| `return lines;` | Lộ collection mutable nếu `lines` là mutable |
-| `return Collections.unmodifiableList(lines);` | View không thể sửa qua getter nhưng sẽ phản ánh các thay đổi sau đó của danh sách nội bộ |
-| `return List.copyOf(lines);` | Snapshot cấu trúc không thể sửa, nhưng **không deep copy** phần tử |
-| Trả DTO/value object bất biến | Có thể bảo vệ cả trạng thái phần tử tùy thiết kế |
+| `return lines;` | Exposes a mutable collection if `lines` is mutable |
+| `return Collections.unmodifiableList(lines);` | An unmodifiable view through the getter that still reflects subsequent changes to the internal list |
+| `return List.copyOf(lines);` | An unmodifiable structural snapshot, but **does not deep-copy** elements |
+| Return an immutable DTO/value object | May also protect element state, depending on the design |
 
-Trong `EncapsulatedOrderDemo`, `OrderLine` có field `private final` chứa `String`, `BigDecimal`, `int` (đều không có nội dung mutable có thể bị lộ) và không có setter. Do đó, kết hợp với `List.copyOf(lines)` là đủ cho yêu cầu bảo vệ danh sách trong ví dụ. Nếu phần tử chứa `List` hay `Date` mutable, cần tiếp tục xét defensive copy ở cấp sâu hơn.
+In `EncapsulatedOrderDemo`, `OrderLine` has `private final` fields containing `String`, `BigDecimal`, and `int` (none exposing mutable internal contents), and no setters. Thus, combining them with `List.copyOf(lines)` meets the list-protection requirements of this example. If elements contain mutable `List` or `Date` values, deeper defensive copying must be considered.
 
-## 8. Kiểm thử hành vi thay vì chỉ kiểm tra getter/setter
+## 8. Test behavior, not just getters and setters
 
-Một bài test tốt nên diễn đạt **luật nghiệp vụ**, bao gồm kết quả khi thao tác bị từ chối.
+A good test expresses **business rules**, including what happens when an operation is rejected.
 
-Ví dụ sử dụng **JUnit 5**, đặt test ở cùng package với `EncapsulatedOrderDemo`:
+For example, using **JUnit 5**, place a test in the same package as `EncapsulatedOrderDemo`:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -4381,96 +4381,96 @@ class OrderBehaviorTest {
 }
 ~~~
 
-Ví dụ test cần dependency và test runner JUnit Jupiter phù hợp; chương trình `EncapsulatedOrderDemo.java` ở phần 2 **chạy độc lập** với thư viện chuẩn Java.
+The sample test requires the appropriate JUnit Jupiter dependency and test runner; the `EncapsulatedOrderDemo.java` program in section 2 **runs independently** using the Java standard library.
 
-Các test này không cố chứng minh setter hoạt động; chúng bảo đảm rằng **đối tượng từ chối những hành vi không hợp lệ** và vẫn giữ trạng thái đúng sau khi từ chối. Đây chính là giá trị cần bảo vệ khi refactor.
+These tests do not merely prove that setters work; they verify that **the object rejects invalid operations** and maintains correct state after rejection. That is the behavior worth preserving during refactoring.
 
-## 9. Khi nào mô hình giàu hành vi là lựa chọn tốt?
+## 9. When is a behavior-rich model useful?
 
-Ưu tiên đưa hành vi về đối tượng khi:
+Favor moving behavior into an object when:
 
-- Một trường dữ liệu có **quy tắc chuyển trạng thái** hoặc ràng buộc kết hợp với các trường khác.
-- Nhiều nơi đang lặp lại cùng chuỗi `get... → if... → set...`.
-- Việc cập nhật sai có thể tạo dữ liệu nghiệp vụ không hợp lệ.
-- Đối tượng có các hành động tự nhiên như `approve`, `reserve`, `withdraw`, `activate`, `close`.
-- Bạn muốn kiểm thử nghiệp vụ qua API rõ ràng, không phụ thuộc trực tiếp cấu trúc field.
+- A data field has **state-transition rules** or constraints involving other fields.
+- Multiple callers repeat the same `get... → if... → set...` sequence.
+- Incorrect updates can create invalid business data.
+- The object has natural actions such as `approve`, `reserve`, `withdraw`, `activate`, or `close`.
+- You want to test business logic through a clear API without depending directly on field structure.
 
-Không nhất thiết làm như vậy cho mọi đối tượng:
+This approach is not necessary for every object:
 
-- **DTO/request/response** chủ yếu dùng để truyền hoặc hiển thị dữ liệu có thể chỉ cần constructor, getter, mapping/validation ở ranh giới.
-- **Value object bất biến** có thể tập trung vào việc kiểm tra ở constructor và những phép biến đổi trả về object mới.
-- **Tác vụ tích hợp hoặc quy trình xuyên nhiều đối tượng** thường cần service để điều phối.
-- Những kiểu dữ liệu chỉ có cấu hình đơn giản và không có invariant phức tạp không cần bị ép thành state machine.
+- **DTO/request/response** types primarily transfer or display data and may need only constructors, getters, and boundary mapping/validation.
+- **Immutable value objects** can focus on constructor validation and transformations returning new objects.
+- **Integration tasks or workflows spanning multiple objects** generally need coordinating services.
+- Simple configuration data without complex invariants need not be forced into a state machine.
 
-Một ví dụ tốt về thay đổi từ thiết kế hướng dữ liệu sang hướng hành vi là:
+A useful example of shifting from data-oriented to behavior-oriented design:
 
-| Cách suy nghĩ thiên về field | Cách suy nghĩ thiên về hành động |
+| Field-oriented thinking | Action-oriented thinking |
 | --- | --- |
-| “Cho phép sửa `status`” | “Cho phép xác nhận/hủy trong điều kiện nào?” |
-| “Cần setter để sửa `balance`” | “Cho phép nạp, rút, chuyển tiền bằng luật gì?” |
-| “Thay `reserved` từ 2 thành 5” | “Yêu cầu giữ thêm 3 đơn vị có hợp lệ không?” |
-| “Sửa `isActive`” | “Ai được kích hoạt hoặc vô hiệu hóa và khi nào?” |
-| “Tổng tiền là số được lưu” | “Tổng tiền được hình thành từ dữ liệu nguồn nào?” |
+| “Allow modifying `status`” | “Under what conditions may confirmation/cancellation happen?” |
+| “Need a setter to change `balance`” | “What rules govern deposits, withdrawals, and transfers?” |
+| “Change `reserved` from 2 to 5” | “Is requesting 3 additional reserved units valid?” |
+| “Change `isActive`” | “Who may activate or deactivate it, and when?” |
+| “The total is a stored number” | “Which source data determines the total?” |
 
-## 10. Các lỗi dễ mắc khi chuyển sang đóng gói hành vi
+## 10. Common mistakes when moving to behavioral encapsulation
 
-**1. Chỉ đổi tên setter.** `updateStatus(CONFIRMED)` vẫn cho caller quyết định trạng thái trực tiếp. Hãy thiết kế `confirm()` mang điều kiện cụ thể.
+**1. Merely renaming a setter.** `updateStatus(CONFIRMED)` still lets callers choose state directly. Design a `confirm()` operation with explicit conditions.
 
-**2. Kiểm tra ở controller nhưng entity vẫn cho sửa tùy ý.** Một API khác, batch job hoặc test có thể bỏ qua controller. Quy tắc cốt lõi của entity cần nằm tại API thay đổi trạng thái của entity (trừ khi có lý do kiến trúc rõ ràng).
+**2. Validating in a controller while leaving the entity freely mutable.** Another API, batch job, or test can bypass the controller. Core entity rules belong in its state-changing API, unless there is a clear architectural reason otherwise.
 
-**3. Phơi bày collection mutable.** Getter trả tham chiếu tới collection nội bộ tạo một con đường thay đổi không qua các hành vi.
+**3. Exposing mutable collections.** A getter returning a reference to an internal collection creates a mutation path that bypasses behaviors.
 
-**4. Cập nhật một nửa rồi mới ném lỗi.** Validate tất cả điều kiện và dữ liệu cần thiết trước khi gán nếu có thể; đối với giao dịch nhiều đối tượng cần phương án nhất quán phù hợp.
+**4. Partially updating state before throwing.** Validate all conditions and necessary data before assignment when possible; operations involving multiple objects require a suitable consistency strategy.
 
-**5. Dồn mọi logic vào một lớp cực lớn.** Chia trách nhiệm theo dữ liệu mà đối tượng thực sự sở hữu và để service điều phối tương tác bên ngoài.
+**5. Putting all logic into one enormous class.** Divide responsibilities according to the data the object actually owns; let services coordinate external interactions.
 
-**6. Cho rằng đóng gói tự bảo đảm an toàn đồng thời.** Nếu nhiều thread đồng thời gọi `addLine()` hoặc `confirm()` trên cùng một `Order`, bản mẫu dùng `ArrayList` và field thường ở đây **không thread-safe**. Cần phân định ranh giới request/aggregate và dùng synchronization, transaction, optimistic locking hoặc cơ chế tương ứng trong hệ thống thực.
+**6. Assuming encapsulation guarantees concurrency safety.** If multiple threads call `addLine()` or `confirm()` concurrently on the same `Order`, the sample using `ArrayList` and ordinary fields here **is not thread-safe**. Real systems need request/aggregate boundaries and synchronization, transactions, optimistic locking, or equivalent mechanisms.
 
-## 11. Tự luyện tập
+## 11. Practice exercises
 
-**Bài 1.** Một lớp `BankAccount` có `getBalance()` và `setBalance(BigDecimal)`. Hãy đề xuất API biểu đạt nghiệp vụ tốt hơn.
+**Exercise 1.** A `BankAccount` class has `getBalance()` and `setBalance(BigDecimal)`. Propose an API that expresses business intent better.
 
-**Gợi ý:** `deposit(amount)`, `withdraw(amount)`, có thể `transferTo(target, amount)` nếu thiết kế bảo vệ được cả hai tài khoản. Đặt quy tắc số tiền dương, đủ số dư, hạn mức và tính nhất quán ở các phương thức thích hợp; chuyển giữa hai tài khoản có thể cần transaction/locking.
+**Hint:** `deposit(amount)`, `withdraw(amount)`, and perhaps `transferTo(target, amount)` if the design can protect both accounts. Enforce positive amounts, sufficient funds, limits, and consistency in appropriate methods; transfers between accounts may require transactions/locking.
 
-**Bài 2.** Khi thêm chức năng “không hủy đơn đã giao”, nên kiểm tra ở đâu?
+**Exercise 2.** Where should the rule “delivered orders cannot be canceled” be checked?
 
-**Gợi ý:** Hành vi hủy trên đối tượng `Order` (hoặc mô hình vòng đời/phân quyền liên quan) phải biết trạng thái vận chuyển cần thiết. Tránh chỉ kiểm tra ở màn hình rồi vẫn để `setStatus(CANCELLED)` từ nơi khác.
+**Hint:** Cancellation behavior in `Order` (or its related lifecycle/authorization model) must know the relevant shipping status. Avoid checking only in a UI while allowing `setStatus(CANCELLED)` elsewhere.
 
-**Bài 3.** Có nên xóa mọi getter trên `Order` để tuân theo Tell, Don't Ask?
+**Exercise 3.** Should every getter on `Order` be removed to follow Tell, Don't Ask?
 
-**Đáp án:** Không. Đọc thông tin để hiển thị, truy vấn, báo cáo là nhu cầu hợp lý. Cảnh báo chỉ xuất hiện khi bên ngoài liên tục đọc trạng thái để **ra quyết định thay đối tượng** rồi trực tiếp thay nhiều field.
+**Answer:** No. Reading data for display, queries, and reports is legitimate. The warning applies when external code repeatedly reads state to **make decisions on the object's behalf** and then directly modifies multiple fields.
 
-**Bài 4.** Nếu `Order.getLines()` trả `List.copyOf(lines)` nhưng từng `OrderLine` lại có `setPrice()`, đối tượng có được bảo vệ hoàn toàn chưa?
+**Exercise 4.** If `Order.getLines()` returns `List.copyOf(lines)` but each `OrderLine` has a `setPrice()` method, is the object fully protected?
 
-**Đáp án:** Chưa. Collection không thể sửa cấu trúc, nhưng từng phần tử mutable vẫn có thể bị người gọi cập nhật qua tham chiếu. Cần thiết kế `OrderLine` bất biến, defensive copy phù hợp hoặc chỉ trả dữ liệu quan sát an toàn.
+**Answer:** No. The collection's structure cannot be changed, but callers can still modify mutable elements through their references. Design immutable `OrderLine` objects, use suitable defensive copies, or expose only safe observable data.
 
-**Bài 5.** Khi xác nhận đơn hàng cần thanh toán qua API và lưu vào database, có nên gọi HTTP trực tiếp bên trong `Order.confirm()`?
+**Exercise 5.** If confirming an order requires payment through an API and persistence to a database, should `Order.confirm()` make the HTTP call directly?
 
-**Gợi ý:** Thường không. Hãy để `Order` quyết định tính hợp lệ của chuyển trạng thái; application service điều phối cổng thanh toán, lưu dữ liệu và phát sự kiện. Thiết kế phải xét trạng thái khi một phần thao tác ngoài hệ thống thất bại.
+**Hint:** Usually not. Let `Order` decide whether the transition is valid; an application service coordinates the payment gateway, persistence, and event publishing. The design must consider what happens if part of an external workflow fails.
 
-Điểm cần nhớ khi thiết kế lớp: **“Đối tượng này chịu trách nhiệm bảo vệ điều gì, và người dùng cần yêu cầu nó thực hiện những hành động nào?”** Khi API mô tả được hành động thay vì chỉ phơi ra dữ liệu, lớp thường dễ dùng đúng hơn, khó bị sửa sai hơn và dễ kiểm thử quy tắc nghiệp vụ hơn.
+A key design question is: **“What is this object responsible for protecting, and what actions do its clients need to request?”** When an API describes behavior instead of merely exposing data, the class is generally easier to use correctly, harder to misuse, and easier to test against business rules.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="encapsulation-009">Ví dụ bảo vệ số dư và trạng thái đơn hàng</a>
+## <a id="encapsulation-009">Example: protecting account balances and order states</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Ví dụ bảo vệ số dư và trạng thái đơn hàng trong Java
+# Example: protecting account balances and order states in Java
 
-**Chủ đề:** OOP → Đóng gói (Encapsulation) → Ví dụ bảo vệ số dư và trạng thái đơn hàng.
+**Topic:** OOP → Encapsulation → Example: protecting account balances and order states.
 
-Hai bài toán dễ gặp khi thiết kế đối tượng: **số dư tài khoản không được âm** và **đơn hàng không thể chuyển tùy ý giữa các trạng thái**. Cả hai đều cần nhiều hơn một trường `private`: đối tượng phải kiểm tra điều kiện trước khi thực hiện thay đổi, chỉ công khai thao tác có ý nghĩa và bảo đảm trạng thái hợp lệ sau thao tác.
+Two common object-design problems are **preventing negative account balances** and **preventing arbitrary order-state transitions**. Both require more than a `private` field: the object must validate before making changes, expose only meaningful operations, and ensure its state remains valid afterward.
 
-## 1. Vấn đề: khi bên ngoài có thể sửa trạng thái tùy ý
+## 1. The problem: external code can change state arbitrarily
 
-Hãy xem thiết kế ban đầu:
+Consider the initial design:
 
 ```java
 class UnsafeAccount {
@@ -4482,7 +4482,7 @@ class UnsafeOrder {
 }
 ```
 
-Mã gọi có thể thực hiện:
+Calling code can do this:
 
 ```java
 UnsafeAccount account = new UnsafeAccount();
@@ -4493,19 +4493,19 @@ order.status = "SHIPPED";             // Giao hàng dù chưa thanh toán
 order.status = "SOMETHING_ELSE";      // Trạng thái không thuộc nghiệp vụ
 ```
 
-Các phép gán này hợp lệ về cú pháp, nhưng phá **bất biến (invariant)** của đối tượng:
+These assignments are syntactically valid but violate object **invariants**:
 
-| Đối tượng | Bất biến phải giữ | Ví dụ vi phạm |
+| Object | Invariant to preserve | Example violation |
 |---|---|---|
-| Tài khoản | Số dư không âm; thao tác với số tiền hợp lệ | Rút vượt số dư hoặc nạp số tiền âm |
-| Đơn hàng | Trạng thái phải thuộc tập cho phép; chuyển trạng thái đúng thứ tự | Từ CREATED chuyển thẳng sang SHIPPED |
-| Cả hai | Dữ liệu chỉ đổi qua những hành vi được kiểm tra | Mã ngoài gán trực tiếp trường |
+| Account | Nonnegative balance; operations use valid amounts | Withdraw more than the balance or deposit a negative amount |
+| Order | State belongs to the permitted set; transitions occur in the correct sequence | Move directly from CREATED to SHIPPED |
+| Both | Data changes only through validated behavior | External code assigns fields directly |
 
-Thiết kế tốt cho người dùng lớp **yêu cầu hành động** (`deposit`, `withdraw`, `markPaid`, `ship`), còn đối tượng **quyết định hành động đó có hợp lệ hay không**.
+A good design lets clients **request actions** (`deposit`, `withdraw`, `markPaid`, `ship`), while objects **decide whether those actions are valid**.
 
-## 2. Ví dụ Java hoàn chỉnh: Account và Order
+## 2. Complete Java example: Account and Order
 
-Ví dụ chạy được bằng **Java 17 trở lên**, không cần thư viện bên ngoài. Lưu toàn bộ mã sau vào `EncapsulationDemo.java`.
+This example runs on **Java 17 or later** without external libraries. Save all the following code to `EncapsulationDemo.java`.
 
 ```java
 import java.util.List;
@@ -4673,14 +4673,14 @@ public class EncapsulationDemo {
 }
 ```
 
-Biên dịch và chạy trong thư mục chứa tệp:
+Compile and run in the directory containing the file:
 
 ```bash
 javac EncapsulationDemo.java
 java EncapsulationDemo
 ```
 
-Kết quả mong đợi:
+Expected output:
 
 ```text
 Rút 25.000: true
@@ -4694,34 +4694,34 @@ Không thể hủy: SHIPPED
 Số dòng hàng: 1
 ```
 
-Ví dụ trên chỉ mô phỏng **trạng thái trong bộ nhớ**. Chức năng `markPaid()` đánh dấu thanh toán đã được xác thực ở bên ngoài; nó **không thực hiện thanh toán thật** hay tự kiểm tra giao dịch từ cổng thanh toán.
+The example simulates only **in-memory state**. The `markPaid()` operation marks a payment as having been verified externally; it **does not process a real payment** or verify a payment-gateway transaction itself.
 
-## 3. Bảo vệ số dư bằng bất biến và phương thức có kiểm tra
+## 3. Protecting balances through invariants and validated methods
 
-Hợp đồng của `Account` là:
+The contract of `Account` is:
 
 ```text
 Đối tượng hợp lệ: balanceCents >= 0
 Tiền nạp/rút hợp lệ: amountCents > 0
 ```
 
-Số dư là `private`, nên đoạn này **không biên dịch** từ mã ngoài `Account`:
+Because the balance is `private`, the following code **does not compile** outside `Account`:
 
 ```java
 Account account = new Account("ACC-002", 0);
 // account.balanceCents = -10; // Lỗi: balanceCents has private access
 ```
 
-Bên ngoài chỉ có thể dùng những hành vi đã cho phép:
+External code can use only the permitted operations:
 
-| Phương thức | Đầu vào | Thành công | Bị từ chối |
+| Method | Input | Success | Rejection |
 |---|---|---|---|
-| `new Account(id, initial)` | ID không rỗng, số dư đầu kỳ không âm | Tạo đối tượng hợp lệ | `IllegalArgumentException` |
-| `deposit(amount)` | Số tiền dương, phép cộng không tràn | Tăng số dư | `IllegalArgumentException` hoặc `ArithmeticException` |
-| `withdraw(amount)` | Số tiền dương | Đủ tiền: giảm số dư, trả `true` | Không đủ: trả `false`, không đổi số dư |
-| `balanceCents()` | Không có | Đọc giá trị hiện tại | Không cấp quyền ghi |
+| `new Account(id, initial)` | Nonblank ID, nonnegative opening balance | Creates a valid object | `IllegalArgumentException` |
+| `deposit(amount)` | Positive amount, addition does not overflow | Increases balance | `IllegalArgumentException` or `ArithmeticException` |
+| `withdraw(amount)` | Positive amount | Sufficient funds: decreases balance, returns `true` | Insufficient funds: returns `false`, leaves balance unchanged |
+| `balanceCents()` | None | Reads the current value | Grants no write access |
 
-### Tại sao kiểm tra phải xảy ra trước phép gán?
+### Why must validation happen before assignment?
 
 ```java
 public synchronized void deposit(long amountCents) {
@@ -4731,13 +4731,13 @@ public synchronized void deposit(long amountCents) {
 }
 ```
 
-Trình tự này tạo một điểm cập nhật rõ ràng:
+This sequence provides a clear update point:
 
-1. Từ chối số tiền không dương.
-2. Tính kết quả mới bằng `Math.addExact`; nếu phép cộng tràn `long`, ngoại lệ xảy ra **trước phép gán**.
-3. Chỉ khi mọi kiểm tra đã thành công mới cập nhật `balanceCents`.
+1. Reject nonpositive amounts.
+2. Compute the new result using `Math.addExact`; if the sum overflows `long`, the exception occurs **before assignment**.
+3. Update `balanceCents` only after all checks have succeeded.
 
-Trong `withdraw`, điều kiện `amountCents > balanceCents` được kiểm tra trước phép trừ nên số dư không bao giờ âm do rút vượt hạn mức:
+In `withdraw`, the condition `amountCents > balanceCents` is checked before subtraction, so an excessive withdrawal cannot make the balance negative:
 
 ```mermaid
 flowchart TD
@@ -4749,24 +4749,24 @@ flowchart TD
     E --> F["return true"]
 ```
 
-Trả `false` cho việc thiếu tiền là một lựa chọn API: đây có thể là kết quả nghiệp vụ thông thường. Nếu yêu cầu sử dụng rõ nguyên nhân, có thể thiết kế kết quả kiểu enum như `SUCCESS`, `INSUFFICIENT_FUNDS` thay cho `boolean`. Dữ liệu đầu vào không hợp lệ, chẳng hạn tiền âm, được xử lý bằng ngoại lệ.
+Returning `false` for insufficient funds is an API choice: it can be a normal business outcome. If the reason must be explicit, an enum result such as `SUCCESS` or `INSUFFICIENT_FUNDS` could replace `boolean`. Invalid input, such as a negative amount, is handled with an exception.
 
-### Vì sao dùng `long` với đơn vị nhỏ nhất?
+### Why use `long` and the smallest monetary unit?
 
-Lưu tiền theo đơn vị nguyên (`balanceCents`) giúp ví dụ tránh biểu diễn không chính xác của `double` với nhiều số thập phân nhị phân. Trong hệ thống thật cần quy định đồng tiền, đơn vị nhỏ nhất, làm tròn, hạn mức và định dạng; có thể dùng `BigDecimal` phù hợp với nghiệp vụ. **Không nên chỉ đổi tên từ `double balance` sang `long balance` mà bỏ qua quy tắc tiền tệ.**
+Storing money as integer units (`balanceCents`) lets the example avoid the imprecise binary representation of many decimal values in `double`. Real systems must specify currencies, minor units, rounding, limits, and formatting; `BigDecimal` may be appropriate for the business rules. **Simply renaming `double balance` to `long balance` without currency rules is not enough.**
 
-## 4. Bảo vệ trạng thái đơn hàng bằng chuyển đổi hợp lệ
+## 4. Protecting order state through valid transitions
 
-Đơn hàng có bốn trạng thái:
+An order has four states:
 
-| Trạng thái | Ý nghĩa |
+| State | Meaning |
 |---|---|
-| `CREATED` | Vừa tạo, chưa được xác nhận đã thanh toán |
-| `PAID` | Đã ghi nhận thanh toán thành công |
-| `SHIPPED` | Đã thực hiện bước gửi hàng trong ví dụ |
-| `CANCELLED` | Bị hủy trước khi thanh toán |
+| `CREATED` | Just created; payment not yet confirmed |
+| `PAID` | Successful payment has been recorded |
+| `SHIPPED` | The shipping step has been performed in this example |
+| `CANCELLED` | Canceled before payment |
 
-Trong phiên bản nghiệp vụ minh họa này, các chuyển đổi hợp lệ chỉ gồm:
+For this illustrative workflow, only these transitions are valid:
 
 ```mermaid
 stateDiagram-v2
@@ -4776,18 +4776,18 @@ stateDiagram-v2
     PAID --> SHIPPED: ship()
 ```
 
-| Trạng thái hiện tại | Hành động | Trạng thái tiếp theo | Kết quả |
+| Current state | Action | Next state | Result |
 |---|---|---|---|
-| `CREATED` | `markPaid()` | `PAID` | Hợp lệ |
-| `CREATED` | `cancel()` | `CANCELLED` | Hợp lệ |
-| `PAID` | `ship()` | `SHIPPED` | Hợp lệ |
-| `CREATED` | `ship()` | Không đổi | `IllegalStateException` |
-| `SHIPPED` | `cancel()` | Không đổi | `IllegalStateException` |
-| `CANCELLED` | `markPaid()` | Không đổi | `IllegalStateException` |
+| `CREATED` | `markPaid()` | `PAID` | Valid |
+| `CREATED` | `cancel()` | `CANCELLED` | Valid |
+| `PAID` | `ship()` | `SHIPPED` | Valid |
+| `CREATED` | `ship()` | Unchanged | `IllegalStateException` |
+| `SHIPPED` | `cancel()` | Unchanged | `IllegalStateException` |
+| `CANCELLED` | `markPaid()` | Unchanged | `IllegalStateException` |
 
-Từ khóa `enum` giới hạn tập trạng thái, tránh lỗi viết chuỗi tự do như `"SHIPED"`. Nhưng **enum chưa đủ**: nếu công khai `setStatus(OrderStatus status)`, người gọi vẫn có thể nhảy từ `CREATED` sang `SHIPPED`.
+The `enum` keyword restricts the set of states, preventing free-form string typos such as `"SHIPED"`. But **an enum is not enough**: exposing `setStatus(OrderStatus status)` would still let callers jump directly from `CREATED` to `SHIPPED`.
 
-Thay vào đó, các phương thức có tên theo hành động:
+Instead, methods are named after actions:
 
 ```java
 public synchronized void ship() {
@@ -4796,13 +4796,13 @@ public synchronized void ship() {
 }
 ```
 
-Thao tác này vừa đọc trạng thái hiện tại, vừa kiểm tra, rồi mới thay đổi. Nếu đơn hàng chưa thanh toán hoặc đã hủy, lời gọi bị từ chối mà không cập nhật `status`.
+Each operation reads the current state, checks it, and only then changes it. If an order is unpaid or canceled, the call is rejected without updating `status`.
 
-Lưu ý: trong một hệ thống thực, có thể phải hỗ trợ hoàn tiền, trả hàng, hủy sau thanh toán hoặc nhiều trạng thái vận chuyển hơn. Sơ đồ trên là **quy tắc do ví dụ đặt ra**, không phải một danh sách trạng thái chuẩn dùng cho mọi ứng dụng thương mại điện tử.
+Note: real systems may need refunds, returns, post-payment cancellations, or more shipping states. The diagram shows **rules defined for this example**, not a standard state list for every e-commerce application.
 
-## 5. Giữ các đường truy cập khác không phá đóng gói
+## 5. Preventing other access paths from breaking encapsulation
 
-Đóng gói bị phá nếu một getter trả thẳng collection nội bộ còn có thể sửa:
+Encapsulation breaks if a getter returns an internal collection that can still be modified:
 
 ```java
 class UnsafeOrder {
@@ -4817,13 +4817,13 @@ UnsafeOrder order = new UnsafeOrder();
 order.items().add(""); // Bên ngoài bỏ qua mọi validation
 ```
 
-Trong `Order` hoàn chỉnh, dữ liệu đầu vào được sao chép:
+In the complete `Order` implementation, input data is copied:
 
 ```java
 this.items = List.copyOf(items);
 ```
 
-Kết quả `items()` có thể được trả ra bởi vì danh sách đó không hỗ trợ các phép sửa như `add`, `clear`, `set`. Ngoài ra, `OrderItem` là `record` có thành phần `String` và `int`, nên không có phần tử mutable mà người gọi có thể thay đổi để lách validation.
+The `items()` result is safe to return because the list does not support mutating operations such as `add`, `clear`, or `set`. Also, `OrderItem` is a `record` with `String` and `int` components, so callers cannot mutate an element to bypass validation.
 
 ```java
 List<OrderItem> source = new java.util.ArrayList<>();
@@ -4836,15 +4836,15 @@ System.out.println(order.items().size()); // 1
 // order.items().clear();         // Ném UnsupportedOperationException
 ```
 
-**Quan trọng:** `List.copyOf` tạo danh sách không sửa được, nhưng chỉ là bảo vệ **nông (shallow)**. Nếu phần tử là đối tượng có setter, mã bên ngoài vẫn có thể sửa chính phần tử đó qua tham chiếu chung. Khi đó cần thiết kế phần tử bất biến hoặc tạo defensive copy cả phần tử.
+**Important:** `List.copyOf` creates an unmodifiable list but provides only **shallow protection**. If elements have setters, external code may still modify an element through a shared reference. In that case, make elements immutable or defensively copy them too.
 
-Tương tự, trường `private final List<T>` không làm nội dung danh sách tự bất biến: `final` ngăn gán lại tham chiếu của trường, không ngăn `add` hay `remove` trên đối tượng danh sách.
+Likewise, a `private final List<T>` field does not automatically make the list contents immutable: `final` prevents reassigning the field reference, not invoking `add` or `remove` on the list.
 
-## 6. Vì sao `synchronized` xuất hiện trong hai lớp?
+## 6. Why do both classes use `synchronized`?
 
-Nếu có nhiều thread cùng cập nhật một đối tượng, `private` ngăn truy cập trực tiếp **nhưng không tự loại bỏ race condition**.
+When multiple threads update an object, `private` prevents direct access **but does not eliminate race conditions**.
 
-Ví dụ phương thức rút tiền kiểu:
+For example, consider a withdrawal method:
 
 ```java
 if (balanceCents >= amount) {
@@ -4852,7 +4852,7 @@ if (balanceCents >= amount) {
 }
 ```
 
-Nếu hai thread đều đọc được số dư cũ trước khi một thread cập nhật, kết quả có thể không tương ứng với thứ tự giao dịch hợp lệ. Vì thế ví dụ dùng các phương thức `synchronized` cho thao tác đọc/ghi số dư, và cho các chuyển trạng thái đơn hàng:
+If both threads read the old balance before either thread updates it, the result may not correspond to any valid transaction order. That is why the example uses `synchronized` methods for balance reads/writes and for order-state transitions:
 
 ```java
 public synchronized boolean withdraw(long amountCents) { /* ... */ }
@@ -4860,50 +4860,50 @@ public synchronized long balanceCents() { /* ... */ }
 public synchronized void markPaid() { /* ... */ }
 ```
 
-Với **cùng một instance**, `synchronized` bảo đảm tại một thời điểm chỉ một thread thực thi một phương thức synchronized khóa trên instance đó. Nó cũng thiết lập quan hệ hiển thị bộ nhớ phù hợp giữa các lần khóa/mở khóa. Điều này giúp phép kiểm tra và cập nhật trạng thái trong phương thức không bị chồng chéo trên cùng object.
+For **the same instance**, `synchronized` ensures that only one thread at a time executes a synchronized method locking that instance. It also establishes the necessary memory-visibility relationship between lock and unlock operations. This keeps validation and state updates within those methods from overlapping on the same object.
 
-Những giới hạn cần nhớ:
+Important limitations:
 
-- `synchronized` trên một đối tượng **không đồng bộ hai instance khác nhau**, kể cả hai instance biểu diễn cùng tài khoản trong cơ sở dữ liệu.
-- Việc chuyển tiền qua **hai tài khoản** hoặc phối hợp thanh toán với **đơn hàng** cần một thiết kế giao dịch rõ ràng; chỉ khóa từng instance chưa đủ để bảo đảm một thao tác xuyên nhiều đối tượng là nguyên tử.
-- Ứng dụng nhiều tiến trình hoặc nhiều máy cần biện pháp ở tầng lưu trữ như transaction, locking, optimistic version hoặc cơ chế điều phối thích hợp.
-- Phạm vi `private/public` là kiểm soát truy cập **mã nguồn Java**, không phải kiểm tra quyền người dùng. Một API cho rút tiền vẫn cần xác thực và phân quyền ở tầng dịch vụ.
+- `synchronized` on one object **does not synchronize two different instances**, even if both represent the same database account.
+- Transferring money between **two accounts** or coordinating payment with **an order** requires an explicit transaction design; locking each instance is not enough to make a multi-object operation atomic.
+- Multi-process or multi-server applications require storage-layer measures such as transactions, locking, optimistic versions, or suitable coordination mechanisms.
+- `private/public` visibility controls access by **Java source code**, not user permissions. A withdrawal API still needs authentication and authorization at the service layer.
 
-## 7. Thiết kế lỗi: từ chối thay đổi nhưng giữ nguyên trạng thái
+## 7. Handling failures: reject changes and preserve state
 
-Trong ví dụ, có hai loại lỗi chủ yếu:
+The example has two main categories of failure:
 
-| Tình huống | Cách báo | Trạng thái sau |
+| Scenario | Failure signal | State afterward |
 |---|---|---|
-| Tạo account với số dư âm | `IllegalArgumentException` | Không có account hợp lệ được tạo |
-| Nạp `0` hoặc số tiền âm | `IllegalArgumentException` | Số dư cũ |
-| Nạp làm tràn `long` | `ArithmeticException` | Số dư cũ |
-| Rút vượt số dư | `false` | Số dư cũ |
-| Giao hàng khi chưa thanh toán | `IllegalStateException` | `CREATED` |
-| Hủy đơn đã giao | `IllegalStateException` | `SHIPPED` |
+| Construct an account with a negative balance | `IllegalArgumentException` | No valid account is created |
+| Deposit `0` or a negative amount | `IllegalArgumentException` | Previous balance |
+| Deposit causes `long` overflow | `ArithmeticException` | Previous balance |
+| Withdraw more than the balance | `false` | Previous balance |
+| Ship an unpaid order | `IllegalStateException` | `CREATED` |
+| Cancel a shipped order | `IllegalStateException` | `SHIPPED` |
 
-Việc “giữ nguyên trạng thái nếu thao tác bị từ chối” làm cho hành vi dễ dự đoán và dễ kiểm thử. Với hai ví dụ trên, kiểm tra xảy ra trước phép gán; không có các tác động mạng/cơ sở dữ liệu nên việc từ chối rất rõ ràng.
+“Leave state unchanged when an operation is rejected” makes behavior predictable and easy to test. In the two examples, validation precedes assignment, and no network/database effects are involved, so rejection is straightforward.
 
-Tuy nhiên, trong ứng dụng thật, thao tác có thể vừa sửa database vừa gọi API bên ngoài. Khi thất bại sau một phần tác động, cần transaction, idempotency, retry hoặc cơ chế bù trừ phù hợp. **Một phương thức Java đơn lẻ không tự bảo đảm rollback những hệ thống ngoài nó.**
+In a real application, however, an operation may update the database and call an external API. If part of those effects succeeds before a failure, transactions, idempotency, retries, or compensating actions may be needed. **A single Java method does not automatically roll back systems outside it.**
 
-## 8. Cách kiểm tra ví dụ bằng các trường hợp biên
+## 8. Testing the example with boundary cases
 
-Ngoài kết quả từ `main`, hãy dùng bảng sau để chủ động thử các trường hợp sai:
+Besides checking the output from `main`, use the following table to try invalid cases deliberately:
 
-| Trường hợp kiểm tra | Thao tác | Điều mong đợi |
+| Test case | Operation | Expected result |
 |---|---|---|
-| Số dư khởi tạo âm | `new Account("A", -1)` | Ném `IllegalArgumentException` |
-| Nạp số 0 | `deposit(0)` | Ném `IllegalArgumentException`, số dư giữ nguyên |
-| Rút số âm | `withdraw(-1)` | Ném `IllegalArgumentException` |
-| Rút bằng số dư | `withdraw(balance)` | Trả `true`, số dư về 0 |
-| Rút nhiều hơn số dư | `withdraw(balance + 1)` với giá trị không tràn | Trả `false`, số dư không đổi |
-| Cộng số dư tràn | Số dư gần `Long.MAX_VALUE`, nạp thêm | Ném `ArithmeticException`, số dư giữ nguyên |
-| Giao hàng quá sớm | `ship()` trên đơn `CREATED` | Ném `IllegalStateException` |
-| Thanh toán đơn đã hủy | `markPaid()` trên `CANCELLED` | Ném `IllegalStateException` |
-| Sửa danh sách mặt hàng đầu vào | `source.clear()` sau khi tạo order | Đơn hàng vẫn giữ mặt hàng |
-| Sửa danh sách mặt hàng trả về | `order.items().clear()` | `UnsupportedOperationException` |
+| Negative opening balance | `new Account("A", -1)` | Throws `IllegalArgumentException` |
+| Deposit 0 | `deposit(0)` | Throws `IllegalArgumentException`; balance unchanged |
+| Negative withdrawal | `withdraw(-1)` | Throws `IllegalArgumentException` |
+| Withdraw exactly the balance | `withdraw(balance)` | Returns `true`; balance reaches 0 |
+| Withdraw more than the balance | `withdraw(balance + 1)` without overflow | Returns `false`; balance unchanged |
+| Overflowing deposit | Balance near `Long.MAX_VALUE`, then another deposit | Throws `ArithmeticException`; balance unchanged |
+| Ship too early | `ship()` on a `CREATED` order | Throws `IllegalStateException` |
+| Pay a canceled order | `markPaid()` on `CANCELLED` | Throws `IllegalStateException` |
+| Modify the input item list | `source.clear()` after creating the order | Order still retains its items |
+| Modify the returned item list | `order.items().clear()` | `UnsupportedOperationException` |
 
-Có thể thử một trường hợp đơn giản ngay trong `main`:
+You can try a simple check directly in `main`:
 
 ```java
 Account zero = new Account("ZERO", 5);
@@ -4917,23 +4917,23 @@ try {
 }
 ```
 
-Đoạn kiểm tra này dùng `AssertionError` do mã tự ném, nên không phụ thuộc tùy chọn `-ea` của JVM.
+This check explicitly throws `AssertionError` in code, so it does not depend on the JVM's `-ea` option.
 
-## 9. Bài tập mở rộng đúng hai tình huống
+## 9. Exercises extending both scenarios
 
-**Bài 1 — Hạn mức rút.** Thêm `dailyWithdrawnCents` và `dailyLimitCents` cho `Account`. Khi rút, kiểm tra cùng lúc số dư và hạn mức còn lại; chỉ cập nhật hai trường nếu mọi điều kiện đều hợp lệ. Xử lý phép cộng số tiền đã rút để tránh overflow. Viết trường hợp thử rằng giao dịch bị từ chối **không thay đổi trường nào**.
+**Exercise 1 — Withdrawal limits.** Add `dailyWithdrawnCents` and `dailyLimitCents` to `Account`. On withdrawal, check both the balance and remaining limit; update the two fields only when all conditions are valid. Handle arithmetic when adding withdrawn amounts to prevent overflow. Write a test verifying that a rejected transaction **changes neither field**.
 
-**Bài 2 — Luồng đơn hàng.** Thêm trạng thái `DELIVERED` vào enum và phương thức `confirmDelivery()`, chỉ hợp lệ từ `SHIPPED`. Vẽ lại Mermaid và thử gọi `confirmDelivery()` từ `CREATED` để kiểm tra lớp từ chối.
+**Exercise 2 — Order workflow.** Add a `DELIVERED` state to the enum and a `confirmDelivery()` method, valid only from `SHIPPED`. Redraw the Mermaid diagram and call `confirmDelivery()` from `CREATED` to verify that the class rejects it.
 
-**Bài 3 — Hủy sau thanh toán.** Giả sử nghiệp vụ cho hủy đơn `PAID` nhưng yêu cầu hoàn tiền. Đề xuất trách nhiệm giữa `Order`, dịch vụ thanh toán và database transaction để tránh đơn bị hủy trong khi hoàn tiền thất bại. Không nên chỉ thêm phép gán `status = CANCELLED` rồi coi như mọi tác động bên ngoài đã hoàn tất.
+**Exercise 3 — Cancellation after payment.** Suppose the business allows canceling `PAID` orders but requires a refund. Propose responsibilities for `Order`, the payment service, and database transactions to avoid canceling the order while refunding fails. Merely assigning `status = CANCELLED` does not mean all external effects have completed.
 
-**Bài 4 — Ranh giới API.** Giải thích vì sao `private balanceCents`, `private status`, `List.copyOf(items)` và các phương thức `withdraw/ship` lần lượt bảo vệ những đường truy cập nào. Nếu đổi `items` sang danh sách phần tử mutable, phải thay đổi cách thiết kế ra sao?
+**Exercise 4 — API boundaries.** Explain which access paths are protected respectively by `private balanceCents`, `private status`, `List.copyOf(items)`, and the `withdraw/ship` methods. If `items` becomes a list of mutable elements, how must the design change?
 
 ---
 
-**Kết luận:** Với tài khoản, đóng gói giúp **bảo vệ bất biến số dư** qua nạp/rút hợp lệ. Với đơn hàng, đóng gói giúp **bảo vệ luồng trạng thái** qua các chuyển đổi có điều kiện. Trường `private` chặn gán trực tiếp, nhưng tính đúng đắn thực sự đến từ **constructor kiểm tra đầu vào, phương thức có ý nghĩa nghiệp vụ, cập nhật sau khi kiểm tra và không làm lộ dữ liệu mutable**.
+**Conclusion:** For accounts, encapsulation **protects the balance invariant** through valid deposits and withdrawals. For orders, it **protects state transitions** through conditional operations. A `private` field prevents direct assignment, but correctness comes from **constructor validation, business-oriented methods, mutation after validation, and avoiding exposure of mutable data**.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

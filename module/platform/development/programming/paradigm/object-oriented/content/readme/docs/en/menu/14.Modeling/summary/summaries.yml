@@ -1,308 +1,308 @@
 summaries:
 - id: modeling-001
-  title: Thu thập tình huống sử dụng và quy tắc nghiệp vụ
+  title: Gathering Use Cases and Business Rules
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Thu thập tình huống sử dụng và quy tắc nghiệp vụ**
+    **Gathering Use Cases and Business Rules**
 
-    Chuyển câu chuyện người dùng về đăng ký khóa học thành **use case** có actor, trigger, luồng chính/ngoại lệ, tiền/hậu điều kiện; diễn đạt **business rule** bằng BR-ID và tình huống kiểm chứng được. Từ đó xác định invariant và chủ sở hữu quy tắc trước khi thiết kế Java API, đồng thời phân biệt giả định minh họa với chính sách thực tế được stakeholder chấp thuận.
+    Turn a user story about course enrollment into a **use case** with an actor, trigger, main and exception flows, preconditions, and postconditions; express **business rules** with BR-IDs and verifiable scenarios. Then identify invariants and rule owners before designing Java APIs, while distinguishing illustrative assumptions from actual policies approved by stakeholders.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Khám phá và xác nhận yêu cầu
+    ### Discovering and Validating Requirements
 
-    1. Vì sao yêu cầu “sinh viên đăng ký khóa học” chưa đủ để quyết định class và method, và phải hỏi thêm những điều kiện nghiệp vụ nào?
-    2. Use case, business rule, non-functional requirement và technical constraint khác nhau ở câu hỏi chúng trả lời như thế nào?
-    3. Vì sao phải xác định actor, system boundary, rule owner và nguồn dữ liệu đáng tin trước khi phác thảo domain model?
+    1. Why is the requirement “students enroll in courses” insufficient to determine classes and methods, and what additional business conditions must be clarified?
+    2. How do use cases, business rules, non-functional requirements, and technical constraints differ in the questions they answer?
+    3. Why must actors, system boundaries, rule owners, and authoritative data sources be identified before sketching a domain model?
 
-    ### Luồng, bất biến và kiểm chứng
+    ### Flows, Invariants, and Verification
 
-    1. Với UC-01, từng BR-01 đến BR-06 được thể hiện bằng luồng từ chối và trạng thái không đổi ra sao?
-    2. Vì sao đăng ký trùng và retry cùng một yêu cầu có thể cần hai chính sách khác nhau?
-    3. Để bảo vệ giới hạn sức chứa khi có hai request cạnh tranh, `synchronized` trong một JVM khác transaction/unique constraint ở nhiều node ra sao?
-    4. Ma trận BR → class/API → acceptance test và Given–When–Then giúp phát hiện yêu cầu thiếu kiểm chứng thế nào?
+    1. For UC-01, how is each rule from BR-01 through BR-06 reflected in rejection flows that leave state unchanged?
+    2. Why might duplicate enrollment and retrying the same request require two different policies?
+    3. When two requests compete for capacity, how does `synchronized` within one JVM differ from transactions and unique constraints across multiple nodes?
+    4. How do a BR → class/API → acceptance test matrix and Given–When–Then scenarios reveal requirements that lack verification?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Đặc tả use case | Viết UC đăng ký học có actor, precondition, happy path, ít nhất ba exception path và postcondition thất bại. |
-    | Chuẩn hóa business rule | Đặt BR-ID, owner, điều kiện và phản ví dụ cụ thể cho active/prerequisite/duplicate/capacity. |
-    | Truy vết quy tắc | Ánh xạ từng BR tới phương thức `Course.enroll`, persistence và Given–When–Then hoặc JUnit. |
-    | Đánh giá ranh giới an toàn | Giải thích vì sao atomicity khi cùng tranh chỗ không được chứng minh bằng một kiểm tra `if` đơn lẻ. |
+    | Specifying use cases | Write a course-enrollment use case with an actor, preconditions, a happy path, at least three exception paths, and postconditions for failure. |
+    | Formalizing business rules | Assign BR-IDs, owners, conditions, and concrete counterexamples for active/prerequisite/duplicate/capacity rules. |
+    | Tracing rules | Map every BR to the `Course.enroll` method, persistence, and Given–When–Then scenarios or JUnit tests. |
+    | Evaluating consistency boundaries | Explain why a single `if` check cannot prove atomicity when requests compete for the same capacity. |
 - id: modeling-002
-  title: Nhận diện đối tượng từ yêu cầu
+  title: Identifying Objects from Requirements
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Nhận diện đối tượng từ yêu cầu**
+    **Identifying Objects from Requirements**
 
-    Biến mô tả mượn sách thành **đối tượng ứng viên** bằng danh từ–động từ–ràng buộc, rồi đánh giá theo danh tính, trách nhiệm và vòng đời. Bài chỉ ra lý do phải phân biệt `BookTitle`, `BookCopy` và `Loan`, đồng thời phân vai entity, value object, domain policy, service điều phối, repository và DTO đúng yêu cầu.
+    Derive **candidate objects** from a book-borrowing description by examining nouns, verbs, and constraints, then evaluate them by identity, responsibility, and lifecycle. The lesson explains why `BookTitle`, `BookCopy`, and `Loan` must be distinguished, while assigning the appropriate roles to entities, value objects, domain policies, coordinating services, repositories, and DTOs.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Chắt lọc đối tượng từ yêu cầu
+    ### Deriving Objects from Requirements
 
-    1. Vì sao danh từ “sách”, “ngày mượn” hay động từ “kiểm tra” không tự động cần mỗi từ một class?
-    2. Với đầu sách, bản vật lý và lượt mượn, yếu tố ID, vòng đời và lịch sử nào chứng minh chúng nên được tách riêng?
-    3. Làm sao phân biệt entity với value object, policy với application service và actor với domain object?
+    1. Why does each noun such as “book” or “borrow date,” or verb such as “check,” not automatically warrant its own class?
+    2. For a book title, physical copy, and loan, which identity, lifecycle, and history considerations justify keeping them separate?
+    3. How can entities be distinguished from value objects, policies from application services, and actors from domain objects?
 
-    ### Đặt quan hệ và thử mô hình
+    ### Defining Relationships and Testing the Model
 
-    1. Multiplicity giữa `BookCopy` và `Loan` mô tả lịch sử khác gì invariant tối đa một Loan active?
-    2. Vì sao `LoanPolicy` tính hạn trả, `BorrowingService` điều phối còn `LoanRepository` lưu/tải?
-    3. Khi thêm giữ chỗ, gia hạn hoặc lịch sử sửa chữa, điều kiện nào cho thấy cần class mới thay vì field bổ sung?
-    4. Những rủi ro đồng thời nào demo in-memory không thể tự đảm bảo?
+    1. How does the historical multiplicity between `BookCopy` and `Loan` differ from the invariant allowing at most one active Loan?
+    2. Why does `LoanPolicy` calculate due dates, `BorrowingService` coordinate the process, and `LoanRepository` store and load data?
+    3. When adding reservations, renewals, or repair histories, what conditions indicate the need for a new class rather than another field?
+    4. Which concurrency risks cannot be handled automatically by an in-memory demo?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Tạo danh sách ứng viên có lý do | Trích khái niệm, thuộc tính, hành vi và constraint rồi giải thích vì sao mỗi candidate được giữ hay loại. |
-    | Phân loại vai trò miền | Chọn entity, value object, policy, service, repository/port cho trường hợp thư viện. |
-    | Vẽ quan hệ đúng nghĩa | Phân biệt `BookTitle`, `BookCopy`, `Loan` và ghi multiplicity lịch sử kèm invariant active riêng. |
-    | Thử thay đổi yêu cầu | Mô phỏng các luồng mượn/trả, phân tích khi có Reservation hoặc Renewal và cập nhật model phù hợp. |
+    | Building a justified candidate list | Extract concepts, attributes, behaviors, and constraints and explain why each candidate is retained or rejected. |
+    | Classifying domain roles | Select entities, value objects, policies, services, and repositories/ports for the library scenario. |
+    | Drawing meaningful relationships | Distinguish `BookTitle`, `BookCopy`, and `Loan`, documenting historical multiplicity separately from the active-loan invariant. |
+    | Testing requirement changes | Simulate borrowing and returning flows, analyze the addition of Reservation or Renewal, and update the model accordingly. |
 - id: modeling-003
-  title: Phân chia trách nhiệm và đối tượng cộng tác
+  title: Assigning Responsibilities and Collaborators
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Phân chia trách nhiệm và đối tượng cộng tác**
+    **Assigning Responsibilities and Collaborators**
 
-    Giao **trách nhiệm biết/làm** cho đúng đối tượng sở hữu thông tin hoặc invariant và xác định cộng tác viên cần thiết. Qua `Member`, `BookCopy`, `Loan`, `LendingService`, người học phân biệt quy tắc cục bộ ở entity với quy trình nhiều đối tượng do service điều phối; hiểu low coupling, high cohesion và giới hạn transaction.
+    Assign **knowing/doing responsibilities** to the objects that own the relevant information or invariants and identify the collaborators they need. Through `Member`, `BookCopy`, `Loan`, and `LendingService`, learners distinguish local entity rules from multi-object processes coordinated by services, while understanding low coupling, high cohesion, and transaction boundaries.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Giao nhiệm vụ đúng nơi
+    ### Assigning Responsibilities to the Right Objects
 
-    1. Vì sao giới hạn số lượt mượn thuộc trách nhiệm của `Member`, trạng thái sẵn sàng thuộc `BookCopy`, còn việc đóng phiếu thuộc `Loan`?
-    2. Điều gì sai khi service tự đọc các field và sửa `Member` bằng setter thay vì gọi `recordBorrow()`?
-    3. Những câu hỏi của Information Expert, Controller, Low Coupling và High Cohesion dẫn tới các quyết định thiết kế nào?
+    1. Why is the borrowing limit the responsibility of `Member`, availability the responsibility of `BookCopy`, and closing a loan the responsibility of `Loan`?
+    2. What is wrong with a service reading fields and modifying `Member` through setters instead of calling `recordBorrow()`?
+    3. What design decisions follow from the questions raised by Information Expert, Controller, Low Coupling, and High Cohesion?
 
-    ### Cộng tác và tính nhất quán
+    ### Collaboration and Consistency
 
-    1. `LendingService.lend` phải điều phối những lời gọi nào theo thứ tự để tránh sửa trạng thái khi đầu vào không hợp lệ?
-    2. Khi quy tắc phụ thuộc nhiều aggregate, nên chọn domain policy/service hay ép vào một entity; căn cứ là gì?
-    3. Vì sao thay state của Member và BookCopy qua các method riêng chưa bảo đảm atomicity, và DB transaction/idempotency giải quyết rủi ro nào?
-    4. Đổi công cụ thông báo hoặc nơi lưu có nên buộc đổi domain class hay không, và điểm cộng tác nào giúp tránh điều đó?
+    1. Which calls must `LendingService.lend` coordinate, and in what order, to avoid changing state when input is invalid?
+    2. When a rule spans multiple aggregates, should it be placed in a domain policy/service or forced into one entity, and on what basis?
+    3. Why do separate methods changing Member and BookCopy state not guarantee atomicity, and which risks do DB transactions and idempotency address?
+    4. Should replacing the notification tool or storage system require changing a domain class, and which collaboration points prevent that?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Phân trách nhiệm | Xác định owner của quota, availability, phiếu mượn và orchestration mà không nhân bản quy tắc. |
-    | Thiết kế thông điệp rõ nghĩa | Đề xuất API `ensureCanBorrow`, `recordBorrow`, `markBorrowed`, `close` thay cho setter trực tiếp. |
-    | Kiểm tra coupling/cohesion | Phát hiện God Object, chuỗi `get...get...set` và phụ thuộc hạ tầng chảy vào domain. |
-    | Phân tích giao dịch | Chỉ ra các điểm dễ lệch khi update nhiều entity và chọn transaction boundary thích hợp. |
+    | Assigning responsibilities | Identify the owners of borrowing quotas, availability, loan records, and orchestration without duplicating rules. |
+    | Designing meaningful messages | Propose APIs such as `ensureCanBorrow`, `recordBorrow`, `markBorrowed`, and `close` instead of direct setters. |
+    | Evaluating coupling and cohesion | Detect God Objects, `get...get...set` chains, and infrastructure dependencies leaking into the domain. |
+    | Analyzing transactions | Identify inconsistency risks when updating multiple entities and choose an appropriate transaction boundary. |
 - id: modeling-004
-  title: 'Thẻ CRC: lớp, trách nhiệm và cộng tác'
+  title: 'CRC Cards: Classes, Responsibilities, and Collaborators'
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Thẻ CRC: lớp, trách nhiệm và cộng tác**
+    **CRC Cards: Classes, Responsibilities, and Collaborators**
 
-    Sử dụng **thẻ CRC (Class–Responsibilities–Collaborators)** để role-play các tình huống đăng ký lớp học, xác định lớp nào có trách nhiệm nghiệp vụ nào và cần nhờ ai. Bài tập trung vào mẫu thẻ, diễn tập luồng thành công/thất bại, chuyển nghĩa vụ thành API/UML/test và thay đổi bộ thẻ khi xuất hiện danh sách chờ hoặc thanh toán.
+    Use **CRC cards (Class–Responsibilities–Collaborators)** to role-play workshop registration scenarios and determine each class's business responsibilities and collaborators. The lesson focuses on card templates, rehearsing success and failure flows, translating obligations into APIs/UML/tests, and updating cards when waitlists or payments are introduced.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Viết thẻ và diễn tập
+    ### Writing Cards and Rehearsing Scenarios
 
-    1. Ba vùng trên một thẻ CRC diễn đạt điều gì, và vì sao responsibility nên mô tả nghĩa vụ thay vì chỉ liệt kê getter/setter?
-    2. Với `Student`, `Workshop`, `Enrollment`, `RegistrationService`, `WorkshopRepository`, `RegistrationNotifier`, vì sao các collaborator khác nhau?
-    3. Khi role-play đăng ký trùng hoặc hết chỗ, thẻ nào ra quyết định cuối cùng và những lời gọi nào phải được bỏ qua?
+    1. What do the three sections of a CRC card express, and why should responsibilities describe obligations rather than merely list getters and setters?
+    2. Why do `Student`, `Workshop`, `Enrollment`, `RegistrationService`, `WorkshopRepository`, and `RegistrationNotifier` have different collaborators?
+    3. When role-playing duplicate registration or a full workshop, which card makes the final decision, and which calls must be skipped?
 
-    ### Từ thẻ sang thiết kế và thay đổi
+    ### From Cards to Design and Change
 
-    1. Làm sao chuyển CRC thành class diagram, `Workshop.enroll`, `withdraw` và các test theo trách nhiệm?
-    2. Yêu cầu waitlist theo thời gian, thanh toán hay lịch trùng buộc bổ sung trách nhiệm hoặc collaborator ở đâu?
-    3. Vì sao thẻ CRC không tự chứng minh transaction, concurrency safety, idempotency hoặc quyền người gọi?
+    1. How can CRC cards be translated into class diagrams, `Workshop.enroll`, `withdraw`, and responsibility-based tests?
+    2. Where do time-ordered waitlists, payments, or scheduling conflicts require additional responsibilities or collaborators?
+    3. Why do CRC cards alone not prove transaction correctness, concurrency safety, idempotency, or caller authorization?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Soạn CRC có nội dung | Tạo thẻ Class/Responsibilities/Collaborators riêng cho ít nhất bốn vai trò đăng ký học. |
-    | Diễn tập tình huống | Giải thích chuỗi lời gọi success, duplicate, full-capacity, withdrawal và điểm dừng sau lỗi. |
-    | Phát hiện trách nhiệm sai | Chỉ ra rule trùng giữa service và entity hoặc domain phụ thuộc SQL/SMTP. |
-    | Nối sang implementation | Ánh xạ responsibility thành Java method và test xác nhận số chỗ hoặc không gửi thông báo khi bị từ chối. |
+    | Creating meaningful CRC cards | Create separate Class/Responsibilities/Collaborators cards for at least four workshop-registration roles. |
+    | Rehearsing scenarios | Explain call sequences for success, duplicates, full capacity, and withdrawal, including where execution stops after failure. |
+    | Detecting misplaced responsibilities | Identify rules duplicated between services and entities or domain logic depending on SQL/SMTP. |
+    | Connecting to implementation | Map responsibilities to Java methods and tests that verify remaining capacity or the absence of notifications after rejection. |
 - id: modeling-005
-  title: 'Sơ đồ lớp: thành viên và quan hệ'
+  title: 'Class Diagrams: Members and Relationships'
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Sơ đồ lớp: thành viên và quan hệ**
+    **Class Diagrams: Members and Relationships**
 
-    Đọc, thiết kế và kiểm tra **UML class diagram** theo mức miền hoặc implementation: tên lớp, field, operation, visibility, bội số, hướng liên kết, association, aggregation, composition, inheritance, realization và dependency. Qua `Order`–`OrderLine`–`Customer`–`Product`, người học liên hệ ký pháp với Java và lý giải nơi phải bảo vệ invariant bằng code/test.
+    Read, design, and validate **UML class diagrams** at the domain or implementation level: class names, fields, operations, visibility, multiplicities, association directions, associations, aggregations, compositions, inheritance, realizations, and dependencies. Through `Order`–`OrderLine`–`Customer`–`Product`, learners connect UML notation to Java and explain where invariants must be enforced through code and tests.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Ký pháp thành viên và quan hệ
+    ### Member and Relationship Notation
 
-    1. Ký hiệu UML `+`, `-`, `#`, `~`, kiểu thuộc tính/phương thức và static khác cách khai báo Java thế nào?
-    2. Association, aggregation, composition, generalization, realization và dependency khác nhau về ownership/lifecycle/cách sử dụng ra sao?
-    3. Vì sao `Order` sở hữu `OrderLine` bằng composition nhưng chỉ liên kết với `Customer` và `Product`?
-    4. Đầu hình thoi, tam giác rỗng và mũi tên dependency đặt về phía nào và có nghĩa gì?
+    1. How do the UML symbols `+`, `-`, `#`, and `~`, attribute and operation types, and static notation differ from Java declarations?
+    2. How do association, aggregation, composition, generalization, realization, and dependency differ in ownership, lifecycle, and usage?
+    3. Why does `Order` own `OrderLine` through composition but merely associate with `Customer` and `Product`?
+    4. On which ends should diamonds, hollow triangles, and dependency arrows appear, and what do they mean?
 
-    ### Bội số, code và giới hạn sơ đồ
+    ### Multiplicity, Code, and Diagram Limitations
 
-    1. Multiplicity `0..*`, `1`, `0..1` được đọc từ phía đối diện thế nào và Java `List` có tự enforce bội số không?
-    2. Vì sao `new B()` hoặc một field tham chiếu B chưa đủ để kết luận A composition B?
-    3. Đối chiếu `PaymentGateway` interface với implementation và `CheckoutService` qua đường realization/dependency thế nào?
-    4. Khi sơ đồ hứa hẹn trạng thái đơn hợp lệ, code và test cần bảo vệ những điều gì mà UML không tự thực thi?
+    1. How are the multiplicities `0..*`, `1`, and `0..1` read from the opposite end, and does a Java `List` enforce multiplicity automatically?
+    2. Why is `new B()` or a field referencing B insufficient to conclude that A composes B?
+    3. How do realization/dependency lines connect the `PaymentGateway` interface to its implementation and `CheckoutService`?
+    4. When a diagram promises valid order states, what must code and tests enforce that UML cannot enforce by itself?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Giải mã UML | Đọc chính xác visibility, attribute, operation, association role/multiplicity và các loại đường quan hệ. |
-    | Chuyển UML sang Java | Phác thảo `Order`/`OrderLine` và API add/confirm theo quan hệ sở hữu chính xác. |
-    | Phân biệt quan hệ | Biện minh composition cho OrderLine và association cho Product/Customer bằng vòng đời. |
-    | Review bất biến mô hình | Chỉ ra bội số/ownership sai và cách xác nhận bằng constructor, API, test và constraint. |
+    | Interpreting UML | Read visibility, attributes, operations, association roles/multiplicities, and relationship line types accurately. |
+    | Translating UML to Java | Sketch `Order`/`OrderLine` and add/confirm APIs according to the correct ownership relationships. |
+    | Distinguishing relationships | Justify composition for OrderLine and association for Product/Customer based on lifecycle. |
+    | Reviewing model invariants | Identify incorrect multiplicities or ownership and explain how to verify them with constructors, APIs, tests, and constraints. |
 - id: modeling-006
-  title: 'Sơ đồ đối tượng: các thể hiện tại một thời điểm'
+  title: 'Object Diagrams: Instances at a Point in Time'
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Sơ đồ đối tượng: các thể hiện tại một thời điểm**
+    **Object Diagrams: Instances at a Point in Time**
 
-    Hiểu **UML Object Diagram** là snapshot các instance, giá trị slot và link tại một thời điểm, khác class diagram mô tả kiểu/quan hệ cho nhiều object. Qua `Order`–`OrderItem`–`Product`–`Customer`, người học mô tả t0/t1, aliasing và liên kết nhiều đường đến cùng một instance.
+    Understand a **UML Object Diagram** as a snapshot of instances, slot values, and links at a specific moment, unlike a class diagram describing types and relationships across many objects. Through `Order`–`OrderItem`–`Product`–`Customer`, learners describe t0/t1, aliasing, and multiple links to the same instance.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Đọc một snapshot cụ thể
+    ### Reading a Concrete Snapshot
 
-    1. `o01:Order` và `code = "O-001"` khác `Order` và `code: String` về ý nghĩa nào?
-    2. Vì sao một snapshot t0 có một item không có nghĩa class Order chỉ được có một item?
-    3. Link giữa `o01`, `i01`, `p01`, `c01` biểu diễn dữ liệu gì, và mũi tên minh họa Mermaid có phải method call không?
+    1. How do `o01:Order` and `code = "O-001"` differ in meaning from `Order` and `code: String`?
+    2. Why does a t0 snapshot containing one item not mean that the Order class can have only one item?
+    3. What data do links among `o01`, `i01`, `p01`, and `c01` represent, and are the illustrative Mermaid arrows method calls?
 
-    ### So sánh thời điểm và danh tính
+    ### Comparing Moments and Identities
 
-    1. Sau khi thêm `i02`, object nào/đường liên kết nào mới, object nào vẫn giữ nguyên tại t1?
-    2. Vì sao hai order cùng tham chiếu `c01` cần một hộp Customer và hai link, còn hai object cùng tên Lan phải dùng hai hộp?
-    3. Muốn xác nhận snapshot phù hợp multiplicity và invariant, phải biết phạm vi sơ đồ đã lược bỏ link nào và kiểm chứng trong code/test thế nào?
+    1. After adding `i02`, which object and link are new, and which objects remain unchanged at t1?
+    2. Why do two orders referencing the same `c01` require one Customer box and two links, while two objects both named Lan require separate boxes?
+    3. To verify that a snapshot satisfies multiplicities and invariants, how can we determine which links were omitted from the diagram and check the model in code/tests?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Đọc object graph | Nêu đúng object identity, slot values và link trên snapshot t0/t1. |
-    | Vẽ snapshot có căn cứ | Vẽ cùng một order trước/sau addItem, đúng số instance và đường tham chiếu. |
-    | Phát hiện alias | Giải thích `==` cho hai tham chiếu chung instance khác với hai object cùng giá trị. |
-    | Kiểm chứng snapshot | Chỉ ra trạng thái có thể vi phạm một multiplicity được đặc tả đầy đủ và viết assertion tương ứng. |
+    | Reading object graphs | Correctly identify object identities, slot values, and links in t0/t1 snapshots. |
+    | Drawing evidence-based snapshots | Draw the same order before and after addItem with the correct number of instances and reference links. |
+    | Detecting aliases | Explain how `==` for two references to one instance differs from two objects with equal values. |
+    | Verifying snapshots | Identify states that may violate a fully specified multiplicity and write corresponding assertions. |
 - id: modeling-007
-  title: 'Sơ đồ tuần tự: thứ tự tương tác'
+  title: 'Sequence Diagrams: Interaction Order'
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Sơ đồ tuần tự: thứ tự tương tác**
+    **Sequence Diagrams: Interaction Order**
 
-    Dùng **UML Sequence Diagram** để mô tả thứ tự message giữa actor, endpoint, service, repository, policy và domain object trong use case mượn sách. Bài cho thấy lifeline, activation, call/return, `alt`/`opt`/`loop`/`par`, nhánh thất bại và các side effect như `save()` cần xuất hiện sau validation.
+    Use **UML Sequence Diagrams** to describe message ordering among actors, endpoints, services, repositories, policies, and domain objects in a book-borrowing use case. The lesson covers lifelines, activations, calls/returns, `alt`/`opt`/`loop`/`par`, failure branches, and side effects such as `save()` that must occur after validation.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Đọc và vẽ tương tác
+    ### Reading and Drawing Interactions
 
-    1. Trục ngang, trục dọc, lifeline, activation, call message và return message diễn giải điều gì; khoảng cách dọc có phải thời lượng thực không?
-    2. Điều gì phân biệt nhánh `alt`, tùy chọn `opt`, vòng `loop` và song song `par`?
-    3. Trong use case mượn sách, thứ tự `isOnLoan`, `countActive`, `ensureEligible`, `dueDate`, tạo `Loan`, `save` giải quyết trách nhiệm nào?
+    1. What do the horizontal and vertical axes, lifelines, activations, call messages, and return messages represent; does vertical spacing indicate actual elapsed time?
+    2. What distinguishes the `alt` alternative, `opt` optional, `loop` repetition, and `par` parallel fragments?
+    3. In the book-borrowing use case, which responsibilities are addressed by the sequence `isOnLoan`, `countActive`, `ensureEligible`, `dueDate`, creating `Loan`, and `save`?
 
-    ### Nhánh lỗi và đồng bộ
+    ### Failure Branches and Synchronization
 
-    1. Khi bản sách đã mượn hoặc member đạt hạn mức, những message nào nhất thiết không được gửi nữa?
-    2. Vì sao một mũi tên bất đồng bộ hoặc khung `critical` trên diagram không tự tạo queue hoặc DB transaction?
-    3. Nếu `save` xảy ra trước `ensureEligible` hoặc `notifySuccess` trước `charge`, hậu quả cần kiểm tra là gì?
-    4. Spy repository có thể xác minh những thứ tự call mang tính hợp đồng nào mà không phụ thuộc toàn bộ implementation?
+    1. When a book copy is already on loan or a member has reached the borrowing limit, which messages must no longer be sent?
+    2. Why does an asynchronous arrow or a `critical` fragment on a diagram not create a queue or DB transaction by itself?
+    3. If `save` occurs before `ensureEligible` or `notifySuccess` before `charge`, which consequences must be investigated?
+    4. Which contractually significant call orders can a spy repository verify without depending on the entire implementation?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Đọc sequence diagram | Xác định actor, participant, message, return, activation và các control fragment. |
-    | Vẽ cả hai luồng | Mô tả nhánh thành công và ít nhất hai nhánh từ chối không gọi `save()`. |
-    | Đối chiếu Java | So khớp thứ tự lời gọi trong `BorrowService.borrow()` với thứ tự mũi tên. |
-    | Kiểm tra tác dụng phụ | Thiết kế spy/điều kiện để khẳng định lưu/thông báo không xảy ra trước khi rule được đáp ứng. |
+    | Reading sequence diagrams | Identify actors, participants, messages, returns, activations, and control fragments. |
+    | Drawing both flows | Describe a success branch and at least two rejection branches that never call `save()`. |
+    | Comparing with Java | Match the order of calls in `BorrowService.borrow()` to the order of arrows. |
+    | Checking side effects | Design spies/assertions to verify that persistence and notifications do not occur before the rules are satisfied. |
 - id: modeling-008
-  title: 'Sơ đồ trạng thái: chuyển trạng thái hợp lệ'
+  title: 'State Diagrams: Valid State Transitions'
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Sơ đồ trạng thái: chuyển trạng thái hợp lệ**
+    **State Diagrams: Valid State Transitions**
 
-    Mô hình hóa vòng đời một đối tượng bằng **state**, **event**, **guard**, **transition** và **effect**, thay vì cho caller gán `status` tùy ý. Bài dùng đơn hàng từ `DRAFT` đến `DELIVERED` hoặc `CANCELLED`, bảng transition, Java enum + RULES, guard số tiền/mã vận đơn và kiểm tra trạng thái giữ nguyên khi lỗi.
+    Model an object's lifecycle using **state**, **event**, **guard**, **transition**, and **effect** rather than allowing callers to assign `status` arbitrarily. The lesson uses an order progressing from `DRAFT` to `DELIVERED` or `CANCELLED`, a transition table, Java enums + RULES, guards on payment amounts and tracking numbers, and checks that failures leave state unchanged.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### State machine và chuyển trạng thái
+    ### State Machines and State Transitions
 
-    1. State, event, guard, effect và transition có vai trò khác nhau thế nào trong cạnh `PACKING --SHIP--> SHIPPED`?
-    2. Vì sao `DRAFT` có thể cancel nhưng `PAID` trong ví dụ không được phép cancel bằng cùng một event?
-    3. Ký hiệu initial/final state mô tả điều gì và vì sao final không có nghĩa xóa object khỏi RAM/DB?
-    4. Khi không có cạnh hoặc guard sai, API nên xử lý thế nào để trạng thái và lịch sử không bị đổi?
+    1. How do state, event, guard, effect, and transition play different roles in the `PACKING --SHIP--> SHIPPED` edge?
+    2. Why can `DRAFT` be canceled while `PAID` cannot be canceled by the same event in this example?
+    3. What do initial/final state symbols mean, and why does a final state not mean deleting the object from RAM or a database?
+    4. When no transition exists or a guard fails, how should the API respond without changing state or history?
 
-    ### Triển khai và kiểm chứng
+    ### Implementation and Verification
 
-    1. Vì sao `Order.submit`, `confirmPayment`, `ship` cần method có tên thay cho setter `setStatus`?
-    2. Callback thanh toán trùng, hai request SHIP cạnh tranh và email sau commit đòi idempotency, optimistic locking hoặc outbox ở đâu?
-    3. Khi trạng thái thanh toán và giao hàng tương đối độc lập, vì sao một enum kết hợp có thể phình to và phải xét ràng buộc liên chiều?
-    4. Test chuyển trạng thái nên bao phủ những cạnh hợp lệ, guard lỗi và event cấm nào?
+    1. Why should `Order.submit`, `confirmPayment`, and `ship` be named methods instead of exposing a `setStatus` setter?
+    2. Where do duplicate payment callbacks, two competing SHIP requests, and post-commit emails require idempotency, optimistic locking, or an outbox?
+    3. When payment and shipping states are relatively independent, why can a combined enum grow excessively, and which cross-dimensional constraints must be considered?
+    4. Which valid transitions, failing guards, and forbidden events should state-transition tests cover?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Xây state machine | Vẽ trạng thái bắt đầu/kết thúc, event, guard và effect cho luồng Order. |
-    | Xác định bảng chuyển | Liệt kê cạnh hợp lệ và từ chối trạng thái/event không có trong bảng. |
-    | Thiết kế cập nhật an toàn | Kiểm tra payment/tracking trước khi đổi state, giữ nguyên lịch sử sau lỗi. |
-    | Kiểm chứng vòng đời | Đề xuất positive/negative transition tests và giải thích concurrency/idempotency cần bảo vệ ở persistence. |
+    | Building state machines | Draw initial/final states, events, guards, and effects for the Order workflow. |
+    | Defining transition tables | List valid edges and reject state/event pairs absent from the table. |
+    | Designing safe updates | Validate payment/tracking information before changing state and preserve history after failures. |
+    | Verifying lifecycles | Propose positive/negative transition tests and explain concurrency/idempotency safeguards needed in persistence. |
 - id: modeling-009
-  title: Đối chiếu mô hình với mã và tình huống thực tế
+  title: Validating Models Against Code and Real-World Scenarios
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Đối chiếu mô hình với mã và tình huống thực tế**
+    **Validating Models Against Code and Real-World Scenarios**
 
-    Kiểm tra **hai chiều** từ use case/business rule đến UML, Java API, test và dữ liệu vận hành, rồi từ code/test phát hiện mô hình sai lệch. Qua thư viện mượn/trả `BookCopy`, bài truy vết BR-01…BR-07, phân biệt Loan lịch sử với Loan active và kiểm chứng giới hạn 3 lượt, 14 ngày, trả một lần cùng tranh chấp đồng thời.
+    Verify **in both directions** from use cases/business rules to UML, Java APIs, tests, and operational data, and from code/tests back to detect model drift. Using a `BookCopy` lending/returning library scenario, the lesson traces BR-01…BR-07, distinguishes historical Loans from active Loans, and verifies the limits of 3 loans, 14 days, one-time returns, and concurrent contention.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Kiểm tra mô hình với nghiệp vụ
+    ### Validating Models Against Business Requirements
 
-    1. Vì sao association `BookCopy 1 -- 0..* Loan` thể hiện lịch sử nhưng chưa bảo đảm tối đa một Loan active?
-    2. Những mismatch nào xảy ra nếu dùng ISBN thay copy ID, đếm toàn bộ Loan thay vì Loan active hoặc xóa phiếu khi trả?
-    3. UC-BORROW và UC-RETURN đòi tiền/hậu điều kiện và bất biến BR-01…BR-07 nào?
+    1. Why does the `BookCopy 1 -- 0..* Loan` association represent history without guaranteeing at most one active Loan?
+    2. What mismatches arise from using ISBN instead of copy ID, counting all Loans instead of active Loans, or deleting loan records upon return?
+    3. Which preconditions, postconditions, and BR-01…BR-07 invariants do UC-BORROW and UC-RETURN require?
 
-    ### Kiểm chứng triển khai và thay đổi
+    ### Verifying Implementations and Changes
 
-    1. Từng BR được bảo vệ bởi API `Library.borrow`, `Loan.returnOn`, `isAvailable`, `Clock` và bài test nào?
-    2. Vì sao lock `synchronized` cùng một `Library` chỉ bảo vệ một JVM, còn nhiều node cần transaction/unique active-copy index?
-    3. Giới hạn 3 active Loan/member được kiểm soát ra sao khi unique index chỉ bảo vệ mỗi copy?
-    4. Nếu thay chính sách cho giáo viên được mượn 6 bản, cần cập nhật rule, model, Java, test và dữ liệu cũ theo thứ tự suy nghĩ nào?
+    1. Which APIs—`Library.borrow`, `Loan.returnOn`, `isAvailable`, and `Clock`—and which tests enforce each BR?
+    2. Why does a `synchronized` lock on the same `Library` protect only one JVM, while multiple nodes require a transaction/unique active-copy index?
+    3. How is the limit of 3 active Loans per member enforced when a unique index protects only individual copies?
+    4. If policy changes to allow teachers to borrow 6 copies, in what order should changes to rules, models, Java, tests, and existing data be considered?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Lập traceability | Tạo bảng UC/BR → class, API, constraint và test có căn cứ. |
-    | Phát hiện model drift | Giải thích sai lệch về identity, multiplicity, active-vs-history, due date và trách nhiệm. |
-    | Kiểm chứng hai chiều | Nêu test success, rejection, return-history và các trường hợp cạnh tranh bản cuối. |
-    | Đề xuất nơi bảo vệ rule | Phân biệt validation trong model với transaction/unique constraint tại nơi lưu trữ chung. |
-    | Quản lý thay đổi nghiệp vụ | Xác định phần model/code/test/policy cần cập nhật khi rule thay đổi sau vận hành. |
+    | Establishing traceability | Create a justified UC/BR → class, API, constraint, and test matrix. |
+    | Detecting model drift | Explain discrepancies in identity, multiplicity, active-versus-historical loans, due dates, and responsibilities. |
+    | Verifying in both directions | Specify tests for success, rejection, return history, and contention for the last available copy. |
+    | Choosing where to enforce rules | Distinguish model-level validation from transactions/unique constraints in shared storage. |
+    | Managing business changes | Identify which models, code, tests, and policies must be updated when business rules change after deployment. |

@@ -1,68 +1,68 @@
 version: 1
 type: LEARNING_ROADMAP
-title: KẾT HỢP — LIÊN KẾT BÀI HỌC
-roadmapHeading: Mạch liên kết bài học
+title: COMPOSITION — LESSON CONNECTIONS
+roadmapHeading: Learning Path Connections
 roadmap:
 - id: composition-001
   order: 1
-  title: Ghép đối tượng để xây dựng hành vi
-  description: Thiết kế một hành vi lớn bằng việc lắp ghép formatter, transport và đối tượng điều phối; quan sát delegation và kiểm thử ranh giới.
+  title: Composing Objects to Build Behavior
+  description: Design a larger behavior by assembling a formatter, a transport, and a coordinating object; observe delegation and test boundaries.
   transition:
     to: composition-002
-    description: '**Từ xây dựng hành vi bằng thành phần → chọn đúng loại quan hệ và mức sở hữu của các thành phần.**'
+    description: '**From building behavior with components → choosing the right relationship types and levels of component ownership.**'
 - id: composition-002
   order: 2
-  title: Quan hệ “có một” và quan hệ “là một”
-  description: Nhận diện is-a, has-a và các mức sở hữu của liên kết giữa Car, Vehicle, PowerSource hoặc Order và OrderLine.
+  title: Has-A and Is-A Relationships
+  description: Identify is-a and has-a relationships and levels of ownership in the associations among Car, Vehicle, and PowerSource, or between Order and OrderLine.
   transition:
     to: composition-003
-    description: '**Từ quan hệ has-a/is-a → xem chính xác công việc được chuyển qua từng ranh giới và ai chịu trách nhiệm lỗi.**'
+    description: '**From has-a/is-a relationships → examining exactly what work crosses each boundary and who is responsible for errors.**'
 - id: composition-003
   order: 3
-  title: Ủy quyền công việc cho đối tượng khác
-  description: Lần theo hợp đồng và đường gọi TicketRouter → TicketClassifier → AssignmentPort, giữ đúng trách nhiệm kết quả và lỗi.
+  title: Delegating Work to Other Objects
+  description: Trace the contracts and call path TicketRouter → TicketClassifier → AssignmentPort, preserving responsibility for results and errors.
   transition:
     to: composition-004
-    description: '**Từ đường gọi delegation → so sánh chiều tái sử dụng qua subclass với sự lắp ghép nhiều collaborator.**'
+    description: '**From delegation call paths → comparing reuse through subclasses with assembling multiple collaborators.**'
 - id: composition-004
   order: 4
-  title: Tái sử dụng bằng kết hợp và bằng kế thừa
-  description: So sánh khung kế thừa AbstractReport với ReportPublisher ghép Formatter/Destination để lựa chọn theo những chiều thay đổi độc lập.
+  title: Reuse Through Composition and Inheritance
+  description: Compare the AbstractReport inheritance framework with ReportPublisher composed of Formatter/Destination to choose based on independent dimensions of change.
   transition:
     to: composition-005
-    description: '**Từ lựa chọn tái sử dụng → nghiên cứu trường hợp cần thay collaborator ngay trong thời gian service hoạt động.**'
+    description: '**From reuse choices → examining cases where a collaborator must change while a service is running.**'
 - id: composition-005
   order: 5
-  title: Thay đổi đối tượng cộng tác khi chạy
-  description: Thực hành đổi DiscountPolicy trong runtime và đánh giá nhất quán per-call, visibility đa luồng, vòng đời cộng tác viên.
+  title: Replacing Collaborators at Runtime
+  description: Practice replacing DiscountPolicy at runtime and evaluate per-call consistency, visibility across threads, and collaborator lifecycles.
   transition:
     to: composition-006
-    description: '**Từ khả năng thay collaborator → thiết kế cách cung cấp dependency và phạm vi dùng trong Java.**'
+    description: '**From replacing collaborators → designing how dependencies are supplied and scoped in Java.**'
 - id: composition-006
   order: 6
-  title: Tiêm phụ thuộc qua hàm khởi tạo hoặc phương thức
-  description: Cấp dependency qua constructor hoặc tham số phương thức để tránh hard-code implementation và thuận tiện tiêm fake kiểm thử.
+  title: Constructor or Method Dependency Injection
+  description: Supply dependencies through constructors or method parameters to avoid hard-coding implementations and make it easy to inject test fakes.
   transition:
     to: composition-007
-    description: '**Từ cách tiêm dependency → làm rõ ai thực sự sở hữu trạng thái/tài nguyên và ai chịu trách nhiệm dọn dẹp.**'
+    description: '**From dependency injection approaches → clarifying who actually owns state and resources and who is responsible for cleanup.**'
 - id: composition-007
   order: 7
-  title: Quyền sở hữu và vòng đời đối tượng được chứa
-  description: Xác lập owner cho trạng thái và tài nguyên, chặn alias mutable và đóng writer/socket theo AutoCloseable.
+  title: Ownership and Lifecycle of Contained Objects
+  description: Establish ownership of state and resources, prevent mutable aliasing, and close writers/sockets according to AutoCloseable.
   transition:
     to: composition-008
-    description: '**Từ hợp đồng và vòng đời được xác định → thực hành chuyển một hierarchy sai sang composition có kiểm chứng.**'
+    description: '**From defined contracts and lifecycles → practicing a verified conversion of an incorrect hierarchy to composition.**'
 - id: composition-008
   order: 8
-  title: Chuyển thiết kế kế thừa sang kết hợp
-  description: Chuyển OrderService từ kế thừa OrderStore sang sử dụng OrderRepository, kiểm kê caller và giữ hợp đồng qua test.
+  title: Refactoring Inheritance to Composition
+  description: Refactor OrderService from inheriting OrderStore to using OrderRepository, inventory callers, and preserve contracts through tests.
   transition: null
 comparisonMarkdown: |-
-  ## 2. Bảng đối chiếu các bài học
+  ## 2. Lesson Comparison Table
 
-  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 |
+  | Criterion | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 | Lesson 6 | Lesson 7 | Lesson 8 |
   | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-  | Tên | Ghép đối tượng để xây dựng hành vi | Quan hệ “có một” và quan hệ “là một” | Ủy quyền công việc cho đối tượng khác | Tái sử dụng bằng kết hợp và bằng kế thừa | Thay đổi đối tượng cộng tác khi chạy | Tiêm phụ thuộc qua hàm khởi tạo hoặc phương thức | Quyền sở hữu và vòng đời đối tượng được chứa | Chuyển thiết kế kế thừa sang kết hợp |
-  | Vấn đề cần hiểu | Hành vi lớn hình thành từ các object phối hợp ra sao? | Đâu là is-a, has-a, association hay ownership mạnh? | Ai giao việc, ai làm, ai chịu trách nhiệm kết quả? | Nên tái sử dụng bằng extends hay ghép các vai trò? | Thay collaborator lúc chạy mà giữ nhất quán thế nào? | Cấp collaborator từ ngoài ở phạm vi nào? | Ai quản lý state và đóng tài nguyên được chứa? | Bỏ extends thế nào mà không phá client và contract? |
-  | Giá trị đối với OOP/module | Phân chia trách nhiệm, thay formatter/transport dễ dàng. | Mô hình quan hệ đúng và bảo toàn subtype contract. | API cộng tác có đường lỗi và luồng rõ. | Giảm phình cây lớp khi nhiều biến thể độc lập. | Chuyển policy và kiểm soát concurrent requests. | Giảm coupling, test không cần gửi thông báo thật. | Giữ invariant và tránh leak file/connection. | Cải thiện phân lớp nghiệp vụ, lưu trữ và khả năng test. |
-  | Tư duy hình thành | Phối hợp object qua interface/field. | Chọn quan hệ theo hợp đồng và vòng đời. | Nhìn theo luồng lời gọi và responsibility. | Đánh giá các chiều thay đổi trước khi chọn reuse. | Phân biệt snapshot mỗi call với mutable global state. | Xác định dependency bắt buộc hay theo từng tác vụ. | Đặt owner và quyền truy cập trước khi code. | Refactor từng bước theo hành vi quan sát được. |
+  | Name | Composing Objects to Build Behavior | Has-A and Is-A Relationships | Delegating Work to Other Objects | Reuse Through Composition and Inheritance | Replacing Collaborators at Runtime | Constructor or Method Dependency Injection | Ownership and Lifecycle of Contained Objects | Refactoring Inheritance to Composition |
+  | Key question | How do collaborating objects produce larger behaviors? | Which relationships are is-a, has-a, associations, or strong ownership? | Who delegates, who performs the work, and who is responsible for the result? | Should reuse rely on extends or assembling roles? | How can a collaborator change at runtime while preserving consistency? | At what scope should an external collaborator be supplied? | Who manages state and closes contained resources? | How can extends be removed without breaking clients or contracts? |
+  | Value for OOP/the module | Separate responsibilities and easily replace the formatter/transport. | Model relationships correctly and preserve subtype contracts. | Give collaboration APIs clear control and error flows. | Avoid class hierarchy explosion when variants change independently. | Switch policies and control concurrent requests. | Reduce coupling and test without sending real notifications. | Preserve invariants and avoid file/connection leaks. | Improve the separation of domain logic and persistence and make testing easier. |
+  | Mindset developed | Coordinate objects through interfaces/fields. | Choose relationships based on contracts and lifecycles. | Think in terms of call flow and responsibility. | Evaluate dimensions of change before choosing reuse. | Distinguish per-call snapshots from mutable global state. | Determine whether a dependency is mandatory or task-specific. | Define owners and access rights before coding. | Refactor incrementally based on observable behavior. |

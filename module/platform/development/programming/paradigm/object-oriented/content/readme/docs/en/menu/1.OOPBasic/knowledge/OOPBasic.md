@@ -1,82 +1,82 @@
 <a id="back-to-top"></a>
 
-# Tư duy OOP
+# Thinking in OOP
 
 ## Menu
-- [OOP là gì và bài toán tổ chức chương trình](#oop-basic-001)
-- [Đối tượng, trạng thái, hành vi và trách nhiệm](#oop-basic-002)
-- [Lớp, kiểu và thể hiện: các khái niệm nền tảng](#oop-basic-003)
-- [Tương tác giữa đối tượng và lời gọi phương thức](#oop-basic-004)
-- [Đóng gói, trừu tượng, kế thừa và đa hình](#oop-basic-005)
-- [OOP và lập trình thủ tục: cách phân chia bài toán](#oop-basic-006)
-- [OOP dựa trên lớp và OOP dựa trên nguyên mẫu](#oop-basic-007)
-- [Khi nên và không nên sử dụng OOP](#oop-basic-008)
+- [What OOP Is and the Problem of Organizing Programs](#oop-basic-001)
+- [Objects, State, Behavior, and Responsibility](#oop-basic-002)
+- [Classes, Types, and Instances: Foundational Concepts](#oop-basic-003)
+- [Object Interactions and Method Calls](#oop-basic-004)
+- [Encapsulation, Abstraction, Inheritance, and Polymorphism](#oop-basic-005)
+- [OOP and Procedural Programming: Decomposing a Problem](#oop-basic-006)
+- [Class-Based and Prototype-Based OOP](#oop-basic-007)
+- [When to Use OOP and When Not To](#oop-basic-008)
 
-## <a id="oop-basic-001">OOP là gì và bài toán tổ chức chương trình</a>
+## <a id="oop-basic-001">What OOP Is and the Problem of Organizing Programs</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# OOP là gì và bài toán tổ chức chương trình?
+# What Is OOP, and Why Does Program Organization Matter?
 
-Khi một chương trình chỉ có vài chục dòng, chúng ta thường dễ biết dữ liệu nằm ở đâu, hàm nào xử lý việc gì và phải sửa chỗ nào khi yêu cầu thay đổi. Nhưng hãy tưởng tượng một ứng dụng có tài khoản, đơn hàng, kho hàng, thanh toán, nhiều người cùng phát triển và hàng trăm yêu cầu mới. Câu hỏi khó dần không còn là “viết vòng lặp thế nào?” mà là **“tổ chức chương trình ra sao để dữ liệu, hành vi và quy tắc nghiệp vụ có chỗ đứng rõ ràng?”**
+When a program has only a few dozen lines, it is usually easy to tell where data lives, which function handles which task, and what needs to change when requirements evolve. Now imagine an application with accounts, orders, inventory, payments, multiple developers, and hundreds of new requirements. The hard question gradually shifts from “How do I write this loop?” to **“How should I organize the program so that data, behavior, and business rules each have a clearly defined place?”**
 
-**Lập trình hướng đối tượng (Object-Oriented Programming, OOP)** là một cách tư duy và tổ chức chương trình quanh các **đối tượng**. Mỗi đối tượng đại diện cho một thực thể hoặc khái niệm có trách nhiệm cụ thể; nó có thể giữ trạng thái, thực hiện hành vi và phối hợp với đối tượng khác để hoàn thành công việc.
+**Object-oriented programming (OOP)** is a way of thinking about and organizing programs around **objects**. Each object represents an entity or concept with a specific responsibility; it can hold state, perform behavior, and collaborate with other objects to accomplish a task.
 
-Bài này tập trung vào hai câu hỏi: **OOP là gì?** Và **vấn đề tổ chức chương trình nào khiến OOP trở nên hữu ích?** Các kỹ thuật như kế thừa, đa hình hay SOLID sẽ được nhắc đến khi cần, chưa phải trọng tâm.
+This lesson focuses on two questions: **What is OOP?** And **what challenges in organizing programs make OOP useful?** Techniques such as inheritance, polymorphism, and SOLID will be mentioned where relevant, but they are not the focus yet.
 
-## 1. Vì sao “tổ chức chương trình” lại là một bài toán?
+## 1. Why Is “Organizing a Program” a Problem Worth Solving?
 
-Giả sử bạn viết tính năng rút tiền. Khi mới bắt đầu, bài toán có vẻ đơn giản:
+Suppose you are implementing a cash withdrawal feature. At first, the problem seems simple:
 
-1. Đọc số dư hiện tại.
-2. Nhận số tiền muốn rút.
-3. Kiểm tra số tiền hợp lệ và số dư đủ.
-4. Trừ tiền nếu được phép.
-5. Trả kết quả.
+1. Read the current balance.
+2. Receive the requested withdrawal amount.
+3. Check that the amount is valid and the balance is sufficient.
+4. Deduct the money if the withdrawal is allowed.
+5. Return the result.
 
-Nếu chương trình chỉ xử lý một tài khoản, vài hàm và biến có thể đã đủ. Nhưng hệ thống lớn hơn sẽ xuất hiện thêm yêu cầu: có hàng nghìn tài khoản; cần lịch sử giao dịch; giới hạn rút theo ngày; khóa tài khoản; phân quyền; cảnh báo giao dịch bất thường; nhiều giao dịch đồng thời; cần kiểm thử và thay đổi quy tắc mà không phá tính năng cũ.
+If the program handles only one account, a few functions and variables might suffice. But a larger system brings additional requirements: thousands of accounts; transaction histories; daily withdrawal limits; account freezing; access control; suspicious-transaction alerts; concurrent transactions; testing; and changes to rules without breaking existing functionality.
 
-Những thách thức đáng chú ý là:
+Some notable challenges are:
 
-| Vấn đề | Dấu hiệu trong mã nguồn | Hậu quả có thể gặp |
+| Problem | Signs in the source code | Possible consequence |
 |---|---|---|
-| Dữ liệu và thao tác bị tách rời | Nhiều nơi cùng sửa trực tiếp `balance` | Một nơi quên kiểm tra, dữ liệu trở nên không hợp lệ |
-| Trách nhiệm phân tán | Quy tắc rút tiền nằm rải rác ở controller, service, utility | Sửa một nghiệp vụ phải tìm và cập nhật nhiều nơi |
-| Phụ thuộc chằng chịt | Đổi cách thanh toán kéo theo sửa nhiều phần không liên quan | Khó thay đổi, dễ phát sinh lỗi ngoài ý muốn |
-| Khó hiểu luồng xử lý | Không rõ ai được phép làm gì với dữ liệu | Người mới khó đọc, khó bảo trì |
-| Khó kiểm thử | Một hàm ôm đọc dữ liệu, tính toán, ghi DB và gửi thông báo | Muốn kiểm thử một quy tắc phải dựng cả hệ thống |
+| Data and operations are separated | Many places directly modify `balance` | One place skips validation, leaving the data invalid |
+| Responsibilities are scattered | Withdrawal rules are spread across controllers, services, and utilities | Changing one business operation requires finding and updating many locations |
+| Dependencies are tangled | Changing a payment method forces changes in unrelated components | Changes are difficult and can introduce unintended bugs |
+| Control flow is hard to understand | It is unclear who is allowed to do what with the data | New developers struggle to read and maintain the code |
+| Testing is difficult | One function reads data, calculates, writes to the database, and sends notifications | Testing one rule requires setting up the entire system |
 
-**OOP đưa ra một hướng tổ chức:** xác định những đối tượng mang trách nhiệm trong bài toán, giao cho chúng hành vi thích hợp và để chúng cộng tác thông qua các giao diện/phương thức rõ ràng. OOP **không tự động** giải quyết mọi vấn đề ở bảng trên; thiết kế đối tượng vẫn có thể tệ nếu phân chia trách nhiệm sai.
+**OOP offers an approach to organization:** identify the objects responsible for parts of the problem, assign appropriate behaviors to them, and let them collaborate through well-defined interfaces and methods. OOP **does not automatically** solve every problem in the table; an object-oriented design can still be poor if responsibilities are assigned incorrectly.
 
-## 2. “Đối tượng” thực sự là gì?
+## 2. What Exactly Is an “Object”?
 
-Hãy xét một tài khoản ngân hàng, ở góc nhìn mô hình phần mềm:
+Consider a bank account from the perspective of a software model:
 
-- **Định danh (identity):** đó là tài khoản nào, ví dụ mã nghiệp vụ `ACC-01`.
-- **Trạng thái (state):** số dư, trạng thái hoạt động, hạn mức... tại thời điểm hiện tại.
-- **Hành vi (behavior):** nạp tiền, rút tiền, khóa tài khoản... đi kèm các điều kiện được phép thực hiện.
-- **Trách nhiệm (responsibility):** duy trì những quy tắc thuộc về tài khoản, chẳng hạn không cho số dư âm theo chính sách được chọn.
+- **Identity:** which account it is, for example the business identifier `ACC-01`.
+- **State:** its balance, active status, limits, and so on at the current point in time.
+- **Behavior:** depositing money, withdrawing money, freezing an account, and so on, subject to the conditions under which those actions are permitted.
+- **Responsibility:** enforcing rules that belong to the account, such as disallowing a negative balance under the chosen policy.
 
-Ví dụ: tài khoản `ACC-01` có số dư 100.000 đồng. Khi được yêu cầu rút 30.000 đồng, nó kiểm tra yêu cầu và chuyển số dư thành 70.000 đồng. Nếu yêu cầu rút 120.000 đồng ngay từ trạng thái 100.000 đồng, nó từ chối và giữ nguyên 100.000 đồng.
+For example, account `ACC-01` has a balance of 100.000 VND. When asked to withdraw 30.000 VND, it checks the request and updates the balance to 70.000 VND. If asked to withdraw 120.000 VND while its balance is 100.000 VND, it rejects the request and keeps the balance at 100.000 VND.
 
-**Đối tượng không chỉ là “một túi dữ liệu”.** Một đối tượng được thiết kế tốt còn định nghĩa những thao tác hợp lệ đối với dữ liệu mà nó chịu trách nhiệm. Đồng thời, không phải đối tượng nào cũng có trạng thái thay đổi: đối tượng giá trị bất biến, ví dụ một `Money` đại diện cho số tiền và đơn vị tiền tệ, cũng hoàn toàn phù hợp với OOP.
+**An object is more than “a bag of data.”** A well-designed object also defines the valid operations on the data it is responsible for. At the same time, not every object has mutable state: an immutable value object, such as `Money` representing an amount and currency, also fits OOP perfectly well.
 
-### Phân biệt class và object
+### Distinguishing Classes from Objects
 
-| Khái niệm | Vai trò | Ví dụ |
+| Concept | Role | Example |
 |---|---|---|
-| `class` (lớp) | Bản mô tả cấu trúc và hành vi chung | `BankAccount` |
-| `object` (đối tượng) | Một thể hiện được tạo từ lớp, tồn tại tại thời điểm chạy | Tài khoản A và tài khoản B |
-| Thuộc tính / field | Dữ liệu thuộc về thể hiện hoặc lớp tùy cách khai báo | `balance` của một tài khoản |
-| Phương thức / method | Hành vi mà đối tượng hoặc lớp cung cấp | `withdraw(amount)` |
-| Tham chiếu / reference | Giá trị trong Java dùng để trỏ tới đối tượng | `accountA` |
+| `class` | A description of shared structure and behavior | `BankAccount` |
+| `object` | An instance created from a class that exists at runtime | Account A and account B |
+| Attribute / field | Data belonging to an instance or a class, depending on its declaration | An account's `balance` |
+| Method | Behavior provided by an object or a class | `withdraw(amount)` |
+| Reference | A value used in Java to refer to an object | `accountA` |
 
-Hai tài khoản được tạo từ cùng một lớp có thể có **số dư khác nhau**. Mỗi đối tượng có trạng thái riêng nếu trạng thái đó được lưu bằng instance field. “Định danh nghiệp vụ” như `accountNumber` cũng khác với “identity của object” trong Java: hai object có thể mang cùng một mã nếu chương trình cho phép tạo như vậy.
+Two accounts created from the same class can have **different balances**. Each object has its own state when that state is stored in instance fields. A “business identifier” such as `accountNumber` also differs from “object identity” in Java: two objects can have the same account number if the program allows them to be created that way.
 
-## 3. Cách tiếp cận thủ tục và chỗ dễ phát sinh lỗi tổ chức
+## 3. The Procedural Approach and Where Organizational Problems Arise
 
-Có thể tổ chức chương trình bằng dữ liệu và các hàm tách riêng. Ví dụ minh họa sau cố ý để dữ liệu mở:
+A program can be organized around separate data and functions. The following example deliberately leaves the data exposed:
 
 ```java
 class AccountData {
@@ -102,13 +102,13 @@ AccountFunctions.withdraw(account, 30_000); // còn 70_000
 account.balance = -999_000; // vẫn sửa được, bỏ qua quy tắc rút tiền
 ```
 
-Ở đây, `withdraw` có kiểm tra, nhưng biến `balance` vẫn có thể bị sửa trực tiếp từ nơi khác trong cùng package. Khi chương trình lớn, ta khó bảo đảm **mọi nơi sửa số dư đều tuân theo cùng một quy tắc**. Đây là vấn đề của **thiết kế ví dụ này**, không phải chứng minh rằng mọi chương trình lập trình thủ tục đều thiếu an toàn: cách tiếp cận thủ tục vẫn có thể bảo vệ dữ liệu bằng hàm, module, kiểu dữ liệu bất biến và kiểm soát quyền truy cập.
+Here, `withdraw` performs validation, but `balance` can still be modified directly elsewhere in the same package. As the program grows, it becomes difficult to ensure that **every place modifying the balance follows the same rule**. This is a problem with **the design of this particular example**, not proof that every procedural program is unsafe: procedural approaches can also protect data through functions, modules, immutable data types, and access control.
 
-Hướng tổ chức bằng đối tượng là đặt dữ liệu cần bảo vệ và những hành vi duy trì quy tắc của nó vào cùng một nơi chịu trách nhiệm.
+The object-oriented approach places protected data and the behaviors that enforce its rules together under one responsible component.
 
-## 4. Một ví dụ Java OOP chạy được
+## 4. A Runnable Java OOP Example
 
-Tạo file `Main.java` như sau (Java 11+):
+Create a file named `Main.java` as follows (Java 11+):
 
 ```java
 public class Main {
@@ -175,22 +175,22 @@ public class Main {
 }
 ```
 
-Lệnh chạy:
+Commands to run it:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Ở ví dụ này:
+In this example:
 
-- `private long balance`: bên ngoài không thể viết `a.balance = -10` bằng lời gọi Java thông thường; việc thay đổi phải đi qua các phương thức mà lớp cho phép.
-- `withdraw`: kiểm tra số tiền trước khi thay đổi số dư. Nếu tiền không đủ, trả `false` và **không sửa trạng thái**.
-- `deposit`: kiểm tra số dương; `Math.addExact` báo lỗi khi phép cộng `long` tràn số, tránh tạo số dư sai do overflow.
-- `accountNumber`: được gán khi tạo và không có phương thức thay đổi; ở ví dụ này nó là thông tin định danh nghiệp vụ bất biến.
-- `a` và `b`: là hai đối tượng riêng; thao tác trên `a` không làm số dư của `b` thay đổi.
+- `private long balance`: external code cannot write `a.balance = -10` through ordinary Java access; changes must go through methods permitted by the class.
+- `withdraw`: validates the amount before changing the balance. If funds are insufficient, it returns `false` and **does not modify the state**.
+- `deposit`: requires a positive amount; `Math.addExact` signals an error if adding two `long` values overflows, preventing an incorrect balance caused by overflow.
+- `accountNumber`: is assigned during construction and has no method for changing it; in this example it is an immutable business identifier.
+- `a` and `b`: are separate objects; operations on `a` do not change `b`'s balance.
 
-### Đọc mã như một chuỗi nguyên nhân → kết quả
+### Reading Code as a Chain of Cause and Effect
 
 ```mermaid
 flowchart TD
@@ -203,27 +203,27 @@ flowchart TD
     H -->|Không| I["balance vẫn 100.000; trả false"]
 ```
 
-**Chú ý:** hai nhánh bắt đầu từ **hai tài khoản mới có số dư 100.000**, nên không được lẫn trạng thái. Nếu thử rút 120.000 *sau khi* đã rút 30.000 trên cùng tài khoản `a`, nó cũng thất bại, nhưng số dư lúc đó giữ nguyên ở **70.000**, không quay về 100.000.
+**Note:** the two branches start with **two new accounts, each with a balance of 100.000**, so their states must not be confused. If you attempt to withdraw 120.000 *after* withdrawing 30.000 from the same account `a`, that attempt also fails, but the balance remains **70.000** at that point; it does not return to 100.000.
 
-Mô hình này cho thấy giá trị của việc để một đối tượng **chịu trách nhiệm giữ trạng thái hợp lệ**, đồng thời thể hiện giới hạn: `BankAccount` minh họa logic trong bộ nhớ của một tiến trình, **chưa** phải một hệ thống chuyển tiền an toàn. Với nhiều luồng hoặc nhiều máy chủ cùng cập nhật, ta còn cần giao dịch cơ sở dữ liệu, khóa/kiểm soát đồng thời, chống xử lý trùng, bảo mật, kiểm toán... `private` không tự làm mã trở nên thread-safe.
+This model illustrates the value of making an object **responsible for maintaining valid state**, while also showing its limitations: `BankAccount` demonstrates in-memory logic within one process; it is **not yet** a secure money-transfer system. With multiple threads or servers updating data concurrently, you also need database transactions, locking/concurrency control, duplicate-processing prevention, security, auditing, and more. `private` does not make code thread-safe by itself.
 
-## 5. OOP tổ chức *cả chương trình* như thế nào?
+## 5. How Does OOP Organize *an Entire Program*?
 
-Một lớp `BankAccount` chưa thể hiện hết ý tưởng. Giả sử ứng dụng bán hàng có yêu cầu: khách đặt mua hai sản phẩm, hệ thống phải kiểm tra giá, hàng còn, ghi đơn hàng và yêu cầu thanh toán.
+A single `BankAccount` class does not convey the entire idea. Suppose a sales application must let a customer order two products; the system must check prices and availability, record the order, and request payment.
 
-Nếu mọi bước đều nằm trong một hàm khổng lồ như `processEverything()`, hàm đó rất dễ phình ra: truy vấn dữ liệu, tính tổng, kiểm tra kho, gọi cổng thanh toán, ghi log, gửi email... Khi thêm “thanh toán khi nhận hàng” hay “hủy đơn”, ta lại phải chỉnh một hàm có quá nhiều lý do để thay đổi.
+If every step lives in one enormous function such as `processEverything()`, that function can easily balloon to include database queries, total calculations, inventory checks, payment gateway calls, logging, sending emails, and more. Adding “cash on delivery” or “order cancellation” then means editing a function with too many reasons to change.
 
-Thay vào đó, ta có thể giao việc theo trách nhiệm:
+Instead, we can assign tasks according to responsibility:
 
-| Thành phần | Trách nhiệm chính | Không nên tự ôm |
+| Component | Primary responsibility | Should not handle on its own |
 |---|---|---|
-| `Order` | Quản lý các dòng hàng, trạng thái đơn, các chuyển trạng thái hợp lệ | Gọi HTTP đến cổng thanh toán |
-| `OrderItem` | Giữ sản phẩm, số lượng, đơn giá tại thời điểm đặt | Cập nhật toàn bộ tồn kho |
-| `InventoryService` | Kiểm tra/đặt giữ hàng theo quy tắc kho | Quyết định trạng thái thanh toán |
-| `PaymentGateway` | Hợp đồng gửi yêu cầu thanh toán và nhận kết quả | Sửa trực tiếp số lượng hàng |
-| `CheckoutService` | Điều phối những bước tạo đơn, giữ hàng, yêu cầu thanh toán | Chứa toàn bộ quy tắc nội bộ của mọi đối tượng |
+| `Order` | Manage order items, order status, and valid state transitions | Make HTTP calls to the payment gateway |
+| `OrderItem` | Hold the product, quantity, and unit price at the time of ordering | Update all inventory records |
+| `InventoryService` | Check and reserve stock according to inventory rules | Decide payment status |
+| `PaymentGateway` | Define the contract for sending payment requests and receiving results | Directly change stock quantities |
+| `CheckoutService` | Coordinate order creation, stock reservation, and payment requests | Contain every other object's internal business rules |
 
-Một luồng tương tác có thể được diễn đạt như sau:
+One possible interaction flow looks like this:
 
 ```mermaid
 sequenceDiagram
@@ -256,15 +256,15 @@ sequenceDiagram
     end
 ```
 
-Sơ đồ diễn tả **trách nhiệm và thông điệp** giữa các đối tượng; đây là mô hình giảng giải, chưa xử lý chi tiết timeout, lỗi mạng hoặc hoàn tiền. Trong hệ thống thực, bước `charge` có thể thành công nhưng phản hồi thất lạc; do đó cần trạng thái bền vững, idempotency, xử lý lại có kiểm soát và cơ chế đối soát/bù trừ trước khi coi luồng là hoàn chỉnh.
+The diagram shows **responsibilities and messages** exchanged between objects; it is an instructional model that does not yet address timeouts, network failures, or refunds in detail. In a real system, a `charge` operation might succeed even when its response is lost; therefore, persistent state, idempotency, controlled retries, and reconciliation/compensation mechanisms are needed before the flow is complete.
 
-Ở đây, `CheckoutService` **biết phải nhờ ai làm việc gì**. `Order` tự giữ luật của trạng thái đơn; kho chịu trách nhiệm giữ hàng; `PaymentGateway` là một hợp đồng giao tiếp. Mỗi thành phần có một lý do chính để thay đổi, vì vậy người đọc tìm đúng chỗ nhanh hơn.
+Here, `CheckoutService` **knows which component to ask to do which task**. `Order` enforces its own order-state rules; the inventory component is responsible for reservations; `PaymentGateway` is a communication contract. Each component has one primary reason to change, making it easier for readers to find the right place to work.
 
-Cũng cần phân biệt **đối tượng có trách nhiệm** với **việc tạo thật nhiều class**. Nếu một chức năng chỉ là phép cộng đơn giản, tách thành bảy lớp và mười interface sẽ gây khó hiểu hơn là giúp ích.
+It is also important to distinguish **objects with meaningful responsibilities** from **creating large numbers of classes**. If a feature merely performs simple addition, splitting it into seven classes and ten interfaces creates more confusion than value.
 
-## 6. “Các đối tượng phối hợp” nghĩa là gì?
+## 6. What Does It Mean for “Objects to Collaborate”?
 
-Trong Java, đối tượng thường làm việc với nhau thông qua **lời gọi phương thức**. Ví dụ khái niệm:
+In Java, objects commonly work together through **method calls**. A conceptual example:
 
 ```java
 interface PaymentGateway {
@@ -290,45 +290,45 @@ class CheckoutService {
 // Đoạn này minh họa cách phối hợp, không phải file Java độc lập.
 ```
 
-`CheckoutService` cần khả năng “thu tiền”, nên nó phụ thuộc vào hợp đồng `PaymentGateway`. Một lớp có thể triển khai cổng thanh toán thật; một lớp khác có thể giả lập kết quả để kiểm thử. Điều này giúp giảm mức phụ thuộc vào chi tiết cụ thể.
+`CheckoutService` needs the ability to “collect payment,” so it depends on the `PaymentGateway` contract. One class might implement a real payment gateway, while another simulates results for tests. This reduces coupling to specific implementation details.
 
-Đây là một lợi ích lớn của OOP khi xây dựng hệ thống: **thay đổi một cách thực hiện mà giảm nhu cầu sửa mã đang sử dụng nó**. Nhưng việc chọn interface phải có lý do, ví dụ tồn tại nhiều cách thực hiện, cần thay thế khi kiểm thử hoặc cần giữ ranh giới phụ thuộc; không nhất thiết mỗi class đều phải có interface tương ứng.
+This is a major benefit of OOP when building systems: **you can change an implementation while reducing the need to modify the code that uses it**. But introducing an interface should have a purpose, such as supporting multiple implementations, substituting a test implementation, or establishing a dependency boundary; not every class needs its own matching interface.
 
-## 7. OOP khác lập trình thủ tục ở điểm nào?
+## 7. How Does OOP Differ from Procedural Programming?
 
-So sánh nên tập trung vào **cách phân chia và quản lý trách nhiệm**, thay vì nói một bên “cũ” hay “dở”:
+The comparison should focus on **how responsibilities are divided and managed**, rather than labeling one approach “old” or “inferior”:
 
-| Câu hỏi | Cách tổ chức theo thủ tục / hàm | Cách tổ chức theo đối tượng |
+| Question | Procedural / function-oriented organization | Object-oriented organization |
 |---|---|---|
-| Tư duy chủ đạo | Những bước/hàm nào biến đầu vào thành kết quả? | Những đối tượng nào chịu trách nhiệm và cần trao đổi gì? |
-| Dữ liệu và hành vi | Có thể đặt trong những module/hàm riêng | Thường gom trạng thái và hành vi liên quan vào đối tượng |
-| Điểm mạnh tự nhiên | Luồng xử lý tuyến tính, thuật toán, biến đổi dữ liệu | Mô hình có trạng thái và quy tắc, cộng tác giữa thành phần |
-| Kiểm soát thay đổi | Qua module, hợp đồng hàm, kiểu dữ liệu | Qua ranh giới đối tượng, phương thức, giao diện |
-| Rủi ro khi áp dụng kém | Hàm quá dài, trạng thái dùng chung tùy tiện | Class quá lớn, quan hệ chằng chịt, nhiều tầng không cần thiết |
+| Main way of thinking | Which steps/functions transform input into output? | Which objects hold responsibilities, and what must they exchange? |
+| Data and behavior | Can reside in separate modules/functions | Related state and behavior are often grouped within objects |
+| Natural strengths | Linear processing flows, algorithms, data transformations | Models with state and rules; collaboration among components |
+| Managing change | Through modules, function contracts, and data types | Through object boundaries, methods, and interfaces |
+| Risks of poor application | Overlong functions and uncontrolled shared state | Oversized classes, tangled relationships, unnecessary layers |
 
-Hai cách có thể **kết hợp trong cùng ứng dụng**: một đối tượng `Order` dùng một hàm thuần để tính thuế; service gọi phương thức của object; một pipeline xử lý dữ liệu có thể dùng hàm/stream thay vì dựng đối tượng cho từng bước. Java hỗ trợ lập trình hướng đối tượng nhưng bản thân việc viết code Java không bảo đảm thiết kế đã mang tư duy OOP tốt.
+Both approaches can **coexist in one application**: an `Order` object can use a pure function to calculate tax; a service can call an object's methods; a data-processing pipeline can use functions or streams instead of creating an object for every step. Java supports object-oriented programming, but writing Java code alone does not guarantee a good OOP design.
 
-### Một tình huống so sánh rất thực tế
+### A Practical Scenario for Comparison
 
-Khi có thay đổi “không được rút tiền nếu tài khoản bị khóa”, tư duy OOP gợi ý đặt quy tắc ở `BankAccount.withdraw()` hoặc một thành phần nghiệp vụ chịu trách nhiệm rõ ràng. Giao diện web, ứng dụng di động và tác vụ nền đều gọi vào cùng hành vi; như vậy tránh mỗi phía tự viết một bản kiểm tra khác nhau.
+When the requirement changes to “withdrawals must be blocked for frozen accounts,” OOP thinking suggests placing the rule in `BankAccount.withdraw()` or another clearly responsible domain component. The web interface, mobile application, and background jobs all invoke the same behavior, avoiding separate, inconsistent checks in each client.
 
-Nếu vì tiện mà ba controller tự truy cập database rồi trừ số dư, việc đã tạo class `BankAccount` không giúp ích bao nhiêu: **quy tắc vẫn phân tán**. Giá trị đến từ thiết kế và kỷ luật sử dụng ranh giới đối tượng, không đến từ tên lớp.
+If three controllers each access the database and deduct a balance directly for convenience, creating a `BankAccount` class helps little: **the rules remain scattered**. The benefit comes from the design and disciplined use of object boundaries, not from class names.
 
-## 8. Làm thế nào để tìm ra đối tượng từ yêu cầu?
+## 8. How Do You Identify Objects from Requirements?
 
-Đừng vội nhìn danh từ nào trong câu cũng tạo một class. Hãy bắt đầu bằng hành vi và quy tắc thực tế.
+Do not rush to create a class for every noun in a sentence. Start with actual behaviors and rules.
 
-**Ví dụ yêu cầu:** “Khách có thể hủy đơn khi đơn chưa giao cho đơn vị vận chuyển; nếu đã giao thì không thể hủy trực tiếp.”
+**Example requirement:** “A customer can cancel an order before it is handed over to the shipping carrier; once handed over, it cannot be canceled directly.”
 
-Ta có thể tự hỏi theo thứ tự:
+You can ask the following questions in order:
 
-1. **Thông tin gì cần được giữ?** Một đơn hàng có mã, các món hàng và trạng thái như `CREATED`, `PAID`, `SHIPPED`, `CANCELLED`.
-2. **Quy tắc nào phải luôn đúng?** Khi đã `SHIPPED`, lệnh `cancel()` thông thường không được chuyển thẳng sang `CANCELLED`.
-3. **Ai nên chịu trách nhiệm bảo vệ quy tắc?** `Order` là ứng viên tự nhiên vì nó nắm trạng thái và quyết định chuyển trạng thái hợp lệ.
-4. **Cần hợp tác với ai?** `OrderService` có thể lấy đơn từ kho lưu trữ; một cơ chế vận chuyển hoặc hoàn tiền có quy tắc của riêng nó.
-5. **Phần nào phải thay đổi độc lập?** Nếu thay nhà vận chuyển, không nên bắt `Order` viết lại toàn bộ logic HTTP.
+1. **What information must be kept?** An order has an identifier, items, and statuses such as `CREATED`, `PAID`, `SHIPPED`, and `CANCELLED`.
+2. **Which rules must always hold?** Once an order is `SHIPPED`, an ordinary `cancel()` operation must not transition it directly to `CANCELLED`.
+3. **Who should enforce the rule?** `Order` is a natural candidate because it owns the state and determines valid transitions.
+4. **Which other components must collaborate?** `OrderService` might retrieve the order from storage; shipping or refund mechanisms have their own rules.
+5. **What should be able to change independently?** Switching carriers should not require `Order` to rewrite all its HTTP logic.
 
-Phác thảo rất ngắn:
+A very brief sketch:
 
 ```java
 enum OrderStatus { CREATED, PAID, SHIPPED, CANCELLED }
@@ -348,95 +348,95 @@ class Order {
 }
 ```
 
-Đây chỉ là mô hình một quy tắc nhỏ. Trong sản phẩm thật, việc hủy có thể bị giới hạn ở những trạng thái cụ thể hơn; hoàn tiền, hoàn kho, lịch sử sự kiện và quyền của người thao tác là các trách nhiệm cần phân tích riêng. Điểm cần nhớ: **quy tắc trạng thái có “nhà” để ở**, người khác gọi `cancel()` thay vì tự sửa `status` tùy ý.
+This models just one small rule. In a real product, cancellation may be restricted to a more specific set of states; refunds, restocking, event history, and user permissions are responsibilities that must be analyzed separately. The key point is that **state rules have a clear “home”**: other code calls `cancel()` instead of changing `status` arbitrarily.
 
-## 9. OOP liên quan đến encapsulation, abstraction, inheritance, polymorphism thế nào?
+## 9. How Does OOP Relate to Encapsulation, Abstraction, Inheritance, and Polymorphism?
 
-OOP thường được giới thiệu qua “bốn tính chất”. Chúng là những công cụ để xây dựng và mở rộng thiết kế, nhưng **định nghĩa OOP chỉ bằng cách thuộc tên bốn tính chất là chưa đủ**.
+OOP is often introduced through its “four pillars.” These are tools for building and extending designs, but **memorizing the names of the four pillars alone is not enough to understand OOP**.
 
-| Ý tưởng | Trả lời câu hỏi nào? | Liên hệ trong bài |
+| Concept | What question does it answer? | Connection to this lesson |
 |---|---|---|
-| **Encapsulation (đóng gói)** | Ai được quyền thay đổi dữ liệu, qua thao tác gì? | `balance` là `private`; rút tiền qua `withdraw()` |
-| **Abstraction (trừu tượng hóa)** | Bên ngoài cần biết điều gì, có thể bỏ qua chi tiết gì? | Người gọi chỉ cần biết `withdraw(amount)` trả thành công hay thất bại |
-| **Inheritance (kế thừa)** | Khi nào có quan hệ kiểu cha–con phù hợp để tái sử dụng/mở rộng? | Chưa cần dùng cho ví dụ tài khoản; không phải lúc nào cũng nên kế thừa |
-| **Polymorphism (đa hình)** | Làm sao nhiều cách thực hiện dùng chung một hợp đồng? | Các triển khai khác nhau của `PaymentGateway` |
+| **Encapsulation** | Who may change data, and through which operations? | `balance` is `private`; withdrawals go through `withdraw()` |
+| **Abstraction** | What does the outside world need to know, and which details can be hidden? | Callers only need to know whether `withdraw(amount)` succeeds or fails |
+| **Inheritance** | When is a parent–child type relationship appropriate for reuse or extension? | Not needed for the account example; inheritance is not always appropriate |
+| **Polymorphism** | How can different implementations share one contract? | Different implementations of `PaymentGateway` |
 
-**Đóng gói và trừu tượng hóa không đồng nghĩa.** `private` giúp giới hạn truy cập là một kỹ thuật đóng gói; chọn một giao diện nhỏ gọn, che đi cách thực hiện là quyết định trừu tượng hóa. Bản thân một class có nhiều `private` field nhưng toàn bộ nghiệp vụ lại ở controller cũng chưa thể xem là thiết kế trách nhiệm tốt.
+**Encapsulation and abstraction are not the same thing.** Using `private` to restrict access is an encapsulation technique; choosing a compact interface that hides implementation details is an abstraction decision. A class with many `private` fields but all its business logic in a controller still does not have a sound division of responsibilities.
 
-## 10. Khi nào OOP có ích, khi nào không nên cố ép?
+## 10. When Is OOP Useful, and When Should You Avoid Forcing It?
 
-OOP đặc biệt có ích khi chương trình có **nhiều thực thể tương tác, trạng thái và quy tắc thay đổi theo thời gian**, nhiều nhóm phát triển cần thống nhất ranh giới; hoặc khi có những hành vi cần triển khai theo nhiều cách.
+OOP is especially useful when a program has **many interacting entities, state and rules that evolve over time**, multiple development teams that need agreed boundaries, or behaviors requiring different implementations.
 
-Ngược lại, một script chuyển đổi CSV, phép tính số học thuần túy, xử lý hàng loạt theo pipeline hoặc chương trình nhỏ đôi khi được diễn đạt rõ ràng hơn bằng hàm và cấu trúc dữ liệu đơn giản. Không có luật nào buộc mọi xử lý phải tạo object mới. Nhiều ứng dụng thực tế dùng phối hợp hướng đối tượng, thủ tục và hàm.
+Conversely, a CSV conversion script, a pure arithmetic calculation, batch processing in a pipeline, or a small program may be clearer with simple functions and data structures. No rule requires every operation to create a new object. Many real applications combine object-oriented, procedural, and functional approaches.
 
-Một số dấu hiệu nên xem lại thiết kế:
+Some warning signs that a design should be reconsidered:
 
-- **God object:** một class làm mọi thứ từ nghiệp vụ đến SQL, HTTP, gửi mail.
-- **Anemic domain model:** object chủ yếu chỉ có getter/setter, còn quy tắc duy trì trạng thái chạy rải rác ở những nơi khác. Với DTO hoặc dữ liệu truyền tải, object chỉ chứa dữ liệu có thể vẫn hoàn toàn hợp lý.
-- **Lạm dụng kế thừa:** cố dùng quan hệ `extends` chỉ để tái sử dụng vài dòng code, làm lớp con phụ thuộc nặng vào lớp cha.
-- **Quá nhiều lớp trung gian:** một thao tác đơn giản phải đi qua hàng loạt interface, manager, helper mà không có ranh giới thực sự.
-- **Bỏ quên concurrency và persistence:** tưởng rằng giấu field hoặc dùng `synchronized` trong một object sẽ tự bảo vệ dữ liệu giữa nhiều instance ứng dụng.
+- **God object:** one class handles everything from business logic to SQL, HTTP, and email.
+- **Anemic domain model:** objects mostly contain getters/setters, while the rules governing their state are scattered elsewhere. For DTOs or data-transfer structures, data-only objects can still be entirely appropriate.
+- **Overuse of inheritance:** using `extends` merely to reuse a few lines of code, making subclasses heavily dependent on their parent classes.
+- **Too many intermediary classes:** a simple operation passes through a string of interfaces, managers, and helpers without meaningful boundaries.
+- **Ignoring concurrency and persistence:** assuming that hiding a field or using `synchronized` within one object automatically protects data across multiple application instances.
 
-Trong **Spring Boot**, `@Service`, `@Controller`, `@Repository` là những vai trò thường gặp khi tổ chức ứng dụng. Chúng có thể sử dụng OOP, nhưng việc gắn annotation không tự biến một class thành mô hình nghiệp vụ tốt. Chẳng hạn controller nên tiếp nhận/kiểm tra dữ liệu ở biên và gọi vào các thành phần phụ trách nghiệp vụ; đối tượng miền có thể giữ quy tắc chuyển trạng thái. Với JPA, transaction và optimistic/pessimistic locking cần được cân nhắc riêng cho cập nhật đồng thời.
+In **Spring Boot**, `@Service`, `@Controller`, and `@Repository` commonly mark application-layer roles. They can be used in an OOP design, but adding annotations does not automatically make a class a good domain model. For example, a controller should receive and validate data at the boundary and delegate to domain components; domain objects can enforce state-transition rules. With JPA, transactions and optimistic/pessimistic locking must be considered separately for concurrent updates.
 
-## 11. Tự kiểm tra cách hiểu
+## 11. Check Your Understanding
 
-Hãy thử trả lời trước khi xem gợi ý:
+Try answering before reading the hints:
 
-**Tình huống A.** Một class `Wallet` có `public long balance` và một phương thức `withdraw()` rất chặt chẽ. Mọi nơi vẫn có thể viết `wallet.balance = -1`. Có vấn đề gì?  
-**Gợi ý:** lớp chưa bảo vệ được quy tắc số dư vì còn đường sửa trạng thái bỏ qua hành vi kiểm tra.
+**Scenario A.** A `Wallet` class has `public long balance` and a very strict `withdraw()` method. Other code can still write `wallet.balance = -1`. What is wrong?  
+**Hint:** the class does not enforce the balance rule because there is still a way to modify state without passing through the validation behavior.
 
-**Tình huống B.** Hai đối tượng `BankAccount` cùng có `balance = 100000`. Chúng có nhất thiết là cùng một đối tượng không?  
-**Gợi ý:** không. Giá trị trạng thái bằng nhau không đồng nghĩa cùng identity/tham chiếu; cũng không có nghĩa mã tài khoản nghiệp vụ trùng nhau.
+**Scenario B.** Two `BankAccount` objects both have `balance = 100000`. Must they be the same object?  
+**Hint:** no. Equal state values do not imply equal identity or the same reference; nor do they mean the business account identifiers are equal.
 
-**Tình huống C.** Mỗi lần thêm phương thức thanh toán mới, developer phải sửa hàng loạt nhánh `if/else` trong `CheckoutService`. Có hướng thiết kế nào cần xem xét?  
-**Gợi ý:** xác định hợp đồng thanh toán chung và phân tách phần triển khai cụ thể nếu hệ thống thực sự cần nhiều phương thức thanh toán.
+**Scenario C.** Every time a new payment method is added, developers must modify numerous `if/else` branches in `CheckoutService`. What design approach could help?  
+**Hint:** define a shared payment contract and separate concrete implementations if the system genuinely needs multiple payment methods.
 
-**Tình huống D.** Một class `Order` vừa tính tổng tiền, gọi ngân hàng qua HTTP, gửi email, thực thi câu lệnh SQL, ghi log, vừa quản lý kho. Có lợi vì “mọi thứ ở cùng một object” không?  
-**Gợi ý:** không; đóng gói tốt còn cần **phân chia trách nhiệm đúng**, để thay đổi một phần ít kéo theo những phần khác.
+**Scenario D.** An `Order` class calculates totals, calls a bank over HTTP, sends emails, executes SQL, writes logs, and manages inventory. Is this good because “everything is in one object”?  
+**Hint:** no; good encapsulation also requires **assigning responsibilities appropriately**, so changes in one area have less impact on others.
 
-## 12. Nhớ điều gì sau bài này?
+## 12. What Should You Remember from This Lesson?
 
-OOP là một cách **chia hệ thống thành những đối tượng có trạng thái/hành vi và trách nhiệm rõ ràng, phối hợp với nhau qua hợp đồng**. Nó hữu ích vì khi dự án phát triển, ta cần biết **dữ liệu do ai quản lý, quy tắc ở đâu, ai có thể yêu cầu thao tác nào, và thay đổi chỗ này sẽ ảnh hưởng tới những chỗ nào**.
+OOP is a way to **divide a system into objects with state, behavior, and clear responsibilities that collaborate through contracts**. It is useful because, as a project grows, we need to know **who owns the data, where the rules live, who may request which operations, and which parts are affected by a change**.
 
-Để thực hành, hãy lấy một nghiệp vụ quen thuộc như tài khoản hoặc đơn hàng, ghi ra 3 thứ: **trạng thái phải giữ, hành vi hợp lệ, quy tắc không được vi phạm**. Sau đó thử viết một class bảo vệ được các quy tắc đó và kiểm tra trạng thái trước/sau từng lời gọi. Khi thêm đối tượng thứ hai, hãy xác định rõ thông điệp và trách nhiệm của từng bên. Đó là bước đầu chuyển từ “viết code cho chạy” sang **thiết kế một chương trình có thể hiểu, kiểm thử và thay đổi được**.
+To practice, choose a familiar business concept such as an account or order and write down 3 things: **the state it must maintain, its valid behaviors, and the rules that must never be violated**. Then try writing a class that enforces those rules and check its state before and after each call. When you add a second object, identify the messages and responsibilities of each participant. This is a first step from “writing code that runs” toward **designing a program that can be understood, tested, and changed**.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="oop-basic-002">Đối tượng, trạng thái, hành vi và trách nhiệm</a>
+## <a id="oop-basic-002">Objects, State, Behavior, and Responsibility</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đối tượng, trạng thái, hành vi và trách nhiệm trong OOP
+# Objects, State, Behavior, and Responsibility in OOP
 
-Khi học lập trình hướng đối tượng (Object-Oriented Programming – OOP), ta thường nghe: “Một đối tượng có trạng thái và hành vi”. Câu nói đúng nhưng chưa đủ để thiết kế phần mềm. Cần hiểu thêm **đối tượng chịu trách nhiệm về điều gì**, vì chính trách nhiệm quyết định dữ liệu nào thuộc về nó và hành vi nào nên đặt bên trong nó.
+When learning object-oriented programming (OOP), we often hear: “An object has state and behavior.” This is true, but it is not enough to design software. We also need to understand **what the object is responsible for**, because that responsibility determines which data belongs to it and which behaviors should reside within it.
 
-Hãy hình dung một đơn hàng đang được tạo: nó có mã đơn, danh sách sản phẩm, trạng thái nháp; người mua có thể thêm sản phẩm rồi xác nhận. Đơn hàng phải tự bảo vệ quy tắc “đã xác nhận thì không được tùy ý sửa danh sách sản phẩm”. Đó là một ví dụ về sự gắn kết giữa **đối tượng → trạng thái → hành vi → trách nhiệm**.
+Imagine an order being created: it has an order ID, a list of products, and a draft status; the buyer can add products and then confirm it. The order must enforce the rule “once confirmed, the product list cannot be modified arbitrarily.” This illustrates the connection among **object → state → behavior → responsibility**.
 
-## 1. Bốn khái niệm liên hệ với nhau như thế nào?
+## 1. How Are These Four Concepts Related?
 
-| Khái niệm | Câu hỏi cần trả lời | Ví dụ với đơn hàng |
+| Concept | Question to answer | Order example |
 | --- | --- | --- |
-| **Đối tượng (object)** | Ai/điều gì đang tham gia vào hệ thống? | Một đơn hàng cụ thể, có mã `orderId` |
-| **Trạng thái (state)** | Đối tượng hiện có dữ liệu và đang ở tình huống nào? | Các dòng sản phẩm; `DRAFT`, `CONFIRMED` hoặc `CANCELLED` |
-| **Hành vi (behavior)** | Đối tượng có thể thực hiện thao tác có ý nghĩa gì? | `addLine()`, `confirm()`, `cancel()`, `total()` |
-| **Trách nhiệm (responsibility)** | Đối tượng phải biết, quyết định và bảo đảm điều gì? | Giữ danh sách sản phẩm hợp lệ và kiểm soát chuyển trạng thái đơn hàng |
+| **Object** | Who or what participates in the system? | A specific order with an `orderId` |
+| **State** | What data does the object currently hold, and what condition is it in? | Order lines; `DRAFT`, `CONFIRMED`, or `CANCELLED` |
+| **Behavior** | What meaningful operations can the object perform? | `addLine()`, `confirm()`, `cancel()`, `total()` |
+| **Responsibility** | What must the object know, decide, and guarantee? | Keep order lines valid and control order-state transitions |
 
-Bốn phần không tồn tại độc lập. Nếu một đối tượng có thao tác `confirm()` thì thao tác ấy phải đọc trạng thái hiện tại, kiểm tra điều kiện và cập nhật trạng thái theo trách nhiệm của chính đối tượng.
+These four elements are not independent. If an object provides a `confirm()` operation, that operation must read the current state, check conditions, and update the state in accordance with the object's own responsibility.
 
-Ví dụ, việc xác nhận đơn hàng không nên chỉ là gán `status = CONFIRMED`. Nó phải trả lời: *Đơn đã bị hủy chưa? Có ít nhất một sản phẩm chưa? Có cho xác nhận lại không?* Nếu quy tắc nằm rải rác ở nhiều nơi, phần mềm dễ tạo ra đơn hàng ở trạng thái sai.
+For example, confirming an order should not merely assign `status = CONFIRMED`. It must answer: *Has the order been canceled? Does it contain at least one product? Is confirming it again allowed?* If these rules are scattered across the codebase, the software can easily create orders in invalid states.
 
-## 2. Đối tượng là gì? Phân biệt đối tượng và lớp
+## 2. What Is an Object? Distinguishing Objects from Classes
 
-**Đối tượng** là một thực thể trong chương trình có dữ liệu và cách xử lý liên quan đến dữ liệu đó. Nó có thể biểu diễn một thứ ngoài đời thực (đơn hàng, khách hàng), một khái niệm nghiệp vụ (giỏ hàng, hạn mức tín dụng), hoặc một thành phần kỹ thuật (bộ đệm, bộ đọc tệp). Không phải mọi đối tượng đều phải tương ứng với một vật thể hữu hình.
+An **object** is an entity within a program that has data and operations related to that data. It can represent something in the real world (an order or customer), a business concept (a shopping cart or credit limit), or a technical component (a buffer or file reader). Not every object has to correspond to a tangible physical thing.
 
-**Lớp (class)** thường mô tả cấu trúc và hành vi chung; **đối tượng (instance)** là một thể hiện cụ thể được tạo ra từ lớp.
+A **class** generally describes shared structure and behavior; an **object (instance)** is a concrete instance created from that class.
 
 ~~~java
 Order firstOrder = new Order(UUID.randomUUID());
@@ -446,49 +446,49 @@ Order secondOrder = new Order(UUID.randomUUID());
 // Mỗi đối tượng có id, danh sách hàng và trạng thái của riêng nó.
 ~~~
 
-Hai đơn hàng có thể cùng ở trạng thái `DRAFT` nhưng vẫn là **hai đối tượng khác nhau**. Ngược lại, một đơn hàng chuyển từ `DRAFT` sang `CONFIRMED` vẫn là *cùng đơn hàng ấy*; chỉ có trạng thái của nó thay đổi.
+Two orders can both be in the `DRAFT` state while remaining **two distinct objects**. Conversely, an order that moves from `DRAFT` to `CONFIRMED` is still *the same order*; only its state has changed.
 
-Cần phân biệt hai góc nhìn về danh tính:
+Two perspectives on identity must be distinguished:
 
-- **Danh tính trong bộ nhớ Java:** `firstOrder == secondOrder` so sánh xem hai biến có trỏ đến cùng một object hay không.
-- **Danh tính nghiệp vụ:** `orderId` giúp nhận diện một đơn hàng xuyên qua các lần lưu, tải từ database hoặc truyền qua API. Hai instance Java khác nhau có thể biểu diễn cùng một `orderId`. Việc so sánh chúng bằng `equals()` hay bằng ID phụ thuộc thiết kế cụ thể, không tự động suy ra từ tên lớp.
+- **Identity in Java memory:** `firstOrder == secondOrder` checks whether two variables refer to the same object.
+- **Business identity:** `orderId` identifies an order across persistence, loading from a database, or transmission through an API. Two different Java instances can represent the same `orderId`. Whether to compare them using `equals()` or an ID depends on the particular design; it is not determined automatically by the class name.
 
-Điểm cốt lõi: **danh tính trả lời “đây là ai/cái gì?”, trạng thái trả lời “hiện tại nó ra sao?”**.
+The essential distinction: **identity answers “Which entity is this?”; state answers “What is its current condition?”**
 
-## 3. Trạng thái: những gì đối tượng đang nắm giữ
+## 3. State: What an Object Currently Holds
 
-Trạng thái là tập hợp giá trị liên quan đến một đối tượng tại một thời điểm. Với đơn hàng, ta có:
+State is the set of values associated with an object at a given moment. For an order, these include:
 
-- **Không đổi theo vòng đời nghiệp vụ:** mã đơn hàng `id`.
-- **Có thể đổi qua hành vi hợp lệ:** các dòng sản phẩm khi đơn còn ở trạng thái nháp; `status` sau khi xác nhận hoặc hủy.
-- **Có thể tính từ trạng thái khác:** `total()` được tính từ số lượng và đơn giá của các dòng sản phẩm. Không nhất thiết phải lưu thêm biến `total` rồi lo đồng bộ mỗi khi thêm hàng.
+- **Unchanged throughout the business lifecycle:** the order identifier `id`.
+- **May change through valid behaviors:** order lines while the order is in draft; `status` after confirmation or cancellation.
+- **May be derived from other state:** `total()` is calculated from order-line quantities and unit prices. There is no requirement to store an additional `total` variable and keep it synchronized whenever an item is added.
 
-Ví dụ ba thời điểm của cùng một đơn hàng:
+Consider the same order at three points in time:
 
-| Thời điểm | Danh sách hàng | Trạng thái | Tổng tiền |
+| Point in time | Order lines | Status | Total |
 | --- | --- | --- | --- |
-| Mới tạo | Rỗng | `DRAFT` | 0 |
-| Thêm 2 cuốn sách × 125.000 | 1 dòng hàng, số lượng 2 | `DRAFT` | 250.000 |
-| Xác nhận thành công | Giữ nguyên | `CONFIRMED` | 250.000 |
+| Newly created | Empty | `DRAFT` | 0 |
+| Add 2 books × 125.000 | 1 order line, quantity 2 | `DRAFT` | 250.000 |
+| Successfully confirmed | Unchanged | `CONFIRMED` | 250.000 |
 
-Một trạng thái **hợp lệ** phải tuân theo các quy tắc nghiệp vụ (invariant). Trong ví dụ này:
+A **valid** state must satisfy business rules (invariants). In this example:
 
-1. Số lượng mỗi dòng hàng phải lớn hơn 0; đơn giá không âm.
-2. Đơn đã xác nhận hoặc đã hủy không được thêm dòng hàng bằng `addLine()`.
-3. Một đơn chỉ được `confirm()` khi đang `DRAFT` và có ít nhất một dòng hàng.
-4. ID không tự thay đổi chỉ vì đơn chuyển trạng thái.
+1. The quantity of each order line must be greater than 0, and its unit price cannot be negative.
+2. Confirmed or canceled orders must not accept additional lines through `addLine()`.
+3. The `confirm()` operation is allowed only when an order is `DRAFT` and has at least one order line.
+4. The ID does not change simply because the order changes state.
 
-Không phải tất cả trạng thái đều phải có thể thay đổi. Một đối tượng bất biến (immutable object) vẫn có trạng thái, chỉ là trạng thái được cố định sau khi tạo. Và trường `private` không tự bảo đảm dữ liệu hợp lệ: vẫn cần kiểm soát những phương thức có thể thay đổi dữ liệu.
+Not all state must be mutable. An immutable object still has state; it simply remains fixed after creation. And a `private` field does not guarantee valid data by itself: methods that can modify data must still be controlled.
 
-## 4. Hành vi: việc đối tượng biết làm
+## 4. Behavior: What an Object Can Do
 
-**Hành vi** là hoạt động mà đối tượng cung cấp cho phần còn lại của chương trình. Trong Java, hành vi thường được thể hiện bằng method. Một hành vi có thể:
+**Behavior** is an operation an object exposes to the rest of the program. In Java, behavior is usually represented by methods. A behavior may:
 
-- **Thay đổi trạng thái:** `addLine()`, `confirm()`, `cancel()`.
-- **Trả về thông tin mà không thay đổi trạng thái:** `total()`, `status()`.
-- **Từ chối thao tác không hợp lệ:** `confirm()` khi đơn rỗng sẽ báo lỗi và giữ nguyên `DRAFT`.
+- **Change state:** `addLine()`, `confirm()`, `cancel()`.
+- **Return information without changing state:** `total()`, `status()`.
+- **Reject invalid operations:** `confirm()` reports an error for an empty order and leaves it in `DRAFT`.
 
-Tên phương thức nên diễn đạt ý định của miền bài toán. So sánh:
+Method names should express an intention from the problem domain. Compare:
 
 ~~~java
 // Khó kiểm soát: mã gọi bên ngoài tự quyết định trạng thái.
@@ -498,30 +498,30 @@ order.setStatus(OrderStatus.CONFIRMED);
 order.confirm();
 ~~~
 
-`confirm()` tốt hơn trong ví dụ này vì người gọi yêu cầu **“hãy xác nhận đơn”**, còn **đối tượng quyết định liệu yêu cầu có hợp lệ hay không**. Không nên hiểu rằng mọi setter đều xấu: các đối tượng truyền dữ liệu (DTO), cấu hình hoặc bean đơn giản có mục đích riêng. Điều cần tránh là bỏ qua quy tắc quan trọng đối với một đối tượng có vòng đời nghiệp vụ.
+`confirm()` is preferable here because the caller requests **“confirm this order”**, while **the object decides whether the request is valid**. This does not mean every setter is bad: data transfer objects (DTOs), configuration objects, and simple beans serve their own purposes. What matters is avoiding bypasses of important rules for objects with a business lifecycle.
 
-Hành vi phải có **đầu vào, điều kiện trước, kết quả và điều kiện sau** rõ ràng. Nếu thao tác thất bại, đừng để dữ liệu ở tình trạng thay đổi dở dang ngoài ý muốn.
+Behaviors should have clearly defined **inputs, preconditions, results, and postconditions**. If an operation fails, it should not unintentionally leave data partially modified.
 
-## 5. Trách nhiệm: đối tượng nên giữ quy tắc nào?
+## 5. Responsibility: Which Rules Should an Object Own?
 
-Trách nhiệm là những điều một đối tượng cần biết hoặc bảo đảm để thực hiện đúng vai trò. Đây là nền tảng để quyết định **đặt dữ liệu và phương thức ở đâu**.
+Responsibilities are what an object must know or guarantee to fulfill its role correctly. They provide the basis for deciding **where to place data and methods**.
 
-| Thành phần | Trách nhiệm phù hợp | Không nên ôm luôn |
+| Component | Appropriate responsibility | Should not also handle |
 | --- | --- | --- |
-| **`Order`** | Quản lý dòng hàng, tính tổng, kiểm tra chuyển trạng thái đơn hàng | Gửi HTTP request tới cổng thanh toán, xây SQL, gửi email |
-| **`PaymentService`** | Điều phối quy trình thanh toán, gọi hệ thống thanh toán và xử lý kết quả | Tự sửa trực tiếp danh sách hàng bên trong `Order` |
-| **`OrderRepository`** | Lưu và tải đơn hàng từ nơi lưu trữ | Quyết định đơn rỗng có được xác nhận hay không |
-| **`NotificationService`** | Gửi thông báo liên quan đến đơn hàng | Tự thay đổi `Order.status` |
+| **`Order`** | Manage order lines, calculate totals, validate order-state transitions | Send HTTP requests to payment gateways, construct SQL, send emails |
+| **`PaymentService`** | Coordinate payments, call payment systems, and process results | Directly modify the order lines inside `Order` |
+| **`OrderRepository`** | Persist and load orders | Decide whether an empty order can be confirmed |
+| **`NotificationService`** | Send order-related notifications | Change `Order.status` on its own |
 
-Cách phân chia này không tuyệt đối cho mọi hệ thống. Điều quan trọng là quy tắc **“đơn hàng có được xác nhận không?”** có một nơi chịu trách nhiệm rõ ràng, thay vì bị lặp ở controller, service và repository với những điều kiện khác nhau.
+This division is not universal for every system. What matters is that the rule **“Can this order be confirmed?”** has one clearly responsible owner instead of being duplicated across controllers, services, and repositories with different conditions.
 
-**Trách nhiệm khác hành vi:** “Bảo đảm đơn hàng chuyển trạng thái hợp lệ” là một *trách nhiệm*; `confirm()` và `cancel()` là các *hành vi* thực hiện trách nhiệm đó. Một đối tượng có thể có nhiều method để phục vụ cùng một trách nhiệm.
+**Responsibility differs from behavior:** “Ensure valid order-state transitions” is a *responsibility*; `confirm()` and `cancel()` are *behaviors* that carry it out. An object can have multiple methods that serve one responsibility.
 
-Trách nhiệm tốt thường có **tính gắn kết (cohesion)**: dữ liệu và hành vi cùng phục vụ một mục đích. Nếu lớp `Order` vừa quản lý đơn, vừa xác thực JWT, vừa mở kết nối database, vừa gửi email, các lý do khiến lớp phải thay đổi không còn cùng một nhóm.
+Well-defined responsibilities tend to exhibit **cohesion**: data and behavior serve the same purpose. If `Order` manages orders, validates JWTs, opens database connections, and sends emails, the reasons for changing that class no longer belong to one coherent group.
 
-## 6. Ví dụ Java hoàn chỉnh: một Order bảo vệ trạng thái của nó
+## 6. Complete Java Example: An Order That Protects Its Own State
 
-Ví dụ sau dùng Java 17 trở lên (có `record`), có thể lưu trong `Main.java` để chạy. Nó minh họa quy tắc trong bộ nhớ, chưa bàn đến việc lưu database hay xử lý nhiều yêu cầu đồng thời.
+The following example uses Java 17 or later (which supports `record`) and can be saved as `Main.java` and run. It illustrates in-memory rules without yet addressing database persistence or concurrent requests.
 
 ~~~java
 import java.math.BigDecimal;
@@ -640,23 +640,23 @@ public class Main {
 }
 ~~~
 
-**Đọc ví dụ theo bốn góc nhìn:**
+**Read the example from four perspectives:**
 
-- **Đối tượng:** `order`, `emptyOrder` và `cancelledOrder` là ba instance có ID riêng, dù chúng cùng được tạo từ lớp `Order`.
-- **Trạng thái:** `id`, `lines` và `status` tạo thành dữ liệu mà `Order` quản lý. `total()` suy ra kết quả từ `lines`.
-- **Hành vi:** `addLine()` thay đổi danh sách; `confirm()` và `cancel()` chuyển trạng thái; `total()` chỉ tính toán.
-- **Trách nhiệm:** `Order` bảo đảm mọi thao tác công khai ở ví dụ đều giữ trạng thái theo quy tắc. Nó che danh sách mutable bằng `List.copyOf(...)` và không cung cấp `setStatus()` tự do.
+- **Object:** `order`, `emptyOrder`, and `cancelledOrder` are three instances with distinct IDs, even though all are created from `Order`.
+- **State:** `id`, `lines`, and `status` make up the data managed by `Order`. `total()` derives its result from `lines`.
+- **Behavior:** `addLine()` changes the list; `confirm()` and `cancel()` change state; `total()` only calculates.
+- **Responsibility:** `Order` ensures that every public operation in this example preserves the state rules. It hides its mutable list using `List.copyOf(...)` and provides no unrestricted `setStatus()` method.
 
-Chạy ví dụ:
+Run the example:
 
 ~~~bash
 javac Main.java
 java Main
 ~~~
 
-**Lưu ý về ví dụ:** Chúng ta chủ động định nghĩa chỉ đơn `DRAFT` được hủy. Dự án thực tế có thể cho hủy đơn đã xác nhận, hoàn tiền hoặc có thêm `PAID`/`SHIPPED`; khi đó phải thay đổi quy tắc và kiểm thử đúng theo nghiệp vụ. `BigDecimal` được dùng để tránh sai số số thực nhị phân trong phép tính thập phân, nhưng hệ thống tiền tệ thực tế còn cần quy định đơn vị tiền, làm tròn và thuế/phí.
+**Note about this example:** We deliberately define cancellation as permitted only for `DRAFT` orders. A real project may allow confirmed orders to be canceled, include refunds, or introduce `PAID`/`SHIPPED` statuses; the rules and tests must then reflect those business requirements. `BigDecimal` avoids binary floating-point errors in decimal calculations, but real monetary systems also need currency-unit, rounding, tax, and fee policies.
 
-## 7. Vòng đời đối tượng: trạng thái thay đổi qua hành vi
+## 7. Object Lifecycle: State Changes Through Behavior
 
 ~~~mermaid
 stateDiagram-v2
@@ -668,24 +668,24 @@ stateDiagram-v2
     CANCELLED --> [*]
 ~~~
 
-Sơ đồ mô tả **các chuyển trạng thái thành công** trong ví dụ. Những yêu cầu không hợp lệ (xác nhận đơn rỗng, thêm hàng sau xác nhận, hủy lần nữa) bị từ chối; trạng thái được giữ nguyên.
+The diagram shows **successful state transitions** in the example. Invalid requests (confirming an empty order, adding items after confirmation, or attempting cancellation again) are rejected and leave the state unchanged.
 
-Theo dõi chính xác một luồng:
+Trace one flow step by step:
 
-| Bước | Lệnh | Trước | Sau | Kết quả quan sát được |
+| Step | Operation | Before | After | Observable result |
 | --- | --- | --- | --- | --- |
-| 1 | `new Order(id)` | Chưa tồn tại | `DRAFT`, rỗng | Có một đơn mới |
-| 2 | `addLine("BOOK-01", 2, 125000)` | `DRAFT`, rỗng | `DRAFT`, 1 dòng | `total() = 250000` |
-| 3 | `confirm()` | `DRAFT`, 1 dòng | `CONFIRMED`, 1 dòng | Xác nhận thành công |
-| 4 | `addLine("PEN-01", 1, 5000)` | `CONFIRMED`, 1 dòng | **Giữ nguyên** | Ném `IllegalStateException`; tổng vẫn 250000 |
+| 1 | `new Order(id)` | Does not exist | `DRAFT`, empty | A new order exists |
+| 2 | `addLine("BOOK-01", 2, 125000)` | `DRAFT`, empty | `DRAFT`, 1 line | `total() = 250000` |
+| 3 | `confirm()` | `DRAFT`, 1 line | `CONFIRMED`, 1 line | Confirmation succeeds |
+| 4 | `addLine("PEN-01", 1, 5000)` | `CONFIRMED`, 1 line | **Unchanged** | Throws `IllegalStateException`; total remains 250000 |
 
-Để thử lỗi “xác nhận đơn rỗng”, dùng **đơn thứ hai**: `new Order(id2)` → `confirm()` thất bại → trạng thái vẫn `DRAFT`. Hai nhánh kiểm thử riêng giúp không nhầm kết quả của đơn trước với đơn sau.
+To test the “confirm an empty order” error, use **a second order**: `new Order(id2)` → `confirm()` fails → status remains `DRAFT`. Using separate test branches avoids confusing the first order's results with those of the second.
 
-## 8. Khi nhiều đối tượng phối hợp thì sao?
+## 8. What Happens When Multiple Objects Collaborate?
 
-Một đối tượng có trách nhiệm riêng, nhưng hệ thống thường phải phối hợp nhiều đối tượng.
+Each object has its own responsibility, but systems often require multiple objects to collaborate.
 
-Ví dụ luồng xác nhận đơn trong ứng dụng Spring Boot:
+For example, consider an order-confirmation flow in a Spring Boot application:
 
 ~~~mermaid
 sequenceDiagram
@@ -702,107 +702,107 @@ sequenceDiagram
     S-->>C: Kết quả
 ~~~
 
-Trong cách tổ chức này, **OrderController** nhận request, **OrderService** điều phối use case, **OrderRepository** lo truy xuất/lưu trữ, còn **Order** kiểm tra điều kiện và chuyển trạng thái. Phân chia ấy cho phép sửa quy tắc “đơn rỗng có được xác nhận không?” tại `Order.confirm()`, đồng thời cho phép thay đổi cách lưu trữ mà không phải đưa SQL vào `Order`.
+In this organization, **OrderController** receives the request, **OrderService** coordinates the use case, **OrderRepository** handles retrieval and persistence, and **Order** validates conditions and changes state. This division allows the rule “Can an empty order be confirmed?” to be changed in `Order.confirm()`, while also allowing storage details to change without placing SQL inside `Order`.
 
-Đây là **một thiết kế minh họa**, không phải yêu cầu mọi ứng dụng OOP đều phải có các lớp tên `Service`/`Repository`. Ở ứng dụng đơn giản, số lượng lớp có thể ít hơn. Ở hệ thống có thanh toán, kho hàng và giao dịch, trách nhiệm phối hợp sẽ phức tạp hơn.
+This is **an illustrative design**, not a requirement that every OOP application contain classes named `Service`/`Repository`. A simple application might need fewer classes. Systems involving payments, inventory, and transactions will have more complex coordination responsibilities.
 
-Lưu ý: kiểm tra trong `Order` ở bộ nhớ **chưa giải quyết** các tình huống hai request đồng thời, cập nhật thất bại hoặc rollback database. Những vấn đề ấy cần cơ chế transaction, locking/versioning và xử lý lỗi thích hợp trong tầng lưu trữ/quy trình nghiệp vụ.
+Note: in-memory validation inside `Order` **does not resolve** concurrent requests, failed updates, or database rollbacks. Those situations require appropriate transactions, locking/versioning, and error handling in persistence and business-process layers.
 
-## 9. Lỗi thiết kế thường gặp
+## 9. Common Design Mistakes
 
-| Cách nghĩ dễ sai | Hệ quả | Cách suy nghĩ tốt hơn |
+| Common misconception | Consequence | Better way to think |
 | --- | --- | --- |
-| “Đối tượng chỉ là một nhóm field.” | Lớp chỉ chứa getter/setter; quy tắc rải ngoài lớp. | Hỏi đối tượng phải bảo vệ điều kiện và thực hiện hành vi gì. |
-| “Mỗi method đều là một trách nhiệm khác nhau.” | Phân chia lớp tùy tiện, khó theo dõi. | Nhiều method có thể phục vụ cùng một trách nhiệm nhất quán. |
-| “`private` nghĩa là trạng thái luôn an toàn.” | Setter vô điều kiện vẫn phá được quy tắc; collection mutable có thể bị lộ. | Kiểm tra quy tắc ở đường thay đổi trạng thái và giới hạn quyền sửa. |
-| “Trạng thái là status enum.” | Bỏ qua danh sách hàng, số lượng, giá trị khác trong object. | State là toàn bộ dữ liệu liên quan tại một thời điểm; status chỉ là một phần. |
-| “Cứ biến thứ gì thành class là OOP tốt.” | Tăng lớp vô ích; trách nhiệm không rõ. | Tạo đối tượng khi nó có vai trò, dữ liệu hoặc hành vi cần quản lý. |
-| “Đối tượng tự làm được mọi thứ.” | Một lớp ôm API, database, thanh toán, email và nghiệp vụ. | Chọn ranh giới trách nhiệm, cộng tác thông qua method phù hợp. |
+| “An object is just a group of fields.” | Classes contain only getters/setters, while rules are scattered outside. | Ask what conditions the object must enforce and what behaviors it must provide. |
+| “Every method is a separate responsibility.” | Classes are split arbitrarily and become hard to follow. | Multiple methods can serve one consistent responsibility. |
+| “`private` means state is always safe.” | An unrestricted setter can still break rules; mutable collections may leak. | Validate rules wherever state changes and restrict modification rights. |
+| “State means a status enum.” | Order lines, quantities, and other values inside the object are overlooked. | State includes all relevant data at a point in time; status is just one part. |
+| “Making everything a class produces good OOP.” | Unnecessary classes proliferate; responsibilities remain unclear. | Create an object when it has a role, data, or behavior that needs managing. |
+| “An object can do everything on its own.” | One class handles APIs, databases, payments, email, and business logic. | Establish responsibility boundaries and collaborate through suitable methods. |
 
-Một dấu hiệu nên xem lại: ở nhiều nơi xuất hiện mã dạng `if (order.getStatus() == DRAFT) { ... }` trước khi thay đổi đơn. Có thể quy tắc thuộc về `Order` và nên được đưa vào hành vi của nó. Tuy nhiên, những quy tắc liên quan **nhiều đối tượng, nhiều nguồn dữ liệu** vẫn có thể cần service hoặc thành phần điều phối.
+A sign that warrants review is code like `if (order.getStatus() == DRAFT) { ... }` appearing in many places before an order is changed. The rule may belong to `Order` and should perhaps become one of its behaviors. However, rules involving **multiple objects or multiple data sources** may still require a service or coordinating component.
 
-## 10. Tự kiểm tra mức hiểu
+## 10. Test Your Understanding
 
-**Tình huống 1.** Hai đơn đều có `status = DRAFT` và `total = 0`. Chúng có phải cùng một đối tượng? **Không nhất thiết.** Cần xét danh tính; dữ liệu giống nhau không có nghĩa là cùng instance hoặc cùng đơn nghiệp vụ.
+**Scenario 1.** Two orders both have `status = DRAFT` and `total = 0`. Are they the same object? **Not necessarily.** Identity matters; matching data does not imply the same instance or the same business order.
 
-**Tình huống 2.** Một đơn được xác nhận, sau đó `status` đổi thành `CONFIRMED`. Đây có phải một đối tượng mới? **Không.** Danh tính vẫn giữ nguyên, trạng thái thay đổi.
+**Scenario 2.** An order is confirmed and its `status` changes to `CONFIRMED`. Is this a new object? **No.** Its identity remains the same; its state changes.
 
-**Tình huống 3.** Có nên cho controller gọi `order.setStatus(CONFIRMED)`? **Trong ví dụ này không nên.** Phương thức `confirm()` giúp Order tự kiểm tra điều kiện trước khi chuyển trạng thái.
+**Scenario 3.** Should a controller call `order.setStatus(CONFIRMED)`? **Not in this example.** The `confirm()` method lets Order validate the conditions itself before changing state.
 
-**Tình huống 4.** `total()` không sửa dữ liệu. Nó có phải hành vi không? **Có.** Hành vi có thể tính toán/trả lời thông tin mà không thay đổi trạng thái.
+**Scenario 4.** `total()` does not modify data. Is it still a behavior? **Yes.** Behavior can calculate or return information without changing state.
 
-**Tình huống 5.** Có nên đặt code gửi email trong `Order.confirm()`? **Thông thường không.** Gửi email là trách nhiệm tích hợp/thông báo, có thể do thành phần khác xử lý sau khi nghiệp vụ xác nhận thành công.
+**Scenario 5.** Should email-sending code live inside `Order.confirm()`? **Usually not.** Sending emails is an integration/notification responsibility that another component can handle after the order is successfully confirmed.
 
-Khi tự thiết kế một lớp OOP, hãy hỏi theo thứ tự:
+When designing your own OOP class, ask these questions in order:
 
-1. **Đối tượng nào** tồn tại trong bài toán? Điều gì nhận diện một đối tượng cụ thể?
-2. **Trạng thái nào** đối tượng phải sở hữu? Phần nào được thay đổi, phần nào chỉ tính ra?
-3. **Hành vi nào** có ý nghĩa với người dùng hoặc nghiệp vụ? Mỗi hành vi có điều kiện trước/sau gì?
-4. **Quy tắc nào** đối tượng phải luôn bảo vệ? Điều gì xảy ra khi thao tác thất bại?
-5. **Trách nhiệm nào** thuộc về đối tượng đó, trách nhiệm nào nên giao cho đối tượng khác?
+1. **Which objects** exist in the problem? What identifies a particular object?
+2. **Which state** must each object own? What can change, and what is merely derived?
+3. **Which behaviors** are meaningful to users or the business? What are their preconditions and postconditions?
+4. **Which rules** must the object always enforce? What happens when an operation fails?
+5. **Which responsibilities** belong to that object, and which should belong to others?
 
-Nếu trả lời được năm câu hỏi này bằng một ví dụ cụ thể, bạn đã nắm được cách tư duy từ dữ liệu thụ động sang **đối tượng có hành vi và trách nhiệm rõ ràng**, thay vì chỉ nhớ định nghĩa OOP.
+If you can answer these five questions with a concrete example, you understand the shift from passive data to **objects with clearly defined behaviors and responsibilities**, rather than merely memorizing the definition of OOP.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="oop-basic-003">Lớp, kiểu và thể hiện: các khái niệm nền tảng</a>
+## <a id="oop-basic-003">Classes, Types, and Instances: Foundational Concepts</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Lớp, kiểu và thể hiện: các khái niệm nền tảng
+# Classes, Types, and Instances: Foundational Concepts
 
-Khi đọc câu lệnh Java `CounterView view = new ClickCounter("Nút A", 10);`, người mới dễ gọi cả ba thành phần là “đối tượng”. Thực ra cần tách ba câu hỏi:
+When reading the Java statement `CounterView view = new ClickCounter("Nút A", 10);`, beginners may call all three elements “objects.” In fact, three separate questions need to be asked:
 
-- **Lớp (class):** định nghĩa nào mô tả dữ liệu, phương thức, constructor và quy tắc của đối tượng?
-- **Kiểu (type):** biến hoặc biểu thức cho phép ta sử dụng những thao tác nào ở thời điểm biên dịch?
-- **Thể hiện (instance/object):** đối tượng cụ thể nào được tạo ra và có trạng thái riêng trong lúc chạy?
+- **Class:** which definition describes the object's data, methods, constructor, and rules?
+- **Type:** which operations can a variable or expression use at compile time?
+- **Instance/object:** which concrete object was created and has its own state at runtime?
 
-Thêm một khái niệm quan trọng là **tham chiếu (reference)**: trong Java, biến có kiểu tham chiếu thường chứa giá trị dùng để truy cập đối tượng, chứ bản thân biến không phải đối tượng. Bài học này tập trung vào cách phân biệt những khái niệm đó trên mã và kết quả thực thi.
+Another important concept is the **reference**: in Java, a variable of a reference type typically holds a value used to access an object; the variable itself is not the object. This lesson focuses on distinguishing these concepts in code and runtime results.
 
-## 1. Bản đồ bốn khái niệm
+## 1. A Map of the Four Concepts
 
-| Thuật ngữ | Trả lời câu hỏi | Ví dụ |
+| Term | Question answered | Example |
 | --- | --- | --- |
-| Lớp | Đối tượng được định nghĩa ra sao? | `class ClickCounter` có trạng thái `clicks` và hành vi `click()` |
-| Kiểu | Thao tác nào hợp lệ qua biến này? | `CounterView` công bố `value()` |
-| Thể hiện | Đối tượng cụ thể nào đang tồn tại? | Kết quả của `new ClickCounter("Nút A", 10)` |
-| Tham chiếu | Biến đang truy cập đối tượng nào? | `view` giữ tham chiếu tới một `ClickCounter` |
+| Class | How is the object defined? | `class ClickCounter` has `clicks` state and `click()` behavior |
+| Type | Which operations are valid through this variable? | `CounterView` declares `value()` |
+| Instance | Which concrete object exists? | The result of `new ClickCounter("Nút A", 10)` |
+| Reference | Which object does the variable access? | `view` holds a reference to a `ClickCounter` |
 
-Một **class cũng định nghĩa một kiểu** trong Java, nhưng “class” và “type” không hoàn toàn đồng nghĩa. Ngoài kiểu lớp còn có kiểu interface, kiểu mảng, kiểu nguyên thủy, v.v. Đồng thời, cùng một đối tượng có thể được truy cập qua nhiều **kiểu khai báo tương thích**.
+In Java, a **class also defines a type**, but “class” and “type” are not synonymous. Other types include interface types, array types, primitive types, and more. Also, the same object can be accessed through multiple **compatible declared types**.
 
-Ví dụ:
+For example:
 
 ~~~java
 CounterView view = new ClickCounter("Nút A", 10);
 ~~~
 
-Bên trái: `CounterView` là kiểu khai báo của biến `view`. Bên phải: `new ClickCounter(...)` tạo một thể hiện của lớp `ClickCounter`. Biến `view` nhận tham chiếu tới thể hiện đó. Một đối tượng được tạo ra, không phải hai đối tượng vì xuất hiện hai tên kiểu.
+On the left, `CounterView` is the declared type of variable `view`. On the right, `new ClickCounter(...)` creates an instance of `ClickCounter`. Variable `view` receives a reference to that instance. Only one object is created, not two merely because two type names appear.
 
-## 2. Class mô tả cấu trúc và hành vi chung
+## 2. A Class Describes Shared Structure and Behavior
 
-Lớp là nơi Java khai báo những thành phần và quy tắc cho các đối tượng thuộc lớp:
+A class declares the members and rules for its objects in Java:
 
-| Thành phần | Ví dụ | Vai trò |
+| Component | Example | Role |
 | --- | --- | --- |
-| Field của thể hiện | `private int clicks;` | Lưu số lượt nhấn của **mỗi** bộ đếm |
-| Field cố định | `private final String label;` | Tên bộ đếm, được gán lúc khởi tạo rồi không gán lại |
-| Constructor | `ClickCounter(String label, int initial)` | Tạo trạng thái ban đầu hợp lệ |
-| Instance method | `void click()` | Tác động lên bộ đếm nhận lời gọi |
-| Method truy vấn | `int value()` | Trả về số lượt nhấn hiện tại |
-| Access modifier | `private`, `public` | Quy định nơi có thể sử dụng thành viên |
+| Instance field | `private int clicks;` | Stores the click count for **each** counter |
+| Final field | `private final String label;` | Counter label, assigned during initialization and not reassigned afterward |
+| Constructor | `ClickCounter(String label, int initial)` | Establishes a valid initial state |
+| Instance method | `void click()` | Operates on the counter receiving the call |
+| Query method | `int value()` | Returns the current click count |
+| Access modifier | `private`, `public` | Controls where members can be accessed |
 
-Chỉ viết `class ClickCounter { ... }` **chưa tạo ra** một bộ đếm cụ thể. Mỗi lần chạy biểu thức `new ClickCounter(...)`, Java tạo một đối tượng mới và thực hiện constructor phù hợp. Các đối tượng có cùng tập phương thức theo định nghĩa lớp nhưng có thể giữ giá trị field khác nhau.
+Writing `class ClickCounter { ... }` alone **does not create** a concrete counter. Every time `new ClickCounter(...)` is evaluated, Java creates a new object and executes the corresponding constructor. Objects share the methods defined by their class but may hold different field values.
 
-**Đừng hiểu phép so sánh “class là bản thiết kế” quá máy móc.** Trong Java, lớp còn tham gia quy tắc kiểu, kế thừa, mức truy cập và lựa chọn phương thức. Bản thiết kế là hình ảnh để bắt đầu hiểu, không phải toàn bộ ngữ nghĩa của class.
+**Do not take the “class is a blueprint” analogy too literally.** In Java, classes also participate in type rules, inheritance, access control, and method selection. A blueprint is a starting analogy, not the full meaning of a class.
 
-## 3. Chương trình chạy độc lập: một đối tượng, nhiều góc nhìn kiểu
+## 3. Standalone Runnable Program: One Object, Multiple Type Perspectives
 
-Ví dụ sử dụng Java 11 trở lên. Lưu toàn bộ vào `Main.java`.
+This example uses Java 11 or later. Save all of it in `Main.java`.
 
 ~~~java
 interface CounterView {
@@ -858,14 +858,14 @@ public class Main {
 }
 ~~~
 
-Chạy bằng:
+Run with:
 
 ~~~bash
 javac Main.java
 java Main
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 11
@@ -877,15 +877,15 @@ false
 ClickCounter
 ~~~
 
-### Theo dõi từng lời gọi
+### Tracing Each Call
 
-1. `new ClickCounter("Nút A", 10)` tạo **thể hiện thứ nhất** có `clicks = 10`. Biến `first` chứa tham chiếu tới nó.
-2. `CounterView view = first` **sao chép tham chiếu**. Nó không tạo một `ClickCounter` thứ hai.
-3. `Object general = first` cũng trỏ tới thể hiện thứ nhất; một thể hiện giờ có ba biến tham chiếu.
-4. `new ClickCounter("Nút A", 10)` tạo **thể hiện thứ hai** được gán cho `second`. Cùng tên và số đếm ban đầu không biến nó thành đối tượng thứ nhất.
-5. `first.click()` sửa `clicks` trên thể hiện thứ nhất từ 10 lên 11. `view.value()` nhận 11 vì cùng đối tượng; `second.value()` vẫn 10 vì là một đối tượng khác.
-6. Hai biểu thức `first == view` và `view == general` là `true` vì các tham chiếu tương ứng cùng trỏ một đối tượng. `first == second` là `false`.
-7. `view.getClass().getSimpleName()` trả `ClickCounter` vì lớp runtime của đối tượng không đổi khi ta xem nó qua kiểu interface.
+1. `new ClickCounter("Nút A", 10)` creates **the first instance** with `clicks = 10`. Variable `first` contains a reference to it.
+2. `CounterView view = first` **copies the reference**. It does not create a second `ClickCounter`.
+3. `Object general = first` also refers to the first instance; that one instance now has three reference variables pointing to it.
+4. `new ClickCounter("Nút A", 10)` creates **the second instance** and assigns it to `second`. Matching labels and initial counts do not make it the first object.
+5. `first.click()` changes `clicks` on the first instance from 10 to 11. `view.value()` returns 11 because it accesses the same object; `second.value()` remains 10 because it accesses a different object.
+6. Both `first == view` and `view == general` are `true` because their respective references point to the same object. `first == second` is `false`.
+7. `view.getClass().getSimpleName()` returns `ClickCounter` because viewing an object through an interface type does not change its runtime class.
 
 ~~~mermaid
 flowchart LR
@@ -895,19 +895,19 @@ flowchart LR
     S["second: ClickCounter"] --> C2["ClickCounter #2<br/>label=Nút A; clicks=10"]
 ~~~
 
-Sơ đồ cho thấy **bốn biến tham chiếu** nhưng chỉ có **hai thể hiện**. Biến và đối tượng phải được đếm riêng.
+The diagram shows **four reference variables** but only **two instances**. Variables and objects must be counted separately.
 
-## 4. Type quyết định được phép gọi gì qua biến
+## 4. A Type Determines What You Can Call Through a Variable
 
-Trong ví dụ, cả ba biến `first`, `view`, `general` đều trỏ tới cùng đối tượng. Nhưng ở lúc biên dịch, chúng có **kiểu khai báo khác nhau**.
+In the example, `first`, `view`, and `general` all refer to the same object. At compile time, however, they have **different declared types**.
 
-| Biến | Kiểu khai báo | Gọi trực tiếp được |
+| Variable | Declared type | Methods callable directly |
 | --- | --- | --- |
-| `first` | `ClickCounter` | `click()`, `value()`, `label()` và những method phù hợp khác |
-| `view` | `CounterView` | `value()` và những method của `Object` được Java cho phép qua interface |
-| `general` | `Object` | Những method công bố bởi `Object`, chẳng hạn `getClass()` |
+| `first` | `ClickCounter` | `click()`, `value()`, `label()`, and other applicable methods |
+| `view` | `CounterView` | `value()` and `Object` methods Java permits through an interface |
+| `general` | `Object` | Methods declared by `Object`, such as `getClass()` |
 
-Ví dụ:
+For example:
 
 ~~~java
 first.click();      // Hợp lệ: ClickCounter khai báo click().
@@ -918,31 +918,31 @@ general.getClass(); // Hợp lệ: Object khai báo getClass().
 // general.value();     // Không biên dịch: Object không khai báo value().
 ~~~
 
-Đây là các dòng minh họa để đặt **bên trong một phương thức** có sẵn ba biến như ở `main`, không phải file Java độc lập. Đối tượng runtime vẫn có `click()`; lỗi xảy ra vì **kiểu mà trình biên dịch nhìn thấy tại vị trí gọi** không công bố method đó. Nếu cần gọi thêm khả năng riêng, có thể giữ biến kiểu cụ thể hoặc kiểm tra kiểu rồi ép kiểu có chủ đích. Không nên ép kiểu vô điều kiện khi chưa biết lớp runtime.
+These illustrative statements belong **inside a method** with the three variables already available, as in `main`; they are not a standalone Java file. The runtime object still has `click()`; the error occurs because **the type visible to the compiler at the call site** does not declare that method. To call additional capabilities, you can retain a variable of the concrete type or check the type before casting deliberately. Avoid unconditional casts when the runtime class is unknown.
 
-**Phân biệt hai ý:** kiểu khai báo giới hạn những thao tác có thể gọi hợp lệ; với **phương thức instance được override**, lớp runtime sẽ quyết định cách triển khai được thực thi. Đây là nền tảng cho bài đa hình, nhưng không đồng nghĩa việc gán biến sang kiểu interface đã tạo ra một đối tượng mới.
+**Distinguish two ideas:** the declared type restricts which operations can legally be called; for **overridden instance methods**, the runtime class determines which implementation executes. This underlies polymorphism, but assigning a reference to an interface-typed variable does not create a new object.
 
-### Tập hợp các kiểu Java rộng hơn class
+### Java Types Go Beyond Classes
 
-- **Class type:** `ClickCounter`, `String`, `Object`.
-- **Interface type:** `CounterView`, `Runnable`. Interface định nghĩa hợp đồng và không thể `new CounterView()` trực tiếp.
-- **Primitive type:** `int`, `long`, `boolean`; giá trị primitive không phải thể hiện được tạo bằng `new`.
-- **Array type:** `int[]`, `String[]`; mảng là đối tượng và có kiểu mảng riêng.
-- **Các kiểu trừu tượng:** Một `abstract class` vẫn là một class/type, nhưng không thể tạo instance trực tiếp bằng `new AbstractType()`.
+- **Class types:** `ClickCounter`, `String`, `Object`.
+- **Interface types:** `CounterView`, `Runnable`. An interface defines a contract and cannot be instantiated directly using `new CounterView()`.
+- **Primitive types:** `int`, `long`, `boolean`; primitive values are not instances created using `new`.
+- **Array types:** `int[]`, `String[]`; arrays are objects and have their own array types.
+- **Abstract types:** An `abstract class` is still a class/type, but you cannot instantiate it directly using `new AbstractType()`.
 
-Hai biến có cùng kiểu khai báo có thể trỏ đến hai đối tượng khác nhau; ngược lại, hai biến có kiểu khác nhau vẫn có thể trỏ **cùng một đối tượng** nếu các kiểu tương thích.
+Two variables with the same declared type may refer to different objects; conversely, two variables with different types may refer to **the same object** if their types are compatible.
 
-## 5. Thể hiện, danh tính và trạng thái khác nhau ra sao?
+## 5. How Do Instances, Identity, and State Differ?
 
-Một thể hiện là một đối tượng cụ thể ở thời điểm chạy. Ta cần phân biệt ba mặt:
+An instance is a concrete object at runtime. We must distinguish three aspects:
 
-| Mặt | Câu hỏi | Ví dụ |
+| Aspect | Question | Example |
 | --- | --- | --- |
-| **Identity** | Đây có phải chính đối tượng trước đó không? | `first == view` là `true` |
-| **State** | Đối tượng đang chứa thông tin gì? | `clicks` của `first` đã tăng thành 11 |
-| **Behavior** | Có thể thực hiện thao tác nào? | `click()` cập nhật; `value()` truy vấn |
+| **Identity** | Is this the very same object as before? | `first == view` is `true` |
+| **State** | What information does the object hold? | The `clicks` value in `first` has increased to 11 |
+| **Behavior** | Which operations can it perform? | `click()` updates; `value()` queries |
 
-Đối tượng có thể đổi trạng thái mà **vẫn là chính đối tượng ấy**. Ngược lại, hai đối tượng khác nhau có thể lưu dữ liệu giống hệt nhau mà không thành một đối tượng.
+An object can change state while **remaining the same object**. Conversely, two distinct objects may contain identical data without becoming one object.
 
 ~~~java
 ClickCounter a = new ClickCounter("Trùng tên", 5);
@@ -952,15 +952,15 @@ System.out.println(a == b);      // false
 System.out.println(a.equals(b)); // false với lớp mẫu hiện tại
 ~~~
 
-`a.equals(b)` trả `false` ở lớp này vì `ClickCounter` chưa override `equals`, nên kế thừa so sánh danh tính của `Object`. Nếu một lớp định nghĩa so sánh bằng giá trị, hai instance khác nhau có thể `equals` nhau theo quy tắc đó. Do vậy:
+`a.equals(b)` returns `false` for this class because `ClickCounter` has not overridden `equals`, so it inherits identity-based comparison from `Object`. If a class defines value-based equality, two different instances may be `equals` according to that rule. Therefore:
 
-- `==` giữa các tham chiếu kiểm tra **có cùng đối tượng**.
-- `equals(...)` phản ánh **quy tắc bằng nhau do lớp cung cấp**.
-- Dữ liệu nghiệp vụ trùng nhau (ví dụ cùng mã đơn hàng) không tự động làm các tham chiếu trỏ tới một đối tượng; sự duy nhất của mã nghiệp vụ là một quy tắc khác.
+- `==` between references checks **whether they point to the same object**.
+- `equals(...)` reflects **the equality rule provided by the class**.
+- Matching business data (for example, the same order ID) does not automatically make references point to one object; uniqueness of a business identifier is a separate rule.
 
-Một lớp có thể mô tả đối tượng **bất biến** (không thay đổi trạng thái quan sát được sau khởi tạo). Việc một đối tượng mutable hay immutable là quyết định thiết kế, không quyết định nó có phải thể hiện của lớp hay không.
+A class can describe **immutable** objects (whose observable state does not change after initialization). Whether an object is mutable or immutable is a design choice; it does not determine whether it is an instance of a class.
 
-## 6. Ba thao tác thường bị nhầm: new, gán tham chiếu, thay đổi trạng thái
+## 6. Three Commonly Confused Operations: new, Reference Assignment, and State Changes
 
 ~~~java
 ClickCounter x = new ClickCounter("X", 3); // Tạo đối tượng thứ nhất.
@@ -972,27 +972,27 @@ System.out.println(y.value()); // 4
 System.out.println(x.value()); // 7
 ~~~
 
-Đoạn mã này cũng được đặt trong một phương thức, và dùng định nghĩa `ClickCounter` từ ví dụ chính.
+This snippet also belongs inside a method and uses the `ClickCounter` definition from the main example.
 
-Điểm khác biệt:
+The differences:
 
-- `new ClickCounter(...)` tạo một đối tượng mới với trạng thái ban đầu được constructor kiểm tra.
-- `ClickCounter y = x` sao chép **giá trị tham chiếu**, không sao chép đối tượng; `x` và `y` cùng trỏ đến đối tượng X cho đến khi một biến được gán lại.
-- `x = new ClickCounter("Z", 7)` chỉ thay đổi đối tượng mà **biến x** trỏ tới; không tự thay đổi đối tượng cũ mà `y` đang trỏ.
-- `y.click()` thay đổi **nội dung đối tượng X** qua biến `y`; nó không tác động đến đối tượng Z.
+- `new ClickCounter(...)` creates a new object with initial state validated by its constructor.
+- `ClickCounter y = x` copies **the reference value**, not the object; `x` and `y` both refer to object X until one variable is reassigned.
+- `x = new ClickCounter("Z", 7)` changes only the object to which **variable x** refers; it does not modify the old object still referenced by `y`.
+- `y.click()` changes **the contents of object X** through variable `y`; it does not affect object Z.
 
-Biến tham chiếu cũng có thể chứa `null`:
+A reference variable can also hold `null`:
 
 ~~~java
 CounterView missing = null;
 // missing.value(); // Nếu bỏ chú thích sẽ ném NullPointerException.
 ~~~
 
-`null` không phải là “một thể hiện rỗng” của `CounterView` hay `ClickCounter`. Một biến cục bộ khai báo nhưng chưa được gán (`CounterView c;`) cũng không được đọc/gọi trước khi được gán giá trị hợp lệ theo kiểm tra definite assignment của Java.
+`null` is not an “empty instance” of `CounterView` or `ClickCounter`. A declared but unassigned local variable (`CounterView c;`) likewise cannot be read or used for a call until it has a valid assignment, as enforced by Java's definite-assignment checks.
 
-## 7. Instance member và static member là hai chuyện khác
+## 7. Instance Members and Static Members Are Different
 
-Một **instance field** không có từ khóa `static` được lưu riêng cho từng đối tượng. Trong ví dụ, `first` và `second` có hai giá trị `clicks` độc lập. Nếu thêm một field `static int createdCount` vào lớp và tăng nó trong constructor, đó sẽ là một bộ đếm chung theo lớp được nạp, chứ không phải mỗi thể hiện có một `createdCount` riêng.
+An **instance field** without the `static` keyword is stored separately for each object. In the example, `first` and `second` have independent `clicks` values. If you add a `static int createdCount` field to the class and increment it in the constructor, it becomes one shared counter for the loaded class, rather than a separate `createdCount` for every instance.
 
 ~~~java
 class Sample {
@@ -1013,82 +1013,82 @@ System.out.println(b.value);            // 0
 System.out.println(Sample.createdCount); // 2
 ~~~
 
-Đoạn dùng thử phải nằm trong một method; không chèn trần các câu lệnh phía sau khai báo class. Dữ liệu `static` thuộc lớp (trong phạm vi lớp đã được nạp), còn dữ liệu `instance` thuộc đối tượng. Việc có cùng kiểu không khiến mọi field của đối tượng được chia sẻ.
+The trial statements must be placed inside a method; do not put standalone statements directly after the class declaration. `static` data belongs to the class (within the scope of the loaded class), while `instance` data belongs to an object. Sharing a type does not make all object fields shared.
 
-Ngược lại, hai instance field riêng biệt chứa **tham chiếu** vẫn có thể cùng trỏ đến một đối tượng mutable khác. “Mỗi instance có field riêng” không có nghĩa cả đồ thị đối tượng đều tự động được sao chép sâu.
+Conversely, two separate instance fields containing **references** can still refer to the same other mutable object. “Each instance has its own field” does not mean that its entire object graph is automatically deep-copied.
 
-## 8. Tránh các nhầm lẫn thường gặp
+## 8. Avoiding Common Misconceptions
 
-| Nhầm lẫn | Cách hiểu đúng |
+| Misconception | Correct understanding |
 | --- | --- |
-| “Khai báo class là tạo object.” | Khai báo tạo định nghĩa; cần có hành động tạo hoặc nhận đối tượng ở runtime. |
-| “`CounterView c;` tạo bộ đếm.” | Nó chỉ khai báo biến; chưa có thể hiện nào được tạo từ dòng đó. |
-| “Có hai tên kiểu thì có hai đối tượng.” | Một object có thể dùng qua nhiều kiểu và nhiều biến tham chiếu. |
-| “`view` có kiểu interface nên đối tượng không có `click()`.” | Method vẫn thuộc lớp runtime; chỉ không được gọi trực tiếp qua kiểu interface không công bố method đó. |
-| “Gán `b = a` sao chép toàn bộ field.” | Chỉ sao chép tham chiếu; thay đổi trạng thái qua một biến được thấy qua biến kia nếu cùng object. |
-| “Hai object cùng field có cùng identity.” | Cùng giá trị không đồng nghĩa cùng object. |
-| “`null` là một đối tượng mặc định.” | `null` không tham chiếu tới đối tượng nào. |
-| “Mọi kiểu Java đều có thể new.” | Primitive, interface và abstract class không được khởi tạo trực tiếp bằng `new`. |
-| “Class nào cũng phải chứa mutable state.” | Đối tượng có thể bất biến, không có instance field hoặc chỉ cung cấp hành vi. |
-| “Mọi field cùng class đều thuộc mỗi instance.” | Field `static` thuộc lớp, không phải bản riêng cho từng đối tượng. |
+| “Declaring a class creates an object.” | A declaration creates the definition; an object must still be created or obtained at runtime. |
+| “`CounterView c;` creates a counter.” | It only declares a variable; that line creates no instance. |
+| “Two type names mean two objects.” | One object can be used through multiple types and reference variables. |
+| “Because `view` is interface-typed, the object has no `click()`.” | The method still belongs to the runtime class; it simply cannot be called directly through an interface type that does not declare it. |
+| “Assigning `b = a` copies every field.” | Only the reference is copied; state changes made through one variable are visible through the other if both reference the same object. |
+| “Objects with identical fields have identical identity.” | Equal values do not imply the same object. |
+| “`null` is a default object.” | `null` does not reference any object. |
+| “Every Java type can be instantiated with new.” | Primitive types, interfaces, and abstract classes cannot be instantiated directly using `new`. |
+| “Every class must hold mutable state.” | Objects can be immutable, have no instance fields, or provide behavior only. |
+| “Every field in a class belongs to each instance.” | A `static` field belongs to the class, not separately to each object. |
 
-Nhận ra class/type/instance còn giúp hiểu lý do code chỉ dùng biến `CounterView` không cần biết đầy đủ chi tiết triển khai của `ClickCounter`. Đây là sự tách biệt giữa **hợp đồng có thể nhìn thấy** và **đối tượng thực tế**, rất hữu ích khi học tiếp interface và đa hình.
+Distinguishing class, type, and instance also helps explain why code that uses only a `CounterView` variable need not know all the implementation details of `ClickCounter`. This separation between **the visible contract** and **the actual object** is especially useful when studying interfaces and polymorphism.
 
-## 9. Tự kiểm tra trước khi chạy
+## 9. Test Yourself Before Running the Code
 
-**Câu 1.** Cho `ClickCounter a = new ClickCounter("A", 1); ClickCounter b = a;`. Sau `b.click()`, `a.value()` bằng bao nhiêu?
+**Question 1.** Given `ClickCounter a = new ClickCounter("A", 1); ClickCounter b = a;`, after `b.click()`, what does `a.value()` return?
 
-**Đáp án:** `2`. Hai biến trỏ cùng một thể hiện, nên lời gọi qua `b` làm tăng trạng thái mà `a` cũng quan sát được.
+**Answer:** `2`. Both variables refer to the same instance, so calling through `b` increases the state visible through `a` as well.
 
-**Câu 2.** Thay `ClickCounter b = a;` bằng `ClickCounter b = new ClickCounter("A", 1);`. Sau `b.click()`, `a.value()` bằng bao nhiêu?
+**Question 2.** Replace `ClickCounter b = a;` with `ClickCounter b = new ClickCounter("A", 1);`. After `b.click()`, what does `a.value()` return?
 
-**Đáp án:** `1`. Hai lần `new` tạo hai đối tượng; cùng nhãn không làm chúng chia sẻ trạng thái.
+**Answer:** `1`. Two uses of `new` create two objects; identical labels do not make them share state.
 
-**Câu 3.** Với `CounterView view = new ClickCounter("A", 1);`, gọi `view.click()` có biên dịch không? Có thể gọi `view.value()` không?
+**Question 3.** With `CounterView view = new ClickCounter("A", 1);`, does `view.click()` compile? Can you call `view.value()`?
 
-**Đáp án:** `view.click()` không biên dịch vì kiểu `CounterView` không công bố `click()`. `view.value()` hợp lệ. Đối tượng runtime vẫn thuộc lớp `ClickCounter`.
+**Answer:** `view.click()` does not compile because type `CounterView` does not declare `click()`. `view.value()` is valid. The runtime object is still an instance of `ClickCounter`.
 
-**Câu 4.** Viết `CounterView view = null;` có tạo instance nào không? Lời gọi `view.value()` dẫn tới gì?
+**Question 4.** Does writing `CounterView view = null;` create an instance? What happens when `view.value()` is called?
 
-**Đáp án:** Không tạo instance; gọi instance method qua tham chiếu null gây `NullPointerException`.
+**Answer:** No instance is created; invoking an instance method through a null reference throws `NullPointerException`.
 
-**Câu 5.** Một instance có kiểu runtime `ClickCounter` có thể được tham chiếu qua `Object` không? Sau phép gán đó, lớp runtime có đổi không?
+**Question 5.** Can an instance whose runtime type is `ClickCounter` be referenced through `Object`? Does that assignment change its runtime class?
 
-**Đáp án:** Có thể dùng `Object x = first;`. Phép gán không làm đổi lớp runtime của đối tượng; `x.getClass()` vẫn là `ClickCounter.class`.
+**Answer:** You can use `Object x = first;`. The assignment does not change the object's runtime class; `x.getClass()` remains `ClickCounter.class`.
 
-**Câu 6.** Vì sao `ClickCounter` là một class và cũng là một type, còn `CounterView` là type nhưng không phải class?
+**Question 6.** Why is `ClickCounter` both a class and a type, while `CounterView` is a type but not a class?
 
-**Đáp án:** Class định nghĩa kiểu lớp và phần triển khai; interface công bố hợp đồng kiểu mà lớp có thể implements. Java có nhiều loại type nên không thể đồng nhất “type” với “class”.
+**Answer:** A class defines a class type and its implementation; an interface declares a type contract that classes can implement. Java has several kinds of types, so “type” cannot be equated with “class.”
 
-Khi đọc mã OOP, hãy chỉ ra **lớp tạo đối tượng, kiểu khai báo của biến, số lần thực sự tạo thể hiện và các tham chiếu cùng trỏ một thể hiện**. Nếu còn xác định được method nào trình biên dịch cho phép gọi và đối tượng nào thực hiện lời gọi đó, bạn đã có nền tảng vững để học đóng gói, kế thừa và đa hình.
+When reading OOP code, identify **the class that creates the object, the variable's declared type, the number of instances actually created, and which references point to the same instance**. If you can also determine which methods the compiler permits you to call and which object executes each call, you have a solid foundation for studying encapsulation, inheritance, and polymorphism.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="oop-basic-004">Tương tác giữa đối tượng và lời gọi phương thức</a>
+## <a id="oop-basic-004">Object Interactions and Method Calls</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tương tác giữa đối tượng và lời gọi phương thức trong OOP
+# Object Interactions and Method Calls in OOP
 
-Giả sử một bạn đọc đến thư viện và nói: “Tôi muốn mượn cuốn sách này”. Ở đời thực, bạn đọc không tự vào hệ thống đổi trạng thái sách thành “đã mượn”. Thủ thư tiếp nhận yêu cầu, kiểm tra tư cách bạn đọc, kiểm tra sách còn sẵn và ghi nhận lần mượn.
+Suppose a reader visits a library and says, “I would like to borrow this book.” In real life, the reader does not enter the system and change the book's status to “borrowed.” A librarian receives the request, verifies the reader's eligibility, checks availability, and records the loan.
 
-Trong chương trình hướng đối tượng cũng vậy: **một đối tượng thường không tự làm tất cả mọi việc**. Nó sử dụng những đối tượng khác bằng cách **gọi phương thức** để yêu cầu chúng thực hiện phần việc thuộc trách nhiệm của chúng.
+The same idea applies to object-oriented programs: **an object generally does not do everything itself**. It uses other objects by **calling methods** to ask them to perform the work for which they are responsible.
 
-Ví dụ, `LendingService` nhận yêu cầu mượn sách, hỏi `Member` xem thành viên có được phép mượn không, rồi yêu cầu `Book` ghi nhận người mượn và nhận về `Loan` (phiếu mượn). Đó là một **cuộc tương tác giữa các đối tượng**.
+For example, `LendingService` receives a borrowing request, asks `Member` whether the member may borrow, then asks `Book` to record the borrower and receives a `Loan` (loan record). This is an **interaction between objects**.
 
-Bài học này giúp bạn đọc một dòng Java như `book.lendTo(member)` và hiểu điều gì đang diễn ra: **ai gọi, ai nhận, truyền thông tin gì, phương thức chạy ở đâu, trả lại điều gì, trạng thái có thể thay đổi ra sao và khi có lỗi thì chuyện gì xảy ra**.
+This lesson helps you read a Java statement such as `book.lendTo(member)` and understand what happens: **who calls, who receives, what information is passed, where the method executes, what it returns, how state can change, and what happens on failure**.
 
-## 1. Tương tác giữa đối tượng là gì?
+## 1. What Is Object Interaction?
 
-Trong OOP, **tương tác giữa đối tượng (object interaction)** là việc các đối tượng phối hợp để thực hiện một hành vi hoặc một quy trình. Một đối tượng có thể gọi phương thức của đối tượng khác để hỏi thông tin, yêu cầu kiểm tra, thay đổi trạng thái hoặc thực hiện một tác vụ.
+In OOP, **object interaction** means objects collaborating to carry out a behavior or process. One object can call another object's methods to retrieve information, request validation, change state, or perform a task.
 
-Hãy hình dung:
+Imagine the following:
 
 ```text
 Người dùng
@@ -1106,35 +1106,35 @@ LendingService
                           Loan
 ```
 
-Không phải mũi tên nào cũng là một luồng mạng. Với Java thông thường, `member.ensureActive()` là **một lời gọi phương thức trực tiếp trong cùng tiến trình**, thực hiện đồng bộ trên luồng hiện tại. Từ “gửi thông điệp” thường dùng trong mô tả OOP mang tính **khái niệm**: đối tượng A yêu cầu đối tượng B làm việc qua giao diện công khai của B. Nó không nhất thiết có nghĩa là gửi Kafka message, HTTP request hay chạy bất đồng bộ.
+Not every arrow represents network traffic. In ordinary Java, `member.ensureActive()` is **a direct method call within the same process**, executed synchronously on the current thread. The term “message passing” in OOP descriptions is **conceptual**: object A requests work from object B through B's public interface. It does not necessarily involve sending a Kafka message or HTTP request, or executing asynchronously.
 
-### Bốn yếu tố của một lời gọi
+### Four Elements of a Method Call
 
-Xét:
+Consider:
 
 ```java
 Loan loan = book.lendTo(member);
 ```
 
-| Thành phần | Trong ví dụ | Ý nghĩa |
+| Element | In the example | Meaning |
 |---|---|---|
-| **Bên gọi (caller)** | Đoạn mã đang chạy trong `LendingService` | Nơi phát sinh yêu cầu |
-| **Bên nhận (receiver / target object)** | Đối tượng mà biến `book` đang tham chiếu | Đối tượng thực thi hành vi `lendTo` |
-| **Phương thức + đối số** | `lendTo(member)` | Hành vi được yêu cầu và dữ liệu đầu vào |
-| **Kết quả (result)** | Một đối tượng `Loan` được gán vào `loan` | Giá trị trả lại sau khi chạy thành công |
+| **Caller** | The code executing inside `LendingService` | Where the request originates |
+| **Receiver / target object** | The object referenced by variable `book` | The object executing the `lendTo` behavior |
+| **Method + arguments** | `lendTo(member)` | The requested behavior and input data |
+| **Result** | A `Loan` object assigned to `loan` | The value returned after successful execution |
 
-Nếu phương thức không thể hoàn thành và ném exception thì dòng gán kết quả **không hoàn tất**. Tùy thiết kế, một phương thức cũng có thể thay đổi trạng thái mà không trả về giá trị (kiểu `void`), hoặc chỉ đọc dữ liệu mà không thay đổi gì.
+If the method cannot complete and throws an exception, the assignment of its result **does not complete**. Depending on its design, a method can also change state without returning a value (return type `void`), or only read data without changing anything.
 
-## 2. Một ví dụ Java hoàn chỉnh: hệ thống mượn sách tối giản
+## 2. Complete Java Example: A Minimal Library Lending System
 
-Bốn vai trò xuất hiện trong quy trình:
+The process has four roles:
 
-- `Member` biết thông tin và trạng thái hoạt động của thành viên.
-- `Book` biết cuốn sách hiện đang được ai mượn.
-- `LendingService` điều phối thao tác mượn.
-- `Loan` là kết quả ghi nhận thông tin của lần mượn, dùng `record` bất biến trong ví dụ.
+- `Member` knows the member's information and active status.
+- `Book` knows who currently has the book on loan.
+- `LendingService` coordinates borrowing.
+- `Loan` records information about a loan as the result; the example uses an immutable `record`.
 
-Tạo file `Main.java` sau (Java 17 trở lên):
+Create the following `Main.java` file (Java 17 or later):
 
 ```java
 import java.util.Objects;
@@ -1236,14 +1236,14 @@ public class Main {
 }
 ```
 
-Chạy với:
+Run with:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 Java căn bản -> M01
@@ -1254,26 +1254,26 @@ Member is inactive
 true
 ```
 
-Các lời gọi mượn trên cùng `javaBook` **chia sẻ trạng thái của một đối tượng sách**. Sau lần mượn đầu tiên, `javaBook` không còn sẵn; lần mượn thứ hai ném lỗi và người mượn ban đầu được giữ nguyên. Trường hợp thành viên `inactive` sử dụng **một đối tượng `otherBook` mới**, nên sách đó vẫn sẵn sau khi bị từ chối.
+Calls that borrow the same `javaBook` **share the state of one book object**. After the first successful loan, `javaBook` is unavailable; the second attempt throws an exception, and the original borrower remains unchanged. The `inactive` member case uses **a new `otherBook` object**, so that book remains available after the request is rejected.
 
-Đây là mô hình trong bộ nhớ để học tương tác. Chưa có cơ sở dữ liệu, xử lý trả sách, giao dịch, phân quyền hay đảm bảo an toàn khi nhiều luồng cùng mượn một sách.
+This is an in-memory model for learning about interactions. It does not yet include a database, book returns, transactions, access control, or safety when multiple threads attempt to borrow the same book.
 
-## 3. Theo dõi chính xác một lời gọi diễn ra thế nào
+## 3. Tracing Exactly How a Method Call Works
 
-Dòng quan trọng nhất ở `main` là:
+The key line in `main` is:
 
 ```java
 Loan firstLoan = service.borrow(an, javaBook);
 ```
 
-Hãy lần theo các bước:
+Follow the steps:
 
-1. `main` đang giữ ba **tham chiếu**: `service` trỏ tới một `LendingService`, `an` trỏ tới một `Member`, `javaBook` trỏ tới một `Book`.
-2. Java thực thi lời gọi `borrow(an, javaBook)` trên đối tượng được tham chiếu bởi `service`. Giá trị các đối số được chuyển cho tham số `member` và `book` của phương thức.
-3. Trong `borrow`, câu lệnh `member.ensureActive()` gọi phương thức **của chính đối tượng thành viên `an`**. Đối tượng này kiểm tra trạng thái `active` và trở về bình thường vì thành viên đang hoạt động.
-4. `book.lendTo(member)` gọi `lendTo` trên **chính đối tượng `javaBook`**. Cuốn sách thấy `borrower == null`, nên gán `borrower = member`.
-5. `Book` tạo một `Loan` chứa tên sách và mã thành viên, rồi trả về cho `LendingService`.
-6. `LendingService` dùng `return` chuyển tiếp kết quả về `main`; `main` nhận được tham chiếu tới `Loan` và gán vào `firstLoan`.
+1. `main` holds three **references**: `service` refers to a `LendingService`, `an` to a `Member`, and `javaBook` to a `Book`.
+2. Java executes `borrow(an, javaBook)` on the object referenced by `service`. The argument values are passed into the method parameters `member` and `book`.
+3. Inside `borrow`, `member.ensureActive()` calls a method **on the same member object referenced by `an`**. That object checks `active` and returns normally because the member is active.
+4. `book.lendTo(member)` calls `lendTo` on **the very same `javaBook` object**. The book finds `borrower == null`, so it assigns `borrower = member`.
+5. `Book` creates a `Loan` containing the book title and member ID, then returns it to `LendingService`.
+6. `LendingService` uses `return` to forward the result to `main`; `main` receives a reference to the `Loan` and assigns it to `firstLoan`.
 
 ```mermaid
 sequenceDiagram
@@ -1296,11 +1296,11 @@ sequenceDiagram
     Service-->>Main: trả Loan
 ```
 
-Sơ đồ này mô tả thứ tự gọi, xử lý và trả kết quả. Mỗi đối tượng **chịu trách nhiệm cho trạng thái của chính nó**, ví dụ thành viên kiểm tra `active`, sách kiểm tra `borrower`.
+This diagram shows the order of calls, operations, and returns. Each object **is responsible for its own state**: the member checks `active`, while the book checks `borrower`.
 
-### Ai đang chạy code tại từng thời điểm?
+### Which Object Is Running Code at Each Point?
 
-Khi đang ở thân phương thức `LendingService.borrow`, biến `this` tham chiếu tới đối tượng `service`. Khi nhảy vào `Member.ensureActive`, `this` trở thành đối tượng `an`. Khi vào `Book.lendTo`, `this` là `javaBook`.
+While executing the body of `LendingService.borrow`, `this` refers to the `service` object. Upon entering `Member.ensureActive`, `this` refers to the `an` object. Inside `Book.lendTo`, `this` refers to `javaBook`.
 
 ```java
 // Trong Book:
@@ -1311,11 +1311,11 @@ Loan lendTo(Member member) {
 }
 ```
 
-Vì thế, `this.borrower` và `member.id()` truy cập **hai đối tượng khác nhau**. `this` không phải là “đối tượng khởi đầu cả quy trình”; nó là đối tượng nhận **lời gọi phương thức hiện tại**.
+Therefore, `this.borrower` and `member.id()` access **two different objects**. `this` is not “the object that started the entire process”; it is the receiver of **the current method call**.
 
-## 4. Phân biệt biến tham chiếu và đối tượng thực sự
+## 4. Distinguishing Reference Variables from Actual Objects
 
-Trong Java, với các kiểu tham chiếu như `Book`, `Member`, `Loan`, biến chứa **tham chiếu**, không chứa nguyên bản toàn bộ đối tượng.
+In Java, variables of reference types such as `Book`, `Member`, and `Loan` hold **references**, not entire copies of objects.
 
 ```java
 Book first = new Book("Java căn bản");
@@ -1324,7 +1324,7 @@ Book second = first;
 System.out.println(first == second); // true
 ```
 
-`first` và `second` trỏ tới **cùng một đối tượng `Book`**. Nếu một lời gọi hợp lệ qua `first` làm thay đổi đối tượng, thì đọc trạng thái qua `second` cũng thấy sự thay đổi đó.
+`first` and `second` refer to **the same `Book` object**. If a valid operation through `first` changes that object, inspecting its state through `second` will reveal the change.
 
 ```java
 Book a = new Book("Java căn bản");
@@ -1333,11 +1333,11 @@ Book b = new Book("Java căn bản");
 System.out.println(a == b); // false
 ```
 
-Hai sách có cùng tên vẫn có thể là **hai đối tượng độc lập**. Biểu thức `==` trên tham chiếu kiểm tra chúng có trỏ tới cùng một object hay không. Nó không tự động so sánh nội dung. Nếu muốn so sánh giá trị theo nghiệp vụ, cần quy tắc `equals()` thích hợp; không nên đánh đồng “tên sách giống nhau” với “cùng bản sao sách”.
+Two books with the same title can still be **two independent objects**. The `==` operator on references checks whether they refer to the same object; it does not automatically compare contents. Comparing business values requires a suitable `equals()` rule; “same book title” must not be confused with “same physical copy of a book.”
 
-### Java truyền tham số theo giá trị, kể cả tham chiếu
+### Java Passes Parameters by Value, Including References
 
-Đây là điểm dễ nhầm khi thấy lời gọi phương thức làm thay đổi đối tượng.
+This point is easy to misunderstand when a method call modifies an object.
 
 ```java
 static void reassign(Book localBook) {
@@ -1349,7 +1349,7 @@ static void borrowThroughReference(Book localBook, Member member) {
 }
 ```
 
-Với `reassign(original)`, phương thức nhận **bản sao giá trị tham chiếu**, rồi đổi biến cục bộ `localBook` sang đối tượng mới; biến `original` của bên gọi vẫn trỏ tới sách ban đầu. Với `borrowThroughReference(original, member)`, cả `localBook` và `original` cùng trỏ tới một sách, nên `lendTo` làm đổi **trạng thái đối tượng chung**. Điều này vẫn đúng với nguyên tắc **Java luôn truyền tham số theo giá trị (pass-by-value)**.
+With `reassign(original)`, the method receives **a copy of the reference value** and then reassigns local variable `localBook` to a new object; the caller's `original` variable still refers to the initial book. With `borrowThroughReference(original, member)`, both `localBook` and `original` refer to the same book, so `lendTo` changes **the shared object's state**. This is fully consistent with the principle that **Java always passes parameters by value**.
 
 ```mermaid
 flowchart LR
@@ -1358,11 +1358,11 @@ flowchart LR
     B -. "gán localBook = new Book(...)" .-> N["Đối tượng Book mới"]
 ```
 
-Sau phép gán ở dòng nét đứt, `localBook` trỏ tới object mới trong phạm vi phương thức, còn `original` vẫn trỏ tới object cũ.
+After the assignment shown by the dashed arrow, `localBook` refers to the new object within the method's scope, while `original` still refers to the original object.
 
-## 5. Đọc cú pháp lời gọi phương thức
+## 5. Reading Method-Call Syntax
 
-Nhìn vài dòng quen thuộc:
+Consider some familiar statements:
 
 ```java
 book.isAvailable();
@@ -1372,27 +1372,27 @@ String id = member.id();
 Loan loan = service.borrow(member, book);
 ```
 
-| Cú pháp | Cách đọc | Điều cần quan sát |
+| Syntax | How to read it | What to observe |
 |---|---|---|
-| `book.isAvailable()` | Hỏi sách còn sẵn không | Trả `boolean`; chỉ đọc trạng thái trong ví dụ |
-| `book.lendTo(member)` | Yêu cầu sách ghi nhận thành viên mượn | Trả `Loan`; thay đổi trạng thái sách |
-| `member.ensureActive()` | Yêu cầu thành viên tự kiểm tra điều kiện | `void`; có thể ném exception |
-| `member.id()` | Lấy mã thành viên | Trả `String`; không đổi trạng thái |
-| `service.borrow(member, book)` | Yêu cầu service điều phối mượn | Gọi tiếp các đối tượng khác; trả `Loan` |
+| `book.isAvailable()` | Ask whether the book is available | Returns `boolean`; only reads state in this example |
+| `book.lendTo(member)` | Ask the book to record the member as borrower | Returns `Loan`; changes book state |
+| `member.ensureActive()` | Ask the member to validate its own eligibility | `void`; may throw an exception |
+| `member.id()` | Retrieve the member ID | Returns `String`; does not change state |
+| `service.borrow(member, book)` | Ask the service to coordinate borrowing | Calls other objects; returns `Loan` |
 
-Một lời gọi nhìn chung có dạng:
+A method call generally has this form:
 
 ```java
 receiver.methodName(argument1, argument2);
 ```
 
-- **Receiver**: đối tượng bên nhận mà biểu thức bên trái dấu chấm đánh giá ra.
-- **Tên phương thức**: hành vi cần thực hiện.
-- **Đối số (arguments)**: giá trị được bên gọi cung cấp ở vị trí lời gọi.
-- **Tham số (parameters)**: các biến được khai báo tại định nghĩa phương thức để nhận các giá trị đó.
-- **Kiểu trả về (return type)**: quy định phương thức có thể trả loại giá trị nào; `void` là không trả giá trị.
+- **Receiver:** the target object to which the expression on the left of the dot evaluates.
+- **Method name:** the behavior to be performed.
+- **Arguments:** values supplied by the caller at the call site.
+- **Parameters:** variables declared in the method definition that receive those values.
+- **Return type:** specifies which kind of value the method may return; `void` means no value is returned.
 
-Ví dụ phân biệt argument/parameter:
+An example distinguishing arguments from parameters:
 
 ```java
 // "member" là parameter trong khai báo:
@@ -1402,48 +1402,48 @@ Loan lendTo(Member member) { /* ... */ }
 Loan loan = javaBook.lendTo(an);
 ```
 
-Tên `an` và `member` không cần giống nhau. Điều cần phù hợp là kiểu đối số và chữ ký phương thức theo quy tắc của Java.
+The names `an` and `member` need not match. What matters is compatibility between argument types and the method signature under Java's rules.
 
-Một lời gọi cũng có thể **không viết tường minh receiver** khi gọi phương thức instance trong cùng class, ví dụ trong `Book` có `isAvailable()`; Java hiểu tương đương `this.isAvailable()` khi không có xung đột tên. Còn lời gọi như `Math.max(4, 7)` là **phương thức static** qua tên lớp: không có đối tượng `Math` cụ thể làm receiver.
+A call may also **omit an explicit receiver** when invoking an instance method within the same class: inside `Book`, for example, calling `isAvailable()` is interpreted as `this.isAvailable()` when there is no naming conflict. By contrast, `Math.max(4, 7)` invokes a **static method** through a class name: there is no concrete `Math` object acting as receiver.
 
-## 6. Lời gọi có thể trả kết quả, đổi trạng thái hoặc phát sinh lỗi
+## 6. Calls Can Return Results, Change State, or Raise Errors
 
-### Trường hợp A — chỉ trả về thông tin
+### Case A — Returning Information Only
 
 ```java
 boolean available = javaBook.isAvailable();
 ```
 
-Theo cách chúng ta đã viết, phương thức này **không sửa** trạng thái của sách, chỉ đọc `borrower`. Những phương thức có tính quan sát thường mang tên `get...`, `is...`, `find...`, `calculate...`, nhưng **tên gọi không tự bảo đảm không có side effect**. Phải xem hợp đồng và cách triển khai.
+As written, this method **does not modify** the book's state; it only reads `borrower`. Query-like methods often have names beginning with `get...`, `is...`, `find...`, or `calculate...`, but **a name alone does not guarantee the absence of side effects**. The contract and implementation must be examined.
 
-### Trường hợp B — thay đổi trạng thái, có trả kết quả
+### Case B — Changing State and Returning a Result
 
 ```java
 Loan loan = javaBook.lendTo(an);
 ```
 
-Nếu sách còn sẵn, `borrower` được gán sang `an` và trả về `Loan`. Có hai điều khác nhau:
+If the book is available, `borrower` is assigned to `an` and a `Loan` is returned. These are two distinct things:
 
-- **Side effect:** đối tượng `javaBook` đã đổi trạng thái.
-- **Return value:** bên gọi nhận về một đối tượng `Loan` để sử dụng tiếp.
+- **Side effect:** the `javaBook` object has changed state.
+- **Return value:** the caller receives a `Loan` object for further use.
 
-Giá trị `Loan` được trả về **không phải chính đối tượng `Book`**, và nó không tự biến mất khi phương thức `lendTo` kết thúc. Nếu bên gọi còn giữ tham chiếu, đối tượng `Loan` còn có thể được sử dụng sau đó. Dữ liệu trong `record Loan` là thông tin của lần mượn đã tạo; nó không tự động cập nhật theo mọi thay đổi tương lai của cuốn sách.
+The returned `Loan` value **is not the `Book` object itself**, and it does not automatically disappear when `lendTo` finishes. If the caller retains a reference, the `Loan` object remains available for later use. The data in `record Loan` describes the loan as created; it does not automatically track every future change to the book.
 
-### Trường hợp C — kiểm tra và trả `void`
+### Case C — Validating and Returning `void`
 
 ```java
 an.ensureActive();
 ```
 
-Khi thành viên hoạt động, phương thức hoàn thành bình thường, không trả một giá trị Java cụ thể. `void` **không có nghĩa** là không làm gì: một `void` method có thể ghi trạng thái, gửi sự kiện, ghi log hoặc ném lỗi.
+When the member is active, the method completes normally without returning a Java value. `void` **does not mean** that nothing happens: a `void` method can write state, publish events, log information, or throw an exception.
 
-### Trường hợp D — lời gọi ném exception
+### Case D — A Call Throws an Exception
 
 ```java
 service.borrow(binh, javaBook); // sách đã có người mượn
 ```
 
-`Book.lendTo` kiểm tra `borrower != null` rồi `throw new IllegalStateException(...)`. Vì vậy `lendTo` không chạy tới `return new Loan(...)`, `LendingService.borrow` cũng không có giá trị hợp lệ để trả về. Exception lan ngược tới `main`; khối `catch` bắt lỗi và chương trình tiếp tục.
+`Book.lendTo` checks `borrower != null` and executes `throw new IllegalStateException(...)`. Therefore `lendTo` never reaches `return new Loan(...)`, and `LendingService.borrow` has no valid value to return either. The exception propagates back to `main`; the `catch` block handles it, and execution continues.
 
 ```mermaid
 sequenceDiagram
@@ -1461,13 +1461,13 @@ sequenceDiagram
     Note over Main: catch và xử lý thông báo
 ```
 
-**Exception không tự hoàn tác mọi side effect đã xảy ra trước đó.** Ví dụ nếu `LendingService` đã gọi hai phương thức sửa hai đối tượng, sau đó lời gọi thứ ba ném lỗi, hai thay đổi đầu vẫn có thể tồn tại. Với dữ liệu lưu trong database, tính nguyên tử phụ thuộc vào transaction và cấu hình thực tế. Đừng hiểu `throw` là “rollback tất cả”.
+**An exception does not automatically undo all preceding side effects.** For example, if `LendingService` calls two methods that modify two objects and a third call then throws, the first two changes may remain. For database data, atomicity depends on the transaction and actual configuration. Do not interpret `throw` as “roll back everything.”
 
-## 7. Lời gọi nối tiếp, gọi lồng nhau và call stack
+## 7. Sequential Calls, Nested Calls, and the Call Stack
 
-Trong `LendingService.borrow`, trước khi tạo được phiếu mượn, chương trình gọi tiếp `Member.ensureActive` rồi `Book.lendTo`. Đó là **gọi lồng nhau (nested calls)**: một phương thức chưa kết thúc đã gọi phương thức khác.
+Inside `LendingService.borrow`, the program calls `Member.ensureActive` and then `Book.lendTo` before producing the loan record. These are **nested calls**: a method invokes another method before it finishes.
 
-Hình dung call stack khi đang thực thi `Book.lendTo`:
+Imagine the call stack while `Book.lendTo` is executing:
 
 ```text
        Đỉnh stack — lời gọi đang chạy
@@ -1481,39 +1481,39 @@ Hình dung call stack khi đang thực thi `Book.lendTo`:
        Đáy stack
 ```
 
-Mỗi lời gọi thông thường tạo một *stack frame* để giữ ngữ cảnh thực thi như biến cục bộ và vị trí trở về (chi tiết do JVM thực hiện). Khi `lendTo` hoàn thành, lời gọi trở về `borrow`; khi `borrow` hoàn thành, nó trở về `main`.
+Each ordinary call creates a *stack frame* that holds execution context such as local variables and the return location (with details managed by the JVM). When `lendTo` finishes, execution returns to `borrow`; when `borrow` finishes, execution returns to `main`.
 
-Điều này giải thích vì sao:
+This explains why:
 
-- Sau khi `member.ensureActive()` kết thúc, `borrow` tiếp tục ở câu lệnh tiếp theo.
-- Sau `return book.lendTo(member)`, kết quả của `lendTo` trở thành kết quả của `borrow`.
-- Khi exception không được xử lý ở tầng trong, JVM tháo các frame liên quan và tìm nơi bắt exception phù hợp.
+- After `member.ensureActive()` finishes, `borrow` continues with the next statement.
+- With `return book.lendTo(member)`, the result of `lendTo` becomes the result of `borrow`.
+- When an exception is not handled in an inner layer, the JVM unwinds the relevant stack frames and looks for a matching exception handler.
 
-Mỗi phương thức có thể được nhiều nơi gọi; **thứ tự thực thi thực tế được quyết định bởi luồng gọi**, không phải bởi thứ tự các class nằm trong file.
+Any method can be called from multiple places; **the actual execution order is determined by the call flow**, not by the order of class definitions in the file.
 
-## 8. Phương thức là một hợp đồng giữa các đối tượng
+## 8. A Method Is a Contract Between Objects
 
-Nếu `LendingService` muốn yêu cầu `Book` cho mượn, nó cần biết **cách gọi và hành vi được cam kết**. Đó là *method contract*.
+If `LendingService` wants `Book` to lend a book, it must know **how to call the method and what behavior is promised**. That is the *method contract*.
 
-Với:
+For:
 
 ```java
 Loan lendTo(Member member)
 ```
 
-Một hợp đồng rõ ràng nên trả lời:
+A clear contract should specify:
 
-| Thành phần hợp đồng | Nội dung trong ví dụ |
+| Contract element | Meaning in the example |
 |---|---|
-| Điều kiện trước (*precondition*) | `member` không null; sách chưa được mượn |
-| Kết quả khi thành công | Trả `Loan` chứa tên sách và mã thành viên |
-| Trạng thái sau (*postcondition*) | `Book.borrower` tham chiếu tới thành viên vừa mượn |
-| Khi không thể hoàn thành | Ném `NullPointerException` với member null hoặc `IllegalStateException` khi sách đã mượn |
-| Điều cần giữ đúng (*invariant*) | Trong mô hình này, một đối tượng `Book` có tối đa một `borrower` tại một thời điểm (theo xử lý tuần tự) |
+| Preconditions | `member` is non-null; the book is not already borrowed |
+| Result on success | Returns a `Loan` containing the book title and member ID |
+| Postcondition | `Book.borrower` refers to the member who just borrowed the book |
+| When the operation cannot complete | Throws `NullPointerException` for a null member or `IllegalStateException` if the book is already borrowed |
+| Invariant | In this model, a `Book` object has at most one `borrower` at a time (under sequential execution) |
 
-**Method signature** trong Java chủ yếu liên quan tên phương thức và danh sách kiểu tham số để Java xác định lời gọi; **method contract** rộng hơn, bao gồm ý nghĩa nghiệp vụ, điều kiện hợp lệ, tác động trạng thái, lỗi và hành vi bên ngoài có thể dựa vào. Hai phương thức có chữ ký giống nhau vẫn có thể vi phạm hợp đồng nếu cách thực hiện khác nhau.
+In Java, a **method signature** primarily involves the method name and parameter types used to resolve a call; a **method contract** is broader, encompassing business meaning, valid conditions, state changes, errors, and behavior callers can rely on. Two methods with the same signature may still violate the contract if they behave differently.
 
-Những phương thức có tên rõ ràng như `lendTo(member)`, `ensureActive()`, `isAvailable()` giúp đoạn mã đọc gần với lời nói nghiệp vụ. Ngược lại, một API chỉ phơi ra setter:
+Clearly named methods such as `lendTo(member)`, `ensureActive()`, and `isAvailable()` make code read more like business-language statements. By contrast, an API that exposes only setters:
 
 ```java
 book.setBorrower(member);
@@ -1521,35 +1521,35 @@ book.setAvailable(false);
 book.setLoanCount(book.getLoanCount() + 1);
 ```
 
-sẽ buộc **bên gọi biết quá nhiều chi tiết phải cập nhật theo thứ tự nào**. Nếu bỏ sót một dòng, trạng thái có thể lệch nhau. Một phương thức thể hiện trọn hành vi nghiệp vụ giúp tập trung các quy tắc liên quan, miễn là bản thân phương thức đó được thiết kế đúng.
+forces **the caller to know too many details about what to update and in which order**. Missing one line can leave the state inconsistent. A method representing the complete business operation centralizes related rules, provided that method itself is correctly designed.
 
-## 9. Quan hệ giữa đối tượng và quyền kiểm soát trạng thái
+## 9. Object Relationships and Control Over State
 
-Tương tác tốt không đồng nghĩa đối tượng A được quyền sửa mọi field của đối tượng B. Với:
+Good interaction does not mean object A may modify every field of object B. Given:
 
 ```java
 private Member borrower;
 ```
 
-đối tượng khác không thể viết `javaBook.borrower = binh` bằng truy cập Java thông thường. Nó phải sử dụng phương thức mà `Book` cung cấp. Như vậy `Book` có cơ hội kiểm tra quy tắc riêng của nó trước khi đổi trạng thái.
+another object cannot write `javaBook.borrower = binh` through ordinary Java access. It must use a method provided by `Book`. That gives `Book` the opportunity to enforce its own rules before changing state.
 
-Tuy nhiên, **`private` mới chỉ là kiểm soát truy cập**. Nếu lớp vẫn phơi những phương thức nguy hiểm như `setBorrower` mà không kiểm tra hợp lệ, ta có thể tiếp tục làm hỏng mô hình. Ngược lại, có những loại đối tượng chỉ lưu dữ liệu, như DTO hoặc `record Loan` của ví dụ, mà không cần chứa nhiều hành vi nghiệp vụ.
+However, **`private` is only access control**. If the class still exposes unsafe methods such as `setBorrower` without validation, the model can still be broken. Conversely, some objects exist mainly to hold data, such as DTOs or this example's `record Loan`, and need not contain extensive business behavior.
 
-### Vì sao service và entity không nên làm thay toàn bộ công việc của nhau?
+### Why Should Services and Entities Not Do All of Each Other's Work?
 
-Trong ví dụ:
+In this example:
 
-- `Member` sở hữu điều kiện thành viên có hoạt động không.
-- `Book` sở hữu trạng thái đã có người mượn chưa.
-- `LendingService` quyết định thứ tự phối hợp để thực hiện yêu cầu mượn.
+- `Member` owns the rule determining whether a member is active.
+- `Book` owns the state indicating whether the book has a borrower.
+- `LendingService` determines the order of collaboration to fulfill a borrowing request.
 
-Một điểm cần thấy ở phiên bản rút gọn: `Book.lendTo` tự kiểm tra sách đã được mượn nhưng **không tự kiểm tra thành viên còn hoạt động**; quy tắc này đang được `LendingService` kiểm tra. Nếu hệ thống để mọi nơi tự gọi `book.lendTo(inactiveMember)`, chúng có thể bỏ qua quy trình ở service. Một thiết kế thực tế phải định nghĩa **đường vào nghiệp vụ được phép** hoặc chuyển các kiểm tra bắt buộc vào một điểm không thể bỏ qua. Phân chia trách nhiệm tốt cần cân bằng giữa việc giữ quy tắc tại “chủ sở hữu” và hạn chế đường đi có thể phá quy tắc.
+One subtlety of this simplified version is that `Book.lendTo` checks whether the book is already borrowed but **does not check whether the member is active**; `LendingService` performs that check. If arbitrary code can call `book.lendTo(inactiveMember)`, it may bypass the service's workflow. A real design must define **authorized business entry points** or move mandatory checks to a place that cannot be bypassed. A sound division of responsibilities balances keeping rules with their “owners” against restricting paths that can violate those rules.
 
-Đó là lý do phải đặt câu hỏi: **“Đối tượng này được phép yêu cầu gì từ đối tượng kia?”**, chứ không chỉ “hai đối tượng có gọi nhau được không?”.
+That is why you must ask **“What is this object allowed to request from that object?”**, not merely “Can these two objects call each other?”
 
-## 10. Khi cùng một lời gọi có nhiều cách thực hiện
+## 10. When the Same Call Has Multiple Implementations
 
-Giả sử thư viện gửi thông báo qua email hoặc qua ứng dụng. Bên điều phối chỉ cần hành vi `send`:
+Suppose the library sends notifications by email or through an application. The coordinating component needs only the `send` behavior:
 
 ```java
 interface Notifier {
@@ -1583,128 +1583,128 @@ class ReminderService {
 }
 ```
 
-Đoạn này minh họa riêng việc phối hợp và có thể thêm vào project cùng file theo cách tổ chức lớp phù hợp. `ReminderService` giữ tham chiếu với **kiểu khai báo `Notifier`**, trong khi đối tượng thực tế có thể là `EmailNotifier` hoặc `AppNotifier`. Khi chạy `notifier.send(...)`, Java chọn phương thức được override theo **kiểu thực tế của đối tượng**. Đây là một ví dụ của **đa hình khi gọi phương thức (runtime polymorphism)**.
+This separate illustration of collaboration can be added to a project with suitable class organization, including within the same file if appropriate. `ReminderService` holds a reference whose **declared type is `Notifier`**, while the actual object may be an `EmailNotifier` or `AppNotifier`. When `notifier.send(...)` runs, Java selects the overridden method according to **the object's actual type**. This illustrates **runtime polymorphism in method calls**.
 
-Cách tổ chức này hữu ích khi thực sự cần thay đổi cách thông báo. Nếu dự án luôn có đúng một cách gửi và không có nhu cầu thay thế, không bắt buộc tạo interface chỉ để trông “đúng OOP”.
+This organization is useful when notification implementations genuinely need to vary. If the project always has exactly one delivery mechanism and no need to substitute it, there is no requirement to introduce an interface merely to look “properly object-oriented.”
 
-Cần phân biệt:
+Distinguish the following:
 
-- **Overloading:** các phương thức cùng tên nhưng danh sách tham số khác nhau; Java quyết định phiên bản phù hợp chủ yếu dựa trên kiểu biểu thức ở thời điểm biên dịch.
-- **Overriding:** lớp con hoặc lớp triển khai cung cấp cách thực hiện khác cho phương thức có hợp đồng tương ứng; với phương thức instance được override, đối tượng thực tế quyết định cách thực hiện ở runtime.
+- **Overloading:** methods share a name but have different parameter lists; Java selects the applicable version primarily from expression types at compile time.
+- **Overriding:** a subclass or implementing class provides another implementation of a method with the corresponding contract; for an overridden instance method, the actual object determines the implementation at runtime.
 
-Cả hai đều liên quan lời gọi, nhưng không phải cùng một cơ chế.
+Both affect method calls, but they are different mechanisms.
 
-## 11. Những nhầm lẫn phổ biến khi đọc các lời gọi OOP
+## 11. Common Misconceptions When Reading OOP Calls
 
-| Nhận định | Chính xác hơn |
+| Claim | More accurate explanation |
 |---|---|
-| “Gọi phương thức đối tượng khác là gửi message qua mạng.” | Thường chỉ là một lời gọi Java trong tiến trình; truyền thông qua mạng là cơ chế riêng. |
-| “Nếu phương thức trả `void`, nó không có tác dụng gì.” | `void` chỉ nói rằng không có **giá trị trả về**; phương thức vẫn có thể đổi trạng thái hoặc ném lỗi. |
-| “Truyền object vào hàm là truyền trực tiếp object theo tham chiếu.” | Java copy **giá trị tham chiếu**. Có thể thay đổi cùng một object qua bản sao tham chiếu, nhưng gán lại tham số không đổi biến bên gọi. |
-| “Hai biến khác tên luôn là hai object khác nhau.” | Hai biến có thể cùng tham chiếu một object. |
-| “Phương thức đọc dữ liệu luôn không làm thay đổi gì.” | Phải dựa trên hợp đồng và mã; phương thức có tên `get...` vẫn có thể có side effect nếu được viết như vậy. |
-| “Method có exception sẽ hoàn tác mọi thay đổi.” | Exception chỉ làm thay đổi luồng điều khiển; hoàn tác cần thiết kế hoặc cơ chế transaction thích hợp. |
-| “Tạo thật nhiều method gọi qua lại là thiết kế OOP tốt.” | Chất lượng nằm ở ranh giới trách nhiệm, tính nhất quán và khả năng hiểu luồng tương tác. |
-| “Dùng `private` thì không cần quan tâm concurrency.” | Che giấu field không tạo tính nguyên tử giữa nhiều luồng hoặc nhiều tiến trình. |
+| “Calling another object's method sends a message across the network.” | Usually it is just an in-process Java call; network communication is a separate mechanism. |
+| “A `void` method has no effect.” | `void` only means there is no **return value**; the method may still change state or throw an exception. |
+| “Passing an object to a function directly passes that object by reference.” | Java copies **the reference value**. You can modify the same object through the copied reference, but reassigning a parameter does not change the caller's variable. |
+| “Two variables with different names always represent different objects.” | Two variables can refer to the same object. |
+| “A method that reads data never changes anything.” | Look at the contract and code; even a method named `get...` may have side effects if written that way. |
+| “A method throwing an exception undoes all changes.” | An exception changes control flow; undoing changes requires appropriate design or transaction mechanisms. |
+| “Many methods calling one another means good OOP design.” | Quality depends on responsibility boundaries, consistency, and understandable interactions. |
+| “Using `private` eliminates concurrency concerns.” | Hiding fields does not establish atomicity across threads or processes. |
 
-### Một lỗi rất thường gặp: receiver là `null`
+### A Very Common Error: A `null` Receiver
 
 ```java
 Book book = null;
 book.isAvailable(); // NullPointerException
 ```
 
-Chương trình chưa có đối tượng `Book` nào để nhận lời gọi. Trước khi gọi, cần bảo đảm receiver tồn tại qua quy tắc khởi tạo, kiểm tra `null` hoặc thiết kế API phù hợp. Với phương thức instance thông thường, không thể gửi hành vi tới một receiver `null`.
+There is no `Book` object to receive the call. Before invoking the method, ensure that the receiver exists through initialization rules, `null` checks, or suitable API design. An ordinary instance method cannot be invoked on a `null` receiver.
 
-### Một lỗi khác: hiểu sai chuỗi lời gọi
+### Another Error: Misreading Chained Calls
 
 ```java
 service.borrow(member, book).memberId();
 ```
 
-Biểu thức này làm hai việc theo thứ tự: `service.borrow` chạy **trước**, trả `Loan` nếu thành công, sau đó mới gọi `memberId()` trên `Loan`. Nếu `borrow` ném exception, lời gọi `memberId()` **không bao giờ diễn ra**. Chaining giúp viết gọn nhưng có thể che khuất side effect, nên với những hành vi thay đổi trạng thái, tách dòng thường dễ đọc và gỡ lỗi hơn.
+This expression performs two operations in order: `service.borrow` runs **first** and returns a `Loan` if successful; only then is `memberId()` called on that `Loan`. If `borrow` throws an exception, `memberId()` **is never called**. Chaining is concise but can obscure side effects, so separating state-changing operations into lines often makes them easier to read and debug.
 
-## 12. Tự suy luận trước khi chạy code
+## 12. Reason Through the Code Before Running It
 
-**Câu 1.** `Member an` được truyền vào `service.borrow(an, book)`. Ở trong `borrow`, tên tham số là `member`. Đây có phải một thành viên mới được tạo không?
+**Question 1.** `Member an` is passed into `service.borrow(an, book)`. Inside `borrow`, the parameter is named `member`. Was a new member created?
 
-> Không. `member` nhận một bản sao giá trị tham chiếu tới cùng đối tượng mà `an` đang trỏ tới. Chỉ câu lệnh `new Member(...)` (hoặc một cơ chế tạo tương ứng) mới tạo thêm đối tượng.
+> No. `member` receives a copy of the reference value pointing to the same object as `an`. Only `new Member(...)` (or another corresponding creation mechanism) creates an additional object.
 
-**Câu 2.** Sau `service.borrow(an, javaBook)` thành công, gọi `javaBook.isAvailable()` trả `false`. Phương thức nào làm trạng thái thay đổi?
+**Question 2.** After `service.borrow(an, javaBook)` succeeds, `javaBook.isAvailable()` returns `false`. Which method changed the state?
 
-> `Book.lendTo` thực hiện `borrower = member`. `LendingService.borrow` chỉ là nơi điều phối lời gọi; `isAvailable` quan sát trạng thái sau đó.
+> `Book.lendTo` executes `borrower = member`. `LendingService.borrow` only coordinates the calls; `isAvailable` observes the resulting state.
 
-**Câu 3.** Khi sách đã được mượn, `service.borrow(binh, javaBook)` thất bại. Lời gọi `new Loan(...)` ở trong `Book.lendTo` có thực thi không?
+**Question 3.** When the book is already borrowed, `service.borrow(binh, javaBook)` fails. Does `new Loan(...)` execute inside `Book.lendTo`?
 
-> Không. `throw` xảy ra trước câu lệnh tạo `Loan`. Trạng thái `borrower` vẫn là người mượn trước đó trong ví dụ tuần tự này.
+> No. `throw` occurs before the `Loan` creation statement. In this sequential example, `borrower` still refers to the previous borrower.
 
-**Câu 4.** Đổi `Book other = javaBook` rồi thử mượn `other` có tạo ra sách thứ hai không?
+**Question 4.** Does assigning `Book other = javaBook` and attempting to borrow `other` create a second book?
 
-> Không. `other` và `javaBook` cùng tham chiếu cuốn sách đã tồn tại; trạng thái là chung.
+> No. `other` and `javaBook` both refer to the existing book and share its state.
 
-**Câu 5.** Bạn thêm tính năng “thành viên bị khóa không được mượn sách”. Nên đặt kiểm tra ở mọi nút bấm giao diện hay trong lớp nghiệp vụ có đường đi dùng chung?
+**Question 5.** You add a rule that “suspended members cannot borrow books.” Should validation live on every UI button or in a shared business-layer entry point?
 
-> Kiểm tra giao diện chỉ phục vụ trải nghiệm; quy tắc bắt buộc phải được thực thi ở tầng nghiệp vụ có quyền quyết định giao dịch mượn. Trong mô hình này `Member.ensureActive()` chứa phép kiểm tra và `LendingService.borrow` bắt buộc gọi nó. Khi mở rộng, cần bảo đảm không tồn tại đường mượn khác bỏ qua điều kiện này.
+> UI checks improve the user experience, but mandatory rules must be enforced in the business layer that controls borrowing. In this model, `Member.ensureActive()` performs the check and `LendingService.borrow` must call it. As the system grows, ensure no alternative borrowing path can bypass this condition.
 
-## 13. Bài tập thực hành nhỏ
+## 13. Short Practice Exercise
 
-Dựa trên `Main.java` phía trên, hãy thêm tính năng **trả sách** theo yêu cầu:
+Using the `Main.java` example above, add a **book-return** feature with these requirements:
 
-- `Book.returnBy(Member member)` chỉ cho phép người đang mượn trả sách; nếu không khớp, từ chối với thông báo rõ ràng.
-- Nếu thành công, cập nhật `borrower = null` để `isAvailable()` trả `true`.
-- `LendingService.returnBook(member, book)` điều phối lời gọi vào `Book`.
-- Trong `main`, kiểm thử ba tình huống tách bạch: mượn xong trả đúng người; người khác trả hộ bị từ chối; trả sách chưa ai mượn bị từ chối.
+- `Book.returnBy(Member member)` must allow only the current borrower to return the book; otherwise it must reject the request with a clear message.
+- On success, update `borrower = null` so that `isAvailable()` returns `true`.
+- `LendingService.returnBook(member, book)` coordinates the call into `Book`.
+- In `main`, test three distinct situations: a book successfully returned by its borrower; a return attempt by someone else is rejected; and a return attempt for a book nobody has borrowed is rejected.
 
-Trước khi viết, tự trả lời: **“Ai nên giữ quy tắc chỉ người đang mượn mới được trả?”** `Book` là nơi hợp lý trong mô hình này vì nó trực tiếp quản lý `borrower`.
+Before coding, answer: **“Who should own the rule that only the current borrower may return a book?”** `Book` is an appropriate owner in this model because it directly manages `borrower`.
 
-Có thể vẽ chuỗi `main → LendingService → Book → main` cho cả đường thành công lẫn thất bại. Chú ý dùng những đối tượng sách mới giữa các bài kiểm thử độc lập để tránh trạng thái của một trường hợp ảnh hưởng đến trường hợp khác.
+You can draw the sequence `main → LendingService → Book → main` for both success and failure paths. Use fresh book objects for independent test cases to prevent state from one case affecting another.
 
-## 14. Điều cần ghi nhớ
+## 14. Key Points to Remember
 
-Khi đọc một lời gọi OOP, hãy lần lượt xác định:
+When reading an OOP call, determine the following in order:
 
-1. **Đối tượng nào là receiver?** Nó có thực sự tồn tại và đang có trạng thái gì?
-2. **Ai là caller?** Tại sao caller cần nhờ đối tượng đó thực hiện hành vi?
-3. **Thông tin nào được truyền?** Phân biệt argument tại nơi gọi với parameter trong thân phương thức; nhớ quy tắc pass-by-value.
-4. **Phương thức bảo đảm điều gì?** Điều kiện hợp lệ, trạng thái trước/sau, side effect, kết quả trả về hoặc exception.
-5. **Sau lời gọi thì đi đâu?** Trả về caller để tiếp tục, gọi tiếp đối tượng khác, hay ném exception lên tầng trên?
+1. **Which object is the receiver?** Does it actually exist, and what is its current state?
+2. **Who is the caller?** Why does the caller need that object to perform this behavior?
+3. **What information is passed?** Distinguish arguments at the call site from parameters in the method body; remember pass-by-value.
+4. **What does the method guarantee?** Valid conditions, before/after states, side effects, return values, or exceptions.
+5. **Where does control go afterward?** Does execution return to the caller, continue into another object, or propagate an exception upward?
 
-**Tương tác giữa đối tượng** chính là cách những trách nhiệm riêng lẻ kết hợp thành một nghiệp vụ hoàn chỉnh. Lời gọi phương thức là cơ chế chủ yếu để biểu diễn sự phối hợp đó trong Java. Khi bạn có thể lần theo `caller → receiver → hành vi → thay đổi trạng thái → kết quả`, bạn sẽ đọc và thiết kế các luồng OOP rõ ràng hơn rất nhiều.
+**Object interaction** is how separate responsibilities combine into a complete business process. Method calls are the primary mechanism for expressing that collaboration in Java. Once you can trace `caller → receiver → hành vi → thay đổi trạng thái → kết quả` (caller → receiver → behavior → state change → result), reading and designing OOP flows becomes much clearer.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="oop-basic-005">Đóng gói, trừu tượng, kế thừa và đa hình</a>
+## <a id="oop-basic-005">Encapsulation, Abstraction, Inheritance, and Polymorphism</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đóng gói, trừu tượng, kế thừa và đa hình trong OOP
+# Encapsulation, Abstraction, Inheritance, and Polymorphism in OOP
 
-Bốn khái niệm **đóng gói (encapsulation), trừu tượng (abstraction), kế thừa (inheritance) và đa hình (polymorphism)** thường được gọi là “bốn tính chất của lập trình hướng đối tượng”. Nhưng nhớ tên và định nghĩa chưa đủ: điều quan trọng là hiểu **chúng giúp thiết kế phần mềm như thế nào, liên quan ra sao và khi nào nên dùng**.
+The four concepts of **encapsulation, abstraction, inheritance, and polymorphism** are often called the “four pillars of object-oriented programming.” But memorizing names and definitions is insufficient: you need to understand **how they help design software, how they relate, and when to use them**.
 
-Hãy lấy bài toán một cửa hàng: khách mua giỏ hàng trị giá 500.000 đồng. Cửa hàng có thể áp dụng **giảm 10%** hoặc **giảm cố định 80.000 đồng**. Hệ thống cần giữ cho giỏ hàng hợp lệ, tính đúng tổng tiền và cho phép bổ sung chính sách giảm giá sau này mà ít phải sửa mã thanh toán.
+Consider a store where a customer has a cart worth 500.000 VND. The store can offer either **a 10% discount** or **a fixed discount of 80.000 VND**. The system must keep the cart valid, calculate totals correctly, and allow new discount policies with minimal changes to checkout code.
 
-Bài học sẽ dùng bài toán này để giải thích cả bốn khái niệm. Không cần biết Spring Boot trước; phần code Java có thể chạy trực tiếp.
+This lesson uses that problem to explain all four concepts. No prior Spring Boot knowledge is required; the Java code can run directly.
 
-## 1. Bức tranh tổng quan: bốn khái niệm giải quyết bốn câu hỏi khác nhau
+## 1. Overview: Four Concepts Address Four Different Questions
 
-| Khái niệm | Câu hỏi nó giải quyết | Ví dụ trong cửa hàng |
+| Concept | Question it addresses | Store example |
 | --- | --- | --- |
-| **Đóng gói** | Ai được phép xem, sửa trạng thái, và sửa qua con đường nào để dữ liệu luôn hợp lệ? | Giỏ hàng tự kiểm tra số lượng và không cho bên ngoài sửa thẳng danh sách hàng. |
-| **Trừu tượng** | Người sử dụng đối tượng cần biết *khả năng gì* và có thể bỏ qua *chi tiết nào*? | Thanh toán chỉ cần yêu cầu “tính số tiền giảm”, không phải biết thuật toán của từng ưu đãi. |
-| **Kế thừa** | Kiểu chuyên biệt nào có thể dùng lại và mở rộng một kiểu cha theo quan hệ hợp lý? | Giảm phần trăm và giảm số tiền cố định đều là loại chính sách giảm giá. |
-| **Đa hình** | Vì sao cùng một lời gọi có thể tạo ra hành vi khác nhau tùy đối tượng thực tế? | Gọi `discountFor(500000)` trả về 50.000 với chính sách 10%, nhưng 80.000 với chính sách cố định. |
+| **Encapsulation** | Who may read or modify state, and through which paths, to keep data valid? | A cart validates quantities itself and prevents outsiders from directly modifying its order-line list. |
+| **Abstraction** | *Which capabilities* must object users know, and *which details* can they ignore? | Checkout only needs to ask for the discount amount, without knowing each promotion's algorithm. |
+| **Inheritance** | Which specialized type can reasonably reuse and extend a parent type? | Percentage and fixed-amount discounts are both kinds of discount policies. |
+| **Polymorphism** | Why can the same call behave differently depending on the actual object? | `discountFor(500000)` returns 50.000 for a 10% policy, but 80.000 for a fixed-amount policy. |
 
-Chúng **không phải bốn bước thực hiện theo thứ tự**, cũng không bắt buộc mọi lớp phải sử dụng cả bốn. Một lớp bất biến có thể thể hiện đóng gói rất tốt mà không hề kế thừa lớp nào. Một ứng dụng có thể dùng trừu tượng và đa hình qua interface mà gần như không cần hệ phân cấp lớp sâu.
+They **are not four steps to execute in sequence**, and every class need not use all four. An immutable class can exhibit excellent encapsulation without inheriting from another domain class. An application can use abstraction and polymorphism through interfaces with little need for deep class hierarchies.
 
-## 2. Đóng gói (Encapsulation): đối tượng tự bảo vệ trạng thái
+## 2. Encapsulation: An Object Protects Its Own State
 
-Giả sử viết một giỏ hàng như sau:
+Suppose you implement a cart as follows:
 
 ~~~java
 class Cart {
@@ -1712,9 +1712,9 @@ class Cart {
 }
 ~~~
 
-Mọi nơi giữ tham chiếu đến `Cart` đều có thể sửa `items` trực tiếp. Nếu hệ thống cần quy tắc “không được thêm sản phẩm có số lượng âm”, lớp này không có điểm kiểm soát đáng tin cậy. Người gọi có thể vô tình phá hỏng dữ liệu dù không cố ý.
+Any code holding a `Cart` reference can modify `items` directly. If the system needs a rule such as “items with negative quantities cannot be added,” this class has no reliable enforcement point. Callers can accidentally corrupt the data even without intending to.
 
-Thiết kế theo hướng đóng gói là **đặt dữ liệu và hành vi xử lý dữ liệu vào cùng một ranh giới chịu trách nhiệm**, rồi kiểm soát cách truy cập và thay đổi trạng thái.
+Encapsulated design means **placing data and the behaviors that operate on it within the same responsibility boundary**, then controlling how state can be accessed and changed.
 
 ~~~java
 final class Cart {
@@ -1733,36 +1733,36 @@ final class Cart {
 }
 ~~~
 
-Ở đây:
+Here:
 
-- `items` là chi tiết trạng thái được giữ trong `Cart`; bên ngoài không được tự ý thêm/xóa trực tiếp trên danh sách nội bộ.
-- `addItem()` là **con đường thay đổi có kiểm soát**: kiểm tra đầu vào trước khi cập nhật.
-- `viewItems()` trả về bản chụp danh sách không thể sửa bằng các thao tác như `add`/`clear`. Nhờ đó, người gọi không làm thay đổi danh sách gốc qua tham chiếu trả về.
+- `items` is internal state held by `Cart`; external code cannot directly add to or remove from its internal list.
+- `addItem()` is **a controlled modification path**: it validates input before updating.
+- `viewItems()` returns an unmodifiable snapshot of the list that rejects operations such as `add`/`clear`. Consequently, callers cannot modify the original list through the returned reference.
 
-**Đóng gói không đồng nghĩa đơn giản với việc thêm `private` rồi tạo getter/setter cho mọi trường.** Nếu viết `setQuantity(-5)` và setter vẫn chấp nhận giá trị sai, quy tắc nghiệp vụ chưa được bảo vệ. Nhiều khi hành vi `addItem()`, `removeItem()` hoặc `confirm()` có ý nghĩa hơn setter chung chung, vì nó diễn đạt một thao tác hợp lệ.
+**Encapsulation does not simply mean adding `private` and generating getters/setters for every field.** If `setQuantity(-5)` accepts an invalid value, the business rule is still unprotected. Behaviors such as `addItem()`, `removeItem()`, or `confirm()` are often more meaningful than generic setters because they express valid operations.
 
-### Bảo vệ điều kiện luôn đúng (invariant)
+### Protecting Invariants
 
-Một giỏ hàng có thể đặt quy tắc:
+A cart might enforce these rules:
 
-- Mã sản phẩm không rỗng.
-- Số lượng của mỗi dòng hàng lớn hơn 0.
-- Đơn giá không âm.
-- Tổng tiền được tính từ các dòng hàng hợp lệ.
+- Product codes must not be blank.
+- Every order-line quantity must be greater than 0.
+- Unit prices must not be negative.
+- Totals must be calculated from valid order lines.
 
-Một thao tác tốt sẽ **kiểm tra điều kiện trước khi đổi trạng thái** và từ chối đầu vào sai mà không để giỏ hàng ở trạng thái dở dang.
+A well-designed operation **checks conditions before changing state** and rejects invalid input without leaving the cart partially updated.
 
-Để ý `private final List` chỉ ngăn gán lại biến `items`; bản thân `ArrayList` vẫn thay đổi được qua `add()`. Vì vậy **`final` không có nghĩa là nội dung danh sách bất biến**, còn `private` không tự ngăn lỗi trong chính các phương thức của lớp. Muốn đóng gói đúng cần cả quyền truy cập, phương thức thao tác và kiểm tra quy tắc.
+Notice that `private final List` prevents reassignment of the `items` variable, but the `ArrayList` itself remains mutable through `add()`. Therefore, **`final` does not mean the list's contents are immutable**, and `private` does not prevent bugs within the class's own methods. Proper encapsulation requires access controls, suitable operations, and rule validation.
 
-**Khi nào hữu ích?** Khi trạng thái có ràng buộc, thay đổi ở nhiều nơi sẽ gây sai lệch, hoặc bạn muốn bảo trì logic mà không sửa tất cả nơi sử dụng.
+**When is it useful?** When state has constraints, changes from many locations could introduce inconsistencies, or you want to maintain logic without editing every caller.
 
-## 3. Trừu tượng (Abstraction): nói rõ khả năng, giấu phần chi tiết không cần thiết
+## 3. Abstraction: Expose Capabilities, Hide Unnecessary Details
 
-Với bài toán giảm giá, mã thanh toán chỉ cần biết một chính sách có thể:
+For the discount problem, checkout code only needs to know that a policy can:
 
-> Nhận tổng tiền trước giảm và trả về số tiền được giảm hợp lệ.
+> Accept a subtotal before discounts and return a valid discount amount.
 
-Nó không cần biết chính sách tính theo phần trăm, số tiền cố định hay một cách tính phức tạp hơn. Ta có thể mô tả **hợp đồng (contract)** bằng một interface:
+It does not need to know whether the policy uses a percentage, a fixed amount, or a more complex calculation. We can describe the **contract** using an interface:
 
 ~~~java
 interface DiscountPolicy {
@@ -1770,7 +1770,7 @@ interface DiscountPolicy {
 }
 ~~~
 
-Hàm thanh toán có thể làm việc với `DiscountPolicy`:
+The checkout function can work with `DiscountPolicy`:
 
 ~~~java
 BigDecimal amountToPay(BigDecimal subtotal, DiscountPolicy policy) {
@@ -1778,28 +1778,28 @@ BigDecimal amountToPay(BigDecimal subtotal, DiscountPolicy policy) {
 }
 ~~~
 
-Điểm chính là **tách “cần làm gì” khỏi “được thực hiện như thế nào”**. Người gọi biết tên hành vi, tham số, kiểu kết quả và quy tắc kỳ vọng; người gọi không cần nhìn vào thuật toán bên trong từng chính sách.
+The main idea is **separating “what must be done” from “how it is implemented.”** Callers know the behavior's name, parameters, return type, and expected rules; they do not need to inspect each policy's internal algorithm.
 
-Trừu tượng còn xuất hiện khi ta dùng `Cart.addItem()` mà không cần quan tâm lớp này đang lưu dữ liệu bằng `ArrayList`, mảng hay cấu trúc khác. Vì vậy **trừu tượng là cách thiết kế và chọn thông tin cần công khai**, không chỉ là cú pháp `abstract class` hoặc `interface`.
+Abstraction also appears when we use `Cart.addItem()` without caring whether the class stores data in an `ArrayList`, an array, or another structure. Thus, **abstraction involves designing and selecting what to expose**, not just using `abstract class` or `interface` syntax.
 
-**Đừng nhầm trừu tượng với đóng gói:**
+**Do not confuse abstraction with encapsulation:**
 
-| Góc nhìn | Đóng gói | Trừu tượng |
+| Perspective | Encapsulation | Abstraction |
 | --- | --- | --- |
-| Trọng tâm | Kiểm soát truy cập và thay đổi trạng thái bên trong. | Chỉ đưa ra những khả năng/chi tiết cần thiết cho người sử dụng. |
-| Câu hỏi | “Ai được quyền sửa dữ liệu và theo quy tắc nào?” | “Người gọi cần biết điều gì để dùng đối tượng?” |
-| Ví dụ | `Cart` không lộ `items` mutable. | `CheckoutService` chỉ biết `DiscountPolicy.discountFor()`. |
-| Công cụ Java thường thấy | `private`, phương thức nghiệp vụ, immutable view, validation. | Interface, abstract class, phương thức công khai có hợp đồng rõ ràng. |
+| Focus | Control access to and changes of internal state. | Expose only the capabilities/details users need. |
+| Question | “Who may modify data, and under which rules?” | “What does the caller need to know to use the object?” |
+| Example | `Cart` does not expose mutable `items`. | `CheckoutService` only knows `DiscountPolicy.discountFor()`. |
+| Common Java tools | `private`, domain methods, immutable views, validation. | Interfaces, abstract classes, public methods with clear contracts. |
 
-Một đối tượng tốt thường **vừa trừu tượng hóa điều người gọi cần, vừa đóng gói những chi tiết nội bộ phải bảo vệ**. Hai khái niệm bổ trợ nhưng không thay thế nhau.
+A well-designed object often **abstracts what callers need while encapsulating internal details that require protection**. The two concepts complement rather than replace one another.
 
-### Hợp đồng không chỉ có tên method
+### A Contract Is More Than a Method Name
 
-Với `discountFor(subtotal)`, cần quy định: tổng tiền đầu vào không âm; số tiền giảm đầu ra không âm và không vượt tổng tiền; chính sách không tự ý sửa giỏ hàng. Interface về mặt cú pháp chưa thể tự bảo đảm các điều kiện này. Thiết kế phải thể hiện chúng qua code, kiểm tra, tài liệu hợp đồng và test thích hợp.
+For `discountFor(subtotal)`, the contract must specify that the input subtotal is nonnegative, the output discount is nonnegative and no greater than the subtotal, and the policy must not arbitrarily modify the cart. Interface syntax alone cannot enforce these conditions. The design must express them through code, validation, contract documentation, and appropriate tests.
 
-## 4. Kế thừa (Inheritance): xây dựng quan hệ cha – con hợp lý
+## 4. Inheritance: Building a Sound Parent–Child Relationship
 
-Kế thừa cho phép một lớp con nhận thuộc tính/hành vi có thể truy cập từ lớp cha và bổ sung hoặc thay đổi một phần hành vi phù hợp với hợp đồng. Trong Java, dùng `extends` để kế thừa một lớp.
+Inheritance lets a subclass acquire accessible members and behaviors from a parent class and add or change behavior while respecting its contract. In Java, `extends` expresses class inheritance.
 
 ~~~java
 abstract class DiscountPolicy {
@@ -1821,43 +1821,43 @@ final class PercentageDiscount extends DiscountPolicy {
 }
 ~~~
 
-`PercentageDiscount` là một dạng `DiscountPolicy`: mọi chỗ cần chính sách giảm giá đều có thể nhận một đối tượng `PercentageDiscount`, miễn nó tuân thủ quy tắc mà `DiscountPolicy` cam kết.
+`PercentageDiscount` is a kind of `DiscountPolicy`: anywhere a discount policy is required, a `PercentageDiscount` object can be used, provided it respects the rules promised by `DiscountPolicy`.
 
-Kế thừa có hai tác dụng thường gặp:
+Inheritance commonly serves two purposes:
 
-1. **Quan hệ kiểu (subtyping):** `PercentageDiscount` có thể được dùng ở chỗ yêu cầu `DiscountPolicy`.
-2. **Dùng chung triển khai:** lớp cha có thể cung cấp xử lý dùng chung, lớp con chỉ triển khai điểm khác biệt.
+1. **Subtyping:** `PercentageDiscount` can be used wherever `DiscountPolicy` is required.
+2. **Shared implementation:** the parent class can provide shared logic while subclasses implement only the differences.
 
-Không phải cứ thấy hai lớp có đoạn code giống nhau là nên dùng `extends`. Ví dụ `ReportService` và `EmailService` cùng có method `log()` chưa có nghĩa một lớp “là một dạng” của lớp kia. Trường hợp này có thể tách một đối tượng cộng tác để dùng chung chức năng.
+Similar code in two classes does not automatically justify `extends`. For example, `ReportService` and `EmailService` both having a `log()` method does not mean one “is a kind of” the other. Instead, they could share the functionality through a collaborating object.
 
-### Một số quy tắc Java cần nhớ
+### Some Java Rules to Remember
 
-| Cú pháp/khái niệm | Ý nghĩa |
+| Syntax/concept | Meaning |
 | --- | --- |
-| `class B extends A` | `B` kế thừa **một** lớp cha `A` (Java không hỗ trợ một lớp trực tiếp extends nhiều lớp). |
-| `@Override` | Đánh dấu method của lớp con ghi đè method có thể override từ lớp cha; compiler giúp phát hiện sai chữ ký. |
-| `super(...)` | Gọi constructor phù hợp của lớp cha từ constructor lớp con. |
-| `super.method()` | Gọi triển khai của lớp cha khi cần, nếu method đó có thể truy cập. |
-| `protected` | Cho phép truy cập trong cùng package và từ subclass theo quy tắc Java; dùng có cân nhắc vì mở rộng bề mặt phụ thuộc. |
-| `final class` | Không cho phép lớp khác kế thừa lớp này. |
-| `final method` | Không cho phép subclass override method đó. |
+| `class B extends A` | `B` inherits from **one** parent class `A` (Java does not allow a class to extend multiple classes directly). |
+| `@Override` | Marks a subclass method that overrides an overridable parent method; the compiler helps detect incorrect signatures. |
+| `super(...)` | Calls an appropriate parent-class constructor from a subclass constructor. |
+| `super.method()` | Invokes the parent implementation when needed, provided the method is accessible. |
+| `protected` | Permits access within the same package and from subclasses under Java's rules; use carefully because it increases the dependency surface. |
+| `final class` | Prevents other classes from extending the class. |
+| `final method` | Prevents subclasses from overriding the method. |
 
-Java còn có **kế thừa interface**: `interface B extends A`; một class có thể `implements` nhiều interface. Việc **triển khai interface** không giống việc kế thừa phần trạng thái của một superclass, dù nó cũng tạo quan hệ kiểu và hỗ trợ đa hình.
+Java also supports **interface inheritance**: `interface B extends A`; a class can `implements` multiple interfaces. **Implementing an interface** is not the same as inheriting a superclass's state, although it also establishes a type relationship and supports polymorphism.
 
-### “Là một loại” chưa đủ: còn phải thay thế được
+### “Is a Kind Of” Is Not Enough: Substitutability Matters
 
-Một subclass tốt phải giữ được kỳ vọng của code sử dụng kiểu cha. Nếu lớp cha hứa trả tiền giảm trong đoạn từ 0 đến tổng tiền, lớp con không nên tự trả giá trị âm hay lớn hơn tổng tiền. Đây là trực giác của **nguyên tắc thay thế Liskov (LSP)**: không làm hỏng hợp đồng khi thay kiểu cha bằng kiểu con.
+A sound subclass must preserve the expectations of code using the parent type. If the parent promises a discount between 0 and the subtotal, the child should not return a negative value or one exceeding the subtotal. This is the intuition behind the **Liskov Substitution Principle (LSP)**: substituting a child type for its parent must not break the contract.
 
-Vì vậy, kế thừa nên được cân nhắc khi **quan hệ kiểu thực sự có nghĩa và hành vi của lớp con phù hợp với hợp đồng của lớp cha**. Nếu chỉ muốn ghép chức năng, **composition** (chứa và ủy quyền cho đối tượng khác) thường linh hoạt hơn.
+Therefore, consider inheritance when **the type relationship is meaningful and the subclass's behavior satisfies the parent's contract**. If you merely want to combine functionality, **composition** (holding and delegating to another object) is often more flexible.
 
-## 5. Đa hình (Polymorphism): cùng lời gọi, cách xử lý khác nhau
+## 5. Polymorphism: Same Call, Different Implementations
 
-Xét hai chính sách cùng nhận tổng tiền 500.000 đồng:
+Consider two policies applied to the same subtotal of 500.000 VND:
 
-- `PercentageDiscount(10)`: giảm 50.000, khách trả **450.000 đồng**.
-- `FixedDiscount(80000)`: giảm 80.000, khách trả **420.000 đồng**.
+- `PercentageDiscount(10)`: a discount of 50.000; the customer pays **450.000 VND**.
+- `FixedDiscount(80000)`: a discount of 80.000; the customer pays **420.000 VND**.
 
-Đoạn mã thanh toán không cần một chuỗi `if/else` để hỏi “đây là loại giảm giá gì?”. Nó chỉ yêu cầu đối tượng chính sách thực hiện hành vi của mình.
+Checkout code does not need an `if/else` chain asking “What kind of discount is this?” It simply asks the policy object to perform its behavior.
 
 ~~~java
 DiscountPolicy policy = new PercentageDiscount(10);
@@ -1867,26 +1867,26 @@ policy = new FixedDiscount(new BigDecimal("80000"));
 BigDecimal second = policy.discountFor(new BigDecimal("500000"));
 ~~~
 
-Đây là **đa hình lúc chạy (runtime polymorphism)** dựa trên **ghi đè phương thức (overriding)**: cùng một cách gọi qua kiểu `DiscountPolicy` nhưng Java chọn triển khai phù hợp với kiểu đối tượng thực tế.
+This is **runtime polymorphism** based on **method overriding**: the same call through type `DiscountPolicy` selects the implementation associated with the actual object type.
 
-Trong Java còn có **nạp chồng phương thức (overloading)**: cùng tên method, khác danh sách tham số.
+Java also supports **method overloading**: methods with the same name but different parameter lists.
 
 ~~~java
 void print(String text) { /* ... */ }
 void print(int value) { /* ... */ }
 ~~~
 
-Overloading được chọn chủ yếu theo **kiểu khai báo của biểu thức và chữ ký có thể áp dụng tại lúc biên dịch**; không phải cơ chế chọn override dựa trên đối tượng runtime. Phân biệt hai cơ chế giúp tránh ngộ nhận rằng cứ trùng tên method là ví dụ của cùng một loại đa hình.
+Overloads are selected primarily from **expression types and applicable signatures at compile time**; this differs from runtime dispatch of overridden methods. Distinguishing these mechanisms avoids the misconception that methods sharing a name always demonstrate the same kind of polymorphism.
 
-**Một giới hạn quan trọng:** phương thức `static` không được override theo cơ chế dynamic dispatch của instance method; nếu subclass khai báo static method cùng tên/chữ ký, đó là *method hiding*. Các `private` method cũng không được subclass override như phương thức instance có thể truy cập.
+**An important limitation:** `static` methods are not overridden via the dynamic dispatch used for instance methods; a subclass static method with the same name/signature performs *method hiding*. `private` methods likewise cannot be overridden by subclasses like accessible instance methods.
 
-### Đa hình giúp mở rộng ở đâu?
+### How Does Polymorphism Support Extension?
 
-Khi xuất hiện `SeasonalDiscount` mới, chương trình có thể bổ sung một lớp/triển khai mới mà `CheckoutService` vẫn gọi `discountFor()`. Điều này giúp giảm mã phụ thuộc vào từng loại cụ thể. Tuy nhiên, nếu mỗi lần bổ sung chính sách lại buộc sửa chuỗi if/else trong service, lợi ích này bị hạn chế.
+When a new `SeasonalDiscount` appears, the application can add another class/implementation while `CheckoutService` continues calling `discountFor()`. This reduces code tied to individual concrete types. However, if each policy addition still requires editing an if/else chain inside the service, the benefit is limited.
 
-## 6. Ví dụ Java hoàn chỉnh: bốn khái niệm phối hợp
+## 6. Complete Java Example: All Four Concepts Working Together
 
-Để thấy đầy đủ, ta dùng một lớp cha trừu tượng `DiscountPolicy` với **phần kiểm tra điều kiện dùng chung**, hai lớp con cung cấp thuật toán riêng, và một `Cart` tự giữ danh sách hàng hợp lệ. Code sau chạy được với **Java 17+** trong một file `Main.java`; chỉ có một public class.
+To see them together, we use an abstract parent class `DiscountPolicy` with **shared validation logic**, two subclasses with their own algorithms, and a `Cart` that keeps its item list valid. The following code runs on **Java 17+** from one `Main.java` file and contains only one public class.
 
 ~~~java
 import java.math.BigDecimal;
@@ -2040,14 +2040,14 @@ public class Main {
 }
 ~~~
 
-Chạy trong thư mục chứa `Main.java`:
+Run from the directory containing `Main.java`:
 
 ~~~bash
 javac Main.java
 java Main
 ~~~
 
-Kết quả chính, theo thứ tự:
+Key output, in order:
 
 ~~~text
 500000
@@ -2060,27 +2060,27 @@ Cannot modify cart through view
 0
 ~~~
 
-### Đọc chương trình theo bốn khái niệm
+### Reading the Program Through the Four Concepts
 
-| Khái niệm | Đoạn thể hiện trong code | Vì sao |
+| Concept | Where it appears in the code | Why it matters |
 | --- | --- | --- |
-| **Đóng gói** | `Cart.lines` là `private`; `addItem()` kiểm tra qua `CartLine`; `viewItems()` dùng `List.copyOf`. | Mã bên ngoài không trực tiếp thay đổi trạng thái danh sách, dữ liệu không hợp lệ bị từ chối trước khi thêm. |
-| **Trừu tượng** | `CheckoutService` nhận tham số kiểu `DiscountPolicy` với hành vi `discountFor()`. | Service chỉ cần hợp đồng tính giảm giá, không biết chi tiết công thức. |
-| **Kế thừa** | `PercentageDiscount extends DiscountPolicy` và `FixedDiscount extends DiscountPolicy`. | Hai lớp con thuộc cùng kiểu chính sách, dùng chung bước kiểm tra và tự cài công thức riêng. |
-| **Đa hình** | `policy.discountFor(subtotal)` gọi `calculateDiscount()` của lớp con tương ứng. | Cùng luồng checkout nhưng phần tính tiền giảm thay đổi theo đối tượng thực tế. |
+| **Encapsulation** | `Cart.lines` is `private`; `addItem()` validates through `CartLine`; `viewItems()` uses `List.copyOf`. | External code cannot directly change the internal list; invalid data is rejected before being added. |
+| **Abstraction** | `CheckoutService` takes a `DiscountPolicy` parameter exposing `discountFor()`. | The service needs only the discount calculation contract, not the details of the formula. |
+| **Inheritance** | `PercentageDiscount extends DiscountPolicy` and `FixedDiscount extends DiscountPolicy`. | Both subclasses are discount policies, share validation logic, and implement their own formulas. |
+| **Polymorphism** | `policy.discountFor(subtotal)` calls the appropriate subclass's `calculateDiscount()`. | The checkout flow stays the same while discount calculations vary with the actual object. |
 
-### Chính xác chuyện gì xảy ra khi gọi method?
+### Exactly What Happens When the Method Is Called?
 
-Giả sử biến `policy` được gán `new PercentageDiscount(10)`:
+Suppose `policy` is assigned `new PercentageDiscount(10)`:
 
-1. `CheckoutService.amountToPay()` tính `subtotal = 500000`.
-2. Nó gọi `policy.discountFor(subtotal)`.
-3. Java chạy method `discountFor()` dùng chung từ lớp cha `DiscountPolicy` và kiểm tra subtotal không âm.
-4. Bên trong method cha, lời gọi `calculateDiscount(subtotal)` được **dispatch động** đến phiên bản ghi đè trong `PercentageDiscount`.
-5. Kết quả giảm là `50000`; lớp cha kiểm tra giá trị hợp lệ và trả lại.
-6. Service tính `500000 - 50000 = 450000`.
+1. `CheckoutService.amountToPay()` calculates `subtotal = 500000`.
+2. It calls `policy.discountFor(subtotal)`.
+3. Java executes the shared `discountFor()` method from parent class `DiscountPolicy` and validates that the subtotal is nonnegative.
+4. Within that parent method, `calculateDiscount(subtotal)` is **dynamically dispatched** to the override in `PercentageDiscount`.
+5. The discount is `50000`; the parent class validates and returns it.
+6. The service calculates `500000 - 50000 = 450000`.
 
-Nếu `policy` tham chiếu đến `new FixedDiscount(80000)` thì các bước chung không thay đổi, chỉ **bước 4** dùng công thức của `FixedDiscount`. Kết quả phải trả là `420000`.
+If `policy` refers to `new FixedDiscount(80000)`, the common steps are unchanged; only **step 4** uses the `FixedDiscount` formula. The amount payable is `420000`.
 
 ~~~mermaid
 sequenceDiagram
@@ -2100,38 +2100,38 @@ sequenceDiagram
     C-->>Main: 450000 hoặc 420000
 ~~~
 
-Sơ đồ trên biểu diễn luồng logic. `DiscountPolicy` trong code là **lớp cha của chính đối tượng runtime**, không phải một đối tượng thứ hai được tạo ra chỉ để chuyển lời gọi. Dispatch của Java chọn method override ngay trên đối tượng hiện tại.
+The diagram illustrates the logical flow. `DiscountPolicy` in the code is **the parent class of the runtime object itself**, not a separate second object created merely to forward the call. Java's dispatch selects the overridden method on the current object.
 
-## 7. Vì sao dùng abstract class trong ví dụ? Khi nào dùng interface?
+## 7. Why Use an Abstract Class Here? When Should You Use an Interface?
 
-Ta đã xem ví dụ interface đơn giản trước đó, còn chương trình hoàn chỉnh dùng `abstract class` vì muốn giữ **quy tắc kiểm tra dùng chung**: mọi loại giảm giá phải kiểm tra đầu vào và kết quả. Điều này được thể hiện bằng **Template Method**: method `discountFor()` là `final`, chỉ phần `calculateDiscount()` được override.
+We saw a simpler interface example earlier, but the complete program uses an `abstract class` to enforce **shared validation rules**: every discount type must validate input and results. This is expressed using the **Template Method** pattern: `discountFor()` is `final`, while only `calculateDiscount()` can be overridden.
 
-| Nhu cầu | Interface thường phù hợp | Abstract class thường phù hợp |
+| Need | When an interface often fits | When an abstract class often fits |
 | --- | --- | --- |
-| Khai báo năng lực/hợp đồng chung | Rất phù hợp; nhiều class độc lập có thể implement. | Có thể dùng, nhưng buộc lớp con tham gia một hệ phân cấp lớp. |
-| Dùng chung trạng thái instance và constructor | Không dành cho instance fields/constructors của lớp triển khai. | Có thể định nghĩa state, constructor và logic chung. |
-| Dùng chung code | Có `default`/`static` method khi cần, nhưng giới hạn. | Có method thường, `protected` helper và template. |
-| Một class cần nhiều vai trò | Một class có thể implements nhiều interface. | Một class chỉ extends trực tiếp một class. |
-| Bảo đảm không subclass nào bỏ qua bước validation | Chỉ khai báo contract thường chưa đủ để ép luồng xử lý chung. | Có thể dùng method `final` gọi hook `protected abstract` như ví dụ. |
+| Declare shared capabilities/contracts | Very suitable; multiple independent classes can implement it. | Possible, but forces subclasses into a class hierarchy. |
+| Share instance state and constructors | Not designed for implementing classes' instance fields or constructors. | Can define shared state, constructors, and logic. |
+| Share implementation code | Supports `default`/`static` methods where needed, with limitations. | Supports regular methods, `protected` helpers, and templates. |
+| One class needs multiple roles | A class can implement multiple interfaces. | A class can directly extend only one class. |
+| Ensure no subclass skips validation | A declaration of the contract alone usually cannot enforce the shared execution sequence. | A `final` method can call a `protected abstract` hook, as in this example. |
 
-**Một lựa chọn khác:** giữ `DiscountPolicy` là interface và dùng **composition** để tách đối tượng kiểm tra quy tắc hoặc phần công thức. Interface không phải lúc nào cũng tốt hơn, abstract class cũng không mặc nhiên là thiết kế “OOP hơn”. Hãy chọn theo hợp đồng, mức độ dùng chung và giới hạn mở rộng thực sự cần có.
+**Another option:** keep `DiscountPolicy` as an interface and use **composition** to separate the validation component or calculation strategy. An interface is not always better, and an abstract class is not inherently “more object-oriented.” Choose according to the contract, actual sharing needs, and necessary extension constraints.
 
-## 8. Những nhầm lẫn khiến thiết kế OOP khó hiểu
+## 8. Misconceptions That Make OOP Designs Hard to Understand
 
-| Nhầm lẫn | Điều cần hiểu |
+| Misconception | What to understand instead |
 | --- | --- |
-| “Đóng gói = biến private + đầy đủ getter/setter.” | Đóng gói nhằm bảo vệ quy tắc và giới hạn các con đường làm thay đổi trạng thái; getter/setter vô điều kiện có thể phá mục tiêu này. |
-| “Trừu tượng = dùng abstract class.” | Trừu tượng là cách chọn hợp đồng/chi tiết cần cho người dùng; class thường cũng cung cấp một mức trừu tượng. |
-| “Kế thừa giúp tái sử dụng, nên cứ thấy code trùng là extends.” | Kế thừa còn là cam kết quan hệ kiểu và khả năng thay thế. Dùng composition khi chỉ muốn ghép chức năng. |
-| “Đa hình = bất kỳ hai method có cùng tên.” | Đa hình runtime dựa trên override và kiểu đối tượng thực tế; overload có quy tắc chọn khác. |
-| “Có inheritance mới dùng được polymorphism.” | Implement interface cũng có thể tạo đa hình, không cần extends một lớp nghiệp vụ chung. |
-| “Con gọi method cha nào cũng tự động override được.” | Không override được `final`/`private`; `static` cùng chữ ký là hiding, không phải override instance. |
-| “Một abstract class luôn ẩn toàn bộ cách cài đặt.” | Abstract class có thể chứa nhiều chi tiết dùng chung; mức trừu tượng phụ thuộc hợp đồng mà nó công khai. |
-| “Cứ dùng bốn tính chất thì chương trình sẽ tự an toàn.” | Vẫn cần xét transaction, đồng thời, input validation, lỗi mạng và ranh giới dữ liệu trong hệ thống thực tế. |
+| “Encapsulation = private fields + full getters/setters.” | Encapsulation protects rules and limits ways to change state; unrestricted getters/setters can undermine that goal. |
+| “Abstraction = using an abstract class.” | Abstraction means choosing the contract/details users need; ordinary classes also offer a level of abstraction. |
+| “Inheritance enables reuse, so duplicate code means extends.” | Inheritance also commits to a type relationship and substitutability. Use composition when you only need to assemble functionality. |
+| “Polymorphism = any two methods with the same name.” | Runtime polymorphism involves overriding and the actual object type; overload resolution follows different rules. |
+| “You need inheritance to use polymorphism.” | Implementing interfaces also supports polymorphism without extending a shared domain superclass. |
+| “A child can automatically override any parent method.” | `final`/`private` methods cannot be overridden; same-signature `static` methods are hidden, not overridden as instance methods. |
+| “An abstract class always hides all implementation details.” | Abstract classes may contain extensive shared implementation; their level of abstraction depends on the public contract. |
+| “Using all four pillars automatically makes a program safe.” | Real systems still require transactions, concurrency control, input validation, network-error handling, and data-boundary design. |
 
-### Một phản ví dụ về kế thừa vì tiện tay
+### A Counterexample: Inheriting Merely for Convenience
 
-Giả sử có `Printer` và `InvoiceService` cùng cần ghi log. Thiết kế `InvoiceService extends Printer` chỉ để dùng lại `log()` là không hợp lý: dịch vụ hóa đơn **không phải một loại máy in**. Hợp lý hơn là cho `InvoiceService` **nhận một đối tượng `Logger`** rồi gọi phương thức của nó khi cần.
+Suppose `Printer` and `InvoiceService` both need logging. Designing `InvoiceService extends Printer` merely to reuse `log()` is unreasonable: an invoice service **is not a kind of printer**. A better design gives `InvoiceService` **a `Logger` object** and lets it call that object's methods when needed.
 
 ~~~java
 interface Logger {
@@ -2151,106 +2151,106 @@ final class InvoiceService {
 }
 ~~~
 
-Đây là **composition và dependency injection** ở mức cơ bản. Nó cũng sử dụng **trừu tượng** qua `Logger` và cho phép **đa hình** nếu có nhiều cách ghi log, nhưng không cần kế thừa một lớp cha nghiệp vụ.
+This demonstrates **composition and dependency injection** at a basic level. It also uses **abstraction** through `Logger` and allows **polymorphism** if there are several logging implementations, without inheriting from a domain superclass.
 
-## 9. Tự kiểm tra bằng tình huống ngắn
+## 9. Check Your Understanding with Short Scenarios
 
-**Câu 1.** Một lớp có `private int balance` nhưng `setBalance(-100)` vẫn chạy được. Đã đóng gói tốt chưa?
+**Question 1.** A class has `private int balance`, but `setBalance(-100)` is still accepted. Is that good encapsulation?
 
-**Giải thích:** Chưa. Che trường khỏi truy cập trực tiếp chưa đủ; public method vẫn có thể phá invariant “số dư không âm” nếu không kiểm soát thao tác.
+**Explanation:** No. Hiding a field from direct access is insufficient; a public method can still violate the “nonnegative balance” invariant unless its behavior is controlled.
 
-**Câu 2.** `CheckoutService` chỉ nhận `DiscountPolicy`, không import `PercentageDiscount`. Đây là biểu hiện của gì?
+**Question 2.** `CheckoutService` depends only on `DiscountPolicy` and does not import `PercentageDiscount`. What does this illustrate?
 
-**Giải thích:** Trừu tượng. Service dựa vào hợp đồng và ít phụ thuộc chi tiết. Khi có nhiều implementation, cách sử dụng ấy cũng tạo điều kiện cho đa hình.
+**Explanation:** Abstraction. The service relies on a contract and depends less on implementation details. With multiple implementations, this also enables polymorphism.
 
-**Câu 3.** `PercentageDiscount` kế thừa `DiscountPolicy` nhưng trả về mức giảm 700.000 cho tổng 500.000. Có vấn đề gì?
+**Question 3.** `PercentageDiscount` extends `DiscountPolicy` but returns a discount of 700.000 on a subtotal of 500.000. What is wrong?
 
-**Giải thích:** Nó vi phạm hợp đồng “giảm không vượt tổng”; chương trình hoàn chỉnh đặt kiểm tra ở method `final` của lớp cha để phát hiện.
+**Explanation:** It violates the contract that the discount must not exceed the subtotal; the complete program detects this using validation in the parent's `final` method.
 
-**Câu 4.** Biến `DiscountPolicy p` lần lượt trỏ đến đối tượng giảm phần trăm và giảm cố định, còn câu lệnh gọi vẫn là `p.discountFor(subtotal)`. Đây là gì?
+**Question 4.** A `DiscountPolicy p` variable successively references a percentage policy and a fixed-amount policy, while the call remains `p.discountFor(subtotal)`. What is this?
 
-**Giải thích:** Đa hình. Lời gọi bên ngoài thống nhất; method được ghi đè bên trong sẽ chạy theo loại đối tượng thực tế.
+**Explanation:** Polymorphism. The external call is the same; the overridden method executes according to the actual object type.
 
-**Câu 5.** Hai lớp có chung method `formatMoney()`. Có bắt buộc tạo base class để kế thừa không?
+**Question 5.** Two classes share a `formatMoney()` method. Must you create a base class for them to inherit?
 
-**Giải thích:** Không. Có thể dùng helper, service hoặc đối tượng cộng tác. Chỉ tạo quan hệ kế thừa khi lớp con thực sự thỏa hợp đồng của lớp cha.
+**Explanation:** No. A helper, service, or collaborating object may work. Introduce inheritance only when the child truly satisfies the parent's contract.
 
-**Câu 6.** Vì sao `viewItems()` của `Cart` trả về `List.copyOf(lines)`?
+**Question 6.** Why does `viewItems()` in `Cart` return `List.copyOf(lines)`?
 
-**Giải thích:** Để không lộ danh sách mutable bên trong qua kết quả trả về. Lưu ý nếu phần tử của danh sách là các object mutable thì vẫn phải đánh giá nguy cơ sửa trạng thái qua từng phần tử; ở đây `CartLine` là record với các thành phần bất biến.
+**Explanation:** To avoid exposing the internal mutable list through the return value. Note that if the list elements are mutable objects, modification through those elements still needs to be considered; here `CartLine` is a record containing immutable components.
 
-**Câu 7.** Nếu phải thêm một chính sách mới “giảm 15% tối đa 100.000 đồng”, phần nào cần thay đổi?
+**Question 7.** If you add a policy providing “15% off, capped at 100.000 VND,” what needs to change?
 
-**Giải thích:** Có thể tạo `CappedPercentageDiscount extends DiscountPolicy`, override `calculateDiscount()` và giữ nguyên `CheckoutService`. Cần tiếp tục bảo đảm mức giảm hợp lệ và kiểm thử đầu vào biên. Trong hệ thống lớn, việc cấp phát/chọn chính sách phù hợp ở nơi cấu hình vẫn có thể cần cập nhật.
+**Explanation:** You can create `CappedPercentageDiscount extends DiscountPolicy`, override `calculateDiscount()`, and leave `CheckoutService` unchanged. The discount must remain valid, and boundary inputs must be tested. In a larger system, configuration responsible for constructing or selecting policies may still need updates.
 
-## 10. Khi tự thiết kế một đối tượng, hãy hỏi gì?
+## 10. What Should You Ask When Designing an Object?
 
-- **Trạng thái và quy tắc:** dữ liệu nào thuộc quyền quản lý của đối tượng? Làm sao bảo đảm không bị sửa sai? → nghĩ đến **đóng gói**.
-- **Hợp đồng:** người dùng đối tượng cần yêu cầu những hành vi gì mà không phải biết thuật toán nội bộ? → nghĩ đến **trừu tượng**.
-- **Quan hệ kiểu:** các triển khai có quan hệ “là một dạng” thực sự, tuân thủ cùng một hợp đồng và có phần triển khai dùng chung không? → cân nhắc **kế thừa**.
-- **Biến thể hành vi:** nhiều đối tượng cần đáp ứng cùng một lời gọi với cách xử lý khác nhau không? → nghĩ đến **đa hình**.
+- **State and rules:** which data belongs to the object, and how can you ensure it is not modified incorrectly? → Think about **encapsulation**.
+- **Contract:** what behaviors must users request without understanding internal algorithms? → Think about **abstraction**.
+- **Type relationships:** do implementations genuinely have an “is a kind of” relationship, share a contract, and have reusable implementation? → Consider **inheritance**.
+- **Behavior variations:** must multiple objects respond to the same call with different implementations? → Think about **polymorphism**.
 
-Trong ví dụ cửa hàng, `Cart` bảo vệ dữ liệu; `DiscountPolicy` xác định khả năng mà checkout cần; các lớp giảm giá chuyên biệt kế thừa quy tắc chung; và checkout gọi cùng một hợp đồng để nhận kết quả khác nhau theo chính sách. Bốn khái niệm trở nên hữu ích khi mỗi khái niệm giải quyết **một vấn đề thiết kế cụ thể**, chứ không phải khi cố đưa đủ bốn tên gọi vào mọi class.
+In the store example, `Cart` protects data; `DiscountPolicy` defines the capabilities checkout needs; specialized discount classes inherit shared rules; and checkout invokes the same contract to obtain policy-specific results. The four concepts are useful when each addresses **a concrete design problem**, rather than when we try to force all four into every class.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="oop-basic-006">OOP và lập trình thủ tục: cách phân chia bài toán</a>
+## <a id="oop-basic-006">OOP and Procedural Programming: Decomposing a Problem</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# OOP và lập trình thủ tục: cách phân chia bài toán
+# OOP and Procedural Programming: Decomposing a Problem
 
-Giả sử bạn nhận yêu cầu: **“Xây dựng chức năng giỏ hàng, cho phép thêm sản phẩm và tính số tiền phải thanh toán. Thành viên được giảm 10%.”**
+Suppose you receive this requirement: **“Build a shopping cart feature that lets customers add products and calculate the amount due. Members receive a 10% discount.”**
 
-Bạn sẽ bắt đầu thiết kế từ đâu?
+Where would you begin designing?
 
-- Có thể liệt kê **các bước cần thực hiện**: nhận dữ liệu → kiểm tra → thêm mặt hàng → cộng tiền → áp dụng giảm giá → trả kết quả.
-- Cũng có thể xác định **những đối tượng chịu trách nhiệm**: giỏ hàng quản lý các mặt hàng của nó, chính sách giá quyết định mức giảm, dịch vụ thanh toán điều phối việc trả tiền.
+- You could list **the steps to perform**: receive data → validate → add an item → calculate the total → apply a discount → return the result.
+- Or you could identify **the responsible objects**: a cart manages its items, a pricing policy determines the discount, and a checkout service coordinates payment.
 
-Đó là hai hướng phân chia bài toán thường gặp trong **lập trình thủ tục (procedural programming)** và **lập trình hướng đối tượng (object-oriented programming, OOP)**. Cả hai đều có thể giải đúng một yêu cầu, dùng vòng lặp, điều kiện, hàm và cấu trúc dữ liệu. Điểm khác biệt đáng học là **ta tổ chức dữ liệu, thao tác và trách nhiệm ở đâu**, từ đó chương trình dễ đọc và dễ thay đổi theo hướng nào.
+These are two common ways to decompose a problem in **procedural programming** and **object-oriented programming (OOP)**. Both can satisfy the same requirement using loops, conditions, functions, and data structures. The useful difference to study is **where we place data, operations, and responsibilities**, and how that organization affects readability and future changes.
 
-## 1. “Phân chia bài toán” thực chất là gì?
+## 1. What Does “Problem Decomposition” Actually Mean?
 
-Một yêu cầu nghiệp vụ thường chứa nhiều việc nhỏ: kiểm tra đầu vào, lưu trạng thái, tính toán, thông báo kết quả, ghi dữ liệu hoặc gọi hệ thống khác. Việc phân chia bài toán là quyết định **mỗi phần của mã nguồn đảm nhận trách nhiệm nào**, các phần giao tiếp ra sao và khi yêu cầu thay đổi thì phải sửa ở đâu.
+A business requirement typically involves many smaller tasks: validating input, storing state, calculating values, reporting results, persisting data, or calling other systems. Decomposing a problem means deciding **which part of the source code is responsible for each task**, how those parts communicate, and what must change when requirements evolve.
 
-Chẳng hạn, với giỏ hàng:
+For example, a cart must satisfy the following:
 
-1. Giỏ hàng phải giữ danh sách những mặt hàng đã thêm.
-2. Số lượng của mỗi mặt hàng phải lớn hơn 0; đơn giá không âm.
-3. Thành tiền của mặt hàng bằng đơn giá nhân số lượng.
-4. Tổng trước giảm giá là tổng thành tiền của các mặt hàng.
-5. Thành viên được giảm 10% trên tổng trước giảm giá.
-6. Trả về số tiền cuối cùng, không âm.
+1. The cart must store a list of added items.
+2. Each item's quantity must be greater than 0; its unit price cannot be negative.
+3. Each line total equals unit price multiplied by quantity.
+4. The subtotal before discounts is the sum of all line totals.
+5. Members receive 10% off the subtotal.
+6. The final amount returned must be nonnegative.
 
-Quy tắc tính tiền này **không đổi** giữa hai cách tổ chức. Ta thay đổi cách đặt mã và cách các thành phần phối hợp, từ đó thấy được tác dụng của thiết kế.
+These pricing rules **remain unchanged** between the two approaches. Only the placement of code and collaboration of components differ, allowing us to see the effects of design.
 
-| Câu hỏi thiết kế | Hướng thủ tục thường hỏi | Hướng OOP thường hỏi |
+| Design question | Typical procedural question | Typical OOP question |
 | --- | --- | --- |
-| Bắt đầu phân rã từ đâu? | “Cần những bước/hàm nào?” | “Có những thực thể nào? Ai chịu trách nhiệm cho việc gì?” |
-| Dữ liệu đặt ở đâu? | Trong biến, cấu trúc dữ liệu hoặc bản ghi truyền qua các hàm | Trong trạng thái của đối tượng hoặc giá trị được đối tượng quản lý |
-| Hành vi đặt ở đâu? | Trong các hàm/thủ tục hoạt động trên dữ liệu | Trong phương thức và các đối tượng cộng tác |
-| Thành phần phối hợp thế nào? | Hàm gọi hàm, truyền và nhận dữ liệu | Đối tượng gửi lời gọi tới các đối tượng khác; một luồng điều phối vẫn có thể gọi nhiều phương thức |
-| Đổi quy tắc nghiệp vụ thì sao? | Tìm các hàm xử lý quy tắc | Tìm đối tượng/chính sách sở hữu trách nhiệm tương ứng |
+| Where does decomposition start? | “Which steps/functions are needed?” | “Which entities exist? Who is responsible for what?” |
+| Where does data live? | In variables, data structures, or records passed between functions | In object state or values managed by objects |
+| Where does behavior live? | In functions/procedures operating on data | In methods and collaborating objects |
+| How do components collaborate? | Functions call functions, passing and receiving data | Objects invoke other objects; a coordinator can still call many methods in sequence |
+| What happens when business rules change? | Find the functions implementing the rule | Find the object/policy owning the corresponding responsibility |
 
-**Đây là xu hướng tổ chức, không phải ranh giới tuyệt đối.** Java dù viết theo hướng thủ tục vẫn dùng `class` để chứa mã; OOP vẫn dùng `if`, `for`, thuật toán và những hàm phục vụ tính toán. Một hệ thống thực tế thường kết hợp nhiều cách tiếp cận.
+**These are organizational tendencies, not absolute boundaries.** Even procedural-style Java code uses `class` declarations to hold code; OOP still uses `if`, `for`, algorithms, and helper functions for calculations. Real systems often combine multiple approaches.
 
-## 2. Cùng một yêu cầu, hai cách đặt trách nhiệm
+## 2. One Requirement, Two Ways to Assign Responsibilities
 
-### 2.1. Phân chia theo thủ tục: dữ liệu đi qua các bước xử lý
+### 2.1. Procedural Decomposition: Data Flows Through Processing Steps
 
-Trong hướng này, ta có thể nghĩ tới:
+With this approach, we might identify:
 
-- `CartData`: chứa dữ liệu giỏ hàng.
-- `addItem(cart, price, quantity)`: kiểm tra rồi thêm mặt hàng.
-- `calculateTotal(cart)`: đọc dữ liệu giỏ hàng, cộng tiền và áp dụng giảm giá.
-- `main`: gọi các bước theo thứ tự cần thiết.
+- `CartData`: holds cart data.
+- `addItem(cart, price, quantity)`: validates and adds an item.
+- `calculateTotal(cart)`: reads cart data, sums amounts, and applies the discount.
+- `main`: invokes the steps in the required order.
 
-Hình dung luồng:
+Visualize the flow:
 
 ```mermaid
 flowchart TD
@@ -2261,17 +2261,17 @@ flowchart TD
     T --> V["405.000 đồng"]
 ```
 
-Hàm nhận dữ liệu cần thiết qua tham số. Các hàm có thể trả kết quả hoặc cập nhật cấu trúc dữ liệu. Điều này thuận tiện khi ta đang giải một **quy trình tuần tự rõ ràng** hay thực hiện phép biến đổi dữ liệu từ đầu vào sang đầu ra.
+Functions receive required data through parameters. They can return results or update data structures. This is convenient for a **clear sequential process** or for transforming input data into output.
 
-Điểm cần để ý: nếu nhiều phần chương trình có quyền sửa trực tiếp `CartData`, chúng có thể đi vòng qua bước kiểm tra. Hướng thủ tục **vẫn có thể bảo vệ dữ liệu** bằng phạm vi truy cập, mô-đun, kiểu bất biến hoặc quy tắc chỉ sửa thông qua hàm; việc để dữ liệu công khai chỉ là một lựa chọn thiết kế.
+One concern: if many parts of the application can modify `CartData` directly, they may bypass validation. A procedural design **can still protect data** through access scopes, modules, immutable types, or rules that permit updates only through functions; exposing data publicly is merely one possible design choice.
 
-### 2.2. Phân chia theo OOP: giao trách nhiệm cho đối tượng
+### 2.2. OOP Decomposition: Assigning Responsibilities to Objects
 
-Với OOP, ta có thể tạo một đối tượng `ShoppingCart` chịu trách nhiệm duy trì trạng thái giỏ hàng hợp lệ:
+With OOP, we might create a `ShoppingCart` object responsible for maintaining valid cart state:
 
-- `cart.addItem(price, quantity)`: giỏ hàng tự kiểm tra và thêm mặt hàng của chính nó.
-- `cart.total()`: giỏ hàng tính số tiền dựa trên các mặt hàng và trạng thái thành viên của nó.
-- Bên gọi không cần biết danh sách nội bộ được lưu bằng `ArrayList` hay dạng khác.
+- `cart.addItem(price, quantity)`: the cart validates and adds its own item.
+- `cart.total()`: the cart calculates the amount based on its items and membership status.
+- Callers do not need to know whether its internal list uses an `ArrayList` or another representation.
 
 ```mermaid
 flowchart TD
@@ -2281,19 +2281,19 @@ flowchart TD
     C --> R["405.000 đồng"]
 ```
 
-Ở đây, đối tượng vừa **quản lý trạng thái**, vừa **cung cấp những thao tác hợp lệ trên trạng thái đó**. Bên ngoài trao đổi qua phương thức của đối tượng, thay vì tự điều khiển mọi chi tiết bên trong.
+Here, the object both **manages state** and **provides valid operations on that state**. External code interacts through the object's methods instead of controlling every internal detail itself.
 
-Đừng hiểu là mỗi hành động phải nằm trong một đối tượng khổng lồ. Nếu tính chiết khấu có nhiều chiến lược, trách nhiệm đó có thể thuộc một `DiscountPolicy` riêng; `ShoppingCart` và chính sách giá sẽ cộng tác. Thiết kế OOP tốt phụ thuộc việc phân đúng trách nhiệm, không phụ thuộc số lượng lớp.
+This does not mean every action belongs in one enormous object. If discounts have multiple strategies, that responsibility may belong to a separate `DiscountPolicy`; `ShoppingCart` and the pricing policy then collaborate. Good OOP design depends on assigning responsibilities correctly, not on the number of classes.
 
-## 3. Ví dụ Java hoàn chỉnh: kết quả giống nhau, cấu trúc khác nhau
+## 3. Complete Java Example: Same Result, Different Structure
 
-Đoạn mã dưới đây chứa **hai phương án độc lập để so sánh**, cùng tính hai mặt hàng: 2 sản phẩm giá 200.000 đồng và 1 sản phẩm giá 50.000 đồng; người mua là thành viên.
+The following code contains **two independent versions for comparison**, each pricing two items: 2 products at 200.000 VND and 1 product at 50.000 VND; the customer is a member.
 
-- Tổng trước giảm: `2 × 200.000 + 1 × 50.000 = 450.000` đồng.
-- Giảm 10%: `45.000` đồng.
-- Cần thanh toán: **405.000 đồng**.
+- Subtotal: `2 × 200.000 + 1 × 50.000 = 450.000` VND.
+- 10% discount: `45.000` VND.
+- Amount due: **405.000 VND**.
 
-Mã cố ý lặp lại cùng quy tắc nghiệp vụ trong hai phương án để bạn nhìn được khác biệt tổ chức. Trong sản phẩm thật, ta sẽ chỉ chọn một hướng thiết kế thích hợp cho phần đó.
+The code deliberately repeats the same business rule in both versions so you can see the organizational differences. In a real product, we would choose one appropriate design for that area.
 
 ```java
 // Main.java — chạy với Java 11+
@@ -2393,78 +2393,78 @@ public class Main {
 }
 ```
 
-Chạy bằng:
+Run with:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 405000
 405000
 ```
 
-Lựa chọn `long` giúp ví dụ biểu diễn số tiền nguyên; ứng dụng thực tế còn cần quy ước đơn vị tiền, làm tròn, thuế và những tình huống tràn số. `Math.multiplyExact`, `Math.addExact` được sử dụng để báo lỗi thay vì âm thầm tràn số khi tính toán.
+Using `long` lets the example represent monetary amounts as integers; real applications also need conventions for currency units, rounding, taxes, and overflow scenarios. `Math.multiplyExact` and `Math.addExact` report errors instead of silently overflowing during calculations.
 
-### Đọc mã theo hai hướng suy nghĩ
+### Reading the Code from Two Perspectives
 
-**Hướng A:**
+**Approach A:**
 
 ```java
 CartProcedures.addItem(data, 200_000, 2);
 long payable = CartProcedures.calculateTotal(data);
 ```
 
-Câu hỏi chủ đạo là **gọi thủ tục nào, theo thứ tự nào và truyền dữ liệu nào**. `CartProcedures` tập hợp các hàm thao tác lên `CartData`; dữ liệu đi từ bước thêm mặt hàng sang bước tính tiền.
+The central question is **which procedures to call, in what order, and with which data**. `CartProcedures` groups functions operating on `CartData`; data flows from the item-adding step to the total-calculation step.
 
-**Hướng B:**
+**Approach B:**
 
 ```java
 cart.addItem(200_000, 2);
 long payable = cart.total();
 ```
 
-Câu hỏi chủ đạo là **đối tượng nào sở hữu thông tin và có trách nhiệm thực hiện thao tác**. `ShoppingCart` giữ danh sách sản phẩm `private`, kiểm tra đầu vào khi thêm và tự tính tổng khi được yêu cầu.
+The central question is **which object owns the information and is responsible for the operation**. `ShoppingCart` keeps its item list `private`, validates added items, and calculates its own total when asked.
 
-Điều đáng chú ý là thuật toán cộng tiền **không hề khác**. Hai đoạn đều duyệt các mặt hàng, nhân giá với số lượng, cộng thành tiền và áp dụng mức giảm. Chuyển sang OOP không tự làm phép tính nhanh hơn, chính xác hơn hoặc ít dòng hơn. Lợi ích cần đánh giá nằm ở **ranh giới trách nhiệm**, khả năng giữ trạng thái hợp lệ và mức độ dễ thay đổi sau này.
+Notice that the summation algorithm **does not change at all**. Both versions iterate over items, multiply prices by quantities, sum line totals, and apply the discount. Switching to OOP does not automatically make calculations faster, more accurate, or shorter. The relevant benefits to evaluate are **responsibility boundaries**, the ability to maintain valid state, and ease of future changes.
 
-## 4. Theo dõi khi yêu cầu thay đổi
+## 4. What Happens When Requirements Change?
 
-Một thiết kế trở nên hữu ích khi có yêu cầu mới. Giả sử chủ cửa hàng bổ sung các chức năng:
+A design shows its value when new requirements arrive. Suppose the store owner adds these features:
 
-| Yêu cầu mới | Khi tổ chức thiên về thủ tục | Khi tổ chức thiên về OOP |
+| New requirement | Procedural-leaning organization | OOP-leaning organization |
 | --- | --- | --- |
-| Thêm chức năng in hóa đơn | Viết hàm `printReceipt(cart)` đọc dữ liệu | Viết thành phần `ReceiptPrinter` nhận thông tin giỏ hàng hoặc một bản tóm tắt; không nhất thiết đặt vào `ShoppingCart` |
-| Thay đổi quy tắc giảm giá | Sửa hoặc bổ sung hàm tính chiết khấu | Có thể tách `DiscountPolicy` và giao việc tính giảm giá cho đối tượng chính sách |
-| Thay đổi cách lưu danh sách mặt hàng | Rà soát những hàm trực tiếp truy cập cấu trúc dữ liệu | Nếu chi tiết được đóng gói tốt, thay cách lưu trong `ShoppingCart` mà ít ảnh hưởng mã bên gọi |
-| Thêm quy tắc kiểm tra số lượng | Đưa kiểm tra vào các hàm thao tác với dữ liệu; đảm bảo các đường sửa đều tuân thủ | Đặt kiểm tra tại thao tác `addItem` hoặc một đối tượng chịu trách nhiệm xác thực |
-| Thêm kiểu giảm giá mới | Có thể thêm hàm và nhánh lựa chọn quy tắc | Nếu có `DiscountPolicy`, có thể thêm một hiện thực chính sách khác |
-| Xuất dữ liệu sang CSV | Hàm chuyển đổi nhận dữ liệu/DTO có thể rất tự nhiên | Có thể dùng một đối tượng xuất dữ liệu riêng; không nên nhét mọi thao tác xuất vào đối tượng nghiệp vụ |
+| Add receipt printing | Write a `printReceipt(cart)` function that reads data | Write a `ReceiptPrinter` component receiving cart data or a summary; it need not live in `ShoppingCart` |
+| Change discount rules | Modify or add a discount-calculation function | Extract `DiscountPolicy` and assign calculations to a policy object |
+| Change how the item list is stored | Review functions that directly access the data structure | If details are well encapsulated, change the representation inside `ShoppingCart` with little effect on callers |
+| Add quantity-validation rules | Add checks to functions operating on data; ensure all modification paths comply | Validate within `addItem` or a dedicated validation object |
+| Add another discount type | Add a function and possibly a rule-selection branch | With `DiscountPolicy`, add another policy implementation |
+| Export data to CSV | A conversion function receiving data/DTOs can be natural | Use a separate export object; avoid putting every export operation inside the domain object |
 
-Bảng này **không phải lời hứa** rằng OOP lúc nào cũng sửa ít tệp hơn. Nếu thiết kế OOP rải một quy tắc nhỏ qua quá nhiều lớp, thay đổi đơn giản có thể tốn công hơn. Ngược lại, thủ tục có mô-đun rõ ràng và dữ liệu được bảo vệ cũng có thể rất dễ bảo trì.
+This table **does not promise** that OOP always requires editing fewer files. If an OOP design spreads a small rule across too many classes, a simple change can take more effort. Conversely, procedural code with clear modules and protected data can be very maintainable.
 
-Vì thế hãy quan sát **kiểu thay đổi xảy ra thường xuyên**:
+Therefore, consider **which kinds of changes occur frequently**:
 
-- Nếu bài toán chủ yếu thêm **các thao tác mới trên một tập dữ liệu ổn định**, tập hợp các hàm độc lập có thể rõ ràng, dễ kiểm tra.
-- Nếu bài toán thường thêm **những biến thể đối tượng hoặc quy tắc hành xử khác nhau**, interface và đa hình của OOP có thể giúp giới hạn nơi phải sửa.
-- Nếu bài toán có **trạng thái phải luôn hợp lệ**, đặt thao tác kiểm tra và thay đổi trạng thái sau một ranh giới rõ ràng sẽ có lợi; OOP hỗ trợ làm việc này nhưng không phải cách duy nhất.
-- Nếu yêu cầu chỉ là **đọc dữ liệu → biến đổi → xuất kết quả**, một chuỗi hàm hoặc các phép biến đổi thuần túy thường đơn giản hơn việc dựng cả hệ thống đối tượng.
+- If the problem mostly adds **new operations on a stable set of data**, a collection of independent functions may be clear and easy to test.
+- If it frequently adds **new object variants or behavioral rules**, OOP interfaces and polymorphism can reduce the locations that need editing.
+- If it has **state that must remain valid**, placing validation and state-changing operations behind a clear boundary is valuable; OOP supports this but is not the only way.
+- If the requirement is simply **read data → transform it → output results**, a sequence of functions or pure transformations is often simpler than building an entire object system.
 
-## 5. Khi OOP có nhiều đối tượng cộng tác
+## 5. When Multiple OOP Objects Collaborate
 
-Ở ví dụ đầu, `ShoppingCart` tự tính giá và giảm giá để dễ đọc. Nhưng trong ứng dụng lớn hơn, giỏ hàng không nhất thiết phải biết mọi loại khuyến mãi. Có thể tách những trách nhiệm rõ ràng:
+In the initial example, `ShoppingCart` calculates prices and discounts itself for clarity. In a larger application, however, the cart need not know every promotion type. We can separate responsibilities:
 
-| Thành phần | Trách nhiệm | Không nên làm thay |
+| Component | Responsibility | Should not take over |
 | --- | --- | --- |
-| `ShoppingCart` | Duy trì các mặt hàng hợp lệ trong giỏ | Gửi email, trực tiếp truy vấn cổng thanh toán |
-| `DiscountPolicy` | Đưa ra số tiền giảm theo các quy tắc hiện hành | Tự ý sửa danh sách mặt hàng |
-| `CheckoutService` | Điều phối tính giá, xác nhận và thanh toán | Biến thành nơi chứa toàn bộ quy tắc nội bộ của mọi đối tượng |
-| `PaymentGateway` | Giao tiếp với hệ thống thanh toán | Tự tính thành tiền, tự quyết định thành viên được giảm bao nhiêu |
+| `ShoppingCart` | Maintain valid items in the cart | Send emails or directly query payment gateways |
+| `DiscountPolicy` | Determine discount amounts according to applicable rules | Arbitrarily modify the item list |
+| `CheckoutService` | Coordinate pricing, confirmation, and payment | Become a container for every object's internal rules |
+| `PaymentGateway` | Communicate with payment systems | Calculate line totals or decide member discounts |
 
-Một luồng hợp lý có thể là:
+One reasonable flow:
 
 ```mermaid
 sequenceDiagram
@@ -2483,11 +2483,11 @@ sequenceDiagram
     C-->>User: Thành công / thất bại
 ```
 
-**Lưu ý:** đây là sơ đồ thiết kế minh họa, chưa phải mã thanh toán hoàn chỉnh. Hệ thống thật phải giải quyết giao dịch, lỗi kết nối, thanh toán lặp, bảo mật và nhiều vấn đề khác.
+**Note:** this is an illustrative design diagram, not complete payment code. Real systems must handle transactions, connection failures, duplicate payments, security, and many other concerns.
 
-Sơ đồ cho thấy OOP **không loại bỏ quy trình**. `CheckoutService` vẫn thực hiện những bước theo thứ tự. Khác biệt là các trách nhiệm chuyên biệt được giao cho những thành phần có giao diện rõ ràng, trong khi thành phần điều phối tập trung vào phối hợp.
+The diagram shows that OOP **does not eliminate process flows**. `CheckoutService` still carries out steps in order. The difference is that specialized responsibilities are assigned to components with clear interfaces while the coordinator focuses on orchestration.
 
-Đối chiếu cùng ý tưởng ở hướng thủ tục, ta hoàn toàn có thể viết:
+The same idea can be expressed procedurally:
 
 ```text
 subtotal = calculateSubtotal(cartData)
@@ -2495,151 +2495,151 @@ discount = calculateDiscount(subtotal, memberData)
 result = chargePayment(subtotal - discount)
 ```
 
-Hai hướng có thể mô tả **cùng một luồng nghiệp vụ**. Quyết định nằm ở việc dữ liệu và hành vi nào nên được nhóm chung, đâu là ranh giới độc lập và việc nhóm đó có tạo lợi ích thực tế hay không.
+Both approaches can describe **the same business flow**. The design decision is which data and behaviors belong together, where independent boundaries lie, and whether those groupings offer practical benefits.
 
-## 6. Bốn tiêu chí đánh giá cách phân chia
+## 6. Four Criteria for Evaluating Decomposition
 
-### 6.1. Tính gắn kết: các phần của một thành phần có cùng mục đích?
+### 6.1. Cohesion: Do a Component's Parts Share a Purpose?
 
-Một lớp `ShoppingCart` biết thêm/xóa mặt hàng và tính tổng thường có lý do tồn tại khá rõ. Nhưng nếu nó đồng thời gửi email, ghi log hệ thống, truy vấn database, hiển thị màn hình và gọi cổng thanh toán, trách nhiệm đã lan quá rộng.
+A `ShoppingCart` class that adds/removes items and calculates totals usually has a clear purpose. But if it also sends emails, writes system logs, queries databases, renders screens, and calls payment gateways, its responsibilities have become too broad.
 
-Tương tự, một tệp `Utils` chứa 70 hàm không liên quan chỉ là “gom vào một chỗ”, chưa phải phân chia bài toán tốt. Thiết kế theo hàm cũng cần mô-đun có mục đích nhất quán.
+Similarly, a `Utils` file with 70 unrelated functions merely “puts everything in one place”; it is not good decomposition. Function-oriented designs also need modules with coherent purposes.
 
-### 6.2. Mức phụ thuộc: thay đổi một chỗ ảnh hưởng bao nhiêu chỗ khác?
+### 6.2. Coupling: How Many Other Places Does One Change Affect?
 
-Nếu mười hàm đọc trực tiếp `cart.items` và giả định nó là `ArrayList`, đổi cách lưu dữ liệu có thể kéo theo sửa nhiều hàm. Một API ổn định như `cart.addItem(...)` hoặc `calculateSubtotal(cart)` giúp giảm mức phụ thuộc nếu bên gọi không cần biết cách lưu bên trong.
+If ten functions directly access `cart.items` and assume it is an `ArrayList`, changing its storage representation may require edits to many functions. A stable API such as `cart.addItem(...)` or `calculateSubtotal(cart)` reduces coupling when callers do not need to know how data is stored internally.
 
-**Ranh giới có ích khi nó che giấu những chi tiết có khả năng thay đổi**, không phải khi nó chỉ tăng số lượng lớp hoặc hàm chuyển tiếp.
+**A boundary is valuable when it hides details likely to change**, not merely when it increases the number of classes or forwarding functions.
 
-### 6.3. Bất biến nghiệp vụ: ai đảm bảo trạng thái không sai?
+### 6.3. Business Invariants: Who Ensures Valid State?
 
-Bất biến là điều kiện phải luôn đúng tại những thời điểm được xác định. Ví dụ đơn giản: số lượng mặt hàng trong giỏ luôn lớn hơn 0; đơn giá không âm.
+An invariant is a condition that must always hold at specified points. Simple examples: cart item quantities must always be greater than 0, and unit prices must be nonnegative.
 
-Trong mô hình OOP, có thể thiết kế `ShoppingCart` sao cho cách sửa danh sách bên ngoài chỉ thông qua phương thức có kiểm tra. Trong thiết kế theo thủ tục, có thể giữ `CartData` chỉ đọc ở ngoài mô-đun và cung cấp các hàm cập nhật có kiểm tra. **Cả hai đều có thể bảo vệ bất biến** nếu quyền sửa dữ liệu được kiểm soát đầy đủ.
+In an OOP model, `ShoppingCart` can be designed so that external code changes the item list only through validated methods. In a procedural design, `CartData` can be read-only outside a module that exposes validated update functions. **Both can protect invariants** if data modification is fully controlled.
 
-### 6.4. Chi phí hiểu và kiểm thử
+### 6.4. Cost of Understanding and Testing
 
-Một hàm `calculateTotal(cart)` nhận đầu vào rõ ràng và trả về kết quả, không gây tác dụng phụ, thường rất dễ kiểm thử. Với OOP, một phương thức `cart.total()` cũng có thể dễ kiểm thử nếu trạng thái của `cart` được thiết lập rõ ràng.
+A `calculateTotal(cart)` function with explicit inputs, a return value, and no side effects is usually easy to test. In OOP, a `cart.total()` method can be just as easy to test when the state of `cart` is set up clearly.
 
-Mặt khác, các đối tượng có phụ thuộc chằng chịt và trạng thái thay đổi ở nhiều nơi khiến việc tái hiện lỗi khó hơn. Hãy chọn một cấu trúc mà người mới vào dự án có thể lần theo **đầu vào, quy tắc, trạng thái thay đổi và đầu ra** một cách thuận tiện.
+On the other hand, objects with tangled dependencies and state modified in many places make bugs harder to reproduce. Choose a structure that lets new developers trace **inputs, rules, state changes, and outputs** conveniently.
 
-## 7. Những so sánh thường gây hiểu lầm
+## 7. Commonly Misleading Comparisons
 
-| Nhận định | Đánh giá chính xác hơn |
+| Claim | More accurate assessment |
 | --- | --- |
-| “Thủ tục là code cũ, OOP là code hiện đại.” | Cả hai cách vẫn được dùng rộng rãi; bài toán và ràng buộc mới là điều cần đánh giá. |
-| “Lập trình thủ tục không có cấu trúc hoặc không tái sử dụng được.” | Hàm và mô-đun là công cụ mạnh để tổ chức, tái sử dụng và kiểm thử. |
-| “Dùng class là đã áp dụng OOP tốt.” | Việc gom các `static` utility vào class không tự tạo ranh giới trách nhiệm hay bảo vệ trạng thái. |
-| “OOP nghĩa là mọi thứ đều phải có state và getter/setter.” | Đối tượng có thể bất biến, chỉ cung cấp hành vi có ý nghĩa; getter/setter tràn lan có thể làm lộ chi tiết nội bộ. |
-| “OOP không dùng các bước tuần tự.” | Mọi chương trình thực thi thao tác theo một thứ tự nào đó; OOP vẫn điều phối luồng xử lý. |
-| “Đóng gói chỉ OOP mới làm được.” | Mô-đun và phạm vi truy cập của các phong cách khác cũng có thể che giấu dữ liệu. |
-| “Thủ tục luôn nhanh hơn OOP” hoặc ngược lại. | Hiệu năng phụ thuộc thuật toán, cấu trúc dữ liệu, cấp phát, JVM, I/O và tải thực tế; không thể kết luận chỉ từ nhãn phong cách. |
-| “Chuyển mọi hàm thành method là đã thiết kế OOP.” | Cần xem method có thuộc đúng trách nhiệm đối tượng không, hay chỉ đổi vị trí cú pháp. |
+| “Procedural code is old; OOP is modern.” | Both approaches remain widely used; the problem and its constraints are what matter. |
+| “Procedural programming has no structure or reuse.” | Functions and modules are powerful tools for organization, reuse, and testing. |
+| “Using classes means applying OOP well.” | Grouping `static` utilities in a class does not automatically create responsibility boundaries or protect state. |
+| “OOP means everything must have state and getters/setters.” | Objects can be immutable or expose only meaningful behavior; excessive getters/setters may reveal internal details. |
+| “OOP never uses sequential steps.” | Every program executes operations in some order; OOP still coordinates process flow. |
+| “Only OOP can encapsulate data.” | Modules and access scopes in other paradigms can also hide data. |
+| “Procedural code is always faster than OOP,” or vice versa. | Performance depends on algorithms, data structures, allocation, the JVM, I/O, and actual workloads; labels alone prove nothing. |
+| “Turning every function into a method means you have designed OOP.” | Consider whether a method really belongs to the object's responsibility or has merely changed syntactic location. |
 
-**Một ví dụ gây tranh cãi:** `cart.getItems().add(...)` có thể làm lộ danh sách nội bộ, khiến mã bên ngoài bỏ qua bước kiểm tra. Nếu cần xuất danh sách để hiển thị, trả về bản xem chỉ đọc, bản sao hoặc kiểu dữ liệu phù hợp có thể tốt hơn. Tuy nhiên, không phải mọi getter đều sai; điều cần xét là nó làm lộ điều gì và bên ngoài có được phép thay đổi gì.
+**A frequently debated example:** `cart.getItems().add(...)` may expose the internal list, letting external code bypass validation. If a list is needed for display, returning a read-only view, a copy, or a suitable data type may be better. However, not all getters are wrong; consider what they reveal and what outsiders are permitted to change.
 
-## 8. Khi nào nên bắt đầu từ thủ tục, khi nào nên nghĩ đến OOP?
+## 8. When Should You Start with Procedures, and When Should You Consider OOP?
 
-Không cần áp dụng một nguyên tắc cứng cho tất cả dự án. Có thể dùng câu hỏi sau trước khi đặt tên class.
+No rigid rule applies to every project. Consider the following before naming classes.
 
-| Tình huống | Hướng thường phù hợp để bắt đầu | Vì sao |
+| Situation | Often suitable starting approach | Why |
 | --- | --- | --- |
-| Đọc một file CSV, lọc dữ liệu, tạo báo cáo | Các hàm/mô-đun và luồng biến đổi dữ liệu | Dễ biểu diễn thành những bước độc lập với đầu vào và đầu ra rõ ràng |
-| Tính một công thức trên dữ liệu bất biến | Hàm thuần túy | Ít trạng thái phải quản lý, kiểm thử trực tiếp |
-| Quản lý giỏ hàng/đơn hàng qua nhiều thao tác thay đổi trạng thái | Đối tượng nghiệp vụ có trách nhiệm rõ ràng | Giữ các quy tắc cập nhật gần dữ liệu chịu tác động |
-| Nhiều loại phương thức vận chuyển có cách tính khác nhau | Interface và các hiện thực OOP, hoặc tập hàm chiến lược | Có thể thay biến thể tính toán qua cùng một hợp đồng |
-| Một luồng nhiều bước tích hợp hệ thống | Thành phần điều phối cộng với các hàm/đối tượng chuyên trách | Phân biệt trách nhiệm thực hiện từng bước và trách nhiệm điều phối |
-| Script nhỏ chạy một lần | Cấu trúc thủ tục đơn giản | Tránh chi phí khởi tạo nhiều kiểu và tầng trừu tượng không cần thiết |
+| Read a CSV file, filter data, produce a report | Functions/modules and a data-transformation flow | Easy to express as independent steps with clear inputs and outputs |
+| Compute a formula on immutable data | Pure function | Little state to manage; straightforward tests |
+| Manage a cart/order through many state-changing operations | Domain objects with clear responsibilities | Keep update rules close to the data they affect |
+| Multiple shipping methods with different calculations | Interfaces and OOP implementations, or a set of strategy functions | Swap calculation variants through a shared contract |
+| A multistep system-integration flow | Coordinator plus specialized functions/objects | Separate execution of individual steps from orchestration |
+| Small one-off script | Simple procedural structure | Avoid unnecessary types and abstraction layers |
 
-Trong Java/Spring Boot, bạn có thể thấy một `@Service` điều phối tuần tự `validate → calculate → save → publish`, trong khi đối tượng miền nghiệp vụ chịu trách nhiệm duy trì trạng thái hợp lệ. Điều đó vẫn có thể là thiết kế OOP hợp lý. Ngược lại, tạo một class mới cho từng dòng mã thường không đem lại ranh giới đáng kể.
+In Java/Spring Boot, a `@Service` may coordinate `validate → calculate → save → publish` in sequence, while domain objects maintain valid state. This can still be a sound OOP design. Conversely, creating a new class for every line of code rarely establishes meaningful boundaries.
 
-Một cách bắt đầu thiết thực:
+A practical starting process:
 
-1. Viết ra **đầu vào, đầu ra, quy tắc** bằng ngôn ngữ nghiệp vụ.
-2. Liệt kê các **trạng thái phải duy trì hợp lệ** và những thao tác có quyền thay đổi chúng.
-3. Chỉ ra các **bước xử lý**: kiểm tra, tính toán, lưu, gửi kết quả.
-4. Xác định phần nào nên là hàm độc lập, phần nào cần đối tượng chịu trách nhiệm; đừng quên ai là người điều phối.
-5. Xem lại yêu cầu nào có khả năng thay đổi. Thiết lập ranh giới ở những nơi thật sự cần cô lập thay đổi.
-6. Kiểm tra bằng một tình huống thành công và một tình huống lỗi. Bạn có lần theo đường đi và chỉ ra nơi giữ đúng quy tắc không?
+1. Write down **inputs, outputs, and rules** in business language.
+2. List the **states that must remain valid** and the operations allowed to change them.
+3. Identify the **processing steps**: validate, calculate, persist, and report results.
+4. Decide which parts should be independent functions and which need responsible objects; identify the coordinator as well.
+5. Review which requirements are likely to change. Establish boundaries where changes genuinely need isolation.
+6. Test a successful case and a failure case. Can you trace execution and identify where the rule is enforced?
 
-## 9. Tự kiểm tra tư duy thiết kế
+## 9. Test Your Design Thinking
 
-**Bài 1 — Xuất báo cáo.** Hệ thống chỉ cần đọc danh sách giao dịch, lọc theo ngày, cộng doanh thu rồi xuất CSV. Bạn sẽ tạo một đối tượng `TransactionReport` có nhiều trạng thái, hay các hàm `filterByDate`, `sumRevenue`, `writeCsv`?
+**Exercise 1 — Exporting reports.** The system only needs to read transactions, filter by date, sum revenue, and export CSV. Would you create a `TransactionReport` object with extensive state, or functions such as `filterByDate`, `sumRevenue`, and `writeCsv`?
 
-*Gợi ý:* Nếu từng bước là phép biến đổi rõ ràng trên dữ liệu, các hàm độc lập có thể dễ hiểu hơn. Có thể gom chúng thành mô-đun hoặc service nếu thực tế cần; không nhất thiết phải tạo đối tượng giữ trạng thái cho từng phép tính.
+*Hint:* If each step is a clear transformation of data, independent functions may be easier to understand. You can group them into a module or service if needed; an object holding state for every calculation is not required.
 
-**Bài 2 — Bảo vệ giỏ hàng.** Mã bên ngoài có thể viết `cart.items.clear()` hoặc `cart.items.add(new ItemData(-100, -5))`. Nguy cơ là gì, và bạn muốn sửa ở ranh giới nào?
+**Exercise 2 — Protecting the cart.** External code can execute `cart.items.clear()` or `cart.items.add(new ItemData(-100, -5))`. What is the risk, and where would you enforce the boundary?
 
-*Gợi ý:* Bên ngoài có thể sửa dữ liệu trái quy tắc. Hãy giới hạn quyền truy cập/ghi và buộc các cập nhật đi qua thao tác có kiểm tra, dù thao tác đó được tổ chức thành method của đối tượng hay hàm trong mô-đun.
+*Hint:* Outside code can change data in violation of the rules. Restrict read/write access and require updates to pass through validated operations, whether organized as object methods or module functions.
 
-**Bài 3 — Thêm khuyến mãi.** Sau này cần ba chính sách giảm giá: thành viên, mã giảm giá, giảm giá theo mùa. Có nên tạo `DiscountPolicy` cho mỗi biến thể?
+**Exercise 3 — Adding promotions.** You will later need three discount policies: membership, coupon code, and seasonal discount. Should you create a `DiscountPolicy` implementation for each variation?
 
-*Gợi ý:* Nếu các biến thể được thêm và thay thế thường xuyên, cùng một hợp đồng (chẳng hạn `discount(subtotal, context)`) có thể làm việc mở rộng rõ ràng hơn. Nếu chỉ có một quy tắc ổn định, một hàm nhỏ vẫn có thể là lựa chọn tốt.
+*Hint:* If variants are frequently added and swapped, a shared contract (such as `discount(subtotal, context)`) may make extension clearer. If there is only one stable rule, a small function can still be a good choice.
 
-**Bài 4 — Nhận diện trách nhiệm.** Một `OrderService` vừa giữ danh sách mặt hàng, tính thuế, dựng HTML email, gọi ngân hàng và ghi SQL trực tiếp. Vấn đề nằm ở tên gọi hay cách phân chia?
+**Exercise 4 — Identifying responsibilities.** An `OrderService` stores order lines, calculates tax, builds email HTML, calls a bank, and directly writes SQL. Is the problem its name or its division of responsibilities?
 
-*Gợi ý:* Đó là dấu hiệu một thành phần đang sở hữu quá nhiều trách nhiệm. Hãy tách các ranh giới có mục đích rõ ràng, còn service có thể giữ vai trò điều phối.
+*Hint:* This suggests one component owns too many responsibilities. Separate boundaries with clear purposes, while the service can retain its coordinating role.
 
-**Bài 5 — Giải thích bằng lời của bạn.** Nếu người khác hỏi “Hai đoạn mã tính ra 405.000 đồng như nhau, vậy OOP khác thủ tục ở điểm nào?”, hãy mô tả **ai sở hữu dữ liệu, ai chịu trách nhiệm áp dụng quy tắc và nơi bên gọi cần tương tác**. Đây là thước đo hiểu bài tốt hơn việc chỉ đếm số class hoặc method.
+**Exercise 5 — Explain it in your own words.** If someone asks, “Both versions calculate the same 405.000 VND, so how is OOP different from procedural programming?”, describe **who owns the data, who applies the rules, and where callers interact**. This measures understanding better than simply counting classes or methods.
 
-## Điều cần giữ khi áp dụng vào dự án
+## What to Keep in Mind When Applying This to a Project
 
-Lập trình thủ tục giúp ta nhìn bài toán như **chuỗi thao tác được tổ chức thành những hàm/mô-đun**. OOP giúp ta nhìn bài toán qua **những đối tượng có trách nhiệm, giao diện sử dụng và quan hệ cộng tác**. Không cách nào tự động bảo đảm phần mềm dễ bảo trì: điều quyết định là các trách nhiệm có được đặt đúng nơi, dữ liệu có được bảo vệ và thay đổi có được giới hạn hợp lý hay không.
+Procedural programming helps us view a problem as **a sequence of operations organized into functions/modules**. OOP helps us view it through **responsible objects, usable interfaces, and collaborations**. Neither automatically guarantees maintainability: the decisive factors are whether responsibilities are placed appropriately, data is protected, and changes are reasonably contained.
 
-Khi gặp một bài toán mới, hãy thử phác thảo cả **luồng xử lý** lẫn **các thực thể sở hữu trạng thái/quy tắc** trước khi viết mã. Bạn sẽ thấy phần nào nên được viết thành một hàm đơn giản, phần nào đáng trở thành một đối tượng và các thành phần nên phối hợp thế nào.
+When facing a new problem, sketch both **the processing flow** and **the entities that own state/rules** before coding. This will help you see which parts suit simple functions, which warrant objects, and how the components should collaborate.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="oop-basic-007">OOP dựa trên lớp và OOP dựa trên nguyên mẫu</a>
+## <a id="oop-basic-007">Class-Based and Prototype-Based OOP</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# OOP dựa trên lớp và OOP dựa trên nguyên mẫu (Class-based vs. Prototype-based OOP)
+# Class-Based vs. Prototype-Based OOP
 
-Khi nghe “lập trình hướng đối tượng”, nhiều người hình dung trước tiên một **lớp (class)** chứa thuộc tính và phương thức, rồi dùng `new` để tạo **đối tượng (object)**. Đó là mô hình **OOP dựa trên lớp (class-based OOP)** rất quen thuộc với người học Java. Tuy nhiên, tổ chức phần mềm theo đối tượng **không bắt buộc phải dựa vào class**: một mô hình khác cho phép đối tượng sử dụng trực tiếp một đối tượng đã tồn tại làm **nguyên mẫu (prototype)** để tìm và tái sử dụng hành vi.
+When people hear “object-oriented programming,” many first picture a **class** containing fields and methods, followed by `new` creating **objects**. That is the **class-based OOP** model familiar to Java learners. However, organizing software around objects **does not require classes**: another model lets an object use an existing object directly as its **prototype** to find and reuse behavior.
 
-Sự khác biệt này xuất hiện ngay ở câu hỏi: *Khi một đối tượng được yêu cầu thực hiện một phương thức mà bản thân nó không trực tiếp khai báo, chương trình tìm phương thức ấy ở đâu?*
+The distinction becomes clear when we ask: *When an object is asked to execute a method that it does not declare directly, where does the program look for that method?*
 
-- Với Java, ta nhìn vào **kiểu lớp** của đối tượng và các phương thức được kế thừa/ghi đè theo quan hệ lớp.
-- Với mô hình nguyên mẫu trong JavaScript, ta nhìn vào **đối tượng đó** và đi tiếp theo **chuỗi nguyên mẫu (prototype chain)** cho đến khi tìm thấy thuộc tính/phương thức phù hợp.
+- In Java, we look at the object's **class type** and methods inherited or overridden through class relationships.
+- In JavaScript's prototype model, we look at **the object itself** and follow its **prototype chain** until we find the relevant property or method.
 
-Cả hai đều có thể biểu diễn trạng thái, hành vi, cộng tác giữa các đối tượng và cung cấp đa hình. Khác biệt nằm ở **cơ chế tổ chức và tái sử dụng hành vi**, chứ không phải mô hình nào “hướng đối tượng thật” hơn.
+Both models can represent state, behavior, object collaboration, and polymorphism. Their difference lies in **how behavior is organized and reused**, not in whether one is “more truly object-oriented.”
 
-## 1. Hai cách hình thành đối tượng: bản thiết kế và đối tượng làm mẫu
+## 1. Two Ways to Build Objects: Blueprints and Prototypes
 
-**Mô hình dựa trên lớp** xem class là định nghĩa của một loại đối tượng. Class mô tả dữ liệu mà instance có thể chứa, constructor giúp thiết lập trạng thái ban đầu, và phương thức biểu diễn hành vi. Hai instance của cùng một class có trạng thái riêng, còn các hành vi tuân theo định nghĩa lớp và các lớp cha liên quan.
+The **class-based model** treats a class as the definition of a kind of object. The class describes the data instances can hold, constructors establish initial state, and methods express behavior. Two instances of the same class have their own state, while their behavior follows the class definition and related parent classes.
 
-**Mô hình dựa trên nguyên mẫu** cho phép tạo một đối tượng rồi liên kết đối tượng khác với nó. Khi thuộc tính/phương thức không có trên đối tượng hiện tại, chương trình có thể tìm tiếp ở nguyên mẫu. Nguyên mẫu cũng là một **đối tượng đang tồn tại**, không nhất thiết là một “class” hay bản sao bất biến.
+The **prototype-based model** allows one object to be created and another object linked to it. When a property or method is absent from the current object, the program can search its prototype. The prototype is also **an existing object**, not necessarily a “class” or an immutable copy.
 
-| Câu hỏi | Dựa trên lớp: Java | Dựa trên nguyên mẫu: JavaScript |
+| Question | Class-based: Java | Prototype-based: JavaScript |
 | --- | --- | --- |
-| Nguồn mô tả hành vi | Class và hệ phân cấp kiểu; interface là hợp đồng hành vi. | Thuộc tính/phương thức ở object hiện tại hoặc các object nằm trong prototype chain. |
-| Tạo đối tượng phổ biến | `new SomeClass(...)`; cũng có factory. | Object literal `{}`, `Object.create(proto)`, factory, constructor, cú pháp `class`/`new`. |
-| Tái sử dụng hành vi | Method của class, kế thừa `extends`, interface và composition. | Ủy quyền tìm kiếm thuộc tính qua prototype chain; cũng có composition. |
-| Thay đổi nơi tìm phương thức | Quan hệ superclass đã được định nghĩa trong kiểu lớp; không thay superclass của một Java object đang chạy. | Có thể thay đổi thuộc tính ở object nguyên mẫu, hoặc cấu hình prototype link của object (nên hạn chế sửa link khi đang chạy). |
-| Kiểu dữ liệu | Java kiểm tra phần lớn quan hệ kiểu tại thời điểm biên dịch. | JavaScript có kiểu động; lookup theo object và prototype ở runtime. |
-| Đa hình | Dynamic dispatch đối với instance method được override; cũng có đa hình qua interface. | Nhiều object cùng đáp ứng lời gọi nhưng tìm ra hàm khác nhau nhờ thuộc tính và prototype chain. |
+| Source of behavior | Classes and type hierarchies; interfaces define behavioral contracts. | Properties/methods on the current object or objects in its prototype chain. |
+| Common object creation | `new SomeClass(...)`; factories are also available. | Object literals `{}`, `Object.create(proto)`, factories, constructors, and `class`/`new` syntax. |
+| Behavior reuse | Class methods, inheritance via `extends`, interfaces, and composition. | Delegated property lookup through the prototype chain; composition is also available. |
+| Changing where methods are found | Superclass relationships are defined by class types; a running Java object cannot switch its superclass. | Properties on prototype objects can change, and an object's prototype link can be reconfigured (changing links at runtime should be limited). |
+| Type system | Java checks most type relationships at compile time. | JavaScript is dynamically typed; object and prototype lookup happens at runtime. |
+| Polymorphism | Dynamic dispatch for overridden instance methods; polymorphism through interfaces as well. | Different objects can respond to the same call while resolving functions through their properties and prototype chains. |
 
-**Cảnh báo về cách so sánh:** “dựa trên lớp” không đồng nghĩa với “kiểu tĩnh”, còn “dựa trên nguyên mẫu” không đồng nghĩa với “kiểu động”. Đây là hai trục khái niệm khác nhau. Bảng chọn Java và JavaScript vì chúng là ví dụ tiêu biểu, không phải vì ngôn ngữ kiểu động thì bắt buộc phải dùng prototype.
+**A caution about this comparison:** “class-based” does not mean “statically typed,” and “prototype-based” does not mean “dynamically typed.” These are separate conceptual dimensions. The table uses Java and JavaScript as representative examples, not because dynamically typed languages must use prototypes.
 
-## 2. OOP dựa trên lớp: đọc cấu trúc Java trước khi chạy chương trình
+## 2. Class-Based OOP: Reading Java Structure Before Execution
 
-Giả sử ứng dụng giao hàng có hai hình thức:
+Suppose a delivery application offers two services:
 
-- **Tiêu chuẩn**: phí gốc 20.000 đồng, thêm 5.000 đồng mỗi kg.
-- **Hỏa tốc**: phí gốc 40.000 đồng, thêm 12.000 đồng mỗi kg.
+- **Standard**: a base fee of 20.000 VND plus 5.000 VND per kilogram.
+- **Express**: a base fee of 40.000 VND plus 12.000 VND per kilogram.
 
-Chúng cùng nhận đầu vào là cân nặng, cùng phải từ chối cân nặng không hợp lệ, nhưng tính phí khác nhau. Trong Java, ta có thể biểu diễn một **class cha trừu tượng** và các **class con**.
+Both receive a weight, both must reject invalid weights, but they calculate fees differently. In Java, we can model them with an **abstract parent class** and **subclasses**.
 
-### Ví dụ Java có thể chạy độc lập
+### Standalone Runnable Java Example
 
-Lưu thành `Main.java` và chạy bằng Java 17 trở lên (ví dụ chỉ dùng các tính năng cũng có ở nhiều bản Java cũ hơn):
+Save as `Main.java` and run using Java 17 or later (the example uses features also available in many older Java versions):
 
 ~~~java
 import java.util.List;
@@ -2714,14 +2714,14 @@ public class Main {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac Main.java
 java Main
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Standard: 30000
@@ -2729,18 +2729,18 @@ Express: 64000
 Rejected invalid weight
 ~~~
 
-### Đối tượng được tạo ra và method được chọn ra sao?
+### How Are Objects Created and Methods Selected?
 
-Với câu lệnh `DeliveryMethod method = new ExpressDelivery();`:
+Given `DeliveryMethod method = new ExpressDelivery();`:
 
-1. **`ExpressDelivery` là một class** được định nghĩa với quan hệ `extends DeliveryMethod`.
-2. **`new ExpressDelivery()` tạo instance** thuộc lớp `ExpressDelivery`. Instance có những trạng thái riêng, gồm `name = "Express"` và `baseFee = 40000` do constructor lớp cha thiết lập.
-3. Biến `method` có **kiểu khai báo** `DeliveryMethod`, còn đối tượng thực tế có **kiểu runtime** `ExpressDelivery`.
-4. Khi gọi `method.quote(2)`, Java sử dụng method `quote()` chung ở lớp cha; method này kiểm tra cân nặng.
-5. Lời gọi `variableFee(2)` trong `quote()` được **dynamic dispatch** tới phần ghi đè của `ExpressDelivery`: `12000 × 2 = 24000`.
-6. Phí cuối cùng là `40000 + 24000 = 64000`.
+1. **`ExpressDelivery` is a class** defined with an `extends DeliveryMethod` relationship.
+2. **`new ExpressDelivery()` creates an instance** of `ExpressDelivery`. The instance has its own state, including `name = "Express"` and `baseFee = 40000`, initialized by the parent constructor.
+3. Variable `method` has the **declared type** `DeliveryMethod`, while the actual object has the **runtime type** `ExpressDelivery`.
+4. Calling `method.quote(2)` uses the shared `quote()` method in the parent class, which validates the weight.
+5. The `variableFee(2)` call within `quote()` is **dynamically dispatched** to the override in `ExpressDelivery`: `12000 × 2 = 24000`.
+6. The final fee is `40000 + 24000 = 64000`.
 
-Với `StandardDelivery`, phần logic chung không thay đổi; Java chọn phần ghi đè tương ứng và trả `20000 + 5000 × 2 = 30000`.
+With `StandardDelivery`, the shared logic remains unchanged; Java selects the corresponding override and returns `20000 + 5000 × 2 = 30000`.
 
 ~~~mermaid
 classDiagram
@@ -2761,19 +2761,19 @@ classDiagram
     DeliveryMethod <|-- ExpressDelivery
 ~~~
 
-Trong sơ đồ, mũi tên hướng về `DeliveryMethod` biểu diễn **kế thừa lớp**. Chúng ta định nghĩa quan hệ giữa các lớp **trong mã nguồn**. Một instance Java có thể đổi các giá trị được thiết kế là mutable, nhưng không thể tự chuyển sang kế thừa một superclass khác khi đang chạy.
+In the diagram, the arrow pointing toward `DeliveryMethod` represents **class inheritance**. We define class relationships **in source code**. A Java instance can change values designed to be mutable, but it cannot start inheriting from another superclass while running.
 
-Ví dụ này chỉ là *một cách* thiết kế class-based OOP. Hoàn toàn có thể dùng `interface DeliveryMethod` rồi cài đặt riêng hai class; hoặc dùng composition với một đối tượng tính phí. Class-based OOP không bắt buộc phải xây dựng cây kế thừa nhiều tầng.
+This is only *one way* to design class-based OOP. We could instead use `interface DeliveryMethod` with two implementing classes or composition with a fee-calculation object. Class-based OOP does not require a deep inheritance tree.
 
-## 3. OOP dựa trên nguyên mẫu: hành vi được tìm qua đối tượng khác
+## 3. Prototype-Based OOP: Finding Behavior Through Other Objects
 
-JavaScript giúp ta quan sát trực tiếp cơ chế nguyên mẫu bằng `Object.create(proto)`. Lệnh này **tạo một đối tượng mới và đặt prototype của nó trỏ tới `proto`**; nó **không sao chép toàn bộ thuộc tính/phương thức của `proto` thành thuộc tính riêng**.
+JavaScript lets us observe prototype mechanics directly with `Object.create(proto)`. This operation **creates a new object and sets its prototype to `proto`**; it **does not copy all of `proto`'s properties and methods into the new object's own properties**.
 
-Dùng lại bài toán giao hàng để so sánh với ví dụ Java.
+We will reuse the delivery problem for comparison with Java.
 
-### Ví dụ JavaScript: tạo object từ một prototype đã tồn tại
+### JavaScript Example: Creating an Object from an Existing Prototype
 
-Lưu thành `delivery.js`, chạy với Node.js hiện đại:
+Save as `delivery.js` and run with a modern version of Node.js:
 
 ~~~javascript
 "use strict";
@@ -2829,7 +2829,7 @@ try {
 }
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 30000
@@ -2844,7 +2844,7 @@ true
 Rejected invalid weight
 ~~~
 
-Mấu chốt ở đây là đối tượng `express` **không có thuộc tính riêng `quote`**. Nhưng `express.quote(2)` vẫn chạy được nhờ JavaScript lần lượt kiểm tra các đối tượng trong prototype chain.
+The crucial detail is that object `express` **does not have its own `quote` property**. Yet `express.quote(2)` works because JavaScript searches the objects along the prototype chain in order.
 
 ~~~mermaid
 flowchart TD
@@ -2859,33 +2859,33 @@ flowchart TD
     O -->|"[[Prototype]]"| N
 ~~~
 
-Đọc chuỗi từ `express` lên trên:
+Follow the chain upward from `express`:
 
-1. JavaScript tìm thuộc tính `quote` trên chính `express`: **không có**.
-2. Nó theo liên kết prototype đến `standard`: **cũng không có `quote` riêng**.
-3. Nó đi tiếp đến `deliveryBehavior`: **có `quote`**, nên sử dụng hàm này.
-4. Khi gọi dưới dạng `express.quote(2)`, `this` bên trong method là **`express`**. Vì vậy `this.baseFee` lấy `40000` và `this.feePerKg` lấy `12000` từ chính `express`.
+1. JavaScript looks for `quote` on `express` itself: **it is absent**.
+2. It follows the prototype link to `standard`: **that object also has no own `quote`**.
+3. It continues to `deliveryBehavior`: **that object has `quote`**, so JavaScript uses the function.
+4. When called as `express.quote(2)`, `this` inside the method is **`express`**. Thus, `this.baseFee` reads `40000` and `this.feePerKg` reads `12000` from `express` itself.
 
-Đây là điểm dễ hiểu sai nhất: **method được tìm thấy trên prototype không có nghĩa `this` trỏ về prototype**. Với cú pháp gọi method thông thường `receiver.method()`, `this` phụ thuộc vào đối tượng làm *receiver* của lời gọi (ngoại trừ các quy tắc riêng của arrow function, binding, v.v.).
+This is a particularly common misunderstanding: **finding a method on a prototype does not mean `this` points to that prototype**. With an ordinary method call `receiver.method()`, `this` depends on the object acting as the call's *receiver* (subject to separate rules for arrow functions, binding, and so on).
 
-### Cùng method, nhưng dữ liệu được tra cứu từ object đang nhận lời gọi
+### Same Method, but Data Is Looked Up from the Receiving Object
 
-| Biểu thức | Tìm `quote` tại | `this` khi thực thi | Phí 2 kg |
+| Expression | Where `quote` is found | `this` during execution | Fee for 2 kg |
 | --- | --- | --- | --- |
 | `standard.quote(2)` | `deliveryBehavior` | `standard` | 30.000 |
-| `express.quote(2)` | `deliveryBehavior` qua `standard` | `express` | 64.000 |
-| `economy.quote(2)` lúc đầu | `deliveryBehavior` qua `standard` | `economy` | 25.000 |
-| `economy.quote(2)` sau khi sửa `standard.feePerKg` | Vẫn `deliveryBehavior` | `economy` | 27.000 |
+| `express.quote(2)` | `deliveryBehavior` via `standard` | `express` | 64.000 |
+| `economy.quote(2)` initially | `deliveryBehavior` via `standard` | `economy` | 25.000 |
+| `economy.quote(2)` after changing `standard.feePerKg` | Still `deliveryBehavior` | `economy` | 27.000 |
 
-`economy` không có `feePerKg` riêng nên đọc giá trị từ `standard`. Khi `standard.feePerKg` thay đổi từ 5.000 thành 6.000, kết quả của `economy` cũng đổi. Còn `express` có thuộc tính `feePerKg` riêng nên giá trị của `standard` bị **che khuất (shadowing)** đối với `express`.
+`economy` has no own `feePerKg`, so it reads the value from `standard`. When `standard.feePerKg` changes from 5.000 to 6.000, `economy`'s result changes too. Meanwhile, `express` has its own `feePerKg` property, which **shadows** the value on `standard` for `express`.
 
-Đây là sự **ủy quyền (delegation)** rất đặc trưng của mô hình prototype-based: đối tượng có thể tìm đến đối tượng khác để lấy hành vi và dữ liệu mà nó chưa sở hữu.
+This **delegation** is characteristic of prototype-based models: an object can look to other objects for behavior and data it does not own.
 
-## 4. “Nguyên mẫu” là đối tượng liên kết, không mặc nhiên là bản sao
+## 4. A “Prototype” Is a Linked Object, Not Automatically a Copy
 
-Từ *prototype* đôi khi được dịch là “vật mẫu”, dễ khiến người học hiểu rằng đối tượng mới nhận một bản sao tất cả dữ liệu của vật mẫu. Với `Object.create(proto)`, điều đó **không đúng**.
+The term *prototype* can suggest a physical model, leading learners to assume a new object receives copies of all the model's data. With `Object.create(proto)`, that assumption is **incorrect**.
 
-Xem ví dụ ngắn:
+Consider this short example:
 
 ~~~javascript
 const prototypeUser = { role: "viewer" };
@@ -2906,18 +2906,18 @@ delete alice.role;       // Xóa own property.
 console.log(alice.role); // "editor": lookup lại tiếp tục đi tới prototype.
 ~~~
 
-Thực chất:
+What actually happens:
 
-- `Object.create(prototypeUser)` thiết lập **liên kết nguyên mẫu**, không tạo một bản sao sâu của `prototypeUser`.
-- Đọc `alice.role` có thể đến giá trị trên nguyên mẫu nếu `alice` không có own property.
-- Gán `alice.role = "admin"` trong tình huống thông thường tạo một **thuộc tính riêng**, không sửa `prototypeUser.role`. Các trường hợp getter/setter, descriptor chỉ đọc hoặc proxy có quy tắc riêng.
-- `delete alice.role` chỉ xóa thuộc tính riêng (nếu xóa được), không xóa thuộc tính trên prototype.
+- `Object.create(prototypeUser)` establishes **a prototype link**; it does not make a deep copy of `prototypeUser`.
+- Reading `alice.role` can reach the prototype's value if `alice` has no own property.
+- Assigning `alice.role = "admin"` ordinarily creates an **own property** rather than changing `prototypeUser.role`. Getters/setters, read-only descriptors, and proxies follow their own rules.
+- `delete alice.role` deletes only the own property (if deletion is permitted), not the property on the prototype.
 
-Nếu mục tiêu là **sao chép dữ liệu thành một object khác**, cần nghĩ đến `Object.assign`, spread syntax hoặc kỹ thuật sao chép thích hợp. Sao chép nông hay sâu là một quyết định khác, tách biệt với việc đặt prototype.
+If the goal is **to copy data into another object**, consider `Object.assign`, spread syntax, or another suitable copying technique. Shallow versus deep copying is a separate choice from setting a prototype.
 
-## 5. Trạng thái riêng và nguy cơ chia sẻ trạng thái qua prototype
+## 5. Per-Object State and the Risk of Shared State Through Prototypes
 
-Dùng chung method là điều thường mong muốn. Nhưng đặt **mảng hoặc object có thể thay đổi** trên prototype có thể khiến nhiều instance vô tình chia sẻ cùng một dữ liệu.
+Sharing methods is often desirable. But placing **mutable arrays or objects** on a prototype can cause multiple instances to share the same data accidentally.
 
 ~~~javascript
 const userBehavior = {
@@ -2935,9 +2935,9 @@ alice.addTag("vip");
 console.log(bob.tags); // ["vip"] — ngoài mong đợi!
 ~~~
 
-Tại sao? `alice` chưa có `tags` riêng, nên `this.tags` tìm thấy **cùng một mảng** trên `userBehavior`. Phương thức `push()` sửa *nội dung mảng được tham chiếu*, không tạo một own property mới trên `alice`.
+Why? `alice` has no own `tags`, so `this.tags` finds **the same array** on `userBehavior`. Calling `push()` modifies *the referenced array's contents*; it does not create a new own property on `alice`.
 
-Cách sửa là **khởi tạo trạng thái mutable riêng cho từng đối tượng**:
+The fix is to **initialize mutable state separately for each object**:
 
 ~~~javascript
 function createUser() {
@@ -2954,13 +2954,13 @@ console.log(user1.tags); // ["vip"]
 console.log(user2.tags); // []
 ~~~
 
-Bài học thiết kế: khi dùng prototype, hãy phân biệt **hành vi có thể chia sẻ** (method) và **trạng thái cần sở hữu riêng** (mảng, object mutable, dữ liệu nghiệp vụ). Trong class-based OOP, quy tắc tương tự cũng quan trọng khi phân biệt **instance field** với **static field** hoặc đối tượng tham chiếu dùng chung.
+The design lesson: with prototypes, distinguish **shareable behavior** (methods) from **state each object must own** (arrays, mutable objects, business data). A similar distinction matters in class-based OOP when comparing **instance fields** with **static fields** or shared referenced objects.
 
-## 6. Ghi đè (override) hoạt động như thế nào ở hai mô hình?
+## 6. How Does Overriding Work in the Two Models?
 
-Trong Java, lớp con có thể **override instance method** của lớp cha. Việc chọn implementation thực tế khi gọi thông qua kiểu cha là **dynamic method dispatch**. Ví dụ `ExpressDelivery` override `variableFee()` của `DeliveryMethod`. Một đối tượng Java không thể tự gán một function mới vào `object.variableFee` để thay việc cài đặt method theo từng instance theo cú pháp Java thông thường.
+In Java, a subclass can **override an instance method** of its parent. Selecting the actual implementation through a parent type uses **dynamic method dispatch**. For example, `ExpressDelivery` overrides `variableFee()` from `DeliveryMethod`. In ordinary Java syntax, an object cannot simply assign a new function to `object.variableFee` to replace the method implementation for that particular instance.
 
-Trong JavaScript, object có thể **che khuất (shadow)** phương thức của prototype bằng một **thuộc tính riêng** cùng tên chứa hàm:
+In JavaScript, an object can **shadow** a prototype method with an **own property** of the same name containing a function:
 
 ~~~javascript
 const formatter = {
@@ -2981,17 +2981,17 @@ console.log(upper.format("hello"));  // "HELLO"
 console.log(Object.hasOwn(upper, "format")); // true
 ~~~
 
-Cả `simple` và `upper` đều dùng chung prototype `formatter`, nhưng `upper` có `format` riêng nên chuỗi tìm kiếm **dừng ngay tại `upper`**.
+Both `simple` and `upper` share prototype `formatter`, but `upper` has its own `format`, so property lookup **stops at `upper`**.
 
-Cách mô tả **“override method”** là hợp lý ở mức hành vi, nhưng về cơ chế của prototype-based OOP, ta đang **đặt một own property che thuộc tính kế thừa**. Điều này khác với quy tắc override của class Java có kiểm tra chữ ký, khả năng truy cập và quan hệ kiểu.
+Describing this behavior as **“overriding a method”** is reasonable at a behavioral level, but mechanically, prototype-based OOP is **using an own property to shadow an inherited property**. This differs from Java class overriding rules involving signatures, accessibility, and type relationships.
 
-Đặc biệt, trong JavaScript cần chú ý **arrow function không có `this` riêng**. Nếu viết `upper.format = (value) => this...` với mong muốn `this` là `upper`, kết quả có thể sai vì arrow function lấy `this` từ phạm vi từ vựng. Dùng cú pháp method thông thường hoặc function khi cần `this` là receiver.
+In particular, remember that **JavaScript arrow functions do not have their own `this`**. Writing `upper.format = (value) => this...` while expecting `this` to be `upper` can fail because an arrow function captures `this` lexically. Use an ordinary method or function when `this` should be the receiver.
 
-## 7. JavaScript có `class` thì còn gọi là prototype-based được không?
+## 7. If JavaScript Has `class`, Is It Still Prototype-Based?
 
-**Có.** JavaScript hiện đại hỗ trợ cú pháp `class`/`extends`/`new` để khai báo constructor, methods và quan hệ kế thừa rõ ràng hơn. Tuy nhiên, việc tìm instance method vẫn liên quan đến **prototype chain**.
+**Yes.** Modern JavaScript supports `class`/`extends`/`new` syntax to declare constructors, methods, and inheritance relationships more clearly. Nevertheless, instance-method lookup still involves **the prototype chain**.
 
-Ví dụ:
+For example:
 
 ~~~javascript
 class StandardDelivery {
@@ -3019,23 +3019,23 @@ console.log(
 ); // true
 ~~~
 
-Method `quote` được định nghĩa trong thân class theo cú pháp trên nằm ở **`StandardDelivery.prototype`**, còn `baseFee` và `feePerKg` được tạo trên từng instance trong constructor. Khi `standard.quote(2)` chạy, JavaScript có thể tìm method thông qua prototype.
+The `quote` method defined in the class body above lives on **`StandardDelivery.prototype`**, while `baseFee` and `feePerKg` are created on each instance by the constructor. When `standard.quote(2)` runs, JavaScript can find the method through the prototype.
 
-Có ba tên dễ nhầm:
+Three names are easy to confuse:
 
-| Cú pháp/khái niệm | Vai trò |
+| Syntax/concept | Role |
 | --- | --- |
-| `Object.getPrototypeOf(standard)` | Trả về đối tượng là **`[[Prototype]]` nội bộ** của instance `standard`. |
-| `StandardDelivery.prototype` | Thuộc tính `prototype` trên hàm/class constructor; thường là object trở thành `[[Prototype]]` của instance tạo bởi `new`. |
-| `Object.create(proto)` | Tạo object mới với `[[Prototype]]` được chỉ định trực tiếp là `proto`. |
+| `Object.getPrototypeOf(standard)` | Returns the object that is the **internal `[[Prototype]]`** of instance `standard`. |
+| `StandardDelivery.prototype` | The `prototype` property of the constructor function/class; typically the object used as `[[Prototype]]` for instances created with `new`. |
+| `Object.create(proto)` | Creates a new object whose `[[Prototype]]` is explicitly set to `proto`. |
 
-**`[[Prototype]]` và thuộc tính có tên `prototype` không phải một thứ.** Hầu hết object đều có liên kết nguyên mẫu nội bộ (có thể là `null`), còn không phải object nào cũng có own property tên `prototype`. Phương thức `Object.getPrototypeOf()` thường rõ ràng hơn truy cập `__proto__` cũ.
+**`[[Prototype]]` and the property named `prototype` are not the same thing.** Most objects have an internal prototype link (possibly `null`), whereas not every object has its own property named `prototype`. The `Object.getPrototypeOf()` method is generally clearer than legacy `__proto__` access.
 
-Một điều tinh tế: nói “`class` chỉ là cú pháp đường” giúp nhớ cơ chế prototype cơ bản, nhưng không nên hiểu **mọi tính năng `class` đều thay thế nguyên xi bằng cú pháp constructor cũ**. Class còn có semantics riêng, như yêu cầu gọi bằng `new`, các quy tắc `super`, private fields `#field`, và những đặc điểm khác.
+A subtle point: saying “`class` is just syntactic sugar” helps recall the underlying prototype mechanism, but does **not mean that every `class` feature is exactly interchangeable with old constructor syntax**. Classes also have distinct semantics, including requiring `new`, rules for `super`, private fields such as `#field`, and other features.
 
-## 8. Sơ đồ nhìn song song để tránh nhầm hai loại quan hệ
+## 8. Side-by-Side Diagrams to Distinguish the Relationships
 
-### Java: instance có class; các class có quan hệ kế thừa
+### Java: Instances Have Classes; Classes Have Inheritance Relationships
 
 ~~~mermaid
 flowchart TD
@@ -3045,9 +3045,9 @@ flowchart TD
     J4 -->|"extends"| J5
 ~~~
 
-Class xác định những method nào khả dụng; phần override có thể được chọn dựa theo runtime class của đối tượng.
+The class determines which methods are available; an override can be selected according to the object's runtime class.
 
-### JavaScript: object tra cứu qua prototype chain
+### JavaScript: Objects Look Up Properties Along the Prototype Chain
 
 ~~~mermaid
 flowchart TD
@@ -3057,24 +3057,24 @@ flowchart TD
     P4 -->|"[[Prototype]]"| P5["null"]
 ~~~
 
-Các node `express`, `standard`, `deliveryBehavior` đều là **object cụ thể**. Với `Object.create`, liên kết giữa chúng có thể được chỉ định mà không cần khai báo một class mới.
+The `express`, `standard`, and `deliveryBehavior` nodes are all **concrete objects**. With `Object.create`, links between them can be specified without declaring a new class.
 
-Hai sơ đồ minh họa **cơ chế nổi bật của mỗi mô hình**, không có nghĩa Java hoàn toàn không biết ủy quyền cho một object khác hay JavaScript không có cú pháp lớp.
+The diagrams illustrate **characteristic mechanisms of each model**; they do not mean Java cannot delegate to other objects or JavaScript lacks class syntax.
 
-## 9. Cả hai có đa hình, nhưng “cách tìm method” khác nhau
+## 9. Both Support Polymorphism, but Method Lookup Differs
 
-Đa hình cho phép chương trình xử lý nhiều đối tượng qua một cách yêu cầu thống nhất.
+Polymorphism lets a program work with multiple objects through a consistent kind of request.
 
-Trong Java:
+In Java:
 
 ~~~java
 DeliveryMethod method = new ExpressDelivery();
 long fee = method.quote(2);
 ~~~
 
-Compiler kiểm tra `quote(int)` khả dụng trên kiểu khai báo `DeliveryMethod`. Khi method được override hoặc gọi vào hook override, runtime chọn triển khai phù hợp với object thực tế.
+The compiler verifies that `quote(int)` is available on declared type `DeliveryMethod`. When a method is overridden or invokes an overridden hook, the runtime selects the implementation appropriate for the actual object.
 
-Trong JavaScript:
+In JavaScript:
 
 ~~~javascript
 function printFee(method, kilograms) {
@@ -3085,35 +3085,35 @@ printFee(standard, 2);
 printFee(express, 2);
 ~~~
 
-Hàm `printFee` chỉ gọi thuộc tính `quote` của object được nhận. Object có thể có method riêng hoặc tìm method qua prototype chain. JavaScript thường gọi cách sử dụng này là **duck typing** ở cấp độ giao tiếp: nếu object cung cấp hành vi mong đợi thì dùng được. Nếu object không có `quote` là callable function, lời gọi sẽ lỗi lúc chạy.
+The `printFee` function simply invokes the received object's `quote` property. The object may have its own method or find one through the prototype chain. JavaScript commonly describes this style as **duck typing** at the interaction level: an object is usable if it provides the expected behavior. If its `quote` property is not a callable function, the call fails at runtime.
 
-Do đó, **class-based OOP và prototype-based OOP không khác nhau ở chỗ một bên có đa hình còn bên kia không**. Cả hai đều có thể có đa hình; chúng khác nhau về cách biểu diễn, tìm và kiểm tra hành vi.
+Therefore, **the difference between class-based and prototype-based OOP is not that only one supports polymorphism**. Both can support it; they differ in how behavior is represented, located, and checked.
 
-## 10. Ưu điểm, giới hạn và khi nên chọn cách tư duy nào
+## 10. Strengths, Limitations, and Choosing an Approach
 
-| Khía cạnh | Class-based OOP | Prototype-based OOP |
+| Aspect | Class-based OOP | Prototype-based OOP |
 | --- | --- | --- |
-| **Nhìn vào mô hình nghiệp vụ** | Class/interface giúp thể hiện loại, hợp đồng, quan hệ kế thừa rõ ràng. | Có thể bắt đầu từ các object cụ thể và hành vi cần chia sẻ, ít yêu cầu định nghĩa loại upfront. |
-| **Kiểm tra trước khi chạy** | Với Java, compiler giúp phát hiện nhiều lỗi kiểu và chữ ký method. | Với JavaScript thuần, nhiều lỗi truy cập property/callable được phát hiện khi chạy; TypeScript có thể bổ sung kiểm tra tĩnh. |
-| **Linh hoạt từng object** | Hành vi thường được tổ chức ở cấp class, interface hay đối tượng chiến lược. | Mỗi object có thể có own methods/properties và chuỗi nguyên mẫu riêng. |
-| **Khả năng dự đoán** | Quan hệ kiểu tương đối tường minh; quá nhiều lớp/extends vẫn có thể gây phức tạp. | Lookup động linh hoạt nhưng có thể bất ngờ khi prototype có thay đổi hoặc chia sẻ trạng thái mutable. |
-| **Tái sử dụng** | Kế thừa, composition và interface. | Delegation qua prototype, composition, function/factory. |
-| **Bảo trì** | Cây kế thừa sâu dễ tạo phụ thuộc chặt và hành vi ghi đè khó theo dõi. | Chuỗi prototype quá sâu, thay đổi prototype khi chạy hoặc shadowing nhiều tầng dễ gây khó hiểu. |
+| **Representing the business model** | Classes/interfaces explicitly express types, contracts, and inheritance relationships. | You can start with concrete objects and shareable behaviors, with less need to define types up front. |
+| **Checking before execution** | In Java, the compiler detects many type and method-signature errors. | In plain JavaScript, many invalid property accesses/calls are detected at runtime; TypeScript can add static checking. |
+| **Per-object flexibility** | Behavior is generally organized through classes, interfaces, or strategy objects. | Each object can have its own methods/properties and prototype chain. |
+| **Predictability** | Type relationships are relatively explicit; too many classes or extends relationships can still be complex. | Dynamic lookup is flexible but may be surprising when prototypes change or mutable state is shared. |
+| **Reuse** | Inheritance, composition, and interfaces. | Delegation via prototypes, composition, functions, and factories. |
+| **Maintenance** | Deep inheritance trees can create tight coupling and hard-to-follow overrides. | Deep prototype chains, runtime prototype changes, and multi-level shadowing can be confusing. |
 
-**Trong dự án Java/Spring Boot**, bạn thường thiết kế type bằng class và interface, rồi quyết định rõ trách nhiệm của từng loại. Không cần ép mọi sự tái sử dụng qua `extends`: composition, strategy, dependency injection và các interface nhỏ thường phù hợp hơn với hệ thống có nhiều thay đổi.
+**In Java/Spring Boot projects**, you generally define types using classes and interfaces, then establish each type's responsibilities. Not all reuse needs to go through `extends`: composition, strategies, dependency injection, and small interfaces often suit systems with changing requirements better.
 
-**Trong dự án JavaScript/Node.js**, prototype luôn là phần nền tảng của hệ đối tượng JavaScript, ngay cả khi bạn dùng cú pháp `class`. Bạn có thể dùng object literal/factory cho object nhỏ, hoặc class khi cần định nghĩa cấu trúc, khởi tạo, private fields và hệ phân cấp dễ đọc. Không có quy tắc “JavaScript thì tuyệt đối tránh class” hay “prototype thuần luôn tốt hơn class”.
+**In JavaScript/Node.js projects**, prototypes remain the foundation of JavaScript's object system even when you use `class` syntax. You can use object literals/factories for small objects or classes when you need explicit structure, initialization, private fields, and readable hierarchies. There is no universal rule that “JavaScript must avoid classes” or that “raw prototypes are always better than classes.”
 
-Một lựa chọn tốt phụ thuộc vào **độ rõ của mô hình, bất biến cần bảo vệ, khả năng thay đổi và kinh nghiệm nhóm**, thay vì chỉ dựa vào tên paradigm.
+A sound choice depends on **model clarity, invariants to protect, expected changes, and team experience**, rather than the paradigm's name alone.
 
-## 11. Đừng nhầm prototype-based OOP với Prototype Design Pattern
+## 11. Do Not Confuse Prototype-Based OOP with the Prototype Design Pattern
 
-Từ **Prototype** còn xuất hiện trong nhóm *creational design patterns* của GoF. Hai ý tưởng này có liên hệ về từ vựng nhưng **không phải một khái niệm**:
+The term **Prototype** also appears among the GoF *creational design patterns*. The two ideas share terminology but **are not the same concept**:
 
-- **Prototype-based OOP** là một *mô hình đối tượng*: một object có thể ủy quyền việc truy tìm thuộc tính/hành vi qua prototype object khác.
-- **Prototype Design Pattern** là một *mẫu thiết kế tạo đối tượng*, thường tạo đối tượng mới bằng cách **sao chép một đối tượng có sẵn**, có thể dùng cả trong Java vốn là ngôn ngữ class-based.
+- **Prototype-based OOP** is an *object model*: an object can delegate property/behavior lookup through another prototype object.
+- The **Prototype Design Pattern** is a *creational design pattern* that often creates new objects by **copying an existing object**; it can be used in class-based languages such as Java.
 
-Ví dụ Java:
+Java example:
 
 ~~~java
 final class ReportConfig {
@@ -3129,107 +3129,107 @@ final class ReportConfig {
 }
 ~~~
 
-`copy()` minh họa việc tạo cấu hình mới từ cấu hình cũ. Nó **không làm Java trở thành ngôn ngữ prototype-based**, vì các instance vẫn thuộc lớp `ReportConfig` và không có cơ chế property lookup qua một object nguyên mẫu như `Object.create` trong JavaScript.
+`copy()` illustrates creating a new configuration from an existing one. It **does not make Java a prototype-based language**, because instances still belong to class `ReportConfig` and do not perform property lookup through a prototype object as with JavaScript's `Object.create`.
 
-Với object chứa collection hoặc tham chiếu mutable, thiết kế copy còn phải quyết định **sao chép nông hay sâu**, điều hoàn toàn riêng với chuỗi nguyên mẫu.
+When objects contain collections or mutable references, copy design must also decide between **shallow and deep copying**, which is entirely separate from prototype chains.
 
-## 12. Tự kiểm tra bằng các tình huống cụ thể
+## 12. Check Your Understanding with Concrete Scenarios
 
-**Tình huống 1.** Hai Java object `new StandardDelivery()` có phải cùng một instance không?
+**Scenario 1.** Are two Java objects constructed with `new StandardDelivery()` the same instance?
 
-**Trả lời:** Không. Chúng là hai instance riêng của cùng class. Cấu trúc/hành vi theo class có thể giống nhau, nhưng danh tính object khác nhau.
+**Answer:** No. They are separate instances of the same class. Their class-defined structure and behavior may match, but their object identities differ.
 
-**Tình huống 2.** Sau `const child = Object.create(parent)`, `child` có tự động sở hữu bản sao toàn bộ thuộc tính của `parent` không?
+**Scenario 2.** After `const child = Object.create(parent)`, does `child` automatically own copies of all of `parent`'s properties?
 
-**Trả lời:** Không. `child` liên kết đến `parent` làm nguyên mẫu. Nó có thể *đọc được* thuộc tính ở `parent` thông qua lookup nhưng không vì thế mà sở hữu các thuộc tính ấy.
+**Answer:** No. `child` is linked to `parent` as its prototype. It can *read* properties from `parent` through lookup without owning those properties.
 
-**Tình huống 3.** Với `const x = Object.create(proto)` và `proto.say = function() { return this.name; }`, khi gọi `x.say()` thì `this` là gì?
+**Scenario 3.** Given `const x = Object.create(proto)` and `proto.say = function() { return this.name; }`, when `x.say()` is called, what does `this` refer to?
 
-**Trả lời:** `this` là `x` trong lời gọi method thông thường. Nơi method được tìm thấy không quyết định receiver.
+**Answer:** `this` is `x` in an ordinary method call. Where the method is found does not determine its receiver.
 
-**Tình huống 4.** Vì sao `economy.quote(2)` đổi từ 25.000 thành 27.000 khi thay `standard.feePerKg`?
+**Scenario 4.** Why does `economy.quote(2)` change from 25.000 to 27.000 when `standard.feePerKg` changes?
 
-**Trả lời:** Vì `economy` không có `feePerKg` riêng, nên tra cứu lên `standard`. Đây là hiệu ứng **đọc giá trị kế thừa qua prototype**.
+**Answer:** Because `economy` has no own `feePerKg`, lookup reaches `standard`. This demonstrates **reading an inherited value through the prototype**.
 
-**Tình huống 5.** Vì sao `express.quote(2)` vẫn là 64.000 trong cùng tình huống?
+**Scenario 5.** Why does `express.quote(2)` remain 64.000 in the same situation?
 
-**Trả lời:** Vì `express` có own property `feePerKg = 12000`, che thuộc tính tương ứng của `standard`.
+**Answer:** Because `express` has its own `feePerKg = 12000` property, which shadows the corresponding property on `standard`.
 
-**Tình huống 6.** JavaScript có cú pháp `class` và `extends`. Vậy JavaScript không còn dựa trên prototype?
+**Scenario 6.** JavaScript has `class` and `extends` syntax. Does that mean it is no longer prototype-based?
 
-**Trả lời:** Sai. Instance methods khai báo theo cú pháp class thường được đặt trên `Constructor.prototype` và lookup vẫn dựa vào prototype chain.
+**Answer:** No. Instance methods declared with class syntax are generally placed on `Constructor.prototype`, and lookup still uses the prototype chain.
 
-**Tình huống 7.** Mỗi object cần danh sách `tags` riêng. Đặt `tags: []` trên prototype rồi gọi `this.tags.push(...)` có an toàn không?
+**Scenario 7.** Each object needs its own `tags` list. Is it safe to place `tags: []` on the prototype and call `this.tags.push(...)`?
 
-**Trả lời:** Không. Các object có thể cùng sửa một mảng được kế thừa. Hãy khởi tạo mảng riêng ở mỗi object hoặc dùng một cấu trúc bất biến thích hợp.
+**Answer:** No. Multiple objects can mutate the same inherited array. Initialize a separate array for each object or use an appropriate immutable structure.
 
-**Tình huống 8.** Java dùng Prototype Design Pattern để tạo bản sao cấu hình; điều đó có giống cơ chế `Object.create(proto)` không?
+**Scenario 8.** Java uses the Prototype Design Pattern to copy a configuration; is that the same mechanism as `Object.create(proto)`?
 
-**Trả lời:** Không. Sao chép object là kỹ thuật tạo object, còn `Object.create(proto)` chủ yếu tạo *liên kết nguyên mẫu*, không tự sao chép tất cả thuộc tính.
+**Answer:** No. Copying an object is a creation technique, whereas `Object.create(proto)` primarily establishes *a prototype link* without copying all properties.
 
-## 13. Cách tự giải thích lại mà không học thuộc định nghĩa
+## 13. Explaining the Concepts Without Memorizing Definitions
 
-Bạn có thể dùng cùng một câu hỏi thực tế: “Tại sao hai đối tượng đều gọi được `quote(2)` nhưng kết quả khác nhau?”
+Use a practical question: “Why can two objects both call `quote(2)` but produce different results?”
 
-Ở **Java**, hãy lần theo: *instance được tạo từ class nào → class có quan hệ kiểu nào → method chung và phần override nào được chọn ở runtime → trạng thái riêng của instance đóng góp gì vào kết quả?*
+In **Java**, trace: *Which class created the instance → what type relationships does that class have → which shared method and runtime override are selected → how does the instance's own state contribute to the result?*
 
-Ở **JavaScript**, hãy lần theo: *object hiện tại có own property `quote` không → nếu không, đi qua prototype nào → method được tìm thấy ở đâu → receiver `this` là object nào → các giá trị `baseFee` và `feePerKg` được lookup từ đâu?*
+In **JavaScript**, trace: *Does the current object have its own `quote` property → if not, which prototypes are visited → where is the method found → which object is receiver `this` → where are the `baseFee` and `feePerKg` values looked up?*
 
-Nếu giải thích được đường đi đó và dự đoán đúng kết quả trước/sau khi thay đổi một thuộc tính trên prototype, bạn đã nắm được **sự khác biệt cốt lõi giữa OOP dựa trên lớp và OOP dựa trên nguyên mẫu**.
+If you can explain that process and predict results before and after modifying a prototype property, you understand **the essential difference between class-based and prototype-based OOP**.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="oop-basic-008">Khi nên và không nên sử dụng OOP</a>
+## <a id="oop-basic-008">When to Use OOP and When Not To</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Khi nên và không nên sử dụng OOP
+# When to Use OOP and When Not To
 
-**Có nên dùng lập trình hướng đối tượng (Object-Oriented Programming — OOP) cho mọi bài toán Java không?** Không. OOP là một cách tổ chức chương trình rất hữu ích khi cần quản lý trạng thái, trách nhiệm và sự cộng tác giữa các thành phần. Nhưng có những công việc chỉ cần vài hàm rõ ràng; dựng thêm nhiều lớp trong trường hợp ấy thường khiến mã khó đọc hơn.
+**Should you use object-oriented programming (OOP) for every Java problem?** No. OOP is a useful way to organize programs when managing state, responsibilities, and collaboration among components. But some tasks need only a few clear functions; introducing many extra classes often makes such code harder to read.
 
-Ví dụ, hai yêu cầu sau đều có thể triển khai bằng Java:
+For example, both of these requirements can be implemented in Java:
 
-- **Yêu cầu A:** Đọc danh sách doanh thu trong ngày, kiểm tra dữ liệu, cộng tổng và xuất kết quả. Dữ liệu đi qua một phép biến đổi rồi kết thúc.
-- **Yêu cầu B:** Quản lý một đơn hàng qua các trạng thái `DRAFT → SUBMITTED → PAID`. Không được sửa mặt hàng sau khi gửi đơn; không được đánh dấu thanh toán khi đơn chưa được gửi; nhiều thao tác khác nhau có thể tác động đến cùng một đơn.
+- **Requirement A:** Read a day's sales records, validate the data, calculate the sum, and output the result. Data passes through a transformation, and the process ends.
+- **Requirement B:** Manage an order through the states `DRAFT → SUBMITTED → PAID`. Items must not be edited after submission; an unsubmitted order must not be marked as paid; several operations can affect the same order.
 
-Yêu cầu A có thể bắt đầu rất tốt bằng **các hàm thao tác trên dữ liệu**. Yêu cầu B thường phù hợp với một **đối tượng `Order` tự bảo vệ quy tắc trạng thái**. Cả hai cách có thể cùng tồn tại trong một ứng dụng.
+Requirement A is a good candidate for **functions operating on data**. Requirement B often benefits from an **`Order` object that enforces its own state rules**. Both approaches can coexist within one application.
 
-Bài này đưa ra những dấu hiệu thực tế để quyết định **khi OOP đem lại lợi ích, khi OOP tạo thêm chi phí và cách xác định mức OOP vừa đủ**.
+This lesson offers practical signs for deciding **when OOP provides value, when it adds costs, and how much OOP is appropriate**.
 
-## 1. Trước tiên, hiểu “sử dụng OOP” nghĩa là gì
+## 1. First, Understand What “Using OOP” Means
 
-Trong Java, ta gần như luôn gặp `class`: kể cả một chương trình chỉ chứa `public static void main` cũng nằm trong class. Vì thế, **có class trong mã nguồn chưa đủ để kết luận thiết kế đang tận dụng OOP một cách có ý nghĩa**.
+In Java, we encounter `class` almost everywhere: even a program containing only `public static void main` resides inside a class. Therefore, **having classes in source code does not prove that a design uses OOP meaningfully**.
 
-Khi nói “thiết kế theo OOP”, ta thường quan tâm ba ý:
+When discussing “OOP design,” we usually consider three things:
 
-1. **Trách nhiệm:** đối tượng nào có đủ thông tin và có lý do phù hợp để thực hiện một hành vi?
-2. **Ranh giới:** bên ngoài được yêu cầu đối tượng làm gì, và những chi tiết nào đối tượng cần tự quản lý?
-3. **Cộng tác:** các đối tượng tương tác qua hợp đồng nào để hoàn thành nghiệp vụ mà không cần biết toàn bộ chi tiết của nhau?
+1. **Responsibility:** which object has the necessary information and a sound reason to perform a behavior?
+2. **Boundary:** what can callers ask an object to do, and which details should the object manage internally?
+3. **Collaboration:** through which contracts do objects work together to complete business tasks without knowing all of one another's details?
 
-Một đối tượng tốt không bắt buộc phải thay đổi trạng thái. Ví dụ, đối tượng `Money` bất biến có thể chứa số tiền và đơn vị tiền, đồng thời cung cấp thao tác cộng có kiểm tra tiền tệ. Một interface không bắt buộc phải có nhiều hiện thực ngay ngày đầu. OOP là **cách đặt và bảo vệ trách nhiệm**, không phải cuộc thi tạo số lớp nhiều nhất.
+A well-designed object does not have to change state. For example, an immutable `Money` object may contain an amount and currency and offer addition with currency validation. An interface need not have multiple implementations from day one. OOP is **about assigning and protecting responsibilities**, not competing to create the most classes.
 
-Và **“không dùng OOP cho phần này”** cũng không có nghĩa từ bỏ Java hay mọi lớp. Ta vẫn có thể viết các hàm `static`, record, dữ liệu bất biến, các phép biến đổi `Stream` và những mô-đun đơn giản bên trong dự án dùng OOP ở phần khác.
+Similarly, **“do not use OOP for this part”** does not mean abandoning Java or all classes. We can still write `static` functions, records, immutable data, `Stream` transformations, and simple modules inside a project that uses OOP elsewhere.
 
-## 2. Năm câu hỏi giúp quyết định
+## 2. Five Questions to Help You Decide
 
-Trước khi thiết kế class hoặc interface, hãy trả lời theo thứ tự:
+Before designing a class or interface, answer these questions in order:
 
-| Câu hỏi | Khi câu trả lời nghiêng về OOP | Khi câu trả lời nghiêng về hàm/quy trình đơn giản |
+| Question | When the answer favors OOP | When the answer favors simple functions/processes |
 | --- | --- | --- |
-| **Có trạng thái sống qua nhiều thao tác không?** | Một đơn hàng tồn tại, chuyển trạng thái, được nhiều chức năng thao tác trong suốt vòng đời | Nhận đầu vào, biến đổi, trả đầu ra, không cần nhớ quá trình trước đó |
-| **Có quy tắc phải được bảo vệ ở mọi lần thay đổi không?** | Không được rút quá số dư, không được sửa đơn đã gửi, không được đổi trạng thái tùy ý | Quy tắc chỉ là kiểm tra đầu vào cho một phép tính độc lập |
-| **Có những thực thể sở hữu trách nhiệm riêng và cộng tác không?** | `Order`, `Inventory`, `PaymentGateway` có các nghĩa vụ khác nhau | Một phép lọc, tính tổng, chuẩn hóa chuỗi, ánh xạ dữ liệu |
-| **Có các biến thể hành vi cần thay thế/mở rộng không?** | Các chính sách giảm giá, thanh toán, vận chuyển thay đổi độc lập và dùng chung hợp đồng | Hai nhánh điều kiện rất ít thay đổi, chưa cần cơ chế mở rộng |
-| **Lợi ích quản lý thay đổi có vượt chi phí thiết kế không?** | Code được dùng lâu dài, nhiều chỗ gọi, cần che giấu quyết định nội bộ | Script một lần, bài tính nhỏ, yêu cầu ổn định, tạo abstraction tốn công hơn chính bài toán |
+| **Does state persist across multiple operations?** | An order exists and changes state as several features operate on it throughout its lifecycle | Input arrives, is transformed, and produces output without remembering previous operations |
+| **Must rules be enforced on every change?** | Withdrawals cannot exceed the balance; submitted orders cannot be edited; status cannot change arbitrarily | Rules only validate input to an independent calculation |
+| **Do entities own distinct responsibilities and collaborate?** | `Order`, `Inventory`, and `PaymentGateway` have different obligations | Filtering, summing, normalizing strings, or mapping data |
+| **Are there behavioral variants that need substitution or extension?** | Discount, payment, or shipping policies vary independently behind a shared contract | Two rarely changing branches do not yet need an extension mechanism |
+| **Do change-management benefits outweigh design costs?** | Long-lived code has many callers and needs to hide internal decisions | A one-off script, small calculation, or stable requirement where abstraction costs more than the problem itself |
 
-Đây là **các tín hiệu để thảo luận**, không phải công thức “có ba dấu tích thì phải dùng OOP”. Quan trọng nhất là **kiểu thay đổi và rủi ro của chính phần mềm đang xây dựng**.
+These are **signals for discussion**, not a formula such as “three checkmarks mean you must use OOP.” What matters most is **the kinds of changes and risks in the actual software being built**.
 
-Một trình tự lựa chọn có thể hình dung như sau:
+One possible decision process looks like this:
 
 ```mermaid
 flowchart TD
@@ -3247,15 +3247,15 @@ flowchart TD
     I --> J
 ```
 
-Sơ đồ là gợi ý tổ chức suy nghĩ. Ví dụ, một nghiệp vụ không có trạng thái vẫn có thể hưởng lợi từ interface nếu cần thay thế nhiều bộ tích hợp bên ngoài; ngược lại, trạng thái đơn giản không tự động đòi hỏi một hệ thống đối tượng phức tạp.
+The diagram is a guide for organizing your thinking. For instance, a stateless operation may still benefit from an interface when several external integrations must be interchangeable; conversely, simple state does not automatically require a complex object system.
 
-## 3. Khi OOP đặc biệt có ích: trạng thái và vòng đời nghiệp vụ
+## 3. When OOP Is Especially Useful: State and Business Lifecycles
 
-Xét một đơn hàng: lúc tạo, khách có thể thêm sản phẩm. Khi gửi đơn, danh sách mặt hàng phải đóng lại. Sau khi thanh toán thành công, hệ thống chuyển sang `PAID`.
+Consider an order: while it is being created, customers can add products. Once submitted, its item list must be locked. After successful payment, the system transitions to `PAID`.
 
-Nếu mỗi chức năng tự đọc/sửa trường `status` và `items`, rất dễ sinh lỗi: phần cập nhật giỏ hàng có thể vô tình sửa đơn đã thanh toán, hoặc một đoạn mã nào đó trực tiếp gán `PAID` khi đơn còn `DRAFT`.
+If each feature reads and modifies `status` and `items` directly, bugs are likely: cart updates might accidentally modify a paid order, or some code might assign `PAID` while the order is still `DRAFT`.
 
-Ta có thể giao cho `Order` trách nhiệm **giữ các quy tắc đúng tại thời điểm chuyển trạng thái**:
+We can make `Order` responsible for **enforcing the rules whenever state transitions occur**:
 
 ```java
 // File: OrderDemo.java — Java 17+
@@ -3355,35 +3355,35 @@ public class OrderDemo {
 }
 ```
 
-Chạy bằng `javac OrderDemo.java` rồi `java OrderDemo`.
+Run with `javac OrderDemo.java` followed by `java OrderDemo`.
 
-### Điều gì khiến đối tượng có ích ở đây?
+### What Makes an Object Useful Here?
 
-Đối tượng `order` có **danh tính** (`ORD-001`), **trạng thái riêng** (`DRAFT`, `SUBMITTED`, `PAID`) và **hành vi phù hợp với trạng thái**. Các phương thức `addLine`, `submit`, `confirmPaid` kiểm soát các chuyển đổi hợp lệ.
+The `order` object has **identity** (`ORD-001`), **its own state** (`DRAFT`, `SUBMITTED`, `PAID`), and **state-appropriate behavior**. The `addLine`, `submit`, and `confirmPaid` methods control valid transitions.
 
-| Tình huống | Kết quả |
+| Situation | Result |
 | --- | --- |
-| Thêm mặt hàng khi đơn còn `DRAFT` | Hợp lệ, danh sách tăng |
-| Gửi đơn rỗng | Từ chối |
-| Gửi đơn có mặt hàng | Chuyển sang `SUBMITTED` |
-| Thêm mặt hàng sau khi gửi | Từ chối |
-| Xác nhận trả tiền khi còn `DRAFT` | Từ chối |
-| Xác nhận trả tiền sau `SUBMITTED` | Chuyển sang `PAID` |
+| Add an item while the order is `DRAFT` | Valid; the list grows |
+| Submit an empty order | Rejected |
+| Submit an order containing items | Transitions to `SUBMITTED` |
+| Add an item after submission | Rejected |
+| Confirm payment while still `DRAFT` | Rejected |
+| Confirm payment after `SUBMITTED` | Transitions to `PAID` |
 
-Nếu các trường `status` và `lines` được công khai để mọi nơi tự sửa, những kiểm tra này có thể bị bỏ qua. Với cách đặt trên, muốn đổi trạng thái phải thông qua các hành vi được cung cấp. **OOP giúp đặt quy tắc ngay cạnh trạng thái mà quy tắc bảo vệ.**
+If `status` and `lines` were exposed for arbitrary modification, these checks could be bypassed. In this design, state changes must go through the provided behaviors. **OOP helps keep rules alongside the state they protect.**
 
-Đây chỉ là mô hình trong bộ nhớ dùng để giải thích trách nhiệm. Trong ứng dụng thực tế, dữ liệu có thể bị cập nhật đồng thời từ nhiều request hoặc nhiều instance dịch vụ. `private` **không giải quyết tranh chấp đồng thời**: có thể cần transaction, optimistic/pessimistic locking, kiểm tra trạng thái ở database và xử lý xác nhận thanh toán an toàn. Ngoài ra, `confirmPaid()` chỉ minh họa ranh giới; lớp `Order` không tự xác minh giao dịch ngân hàng.
+This is only an in-memory model for explaining responsibilities. In a real application, data may be updated concurrently by several requests or service instances. `private` **does not resolve concurrent-update conflicts**: transactions, optimistic/pessimistic locking, database state checks, and safe payment confirmation may be required. Also, `confirmPaid()` merely illustrates a boundary; `Order` does not independently verify a bank transaction.
 
-Một điểm cũng đáng chú ý: `Line` được viết dưới dạng **record bất biến**. Hướng đối tượng không đồng nghĩa mọi trường đều được phép sửa.
+Another detail: `Line` is an **immutable record**. Object-oriented programming does not imply that every field must be mutable.
 
-## 4. Khi OOP có ích: nhiều biến thể hành vi chia sẻ một hợp đồng
+## 4. When OOP Helps: Behavioral Variants Sharing One Contract
 
-Giả sử phí giao hàng có hai cách tính:
+Suppose shipping fees have two possible calculations:
 
-- Giao hàng tiêu chuẩn: luôn 30.000 đồng.
-- Chương trình khuyến mãi: miễn phí nếu tổng hàng từ 200.000 đồng; nếu thấp hơn, phí 30.000 đồng.
+- Standard delivery: always 30.000 VND.
+- Promotional delivery: free for subtotals of at least 200.000 VND; otherwise 30.000 VND.
 
-Nếu quy tắc thay đổi thường xuyên hoặc nhiều luồng cần dùng, ta có thể đặt một hợp đồng `ShippingPolicy` và các cách tính riêng:
+If these rules change frequently or many flows need them, we can define a `ShippingPolicy` contract with separate calculations:
 
 ```java
 // File: ShippingDemo.java — Java 17+
@@ -3443,11 +3443,11 @@ public class ShippingDemo {
 }
 ```
 
-Hàm `finalAmount` chỉ cần biết **hợp đồng `ShippingPolicy`**, không cần biết chính sách cụ thể thuộc lớp nào. Ta có thể cung cấp các cách tính khác nhau qua cùng tham số. Đây là lợi ích của **đa hình** khi phần thay đổi nằm sau một giao diện ổn định.
+The `finalAmount` function only needs to know **the `ShippingPolicy` contract**; it does not need to know a policy's concrete class. Different calculations can be supplied through the same parameter. This demonstrates the value of **polymorphism** when changeable behavior is behind a stable interface.
 
-Tuy vậy, nếu ứng dụng chỉ có đúng một quy tắc phí cố định, viết một hàm `calculateShippingFee(subtotal)` có thể vừa đủ. Interface và các lớp hiện thực chỉ đáng thêm khi chúng làm giảm sự phụ thuộc hoặc đáp ứng nhu cầu mở rộng **có thật**.
+However, if the application has only one fixed-fee rule, a `calculateShippingFee(subtotal)` function may be sufficient. An interface and implementing classes are worthwhile only when they reduce coupling or meet a **real** need for extension.
 
-Ngay cả khi cần thay một hành vi, Java cũng có thể dùng **functional interface, lambda hoặc truyền hàm** thay vì tạo nhiều class, nhất là khi hành vi chỉ là một phép tính ngắn:
+Even when behavior must vary, Java can use **functional interfaces, lambdas, or functions passed as arguments** instead of many classes, especially when the behavior is a short calculation:
 
 ```java
 import java.util.function.LongUnaryOperator;
@@ -3459,13 +3459,13 @@ long amount = Math.addExact(250_000, shippingFee.applyAsLong(250_000));
 // amount == 250000
 ```
 
-Đoạn trên là các câu lệnh dùng trong một phương thức Java (ví dụ `main`). Hai lựa chọn có cùng ý nghĩa tính toán; kiểu giao diện tự thiết kế phù hợp khi cần tên nghiệp vụ, hợp đồng rõ ràng hoặc nhiều phương thức, còn lambda thường gọn cho một hành vi đơn.
+The statements above belong inside a Java method (such as `main`). Both options have the same computational meaning; a custom interface is appropriate when you need a domain name, a clear contract, or multiple methods, while a lambda is usually more concise for one behavior.
 
-## 5. Khi **không nên cố áp dụng OOP**: phép biến đổi dữ liệu ngắn, độc lập
+## 5. When **Not to Force OOP**: Short, Independent Data Transformations
 
-Nhiều bài toán có dạng **đầu vào → kiểm tra → biến đổi → đầu ra**, không có thực thể cần quản lý suốt nhiều giai đoạn. Chẳng hạn: nhận danh sách dòng doanh thu hợp lệ rồi tính tổng.
+Many problems follow **input → validation → transformation → output**, without an entity that needs management across multiple stages. For example: receive a list of valid sales lines and calculate their total.
 
-Một hàm độc lập có thể biểu diễn rất rõ:
+An independent function can express this clearly:
 
 ```java
 // File: RevenueDemo.java — Java 17+
@@ -3501,11 +3501,11 @@ public class RevenueDemo {
 }
 ```
 
-Hàm `totalRevenue` nhận dữ liệu, tính toán và trả về một kết quả. Nó không lưu tổng vào một đối tượng có trạng thái, không làm thay đổi danh sách đầu vào. Vì thế kết quả rất dễ kiểm tra: **cùng dữ liệu đầu vào thì cho cùng đầu ra**, miễn không có lỗi số học.
+The `totalRevenue` function receives data, calculates a value, and returns a result. It does not store the total in a stateful object or modify its input list. This makes its result easy to verify: **the same input produces the same output**, assuming no arithmetic error.
 
-Có thể viết một class `RevenueCalculator` với phương thức `calculate`, nhưng nếu class chỉ chuyển tiếp một phép cộng và không mang thêm trách nhiệm gì, cần hỏi: **sự trừu tượng ấy đang che giấu điều gì có ích?**
+You could create a `RevenueCalculator` class with a `calculate` method, but if that class merely forwards an addition and has no other responsibility, ask: **what useful complexity does the abstraction hide?**
 
-Đừng thiết kế sớm kiểu:
+Avoid prematurely designing something like:
 
 ```java
 // Ví dụ về sự phức tạp chưa cần thiết:
@@ -3514,40 +3514,40 @@ RevenueCalculator calculator = factory.create();
 RevenueResult result = calculator.execute(request);
 ```
 
-cho một bài toán vốn được diễn đạt rõ bằng `long total = totalRevenue(sales);`. Đoạn minh họa này là **pseudocode** cho một thiết kế có nhiều lớp không cần thiết, không phải mã hoàn chỉnh để biên dịch.
+for a problem already expressed clearly by `long total = totalRevenue(sales);`. This illustration is **pseudocode** for a design with unnecessary classes, not complete compilable code.
 
-### Những tình huống thường phù hợp với hàm/quy trình hơn
+### Situations Often Better Suited to Functions or Procedures
 
-- Script xử lý file một lần: đọc CSV, bỏ bản ghi lỗi, chuẩn hóa cột, xuất CSV khác.
-- Bộ chuyển đổi thuần túy: parse chuỗi, định dạng ngày, tính công thức độc lập.
-- Pipeline dữ liệu có các bước được đặt tên rõ ràng: `parse → validate → transform → export`.
-- Thuật toán tính toán hoặc xử lý mảng có đầu vào/đầu ra cụ thể.
-- Bản thử nghiệm nhỏ để kiểm chứng thuật toán, khi chưa có quy tắc miền nghiệp vụ phức tạp.
+- One-off file-processing scripts: read CSV, discard invalid records, normalize columns, and export another CSV.
+- Pure converters: parse strings, format dates, and calculate independent formulas.
+- Data pipelines with clearly named steps: `parse → validate → transform → export`.
+- Numerical algorithms or array processing with well-defined inputs and outputs.
+- Small prototypes testing algorithms before complex domain rules exist.
 
-Ta vẫn có thể nhóm các hàm trong mô-đun/class để quản lý tên và phạm vi, thậm chí dùng record để đại diện dữ liệu. Câu hỏi không phải “có class hay không”, mà là “**có cần nhiều đối tượng có vòng đời và tương tác không?**”.
+Functions can still be grouped into modules/classes for naming and scoping, and records can represent data. The question is not “Does the code contain a class?” but “**Does it need multiple objects with lifecycles and interactions?**”
 
-## 6. Một số lựa chọn thường gặp trong dự án Java/Spring Boot
+## 6. Common Choices in Java/Spring Boot Projects
 
-| Bài toán | Cách bắt đầu hợp lý | Khi nào cân nhắc thêm OOP |
+| Problem | Reasonable starting approach | When to consider more OOP |
 | --- | --- | --- |
-| Validate email theo một quy tắc đơn giản | Hàm kiểm tra hoặc thành phần validate nhỏ | Khi có nhiều quy tắc cấu hình, nhiều chiến lược, nhu cầu gắn hành vi với giá trị |
-| Tổng hợp log mỗi đêm thành báo cáo | Pipeline các hàm/step độc lập | Khi nguồn dữ liệu, định dạng báo cáo và các xử lý cần thay thế độc lập |
-| Tài khoản ngân hàng có nạp, rút, đóng băng | Đối tượng tài khoản bảo vệ trạng thái, service điều phối | Thường đã có động lực dùng đối tượng từ đầu; phải bổ sung bảo vệ cạnh tranh dữ liệu |
-| Đơn hàng đi qua nhiều trạng thái | Đối tượng miền nghiệp vụ với thao tác chuyển trạng thái hợp lệ | Khi quy tắc phức tạp lên, cân nhắc tách chính sách và thành phần cộng tác |
-| Gọi một REST API cố định để lấy dữ liệu | Một client hoặc hàm dịch vụ được đặt tên rõ | Khi có nhiều nhà cung cấp, hợp đồng client + các hiện thực có thể hữu ích |
-| Gửi thông báo qua email, SMS, push | Một thành phần gửi thông báo có trách nhiệm rõ | Khi nhiều kênh thật sự tồn tại, interface và nhiều hiện thực có thể giảm phụ thuộc |
-| Quy tắc tính thuế cố định, một biểu thức | Một hàm tên rõ, dữ liệu đầu vào rõ | Khi có nhiều quốc gia/kịch bản, cần version hoặc thay chính sách độc lập |
-| Truy vấn DB bằng Spring Data JPA | Repository theo abstraction của framework | Không cần bọc mỗi phương thức `findById` trong một tầng chỉ chuyển tiếp |
+| Validate an email using a simple rule | Validation function or small validator component | Multiple configurable rules, strategies, or a need to attach behavior to a value |
+| Aggregate nightly logs into a report | Pipeline of independent functions/steps | Data sources, report formats, or processing strategies must vary independently |
+| Bank account supporting deposits, withdrawals, freezing | Account object enforcing state rules; coordinating service | Objects are often justified from the start; concurrent-data protection is still needed |
+| Order moving through multiple statuses | Domain object with valid state-transition methods | As rules become complex, consider extracting policies and collaborators |
+| Call one fixed REST API for data | Clearly named client or service function | With multiple providers, a client contract and implementations may help |
+| Send notifications by email, SMS, or push | A notification component with a clear responsibility | When multiple channels actually exist, interfaces and implementations can reduce coupling |
+| Fixed tax formula expressed in one operation | A clearly named function with explicit input | Multiple countries/scenarios, versioning, or independently replaceable policies |
+| Query a database using Spring Data JPA | Repository using the framework's abstraction | No need to wrap every `findById` in a layer that merely forwards the call |
 
-Đặc biệt trong Spring Boot, `@Service`, `@Component` và `@Repository` là những công cụ tổ chức và quản lý thành phần, nhưng **số lượng annotation hoặc số tầng không đo chất lượng OOP**.
+In Spring Boot in particular, `@Service`, `@Component`, and `@Repository` help organize and manage components, but **the number of annotations or layers is not a measure of OOP quality**.
 
-Ví dụ, một `OrderService` có thể điều phối việc tải đơn, gọi thao tác nghiệp vụ trên `Order` rồi lưu lại. Nếu toàn bộ quy tắc “đơn ở trạng thái nào mới được sửa” bị sao chép ở năm controller và service, ranh giới nghiệp vụ đang yếu đi. Ngược lại, đừng ép một entity JPA tự gọi HTTP hoặc tự quản lý transaction chỉ vì muốn “mọi hành vi phải nằm trong object”.
+For example, an `OrderService` may coordinate loading an order, invoking domain operations on `Order`, and saving it. If the rule “Which order statuses permit editing?” is duplicated in five controllers and services, the business boundary is weakened. Conversely, do not force a JPA entity to make HTTP calls or manage transactions itself just to satisfy the idea that “all behavior must live in an object.”
 
-## 7. Vì sao lạm dụng OOP có thể phản tác dụng?
+## 7. Why Can Overusing OOP Backfire?
 
-### 7.1. Có quá nhiều lớp chỉ để chuyển tiếp lời gọi
+### 7.1. Too Many Classes That Merely Forward Calls
 
-Ví dụ:
+For example:
 
 ```text
 Controller
@@ -3559,63 +3559,63 @@ Controller
             → Calculator
 ```
 
-Nếu mỗi tầng chỉ gọi tiếp `return next.calculate(input);` mà không thêm trách nhiệm, ranh giới, xử lý lỗi hay khả năng thay thế nào, việc đọc lỗi sẽ phải đi qua nhiều file. **Abstraction phải giải quyết một vấn đề cụ thể**, không chỉ tạo cảm giác “kiến trúc nhiều lớp”.
+If each layer merely calls `return next.calculate(input);` without adding responsibilities, boundaries, error handling, or substitutability, investigating a bug requires navigating many files. **An abstraction should solve a concrete problem**, rather than simply creating the appearance of a “multi-layer architecture.”
 
-### 7.2. Class “chứa dữ liệu” bị tách rời hoàn toàn khỏi quy tắc
+### 7.2. Data-Holding Classes Completely Separated from Their Rules
 
-Ví dụ `Order` có `getStatus()` và `setStatus(...)` công khai, còn mọi quy tắc nằm rải rác ở service. Bất kỳ nơi nào cũng có thể gán `PAID` trước khi submit. Đây là dấu hiệu mô hình dữ liệu nghèo hành vi (*anemic domain model*) **khi bài toán thực sự cần bảo vệ trạng thái**.
+For example, `Order` exposes public `getStatus()` and `setStatus(...)` methods while all rules are scattered across services. Any caller can assign `PAID` before submission. This indicates an *anemic domain model* **when the problem genuinely requires state protection**.
 
-Tuy nhiên, DTO dùng để vận chuyển dữ liệu từ API sang service có thể rất phù hợp khi chỉ chứa giá trị. Không cần ép một DTO trở thành đối tượng nghiệp vụ giàu hành vi.
+However, a DTO that transports data from an API to a service can be entirely appropriate as a value-only container. A DTO need not be forced into a behavior-rich domain object.
 
-### 7.3. Tạo interface khi chỉ có một implementation và không có ranh giới có ích
+### 7.3. Creating Interfaces for One Implementation Without a Useful Boundary
 
-`UserService` và `UserServiceImpl` đôi khi có ý nghĩa nếu interface là hợp đồng được dùng ở nhiều mô-đun hoặc để thay thế nhà cung cấp. Nếu toàn bộ hệ thống chỉ có một hiện thực, không có yêu cầu thay thế hay phụ thuộc cần đảo chiều, interface đó có thể làm phát sinh một file phải mở thêm mà chưa tạo lợi ích.
+`UserService` and `UserServiceImpl` can make sense when an interface defines a contract shared across modules or supports provider replacement. If the entire system has one implementation with no substitution requirement or dependency to invert, that interface may merely add another file to open without providing value.
 
-**Một implementation vẫn có thể xứng đáng với interface** khi hợp đồng là ranh giới kỹ thuật quan trọng; số lượng implementation hiện tại chỉ là một tín hiệu, không phải quy tắc cấm.
+**Even one implementation can justify an interface** when the contract defines an important technical boundary; the current number of implementations is only a signal, not a prohibition.
 
-### 7.4. Lạm dụng kế thừa
+### 7.4. Overusing Inheritance
 
-Nếu một hệ thống có chuỗi `BaseService → AbstractBaseService → AbstractConfiguredService → ConcreteService`, mỗi thay đổi phải hiểu nhiều lớp cha và hành vi có thể bị chi phối bởi override khó lần theo.
+With a chain such as `BaseService → AbstractBaseService → AbstractConfiguredService → ConcreteService`, each change can require understanding several parent classes, and behavior may depend on overrides that are difficult to trace.
 
-Chỉ kế thừa khi quan hệ “là một” (*is-a*) đúng về mặt hành vi và hợp đồng. Trong nhiều trường hợp, **composition** — đối tượng giữ một thành phần khác và ủy quyền đúng trách nhiệm — dễ sửa hơn cấu trúc thừa kế sâu.
+Use inheritance only when the *is-a* relationship holds in both behavior and contract. In many situations, **composition**—an object holding another component and delegating appropriate responsibilities—is easier to modify than deep inheritance.
 
-### 7.5. Dự đoán quá nhiều nhu cầu chưa có
+### 7.5. Anticipating Too Many Requirements That Do Not Yet Exist
 
-Dựng sẵn mười `Strategy`, ba `Factory`, bộ đăng ký plugin và cấu hình lựa chọn cho một bài toán chỉ có một chính sách khiến chi phí bảo trì xuất hiện ngay hôm nay, trong khi lợi ích có thể không bao giờ đến. Hãy để yêu cầu hiện tại và các thay đổi có cơ sở dẫn dắt thiết kế.
+Prebuilding ten `Strategy` classes, three `Factory` classes, a plugin registry, and selection configuration for a problem with one policy creates maintenance costs today while benefits may never materialize. Let current requirements and credible future changes guide design.
 
-## 8. OOP có làm chương trình chạy chậm hơn không?
+## 8. Does OOP Make Programs Slower?
 
-Không có đáp án đúng cho mọi chương trình. Một phần thiết kế OOP có thể tạo thêm đối tượng, phân bổ bộ nhớ và thêm lời gọi qua interface. Nhưng JVM có các tối ưu như JIT inlining, escape analysis và tối ưu việc cấp phát trong những tình huống phù hợp. Ngược lại, một vòng lặp viết theo kiểu thủ tục với thuật toán kém có thể chậm hơn hẳn một thiết kế OOP hợp lý.
+There is no universally correct answer. Some OOP designs can create extra objects, allocate memory, and add calls through interfaces. But the JVM offers optimizations such as JIT inlining, escape analysis, and allocation optimizations in suitable cases. Conversely, a procedural loop using a poor algorithm may be much slower than a reasonable OOP design.
 
-**Hãy phân biệt ba vấn đề:**
+**Distinguish three concerns:**
 
-| Vấn đề | Cách đánh giá |
+| Concern | How to evaluate it |
 | --- | --- |
-| Đúng nghiệp vụ | Xác minh bất biến, kết quả và các trường hợp lỗi |
-| Dễ bảo trì | Xem một yêu cầu thay đổi ảnh hưởng bao nhiêu nơi; người đọc có hiểu trách nhiệm không |
-| Hiệu năng | Đo với dữ liệu và tải thật; benchmark trước khi tối ưu |
+| Business correctness | Verify invariants, results, and failure cases |
+| Maintainability | Check how many places a requirement change affects and whether responsibilities are understandable |
+| Performance | Measure using realistic data and workloads; benchmark before optimizing |
 
-Ví dụ, trong một vòng lặp tính toán hàng triệu phần tử, có thể cần giảm số đối tượng trung gian để tiết kiệm bộ nhớ. Nhưng trong request gọi database mất hàng chục mili giây, chi phí một vài lời gọi phương thức thường không phải nút thắt chính. Đánh giá bằng profiler/benchmark thay vì suy luận từ việc mã dùng OOP.
+For example, a loop processing millions of elements may benefit from fewer intermediate objects to save memory. But in a request whose database call takes tens of milliseconds, a few method calls are usually not the main bottleneck. Use profiling and benchmarks instead of guessing based on whether the code uses OOP.
 
-Với code Java, benchmark vi mô nên dùng cách đo phù hợp (thường là JMH) để tránh các sai lệch do JVM warmup, tối ưu biên dịch và GC.
+For Java, microbenchmarks should use a suitable methodology (often JMH) to avoid misleading results from JVM warmup, compiler optimizations, and garbage collection.
 
-## 9. OOP có tự giải quyết đồng thời, microservice hoặc thay đổi nghiệp vụ không?
+## 9. Does OOP Automatically Solve Concurrency, Microservices, or Business Changes?
 
-**Không.** Đây là ba vấn đề liên quan đến thiết kế rộng hơn:
+**No.** These three concerns require broader design:
 
-- **Đồng thời:** Một đối tượng có trường `private int balance` vẫn có race condition nếu nhiều thread cập nhật mà không có cơ chế đồng bộ phù hợp. Đóng gói giúp kiểm soát điểm cập nhật, nhưng không tự đảm bảo thread safety.
-- **Microservice:** Mỗi service có thể viết bằng OOP, nhưng ranh giới mạng, timeout, dữ liệu phân tán, transaction và idempotency vẫn cần được xử lý riêng. Chia thành nhiều class không tương đương với chia microservice.
-- **Thay đổi nghiệp vụ:** Interface giúp thay đổi một loại hành vi khi ranh giới được thiết kế tốt, nhưng nếu yêu cầu thay đổi quy tắc nền tảng của toàn hệ thống thì vẫn có thể phải sửa nhiều thành phần.
+- **Concurrency:** An object with a `private int balance` field can still have race conditions if multiple threads update it without proper synchronization. Encapsulation helps control update locations but does not guarantee thread safety.
+- **Microservices:** Each service may be written using OOP, but network boundaries, timeouts, distributed data, transactions, and idempotency still require separate handling. Splitting code into classes is not the same as splitting it into microservices.
+- **Business changes:** Interfaces help replace one kind of behavior when boundaries are well designed, but changing a fundamental rule across a system can still require modifying many components.
 
-Chọn OOP phù hợp giải quyết **khả năng tổ chức và bảo vệ trách nhiệm trong mã nguồn**. Nó không thể thay thế các biện pháp đảm bảo tính đúng đắn và vận hành của toàn hệ thống.
+Choosing OOP appropriately improves **the organization and protection of responsibilities in source code**. It cannot replace measures ensuring correctness and operational reliability across the system.
 
-## 10. Đánh giá tình huống qua hai hướng triển khai
+## 10. Evaluating a Scenario Through Two Implementations
 
-Giả sử bạn được giao “tính điểm thưởng cho khách hàng”. Hãy so sánh hai phiên bản yêu cầu:
+Suppose you are asked to “calculate customer loyalty points.” Compare two versions of the requirement:
 
-**Phiên bản 1 — tính một lần.** Mỗi giao dịch có `amount`. Điểm thưởng bằng số tiền chia nguyên cho 10.000. Chương trình nhận danh sách giao dịch, cộng điểm rồi xuất kết quả. Quy tắc cố định, không quản lý ví điểm trong thời gian dài.
+**Version 1 — one-time calculation.** Each transaction has an `amount`. Reward points equal the amount divided by 10.000 using integer division. The program receives a list of transactions, sums the points, and outputs the result. The rule is fixed; no persistent point wallet is managed.
 
-Có thể bắt đầu bằng:
+You could start with:
 
 ```java
 static long pointsFor(long amount) {
@@ -3624,55 +3624,55 @@ static long pointsFor(long amount) {
 }
 ```
 
-Đây là một hàm đơn giản, dễ kiểm thử. Dựng `PointContext`, `PointCalculatorFactory`, `AbstractPointStrategy` từ đầu không chắc tạo thêm giá trị.
+This is a simple, easily tested function. Introducing `PointContext`, `PointCalculatorFactory`, and `AbstractPointStrategy` from the outset might add no value.
 
-**Phiên bản 2 — tài khoản điểm có vòng đời.** Điểm có thể được cộng sau giao dịch, dùng để đổi quà, bị hết hạn, có lịch sử, có giới hạn dùng và không được âm. Nhiều thao tác có thể làm thay đổi cùng một tài khoản điểm.
+**Version 2 — a loyalty account with a lifecycle.** Points can be earned after transactions, redeemed for gifts, expire, have a history, be subject to usage limits, and must not go negative. Multiple operations can change the same points account.
 
-Lúc này một đối tượng `LoyaltyAccount` với các thao tác `earn(...)`, `redeem(...)` và quy tắc bảo vệ trạng thái có thể là ranh giới tốt. Tuy nhiên giao dịch điểm thật vẫn cần cơ chế nhất quán tại tầng lưu trữ, kiểm soát đồng thời và chống xử lý lặp.
+Now a `LoyaltyAccount` object with `earn(...)` and `redeem(...)` operations and rules protecting its state may define a useful boundary. However, real points transactions still need consistency mechanisms in persistence, concurrency control, and duplicate-processing prevention.
 
-**Bài học:** Tên miền nghiệp vụ giống nhau không quyết định phong cách thiết kế. **Độ phức tạp của trạng thái, số tương tác và kiểu thay đổi** mới làm thay đổi quyết định.
+**Lesson:** The same business-domain name does not determine the design style. **State complexity, interaction frequency, and kinds of change** drive that decision.
 
-## 11. Checklist trước khi tạo thêm một class hoặc interface
+## 11. Checklist Before Creating Another Class or Interface
 
-Thay vì hỏi “đã đủ OOP chưa?”, hãy tự trả lời:
+Instead of asking “Am I using enough OOP?”, answer these questions:
 
-1. **Tôi có thể mô tả trách nhiệm của class trong một câu rõ ràng không?** Ví dụ: “`Order` kiểm soát các thao tác hợp lệ theo trạng thái đơn hàng.”
-2. **Dữ liệu nào thuộc trách nhiệm ấy?** Ai được phép cập nhật dữ liệu? Quy tắc nào phải luôn đúng?
-3. **Bên sử dụng thực sự cần biết gì?** Có thể che giấu cấu trúc nội bộ và cung cấp thao tác có ý nghĩa hơn getter/setter không?
-4. **Tại sao cần interface?** Có nhiều cách thực hiện, ranh giới module, hợp đồng tích hợp hoặc yêu cầu thay thế có thật không?
-5. **Nếu đổi yêu cầu tuần sau, tôi cần sửa bao nhiêu chỗ?** Class mới có giúp cô lập thay đổi, hay chỉ kéo dài chuỗi lời gọi?
-6. **Một hàm thuần túy có giải quyết rõ hơn không?** Nếu có, dùng hàm là một lựa chọn thiết kế hợp lệ ngay cả trong dự án OOP.
-7. **Tôi kiểm thử ở đâu?** Có thể tạo trạng thái ban đầu, thực hiện hành vi rồi xác nhận kết quả/điều kiện lỗi mà không cần chạy cả ứng dụng không?
+1. **Can I describe the class's responsibility in one clear sentence?** For example: “`Order` controls which operations are valid in each order status.”
+2. **Which data belongs to that responsibility?** Who may update it? Which rules must always hold?
+3. **What do callers actually need to know?** Can internal structures be hidden behind more meaningful operations than getters/setters?
+4. **Why is an interface needed?** Are there multiple implementations, module boundaries, integration contracts, or real substitution requirements?
+5. **If requirements change next week, how many places must I edit?** Will the new class isolate changes or just lengthen the call chain?
+6. **Would a pure function express the solution more clearly?** If so, using a function is a valid design choice even in an OOP project.
+7. **Where can I test it?** Can I establish initial state, execute behavior, and verify results or error conditions without running the whole application?
 
-Nếu chưa trả lời được những câu này, hãy bắt đầu từ cấu trúc nhỏ rõ ràng, quan sát các điểm thường thay đổi rồi tách trách nhiệm khi cần. Việc refactor dựa trên bằng chứng thường hiệu quả hơn dựng trước một tầng trừu tượng chưa có người sử dụng.
+If you cannot answer these questions yet, start with a small, clear structure, observe frequently changing areas, and separate responsibilities when justified. Evidence-based refactoring is often more effective than prebuilding an abstraction layer with no users.
 
-## 12. Câu hỏi tự kiểm tra
+## 12. Self-Assessment Questions
 
-**Câu 1.** Bạn viết một chương trình CLI chỉ đọc file, chuẩn hóa số điện thoại rồi ghi file mới. Có cần class `PhoneNumberNormalizationManagerFactory` và nhiều tầng interface không?
+**Question 1.** You write a CLI program that reads a file, normalizes phone numbers, and writes a new file. Do you need a `PhoneNumberNormalizationManagerFactory` class and multiple interface layers?
 
-**Gợi ý:** Chưa có nhu cầu rõ ràng. Một hàm chuẩn hóa và một hàm xử lý luồng file thường đủ tốt, miễn có kiểm tra lỗi và test trường hợp biên.
+**Hint:** There is no clear need yet. A normalization function and a file-processing function are usually sufficient, provided errors and boundary cases are handled and tested.
 
-**Câu 2.** Một đối tượng `BankAccount` có `deposit` và `withdraw` nhưng đồng thời công khai `setBalance`. Dùng class ở đây đã đủ bảo vệ nghiệp vụ chưa?
+**Question 2.** A `BankAccount` object has `deposit` and `withdraw` methods but also exposes `setBalance` publicly. Is using a class enough to protect the business rules?
 
-**Gợi ý:** Chưa. `setBalance` có thể bỏ qua các kiểm tra nạp/rút, khiến bất biến bị vi phạm. Thiết kế cần kiểm soát mọi đường cập nhật trạng thái.
+**Hint:** No. `setBalance` can bypass deposit/withdrawal checks and violate invariants. The design must control every path that updates state.
 
-**Câu 3.** Mọi báo cáo hiện tại chỉ xuất CSV nhưng đội ngũ chắc chắn sẽ triển khai PDF và Excel trong cùng quý. Có thể cân nhắc interface `ReportExporter` không?
+**Question 3.** All reports currently export CSV, but the team is certain it will add PDF and Excel exports in the same quarter. Is a `ReportExporter` interface worth considering?
 
-**Gợi ý:** Có cơ sở vì các cách xuất khác nhau dùng chung mục tiêu, nhưng hãy xác định hợp đồng và các khác biệt thực tế trước khi thêm các lớp.
+**Hint:** Yes, there is a clear basis because different exporters share a purpose, but establish the contract and real differences before adding classes.
 
-**Câu 4.** Một đồng nghiệp nói “Tách một hàm tính tiền thành bốn class chắc chắn sẽ nâng hiệu năng.” Bạn phản biện thế nào?
+**Question 4.** A colleague says, “Splitting a payment-calculation function into four classes will definitely improve performance.” How would you respond?
 
-**Gợi ý:** Số class không bảo đảm hiệu năng. Phải xem thuật toán, I/O, cấp phát và đo trong điều kiện đại diện. Lợi ích bảo trì và hiệu năng là hai tiêu chí khác nhau.
+**Hint:** Class count does not guarantee performance. Examine algorithms, I/O, allocation, and representative measurements. Maintainability and performance are separate criteria.
 
-**Câu 5.** Đơn hàng cần `addItem`, `submit` và `cancel`; quy tắc hủy phụ thuộc trạng thái. Bạn sẽ đặt quy tắc ở controller, trong một loạt hàm rời rạc hay trong ranh giới chịu trách nhiệm về trạng thái đơn? Vì sao?
+**Question 5.** An order needs `addItem`, `submit`, and `cancel`, and cancellation rules depend on status. Would you put the rule in a controller, scattered functions, or the boundary responsible for order state? Why?
 
-**Gợi ý:** Ưu tiên tập trung quy tắc ở một ranh giới kiểm soát trạng thái nhất quán; đối tượng `Order` là lựa chọn tự nhiên, còn service có thể điều phối lưu trữ và tích hợp. Các hệ thống khác nhau vẫn có thể có ranh giới phù hợp khác nhau.
+**Hint:** Prefer centralizing the rule within a boundary that consistently controls state. `Order` is a natural choice, while a service can coordinate persistence and integrations. Different systems may still have different appropriate boundaries.
 
 ---
 
-**Nguyên tắc thực hành:** Hãy chọn cấu trúc đơn giản nhất thể hiện được trách nhiệm, bảo vệ quy tắc và chịu được những thay đổi có cơ sở. **Dùng OOP khi đối tượng và hợp đồng giúp hiểu bài toán rõ hơn; dùng hàm và quy trình khi chúng diễn đạt bài toán trực tiếp hơn.** Trong một ứng dụng Java tốt, hai cách thường hỗ trợ nhau.
+**Practical principle:** Choose the simplest structure that expresses responsibilities, protects rules, and accommodates credible changes. **Use OOP when objects and contracts make the problem clearer; use functions and procedures when they express it more directly.** In a well-designed Java application, the two approaches often complement each other.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

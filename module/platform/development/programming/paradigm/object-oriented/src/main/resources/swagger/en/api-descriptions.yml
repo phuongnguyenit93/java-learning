@@ -1,10 +1,9 @@
 Group10Controller:
   executeCase1():
-    summary: Một entity Customer dùng họ tên để định danh nên hai khách hàng trùng
-      tên bị coi là cùng một bản ghi trong collection.
+    summary: "A Customer entity uses full names as identifiers, so two customers with the same name are treated as one record in a collection."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Định nghĩa Customer equality theo customerId, tên là thuộc tính có thể trùng; kiểm thử nhiều customer cùng tên.</p>
-      <p><strong>Kiến thức liên quan:</strong> Entity identity, equals/hashCode và mutable attributes.</p>
+      <p><strong>Recommended approach:</strong> Define Customer equality using customerId; names may be duplicated. Test multiple customers sharing the same name.</p>
+      <p><strong>Related concepts:</strong> Entity identity, equals/hashCode, and mutable attributes.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -30,11 +29,10 @@ Group10Controller:
       ]
     usage: true
   executeCase2():
-    summary: Một entity mới chưa có database ID được đưa vào HashSet, rồi sau khi
-      lưu và nhận ID thì phép contains trả false.
+    summary: "A new entity without a database ID is added to a HashSet; after it is saved and assigned an ID, contains returns false."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không dùng ID được gán sau khi lưu làm hash của object đã nằm trong Set; chọn identity ổn định hoặc tách key bất biến.</p>
-      <p><strong>Kiến thức liên quan:</strong> Transient entity identity, equals/hashCode và hash bucket invariants.</p>
+      <p><strong>Recommended approach:</strong> Do not base the hash of an object already in a Set on an ID assigned after persistence; use a stable identity or a separate immutable key.</p>
+      <p><strong>Related concepts:</strong> Transient entity identity, equals/hashCode, and hash-bucket invariants.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -60,11 +58,10 @@ Group10Controller:
       ]
     usage: true
   executeCase3():
-    summary: Hai địa chỉ có nội dung như nhau nhưng được so bằng reference nên ứng
-      dụng tính chúng là hai địa điểm giao hàng khác nhau.
+    summary: "Two addresses with identical contents are compared by reference, so the application treats them as different delivery locations."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Biểu diễn Address như immutable value object có equals/hashCode theo các thành phần chuẩn hóa; không so reference.</p>
-      <p><strong>Kiến thức liên quan:</strong> Value equality, records/value objects và normalization policy.</p>
+      <p><strong>Recommended approach:</strong> Model Address as an immutable value object with equals/hashCode based on normalized components; do not compare references.</p>
+      <p><strong>Related concepts:</strong> Value equality, records/value objects, and normalization policies.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -89,11 +86,10 @@ Group10Controller:
       ]
     usage: true
   executeCase4():
-    summary: Một Money value object giữ amount dưới dạng double nên cộng dồn nhiều
-      giao dịch cho ra sai số khi so sánh tổng.
+    summary: "A Money value object stores its amount as a double, so accumulated transactions produce precision errors when totals are compared."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Dùng BigDecimal hoặc integer minor units cho tiền, xác định precision/rounding theo loại tiền và kiểm thử cộng dồn.</p>
-      <p><strong>Kiến thức liên quan:</strong> Money value object, binary floating-point và rounding policies.</p>
+      <p><strong>Recommended approach:</strong> Use BigDecimal or integer minor units for money; define currency-specific precision/rounding and test accumulated totals.</p>
+      <p><strong>Related concepts:</strong> Money value objects, binary floating-point, and rounding policies.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -118,11 +114,10 @@ Group10Controller:
       ]
     usage: true
   executeCase5():
-    summary: Một aggregate cho phép caller sửa trực tiếp child entity, khiến tổng
-      số lượng đơn hàng không còn đúng với danh sách item.
+    summary: "An aggregate lets callers directly mutate a child entity, causing the order quantity total to diverge from its item list."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Ẩn child collection, mọi cập nhật qua aggregate root cập nhật/tính lại total và kiểm tra invariant trước commit.</p>
-      <p><strong>Kiến thức liên quan:</strong> Aggregate root, encapsulation và derived state.</p>
+      <p><strong>Recommended approach:</strong> Hide the child collection; route every update through the aggregate root, which updates/recalculates totals and checks invariants before committing.</p>
+      <p><strong>Related concepts:</strong> Aggregate roots, encapsulation, and derived state.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -150,11 +145,10 @@ Group10Controller:
       ]
     usage: true
   executeCase6():
-    summary: Domain service gửi notification trước khi transaction hoàn tất nên người
-      dùng nhận thông báo thành công dù database rollback.
+    summary: "A domain service sends a notification before its transaction finishes, so users receive a success notification even when the database rolls back."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Commit transaction trước khi phát side effect; dùng outbox để gửi notification sau commit, xử lý retry có kiểm soát.</p>
-      <p><strong>Kiến thức liên quan:</strong> Transaction boundary, transactional outbox và eventual consistency.</p>
+      <p><strong>Recommended approach:</strong> Commit the transaction before emitting side effects; use an outbox to send notifications after commit, with controlled retries.</p>
+      <p><strong>Related concepts:</strong> Transaction boundaries, transactional outbox, and eventual consistency.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -179,11 +173,10 @@ Group10Controller:
       ]
     usage: true
   executeCase7():
-    summary: Ứng dụng phát cùng một domain event nhiều lần khi retry request, làm
-      số lượng email và lần trừ tồn kho bị nhân đôi.
+    summary: "The application emits the same domain event repeatedly when retrying a request, duplicating emails and inventory deductions."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Gán eventId/idempotency key, deduplicate consumer và kiểm soát retry để không gửi mail hay trừ kho nhiều lần.</p>
-      <p><strong>Kiến thức liên quan:</strong> At-least-once delivery, idempotent consumers và outbox.</p>
+      <p><strong>Recommended approach:</strong> Assign an eventId/idempotency key, deduplicate consumers, and control retries to prevent repeated emails or stock deductions.</p>
+      <p><strong>Related concepts:</strong> At-least-once delivery, idempotent consumers, and outbox.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -207,11 +200,10 @@ Group10Controller:
       ]
     usage: true
   executeCase8():
-    summary: Một luồng nghiệp vụ sửa hai aggregate ở hai database nhưng lại giả định
-      một transaction cục bộ đủ bảo đảm tính nhất quán.
+    summary: "A business workflow updates two aggregates in separate databases but assumes a single local transaction can guarantee consistency."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Dùng saga/compensation hoặc mô hình nhất quán cuối cùng giữa hai database; không giả định một local transaction phủ cả hai.</p>
-      <p><strong>Kiến thức liên quan:</strong> Distributed transactions, saga và consistency models.</p>
+      <p><strong>Recommended approach:</strong> Use a saga/compensation or eventual-consistency model across the databases; do not assume one local transaction spans both.</p>
+      <p><strong>Related concepts:</strong> Distributed transactions, sagas, and consistency models.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -234,11 +226,10 @@ Group10Controller:
       ]
     usage: true
   executeCase9():
-    summary: Tầng controller web kiểm tra hạn hủy vé còn API mobile và batch đi đường
-      khác, tạo ra kết quả hoàn tiền trái quy tắc.
+    summary: "A web controller checks ticket-cancellation deadlines, but mobile APIs and batch processes bypass that path, producing refunds that violate business rules."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Đưa chính sách hạn hủy/hoàn tiền vào domain/application use case chung; tất cả web/mobile/batch dùng cùng guard.</p>
-      <p><strong>Kiến thức liên quan:</strong> Business invariants, shared use cases và channel consistency.</p>
+      <p><strong>Recommended approach:</strong> Move the cancellation/refund deadline policy into a shared domain/application use case; enforce the same guard for web/mobile/batch.</p>
+      <p><strong>Related concepts:</strong> Business invariants, shared use cases, and channel consistency.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -265,11 +256,10 @@ Group10Controller:
       ]
     usage: true
   executeCase10():
-    summary: Một workflow đơn hàng có nhiều public setter độc lập khiến user có thể
-      chuyển thẳng từ NEW sang REFUNDED dù chưa thanh toán.
+    summary: "Independent public setters in an order workflow allow users to jump directly from NEW to REFUNDED without paying."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thay setter bằng transition methods có guard, từ chối NEW→REFUNDED và kiểm thử state graph.</p>
-      <p><strong>Kiến thức liên quan:</strong> State machines, domain commands và legal transitions.</p>
+      <p><strong>Recommended approach:</strong> Replace setters with guarded transition methods; reject NEW?REFUNDED and test the state graph.</p>
+      <p><strong>Related concepts:</strong> State machines, domain commands, and legal transitions.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -296,11 +286,10 @@ Group10Controller:
       ]
     usage: true
   executeCase11():
-    summary: Một entity ORM với lazy relationship được trả thẳng ra HTTP; serializer
-      truy cập quan hệ khi session đã đóng và request thất bại.
+    summary: "An ORM entity with a lazy relationship is returned directly over HTTP; the serializer accesses the relationship after the session closes and the request fails."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Map ORM entity sang DTO trong transaction phù hợp hoặc fetch chủ đích; không serialize trực tiếp lazy proxy khi session đóng.</p>
-      <p><strong>Kiến thức liên quan:</strong> ORM lazy loading, persistence boundary và API DTO.</p>
+      <p><strong>Recommended approach:</strong> Map ORM entities to DTOs within an appropriate transaction or fetch relationships intentionally; do not serialize lazy proxies after the session closes.</p>
+      <p><strong>Related concepts:</strong> ORM lazy loading, persistence boundaries, and API DTOs.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -325,11 +314,10 @@ Group10Controller:
       ]
     usage: true
   executeCase12():
-    summary: Một domain object phụ thuộc vào thời gian hiện tại qua System.currentTimeMillis
-      trong mọi method, khiến kết quả test thay đổi theo thời điểm chạy.
+    summary: "A domain object reads the current time through System.currentTimeMillis in every method, making test results depend on when they run."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Inject Clock vào domain service hoặc truyền time theo use case; test thời điểm cố định, biên thời gian và timezone.</p>
-      <p><strong>Kiến thức liên quan:</strong> Time dependency injection, determinism và temporal boundaries.</p>
+      <p><strong>Recommended approach:</strong> Inject Clock into the domain service or pass time from the use case; test fixed instants, time boundaries, and time zones.</p>
+      <p><strong>Related concepts:</strong> Time dependency injection, determinism, and temporal boundaries.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -354,11 +342,10 @@ Group10Controller:
     usage: true
 Group11Controller:
   executeCase1():
-    summary: Một lớp sử dụng equality theo business key nhưng business key được phép
-      sửa, làm các Map và Set chứa object trả kết quả sai.
+    summary: "A class bases equality on a mutable business key, causing incorrect results in Maps and Sets holding its objects."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Dùng business ID không đổi cho hash/equality hoặc snapshot immutable key; tránh mutation khi object đang trong Map/Set.</p>
-      <p><strong>Kiến thức liên quan:</strong> Equality consistency, mutable keys và hashed collections.</p>
+      <p><strong>Recommended approach:</strong> Use an immutable business ID for hashing/equality or snapshot an immutable key; avoid mutating objects while they are in Maps/Sets.</p>
+      <p><strong>Related concepts:</strong> Equality consistency, mutable keys, and hashed collections.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -384,11 +371,10 @@ Group11Controller:
       ]
     usage: true
   executeCase2():
-    summary: Một class override equals nhưng bỏ quên hashCode khiến hai key bằng nhau
-      nằm ở các bucket khác nhau của HashMap.
+    summary: "A class overrides equals but forgets hashCode, so equal keys end up in different HashMap buckets."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Override equals và hashCode đồng bộ dựa cùng các field ổn định; kiểm thử HashMap put/get và hợp đồng equality.</p>
-      <p><strong>Kiến thức liên quan:</strong> equals/hashCode contract và Java hashed collections.</p>
+      <p><strong>Recommended approach:</strong> Override equals and hashCode consistently using the same stable fields; test HashMap put/get operations and the equality contract.</p>
+      <p><strong>Related concepts:</strong> The equals/hashCode contract and Java hashed collections.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -413,11 +399,10 @@ Group11Controller:
       ]
     usage: true
   executeCase3():
-    summary: Một cách override equals dùng instanceof trên superclass và getClass
-      trên subclass làm tính đối xứng của phép bằng bị phá.
+    summary: "An equals implementation uses instanceof in the superclass but getClass in the subclass, breaking equality symmetry."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Chọn thống nhất getClass hoặc instanceof theo chính sách kế thừa; ưu tiên composition/value semantics khi subclass phá đối xứng.</p>
-      <p><strong>Kiến thức liên quan:</strong> Equality symmetry/transitivity và inheritance pitfalls.</p>
+      <p><strong>Recommended approach:</strong> Choose getClass or instanceof consistently according to the inheritance policy; prefer composition/value semantics when subclasses break symmetry.</p>
+      <p><strong>Related concepts:</strong> Equality symmetry/transitivity and inheritance pitfalls.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -442,11 +427,10 @@ Group11Controller:
       ]
     usage: true
   executeCase4():
-    summary: Comparator chỉ so sánh tên sản phẩm khiến TreeSet loại bỏ các sản phẩm
-      khác mã nhưng trùng tên.
+    summary: "A Comparator compares only product names, so TreeSet discards products with distinct IDs but identical names."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thêm tie-breaker mã sản phẩm cho Comparator; chỉ trả 0 khi thật sự cùng khóa sorted collection.</p>
-      <p><strong>Kiến thức liên quan:</strong> Comparator ordering, TreeSet equivalence và consistent-with-equals.</p>
+      <p><strong>Recommended approach:</strong> Add a product-ID tie-breaker to the Comparator; return 0 only for truly identical sorted-collection keys.</p>
+      <p><strong>Related concepts:</strong> Comparator ordering, TreeSet equivalence, and consistent-with-equals behavior.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -469,11 +453,10 @@ Group11Controller:
       ]
     usage: true
   executeCase5():
-    summary: Một record chứa List mutable được xem là immutable và được chia sẻ qua
-      API, nhưng caller sửa phần tử làm snapshot lịch sử thay đổi.
+    summary: "A record containing a mutable List is treated as immutable and shared through an API, but callers mutate its elements and change historical snapshots."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tạo defensive copies của list và phần tử mutable ngay trong record constructor; chỉ expose immutable projections.</p>
-      <p><strong>Kiến thức liên quan:</strong> Records, shallow immutability và defensive copying.</p>
+      <p><strong>Recommended approach:</strong> Make defensive copies of both the list and its mutable elements in the record constructor; expose only immutable projections.</p>
+      <p><strong>Related concepts:</strong> Records, shallow immutability, and defensive copying.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -500,11 +483,10 @@ Group11Controller:
       ]
     usage: true
   executeCase6():
-    summary: Phương thức toString duyệt cả graph object hai chiều khiến ghi log một
-      node làm tràn stack.
+    summary: "A toString method traverses an entire bidirectional object graph, causing a stack overflow when one node is logged."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Chặn duyệt vòng trong toString bằng ID/summary, không tự nối parent và children đệ quy vô hạn.</p>
-      <p><strong>Kiến thức liên quan:</strong> Object graph cycles, safe logging và StackOverflowError.</p>
+      <p><strong>Recommended approach:</strong> Prevent cycles during toString traversal by using IDs/summaries instead of recursively concatenating parents and children.</p>
+      <p><strong>Related concepts:</strong> Object-graph cycles, safe logging, and StackOverflowError.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -527,11 +509,10 @@ Group11Controller:
       ]
     usage: true
   executeCase7():
-    summary: Một toString của User tự động in token truy cập và số thẻ thanh toán
-      vào log theo mỗi lần debug.
+    summary: "A User toString method automatically includes access tokens and payment-card numbers in every debug log."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không đưa secret/payment fields vào toString; dùng redaction, allowlist và test bảo vệ thông tin nhạy cảm trong log.</p>
-      <p><strong>Kiến thức liên quan:</strong> Information disclosure, structured logging và sensitive data handling.</p>
+      <p><strong>Recommended approach:</strong> Exclude secrets and payment fields from toString; apply redaction and allowlists, and test that logs protect sensitive information.</p>
+      <p><strong>Related concepts:</strong> Information disclosure, structured logging, and sensitive-data handling.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -553,11 +534,10 @@ Group11Controller:
       ]
     usage: true
   executeCase8():
-    summary: Một copy constructor chỉ copy các reference nested object, khiến người
-      dùng chỉnh sửa bản sao và vô tình đổi bản gốc.
+    summary: "A copy constructor copies only nested-object references, so editing the copy accidentally changes the original."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Deep copy những nested objects cần độc lập hoặc dùng immutable structures; kiểm thử sửa bản sao không đổi bản gốc.</p>
-      <p><strong>Kiến thức liên quan:</strong> Copy constructor, graph ownership và shallow/deep copy.</p>
+      <p><strong>Recommended approach:</strong> Deep-copy nested objects that must be independent, or use immutable structures; verify that modifying the copy leaves the original unchanged.</p>
+      <p><strong>Related concepts:</strong> Copy constructors, graph ownership, and shallow/deep copies.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -582,11 +562,10 @@ Group11Controller:
       ]
     usage: true
   executeCase9():
-    summary: Một Generic Repository dùng Object cho kiểu trả về nên cast lỗi chỉ được
-      phát hiện ở runtime.
+    summary: "A generic Repository uses Object as its return type, so invalid casts are discovered only at runtime."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Định nghĩa Repository&lt;T,ID&gt; và trả T/Optional&lt;T&gt; có generic type; loại cast runtime không an toàn.</p>
-      <p><strong>Kiến thức liên quan:</strong> Java generics, type safety và parametric polymorphism.</p>
+      <p><strong>Recommended approach:</strong> Define Repository&lt;T,ID&gt; and return generic T/Optional&lt;T&gt; values; eliminate unsafe runtime casts.</p>
+      <p><strong>Related concepts:</strong> Java generics, type safety, and parametric polymorphism.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -609,11 +588,10 @@ Group11Controller:
       ]
     usage: true
   executeCase10():
-    summary: Một API generic nhận List của subtype nhưng caller kỳ vọng truyền trực
-      tiếp List<Subtype> vào List<Supertype>, gây lỗi biên dịch.
+    summary: "A generic API accepts a subtype list, but the caller expects to pass List<Subtype> directly as List<Supertype>, causing a compilation error."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không gán List&lt;Subtype&gt; cho List&lt;Supertype&gt; vì invariant; dùng List&lt;? extends Supertype&gt; cho đọc, copy để ghi phù hợp.</p>
-      <p><strong>Kiến thức liên quan:</strong> Generic invariance, bounded wildcards và PECS.</p>
+      <p><strong>Recommended approach:</strong> Do not assign List&lt;Subtype&gt; to List&lt;Supertype&gt; because generics are invariant; use List&lt;? extends Supertype&gt; for reading or copy values when writes are needed.</p>
+      <p><strong>Related concepts:</strong> Generic invariance, bounded wildcards, and PECS.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -637,11 +615,10 @@ Group11Controller:
       ]
     usage: true
   executeCase11():
-    summary: Một wildcard API cho phép ghi dữ liệu vào collection chỉ để đọc khiến
-      hợp đồng kiểu trở nên mơ hồ và compiler từ chối lời gọi.
+    summary: "A wildcard API attempts to write into a read-only collection, making its type contract ambiguous and causing the compiler to reject the call."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách producer/consumer interface; với nguồn đọc dùng ? extends T, nơi ghi dùng ? super T; tránh yêu cầu ghi vào extends wildcard.</p>
-      <p><strong>Kiến thức liên quan:</strong> PECS, wildcard variance và type-safe collections.</p>
+      <p><strong>Recommended approach:</strong> Separate producer and consumer interfaces; use ? extends T for read sources and ? super T for write destinations; do not require writes through extends wildcards.</p>
+      <p><strong>Related concepts:</strong> PECS, wildcard variance, and type-safe collections.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -666,11 +643,10 @@ Group11Controller:
     usage: true
 Group12Controller:
   executeCase1():
-    summary: Một unit test kiểm tra chi tiết private helper qua reflection nên sau
-      khi refactor hành vi không đổi mà hàng loạt test vẫn thất bại.
+    summary: "A unit test accesses a private helper through reflection, so many tests fail after a refactor even though public behavior is unchanged."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Viết unit tests theo public behavior/invariant, không phản chiếu private helper; giữ test ổn định khi implementation thay đổi.</p>
-      <p><strong>Kiến thức liên quan:</strong> Black-box testing, encapsulation và refactorability.</p>
+      <p><strong>Recommended approach:</strong> Write unit tests around public behavior/invariants rather than reflecting on private helpers; keep tests stable as implementations change.</p>
+      <p><strong>Related concepts:</strong> Black-box testing, encapsulation, and refactorability.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -695,11 +671,10 @@ Group12Controller:
       ]
     usage: true
   executeCase2():
-    summary: Một kiểm thử chỉ xác nhận mock được gọi đúng số lần nhưng không phát
-      hiện object cuối cùng vi phạm invariant.
+    summary: "A test checks only the number of mock calls and misses a final object state that violates an invariant."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thêm assertion về state và outcome của object; chỉ verify mock interactions khi tương tác là một phần contract observable.</p>
-      <p><strong>Kiến thức liên quan:</strong> Behavioral tests, invariants và over-mocking.</p>
+      <p><strong>Recommended approach:</strong> Add assertions about object state and outcomes; verify mock interactions only when those interactions are part of the observable contract.</p>
+      <p><strong>Related concepts:</strong> Behavioral tests, invariants, and over-mocking.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -724,11 +699,10 @@ Group12Controller:
       ]
     usage: true
   executeCase3():
-    summary: Hai implementation cùng interface vượt qua unit test riêng nhưng phản
-      hồi khác nhau với null input và exception, gây lỗi khi thay thế.
+    summary: "Two implementations of the same interface pass their own unit tests but handle null input and exceptions differently, breaking substitutability."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tạo shared contract suite chạy trên mọi implementation, phủ null, exceptions, edge cases và side effects theo một spec.</p>
-      <p><strong>Kiến thức liên quan:</strong> Contract tests, LSP và semantic compatibility.</p>
+      <p><strong>Recommended approach:</strong> Run a shared contract test suite against every implementation, covering null, exceptions, edge cases, and side effects under one specification.</p>
+      <p><strong>Related concepts:</strong> Contract tests, LSP, and semantic compatibility.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -755,12 +729,10 @@ Group12Controller:
       ]
     usage: true
   executeCase4():
-    summary: Một method dài trong OrderService trộn validation, tính phí, update trạng
-      thái và persistence nhưng thiếu regression test nên developer sợ tách trách
-      nhiệm.
+    summary: "A long method in OrderService mixes validation, pricing, state updates, and persistence, but the lack of regression tests makes developers reluctant to split its responsibilities."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Bổ sung characterization/regression tests trước khi chia OrderService, tách validation/pricing/state/persistence theo từng thay đổi nhỏ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Safe refactoring, characterization tests và SRP.</p>
+      <p><strong>Recommended approach:</strong> Add characterization/regression tests before splitting OrderService; extract validation, pricing, state changes, and persistence in small steps.</p>
+      <p><strong>Related concepts:</strong> Safe refactoring, characterization tests, and SRP.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -787,11 +759,10 @@ Group12Controller:
       ]
     usage: true
   executeCase5():
-    summary: Một chức năng được refactor sang composition nhưng delegation vô tình
-      bỏ qua kiểm tra quyền vốn nằm trong superclass cũ.
+    summary: "A refactor replaces inheritance with composition, but delegation accidentally skips an authorization check previously performed by the superclass."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Giữ permission guard khi chuyển sang delegation, đặt ở boundary duy nhất và viết regression test cho unauthorized/authorized.</p>
-      <p><strong>Kiến thức liên quan:</strong> Delegation, security invariants và behavior preservation.</p>
+      <p><strong>Recommended approach:</strong> Preserve the permission guard when moving to delegation, enforce it at one boundary, and add regression tests for authorized/unauthorized callers.</p>
+      <p><strong>Related concepts:</strong> Delegation, security invariants, and behavior preservation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -818,11 +789,10 @@ Group12Controller:
       ]
     usage: true
   executeCase6():
-    summary: Một đội chuyển từ procedural code sang nhiều domain object trong một
-      lần thay đổi lớn nên khó xác định bước nào làm sai nghiệp vụ.
+    summary: "A team converts procedural code into many domain objects in one large change, making it difficult to identify which step breaks business behavior."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Chuyển từng use case, giữ golden-master/characterization tests và điểm rollback nhỏ; tránh thay toàn bộ model trong một commit.</p>
-      <p><strong>Kiến thức liên quan:</strong> Incremental refactoring, regression safety và change isolation.</p>
+      <p><strong>Recommended approach:</strong> Migrate one use case at a time, retain golden-master/characterization tests and small rollback points; avoid replacing the entire model in one commit.</p>
+      <p><strong>Related concepts:</strong> Incremental refactoring, regression safety, and change isolation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -848,11 +818,10 @@ Group12Controller:
       ]
     usage: true
   executeCase7():
-    summary: Một refactoring chuyển method sang class khác làm thay đổi thứ tự side
-      effect, khiến callback chạy trước khi trạng thái dữ liệu hoàn tất.
+    summary: "Moving a method to another class changes the order of side effects, causing a callback to run before the data state is finalized."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Ghi rõ thứ tự side effect theo contract, validate/commit trước callback; test thứ tự và đường lỗi sau Move Method.</p>
-      <p><strong>Kiến thức liên quan:</strong> Refactoring semantics, observable side effects và sequencing.</p>
+      <p><strong>Recommended approach:</strong> Specify side-effect ordering in the contract, validate/commit before the callback, and test event order and error paths after Move Method.</p>
+      <p><strong>Related concepts:</strong> Refactoring semantics, observable side effects, and sequencing.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -879,11 +848,10 @@ Group12Controller:
       ]
     usage: true
   executeCase8():
-    summary: Một test khởi động toàn bộ Spring context để kiểm tra object tính tiền
-      đơn giản, làm bộ unit test chạy quá lâu và phụ thuộc môi trường.
+    summary: "A test starts an entire Spring context to check a simple pricing object, making unit tests slow and environment-dependent."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Test class tính tiền bằng unit test thuần và fake dependencies; chỉ dùng Spring context test để kiểm tra wiring/integration thực.</p>
-      <p><strong>Kiến thức liên quan:</strong> Test pyramid, test isolation và Spring context cost.</p>
+      <p><strong>Recommended approach:</strong> Test the pricing class with plain unit tests and fake dependencies; reserve Spring context tests for real wiring/integration concerns.</p>
+      <p><strong>Related concepts:</strong> The test pyramid, test isolation, and Spring context costs.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -910,11 +878,10 @@ Group12Controller:
     usage: true
 Group13Controller:
   executeCase1():
-    summary: Hai thread cùng đọc rồi tăng một counter nằm trong object mutable khiến
-      số lượng xử lý thực tế thấp hơn số request đã nhận.
+    summary: "Two threads concurrently read and increment a counter in a mutable object, so the final processed count is lower than the number of requests received."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Dùng AtomicInteger hoặc lock bao quanh toàn bộ read-modify-write; test với nhiều thread và khẳng định tổng cập nhật.</p>
-      <p><strong>Kiến thức liên quan:</strong> Race conditions, atomic operations và lost updates.</p>
+      <p><strong>Recommended approach:</strong> Use AtomicInteger or a lock around the entire read-modify-write operation; test with multiple threads and assert the final update count.</p>
+      <p><strong>Related concepts:</strong> Race conditions, atomic operations, and lost updates.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -939,11 +906,10 @@ Group13Controller:
       ]
     usage: true
   executeCase2():
-    summary: Một thread cập nhật flag completed nhưng thread khác không quan sát được
-      giá trị mới kịp thời vì thiếu quan hệ đồng bộ bộ nhớ.
+    summary: "One thread updates a completed flag, but another fails to observe the new value promptly because memory synchronization is missing."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Dùng volatile/AtomicBoolean hoặc lock để thiết lập happens-before; không coi sleep là bảo đảm visibility.</p>
-      <p><strong>Kiến thức liên quan:</strong> Java Memory Model, visibility và happens-before.</p>
+      <p><strong>Recommended approach:</strong> Use volatile/AtomicBoolean or a lock to establish happens-before; do not treat sleep as a visibility guarantee.</p>
+      <p><strong>Related concepts:</strong> The Java Memory Model, visibility, and happens-before.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -967,11 +933,10 @@ Group13Controller:
       ]
     usage: true
   executeCase3():
-    summary: Một object chứa HashMap mutable được nhiều request đọc và ghi cùng lúc
-      làm dữ liệu trả về không ổn định và có thể bị mất cập nhật.
+    summary: "A mutable HashMap stored in an object is read and written concurrently by many requests, producing inconsistent results and potentially lost updates."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Dùng ConcurrentHashMap hoặc immutable snapshots có contract thao tác phù hợp; bảo vệ compound operations khi nhiều request cạnh tranh.</p>
-      <p><strong>Kiến thức liên quan:</strong> Concurrent collections, thread safety và atomic compound actions.</p>
+      <p><strong>Recommended approach:</strong> Use ConcurrentHashMap or immutable snapshots with suitable operation contracts; protect compound operations when requests compete.</p>
+      <p><strong>Related concepts:</strong> Concurrent collections, thread safety, and atomic compound actions.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -996,11 +961,10 @@ Group13Controller:
       ]
     usage: true
   executeCase4():
-    summary: Một listener callback được gọi khi object vẫn đang giữ lock, gây deadlock
-      khi callback gọi ngược vào object khác.
+    summary: "A listener callback runs while an object still holds a lock, causing deadlock when the callback calls back into another object."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không gọi callback ngoài trong khi giữ lock; copy danh sách listener dưới lock rồi phát sau unlock, kiểm tra thứ tự lock.</p>
-      <p><strong>Kiến thức liên quan:</strong> Deadlock, lock ordering và external calls under locks.</p>
+      <p><strong>Recommended approach:</strong> Do not invoke external callbacks while holding locks; copy the listener list under the lock and dispatch after unlocking, checking lock order.</p>
+      <p><strong>Related concepts:</strong> Deadlock, lock ordering, and external calls under locks.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1023,11 +987,10 @@ Group13Controller:
       ]
     usage: true
   executeCase5():
-    summary: Một class thread-safe ở từng method nhưng thao tác gồm đọc rồi sửa qua
-      hai method vẫn bị race khi có request khác xen vào.
+    summary: "A class is thread-safe at the individual-method level, but a read-then-write operation spanning two methods still races with other requests."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Gộp read-and-update vào một atomic method hoặc khóa transaction toàn thao tác, không chỉ synchronized từng getter/setter.</p>
-      <p><strong>Kiến thức liên quan:</strong> Compound race, atomicity boundaries và thread safety.</p>
+      <p><strong>Recommended approach:</strong> Combine read-and-update into a single atomic method or lock the entire transaction, rather than synchronizing each getter/setter separately.</p>
+      <p><strong>Related concepts:</strong> Compound races, atomicity boundaries, and thread safety.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1052,11 +1015,10 @@ Group13Controller:
       ]
     usage: true
   executeCase6():
-    summary: Một cache giữ reference của toàn bộ request object đã xử lý mà không
-      có eviction, khiến heap tăng dần dù kết quả đã hết giá trị.
+    summary: "A cache retains references to every processed request object without eviction, causing heap usage to grow even after results are no longer useful."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Giới hạn cache bằng eviction/TTL/size, bỏ reference khi hết nhu cầu; dùng heap dump theo thời gian để chẩn đoán retention.</p>
-      <p><strong>Kiến thức liên quan:</strong> GC reachability, cache eviction và memory leak analysis.</p>
+      <p><strong>Recommended approach:</strong> Bound the cache with eviction/TTL/size limits, release unneeded references, and use heap dumps over time to diagnose retention.</p>
+      <p><strong>Related concepts:</strong> GC reachability, cache eviction, and memory-leak analysis.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1080,12 +1042,10 @@ Group13Controller:
       ]
     usage: true
   executeCase7():
-    summary: Đội tối ưu hóa bằng cách thay object thành nhiều mảng primitive trước
-      khi đo, khiến mã khó hiểu hơn nhưng latency không có số liệu chứng minh cải
-      thiện.
+    summary: "A team replaces objects with primitive arrays as a premature optimization, making code harder to understand without measured latency improvements."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thiết lập baseline với profiler/benchmark workload thật trước và sau; chỉ đánh đổi readability lấy tối ưu có lợi ích được đo.</p>
-      <p><strong>Kiến thức liên quan:</strong> Performance profiling, allocation và evidence-based optimization.</p>
+      <p><strong>Recommended approach:</strong> Establish a baseline using profiling/benchmarks of realistic workloads before and after; trade readability for optimizations only when benefits are measured.</p>
+      <p><strong>Related concepts:</strong> Performance profiling, allocation, and evidence-based optimization.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1110,11 +1070,10 @@ Group13Controller:
       ]
     usage: true
   executeCase8():
-    summary: Một thay đổi cho object reuse nhằm giảm allocation vô tình giữ lại state
-      của request trước, gây rò rỉ dữ liệu giữa các người dùng.
+    summary: "An object-reuse change intended to reduce allocations accidentally retains state from the previous request, leaking data between users."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không reuse mutable object qua các request không tin cậy; dùng immutable context/new instance hoặc reset đầy đủ và test isolation.</p>
-      <p><strong>Kiến thức liên quan:</strong> Object pooling risks, aliasing và data isolation.</p>
+      <p><strong>Recommended approach:</strong> Do not reuse mutable objects across untrusted requests; use immutable contexts/new instances, or fully reset state and test isolation.</p>
+      <p><strong>Related concepts:</strong> Object-pooling risks, aliasing, and data isolation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1140,11 +1099,10 @@ Group13Controller:
       ]
     usage: true
   executeCase9():
-    summary: Ứng dụng dùng synchronized trên toàn service để bảo vệ một field nhỏ,
-      khiến các request độc lập bị chặn nối đuôi nhau dưới tải cao.
+    summary: "An application synchronizes an entire service to protect one small field, forcing independent requests to queue under high load."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thu nhỏ critical section hoặc dùng khóa theo resource/atomic field; kiểm benchmark contention trên workload thực trước chọn giải pháp.</p>
-      <p><strong>Kiến thức liên quan:</strong> Lock granularity, contention và concurrent throughput.</p>
+      <p><strong>Recommended approach:</strong> Narrow the critical section or use per-resource locks/an atomic field; benchmark contention under realistic workloads before choosing a solution.</p>
+      <p><strong>Related concepts:</strong> Lock granularity, contention, and concurrent throughput.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1166,11 +1124,10 @@ Group13Controller:
       ]
     usage: true
   executeCase10():
-    summary: Một object domain chứa hàng chục collection và cache dẫn xuất nhưng không
-      có quy tắc invalidation nhất quán, làm dữ liệu sau cập nhật vẫn bị cũ.
+    summary: "A domain object contains dozens of collections and derived caches without consistent invalidation rules, leaving stale data after updates."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Xác định dependency của cache dẫn xuất, invalidation lúc mutate hoặc tính lại on demand; kiểm thử consistency sau từng update.</p>
-      <p><strong>Kiến thức liên quan:</strong> Cache invalidation, derived state và object invariants.</p>
+      <p><strong>Recommended approach:</strong> Identify each derived cache dependency, invalidate on mutation or recompute on demand, and test consistency after every update.</p>
+      <p><strong>Related concepts:</strong> Cache invalidation, derived state, and object invariants.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1198,11 +1155,10 @@ Group13Controller:
     usage: true
 Group1Controller:
   executeCase1():
-    summary: Ứng dụng quản lý bệnh viện dồn hồ sơ bệnh nhân, lịch khám, hóa đơn và
-      gửi tin nhắn vào một class, nên sửa tính phí lại làm hỏng đặt lịch.
+    summary: "A hospital management application puts patient records, appointments, invoices, and messaging into one class, so changing billing logic breaks appointment scheduling."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách hồ sơ bệnh nhân, lịch khám, thanh toán và thông báo theo trách nhiệm; giữ application service điều phối use case và regression test từng chức năng.</p>
-      <p><strong>Kiến thức liên quan:</strong> SRP, high cohesion, domain boundaries và tách tác vụ hạ tầng.</p>
+      <p><strong>Recommended approach:</strong> Separate patient records, appointments, payments, and notifications by responsibility; let an application service coordinate use cases and regression-test each function.</p>
+      <p><strong>Related concepts:</strong> SRP, high cohesion, domain boundaries, and separation of infrastructure tasks.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1231,11 +1187,10 @@ Group1Controller:
       ]
     usage: true
   executeCase2():
-    summary: Một nhóm phát triển tạo class mới cho từng hàm xử lý nhỏ khiến luồng
-      đặt hàng đi qua hàng chục lớp trung gian và rất khó truy dấu lỗi.
+    summary: "A development team creates a new class for every small processing function, making the ordering flow pass through dozens of intermediaries and errors difficult to trace."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Gộp các lớp trung gian chỉ chuyển tiếp, đặt hành vi gần dữ liệu sở hữu; kiểm tra luồng gọi và test trước/sau để giảm tầng không cần thiết.</p>
-      <p><strong>Kiến thức liên quan:</strong> KISS, cohesion, indirection và phát hiện speculative generality.</p>
+      <p><strong>Recommended approach:</strong> Merge intermediary classes that only forward calls, keep behavior close to its owning data, and compare call flows and tests before/after removing unnecessary layers.</p>
+      <p><strong>Related concepts:</strong> KISS, cohesion, indirection, and identifying speculative generality.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1263,11 +1218,10 @@ Group1Controller:
       ]
     usage: true
   executeCase3():
-    summary: Code nghiệp vụ được viết thành các static utility thao tác trên object
-      chỉ chứa dữ liệu, khiến trạng thái có thể bị sửa mà không qua quy tắc nào.
+    summary: "Business code consists of static utilities manipulating data-only objects, allowing state changes without enforcing any business rules."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Chuyển quy tắc và thay đổi trạng thái vào method của domain object; hạn chế public setter, utility chỉ giữ hàm thuần phù hợp.</p>
-      <p><strong>Kiến thức liên quan:</strong> Rich domain model, encapsulation, invariant và Tell Don&#39;t Ask.</p>
+      <p><strong>Recommended approach:</strong> Move rules and state changes into domain-object methods; restrict public setters and reserve utilities for appropriate pure functions.</p>
+      <p><strong>Related concepts:</strong> Rich domain models, encapsulation, invariants, and Tell Don&#39;t Ask.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1295,11 +1249,10 @@ Group1Controller:
       ]
     usage: true
   executeCase4():
-    summary: Hai nhóm cùng dùng một class Customer cho bán hàng và chăm sóc khách
-      hàng nhưng cần thay đổi các thuộc tính theo hai quy trình khác nhau.
+    summary: "Two teams share one Customer class for sales and customer support, but their workflows require different attribute changes."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách vai trò Customer theo bounded context hoặc model/DTO riêng; chỉ chia sẻ định danh và dữ liệu đã có hợp đồng rõ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Bounded contexts, SRP theo actor và tránh shared model coupling.</p>
+      <p><strong>Recommended approach:</strong> Separate Customer roles by bounded context or use distinct models/DTOs; share only identities and data governed by explicit contracts.</p>
+      <p><strong>Related concepts:</strong> Bounded contexts, actor-based SRP, and avoiding shared-model coupling.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1325,11 +1278,10 @@ Group1Controller:
       ]
     usage: true
   executeCase5():
-    summary: Một class thay đổi thường xuyên vì vừa định dạng báo cáo, vừa gọi database,
-      vừa gửi email, làm mọi lần phát hành có phạm vi ảnh hưởng rộng.
+    summary: "A class changes frequently because it formats reports, queries a database, and sends emails, giving every release a broad impact."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách logic báo cáo, truy cập dữ liệu và email khỏi class nghiệp vụ; xác định boundary và kiểm thử các phần độc lập.</p>
-      <p><strong>Kiến thức liên quan:</strong> SRP, cohesion, separation of concerns và dependency direction.</p>
+      <p><strong>Recommended approach:</strong> Separate reporting logic, data access, and email from business logic; identify boundaries and test components independently.</p>
+      <p><strong>Related concepts:</strong> SRP, cohesion, separation of concerns, and dependency direction.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1356,11 +1308,10 @@ Group1Controller:
       ]
     usage: true
   executeCase6():
-    summary: Mỗi lần thêm một phương thức vận chuyển, developer phải sửa nhiều đoạn
-      if-else ở bảng giá, kiểm tra đơn và tạo nhãn giao hàng.
+    summary: "Every new shipping method requires developers to change multiple if-else blocks in pricing, order validation, and shipping-label generation."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tập trung lựa chọn và quy tắc vận chuyển tại một policy/strategy boundary; kiểm thử thêm phương thức mới không ảnh hưởng loại cũ.</p>
-      <p><strong>Kiến thức liên quan:</strong> OCP, polymorphism, Strategy và regression tests.</p>
+      <p><strong>Recommended approach:</strong> Centralize shipping selection and rules behind a policy/strategy boundary; test new methods without affecting existing ones.</p>
+      <p><strong>Related concepts:</strong> OCP, polymorphism, Strategy, and regression tests.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1388,11 +1339,10 @@ Group1Controller:
       ]
     usage: true
   executeCase7():
-    summary: Một object giao dịch vừa được dùng làm dữ liệu API, vừa làm entity persistence,
-      vừa chứa logic hiển thị, khiến thay đổi từ một lớp lan sang các lớp khác.
+    summary: "A transaction object serves as an API payload, a persistence entity, and a presentation model, so changes in one layer spread across others."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách domain entity, persistence mapping, API DTO và presentation model; mapper ở boundary giảm rò rỉ thay đổi giữa tầng.</p>
-      <p><strong>Kiến thức liên quan:</strong> Separation of concerns, anti-corruption mapping và domain boundaries.</p>
+      <p><strong>Recommended approach:</strong> Separate the domain entity, persistence mapping, API DTO, and presentation model; use boundary mappers to contain change propagation.</p>
+      <p><strong>Related concepts:</strong> Separation of concerns, anti-corruption mapping, and domain boundaries.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1418,11 +1368,10 @@ Group1Controller:
       ]
     usage: true
   executeCase8():
-    summary: Hai bản ghi nhân viên có cùng tên và ngày sinh bị coi là cùng một object
-      dù thuộc hai nhân viên khác nhau.
+    summary: "Two employee records with the same name and date of birth are considered one object despite representing different employees."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Dùng employeeId ổn định cho entity equality; không dùng họ tên/ngày sinh làm identity; kiểm thử hai nhân viên cùng thông tin.</p>
-      <p><strong>Kiến thức liên quan:</strong> Entity identity so với value equality, equals/hashCode contract.</p>
+      <p><strong>Recommended approach:</strong> Use stable employeeId for entity equality; do not treat name/date of birth as identity. Test distinct employees with matching details.</p>
+      <p><strong>Related concepts:</strong> Entity identity versus value equality, and the equals/hashCode contract.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1447,11 +1396,10 @@ Group1Controller:
       ]
     usage: true
   executeCase9(String):
-    summary: Hệ thống tạo hàng nghìn object tạm ở mỗi request nhưng không đo được
-      liệu độ trễ đến từ logic ứng dụng, cấp phát hay garbage collection.
+    summary: "A system creates thousands of temporary objects per request but has not measured whether latency comes from application logic, allocation, or garbage collection."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Đo bằng profiler/JFR và benchmark workload đại diện trước tối ưu; xem allocation rate, GC pause và tracing luồng nghiệp vụ thay vì suy đoán.</p>
-      <p><strong>Kiến thức liên quan:</strong> Profiling, allocation, garbage collection và performance baselines.</p>
+      <p><strong>Recommended approach:</strong> Measure with a profiler/JFR and representative workload benchmarks before optimizing; examine allocation rate, GC pauses, and business-flow tracing instead of guessing.</p>
+      <p><strong>Related concepts:</strong> Profiling, allocation, garbage collection, and performance baselines.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1464,8 +1412,8 @@ Group1Controller:
     methodName: executeCase9
     params:
     - name: mode
-      summary: "Chọn workload tính toán CPU hoặc cấp phát bộ nhớ"
-      description: "Tham số truy vấn mode chọn đúng một trong hai chế độ: cpu chạy phép tính trong vòng lặp; allocation cấp phát các mảng byte để minh họa hoạt động cấp phát object trên JVM. Chỉ chấp nhận chính xác cpu hoặc allocation. Dù Controller khai báo required=false, không có giá trị mặc định: khi bỏ mode, Controller truyền mảng đối số rỗng và Service ném IllegalArgumentException; nếu truyền giá trị khác hai chế độ trên, Service cũng ném IllegalArgumentException. Khi chạy hợp lệ, Service in workload completed; result=... ra stdout; đây không phải số đo CPU time, allocation rate hay GC pause."
+      summary: "Select a CPU-computation or memory-allocation workload"
+      description: "The mode query parameter selects exactly one of two modes: cpu performs calculations in a loop; allocation allocates byte arrays to demonstrate JVM object allocation. Only the exact values cpu or allocation are accepted. Although the Controller declares required=false, no default is provided: omitting mode makes the Controller pass an empty argument array and the Service throw IllegalArgumentException; any value other than those two modes also makes the Service throw IllegalArgumentException. On valid execution, the Service prints workload completed; result=... to stdout; this is not a measurement of CPU time, allocation rate, or GC pause."
     path: com/example/learning/casestudy/controller/Group1Controller.java
     mapping: '@GetMapping("/case/9/execute")'
     httpMethods:
@@ -1478,11 +1426,10 @@ Group1Controller:
       ]
     usage: true
   executeCase10():
-    summary: Mô hình nghiệp vụ có quá nhiều class tên Manager, Helper và Processor
-      nhưng không ai xác định được object nào sở hữu quy tắc tính giá.
+    summary: "A domain model contains many classes named Manager, Helper, and Processor, but no one can identify which object owns pricing rules."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Xác định object sở hữu chính sách tính giá từ use case; đổi tên/di chuyển hành vi theo domain và giảm lớp điều phối mơ hồ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Responsibility-driven design, cohesion và domain modeling.</p>
+      <p><strong>Recommended approach:</strong> Identify the owner of pricing policy from the use case; rename/move behavior according to the domain and reduce vague orchestration classes.</p>
+      <p><strong>Related concepts:</strong> Responsibility-driven design, cohesion, and domain modeling.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1511,11 +1458,10 @@ Group1Controller:
       ]
     usage: true
   executeCase11():
-    summary: Đội phát triển tranh luận một khái niệm đơn hàng nên là entity hay tập
-      dữ liệu truyền qua service vì định danh và vòng đời của nó chưa được làm rõ.
+    summary: "A team debates whether an order concept should be an entity or a data structure passed between services because its identity and lifecycle are unclear."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Xác định vòng đời, business ID và invariant của Order; dùng entity nếu cần danh tính qua thay đổi, DTO cho trao đổi dữ liệu.</p>
-      <p><strong>Kiến thức liên quan:</strong> Entity vs DTO, identity, object lifecycle và aggregate boundaries.</p>
+      <p><strong>Recommended approach:</strong> Define Order's lifecycle, business ID, and invariants; use an entity when identity must persist across changes and DTOs for data transfer.</p>
+      <p><strong>Related concepts:</strong> Entities versus DTOs, identity, object lifecycles, and aggregate boundaries.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1541,11 +1487,10 @@ Group1Controller:
       ]
     usage: true
   executeCase12():
-    summary: Một chức năng xuất CSV rất đơn giản bị buộc đi qua factory, service locator
-      và nhiều interface dù ứng dụng không có biến thể triển khai.
+    summary: "A simple CSV export feature is forced through a factory, service locator, and several interfaces even though the application has no implementation variants."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Bỏ factory/locator/interface dự phòng nếu chỉ có một luồng xuất CSV; dùng hàm có hợp đồng rõ và test độc lập.</p>
-      <p><strong>Kiến thức liên quan:</strong> YAGNI, KISS, trade-off của abstraction và simplicity.</p>
+      <p><strong>Recommended approach:</strong> Remove speculative factories/locators/interfaces when there is only one CSV export flow; use a function with a clear contract and independent tests.</p>
+      <p><strong>Related concepts:</strong> YAGNI, KISS, abstraction trade-offs, and simplicity.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1573,11 +1518,10 @@ Group1Controller:
     usage: true
 Group2Controller:
   executeCase1():
-    summary: Object thanh toán được khởi tạo với số tiền âm nhưng chỉ bị phát hiện
-      khi ghi vào database, khiến lỗi xuất hiện xa vị trí tạo dữ liệu.
+    summary: "A Payment object is constructed with a negative amount, but the error is detected only when it reaches the database, far from where the invalid data originated."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Kiểm tra số tiền ở constructor/factory hoặc Money value object trước khi tạo Payment; trả lỗi ngay tại ranh giới miền.</p>
-      <p><strong>Kiến thức liên quan:</strong> Constructor invariant, fail-fast validation và value objects.</p>
+      <p><strong>Recommended approach:</strong> Validate the amount in the constructor/factory or a Money value object before creating Payment; fail immediately at the domain boundary.</p>
+      <p><strong>Related concepts:</strong> Constructor invariants, fail-fast validation, and value objects.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1603,11 +1547,10 @@ Group2Controller:
       ]
     usage: true
   executeCase2():
-    summary: Một constructor yêu cầu mười hai tham số cùng kiểu String và developer
-      truyền nhầm số điện thoại vào vị trí mã khách hàng.
+    summary: "A constructor accepts twelve String parameters, and a developer accidentally passes a phone number where the customer ID belongs."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thay chuỗi tham số cùng kiểu bằng value objects có tên/Builder kiểm tra required fields; cung cấp factory có ý nghĩa.</p>
-      <p><strong>Kiến thức liên quan:</strong> Primitive obsession, type safety, Builder và object construction.</p>
+      <p><strong>Recommended approach:</strong> Replace long sequences of same-type parameters with named value objects or a Builder validating required fields; provide meaningful factory methods.</p>
+      <p><strong>Related concepts:</strong> Primitive obsession, type safety, Builder, and object construction.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1633,11 +1576,10 @@ Group2Controller:
       ]
     usage: true
   executeCase3():
-    summary: Constructor của lớp cha gọi một method có thể override làm lớp con đọc
-      field chưa khởi tạo và trả kết quả khác nhau theo cách tạo object.
+    summary: "A base-class constructor invokes an overridable method, causing the subclass to read uninitialized fields and produce results that depend on construction order."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không gọi overridable method trong constructor cha; dùng private/final initialization rồi kích hoạt hành vi subclass sau khi khởi tạo.</p>
-      <p><strong>Kiến thức liên quan:</strong> Java initialization order, dynamic dispatch và constructor safety.</p>
+      <p><strong>Recommended approach:</strong> Do not call overridable methods from base constructors; complete private/final initialization before activating subclass behavior.</p>
+      <p><strong>Related concepts:</strong> Java initialization order, dynamic dispatch, and constructor safety.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1663,11 +1605,10 @@ Group2Controller:
       ]
     usage: true
   executeCase4():
-    summary: Trong quá trình tạo một object, constructor mở socket rồi ném exception
-      ở bước đọc cấu hình, để lại kết nối không được đóng.
+    summary: "An object's constructor opens a socket but throws while reading configuration, leaving the connection unclosed."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Đảm bảo close các tài nguyên đã mở nếu khởi tạo thất bại bằng try-with-resources/factory; phân định rõ owner đóng socket.</p>
-      <p><strong>Kiến thức liên quan:</strong> Exception safety, AutoCloseable và resource ownership.</p>
+      <p><strong>Recommended approach:</strong> Ensure previously opened resources are closed if initialization fails, using try-with-resources/a factory; clearly assign responsibility for closing the socket.</p>
+      <p><strong>Related concepts:</strong> Exception safety, AutoCloseable, and resource ownership.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1693,11 +1634,10 @@ Group2Controller:
       ]
     usage: true
   executeCase5():
-    summary: Một static initializer đọc biến môi trường không tồn tại làm toàn bộ
-      class thất bại khi lần đầu được tải trong môi trường production.
+    summary: "A static initializer reads a missing environment variable, causing the entire class to fail on first load in production."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Đưa kiểm tra cấu hình vào bước bootstrap có thông báo lỗi rõ thay vì static initializer khó kiểm soát; xử lý thiếu config sớm.</p>
-      <p><strong>Kiến thức liên quan:</strong> Class initialization, fail-fast configuration và exception handling.</p>
+      <p><strong>Recommended approach:</strong> Validate configuration during bootstrap with clear error messages instead of an uncontrolled static initializer; detect missing configuration early.</p>
+      <p><strong>Related concepts:</strong> Class initialization, fail-fast configuration, and exception handling.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1720,11 +1660,10 @@ Group2Controller:
       ]
     usage: true
   executeCase6():
-    summary: Một object được đưa vào cache trước khi hoàn tất khởi tạo nên request
-      khác quan sát thấy các field có giá trị mặc định.
+    summary: "An object is inserted into a cache before initialization completes, so another request observes default field values."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Chỉ đưa object vào cache sau khi validate và khởi tạo hoàn chỉnh; dùng factory và cơ chế công bố an toàn giữa thread.</p>
-      <p><strong>Kiến thức liên quan:</strong> Safe publication, object invariant và concurrent visibility.</p>
+      <p><strong>Recommended approach:</strong> Publish the object to the cache only after complete initialization and validation; use a factory and safe publication across threads.</p>
+      <p><strong>Related concepts:</strong> Safe publication, object invariants, and concurrent visibility.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1750,11 +1689,10 @@ Group2Controller:
       ]
     usage: true
   executeCase7():
-    summary: Hai constructor overload cùng nhận nhiều tham số nullable khiến lời gọi
-      với null chọn sai chữ ký hoặc không biên dịch do mơ hồ.
+    summary: "Two overloaded constructors accept several nullable parameters, making calls with null select the wrong signature or fail to compile because of ambiguity."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Loại overload mơ hồ với null bằng tên factory rõ ràng hoặc type-specific value objects; tránh các chữ ký dễ gây nhập nhằng.</p>
-      <p><strong>Kiến thức liên quan:</strong> Overload resolution, null ambiguity và type-safe API design.</p>
+      <p><strong>Recommended approach:</strong> Replace null-ambiguous overloads with clearly named factories or type-specific value objects; avoid easily confused signatures.</p>
+      <p><strong>Related concepts:</strong> Overload resolution, null ambiguity, and type-safe API design.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1779,11 +1717,10 @@ Group2Controller:
       ]
     usage: true
   executeCase8():
-    summary: Builder cho phép tạo yêu cầu chuyển khoản thiếu tài khoản đích và chỉ
-      phát hiện lỗi sau khi gọi hệ thống ngân hàng.
+    summary: "A Builder allows a transfer request without a destination account, and the missing field is discovered only after calling the banking system."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Cho Builder từ chối thiếu destination/amount khi build, tạo object bất biến hợp lệ; kiểm tra cả trường hợp không đủ dữ liệu.</p>
-      <p><strong>Kiến thức liên quan:</strong> Builder validation, required fields và constructor invariant.</p>
+      <p><strong>Recommended approach:</strong> Make Builder reject missing destination/amount fields during build, producing a valid immutable object; test incomplete requests.</p>
+      <p><strong>Related concepts:</strong> Builder validation, required fields, and constructor invariants.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1810,11 +1747,10 @@ Group2Controller:
       ]
     usage: true
   executeCase9():
-    summary: Một static factory trả object dùng chung có trạng thái mutable khiến
-      hai người dùng vô tình ảnh hưởng lẫn nhau.
+    summary: "A static factory returns a shared mutable object, causing two users to affect one another unintentionally."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Trả object immutable hoặc instance tách biệt theo owner; nếu chia sẻ cần đồng bộ trạng thái và hợp đồng lifetime rõ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Aliasing, shared mutable state, scope và thread safety.</p>
+      <p><strong>Recommended approach:</strong> Return immutable objects or separate instances per owner; if sharing is required, define synchronization and lifetime contracts explicitly.</p>
+      <p><strong>Related concepts:</strong> Aliasing, shared mutable state, scope, and thread safety.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1841,11 +1777,10 @@ Group2Controller:
       ]
     usage: true
   executeCase10():
-    summary: Một đối tượng có field final tham chiếu tới danh sách sản phẩm nhưng
-      caller vẫn thay đổi các phần tử bên trong sau khi object đã được tạo.
+    summary: "An object has a final field referencing a product list, but callers can still mutate its elements after construction."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tạo defensive copies của cả list lẫn phần tử mutable; trả immutable snapshot/DTO thay vì để caller giữ alias.</p>
-      <p><strong>Kiến thức liên quan:</strong> Shallow vs deep immutability, final reference và defensive copying.</p>
+      <p><strong>Recommended approach:</strong> Make defensive copies of both the list and mutable elements; return immutable snapshots/DTOs instead of exposing aliases.</p>
+      <p><strong>Related concepts:</strong> Shallow versus deep immutability, final references, and defensive copying.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1871,11 +1806,10 @@ Group2Controller:
       ]
     usage: true
   executeCase11():
-    summary: Vòng đời của một session object kéo dài qua nhiều request khiến quyền
-      truy cập cũ vẫn tồn tại sau khi người dùng đăng xuất.
+    summary: "A session object lives across multiple requests, so outdated permissions remain available after the user logs out."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Gắn session với lifecycle và thời hạn phù hợp; vô hiệu hóa khi logout, tránh cache/tái sử dụng principal có quyền đã hết hạn.</p>
-      <p><strong>Kiến thức liên quan:</strong> Object scope, session lifecycle, invalidation và access control.</p>
+      <p><strong>Recommended approach:</strong> Bind sessions to an appropriate lifecycle and expiration period; invalidate on logout and avoid caching/reusing principals whose permissions have expired.</p>
+      <p><strong>Related concepts:</strong> Object scope, session lifecycles, invalidation, and access control.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1898,11 +1832,10 @@ Group2Controller:
       ]
     usage: true
   executeCase12():
-    summary: Đối tượng dùng làm key trong cache có hashCode dựa trên field thay đổi
-      theo thời gian, khiến cùng đối tượng không thể truy xuất lại.
+    summary: "A cache key object's hashCode depends on a field that changes over time, so the same object cannot be looked up again."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không dùng field mutable tham gia hash của cache key; chọn immutable ID/value key, hoặc loại key cũ rồi thêm key mới có kiểm soát.</p>
-      <p><strong>Kiến thức liên quan:</strong> equals/hashCode, hashed collections và mutable key hazards.</p>
+      <p><strong>Recommended approach:</strong> Exclude mutable fields from cache-key hashes; use immutable IDs/value keys or remove and replace changed keys in a controlled way.</p>
+      <p><strong>Related concepts:</strong> equals/hashCode, hashed collections, and mutable-key hazards.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1928,11 +1861,10 @@ Group2Controller:
       ]
     usage: true
   executeCase13():
-    summary: Khi clone đơn hàng mẫu, danh sách item vẫn tham chiếu tới các object
-      con của đơn gốc nên sửa đơn mới làm thay đổi đơn cũ.
+    summary: "Cloning a template order leaves its item list referencing the original order's child objects, so editing the new order also changes the old one."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Copy sâu các line item cần sở hữu riêng hoặc dùng immutable item; ghi rõ contract copy và thử sửa bản sao mà không ảnh hưởng gốc.</p>
-      <p><strong>Kiến thức liên quan:</strong> Copy constructors, clone semantics và graph aliasing.</p>
+      <p><strong>Recommended approach:</strong> Deep-copy line items that require separate ownership or use immutable items; document copy semantics and test that changing the copy leaves the original untouched.</p>
+      <p><strong>Related concepts:</strong> Copy constructors, clone semantics, and graph aliasing.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1958,11 +1890,10 @@ Group2Controller:
       ]
     usage: true
   executeCase14():
-    summary: Một lần khôi phục object từ JSON tạo được trạng thái mà constructor thường
-      từ chối, khiến quy tắc miền không còn nhất quán.
+    summary: "Deserializing an object from JSON produces a state that its normal constructor rejects, making domain rules inconsistent."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Áp dụng validate/invariant sau deserialize hoặc map DTO vào constructor/factory của domain; từ chối trạng thái JSON không hợp lệ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Deserialization boundaries, object invariants và factory validation.</p>
+      <p><strong>Recommended approach:</strong> Validate invariants after deserialization or map the DTO through a domain constructor/factory; reject invalid JSON-derived states.</p>
+      <p><strong>Related concepts:</strong> Deserialization boundaries, object invariants, and factory validation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1990,11 +1921,10 @@ Group2Controller:
     usage: true
 Group3Controller:
   executeCase1():
-    summary: Public setter cho trạng thái đơn hàng cho phép ứng dụng mobile đưa đơn
-      từ CREATED sang DELIVERED khi chưa có thanh toán.
+    summary: "A public order-status setter lets a mobile application move an order from CREATED to DELIVERED without payment."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Ẩn setter status; chỉ có transition methods với guard xác nhận thanh toán và kiểm thử chuyển trạng thái trái phép.</p>
-      <p><strong>Kiến thức liên quan:</strong> Encapsulation, state machine, domain commands và invariants.</p>
+      <p><strong>Recommended approach:</strong> Hide the status setter; expose only guarded transition methods that verify payment and test illegal state changes.</p>
+      <p><strong>Related concepts:</strong> Encapsulation, state machines, domain commands, and invariants.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2022,11 +1952,10 @@ Group3Controller:
       ]
     usage: true
   executeCase2():
-    summary: Mỗi field của hóa đơn có setter riêng nên giảm giá có thể được cập nhật
-      nhưng tổng tiền chưa đổi nếu request thất bại giữa chừng.
+    summary: "Each invoice field has a separate setter, so a discount can change while the total remains stale if a request fails midway."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Cập nhật discount và total trong một method, validate trước khi mutate; cân nhắc tính total dẫn xuất thay vì lưu hai trạng thái trùng.</p>
-      <p><strong>Kiến thức liên quan:</strong> Cross-field invariant, exception safety và atomic domain operations.</p>
+      <p><strong>Recommended approach:</strong> Update discount and total in one method, validating before mutation; consider deriving the total instead of maintaining duplicate state.</p>
+      <p><strong>Related concepts:</strong> Cross-field invariants, exception safety, and atomic domain operations.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2053,11 +1982,10 @@ Group3Controller:
       ]
     usage: true
   executeCase3():
-    summary: Caller nhận trực tiếp List sản phẩm từ Cart.getItems và xóa mặt hàng
-      mà không đi qua kiểm tra tồn kho của giỏ hàng.
+    summary: "A caller obtains the product List directly from Cart.getItems and removes an item without going through the cart's inventory checks."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không trả live list; cung cấp snapshot bất biến và phương thức add/remove kiểm tra tồn kho, giới hạn và trạng thái Cart.</p>
-      <p><strong>Kiến thức liên quan:</strong> Representation exposure, aggregate encapsulation và defensive copies.</p>
+      <p><strong>Recommended approach:</strong> Do not return a live list; expose an immutable snapshot and add/remove methods that validate inventory, limits, and Cart state.</p>
+      <p><strong>Related concepts:</strong> Representation exposure, aggregate encapsulation, and defensive copies.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2085,11 +2013,10 @@ Group3Controller:
       ]
     usage: true
   executeCase4():
-    summary: API getter trả một mảng byte chứa khóa phiên làm client sửa phần tử và
-      khiến các bước xác thực sau sử dụng dữ liệu sai.
+    summary: "A getter returns a byte array containing a session key, allowing clients to modify its elements and corrupt subsequent authentication."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Trả bản sao byte array ở constructor/getter hoặc không expose secret; kiểm soát quyền truy cập và vòng đời dữ liệu nhạy cảm.</p>
-      <p><strong>Kiến thức liên quan:</strong> Array mutability, defensive copying và information hiding.</p>
+      <p><strong>Recommended approach:</strong> Return copies of the byte array at constructor/getter boundaries or avoid exposing secrets; control access rights and sensitive-data lifetimes.</p>
+      <p><strong>Related concepts:</strong> Array mutability, defensive copying, and information hiding.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2115,11 +2042,10 @@ Group3Controller:
       ]
     usage: true
   executeCase5():
-    summary: Một class khai báo private field nhưng public getter trả chính object
-      mutable chứa thông tin nội bộ, làm việc đóng gói trở nên hình thức.
+    summary: "A class declares a private field but exposes the underlying mutable object through a public getter, reducing encapsulation to a formality."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thay getter trả live object bằng immutable projection/defensive copy; chỉ expose thao tác nghiệp vụ thay đổi hợp lệ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Encapsulation, aliasing và representation exposure.</p>
+      <p><strong>Recommended approach:</strong> Replace live-object getters with immutable projections/defensive copies; expose only valid business operations for state changes.</p>
+      <p><strong>Related concepts:</strong> Encapsulation, aliasing, and representation exposure.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2145,11 +2071,10 @@ Group3Controller:
       ]
     usage: true
   executeCase6():
-    summary: Dữ liệu ngày bắt đầu và kết thúc hợp đồng được nhập hợp lệ từng field
-      nhưng kết hợp lại thành khoảng thời gian có ngày kết thúc trước ngày bắt đầu.
+    summary: "Contract start and end dates are valid individually but combine into an invalid interval with an end date before its start."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Dùng DateRange value object kiểm tra start &lt;= end trước khi xây hợp đồng; cùng invariant áp dụng ở mọi kênh.</p>
-      <p><strong>Kiến thức liên quan:</strong> Cross-field invariants, value objects và validation boundaries.</p>
+      <p><strong>Recommended approach:</strong> Use a DateRange value object to check start &lt;= end before constructing the contract; enforce the same invariant across all channels.</p>
+      <p><strong>Related concepts:</strong> Cross-field invariants, value objects, and validation boundaries.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2176,11 +2101,10 @@ Group3Controller:
       ]
     usage: true
   executeCase7():
-    summary: Ứng dụng web kiểm tra hạn mức chuyển tiền còn batch job gọi trực tiếp
-      model nên các giao dịch batch vượt hạn mức.
+    summary: "A web application enforces transfer limits, but a batch job calls the model directly, allowing batch transfers to exceed the limit."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Đưa kiểm tra hạn mức vào domain/application use case chung, bắt buộc web và batch gọi qua cùng điểm, kiểm thử cả hai đường.</p>
-      <p><strong>Kiến thức liên quan:</strong> Domain rule centralization, policy enforcement và boundary validation.</p>
+      <p><strong>Recommended approach:</strong> Move transfer-limit checks into a shared domain/application use case, require web and batch calls through that entry point, and test both paths.</p>
+      <p><strong>Related concepts:</strong> Centralized domain rules, policy enforcement, and boundary validation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2207,11 +2131,10 @@ Group3Controller:
       ]
     usage: true
   executeCase8():
-    summary: Một phương thức rút tiền trừ số dư trước khi gọi kiểm tra phí và khi
-      bước sau ném exception thì số dư đã bị thay đổi.
+    summary: "A withdrawal method deducts funds before validating fees; when the later check throws, the balance has already changed."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tính phí và kiểm tra đủ số dư trước khi trừ; nếu nhiều bước ghi, dùng transaction/rollback để trạng thái cũ không bị hỏng khi lỗi.</p>
-      <p><strong>Kiến thức liên quan:</strong> Strong exception safety, atomicity và transaction boundaries.</p>
+      <p><strong>Recommended approach:</strong> Calculate fees and verify sufficient funds before deducting; for multi-step writes use transactions/rollback so failures preserve previous state.</p>
+      <p><strong>Related concepts:</strong> Strong exception safety, atomicity, and transaction boundaries.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2238,11 +2161,10 @@ Group3Controller:
       ]
     usage: true
   executeCase9():
-    summary: Hai luồng cập nhật hai field phụ thuộc nhau trên cùng object và một luồng
-      đọc được trạng thái chỉ mới cập nhật một nửa.
+    summary: "Two threads update dependent fields of the same object, and one thread observes a state in which only half the fields have changed."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Gộp hai field thành immutable state cập nhật atomically hoặc bảo vệ cả đọc/ghi bằng cùng lock; không cho thấy trạng thái dở dang.</p>
-      <p><strong>Kiến thức liên quan:</strong> Thread safety, atomic snapshot, visibility và compound invariants.</p>
+      <p><strong>Recommended approach:</strong> Combine both fields into an immutable state updated atomically, or protect all reads and writes with the same lock; never expose partial states.</p>
+      <p><strong>Related concepts:</strong> Thread safety, atomic snapshots, visibility, and compound invariants.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2268,11 +2190,10 @@ Group3Controller:
       ]
     usage: true
   executeCase10():
-    summary: Danh sách trả về được bọc unmodifiable nhưng phần tử bên trong vẫn có
-      setter nên caller có thể sửa thông tin giỏ hàng.
+    summary: "A returned list is wrapped as unmodifiable, but its elements still have setters, so callers can change shopping-cart information."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Trả list chứa immutable DTO/deep copies thay vì chỉ unmodifiable wrapper trên các phần tử có setter.</p>
-      <p><strong>Kiến thức liên quan:</strong> Unmodifiable view vs deep immutability và defensive copies.</p>
+      <p><strong>Recommended approach:</strong> Return lists of immutable DTOs/deep copies rather than merely wrapping elements with setters in an unmodifiable collection.</p>
+      <p><strong>Related concepts:</strong> Unmodifiable views versus deep immutability, and defensive copies.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2299,11 +2220,10 @@ Group3Controller:
       ]
     usage: true
   executeCase11():
-    summary: Một object dùng chung giữ tham chiếu tới Date mutable của caller, khiến
-      ngày hết hạn thay đổi âm thầm sau khi tạo object.
+    summary: "A shared object retains a reference to a caller's mutable Date, silently changing its expiration date after construction."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Sao chép Date ở biên vào/ra hoặc thay bằng Instant/LocalDate bất biến; không giữ tham chiếu mutable của caller.</p>
-      <p><strong>Kiến thức liên quan:</strong> Temporal value types, aliasing và defensive copying.</p>
+      <p><strong>Recommended approach:</strong> Copy Date values at input/output boundaries or replace them with immutable Instant/LocalDate values; do not retain caller-owned mutable references.</p>
+      <p><strong>Related concepts:</strong> Temporal value types, aliasing, and defensive copying.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2328,11 +2248,10 @@ Group3Controller:
       ]
     usage: true
   executeCase12():
-    summary: Tính năng hủy đơn hàng được cho phép từ bất kỳ trạng thái nào vì nghiệp
-      vụ được biểu diễn bằng setter thay vì các hành vi cụ thể.
+    summary: "Order cancellation is allowed from any state because business behavior is modeled with a setter rather than specific operations."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Ẩn setter, định nghĩa cancel() theo các trạng thái cho phép cùng điều kiện hoàn tiền; kiểm thử các transition không hợp lệ.</p>
-      <p><strong>Kiến thức liên quan:</strong> State machines, guard clauses và domain invariants.</p>
+      <p><strong>Recommended approach:</strong> Hide the setter, define cancel() for permitted states and refund conditions, and test invalid transitions.</p>
+      <p><strong>Related concepts:</strong> State machines, guard clauses, and domain invariants.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2359,11 +2278,10 @@ Group3Controller:
       ]
     usage: true
   executeCase13():
-    summary: Một phương thức thay đổi trạng thái đồng thời ghi log, gửi email và gọi
-      API ngoài, khiến thất bại ở một bước để lại object ở trạng thái khó xác định.
+    summary: "A method changes state while logging, emailing, and calling an external API, so a failure in one step leaves the object's state uncertain."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách chuyển trạng thái và side effects; commit dữ liệu trước, phát sự kiện/outbox sau và kiểm soát retry/idempotency cho ngoại hệ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Transaction boundary, domain events, outbox và failure isolation.</p>
+      <p><strong>Recommended approach:</strong> Separate state transitions from side effects; commit data first, publish events/outbox entries afterward, and control retries/idempotency for external systems.</p>
+      <p><strong>Related concepts:</strong> Transaction boundaries, domain events, outbox, and failure isolation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2390,11 +2308,10 @@ Group3Controller:
       ]
     usage: true
   executeCase14():
-    summary: Một class công khai nhiều getter khiến các caller tự ghép lại quy tắc
-      tính tiền; sau khi công thức thay đổi, các caller trả kết quả không đồng nhất.
+    summary: "A class exposes many getters, making callers reassemble pricing rules themselves; after a formula change, callers produce inconsistent results."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Đưa công thức tính tiền về PricePolicy/domain method duy nhất; client chỉ nhận kết quả thay vì tự tổ hợp getter.</p>
-      <p><strong>Kiến thức liên quan:</strong> Tell Don&#39;t Ask, cohesion, single source of truth.</p>
+      <p><strong>Recommended approach:</strong> Centralize the pricing formula in one PricePolicy/domain method; clients receive the result rather than composing getters themselves.</p>
+      <p><strong>Related concepts:</strong> Tell Don&#39;t Ask, cohesion, and a single source of truth.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2422,11 +2339,10 @@ Group3Controller:
     usage: true
 Group4Controller:
   executeCase1():
-    summary: SDK của nhà cung cấp thanh toán bị gọi trực tiếp từ domain model nên
-      đổi vendor đòi sửa cả logic đặt hàng.
+    summary: "A payment provider's SDK is called directly from the domain model, so changing vendors requires rewriting ordering logic."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tạo PaymentGateway port theo miền và adapter bọc SDK; inject dependency tại composition root để đổi vendor độc lập.</p>
-      <p><strong>Kiến thức liên quan:</strong> DIP, ports-and-adapters và anti-corruption layer.</p>
+      <p><strong>Recommended approach:</strong> Define a domain PaymentGateway port and an adapter wrapping the SDK; inject dependencies at the composition root so vendors can be changed independently.</p>
+      <p><strong>Related concepts:</strong> DIP, ports-and-adapters, and anti-corruption layers.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2454,11 +2370,10 @@ Group4Controller:
       ]
     usage: true
   executeCase2():
-    summary: 'Hai implementation của cùng interface xử lý mã đơn hàng không tồn tại
-      khác nhau: một trả null, một ném exception, làm client lỗi ngẫu nhiên.'
+    summary: "Two implementations of the same interface handle a nonexistent order ID differently: one returns null, while the other throws an exception, causing unpredictable client failures."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Chốt một chính sách not-found bằng Optional hoặc exception định nghĩa rõ, sửa cả hai adapter và chạy shared contract tests.</p>
-      <p><strong>Kiến thức liên quan:</strong> Interface semantic contracts, nullability và LSP.</p>
+      <p><strong>Recommended approach:</strong> Standardize one not-found policy using Optional or a clearly defined exception; fix both adapters and run shared contract tests.</p>
+      <p><strong>Related concepts:</strong> Interface semantic contracts, nullability, and LSP.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2487,11 +2402,10 @@ Group4Controller:
       ]
     usage: true
   executeCase3():
-    summary: Một interface in hóa đơn có cả phương thức ghi dữ liệu và hủy tài liệu,
-      buộc client chỉ đọc phải phụ thuộc vào các thao tác nguy hiểm.
+    summary: "An invoice-printing interface includes data-writing and document-deletion operations, forcing read-only clients to depend on dangerous methods."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Chia ReadInvoice và ManageInvoice theo vai trò, chỉ cấp quyền thao tác cần thiết cho client chỉ đọc.</p>
-      <p><strong>Kiến thức liên quan:</strong> ISP, least privilege và role-based interfaces.</p>
+      <p><strong>Recommended approach:</strong> Separate ReadInvoice and ManageInvoice by role; expose only necessary operations to read-only clients.</p>
+      <p><strong>Related concepts:</strong> ISP, least privilege, and role-based interfaces.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2515,11 +2429,10 @@ Group4Controller:
       ]
     usage: true
   executeCase4():
-    summary: Một API public được mở rộng thêm default method làm class đang implements
-      hai interface phát sinh xung đột và không còn biên dịch.
+    summary: "Adding a default method to a public interface creates a conflict for a class implementing two interfaces, so the class no longer compiles."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Rà soát method trùng và thêm override tường minh theo quy tắc Java; kiểm tra tương thích binary/source trước nâng API.</p>
-      <p><strong>Kiến thức liên quan:</strong> Default method conflict, interface evolution và method resolution.</p>
+      <p><strong>Recommended approach:</strong> Review colliding method signatures and add an explicit override under Java's resolution rules; check binary/source compatibility before upgrading the API.</p>
+      <p><strong>Related concepts:</strong> Default-method conflicts, interface evolution, and method resolution.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2543,11 +2456,10 @@ Group4Controller:
       ]
     usage: true
   executeCase5():
-    summary: Một interface dành cho repository chứa quá nhiều phương thức, khiến adapter
-      chỉ hỗ trợ tra cứu phải ném UnsupportedOperationException cho thao tác ghi.
+    summary: "A repository interface has too many methods, forcing a lookup-only adapter to throw UnsupportedOperationException for writes."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách read repository khỏi write repository; loại những thao tác không hỗ trợ thay vì trả UnsupportedOperationException.</p>
-      <p><strong>Kiến thức liên quan:</strong> ISP, capability interfaces và contract consistency.</p>
+      <p><strong>Recommended approach:</strong> Separate read and write repositories; remove unsupported operations rather than throwing UnsupportedOperationException.</p>
+      <p><strong>Related concepts:</strong> ISP, capability interfaces, and contract consistency.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2572,11 +2484,10 @@ Group4Controller:
       ]
     usage: true
   executeCase6():
-    summary: Class phụ thuộc trực tiếp nhiều implementation cụ thể khiến test tích
-      hợp phải khởi động cả database, queue và email server.
+    summary: "A class depends directly on many concrete implementations, so integration tests must start a database, queue, and email server."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Inject ports nhỏ cho storage/queue/email vào class; test với test doubles thay vì khởi động mọi hệ thống ngoài.</p>
-      <p><strong>Kiến thức liên quan:</strong> Dependency injection, dependency inversion và unit test isolation.</p>
+      <p><strong>Recommended approach:</strong> Inject small storage/queue/email ports into the class; test using test doubles instead of starting every external system.</p>
+      <p><strong>Related concepts:</strong> Dependency injection, dependency inversion, and unit-test isolation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2603,11 +2514,10 @@ Group4Controller:
       ]
     usage: true
   executeCase7():
-    summary: Nhóm phát triển tạo interface cho mọi concrete class dù không có ranh
-      giới module hay nhu cầu thay thế, gây khó tìm luồng thực thi.
+    summary: "Developers create an interface for every concrete class without module boundaries or substitution needs, making execution flow difficult to trace."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Chỉ tạo interface tại điểm biến thiên/boundary có nhu cầu; ưu tiên concrete class đơn giản cho phần ổn định, bỏ wrapper vô ích.</p>
-      <p><strong>Kiến thức liên quan:</strong> YAGNI, speculative abstraction và trade-off design.</p>
+      <p><strong>Recommended approach:</strong> Create interfaces only where variation or boundary requirements exist; prefer simple concrete classes for stable code and remove useless wrappers.</p>
+      <p><strong>Related concepts:</strong> YAGNI, speculative abstraction, and design trade-offs.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2634,11 +2544,10 @@ Group4Controller:
       ]
     usage: true
   executeCase8():
-    summary: Một abstraction đặt tên chung chung là execute nhận Map String,Object
-      làm các implementation diễn giải key và lỗi theo cách khác nhau.
+    summary: "A vaguely named execute abstraction accepts a Map String,Object, so implementations interpret keys and errors differently."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thay Map String,Object bằng request/command type rõ trường và validation; đặc tả đầu vào, lỗi và side effects của execute.</p>
-      <p><strong>Kiến thức liên quan:</strong> Type safety, explicit contracts và schema validation.</p>
+      <p><strong>Recommended approach:</strong> Replace Map String,Object with an explicit request/command type with named fields and validation; specify execute inputs, errors, and side effects.</p>
+      <p><strong>Related concepts:</strong> Type safety, explicit contracts, and schema validation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2666,11 +2575,10 @@ Group4Controller:
       ]
     usage: true
   executeCase9():
-    summary: Service công khai hợp đồng cho phép truyền null nhưng một implementation
-      lại dereference ngay và ném NullPointerException.
+    summary: "A public service contract permits null, but one implementation immediately dereferences it and throws NullPointerException."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thống nhất null policy trong contract; kiểm tra null có chủ đích hoặc sửa đặc tả thành non-null, test mọi implementation.</p>
-      <p><strong>Kiến thức liên quan:</strong> Nullability, preconditions và behavioral subtyping.</p>
+      <p><strong>Recommended approach:</strong> Standardize the null policy in the contract; deliberately handle null or revise the specification to require non-null inputs, and test every implementation.</p>
+      <p><strong>Related concepts:</strong> Nullability, preconditions, and behavioral subtyping.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2698,11 +2606,10 @@ Group4Controller:
       ]
     usage: true
   executeCase10():
-    summary: Một API được thiết kế trả kết quả bất biến nhưng một implementation trả
-      danh sách có thể sửa còn implementation khác trả snapshot.
+    summary: "An API promises immutable results, but one implementation returns a mutable list while another returns a snapshot."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Định nghĩa ownership đầu ra: luôn immutable snapshot hoặc bản sao phòng vệ; kiểm thử cả việc sửa list và mutable elements.</p>
-      <p><strong>Kiến thức liên quan:</strong> Return-value contract, defensive copies và LSP.</p>
+      <p><strong>Recommended approach:</strong> Define output ownership: always return an immutable snapshot or defensive copy, and test mutations of both the list and its mutable elements.</p>
+      <p><strong>Related concepts:</strong> Return-value contracts, defensive copies, and LSP.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2729,11 +2636,10 @@ Group4Controller:
       ]
     usage: true
   executeCase11():
-    summary: Một class abstract có method template phụ thuộc thứ tự hook không được
-      tài liệu hóa, khiến subclass mới hoạt động sai dù compile thành công.
+    summary: "An abstract class has a template method whose hook ordering is undocumented, causing new subclasses to misbehave even though they compile."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tài liệu hóa thứ tự hook và invariant trước/sau; đóng băng bước bắt buộc hoặc chuyển sang composition nếu subclass tùy biến quá rộng.</p>
-      <p><strong>Kiến thức liên quan:</strong> Template Method, subclass contracts và fragile base class.</p>
+      <p><strong>Recommended approach:</strong> Document hook order and before/after invariants; make required steps non-overridable or switch to composition if subclass customization is too broad.</p>
+      <p><strong>Related concepts:</strong> Template Method, subclass contracts, and fragile base classes.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2761,11 +2667,10 @@ Group4Controller:
     usage: true
 Group5Controller:
   executeCase1():
-    summary: Một subtype Vehicle buộc đối tượng Bicycle có phương thức startEngine
-      dù xe đạp không có hành vi động cơ.
+    summary: "A Vehicle subtype forces Bicycle to expose startEngine even though bicycles have no engine behavior."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Phân tách EnginePowered khỏi Vehicle, chỉ gắn năng lực startEngine cho phương tiện có động cơ; không ép Bicycle hỗ trợ giả.</p>
-      <p><strong>Kiến thức liên quan:</strong> LSP, ISP, role interface và capability modeling.</p>
+      <p><strong>Recommended approach:</strong> Separate EnginePowered from Vehicle and assign the startEngine capability only to powered vehicles; do not force Bicycle to fake support.</p>
+      <p><strong>Related concepts:</strong> LSP, ISP, role interfaces, and capability modeling.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2791,11 +2696,10 @@ Group5Controller:
       ]
     usage: true
   executeCase2():
-    summary: Subclass tài khoản tiết kiệm cho phép số dư âm trong khi các client sử
-      dụng hợp đồng Account luôn giả định số dư không âm.
+    summary: "A savings-account subclass allows a negative balance, while clients of its Account contract always assume balances are nonnegative."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Sửa withdraw giữ invariant số dư theo Account contract; nếu quy tắc khác biệt bản chất, tạo type/hợp đồng phù hợp.</p>
-      <p><strong>Kiến thức liên quan:</strong> LSP, postconditions và invariants.</p>
+      <p><strong>Recommended approach:</strong> Fix withdraw to preserve the Account contract's balance invariant; if the rules fundamentally differ, introduce a suitable type/contract.</p>
+      <p><strong>Related concepts:</strong> LSP, postconditions, and invariants.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2822,11 +2726,10 @@ Group5Controller:
       ]
     usage: true
   executeCase3():
-    summary: Thay đổi thêm validation trong superclass phá luồng tạo object của nhiều
-      subclass vốn truyền dữ liệu trung gian trong constructor.
+    summary: "Adding validation to a superclass breaks construction of many subclasses that pass intermediate data through their constructors."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không dùng subclass state chưa sẵn sàng khi superclass constructor chạy; đặt validation tại factory/phase thích hợp và thêm regression tests.</p>
-      <p><strong>Kiến thức liên quan:</strong> Initialization order, base-class coupling và subclass invariants.</p>
+      <p><strong>Recommended approach:</strong> Do not rely on subclass state before the superclass constructor completes; validate at an appropriate factory/phase and add regression tests.</p>
+      <p><strong>Related concepts:</strong> Initialization order, base-class coupling, and subclass invariants.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2853,11 +2756,10 @@ Group5Controller:
       ]
     usage: true
   executeCase4():
-    summary: Một lớp con override hàm định giá nhưng âm thầm bỏ qua một khoản phí
-      mà mọi client của lớp cha đều coi là bắt buộc.
+    summary: "A subclass overrides pricing but silently omits a mandatory fee that all superclass clients expect."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Giữ thành phần phí bắt buộc trong semantic contract, test tất cả subtype bằng shared contract tests với tình huống biên.</p>
-      <p><strong>Kiến thức liên quan:</strong> Behavioral subtyping, postconditions và contract testing.</p>
+      <p><strong>Recommended approach:</strong> Preserve required fee components in the semantic contract; run shared contract tests on all subtypes, including boundary cases.</p>
+      <p><strong>Related concepts:</strong> Behavioral subtyping, postconditions, and contract testing.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2883,11 +2785,10 @@ Group5Controller:
       ]
     usage: true
   executeCase5():
-    summary: Một subclass ném loại checked exception khác với phương thức của lớp
-      cha nên đoạn override không thể biên dịch.
+    summary: "A subclass override declares a different checked exception from the parent method, so the override cannot compile."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Sửa override chỉ ném checked exception đúng loại hoặc subtype đã khai báo; nếu cần lỗi khác, chuyển đổi theo hợp đồng.</p>
-      <p><strong>Kiến thức liên quan:</strong> Checked exception override rules và Java type system.</p>
+      <p><strong>Recommended approach:</strong> Declare only checked exceptions allowed by the parent method or their subtypes; translate other errors according to the contract.</p>
+      <p><strong>Related concepts:</strong> Checked-exception overriding rules and the Java type system.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2911,11 +2812,10 @@ Group5Controller:
       ]
     usage: true
   executeCase6():
-    summary: Một method overload nhận Object và String khiến lời gọi null chạy vào
-      nhánh ngoài mong đợi hoặc gây lỗi khi chữ ký được mở rộng.
+    summary: "Overloads accepting Object and String cause null calls to select an unexpected branch or become ambiguous as signatures evolve."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tránh overload có quan hệ type dễ mơ hồ với null; đổi tên API hoặc cast/chỉ định type tại call site theo ý định.</p>
-      <p><strong>Kiến thức liên quan:</strong> Compile-time overload resolution và null overload ambiguity.</p>
+      <p><strong>Recommended approach:</strong> Avoid type-related overloads that are confusing with null; use distinct API names or explicit casts/types at call sites to convey intent.</p>
+      <p><strong>Related concepts:</strong> Compile-time overload resolution and null overload ambiguity.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2940,11 +2840,10 @@ Group5Controller:
       ]
     usage: true
   executeCase7():
-    summary: Developer mong static method của subclass được dispatch theo kiểu object
-      thực tế nên kết quả xử lý khác với dự đoán.
+    summary: "A developer expects a subclass static method to dispatch based on the actual object's type, producing unexpected results."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách kỳ vọng static method dispatch khỏi dynamic polymorphism; dùng instance virtual method khi thật sự cần hành vi subtype.</p>
-      <p><strong>Kiến thức liên quan:</strong> Static method hiding và runtime dynamic dispatch.</p>
+      <p><strong>Recommended approach:</strong> Distinguish static-method hiding from dynamic polymorphism; use virtual instance methods when subtype-specific runtime behavior is required.</p>
+      <p><strong>Related concepts:</strong> Static-method hiding and runtime dynamic dispatch.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2969,11 +2868,10 @@ Group5Controller:
       ]
     usage: true
   executeCase8():
-    summary: Một subclass khai báo field cùng tên với superclass khiến một biến được
-      truy cập theo kiểu cha và kiểu con trả hai giá trị khác nhau.
+    summary: "A subclass declares a field with the same name as the superclass, so accessing it through parent and child types yields different values."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không tái khai báo field trùng tên trong subtype; dùng accessor có nghĩa, bảo đảm một nguồn trạng thái hoặc composition.</p>
-      <p><strong>Kiến thức liên quan:</strong> Field hiding, lexical resolution và encapsulation.</p>
+      <p><strong>Recommended approach:</strong> Avoid redeclaring same-named fields in subtypes; use meaningful accessors and a single source of state, or composition.</p>
+      <p><strong>Related concepts:</strong> Field hiding, lexical resolution, and encapsulation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -2998,11 +2896,10 @@ Group5Controller:
       ]
     usage: true
   executeCase9():
-    summary: Refactor chuyển một method từ protected sang private làm các subclass
-      từng override nó không còn thay đổi được hành vi.
+    summary: "A refactor changes a method from protected to private, so subclasses that used to override it can no longer customize behavior."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Giữ protected extension contract khi cần tương thích hoặc thay bằng strategy/hook chính thức và migration có test.</p>
-      <p><strong>Kiến thức liên quan:</strong> Access modifiers, override contracts và API compatibility.</p>
+      <p><strong>Recommended approach:</strong> Preserve protected extension contracts where compatibility matters, or replace them with an official strategy/hook and a tested migration path.</p>
+      <p><strong>Related concepts:</strong> Access modifiers, override contracts, and API compatibility.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3027,11 +2924,10 @@ Group5Controller:
       ]
     usage: true
   executeCase10():
-    summary: Một class final được dùng làm điểm mở rộng trong thư viện nhưng plugin
-      bên ngoài không thể kế thừa và phải sao chép logic.
+    summary: "A final class is used as a library extension point, but external plugins cannot inherit it and must duplicate logic."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thiết kế extension points bằng interface/strategy thay cho kế thừa class final; tránh copy implementation nội bộ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Final classes, composition và plugin extensibility.</p>
+      <p><strong>Recommended approach:</strong> Provide extension points through interfaces/strategies instead of inheriting a final class; avoid copying internal implementations.</p>
+      <p><strong>Related concepts:</strong> Final classes, composition, and plugin extensibility.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3057,11 +2953,10 @@ Group5Controller:
       ]
     usage: true
   executeCase11():
-    summary: Quy tắc tính diện tích của một Square mutable kế thừa Rectangle phá kỳ
-      vọng client khi thay đổi chiều rộng nhưng chiều cao cũng đổi.
+    summary: "A mutable Square subclass of Rectangle violates client expectations because changing its width also changes its height."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không cho Square subtype Rectangle mutable nếu phá setWidth/setHeight contract; chọn Shape chung hoặc mô hình bất biến.</p>
-      <p><strong>Kiến thức liên quan:</strong> LSP, Rectangle-Square problem và pre/postconditions.</p>
+      <p><strong>Recommended approach:</strong> Do not make Square a subtype of mutable Rectangle if it violates the setWidth/setHeight contract; use a shared Shape contract or immutable design.</p>
+      <p><strong>Related concepts:</strong> LSP, the Rectangle-Square problem, and pre/postconditions.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3086,11 +2981,10 @@ Group5Controller:
       ]
     usage: true
   executeCase12():
-    summary: Một hệ thống mở rộng chuỗi class kế thừa sâu đến mức sửa hook trong lớp
-      gốc làm lỗi hiển thị ở nhiều màn hình không liên quan.
+    summary: "An application grows a deep inheritance chain, so modifying a base-class hook causes UI failures across unrelated screens."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Giảm hierarchy sâu bằng composition/delegation; viết contract tests cho hook và refactor theo từng lớp kiểm soát tác động.</p>
-      <p><strong>Kiến thức liên quan:</strong> Fragile base class, inheritance coupling và refactoring.</p>
+      <p><strong>Recommended approach:</strong> Reduce deep hierarchies using composition/delegation; test hook contracts and refactor incrementally to control impact.</p>
+      <p><strong>Related concepts:</strong> Fragile base classes, inheritance coupling, and refactoring.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3117,11 +3011,10 @@ Group5Controller:
     usage: true
 Group6Controller:
   executeCase1():
-    summary: Mã xử lý báo cáo lặp đi lặp lại instanceof cho từng loại nhân viên nên
-      thêm vị trí mới phải sửa nhiều caller.
+    summary: "Report-processing code repeatedly checks instanceof for every employee type, so adding a new role requires changes in many callers."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Đưa report behavior cần biến thiên vào interface nhân viên hoặc strategy tương ứng; giảm lặp instanceof tại caller.</p>
-      <p><strong>Kiến thức liên quan:</strong> Subtype polymorphism, Tell Don&#39;t Ask và OCP.</p>
+      <p><strong>Recommended approach:</strong> Move varying report behavior into an employee interface or corresponding strategy; reduce repeated instanceof checks in callers.</p>
+      <p><strong>Related concepts:</strong> Subtype polymorphism, Tell Don&#39;t Ask, and OCP.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3148,11 +3041,10 @@ Group6Controller:
       ]
     usage: true
   executeCase2():
-    summary: Một tập lệnh switch theo type code ở controller, service và UI làm hai
-      thành phần hiểu khác nhau về cùng một loại giao dịch.
+    summary: "Switch statements over type codes appear in the controller, service, and UI, causing components to interpret the same transaction type differently."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tập trung mapping type code và hành vi vào một tầng hoặc polymorphic API; dùng contract tests tránh cách hiểu lệch giữa UI/service.</p>
-      <p><strong>Kiến thức liên quan:</strong> Dynamic dispatch, type codes và consistency.</p>
+      <p><strong>Recommended approach:</strong> Centralize type-code mapping and behavior in one layer or a polymorphic API; use contract tests to prevent UI/service inconsistencies.</p>
+      <p><strong>Related concepts:</strong> Dynamic dispatch, type codes, and consistency.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3177,11 +3069,10 @@ Group6Controller:
       ]
     usage: true
   executeCase3():
-    summary: Hai biến thể tính thuế dùng cùng interface nhưng khác nhau trong việc
-      làm tròn, khiến hợp đồng chung không bảo đảm kết quả tương đương.
+    summary: "Two tax-calculation variants share an interface but apply different rounding, so the shared contract cannot guarantee equivalent results."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Xác định chính sách rounding là một phần contract của tính thuế, thống nhất precision và các case biên cho mọi implementation.</p>
-      <p><strong>Kiến thức liên quan:</strong> Semantic contracts, money rounding và contract tests.</p>
+      <p><strong>Recommended approach:</strong> Make rounding policy part of the tax-calculation contract; standardize precision and boundary cases across implementations.</p>
+      <p><strong>Related concepts:</strong> Semantic contracts, monetary rounding, and contract tests.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3208,11 +3099,10 @@ Group6Controller:
       ]
     usage: true
   executeCase4():
-    summary: Một object được giữ trong biến kiểu superclass nhưng caller liên tục
-      cast sang subclass để gọi phương thức không nằm trong hợp đồng chung.
+    summary: "A reference is declared as a superclass type, but callers repeatedly cast it to a subclass to invoke methods outside the shared contract."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Bổ sung năng lực cần dùng vào hợp đồng phù hợp hoặc tách interface theo vai trò; cast chỉ tại boundary thật sự cần thông tin subtype.</p>
-      <p><strong>Kiến thức liên quan:</strong> Polymorphism, ISP và type-safe API design.</p>
+      <p><strong>Recommended approach:</strong> Expose needed capabilities through an appropriate contract or role-specific interface; cast only at boundaries requiring subtype information.</p>
+      <p><strong>Related concepts:</strong> Polymorphism, ISP, and type-safe API design.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3238,11 +3128,10 @@ Group6Controller:
       ]
     usage: true
   executeCase5():
-    summary: Ứng dụng muốn thêm một kênh thông báo mới nhưng phải thay đổi luồng xử
-      lý của các kênh đang hoạt động, gây lỗi hồi quy.
+    summary: "Adding a notification channel requires modifying the processing flows of existing channels, introducing regressions."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách NotificationSender khỏi điều phối, thêm implementation mới tại composition root; kiểm thử không thay kết quả các kênh cũ.</p>
-      <p><strong>Kiến thức liên quan:</strong> OCP, Strategy và regression isolation.</p>
+      <p><strong>Recommended approach:</strong> Separate NotificationSender from orchestration, register a new implementation at the composition root, and test that old channels remain unchanged.</p>
+      <p><strong>Related concepts:</strong> OCP, Strategy, and regression isolation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3268,11 +3157,10 @@ Group6Controller:
       ]
     usage: true
   executeCase6():
-    summary: Một interface có nhiều implementation nhưng không có test chung, khiến
-      implementation mới trả giá trị sai cho trường hợp biên.
+    summary: "An interface has many implementations but no shared tests, so a new implementation returns incorrect values for edge cases."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tạo shared contract test suite cho mọi implementation, gồm null, empty, errors, rounding và side effects.</p>
-      <p><strong>Kiến thức liên quan:</strong> LSP, semantic contracts và parameterized testing.</p>
+      <p><strong>Recommended approach:</strong> Create a shared contract test suite for every implementation covering null, empty inputs, errors, rounding, and side effects.</p>
+      <p><strong>Related concepts:</strong> LSP, semantic contracts, and parameterized testing.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3299,11 +3187,10 @@ Group6Controller:
       ]
     usage: true
   executeCase7():
-    summary: Thiết kế dùng hàng chục subclass để mô tả mọi tổ hợp khuyến mãi, loại
-      khách hàng và phương thức vận chuyển, khiến số lớp tăng theo cấp số nhân.
+    summary: "A design uses dozens of subclasses for every combination of promotion, customer type, and shipping method, causing exponential class growth."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thay tổ hợp subclass bằng các policy độc lập cho promotion/customer/shipping, ghép qua composition với validation tổ hợp hợp lệ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Composition over inheritance, Strategy và combinatorial explosion.</p>
+      <p><strong>Recommended approach:</strong> Replace combinations of subclasses with independent promotion/customer/shipping policies and compose them while validating permitted combinations.</p>
+      <p><strong>Related concepts:</strong> Composition over inheritance, Strategy, and combinatorial explosion.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3330,11 +3217,10 @@ Group6Controller:
       ]
     usage: true
   executeCase8():
-    summary: Một thuật toán có thể thay đổi lúc runtime lại được cố định bằng inheritance
-      nên phải tạo lại toàn bộ object mỗi khi người dùng đổi lựa chọn.
+    summary: "An algorithm that should change at runtime is fixed through inheritance, forcing recreation of the entire object whenever users change options."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Đưa thuật toán biến đổi vào collaborator Strategy có thể thay trong phạm vi owner; không dùng subclass chỉ để đổi runtime option.</p>
-      <p><strong>Kiến thức liên quan:</strong> Strategy, runtime delegation và state ownership.</p>
+      <p><strong>Recommended approach:</strong> Move the variable algorithm into a replaceable Strategy collaborator owned at the appropriate scope; do not use subclasses solely for runtime options.</p>
+      <p><strong>Related concepts:</strong> Strategy, runtime delegation, and state ownership.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3359,11 +3245,10 @@ Group6Controller:
       ]
     usage: true
   executeCase9():
-    summary: Logic vẽ từng Shape được quyết định bằng class name dạng String, khiến
-      đổi tên class làm lỗi chức năng lúc chạy.
+    summary: "Each Shape's drawing logic is chosen using a class-name String, so renaming a class breaks behavior at runtime."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thay kiểm tra class name bằng Shape.draw hoặc capability dispatch theo hợp đồng; tránh String reflection cho phân loại hành vi.</p>
-      <p><strong>Kiến thức liên quan:</strong> Dynamic dispatch, polymorphism và brittle type codes.</p>
+      <p><strong>Recommended approach:</strong> Replace class-name checks with Shape.draw or contract-based capability dispatch; avoid String-based reflection for behavioral categories.</p>
+      <p><strong>Related concepts:</strong> Dynamic dispatch, polymorphism, and brittle type codes.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3389,11 +3274,10 @@ Group6Controller:
       ]
     usage: true
   executeCase10():
-    summary: Khi nhiều interface có default method cùng tên, developer không biết
-      method nào được gọi và gặp lỗi xung đột ở class kết hợp.
+    summary: "When several interfaces declare same-named default methods, developers encounter conflicts in the implementing class and cannot tell which implementation applies."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Khi cần hai default method xung đột, override tại class và gọi rõ InterfaceName.super.method nếu thích hợp; kiểm thử behavior chọn.</p>
-      <p><strong>Kiến thức liên quan:</strong> Interface default method precedence và ambiguity.</p>
+      <p><strong>Recommended approach:</strong> Override the conflicting defaults in the implementing class and explicitly invoke InterfaceName.super.method when appropriate; test the selected behavior.</p>
+      <p><strong>Related concepts:</strong> Interface default-method precedence and ambiguity.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3417,11 +3301,10 @@ Group6Controller:
       ]
     usage: true
   executeCase11():
-    summary: Một trò chơi có quá nhiều trạng thái được mã hóa bằng boolean trên object
-      nhân vật, cho phép các kết hợp trạng thái vô nghĩa.
+    summary: "A game encodes many character states as boolean fields, allowing meaningless combinations."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Biểu diễn các trạng thái hợp lệ bằng enum/state machine có transition guard; không để nhiều boolean độc lập tạo tổ hợp vô lý.</p>
-      <p><strong>Kiến thức liên quan:</strong> State pattern, invariants và state explosion.</p>
+      <p><strong>Recommended approach:</strong> Represent valid states with an enum/state machine and guarded transitions rather than independent booleans that permit impossible combinations.</p>
+      <p><strong>Related concepts:</strong> State patterns, invariants, and state explosion.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3447,11 +3330,10 @@ Group6Controller:
       ]
     usage: true
   executeCase12():
-    summary: Hai hướng xử lý checkout được gom vào một abstract superclass dù chúng
-      không chia sẻ invariant, khiến subclass phải override gần hết hành vi.
+    summary: "Two checkout flows share an abstract superclass despite having no shared invariants, so subclasses must override almost all behavior."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách hai checkout flow bằng strategy/composition có contract chung thật sự; bỏ superclass không có behavior/invariant ổn định.</p>
-      <p><strong>Kiến thức liên quan:</strong> Inheritance vs composition, fragile base class và variation points.</p>
+      <p><strong>Recommended approach:</strong> Separate checkout flows with strategy/composition around a genuinely shared contract; remove superclasses with no stable behavior or invariants.</p>
+      <p><strong>Related concepts:</strong> Inheritance versus composition, fragile base classes, and variation points.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3479,11 +3361,10 @@ Group6Controller:
       ]
     usage: true
   executeCase13():
-    summary: Mã nguồn kế thừa một library base class chỉ để tái sử dụng vài utility
-      method, làm ứng dụng phụ thuộc chặt vào lifecycle của library.
+    summary: "Source code extends a library base class merely to reuse a few utility methods, tightly coupling the application to the library's lifecycle."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Dùng utility qua collaborator hoặc static method được cấp phép thay vì extends library base; quản lý library lifecycle ở adapter.</p>
-      <p><strong>Kiến thức liên quan:</strong> Prefer composition, dependency direction và API stability.</p>
+      <p><strong>Recommended approach:</strong> Use a collaborator or permitted static utility methods instead of extending the library base class; manage the library lifecycle in an adapter.</p>
+      <p><strong>Related concepts:</strong> Prefer composition, dependency direction, and API stability.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3511,11 +3392,10 @@ Group6Controller:
     usage: true
 Group7Controller:
   executeCase1():
-    summary: Một Order giữ cả reference Customer và bản sao địa chỉ giao hàng nhưng
-      đội phát triển không xác định được nguồn dữ liệu nào được phép thay đổi.
+    summary: "An Order stores both a Customer reference and a copy of the delivery address, but the team has not defined which data source may change."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Phân biệt địa chỉ hiện hành từ Customer với snapshot địa chỉ tại lúc đặt hàng; đặt tên trường và thời điểm chụp rõ ràng.</p>
-      <p><strong>Kiến thức liên quan:</strong> Entity reference, historical snapshot và aggregate ownership.</p>
+      <p><strong>Recommended approach:</strong> Distinguish the current address held by Customer from the address snapshot taken when the order is placed; name fields and snapshot timing explicitly.</p>
+      <p><strong>Related concepts:</strong> Entity references, historical snapshots, and aggregate ownership.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3542,11 +3422,10 @@ Group7Controller:
       ]
     usage: true
   executeCase2():
-    summary: Danh sách children của một TreeNode đổi parent nhưng reference parent
-      cũ vẫn chứa node, gây kết quả duyệt cây không nhất quán.
+    summary: "A TreeNode is moved to a new parent, but the old parent's children list still contains it, causing inconsistent tree traversal."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Cập nhật parent/children qua reparent operation duy nhất, xóa khỏi parent cũ và thêm parent mới, cấm cycle và kiểm thử đồ thị.</p>
-      <p><strong>Kiến thức liên quan:</strong> Bidirectional association, graph invariants và consistency.</p>
+      <p><strong>Recommended approach:</strong> Update parent/children through a single reparent operation: remove the node from its old parent, add it to the new parent, prevent cycles, and test the graph.</p>
+      <p><strong>Related concepts:</strong> Bidirectional associations, graph invariants, and consistency.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3573,11 +3452,10 @@ Group7Controller:
       ]
     usage: true
   executeCase3():
-    summary: Một thao tác xóa phòng ban khỏi hệ thống vô tình xóa thông tin nhân viên
-      do mô hình ownership giữa hai loại object bị hiểu sai.
+    summary: "Deleting a department inadvertently deletes employee records because ownership between the two object types was misunderstood."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Xác định nhân viên có lifecycle độc lập phòng ban; ngăn cascade delete không phù hợp, chuyển quan hệ trước khi xóa.</p>
-      <p><strong>Kiến thức liên quan:</strong> Association vs composition, ownership và cascade semantics.</p>
+      <p><strong>Recommended approach:</strong> Recognize that employees have lifecycles independent of departments; prevent inappropriate cascading deletes and reassign relationships before deletion.</p>
+      <p><strong>Related concepts:</strong> Association versus composition, ownership, and cascade semantics.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3602,11 +3480,10 @@ Group7Controller:
       ]
     usage: true
   executeCase4():
-    summary: Một object giữ cả parent và child theo hai chiều nhưng quá trình serialize
-      JSON đi vào vòng lặp vô hạn.
+    summary: "An object stores both parent and child links, and JSON serialization enters an infinite loop."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Trả DTO hoặc cấu hình serialization một chiều/ID reference; không duyệt toàn bộ parent-child cycle khi xuất JSON.</p>
-      <p><strong>Kiến thức liên quan:</strong> Object graph cycles, serialization boundaries và DTO mapping.</p>
+      <p><strong>Recommended approach:</strong> Return a DTO or configure one-way serialization/ID references; do not traverse the entire parent-child cycle when producing JSON.</p>
+      <p><strong>Related concepts:</strong> Object-graph cycles, serialization boundaries, and DTO mapping.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3631,11 +3508,10 @@ Group7Controller:
       ]
     usage: true
   executeCase5():
-    summary: Hai aggregate có reference vòng và constructor yêu cầu mỗi bên được tạo
-      trước, khiến quá trình khởi tạo không thể hoàn tất.
+    summary: "Two aggregates reference each other, and each constructor requires the other aggregate to exist first, making initialization impossible."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Phá constructor cycle bằng factory/orchestrator và ID/reference sau khi tạo entity hợp lệ; xem lại ranh giới aggregate.</p>
-      <p><strong>Kiến thức liên quan:</strong> Circular dependencies, aggregate boundaries và construction order.</p>
+      <p><strong>Recommended approach:</strong> Break the constructor cycle with a factory/orchestrator and IDs/references assigned after valid entities are created; reconsider aggregate boundaries.</p>
+      <p><strong>Related concepts:</strong> Circular dependencies, aggregate boundaries, and construction order.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3658,11 +3534,10 @@ Group7Controller:
       ]
     usage: true
   executeCase6():
-    summary: Nhiều đối tượng đọc trực tiếp dữ liệu sâu qua chuỗi getter khiến đổi
-      cấu trúc nội bộ của Customer kéo theo sửa hàng loạt service.
+    summary: "Many objects navigate through long getter chains, so changing Customer's internal structure requires modifications across numerous services."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Đưa thao tác vào method cấp object sở hữu thông tin hoặc facade theo nhu cầu; giảm chuỗi getter và sửa sâu từ ngoài.</p>
-      <p><strong>Kiến thức liên quan:</strong> Law of Demeter, Tell Don&#39;t Ask và encapsulation.</p>
+      <p><strong>Recommended approach:</strong> Move operations into methods of the information-owning object or a use-case-specific facade; reduce external deep getter chains and mutations.</p>
+      <p><strong>Related concepts:</strong> The Law of Demeter, Tell Don&#39;t Ask, and encapsulation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3688,11 +3563,10 @@ Group7Controller:
       ]
     usage: true
   executeCase7():
-    summary: Một Cart public method trả live list nên bên khác thêm item mà không
-      áp dụng giới hạn số lượng mặt hàng.
+    summary: "A public method on Cart returns a live list, allowing other components to add items without enforcing cart quantity limits."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Ẩn live list Cart, cho addItem kiểm giới hạn và trả immutable snapshot; mọi update phải đi qua aggregate root.</p>
-      <p><strong>Kiến thức liên quan:</strong> Aggregate boundary, representation exposure và invariant.</p>
+      <p><strong>Recommended approach:</strong> Hide Cart's live list; enforce limits through addItem and return immutable snapshots. Route every update through the aggregate root.</p>
+      <p><strong>Related concepts:</strong> Aggregate boundaries, representation exposure, and invariants.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3718,11 +3592,10 @@ Group7Controller:
       ]
     usage: true
   executeCase8():
-    summary: Một class đăng ký listener lên object sống lâu nhưng không hủy đăng ký,
-      khiến object không còn dùng vẫn bị giữ trong bộ nhớ.
+    summary: "A class registers a listener on a long-lived object but never unregisters it, retaining an object that is no longer used."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Gắn unsubscribe/close với lifecycle listener hoặc dùng weak subscription khi phù hợp; kiểm thử object được giải phóng.</p>
-      <p><strong>Kiến thức liên quan:</strong> Observer lifecycle, memory retention và resource cleanup.</p>
+      <p><strong>Recommended approach:</strong> Tie unsubscribe/close to the listener lifecycle or use weak subscriptions when appropriate; test that objects can be released.</p>
+      <p><strong>Related concepts:</strong> Observer lifecycles, memory retention, and resource cleanup.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3745,11 +3618,10 @@ Group7Controller:
       ]
     usage: true
   executeCase9():
-    summary: Đội phát triển hiểu nhầm composition nghĩa là tự động quản lý vòng đời
-      mọi dependency, dẫn đến đóng nhầm collaborator được chia sẻ.
+    summary: "A team assumes composition automatically manages every dependency's lifecycle and accidentally closes a shared collaborator."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Ghi rõ ai tạo/đóng dependency; không đóng shared collaborator khi một composite ngừng dùng, inject owner quản lý scope.</p>
-      <p><strong>Kiến thức liên quan:</strong> Composition ownership, lifecycle scopes và dependency management.</p>
+      <p><strong>Recommended approach:</strong> Specify who creates and closes each dependency; do not close a shared collaborator when one composite stops using it, and inject the owner responsible for scope.</p>
+      <p><strong>Related concepts:</strong> Composition ownership, lifecycle scopes, and dependency management.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3773,11 +3645,10 @@ Group7Controller:
       ]
     usage: true
   executeCase10():
-    summary: Một module tự khởi tạo concrete repository trong constructor nên test
-      unit phải kết nối database thật dù chỉ cần kiểm tra phép tính.
+    summary: "A module constructs a concrete repository in its constructor, so unit tests require a real database even when testing only calculations."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Inject Repository interface vào module; dùng fake/in-memory implementation trong unit tests và adapter cụ thể ở composition root.</p>
-      <p><strong>Kiến thức liên quan:</strong> Constructor injection, DIP và test isolation.</p>
+      <p><strong>Recommended approach:</strong> Inject a Repository interface into the module; use fake/in-memory implementations in unit tests and select concrete adapters at the composition root.</p>
+      <p><strong>Related concepts:</strong> Constructor injection, DIP, and test isolation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3803,11 +3674,10 @@ Group7Controller:
       ]
     usage: true
   executeCase11():
-    summary: Service nhận một đối tượng cấu hình mutable chia sẻ cho toàn ứng dụng
-      và request A có thể thay đổi tham số xử lý của request B.
+    summary: "A service accepts a mutable configuration object shared application-wide, allowing request A to alter request B's processing parameters."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Chuyển config chia sẻ thành immutable snapshot per-request hoặc theo scope; không cho request mutate singleton settings.</p>
-      <p><strong>Kiến thức liên quan:</strong> Immutable configuration, request scope và concurrent aliasing.</p>
+      <p><strong>Recommended approach:</strong> Use immutable shared or per-request configuration snapshots with clear scope; never let requests mutate singleton settings.</p>
+      <p><strong>Related concepts:</strong> Immutable configuration, request scope, and concurrent aliasing.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3832,11 +3702,10 @@ Group7Controller:
       ]
     usage: true
   executeCase12():
-    summary: Một thay đổi thiết kế từ one-to-many sang many-to-many làm nhiều method
-      giả định mỗi item chỉ thuộc một parent trả kết quả sai.
+    summary: "Changing a relationship from one-to-many to many-to-many breaks methods that assume each item belongs to only one parent."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Mô hình quan hệ many-to-many bằng association entity/collection có identity rõ; sửa cardinality assumptions và kiểm thử add/remove hai chiều.</p>
-      <p><strong>Kiến thức liên quan:</strong> Multiplicity, association invariants và relation modeling.</p>
+      <p><strong>Recommended approach:</strong> Model the many-to-many relationship with an association entity/collection and clear identity; update cardinality assumptions and test bidirectional add/remove operations.</p>
+      <p><strong>Related concepts:</strong> Multiplicity, association invariants, and relationship modeling.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3861,11 +3730,10 @@ Group7Controller:
       ]
     usage: true
   executeCase13():
-    summary: Một entity bị tham chiếu bởi nhiều domain object nhưng mỗi nơi giữ bản
-      sao dữ liệu nên việc cập nhật không đồng bộ theo thời gian.
+    summary: "Multiple domain objects refer to the same entity but each stores its own copy of its data, causing updates to diverge over time."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Giữ reference theo entity ID tới nguồn chân lý; dùng snapshot có chủ đích khi lịch sử cần cố định, không sao chép tùy tiện.</p>
-      <p><strong>Kiến thức liên quan:</strong> Entity identity, source of truth và consistency.</p>
+      <p><strong>Recommended approach:</strong> Keep references by entity ID to one source of truth; use intentional snapshots when history must remain fixed, rather than copying arbitrarily.</p>
+      <p><strong>Related concepts:</strong> Entity identity, sources of truth, and consistency.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3893,11 +3761,10 @@ Group7Controller:
     usage: true
 Group8Controller:
   executeCase1():
-    summary: Hai module import class của nhau qua một chuỗi package, gây phụ thuộc
-      vòng và ngăn build hoặc test từng module độc lập.
+    summary: "Two modules import each other's classes through a package chain, creating a dependency cycle that prevents independent builds or tests."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Lập đồ thị dependency để tìm chu trình, tách shared contract xuống module độc lập hoặc thay cuộc gọi ngược bằng port/event.</p>
-      <p><strong>Kiến thức liên quan:</strong> Module cycles, DIP và acyclic dependencies.</p>
+      <p><strong>Recommended approach:</strong> Draw the dependency graph to locate cycles, move shared contracts into an independent module, or replace reverse calls with a port/event.</p>
+      <p><strong>Related concepts:</strong> Module cycles, DIP, and acyclic dependencies.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3922,11 +3789,10 @@ Group8Controller:
       ]
     usage: true
   executeCase2():
-    summary: Một high-level rule phải đổi theo một thay đổi nhỏ trong SQL query vì
-      nghiệp vụ phụ thuộc trực tiếp lớp persistence.
+    summary: "A high-level business rule must change whenever a small SQL query changes because business logic depends directly on persistence code."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Để high-level policy phụ thuộc Repository port; SQL adapter implement phía infrastructure, không cho query detail lan vào business rule.</p>
-      <p><strong>Kiến thức liên quan:</strong> Dependency Inversion, persistence ports và hexagonal architecture.</p>
+      <p><strong>Recommended approach:</strong> Make high-level policies depend on a Repository port implemented by an infrastructure SQL adapter; keep query details out of business rules.</p>
+      <p><strong>Related concepts:</strong> Dependency Inversion, persistence ports, and hexagonal architecture.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3952,11 +3818,10 @@ Group8Controller:
       ]
     usage: true
   executeCase3():
-    summary: Class quản lý đơn hàng vừa gửi email, vừa tính phí, vừa ghi sổ và vừa
-      cập nhật kho, nên một lỗi hạ tầng làm hỏng thao tác kinh doanh khác.
+    summary: "An order-management class sends email, calculates fees, writes accounting entries, and updates inventory, so one infrastructure failure disrupts other business operations."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách pricing, stock, accounting, notification; điều phối use case với transaction và cơ chế xử lý side effects thất bại.</p>
-      <p><strong>Kiến thức liên quan:</strong> SRP, transaction boundaries và fault isolation.</p>
+      <p><strong>Recommended approach:</strong> Separate pricing, stock, accounting, and notification responsibilities; orchestrate use cases with transaction boundaries and mechanisms for failed side effects.</p>
+      <p><strong>Related concepts:</strong> SRP, transaction boundaries, and fault isolation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -3983,11 +3848,10 @@ Group8Controller:
       ]
     usage: true
   executeCase4():
-    summary: Một class chỉ cần thao tác đọc phải inject cả interface quản trị xóa
-      dữ liệu, tạo quyền truy cập vượt nhu cầu.
+    summary: "A class needing only read access injects an administrative repository interface that can also delete data, granting more capabilities than needed."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách ReadOnlyRepository và AdminRepository; inject chỉ khả năng cần dùng, không cấp quyền ghi/xóa cho read-only client.</p>
-      <p><strong>Kiến thức liên quan:</strong> ISP, least privilege và capability security.</p>
+      <p><strong>Recommended approach:</strong> Split ReadOnlyRepository and AdminRepository; inject only necessary capabilities and do not give read-only clients write/delete access.</p>
+      <p><strong>Related concepts:</strong> ISP, least privilege, and capability security.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4011,11 +3875,10 @@ Group8Controller:
       ]
     usage: true
   executeCase5():
-    summary: Một phương thức service có 18 dependency trong constructor, cho thấy
-      nhiều trách nhiệm không liên quan đã bị dồn vào cùng điểm điều phối.
+    summary: "A service constructor has 18 dependencies, suggesting multiple unrelated responsibilities have accumulated in one orchestration point."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Nhóm 18 dependency theo trách nhiệm/use case, tách class điều phối quá lớn; tránh chữa bằng service locator che số phụ thuộc.</p>
-      <p><strong>Kiến thức liên quan:</strong> SRP, high coupling và constructor dependency smell.</p>
+      <p><strong>Recommended approach:</strong> Group the 18 dependencies by responsibility/use case and split an oversized coordinator; do not hide the dependency count behind a service locator.</p>
+      <p><strong>Related concepts:</strong> SRP, high coupling, and constructor-dependency smells.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4041,11 +3904,10 @@ Group8Controller:
       ]
     usage: true
   executeCase6():
-    summary: Một interface được sửa thêm method ghi để phục vụ một client làm tất
-      cả implementation chỉ đọc cũ không còn biên dịch.
+    summary: "Adding a write method to an interface for one client prevents all existing read-only implementations from compiling."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Thay interface tổng bằng read/write contracts tách biệt, giữ API cũ nếu cần migration; bảo vệ compatibility bằng compile tests.</p>
-      <p><strong>Kiến thức liên quan:</strong> ISP, interface evolution và backward compatibility.</p>
+      <p><strong>Recommended approach:</strong> Separate read/write contracts instead of widening one interface; retain old APIs for migration where needed and verify compatibility with compilation tests.</p>
+      <p><strong>Related concepts:</strong> ISP, interface evolution, and backward compatibility.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4070,11 +3932,10 @@ Group8Controller:
       ]
     usage: true
   executeCase7():
-    summary: Các lớp application và infrastructure gọi ngược lẫn nhau, gây một thay
-      đổi nhỏ trong adapter dẫn đến hiệu ứng dây chuyền sang business rules.
+    summary: "Application and infrastructure classes call each other, so a small adapter change ripples into business rules."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Định hướng dependency từ application tới port, infrastructure implement port; loại import ngược và kiểm tra đồ thị module.</p>
-      <p><strong>Kiến thức liên quan:</strong> Dependency Rule, DIP và architecture boundaries.</p>
+      <p><strong>Recommended approach:</strong> Direct application dependencies toward ports implemented by infrastructure; eliminate reverse imports and inspect the module dependency graph.</p>
+      <p><strong>Related concepts:</strong> The Dependency Rule, DIP, and architectural boundaries.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4100,11 +3961,10 @@ Group8Controller:
       ]
     usage: true
   executeCase8():
-    summary: Kỹ sư áp dụng mọi nguyên tắc SOLID bằng cách tạo thêm factory, decorator,
-      provider và service cho ứng dụng nhỏ, khiến lỗi thực tế bị che khuất.
+    summary: "An engineer applies every SOLID principle by adding factories, decorators, providers, and services to a small application, obscuring the actual problems."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Bỏ abstraction không tạo biến thể/test seam có giá trị; tối ưu cho luồng nhỏ bằng thiết kế dễ đọc và thay đổi có kiểm chứng.</p>
-      <p><strong>Kiến thức liên quan:</strong> SOLID pragmatism, KISS, YAGNI.</p>
+      <p><strong>Recommended approach:</strong> Remove abstractions without valuable variation or test seams; favor readable, verifiably changeable designs for small workflows.</p>
+      <p><strong>Related concepts:</strong> Pragmatic SOLID, KISS, and YAGNI.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4131,11 +3991,10 @@ Group8Controller:
       ]
     usage: true
   executeCase9():
-    summary: Một component lấy dependency từ global service locator trong từng method
-      nên test không biết cần chuẩn bị những dịch vụ nào trước khi chạy.
+    summary: "A component fetches dependencies from a global service locator in each method, so tests cannot tell which services to prepare."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Đưa dependency bắt buộc vào constructor thay vì tra locator tại runtime; test nêu rõ fake cần cung cấp.</p>
-      <p><strong>Kiến thức liên quan:</strong> Dependency injection vs Service Locator và explicit dependencies.</p>
+      <p><strong>Recommended approach:</strong> Declare required dependencies in the constructor rather than looking them up at runtime; make test doubles explicit.</p>
+      <p><strong>Related concepts:</strong> Dependency Injection versus Service Locator, and explicit dependencies.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4159,11 +4018,10 @@ Group8Controller:
       ]
     usage: true
   executeCase10():
-    summary: Một Singleton mutable chứa người dùng hiện tại bị tái sử dụng trên nhiều
-      request, làm dữ liệu phiên đăng nhập bị lẫn giữa các khách hàng.
+    summary: "A mutable Singleton holds the current user across requests, mixing login-session data between customers."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không lưu current user trong singleton; đưa identity vào request/security context đã xác thực, tránh state mutable chia sẻ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Singleton scope, thread isolation và authorization context.</p>
+      <p><strong>Recommended approach:</strong> Do not store the current user in a singleton; obtain identity from the authenticated request/security context and avoid shared mutable session state.</p>
+      <p><strong>Related concepts:</strong> Singleton scope, thread isolation, and authorization context.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4188,11 +4046,10 @@ Group8Controller:
       ]
     usage: true
   executeCase11():
-    summary: Trong quá trình cấu hình dependency injection, hai service constructor
-      phụ thuộc ngược lẫn nhau làm ứng dụng không khởi động được.
+    summary: "During dependency-injection configuration, two services depend on each other's constructors, preventing application startup."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách trách nhiệm để loại constructor cycle; có thể di chuyển orchestration lên service thứ ba hoặc dùng port phụ thuộc một chiều.</p>
-      <p><strong>Kiến thức liên quan:</strong> DI cycle, DAG construction và service decomposition.</p>
+      <p><strong>Recommended approach:</strong> Separate responsibilities to eliminate the constructor cycle; move orchestration to a third service or use unidirectional port dependencies.</p>
+      <p><strong>Related concepts:</strong> DI cycles, DAG construction, and service decomposition.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4217,11 +4074,10 @@ Group8Controller:
       ]
     usage: true
   executeCase12():
-    summary: Nhiều class dùng chung một interface khổng lồ chỉ vì có vài method trùng
-      tên, buộc implementation có nhiều hành vi không hợp lệ.
+    summary: "Multiple classes share an enormous interface merely because a few method names match, forcing implementations to provide invalid behavior."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tách interface theo năng lực thực sự được hỗ trợ; không ép implementation ném lỗi cho những method vô nghĩa.</p>
-      <p><strong>Kiến thức liên quan:</strong> ISP, LSP và role segregation.</p>
+      <p><strong>Recommended approach:</strong> Segregate interfaces by genuinely supported capabilities; do not force implementations to throw errors for meaningless methods.</p>
+      <p><strong>Related concepts:</strong> ISP, LSP, and role segregation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4245,11 +4101,10 @@ Group8Controller:
       ]
     usage: true
   executeCase13():
-    summary: Một API chỉ cần thêm loại chiết khấu mới nhưng developer phải thay đổi
-      cấu trúc core framework và tất cả nơi gọi.
+    summary: "Adding one discount type requires changing the core framework structure and every caller instead of only extending policy behavior."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Chỉ mở rộng tại điểm biến thiên chính sách chiết khấu, không buộc sửa framework core; giữ contract ổn định và test tương thích.</p>
-      <p><strong>Kiến thức liên quan:</strong> OCP, extension points và abstraction boundaries.</p>
+      <p><strong>Recommended approach:</strong> Extend only the discount-policy variation point without modifying the core framework; preserve a stable contract and test compatibility.</p>
+      <p><strong>Related concepts:</strong> OCP, extension points, and abstraction boundaries.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4276,11 +4131,10 @@ Group8Controller:
     usage: true
 Group9Controller:
   executeCase1():
-    summary: Nhóm áp dụng Strategy cho ba công thức đang thay đổi nhưng logic chọn
-      strategy lại bị nhân bản trong nhiều controller.
+    summary: "A team uses Strategy for three changing formulas, but duplicates strategy-selection logic across many controllers."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Tập trung Strategy selection tại một factory/application boundary; các controller chỉ gọi dịch vụ định giá qua contract.</p>
-      <p><strong>Kiến thức liên quan:</strong> Strategy, composition root và DRY selection logic.</p>
+      <p><strong>Recommended approach:</strong> Centralize Strategy selection at a factory/application boundary; controllers should call the pricing service through its contract.</p>
+      <p><strong>Related concepts:</strong> Strategy, the composition root, and DRY selection logic.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4306,11 +4160,10 @@ Group9Controller:
       ]
     usage: true
   executeCase2():
-    summary: Một factory dùng tham số environment lấy từ biến toàn cục khiến object
-      trong test và production bị tạo với các dependency khác kỳ vọng.
+    summary: "A factory reads environment settings from a global variable, creating test and production objects with unexpected dependencies."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Truyền environment/config tường minh vào factory; kiểm thử tương ứng từng profile, tránh đọc mutable global state.</p>
-      <p><strong>Kiến thức liên quan:</strong> Abstract Factory, configuration injection và reproducibility.</p>
+      <p><strong>Recommended approach:</strong> Pass environment/configuration explicitly to the factory; test each profile and avoid reading mutable global state.</p>
+      <p><strong>Related concepts:</strong> Abstract Factory, configuration injection, and reproducibility.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4336,11 +4189,10 @@ Group9Controller:
       ]
     usage: true
   executeCase3():
-    summary: Một Abstract Factory tạo database client của môi trường staging nhưng
-      messaging client của production, khiến một thao tác phát dữ liệu sai môi trường.
+    summary: "An Abstract Factory creates a staging database client but a production messaging client, sending data to the wrong environment during one operation."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Ràng buộc tất cả client trong cùng bộ factory theo environment duy nhất; validate profile và loại mixed dependencies trước khởi tạo.</p>
-      <p><strong>Kiến thức liên quan:</strong> Abstract Factory product families, environment isolation.</p>
+      <p><strong>Recommended approach:</strong> Bind all clients in a factory product family to the same environment; validate the profile and reject mixed dependencies before initialization.</p>
+      <p><strong>Related concepts:</strong> Abstract Factory product families and environment isolation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4364,11 +4216,10 @@ Group9Controller:
       ]
     usage: true
   executeCase4():
-    summary: Decorator ghi audit log không giữ nguyên exception của service bên trong
-      khiến client nhận lỗi khác với contract ban đầu.
+    summary: "An audit-logging Decorator changes exceptions from the wrapped service, so clients receive errors that differ from the original contract."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Decorator nên giữ nguyên success/error contract, log lỗi rồi rethrow thích hợp; không thay loại exception ngoài hợp đồng.</p>
-      <p><strong>Kiến thức liên quan:</strong> Decorator transparency, exception propagation và LSP.</p>
+      <p><strong>Recommended approach:</strong> Preserve the Decorator's success/error contract, log errors, and rethrow appropriately; do not introduce exception types outside the contract.</p>
+      <p><strong>Related concepts:</strong> Decorator transparency, exception propagation, and LSP.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4395,11 +4246,10 @@ Group9Controller:
       ]
     usage: true
   executeCase5():
-    summary: Adapter tích hợp dịch vụ bên ngoài rò rỉ enum và DTO vendor vào domain
-      nên nâng version SDK làm hàng loạt object không biên dịch.
+    summary: "An Adapter for an external service exposes vendor enums and DTOs to the domain, so upgrading the SDK breaks compilation in many objects."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Map DTO/enum/error vendor sang domain contracts trong Adapter; không expose SDK ở domain public API.</p>
-      <p><strong>Kiến thức liên quan:</strong> Adapter, anti-corruption layer và vendor isolation.</p>
+      <p><strong>Recommended approach:</strong> Map vendor DTOs/enums/errors to domain contracts inside the Adapter; do not expose SDK types through public domain APIs.</p>
+      <p><strong>Related concepts:</strong> Adapter, anti-corruption layers, and vendor isolation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4425,11 +4275,10 @@ Group9Controller:
       ]
     usage: true
   executeCase6():
-    summary: Facade gộp nhiều lời gọi backend nhưng một bước phụ thất bại khiến caller
-      không biết thao tác chính đã thành công hay chưa.
+    summary: "A Facade combines several backend calls, but failure of an auxiliary step leaves the caller unsure whether the main operation succeeded."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Định nghĩa contract trả kết quả của Facade theo từng bước, trạng thái partial success và retry/idempotency thay vì che lỗi phụ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Facade, failure semantics và idempotent orchestration.</p>
+      <p><strong>Recommended approach:</strong> Define the Facade's result contract for each step, including partial-success states and retries/idempotency, instead of hiding auxiliary errors.</p>
+      <p><strong>Related concepts:</strong> Facade, failure semantics, and idempotent orchestration.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4456,11 +4305,10 @@ Group9Controller:
       ]
     usage: true
   executeCase7():
-    summary: Một hệ thống Observer gọi đồng bộ hàng chục subscriber, trong đó một
-      subscriber ném exception khiến các subscriber còn lại không nhận sự kiện.
+    summary: "An Observer system synchronously invokes dozens of subscribers; one subscriber throws an exception, preventing the rest from receiving the event."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Cô lập callback bằng cơ chế dispatch xử lý lỗi riêng, chọn async/event queue khi phù hợp; mô tả thứ tự và retry rõ.</p>
-      <p><strong>Kiến thức liên quan:</strong> Observer, fault isolation và event delivery guarantees.</p>
+      <p><strong>Recommended approach:</strong> Isolate callbacks with per-subscriber error handling, choose asynchronous dispatch/event queues where appropriate, and document ordering and retries.</p>
+      <p><strong>Related concepts:</strong> Observer, fault isolation, and event-delivery guarantees.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4483,11 +4331,10 @@ Group9Controller:
       ]
     usage: true
   executeCase8():
-    summary: Một listener không được unsubscribe sau khi tab UI đóng, khiến mỗi lần
-      mở lại tab đều xuất hiện thông báo trùng lặp.
+    summary: "A listener remains subscribed after a UI tab closes, so reopening the tab repeatedly produces duplicate notifications."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Unsubscribe khi đóng tab, quản lý subscription handle và idempotent register; kiểm thử mở/đóng không nhân listener.</p>
-      <p><strong>Kiến thức liên quan:</strong> Observer listener lifecycle, cleanup và duplicate events.</p>
+      <p><strong>Recommended approach:</strong> Unsubscribe when the tab closes, manage subscription handles, and make registration idempotent; test that repeated open/close cycles do not multiply listeners.</p>
+      <p><strong>Related concepts:</strong> Observer listener lifecycles, cleanup, and duplicate events.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4511,11 +4358,10 @@ Group9Controller:
       ]
     usage: true
   executeCase9():
-    summary: Template Method trong superclass có hook được override thay đổi thứ tự
-      xử lý, khiến dữ liệu được ghi trước khi validation.
+    summary: "A Template Method superclass has an overridden hook that changes operation order, writing data before validation."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Đóng băng bước validate bắt buộc trước write trong template; không để hook phá thứ tự hoặc chuyển sang composition.</p>
-      <p><strong>Kiến thức liên quan:</strong> Template Method, invariant sequencing và hook contracts.</p>
+      <p><strong>Recommended approach:</strong> Fix the required validation step ahead of writes in the template; prevent hooks from changing this order or switch to composition.</p>
+      <p><strong>Related concepts:</strong> Template Method, invariant sequencing, and hook contracts.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4541,11 +4387,10 @@ Group9Controller:
       ]
     usage: true
   executeCase10():
-    summary: Builder cho object cấu hình cho phép hai tùy chọn loại trừ nhau cùng
-      xuất hiện, gây lỗi chỉ lúc đưa vào production.
+    summary: "A configuration Builder allows two mutually exclusive options at once, causing failure only after deployment to production."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Kiểm tra các option loại trừ nhau ở build(), đưa ra lỗi trước khi tạo config; nếu phù hợp dùng kiểu tổng để ngăn kết hợp sai.</p>
-      <p><strong>Kiến thức liên quan:</strong> Builder, cross-field invariants và validation.</p>
+      <p><strong>Recommended approach:</strong> Validate mutually exclusive options in build() and fail before creating the configuration; use sum types to prevent invalid combinations when appropriate.</p>
+      <p><strong>Related concepts:</strong> Builder, cross-field invariants, and validation.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4571,11 +4416,10 @@ Group9Controller:
       ]
     usage: true
   executeCase11():
-    summary: State pattern bị sử dụng với state object có mutable dữ liệu chia sẻ,
-      khiến transition của phiên làm việc này thay đổi phiên khác.
+    summary: "A State pattern uses a shared mutable state object, so one session's transition changes another session."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Không chia sẻ mutable state object giữa phiên; tạo state riêng per aggregate hoặc state strategy bất biến; bảo vệ transitions.</p>
-      <p><strong>Kiến thức liên quan:</strong> State pattern, object lifetime và shared mutable state.</p>
+      <p><strong>Recommended approach:</strong> Do not share mutable state objects between sessions; create per-aggregate state or use immutable state strategies, and protect transitions.</p>
+      <p><strong>Related concepts:</strong> State patterns, object lifetimes, and shared mutable state.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4601,11 +4445,10 @@ Group9Controller:
       ]
     usage: true
   executeCase12():
-    summary: Một pattern Decorator được lồng qua nhiều tầng khiến stack trace không
-      còn cho biết lớp nào thay đổi dữ liệu request.
+    summary: "A deeply nested Decorator chain obscures stack traces, making it hard to determine which layer modified request data."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Giảm decorator layers, đặt tên/tracing rõ; xác định trách nhiệm từng wrapper và giữ stack trace/cause khi bắt lỗi.</p>
-      <p><strong>Kiến thức liên quan:</strong> Decorator chain, observability và exception chaining.</p>
+      <p><strong>Recommended approach:</strong> Reduce decorator layers, use clear naming/tracing, define each wrapper's responsibility, and preserve stack traces/causes when handling errors.</p>
+      <p><strong>Related concepts:</strong> Decorator chains, observability, and exception chaining.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -4631,11 +4474,10 @@ Group9Controller:
       ]
     usage: true
   executeCase13():
-    summary: Đội phát triển thay switch đơn giản bằng nhiều pattern trước khi có yêu
-      cầu biến thể, khiến người mới khó sửa một quy tắc nhỏ.
+    summary: "A development team replaces a simple switch with multiple patterns before variants are required, making small rule changes harder for newcomers."
     description: |-
-      <p><strong>Hướng xử lý:</strong> Chỉ dùng pattern khi có variation/failure mode thực, so sánh chi phí lớp mới với switch đơn giản; bỏ speculative abstraction.</p>
-      <p><strong>Kiến thức liên quan:</strong> KISS, YAGNI và pattern trade-offs.</p>
+      <p><strong>Recommended approach:</strong> Apply patterns only when real variation/failure modes justify them; compare new-class costs with a simple switch and remove speculative abstractions.</p>
+      <p><strong>Related concepts:</strong> KISS, YAGNI, and pattern trade-offs.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

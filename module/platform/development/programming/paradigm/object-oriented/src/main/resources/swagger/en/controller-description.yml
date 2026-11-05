@@ -1,26 +1,26 @@
 Group10Controller:
-  description: <h2>Domain model, aggregate và transaction</h2>
+  description: <h2>Domain models, aggregates, and transactions</h2>
 Group11Controller:
-  description: <h2>Object contract, equality và generics</h2>
+  description: <h2>Object contracts, equality, and generics</h2>
 Group12Controller:
-  description: <h2>Kiểm thử và refactoring an toàn</h2>
+  description: <h2>Testing and safe refactoring</h2>
 Group13Controller:
-  description: <h2>Concurrency, vòng đời bộ nhớ và hiệu năng</h2>
+  description: <h2>Concurrency, memory lifecycle, and performance</h2>
 Group1Controller:
-  description: <h2>Nền tảng OOP, trách nhiệm và độ phức tạp</h2>
+  description: <h2>OOP foundations, responsibilities, and complexity</h2>
 Group2Controller:
-  description: <h2>Khởi tạo, vòng đời và bản sao đối tượng</h2>
+  description: <h2>Object initialization, lifecycle, and copying</h2>
 Group3Controller:
-  description: <h2>Đóng gói, bất biến và chuyển trạng thái</h2>
+  description: <h2>Encapsulation, immutability, and state transitions</h2>
 Group4Controller:
-  description: <h2>Abstraction, interface và hợp đồng API</h2>
+  description: <h2>Abstraction, interfaces, and API contracts</h2>
 Group5Controller:
-  description: <h2>Kế thừa, overriding và khả năng thay thế</h2>
+  description: <h2>Inheritance, overriding, and substitutability</h2>
 Group6Controller:
-  description: <h2>Đa hình, dispatch và biến thể hành vi</h2>
+  description: <h2>Polymorphism, dispatch, and behavioral variations</h2>
 Group7Controller:
-  description: <h2>Composition, quan hệ và quyền sở hữu</h2>
+  description: <h2>Composition, relationships, and ownership</h2>
 Group8Controller:
-  description: <h2>SOLID, dependency và module boundaries</h2>
+  description: <h2>SOLID, dependencies, and module boundaries</h2>
 Group9Controller:
-  description: <h2>Design Patterns và tương tác giữa thành phần</h2>
+  description: <h2>Design patterns and interactions between components</h2>

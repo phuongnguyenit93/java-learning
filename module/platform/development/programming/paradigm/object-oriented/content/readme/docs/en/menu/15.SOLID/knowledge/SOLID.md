@@ -3,53 +3,53 @@
 # SOLID
 
 ## Menu
-- [Mục đích và phạm vi áp dụng SOLID](#solid-001)
-- [Trách nhiệm đơn: một nhóm lý do thay đổi](#solid-002)
-- [Đóng-mở: mở rộng hành vi với thay đổi có kiểm soát](#solid-003)
-- [Thay thế Liskov: bảo toàn hợp đồng của kiểu cha](#solid-004)
-- [Phân tách giao diện: hợp đồng phù hợp từng bên sử dụng](#solid-005)
-- [Đảo ngược phụ thuộc: phụ thuộc vào sự trừu tượng](#solid-006)
-- [Phân biệt đảo ngược phụ thuộc và tiêm phụ thuộc](#solid-007)
-- [Cân bằng các nguyên tắc với độ phức tạp thực tế](#solid-008)
+- [Purpose and Scope of SOLID](#solid-001)
+- [Single Responsibility: One Group of Reasons to Change](#solid-002)
+- [Open/Closed: Extending Behavior with Controlled Changes](#solid-003)
+- [Liskov Substitution: Preserving Supertype Contracts](#solid-004)
+- [Interface Segregation: Contracts Tailored to Clients](#solid-005)
+- [Dependency Inversion: Depending on Abstractions](#solid-006)
+- [Distinguishing Dependency Inversion from Dependency Injection](#solid-007)
+- [Balancing Principles Against Real-World Complexity](#solid-008)
 
-## <a id="solid-001">Mục đích và phạm vi áp dụng SOLID</a>
+## <a id="solid-001">Purpose and Scope of SOLID</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# SOLID trong OOP: mục đích và phạm vi áp dụng
+# SOLID in OOP: Purpose and Scope
 
-**SOLID** là năm nguyên tắc thiết kế hướng đối tượng giúp phần mềm dễ thay đổi, dễ kiểm thử và giảm tác động dây chuyền khi yêu cầu phát triển. Đây là **các nguyên tắc định hướng**, không phải cú pháp bắt buộc của Java, công thức tự động tạo kiến trúc tốt, hay yêu cầu mọi class phải có interface.
+**SOLID** comprises five object-oriented design principles that make software easier to change and test while reducing cascading effects as requirements evolve. These are **guiding principles**, not mandatory Java syntax, a formula that automatically yields good architecture, or a requirement for every class to have an interface.
 
-Bài học tập trung vào hai câu hỏi: **SOLID giải quyết vấn đề gì?** và **nên áp dụng đến mức nào trong từng bối cảnh?** Sau khi hiểu phạm vi, ta mới quyết định cách dùng SRP, OCP, LSP, ISP, DIP trong một thiết kế cụ thể.
+This lesson focuses on two questions: **What problems does SOLID address?** and **How extensively should it be applied in a particular context?** Understanding that scope helps us decide how to use SRP, OCP, LSP, ISP, and DIP in a specific design.
 
-## 1. Vì sao cần SOLID?
+## 1. Why Do We Need SOLID?
 
-Hãy hình dung ứng dụng bán hàng có một `CheckoutService` vừa tính tiền, áp khuyến mãi, gọi SQL trực tiếp và gửi email. Khi chính sách giảm giá thay đổi, bạn phải sửa service; khi chuyển sang PostgreSQL, vẫn sửa service; khi đổi nhà cung cấp email, tiếp tục sửa service. Một lỗi nhỏ ở bất kỳ phần nào có thể tác động đến quy trình đặt hàng.
+Imagine a sales application where one `CheckoutService` calculates totals, applies promotions, calls SQL directly, and sends emails. Changing discount rules means editing that service; migrating to PostgreSQL means editing it again; switching email providers means yet another edit. A small bug in any of these concerns can affect checkout.
 
-SOLID hướng tới những kết quả cụ thể:
+SOLID aims for concrete outcomes:
 
-- **Dễ thay đổi có kiểm soát:** đổi một quy tắc không bắt buộc viết lại các thành phần ít liên quan.
-- **Giảm phụ thuộc vào chi tiết biến động:** code nghiệp vụ không phải biết chính xác thư viện SQL, SMTP hay hình thức lưu trữ.
-- **Dễ kiểm thử:** có thể kiểm tra phép tính và quy tắc bằng dữ liệu giả mà không cần mọi dịch vụ bên ngoài cùng chạy.
-- **Giữ đúng hợp đồng:** các triển khai khác nhau của cùng một abstraction không làm code sử dụng chúng bị sai bất ngờ.
-- **Làm rõ trách nhiệm:** khi có bug hoặc yêu cầu mới, biết nơi cần thay đổi và nơi cần kiểm tra hồi quy.
+- **Controlled change:** Updating one rule should not require rewriting unrelated components.
+- **Reduced dependence on volatile details:** Business code need not know the exact SQL or SMTP library or storage mechanism.
+- **Easier testing:** Calculations and rules can be tested with fake data without running every external service.
+- **Contract preservation:** Different implementations of one abstraction must not unexpectedly break client code.
+- **Clearer responsibilities:** When a bug or new requirement appears, it is easier to identify what to change and regression-test.
 
-Tuy vậy, dùng SOLID có **chi phí**: thêm abstraction, lớp điều phối, hợp đồng và công việc hiểu luồng phụ thuộc. Nếu áp dụng cơ học cho chức năng nhỏ, số lượng lớp có thể tăng mà không đem lại lợi ích thực tế.
+However, SOLID has **costs**: additional abstractions, coordinating classes, contracts, and effort to understand dependency flows. Applying it mechanically to small features can increase the class count without delivering practical benefits.
 
-> Mục tiêu của SOLID là quản lý **chi phí thay đổi theo thời gian** và chất lượng hợp đồng giữa các thành phần, chứ không phải tối đa hóa số interface hay số class.
+> SOLID seeks to manage **the cost of change over time** and the quality of contracts between components, not to maximize the number of interfaces or classes.
 
-## 2. Năm chữ cái SOLID nói về điều gì?
+## 2. What Do the Five Letters in SOLID Mean?
 
-| Chữ | Nguyên tắc | Câu hỏi tự kiểm tra | Nguy cơ nếu bỏ qua |
+| Letter | Principle | Self-check question | Risk if ignored |
 | --- | --- | --- | --- |
-| **S** | **Single Responsibility Principle (SRP)** — một trách nhiệm chính | Class/module đang thay đổi vì bao nhiêu nhóm yêu cầu độc lập? | Một thay đổi SQL/email/nghiệp vụ cùng buộc sửa một class |
-| **O** | **Open/Closed Principle (OCP)** — mở rộng được, hạn chế sửa code ổn định | Có thêm cách tính/chiến lược bằng implementation mới được không? | Mỗi biến thể mới phải thêm nhánh `if/switch` vào lõi |
-| **L** | **Liskov Substitution Principle (LSP)** — thay thế được | Triển khai subtype có giữ đúng hợp đồng kỳ vọng của kiểu cha không? | Code gọi qua interface bất ngờ sai với một implementation |
-| **I** | **Interface Segregation Principle (ISP)** — giao diện theo nhu cầu | Consumer có bị ép phụ thuộc method nó không dùng? | Class phải implement method vô nghĩa hoặc ném `UnsupportedOperationException` |
-| **D** | **Dependency Inversion Principle (DIP)** — đảo chiều phụ thuộc | Quy tắc cấp cao đang phụ thuộc trực tiếp chi tiết công nghệ? | Domain/application bị trói với DB, HTTP hoặc thư viện cụ thể |
+| **S** | **Single Responsibility Principle (SRP)** — one primary responsibility | How many independent groups of requirements cause this class/module to change? | SQL, email, and business-rule changes all force edits to one class |
+| **O** | **Open/Closed Principle (OCP)** — extensible with limited modification of stable code | Can a new calculation or strategy be added as a new implementation? | Each variant requires another `if/switch` branch in the core |
+| **L** | **Liskov Substitution Principle (LSP)** — safe substitutability | Does the subtype implementation preserve the contract expected of its supertype? | Code using an interface unexpectedly fails with one implementation |
+| **I** | **Interface Segregation Principle (ISP)** — interfaces based on client needs | Must a consumer depend on methods it never uses? | A class implements meaningless methods or throws `UnsupportedOperationException` |
+| **D** | **Dependency Inversion Principle (DIP)** — inversion of source dependencies | Do high-level policies depend directly on technology details? | Domain/application logic becomes tied to a database, HTTP, or specific libraries |
 
-Năm nguyên tắc **hỗ trợ nhau**, không phải năm quy tắc tách biệt tuyệt đối. Một interface nhỏ giúp ISP; application service phụ thuộc interface thay vì SMTP cụ thể thể hiện DIP; nhiều triển khai tuân cùng hợp đồng liên quan đến LSP; thêm triển khai mới mà ít sửa luồng chính hỗ trợ OCP.
+The five principles **reinforce one another** rather than being entirely separate rules. A small interface supports ISP; an application service depending on an interface instead of a concrete SMTP implementation demonstrates DIP; interchangeable implementations honoring one contract relate to LSP; adding implementations with minimal changes to the main workflow supports OCP.
 
 ```mermaid
 flowchart TD
@@ -65,27 +65,27 @@ flowchart TD
     D --> R
 ```
 
-## 3. Hiểu phạm vi áp dụng trước khi thiết kế
+## 3. Understand the Scope Before Designing
 
-SOLID thường phát huy tác dụng ở hệ thống có **nhiều quy tắc, nhiều biến thể hoặc nhiều tác nhân gây thay đổi**. Nhưng quy tắc nghiệp vụ đơn giản không nhất thiết cần cả hệ thống phân tầng phức tạp.
+SOLID often pays off in systems with **many rules, many variants, or multiple independent drivers of change**. Simple business rules, however, do not necessarily justify a complex layered architecture.
 
-| Bối cảnh | Mức áp dụng hợp lý | Lý do |
+| Context | Appropriate degree of application | Rationale |
 | --- | --- | --- |
-| Value object `Money` chỉ cần kiểm tra và cộng/trừ tiền | Giữ dữ liệu và hành vi gắn kết, tránh abstraction dư | Không cần interface cho phép cộng hai số tiền |
-| CRUD nội bộ ít quy tắc, một kiểu lưu trữ cố định | Class rõ trách nhiệm và validation đủ dùng | Tách quá nhiều tầng làm khó đọc mà ít lợi ích |
-| Nhiều cách giảm giá/vận chuyển thay đổi thường xuyên | Policy/strategy có hợp đồng chung | OCP, LSP giúp thêm biến thể có kiểm soát |
-| Use case đọc/ghi DB, phát email hoặc gọi API ngoài | Tách rule khỏi adapter; tạo port tại chỗ cần thay thế | SRP, DIP, ISP làm logic dễ test |
-| Thư viện/SDK cung cấp interface công khai cho nhiều consumer | Thiết kế hợp đồng chính xác, nhỏ và ổn định | LSP, ISP đặc biệt quan trọng vì khách hàng phụ thuộc lâu dài |
-| Hệ thống có nhiều nhóm phát triển và module | Phân rõ quyền sửa, abstraction ở biên thay đổi | Giảm ảnh hưởng khi nhiều nhóm sửa song song |
-| Script xử lý tạm một lần, không có quy tắc tái sử dụng | Ưu tiên đơn giản, đúng và có kiểm tra cần thiết | Chi phí thiết kế hơn lợi ích vòng đời ngắn |
+| A `Money` value object only validates and adds/subtracts amounts | Keep data and behavior cohesive; avoid extra abstractions | Adding two monetary amounts does not need an interface |
+| Internal CRUD with few rules and one fixed storage mechanism | Clear class responsibilities and sufficient validation | Excessive layering hurts readability with little benefit |
+| Multiple frequently changing discount/shipping options | Policies/strategies with a shared contract | OCP and LSP support controlled variation |
+| Use cases that read/write databases, send email, or call external APIs | Separate rules from adapters; define ports where replacement is needed | SRP, DIP, and ISP make logic easier to test |
+| A library/SDK exposes public interfaces to many consumers | Small, precise, stable contracts | LSP and ISP are especially important for long-lived client dependencies |
+| A system has multiple development teams and modules | Define ownership of changes and abstractions at change boundaries | Reduces cross-team impact during parallel development |
+| A one-off script with no reusable rules | Prefer simplicity, correctness, and necessary checks | Design overhead outweighs benefits over its short lifetime |
 
-Nên đặt câu hỏi **“điều gì thực sự thay đổi?”** trước câu hỏi **“cần tạo interface nào?”**. Chẳng hạn nếu chỉ có một cách tính thuế đơn giản và không có yêu cầu đa vùng, một hàm `calculateTax(...)` rõ ràng có thể đủ. Khi có nhiều chính sách theo vùng và đổi thường xuyên, abstraction mới bắt đầu có giá trị rõ.
+Ask **"What actually changes?"** before **"Which interface should we create?"** For example, if there is one simple tax calculation and no regional variation, a clear `calculateTax(...)` function may suffice. Abstraction gains value when multiple regional policies exist and change frequently.
 
-## 4. SRP: xác định ranh giới trách nhiệm
+## 4. SRP: Defining Responsibility Boundaries
 
-SRP thường được giải thích là một class nên có **một lý do để thay đổi**. “Một” ở đây gắn với một nhóm trách nhiệm phục vụ cùng quy tắc/người sở hữu nghiệp vụ, **không phải một method**.
+SRP is often explained as a class having **one reason to change**. "One" refers to a cohesive group of responsibilities serving the same business rules or stakeholders, **not one method**.
 
-Ví dụ một lớp làm mọi việc:
+Consider a class that does everything:
 
 ```java
 // Phác thảo một cách viết cần xem lại, không phải chương trình chạy độc lập.
@@ -99,22 +99,22 @@ class CheckoutManager {
 }
 ```
 
-Những thay đổi trong công thức giảm giá, schema DB, nhà cung cấp email và định dạng JSON đều làm `CheckoutManager` biến động. Hãy phân vai:
+Changes to discount formulas, database schemas, email providers, and JSON formatting all affect `CheckoutManager`. Separate the roles:
 
-- `Order` bảo vệ bất biến của đơn và tính tổng dựa trên các dòng.
-- `DiscountPolicy` quyết định số tiền giảm theo chính sách.
-- `CheckoutService` phối hợp quy trình.
-- `OrderRepository` lưu/truy vấn đơn theo một hợp đồng.
-- `ReceiptSender` gửi biên nhận qua cổng bên ngoài.
-- Controller/API adapter xử lý HTTP và DTO.
+- `Order` protects order invariants and calculates totals from line items.
+- `DiscountPolicy` determines discounts according to a policy.
+- `CheckoutService` coordinates the workflow.
+- `OrderRepository` persists and queries orders through a contract.
+- `ReceiptSender` sends receipts through an external port.
+- A controller/API adapter handles HTTP and DTOs.
 
-Không có nghĩa bắt buộc **mỗi dòng yêu cầu một class**. Nếu hai method cùng phục vụ một trách nhiệm, hoàn toàn có thể để cạnh nhau. SRP bị áp dụng sai khi tạo hàng chục lớp chỉ để đạt “một method một class”.
+This does not mean **every line of code needs its own class**. Two methods serving one responsibility can belong together. Creating dozens of classes to achieve "one method per class" misapplies SRP.
 
-## 5. OCP: chọn đúng điểm mở rộng
+## 5. OCP: Choosing the Right Extension Points
 
-OCP thường được diễn đạt: đối tượng/module nên **mở cho mở rộng nhưng đóng đối với sửa đổi**. Ý nghĩa thực tế không phải “không bao giờ sửa source”. Một bug, hợp đồng sai hoặc yêu cầu mới chưa từng được dự liệu vẫn cần sửa code. OCP nhắm tới những **biến thể đã biết có khả năng tăng**, sao cho thêm biến thể ít phải sửa lõi đã ổn định.
+OCP is often phrased as: objects/modules should be **open for extension but closed for modification**. In practice, this does not mean "never edit source code." Bugs, incorrect contracts, and previously unforeseen requirements still demand changes. OCP targets **known dimensions of variation likely to grow**, so adding variants requires little modification of the stable core.
 
-Ví dụ khi giảm giá có nhiều chính sách:
+For example, when discounts have multiple policies:
 
 ```java
 interface DiscountPolicy {
@@ -134,20 +134,20 @@ final class TenPercentDiscount implements DiscountPolicy {
 }
 ```
 
-`CheckoutService` chỉ phụ thuộc `DiscountPolicy`. Khi bổ sung một loại giảm giá có điều kiện, tạo implementation mới và cấu hình chọn nó; không phải chỉnh code tính tiền của toàn bộ checkout.
+`CheckoutService` depends only on `DiscountPolicy`. To add a conditional discount, create another implementation and configure its selection rather than changing checkout's calculation logic.
 
-**Lưu ý:** vị trí **chọn implementation nào** vẫn cần thay đổi/cấu hình theo yêu cầu: composition root, factory, Spring DI configuration hoặc một policy selector. OCP không xóa hoàn toàn việc sửa code, mà **giới hạn vùng ảnh hưởng**.
+**Note:** The place that **selects an implementation** may still need changes or configuration, whether it is a composition root, factory, Spring DI configuration, or policy selector. OCP does not eliminate all code changes; it **limits their scope**.
 
-## 6. LSP: cùng interface phải giữ cùng kỳ vọng
+## 6. LSP: Shared Interfaces Must Preserve Shared Expectations
 
-Nếu `CheckoutService` chấp nhận `DiscountPolicy`, mọi policy đều phải giữ hợp đồng:
+If `CheckoutService` accepts `DiscountPolicy`, every policy must honor its contract:
 
-- Input subtotal hợp lệ là số cent không âm.
-- Output discount là số cent trong khoảng `0..subtotal`.
-- Không tự ý tạo order, ghi database hoặc đột nhiên trả `null`.
-- Nếu code caller kỳ vọng policy hoạt động cho subtotal hợp lệ, implementation không được âm thầm thu hẹp đầu vào chỉ vì “loại policy này không hỗ trợ”.
+- A valid subtotal input is a nonnegative number of cents.
+- The discount output is an amount in cents within `0..subtotal`.
+- It must not unexpectedly create an order, write to a database, or return `null`.
+- If callers expect a policy to handle valid subtotals, an implementation must not silently narrow the accepted input domain just because "this policy type does not support it."
 
-Ví dụ vi phạm LSP:
+An LSP violation:
 
 ```java
 final class BrokenDiscount implements DiscountPolicy {
@@ -158,15 +158,15 @@ final class BrokenDiscount implements DiscountPolicy {
 }
 ```
 
-Dù Java cho phép compile, triển khai này không đáp ứng hậu điều kiện của `DiscountPolicy`. Khi thay nó cho policy khác, checkout có thể tính số tiền phải trả âm.
+Although Java compiles it, this implementation violates `DiscountPolicy`'s postcondition. Substituting it for another policy can make checkout calculate a negative amount due.
 
-Cách bảo vệ gồm **viết rõ contract**, test chung cho các implementation và kiểm tra các invariant quan trọng tại ranh giới (nhất là khi implementation do plugin/đối tác ngoài cung cấp).
+Safeguards include **documenting the contract**, running shared contract tests against implementations, and validating important invariants at boundaries—especially when plugins or external partners supply implementations.
 
-LSP không chỉ áp dụng cho `extends`: đối tượng triển khai interface cũng phải thay thế được nhau về mặt **hành vi**, chứ không chỉ cùng chữ ký method.
+LSP applies beyond `extends`: objects implementing an interface must be substitutable in **behavior**, not merely match method signatures.
 
-## 7. ISP: interface đủ nhỏ cho vai trò sử dụng
+## 7. ISP: Interfaces Small Enough for Their Clients
 
-Một interface vừa lưu đơn, gửi email, xuất PDF, hoàn tiền và thống kê khiến mỗi implementation hoặc consumer phải phụ thuộc những phần nó không cần.
+An interface that stores orders, sends email, exports PDFs, issues refunds, and produces statistics forces each implementation or consumer to depend on capabilities it does not need.
 
 ```java
 // Dễ gây ép buộc không cần thiết:
@@ -177,7 +177,7 @@ interface BusinessGateway {
 }
 ```
 
-Thay vì buộc một test fake repository phải implement `emailReceipt`, có thể tách:
+Rather than forcing a fake repository in a test to implement `emailReceipt`, split the contracts:
 
 ```java
 interface OrderRepository {
@@ -189,15 +189,15 @@ interface ReceiptSender {
 }
 ```
 
-Service cần lưu đơn chỉ phụ thuộc `OrderRepository`; thành phần gửi biên nhận chỉ quan tâm `ReceiptSender`. Hợp đồng nhỏ còn làm test dễ hiểu.
+A service that stores orders depends only on `OrderRepository`; the receipt-sending component only needs `ReceiptSender`. Small contracts also make tests easier to understand.
 
-Tuy nhiên, ISP **không yêu cầu chia vô hạn** thành interface một method. Nếu nhiều operation cùng thuộc một giao thức ổn định và những consumer liên quan đều dùng chúng, một interface gắn kết vẫn hợp lý.
+However, ISP **does not require endless splitting** into single-method interfaces. If several operations form one stable protocol and its clients need them together, a cohesive interface is still appropriate.
 
-## 8. DIP và Dependency Injection có gì khác nhau?
+## 8. How Do DIP and Dependency Injection Differ?
 
-**DIP** là nguyên tắc thiết kế **hướng phụ thuộc**: phần chính sách cấp cao nên phụ thuộc abstraction mô tả những gì nó cần; chi tiết cấp thấp cài đặt abstraction đó.
+**DIP** is a design principle about **dependency direction**: high-level policies should depend on abstractions describing their needs, and low-level details should implement those abstractions.
 
-**Dependency Injection (DI)** là kỹ thuật truyền dependency từ bên ngoài (ví dụ qua constructor). DI thường giúp hiện thực DIP, nhưng **tự tiêm một class công nghệ cụ thể không tự động đạt DIP**.
+**Dependency Injection (DI)** is the technique of supplying a dependency from outside, for example through a constructor. DI often helps implement DIP, but **injecting a concrete technology class does not automatically satisfy DIP**.
 
 ```java
 // Có constructor injection nhưng vẫn phụ thuộc chi tiết SMTP:
@@ -209,7 +209,7 @@ class CheckoutService {
 }
 ```
 
-Một thiết kế theo DIP:
+A design following DIP:
 
 ```java
 interface ReceiptSender {
@@ -225,7 +225,7 @@ class CheckoutService {
 }
 ```
 
-Lúc chạy có thể truyền `SmtpReceiptSender`, `ConsoleReceiptSender` hoặc fake để test. Service vẫn quan tâm tới nghĩa vụ “gửi biên nhận” nhưng không bị ràng buộc bởi lớp SMTP cụ thể.
+At runtime, we can supply `SmtpReceiptSender`, `ConsoleReceiptSender`, or a fake for testing. The service still requires "sending a receipt," but it is not coupled to a particular SMTP class.
 
 ```mermaid
 flowchart LR
@@ -235,13 +235,13 @@ flowchart LR
     FAKE["FakeReceiptSender — test"] -. "implements" .-> PORT
 ```
 
-Đặt interface ở module nghiệp vụ/application hoặc module contract thích hợp là một cách để **source code của phần cấp cao không import adapter**. Đừng đánh giá hướng phụ thuộc bằng thứ tự gọi lúc chạy: việc service gọi adapter qua interface không có nghĩa module service phải biết chi tiết adapter.
+Placing the interface in the business/application module or an appropriate contract module ensures **high-level source code does not import the adapter**. Do not infer dependency direction from runtime call order: calling an adapter through an interface does not mean the service module must know its implementation details.
 
-## 9. Ví dụ Java 17 chạy độc lập: SOLID ở đúng điểm cần thay đổi
+## 9. Standalone Java 17 Example: SOLID at the Right Change Boundaries
 
-Bài toán: checkout đơn giản có nhiều chương trình giảm giá, có thể thay cách lưu và cách gửi biên nhận. Phần **tiền và trạng thái đơn hợp lệ** thuộc mô hình; phần **điều phối** thuộc service; **tương tác bên ngoài** qua hai interface nhỏ.
+Scenario: A simple checkout offers multiple discount programs and supports different storage and receipt-delivery mechanisms. **Money and valid order state** belong to the model; **coordination** belongs to the service; **external interactions** go through two small interfaces.
 
-Tạo file `SolidScopeDemo.java`. Chương trình dùng một lớp chính và các lớp nested để bạn biên dịch bằng một lệnh.
+Create `SolidScopeDemo.java`. The program uses one main class with nested classes so it can be compiled with a single command.
 
 ```java
 import java.util.LinkedHashMap;
@@ -420,14 +420,14 @@ public class SolidScopeDemo {
 }
 ```
 
-Chạy bằng JDK 17 hoặc mới hơn:
+Run with JDK 17 or later:
 
 ```bash
 javac SolidScopeDemo.java
 java SolidScopeDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 Receipt O-01: 18000 cents
@@ -436,35 +436,35 @@ Saved: true
 Receipt O-02: 10000 cents
 ```
 
-Cách tính đơn đầu tiên: `15_000 + 2 × 2_500 = 20_000` cent; giảm 10% là `2_000` cent; số phải trả `18_000` cent.
+The first order is calculated as `15_000 + 2 × 2_500 = 20_000` cents; a 10% discount is `2_000` cents, leaving `18_000` cents due.
 
-**Giới hạn của ví dụ:** chưa có thuế, hoàn tiền, thanh toán thật hoặc giao dịch database. `MemoryOrderRepository` không thread-safe, chỉ phục vụ demo. `CheckoutService` lưu đơn rồi gửi biên nhận; nếu gửi thất bại, đơn có thể **đã lưu** dù caller gặp exception. Trong sản phẩm cần quy định transaction, retry/idempotency và có thể dùng *transactional outbox* để phát thông báo sau commit. SOLID giúp tách trách nhiệm nhưng **không tự bảo đảm atomicity, tính đúng đắn khi đồng thời hoặc consistency giữa các hệ thống**.
+**Limitations of the example:** It has no taxes, refunds, real payments, or database transactions. `MemoryOrderRepository` is not thread-safe and is only for demonstration. `CheckoutService` saves the order before sending the receipt; if sending fails, the order may **already be saved** even though the caller receives an exception. Production systems need explicit transaction, retry, and idempotency policies and might use a *transactional outbox* to publish notifications after commit. SOLID separates responsibilities but **does not automatically guarantee atomicity, concurrency correctness, or cross-system consistency**.
 
-### Mỗi nguyên tắc xuất hiện ở đâu trong ví dụ?
+### Where Does Each Principle Appear in the Example?
 
-| Nguyên tắc | Bằng chứng từ Java | Giá trị thực tế |
+| Principle | Evidence in Java | Practical value |
 | --- | --- | --- |
-| SRP | `Order` giữ invariant/tính tổng; `CheckoutService` điều phối; adapter lo I/O | Đổi nơi lưu không ảnh hưởng công thức tổng tiền |
-| OCP | `PercentDiscount` và `NoDiscount` cùng implement `DiscountPolicy` | Thêm chính sách mới qua implementation thay vì sửa checkout |
-| LSP | Mọi policy phải trả `0..subtotal` | Thay policy không làm `CheckoutService` trả số âm |
-| ISP | `OrderRepository` và `ReceiptSender` là hợp đồng nhỏ | Fake test chỉ implement đúng phần cần |
-| DIP | Service nhận ba interface qua constructor | Không phụ thuộc trực tiếp `MemoryOrderRepository`/`ConsoleReceiptSender` |
+| SRP | `Order` protects invariants/calculates totals; `CheckoutService` coordinates; adapters handle I/O | Changing storage does not affect the total calculation |
+| OCP | `PercentDiscount` and `NoDiscount` both implement `DiscountPolicy` | Add policies through implementations rather than editing checkout |
+| LSP | Every policy must return `0..subtotal` | Replacing policies does not make `CheckoutService` produce negative amounts |
+| ISP | `OrderRepository` and `ReceiptSender` are small contracts | Test fakes implement only what they need |
+| DIP | The service receives three interfaces through its constructor | No direct dependency on `MemoryOrderRepository`/`ConsoleReceiptSender` |
 
-**Một thiết kế có thể dùng cùng lúc nhiều nguyên tắc** mà không cần đặt tên mỗi nguyên tắc vào tên class. Hợp đồng rõ và các mối phụ thuộc ít bất ngờ quan trọng hơn việc có đủ “năm mẫu” trong code.
+**One design can apply several principles at once** without naming each principle in a class. Clear contracts and unsurprising dependencies matter more than displaying all "five patterns" in code.
 
-## 10. Kiểm thử điều gì để biết thiết kế thật sự có ích?
+## 10. What Should We Test to Validate the Design?
 
-Bạn nên kiểm tra **hành vi** và **khả năng thay thế**:
+Test both **behavior** and **substitutability**:
 
-1. Chính sách 0%, 10%, 100% luôn trả mức giảm trong giới hạn.
-2. Trường hợp `subtotal=1` cent với 10% phải giảm `0` cent theo quy tắc làm tròn xuống.
-3. `Order` từ chối danh sách rỗng, dòng có số lượng không dương, giá âm hoặc dữ liệu khiến tổng tràn `long`.
-4. Nếu policy vi phạm contract, checkout từ chối **trước khi lưu**.
-5. Nếu repository từ chối ghi, `ReceiptSender` không được gọi trong luồng triển khai này.
-6. Nếu thay `ConsoleReceiptSender` bằng fake, cách tính giá và lưu đơn không đổi.
-7. Nếu thay repository bằng một adapter khác, code `Order` và các policy không phải sửa.
+1. Policies of 0%, 10%, and 100% always return discounts within the allowed range.
+2. For a `subtotal=1` cent at 10%, the discount must be `0` cent under the round-down rule.
+3. `Order` rejects empty line lists, nonpositive quantities, negative prices, or values whose total overflows `long`.
+4. If a policy violates the contract, checkout rejects it **before saving**.
+5. If the repository rejects a write, `ReceiptSender` is not called in this implementation's flow.
+6. Replacing `ConsoleReceiptSender` with a fake must not change price calculations or order storage.
+7. Replacing the repository with another adapter should not require changes to `Order` or policy code.
 
-Một fake sender tối giản để kiểm thử:
+A minimal fake sender for testing:
 
 ```java
 class CountingReceiptSender implements SolidScopeDemo.ReceiptSender {
@@ -478,9 +478,9 @@ class CountingReceiptSender implements SolidScopeDemo.ReceiptSender {
 }
 ```
 
-Nếu test đoạn này **từ file khác**, các nested type trong demo đang có mức truy cập *package-private*: đặt test cùng package (ví dụ file mặc định không khai báo package) hoặc sửa visibility phù hợp khi chuyển thành project thật. Để test tự động, dùng JUnit 5 và assert kết quả thay vì phụ thuộc `System.out`.
+If testing this code **from another file**, the demo's nested types have *package-private* access: place the test in the same package (for example, the default package) or adjust visibility when moving to a real project. For automated tests, use JUnit 5 and assert results instead of relying on `System.out`.
 
-Ví dụ test hợp đồng cho policy:
+Example of a policy contract test:
 
 ```java
 // Phác thảo phép kiểm thử, thêm vào test/JUnit của dự án.
@@ -493,36 +493,36 @@ void assertPolicyContract(
 }
 ```
 
-Chạy cùng một bộ kiểm tra cho mọi implementation của `DiscountPolicy` là phương pháp thực tế để duy trì LSP. Riêng tính đúng đắn khuyến mãi theo yêu cầu còn cần test công thức và ranh giới số học.
+Running the same contract checks against every `DiscountPolicy` implementation is a practical way to maintain LSP. Correct promotional behavior also requires tests for formulas and numeric boundaries.
 
-## 11. SOLID không thay thế những nguyên tắc nào?
+## 11. What Does SOLID Not Replace?
 
-Một thiết kế tuân SOLID vẫn có thể lỗi nếu bỏ qua:
+A SOLID-compliant design can still fail if it ignores:
 
-- **Đúng nghiệp vụ:** thời gian, đơn vị tiền, điều kiện khuyến mãi hay chính sách trả hàng bị hiểu sai.
-- **Đóng gói dữ liệu:** public setter có thể phá invariant dù service đã tách interface đẹp.
-- **Transaction và concurrency:** hai request cùng kiểm tra tồn kho/giới hạn rồi cập nhật có thể tạo race condition.
-- **Bảo mật và phân quyền:** interface nhỏ không tự kiểm tra ai được thực hiện thao tác.
-- **Hiệu năng:** quá nhiều truy vấn, gọi mạng tuần tự hoặc cấp phát đối tượng vẫn có thể chậm.
-- **Khả năng quan sát:** log, metric, trace và lỗi cần được xử lý rõ ràng.
-- **Mô hình dữ liệu:** khóa ngoại, uniqueness và constraints ở database không được tự sinh từ SOLID.
-- **Đơn giản hóa:** có những nơi một class/factory đơn giản dễ bảo trì hơn một hệ thống chiến lược không cần thiết.
+- **Business correctness:** Time, currency units, promotional conditions, or return policies may be misunderstood.
+- **Data encapsulation:** A public setter can violate invariants even when a service has well-factored interfaces.
+- **Transactions and concurrency:** Two requests checking inventory/limits and then updating can race.
+- **Security and authorization:** A small interface does not check who is allowed to perform an operation.
+- **Performance:** Too many queries, sequential network calls, or allocations can still be slow.
+- **Observability:** Logs, metrics, traces, and errors need explicit handling.
+- **Data modeling:** SOLID does not create foreign keys, uniqueness constraints, or other database constraints.
+- **Simplicity:** Sometimes a straightforward class or factory is easier to maintain than an unnecessary strategy system.
 
-Vì vậy SOLID là **một phần** của thiết kế tốt, không phải thước đo duy nhất của chất lượng code.
+Therefore, SOLID is **one part** of good design, not the sole measure of code quality.
 
-## 12. Các dấu hiệu đang dùng SOLID quá mức
+## 12. Signs of Overapplying SOLID
 
-| Dấu hiệu | Vì sao cần xem lại? | Cách đơn giản hơn |
+| Symptom | Why reconsider? | Simpler approach |
 | --- | --- | --- |
-| Mỗi helper có một interface và một class `Impl` duy nhất | Không tạo ra ranh giới thay thế thực sự | Class hoặc hàm thuần, có test |
-| Mỗi thao tác nhỏ trong `Money`/entity thành một service | Tách rời các hành vi cùng bảo vệ một bất biến | Giữ `add`, `subtract`, `compareTo` trong value object |
-| Xây cây kế thừa nhiều tầng cho biến thể còn chưa tồn tại | Phụ thuộc sâu, nhiều điểm override và hợp đồng khó giữ | Composition/policy khi có yêu cầu |
-| Cấm sửa module ổn định dù hợp đồng đang sai | OCP bị hiểu nhầm thành “không được sửa code” | Sửa hợp đồng, chạy test hồi quy |
-| Mỗi cách đổi nhỏ cần cấu hình plugin động | Chi phí thiết kế và vận hành vượt ích lợi | `if/switch` rõ ràng nếu tập biến thể nhỏ và ổn định |
+| Every helper has an interface and a single `Impl` class | No real substitution boundary exists | A concrete class or pure function, with tests |
+| Every small operation on `Money`/entities becomes a service | Separates behavior that protects the same invariant | Keep `add`, `subtract`, and `compareTo` on the value object |
+| Deep inheritance hierarchies for variants that do not yet exist | Deep coupling, many overrides, and difficult contracts | Introduce composition/policies when needed |
+| Stable modules are forbidden from changing even when contracts are wrong | Confuses OCP with "never edit code" | Fix the contract and run regression tests |
+| Every minor variation needs dynamic plugin configuration | Design and operational cost exceeds the benefit | Use a clear `if/switch` for a small, stable set of variants |
 
-Đừng đánh giá SOLID bằng số lượng class/interface. Bài **Cân bằng các nguyên tắc với độ phức tạp thực tế** cho một tình huống giao hàng tăng từ một chính sách lên nhiều chính sách, rồi đo cụ thể chi phí mở rộng và chi phí abstraction.
+Do not evaluate SOLID by counting classes or interfaces. The lesson **Balancing Principles Against Real-World Complexity** examines shipping as it grows from one policy to several and assesses the actual costs of extension and abstraction.
 
-## 13. Quy trình nhanh trước khi thêm abstraction
+## 13. A Quick Process Before Adding Abstractions
 
 ```mermaid
 flowchart TD
@@ -535,108 +535,108 @@ flowchart TD
     F --> G
 ```
 
-1. **Xác định áp lực có thật:** bug do phụ thuộc, nhiều biến thể cùng phải sửa một chỗ, test cần hạ tầng, hoặc subclass không giữ hợp đồng.
-2. **Chọn điểm cần bảo vệ:** nghiệp vụ/domain, dữ liệu và invariant trước; chi tiết SQL/SMTP hoặc quy tắc riêng đưa ra ranh giới phù hợp.
-3. **Mở rộng ở đúng chỗ:** OCP cho điểm biến thiên, DIP cho hướng dependency, ISP cho API của consumer, LSP cho tính thay thế, SRP cho trách nhiệm.
-4. **Giữ kết quả cũ bằng test:** so sánh output, exception và side effect của ca cũ; test riêng ca mới, tình huống biên và lỗi.
-5. **Đánh giá chi phí:** abstraction có làm ít chỗ phải sửa hơn, dễ test/đọc hơn hay chỉ thêm bước chuyển tiếp?
+1. **Identify real pressure:** Dependency-related bugs, many variants changing the same place, tests requiring infrastructure, or subclasses violating contracts.
+2. **Choose what to protect:** Prioritize business/domain rules, data, and invariants; place SQL/SMTP details and specialized policies behind suitable boundaries.
+3. **Extend in the right place:** Use OCP for variation points, DIP for dependency direction, ISP for client-facing APIs, LSP for substitutability, and SRP for responsibility.
+4. **Preserve previous outcomes with tests:** Compare outputs, exceptions, and side effects for existing cases; test new cases, boundaries, and failures separately.
+5. **Evaluate the cost:** Does the abstraction reduce required edits and improve testing/readability, or merely add another forwarding layer?
 
-Đây là bản định hướng đầu chương, không phải quy trình luôn phải áp dụng nguyên xi. Không có tỷ lệ “số interface / số class” hay phần trăm code phải giảm để chứng minh SOLID đúng.
+This is introductory guidance, not a procedure to follow mechanically every time. There is no interface-to-class ratio or required percentage of code reduction that proves SOLID has been applied correctly.
 
-## 14. Bài tập thực hành
+## 14. Practice Exercises
 
-**Bài 1 — Nhận diện phạm vi.** Ứng dụng ghi chú cá nhân chỉ cần tạo, sửa, xóa ghi chú, lưu trên một file JSON. Hãy nêu hai cách thiết kế: đơn giản và phân tầng đầy đủ. Phương án nào hợp lý ở thời điểm hiện tại? Điều kiện nào khiến bạn cần repository port hoặc policy riêng?
+**Exercise 1 — Assess the scope.** A personal note-taking app only needs to create, edit, and delete notes stored in one JSON file. Describe two designs: a simple one and a fully layered one. Which is appropriate now? What conditions would justify a repository port or separate policy?
 
-**Bài 2 — SRP và DIP.** Một `ReportService` vừa tổng hợp số liệu, vừa ghi CSV, vừa tải lên cloud storage. Thiết kế lại trách nhiệm và port để có thể test cách tổng hợp khi cloud không có mạng.
+**Exercise 2 — SRP and DIP.** A `ReportService` aggregates figures, writes CSV, and uploads to cloud storage. Redesign its responsibilities and ports so aggregation can be tested without a network connection to the cloud.
 
-**Bài 3 — OCP và LSP.** Thêm `FixedAmountDiscount` giảm tối đa 5.000 cent nhưng không vượt subtotal. Viết contract test cho các giá trị subtotal 0, 1.000 và 10.000. Giải thích vì sao trả -100 hoặc giảm quá subtotal vi phạm LSP.
+**Exercise 3 — OCP and LSP.** Add `FixedAmountDiscount` with a maximum discount of 5.000 cents, capped at the subtotal. Write contract tests for subtotals of 0, 1.000, and 10.000. Explain why returning -100 or a discount greater than the subtotal violates LSP.
 
-**Bài 4 — ISP.** Hệ thống có `Device` với `print()`, `scan()`, `fax()`; một máy in chỉ hỗ trợ print. Hãy thiết kế các interface năng lực riêng để lớp máy in không phải ném `UnsupportedOperationException` cho `scan/fax`.
+**Exercise 4 — ISP.** A system has `Device` with `print()`, `scan()`, and `fax()`; a basic printer supports only printing. Design separate capability interfaces so the printer does not need to throw `UnsupportedOperationException` for `scan/fax`.
 
-**Bài 5 — Kiểm chứng giá trị.** Đếm những file phải sửa khi thêm một chính sách giảm giá mới **trước** và **sau** refactor. Cũng kiểm tra chi phí tạo thêm class/interface và độ dễ hiểu. Không kết luận refactor thành công chỉ vì số file phải sửa ít hơn: chức năng phải đúng và người bảo trì phải hiểu được.
+**Exercise 5 — Validate the benefit.** Count how many files must change when adding a discount policy **before** and **after** refactoring. Also consider the cost of additional classes/interfaces and the design's readability. Fewer edited files alone do not prove success: behavior must remain correct and maintainers must understand the design.
 
-**Bài 6 — Quan sát side effect.** Giả sử repository lưu thành công nhưng gửi biên nhận lỗi. Thiết kế kết quả trả về, quy tắc retry/idempotency và ranh giới transaction phù hợp. Phân biệt phần SOLID hỗ trợ với phần yêu cầu kỹ thuật consistency ngoài SOLID.
+**Exercise 6 — Examine side effects.** Suppose the repository saves an order but sending its receipt fails. Design the returned result, retry/idempotency policy, and appropriate transaction boundary. Distinguish what SOLID helps with from the additional consistency mechanisms required.
 
-## 15. Checklist trước khi quyết định đưa SOLID vào code
+## 15. Checklist Before Applying SOLID to Code
 
-- Quy tắc hoặc thành phần nào có khả năng thay đổi **thật sự**?
-- Một class đang có nhiều **lý do thay đổi độc lập** hay chỉ có nhiều method cùng chức năng?
-- Điểm biến thể có đủ nhu cầu để được trừu tượng hóa không?
-- Interface được mô tả theo điều consumer cần, hay chỉ sao chép y nguyên mọi method của implementation?
-- Các implementation có cùng **ngữ nghĩa và contract** không?
-- Logic cấp cao có import hoặc tạo trực tiếp client I/O khó thay thế không?
-- Có thể test quy tắc miền bằng input/output độc lập database và HTTP không?
-- Dữ liệu và invariant có được bảo vệ ngoài phạm vi interface không?
-- Transaction, concurrent updates, security và lỗi hệ thống ngoài đã được xem xét riêng chưa?
-- Lợi ích bảo trì có lớn hơn chi phí lớp, interface và cấu hình được thêm vào không?
+- Which rules or components are **actually** likely to change?
+- Does a class have multiple **independent reasons to change**, or simply several methods serving one purpose?
+- Is there enough real variation to justify an abstraction?
+- Does the interface describe what a consumer needs, or merely copy every method of an implementation?
+- Do implementations share the same **semantics and contract**?
+- Does high-level logic directly import or create hard-to-replace I/O clients?
+- Can domain rules be tested through input/output without a database or HTTP?
+- Are data and invariants protected beyond interface boundaries?
+- Have transactions, concurrent updates, security, and external failures been considered separately?
+- Do maintenance benefits outweigh the added classes, interfaces, and configuration?
 
-**Điểm cần nhớ:** SOLID giúp thiết kế *những ranh giới đáng ổn định trước thay đổi*. Áp dụng có chọn lọc dựa trên trách nhiệm, biến thể và phụ thuộc của hệ thống. Với chức năng đơn giản, một class rõ ràng có thể tốt hơn nhiều abstraction; với nghiệp vụ lớn và thay đổi thường xuyên, hợp đồng nhỏ và trách nhiệm rõ đem lại lợi ích bền vững.
+**Key takeaway:** SOLID helps design *boundaries that should remain stable as requirements change*. Apply it selectively according to system responsibilities, variation, and dependencies. For a simple feature, one clear class may be better than many abstractions; for a large and frequently changing domain, small contracts and clear responsibilities offer lasting benefits.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="solid-002">Trách nhiệm đơn: một nhóm lý do thay đổi</a>
+## <a id="solid-002">Single Responsibility: One Group of Reasons to Change</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Trách nhiệm đơn: một nhóm lý do thay đổi (Single Responsibility Principle – SRP)
+# Single Responsibility: One Group of Reasons to Change (Single Responsibility Principle – SRP)
 
-## 1. SRP thực sự muốn nói gì?
+## 1. What Does SRP Really Mean?
 
-**Single Responsibility Principle (SRP)** là chữ **S** trong **SOLID**. Cách phát biểu quen thuộc là:
+The **Single Responsibility Principle (SRP)** is the **S** in **SOLID**. Its familiar formulation is:
 
-> Một module/lớp nên có một lý do để thay đổi.
+> A module/class should have one reason to change.
 
-Tuy nhiên, nếu hiểu “một lý do” là **một phương thức**, **một dòng chức năng**, hoặc “mỗi lớp chỉ làm một việc nhỏ nhất có thể”, ta rất dễ thiết kế hàng chục lớp vụn vặt khó theo dõi.
+However, interpreting "one reason" as **one method**, **one line of functionality**, or "every class should do the smallest possible thing" can easily produce dozens of fragmented classes that are difficult to follow.
 
-Diễn giải hữu ích hơn là: **một lớp nên chịu trách nhiệm với một nhóm yêu cầu thay đổi có cùng mục đích/nguồn phát sinh**. Trong các tài liệu của Robert C. Martin, cách nhìn SRP còn được giải thích theo *actor* – nhóm người hoặc bộ phận yêu cầu thay đổi. Nếu một lớp phải thay đổi vì các nhóm yêu cầu độc lập, nó có thể đang gộp nhiều trách nhiệm.
+A more useful interpretation is that **a class should own one cohesive group of change requests sharing a purpose or source**. Robert C. Martin also explains SRP in terms of an *actor*: a group or department requesting changes. If unrelated groups of requirements cause a class to change, it may be combining multiple responsibilities.
 
-Ví dụ lớp `Invoice` (hóa đơn) có thể cần:
+For example, an `Invoice` class may need to:
 
-- Thêm dòng hàng khi hóa đơn còn ở trạng thái nháp.
-- Kiểm tra số lượng và đơn giá hợp lệ.
-- Tính tổng tiền từ các dòng hàng.
-- Phát hành hóa đơn và từ chối phát hành lặp.
+- Add line items while the invoice is still a draft.
+- Validate quantities and unit prices.
+- Calculate the total from its line items.
+- Issue the invoice and reject repeated issuance.
 
-Các hành vi này khác nhau, nhưng cùng bảo vệ **vòng đời và tính đúng đắn của một hóa đơn**. Không cần tách mỗi phép kiểm tra thành một service chỉ để mỗi lớp có một phương thức.
+These behaviors differ, but they jointly protect **the lifecycle and correctness of an invoice**. Each validation does not need its own service just to achieve one method per class.
 
-Ngược lại, nếu `Invoice` còn tự tạo PDF, tự ghi SQL và tự gửi email, nó phải sửa khi *quy tắc hóa đơn*, *bố cục tài liệu*, *hệ quản trị dữ liệu* hoặc *nhà cung cấp email* thay đổi. Những nhóm thay đổi đó có thể thuộc các trách nhiệm khác nhau.
+Conversely, if `Invoice` also generates PDFs, writes SQL, and sends email, it must change whenever *invoice rules*, *document layouts*, *database systems*, or *email providers* change. These independent groups of changes may belong to different responsibilities.
 
-**Mục tiêu SRP là tăng sự gắn kết (cohesion) của lớp và giảm việc một thay đổi không liên quan buộc sửa cùng một nơi.** SRP không cấm lớp có nhiều phương thức, nhiều field hay nhiều đối tượng cộng tác.
+**SRP seeks to improve class cohesion and reduce unrelated changes that require editing the same place.** It does not prohibit multiple methods, fields, or collaborators in one class.
 
-## 2. “Một nhóm lý do thay đổi” nghĩa là gì?
+## 2. What Is "One Group of Reasons to Change"?
 
-Hãy lấy ví dụ hệ thống xuất hóa đơn:
+Consider an invoicing system:
 
-| Yêu cầu thay đổi | Ai/nhóm nào thường đề xuất? | Trách nhiệm liên quan |
+| Change request | Who typically requests it? | Related responsibility |
 |---|---|---|
-| Chỉ cho phát hành hóa đơn khi có dòng hàng | Nhóm nghiệp vụ hóa đơn | Quy tắc miền của hóa đơn |
-| Đơn giá, số lượng phải hợp lệ | Nhóm nghiệp vụ/kế toán | Bất biến của dòng hóa đơn |
-| Đổi cách hiển thị tiêu đề/logo biên nhận | Thiết kế thương hiệu hoặc vận hành | Định dạng biên nhận |
-| Chuyển lưu từ file sang database | Nhóm vận hành hạ tầng | Lưu trữ |
-| Đổi email sang dịch vụ gửi khác | Nhóm tích hợp/hạ tầng | Gửi thông báo |
-| Quy trình phát hành cần xác thực quyền | Chủ sản phẩm/bảo mật | Điều phối use case/quyền |
+| Issue invoices only when they contain line items | Invoicing business team | Invoice domain rules |
+| Require valid unit prices and quantities | Business/accounting team | Invoice-line invariants |
+| Change the title/logo on a receipt | Brand design or operations | Receipt formatting |
+| Move storage from files to a database | Infrastructure operations | Persistence |
+| Replace the email delivery service | Integrations/infrastructure team | Notification delivery |
+| Require authorization for invoice issuance | Product owner/security | Use-case coordination and permissions |
 
-Bảng này **không bắt buộc mỗi hàng phải là một class**. Các nhóm yêu cầu được dùng để xem **những thay đổi nào đi cùng nhau**, rồi tìm ranh giới mô hình thích hợp.
+This table **does not imply one class per row**. The groups help identify **which changes belong together** and where the appropriate model boundaries lie.
 
-Ví dụ “không có dòng hàng thì không phát hành” và “không thể thêm dòng sau phát hành” đều là **một nhóm bất biến vòng đời hóa đơn**, dù là hai quy tắc. Chúng thường nên nằm cùng `Invoice`.
+For example, "cannot issue an empty invoice" and "cannot add lines after issuance" both belong to **one group of invoice-lifecycle invariants**, even though they are distinct rules. They usually belong together in `Invoice`.
 
-Ngược lại, thay logo biên nhận không nên buộc sửa quy tắc chuyển trạng thái của `Invoice`.
+By contrast, changing the receipt logo should not require modifying `Invoice`'s state-transition rules.
 
-### Thử nghiệm nhanh
+### A Quick Thought Experiment
 
-Hãy đặt câu hỏi: “Nếu ngày mai chỉ đổi định dạng biên nhận, class nào cần sửa?” Nếu câu trả lời bao gồm cả class bảo vệ trạng thái hóa đơn, có thể SRP đã bị ảnh hưởng.
+Ask: "If only the receipt format changes tomorrow, which class must be edited?" If the answer includes the class protecting invoice state, SRP may have been compromised.
 
-Và chiều ngược lại: “Nếu đổi điều kiện phát hành hóa đơn, phải sửa bao nhiêu nơi?” Nếu hàng loạt controller, trình render và repository đều tự kiểm tra trạng thái bằng chuỗi `"DRAFT"`, quy tắc có thể đang bị phân tán.
+Conversely: "If the conditions for issuing invoices change, how many places must be edited?" If controllers, renderers, and repositories all check status against the `"DRAFT"` string, the rule may be scattered across layers.
 
-## 3. Dấu hiệu một lớp gánh nhiều trách nhiệm
+## 3. Signs That a Class Carries Too Many Responsibilities
 
-Ví dụ thiết kế dồn mọi thứ vào `InvoiceManager`:
+Consider a design that puts everything in `InvoiceManager`:
 
 ```java
 // Đoạn minh họa vấn đề, không phải chương trình độc lập.
@@ -665,19 +665,19 @@ class InvoiceManager {
 }
 ```
 
-Những vấn đề:
+Problems with this design:
 
-- **Độ gắn kết thấp:** kiểm tra miền, tính tiền, dựng nội dung, lưu trữ và gửi email có các động lực thay đổi riêng.
-- **Sửa một nơi dễ ảnh hưởng hành vi khác:** chỉnh HTML cũng phải mở class chứa logic phát hành.
-- **Khó kiểm thử:** muốn thử điều kiện “hóa đơn rỗng không được phát hành” có thể phải cấu hình SQL/SMTP.
-- **Rủi ro thiếu nhất quán:** nơi khác cũng có thể cập nhật `status` mà bỏ qua kiểm tra.
-- **Khó thay thế tích hợp:** class phụ thuộc trực tiếp nhiều công nghệ.
+- **Low cohesion:** Domain validation, calculations, content generation, persistence, and email have independent drivers of change.
+- **Unrelated changes interfere:** Editing HTML requires touching the class containing issuance logic.
+- **Difficult testing:** Testing "an empty invoice cannot be issued" may require SQL/SMTP configuration.
+- **Risk of inconsistency:** Other code may update `status` without validation.
+- **Difficult integration substitution:** The class depends directly on multiple technologies.
 
-Lưu ý: đoạn trên được cố ý viết thiếu các lớp phụ thuộc để làm rõ vấn đề thiết kế. Chương trình đầy đủ ở phần sau sẽ minh họa cách phân chia trách nhiệm và có thể biên dịch độc lập.
+Note: The snippet deliberately omits dependency class definitions to highlight the design problem. The complete program later demonstrates a separation of responsibilities and compiles on its own.
 
-## 4. Phân chia theo trách nhiệm, không theo số câu lệnh
+## 4. Split by Responsibility, Not by Statement Count
 
-Một mô hình phù hợp:
+One suitable model:
 
 ```mermaid
 classDiagram
@@ -727,20 +727,20 @@ classDiagram
     InvoiceWorkflow --> NotificationSender : thông báo
 ```
 
-Vai trò của từng phần:
+The roles of each component:
 
-- **`Invoice`** bảo vệ trạng thái và bất biến của hóa đơn.
-- **`InvoiceLine`** giữ dữ liệu và phép tính của một dòng.
-- **`ReceiptFormatter`** chuyển nội dung hóa đơn sang cách thể hiện (text, HTML, PDF…).
-- **`InvoiceRepository`** đại diện cho trách nhiệm lưu/tải.
-- **`NotificationSender`** đại diện cho trách nhiệm giao tiếp với người nhận.
-- **`InvoiceWorkflow`** điều phối *use case phát hành hóa đơn*: gọi các cộng tác viên theo trình tự. Việc biết nhiều đối tượng cộng tác là bình thường đối với một lớp chuyên **điều phối**.
+- **`Invoice`** protects invoice state and invariants.
+- **`InvoiceLine`** holds a line item's data and calculation.
+- **`ReceiptFormatter`** transforms invoice content into a representation (text, HTML, PDF, etc.).
+- **`InvoiceRepository`** is responsible for saving/loading invoices.
+- **`NotificationSender`** handles communication with recipients.
+- **`InvoiceWorkflow`** coordinates *the invoice-issuance use case*: invoking collaborators in sequence. Knowing about several collaborators is normal for a class specializing in **coordination**.
 
-Đây là mô hình trách nhiệm, không phải yêu cầu phải tạo framework hay mỗi interface có đủ ba implementation. Những ranh giới được giới thiệu để minh họa các loại thay đổi độc lập.
+This is a responsibility model, not a requirement to create a framework or give every interface three implementations. These boundaries illustrate independent types of change.
 
-## 5. Ví dụ Java 11+ chạy được
+## 5. Runnable Java 11+ Example
 
-Tạo tệp `SrpDemo.java` với toàn bộ nội dung sau:
+Create `SrpDemo.java` with the complete code below:
 
 ```java
 import java.util.ArrayList;
@@ -990,14 +990,14 @@ public class SrpDemo {
 }
 ```
 
-Chạy bằng JDK 11 hoặc mới hơn:
+Run with JDK 11 or later:
 
 ```bash
 javac SrpDemo.java
 java SrpDemo
 ```
 
-Kết quả mong đợi:
+Expected output:
 
 ```text
 Issued: true
@@ -1008,69 +1008,69 @@ Receipt has total: true
 Duplicate issue rejected
 ```
 
-### SRP được thể hiện ở đâu?
+### Where Does SRP Appear?
 
-1. Đổi quy tắc “hóa đơn rỗng không thể phát hành” hoặc “không sửa dòng sau phát hành” → xem ở **`Invoice`**.
-2. Đổi cách định dạng dòng, đổi sang HTML hoặc thêm bố cục biên nhận → xem ở **`ReceiptFormatter`** và implementation.
-3. Đổi nơi lưu từ bộ nhớ sang database → cung cấp một **`InvoiceRepository`** implementation mới.
-4. Đổi hệ thống gửi email sang hàng đợi thông báo → xem ở **`NotificationSender`** và adapter.
-5. Đổi trình tự use case hoặc chính sách xử lý lỗi giữa các bước → xem ở **`InvoiceWorkflow`**.
+1. Changing "empty invoices cannot be issued" or "lines cannot change after issuance" → inspect **`Invoice`**.
+2. Changing line formatting, switching to HTML, or adding a receipt layout → inspect **`ReceiptFormatter`** and its implementations.
+3. Moving storage from memory to a database → provide a new **`InvoiceRepository`** implementation.
+4. Replacing email delivery with a notification queue → inspect **`NotificationSender`** and its adapter.
+5. Changing use-case order or error-handling policy between steps → inspect **`InvoiceWorkflow`**.
 
-Lưu ý **`InvoiceWorkflow` có ba dependency vẫn có thể tuân SRP**: chúng cùng phục vụ trách nhiệm điều phối một use case. Chỉ việc đếm field hoặc import không xác định lớp có tuân SRP hay không.
+Note that **`InvoiceWorkflow` can have three dependencies and still follow SRP**: all serve the responsibility of coordinating one use case. Counting fields or imports alone does not establish whether a class follows SRP.
 
-### Giới hạn của chương trình minh họa
+### Limitations of the Example
 
-Ví dụ trên chạy **tuần tự trong bộ nhớ**. Việc `invoice.issue()` thành công nhưng `repository.save(...)` hoặc `sender.send(...)` thất bại có thể để lại trạng thái cục bộ đã phát hành mà thông báo chưa gửi. Trong ứng dụng thật, việc lưu dữ liệu và ghi sự kiện để gửi thông báo thường cần transaction và outbox/retry/idempotency phù hợp.
+The example runs **sequentially in memory**. If `invoice.issue()` succeeds but `repository.save(...)` or `sender.send(...)` fails, local state may indicate that the invoice was issued even though the notification was not sent. Real applications often need suitable transactions and outbox/retry/idempotency mechanisms to persist data and record events for notification delivery.
 
-Ngoài ra, `InMemoryInvoiceRepository` giữ tham chiếu trực tiếp đến object. Nó không mô phỏng persistence độc lập, isolation, optimistic locking, concurrency hoặc quá trình tải lại một entity từ database. Đây là bản demo làm rõ **ranh giới trách nhiệm**, không phải hệ thống hóa đơn sản xuất.
+Also, `InMemoryInvoiceRepository` keeps direct references to objects. It does not simulate independent persistence, isolation, optimistic locking, concurrency, or entity reloads from a database. This example illustrates **responsibility boundaries**; it is not a production invoicing system.
 
-## 6. Cohesion và coupling liên quan thế nào đến SRP?
+## 6. How Do Cohesion and Coupling Relate to SRP?
 
-**Cohesion (độ gắn kết):** các field và phương thức của một lớp có cùng phục vụ một mục đích nhất quán không?
+**Cohesion:** Do a class's fields and methods serve one consistent purpose?
 
-**Coupling (mức phụ thuộc):** lớp cần hiểu hoặc lệ thuộc vào bao nhiêu chi tiết của những lớp khác?
+**Coupling:** How many details of other classes must a class understand or depend on?
 
-SRP hướng tới *cohesion cao* trong một ranh giới trách nhiệm. Việc phân chia hợp lý thường giúp giảm các phụ thuộc không liên quan, nhưng không tự động bảo đảm coupling thấp.
+SRP aims for *high cohesion* within a responsibility boundary. Sensible separation often reduces unrelated dependencies but does not automatically guarantee low coupling.
 
-| Thiết kế | Cohesion | Coupling | Đánh giá |
+| Design | Cohesion | Coupling | Assessment |
 |---|---|---|---|
-| Một lớp vừa dựng PDF, tính thuế, gửi email, tự viết SQL | Thường thấp | Thường cao | Nhiều nguồn thay đổi dồn một chỗ |
-| `Invoice` giữ các bất biến về dòng và phát hành | Cao | Có thể thấp/vừa | Một nhóm trách nhiệm nghiệp vụ |
-| Một method `calculateTotal()` trong một lớp riêng chỉ để gọi lại `invoice.totalCents()` | Có vẻ cao | Thêm indirection | Tách lớp không đem lại giá trị rõ rệt |
-| `InvoiceWorkflow` gọi repository, formatter và sender | Cao nếu chuyên điều phối | Có dependency cần thiết | Có nhiều cộng tác viên nhưng mục đích rõ |
-| Một `Utils` chứa xác thực email, định dạng JSON, tính phí và SQL | Thấp | Khó kiểm soát | Tên “Utils” che giấu nhiều trách nhiệm |
+| One class builds PDFs, calculates taxes, sends email, and writes SQL | Usually low | Usually high | Many sources of change in one place |
+| `Invoice` protects line-item and issuance invariants | High | Potentially low/moderate | One group of domain responsibilities |
+| A separate class has only `calculateTotal()` to forward to `invoice.totalCents()` | Apparently high | Adds indirection | Class separation offers no obvious value |
+| `InvoiceWorkflow` calls a repository, formatter, and sender | High if dedicated to coordination | Has necessary dependencies | Multiple collaborators, but a clear purpose |
+| One `Utils` class validates emails, formats JSON, calculates fees, and runs SQL | Low | Hard to control | The "Utils" name conceals multiple responsibilities |
 
-Tránh nhầm lẫn rằng một lớp có **nhiều hành vi** là không cohesive. Chẳng hạn `Invoice.addLine()`, `Invoice.totalCents()`, `Invoice.issue()` đều làm việc với cùng bất biến hóa đơn; mối quan hệ giữa chúng là điều tốt.
+Do not assume a class with **many behaviors** has poor cohesion. For example, `Invoice.addLine()`, `Invoice.totalCents()`, and `Invoice.issue()` all work with the same invoice invariants; that relationship is desirable.
 
-## 7. Tại sao “một method một class” lại có thể phá SRP?
+## 7. Why Can "One Method per Class" Undermine SRP?
 
-Các thao tác `Invoice.addLine()`, `Invoice.totalCents()` và `Invoice.issue()` cùng bảo vệ **một nhóm bất biến**. Nếu tách thành `AddLineService`, `TotalCalculatorService` và `IssueService` chỉ để mỗi lớp có một method, code caller phải ghép lại trạng thái và logic vòng đời ở nhiều nơi. Việc này tăng indirection và có thể làm yếu đóng gói.
+The operations `Invoice.addLine()`, `Invoice.totalCents()`, and `Invoice.issue()` protect **one group of invariants**. Splitting them into `AddLineService`, `TotalCalculatorService`, and `IssueService` solely to give each class one method forces callers to coordinate state and lifecycle logic across multiple places. This adds indirection and can weaken encapsulation.
 
-Hãy phân biệt *nhiều thao tác của một trách nhiệm* với *nhiều nguồn thay đổi độc lập*: thêm dòng và phát hành thuộc nghiệp vụ hóa đơn; dựng PDF, ghi SQL và gửi email là các trục biến thiên khác. Xác nhận ranh giới bằng tình huống thay đổi và test, không bằng phép đếm method/import.
+Distinguish *multiple operations within one responsibility* from *multiple independent sources of change*: adding lines and issuing invoices belong to invoice rules, whereas building PDFs, writing SQL, and sending email are separate dimensions. Validate boundaries through change scenarios and tests, not method/import counts.
 
-## 8. Đặt trách nhiệm vào Entity, Value Object hay Service?
+## 8. Should Responsibilities Belong to an Entity, Value Object, or Service?
 
-Một phương án phân chia phổ biến trong thiết kế miền nghiệp vụ:
+A common approach to responsibility allocation in domain design:
 
-| Trách nhiệm | Nơi thường phù hợp | Ví dụ |
+| Responsibility | Typical location | Example |
 |---|---|---|
-| Bảo vệ trạng thái và chuyển trạng thái của một thực thể | Entity | `Invoice.issue()` |
-| Tính toán gắn với một giá trị bất biến | Value Object | `Money.plus()` hoặc `InvoiceLine.subtotalCents()` |
-| Quy tắc nghiệp vụ trải qua nhiều đối tượng mà không thuộc tự nhiên một object | Domain Service/policy | `TaxPolicy.calculate(invoiceSnapshot)` |
-| Điều phối use case: tải, gọi domain, lưu, báo kết quả | Application Service | `InvoiceWorkflow` |
-| Đọc/ghi nơi lưu trữ | Repository/adapter | `SqlInvoiceRepository` |
-| Chuyển dữ liệu sang định dạng giao tiếp | Formatter/Presenter | `PdfReceiptFormatter` |
-| Tích hợp dịch vụ bên ngoài | Adapter/gateway | `SmtpNotificationSender` |
+| Protecting entity state and state transitions | Entity | `Invoice.issue()` |
+| Calculations tied to an immutable value | Value Object | `Money.plus()` or `InvoiceLine.subtotalCents()` |
+| Business rules spanning several objects without naturally belonging to one | Domain Service/policy | `TaxPolicy.calculate(invoiceSnapshot)` |
+| Coordinating a use case: load, invoke domain logic, save, return results | Application Service | `InvoiceWorkflow` |
+| Reading/writing persistent data | Repository/adapter | `SqlInvoiceRepository` |
+| Converting data into a communication format | Formatter/Presenter | `PdfReceiptFormatter` |
+| Integrating an external service | Adapter/gateway | `SmtpNotificationSender` |
 
-Đây là **gợi ý tìm ranh giới**, không phải công thức bắt buộc.
+These are **guidelines for finding boundaries**, not mandatory rules.
 
-Ví dụ “thuế của hóa đơn” có thể đơn giản là phép tính cố định theo một chính sách nhất quán, khi đó `Invoice.totalTax()` có thể hợp lý. Nếu thuế phụ thuộc nhiều khu vực, ngày, loại hàng và nguồn quy định cập nhật độc lập, một `TaxPolicy` là lựa chọn đáng xem xét hơn. Trách nhiệm được quyết định bởi **ý nghĩa và nguồn thay đổi**, chứ không phải tên lớp.
+For instance, "invoice tax" might be a fixed calculation under one consistent policy, in which case `Invoice.totalTax()` could be appropriate. If taxes vary by region, date, product type, and independently updated regulations, a `TaxPolicy` becomes more compelling. Responsibilities follow **meaning and sources of change**, not class names.
 
-## 9. SRP ở cấp package/module cũng quan trọng
+## 9. SRP Matters at the Package and Module Levels Too
 
-Nguyên tắc trách nhiệm đơn được nói đến nhiều ở cấp class, nhưng ở hệ thống lớn, **module và package** cũng có thể chứa quá nhiều trách nhiệm thay đổi độc lập.
+SRP is often discussed at the class level, but in larger systems, **modules and packages** can also contain too many independently changing responsibilities.
 
-Ví dụ package `billing` vừa gồm nghiệp vụ hóa đơn, cơ sở dữ liệu, email và UI có thể trở thành nơi phải chỉnh sửa khi bất kỳ nhóm công việc nào thay đổi. Có thể tổ chức theo ranh giới:
+For example, a `billing` package containing invoice domain rules, database access, email, and UI may require edits whenever any of those concerns changes. It can be organized around boundaries:
 
 ```text
 billing/
@@ -1088,7 +1088,7 @@ billing/
     SmtpNotificationSender.java
 ```
 
-Đây chỉ là một tổ chức tham khảo. Dự án nhỏ hoàn toàn có thể đặt vài class cùng package nếu tên gọi, mức kết dính và dependency đã rõ.
+This is merely an illustrative organization. A small project can reasonably keep several classes in one package when their names, cohesion, and dependencies are clear.
 
 ```mermaid
 flowchart TB
@@ -1104,75 +1104,75 @@ flowchart TB
     IMPL -.->|"implements"| PORTS
 ```
 
-Các component nên biết điều cần biết để hoàn thành vai trò của mình. **Đổi SMTP không nên buộc domain model phải biên dịch với thư viện SMTP**, và đổi quy tắc phát hành cũng không nên yêu cầu sửa lớp vẽ PDF nếu hợp đồng dữ liệu vẫn tương thích.
+Components should know what they need to fulfill their roles. **Changing SMTP should not force the domain model to compile against an SMTP library**, and changing issuance rules should not require editing the PDF renderer if the data contract remains compatible.
 
-## 10. SRP và các nguyên tắc SOLID khác: phần nào trùng, phần nào khác?
+## 10. SRP and Other SOLID Principles: How Do They Overlap and Differ?
 
-SRP liên quan đến các nguyên tắc khác nhưng có **câu hỏi riêng**:
+SRP relates to other principles but asks **its own question**:
 
-| Nguyên tắc | Câu hỏi trung tâm | Ví dụ |
+| Principle | Central question | Example |
 |---|---|---|
-| **SRP** | Lớp có một nhóm lý do thay đổi nhất quán không? | Hóa đơn không tự xử lý SMTP |
-| **OCP** | Có thể thêm biến thể hành vi mà ít sửa code ổn định không? | Thêm một formatter mới qua interface |
-| **LSP** | Implementation có giữ được hợp đồng của kiểu cha/interface không? | Formatter nào cũng phải trả chuỗi hợp lệ theo contract |
-| **ISP** | Một client có bị buộc phụ thuộc những phương thức không dùng không? | Tránh `CommunicationManager` với 30 API không liên quan |
-| **DIP** | Module nghiệp vụ có phụ thuộc abstraction thay vì chi tiết thay đổi không? | Workflow phụ thuộc `NotificationSender`, không phụ thuộc SMTP SDK |
+| **SRP** | Does the class have one coherent group of reasons to change? | An invoice does not handle SMTP itself |
+| **OCP** | Can behavior variants be added with minimal changes to stable code? | Add a formatter implementation through an interface |
+| **LSP** | Does the implementation honor the supertype/interface contract? | Every formatter returns a contractually valid string |
+| **ISP** | Must a client depend on methods it does not use? | Avoid a `CommunicationManager` with 30 unrelated APIs |
+| **DIP** | Does business code depend on abstractions rather than volatile details? | A workflow depends on `NotificationSender`, not an SMTP SDK |
 
-Dùng interface **không tự động tuân SRP**. Có thể có `AllPurposeService` chứa mười interface dependency nhưng vẫn quyết định cùng lúc thuế, giao diện và phân quyền. Và một Entity không dùng interface nào vẫn có thể tuân SRP nếu trách nhiệm của nó rõ ràng.
+Using interfaces **does not automatically satisfy SRP**. An `AllPurposeService` with ten interface dependencies might still decide taxes, UI layout, and permissions simultaneously. An entity without interfaces can satisfy SRP if its responsibility is clear.
 
-## 11. Actor là cách tìm lý do thay đổi, không phải một nhãn tổ chức cứng nhắc
+## 11. Actors Help Identify Reasons to Change, Not Rigid Organizational Labels
 
-Kế toán, bảo mật và vận hành đều có thể yêu cầu thay đổi quy trình phát hành hóa đơn. **Không phải ba actor đồng nghĩa ba class**. Cần xác định quy tắc đang thuộc đâu:
+Accounting, security, and operations may all request changes to the invoice-issuance process. **Three actors do not necessarily mean three classes**. Identify where each rule belongs:
 
-- `Invoice` giữ bất biến “đã phát hành thì không được sửa”; đó là luật vòng đời thực thể.
-- Application/authorization boundary xác nhận **ai có quyền** ra lệnh phát hành.
-- Adapter/audit ghi log theo chính sách an toàn, không cấp quyền tùy ý sửa trạng thái của `Invoice`.
+- `Invoice` enforces "issued invoices cannot be edited"; this is an entity-lifecycle rule.
+- The application/authorization boundary checks **who is allowed** to request issuance.
+- An adapter/audit component records events under security policies without granting arbitrary permission to change `Invoice` state.
 
-Một thay đổi hợp lệ vẫn có thể ảnh hưởng nhiều tầng cùng lúc (domain, API, lưu trữ). SRP giảm các *lý do thay đổi không liên quan* trong cùng nơi, chứ không hứa mọi yêu cầu sẽ chạm đúng một file.
+A valid change may still affect multiple layers at once (domain, API, storage). SRP reduces *unrelated reasons for change* within the same component; it does not promise every requirement will touch exactly one file.
 
-## 12. Lộ trình refactor một lớp có nguy cơ vi phạm SRP
+## 12. Refactoring a Class That May Violate SRP
 
-Giả sử đang có `OrderService` chứa hơn 1.000 dòng: kiểm tra tồn kho, áp voucher, tính tiền, ghi DB, gửi thông báo.
+Suppose an `OrderService` has more than 1.000 lines: checking inventory, applying vouchers, calculating totals, writing to a database, and sending notifications.
 
-### Bước 1 – Liệt kê lý do thay đổi thực tế
+### Step 1 – List Actual Reasons to Change
 
-Chỉ ra việc sửa nào từng xảy ra hoặc có khả năng xảy ra độc lập: chính sách voucher, công thức giá, cơ chế kho, công nghệ DB, template email. Đừng tự suy đoán rằng mỗi method có lý do thay đổi riêng.
+Identify changes that have happened or could occur independently: voucher policies, pricing formulas, inventory mechanisms, database technology, and email templates. Do not assume every method has its own reason to change.
 
-### Bước 2 – Tìm hành vi và invariant của từng object
+### Step 2 – Find Each Object's Behaviors and Invariants
 
-Trạng thái/điều kiện thuộc Order nên gần Order. Quy tắc kho thuộc hệ thống quản lý kho; quy tắc giảm giá có thể thuộc policy. Tránh tạo “service tiện ích” chỉ chuyển getter/setter từ nơi này sang nơi khác.
+State and conditions belonging to an Order should remain near that Order. Inventory rules belong to inventory management; discount rules may belong to a policy. Avoid "utility services" that merely move getters/setters from one place to another.
 
-### Bước 3 – Xác định đầu vào và hợp đồng rõ nghĩa
+### Step 3 – Define Meaningful Inputs and Contracts
 
-Ví dụ nghiệp vụ cần `reserveStock(productId, quantity)`, không cần biết mã bảng SQL để tự `UPDATE warehouse_stock`. Đầu ra và lỗi phải được ghi rõ.
+For example, business logic needs `reserveStock(productId, quantity)`; it does not need to know SQL table names to issue `UPDATE warehouse_stock` itself. Specify outputs and errors clearly.
 
-### Bước 4 – Tách từng ranh giới có giá trị
+### Step 4 – Extract Valuable Boundaries Incrementally
 
-Ưu tiên phần có lý do thay đổi rõ, có thể kiểm thử độc lập: email gateway, repository, formatter, chính sách giảm giá. Đừng tạo hàng loạt lớp cùng lúc nếu chưa đánh giá tác động.
+Prioritize components with clear reasons to change and independent testing potential: email gateways, repositories, formatters, and discount policies. Do not introduce many classes at once without assessing the impact.
 
-### Bước 5 – Giữ use case dễ theo dõi
+### Step 5 – Keep the Use Case Easy to Follow
 
-Một application service có thể điều phối các thành phần theo trình tự. Điều này không vi phạm SRP khi trách nhiệm thống nhất của nó là **hoàn thành một ca sử dụng**.
+An application service can coordinate components in sequence. This does not violate SRP when its cohesive responsibility is **completing one use case**.
 
-### Bước 6 – Kiểm thử hành vi thay vì hình dạng lớp
+### Step 6 – Test Behavior, Not Class Shape
 
-Kiểm tra:
-- Hóa đơn rỗng bị từ chối.
-- Sau phát hành không được thêm dòng.
-- Tổng tiền đúng, phát hiện tràn số.
-- Formatter thay đổi không làm thay quy tắc Invoice.
-- Repository và sender fake có thể thay thế.
-- Lỗi lưu/gửi được xử lý nhất quán theo chính sách ứng dụng.
+Verify that:
+- Empty invoices are rejected.
+- Lines cannot be added after issuance.
+- Totals are correct and numeric overflow is detected.
+- Switching formatters does not change Invoice rules.
+- Fake repositories and senders can be substituted.
+- Storage/delivery failures are handled consistently with application policy.
 
-### Bước 7 – Đánh giá sau thay đổi
+### Step 7 – Evaluate After Refactoring
 
-Số file không phải KPI. Đánh giá xem các yêu cầu thay đổi đã **tập trung đúng nơi**, số ca kiểm thử tích hợp không cần thiết có giảm, và người mới có thể nhanh chóng tìm trách nhiệm của từng lớp hay chưa.
+File count is not the KPI. Evaluate whether change requests now **land in the right place**, unnecessary integration tests have decreased, and newcomers can quickly identify each class's responsibility.
 
-## 13. Kiểm thử cho đúng mục đích của SRP
+## 13. Testing in a Way That Serves SRP
 
-Một lợi ích của ranh giới trách nhiệm rõ là kiểm thử theo **hành vi có thể quan sát**, không phải kiểm thử getters hoặc nội bộ implementation.
+Clear responsibility boundaries allow tests to focus on **observable behavior**, not getters or internal implementation details.
 
-Ví dụ kiểm thử Entity đơn thuần:
+Example of a simple entity test:
 
 ```java
 Invoice invoice = new Invoice("INV-TEST");
@@ -1191,9 +1191,9 @@ try {
 }
 ```
 
-Đoạn trên được đặt trong phạm vi có thể truy cập lớp `Invoice`, ví dụ `main` của `SrpDemo`. Nó không cần database hay email.
+The snippet above must be placed where `Invoice` is accessible, such as the `main` method of `SrpDemo`. It needs no database or email service.
 
-Kiểm thử formatter độc lập:
+Test the formatter independently:
 
 ```java
 String receipt = new PlainTextReceiptFormatter().format(invoice);
@@ -1202,28 +1202,28 @@ if (!receipt.contains("TONG: 36000 VND")) {
 }
 ```
 
-Kiểm thử use case cần xác nhận repository, sender, formatter được sử dụng đúng. Có thể dùng fake hoặc spy ở các ranh giới tích hợp, không cần mock từng đối tượng miền nhỏ.
+Use-case tests should verify correct interactions with the repository, sender, and formatter. Fakes or spies can be used at integration boundaries without mocking every small domain object.
 
-**Hạn chế:** tách lớp không tự bảo đảm correctness. Tích hợp với database/email thật, lỗi mạng, transaction và retry vẫn cần ca kiểm thử thích hợp.
+**Limitation:** Separating classes does not automatically guarantee correctness. Real database/email integrations, network failures, transactions, and retries still need appropriate tests.
 
-## 14. Checklist tránh ngộ nhận SRP
+## 14. Checklist for Avoiding SRP Misconceptions
 
-| Nhầm lẫn | Cách sửa cách hiểu |
+| Misconception | More accurate understanding |
 |---|---|
-| “Một class chỉ nên có một method hoặc một `if`.” | Những hành vi cùng giữ một invariant có thể nằm trong cùng class. |
-| “Có nhiều dependency/interface là vi phạm SRP.” | Một application coordinator có thể cần nhiều cổng để hoàn thành **một use case**. |
-| “Cứ tách càng nhỏ là càng tốt.” | Lớp chỉ chuyển tiếp một lời gọi làm tăng coupling và khó theo dõi. |
-| “Một class lớn là bằng chứng sai SRP.” | Phải xem nguồn thay đổi: quy tắc miền, định dạng, lưu trữ, tích hợp có đang trộn nhau không? |
-| “Tách formatter xong UI không bao giờ cần sửa vì domain đổi.” | Hợp đồng dữ liệu thay đổi chính đáng vẫn có thể cần sửa cả hai. |
-| “Repository và sender đã tách nên tự động có transaction an toàn.” | SRP không thay thế transaction, retry, idempotency hay ràng buộc dữ liệu. |
+| "A class should only have one method or one `if`." | Behaviors protecting the same invariant can belong in one class. |
+| "Multiple dependencies/interfaces violate SRP." | An application coordinator may need several ports to complete **one use case**. |
+| "The smaller the classes, the better." | Classes that merely forward calls increase coupling and complicate tracing. |
+| "A large class proves SRP is violated." | Examine sources of change: are domain rules, formatting, storage, and integrations mixed? |
+| "After extracting a formatter, domain changes never affect the UI." | Legitimate changes to data contracts may require updates to both. |
+| "Separating the repository and sender automatically creates safe transactions." | SRP does not replace transactions, retries, idempotency, or data constraints. |
 
-Đối chiếu thiết kế bằng *trách nhiệm và hậu quả của yêu cầu thực*, không chỉ bằng tên lớp `Service`, kích thước file hoặc số import.
+Assess designs through *responsibilities and the consequences of real requirements*, not just `Service` class names, file sizes, or import counts.
 
-## 15. Bài tập tự luyện
+## 15. Self-Practice Exercises
 
-### Bài 1 – Nhận diện những lý do thay đổi
+### Exercise 1 – Identify Reasons to Change
 
-Một lớp `UserManager` có các phương thức:
+A `UserManager` class has these methods:
 
 ```java
 registerUser();
@@ -1233,81 +1233,81 @@ generateCsvExport();
 sendWelcomeEmail();
 ```
 
-Hãy nhóm theo trách nhiệm.
+Group them by responsibility.
 
-**Gợi ý:** quản lý trạng thái và quy tắc tài khoản có thể thuộc cùng một miền; CSV export và email thường thuộc presentation/infrastructure. Tuy nhiên cần xem `UserManager` có phải application coordinator chủ định hay đang tự xử lý chi tiết CSV/SMTP.
+**Hint:** Account state and rules may belong to the same domain; CSV exports and email commonly belong to presentation/infrastructure. However, examine whether `UserManager` is intentionally an application coordinator or is directly implementing CSV/SMTP details.
 
-### Bài 2 – Không tách quá mức
+### Exercise 2 – Avoid Excessive Splitting
 
-Một `Money` immutable có `plus()`, `minus()`, `multiply()` và `sameCurrency()`. Có nên tách thành bốn service?
+An immutable `Money` has `plus()`, `minus()`, `multiply()`, and `sameCurrency()`. Should these become four separate services?
 
-**Gợi ý:** không cần nếu tất cả cùng bảo vệ và vận hành các giá trị Money. Tách khi có chính sách ngoài Money, như tỷ giá lấy từ nhà cung cấp bên ngoài.
+**Hint:** Not if they all operate on and protect Money values. Separate behavior when it introduces a policy external to Money, such as exchange rates obtained from an external provider.
 
-### Bài 3 – Viết kiểm thử nguyên tắc phát hành
+### Exercise 3 – Test Issuance Rules
 
-Dựa trên `SrpDemo.java`, hãy thử phát hành một `Invoice` chưa có dòng, kiểm tra `isIssued()` vẫn là `false`. Sau đó thêm một dòng, phát hành và xác nhận không thể sửa dòng nữa.
+Using `SrpDemo.java`, try issuing an `Invoice` with no lines and verify that `isIssued()` remains `false`. Then add a line, issue it, and confirm that lines can no longer be modified.
 
-**Gợi ý:** hai điều kiện này cùng phục vụ bất biến vòng đời hóa đơn; đặt trong `Invoice`, không đặt riêng trong formatter hay email sender.
+**Hint:** Both conditions protect invoice-lifecycle invariants; put them in `Invoice`, not separately in the formatter or email sender.
 
-### Bài 4 – Thay định dạng mà không sửa domain
+### Exercise 4 – Change Formatting Without Editing the Domain
 
-Thêm `HtmlReceiptFormatter implements ReceiptFormatter`. Chỉ thay object truyền cho `InvoiceWorkflow`:
+Add `HtmlReceiptFormatter implements ReceiptFormatter`. Replace only the object passed to `InvoiceWorkflow`:
 
 ```java
 ReceiptFormatter formatter = new HtmlReceiptFormatter();
 ```
 
-Nếu thiết kế hợp đồng đúng, `Invoice` không phải thay đổi. Kiểm tra formatter trả HTML đã escape đúng các trường do người dùng nhập, chẳng hạn mô tả sản phẩm, để tránh chèn markup không mong muốn.
+If the contract is properly designed, `Invoice` does not change. Ensure the formatter properly escapes user-supplied fields such as product descriptions in generated HTML to prevent unintended markup injection.
 
-### Bài 5 – Nhận diện lý do thực sự cần tách
+### Exercise 5 – Identify a Genuine Reason to Split
 
-Một ứng dụng có một lớp `TaxCalculator` chỉ làm một phép nhân cố định, không dự kiến có thêm quy tắc; một lớp `Invoice` khác có 12 phương thức toàn bộ cùng quản lý vòng đời và dòng hóa đơn.
+An application has a `TaxCalculator` that only performs a fixed multiplication with no anticipated rules, and an `Invoice` with 12 methods all managing invoice lines and lifecycle.
 
-**Câu hỏi:** lớp nào nhiều khả năng cần xem lại ranh giới trước?
+**Question:** Which class is more likely to need its boundaries reconsidered first?
 
-**Gợi ý:** không thể kết luận từ số lượng method. Hãy xét nguồn thay đổi, policy, dữ liệu cần bảo vệ và phạm vi sử dụng. Một `Invoice` cohesive có thể tốt, còn `TaxCalculator` vẫn có thể hợp lý nếu chính sách thuế độc lập và thay đổi thường xuyên.
+**Hint:** Method count alone cannot answer this. Consider sources of change, policies, data requiring protection, and scope of use. A cohesive `Invoice` may be excellent, while `TaxCalculator` can also make sense if tax policy changes independently and frequently.
 
-### Bài 6 – Tình huống production
+### Exercise 6 – Production Scenario
 
-`InvoiceWorkflow` đánh dấu `invoice.issue()` rồi lưu và gửi thông báo. Giả sử việc lưu thành công nhưng email thất bại.
+`InvoiceWorkflow` invokes `invoice.issue()`, then saves the invoice and sends a notification. Suppose saving succeeds but email delivery fails.
 
-**Câu hỏi:** Có nên tự đảo `invoice.issued = false` trong NotificationSender không?
+**Question:** Should NotificationSender reset `invoice.issued = false` on its own?
 
-**Gợi ý:** không. Sender không nên sửa bất biến hóa đơn. Hãy định nghĩa transaction quanh phần lưu trạng thái và sự kiện gửi, sau đó xử lý thông báo qua outbox/retry/idempotency theo chính sách. Đây cũng là ví dụ vì sao ranh giới trách nhiệm có giá trị khi xảy ra lỗi.
+**Hint:** No. The sender should not mutate invoice invariants. Define a transaction around persistence of state and the send event, then process notifications with an outbox/retry/idempotency policy. This illustrates why responsibility boundaries matter when failures occur.
 
 ---
 
-**Ghi nhớ:** SRP yêu cầu **một nhóm trách nhiệm có cùng mục đích và nguồn thay đổi**, không yêu cầu “một class = một method”. Hãy giữ các bất biến gần đối tượng sở hữu chúng, tách những chi tiết hiển thị/lưu trữ/tích hợp có nguồn thay đổi riêng, và để một đối tượng điều phối các cộng tác viên khi cần. Một thiết kế tuân SRP sẽ giúp người bảo trì biết chính xác nên sửa đâu khi yêu cầu thay đổi, mà không làm mất sự gắn kết tự nhiên của mô hình miền.
+**Key takeaway:** SRP calls for **one cohesive group of responsibilities sharing a purpose and source of change**, not "one class = one method." Keep invariants near their owners, separate presentation/storage/integration details that change independently, and let a coordinator orchestrate collaborators when needed. A design following SRP helps maintainers identify where changes belong without losing the domain model's natural cohesion.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="solid-003">Đóng-mở: mở rộng hành vi với thay đổi có kiểm soát</a>
+## <a id="solid-003">Open/Closed: Extending Behavior with Controlled Changes</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Nguyên lý Đóng–Mở (Open/Closed Principle): mở rộng hành vi với thay đổi có kiểm soát
+# Open/Closed Principle: Extending Behavior with Controlled Changes
 
-> **Mục tiêu:** Khi xuất hiện một quy tắc nghiệp vụ mới, có thể bổ sung cách xử lý mới qua điểm mở rộng được thiết kế sẵn; phần điều phối ổn định không phải sửa theo từng biến thể.
+> **Objective:** When a new business rule appears, introduce new behavior through an intentionally designed extension point without changing stable coordination code for each variant.
 
-## 1. OCP thực sự nói gì?
+## 1. What Does OCP Really Say?
 
-Open/Closed Principle (OCP), chữ **O** trong SOLID, thường được diễn đạt: một thành phần phần mềm nên **mở cho việc mở rộng** và **đóng trước những sửa đổi do biến thể mới**.
+The Open/Closed Principle (OCP), the **O** in SOLID, is usually expressed as: a software component should be **open for extension** and **closed to modifications triggered by new variants**.
 
-- **Mở cho mở rộng:** có thể đưa vào cách tính phí, hình thức thanh toán, cách xuất báo cáo… mới thông qua hợp đồng (interface/abstract class), composition hoặc callback.
-- **Đóng trước sửa đổi:** phần nghiệp vụ cốt lõi đã ổn định không cần thêm nhánh `if`, `switch`, `instanceof` mỗi khi có biến thể.
-- **Có kiểm soát:** hợp đồng của điểm mở rộng quy định đầu vào, đầu ra, ngoại lệ, các bất biến và cách đăng ký thành phần. Mã mở rộng phải tuân thủ hợp đồng; bổ sung không được vô tình đổi hành vi hiện hành.
+- **Open for extension:** New fee calculations, payment methods, report exporters, and so on can be introduced through contracts (interfaces/abstract classes), composition, or callbacks.
+- **Closed to modification:** Stable core logic need not gain a new `if`, `switch`, or `instanceof` branch whenever another variant appears.
+- **Controlled:** An extension-point contract defines inputs, outputs, exceptions, invariants, and how components are registered. Extension code must honor that contract; adding it must not inadvertently change existing behavior.
 
-OCP **không** có nghĩa “đã viết class thì tuyệt đối không sửa”. Vẫn cần sửa lỗi, tăng tính rõ ràng, thay đổi yêu cầu nền tảng hoặc điều chỉnh một abstraction thiết kế sai. Mục tiêu là giảm số chỗ phải chỉnh và rủi ro hồi quy **khi thêm một biến thể đã được dự liệu**.
+OCP **does not** mean "never edit a class once written." Bugs, unclear code, changes to fundamental requirements, and poorly designed abstractions still require edits. The goal is to minimize the affected code and regression risk **when adding an anticipated variant**.
 
-### Khi nào vấn đề xuất hiện?
+### When Does the Problem Arise?
 
-Giả sử hệ thống bán hàng hiện có hai cách giao hàng: tiêu chuẩn và nhanh. Mỗi tháng lại thêm một dịch vụ mới. Nếu bộ phận tính phí chứa mọi công thức, mỗi dịch vụ mới buộc phải mở lại cùng một hàm và có thể làm hỏng logic cũ.
+Suppose a sales system currently offers standard and express shipping, and a new delivery service is added every month. If one fee calculator contains every formula, each new service requires editing the same function and risks breaking existing rules.
 
 ```java
 // Thiết kế ban đầu: thêm dịch vụ mới luôn phải sửa hàm này.
@@ -1324,11 +1324,11 @@ BigDecimal shippingFee(String service, int weightGrams) {
 }
 ```
 
-Vấn đề không nằm ở riêng cú pháp `if/else`. Nó nằm ở **lý do thay đổi**: mỗi dịch vụ là một quy tắc độc lập, nhưng tất cả đều sửa cùng một điểm điều phối. Điều này tăng xung đột khi nhiều người phát triển, khối lượng kiểm thử hồi quy và nguy cơ bỏ quên một nhánh. Nếu tập lựa chọn là cố định và rất nhỏ thì `switch` vẫn có thể là thiết kế hợp lý.
+The problem is not `if/else` syntax itself. It is the **reason for change**: each service has independent rules, but all variants modify the same coordinating function. That increases conflicts among developers, regression-test effort, and the chance of missing a branch. If the set of options is small and fixed, a `switch` can still be reasonable.
 
-## 2. Thiết kế điểm mở rộng bằng Strategy và đa hình
+## 2. Designing Extension Points with Strategy and Polymorphism
 
-Trong ví dụ dưới đây, `ShippingService` chỉ biết hợp đồng `ShippingPolicy`, không phụ thuộc công thức của từng hãng giao hàng. Từng chính sách chịu trách nhiệm tính giá và có thể được thử nghiệm độc lập.
+In the example below, `ShippingService` only knows the `ShippingPolicy` contract, not individual delivery providers' formulas. Each policy calculates fees and can be tested independently.
 
 ```mermaid
 flowchart LR
@@ -1339,9 +1339,9 @@ flowchart LR
     F[SameDayShipping] -. bổ sung mới .-> C
 ```
 
-### Ví dụ Java 17 chạy được
+### Runnable Java 17 Example
 
-Lưu toàn bộ mã dưới đây vào file `OpenClosedDemo.java`, chạy bằng `javac OpenClosedDemo.java` rồi `java OpenClosedDemo`.
+Save the complete code below as `OpenClosedDemo.java` and run `javac OpenClosedDemo.java` followed by `java OpenClosedDemo`.
 
 ```java
 import java.math.BigDecimal;
@@ -1440,29 +1440,29 @@ public class OpenClosedDemo {
 }
 ```
 
-Lưu ý thực tế:
+Practical observations:
 
-1. `ShippingPolicy` là **điểm biến thiên**. Chính sách mới thêm một lớp thực thi interface này, không buộc `ShippingService` sửa công thức tính.
-2. `ShippingService` là **phần ổn định**, tra cứu chính sách, gọi `feeFor` và từ chối kết quả `null` hoặc phí âm để bảo vệ ranh giới tích hợp. Nó không dùng `instanceof` hoặc hỏi kiểu cụ thể để xử lý khác nhau.
-3. `Map<String, ShippingPolicy>` là **cơ chế chọn và đăng ký**. Khi thêm dịch vụ, thay đổi ở nơi lắp ráp ứng dụng (composition root: ví dụ `main`, cấu hình hoặc DI container) là có chủ đích; OCP không đòi hỏi cả hệ thống tuyệt đối không thay đổi dòng nào.
-4. `BigDecimal` phù hợp với tiền hơn `double` để tránh sai số nhị phân. Ví dụ giữ số tiền VND là giá trị nguyên, không tự ý làm tròn tại nhiều chỗ.
-5. Đối tượng `Order` tự bảo vệ dữ liệu tối thiểu; chính sách mới phải trả phí hợp lệ. Trong dự án thật, có thể cần lớp `Money`/`Currency`, quy tắc làm tròn, giới hạn khối lượng và mức phí riêng.
+1. `ShippingPolicy` is **the variation point**. A new policy adds a class implementing this interface without requiring changes to `ShippingService`'s fee-calculation logic.
+2. `ShippingService` is **the stable component**: it finds a policy, invokes `feeFor`, and rejects `null` or negative fees to protect the integration boundary. It does not use `instanceof` or inspect concrete types to branch.
+3. `Map<String, ShippingPolicy>` provides **selection and registration**. When a service is added, updating the application assembly point (composition root: `main`, configuration, or a DI container) is intentional; OCP does not require zero changes anywhere in the system.
+4. `BigDecimal` is better suited to money than `double` because it avoids binary floating-point errors. The example represents VND amounts as whole numbers and avoids arbitrary rounding in multiple places.
+5. The `Order` object performs basic self-validation; new policies must return valid fees. Real projects may need `Money`/`Currency` types, rounding policies, weight limits, and specific fee bounds.
 
-Một hợp đồng tốt còn phải nêu điều **không được phép thay đổi**: `feeFor` không trả `null`, không trả phí âm, không thay đổi `Order`, áp dụng cùng đơn vị VND và có quy định rõ xử lý dữ liệu không hợp lệ. Những ràng buộc này không được diễn đạt hết bằng chữ ký phương thức; cần tài liệu, kiểm thử hợp đồng và review.
+A good contract also states what **must not change**: `feeFor` must not return `null` or a negative fee, mutate `Order`, or use a different unit from VND; invalid-input behavior must be explicit. Method signatures alone cannot express all of this; documentation, contract tests, and reviews are necessary.
 
-## 3. Hướng thay đổi: trước và sau
+## 3. Change Impact: Before and After
 
-| Tình huống | Hàm tập trung `if/else` | Thiết kế qua `ShippingPolicy` |
+| Scenario | Centralized `if/else` function | Design using `ShippingPolicy` |
 |---|---|---|
-| Thêm giao hàng trong ngày | Chèn nhánh vào hàm tính chung | Viết `SameDayShipping`, đăng ký chính sách |
-| Sửa biểu phí giao nhanh | Sửa nhánh chung, dễ ảnh hưởng dịch vụ khác | Sửa `ExpressShipping` và test của nó |
-| Đơn vị kiểm thử | Phải dựng nhiều trường hợp trong một hàm | Test từng chính sách theo hợp đồng chung |
-| Phần cần ổn định | Dễ biến thành điểm thay đổi liên tục | `ShippingService` và lời gọi `feeFor` |
-| Chi phí | Ban đầu rất ngắn, tăng dần khi có nhiều biến thể | Thêm interface, lớp, cấu hình và quản lý vòng đời |
+| Add same-day delivery | Insert a branch in the common calculator | Implement `SameDayShipping` and register the policy |
+| Update express-shipping fees | Edit the shared branch, potentially affecting other services | Edit `ExpressShipping` and its tests |
+| Unit of testing | Many cases must be built around one function | Test policies separately under a shared contract |
+| Code that should remain stable | Easily becomes a perpetual change hotspot | `ShippingService` and the `feeFor` call |
+| Cost | Initially concise but grows with variants | Adds interfaces, classes, configuration, and lifecycle management |
 
-Việc thêm `SameDayShipping` vẫn phải đăng ký vào `Map`. Nếu triển khai Spring, có thể để mỗi implementation là bean có tên và inject `Map<String, ShippingPolicy>` vào service; Spring tập hợp những bean tương ứng. Điều này hữu ích khi có nhiều plugin, nhưng không bắt buộc đối với ứng dụng Java thuần. Không cần đưa reflection hoặc plugin loader vào bài toán chỉ có hai công thức đơn giản.
+Adding `SameDayShipping` still requires registration in `Map`. With Spring, each implementation may be a named bean, and `Map<String, ShippingPolicy>` can be injected into the service; Spring collects the corresponding beans. This is useful with many plugins but unnecessary for a plain Java application. Two simple formulas do not justify reflection or a plugin loader.
 
-### Sơ đồ luồng thực thi
+### Execution Flow Diagram
 
 ```mermaid
 sequenceDiagram
@@ -1480,26 +1480,26 @@ sequenceDiagram
     end
 ```
 
-Trong phương thức `quote`, `if (policy == null)` vẫn tồn tại, vì đó là **kiểm soát tính hợp lệ của yêu cầu**. OCP không cấm mọi `if`; điều cần tránh là điều phối bằng danh sách kiểu cụ thể liên tục phình to theo các biến thể.
+In the `quote` method, `if (policy == null)` remains because it **validates the request**. OCP does not forbid every `if`; it discourages coordinating behavior through an ever-growing list of concrete types.
 
-## 4. “Đóng” ở cấp nào và thay đổi có kiểm soát ra sao?
+## 4. What Should Be "Closed," and How Are Changes Controlled?
 
-OCP thường chỉ có giá trị khi xác định đúng **ranh giới biến thiên**:
+OCP is most valuable when **variation boundaries** are identified correctly:
 
-- **Thay đổi thường xuyên:** cách tính phí, cách đánh giá khuyến mãi, cách gửi thông báo… → là ứng viên cho interface.
-- **Thay đổi hiếm hoặc luôn đồng bộ:** các bước bất biến như xác thực mã dịch vụ, chặn đầu vào vô nghĩa, cách ghi nhận lỗi… → giữ ở thành phần điều phối.
-- **Thay đổi hợp đồng nền tảng:** nếu tất cả phương thức phải bổ sung `DeliveryContext`, giao diện và các implementation có thể phải sửa. Đây là thay đổi kiến trúc có chủ đích, không phải vi phạm OCP tự động.
+- **Frequently changing behavior:** Fee calculations, promotion evaluation, notification delivery, etc. → candidates for interfaces.
+- **Rarely changing or consistently shared behavior:** Invariants such as service-code validation, rejection of meaningless input, or error handling → keep in the coordinator.
+- **Fundamental contract changes:** If all methods must accept a new `DeliveryContext`, interfaces and implementations may need updates. That is an intentional architectural change, not automatically an OCP violation.
 
-Ví dụ, khi muốn áp dụng phụ phí khu vực, có hai tình huống khác nhau:
+For example, adding regional surcharges creates two distinct situations:
 
-- Nếu **mỗi chính sách tự quyết phụ phí vùng** và logic này thay đổi theo từng dịch vụ, thiết kế hợp đồng đầu vào (ví dụ thêm `Destination` vào `Order` hoặc `ShippingRequest`) rồi để chính sách phụ trách.
-- Nếu **mọi chính sách luôn chịu cùng một phụ phí nền tảng**, nên cân nhắc xử lý chung trong service hoặc một decorator bọc chính sách thay vì sao chép vào từng implementation.
+- If **each policy determines its own regional surcharge** and that logic varies by service, design the input contract (for example, add `Destination` to `Order` or `ShippingRequest`) and let each policy handle it.
+- If **every policy always has the same base surcharge**, consider a shared service step or decorator around policies rather than duplicating the logic in every implementation.
 
-Không nên mở rộng `ShippingPolicy` thành một interface với hàng chục tham số dự phòng cho các kịch bản chưa xuất hiện. Mọi abstraction tạo ra chi phí: tên gọi, tài liệu hợp đồng, kiểm thử, DI, truyền dependency, khả năng debug.
+Do not expand `ShippingPolicy` into an interface with dozens of speculative parameters for scenarios that do not yet exist. Every abstraction has costs: naming, contract documentation, testing, DI, dependency wiring, and debugging.
 
-## 5. Ví dụ mở rộng nâng cao bằng Decorator
+## 5. Advanced Extension Example Using Decorator
 
-Giả sử cần phụ thu cố định **5.000 VND** cho mọi dịch vụ khi giao đến vùng xa. Nếu yêu cầu mới này áp dụng như một lớp phủ nhất quán, có thể bọc chính sách hiện có thay vì sao chép công thức của từng dịch vụ.
+Suppose all services need a fixed **5.000 VND** surcharge for deliveries to remote areas. If the new requirement applies uniformly, existing policies can be wrapped instead of copying the surcharge formula into every service.
 
 ```java
 static final class RemoteAreaSurcharge implements ShippingPolicy {
@@ -1523,15 +1523,15 @@ BigDecimal total = policy.feeFor(
 // total = 56000
 ```
 
-Đoạn `RemoteAreaSurcharge` được viết như **lớp lồng trong `OpenClosedDemo`**, nên tái sử dụng được `ShippingPolicy`, `Order`, `ExpressShipping` từ ví dụ trước. Đây là ví dụ áp dụng decorator; khi tích hợp thực tế, chỉ bọc những chuyến hàng đủ điều kiện vùng xa (ví dụ tại composition root theo địa chỉ đã xác thực). Không nên bọc tất cả một cách mù quáng.
+`RemoteAreaSurcharge` is written as **a nested class inside `OpenClosedDemo`**, so it can reuse `ShippingPolicy`, `Order`, and `ExpressShipping` from the previous example. This illustrates Decorator; in a real integration, wrap only shipments eligible for the remote-area surcharge (for example, at the composition root using validated addresses). Do not wrap every shipment indiscriminately.
 
-Mở rộng kiểu này khác với tạo subclass của `ShippingService` và ghi đè phương thức không được thiết kế cho việc ghi đè. **Ưu tiên composition khi muốn phối hợp nhiều hành vi độc lập.** Đừng biến inheritance thành điểm mở rộng mặc định.
+This type of extension differs from subclassing `ShippingService` and overriding methods not designed for overriding. **Prefer composition when combining independent behaviors.** Do not treat inheritance as the default extension mechanism.
 
-## 6. Kiểm thử để bảo vệ phần “đóng”
+## 6. Testing to Protect the "Closed" Core
 
-Chỉ tách thành interface không tự bảo đảm an toàn. Mỗi implementation có thể âm thầm vi phạm hợp đồng (trả số âm, `null`, dùng sai đơn vị, thay đổi input, ném exception bất ngờ). Nên có hai tầng kiểm thử:
+Extracting an interface alone does not guarantee safety. An implementation may silently violate its contract (return negative numbers or `null`, use the wrong unit, mutate input, or throw unexpected exceptions). Use two levels of tests:
 
-**Kiểm thử quy tắc riêng** (JUnit 5, giả sử mã ví dụ nằm trong `OpenClosedDemo` và các kiểu lồng trong đó có thể truy cập từ test cùng package):
+**Policy-specific tests** (JUnit 5, assuming the example code resides in `OpenClosedDemo` and its nested types are accessible from a test in the same package):
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1563,78 +1563,78 @@ class ShippingPolicyTest {
 }
 ```
 
-**Kiểm thử hợp đồng dùng chung:** với **mọi** `ShippingPolicy` đã đăng ký, chạy các trường hợp đầu vào hợp lệ, xác nhận kết quả khác `null`, không âm, đúng đơn vị; xác định hành vi với đầu vào bị từ chối. Trong hệ thống plugin, có thể dùng `@ParameterizedTest` kết hợp `@MethodSource` để thử cùng một contract cho mọi implementation. Chỉ kiểm tra kết quả không âm là chưa đủ: cần assert các mốc nghiệp vụ, biên khối lượng và những quy tắc của từng chiến lược.
+**Shared contract tests:** For **every** registered `ShippingPolicy`, test valid inputs and confirm non-`null`, nonnegative results with the correct units; specify behavior for rejected inputs. In a plugin system, `@ParameterizedTest` together with `@MethodSource` can run the same contract tests against all implementations. Checking only nonnegative results is insufficient: assert business checkpoints, weight boundaries, and each strategy's specific rules.
 
-Khi tích hợp, thêm thử nghiệm xem tên dịch vụ mới đã được đăng ký chưa và mã dịch vụ không xác định bị từ chối rõ ràng. Nếu sử dụng DI/container, kiểm tra trùng tên bean, thiếu bean, vòng đời singleton và dữ liệu trạng thái dùng chung.
+Integration tests should also confirm that new service names are registered and unknown service codes are rejected clearly. With a DI container, check duplicate bean names, missing beans, singleton lifecycles, and shared mutable state.
 
-## 7. Cạm bẫy khi áp dụng OCP
+## 7. Pitfalls When Applying OCP
 
-| Cạm bẫy | Vì sao có hại | Cách xử lý |
+| Pitfall | Why it hurts | How to address it |
 |---|---|---|
-| Tạo interface cho mọi lớp | Phức tạp mà không có biến thể thực tế | Chỉ mở điểm có thay đổi độc lập và lặp lại |
-| Sau khi tạo interface vẫn `instanceof` từng implementation | Service vẫn phải sửa khi có kiểu mới | Giao hành vi vào phương thức đa hình của interface |
-| Đưa mọi công thức và bảng giá vào service | Điểm điều phối liên tục nhận yêu cầu mới | Tách chính sách độc lập; có thể dùng dữ liệu/cấu hình khi phù hợp |
-| Sửa interface công khai theo từng biến thể | Gây dây chuyền sửa tất cả implementation | Chọn hợp đồng đủ ổn định; bổ sung capability riêng nếu thật sự khác biệt |
-| Dùng kế thừa sâu | Dễ phụ thuộc implementation, khó phối hợp hành vi | Ưu tiên interface nhỏ và composition/decorator |
-| Che lỗi bằng default policy | Mã dịch vụ nhập sai có thể âm thầm áp phí sai | Fail fast với thông báo rõ hoặc fallback theo quy định nghiệp vụ |
-| Bỏ qua chất lượng implementation mới | Một plugin xấu làm hỏng luồng chung | Contract test, logging, code review và quy tắc tích hợp |
-| Xem OCP là “không bao giờ sửa code cũ” | Bám abstraction lỗi thời, phát sinh vá víu | Refactor có kiểm soát khi dữ liệu thực tế chỉ ra cần đổi hợp đồng |
+| Creating an interface for every class | Adds complexity without real variants | Create extension points where independent changes recur |
+| Still checking each implementation with `instanceof` after extracting an interface | The service still changes for each new type | Put behavior in polymorphic interface methods |
+| Putting all formulas and price tables in the service | The coordinator remains a hotspot for every new rule | Separate policies; use data/configuration where appropriate |
+| Changing a public interface for every variant | Forces cascading changes to all implementations | Choose a stable contract; add separate capabilities for genuine differences |
+| Deep inheritance hierarchies | Encourages implementation coupling and complicates behavior composition | Prefer small interfaces and composition/decorators |
+| Hiding errors behind a default policy | Mistyped service codes may silently produce incorrect fees | Fail fast with clear messages or use a business-defined fallback |
+| Ignoring the quality of new implementations | A faulty plugin breaks the shared workflow | Contract tests, logging, code review, and integration rules |
+| Treating OCP as "never modify old code" | Preserves obsolete abstractions and encourages workarounds | Refactor carefully when evidence shows the contract must change |
 
-**OCP liên hệ với các nguyên lý SOLID khác:**
+**How OCP Relates to Other SOLID Principles:**
 
-- **SRP:** mỗi chính sách có lý do thay đổi riêng. Nếu một chính sách vừa tính phí vừa gửi email, nó đang ôm nhiều trách nhiệm.
-- **LSP:** implementation thay thế được cho `ShippingPolicy` mà không phá vỡ giả định của client. Điều này rất quan trọng để “mở rộng” vẫn an toàn.
-- **ISP:** hợp đồng nhỏ khiến implementation không phải viết những hàm vô nghĩa.
-- **DIP:** `ShippingService` phụ thuộc abstraction `ShippingPolicy` thay vì class cụ thể.
+- **SRP:** Each policy has its own reason to change. A policy that calculates fees and sends emails has multiple responsibilities.
+- **LSP:** An implementation must substitute for `ShippingPolicy` without breaking client assumptions. This is essential to safe extension.
+- **ISP:** Small contracts prevent implementations from writing meaningless methods.
+- **DIP:** `ShippingService` depends on the `ShippingPolicy` abstraction rather than a concrete class.
 
-## 8. Quy trình refactor một đoạn code đang vi phạm OCP
+## 8. Refactoring Code That Violates OCP
 
-1. **Nhận diện sự biến thiên:** liệt kê lý do gần đây phải sửa cùng một `if/switch`. Nếu là các quy tắc nghiệp vụ khác nhau, cân nhắc tách.
-2. **Rút hợp đồng tối thiểu:** đặt tên từ nghiệp vụ như `ShippingPolicy.feeFor(Order)`, mô tả bất biến và xử lý lỗi.
-3. **Di chuyển từng hành vi:** viết `StandardShipping` và `ExpressShipping` cho logic có sẵn; giữ kết quả giống trước.
-4. **Chuyển client sang interface:** inject policy hoặc registry; xác nhận service không còn hỏi kiểu cụ thể.
-5. **Bảo vệ bằng kiểm thử:** test kết quả cũ, điều kiện biên và hợp đồng chung.
-6. **Thử thêm biến thể thật:** tạo `SameDayShipping`. Nếu vẫn phải sửa công thức trong service thì điểm mở rộng chưa đúng.
-7. **Theo dõi độ phức tạp:** số lớp, wiring, khả năng quan sát lỗi và hiệu năng thực tế. Có thể giữ giải pháp đơn giản nếu chi phí abstraction vượt lợi ích.
+1. **Identify variation:** List recent reasons for editing the same `if/switch`. Consider extraction if they are separate business rules.
+2. **Extract a minimal contract:** Use domain names such as `ShippingPolicy.feeFor(Order)` and document invariants and error handling.
+3. **Move behaviors individually:** Implement `StandardShipping` and `ExpressShipping` using existing logic and preserve previous results.
+4. **Switch clients to the interface:** Inject a policy or registry; verify the service no longer inspects concrete types.
+5. **Protect with tests:** Test previous results, edge cases, and the shared contract.
+6. **Try adding a genuine variant:** Create `SameDayShipping`. If this still requires editing formulas in the service, the extension boundary is misplaced.
+7. **Track complexity:** Evaluate class count, wiring, error observability, and real performance. Keep the simple design if abstraction costs exceed benefits.
 
-### Bài tập tự luyện
+### Self-Practice Exercises
 
-**Bài 1 – Thanh toán.** Hệ thống hiện xử lý `CASH` và `BANK_TRANSFER` bằng `switch`. Thiết kế `PaymentMethod` với thao tác thanh toán và kết quả tường minh; mở rộng `QR_PAYMENT`. Phân biệt phần chung (validation, idempotency, logging) với phần thay đổi theo phương thức. Không lưu số thẻ hoặc thông tin nhạy cảm vào log.
+**Exercise 1 – Payments.** The system currently handles `CASH` and `BANK_TRANSFER` with a `switch`. Design `PaymentMethod` with an explicit payment operation and result; add `QR_PAYMENT`. Distinguish shared concerns (validation, idempotency, logging) from method-specific behavior. Never log card numbers or sensitive information.
 
-**Bài 2 – Xuất báo cáo.** Đang có `PDF` và `CSV`. Chuyển sang `ReportExporter` với phương thức `export(ReportData)`. Thêm JSON mà không chỉnh thuật toán điều phối xuất báo cáo. Ghi rõ MIME type và quy tắc xử lý lỗi.
+**Exercise 2 – Report export.** The system currently supports `PDF` and `CSV`. Refactor to `ReportExporter` with `export(ReportData)`. Add JSON without changing report-export coordination. Specify MIME types and error-handling rules.
 
-**Bài 3 – Phản biện thiết kế.** Một hệ thống chỉ có đúng hai trạng thái đóng/mở đã ổn định nhiều năm. Việc thêm ba interface, registry và dynamic plugin loader có giúp gì không? Giải thích bằng tần suất thay đổi, chi phí bảo trì và độ phức tạp vận hành.
+**Exercise 3 – Critique the design.** A system has only two open/closed states that have remained stable for years. Would adding three interfaces, a registry, and a dynamic plugin loader help? Explain using change frequency, maintenance costs, and operational complexity.
 
-## 9. Tự kiểm tra đã hiểu OCP chưa?
+## 9. Self-Check: Do You Understand OCP?
 
-- Có chỉ rõ **điểm ổn định** và **trục biến thiên** cần mở rộng không?
-- Khi thêm biến thể mới, có cần chỉnh các nhánh điều phối đã ổn định không?
-- Interface có mô tả hành vi chung thực sự và đủ rõ để viết contract test không?
-- Implementation mới có thay thế được implementation cũ tại vị trí client kỳ vọng không?
-- Việc đăng ký/cấu hình có tường minh, fail fast và kiểm thử được không?
-- Độ phức tạp bổ sung có tương xứng với tần suất yêu cầu thay đổi không?
+- Are the **stable components** and **dimensions of variation** clearly identified?
+- Does adding a variant require editing stable coordination branches?
+- Does the interface describe genuinely shared behavior clearly enough for contract tests?
+- Can a new implementation replace an old one wherever clients expect it?
+- Are registration/configuration explicit, fail-fast, and testable?
+- Is added complexity proportional to how frequently changes are required?
 
-**Ghi nhớ:** OCP là một quyết định về *ranh giới thay đổi*. Thiết kế tốt đặt phần thay đổi thường xuyên phía sau hợp đồng ổn định, cho phép thêm hành vi mới và khoanh vùng kiểm thử, nhưng vẫn sẵn sàng sửa abstraction khi yêu cầu nền tảng thật sự đổi.
+**Key takeaway:** OCP is a decision about *change boundaries*. A good design puts frequently changing behavior behind stable contracts, enabling new behavior and focused testing while remaining willing to revise an abstraction when fundamental requirements actually change.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="solid-004">Thay thế Liskov: bảo toàn hợp đồng của kiểu cha</a>
+## <a id="solid-004">Liskov Substitution: Preserving Supertype Contracts</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thay thế Liskov (LSP): Bảo toàn hợp đồng của kiểu cha
+# Liskov Substitution (LSP): Preserving Supertype Contracts
 
-> Chủ đề: OOP → SOLID → Liskov Substitution Principle. Trọng tâm là **khả năng thay thế về hành vi**: một đối tượng thuộc kiểu con phải dùng được tại mọi vị trí mà chương trình mong đợi kiểu cha, đồng thời giữ nguyên những cam kết mà mã sử dụng kiểu cha đang dựa vào.
+> Topic: OOP → SOLID → Liskov Substitution Principle. The focus is **behavioral substitutability**: a subtype object must work wherever a program expects its supertype while preserving the promises on which supertype clients rely.
 
-## 1. Nguyên lý nói gì?
+## 1. What Does the Principle Say?
 
-Giả sử một hàm nhận đối tượng kiểu `T`. Nếu `S` là kiểu con của `T`, việc truyền một đối tượng `S` thay cho `T` phải giữ đúng các tính chất mà hàm đó được phép kỳ vọng từ hợp đồng của `T`. Viết ngắn gọn:
+Suppose a function accepts an object of type `T`. If `S` is a subtype of `T`, passing an `S` object in place of `T` must preserve every property that the function is entitled to expect under `T`'s contract. In short:
 
 ~~~java
 void process(T value) { /* chỉ dựa vào hợp đồng công khai của T */ }
@@ -1642,36 +1642,36 @@ void process(T value) { /* chỉ dựa vào hợp đồng công khai của T */ 
 // Nếu S <: T, process(new S(...)) vẫn phải đáp ứng hợp đồng của T.
 ~~~
 
-LSP không yêu cầu kiểu con tạo ra **cùng một kết quả cụ thể** với mọi kiểu con khác; kiểu con được phép có thuật toán hoặc chính sách riêng. Điều bắt buộc là mọi kết quả và cách ứng xử của nó nằm trong phạm vi đã cam kết bởi kiểu cha.
+LSP does not require subtypes to produce **identical concrete results**; each may use its own algorithm or policy. What matters is that every result and behavior stays within the supertype's promised contract.
 
-Đừng đánh đồng “`extends` / `implements` hợp lệ và biên dịch được” với “thay thế được”. Trình biên dịch Java kiểm tra nhiều quy tắc về kiểu và ghi đè phương thức, nhưng không tự chứng minh được hợp đồng nghiệp vụ (ví dụ: “chiết khấu không được vượt tổng tiền hàng”).
+Do not confuse "valid, compilable `extends` / `implements`" with "safe substitutability." The Java compiler enforces many type and method-override rules but cannot prove business contracts such as "discounts must not exceed the subtotal."
 
-### Hợp đồng của kiểu cha gồm những gì?
+### What Does a Supertype Contract Include?
 
-| Thành phần | Điều kiểu cha cam kết | Kiểu con phải làm gì? |
+| Contract element | Supertype's promise | Subtype obligation |
 |---|---|---|
-| **Tiền điều kiện (precondition)** | Điều kiện người gọi phải đáp ứng trước khi gọi, ví dụ: tổng tiền ≥ 0 | **Không được siết chặt**: không tự dưng đòi thêm điều kiện đầu vào hợp lệ |
-| **Hậu điều kiện (postcondition)** | Điều kiện đúng sau khi phương thức hoàn tất, ví dụ: chiết khấu thuộc [0, tổng tiền] | **Không được làm yếu**: có thể bảo đảm nhiều hơn, nhưng phải giữ mọi bảo đảm cũ |
-| **Bất biến (invariant)** | Trạng thái luôn hợp lệ trong vòng đời đối tượng | Không tạo trạng thái phá vỡ các bất biến mà người dùng kiểu cha tin cậy |
-| **Lỗi và ngoại lệ** | Cách báo lỗi cho những trường hợp thuộc hợp đồng | Không phát sinh ngoại lệ không được hợp đồng cho phép trên đầu vào hợp lệ; quy tắc Java về `checked exception` chỉ là một phần của vấn đề |
-| **Tác dụng phụ/quan sát được** | Các quy ước về dữ liệu bị thay đổi, số lần thực hiện, thứ tự, tính ổn định nếu có ghi rõ | Không thay đổi tùy tiện những cam kết mà client có quyền dựa vào |
+| **Precondition** | Conditions a caller must satisfy before invoking a method, such as subtotal ≥ 0 | **Must not strengthen it:** Do not arbitrarily add new restrictions to valid inputs |
+| **Postcondition** | Conditions that hold after a method completes, such as a discount in [0, subtotal] | **Must not weaken it:** Stronger guarantees are allowed, but all existing guarantees must remain |
+| **Invariant** | State that must remain valid throughout the object's lifecycle | Never produce state that violates invariants relied upon by supertype clients |
+| **Errors and exceptions** | How errors are reported for cases covered by the contract | Do not throw exceptions the contract disallows for valid inputs; Java's `checked exception` rules are only part of this |
+| **Side effects/observable behavior** | Documented conventions for mutated data, call counts, order, or stability | Do not arbitrarily change promises on which clients are entitled to rely |
 
-Một phương thức có thể khai báo **đầu vào không hợp lệ** và ném lỗi tương ứng. LSP không đòi kiểu con chấp nhận mọi dữ liệu trong thế giới; nó đòi kiểu con chấp nhận ít nhất tất cả dữ liệu **hợp lệ theo kiểu cha**.
+A method can define **invalid input** and throw corresponding errors. LSP does not require a subtype to accept every possible value; it must accept at least every input **valid under the supertype's contract**.
 
-## 2. Tình huống thực tế: tính chiết khấu tại checkout
+## 2. Practical Scenario: Calculating Checkout Discounts
 
-Giả sử ứng dụng bán hàng có nhiều chính sách chiết khấu: giảm cố định và giảm cho đơn đạt ngưỡng. Checkout không muốn biết từng loại chính sách; nó chỉ biết hợp đồng của `DiscountPolicy`.
+Suppose a sales application offers multiple discount policies: fixed reductions and discounts for orders meeting a threshold. Checkout should not need to know each policy's type; it only needs the `DiscountPolicy` contract.
 
-**Hợp đồng công khai**:
+**Public contract:**
 
-- Đầu vào `subtotal` phải khác `null` và ≥ 0. Với `null` hoặc số âm, báo `IllegalArgumentException`.
-- Với mọi `subtotal` hợp lệ, `discountFor(subtotal)` phải trả về `BigDecimal` khác `null`, thỏa mãn `0 ≤ discount ≤ subtotal`.
-- Không sửa đầu vào hay tạo tác dụng phụ bất ngờ; ở đây `BigDecimal` vốn bất biến.
-- Chính sách được tự chọn giá trị giảm cụ thể; không bắt buộc luôn giảm hoặc luôn giảm cùng số tiền.
+- The `subtotal` input must be non-`null` and ≥ 0. For `null` or negative values, throw `IllegalArgumentException`.
+- For every valid `subtotal`, `discountFor(subtotal)` must return a `BigDecimal` that is not `null` and satisfies `0 ≤ discount ≤ subtotal`.
+- Do not mutate the input or cause unexpected side effects; `BigDecimal` is already immutable here.
+- A policy may choose its specific discount; it need not always apply a reduction or use the same amount.
 
-### 2.1. Thiết kế đáp ứng LSP (Java 17+)
+### 2.1. LSP-Compliant Design (Java 17+)
 
-Lưu ví dụ dưới đây thành `LspDemo.java`; có thể biên dịch và chạy bằng JDK mà không cần thư viện ngoài.
+Save the example as `LspDemo.java`; it compiles and runs with the JDK without external libraries.
 
 ~~~java
 import java.math.BigDecimal;
@@ -1767,9 +1767,9 @@ javac LspDemo.java
 java LspDemo
 ~~~
 
-**Vì sao thay thế an toàn?** `CheckoutService.total` chỉ sử dụng `DiscountPolicy` và dựa trên việc chiết khấu không âm, không vượt tổng tiền. Cả hai implementation đều nhận được *mọi subtotal hợp lệ*, kể cả 0 hoặc đơn rất nhỏ. Vì vậy, có thể thêm chính sách mới mà không phải viết nhánh phân biệt kiểu trong `CheckoutService`.
+**Why is substitution safe?** `CheckoutService.total` uses only `DiscountPolicy` and relies on discounts being nonnegative and no greater than the subtotal. Both implementations accept *every valid subtotal*, including 0 and very small orders. New policies can therefore be added without concrete-type branches in `CheckoutService`.
 
-Một cách nhìn theo luồng gọi:
+Viewed as a call flow:
 
 ~~~mermaid
 flowchart TD
@@ -1787,9 +1787,9 @@ flowchart TD
     R --> O
 ~~~
 
-## 3. Hai cách vi phạm LSP thường gặp
+## 3. Two Common Ways to Violate LSP
 
-### 3.1. Siết chặt tiền điều kiện của kiểu cha
+### 3.1. Strengthening the Supertype's Precondition
 
 ~~~java
 // Ví dụ SAI: chèn thêm class này vào cùng package với ví dụ trên.
@@ -1806,11 +1806,11 @@ final class BadVipDiscount implements DiscountPolicy {
 }
 ~~~
 
-Tổng tiền `25.00` là đầu vào **hợp lệ** theo `DiscountPolicy`. Tuy vậy, `BadVipDiscount` lại ném `UnsupportedOperationException`. Đối tượng này không thể thay thế một `DiscountPolicy` bất kỳ trong `CheckoutService`, dù code biên dịch bình thường.
+A subtotal of `25.00` is **valid input** under `DiscountPolicy`. Yet `BadVipDiscount` throws `UnsupportedOperationException`. This object cannot substitute for an arbitrary `DiscountPolicy` in `CheckoutService`, even though it compiles.
 
-**Sửa:** Với đơn dưới 100, trả chiết khấu `BigDecimal.ZERO` như `ThresholdDiscount`. Nếu nghiệp vụ yêu cầu từ chối xử lý một đơn hàng, hãy định nghĩa điều đó **ngay trong hợp đồng của kiểu cha** hoặc tách một abstraction chuyên biệt; không tự thêm điều kiện bí mật trong subclass.
+**Fix:** For orders below 100, return `BigDecimal.ZERO` as `ThresholdDiscount` does. If business rules require rejecting an order, define that behavior **in the supertype contract itself** or introduce a specialized abstraction; do not add hidden restrictions in a subclass.
 
-### 3.2. Làm yếu hậu điều kiện
+### 3.2. Weakening a Postcondition
 
 ~~~java
 // Ví dụ SAI: trả số tiền giảm cố định mà không chặn theo subtotal.
@@ -1823,22 +1823,22 @@ final class BadFixedDiscount implements DiscountPolicy {
 }
 ~~~
 
-Với đơn `25.00`, chiết khấu trả về `50.00`, vi phạm ràng buộc `discount ≤ subtotal`. `CheckoutService.total` khi đó cho ra `-25.00`; lỗi nghiệp vụ xuất hiện ở client mặc dù nó dùng đúng API.
+For an order of `25.00`, the discount returned is `50.00`, violating `discount ≤ subtotal`. `CheckoutService.total` then produces `-25.00`; a business error reaches the client even though it used the API correctly.
 
-**Sửa:** Trả `new BigDecimal("50.00").min(subtotal)` như `FixedDiscount`. Khi tính toán tiền tệ, nên dùng `BigDecimal(String)` thay vì `new BigDecimal(double)` để tránh mang sai số nhị phân vào phép tính.
+**Fix:** Return `new BigDecimal("50.00").min(subtotal)` as `FixedDiscount` does. For monetary calculations, prefer `BigDecimal(String)` to `new BigDecimal(double)` to avoid introducing binary floating-point inaccuracies.
 
-| Trường hợp | `subtotal = 25.00` | Hợp đồng | Kết luận |
+| Case | `subtotal = 25.00` | Contract | Conclusion |
 |---|---:|---|---|
-| `FixedDiscount(10)` | Giảm 10, tổng còn 15 | Đúng | Thay thế được |
-| `ThresholdDiscount` | Giảm 0, tổng còn 25 | Đúng | Thay thế được |
-| `BadVipDiscount` | Ném `UnsupportedOperationException` | Sai: thêm điều kiện | Vi phạm LSP |
-| `BadFixedDiscount` | Giảm 50, tổng âm | Sai: phá hậu điều kiện | Vi phạm LSP |
+| `FixedDiscount(10)` | Discount 10, resulting total 15 | Valid | Substitutable |
+| `ThresholdDiscount` | Discount 0, resulting total 25 | Valid | Substitutable |
+| `BadVipDiscount` | Throws `UnsupportedOperationException` | Invalid: adds a precondition | Violates LSP |
+| `BadFixedDiscount` | Discount 50, resulting total negative | Invalid: violates a postcondition | Violates LSP |
 
-Hai lỗi trên có tính chất khác nhau: **thêm lý do từ chối đầu vào hợp lệ** là siết tiền điều kiện; **trả kết quả ngoài miền hợp lệ** là làm yếu hậu điều kiện. Một implementation cũng có thể vi phạm nhiều phần hợp đồng cùng lúc.
+These errors differ: **introducing a reason to reject valid input** strengthens a precondition; **returning a value outside the permitted range** weakens a postcondition. One implementation can violate several contract clauses at once.
 
-## 4. Kiểm thử hợp đồng chung cho mọi implementation
+## 4. Shared Contract Tests for Every Implementation
 
-Unit test riêng từng lớp dễ bỏ sót khả năng thay thế. Thay vào đó, hãy chạy **cùng một bộ test** cho mọi `DiscountPolicy` mới. Ví dụ dưới đây dùng JUnit Jupiter và JUnit 5 parameterized tests; tệp `DiscountPolicyContractTest.java` nên được đặt cùng package với các lớp ví dụ, trong source set kiểm thử.
+Separate unit tests for individual classes can miss substitutability problems. Instead, run **the same test suite** against every new `DiscountPolicy`. The following example uses JUnit Jupiter and JUnit 5 parameterized tests; `DiscountPolicyContractTest.java` should reside in the same package as the example classes, within the test source set.
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1895,15 +1895,15 @@ class DiscountPolicyContractTest {
 }
 ~~~
 
-Lưu ý: để chạy đoạn test này cần các dependency JUnit Jupiter, JUnit Params và cấu hình test runner trong Maven/Gradle. Mục tiêu là **test hành vi quan sát được ở cấp interface**, không ép tất cả lớp có cùng công thức tính. Trong ví dụ, `BadVipDiscount` trượt ca `subtotal = 25`; `BadFixedDiscount` trượt ca `0` và `25`.
+Note: Running this test requires JUnit Jupiter, JUnit Params, and test-runner configuration in Maven/Gradle. The goal is to **test observable behavior at the interface level**, not force every class to use the same formula. In the example, `BadVipDiscount` fails for `subtotal = 25`; `BadFixedDiscount` fails for `0` and `25`.
 
-Kiểm thử trên vài giá trị là **bằng chứng có giới hạn**, không phải chứng minh toán học cho mọi đầu vào. Với phép tính tiền quan trọng, hãy bổ sung kiểm thử giá trị biên (0, đúng ngưỡng, ngay dưới/trên ngưỡng), dữ liệu rất lớn, số có nhiều chữ số thập phân và kiểm thử thuộc tính để tăng độ tin cậy.
+Testing a few values provides **limited evidence**, not mathematical proof for every input. For important monetary calculations, add boundary tests (0, exactly at thresholds, just below/above thresholds), very large values, high-precision decimal values, and property-based tests.
 
-## 5. Ví dụ OOP kinh điển: Rectangle và Square
+## 5. Classic OOP Example: Rectangle and Square
 
-Giả sử `Rectangle` công khai hai setter độc lập `setWidth(w)` và `setHeight(h)`, đồng thời cam kết gọi setter nào thì **chỉ kích thước tương ứng** thay đổi. Một `Square extends Rectangle` ghi đè `setWidth` để tự đổi cả chiều cao nhằm giữ hai cạnh bằng nhau. Điều này bảo toàn “hình vuông” nhưng phá hợp đồng “đổi chiều rộng không ảnh hưởng chiều cao” của `Rectangle`.
+Suppose `Rectangle` exposes two independent setters, `setWidth(w)` and `setHeight(h)`, promising that each changes **only its corresponding dimension**. A `Square extends Rectangle` overrides `setWidth` to change the height as well, keeping both sides equal. This preserves the square's geometry but violates `Rectangle`'s promise that changing width does not affect height.
 
-Ví dụ client hợp lệ với kiểu cha:
+Example of a valid client of the supertype:
 
 ~~~java
 void resize(Rectangle r) {
@@ -1914,84 +1914,84 @@ void resize(Rectangle r) {
 }
 ~~~
 
-Nếu `Square` âm thầm ép hai cạnh bằng nhau, client không còn nhận được hành vi đã được kiểu cha hứa. Đây là vấn đề của **hợp đồng setter đã thiết kế**, không phải tuyên bố rằng hình vuông không phải hình chữ nhật về toán học.
+If `Square` silently forces equal sides, the client no longer receives the behavior promised by the supertype. The problem lies in **the designed setter contract**, not in claiming that a square is not mathematically a rectangle.
 
-Thiết kế tốt hơn tùy yêu cầu có thể là hai kiểu bất biến triển khai chung `Shape.area()`, trong đó interface chung **không hứa setter độc lập**; hoặc dùng composition thay cho quan hệ kế thừa để tái sử dụng logic. Đừng ép quan hệ `is-a` trong miền toán học thành `extends` khi hợp đồng phần mềm không tương thích.
+Depending on requirements, a better design might use two immutable types implementing a common `Shape.area()` contract where the interface **makes no promise about independent setters**, or reuse behavior through composition instead of inheritance. Do not force a mathematical `is-a` relationship into `extends` when software contracts are incompatible.
 
-## 6. LSP liên quan gì đến những chữ còn lại trong SOLID?
+## 6. How Does LSP Relate to the Other SOLID Principles?
 
-- **SRP:** Một lớp có trách nhiệm rõ ràng sẽ dễ mô tả hợp đồng, nhưng SRP đúng chưa bảo đảm LSP đúng.
-- **OCP:** Khi mọi implementation giữ hợp đồng, ta có thể thêm loại `DiscountPolicy` mới mà ít phải sửa `CheckoutService`; LSP là điều kiện quan trọng để mở rộng an toàn.
-- **ISP:** Interface quá rộng khiến nhiều implementation buộc phải `throw new UnsupportedOperationException()` trên tác vụ hợp lệ; chia interface theo năng lực thường giúp mỗi hợp đồng trung thực hơn.
-- **DIP:** Client phụ thuộc abstraction, nhưng abstraction chỉ hữu ích nếu các implementation tuân thủ cùng hợp đồng hành vi.
+- **SRP:** A class with clear responsibilities makes contracts easier to describe, but satisfying SRP does not guarantee LSP.
+- **OCP:** When implementations honor contracts, a new `DiscountPolicy` can be added with minimal changes to `CheckoutService`; LSP is essential to safe extension.
+- **ISP:** An overly broad interface may force implementations to `throw new UnsupportedOperationException()` for valid operations; capability-specific interfaces make contracts more honest.
+- **DIP:** Clients depend on abstractions, but those abstractions only help if implementations follow the same behavioral contract.
 
-Không nhất thiết dùng inheritance mới có LSP: `implements` một interface cũng tạo nghĩa vụ thay thế. Ngược lại, một chương trình không có kế thừa không tự động “đạt SOLID”.
+LSP does not require class inheritance: using `implements` for an interface also creates a substitutability obligation. Conversely, a program without inheritance is not automatically "SOLID-compliant."
 
-## 7. Cách áp dụng khi review hoặc refactor
+## 7. Applying LSP During Reviews or Refactoring
 
-Trước khi thêm lớp con hoặc implementation mới, trả lời lần lượt:
+Before adding a subclass or implementation, answer these questions in order:
 
-1. **Xác định client:** Nơi nào nhận kiểu cha? Client đang dựa vào những giả định nào về tham số, kết quả, lỗi và tác dụng phụ?
-2. **Viết hợp đồng:** Diễn tả rõ dữ liệu đầu vào hợp lệ, ngoại lệ cho dữ liệu sai, giá trị đầu ra hợp lệ, bất biến và hành vi quan trọng. Dùng JavaDoc, API docs và test.
-3. **Đối chiếu kiểu con:** Có điều kiện đầu vào nào vừa phát sinh? Có `null`, exception, giá trị âm, trạng thái bất hợp lệ, thay đổi dữ liệu, hoặc side effect mới trên đầu vào hợp lệ không?
-4. **Chạy contract tests:** Áp dụng cùng bộ test ở cấp interface cho mọi implementation. Thêm ca biên và kiểm thử tích hợp theo rủi ro.
-5. **Thiết kế lại khi hợp đồng không phù hợp:** Tách interface theo khả năng, chuyển “không hỗ trợ” thành một kết quả được hợp đồng quy định, hoặc dùng composition. Không che lỗi bằng `instanceof` để phân biệt subtype ngay trong client.
+1. **Identify clients:** Which code accepts the supertype? What assumptions do clients rely on concerning parameters, results, errors, and side effects?
+2. **Write the contract:** Specify valid inputs, exceptions for invalid inputs, valid outputs, invariants, and important behavior. Use JavaDoc, API documentation, and tests.
+3. **Check the subtype:** Does it add input restrictions? Does it return `null`, throw unexpected exceptions, produce negative values or invalid states, mutate data, or introduce side effects for valid inputs?
+4. **Run contract tests:** Apply the same interface-level test suite to every implementation. Add risk-based boundary and integration tests.
+5. **Redesign incompatible contracts:** Split interfaces by capability, make "unsupported" an explicitly defined outcome, or use composition. Do not hide the problem with client-side `instanceof` branches for subtypes.
 
-### Sai lầm dễ gặp
+### Common Mistakes
 
-- Chỉ kiểm tra `@Override`, chữ ký phương thức hoặc giới hạn checked exception rồi kết luận “đúng LSP”.
-- Viết phương thức trong subtype ném `UnsupportedOperationException` dù phương thức đó hợp lệ theo abstraction.
-- Cho phép subtype trả `null` khi kiểu cha đã hứa kết quả khác `null`, hoặc trả giá trị ngoài miền hợp lệ.
-- Dùng `instanceof BadVipDiscount` trong `CheckoutService` để cứu một contract đã bị phá: cách này chuyển hiểu biết về subtype vào client, tăng rẽ nhánh khi mở rộng.
-- Hiểu nhầm rằng mọi kiểu con phải có cùng kết quả, hiệu năng hoặc chi tiết thuật toán: chỉ những thuộc tính đã hứa trong hợp đồng mới bắt buộc. Nếu latency, thứ tự xử lý, tính idempotent hoặc thread safety là cam kết công khai, chúng cũng phải được bảo toàn.
+- Checking only `@Override`, method signatures, or checked-exception restrictions and declaring the design "LSP-compliant."
+- Writing subtype methods that throw `UnsupportedOperationException` even when the abstraction promises that operation.
+- Allowing a subtype to return `null` when the supertype promises non-`null` results, or values outside the valid range.
+- Using `instanceof BadVipDiscount` inside `CheckoutService` to compensate for a broken contract: this moves subtype knowledge into the client and increases branching as the system grows.
+- Assuming every subtype must have identical results, performance, or algorithmic details: only contractually promised properties are required. If latency, processing order, idempotency, or thread safety are public guarantees, they must also be preserved.
 
-**Ghi nhớ:** Kế thừa đúng về cú pháp chưa đủ. Hãy hỏi: “Nếu caller chỉ biết kiểu cha, caller có còn an toàn khi nhận kiểu con này không?” Nếu câu trả lời là không, cần sửa implementation hoặc thiết kế lại hợp đồng và quan hệ giữa các kiểu.
+**Key takeaway:** Syntactically valid inheritance is not enough. Ask: "If a caller knows only the supertype, can it safely accept this subtype?" If not, fix the implementation or redesign the contract and type relationships.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="solid-005">Phân tách giao diện: hợp đồng phù hợp từng bên sử dụng</a>
+## <a id="solid-005">Interface Segregation: Contracts Tailored to Clients</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phân tách giao diện: hợp đồng phù hợp từng bên sử dụng (Interface Segregation Principle — ISP)
+# Interface Segregation: Contracts Tailored to Clients (Interface Segregation Principle — ISP)
 
-> **Ngữ cảnh:** SOLID trong thiết kế hướng đối tượng. **Ý chính:** một bên sử dụng chỉ nên phụ thuộc vào những thao tác mà nó thực sự cần.
+> **Context:** SOLID in object-oriented design. **Key idea:** A client should depend only on the operations it actually needs.
 
-## 1. ISP giải quyết vấn đề gì?
+## 1. What Problem Does ISP Solve?
 
-**Interface Segregation Principle (ISP)** thường được diễn đạt: *Clients should not be forced to depend upon interfaces that they do not use* — không ép client phụ thuộc vào các phương thức mà nó không sử dụng.
+The **Interface Segregation Principle (ISP)** is often stated as: *Clients should not be forced to depend upon interfaces that they do not use*. Clients should not depend on unnecessary methods.
 
-Trong Java, **client** là lớp, dịch vụ hoặc module gọi qua một hợp đồng; không nhất thiết là người dùng cuối. **Interface** ở đây mang nghĩa hợp đồng lập trình, có thể là Java interface hay lớp trừu tượng. Một hợp đồng quá nhiều trách nhiệm (*fat interface*) buộc các client rất khác nhau nhìn thấy cùng một nhóm thao tác.
+In Java, a **client** is a class, service, or module calling through a contract, not necessarily an end user. Here, **interface** means a programming contract, represented by a Java interface or abstract class. An overly broad contract (*fat interface*) forces very different clients to see the same operations.
 
-Ví dụ, ứng dụng quản lý tài liệu có ba nhu cầu riêng:
+For example, a document-management application has three distinct needs:
 
-| Client | Nhu cầu thực tế | Hợp đồng nên biết |
+| Client | Actual need | Contract it should know |
 | --- | --- | --- |
-| Dịch vụ tải tài liệu | Đọc theo mã | **DocumentReader** |
-| Tác vụ nhập tài liệu | Lưu tài liệu | **DocumentWriter** |
-| Tác vụ dọn dữ liệu | Xóa theo chính sách | **DocumentDeleter** |
-| Kho lưu trữ chỉ đọc | Cung cấp dữ liệu để tra cứu | Chỉ cần triển khai **DocumentReader** |
+| Document download service | Read by ID | **DocumentReader** |
+| Document import job | Save documents | **DocumentWriter** |
+| Data cleanup job | Delete according to policy | **DocumentDeleter** |
+| Read-only archive | Provide data for lookup | Only needs to implement **DocumentReader** |
 
-Nếu tất cả đều phụ thuộc vào **DocumentStorage** chứa cả đọc, ghi và xóa, ứng dụng tạo ra những phụ thuộc không cần thiết. Đặc biệt, kho chỉ đọc có thể bị ép khai báo các thao tác mà nó không hỗ trợ.
+If every client depends on **DocumentStorage** exposing read, write, and delete, the application creates unnecessary dependencies. A read-only archive may even be forced to declare operations it cannot support.
 
-### Dấu hiệu thiết kế đang vi phạm ISP
+### Signs of an ISP Violation
 
-- Lớp triển khai hàng loạt phương thức chỉ để ném **UnsupportedOperationException**, trả giá trị giả hoặc để trống.
-- Một client chỉ dùng 1–2 phương thức nhưng phải mock/stub một hợp đồng có hàng chục phương thức để kiểm thử.
-- Bổ sung tính năng thuộc một nhóm client lại kéo theo sửa nhiều lớp thuộc nhóm khác.
-- Phân quyền nghiệp vụ khác nhau (chỉ đọc, chỉ ghi, quản trị) nhưng tất cả cùng nhận một API toàn quyền.
+- A class implements numerous methods only to throw **UnsupportedOperationException**, return fake values, or do nothing.
+- A client uses 1–2 methods but must mock/stub a contract with dozens of methods for testing.
+- Adding a feature needed by one client group forces changes to classes in another group.
+- Different permission levels (read-only, write-only, admin) are all given the same unrestricted API.
 
-**Điểm cần phân biệt:** một interface có nhiều phương thức *không tự động* là sai. Sai khi các nhóm client có nhu cầu khác nhau nhưng bị buộc phụ thuộc vào các thao tác không liên quan.
+**Important distinction:** An interface with many methods is *not automatically* wrong. The problem arises when client groups with different needs must depend on unrelated operations.
 
-## 2. Thiết kế ban đầu: hợp đồng quá rộng
+## 2. Initial Design: An Overly Broad Contract
 
-Giả sử ta bắt mọi loại kho tài liệu tuân theo ba thao tác:
+Suppose every document store must support three operations:
 
 ~~~java
 import java.util.Map;
@@ -2023,13 +2023,13 @@ final class ReadOnlyArchive implements DocumentStorage {
 }
 ~~~
 
-**Vấn đề:** **ReadOnlyArchive** chỉ có năng lực đọc, nhưng **DocumentStorage** lại tuyên bố đối tượng có cả năng lực ghi và xóa. Client có thể gọi **save/delete** một cách hợp lệ ở thời điểm biên dịch và chỉ nhận lỗi khi chạy. Việc này đồng thời là dấu hiệu đáng xem xét dưới góc độ **Liskov Substitution Principle (LSP)**: đối tượng triển khai không thực hiện đúng kỳ vọng của hợp đồng rộng.
+**Problem:** **ReadOnlyArchive** can only read, but **DocumentStorage** claims the object also supports writing and deletion. Clients can legitimately compile calls to **save/delete** but encounter failures at runtime. This also raises a **Liskov Substitution Principle (LSP)** concern: the implementation cannot fulfill expectations established by the broad contract.
 
-Không nên vá bằng cách trả về thành công giả, thêm phương thức rỗng hoặc dùng **default method** để che một khả năng vốn không tồn tại. Hãy thu nhỏ hợp đồng theo người sử dụng.
+Do not patch this by returning false success, adding no-op methods, or using **default methods** to conceal a missing capability. Narrow contracts according to client needs.
 
-## 3. Thiết kế lại theo ISP: nhiều hợp đồng nhỏ, có mục đích
+## 3. Redesigning with ISP: Small, Purposeful Contracts
 
-Mã sau đặt trong **IspDemo.java**, dùng **Java 17+**, biên dịch và chạy độc lập. Mỗi interface mô tả một năng lực. **InMemoryStore** cung cấp cả ba năng lực; **ReadOnlyArchive** chỉ cung cấp năng lực đọc. Client chỉ nhận đúng hợp đồng nó cần.
+Place the following code in **IspDemo.java**. It compiles and runs independently with **Java 17+**. Each interface describes a capability. **InMemoryStore** provides all three capabilities, while **ReadOnlyArchive** only provides reading. Clients receive exactly the contracts they need.
 
 ~~~java
 import java.util.Map;
@@ -2131,31 +2131,31 @@ public class IspDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac IspDemo.java
 java IspDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Hợp đồng mới
 Bản lưu năm trước
 ~~~
 
-**Điều đáng chú ý trong ví dụ:**
+**Key observations from the example:**
 
-1. **DownloadService** chỉ biết **DocumentReader**. Nó không thấy API xóa dù đối tượng thực tế có thể hỗ trợ xóa.
-2. **ImportService** chỉ biết **DocumentWriter**. Nó nhận được **InMemoryStore**, nhưng không được giả định quyền đọc hoặc xóa.
-3. **ReadOnlyArchive** không cần phương thức không hỗ trợ, vì hợp đồng đã phản ánh đúng năng lực.
-4. Một lớp được **implements** nhiều interface khi bản thân thực sự cung cấp nhiều năng lực. ISP không buộc tạo một lớp riêng cho mỗi interface.
-5. **Optional.empty()** thể hiện tài liệu không tồn tại. Nó không đại diện cho lỗi mạng, lỗi phân quyền hoặc lỗi hệ thống; các trường hợp đó cần cơ chế lỗi phù hợp.
+1. **DownloadService** knows only **DocumentReader**. It cannot see the deletion API even if the underlying object supports deletion.
+2. **ImportService** knows only **DocumentWriter**. It receives **InMemoryStore** but cannot assume read or delete capabilities.
+3. **ReadOnlyArchive** needs no unsupported methods because its contract reflects its actual capabilities.
+4. A class may **implement** multiple interfaces when it genuinely provides multiple capabilities. ISP does not require a separate class for each interface.
+5. **Optional.empty()** indicates a missing document, not a network, authorization, or system error; such failures require appropriate error mechanisms.
 
-Để ứng dụng sản xuất dễ bảo trì, hãy đặt từng interface và các lớp nghiệp vụ vào file/package thích hợp. Việc lồng các kiểu trong **IspDemo** chỉ nhằm cung cấp ví dụ chạy được ngay.
+For maintainable production applications, put each interface and business class in appropriate files/packages. The types are nested inside **IspDemo** only to make the example immediately runnable.
 
-## 4. Sơ đồ phụ thuộc sau khi phân tách
+## 4. Dependency Diagram After Segregation
 
 ~~~mermaid
 classDiagram
@@ -2184,11 +2184,11 @@ classDiagram
     DocumentReader <|.. ReadOnlyArchive
 ~~~
 
-Mũi tên từ **Service** sang **interface** diễn đạt sự phụ thuộc ở phía client; mũi tên **implements** diễn đạt những năng lực mà adapter cung cấp. Mỗi client có thể đổi implementation mà không phải nhận thêm phương thức ngoài nhu cầu của mình.
+Arrows from a **Service** to an **interface** represent client-side dependencies; **implements** arrows show capabilities provided by adapters. Each client can switch implementations without receiving methods outside its needs.
 
-## 5. Kiểm thử trở nên tập trung hơn
+## 5. More Focused Testing
 
-Với **JUnit 5**, ta truyền implementation tối thiểu cho từng client. **DocumentReader** và **DocumentWriter** mỗi loại chỉ có một abstract method, nên có thể biểu diễn bằng lambda khi phù hợp.
+With **JUnit 5**, we can supply minimal implementations to each client. **DocumentReader** and **DocumentWriter** each have one abstract method, so lambdas may be appropriate.
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -2222,97 +2222,97 @@ class IspDemoTest {
 }
 ~~~
 
-Bài kiểm thử đầu xác nhận client đọc hoạt động với kho chỉ đọc. Bài thứ hai kiểm tra client ghi mà không cần tạo các stub cho đọc/xóa. Với ứng dụng Spring, cùng nguyên tắc được áp dụng khi inject các interface theo nhu cầu vào từng **@Service**; các adapter **@Component/@Repository** có thể triển khai nhiều hợp đồng. Nếu có nhiều bean cùng một interface, cấu hình lựa chọn bean bằng **@Qualifier**, **@Primary** hoặc cơ chế cấu hình thích hợp.
+The first test confirms that a reading client works with a read-only archive. The second tests a writing client without stubs for read/delete. In Spring applications, the same principle applies when injecting only the needed interfaces into each **@Service**; **@Component/@Repository** adapters may implement multiple contracts. If multiple beans implement the same interface, select them using **@Qualifier**, **@Primary**, or suitable configuration.
 
-## 6. Phân biệt ISP với các nguyên lý gần nó
+## 6. Distinguishing ISP from Related Principles
 
-| Nguyên lý | Câu hỏi thiết kế | Liên hệ với ví dụ |
+| Principle | Design question | Connection to the example |
 | --- | --- | --- |
-| **ISP** — Interface Segregation | Client có bị phụ thuộc vào phương thức không cần dùng không? | DownloadService chỉ nhận DocumentReader. |
-| **SRP** — Single Responsibility | Một module có bao nhiêu lý do độc lập để thay đổi? | Logic tải tài liệu và logic nhập tài liệu nằm ở dịch vụ khác nhau khi trách nhiệm khác nhau. |
-| **DIP** — Dependency Inversion | Module nghiệp vụ có phụ thuộc vào abstraction phù hợp thay vì chi tiết lưu trữ không? | DownloadService phụ thuộc DocumentReader, không phụ thuộc InMemoryStore. |
-| **LSP** — Liskov Substitution | Implementation có giữ lời hứa của hợp đồng không? | ReadOnlyArchive không tuyên bố hỗ trợ ghi/xóa rồi ném lỗi vì thiếu khả năng. |
+| **ISP** — Interface Segregation | Does a client depend on methods it does not need? | DownloadService receives only DocumentReader. |
+| **SRP** — Single Responsibility | How many independent reasons to change does a module have? | Document download and import logic live in separate services when their responsibilities differ. |
+| **DIP** — Dependency Inversion | Does business code depend on suitable abstractions instead of storage details? | DownloadService depends on DocumentReader, not InMemoryStore. |
+| **LSP** — Liskov Substitution | Does an implementation honor its contract? | ReadOnlyArchive does not claim write/delete capabilities only to throw when called. |
 
-Các nguyên lý bổ trợ nhau nhưng không thay thế nhau. Chỉ dùng interface thay cho concrete class chưa chắc thỏa ISP nếu interface đó vẫn quá rộng.
+These principles complement but do not replace one another. Using an interface instead of a concrete class does not satisfy ISP if the interface remains too broad.
 
-## 7. Thiết kế ranh giới hợp đồng trong dự án thật
+## 7. Designing Contract Boundaries in Real Projects
 
-Không có quy tắc “cứ một phương thức là một interface”. Hãy phân tách theo **vai trò sử dụng, năng lực và lý do thay đổi**.
+There is no "one method per interface" rule. Split contracts according to **client roles, capabilities, and reasons to change**.
 
-| Trường hợp | Quyết định hợp lý | Lý do |
+| Scenario | Sensible decision | Rationale |
 | --- | --- | --- |
-| Mọi client luôn cần cùng tập thao tác, chúng có ý nghĩa gắn bó | Giữ một interface gọn, nhất quán | Tránh tạo ra quá nhiều kiểu không mang ý nghĩa. |
-| Người xem chỉ đọc, tác vụ đồng bộ chỉ ghi | Tách **Reader** và **Writer** | Client chỉ thấy đúng năng lực cần. |
-| Một adapter hỗ trợ toàn bộ các vai trò | Cho lớp đó triển khai nhiều interface | Không phải nhân bản logic hoặc instance. |
-| Một client quản trị thực sự cần đầy đủ chức năng | Có thể dùng interface tổng hợp cho đúng client đó | Ví dụ **DocumentAdmin extends DocumentReader, DocumentWriter, DocumentDeleter**. |
-| Một thao tác luôn ném **UnsupportedOperationException** vì không hỗ trợ | Xem lại lời hứa của hợp đồng | Có khả năng interface đã bao trùm quá nhiều năng lực. |
+| Every client always needs the same cohesive set of operations | Keep one concise, consistent interface | Avoids creating too many meaningless types. |
+| Viewers only read; synchronization jobs only write | Separate **Reader** and **Writer** | Clients see only the capabilities they need. |
+| One adapter supports every role | Let it implement multiple interfaces | Avoids duplicating logic or instances. |
+| An administrative client truly needs all capabilities | A composite interface may fit that client | For example, **DocumentAdmin extends DocumentReader, DocumentWriter, DocumentDeleter**. |
+| An operation always throws **UnsupportedOperationException** because it is unsupported | Revisit the contract's promise | The interface may cover too many capabilities. |
 
-Trong hệ thống REST/Spring, phân tách interface Java **không tự động tạo ra phân quyền bảo mật**. Một client chỉ nhận **DocumentReader** là giới hạn ở mức thiết kế/biên dịch; endpoint ghi/xóa vẫn cần kiểm tra xác thực, phân quyền và quy tắc nghiệp vụ tại biên hệ thống.
+In REST/Spring systems, separating Java interfaces **does not automatically enforce security authorization**. Giving a client only **DocumentReader** limits its compile-time/design API; write/delete endpoints still require authentication, authorization, and business-rule checks at system boundaries.
 
-### Cách refactor an toàn một interface lớn
+### Safely Refactoring a Large Interface
 
-1. **Lập bản đồ client:** ghi rõ mỗi client đang gọi những phương thức nào, nhóm hành vi nào thay đổi cùng nhau.
-2. **Định nghĩa hợp đồng nhỏ:** đặt tên theo năng lực có ý nghĩa trong domain, ví dụ **DocumentReader**, **DocumentWriter**.
-3. **Chuyển phụ thuộc dần:** đổi constructor/field/kiểm thử của từng client sang interface tương ứng; để adapter hiện tại triển khai các hợp đồng thực sự hỗ trợ.
-4. **Xử lý hợp đồng cũ:** chỉ bỏ interface cũ khi không còn nơi sử dụng; với thư viện public cần cân nhắc tương thích nguồn/binary và lộ trình migration.
-5. **Kiểm tra hành vi:** không đánh đổi semantics (lỗi không tìm thấy, quyền truy cập, tính nhất quán dữ liệu) chỉ để interface ngắn hơn.
+1. **Map clients:** Document which methods each client calls and which behavior groups change together.
+2. **Define small contracts:** Name interfaces after meaningful domain capabilities, such as **DocumentReader** and **DocumentWriter**.
+3. **Migrate dependencies gradually:** Update each client's constructors, fields, and tests to use the relevant interface; let existing adapters implement only the contracts they support.
+4. **Handle the old contract:** Remove the old interface only when it has no consumers; for public libraries, consider source/binary compatibility and a migration plan.
+5. **Verify behavior:** Do not sacrifice semantics (not-found errors, access rights, data consistency) merely to shorten interfaces.
 
-**Lỗi thường gặp khi áp dụng ISP:**
+**Common ISP mistakes:**
 
-- Tách interface theo từng hàm một cách máy móc, làm API khó tìm hiểu.
-- Chỉ tạo nhiều interface nhưng client vẫn inject một interface tổng hợp.
-- Dùng một “God Service” phía sau nhiều interface mà không cải thiện phụ thuộc hoặc trách nhiệm thực tế; ISP chỉ giảm phụ thuộc của client, không tự giải quyết mọi vấn đề của implementation.
-- Lạm dụng interface chỉ đọc ở Java để thay cho cơ chế authorization lúc chạy.
+- Mechanically splitting interfaces method by method, making the API harder to navigate.
+- Creating many interfaces but still injecting one composite interface into clients.
+- Hiding a "God Service" behind multiple interfaces without improving real dependencies or responsibilities; ISP reduces client coupling but does not automatically solve all implementation problems.
+- Mistaking a read-only Java interface for runtime authorization.
 
-## 8. Bài tập thực hành
+## 8. Practice Exercise
 
-Một hệ thống thông báo có hợp đồng **NotificationService** gồm **sendEmail()**, **sendSms()**, **sendPush()**. Một job chỉ gửi email, còn một adapter chỉ hỗ trợ SMS.
+A notification system has a **NotificationService** contract with **sendEmail()**, **sendSms()**, and **sendPush()**. One job only sends email, while another adapter supports only SMS.
 
-Hãy thiết kế các interface theo nhóm client (**EmailSender**, **SmsSender**, **PushSender**), viết một **OtpService** chỉ phụ thuộc vào khả năng gửi SMS và tạo fake **SmsSender** để test. Sau đó tự kiểm tra:
+Design interfaces for the client groups (**EmailSender**, **SmsSender**, **PushSender**), write an **OtpService** that only depends on SMS sending, and create a fake **SmsSender** for tests. Then ask:
 
-- Adapter chỉ hỗ trợ SMS có phải khai báo phương thức email/push giả không?
-- **OtpService** có nhìn thấy và vô tình gọi được **sendEmail()** không?
-- Nếu một provider hỗ trợ cả email và SMS, nó có thể triển khai hai interface mà không nhân bản provider không?
-- Nếu sau này thêm kênh chat, client chỉ dùng SMS có bị buộc sửa không?
+- Must an SMS-only adapter declare fake email/push methods?
+- Can **OtpService** see and accidentally call **sendEmail()**?
+- If one provider supports both email and SMS, can it implement both interfaces without duplicating the provider?
+- If a chat channel is added later, must SMS-only clients change?
 
-**Tiêu chí đạt:** hợp đồng ở phía client chỉ chứa những thao tác client có lý do sử dụng; mỗi implementation thực hiện đúng mọi thao tác mà nó công bố. Đó là giá trị thực tế của **Interface Segregation Principle**.
+**Success criterion:** Client-facing contracts expose only operations clients genuinely need, and every implementation correctly performs all operations it advertises. That is the practical value of the **Interface Segregation Principle**.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="solid-006">Đảo ngược phụ thuộc: phụ thuộc vào sự trừu tượng</a>
+## <a id="solid-006">Dependency Inversion: Depending on Abstractions</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đảo ngược phụ thuộc (Dependency Inversion Principle – DIP): phụ thuộc vào sự trừu tượng
+# Dependency Inversion Principle (DIP): Depending on Abstractions
 
-> **Mục tiêu:** Thiết kế để quy tắc nghiệp vụ quan trọng không bị buộc phải thay đổi mỗi khi thay cơ sở dữ liệu, API bên ngoài, cách lưu trữ hoặc công cụ gửi thông báo. Sau bài này, bạn có thể nhận diện hướng phụ thuộc sai, tự viết interface đúng ranh giới và lắp ráp các implementation bằng Java/Spring.
+> **Objective:** Design important business rules so they do not need to change whenever databases, external APIs, storage mechanisms, or notification tools change. By the end, you should be able to identify incorrect dependency directions, define interfaces at appropriate boundaries, and assemble implementations using Java/Spring.
 
-## 1. DIP là gì?
+## 1. What Is DIP?
 
-**Dependency Inversion Principle (DIP)** là chữ **D** trong SOLID, gồm hai ý quan trọng:
+The **Dependency Inversion Principle (DIP)** is the **D** in SOLID and contains two important statements:
 
-1. **Module cấp cao không nên phụ thuộc module cấp thấp; cả hai nên phụ thuộc vào abstraction.**
-2. **Abstraction không nên phụ thuộc chi tiết triển khai; chi tiết triển khai phải phụ thuộc abstraction.**
+1. **High-level modules should not depend on low-level modules; both should depend on abstractions.**
+2. **Abstractions should not depend on implementation details; details should depend on abstractions.**
 
-Ở đây, **cấp cao** là thành phần diễn đạt quyết định nghiệp vụ, ví dụ tính doanh thu hợp lệ của một khách hàng. **Cấp thấp** là chi tiết kỹ thuật như SQL/JDBC, HTTP client, đọc file hoặc cache. Phân loại này nói về **mức độ chính sách và sự ổn định**, không phải “class ở package nào nằm phía trên”.
+Here, a **high-level** component expresses business decisions, such as calculating a customer's valid spending. **Low-level** components implement technical details such as SQL/JDBC, HTTP clients, file reading, or caching. This distinction concerns **policy level and stability**, not which package is visually "higher."
 
-DIP quan tâm đến **hướng phụ thuộc ở mã nguồn** (import, sử dụng kiểu, tham chiếu module, liên kết khi biên dịch). Lúc chạy, nghiệp vụ vẫn có thể *gọi qua interface* để thực thi JDBC/HTTP; đó là luồng thực thi bình thường và không mâu thuẫn với DIP.
+DIP concerns **source-code dependency direction** (imports, type usage, module references, compile-time linkage). At runtime, business code may still *call through an interface* to execute JDBC/HTTP operations; that is ordinary execution flow and does not contradict DIP.
 
-### Minh họa hướng phụ thuộc
+### Illustrating Dependency Direction
 
-**Trước – nghiệp vụ biết trực tiếp công nghệ:**
+**Before – business logic knows technology details directly:**
 
 ```mermaid
 flowchart LR
     H["CustomerSpendingService<br/>(quy tắc nghiệp vụ)"] --> L["JdbcPurchaseReader<br/>(SQL, driver, schema)"]
 ```
 
-Ví dụ thiếu linh hoạt:
+An inflexible example:
 
 ```java
 // Phác họa một thiết kế bị phụ thuộc hạ tầng.
@@ -2331,9 +2331,9 @@ class CustomerSpendingService {
 }
 ```
 
-Nếu chuyển từ database sang API hoặc muốn chạy unit test không có database, lớp nghiệp vụ phải sửa cách khởi tạo/sử dụng dependency hoặc tạo môi trường hạ tầng thật. Đoạn mã trên mang tính **minh họa**, không phải ví dụ độc lập để biên dịch.
+Switching from a database to an API, or running unit tests without a database, then requires the business class to change how it creates/uses the dependency or to start real infrastructure. The snippet above is **illustrative**, not a standalone compilable example.
 
-**Sau – cả nghiệp vụ và JDBC đều hướng về hợp đồng:**
+**After – both business logic and JDBC depend on a contract:**
 
 ```mermaid
 flowchart TD
@@ -2344,13 +2344,13 @@ flowchart TD
     R --> J
 ```
 
-Điểm mấu chốt: `CustomerSpendingService` chỉ biết **nó cần đọc những đơn mua nào**; nó không biết dữ liệu lấy từ JDBC, HTTP hay bộ nhớ. Implementation bên hạ tầng phải tuân theo yêu cầu đó.
+The key point is that `CustomerSpendingService` knows only **which purchases it needs to read**, not whether data comes from JDBC, HTTP, or memory. The infrastructure implementation must satisfy that requirement.
 
-## 2. Ví dụ Java 17 hoàn chỉnh: tổng tiền mua hàng chưa hoàn
+## 2. Complete Java 17 Example: Total Spending Excluding Refunds
 
-Giả định nghiệp vụ: tính tổng giá trị các giao dịch **chưa hoàn tiền** của một khách hàng, số tiền được lưu dạng số nguyên VND. Nguồn giao dịch có thể đổi, nhưng quy tắc tính tổng vẫn giữ nguyên.
+Business rule: Calculate a customer's total spending from **non-refunded** purchases, representing amounts as integer VND. The purchase data source may change, but the total calculation must remain the same.
 
-Lưu ví dụ sau thành `DipDemo.java` và chạy:
+Save the following example as `DipDemo.java` and run it:
 
 ```bash
 javac DipDemo.java
@@ -2456,24 +2456,24 @@ public class DipDemo {
 }
 ```
 
-**Vì sao đúng DIP?**
+**Why Does This Follow DIP?**
 
-- `CustomerSpendingService` chứa phép tính và điều kiện lọc `refunded`. Nó không import JDBC, không khởi tạo repository cụ thể và không phụ thuộc framework.
-- `PurchaseReader` diễn đạt **nhu cầu dữ liệu của nghiệp vụ** bằng các kiểu Java đơn giản, không lộ `ResultSet`, `Connection`, `ResponseEntity` hay `HttpResponse`.
-- `InMemoryPurchaseReader` **phụ thuộc ngược vào hợp đồng** thông qua `implements PurchaseReader`. Sau này thêm adapter SQL/REST mà lớp tính tổng không cần thay đổi.
-- `main` biết các lớp cụ thể vì nó **chịu trách nhiệm lắp ráp hệ thống**. Đây là ngoại lệ có chủ đích ở composition root, không phải vi phạm DIP của service.
-- `Math.addExact` ném `ArithmeticException` nếu tổng `long` tràn. Với hệ thống tài chính đa tiền tệ hoặc cần phần lẻ, nên dùng kiểu `Money`/`BigDecimal` kèm đơn vị và quy tắc làm tròn.
+- `CustomerSpendingService` contains the calculation and the `refunded` filtering rule. It imports no JDBC classes, constructs no concrete repository, and has no framework dependency.
+- `PurchaseReader` expresses **the business data requirement** using simple Java types without exposing `ResultSet`, `Connection`, `ResponseEntity`, or `HttpResponse`.
+- `InMemoryPurchaseReader` **depends back on the contract** through `implements PurchaseReader`. SQL/REST adapters can be added later without changing the spending calculation.
+- `main` knows concrete classes because it **assembles the system**. This is intentional at the composition root and does not violate DIP in the service.
+- `Math.addExact` throws `ArithmeticException` if a `long` total overflows. Multicurrency finance or fractional amounts may require `Money`/`BigDecimal` with explicit units and rounding rules.
 
-DIP không làm cho mã hạ tầng biến mất. Nó **đặt ranh giới** để kiến thức hạ tầng ở đúng chỗ.
+DIP does not make infrastructure code disappear. It **creates boundaries** so infrastructure knowledge stays in the right place.
 
-## 3. DIP, DI và IoC không phải ba tên gọi của cùng một thứ
+## 3. DIP, DI, and IoC Are Not Three Names for the Same Thing
 
-| Khái niệm | Câu hỏi | Thể hiện trong ví dụ |
+| Concept | Question | How it appears in the example |
 |---|---|---|
-| **DIP** — nguyên lý kiến trúc | Mã nguồn của use case phụ thuộc **abstraction nào**, adapter có phụ thuộc ngược vào nó không? | `CustomerSpendingService → PurchaseReader ← InMemoryPurchaseReader` |
-| **DI** — kỹ thuật lắp ghép | Dependency cụ thể được **truyền vào đối tượng** bằng cách nào? | `new CustomerSpendingService(reader)` |
-| **IoC** — đảo quyền điều khiển ở phạm vi rộng | Bên ngoài có kiểm soát khởi tạo/luồng gọi/callback của thành phần không? | `main` hoặc Spring container tạo và nối object |
-| **Composition root** | Ở đâu ứng dụng chọn implementation thật? | `main`, cấu hình Spring hoặc bootstrap |
+| **DIP** — architectural principle | Which **abstraction** does the use-case code depend on, and does the adapter depend on it in reverse? | `CustomerSpendingService → PurchaseReader ← InMemoryPurchaseReader` |
+| **DI** — assembly technique | How is a concrete dependency **supplied to an object**? | `new CustomerSpendingService(reader)` |
+| **IoC** — broader inversion of control | Does an external component control creation, call flow, or callbacks? | `main` or the Spring container creates and connects objects |
+| **Composition root** | Where does the application select actual implementations? | `main`, Spring configuration, or bootstrap |
 
 ```java
 // DI có, nhưng DIP chưa đạt nếu nghiệp vụ phụ thuộc hạ tầng cụ thể:
@@ -2483,11 +2483,11 @@ class BadService {
 }
 ```
 
-Một constructor nhận `PurchaseReader` và được cấp `InMemoryPurchaseReader` hoặc adapter SQL **vừa sử dụng DI vừa hỗ trợ DIP**, miễn là package/module đặt abstraction đúng ranh giới. Không cần Spring để làm điều đó. Với dependency bắt buộc, constructor injection và field `final` thường rõ nhất; setter/field injection có chi phí về trạng thái khởi tạo. Phần chuyên sâu **Phân biệt đảo ngược phụ thuộc và tiêm phụ thuộc** trình bày mã thanh toán độc lập, Spring `@Bean`, fake tests, các kiểu injection và lỗi nhầm DI với DIP.
+A constructor accepting `PurchaseReader` and receiving `InMemoryPurchaseReader` or a SQL adapter **uses DI and supports DIP**, provided the abstraction resides at the correct package/module boundary. Spring is not required. For required dependencies, constructor injection and `final` fields are usually clearest; setter/field injection introduces initialization-state concerns. The deeper lesson **Distinguishing Dependency Inversion from Dependency Injection** covers standalone payment code, Spring `@Bean` configuration, fake tests, injection styles, and confusion between DI and DIP.
 
-## 4. Ứng dụng cùng JDBC: thay nguồn dữ liệu mà giữ quy tắc tính tổng
+## 4. Applying the Design with JDBC: Swap Data Sources, Keep the Calculation
 
-Ví dụ adapter dưới đây phù hợp khi bảng `purchases` có ba cột `customer_id`, `amount_vnd`, `refunded`. Dùng Java JDBC chuẩn; đặt các type `Purchase` và `PurchaseReader` thành kiểu public/package phù hợp khi tách file thành nhiều package.
+The following adapter assumes a `purchases` table with three columns: `customer_id`, `amount_vnd`, and `refunded`. It uses standard Java JDBC; give `Purchase` and `PurchaseReader` suitable public/package access when splitting files across packages.
 
 ```java
 import java.sql.*;
@@ -2534,13 +2534,13 @@ final class JdbcPurchaseReader implements PurchaseReader {
 }
 ```
 
-Trong ứng dụng thật, adapter nên **ánh xạ** lỗi hạ tầng sang lỗi phù hợp với API của ứng dụng (ví dụ `PurchaseReadException`), có metrics, timeout, connection pool và logging an toàn. Nếu các cột SQL có thể `NULL`, cần xác định chính sách và kiểm tra `ResultSet.wasNull()` khi đọc kiểu nguyên thủy; ví dụ giả định database áp dụng `NOT NULL`. Dùng `PreparedStatement` để binding tham số, tránh ghép `customerId` trực tiếp vào SQL.
+In a real application, adapters should **map** infrastructure failures to suitable application-level errors (such as `PurchaseReadException`), and provide metrics, timeouts, connection pooling, and safe logging. If SQL columns can contain `NULL`, define the policy and check `ResultSet.wasNull()` when reading primitive types; this example assumes the database enforces `NOT NULL`. Use `PreparedStatement` for parameter binding rather than concatenating `customerId` into SQL.
 
-**Sau khi tạo `JdbcPurchaseReader`:** thay cách lắp ráp từ `new InMemoryPurchaseReader(...)` sang `new JdbcPurchaseReader(dataSource)`. `CustomerSpendingService` vẫn giữ nguyên. Tại ranh giới triển khai thật, cấu hình DB và định nghĩa bảng nằm ở tầng infrastructure, không được kéo vào `PurchaseReader`.
+**After introducing `JdbcPurchaseReader`:** Switch assembly from `new InMemoryPurchaseReader(...)` to `new JdbcPurchaseReader(dataSource)`. `CustomerSpendingService` remains unchanged. For the real integration, database configuration and table definitions belong to infrastructure, not `PurchaseReader`.
 
-### Nơi đặt abstraction
+### Where to Place Abstractions
 
-Một tổ chức package thường gặp:
+One common package layout:
 
 ```text
 com.example.shop
@@ -2559,13 +2559,13 @@ com.example.shop
     └── Application.java
 ```
 
-Tầng `application` có thể biết `domain`; `infrastructure` biết contract của `application`; `bootstrap` biết các implementation để ghép nối. Không để application import infrastructure. Nếu tách thành **module** Maven/Gradle, kiểm tra dependency ở mức module thay vì chỉ tin vào tên package.
+The `application` layer may depend on `domain`; `infrastructure` knows `application` contracts; `bootstrap` knows implementations for assembly. Application code should not import infrastructure. If the project uses Maven/Gradle **modules**, verify module dependencies rather than relying on package names alone.
 
-Chú ý: DIP không bắt buộc mọi interface phải nằm ở domain. Đặt ở **phía sở hữu nhu cầu**: hợp đồng lấy dữ liệu phục vụ use case có thể nằm ở `application.port`, còn quy tắc domain thuần túy có thể thuộc `domain`. Interface ở một module “common” khổng lồ đôi khi lại tạo phụ thuộc chung khó quản lý.
+Note: DIP does not require every interface to live in the domain. Place it **with the component that owns the need**: a data-fetching contract for a use case might belong in `application.port`, while pure domain rules belong in `domain`. Putting everything in one enormous "common" module can create hard-to-manage shared dependencies.
 
-## 5. DI với Spring: framework chỉ quản lý khởi tạo
+## 5. DI with Spring: The Framework Manages Assembly
 
-Khi sử dụng Spring Boot và Spring JDBC, adapter có thể nhận `JdbcTemplate` bằng constructor; service vẫn chỉ biết `PurchaseReader`.
+With Spring Boot and Spring JDBC, an adapter can receive `JdbcTemplate` through its constructor while the service still knows only `PurchaseReader`.
 
 ```java
 // Ví dụ dạng nhiều file trong project Spring Boot có spring-jdbc.
@@ -2606,11 +2606,11 @@ class CustomerSpendingService {
 }
 ```
 
-Spring tự inject implementation nếu chỉ có **một bean `PurchaseReader`** phù hợp. Nếu có nhiều implementation cùng kiểu, cần chọn minh bạch bằng `@Qualifier`, `@Primary`, cấu hình `@Bean` hoặc `@Profile`. Đây là trách nhiệm **wiring/deployment**, không đưa `if (isProduction) new Jdbc...` vào service.
+Spring injects an implementation automatically when exactly **one suitable `PurchaseReader` bean** exists. With multiple candidates, choose explicitly using `@Qualifier`, `@Primary`, `@Bean` configuration, or `@Profile`. This is a **wiring/deployment** concern; do not put `if (isProduction) new Jdbc...` inside the service.
 
-**Lưu ý khả năng biên dịch:** đây là phác họa các class tách file, cần import `org.springframework.stereotype.Repository`, `org.springframework.stereotype.Service`, `org.springframework.jdbc.core.JdbcTemplate`, Java `List`, và khai báo các loại `Purchase`/`PurchaseReader` phù hợp; không thể ghép nguyên xi bên cạnh các lớp lồng cùng tên trong `DipDemo.java`. Ví dụ Java thuần ở phần 2 là ví dụ chạy trực tiếp, không cần Spring.
+**Compilation note:** This sketches classes in separate files and requires imports for `org.springframework.stereotype.Repository`, `org.springframework.stereotype.Service`, `org.springframework.jdbc.core.JdbcTemplate`, Java `List`, and appropriate declarations for `Purchase`/`PurchaseReader`. It cannot simply be pasted next to same-named nested classes in `DipDemo.java`. The plain Java example in section 2 is directly runnable without Spring.
 
-Một lựa chọn có tính tách biệt cao hơn là giữ service Java thuần không gắn `@Service`, đăng ký nó ở configuration:
+For even greater decoupling, keep the service as plain Java without `@Service` and register it in configuration:
 
 ```java
 @Configuration
@@ -2622,13 +2622,13 @@ class SpendingConfiguration {
 }
 ```
 
-Khi đó service không cần import Spring. Chọn cách phù hợp quy mô và mục tiêu độc lập framework; cả hai đều có thể tuân DIP nếu hướng phụ thuộc đúng.
+The service then needs no Spring imports. Choose based on project scale and framework-independence goals; either design can follow DIP when dependency direction is correct.
 
-## 6. Kiểm thử: lợi ích đo được của DIP
+## 6. Testing: A Measurable Benefit of DIP
 
-Trong unit test, không cần kết nối database; cung cấp một implementation đơn giản của `PurchaseReader`. Vì interface chỉ có một phương thức, có thể dùng lambda Java để tạo **fake/stub**.
+Unit tests need no database connection: supply a simple `PurchaseReader` implementation. Because the interface has only one method, a Java lambda can provide a **fake/stub**.
 
-Ví dụ JUnit 5 (đặt test cùng package và tham chiếu type lồng `DipDemo` từ phần 2):
+JUnit 5 example (place the test in the same package and reference the nested `DipDemo` types from section 2):
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -2668,41 +2668,41 @@ class CustomerSpendingServiceTest {
 }
 ```
 
-Kiểm thử đủ tốt cần ba lớp khác nhau:
+Adequate testing requires three different levels:
 
-| Lớp kiểm thử | Xác nhận | Có cần DB thực? |
+| Test level | What it verifies | Real DB required? |
 |---|---|---|
-| **Unit test của service** | Lọc hoàn tiền, cộng đúng, validate đầu vào, xử lý contract sai | Không; fake `PurchaseReader` |
-| **Integration test adapter JDBC** | SQL đúng, map `NULL`/kiểu dữ liệu, transaction, lỗi kết nối, thứ tự nếu được yêu cầu | Có; dùng test database/Testcontainers khi phù hợp |
-| **Application wiring test** | Container/`main` chọn đúng bean/adapter, không thiếu dependency, cấu hình ổn | Tùy phạm vi; có thể mock hạ tầng |
+| **Service unit tests** | Refund filtering, correct totals, input validation, broken-contract handling | No; use a fake `PurchaseReader` |
+| **JDBC adapter integration tests** | Correct SQL, mapping of `NULL`/data types, transactions, connection errors, and ordering when required | Yes; use a test database/Testcontainers where appropriate |
+| **Application wiring tests** | Container/`main` chooses the correct bean/adapter, dependencies are present, configuration works | Depends on scope; infrastructure may be mocked |
 
-DIP làm giảm nhu cầu truy cập hạ tầng cho **unit test**, nhưng không thay thế integration test. Một fake trả dữ liệu đúng không chứng minh SQL đã viết đúng.
+DIP reduces infrastructure requirements for **unit tests** but does not replace integration tests. Correct results from a fake do not prove that SQL was written correctly.
 
-## 7. Hợp đồng tốt giúp đảo ngược phụ thuộc mà không rò rỉ chi tiết
+## 7. Good Contracts Invert Dependencies Without Leaking Details
 
-Một interface đạt mục đích DIP nên mô tả **khả năng nghiệp vụ cần**, thay vì chép nguyên API kỹ thuật.
+An interface serving DIP should describe **the capability the business needs**, rather than copying a technical API.
 
-| Hợp đồng dễ rò rỉ hạ tầng | Hợp đồng hướng nhu cầu ứng dụng | Lý do |
+| Infrastructure-leaking contract | Application-oriented contract | Reason |
 |---|---|---|
-| `ResultSet executeQuery(String sql)` | `List<Purchase> findByCustomer(String id)` | Use case không biết SQL và vòng đời connection |
-| `HttpResponse<byte[]> fetch(String url)` | `ExchangeRate getRate(CurrencyPair pair)` | Ẩn URL, status code, cách parse |
-| `void sendSmtp(MimeMessage message)` | `void notifyOrderConfirmed(OrderConfirmation confirmation)` | Use case không tự tạo SMTP message |
-| `RedisTemplate getCache()` | `Optional<Product> findProduct(ProductId id)` | Không buộc logic ứng dụng phụ thuộc Redis |
+| `ResultSet executeQuery(String sql)` | `List<Purchase> findByCustomer(String id)` | The use case need not know SQL or connection lifecycles |
+| `HttpResponse<byte[]> fetch(String url)` | `ExchangeRate getRate(CurrencyPair pair)` | Hides URLs, status codes, and parsing |
+| `void sendSmtp(MimeMessage message)` | `void notifyOrderConfirmed(OrderConfirmation confirmation)` | The use case need not construct SMTP messages |
+| `RedisTemplate getCache()` | `Optional<Product> findProduct(ProductId id)` | Application logic is not forced to depend on Redis |
 
-Khi thiết kế port, viết ra các điều kiện sau:
+When designing a port, specify:
 
-1. **Đơn vị và bất biến:** `amountVnd` là số nguyên VND không âm; không tự động trộn VND và USD.
-2. **Dữ liệu thiếu:** không có giao dịch thì danh sách rỗng; không trả `null`. Phân biệt “không tìm thấy” và “hạ tầng lỗi”.
-3. **Ngữ nghĩa kết quả:** trả giao dịch đúng khách hàng; có hay không giao dịch đã hoàn tiền; yêu cầu sắp xếp nếu cần.
-4. **Hành vi khi lỗi:** timeouts, retry, loại ngoại lệ, có thể lặp lại an toàn hay không. Không biến mọi lỗi DB thành “danh sách rỗng”.
-5. **Thời gian và nhất quán:** nếu báo cáo theo kỳ hoặc nhiều nguồn, xác định timezone, snapshot, mức nhất quán và cơ chế phân trang.
-6. **An toàn và bảo mật:** xác thực/quyền truy cập dữ liệu nên ở đúng ranh giới; không coi “đã có interface” là đủ chống SQL injection hoặc lộ dữ liệu.
+1. **Units and invariants:** `amountVnd` is a nonnegative integer VND amount; do not silently mix VND and USD.
+2. **Missing data:** No purchases means an empty list, not `null`. Distinguish "not found" from "infrastructure failed."
+3. **Result semantics:** Return purchases belonging to the correct customer, define inclusion of refunded transactions, and specify ordering when necessary.
+4. **Failure behavior:** Timeouts, retries, exception types, and safe repeatability. Do not turn every database failure into an "empty list."
+5. **Time and consistency:** For period-based or multisource reports, define time zones, snapshots, consistency levels, and pagination.
+6. **Safety and security:** Authentication/data authorization belong at appropriate boundaries; having an interface does not prevent SQL injection or data exposure.
 
-Nếu nghiệp vụ cần phân trang lớn, việc port trả tất cả `List` có thể gây vấn đề bộ nhớ. Hãy thiết kế `Page`/`Cursor` phù hợp use case thực tế, nhưng tránh đưa class phân trang của một thư viện hạ tầng vào cốt lõi khi yêu cầu độc lập với framework.
+If a use case needs large-scale pagination, returning all results as `List` may cause memory issues. Design a suitable `Page`/`Cursor` for the real use case, but avoid pulling framework-specific pagination classes into the core when framework independence is required.
 
-## 8. Liên hệ DIP với Ports & Adapters (Hexagonal Architecture)
+## 8. DIP and Ports & Adapters (Hexagonal Architecture)
 
-DIP là **nguyên lý về hướng phụ thuộc**. Ports & Adapters là một cách tổ chức kiến trúc giúp hiện thực nguyên lý đó.
+DIP is **a principle governing dependency direction**. Ports & Adapters is an architectural organization that helps implement it.
 
 ```mermaid
 flowchart LR
@@ -2714,109 +2714,109 @@ flowchart LR
     API["Remote API"] --- HTTP
 ```
 
-Ở runtime, `CustomerSpendingService` gọi `findByCustomer` và Java dynamic dispatch chạy implementation tương ứng; nhưng **source dependency** của service chỉ hướng tới `PurchaseReader`.
+At runtime, `CustomerSpendingService` calls `findByCustomer` and Java dynamic dispatch executes the selected implementation, but the service's **source dependency** points only to `PurchaseReader`.
 
-Đây cũng là cách áp dụng DIP trong Clean Architecture, với tên tầng và vị trí interface có thể khác nhau giữa các tổ chức. Không cần dùng toàn bộ kiến trúc hexagonal mới được phép áp dụng DIP; ngay cả ứng dụng nhỏ vẫn có thể tách một phụ thuộc biến động cao.
+Clean Architecture applies DIP similarly, although layer names and interface locations vary across organizations. Adopting a complete hexagonal architecture is not required to use DIP; even a small application can isolate one highly volatile dependency.
 
-**Khi nào không nên tạo port?**
+**When Should You Avoid Creating a Port?**
 
-- Logic thuần tính toán, ít khả năng thay đổi: dùng lớp/hàm trực tiếp có thể đơn giản hơn.
-- Đối tượng dữ liệu hoặc utility ổn định và không đóng vai trò công nghệ bên ngoài: tạo interface vô cớ làm khó điều hướng.
-- Chỉ có một implementation nhưng hạ tầng rất biến động hoặc unit test cần cô lập nó: vẫn có lý do tốt để có port.
-- Mọi interface chỉ lặp lại đúng public methods của library (`IJdbcTemplate` chứa mọi hàm) mà nghiệp vụ không sở hữu: chưa đạt ranh giới có ý nghĩa.
+- For pure computation that rarely changes, a direct class/function may be simpler.
+- For stable data objects or utilities that are not external technology boundaries, arbitrary interfaces complicate navigation.
+- With one implementation but volatile infrastructure or unit tests requiring isolation, a port may still have strong value.
+- If interfaces merely reproduce a library's public methods (for example, `IJdbcTemplate` with every operation) without expressing a business-owned contract, the boundary is not meaningful.
 
-Nguyên tắc thực tế: đặt abstraction khi nó **bảo vệ chính sách ổn định khỏi chi tiết dễ thay đổi** hoặc cho phép test độc lập có giá trị. Không đếm số lượng interface để đánh giá DIP.
+Practical rule: introduce abstractions when they **protect stable policies from volatile details** or enable valuable isolated tests. Do not evaluate DIP by interface count.
 
-## 9. Các lỗi làm đảo ngược phụ thuộc không hiệu quả
+## 9. Mistakes That Make Dependency Inversion Ineffective
 
-| Triệu chứng | Lỗi cốt lõi | Hướng sửa |
+| Symptom | Root cause | Fix |
 |---|---|---|
-| `new JdbcPurchaseReader()` hoặc `JdbcTemplate` trong use case | Chính sách import trực tiếp chi tiết | Inject port `PurchaseReader` do ứng dụng sở hữu |
-| Constructor có DI nhưng kiểu là `JdbcPurchaseReader` | Mới đổi cách lắp ghép, chưa đổi hướng phụ thuộc | Tham số/field theo port |
-| Port trả `ResultSet`, `ResponseEntity`, `EntityManager` | Hạ tầng rò rỉ qua chữ ký | Trả model/kết quả thuộc miền ứng dụng |
-| Port nằm trong module infrastructure | Module lõi vẫn phải import tầng thấp | Chuyển port vào application/domain hoặc module contract phù hợp |
-| Adapter lỗi DB nhưng trả `List.of()` | Trộn “không có dữ liệu” với “không thể đọc” | Có exception/result phân biệt lỗi rõ |
-| Fake pass, JDBC sai hợp đồng | Chỉ test logic với dữ liệu giả | Contract test và integration test của adapter |
-| Tạo interface cho mọi helper | Chi phí abstraction không đem lại ranh giới ổn định | Giữ class/hàm thuần ở nơi ít biến động |
+| `new JdbcPurchaseReader()` or `JdbcTemplate` inside a use case | Policy code imports technical details directly | Inject an application-owned `PurchaseReader` port |
+| Constructor injection uses a `JdbcPurchaseReader` type | Assembly changed, but dependency direction did not | Type parameters/fields using the port |
+| A port returns `ResultSet`, `ResponseEntity`, or `EntityManager` | Infrastructure leaks through signatures | Return application-domain models/results |
+| The port lives in the infrastructure module | The core still imports a lower layer | Move the port to application/domain or a suitable contract module |
+| An adapter returns `List.of()` after a DB failure | Confuses "no data" with "cannot read" | Distinguish failures using explicit exceptions/results |
+| Fake tests pass but JDBC violates the contract | Only business logic was tested with fake data | Add adapter contract and integration tests |
+| Creating interfaces for every helper | Abstraction overhead creates no stable boundary | Keep concrete classes/pure functions in low-variation areas |
 
-Một port nhỏ `PurchaseReader` giúp ISP; thêm adapter mới ít sửa chính sách giúp OCP; adapter phải trả đúng customer/không null để giữ LSP. **DIP không thay thế hợp đồng, kiểm tra đầu vào, transaction hay phân quyền.**
+A small `PurchaseReader` port supports ISP; adding adapters without editing policies supports OCP; returning the correct customer's records and non-null results supports LSP. **DIP does not replace contracts, input validation, transactions, or authorization.**
 
-## 10. Quy trình refactor an toàn một dependency cụ thể
+## 10. Safely Refactoring a Concrete Dependency
 
-1. **Xác định logic cần bảo vệ:** ví dụ `CustomerSpendingService.totalSpentVnd` là quy tắc kinh doanh.
-2. **Liệt kê các chi tiết đang bị gắn chặt:** `JdbcTemplate`, `DataSource`, SQL, SDK HTTP, cách khởi tạo.
-3. **Đề xuất port từ nhu cầu của use case:** `PurchaseReader.findByCustomer` với model và quy tắc trả dữ liệu rõ ràng.
-4. **Cho adapter hiện tại thực hiện port:** di chuyển mã SQL/HTTP vào infrastructure, ánh xạ dữ liệu về model chung.
-5. **Inject vào use case qua constructor:** bỏ thao tác khởi tạo adapter khỏi business class.
-6. **Lắp ráp ở composition root:** chọn adapter theo môi trường bằng code cấu hình minh bạch.
-7. **Giữ behavior bằng test:** unit test cho nghiệp vụ, integration test cho adapter, wiring test nếu có DI.
-8. **Đánh giá coupling còn sót:** package import, kiểu dữ liệu trả về, lỗi, transactions, logging, test fixtures, khả năng thay adapter.
-9. **Chỉ thêm abstraction khi có lợi:** đo bằng số lý do phải sửa use case, tính độc lập kiểm thử và khả năng thay đổi hạ tầng.
+1. **Identify logic to protect:** For example, `CustomerSpendingService.totalSpentVnd` expresses a business rule.
+2. **List tightly coupled details:** `JdbcTemplate`, `DataSource`, SQL, HTTP SDKs, and construction methods.
+3. **Propose a port based on use-case needs:** `PurchaseReader.findByCustomer` with clear models and data-result rules.
+4. **Make the existing adapter implement the port:** Move SQL/HTTP code into infrastructure and map data to shared models.
+5. **Inject through the use-case constructor:** Remove adapter construction from the business class.
+6. **Assemble at the composition root:** Select adapters per environment through explicit configuration.
+7. **Preserve behavior with tests:** Unit tests for business rules, integration tests for adapters, and wiring tests when DI is used.
+8. **Assess remaining coupling:** Package imports, return types, errors, transactions, logging, test fixtures, and adapter replaceability.
+9. **Add abstractions only when worthwhile:** Evaluate reasons for changing the use case, test independence, and flexibility to change infrastructure.
 
-### Bài tập thực hành
+### Practice Exercises
 
-**Bài 1 – Đổi adapter:** Viết `CsvPurchaseReader implements PurchaseReader` đọc tập tin CSV thử nghiệm (đặt rule rõ về separator, encoding UTF-8, cột bắt buộc, lỗi định dạng). Giữ `CustomerSpendingService` và unit test của nó không đổi.
+**Exercise 1 – Switch adapters:** Write `CsvPurchaseReader implements PurchaseReader` to read a sample CSV file (clearly define delimiters, UTF-8 encoding, required columns, and format errors). Keep `CustomerSpendingService` and its unit tests unchanged.
 
-**Bài 2 – Thông báo đơn hàng:** Ban đầu `OrderService` gọi trực tiếp `SmtpClient`. Thiết kế một `OrderNotificationPort` theo nhu cầu nghiệp vụ và hai implementation `EmailNotificationAdapter`, `FakeNotificationAdapter`. Giải thích nơi tạo bean, xử lý khi gửi thất bại và cách tránh gửi trùng nếu retry.
+**Exercise 2 – Order notifications:** Initially, `OrderService` calls `SmtpClient` directly. Design an `OrderNotificationPort` matching business needs with `EmailNotificationAdapter` and `FakeNotificationAdapter` implementations. Explain where beans are created, how sending failures are handled, and how retries avoid duplicate notifications.
 
-**Bài 3 – Phản biện:** Một lập trình viên tạo `IStringFormatter` cho mọi `String.format` và gọi đây là DIP. Phân tích xem lớp nghiệp vụ có đang phụ thuộc chi tiết biến động cao nào không; số interface mới có đem lại lợi ích thực tế nào không.
+**Exercise 3 – Critique:** A developer creates `IStringFormatter` for every `String.format` call and calls it DIP. Analyze whether business logic actually depends on volatile details and whether the new interfaces provide any practical benefit.
 
-**Bài 4 – Kiến trúc nhiều module:** Thiết kế phụ thuộc Maven/Gradle cho `domain`, `application`, `infrastructure`, `bootstrap`. Vẽ mũi tên phụ thuộc build-time và chứng minh `application` không được import package `infrastructure`.
+**Exercise 4 – Multimodule architecture:** Design Maven/Gradle dependencies for `domain`, `application`, `infrastructure`, and `bootstrap`. Draw build-time dependency arrows and demonstrate that `application` must not import the `infrastructure` package.
 
-## 11. Checklist tự đánh giá
+## 11. Self-Assessment Checklist
 
-- [ ] Tôi chỉ ra được **chính sách cấp cao** và **chi tiết cấp thấp** trong bài toán.
-- [ ] Service không gọi `new` adapter cụ thể hoặc import thư viện hạ tầng.
-- [ ] Abstraction diễn đạt *nhu cầu nghiệp vụ*, không lộ API kỹ thuật không cần thiết.
-- [ ] Adapter thực thi hợp đồng; lựa chọn adapter được quyết định tại composition root.
-- [ ] Tôi phân biệt rõ DIP (nguyên lý), DI (kỹ thuật) và IoC (điều khiển).
-- [ ] Có unit test với fake đơn giản và integration test xác minh adapter thực tế.
-- [ ] Hợp đồng quy định kết quả rỗng, lỗi, đơn vị, tính nhất quán và điều kiện biên.
-- [ ] Mức độ abstraction tương xứng với chi phí thay đổi và khả năng bảo trì.
+- [ ] I can identify **high-level policies** and **low-level details** in the design.
+- [ ] The service does not invoke `new` on a concrete adapter or import infrastructure libraries.
+- [ ] Abstractions express *business needs* without unnecessary technical APIs.
+- [ ] Adapters implement contracts, and adapter selection happens at the composition root.
+- [ ] I can distinguish DIP (principle), DI (technique), and IoC (control).
+- [ ] Unit tests use simple fakes, and integration tests verify real adapters.
+- [ ] Contracts define empty results, errors, units, consistency, and edge cases.
+- [ ] The level of abstraction is proportional to change costs and maintainability.
 
-**Ghi nhớ:** DIP không có nghĩa “luôn phải dùng interface hoặc Spring”. DIP yêu cầu **chi tiết phải đi theo nhu cầu của phần nghiệp vụ ổn định**, để công nghệ có thể thay đổi trong phạm vi kiểm soát và logic quan trọng vẫn dễ hiểu, dễ kiểm thử.
+**Key takeaway:** DIP does not mean "always use interfaces or Spring." It means **details must conform to the needs of stable business logic**, so technology can change within controlled boundaries while important logic remains understandable and testable.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="solid-007">Phân biệt đảo ngược phụ thuộc và tiêm phụ thuộc</a>
+## <a id="solid-007">Distinguishing Dependency Inversion from Dependency Injection</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phân biệt đảo ngược phụ thuộc (DIP) và tiêm phụ thuộc (DI)
+# Distinguishing Dependency Inversion (DIP) from Dependency Injection (DI)
 
-> **Chủ đề:** OOP → SOLID. Hai khái niệm thường xuất hiện cùng nhau trong Java/Spring, nhưng giải quyết **hai câu hỏi khác nhau**: *Mã nguồn nên phụ thuộc vào ai?* (DIP) và *đối tượng phụ thuộc được cung cấp bằng cách nào?* (DI).
+> **Topic:** OOP → SOLID. These concepts often appear together in Java/Spring but answer **two different questions**: *What should source code depend on?* (DIP) and *How are dependency objects supplied?* (DI).
 
-## 1. Định nghĩa đúng bản chất
+## 1. Defining the Concepts Precisely
 
-**Dependency Inversion Principle (DIP)** là chữ **D** trong SOLID. Robert C. Martin mô tả hai ý chính:
+The **Dependency Inversion Principle (DIP)** is the **D** in SOLID. Robert C. Martin describes two main ideas:
 
-1. **Module cấp cao** (nghiệp vụ/chính sách) không nên phụ thuộc trực tiếp vào **module cấp thấp** (cơ sở dữ liệu, email, HTTP client, cổng thanh toán). Cả hai nên phụ thuộc vào **abstraction**.
-2. **Abstraction không nên phụ thuộc vào chi tiết triển khai; chi tiết triển khai phải phụ thuộc vào abstraction**.
+1. **High-level modules** (business rules/policies) should not directly depend on **low-level modules** (databases, email, HTTP clients, payment gateways). Both should depend on **abstractions**.
+2. **Abstractions should not depend on implementation details; implementation details should depend on abstractions**.
 
-**Dependency Injection (DI)** là một kỹ thuật cung cấp các dependency cho một đối tượng từ bên ngoài, thường qua **constructor**, **setter** hoặc một cơ chế do container quản lý. Đối tượng không cần tự tạo dependency bằng `new` bên trong logic nghiệp vụ.
+**Dependency Injection (DI)** is a technique for supplying dependencies to an object externally, commonly through a **constructor**, **setter**, or container-managed mechanism. The object need not create dependencies using `new` inside its business logic.
 
-Ví dụ: một `CheckoutService` cần thu tiền đơn hàng. DIP gợi ý service nên biết `PaymentGateway` (hợp đồng nghiệp vụ), không biết trực tiếp `BankSdkClient`. DI là thao tác truyền một implementation của `PaymentGateway` vào constructor `CheckoutService` khi dựng ứng dụng.
+For example, a `CheckoutService` must charge an order. DIP suggests that the service should know the `PaymentGateway` business contract rather than a concrete `BankSdkClient`. DI is the act of passing a `PaymentGateway` implementation into the `CheckoutService` constructor during application assembly.
 
-| Khía cạnh | DIP: Dependency Inversion Principle | DI: Dependency Injection |
+| Aspect | DIP: Dependency Inversion Principle | DI: Dependency Injection |
 |---|---|---|
-| Bản chất | Nguyên lý **thiết kế kiến trúc và hướng phụ thuộc mã nguồn** | Kỹ thuật **khởi tạo, lắp ghép đối tượng** |
-| Câu hỏi chính | “Ai được phép phụ thuộc vào ai?” | “Dependency đến từ đâu?” |
-| Mục tiêu trực tiếp | Nghiệp vụ độc lập hơn trước chi tiết hạ tầng, dễ thay thế và bảo trì | Bỏ việc tự khởi tạo dependency khỏi class cần sử dụng |
-| Công cụ thường dùng | Interface/abstract class, phân tách module, ports/adapters | Constructor injection, setter injection, factory, DI container |
-| Có cần Spring không? | Không | Không; `new CheckoutService(gateway)` cũng là DI |
-| Tự nó bảo đảm điều gì? | Định hướng kiến trúc; phải kiểm tra cả package/module dependencies | Một dependency được đưa từ ngoài vào; **không tự bảo đảm DIP** |
+| Nature | Principle of **architecture and source-code dependency direction** | Technique for **object creation and assembly** |
+| Main question | "Who may depend on whom?" | "Where does the dependency come from?" |
+| Direct goal | Keep business logic independent of infrastructure details for easier substitution and maintenance | Stop consuming classes from instantiating their own dependencies |
+| Common tools | Interfaces/abstract classes, module boundaries, ports/adapters | Constructor injection, setter injection, factories, DI containers |
+| Is Spring required? | No | No; `new CheckoutService(gateway)` is also DI |
+| What does it guarantee on its own? | Architectural guidance; package/module dependencies must also be checked | A dependency comes from outside; **DIP is not automatically satisfied** |
 
-**DIP không đồng nghĩa DI**. DI là một cách thuận tiện để triển khai thiết kế theo DIP, nhưng ứng dụng có DI vẫn có thể phụ thuộc trực tiếp vào implementation cụ thể.
+**DIP is not the same as DI**. DI conveniently supports a DIP-oriented design, but an application using DI may still depend directly on concrete implementations.
 
-## 2. Vấn đề gốc: nghiệp vụ biết quá nhiều về hạ tầng
+## 2. The Underlying Problem: Business Logic Knows Too Much Infrastructure
 
-Mã minh họa sau gắn cứng lựa chọn cổng thanh toán vào bên trong use case:
+The following snippet hardwires the payment gateway choice into the use case:
 
 ~~~java
 // Minh họa thiết kế bị phụ thuộc vào lớp cụ thể
@@ -2830,9 +2830,9 @@ final class TightlyCoupledCheckoutService {
 }
 ~~~
 
-Giả sử `DemoBankAdapter` là adapter gọi SDK ngân hàng thật. Khi thay đổi nhà cung cấp, muốn chạy kiểm thử không gọi API thật, hoặc cần dùng một adapter khác theo môi trường, `TightlyCoupledCheckoutService` dễ bị kéo theo thay đổi. Mã nghiệp vụ đang chịu ảnh hưởng bởi chi tiết “dùng adapter nào”.
+Suppose `DemoBankAdapter` wraps a real bank SDK. Switching providers, testing without real API calls, or using different adapters across environments can force changes to `TightlyCoupledCheckoutService`. Business code is influenced by the technical choice of "which adapter to use."
 
-Sửa chỗ `new` bằng constructor **nhận chính `DemoBankAdapter`** chỉ mới đạt DI:
+Replacing `new` with a constructor **that accepts `DemoBankAdapter` itself** achieves DI only:
 
 ~~~java
 final class CheckoutWithDiButWithoutDip {
@@ -2848,11 +2848,11 @@ final class CheckoutWithDiButWithoutDip {
 }
 ~~~
 
-Tuy đã dùng constructor injection, kiểu khai báo vẫn là `DemoBankAdapter`. Module nghiệp vụ còn phụ thuộc vào class cụ thể của hạ tầng, nên chưa đạt mục tiêu của DIP.
+Despite constructor injection, the declared type remains `DemoBankAdapter`. The business module still depends on a concrete infrastructure class, so DIP's objective has not been achieved.
 
-## 3. Thiết kế đúng: phụ thuộc vào hợp đồng do nghiệp vụ cần
+## 3. Correct Design: Depend on a Business-Defined Contract
 
-Đặt abstraction theo nhu cầu của use case: “thu số tiền VND cho một mã đơn hàng, nhận mã giao dịch”. Adapter cụ thể sẽ triển khai hợp đồng đó.
+Define the abstraction around the use case's need: "charge a VND amount for an order ID and receive a transaction ID." A concrete adapter then implements that contract.
 
 ~~~mermaid
 flowchart TB
@@ -2876,11 +2876,11 @@ flowchart TB
     C -.->|"tạo instance"| A
 ~~~
 
-**Mũi tên liền** thể hiện phụ thuộc ở mã nguồn/kiểu: `CheckoutService → PaymentGateway ← DemoBankAdapter`. **Mũi tên nét đứt** thể hiện nơi lắp ghép đối tượng, nơi được phép biết cả interface và implementation. Lúc chạy, lệnh gọi vẫn đi từ `CheckoutService` đến implementation ngân hàng thông qua interface: đảo ngược phụ thuộc mã nguồn **không có nghĩa** đảo chiều luồng gọi runtime.
+**Solid arrows** indicate source/type dependencies: `CheckoutService → PaymentGateway ← DemoBankAdapter`. **Dashed arrows** indicate object assembly, where both interfaces and implementations may be known. At runtime, calls still flow from `CheckoutService` to the banking implementation through the interface: inverting source dependencies **does not mean** reversing runtime call direction.
 
-### 3.1. Ví dụ Java 17 chạy độc lập (không dùng Spring)
+### 3.1. Standalone Java 17 Example (Without Spring)
 
-Tạo tệp `DipDiDemo.java`:
+Create `DipDiDemo.java`:
 
 ~~~java
 import java.util.Objects;
@@ -2957,27 +2957,27 @@ public class DipDiDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac DipDiDemo.java
 java DipDiDemo
 ~~~
 
-Đầu ra minh họa:
+Illustrative output:
 
 ~~~text
 [DEMO] Thu 150000 VND cho đơn ORD-001
 Receipt[orderId=ORD-001, amountVnd=150000, transactionId=TX-DEMO-ORD-001]
 ~~~
 
-Trong ví dụ này, constructor nhận `PaymentGateway` là **DI**. Việc `CheckoutService` chỉ import/tham chiếu `PaymentGateway` và `DemoBankAdapter implements PaymentGateway` là phần thiết kế theo **DIP**. `DipDiDemo.main` là **composition root**: nơi quyết định dùng adapter nào và cấp đối tượng đó vào use case.
+Here, the constructor receiving `PaymentGateway` is **DI**. Having `CheckoutService` refer only to `PaymentGateway` while `DemoBankAdapter implements PaymentGateway` expresses **DIP**. `DipDiDemo.main` is the **composition root**, selecting an adapter and supplying it to the use case.
 
-Mã ví dụ dùng `long` cho đơn vị VND nguyên để giữ trọng tâm ở dependency; khi xử lý nhiều loại tiền tệ, có phần lẻ, tỷ giá hoặc quy tắc làm tròn, nên thiết kế một money value object phù hợp (`BigDecimal`/minor units + currency), không dùng `double` cho số tiền.
+The example uses `long` for whole VND amounts to focus on dependencies. For multiple currencies, fractions, exchange rates, or rounding, design an appropriate money value object (`BigDecimal`/minor units + currency) rather than using `double` for monetary amounts.
 
-### 3.2. Thay thế implementation không sửa use case
+### 3.2. Replace Implementations Without Editing the Use Case
 
-Ví dụ trong môi trường phát triển cần adapter mô phỏng để không tạo giao dịch thật:
+For example, a development environment may require a fake adapter to avoid real transactions:
 
 ~~~java
 final class LocalFakePaymentGateway implements PaymentGateway {
@@ -2992,13 +2992,13 @@ PaymentGateway gateway = new LocalFakePaymentGateway();
 CheckoutService checkout = new CheckoutService(gateway);
 ~~~
 
-Lúc này `CheckoutService` không có `if (gateway instanceof ...)` và không cần biết adapter hiện tại là ngân hàng, sandbox hay fake. Mọi implementation phải đáp ứng hợp đồng của `PaymentGateway` (ví dụ không trả mã giao dịch rỗng khi thành công). DIP tạo ra điểm thay thế, còn tính thay thế an toàn yêu cầu hợp đồng interface rõ ràng.
+Now `CheckoutService` contains no `if (gateway instanceof ...)` and need not know whether the current adapter is a bank, sandbox, or fake. Every implementation must honor the `PaymentGateway` contract (for example, not returning an empty transaction ID on success). DIP creates the substitution point; safe substitution requires a clear interface contract.
 
-**Ranh giới quan trọng:** Nếu interface `PaymentGateway` trả về `BankSdkPaymentResponse` hoặc bắt buộc người gọi truyền `BankSdkRequest`, thì abstraction đã rò rỉ chi tiết ngân hàng. Dù service chỉ viết tên interface, module nghiệp vụ vẫn phải biết kiểu thuộc SDK. Nên dùng kiểu thuộc nghiệp vụ (`Receipt`, `PaymentId`, `PaymentRequest`...) và chuyển đổi trong adapter.
+**Important boundary:** If `PaymentGateway` returns `BankSdkPaymentResponse` or requires callers to pass `BankSdkRequest`, the abstraction leaks banking details. Even if the service names only an interface, the business module must still know SDK types. Prefer business-owned types (`Receipt`, `PaymentId`, `PaymentRequest`, etc.) and perform conversions in the adapter.
 
-## 4. DI bằng Spring: framework lắp ghép, DIP vẫn nằm ở thiết kế
+## 4. DI with Spring: The Framework Assembles Objects, DIP Remains a Design Choice
 
-Với Spring, ta có thể cấu hình dependency bằng bean. Ví dụ này dùng **các class Java ở phần 3.1** trong cùng package, với dependency `spring-context`:
+With Spring, dependencies can be configured as beans. This example uses **the Java classes from section 3.1** in the same package with the `spring-context` dependency:
 
 ~~~java
 import org.springframework.context.annotation.Bean;
@@ -3019,11 +3019,11 @@ class CheckoutConfiguration {
 }
 ~~~
 
-Spring tạo `DemoBankAdapter`, đưa bean đó vào `CheckoutService` và quản lý vòng đời bean. Không có `@Autowired` cũng được vì đang dùng tham số của `@Bean` method; nếu một `@Service` có **một constructor**, Spring cũng tự chọn constructor đó để injection theo cách thông dụng.
+Spring creates `DemoBankAdapter`, injects that bean into `CheckoutService`, and manages its lifecycle. `@Autowired` is unnecessary here because a `@Bean` method parameter is used; when a `@Service` has **one constructor**, Spring typically selects it for injection automatically.
 
-Khi tích hợp ngân hàng thật, có thể thay duy nhất bean `PaymentGateway` bằng một adapter khác (và cấu hình các dependency của adapter), miễn là chỉ có một bean phù hợp hoặc có `@Qualifier`/`@Primary` khi cần chọn nhiều implementation. Nếu khai báo đồng thời nhiều bean cùng kiểu mà không có quy tắc phân giải, Spring có thể báo lỗi ambiguity khi khởi tạo.
+When integrating a real bank, the `PaymentGateway` bean can be replaced with another adapter (and its dependencies configured), provided exactly one bean matches or `@Qualifier`/`@Primary` selects among implementations. Declaring multiple beans of the same type without resolution rules can trigger an ambiguity error during Spring startup.
 
-**Tránh nhầm:** `@Autowired`, `@Inject`, `@Component`, `@Bean` không tự biến một thiết kế phụ thuộc vào SDK thành DIP. Ví dụ dưới đây là DI nhưng vẫn coupling chặt:
+**Avoid confusion:** `@Autowired`, `@Inject`, `@Component`, and `@Bean` do not automatically turn an SDK-dependent design into DIP. The following example uses DI but remains tightly coupled:
 
 ~~~java
 // Đây là DI, nhưng service vẫn phụ thuộc class hạ tầng cụ thể:
@@ -3036,13 +3036,13 @@ final class CoupledCheckout {
 }
 ~~~
 
-Trong dự án nhiều module, đặt interface `PaymentGateway` ở module ứng dụng/nghiệp vụ phù hợp. Module hạ tầng phụ thuộc ngược về module chứa interface, còn module nghiệp vụ không import module hạ tầng. Nơi bootstrap hoặc cấu hình Spring được phép tham chiếu cả hai để kết nối. Đây mới là điều cần kiểm tra trên **sơ đồ module và dependencies của build**, bên cạnh chữ ký constructor.
+In a multimodule project, place `PaymentGateway` in the appropriate application/business module. Infrastructure depends inward on the interface's module, while business code does not import infrastructure. Bootstrap or Spring configuration may reference both to connect them. Check **module diagrams and build dependencies**, not just constructor signatures.
 
-## 5. Kiểm thử dễ hơn nhờ abstraction và DI
+## 5. Easier Testing Through Abstractions and DI
 
-Không cần khởi động Spring, kết nối mạng, mở database hay gọi cổng thanh toán để kiểm thử logic `CheckoutService`. Tạo một fake ghi nhận số lần gọi; chạy test bằng JUnit Jupiter (JUnit 5).
+Testing `CheckoutService` logic does not require starting Spring, connecting to a network or database, or invoking a payment gateway. Create a fake recording call counts and run tests with JUnit Jupiter (JUnit 5).
 
-Tệp `CheckoutServiceTest.java` (cùng package với demo):
+File `CheckoutServiceTest.java` (in the same package as the demo):
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -3098,28 +3098,28 @@ class CheckoutServiceTest {
 }
 ~~~
 
-Ba test này kiểm tra chính sách đầu vào, cách tương tác với abstraction và bảo vệ trước adapter sai hợp đồng. Test không chứng minh một adapter HTTP/SDK hoạt động thật; adapter thật vẫn cần integration test với sandbox hoặc môi trường kiểm thử có kiểm soát.
+These three tests verify input rules, interactions through abstractions, and protection against adapters violating contracts. They do not prove that an HTTP/SDK adapter really works; real adapters still need integration tests with a sandbox or controlled test environment.
 
-Một lợi ích quan trọng của **constructor injection** là dependency bắt buộc được thể hiện ngay khi khởi tạo; field `final` giúp tránh bị đổi tham chiếu sau đó. Test có thể lắp adapter giả rất rõ ràng.
+An important advantage of **constructor injection** is that required dependencies are explicit at construction; a `final` field prevents subsequent reference reassignment. Tests can assemble fake adapters transparently.
 
-## 6. Các cách DI và lựa chọn hợp lý
+## 6. DI Approaches and Appropriate Choices
 
-| Cách cấp dependency | Ví dụ ngắn | Khi phù hợp | Điểm cần chú ý |
+| Dependency-supply method | Short example | When appropriate | Considerations |
 |---|---|---|---|
-| **Constructor injection** | `new CheckoutService(gateway)` | Dependency bắt buộc, thiết kế ưu tiên mặc định | Nếu constructor quá nhiều tham số, xem lại trách nhiệm class |
-| **Setter injection** | `service.setGateway(gateway)` | Dependency tùy chọn hoặc cần thay cấu hình sau khởi tạo | Có thể tồn tại giai đoạn chưa khởi tạo đầy đủ; cần kiểm soát trạng thái |
-| **Field injection** | `@Autowired private PaymentGateway gateway;` | Mã Spring cũ hoặc tình huống đặc biệt | Khó thấy dependency bắt buộc khi đọc constructor, khó tạo object thuần Java |
-| **DI container** | `@Bean`, `@Service`, `@Autowired` | Ứng dụng cần cấu hình và quản lý vòng đời bean | Đây là hạ tầng lắp ghép; không thay thế tư duy thiết kế abstraction |
+| **Constructor injection** | `new CheckoutService(gateway)` | Required dependencies; usually the preferred default | Too many constructor parameters may indicate excessive class responsibilities |
+| **Setter injection** | `service.setGateway(gateway)` | Optional dependencies or post-construction reconfiguration | Partially initialized states may exist and require management |
+| **Field injection** | `@Autowired private PaymentGateway gateway;` | Legacy Spring code or special circumstances | Required dependencies are less visible; plain Java object creation is harder |
+| **DI container** | `@Bean`, `@Service`, `@Autowired` | Applications needing bean configuration and lifecycle management | Assembly infrastructure does not replace abstraction design |
 
-Ngoài constructor/setter/field, **method parameter injection** cũng phù hợp khi một dependency hay chiến lược chỉ áp dụng cho một lời gọi thay vì toàn bộ vòng đời object. Không nhất thiết biến mọi dữ liệu đầu vào của phương thức thành field trong constructor.
+Beyond constructor/setter/field injection, **method parameter injection** fits dependencies or strategies used by one call rather than throughout an object's lifetime. Not every method input belongs in a constructor field.
 
-**Service locator** như `GlobalContainer.get(PaymentGateway.class)` gọi từ trong logic nghiệp vụ không có ưu điểm tương đương với constructor injection: nó làm dependency khó nhìn thấy và khiến việc test phụ thuộc vào trạng thái container toàn cục. Nếu cần container, nên truy cập tại ranh giới khởi tạo, rồi truyền dependency tường minh vào lớp nghiệp vụ.
+A **service locator** such as `GlobalContainer.get(PaymentGateway.class)` called from business logic lacks constructor injection's transparency: it hides dependencies and makes tests depend on global container state. If a container is used, access it at the assembly boundary and pass dependencies explicitly to business classes.
 
-## 7. DIP, DI và IoC khác nhau thế nào?
+## 7. How Do DIP, DI, and IoC Differ?
 
-**Inversion of Control (IoC)** là khái niệm rộng: quyền điều phối một phần quá trình thực thi/khởi tạo do một thành phần bên ngoài nắm giữ, chẳng hạn Spring gọi code ứng dụng hoặc container quản lý cấu hình và vòng đời đối tượng.
+**Inversion of Control (IoC)** is broader: an external component controls part of execution or object initialization, such as Spring invoking application code or a container managing object configuration and lifecycles.
 
-**DI** là một cơ chế thực hiện IoC trong việc cung cấp dependency. **DIP** là nguyên lý về cấu trúc phụ thuộc của module. Chúng liên quan nhưng nằm ở các tầng khái niệm khác nhau:
+**DI** is one way to implement IoC for dependency provision. **DIP** governs module dependency structure. These concepts are related but operate at different levels:
 
 ~~~mermaid
 flowchart LR
@@ -3129,32 +3129,32 @@ flowchart LR
     P -->|"là kiểu dependency của"| S
 ~~~
 
-Một ứng dụng thuần Java có thể áp dụng DIP + DI thủ công mà không dùng IoC container. Ngược lại, hệ thống dùng Spring DI rất rộng rãi vẫn vi phạm DIP nếu lớp nghiệp vụ phụ thuộc trực tiếp vào các adapter, class framework hoặc DTO SDK.
+A plain Java application can apply DIP with manual DI without an IoC container. Conversely, a system using Spring DI extensively can still violate DIP if business classes depend directly on adapters, framework classes, or SDK DTOs.
 
-## 8. Những hiểu lầm và điểm kiểm tra khi review
+## 8. Misconceptions and Code-Review Checks
 
-- **“Có interface là có DIP”:** Chưa đủ. Nếu interface nằm trong module hạ tầng khiến nghiệp vụ phải phụ thuộc hạ tầng, hướng phụ thuộc build vẫn sai. Quan trọng là abstraction thuộc về nhu cầu của tầng ổn định hơn và các module phụ thuộc vào nó đúng hướng.
-- **“Đưa `new` ra constructor là DIP”:** Chỉ chắc chắn là DI. Hãy kiểm tra kiểu tham số constructor là abstraction do nghiệp vụ sở hữu hay implementation hạ tầng.
-- **“DIP bắt buộc mỗi class có một interface”:** Không. Các value object, domain entity, thuật toán ổn định hoặc class nội bộ không có nhiều cách thay thế có thể không cần abstraction mới. Đặt port tại ranh giới thực sự biến động hoặc cần kiểm thử/tách module.
-- **“DIP có nghĩa không được gọi code hạ tầng”:** Khi chạy, service vẫn gọi adapter hạ tầng để thực hiện công việc. Điều được đảo là **hướng phụ thuộc ở mức kiểu/module**, không phải thứ tự lời gọi.
-- **“Có Spring thì không phải quản lý dependency”:** Container giúp lắp ghép nhưng phải quản lý số lượng bean, vòng đời, vòng phụ thuộc và tính an toàn luồng nếu singleton giữ trạng thái thay đổi.
-- **“Để code nghiệp vụ import response/request của SDK là vô hại”:** Đây là một dạng rò rỉ chi tiết. Nên chuyển đổi ở adapter và định nghĩa kiểu dữ liệu hợp đồng theo use case.
-- **“Cứ inject càng nhiều càng tốt”:** Constructor với hàng chục service khác nhau có thể báo hiệu class quá nhiều trách nhiệm. DI giúp nhìn rõ sự phức tạp; nó không làm sự phức tạp đó biến mất.
+- **"Having an interface means DIP is satisfied":** Not necessarily. If the interface lives in infrastructure and forces business code to depend on that module, the build dependency direction is still wrong. The more stable layer should own the required abstraction, with module dependencies pointing correctly.
+- **"Moving `new` into a constructor achieves DIP":** It definitely achieves DI, but check whether the constructor parameter is a business-owned abstraction or a concrete infrastructure implementation.
+- **"DIP requires an interface for every class":** No. Value objects, domain entities, stable algorithms, or internal classes without multiple substitution needs may not require new abstractions. Create ports at genuinely volatile boundaries or where testing/module isolation warrants them.
+- **"DIP means infrastructure code must never be called":** At runtime, services still call infrastructure adapters. **Type/module dependency direction** is inverted, not execution order.
+- **"With Spring, dependencies no longer need management":** The container helps wire objects, but bean counts, lifecycles, dependency cycles, and thread safety for stateful singletons still matter.
+- **"Importing SDK request/response types into business code is harmless":** This leaks details. Convert types in adapters and define use-case-owned contract data types.
+- **"The more injection, the better":** A constructor with dozens of unrelated services may indicate a class with too many responsibilities. DI makes complexity visible; it does not remove it.
 
-### Quy trình refactor một trường hợp thực tế
+### Refactoring a Real-World Case
 
-1. Xác định **chính sách/use case** cần được giữ ổn định: ví dụ xác thực đơn hàng và yêu cầu thu tiền.
-2. Liệt kê chính xác **hợp đồng** nghiệp vụ muốn dùng: tham số, kết quả, exception, quy tắc idempotency, retry, timeout nếu thuộc yêu cầu hệ thống.
-3. Định nghĩa **port** ở module đúng tầng, tránh kiểu dữ liệu và chú giải đặc thù nhà cung cấp trong API.
-4. Viết **adapter** triển khai port; xử lý chuyển đổi DTO, mapping lỗi và giao tiếp network ở hạ tầng.
-5. Dùng **constructor injection**, nối các đối tượng trong `main` hoặc cấu hình Spring.
-6. Viết **unit test** use case bằng fake/mock port và **integration test** riêng cho adapter; kiểm tra đồ thị module để ngăn nghiệp vụ import hạ tầng.
+1. Identify the **policy/use case** to keep stable, such as order validation and payment requests.
+2. Define the exact business **contract**: parameters, results, exceptions, and idempotency, retry, and timeout rules when required.
+3. Define the **port** in the correct module/layer, avoiding provider-specific types and annotations in the API.
+4. Write an **adapter** implementing the port, with DTO conversion, error mapping, and network interaction in infrastructure.
+5. Use **constructor injection** to connect objects in `main` or Spring configuration.
+6. Write **unit tests** for the use case using fake/mock ports and separate **integration tests** for adapters; inspect module dependencies to prevent business code from importing infrastructure.
 
-Một ví dụ thực tế về hợp đồng quan trọng: nếu cổng thanh toán có thể retry sau timeout, chỉ tạo interface `charge` và thay implementation chưa đủ. Cần làm rõ khóa idempotency, trạng thái giao dịch không chắc chắn và chính sách lặp lời gọi. DIP giúp cô lập API nhà cung cấp; hợp đồng đúng mới giúp thay thế nhà cung cấp an toàn trong vận hành.
+A crucial real-world contract example: if a payment gateway may retry after a timeout, merely defining `charge` and replacing its implementation is insufficient. Clarify idempotency keys, uncertain transaction states, and retry policies. DIP isolates provider APIs; a correct contract makes provider substitution operationally safe.
 
-## 9. Bài tập thực hành
+## 9. Practice Exercise
 
-Cho thiết kế sau:
+Consider this design:
 
 ~~~java
 class ReportService {
@@ -3166,62 +3166,62 @@ class ReportService {
 }
 ~~~
 
-Hãy refactor để `ReportService` sử dụng `ReportRepository` do nghiệp vụ định nghĩa, còn `SqlReportRepository implements ReportRepository` nằm tại tầng lưu trữ. Tạo phiên bản `InMemoryReportRepository` để chạy unit test không cần database. Cuối cùng, so sánh hai biến thể:
+Refactor so `ReportService` uses a business-defined `ReportRepository` while `SqlReportRepository implements ReportRepository` resides in storage. Create an `InMemoryReportRepository` for database-free unit tests. Finally, compare:
 
-- Truyền `SqlReportRepository` qua constructor: đã có DI, nhưng lớp nghiệp vụ vẫn phụ thuộc concrete.
-- Truyền `ReportRepository` qua constructor: có DI **và** thiết kế đi theo DIP, nếu dependency giữa các module cũng đúng hướng.
+- Passing `SqlReportRepository` through the constructor: DI is present, but business code still depends on the concrete type.
+- Passing `ReportRepository` through the constructor: DI is present **and** the design follows DIP, provided module dependencies also point in the correct direction.
 
-**Tự kiểm tra kết quả:** Khi đổi từ SQL sang lưu trữ in-memory, có phải sửa hoặc import thêm loại repository trong `ReportService` không? Nếu có, hãy xem lại vị trí interface, chữ ký constructor và việc đặt logic khởi tạo.
+**Self-check:** When switching from SQL to in-memory storage, must `ReportService` be edited or import another repository type? If so, revisit interface placement, constructor signatures, and where construction logic resides.
 
 ---
 
-**Điều cần nhớ:** **DIP quyết định “phụ thuộc vào abstraction nào và theo hướng nào”; DI quyết định “ai cung cấp implementation cụ thể”.** Có thể dùng DI mà chưa đạt DIP. Kết hợp abstraction đúng tầng, constructor injection và composition root rõ ràng giúp Java/Spring dễ thay đổi hạ tầng, kiểm thử nghiệp vụ và kiểm soát kiến trúc hơn.
+**Key takeaway:** **DIP determines "which abstraction to depend on and in which direction"; DI determines "who supplies the concrete implementation."** DI can exist without DIP. Appropriately placed abstractions, constructor injection, and an explicit composition root make infrastructure changes, business testing, and architectural control easier in Java/Spring.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="solid-008">Cân bằng các nguyên tắc với độ phức tạp thực tế</a>
+## <a id="solid-008">Balancing Principles Against Real-World Complexity</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Cân bằng các nguyên tắc với độ phức tạp thực tế
+# Balancing Principles Against Real-World Complexity
 
-**Phạm vi:** OOP — SOLID trong Java.  
-**Mục tiêu:** biết khi nào nên áp dụng một nguyên tắc thiết kế, áp dụng đến mức nào và khi nào nên giữ giải pháp đơn giản để hệ thống dễ hiểu, dễ kiểm thử và dễ thay đổi.
+**Scope:** OOP — SOLID in Java.  
+**Objective:** Learn when to apply a design principle, how extensively to apply it, and when to keep a solution simple so the system stays understandable, testable, and adaptable.
 
-SOLID là năm nguyên tắc định hướng thiết kế hướng đối tượng, không phải bộ luật bắt mọi lớp, mọi phương thức đều đi qua interface, inheritance và dependency injection. Một thiết kế tốt phải giải quyết nhu cầu đang tồn tại, đồng thời giữ chi phí thay đổi trong tương lai ở mức hợp lý. Đôi khi đó là một lớp ngắn với vài nhánh điều kiện; đôi khi là các abstraction độc lập.
+SOLID consists of five object-oriented design guidelines, not laws requiring every class and method to involve interfaces, inheritance, and dependency injection. Good designs meet current needs while keeping future change costs reasonable. Sometimes that means one concise class with a few branches; sometimes it means independent abstractions.
 
-## 1. Tại sao áp dụng SOLID quá mức lại phản tác dụng?
+## 1. Why Can Overapplying SOLID Backfire?
 
-Các nguyên tắc nhắc ta quản lý các **phụ thuộc** và **lý do thay đổi**:
+The principles encourage managing **dependencies** and **reasons to change**:
 
-| Nguyên tắc | Câu hỏi cần hỏi | Dấu hiệu áp dụng quá mức |
+| Principle | Key question | Sign of overapplication |
 | --- | --- | --- |
-| **SRP — Single Responsibility** | Module có tập trung vào một trách nhiệm, một nhóm lý do thay đổi nhất quán không? | Tách mỗi hàm thành một lớp, khiến một luồng nghiệp vụ đơn giản phải đi qua nhiều lớp trung gian. |
-| **OCP — Open/Closed** | Có điểm biến thiên ổn định nào cần mở rộng mà ít sửa mã đã kiểm chứng không? | Tạo Strategy/Factory/Plugin cho mọi nhánh giả định chưa có yêu cầu thực tế. |
-| **LSP — Liskov Substitution** | Mọi implementation có thực hiện đúng hợp đồng và bất biến mà client kỳ vọng không? | Dùng kế thừa chỉ để tái sử dụng mã dù subtype phải từ chối những thao tác của base type. |
-| **ISP — Interface Segregation** | Client có bị ép phụ thuộc vào năng lực không sử dụng không? | Tách interface thành vô số loại một phương thức khi tất cả client luôn dùng cùng một nhóm thao tác. |
-| **DIP — Dependency Inversion** | Logic quan trọng có phụ thuộc quá sâu vào chi tiết dễ đổi (database, HTTP, nhà cung cấp) không? | Bọc tất cả các lớp đơn giản bằng một interface tương ứng và cấu hình DI dù chỉ có một luồng không cần hoán đổi. |
+| **SRP — Single Responsibility** | Does a module focus on one responsibility and a coherent group of reasons to change? | Splitting every function into a separate class, forcing a simple workflow through many intermediaries. |
+| **OCP — Open/Closed** | Is there a stable variation point that needs extension without modifying tested code? | Creating Strategy/Factory/Plugin systems for speculative branches without real requirements. |
+| **LSP — Liskov Substitution** | Does every implementation honor the contract and invariants expected by its clients? | Using inheritance solely for code reuse even though a subtype must reject valid base-type operations. |
+| **ISP — Interface Segregation** | Must clients depend on capabilities they do not use? | Splitting interfaces into countless one-method types when every client consistently needs the same set of operations. |
+| **DIP — Dependency Inversion** | Does important logic depend too heavily on volatile details (database, HTTP, providers)? | Wrapping every simple class in a matching interface and DI configuration despite having one fixed workflow with no substitution need. |
 
-**Tách trách nhiệm** không có nghĩa là “mỗi lớp chỉ được có một phương thức”. **Mở để mở rộng** không có nghĩa là “không bao giờ sửa một lớp”. **Lập trình hướng abstraction** không có nghĩa là “mọi lớp đều phải có interface”.
+**Separating responsibilities** does not mean "one method per class." **Being open for extension** does not mean "never modify a class." **Programming to abstractions** does not mean "every class needs an interface."
 
-Một abstraction luôn có chi phí: đặt tên, tạo thêm điểm chuyển hướng khi đọc mã, quản lý dependency, duy trì hợp đồng công khai, điều hướng IDE, bảo trì mock/fake và giải thích cho đồng đội. Chi phí đó chỉ đáng trả khi nó làm giảm đáng kể chi phí thay đổi hoặc kiểm thử.
+Every abstraction has costs: naming, extra indirection when reading code, dependency management, public-contract maintenance, IDE navigation, mock/fake upkeep, and explanations for teammates. These costs are justified only when they meaningfully reduce change or testing costs.
 
-## 2. Bắt đầu từ trường hợp đơn giản thật sự
+## 2. Start with a Genuinely Simple Case
 
-Giả sử phiên bản đầu tiên của cửa hàng **chỉ** có giao hàng tiêu chuẩn:
+Suppose a store's first version offers **only** standard shipping:
 
-- Phí giao hàng: **30.000 VND**.
-- Đơn hàng từ **500.000 VND** được miễn phí giao hàng.
-- Chưa có API bên thứ ba, không có các gói giao hàng khác.
-- Giá trị tiền là số nguyên VND để tránh lỗi làm tròn kiểu dấu phẩy động.
+- Shipping fee: **30.000 VND**.
+- Orders of **500.000 VND** or more ship free.
+- There are no third-party APIs or alternative shipping plans yet.
+- Monetary amounts are stored as integer VND to avoid floating-point rounding errors.
 
-Trong tình huống này, một lớp có thể là thiết kế phù hợp:
+In this situation, a single class may be appropriate:
 
 ~~~java
 final class SimpleCheckout {
@@ -3236,20 +3236,20 @@ final class SimpleCheckout {
 }
 ~~~
 
-Đoạn mã ngắn, có quy tắc rõ ràng, dễ debug và dễ kiểm thử. Tạo ngay **FeePolicy**, **PolicyFactory**, **PolicyRegistry** và một hệ thống cấu hình động chỉ vì “sau này *có thể* thêm gói giao hàng” sẽ khiến phần mềm phức tạp hơn khi chưa có bằng chứng về lợi ích.
+The code is short, has clear rules, and is easy to debug and test. Immediately introducing **FeePolicy**, **PolicyFactory**, **PolicyRegistry**, and dynamic configuration solely because "more delivery plans *might* be added someday" increases complexity before there is evidence of benefit.
 
-Nếu các quy tắc còn ít và ổn định, một vài nhánh **if/switch** đơn giản, kiểm thử được, hoàn toàn có thể là lựa chọn tốt. Khi nhu cầu thật sự mở rộng, refactor dựa trên hành vi đã được kiểm chứng.
+When rules remain few and stable, a handful of simple, testable **if/switch** branches can be a sound choice. Refactor when requirements actually expand, using verified existing behavior as the baseline.
 
-## 3. Khi yêu cầu thay đổi, thiết kế cũng cần tiến hóa
+## 3. Designs Should Evolve as Requirements Change
 
-Sáu tháng sau, bài toán khác đi:
+Six months later, the requirements are different:
 
-- Có thêm giao hàng **Express**, phí cơ bản 50.000 VND cộng 5.000 VND cho mỗi kilogram, phần lẻ kilogram làm tròn lên.
-- Giao hàng **Standard** vẫn miễn phí khi tổng tiền hàng từ 500.000 VND.
-- Hai chính sách do hai nhóm nghiệp vụ phụ trách và thay đổi độc lập.
-- Hệ thống có thể kết nối thêm chính sách giao hàng mới qua cấu hình.
+- **Express** shipping is added with a base fee of 50.000 VND plus 5.000 VND per kilogram, rounding partial kilograms up.
+- **Standard** shipping still becomes free for subtotals of at least 500.000 VND.
+- The two policies are owned by different business teams and change independently.
+- New shipping policies may be connected through configuration.
 
-Lúc này các *quy tắc thực sự thay đổi độc lập* là lý do thực tế để tách một abstraction. Cách tiếp cận có thể như sau:
+Now the *independently changing rules* provide a concrete reason to extract an abstraction. The approach could look like this:
 
 ~~~mermaid
 flowchart TD
@@ -3260,9 +3260,9 @@ flowchart TD
     F --> A
 ~~~
 
-### Ví dụ Java 17+ hoàn chỉnh
+### Complete Java 17+ Example
 
-Lưu thành **DeliveryDemo.java**. Ví dụ dùng **record**, **enum** và **Map** để giữ cho mô hình nhỏ nhưng có thể thay đổi chính sách độc lập.
+Save as **DeliveryDemo.java**. The example uses **record**, **enum**, and **Map** to keep the model small while allowing policies to vary independently.
 
 ~~~java
 import java.util.Map;
@@ -3356,33 +3356,33 @@ public class DeliveryDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac DeliveryDemo.java
 java DeliveryDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Receipt[goodsTotalVnd=600000, deliveryFeeVnd=0, grandTotalVnd=600000]
 Receipt[goodsTotalVnd=600000, deliveryFeeVnd=60000, grandTotalVnd=660000]
 ~~~
 
-Ở thiết kế này:
+In this design:
 
-1. **SRP:** mỗi policy chứa quy tắc tính phí thuộc một chế độ; **Checkout** điều phối lựa chọn chính sách và tính tổng.
-2. **OCP:** có thể bổ sung implementation chính sách mới mà không sửa mã tính tổng trong **Checkout**. Việc khai báo chế độ mới trong **DeliveryMode**, cập nhật cấu hình và các thành phần liên quan vẫn có thể cần sửa — OCP không có nghĩa hệ thống hoàn toàn bất biến khi thêm tính năng.
-3. **LSP:** các policy cần thực hiện hợp đồng nhất quán: trả về phí hợp lệ, không âm cho đơn hàng hợp lệ, và không tự ý thay đổi đối tượng đơn hàng. Nếu một policy báo thành công giả hoặc âm phí, việc thay thế policy trở nên không an toàn.
-4. **ISP:** **Checkout** chỉ cần khả năng **calculateFeeVnd**. Không bắt mọi policy triển khai các thao tác như gửi email, xuất hóa đơn hoặc lưu database.
-5. **DIP:** **Checkout** phụ thuộc vào **DeliveryFeePolicy** thay vì phụ thuộc trực tiếp vào **StandardFeePolicy** hay **ExpressFeePolicy**. Phần cấu hình ở **main** (composition root) quyết định implementation nào được cấp vào.
+1. **SRP:** Each policy contains the fee rule for one delivery mode; **Checkout** coordinates policy selection and total calculation.
+2. **OCP:** New policy implementations can be added without editing total-calculation logic in **Checkout**. Adding a mode to **DeliveryMode**, updating configuration, and adjusting related components may still require changes—OCP does not make the entire system immutable when features are added.
+3. **LSP:** Policies must honor a consistent contract: return valid, nonnegative fees for valid orders without arbitrarily mutating order objects. A policy that reports false success or negative fees is not safely substitutable.
+4. **ISP:** **Checkout** only needs **calculateFeeVnd**. Policies are not forced to send email, export invoices, or persist data.
+5. **DIP:** **Checkout** depends on **DeliveryFeePolicy** rather than directly on **StandardFeePolicy** or **ExpressFeePolicy**. Configuration in **main** (the composition root) determines the implementation to supply.
 
-**Giới hạn có chủ ý:** dùng **enum** và registry đơn giản đủ cho hai chế độ trong ví dụ. Nếu nhu cầu thực tế chỉ có hai nhánh rất ổn định, **switch** rõ ràng vẫn có thể rẻ hơn hai class policy và bộ registry. Abstraction này trở nên đáng giá khi các chính sách phát triển, kiểm thử và được thay thế độc lập.
+**Intentional limitation:** A simple **enum** and registry suffice for the two modes in this example. If real requirements have only two very stable branches, a clear **switch** may still cost less than two policy classes and a registry. The abstraction becomes worthwhile when policies evolve, are tested, and are replaced independently.
 
-## 4. Kiểm thử điều gì để việc tách lớp có giá trị?
+## 4. What Should Be Tested to Justify the Separation?
 
-Kiểm thử **hành vi có ý nghĩa**, không kiểm tra nội bộ chỉ để chứng minh thiết kế gồm bao nhiêu lớp. Với JUnit Jupiter (JUnit 5), các trường hợp sau bắt các ranh giới nghiệp vụ và phép tính:
+Test **meaningful behavior**, not internal structure just to prove how many classes exist. With JUnit Jupiter (JUnit 5), the following cases exercise business boundaries and calculations:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -3435,107 +3435,107 @@ class DeliveryDemoTest {
 }
 ~~~
 
-**Chú ý:** test trên cần JUnit Jupiter có trong classpath của dự án. Quy tắc làm tròn trong ví dụ là giả định nghiệp vụ minh họa. Nếu nhà vận chuyển quy định khối lượng tối thiểu một kilogram, trọng lượng quy đổi, làm tròn tiền hay phụ phí vùng miền, phải sửa đặc tả và test tương ứng trước khi sửa implementation.
+**Note:** These tests require JUnit Jupiter on the project's classpath. The rounding rule in the example is an illustrative business assumption. If a carrier specifies a minimum kilogram, volumetric weight, monetary rounding, or regional surcharges, update the specification and tests accordingly before changing implementations.
 
-Có thể truyền một fake **DeliveryFeePolicy** cho **Checkout** để kiểm tra việc cộng tổng mà không cần gọi dịch vụ vận chuyển thật. Tuy nhiên, nếu toàn bộ logic chỉ là một công thức ổn định, test trực tiếp hàm thuần túy có thể đủ; không cần tạo interface chỉ vì muốn dùng mock.
+A fake **DeliveryFeePolicy** can be passed to **Checkout** to verify total calculation without invoking a real shipping service. However, if the entire logic is one stable formula, directly testing a pure function may be sufficient; creating an interface solely for mocking is unnecessary.
 
-## 5. Quyết định giữa sự đơn giản và khả năng mở rộng
+## 5. Choosing Between Simplicity and Extensibility
 
-Một kỹ thuật thiết kế chỉ có ý nghĩa khi giải quyết *áp lực thay đổi cụ thể*. Có thể dùng bảng sau khi review:
+A design technique is worthwhile only when it addresses *specific change pressures*. The following table can guide reviews:
 
-| Tình huống thực tế | Cách tiếp cận cân nhắc | Vì sao |
+| Real-world situation | Approach to consider | Why |
 | --- | --- | --- |
-| Một quy tắc nhỏ, ít thay đổi | Hàm thuần hoặc một lớp đơn giản | Ít khái niệm, dễ đọc và test. |
-| Hai biến thể với điều kiện ngắn, ổn định | **if/switch** rõ ràng, có test | Tổng chi phí có thể thấp hơn Strategy/Factory. |
-| Nhiều thuật toán cùng vai trò, thay đổi độc lập | **Strategy** hoặc policy interface | Giới hạn tác động của thay đổi và test từng thuật toán. |
-| Logic nghiệp vụ quan trọng gọi database/HTTP dễ thay thế | Port/repository interface ở ranh giới phù hợp | Giảm phụ thuộc vào hạ tầng; test nghiệp vụ độc lập. |
-| Client đọc và client ghi có nhu cầu khác nhau | Tách interface đọc/ghi nếu cần | Tránh ép client phụ thuộc vào thao tác không dùng. |
-| Một lớp vừa tính giá vừa gửi email, truy cập DB, render PDF | Tách những trách nhiệm có lý do thay đổi khác nhau | Cô lập lỗi và tác động của thay đổi. |
-| Kế thừa khiến subclass phải ném **UnsupportedOperationException** | Xem lại subtype; ưu tiên composition/hợp đồng phù hợp | Giữ đúng cam kết hành vi với client. |
-| Tạo nhiều tầng interface cho một mô hình bất biến nhỏ | Gộp/loại bỏ lớp trung gian không có giá trị | Giảm độ sâu khi đọc mã và chi phí đồng bộ thay đổi. |
+| One small rule that rarely changes | Pure function or simple class | Fewer concepts; easy to read and test. |
+| Two variants with short, stable conditions | Clear, tested **if/switch** | Lower total cost than Strategy/Factory may be possible. |
+| Many algorithms serving the same role and varying independently | **Strategy** or a policy interface | Isolates change impact and supports per-algorithm tests. |
+| Important business logic calls replaceable database/HTTP services | Port/repository interface at the appropriate boundary | Reduces infrastructure coupling and enables isolated business tests. |
+| Reader and writer clients have different needs | Separate read/write interfaces when warranted | Avoids forcing clients to depend on unused operations. |
+| One class calculates prices, sends email, accesses DB, and renders PDFs | Split responsibilities with different reasons to change | Isolates failures and change impact. |
+| Inheritance forces a subclass to throw **UnsupportedOperationException** | Revisit the subtype; prefer composition or a suitable contract | Preserves behavioral promises to clients. |
+| Many interface layers wrap a small immutable model | Consolidate/remove intermediaries without value | Reduces navigation depth and synchronization costs. |
 
-Đừng chọn chỉ bằng **số dòng**, **số class** hay **số interface**. Một module nhiều dòng nhưng mạch lạc có thể tốt hơn một mô hình phân lớp sâu buộc người đọc mở 12 file để hiểu một phép tính.
+Do not decide solely by **line count**, **class count**, or **interface count**. A coherent module with many lines may be better than a deeply layered design requiring readers to open 12 files to understand one calculation.
 
-### Câu hỏi trước khi tạo abstraction
+### Questions Before Creating an Abstraction
 
-- **Ai là client?** Những client nào cần tập thao tác hoặc quy tắc khác nhau?
-- **Điều gì thật sự biến thiên?** Có hai hoặc nhiều trường hợp hiện hữu, yêu cầu đã được xác nhận, hoặc thay đổi lặp lại không?
-- **Ranh giới ở đâu?** Thay đổi nghiệp vụ có độc lập với database, giao thức, UI, nhà cung cấp không?
-- **Có quy ước chung không?** Các implementation có tuân thủ cùng một hợp đồng hành vi hay chỉ tình cờ trùng tên?
-- **Chi phí của cách đơn giản là gì?** Thêm một biến thể đòi sửa bao nhiêu chỗ, có bao nhiêu test hồi quy chịu ảnh hưởng?
-- **Chi phí của abstraction là gì?** Thêm bao nhiêu kiểu, cấu hình DI, cách chọn implementation, API versioning và rủi ro khó đọc?
+- **Who are the clients?** Which clients need different operations or rules?
+- **What actually varies?** Are there two or more existing cases, confirmed requirements, or recurring changes?
+- **Where is the boundary?** Do business changes vary independently from databases, protocols, UIs, or providers?
+- **Is there a shared contract?** Do implementations honor one behavioral contract or merely share a name?
+- **What does the simple approach cost?** How many places must change to add a variant, and how many regression tests are affected?
+- **What does abstraction cost?** How many types, DI configurations, implementation-selection rules, API versions, and readability risks does it introduce?
 
-**Ngưỡng thay đổi không thể được quyết định bằng một con số cố định.** Quy tắc “đợi ba trường hợp mới trừu tượng hóa” có thể hữu ích như lời nhắc chống thiết kế trước quá xa, nhưng không phải quy luật. Một ranh giới liên quan thanh toán, pháp lý hoặc tích hợp ngoài có thể đáng tách ngay vì tính độc lập và rủi ro thay đổi đã rõ.
+**No fixed number determines the abstraction threshold.** "Wait for three cases before abstracting" can help prevent excessive upfront design, but it is not a law. A payment, legal, or external-integration boundary may warrant separation immediately because its independence and change risk are already clear.
 
-## 6. Ba dạng phức tạp cần nhận diện
+## 6. Three Kinds of Complexity to Recognize
 
-### 6.1. Phức tạp vốn có của nghiệp vụ
+### 6.1. Inherent Business Complexity
 
-Ví dụ: giao hàng phụ thuộc khoảng cách, cân nặng, giờ cao điểm, vùng địa lý, điều kiện miễn phí và quy tắc hoàn tiền. Những điều này không thể biến mất bằng mẫu thiết kế. Công việc của ta là biểu diễn chúng thành quy tắc minh bạch và có test.
+For example, delivery depends on distance, weight, peak hours, geographic region, free-shipping conditions, and refund rules. Design patterns cannot make these requirements disappear. We must represent them as explicit, tested rules.
 
-### 6.2. Phức tạp do cách triển khai
+### 6.2. Complexity Introduced by Implementation
 
-Ví dụ: cùng công thức nằm trong controller, service, repository và frontend, hoặc một client phải gọi qua năm adapter không thêm ý nghĩa. Có thể giảm bằng cách gom quy tắc vào một chỗ, tách phụ thuộc ở đúng ranh giới và bỏ tầng trung gian thừa.
+Examples include the same formula duplicated in a controller, service, repository, and frontend, or a client calling through five adapters that add no value. Reduce this complexity by centralizing rules, separating dependencies at appropriate boundaries, and removing unnecessary intermediaries.
 
-### 6.3. Phức tạp để dự phòng tương lai
+### 6.3. Complexity Added for Speculative Future Needs
 
-Ví dụ: hỗ trợ động hàng trăm plugin giao hàng trước khi dự án có nhà vận chuyển thứ hai. Đây là nơi cần xem xét **YAGNI** (*You Aren't Gonna Need It*) và trì hoãn quyết định có thể đảo ngược. Tuy vậy, trì hoãn thiết kế không có nghĩa bỏ qua lỗi kiến trúc đã biết; nếu thay đổi sau này gây rủi ro lớn hoặc mất tương thích dữ liệu, có thể cần đầu tư sớm.
+For example, supporting hundreds of dynamically loaded shipping plugins before the project has a second carrier. Here, **YAGNI** (*You Aren't Gonna Need It*) suggests postponing reversible decisions. However, delaying design does not mean ignoring known architectural flaws; high-risk future changes or data incompatibility may justify early investment.
 
-**KISS** (*Keep It Simple*) khuyên chọn giải pháp đơn giản đáp ứng yêu cầu. **DRY** (*Don't Repeat Yourself*) khuyên tránh lặp lại tri thức/quy tắc có nguy cơ sai khác; không yêu cầu gộp mọi đoạn mã giống nhau về cú pháp. Gộp hai quy tắc trông giống nhưng khác chủ sở hữu nghiệp vụ có thể tạo coupling nguy hiểm.
+**KISS** (*Keep It Simple*) encourages choosing the simplest solution that meets requirements. **DRY** (*Don't Repeat Yourself*) cautions against duplicating knowledge/rules that may diverge; it does not require merging all syntactically similar code. Combining two similar-looking rules owned by different business stakeholders can create dangerous coupling.
 
-## 7. Đo mức độ tốt của thiết kế bằng hậu quả thay đổi
+## 7. Assessing Design Quality Through the Consequences of Change
 
-Thay vì hỏi “đã dùng đủ năm chữ SOLID chưa?”, hãy kiểm tra bằng các tình huống thay đổi đại diện.
+Instead of asking "have we applied all five SOLID letters?", evaluate representative change scenarios.
 
-| Tín hiệu | Cách quan sát | Diễn giải thận trọng |
+| Signal | What to observe | Careful interpretation |
 | --- | --- | --- |
-| **Change surface** | Một yêu cầu nhỏ phải sửa bao nhiêu module và hợp đồng công khai? | Sửa nhiều nơi không tự động xấu, nhưng có thể chỉ ra coupling không cần thiết. |
-| **Khả năng kiểm thử** | Viết test tình huống lỗi/biên có cần dựng quá nhiều hạ tầng không? | Dễ test thường phản ánh ranh giới tốt; mock quá nhiều có thể che thiết kế khó hiểu. |
-| **Độ dễ đọc** | Một người mới có lần theo đường đi của dữ liệu và business rule nhanh không? | Nhiều tầng chuyển tiếp không đóng góp logic là chi phí nhận thức. |
-| **Tính thay thế** | Thay adapter, phương thức thanh toán hay policy có giữ được hợp đồng không? | Tính mở rộng chỉ có giá trị khi điểm biến thiên là thật. |
-| **Rủi ro hồi quy** | Sau thay đổi, test nào chứng minh behavior cũ và behavior mới? | Thiết kế tốt đi cùng đặc tả và kiểm thử, không thay thế chúng. |
-| **Chi phí vận hành** | Có tăng cấu hình, quản trị dependency, khởi tạo bean, tracing/debug không? | Mẫu thiết kế có thể chuyển chi phí từ code sang cấu hình và vận hành. |
+| **Change surface** | How many modules and public contracts must change for a small request? | Editing multiple places is not automatically bad, but may reveal unnecessary coupling. |
+| **Testability** | Do error/edge-case tests require excessive infrastructure setup? | Easy testing often signals good boundaries; too many mocks can hide an unclear design. |
+| **Readability** | Can a newcomer quickly trace data flow and business rules? | Forwarding layers without logic add cognitive cost. |
+| **Substitutability** | Do replacement adapters, payment methods, or policies honor contracts? | Extensibility matters only when the variation point is real. |
+| **Regression risk** | Which tests establish old and new behavior after a change? | Good design works alongside specifications and tests; it does not replace them. |
+| **Operational cost** | Does configuration, dependency management, bean initialization, or tracing/debugging increase? | Patterns may shift cost from code into configuration and operations. |
 
-Không có điểm số tuyệt đối cho mọi dự án. Mức độ cần phân tách của thư viện public dùng bởi nhiều nhóm thường khác với script nội bộ dùng một lần.
+No single score fits all projects. A public library used by many teams usually needs different boundaries from a one-off internal script.
 
-## 8. Refactor theo bằng chứng, không theo phong trào
+## 8. Refactor Based on Evidence, Not Fashion
 
-Một lộ trình có kiểm soát:
+A controlled sequence:
 
-1. **Ghi rõ hành vi hiện tại** và bảo vệ bằng test các ca chính, ca biên và lỗi.
-2. **Chỉ ra lý do thay đổi đã quan sát được**: hai rule có lịch phát hành khác nhau, DB adapter thường xuyên đổi, hoặc một client đang gánh thao tác không dùng.
-3. **Chọn ranh giới hẹp nhất** thực sự giúp thay đổi dễ hơn; đặt tên theo domain, không chỉ thêm hậu tố **Manager**, **Processor**, **Factory**.
-4. **Refactor từng bước nhỏ**, giữ nguyên kết quả nghiệp vụ ở các đầu vào cũ; chạy test sau mỗi bước có tác động.
-5. **Thêm biến thể mới** qua hợp đồng vừa được ổn định, kiểm tra rằng logic cũ không cần sửa lan rộng.
-6. **Dọn lớp/adapter cũ đã hết nhiệm vụ** nếu không còn client phụ thuộc; với public API phải có kế hoạch tương thích và chuyển đổi.
+1. **Document existing behavior** and protect it with tests covering main cases, boundaries, and errors.
+2. **Identify observed reasons to change:** Two rules have different release schedules, a database adapter changes frequently, or a client depends on unused operations.
+3. **Choose the narrowest boundary** that actually makes change easier; use domain names rather than merely appending **Manager**, **Processor**, or **Factory**.
+4. **Refactor in small steps**, preserving business results for existing inputs and running tests after each impactful change.
+5. **Add the new variant** through the newly stabilized contract and verify that existing logic need not be changed broadly.
+6. **Remove obsolete classes/adapters** when no clients depend on them; public APIs require compatibility and migration plans.
 
-Trong Java/Spring, dependency injection giúp đưa implementation vào constructor, nhưng DI container không thay việc xác định ranh giới. Không cần đưa một giá trị hoặc helper thuần túy vào Spring bean chỉ để “tuân thủ DIP”. Interface thường hữu ích ở chỗ có nhiều implementation, có ranh giới hạ tầng, có hợp đồng công khai cần ổn định hoặc có nhiều client với nhu cầu khác nhau.
+In Java/Spring, dependency injection supplies implementations through constructors, but DI containers do not decide architectural boundaries. A simple value or pure helper does not need to become a Spring bean just to "follow DIP." Interfaces are often useful with multiple implementations, infrastructure boundaries, public contracts requiring stability, or clients with different needs.
 
-### Các lỗi cần tránh khi review
+### Mistakes to Watch for During Reviews
 
-- **Speculative generality:** thêm cơ chế đăng ký plugin, override nhiều tầng hoặc generic phức tạp khi chưa có yêu cầu.
-- **Premature optimization:** tối ưu hoặc thay cấu trúc trước khi đo vấn đề hiệu năng thực tế.
-- **Shotgun surgery:** sửa một rule nhỏ phải chạm nhiều module không liên quan.
-- **Feature envy/God class:** một lớp đọc và thao túng trạng thái của quá nhiều lớp khác để quyết định nghiệp vụ.
-- **Inheritance misuse:** subclass không giữ đúng tiền điều kiện, hậu điều kiện hoặc bất biến của base type.
-- **Test phụ thuộc implementation:** kiểm tra thứ tự gọi nội bộ thay vì kết quả nghiệp vụ, khiến refactor không đổi hành vi vẫn làm test hỏng.
+- **Speculative generality:** Adding plugin registries, layered overrides, or complex generics before requirements exist.
+- **Premature optimization:** Optimizing or restructuring before measuring real performance problems.
+- **Shotgun surgery:** A small rule change requires touching many unrelated modules.
+- **Feature envy/God class:** One class reads and manipulates too many other classes' states to make business decisions.
+- **Inheritance misuse:** A subclass violates its base type's preconditions, postconditions, or invariants.
+- **Implementation-coupled tests:** Testing internal call order rather than business outcomes, so behavior-preserving refactors still break tests.
 
-## 9. Bài tập áp dụng
+## 9. Practice Exercise
 
-Một ứng dụng ban đầu tính giảm giá cố định 5% cho tất cả khách hàng; sau đó có thêm giảm theo hạng thành viên và mã khuyến mãi.
+An application initially provides a fixed 5% discount to every customer, then adds discounts by membership tier and promotional code.
 
-**Yêu cầu thực hành:**
+**Exercise requirements:**
 
-1. Viết bản đầu chỉ cần một hàm tính số tiền giảm, dùng kiểu số nguyên hoặc **BigDecimal** với quy tắc làm tròn được xác định rõ.
-2. Bổ sung hạng thành viên bằng **if/switch** và test; xác định khi nào logic vẫn dễ đọc.
-3. Giả lập thay đổi nghiệp vụ: mỗi chương trình khuyến mãi có vòng đời và cách kiểm tra điều kiện riêng. Cân nhắc **DiscountPolicy**, nhưng chỉ nếu có nhiều chính sách thực sự cần thay đổi độc lập.
-4. Kiểm tra **LSP**: mọi policy có cùng quy định về đầu vào, kết quả không âm, không vượt số tiền hàng hay không?
-5. Thử tính số file/lớp phải sửa khi thêm một chương trình mới; nếu mô hình phức tạp hơn mà chi phí thay đổi không giảm, hãy đơn giản hóa lại.
+1. Implement the first version with one function calculating the discount amount, using integers or **BigDecimal** with an explicit rounding rule.
+2. Add membership tiers using **if/switch** and tests; determine when the logic remains easy to understand.
+3. Simulate changing business requirements: Each promotion has its own lifecycle and eligibility checks. Consider **DiscountPolicy**, but only when multiple policies genuinely need to change independently.
+4. Verify **LSP**: Do all policies share input requirements and return nonnegative discounts no greater than the subtotal?
+5. Count the files/classes needing edits when a new program is added; simplify again if complexity increases without reducing the cost of change.
 
-**Tiêu chí tự đánh giá:** giải pháp đúng nghiệp vụ, giữ được các bất biến quan trọng, test được ca biên, có số lượng abstraction phù hợp với thay đổi đã biết và người khác có thể hiểu đường đi dữ liệu mà không phải lần qua nhiều tầng vô nghĩa.
+**Self-assessment criteria:** The solution meets business requirements, preserves important invariants, tests edge cases, uses an appropriate number of abstractions for known changes, and lets others understand data flow without navigating meaningless layers.
 
-**Thông điệp cốt lõi:** SOLID là công cụ kiểm soát phụ thuộc và chi phí thay đổi. Hãy áp dụng nguyên tắc vào nơi có rủi ro thật, giữ thiết kế nhỏ khi bài toán nhỏ, và mở rộng abstraction khi nhu cầu đã xuất hiện hoặc có bằng chứng đủ mạnh.
+**Core message:** SOLID helps manage dependencies and the cost of change. Apply principles where real risks exist, keep designs small for small problems, and expand abstractions when requirements materialize or strong evidence justifies them.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

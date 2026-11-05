@@ -284,6 +284,18 @@ System.out.println("KEEP");
                 'questions[0].correctAnswerId'))
         assertTrue(ModuleTranslationValidationService.editable(
                 'SWAGGER_API_CASES', 'Controller.method().cases[0].description'))
+        ['source', 'program', 'expect.results', 'expect.conclusion'].each { String field ->
+            assertTrue('Observation text should be translatable: ' + field,
+                    ModuleTranslationValidationService.editable(
+                            'SWAGGER_API_CASES',
+                            'Controller.method().cases[0].observations[1].' + field))
+        }
+        ['type', 'expect.keyword', 'expect.unknownField'].each { String field ->
+            assertFalse('Observation technical field should be protected: ' + field,
+                    ModuleTranslationValidationService.editable(
+                            'SWAGGER_API_CASES',
+                            'Controller.method().cases[0].observations[1].' + field))
+        }
         assertFalse(ModuleTranslationValidationService.editable(
                 'SWAGGER_API_CASES', 'Controller.method().cases[0].response'))
         assertTrue(ModuleTranslationValidationService.editable(
@@ -292,6 +304,80 @@ System.out.println("KEEP");
                 'SWAGGER_API_DESCRIPTIONS', 'DemoController.execute(String).params[0].description'))
         assertFalse(ModuleTranslationValidationService.editable(
                 'SWAGGER_API_DESCRIPTIONS', 'DemoController.execute(String).params[0].name'))
+    }
+
+    @Test
+    void swaggerObservationsAllowProseTranslationButProtectCodeMatchersAndSymbols() {
+        String vi = '''Group1Controller:
+  executeCase9(String):
+    methodName: executeCase9
+    cases:
+      - id: case_001
+        title: Kiểm tra CPU
+        description: Chạy workload
+        detailDescription: "<p>Chạy <code>compute(2000000)</code>.</p>"
+        input:
+          queryParams: {mode: cpu}
+        status: null
+        response: null
+        observations:
+          - type: LOG
+            source: Log tại Group1Service.executeCase9
+            program: Terminal hoặc IDE
+            expect:
+              keyword: "workload completed; result="
+              results: "<p>Tìm <code>workload completed; result=</code>.</p>"
+              conclusion: "<p>Không đo heap.</p>"
+          - type: JFR
+            source: Bản ghi jdk.ExecutionSample
+            program: Java Mission Control
+            expect:
+              keyword: jdk.ExecutionSample
+              results: "<p>Xem <code>jdk.ExecutionSample</code> để xác minh.</p>"
+              conclusion: "<p>Không kết luận bottleneck.</p>"
+'''
+        String en = vi.replace('Log tại ', 'Log from ')
+                .replace('Terminal hoặc IDE', 'Terminal or IDE')
+                .replace('Tìm <code>workload completed; result=</code>.',
+                        'Find <code>workload completed; result=</code>.')
+                .replace('Không đo heap.', 'This does not measure heap memory.')
+                .replace('Bản ghi jdk.ExecutionSample', 'Recording of jdk.ExecutionSample')
+                .replace('Xem <code>jdk.ExecutionSample</code> để xác minh.',
+                        'Inspect <code>jdk.ExecutionSample</code> to verify.')
+                .replace('Không kết luận bottleneck.', 'Do not infer a bottleneck.')
+        ModuleTranslationValidationService.compare('SWAGGER_API_CASES',
+                vi.getBytes('UTF-8'), en.getBytes('UTF-8'))
+
+        GradleException typeError = assertThrows(GradleException) {
+            ModuleTranslationValidationService.compare('SWAGGER_API_CASES',
+                    vi.getBytes('UTF-8'),
+                    en.replace('type: LOG', 'type: METRIC').getBytes('UTF-8'))
+        }
+        assertTrue(typeError.message.contains('Protected translation field'))
+
+        GradleException keywordError = assertThrows(GradleException) {
+            ModuleTranslationValidationService.compare('SWAGGER_API_CASES',
+                    vi.getBytes('UTF-8'),
+                    en.replace('keyword: "workload completed; result="',
+                            'keyword: "changed"').getBytes('UTF-8'))
+        }
+        assertTrue(keywordError.message.contains('Protected translation field'))
+
+        GradleException codeError = assertThrows(GradleException) {
+            ModuleTranslationValidationService.compare('SWAGGER_API_CASES',
+                    vi.getBytes('UTF-8'),
+                    en.replace('<code>jdk.ExecutionSample</code>',
+                            '<code>jdk.OtherEvent</code>').getBytes('UTF-8'))
+        }
+        assertTrue(codeError.message.contains('HTML code literals'))
+
+        GradleException symbolError = assertThrows(GradleException) {
+            ModuleTranslationValidationService.compare('SWAGGER_API_CASES',
+                    vi.getBytes('UTF-8'),
+                    en.replace('Group1Service.executeCase9',
+                            'Group1Service.otherMethod').getBytes('UTF-8'))
+        }
+        assertTrue(symbolError.message.contains('qualified technical identifiers'))
     }
 
     @Test

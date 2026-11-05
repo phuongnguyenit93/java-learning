@@ -1,75 +1,75 @@
 version: 1
 type: LEARNING_ROADMAP
-title: MÔ HÌNH HÓA — LIÊN KẾT BÀI HỌC
-roadmapHeading: Mạch liên kết bài học
+title: MODELING — LESSON CONNECTIONS
+roadmapHeading: Learning Path Connections
 roadmap:
 - id: modeling-001
   order: 1
-  title: Thu thập tình huống sử dụng và quy tắc nghiệp vụ
-  description: Thu thập actor/use case, rule có BR-ID và phản ví dụ để tìm invariant trước khi thiết kế lớp.
+  title: Gathering Use Cases and Business Rules
+  description: Gather actors/use cases, rules with BR-IDs, and counterexamples to identify invariants before designing classes.
   transition:
     to: modeling-002
-    description: '**Từ biết mục tiêu và quy tắc → nhận diện các đối tượng có danh tính, vòng đời và trách nhiệm phù hợp**'
+    description: '**From understanding goals and rules → identifying objects with appropriate identities, lifecycles, and responsibilities**'
 - id: modeling-002
   order: 2
-  title: Nhận diện đối tượng từ yêu cầu
-  description: Từ mô tả thư viện nhận diện entity, value object, policy và service; tách đối tượng theo danh tính, trách nhiệm, vòng đời.
+  title: Identifying Objects from Requirements
+  description: Identify entities, value objects, policies, and services from a library description; distinguish objects by identity, responsibility, and lifecycle.
   transition:
     to: modeling-003
-    description: '**Từ danh sách đối tượng ứng viên → xác định chủ sở hữu của mỗi invariant và những người cộng tác**'
+    description: '**From candidate objects → identifying the owner of each invariant and the required collaborators**'
 - id: modeling-003
   order: 3
-  title: Phân chia trách nhiệm và đối tượng cộng tác
-  description: Phân công trách nhiệm và xác định thông điệp cộng tác giữa `Member`, `BookCopy`, `Loan` và `LendingService`.
+  title: Assigning Responsibilities and Collaborators
+  description: Assign responsibilities and identify the messages exchanged among `Member`, `BookCopy`, `Loan`, and `LendingService`.
   transition:
     to: modeling-004
-    description: '**Từ phân công trách nhiệm → diễn tập qua các thẻ CRC để kiểm tra các kịch bản và chỗ thiếu nghĩa vụ**'
+    description: '**From assigning responsibilities → rehearsing scenarios with CRC cards to identify missing obligations**'
 - id: modeling-004
   order: 4
-  title: 'Thẻ CRC: lớp, trách nhiệm và cộng tác'
-  description: Role-play bằng thẻ CRC, phát hiện thiếu hoặc trùng trách nhiệm, rồi chuyển sang API/UML/test.
+  title: 'CRC Cards: Classes, Responsibilities, and Collaborators'
+  description: Role-play with CRC cards, detect missing or duplicated responsibilities, then translate them into APIs, UML, and tests.
   transition:
     to: modeling-005
-    description: '**Từ thẻ trách nhiệm → mô tả cấu trúc class, API, quan hệ và bội số bằng ký pháp rõ ràng**'
+    description: '**From responsibility cards → describing class structures, APIs, relationships, and multiplicities with clear notation**'
 - id: modeling-005
   order: 5
-  title: 'Sơ đồ lớp: thành viên và quan hệ'
-  description: 'Biểu diễn cấu trúc tĩnh và ownership bằng UML class diagram: thành viên, quan hệ, bội số và hướng phụ thuộc.'
+  title: 'Class Diagrams: Members and Relationships'
+  description: 'Represent static structures and ownership with UML class diagrams: members, relationships, multiplicities, and dependency directions.'
   transition:
     to: modeling-006
-    description: '**Từ cấu trúc ở mức lớp → kiểm tra đồ thị các instance cụ thể tại một thời điểm**'
+    description: '**From class-level structures → examining a graph of concrete instances at a specific moment**'
 - id: modeling-006
   order: 6
-  title: 'Sơ đồ đối tượng: các thể hiện tại một thời điểm'
-  description: Xem snapshot t0/t1 của các object và link cụ thể, nhận ra aliasing và khác biệt với class diagram.
+  title: 'Object Diagrams: Instances at a Point in Time'
+  description: Examine t0/t1 snapshots of concrete objects and links, recognize aliasing, and distinguish them from class diagrams.
   transition:
     to: modeling-007
-    description: '**Từ snapshot các object → theo dõi thông điệp giữa chúng trong một scenario**'
+    description: '**From object snapshots → tracing messages among objects within a scenario**'
 - id: modeling-007
   order: 7
-  title: 'Sơ đồ tuần tự: thứ tự tương tác'
-  description: Mô tả thứ tự lời gọi giữa các participant, các nhánh lỗi và thời điểm có side effect bằng sequence diagram.
+  title: 'Sequence Diagrams: Interaction Order'
+  description: Use sequence diagrams to describe call order among participants, failure branches, and when side effects occur.
   transition:
     to: modeling-008
-    description: '**Từ thứ tự tương tác → làm rõ sự kiện nào được phép đổi trạng thái của một đối tượng**'
+    description: '**From interaction order → clarifying which events are allowed to change an object’s state**'
 - id: modeling-008
   order: 8
-  title: 'Sơ đồ trạng thái: chuyển trạng thái hợp lệ'
-  description: Định nghĩa event, guard và transition hợp lệ cho một object theo vòng đời, từ chối cạnh sai mà không đổi state.
+  title: 'State Diagrams: Valid State Transitions'
+  description: Define valid events, guards, and transitions throughout an object's lifecycle, rejecting invalid transitions without changing state.
   transition:
     to: modeling-009
-    description: '**Từ các sơ đồ thiết kế → đối chiếu implementation, test và nghiệp vụ thực tế để phát hiện sai lệch**'
+    description: '**From design diagrams → comparing implementations, tests, and real business behavior to detect discrepancies**'
 - id: modeling-009
   order: 9
-  title: Đối chiếu mô hình với mã và tình huống thực tế
-  description: Đối chiếu yêu cầu, mô hình, Java, test và dữ liệu chạy; bảo đảm business rule tiếp tục đúng khi đổi mã hoặc môi trường.
+  title: Validating Models Against Code and Real-World Scenarios
+  description: Compare requirements, models, Java code, tests, and runtime data; ensure business rules remain valid as code or environments change.
   transition: null
 comparisonMarkdown: |-
-  ## 2. Bảng đối chiếu các bài học
+  ## 2. Lesson Comparison Table
 
-  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | Criterion | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 | Lesson 6 | Lesson 7 | Lesson 8 | Lesson 9 |
   | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-  | Tên | Thu thập tình huống sử dụng và quy tắc nghiệp vụ | Nhận diện đối tượng từ yêu cầu | Phân chia trách nhiệm và đối tượng cộng tác | Thẻ CRC: lớp, trách nhiệm và cộng tác | Sơ đồ lớp: thành viên và quan hệ | Sơ đồ đối tượng: các thể hiện tại một thời điểm | Sơ đồ tuần tự: thứ tự tương tác | Sơ đồ trạng thái: chuyển trạng thái hợp lệ | Đối chiếu mô hình với mã và tình huống thực tế |
-  | Vấn đề cần hiểu | Ai đạt mục tiêu gì theo điều kiện nào? | Khái niệm nào xứng đáng thành object? | Đối tượng nào sở hữu rule và nhờ ai? | Diễn tập trách nhiệm qua thẻ thế nào? | Lớp có thành viên/quan hệ/bội số gì? | Instance/link nào đang tồn tại tại t0/t1? | Ai gọi ai, theo thứ tự nào? | Event nào cho phép đổi state? | Mô hình và code có thực thi đúng BR? |
-  | Giá trị đối với OOP/module | Xác lập use case, invariant, acceptance criteria | Phân biệt entity/VO/service và vòng đời | Giữ logic đúng owner và luồng cộng tác | Kiểm tra phân vai bằng role-play | Làm rõ cấu trúc và quyền sở hữu | Minh họa aliasing và snapshot | Ngăn side effect sai thứ tự | Bảo vệ chuyển trạng thái nghiệp vụ | Truy vết rule qua API, test và persistence |
-  | Tư duy hình thành | Phỏng vấn và biến yêu cầu mơ hồ thành luật kiểm chứng được | Phản biện class ứng viên bằng danh tính và trách nhiệm | Giao việc nơi có thông tin, giảm coupling | Thử các luồng và sửa thẻ trước khi code | Đọc ký pháp, bội số và chọn đúng quan hệ | Phân biệt loại, instance và dữ liệu tại một thời điểm | Xét thứ tự message và nhánh thất bại | Xét trạng thái, event, guard, effect | Kiểm chứng hai chiều và cập nhật đồng bộ theo thay đổi |
+  | Name | Gathering Use Cases and Business Rules | Identifying Objects from Requirements | Assigning Responsibilities and Collaborators | CRC Cards: Classes, Responsibilities, and Collaborators | Class Diagrams: Members and Relationships | Object Diagrams: Instances at a Point in Time | Sequence Diagrams: Interaction Order | State Diagrams: Valid State Transitions | Validating Models Against Code and Real-World Scenarios |
+  | Key question | Who achieves which goal under what conditions? | Which concepts deserve to become objects? | Which object owns a rule, and whose help does it need? | How can responsibilities be rehearsed with cards? | What members, relationships, and multiplicities does each class have? | Which instances and links exist at t0/t1? | Who calls whom, and in what order? | Which events permit a state change? | Do the model and code correctly enforce the business rules? |
+  | Value for OOP/the module | Establish use cases, invariants, and acceptance criteria | Distinguish entities, value objects, services, and lifecycles | Keep logic with the right owner and clarify collaboration flows | Validate role assignments through role-play | Clarify structure and ownership | Illustrate aliasing and snapshots | Prevent side effects in the wrong order | Protect business state transitions | Trace rules through APIs, tests, and persistence |
+  | Mindset developed | Interview stakeholders and turn ambiguous requirements into testable rules | Challenge candidate classes based on identity and responsibility | Assign work to those with the relevant information and reduce coupling | Rehearse flows and revise cards before coding | Read notation and multiplicities and choose the right relationships | Distinguish types, instances, and data at a specific moment | Consider message order and failure branches | Consider states, events, guards, and effects | Verify in both directions and keep artifacts synchronized as requirements change |

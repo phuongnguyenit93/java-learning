@@ -1,75 +1,75 @@
 version: 1
 type: LEARNING_ROADMAP
-title: VÒNG ĐỜI — LIÊN KẾT BÀI HỌC
-roadmapHeading: Mạch liên kết bài học
+title: OBJECT LIFECYCLE — LESSON CONNECTIONS
+roadmapHeading: How the Lessons Connect
 roadmap:
 - id: lifecycle-001
   order: 1
-  title: Tạo đối tượng và cấp phát tài nguyên
-  description: Phân biệt instance, tham chiếu và tài nguyên ngoài JVM, theo dõi quá trình `new`, rồi chủ động đóng resource thay vì chờ GC.
+  title: Object Creation and Resource Allocation
+  description: Distinguish instances, references, and resources outside the JVM; trace what happens during `new`, then close resources explicitly instead of waiting for GC.
   transition:
     to: lifecycle-002
-    description: '**Từ tạo instance → xác định thế nào là trạng thái khởi tạo hợp lệ**'
+    description: '**From creating an instance → defining what constitutes a valid initialized state**'
 - id: lifecycle-002
   order: 2
-  title: Hàm khởi tạo và thiết lập trạng thái hợp lệ
-  description: Định nghĩa invariant và tổ chức validation, defensive copy, `final` để một constructor hoàn tất luôn tạo trạng thái hợp lệ.
+  title: Constructors and Establishing Valid State
+  description: Define invariants and organize validation, defensive copying, and `final` fields so every constructor that completes produces a valid state.
   transition:
     to: lifecycle-003
-    description: '**Từ bảo vệ invariant → lựa chọn những đường gọi constructor duy trì invariant đó**'
+    description: '**From protecting invariants → choosing constructor paths that preserve those invariants**'
 - id: lifecycle-003
   order: 3
-  title: Khởi tạo mặc định, tham số và nhiều cách khởi tạo
-  description: Phân biệt default/no-arg/parameterized constructors, thiết kế overload và nối chuỗi `this(...)`/`super(...)` bảo vệ cùng quy tắc.
+  title: Default, Parameterized, and Overloaded Constructors
+  description: Distinguish default, no-arg, and parameterized constructors; design overloads and `this(...)`/`super(...)` chains that uphold the same rules.
   transition:
     to: lifecycle-004
-    description: '**Từ chuỗi this/super → truy vết toàn bộ thứ tự khởi tạo trong kế thừa**'
+    description: '**From this/super chains → tracing the full initialization order in inheritance**'
 - id: lifecycle-004
   order: 4
-  title: Thứ tự khởi tạo trong quan hệ kế thừa
-  description: Truy vết static initializer, instance initializer và constructor theo chiều lớp cha đến lớp con; phát hiện override chạy quá sớm.
+  title: Initialization Order in Inheritance
+  description: Trace static initializers, instance initializers, and constructors from superclass to subclass; detect overridden methods invoked too early.
   transition:
     to: lifecycle-005
-    description: '**Từ cơ chế constructor → mở rộng sang API tạo đối tượng có tên và cấu hình**'
+    description: '**From constructor mechanics → exploring named and configurable object-creation APIs**'
 - id: lifecycle-005
   order: 5
-  title: Hàm tạo tĩnh, Factory và Builder
-  description: Lựa chọn constructor, static factory, Factory chọn implementation hoặc Builder để diễn đạt cách tạo object phù hợp API.
+  title: Static Factory Methods, Factories, and Builders
+  description: Choose a constructor, static factory, Factory that selects an implementation, or Builder to express the object-creation approach best suited to the API.
   transition:
     to: lifecycle-006
-    description: '**Từ cách tạo object → xem object còn tồn tại bao lâu và ai đang giữ tham chiếu**'
+    description: '**From creating objects → examining how long they remain alive and who retains their references**'
 - id: lifecycle-006
   order: 6
-  title: Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ
-  description: Đọc đồ thị GC roots và lifetime theo reachability, phát hiện alias, cache, listener hay ThreadLocal làm đối tượng bị giữ lại.
+  title: Object Lifetime, Reachability, and Memory Reclamation
+  description: Read GC-root graphs and determine lifetime through reachability; identify aliases, caches, listeners, or ThreadLocal values that retain objects.
   transition:
     to: lifecycle-007
-    description: '**Từ đồ thị reachability → hiểu GC thực sự thu hồi gì và đo bộ nhớ thế nào**'
+    description: '**From reachability graphs → understanding what GC actually reclaims and how to measure memory use**'
 - id: lifecycle-007
   order: 7
-  title: Thu gom rác và quản lý bộ nhớ thủ công
-  description: Giải thích trách nhiệm của GC đối với heap và giới hạn với native resource, đo đạc các dạng memory pressure khác nhau.
+  title: Garbage Collection and Manual Memory Management
+  description: Explain GC's responsibility for heap memory and its limits regarding native resources; measure different types of memory pressure.
   transition:
     to: lifecycle-008
-    description: '**Từ cơ chế quản lý heap → quy định thời điểm hoàn trả tài nguyên ngoài heap**'
+    description: '**From heap-management mechanisms → defining when to release resources outside the heap**'
 - id: lifecycle-008
   order: 8
-  title: Đóng tài nguyên và giới hạn của hàm hủy
-  description: Thiết kế quyền sở hữu và `close()` có thời điểm rõ ràng bằng try-with-resources, kể cả khi có nhiều tài nguyên và lỗi khi đóng.
+  title: Resource Cleanup and the Limits of Finalizers
+  description: Define ownership and timely `close()` calls using try-with-resources, including cases with multiple resources and failures during closing.
   transition:
     to: lifecycle-009
-    description: '**Từ đóng đúng vòng đời sử dụng → bảo đảm không công bố object trước khi sẵn sàng**'
+    description: '**From closing resources at the right point in their lifecycle → ensuring objects are not published before they are ready**'
 - id: lifecycle-009
   order: 9
-  title: Tránh để đối tượng chưa khởi tạo xong bị sử dụng
-  description: Bảo đảm object được khởi tạo hoàn tất trước khi công bố cho callback, thread hay registry; sử dụng safe publication phù hợp.
+  title: Preventing Use of Partially Initialized Objects
+  description: Ensure objects are fully initialized before publishing them to callbacks, threads, or registries; use appropriate safe-publication techniques.
   transition: null
 comparisonMarkdown: |-
-  ## 2. Bảng đối chiếu các bài học
+  ## 2. Lesson Comparison Table
 
-  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | Criterion | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 | Lesson 6 | Lesson 7 | Lesson 8 | Lesson 9 |
   | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-  | Tên | Tạo đối tượng và cấp phát tài nguyên | Hàm khởi tạo và thiết lập trạng thái hợp lệ | Khởi tạo mặc định, tham số và nhiều cách khởi tạo | Thứ tự khởi tạo trong quan hệ kế thừa | Hàm tạo tĩnh, Factory và Builder | Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ | Thu gom rác và quản lý bộ nhớ thủ công | Đóng tài nguyên và giới hạn của hàm hủy | Tránh để đối tượng chưa khởi tạo xong bị sử dụng |
-  | Vấn đề cần hiểu | `new` tạo instance khác gì gán tham chiếu, còn file/socket phải đóng thế nào? | Constructor bảo vệ invariant và dữ liệu mutable ra sao? | Default/no-arg/overload và `this`/`super` được chọn thế nào? | Static, instance initializer và constructor cha/con chạy theo thứ tự nào? | Khi nào dùng static factory, Factory hoặc Builder? | Scope, GC roots, weak reference và object retention có quan hệ gì? | GC xử lý heap đến đâu, khi nào cần quản lý native memory? | Đóng resource theo ownership và xử lý exception khi close thế nào? | Làm sao ngăn `this escape`, callback sớm và công bố giữa các thread? |
-  | Giá trị đối với OOP/module | Hiểu ranh giới instance và resource khi bắt đầu vòng đời. | Tạo object hợp lệ, bảo vệ trạng thái và các tiền điều kiện. | Xây dựng API constructor rõ nghĩa, không lỗi chuỗi khởi tạo. | Đọc đúng hành vi kế thừa và tránh kết quả khởi tạo bất ngờ. | Thiết kế cách tạo object và lựa chọn implementation linh hoạt. | Tránh giữ object vô hạn, chủ động giới hạn cache/listener. | Tách giám sát heap, native memory và chính sách GC thực tế. | Hoàn trả file, JDBC, socket đúng lúc và đúng người sở hữu. | Ngăn dùng object dở dang, giảm lỗi đồng thời khó tái hiện. |
-  | Tư duy hình thành | Phân tích hai vòng đời: bộ nhớ và tài nguyên. | Bắt đầu từ hợp đồng trạng thái trước khi gán field. | Xem mọi overload như một đường tới invariant chung. | Dự đoán bằng trace thực thi thay vì chỉ nhìn thứ tự khai báo. | Chọn mức trừu tượng tạo đối tượng theo bài toán. | Lần theo đường từ roots đến object và chính sách retention. | Dựa trên số liệu và hợp đồng API, không kỳ vọng GC tất định. | Chủ động quản lý quyền sở hữu, cleanup và lỗi. | Khởi tạo xong, rồi kích hoạt và công bố có đồng bộ. |
+  | Name | Object Creation and Resource Allocation | Constructors and Establishing Valid State | Default, Parameterized, and Overloaded Constructors | Initialization Order in Inheritance | Static Factory Methods, Factories, and Builders | Object Lifetime, Reachability, and Memory Reclamation | Garbage Collection and Manual Memory Management | Resource Cleanup and the Limits of Finalizers | Preventing Use of Partially Initialized Objects |
+  | Questions to Understand | How is creating an instance with `new` different from assigning a reference, and how should files/sockets be closed? | How do constructors protect invariants and mutable data? | How are default/no-arg constructors, overloads, and `this`/`super` selected? | In what order do static and instance initializers and superclass/subclass constructors execute? | When should you use a static factory, Factory, or Builder? | How are scope, GC roots, weak references, and object retention related? | What heap memory can GC manage, and when is native memory management necessary? | How do you close resources according to ownership and handle exceptions during closing? | How do you prevent `this escape`, early callbacks, and premature publication across threads? |
+  | Value for OOP/the Module | Understand the boundary between instances and resources at the start of their lifecycles. | Create valid objects while protecting state and preconditions. | Build clear constructor APIs without chaining errors. | Correctly interpret inheritance behavior and avoid unexpected initialization results. | Design flexible object-creation mechanisms and implementation selection. | Avoid retaining objects indefinitely by actively limiting caches/listeners. | Distinguish monitoring of heap and native memory from practical GC policies. | Release files, JDBC connections, and sockets at the right time and by the responsible owner. | Prevent the use of incomplete objects and reduce hard-to-reproduce concurrency bugs. |
+  | Mental Model Developed | Analyze two lifecycles: memory and resources. | Start with the state contract before assigning fields. | Treat each overload as a path to the same invariant. | Predict behavior by tracing execution rather than relying only on declaration order. | Choose the level of object-creation abstraction that fits the problem. | Trace paths from roots to objects and examine retention policies. | Rely on measurements and API contracts without assuming deterministic GC. | Manage ownership, cleanup, and failures proactively. | Complete initialization before activation and safely synchronized publication. |

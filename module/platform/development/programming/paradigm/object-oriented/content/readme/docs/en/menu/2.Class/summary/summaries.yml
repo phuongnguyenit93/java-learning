@@ -1,266 +1,266 @@
 summaries:
 - id: class-001
-  title: 'Cấu trúc lớp: thuộc tính và phương thức'
+  title: 'Class Structure: Fields and Methods'
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Cấu trúc lớp: thuộc tính và phương thức**
+    **Class Structure: Fields and Methods**
 
-    Biết cấu trúc class gồm field, constructor và method; phân biệt trạng thái với hành vi. Qua `InventoryItem`, người học thấy field cần được bảo vệ bằng API `restock()`/`sell()`, constructor tạo trạng thái ban đầu hợp lệ và tổng giá trị kho được tính từ dữ liệu hiện tại.
+    Understand that a class consists of fields, constructors, and methods, and distinguish state from behavior. Through `InventoryItem`, learners see why fields must be protected by the `restock()`/`sell()` API, how a constructor establishes a valid initial state, and how the total inventory value is calculated from current data.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Nhận diện cấu trúc lớp
+    ### Identifying Class Structure
 
-    1. Field instance, field static, tham số và biến cục bộ khác nhau về nơi khai báo, chủ sở hữu và vòng đời thế nào?
-    2. Trong `InventoryItem`, constructor, `this.sku`, `getQuantity()`, `restock()` và `sell()` lần lượt đảm nhiệm vai trò gì?
-    3. Vì sao `sku` và `unitPriceVnd` dùng `final`, trong khi `quantity` cần được cập nhật?
+    1. How do instance fields, static fields, parameters, and local variables differ in where they are declared, who owns them, and their lifetimes?
+    2. In `InventoryItem`, what roles do the constructor, `this.sku`, `getQuantity()`, `restock()`, and `sell()` play, respectively?
+    3. Why are `sku` and `unitPriceVnd` declared `final`, while `quantity` needs to be updated?
 
-    ### Thiết kế và bảo vệ trạng thái
+    ### Designing and Protecting State
 
-    1. Vì sao gọi `restock()`/`sell()` an toàn và rõ nghĩa hơn công khai setter cho `quantity`?
-    2. Khi gọi `sell(20)` lúc chỉ còn 12 sản phẩm, ngoại lệ nào được ném và `quantity` phải ra sao?
-    3. Vì sao tổng giá trị kho được tính qua method và cần dùng `Math.multiplyExact`?
+    1. Why is calling `restock()`/`sell()` safer and clearer than exposing a setter for `quantity`?
+    2. When `sell(20)` is called with only 12 items remaining, which exception is thrown, and what should happen to `quantity`?
+    3. Why is the total inventory value calculated by a method, and why is `Math.multiplyExact` needed?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Nhận diện thành phần | Chỉ ra đúng field, constructor, method, tham số, kiểu trả về, modifier và `this` trong mã `InventoryItem`. |
-    | Thiết kế hành vi | Đề xuất field `private`, constructor kiểm tra và các method nhập/bán bảo vệ số lượng không âm. |
-    | Phân biệt trạng thái riêng/chung | Giải thích vì sao hai instance có số lượng độc lập còn `MAX_QUANTITY` là quy tắc chung. |
-    | Dự đoán chạy và lỗi | Tính tồn kho trước/sau các lời gọi và chứng minh trạng thái không đổi khi kiểm tra thất bại. |
+    | Identify components | Correctly identify fields, constructors, methods, parameters, return types, modifiers, and `this` in the `InventoryItem` code. |
+    | Design behavior | Propose `private` fields, a validating constructor, and restocking/selling methods that prevent negative quantities. |
+    | Distinguish individual/shared state | Explain why two instances have independent quantities while `MAX_QUANTITY` is a shared rule. |
+    | Predict execution and errors | Calculate inventory before and after calls and demonstrate that state remains unchanged when validation fails. |
 - id: class-002
-  title: Khai báo lớp và tạo thể hiện
+  title: Declaring Classes and Creating Instances
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Khai báo lớp và tạo thể hiện**
+    **Declaring Classes and Creating Instances**
 
-    Phân biệt khai báo class với các thể hiện tạo qua `new`, đồng thời hiểu biến tham chiếu và constructor. Ví dụ `Workshop` giúp người học dự đoán đối tượng độc lập, alias dùng chung đối tượng, `null`, phép so sánh `==` và nguyên nhân của lỗi khởi tạo.
+    Distinguish a class declaration from instances created with `new`, and understand reference variables and constructors. The `Workshop` example helps learners reason about independent objects, aliases that share an object, `null`, `==` comparisons, and the causes of initialization errors.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Khai báo và khởi tạo
+    ### Declaration and Initialization
 
-    1. Vì sao `class Workshop` chỉ định nghĩa kiểu còn `new Workshop(...)` mới tạo instance?
-    2. Constructor kiểm tra tên và sức chứa ở đâu, và khi nào Java tự cấp constructor mặc định không tham số?
-    3. Biến cục bộ chưa gán và field tham chiếu mặc định `null` khác nhau như thế nào khi được sử dụng?
+    1. Why does `class Workshop` only define a type, while `new Workshop(...)` actually creates an instance?
+    2. Where does the constructor validate the name and capacity, and when does Java provide a default no-argument constructor?
+    3. How do an unassigned local variable and a reference field that defaults to `null` differ when used?
 
-    ### Tham chiếu và danh tính
+    ### References and Identity
 
-    1. Vì sao `Workshop alias = spring` không tạo instance mới còn `new Workshop("Spring Boot", 1)` lại tạo instance riêng?
-    2. Khi gọi `alias.register()`, số chỗ của `spring` và `java` thay đổi ra sao?
-    3. `alias == spring` và `separate == spring` kiểm tra điều gì; khác so sánh nội dung bằng `equals()` ra sao?
+    1. Why does `Workshop alias = spring` not create a new instance, while `new Workshop("Spring Boot", 1)` creates a separate one?
+    2. When `alias.register()` is called, how do the available seats for `spring` and `java` change?
+    3. What do `alias == spring` and `separate == spring` check, and how does that differ from comparing content with `equals()`?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Khai báo lớp hợp lệ | Viết `Workshop` có constructor và `Main.java` đáp ứng quy tắc lớp public và tên tệp. |
-    | Đảm bảo trạng thái tạo mới | Đặt kiểm tra tên/sức chứa trong constructor và xác định lời gọi constructor thiếu đối số. |
-    | Vẽ quan hệ tham chiếu | Biểu diễn đúng `java`, `spring`, `alias`, `separate` trong sơ đồ biến và đối tượng. |
-    | Dự đoán kết quả | Giải thích kết quả `register()`, `remainingSeats()` và `==` qua từng lần tạo/gán. |
+    | Declare a valid class | Write a `Workshop` with a constructor and a `Main.java` that follow the rules for public classes and filenames. |
+    | Ensure a valid initial state | Validate the name and capacity in the constructor and identify constructor calls with missing arguments. |
+    | Diagram reference relationships | Correctly represent `java`, `spring`, `alias`, and `separate` in a variable-and-object diagram. |
+    | Predict results | Explain the results of `register()`, `remainingSeats()`, and `==` across object creation and assignment steps. |
 - id: class-003
-  title: Thành viên của thể hiện và thành viên dùng chung
+  title: Instance Members and Shared Members
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Thành viên của thể hiện và thành viên dùng chung**
+    **Instance Members and Shared Members**
 
-    Chọn thành viên của thể hiện khi dữ liệu thuộc một đối tượng và thành viên `static` khi dữ liệu/hành vi thật sự gắn với lớp. Ví dụ `TicketWallet` cho thấy bộ đếm chung khác trạng thái riêng, cùng các giới hạn của class loader, đồng thời, tính bền vững và static method hiding.
+    Choose instance members when data belongs to an individual object and `static` members when data or behavior truly belongs to the class. The `TicketWallet` example shows how a shared counter differs from individual state, along with the limitations involving class loaders, concurrency, persistence, and static method hiding.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Instance và static
+    ### Instance and Static Members
 
-    1. Vì sao hai `TicketWallet` có `ownedTickets` khác nhau nhưng nhìn thấy cùng `totalSold`?
-    2. Static method không có `this` thì có thể truy cập field instance bằng cách nào?
-    3. Khác biệt giữa `static`, `final`, `public` là gì và vì sao `static final List` vẫn có thể chứa dữ liệu mutable?
+    1. Why do two `TicketWallet` instances have different `ownedTickets` values but see the same `totalSold`?
+    2. How can a static method access an instance field when it has no `this`?
+    3. How do `static`, `final`, and `public` differ, and why can a `static final List` still contain mutable data?
 
-    ### Vòng đời, đa hình và đồng thời
+    ### Lifecycle, Polymorphism, and Concurrency
 
-    1. Vì sao static field không tự đồng bộ qua JVM, class loader hoặc lần khởi động mới?
-    2. Trong `Animal pet = new Dog()`, vì sao `pet.sound()` và `pet.group()` chọn hai cách triển khai khác nhau?
-    3. Race condition của `totalSold += quantity` phát sinh thế nào và `AtomicInteger` chỉ bảo đảm phần nào?
+    1. Why are static fields not automatically synchronized across JVMs, class loaders, or application restarts?
+    2. In `Animal pet = new Dog()`, why do `pet.sound()` and `pet.group()` select different implementations?
+    3. How does a race condition arise in `totalSold += quantity`, and what part of the problem does `AtomicInteger` address?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Chọn nơi sở hữu | Xác định field/method nào nên instance, static hoặc static final cho bài toán ví vé. |
-    | Dự đoán dữ liệu | Tính đúng vé mỗi ví và tổng vé bán được sau nhiều lần gọi. |
-    | Giải thích dispatch | Phân biệt override method instance với hiding method static bằng ví dụ `Animal`/`Dog`. |
-    | Nhận diện rủi ro shared state | Chỉ ra giới hạn JVM/class loader, độ bền dữ liệu và thao tác cập nhật không nguyên tử. |
+    | Choose ownership | Decide which fields and methods in the ticket wallet problem should be instance, static, or static final members. |
+    | Predict data | Correctly calculate the tickets in each wallet and the total tickets sold after multiple calls. |
+    | Explain dispatch | Distinguish instance method overriding from static method hiding using the `Animal`/`Dog` example. |
+    | Recognize shared-state risks | Identify JVM/class loader boundaries, data persistence limitations, and non-atomic updates. |
 - id: class-004
-  title: Phạm vi truy cập của thành viên
+  title: Member Access Levels
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Phạm vi truy cập của thành viên**
+    **Member Access Levels**
 
-    Thiết kế ranh giới truy cập cho field, method và constructor bằng bốn mức `private`, package-private, `protected`, `public`. Trọng tâm là giữ bất biến nghiệp vụ qua API công khai và áp dụng đúng quy tắc `protected` khi lớp con ở package khác.
+    Design access boundaries for fields, methods, and constructors using the four levels: `private`, package-private, `protected`, and `public`. The focus is on preserving business invariants through public APIs and correctly applying `protected` rules when a subclass is in a different package.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Bốn mức quyền truy cập
+    ### The Four Access Levels
 
-    1. Ở cùng lớp, cùng package, lớp con khác package và lớp không kế thừa khác package, bốn access level cho phép gì?
-    2. Vì sao `ExchangeStudent` gọi được `this.addCredits()` nhưng không gọi được `other.addCredits()` với biến kiểu `Student`?
-    3. Tại sao `vn.edu.school.domain.audit` không mặc nhiên cùng package với `vn.edu.school.domain`?
+    1. What do the four access levels permit within the same class, the same package, a subclass in another package, and a non-subclass in another package?
+    2. Why can `ExchangeStudent` call `this.addCredits()` but not `other.addCredits()` when other has type `Student`?
+    3. Why is `vn.edu.school.domain.audit` not automatically in the same package as `vn.edu.school.domain`?
 
-    ### Thiết kế API và giới hạn ngôn ngữ
+    ### API Design and Language Restrictions
 
-    1. Vì sao `credits` phải được bảo vệ mà `getCredits()` có thể là public?
-    2. Top-level class dùng được access modifier nào và vì sao override không được giảm mức truy cập?
-    3. Khi nào chọn private constructor, helper package-private và protected extension point?
+    1. Why must `credits` be protected while `getCredits()` may be public?
+    2. Which access modifiers can a top-level class use, and why can an override not reduce visibility?
+    3. When should you choose a private constructor, a package-private helper, or a protected extension point?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Đọc được quyền truy cập | Phân tích tính hợp lệ của các lệnh trong `StudentAudit`, `ExchangeStudent`, `StudentViewer`. |
-    | Áp dụng protected chính xác | Giải thích receiver hợp lệ của method protected qua kế thừa khác package. |
-    | Thiết kế giao diện tối thiểu | Giữ dữ liệu private, công bố getter/hành vi cần thiết và chọn quyền truy cập hẹp nhất. |
-    | Phát hiện lỗi biên dịch | Sửa lỗi modifier của top-level class hoặc override giảm access. |
+    | Interpret access permissions | Analyze whether statements in `StudentAudit`, `ExchangeStudent`, and `StudentViewer` are valid. |
+    | Apply protected access correctly | Explain which receivers are valid for a protected method when inheriting across packages. |
+    | Design a minimal interface | Keep data private, expose only necessary getters and operations, and choose the narrowest access level. |
+    | Identify compilation errors | Fix invalid modifiers on top-level classes or overrides that reduce access. |
 - id: class-005
-  title: Tham số, giá trị trả về và tác động của phương thức
+  title: Method Parameters, Return Values, and Side Effects
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Tham số, giá trị trả về và tác động của phương thức**
+    **Method Parameters, Return Values, and Side Effects**
 
-    Đọc hợp đồng phương thức theo tham số, đối số, kiểu trả về, side effect và lỗi. Người học cần giải thích pass-by-value trong Java, kể cả bản sao giá trị tham chiếu đến object mutable, và thiết kế API không làm lộ trạng thái nội bộ.
+    Interpret method contracts in terms of parameters, arguments, return types, side effects, and errors. Learners must explain Java pass-by-value, including copying a reference value that points to a mutable object, and design APIs that do not expose internal state.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Đầu vào, đầu ra và truyền giá trị
+    ### Inputs, Outputs, and Passing Values
 
-    1. Tham số khác đối số thế nào, và `return result` khác với `System.out.println(result)`?
-    2. Vì sao `update(int, StringBuilder)` không sửa biến `score` của caller, có thể sửa nội dung `note`, nhưng gán lại `note` không đổi tham chiếu caller?
-    3. Vì sao Java không overload chỉ bằng return type, và varargs có ràng buộc vị trí thế nào?
+    1. How does a parameter differ from an argument, and how does `return result` differ from `System.out.println(result)`?
+    2. Why does `update(int, StringBuilder)` not change the caller's `score` variable, why can it change the contents of `note`, and why does reassigning `note` not change the caller's reference?
+    3. Why does Java not allow overloading based only on the return type, and what positional restriction applies to varargs?
 
-    ### Tác động và hợp đồng an toàn
+    ### Side Effects and Safe Contracts
 
-    1. Vì sao method `void` vẫn có side effect và getter không sửa field vẫn chưa chắc là pure function?
-    2. Trong `JobCounter`, kết quả và trạng thái sau `addJobs(-1)`, overflow hoặc `completeOne()` khi rỗng thế nào?
-    3. Vì sao getter trả mutable `List` có thể phá encapsulation và `List.copyOf` bảo vệ điều gì?
+    1. Why can a `void` method still have side effects, and why is a getter that does not modify fields not necessarily a pure function?
+    2. In `JobCounter`, what are the results and states after `addJobs(-1)`, an overflow, or `completeOne()` when no jobs remain?
+    3. Why can a getter that returns a mutable `List` break encapsulation, and what does `List.copyOf` protect?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Phân tích method | Chỉ ra input, return value, side effect, ngoại lệ và điều kiện hợp lệ của chữ ký/logic cụ thể. |
-    | Dự đoán pass-by-value | Giải thích đầu ra với primitive, `StringBuilder`, List và phép gán lại tham số. |
-    | Thiết kế hợp đồng | Viết hành vi cập nhật với validate trước khi sửa và kết quả `boolean`/`void` rõ nghĩa. |
-    | Bảo vệ dữ liệu nội bộ | Chọn defensive copy hoặc read-only API khi trả collection mutable. |
+    | Analyze methods | Identify inputs, return values, side effects, exceptions, and validity conditions for specific signatures and logic. |
+    | Predict pass-by-value behavior | Explain results involving primitives, `StringBuilder`, List, and parameter reassignment. |
+    | Design contracts | Write update operations that validate before modifying state and return meaningful `boolean`/`void` results. |
+    | Protect internal data | Choose defensive copies or read-only APIs when returning mutable collections. |
 - id: class-006
-  title: Thành viên chỉ đọc và thành viên có thể thay đổi
+  title: Read-Only and Mutable Members
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Thành viên chỉ đọc và thành viên có thể thay đổi**
+    **Read-Only and Mutable Members**
 
-    Phân biệt chỉ đọc đối với mã bên ngoài, field `final` không thể gán lại và đối tượng thật sự immutable. Qua `Product`, `Course` và `Inventory`, lựa chọn getter, setter kiểm tra, hành vi nghiệp vụ và defensive copy theo quy tắc thay đổi của dữ liệu.
+    Distinguish data that is read-only to external code, `final` fields that cannot be reassigned, and truly immutable objects. Through `Product`, `Course`, and `Inventory`, choose getters, validating setters, business operations, and defensive copies according to the rules for changing data.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Ý nghĩa chỉ đọc và final
+    ### What Read-Only and Final Mean
 
-    1. Vì sao `private final String sku` khác với `private int available` chỉ cho người ngoài xem qua getter?
-    2. Vì sao `final List` không làm danh sách bất biến và `getItems().clear()` vẫn sửa được nội dung?
-    3. Read-only API, `static final` constant, mutable object và immutable object khác nhau ra sao?
+    1. How does `private final String sku` differ from `private int available` when external code can only read the latter through a getter?
+    2. Why does `final List` not make the list immutable, and why can `getItems().clear()` still change its contents?
+    3. How do a read-only API, a `static final` constant, a mutable object, and an immutable object differ?
 
-    ### Thiết kế dữ liệu có thể đổi
+    ### Designing Mutable Data
 
-    1. Khi nào cần setter có validate và khi nào phải dùng hành vi `reserve()`/`restock()`?
-    2. `Collections.unmodifiableList`, `List.copyOf` và bản sao `ArrayList` khác nhau thế nào?
-    3. Vì sao record có thành phần kiểu List vẫn có thể cần defensive copy để bảo vệ dữ liệu?
+    1. When is a validating setter appropriate, and when should operations such as `reserve()`/`restock()` be used instead?
+    2. How do `Collections.unmodifiableList`, `List.copyOf`, and an `ArrayList` copy differ?
+    3. Why might a record containing a List component still need a defensive copy to protect its data?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Chọn quyền thay đổi | Đề xuất field, getter, setter/hành vi cho SKU, tên, giá và tồn kho. |
-    | Chỉ ra lỗ hổng | Giải thích đường sửa trạng thái nội bộ qua getter trả mutable List. |
-    | Tạo API trả dữ liệu an toàn | Áp dụng `List.copyOf` hoặc bản sao thích hợp và nêu giới hạn sao chép nông. |
-    | Kiểm chứng điều kiện | Dự đoán phản ứng với giá âm và đặt hàng vượt tồn kho. |
+    | Choose mutation permissions | Propose fields, getters, setters, or operations for SKUs, names, prices, and inventory. |
+    | Identify vulnerabilities | Explain how a getter returning a mutable List can allow internal state to be modified. |
+    | Create APIs that return safe data | Apply `List.copyOf` or an appropriate copy and explain the limitations of shallow copying. |
+    | Validate constraints | Predict responses to negative prices and orders exceeding available stock. |
 - id: class-007
-  title: Tham chiếu đến đối tượng hiện tại
+  title: Referencing the Current Object
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Tham chiếu đến đối tượng hiện tại**
+    **Referencing the Current Object**
 
-    Sử dụng `this` để nói đến chính đối tượng đang nhận lời gọi, phân biệt field với tham số bị che khuất, ủy quyền constructor và trả về instance trong method chaining. Bài còn giải thích giới hạn static context, inner class và nguy cơ công bố object từ constructor quá sớm.
+    Use `this` to refer to the object receiving a call, distinguish fields from shadowing parameters, delegate between constructors, and return an instance for method chaining. The lesson also explains the limitations of static contexts, inner classes, and the risk of exposing an object too early from its constructor.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Tham chiếu đối tượng hiện tại
+    ### Referencing the Current Object
 
-    1. Trong `this.username = username`, hai vế chỉ gì và vì sao `username = username` có thể giữ field ở `null`?
-    2. Vì sao `lan.completeLesson()` và `minh.completeLesson()` cho hai giá trị `this` khác nhau?
-    3. `return this`, `this == other` và phép gán alias cho biết điều gì về danh tính đối tượng?
+    1. In `this.username = username`, what does each side refer to, and why can `username = username` leave the field as `null`?
+    2. Why do `lan.completeLesson()` and `minh.completeLesson()` yield different values of `this`?
+    3. What do `return this`, `this == other`, and alias assignment reveal about object identity?
 
-    ### Constructor và ngữ cảnh đặc biệt
+    ### Constructors and Special Contexts
 
-    1. `this(...)` khác `this.field` và `super(...)` thế nào; Java 17/21 quy định vị trí của constructor call ra sao?
-    2. Vì sao không được dùng `this` trong static method nhưng static method vẫn xử lý được object truyền vào?
-    3. Đưa `this` ra listener ngay trong constructor có rủi ro gì, và `OuterClass.this` tham chiếu đến ai?
+    1. How does `this(...)` differ from `this.field` and `super(...)`, and what do Java 17/21 require about the position of a constructor call?
+    2. Why is `this` unavailable inside a static method even though a static method can process an object passed to it?
+    3. What risks arise when `this` is passed to a listener inside the constructor, and which object does `OuterClass.this` refer to?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Sửa shadowing | Sửa `value = value` thành `this.value = value` và dự đoán giá trị field. |
-    | Nối constructor | Viết overload với `this(...)` đúng quy tắc Java 17/21. |
-    | Theo dõi cùng instance | Giải thích method chaining, `return this` và kết quả so sánh tham chiếu. |
-    | Phân biệt các ngữ cảnh | Nhận diện static context, `OuterClass.this` và nguy cơ this-escape trong constructor. |
+    | Fix shadowing | Change `value = value` to `this.value = value` and predict the field's value. |
+    | Chain constructors | Write overloaded constructors using `this(...)` according to Java 17/21 rules. |
+    | Track the same instance | Explain method chaining, `return this`, and the results of reference comparisons. |
+    | Distinguish contexts | Recognize static contexts, `OuterClass.this`, and the risk of this-escape in constructors. |
 - id: class-008
-  title: Thiết kế lớp qua ví dụ tài khoản ngân hàng
+  title: Designing a Class with a Bank Account Example
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Thiết kế lớp qua ví dụ tài khoản ngân hàng**
+    **Designing a Class with a Bank Account Example**
 
-    Tổng hợp cấu trúc lớp, constructor, đóng gói, hợp đồng method và bất biến qua mô hình `BankAccount` đơn luồng. Người học thiết kế nạp/rút/chuyển tiền theo các kiểm tra trước khi cập nhật và phân biệt khả năng mô phỏng bằng RAM với giao dịch an toàn, bảo mật, lưu vết trong hệ thống ngân hàng thật.
+    Combine class structure, constructors, encapsulation, method contracts, and invariants in a single-threaded `BankAccount` model. Learners design deposits, withdrawals, and transfers with validation before updates, and distinguish an in-memory simulation from safe, secure, and auditable transactions in a real banking system.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Mô hình và bất biến
+    ### Model and Invariants
 
-    1. Vì sao accountNumber/holderName được khai báo `private final` còn `balanceVnd` là `private long`?
-    2. Constructor, `deposit()`, `withdraw()` và `transferTo()` cần kiểm tra những điều kiện nào trước khi sửa số dư?
-    3. Vì sao `transferTo()` được đọc field `private` của destination cùng lớp và phải tính số dư đích trước khi trừ số dư nguồn?
+    1. Why are accountNumber/holderName declared `private final` while `balanceVnd` is `private long`?
+    2. Which conditions must the constructor, `deposit()`, `withdraw()`, and `transferTo()` check before changing a balance?
+    3. Why can `transferTo()` read the `private` field of a destination belonging to the same class, and why must it calculate the destination balance before subtracting from the source balance?
 
-    ### Trường hợp biên và giới hạn
+    ### Edge Cases and Limitations
 
-    1. Khi gọi `withdraw` quá số dư, chuyển cho `this` hoặc cộng tràn `long`, kết quả và trạng thái phải thế nào?
-    2. Vì sao ví dụ dùng `long` VND, còn tiền lẻ/đa ngoại tệ thường cần BigDecimal và quy tắc làm tròn?
-    3. Tại sao hai phép gán field trong bộ nhớ chưa đủ đảm bảo transaction nguyên tử, an toàn đa luồng, phân quyền và lưu vết?
+    1. What should the result and state be when `withdraw` exceeds the balance, a transfer targets `this`, or a `long` addition overflows?
+    2. Why does the example use `long` for VND, while fractional amounts or multiple currencies often require BigDecimal and rounding rules?
+    3. Why are two in-memory field assignments insufficient to guarantee atomic transactions, thread safety, authorization, and audit trails?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Ánh xạ yêu cầu thành class | Thiết kế field, constructor, getter và các hành vi `deposit`, `withdraw`, `transferTo` có trách nhiệm rõ ràng. |
-    | Bảo vệ số dư | Kiểm tra tiền dương, đủ tiền, destination hợp lệ và overflow trước khi cập nhật. |
-    | Mô phỏng giao dịch | Tính số dư hai tài khoản sau các bước và kiểm tra tổng tiền không đổi qua chuyển nội bộ. |
-    | Kiểm chứng tình huống biên | Nêu ngoại lệ dự kiến và xác nhận không thay đổi số dư khi kiểm tra thất bại. |
-    | Nhận diện giới hạn kiến trúc | Giải thích khi cần transaction database, concurrency control, authorization và log giao dịch. |
+    | Map requirements to a class | Design fields, a constructor, getters, and `deposit`, `withdraw`, and `transferTo` operations with clear responsibilities. |
+    | Protect balances | Check for positive amounts, sufficient funds, a valid destination, and overflow before updating. |
+    | Simulate transactions | Calculate two account balances after each step and verify that internal transfers preserve the total amount. |
+    | Verify edge cases | Identify expected exceptions and confirm balances remain unchanged when validation fails. |
+    | Recognize architectural limitations | Explain when database transactions, concurrency control, authorization, and transaction logging are needed. |

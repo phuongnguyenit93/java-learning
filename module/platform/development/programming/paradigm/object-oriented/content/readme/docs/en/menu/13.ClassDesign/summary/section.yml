@@ -1,75 +1,75 @@
 version: 1
 type: LEARNING_ROADMAP
-title: THIẾT KẾ LỚP — LIÊN KẾT BÀI HỌC
-roadmapHeading: Mạch liên kết bài học
+title: CLASS DESIGN — LESSON CONNECTIONS
+roadmapHeading: How the Lessons Connect
 roadmap:
 - id: class-design-001
   order: 1
-  title: Xác định trách nhiệm của từng lớp
-  description: Biết cách phân vai theo SRP, Information Expert và use case mượn sách; xác định nơi giữ LoanPolicy, Loan, LoanService, repository, rồi kiểm tra cộng tác bằng CRC Card.
+  title: Identifying Each Class's Responsibilities
+  description: Assign responsibilities using SRP, Information Expert, and a book-borrowing use case; determine where LoanPolicy, Loan, LoanService, and the repository belong, then examine collaboration using CRC Cards.
   transition:
     to: class-design-002
-    description: '**Từ xác định owner của từng quy tắc → đánh giá xem hành vi trong cùng class có gắn kết**'
+    description: '**From identifying the owner of each rule → evaluating whether behaviors within a class are cohesive**'
 - id: class-design-002
   order: 2
-  title: Tính gắn kết bên trong lớp
-  description: Dùng cohesion, nhóm field/method và lý do thay đổi để phân tích lớp; tách Cart, repository, sender và checkout coordinator khi các trách nhiệm thực sự độc lập.
+  title: Cohesion Within a Class
+  description: Analyze classes through cohesion, field/method groups, and reasons for change; separate Cart, repository, sender, and checkout coordinator when their responsibilities are genuinely independent.
   transition:
     to: class-design-003
-    description: '**Từ trách nhiệm nội bộ → kiểm tra mức phụ thuộc giữa các lớp cộng tác**'
+    description: '**From internal responsibilities → examining dependencies among collaborating classes**'
 - id: class-design-003
   order: 3
-  title: Mức phụ thuộc giữa các lớp
-  description: Đánh giá phụ thuộc mã nguồn/runtime/change; dùng PaymentGateway, ReceiptSender và DI ở biên biến động, đồng thời xét lỗi thanh toán và gửi biên nhận.
+  title: Coupling Between Classes
+  description: Evaluate source-code, runtime, and change dependencies; use PaymentGateway, ReceiptSender, and DI at boundaries of change while considering payment and receipt-delivery failures.
   transition:
     to: class-design-004
-    description: '**Từ coupling giữa cộng tác viên → đặt đúng biên giữa miền và hạ tầng**'
+    description: '**From coupling among collaborators → placing the boundary between domain and infrastructure appropriately**'
 - id: class-design-004
   order: 4
-  title: Tách dữ liệu, nghiệp vụ và tương tác bên ngoài
-  description: Phân chia DTO, OrderLine/Order, pricing, use case, repository/gateway; giữ invariant trong miền và xử lý side effect tại adapter.
+  title: Separating Data, Business Logic, and External Interactions
+  description: Separate DTOs, OrderLine/Order, pricing, use cases, and repository/gateway; preserve invariants in the domain and handle side effects in adapters.
   transition:
     to: class-design-005
-    description: '**Từ tách domain và I/O → biểu đạt ranh giới bằng tên class và API dễ hiểu**'
+    description: '**From separating domain and I/O → expressing boundaries through clear class and API names**'
 - id: class-design-005
   order: 5
-  title: Đặt tên lớp, thuộc tính và phương thức
-  description: Dùng naming convention Java, tên mang đơn vị và method thể hiện query/command; xét khả năng tương thích khi rename framework/public API.
+  title: Naming Classes, Fields, and Methods
+  description: Apply Java naming conventions, include units in names, and use method names that express queries or commands; consider compatibility when renaming framework-facing or public APIs.
   transition:
     to: class-design-006
-    description: '**Từ tên API nói đúng trách nhiệm → phân loại đối tượng theo danh tính, giá trị và hành vi phối hợp**'
+    description: '**From API names that express responsibilities → classifying objects by identity, value, and coordinating behavior**'
 - id: class-design-006
   order: 6
-  title: Đối tượng thực thể, đối tượng giá trị và dịch vụ
-  description: Nhận diện Account theo UUID, Money theo giá trị và TransferService theo phối hợp hai tài khoản, phân biệt miền với annotation JPA/Spring.
+  title: Entities, Value Objects, and Services
+  description: Identify Account by UUID, Money by value, and TransferService by its coordination of two accounts; distinguish domain roles from JPA/Spring annotations.
   transition:
     to: class-design-007
-    description: '**Từ ba vai trò entity/value/service → quyết định hành vi nào ở gần dữ liệu cần bảo vệ**'
+    description: '**From the three entity/value/service roles → deciding which behavior belongs near the data it must protect**'
 - id: class-design-007
   order: 7
-  title: Mô hình giàu hành vi và mô hình chỉ chứa dữ liệu
-  description: So sánh Order có addItem/confirm với OrderData chứa setter; chọn DTO/projection khi không có state transition phức tạp.
+  title: Rich Domain Models and Data-Only Models
+  description: Compare Order with addItem/confirm against OrderData with setters; choose DTOs/projections when complex state transitions are absent.
   transition:
     to: class-design-008
-    description: '**Từ lựa chọn mô hình và nơi giữ invariant → thiết kế rõ ý định đọc và thao tác thay đổi trạng thái**'
+    description: '**From choosing a model and locating invariants → clearly expressing the intent to read or change state**'
 - id: class-design-008
   order: 8
-  title: Tách truy vấn khỏi thao tác thay đổi trạng thái
-  description: Tách query khỏi command theo CQS; vẫn kiểm tra–ghi nguyên tử và xét idempotency khi command có retry.
+  title: Separating Queries from State-Changing Commands
+  description: Separate queries from commands under CQS; still ensure atomic validation and writes, and consider idempotency when commands are retried.
   transition:
     to: class-design-009
-    description: '**Từ API đọc/ghi rõ ràng → hạn chế caller phụ thuộc cấu trúc bên trong của các đối tượng khác**'
+    description: '**From clear read/write APIs → limiting callers’ dependence on other objects’ internal structure**'
 - id: class-design-009
   order: 9
-  title: Giới hạn việc truy cập sâu vào chuỗi đối tượng
-  description: Áp dụng Law of Demeter và Tell, don't ask; Loan yêu cầu tính phí qua cộng tác viên gần thay vì service tự đi qua Member/Plan.
+  title: Limiting Deep Object-Chain Access
+  description: Apply the Law of Demeter and Tell, don't ask; have Loan request fee calculations through nearby collaborators instead of having a service navigate Member/Plan itself.
   transition: null
 comparisonMarkdown: |-
-  ## 2. Bảng đối chiếu các bài học
+  ## 2. Lesson Comparison Table
 
-  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | Criterion | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 | Lesson 6 | Lesson 7 | Lesson 8 | Lesson 9 |
   | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-  | Tên | Xác định trách nhiệm của từng lớp | Tính gắn kết bên trong lớp | Mức phụ thuộc giữa các lớp | Tách dữ liệu, nghiệp vụ và tương tác bên ngoài | Đặt tên lớp, thuộc tính và phương thức | Đối tượng thực thể, đối tượng giá trị và dịch vụ | Mô hình giàu hành vi và mô hình chỉ chứa dữ liệu | Tách truy vấn khỏi thao tác thay đổi trạng thái | Giới hạn việc truy cập sâu vào chuỗi đối tượng |
-  | Vấn đề cần hiểu | Ai sở hữu từng invariant, policy và workflow? | Các field/method có phục vụ cùng trách nhiệm không? | Chi tiết thay đổi ở class khác lan truyền đến đâu? | Domain, use case và I/O được phân ranh thế nào? | Tên nào phản ánh nghĩa, đơn vị và side effect? | Phân biệt đối tượng bằng identity, value hay behavior? | Quy tắc nên ở entity hay ở service/data class? | Method đang đọc hay cập nhật trạng thái? | Caller có biết quá sâu cấu trúc object không? |
-  | Giá trị đối với OOP/module | Giữ một owner cho mỗi quy tắc | Gom invariant và thay đổi có liên quan | Thay provider/test không kéo sửa business logic | Cô lập HTTP/DB/email khỏi domain | Giảm hiểu sai API và lỗi rename/mapping | Đặt equality và domain rules đúng chủ thể | Bảo vệ chuyển trạng thái, tránh setter tùy tiện | Chống side effect ẩn và race/retry | Giảm coupling khi thay cấu trúc sâu |
-  | Tư duy hình thành | Đi từ use case tới trách nhiệm | Đánh giá ngữ nghĩa nội bộ thay vì kích cỡ | Hướng vào hợp đồng ổn định | Thiết kế theo ranh giới thay đổi | Đặt tên như một lời cam kết | Phân biệt danh tính với giá trị | Chọn mức rich/anemic có căn cứ | Đọc và ghi là hai ý định khác nhau | Yêu cầu hành vi từ cộng tác viên gần |
+  | Name | Identifying Each Class's Responsibilities | Cohesion Within a Class | Coupling Between Classes | Separating Data, Business Logic, and External Interactions | Naming Classes, Fields, and Methods | Entities, Value Objects, and Services | Rich Domain Models and Data-Only Models | Separating Queries from State-Changing Commands | Limiting Deep Object-Chain Access |
+  | Questions to Understand | Who owns each invariant, policy, and workflow? | Do the fields/methods serve the same responsibility? | How far do changes to details in other classes propagate? | How are the domain, use cases, and I/O separated? | Which names communicate meaning, units, and side effects? | Is an object distinguished by identity, value, or behavior? | Should rules live in an entity or a service/data class? | Is a method reading or updating state? | Does the caller know too much about an object's structure? |
+  | Value for OOP/the Module | Keep one owner for each rule | Group related invariants and reasons for change | Change providers or tests without modifying business logic | Isolate HTTP/DB/email from the domain | Reduce API misunderstandings and rename/mapping errors | Place equality and domain rules in the right objects | Protect state transitions and avoid unrestricted setters | Prevent hidden side effects and race/retry issues | Reduce coupling when deep structures change |
+  | Mental Model Developed | Move from use cases to responsibilities | Evaluate internal meaning rather than size | Depend on stable contracts | Design around boundaries of change | Treat names as commitments | Distinguish identity from value | Choose rich or anemic models based on evidence | Reading and writing express different intentions | Ask nearby collaborators to perform behavior |

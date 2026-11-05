@@ -1,35 +1,35 @@
 <a id="back-to-top"></a>
 
-# Kế thừa
+# Inheritance
 
 ## Menu
-- [Lớp cha, lớp con và quan hệ kế thừa](#inheritance-001)
-- [Kế thừa trạng thái và hành vi](#inheritance-002)
-- [Mở rộng hành vi của lớp cha](#inheritance-003)
-- [Ghi đè phương thức và gọi hành vi lớp cha](#inheritance-004)
-- [Khả năng truy cập thành viên được kế thừa](#inheritance-005)
-- [Khởi tạo lớp con và chuỗi khởi tạo lớp cha](#inheritance-006)
-- [Thành viên không thể ghi đè và lớp không thể kế thừa](#inheritance-007)
-- [Kế thừa đơn, kế thừa đa và xung đột hành vi](#inheritance-008)
-- [Mixin, trait và tái sử dụng hành vi tùy ngôn ngữ](#inheritance-009)
-- [Giới hạn và chi phí của cây kế thừa sâu](#inheritance-010)
+- [Superclasses, subclasses, and inheritance relationships](#inheritance-001)
+- [Inheriting state and behavior](#inheritance-002)
+- [Extending superclass behavior](#inheritance-003)
+- [Overriding methods and invoking superclass behavior](#inheritance-004)
+- [Accessibility of inherited members](#inheritance-005)
+- [Subclass initialization and the superclass constructor chain](#inheritance-006)
+- [Non-overridable members and non-extendable classes](#inheritance-007)
+- [Single inheritance, multiple inheritance, and behavior conflicts](#inheritance-008)
+- [Mixins, traits, and language-specific behavior reuse](#inheritance-009)
+- [Limitations and costs of deep inheritance hierarchies](#inheritance-010)
 
-## <a id="inheritance-001">Lớp cha, lớp con và quan hệ kế thừa</a>
+## <a id="inheritance-001">Superclasses, subclasses, and inheritance relationships</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Lớp cha, lớp con và quan hệ kế thừa trong Java OOP
+# Superclasses, Subclasses, and Inheritance in Java OOP
 
-**Kế thừa (inheritance)** cho phép một lớp mới **mở rộng hoặc chuyên biệt hóa** một lớp đã có. Trong quan hệ này, lớp được kế thừa gọi là **lớp cha** (*superclass/parent class*), lớp kế thừa gọi là **lớp con** (*subclass/child class*). Java dùng từ khóa `extends` để khai báo quan hệ kế thừa giữa hai lớp.
+**Inheritance** allows a new class to **extend or specialize** an existing class. The inherited-from class is the **superclass** (*superclass/parent class*), while the inheriting class is the **subclass** (*subclass/child class*). Java uses `extends` to declare inheritance between two classes.
 
-Kế thừa hữu ích khi các đối tượng thuộc những loại cụ thể khác nhau nhưng có **bản chất chung** và tuân thủ cùng một hợp đồng hành vi. Ví dụ, nhân viên hưởng lương cố định và nhân viên hưởng lương theo giờ đều là **nhân viên**, có mã, tên và có thể tính lương, nhưng công thức tính lương khác nhau.
+Inheritance is useful when objects of different concrete types share a **common nature** and follow the same behavioral contract. For example, salaried and hourly employees are both **employees** with IDs, names, and payable wages, but their pay calculations differ.
 
-Điểm quyết định không chỉ là giảm mã lặp. Kế thừa thiết lập một quan hệ **is-a**: một đối tượng thuộc lớp con phải có thể được sử dụng ở nơi chương trình kỳ vọng đối tượng thuộc lớp cha mà vẫn tôn trọng hợp đồng của lớp cha.
+The decisive benefit is not merely reducing repeated code. Inheritance establishes an **is-a** relationship: a subclass object should be usable wherever a superclass object is expected without violating the superclass contract.
 
-## 1. Nhận diện lớp cha và lớp con
+## 1. Identifying Superclasses and Subclasses
 
-Ví dụ ngắn:
+A short example:
 
 ~~~java
 class Vehicle {
@@ -55,15 +55,15 @@ vehicle.start();       // Hợp lệ
 // vehicle.openTrunk(); // Không biên dịch: Vehicle không khai báo phương thức này
 ~~~
 
-Ở đây:
+Here:
 
-- `Vehicle` là **superclass** của `Car`.
-- `Car` là **subclass** của `Vehicle`.
-- `Car extends Vehicle` mang ý nghĩa “`Car` là một loại `Vehicle`”.
-- `Car` có thể dùng hành vi được kế thừa và tự bổ sung hành vi riêng.
-- Biến tham chiếu `Vehicle` có thể trỏ đến một instance `Car`. Compiler quyết định **phương thức được phép gọi** dựa vào kiểu khai báo của biến; với instance method được override, runtime quyết định **triển khai nào chạy** theo kiểu thực tế của đối tượng.
+- `Vehicle` is the **superclass** of `Car`.
+- `Car` is the **subclass** of `Vehicle`.
+- `Car extends Vehicle` means that “`Car` is a kind of `Vehicle`.”
+- `Car` can reuse inherited behavior while adding behavior of its own.
+- A `Vehicle` reference can point to a `Car` instance. The compiler determines **which methods can be called** from the variable's declared type; for overridden instance methods, runtime dispatch chooses **which implementation executes** according to the object's actual type.
 
-Sơ đồ quan hệ giữa các kiểu:
+Diagram of the type relationship:
 
 ~~~mermaid
 classDiagram
@@ -76,18 +76,18 @@ classDiagram
     Vehicle <|-- Car
 ~~~
 
-Mũi tên tam giác rỗng chỉ từ **lớp con tới lớp cha**. Nó biểu diễn quan hệ kế thừa giữa *kiểu*, không phải hai đối tượng riêng biệt cùng tồn tại mỗi khi gọi `new Car()`.
+The hollow triangular arrow points from the **subclass to the superclass**. It represents inheritance between *types*, not the existence of two separate objects every time `new Car()` is evaluated.
 
-## 2. Ví dụ thực tế: tính lương với hai loại nhân viên
+## 2. Practical Example: Calculating Pay for Two Employee Types
 
-Yêu cầu:
+Requirements:
 
-- Nhân viên nào cũng có mã định danh và họ tên.
-- Nhân viên **hưởng lương cố định** có lương tháng.
-- Nhân viên **hưởng lương theo giờ** có đơn giá giờ và số giờ làm.
-- Hệ thống in phiếu lương mà không phải liên tục viết `if` kiểm tra nhân viên thuộc loại nào.
+- Every employee has an identifier and full name.
+- A **salaried** employee receives a fixed monthly salary.
+- An **hourly** employee has an hourly rate and number of hours worked.
+- The system prints pay slips without repeatedly checking employee types with `if` statements.
 
-Thiết kế:
+Design:
 
 ~~~mermaid
 classDiagram
@@ -116,11 +116,11 @@ classDiagram
     Employee <|-- HourlyEmployee
 ~~~
 
-Trong bài này, `Employee` là **lớp cha trừu tượng** vì một “nhân viên chung chung” chưa có công thức tính lương cụ thể. Hai lớp con hoàn thiện phần đó.
+Here, `Employee` is an **abstract superclass** because a generic employee has no concrete pay formula. The two subclasses provide their own implementations.
 
-### Mã Java chạy độc lập
+### Standalone Runnable Java Example
 
-Lưu toàn bộ đoạn sau vào `InheritanceDemo.java` (Java 11+):
+Save all the following code as `InheritanceDemo.java` (Java 11+):
 
 ~~~java
 import java.math.BigDecimal;
@@ -245,14 +245,14 @@ public class InheritanceDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac InheritanceDemo.java
 java InheritanceDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Toàn thời gian | E001 | An | 15000000
@@ -260,28 +260,28 @@ Theo giờ | E002 | Bình | 6000000
 Tổng lương: 21000000
 ~~~
 
-Để tập trung vào kế thừa, chương trình minh họa chỉ tính lương cơ bản, chưa tính thuế, bảo hiểm, làm thêm giờ, kỳ lương hoặc tiền tệ đa quốc gia. Trong hệ thống thực, các quy tắc đó cần được mô hình hóa và xác thực theo nghiệp vụ.
+To focus on inheritance, this example calculates only basic pay, excluding tax, insurance, overtime, pay periods, and multiple currencies. Real systems must model and validate those rules according to domain requirements.
 
-### Phân tích trách nhiệm
+### Responsibility Breakdown
 
-| Thành phần | Điều gì được đặt ở đây? | Vì sao? |
+| Component | What belongs here? | Why? |
 | --- | --- | --- |
-| `Employee` | `id`, `fullName`, kiểm tra dữ liệu chung, `printPayslip()` | Mọi nhân viên đều cần các dữ liệu/hành vi này |
-| `Employee.monthlyPay()` | Khai báo phương thức trừu tượng | Mọi nhân viên phải tính được lương, công thức chưa thống nhất |
-| `SalariedEmployee` | `fixedSalary`, cách tính lương cố định | Chỉ nhân viên hưởng lương cố định cần |
-| `HourlyEmployee` | `hourlyRate`, `hoursWorked`, phép nhân | Chỉ nhân viên hưởng lương theo giờ cần |
-| `List<Employee>` | Chứa các instance thuộc nhiều lớp con | Dùng chung API của lớp cha và đa hình |
+| `Employee` | `id`, `fullName`, shared validation, `printPayslip()` | All employees need this data and behavior |
+| `Employee.monthlyPay()` | Abstract method declaration | Every employee must have a way to calculate pay, but no single formula applies |
+| `SalariedEmployee` | `fixedSalary`, fixed-pay calculation | Relevant only to salaried employees |
+| `HourlyEmployee` | `hourlyRate`, `hoursWorked`, multiplication | Relevant only to hourly employees |
+| `List<Employee>` | Instances of multiple subclasses | Reuses the superclass API through polymorphism |
 
-Không có lệnh `new Employee()`: lớp `Employee` đang được khai báo `abstract` nên **không thể khởi tạo trực tiếp**. Nếu một lớp cha có hành vi đầy đủ và không khai báo `abstract`, nó có thể là lớp cụ thể và vẫn có lớp con.
+There is no `new Employee()` call: since `Employee` is declared `abstract`, it **cannot be instantiated directly**. A superclass that provides complete behavior without being `abstract` can be concrete and still have subclasses.
 
-## 3. Một đối tượng lớp con có gì từ lớp cha?
+## 3. What Does a Subclass Object Inherit?
 
-Một instance `HourlyEmployee` có trạng thái được khai báo bởi **cả chuỗi lớp cha và lớp con**:
+An `HourlyEmployee` instance contains state declared throughout **both its superclass and subclass hierarchy**:
 
-- Phần từ `Employee`: `id`, `fullName`.
-- Phần riêng của `HourlyEmployee`: `hourlyRate`, `hoursWorked`.
-- Các phương thức được kế thừa/công khai như `getId()`, `getFullName()`, `printPayslip()`.
-- Các phương thức được override như `role()`, `monthlyPay()`.
+- The `Employee` portion: `id`, `fullName`.
+- The `HourlyEmployee` portion: `hourlyRate`, `hoursWorked`.
+- Inherited/exposed methods such as `getId()`, `getFullName()`, and `printPayslip()`.
+- Overridden methods such as `role()` and `monthlyPay()`.
 
 ~~~mermaid
 flowchart TB
@@ -291,28 +291,28 @@ flowchart TB
     R --> C["Hành vi được chọn\nmonthlyPay() của HourlyEmployee"]
 ~~~
 
-Đây là sơ đồ **khái niệm**, không phải bản đồ vị trí bộ nhớ của JVM. Tạo một đối tượng lớp con không đồng nghĩa với tạo hai đối tượng độc lập (một `Employee` và một `HourlyEmployee`).
+This is a **conceptual** diagram, not a JVM memory-layout map. Creating a subclass object does not create two independent objects (an `Employee` and an `HourlyEmployee`).
 
-Field `private` của lớp cha **vẫn tồn tại trong trạng thái của instance**, nhưng lớp con không được truy cập trực tiếp bằng tên field. Thay vì `this.id` trong `HourlyEmployee`, ta sử dụng getter `getId()` của lớp cha.
+The superclass's `private` fields **still exist in the instance's state**, but subclass code cannot access them directly by field name. Instead of `this.id` in `HourlyEmployee`, use the superclass getter `getId()`.
 
-### Tại sao `private` vẫn có ích trong kế thừa?
+### Why Is `private` Still Useful with Inheritance?
 
-Nếu cho lớp con tùy ý gán `id`, một subclass có thể làm sai quy tắc mã nhân viên. `Employee` sở hữu invariant và cách kiểm tra dữ liệu chung. Việc để `id` là `private final` và chỉ công khai getter giúp lớp cha giữ quyền kiểm soát.
+If subclasses could freely assign `id`, they could violate employee-ID rules. `Employee` owns the invariant and shared validation. Declaring `id` as `private final` and exposing only a getter lets the superclass retain control.
 
-Quyền truy cập thường gặp:
+Common access levels:
 
-| Mức truy cập ở thành viên lớp cha | Trong lớp con |
+| Access level of a superclass member | From a subclass |
 | --- | --- |
-| `public` | Truy cập qua quy tắc public |
-| `protected` | Có thể truy cập từ subclass; ngoài package có quy tắc giới hạn về biểu thức nhận |
-| Không ghi modifier (package-private) | Chỉ có thể truy cập trực tiếp nếu ở cùng package |
-| `private` | Không thể truy cập trực tiếp từ mã của subclass |
+| `public` | Accessible according to public access rules |
+| `protected` | Accessible to subclasses; outside the package, qualifier expressions have additional restrictions |
+| No modifier (package-private) | Directly accessible only from the same package |
+| `private` | Not directly accessible from subclass code |
 
-`protected` không phải “public dành cho lớp con trong mọi hoàn cảnh”; Java áp dụng quy tắc quyền truy cập tương đối cụ thể, nhất là khi subclass ở package khác. Thường nên giữ field `private` và cung cấp phương thức có chủ đích thay vì công khai toàn bộ trạng thái cho cây kế thừa.
+`protected` does not mean “public to all subclass code under every circumstance.” Java applies specific access rules, particularly across packages. Prefer keeping fields `private` and exposing intentional operations over sharing all state with the hierarchy.
 
-## 4. Constructor lớp con khởi tạo phần trạng thái của cha
+## 4. Subclass Constructors Initialize Superclass State
 
-Constructor không phải phương thức kế thừa. Khi tạo `HourlyEmployee`, lời gọi `super(id, name)` chọn constructor `Employee` để thiết lập dữ liệu chung, rồi constructor con kiểm tra `hourlyRate` và `hoursWorked`:
+Constructors are not inherited methods. When creating `HourlyEmployee`, `super(id, name)` selects an `Employee` constructor to initialize shared data; then the subclass constructor validates `hourlyRate` and `hoursWorked`:
 
 ~~~java
 HourlyEmployee(String id, String name,
@@ -322,15 +322,15 @@ HourlyEmployee(String id, String name,
 }
 ~~~
 
-Với Java 11, lời gọi `super(...)`/`this(...)` tường minh phải đứng đầu constructor. Nếu bỏ `super(...)`, compiler thử gọi `super()`; điều này chỉ hợp lệ nếu có constructor cha không tham số và truy cập được. `new HourlyEmployee(...)` vẫn tạo **một đối tượng duy nhất**, không tạo một `Employee` riêng.
+In Java 11, an explicit `super(...)`/`this(...)` invocation must appear first in a constructor. Without `super(...)`, the compiler attempts `super()`, which is valid only if an accessible no-argument superclass constructor exists. `new HourlyEmployee(...)` still creates **one object**, not a separate `Employee` instance.
 
-Cần tránh gọi một phương thức có thể bị override từ constructor cha: dynamic dispatch có thể dẫn tới phương thức con khi các trường của con còn ở giá trị mặc định. Thứ tự static initializer, field initializer, instance block và constructor được thực hành chi tiết ở bài **Khởi tạo lớp con và chuỗi khởi tạo lớp cha**.
+Avoid calling overridable methods from superclass constructors: dynamic dispatch may reach subclass methods while subclass fields still hold their default values. Static initializers, field initializers, instance blocks, and constructor order are examined in **Subclass initialization and the superclass constructor chain**.
 
-## 5. Ghi đè phương thức (`@Override`) làm thay đổi hành vi
+## 5. Method Overriding (`@Override`) Changes Behavior
 
-Kế thừa không có nghĩa “bắt buộc dùng nguyên mọi hành vi cha”. Lớp con có thể **ghi đè (override)** phương thức instance có thể được override để cung cấp hành vi chuyên biệt.
+Inheritance does not mean “subclasses must keep every superclass behavior unchanged.” A subclass can **override** an overridable instance method to provide specialized behavior.
 
-Trong ví dụ tính lương:
+In the payroll example:
 
 ~~~java
 @Override
@@ -340,9 +340,9 @@ public BigDecimal monthlyPay() {
 }
 ~~~
 
-Hai lớp con có cùng **chữ ký phương thức** và kiểu trả về tương thích với hợp đồng `Employee.monthlyPay()`, nhưng thuật toán khác nhau.
+The two subclasses have the same **method signature** and compatible return types for the `Employee.monthlyPay()` contract, but use different algorithms.
 
-Khi viết:
+When writing:
 
 ~~~java
 Employee employee = new HourlyEmployee(
@@ -351,9 +351,9 @@ Employee employee = new HourlyEmployee(
 System.out.println(employee.monthlyPay()); // 2000000
 ~~~
 
-Dù `employee` được khai báo theo kiểu `Employee`, Java gọi `HourlyEmployee.monthlyPay()` do **kiểu thực tế** của đối tượng là `HourlyEmployee`. Đây là **đa hình động (runtime polymorphism)** đối với phương thức instance được override.
+Although `employee` is declared as `Employee`, Java invokes `HourlyEmployee.monthlyPay()` because the object's **actual runtime type** is `HourlyEmployee`. This is **runtime polymorphism** for overridden instance methods.
 
-Một lớp con cũng có thể gọi lại phiên bản của lớp cha bằng `super.method()` khi phương thức cha có implementation:
+A subclass can also invoke its superclass implementation through `super.method()` when the superclass provides one:
 
 ~~~java
 class Person {
@@ -375,9 +375,9 @@ Person p = new Student();
 System.out.println(p.describe()); // Một người đang học
 ~~~
 
-Ở đây `super.describe()` là lời gọi trực tiếp phương thức triển khai ở lớp cha từ mã của subclass; nó khác với `super(...)` là lời gọi constructor cha.
+Here, `super.describe()` directly invokes the superclass method implementation from subclass code; it differs from `super(...)`, which invokes a superclass constructor.
 
-### `@Override` giúp phát hiện sai sót
+### `@Override` Helps Detect Mistakes
 
 ~~~java
 class Base {
@@ -390,20 +390,20 @@ class Derived extends Base {
 }
 ~~~
 
-Annotation `@Override` khiến compiler báo lỗi thay vì âm thầm tạo một phương thức mới vì sai chính tả. Nên dùng khi chủ đích là override.
+The `@Override` annotation makes the compiler report misspellings instead of silently defining a new method. Use it whenever overriding is intended.
 
-Quy tắc cơ bản khi override:
+Basic overriding rules:
 
-- Tên và danh sách tham số phải phù hợp với phương thức được override.
-- Kiểu trả về phải tương thích (có thể covariant đối với kiểu tham chiếu).
-- Không giảm mức độ truy cập; ví dụ không override phương thức `public` thành `protected`.
-- Quy định về checked exception không được mở rộng tùy ý so với phương thức cha.
-- Phương thức `final` không thể override.
-- Phương thức `private` của lớp cha không được subclass override vì nó không được kế thừa theo nghĩa đó; phương thức `static` cùng chữ ký là **hiding**, không phải override đa hình.
+- The name and parameter list must match an overridable method.
+- The return type must be compatible (possibly covariant for reference types).
+- Access visibility cannot be reduced; for example, a `public` method cannot be overridden as `protected`.
+- Checked exception declarations cannot be arbitrarily broadened relative to the superclass method.
+- A `final` method cannot be overridden.
+- A superclass `private` method cannot be overridden by a subclass because it is not inherited in that sense; a same-signature `static` method is **hidden**, not polymorphically overridden.
 
-## 6. Kế thừa + đa hình: cùng API, nhiều cách thực hiện
+## 6. Inheritance and Polymorphism: One API, Many Implementations
 
-Trong vòng lặp:
+In this loop:
 
 ~~~java
 for (Employee employee : staff) {
@@ -411,9 +411,9 @@ for (Employee employee : staff) {
 }
 ~~~
 
-Đoạn code không kiểm tra nhân viên là `SalariedEmployee` hay `HourlyEmployee`, nhưng kết quả vẫn đúng cho từng loại.
+The code never checks whether an employee is a `SalariedEmployee` or `HourlyEmployee`, yet produces the correct result for each type.
 
-Luồng gọi được thể hiện bằng sequence diagram:
+The call sequence is shown in this sequence diagram:
 
 ~~~mermaid
 sequenceDiagram
@@ -430,13 +430,13 @@ sequenceDiagram
     E-->>App: đã in phiếu
 ~~~
 
-Trong sơ đồ, `Employee (API)` chỉ **vai trò đoạn mã được kế thừa**; không có một object `Employee` riêng biệt được tạo cùng với `HourlyEmployee`. Khi `printPayslip()` gọi `role()` và `monthlyPay()`, Java thực hiện dispatch tới override của instance cụ thể.
+In the diagram, `Employee (API)` represents only the **role of inherited code**; no separate `Employee` object is created alongside `HourlyEmployee`. When `printPayslip()` invokes `role()` and `monthlyPay()`, Java dispatches to the concrete instance's overrides.
 
-Ưu điểm: nếu thêm `ContractEmployee` với quy tắc tính lương mới, vòng lặp tổng hợp lương có thể không cần sửa, miễn lớp mới tuân thủ đúng hợp đồng `Employee`. Đây là một ví dụ thực tế về khả năng mở rộng dựa trên đa hình.
+Benefit: adding a `ContractEmployee` with a new pay calculation need not change the payroll loop as long as the new class honors the `Employee` contract. This is a practical example of extensibility through polymorphism.
 
-## 7. Dùng tham chiếu lớp cha mà không ép kiểu tùy tiện
+## 7. Using Superclass References Without Arbitrary Casts
 
-**Upcasting** là sử dụng biến kiểu cha cho một đối tượng con; Java thực hiện ngầm định:
+**Upcasting** means using a superclass-typed variable for a subclass object; Java performs it implicitly:
 
 ~~~java
 Employee employee = new HourlyEmployee(
@@ -444,7 +444,7 @@ Employee employee = new HourlyEmployee(
 System.out.println(employee.monthlyPay()); // 9000000
 ~~~
 
-Gọi `monthlyPay()` hợp lệ vì nó thuộc API `Employee`, rồi Java chọn implementation của `HourlyEmployee`. Ngược lại, nếu muốn gọi một phương thức **chỉ có ở lớp con**, cần kiểm tra kiểu runtime trước khi downcast. Ép một `SalariedEmployee` sang `HourlyEmployee` sẽ gây `ClassCastException`.
+Calling `monthlyPay()` is valid because it belongs to the `Employee` API, and Java then selects the `HourlyEmployee` implementation. Conversely, calling a method **available only on the subclass** requires checking the runtime type before downcasting. Casting a `SalariedEmployee` to `HourlyEmployee` throws `ClassCastException`.
 
 ~~~java
 if (employee instanceof HourlyEmployee) {
@@ -453,15 +453,15 @@ if (employee instanceof HourlyEmployee) {
 }
 ~~~
 
-Nên dùng đa hình qua `Employee` thay vì liên tục hỏi `instanceof` khi nghiệp vụ chỉ cần hợp đồng chung. Lưu ý `List<HourlyEmployee>` không tự là `List<Employee>`: generic `List<T>` của Java **không covariant**. Để đọc các phần tử con qua API nhận kiểu cha, có thể sử dụng `List<? extends Employee>` với giới hạn ghi phù hợp.
+Prefer polymorphism through `Employee` instead of repeated `instanceof` checks when the business operation needs only the common contract. Note that `List<HourlyEmployee>` is not a subtype of `List<Employee>`: Java's generic `List<T>` is **invariant**. To read subtype elements through a supertype-oriented API, `List<? extends Employee>` may be used with appropriate write restrictions.
 
-## 8. Quan hệ “is-a” khác “has-a”
+## 8. The “is-a” Relationship Versus “has-a”
 
-Không phải cứ hai lớp cùng có dữ liệu hoặc dùng đến nhau thì nên dùng `extends`.
+Two classes should not be connected with `extends` merely because they share data or use each other.
 
-**Is-a (kế thừa):** một `ElectricCar` là một `Vehicle`. Khi hàm nhận `Vehicle`, nó có thể nhận `ElectricCar` nếu xe điện đáp ứng đúng những điều mà hợp đồng `Vehicle` cam kết.
+**Is-a (inheritance):** an `ElectricCar` is a `Vehicle`. Code accepting `Vehicle` may accept `ElectricCar` if the electric car satisfies every promise in the `Vehicle` contract.
 
-**Has-a (thành phần):** một `Car` có một `Engine`. Xe hơi **không phải** là động cơ, nên viết `class Car extends Engine` chỉ để dùng lại `start()` là quan hệ sai.
+**Has-a (composition):** a `Car` has an `Engine`. A car **is not** an engine, so `class Car extends Engine` is the wrong relationship even if the goal is to reuse `start()`.
 
 ~~~java
 class Engine {
@@ -489,37 +489,37 @@ Car car = new Car(new Engine());
 car.drive();
 ~~~
 
-Đây là **composition**: `Car` giữ tham chiếu đến `Engine` và ủy quyền một phần công việc. Nếu sau này đổi sang một loại động cơ khác, cấu trúc thành phần có thể linh hoạt hơn so với đưa mọi biến thể vào một cây kế thừa.
+This is **composition**: `Car` holds a reference to `Engine` and delegates some work. Switching to another engine type later may be more flexible than placing every variation in an inheritance hierarchy.
 
-| Quan hệ | Câu hỏi kiểm tra | Java thường dùng |
+| Relationship | Question to ask | Typical Java approach |
 | --- | --- | --- |
-| **Is-a** | “X là một loại Y” và thay X vào vị trí Y vẫn hợp lệ? | `class X extends Y` hoặc `implements` hợp đồng kiểu phù hợp |
-| **Has-a** | “X có/sử dụng Y để làm việc”? | Field tham chiếu, constructor injection, composition |
-| **Uses-a** | “X chỉ dùng Y trong một thao tác”? | Tham số phương thức hoặc dependency ngắn hạn |
+| **Is-a** | “Is X a kind of Y, and can X safely substitute for Y?” | `class X extends Y` or `implements` an appropriate type contract |
+| **Has-a** | “Does X have/use Y to perform work?” | Reference field, constructor injection, composition |
+| **Uses-a** | “Does X use Y only for one operation?” | Method parameter or short-lived dependency |
 
-Một câu “X là Y” trong tiếng Việt có thể nghe hợp lý nhưng chưa đủ. **Hợp đồng hành vi** mới là tiêu chí quyết định: mọi yêu cầu hợp lệ đối với Y có còn thực hiện đúng trên X không?
+A linguistic statement that “X is Y” may sound plausible yet be insufficient. The **behavioral contract** is decisive: does every valid requirement imposed on Y still hold when X is substituted?
 
-## 9. Quy tắc kế thừa của Java cần nhớ
+## 9. Java Inheritance Rules to Remember
 
-| Quy tắc | Ví dụ | Kết quả |
+| Rule | Example | Result |
 | --- | --- | --- |
-| Mỗi class `extends` tối đa một class trực tiếp | `class C extends A, B` | Không hợp lệ |
-| Một lớp có thể `implements` nhiều interface | `class C extends A implements X, Y` | Hợp lệ |
-| Nếu không khai báo `extends`, lớp thông thường kế thừa `Object` | `class X {}` | Các phương thức phù hợp của `Object` có sẵn |
-| Class `final` không được kế thừa | `final class Token {}` rồi `extends Token` | Lỗi biên dịch |
-| Method `final` không được override | `final void run() {}` | Subclass không thể thay implementation |
-| Abstract class không tạo instance trực tiếp | `new Employee()` trong ví dụ | Lỗi biên dịch |
-| Subclass concrete phải hoàn thiện abstract methods còn thiếu | `class X extends Employee` nhưng không có `monthlyPay()` | Lỗi biên dịch |
-| Constructor không được kế thừa | `super(id, name)` | Gọi constructor cha để khởi tạo |
-| Kế thừa có tính bắc cầu | `C extends B` và `B extends A` | C cũng là subtype của A |
+| A class can directly `extends` at most one class | `class C extends A, B` | Invalid |
+| A class can `implements` multiple interfaces | `class C extends A implements X, Y` | Valid |
+| An ordinary class without explicit `extends` inherits from `Object` | `class X {}` | Applicable `Object` methods are available |
+| A `final` class cannot be subclassed | `final class Token {}` followed by `extends Token` | Compilation error |
+| A `final` method cannot be overridden | `final void run() {}` | Subclasses cannot replace its implementation |
+| An abstract class cannot be instantiated directly | `new Employee()` in the example | Compilation error |
+| A concrete subclass must implement remaining abstract methods | `class X extends Employee` without `monthlyPay()` | Compilation error |
+| Constructors are not inherited | `super(id, name)` | Invokes a superclass constructor for initialization |
+| Inheritance is transitive | `C extends B` and `B extends A` | C is also a subtype of A |
 
-Java còn có **interface** cho quan hệ đa hình theo hợp đồng; cơ chế `implements` không giống với đa kế thừa class. Một class chỉ có một superclass trực tiếp, giúp tránh nhiều vấn đề khi thừa kế trạng thái và implementation từ nhiều class.
+Java also supports **interfaces** for contract-based polymorphism; `implements` is not the same as multiple class inheritance. A class has only one direct superclass, avoiding many problems of inheriting state and implementations from multiple classes.
 
-### Kế thừa không có nghĩa mọi thành viên đều dùng được
+### Inheritance Does Not Make Every Member Accessible
 
-Các thành viên `private` vẫn bị giới hạn truy cập. Constructor không được kế thừa. Static method không tham gia dispatch động như override instance method. Field cùng tên ở lớp con có thể **che khuất (hide)** field của lớp cha; truy cập field được ràng buộc theo kiểu tham chiếu, khác với phương thức instance override. Vì thế nên hạn chế thiết kế dựa trên việc trùng tên field giữa cha và con.
+`private` members remain access-restricted. Constructors are not inherited. Static methods do not participate in dynamic dispatch like overridden instance methods. A same-named subclass field can **hide** a superclass field; field access is bound by the reference type, unlike overriding of instance methods. Avoid designs that depend on superclass/subclass field-name collisions.
 
-Ví dụ phân biệt field và method:
+An example contrasting fields and methods:
 
 ~~~java
 class Animal {
@@ -545,13 +545,13 @@ System.out.println(a.name);    // Animal (field theo kiểu tham chiếu)
 System.out.println(a.speak()); // Gâu (method theo instance thực)
 ~~~
 
-Ở đây, cả hai field `name` đều tồn tại như thành viên được khai báo ở hai cấp; vì cách truy cập gây nhầm lẫn, nên tránh field hiding trong thiết kế thông thường.
+Here, both `name` fields exist as members declared at different hierarchy levels. Field hiding makes access confusing, so avoid it in ordinary designs.
 
-## 10. Tránh lạm dụng kế thừa và giữ hợp đồng của lớp cha
+## 10. Avoid Overusing Inheritance and Preserve Superclass Contracts
 
-Một lớp con phải tôn trọng kỳ vọng hợp lệ của lớp cha. Điều này liên quan đến **Liskov Substitution Principle (LSP)**: mã dùng lớp cha không nên bị bất ngờ vì lớp con phá vỡ quy tắc quan trọng mà lớp cha cam kết.
+A subclass must honor the valid expectations of its superclass. This relates to the **Liskov Substitution Principle (LSP)**: code using the superclass should not encounter surprises because a subclass breaks important superclass guarantees.
 
-Ví dụ thiết kế không tốt:
+An example of poor design:
 
 ~~~java
 class Bird {
@@ -568,9 +568,9 @@ class Penguin extends Bird {
 }
 ~~~
 
-Chim cánh cụt đúng là một loài chim về sinh học, nhưng **không phù hợp với hợp đồng “mọi Bird đều bay được”** do lớp `Bird.fly()` áp đặt. Mã nhận `Bird` và tin rằng `fly()` luôn làm việc sẽ thất bại với `Penguin`.
+A penguin is biologically a bird, but **it cannot satisfy the contract that every Bird can fly** imposed by `Bird.fly()`. Code accepting `Bird` and assuming `fly()` always works will fail with a `Penguin`.
 
-Một mô hình tốt hơn là tách năng lực:
+A better model separates capabilities:
 
 ~~~java
 interface Flyable {
@@ -601,96 +601,96 @@ class Penguin extends Bird {
 }
 ~~~
 
-Ở đây, `Bird` chỉ cam kết hành vi chung cho tất cả loài chim; `Flyable` biểu diễn năng lực riêng. Kế thừa hợp lý dựa trên **hợp đồng nhất quán**, không phải chỉ dựa trên sự giống nhau về danh từ hay vài dòng code.
+Here, `Bird` promises only behavior common to all birds, while `Flyable` represents a separate capability. Good inheritance depends on **a consistent contract**, not only similar nouns or a few reused lines.
 
-Khi quyết định thiết kế, nên tự hỏi:
+Before choosing a design, ask:
 
-1. Có quan hệ **is-a** đúng về hành vi, không chỉ giống dữ liệu?
-2. Subclass có thể tôn trọng tiền điều kiện, hậu điều kiện và invariant của superclass?
-3. Phần chung có thực sự ổn định, hay mỗi subclass sẽ liên tục phải override để chống lại lớp cha?
-4. Liệu composition hoặc interface có đáp ứng nhu cầu với ít ràng buộc hơn?
-5. Việc mở rộng lớp cha có vô tình thay đổi hành vi các lớp con hiện có không?
+1. Is the **is-a** relationship correct in behavior, not merely similar data?
+2. Can subclasses preserve the superclass's preconditions, postconditions, and invariants?
+3. Is shared behavior truly stable, or must each subclass repeatedly override it to work around the superclass?
+4. Would composition or an interface satisfy the need with fewer constraints?
+5. Could extending a superclass unintentionally change existing subclasses' behavior?
 
-**Kế thừa là quan hệ chặt**: subclass phụ thuộc vào hợp đồng và cách tổ chức của superclass. Khi quan hệ “is-a” không rõ ràng hoặc chỉ muốn dùng lại một tiện ích, composition thường đơn giản và dễ bảo trì hơn.
+**Inheritance is a tight relationship:** subclasses depend on superclass contracts and structure. If the is-a relationship is unclear or the only goal is to reuse a utility, composition is often simpler and more maintainable.
 
-## 11. Các lỗi thường gặp khi học
+## 11. Common Learning Mistakes
 
-| Lỗi | Nguyên nhân | Cách sửa |
+| Mistake | Cause | Fix |
 | --- | --- | --- |
-| Nghĩ `extends` tạo một object cha và một object con độc lập | Nhầm cấp class với cấp instance | Một lần `new Subclass()` tạo một instance với các phần trạng thái kế thừa |
-| Gọi `new Employee()` trong ví dụ | `Employee` là abstract | Tạo một subclass concrete |
-| Quên `super(...)` khi cha không có constructor không tham số | Compiler không thể gọi constructor phù hợp | Gọi constructor cha tường minh |
-| Override sai chữ ký | Tạo overload mới hoặc thiếu implementation | Dùng `@Override` để compiler hỗ trợ |
-| Truy cập `private` field cha trực tiếp | Field không khả dụng qua tên ở subclass | Dùng API `public`/`protected` thích hợp |
-| Ép mọi `Employee` sang `HourlyEmployee` | Runtime object có thể là kiểu con khác | Tránh downcast, dùng đa hình hoặc kiểm tra kiểu |
-| Lạm dụng setter/override làm hỏng invariant cha | Subclass không tôn trọng hợp đồng | Thiết kế quy tắc chung ở cha, mở rộng tại điểm cho phép |
-| Kế thừa chỉ để gọi một helper | Quan hệ “is-a” không đúng | Dùng composition/ủy quyền |
-| Nhầm field hiding với method overriding | Java xử lý field và method khác nhau | Tránh trùng tên field, hiểu dispatch động |
+| Assuming `extends` creates independent parent and child objects | Confusing classes with instances | One `new Subclass()` creates one instance containing inherited state |
+| Calling `new Employee()` in the example | `Employee` is abstract | Instantiate a concrete subclass |
+| Omitting `super(...)` when the superclass has no no-arg constructor | Compiler cannot invoke a suitable constructor | Invoke the superclass constructor explicitly |
+| Incorrect override signature | Creates an overload or fails to implement the method | Use `@Override` for compiler checking |
+| Direct access to a superclass `private` field | The field is inaccessible by name in subclass code | Use an appropriate `public`/`protected` API |
+| Casting every `Employee` to `HourlyEmployee` | The runtime object may be another subtype | Avoid downcasts; use polymorphism or type checks |
+| Using setters/overrides to break superclass invariants | Subclass violates the contract | Keep shared rules in the superclass and extend only at permitted points |
+| Inheriting just to invoke a helper | No valid is-a relationship | Use composition/delegation |
+| Confusing field hiding with method overriding | Java treats fields and methods differently | Avoid duplicate field names; understand dynamic dispatch |
 
-## 12. Bài tập tự kiểm tra
+## 12. Self-Check Exercises
 
-**Bài 1.** `Vehicle v = new Car();` có hợp lệ không? `v.openTrunk()` có biên dịch không?
+**Exercise 1.** Is `Vehicle v = new Car();` valid? Does `v.openTrunk()` compile?
 
-**Đáp án:** Phép gán hợp lệ vì `Car` kế thừa `Vehicle`. Nhưng `v.openTrunk()` không biên dịch nếu kiểu `Vehicle` không khai báo phương thức đó; phương thức hợp lệ dựa vào **kiểu tĩnh** của biến.
+**Answer:** The assignment is valid because `Car` extends `Vehicle`. But `v.openTrunk()` does not compile unless `Vehicle` declares that method; permissible calls depend on the variable's **static type**.
 
-**Bài 2.** Với một `HourlyEmployee` có `hourlyRate=100000`, `hoursWorked=15`, gọi `monthlyPay()` qua biến `Employee` trả gì?
+**Exercise 2.** If an `HourlyEmployee` has `hourlyRate=100000` and `hoursWorked=15`, what does `monthlyPay()` return through an `Employee` reference?
 
-**Đáp án:** `1500000`. Java gọi override của `HourlyEmployee` theo instance runtime dù biến được khai báo là `Employee`.
+**Answer:** `1500000`. Java invokes the `HourlyEmployee` override based on the runtime instance, even though the variable is declared as `Employee`.
 
-**Bài 3.** Tại sao `HourlyEmployee` không thể tự truy cập `this.id` nếu `id` là `private` ở `Employee`?
+**Exercise 3.** Why can't `HourlyEmployee` directly access `this.id` when `id` is `private` in `Employee`?
 
-**Đáp án:** Quyền `private` giới hạn mã trực tiếp truy cập field ở lớp khai báo (ngoại trừ cơ chế quyền truy cập đặc biệt giữa các lớp lồng/nestmates do Java quy định). Lớp con dùng API như `getId()` do lớp cha công khai.
+**Answer:** `private` limits direct field access to the declaring class (apart from the special nestmate access rules defined by Java). The subclass uses the superclass's exposed API, such as `getId()`.
 
-**Bài 4.** `SalariedEmployee` và `HourlyEmployee` có phải là hai đối tượng khi chỉ gọi `new HourlyEmployee(...)` không?
+**Exercise 4.** Do `SalariedEmployee` and `HourlyEmployee` both become objects when only `new HourlyEmployee(...)` is called?
 
-**Đáp án:** Không. Chỉ một đối tượng `HourlyEmployee` được tạo, bao gồm cả phần trạng thái/hành vi được kế thừa từ `Employee`.
+**Answer:** No. Only one `HourlyEmployee` instance is created, including the state and behavior inherited from `Employee`.
 
-**Bài 5.** Một lớp con không override phương thức thường của lớp cha có được không?
+**Exercise 5.** May a subclass inherit an ordinary superclass method without overriding it?
 
-**Đáp án:** Có. Nếu không có nghĩa vụ triển khai abstract method còn thiếu, lớp con có thể kế thừa toàn bộ implementation phù hợp. Override chỉ cần khi lớp con phải chuyên biệt hóa hành vi được phép thay đổi.
+**Answer:** Yes. If there is no remaining obligation to implement abstract methods, the subclass may inherit all applicable implementations. Override only when permitted behavior needs specialization.
 
-**Bài 6.** Khi ứng dụng có `Car` và `Engine`, nên chọn `Car extends Engine` hay `Car` giữ một `Engine`?
+**Exercise 6.** With `Car` and `Engine`, should you use `Car extends Engine` or have `Car` hold an `Engine`?
 
-**Đáp án:** `Car` **có** động cơ, không phải **là** động cơ. Quan hệ composition (`Car` giữ tham chiếu `Engine`) hợp lý hơn.
+**Answer:** A `Car` **has** an engine; it **is not** an engine. Composition (`Car` holds an `Engine` reference) is more appropriate.
 
-**Bài 7.** Việc thêm `Penguin extends Bird` mà lớp `Bird` cam kết `fly()` luôn hoạt động gây nguy cơ gì?
+**Exercise 7.** What is the risk of adding `Penguin extends Bird` if `Bird` promises that `fly()` always works?
 
-**Đáp án:** Phá vỡ hợp đồng thay thế của `Bird` nếu `Penguin.fly()` ném lỗi không được kỳ vọng. Hãy mô hình hóa hành vi chung đúng với mọi lớp con và tách năng lực bay thành `Flyable` nếu thích hợp.
+**Answer:** It violates the `Bird` substitutability contract if `Penguin.fly()` throws an unexpected error. Model shared behavior to suit every subclass and separate flying ability into `Flyable` when appropriate.
 
-**Bài 8.** Nếu sau này có `ContractEmployee`, vòng lặp `List<Employee>` tính lương có cần thêm `if (e instanceof ContractEmployee)` không?
+**Exercise 8.** If `ContractEmployee` is later added, must the `List<Employee>` payroll loop include `if (e instanceof ContractEmployee)`?
 
-**Đáp án:** Thường không, nếu lớp mới triển khai đúng `monthlyPay()`. Đa hình giúp vòng lặp gọi API chung và để mỗi subclass quyết định công thức.
+**Answer:** Usually not, if the new class correctly implements `monthlyPay()`. Polymorphism lets the loop use the common API while each subclass determines its pay formula.
 
-### Ghi nhớ
+### Remember
 
-**Lớp cha** mô tả phần chung và hợp đồng cho một họ đối tượng; **lớp con** là một loại cụ thể hơn, kế thừa phần chung và có thể bổ sung hoặc override hành vi được cho phép. Quan hệ `extends` là cam kết “is-a”, không đơn thuần là mẹo sao chép mã.
+The **superclass** describes shared characteristics and a contract for a family of objects; the **subclass** represents a more specific kind, inherits common behavior, and may add or override permitted behavior. `extends` expresses an is-a commitment, not simply a way to copy code.
 
-Khi đọc code kế thừa, hãy lần lượt xác định: lớp nào là superclass, lớp nào là subclass, constructor cha nào chạy, phương thức nào được kế thừa/override, đối tượng runtime thuộc lớp nào, và liệu subclass có tôn trọng hợp đồng của superclass không.
+When reading inheritance code, identify the superclass, subclass, invoked superclass constructor, inherited/overridden methods, runtime object type, and whether the subclass honors the superclass contract.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="inheritance-002">Kế thừa trạng thái và hành vi</a>
+## <a id="inheritance-002">Inheriting state and behavior</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kế thừa trạng thái và hành vi trong Java OOP
+# Inheriting State and Behavior in Java OOP
 
-**Kế thừa (inheritance)** cho phép một lớp con (*subclass*) mở rộng một lớp cha (*superclass*), sử dụng những thành phần có thể truy cập từ lớp cha và định nghĩa thêm trạng thái hoặc hành vi riêng. Trong Java, quan hệ này được khai báo bằng từ khóa `extends`.
+**Inheritance** lets a subclass (*subclass*) extend a superclass (*superclass*), use its accessible members, and define additional state or behavior. Java declares this relationship with `extends`.
 
-Khi gặp câu “lớp con kế thừa trạng thái và hành vi”, cần phân biệt hai việc:
+When people say “a subclass inherits state and behavior,” distinguish these two aspects:
 
-- **Trạng thái (state)**: dữ liệu của đối tượng được biểu diễn bằng các field. Một đối tượng lớp con chứa phần trạng thái do lớp cha định nghĩa, cộng với các field mà lớp con tự khai báo.
-- **Hành vi (behavior)**: các phương thức lớp cha cung cấp. Lớp con có thể sử dụng phương thức được kế thừa, bổ sung phương thức mới hoặc **ghi đè** (*override*) một phương thức instance được phép ghi đè.
+- **State:** object data represented by fields. A subclass object contains state declared by its superclass plus fields declared by the subclass itself.
+- **Behavior:** methods provided by the superclass. A subclass can use inherited methods, add new ones, or **override** (*override*) an overridable instance method.
 
-Kế thừa không có nghĩa là tạo hai đối tượng riêng biệt (một “cha”, một “con”) rồi nối chúng lại. Với `new Child(...)`, đó là **một đối tượng** có kiểu thực tế `Child`; quá trình khởi tạo phần thuộc lớp cha và lớp con diễn ra theo chuỗi constructor.
+Inheritance does not create separate “parent” and “child” objects and link them together. `new Child(...)` creates **one object** whose runtime type is `Child`; its superclass and subclass portions are initialized through the constructor chain.
 
-## 1. Cú pháp và hình dung quan hệ is-a
+## 1. Syntax and the Is-a Relationship
 
 ```java
 class Vehicle {
@@ -723,7 +723,7 @@ class ElectricCar extends Vehicle {
 }
 ```
 
-Một `ElectricCar` **là một** `Vehicle`: `ElectricCar extends Vehicle` biểu diễn quan hệ *is-a*. Đối tượng `ElectricCar` có thông tin đăng ký do phần `Vehicle` quản lý, đồng thời có mức pin riêng. Nó cũng sử dụng được `description()` và `registration()` của `Vehicle`.
+An `ElectricCar` **is a kind of** `Vehicle`: `ElectricCar extends Vehicle` expresses the *is-a* relationship. An `ElectricCar` object has registration data managed by `Vehicle` and its own battery level. It can also use the `description()` and `registration()` methods from `Vehicle`.
 
 ```java
 ElectricCar car = new ElectricCar("EV-001", 87);
@@ -733,7 +733,7 @@ System.out.println(car.description());    // Phương tiện EV-001
 System.out.println(car.batteryPercent()); // 87
 ```
 
-Sơ đồ lớp:
+Class diagram:
 
 ```mermaid
 classDiagram
@@ -749,15 +749,15 @@ classDiagram
     Vehicle <|-- ElectricCar
 ```
 
-Mũi tên từ `ElectricCar` tới `Vehicle` là **quan hệ kế thừa**; nó không nói rằng có một object `Vehicle` độc lập được tạo bên cạnh object `ElectricCar`.
+The arrow from `ElectricCar` to `Vehicle` denotes **inheritance**; it does not imply that an independent `Vehicle` object exists alongside the `ElectricCar` object.
 
-Java cho một lớp kế thừa trực tiếp **tối đa một lớp cha**. Nếu không viết `extends`, lớp thông thường mặc nhiên có superclass là `Object` (ngoại trừ chính `Object`). Một lớp vẫn có thể triển khai nhiều interface qua `implements`, nhưng đó không phải đa kế thừa trạng thái từ nhiều lớp cha.
+Java permits a class to directly extend **at most one superclass**. An ordinary class without `extends` implicitly has `Object` as its superclass (except `Object` itself). A class can still implement multiple interfaces using `implements`, but that is not multiple inheritance of state from several superclasses.
 
-## 2. Kế thừa trạng thái: field của cha nằm trong đối tượng con
+## 2. Inherited State: Superclass Fields Reside in the Subclass Object
 
-Điểm dễ nhầm: lớp con có phần trạng thái do lớp cha khai báo, nhưng **không phải mọi field lớp cha đều có thể truy cập trực tiếp trong mã lớp con**.
+A common misconception: the subclass contains superclass-declared state, but **not every superclass field is directly accessible from subclass code**.
 
-Với field `private`:
+For a `private` field:
 
 ```java
 class Account {
@@ -796,9 +796,9 @@ class RewardAccount extends Account {
 }
 ```
 
-`Account.balance` vẫn tồn tại như một phần trạng thái của đối tượng `RewardAccount`, dù mã lớp con **không có quyền truy cập trực tiếp** đến tên field `balance`. Lớp cha kiểm soát cách số dư thay đổi thông qua `credit(...)`; như vậy các quy tắc hợp lệ không bị lặp ở lớp con.
+`Account.balance` remains part of a `RewardAccount` object's state even though subclass code **cannot directly access** the field named `balance`. The superclass controls balance changes through `credit(...)`, preventing the subclass from duplicating validation rules.
 
-Một ví dụ sử dụng:
+An example of usage:
 
 ```java
 RewardAccount account = new RewardAccount(100_000);
@@ -807,30 +807,30 @@ account.receiveReward(20_000);
 System.out.println(account.balance()); // 120000
 ```
 
-**Không nên chuyển toàn bộ field lớp cha thành `protected` chỉ vì muốn lớp con dùng được.** Việc cho phép lớp con sửa trực tiếp field có thể khiến lớp cha khó giữ bất biến. Thường nên giữ field `private` rồi cung cấp những phương thức `protected` hoặc `public` có ý nghĩa rõ và kiểm tra đầu vào.
+**Do not change all superclass fields to `protected` merely to make them available to subclasses.** Direct subclass writes may prevent the superclass from preserving invariants. Prefer `private` fields with meaningful, validating `protected` or `public` methods.
 
-### Các mức truy cập tác động ra sao?
+### How Do Access Levels Affect Inheritance?
 
-| Thành phần khai báo ở lớp cha | Mã lớp con có thể dùng? | Ghi chú |
+| Superclass declaration | Can subclass code use it? | Notes |
 |---|---|---|
-| `public` instance method/field | Có, ở nơi lớp con có quyền thấy lớp cha | Cẩn trọng với public mutable field |
-| `protected` instance method/field | Có, theo quy tắc truy cập `protected` của Java | Khi khác package có giới hạn cụ thể về biểu thức nhận truy cập |
-| Package-private (không ghi modifier) | Chỉ trong cùng package | Không nên dùng khi kỳ vọng subclass khác package gọi trực tiếp |
-| `private` field/method | Không thể truy cập trực tiếp trong mã lớp con | Trạng thái private của cha vẫn có mặt trong đối tượng con; có thể tiếp cận qua API hợp lệ |
-| `public final` instance method | Được sử dụng nhưng **không override** | Lớp cha cố định cách thực thi hành vi này |
-| Constructor | **Không được kế thừa** | Lớp con khai báo constructor riêng, gọi constructor cha qua `super(...)` |
+| `public` instance method/field | Yes, where the superclass is accessible | Beware of public mutable fields |
+| `protected` instance method/field | Yes, under Java's `protected` access rules | Across packages, qualifier expressions have additional restrictions |
+| Package-private (no modifier) | Only within the same package | Unsuitable for direct cross-package subclass access |
+| `private` field/method | Not directly from subclass code | Private superclass state remains in the subclass object and can be accessed through valid APIs |
+| `public final` instance method | Usable but **not overridable** | The superclass fixes this implementation |
+| Constructor | **Not inherited** | The subclass declares its own constructor and invokes the superclass constructor via `super(...)` |
 
-Theo nghĩa ngôn ngữ Java, **private members không được kế thừa như thành viên mà lớp con có thể sử dụng trực tiếp**. Đừng diễn giải điều này thành “field private của cha không có trong đối tượng con”.
+In Java language terms, **private members are not inherited as directly usable subclass members**. Do not interpret that to mean “private superclass fields are absent from subclass objects.”
 
-## 3. Kế thừa hành vi: dùng lại, bổ sung và override
+## 3. Inherited Behavior: Reuse, Addition, and Override
 
-Giả sử trong hệ thống nhân sự, nhân viên bán hàng có lương cơ bản và thêm hoa hồng. Các nhân viên đều có mã định danh và cách trình bày phiếu lương giống nhau, nhưng công thức thu nhập có thể khác.
+Suppose a sales employee earns base pay plus commission. All employees have identifiers and a shared pay-slip format, but their earnings formulas may differ.
 
-Dưới đây là **ví dụ Java chạy độc lập**, thể hiện rõ ba loại hành vi:
+This **standalone runnable Java example** demonstrates three kinds of behavior:
 
-1. **Kế thừa nguyên vẹn** `id()`.
+1. **Inherit unchanged** `id()`.
 2. **Override** `monthlyPayVnd()`.
-3. **Bổ sung** `commissionVnd()`.
+3. **Add** `commissionVnd()`.
 
 File `InheritanceDemo.java`:
 
@@ -909,14 +909,14 @@ public class InheritanceDemo {
 }
 ```
 
-Chạy bằng JDK 11+:
+Run with JDK 11+:
 
 ```bash
 javac InheritanceDemo.java
 java InheritanceDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 E01: 12000000 VND
@@ -925,19 +925,19 @@ S01: 13000000 VND
 S01
 ```
 
-Phân tích:
+Analysis:
 
-- `SalesEmployee` **không khai báo lại** `id()` hoặc `paySlip()`; chúng là hành vi được dùng lại từ `Employee`.
-- `SalesEmployee.monthlyPayVnd()` ghi đè phương thức cha. Từ khóa `@Override` để compiler kiểm tra xem chữ ký có thật sự override được không.
-- `super.monthlyPayVnd()` gọi cách tính ở `Employee` rồi cộng hoa hồng. `super` không phải tên của một đối tượng cha riêng biệt.
-- `Math.addExact` ném `ArithmeticException` nếu tổng vượt giới hạn `long`, tránh trả sai âm thầm.
-- `commissionVnd()` là hành vi riêng của `SalesEmployee`; biến có **kiểu khai báo `Employee`** không gọi trực tiếp được phương thức này.
+- `SalesEmployee` **does not redeclare** `id()` or `paySlip()`; these are reused from `Employee`.
+- `SalesEmployee.monthlyPayVnd()` overrides the superclass method. `@Override` asks the compiler to check that the signature actually overrides a method.
+- `super.monthlyPayVnd()` calls the `Employee` calculation and adds commission. `super` does not name a separate superclass object.
+- `Math.addExact` throws `ArithmeticException` if the sum overflows `long`, preventing a silent incorrect result.
+- `commissionVnd()` is specific to `SalesEmployee`; a reference with **declared type `Employee`** cannot directly call this method.
 
-Ví dụ này minh họa một mô hình thu nhập đơn giản, không đại diện đầy đủ quy tắc lương, thuế hay hoa hồng của doanh nghiệp.
+This example illustrates a simple earnings model, not the full payroll, tax, or commission rules of a real business.
 
-## 4. Đa hình: phương thức chạy theo loại đối tượng thực tế
+## 4. Polymorphism: Method Behavior Depends on the Runtime Object Type
 
-Xem hai dòng:
+Consider these two lines:
 
 ```java
 Employee asParent =
@@ -946,9 +946,9 @@ Employee asParent =
 System.out.println(asParent.monthlyPayVnd()); // 9500000
 ```
 
-Biến `asParent` có **kiểu khai báo** là `Employee`, nhưng đối tượng thực tế được tạo bởi `new SalesEmployee(...)`. Khi gọi một phương thức instance đã được override, Java sử dụng **dynamic dispatch** để thực hiện phiên bản phù hợp với kiểu runtime `SalesEmployee`.
+The variable `asParent` has the **declared type** `Employee`, but the actual object comes from `new SalesEmployee(...)`. For an overridden instance method, Java uses **dynamic dispatch** to invoke the version corresponding to runtime type `SalesEmployee`.
 
-Đây là lý do `Employee.paySlip()` có thể gọi `monthlyPayVnd()` mà không biết lớp con cụ thể: lần gọi tới đối tượng `SalesEmployee` vẫn chọn phương thức override.
+That is why `Employee.paySlip()` can call `monthlyPayVnd()` without knowing the concrete subclass: when invoked on a `SalesEmployee`, it still selects the override.
 
 ```mermaid
 flowchart TD
@@ -960,7 +960,7 @@ flowchart TD
     F --> G["Dùng super.monthlyPayVnd() + commission"]
 ```
 
-Tuy nhiên, **kiểu khai báo vẫn giới hạn những phương thức có thể gọi ở thời điểm biên dịch**:
+However, **the declared type still limits which methods are callable at compile time**:
 
 ```java
 Employee employee =
@@ -970,11 +970,11 @@ employee.monthlyPayVnd();   // Hợp lệ
 // employee.commissionVnd(); // Lỗi biên dịch
 ```
 
-Nếu có nhu cầu làm việc trực tiếp với hành vi dành riêng cho subclass, nên xem lại kiểu biến/API. Ép kiểu xuống subclass chỉ khi đã có lý do thiết kế rõ và biết chắc kiểu runtime; không nên dựa vào chuỗi `instanceof` và cast chỉ để thay thế đa hình ở mọi nơi.
+If subclass-specific behavior is truly needed, reconsider the variable type or API. Downcast only for a clear design reason when the runtime type is known; avoid replacing polymorphism everywhere with chains of `instanceof` checks and casts.
 
-## 5. Phần trạng thái của cha được khởi tạo trước phần riêng của con
+## 5. Superclass State Is Initialized Before Subclass-Specific State
 
-Một constructor con phải đi qua constructor cha, nhưng **constructor không được kế thừa** như phương thức. Ví dụ:
+A subclass constructor must invoke a superclass constructor, but **constructors are not inherited** as methods. For example:
 
 ~~~java
 class Parent {
@@ -990,13 +990,13 @@ class Child extends Parent {
 }
 ~~~
 
-`new Child()` in `Parent: A01` rồi `Child`. Nếu lớp cha chỉ có constructor có tham số thì không thể bỏ `super("A01")` và trông đợi compiler tự gọi một `Parent()` không tồn tại.
+`new Child()` prints `Parent: A01` followed by `Child`. If the superclass has only parameterized constructors, you cannot omit `super("A01")` and expect the compiler to call a nonexistent `Parent()`.
 
-Phần khởi tạo field/instance block của lớp con chạy **sau** phần constructor cha. Vì thế constructor cha không nên gọi method overridable: lời gọi có thể dispatch vào lớp con khi field của con còn `null` hoặc `0`. Phần chi tiết về `this(...)`, static initialization, thứ tự initializer và thất bại constructor được triển khai bằng một chương trình truy vết riêng ở bài chuỗi khởi tạo.
+Subclass field initializers and instance blocks run **after** the superclass constructor's portion. Therefore, a superclass constructor should not invoke overridable methods: dispatch may reach subclass code while its fields are still `null` or `0`. The details of `this(...)`, static initialization, initializer order, and constructor failure are demonstrated through a separate tracing program in the constructor-chain lesson.
 
-## 6. Field là trạng thái, không được dispatch như method
+## 6. Fields Are State; They Are Not Dynamically Dispatched Like Methods
 
-**Override** thay implementation của một phương thức instance theo kiểu runtime. **Overload** là cùng tên nhưng khác danh sách tham số và được chọn chủ yếu tại biên dịch. **Field hiding** là lớp con khai báo lại field cùng tên; truy cập field dựa trên kiểu của biểu thức, không chọn động theo đối tượng.
+**Overriding** replaces an instance method implementation according to the runtime type. **Overloading** uses the same name with different parameter lists and is primarily resolved at compile time. **Field hiding** occurs when a subclass declares a field with the same name; field access depends on the expression's type, not runtime object dispatch.
 
 ~~~java
 class Parent {
@@ -1013,22 +1013,22 @@ System.out.println(value.label);   // parent
 System.out.println(value.label()); // child-method
 ~~~
 
-Hai field `label` cùng tồn tại trong một object `Child` nên dễ nhầm về dữ liệu nào đang được đọc. Trong mô hình thực, giữ field `private` rồi cung cấp API phù hợp thường an toàn hơn. Tương tự, phương thức `static` cùng chữ ký là *hiding*, không phải instance override; hãy gọi bằng tên lớp để tránh nhầm với dispatch động.
+Both `label` fields coexist in one `Child` object, making it easy to confuse which data is being read. In real designs, keeping fields `private` and exposing suitable APIs is usually safer. Similarly, a same-signature `static` method is *hidden*, not an overridden instance method; invoke static methods through class names to avoid confusing them with dynamic dispatch.
 
-## 7. Những quy tắc override phải tôn trọng
+## 7. Rules That Method Overrides Must Respect
 
-Một phương thức override hợp lệ không chỉ là “viết lại tên giống nhau”.
+Valid overriding involves more than “writing a method with the same name.”
 
-| Quy tắc | Điều cần nhớ |
+| Rule | What to remember |
 |---|---|
-| Phương thức phải có thể override | Không override `private`, `final` hoặc `static` method theo nghĩa instance override |
-| Danh sách tham số | Cùng chữ ký thích hợp; thay đổi danh sách tham số thành **overload** |
-| Kiểu trả về | Có thể dùng kiểu trả về **covariant** khi phù hợp, không tùy tiện đổi kiểu |
-| Quyền truy cập | Không được giảm mức truy cập của phương thức được override |
-| Checked exceptions | Không khai báo checked exception mới/rộng hơn ngoài phạm vi cho phép của phương thức cha |
-| Hợp đồng hành vi | Phải giữ kỳ vọng mà người dùng kiểu cha dựa vào |
+| Method must be overridable | You cannot override `private`, `final`, or `static` methods as instance-method overrides |
+| Parameter list | Requires the appropriate matching signature; a different parameter list creates an **overload** |
+| Return type | A **covariant** return type is permitted when applicable; arbitrary changes are not |
+| Visibility | An override cannot reduce its inherited method's access level |
+| Checked exceptions | An override cannot declare new or broader checked exceptions beyond what the superclass method permits |
+| Behavioral contract | Must preserve expectations clients rely on through the superclass type |
 
-Ví dụ khi cha công khai phương thức:
+For example, when a superclass exposes a method:
 
 ```java
 class Parent {
@@ -1045,9 +1045,9 @@ class Child extends Parent {
 }
 ```
 
-`Integer` là subtype của `Number`, nên kiểu trả về trong ví dụ **covariant hợp lệ**.
+`Integer` is a subtype of `Number`, so the return type here is **validly covariant**.
 
-Ngược lại:
+In contrast:
 
 ```java
 class WrongChild extends Parent {
@@ -1057,13 +1057,13 @@ class WrongChild extends Parent {
 }
 ```
 
-Điểm thực hành quan trọng hơn cú pháp là **tính thay thế được (substitutability)**: nếu caller làm việc đúng với `Parent`, đưa một `Child` vào không nên bất ngờ phá những cam kết mà `Parent` đã thiết lập. Ví dụ nếu `Employee.monthlyPayVnd()` cam kết trả thu nhập không âm, subclass không nên tùy tiện trả giá trị âm để biểu diễn lỗi.
+More important than syntax is **substitutability**: if a caller works correctly with `Parent`, supplying a `Child` should not unexpectedly violate guarantees made by `Parent`. For example, if `Employee.monthlyPayVnd()` promises nonnegative earnings, a subclass should not arbitrarily return a negative number to signal an error.
 
-## 8. Kế thừa trạng thái có nguy cơ tạo phụ thuộc chặt
+## 8. Inheriting State Can Create Tight Coupling
 
-Khi subclass dựa vào nhiều chi tiết nội bộ của superclass, thay đổi superclass có thể làm hỏng subclass dù API công khai vẫn trông giống trước. Đây là một dạng vấn đề **fragile base class**.
+When subclasses depend on superclass internals, superclass changes may break subclasses even when the public API looks unchanged. This is a form of the **fragile base class** problem.
 
-Ví dụ thiết kế rủi ro:
+A risky design example:
 
 ```java
 class MutableBalance {
@@ -1081,21 +1081,21 @@ class SpecialBalance extends MutableBalance {
 }
 ```
 
-Subclass phụ thuộc trực tiếp vào field `balance`. Nếu về sau lớp cha bổ sung giới hạn số dư, ghi audit log hay yêu cầu kiểm tra nghiệp vụ, `SpecialBalance` có thể tiếp tục bỏ qua các quy tắc đó.
+The subclass directly depends on the `balance` field. If the superclass later adds balance limits, audit logging, or business validation, `SpecialBalance` may continue bypassing those rules.
 
-Một thiết kế tốt hơn:
+A better design:
 
-- Giữ field `private`.
-- Cung cấp phương thức `protected final` có ý nghĩa như `creditValidated(...)` nếu subclass thật sự cần mở rộng.
-- Xác định rõ **điểm được phép tùy biến** bằng phương thức protected hoặc interface có hợp đồng.
-- Hạn chế gọi phương thức override trong quá trình constructor.
-- Không để subclass phụ thuộc vào bố cục field hoặc thứ tự gọi phương thức nội bộ nếu không được cam kết.
+- Keep fields `private`.
+- Offer a meaningful `protected final` method, such as `creditValidated(...)`, when subclasses genuinely need an extension point.
+- Define **permitted customization points** with protected methods or interfaces that have clear contracts.
+- Avoid invoking overridden methods during construction.
+- Do not let subclasses rely on field layouts or internal call order unless explicitly guaranteed.
 
-Đây không có nghĩa mọi field `protected` đều sai, nhưng nên cân nhắc chi phí ràng buộc mà nó đặt lên hệ phân cấp.
+This does not mean every `protected` field is wrong, but consider the coupling costs it imposes on the hierarchy.
 
-## 9. Phần trạng thái chung chỉ nên có mặt ở superclass khi quan hệ is-a đúng
+## 9. Shared State Belongs in a Superclass Only for a Genuine Is-a Relationship
 
-`SalesEmployee extends Employee` là một phân loại nghiệp vụ hợp lý nếu nhân viên bán hàng tôn trọng hợp đồng chung về nhân viên. Ngược lại, `OrderService` **sử dụng** một `PaymentGateway`, chứ không phải một loại gateway. Để dùng chức năng thanh toán, hãy giữ một `PaymentGateway` làm collaborator:
+`SalesEmployee extends Employee` is a sensible business specialization if sales employees honor the shared employee contract. By contrast, an `OrderService` **uses** a `PaymentGateway`; it is not a kind of gateway. To process payments, keep a `PaymentGateway` collaborator:
 
 ~~~java
 interface PaymentGateway {
@@ -1115,24 +1115,24 @@ final class OrderService {
 }
 ~~~
 
-**Composition** giúp thay gateway hoặc phối hợp nhiều thành phần mà không làm phát sinh superclass giả. Với inheritance, subclass gắn trực tiếp vào hợp đồng và extension points của cha; với composition, việc cộng tác xảy ra thông qua field/interface. Quyết định nên dựa trên khả năng thay thế đúng ngữ nghĩa, không chỉ số dòng code có thể dùng lại.
+**Composition** makes it easier to replace gateways or combine components without inventing a superclass relationship. Inheritance directly couples subclasses to superclass contracts and extension points; composition connects collaborators through fields/interfaces. Decide based on semantic substitutability, not just the number of lines reused.
 
-## 10. Checklist kiểm tra thiết kế kế thừa
+## 10. Inheritance Design Review Checklist
 
-Trước khi cho một lớp `extends` lớp khác, hãy kiểm tra:
+Before making one class `extends` another, check:
 
-1. **Có quan hệ is-a thật không?** Lớp con được dùng thay lớp cha mà không phá hợp đồng?
-2. **Trạng thái nào thuộc lớp cha?** Field chung có được khởi tạo và kiểm soát ở superclass?
-3. **Phương thức nào được kế thừa nguyên vẹn?** Không cần override nếu hành vi cha đã đúng.
-4. **Phương thức nào phải override?** Có lý do nghiệp vụ rõ và dùng `@Override`?
-5. **Điểm mở rộng có an toàn không?** Có phương thức `final` hoặc `protected` phù hợp để bảo vệ invariant?
-6. **Constructor có đúng chuỗi không?** `super(...)` nhận dữ liệu hợp lệ, không lộ đối tượng chưa khởi tạo?
-7. **Có cách dùng composition đơn giản hơn không?** Tránh thừa kế thừa để tái sử dụng vài hàm.
-8. **Kiểm thử có xác minh qua tham chiếu kiểu cha không?** Kiểm tra dynamic dispatch và tính thay thế được.
+1. **Is there a genuine is-a relationship?** Can a subclass replace its superclass without violating the contract?
+2. **Which state belongs to the superclass?** Are common fields initialized and controlled there?
+3. **Which methods should be inherited unchanged?** Avoid overriding when the superclass behavior is already correct.
+4. **Which methods require overrides?** Is there a clear business reason and an `@Override` annotation?
+5. **Are extension points safe?** Are suitable `final` or `protected` methods used to preserve invariants?
+6. **Is the constructor chain correct?** Does `super(...)` receive valid data without exposing a partially initialized object?
+7. **Would composition be simpler?** Avoid excessive inheritance merely to reuse a few functions.
+8. **Do tests verify behavior through superclass references?** Check dynamic dispatch and substitutability.
 
-## 11. Bài tập tự kiểm tra
+## 11. Self-Check Exercises
 
-### Bài 1 — Dự đoán kết quả
+### Exercise 1 — Predict the Result
 
 ```java
 class Animal {
@@ -1156,9 +1156,9 @@ Animal a = new Cat();
 System.out.println(a.describe());
 ```
 
-**Đáp án:** `Sound: meow`. Phương thức `describe()` được dùng lại từ `Animal`, nhưng lời gọi `sound()` bên trong nó được dispatch tới `Cat.sound()`.
+**Answer:** `Sound: meow`. The `describe()` method is inherited from `Animal`, but its call to `sound()` dispatches to `Cat.sound()`.
 
-### Bài 2 — Có phải lớp con nhìn thấy mọi field?
+### Exercise 2 — Can a Subclass See Every Field?
 
 ```java
 class Base {
@@ -1177,9 +1177,9 @@ class Derived extends Base {
 }
 ```
 
-**Đáp án:** `return secret()` hợp lệ, vì đây là public method của cha. `return secret` không hợp lệ vì `secret` là private field của `Base`.
+**Answer:** `return secret()` is valid because it invokes the superclass's public method. `return secret` is invalid because `secret` is a private field of `Base`.
 
-### Bài 3 — Tìm chỗ không phải override
+### Exercise 3 — Find the Non-Override
 
 ```java
 class Base {
@@ -1195,47 +1195,47 @@ class Derived extends Base {
 }
 ```
 
-**Đáp án:** `Derived.print(String)` là **overload**, không phải override `Base.print(int)`. Lớp con có thể gọi cả hai phương thức theo kiểu đối số tương ứng.
+**Answer:** `Derived.print(String)` is an **overload**, not an override of `Base.print(int)`. The subclass can invoke both methods with their respective argument types.
 
-### Bài 4 — Thiết kế lớp con có kiểm tra
+### Exercise 4 — Design a Validated Subclass
 
-Hãy tạo `StudentAccount extends Account`, trong đó:
+Create `StudentAccount extends Account` with the following requirements:
 
-- `Account` giữ `private long balance`, không cho số dư âm.
-- `Account` cung cấp `public final long balance()` và một phương thức bảo vệ để cộng tiền hợp lệ.
-- `StudentAccount` có `private final String universityCode` được kiểm tra trong constructor.
-- Phương thức `receiveScholarship(long amount)` cộng tiền thông qua API của lớp cha, không trực tiếp sửa field.
-- Viết test: tạo `StudentAccount`, nhận học bổng, đọc số dư và thử truyền số tiền không hợp lệ.
+- `Account` holds a `private long balance` that cannot become negative.
+- `Account` provides `public final long balance()` and a protected method for valid credit operations.
+- `StudentAccount` has a `private final String universityCode` validated in its constructor.
+- `receiveScholarship(long amount)` credits money through the superclass API, not by modifying a field directly.
+- Write a test: create `StudentAccount`, receive a scholarship, check the balance, and attempt an invalid amount.
 
-Khi giải, hãy kiểm tra rằng **trạng thái chung vẫn do lớp cha bảo vệ**, còn lớp con chỉ bổ sung thông tin và hành vi chuyên biệt.
+As you solve it, ensure **the superclass still protects shared state**, while the subclass adds only specialized information and behavior.
 
 ---
 
-**Ghi nhớ:** Kế thừa cho phép lớp con **mang phần trạng thái được khai báo ở lớp cha** và **dùng lại hoặc ghi đè hành vi** theo các quy tắc truy cập, constructor và override của Java. Đối tượng con vẫn là **một đối tượng duy nhất**. Hãy giữ dữ liệu chung được đóng gói, phân biệt method overriding với field hiding, tôn trọng hợp đồng lớp cha và chỉ dùng kế thừa khi quan hệ *is-a* thực sự có ý nghĩa.
+**Remember:** Inheritance lets a subclass **contain state declared in its superclass** and **reuse or override behavior** under Java's access, constructor, and overriding rules. A subclass instance remains **one object**. Encapsulate shared data, distinguish method overriding from field hiding, honor superclass contracts, and inherit only when the *is-a* relationship truly applies.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="inheritance-003">Mở rộng hành vi của lớp cha</a>
+## <a id="inheritance-003">Extending superclass behavior</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Mở rộng hành vi của lớp cha trong Java
+# Extending Superclass Behavior in Java
 
-Khi một lớp con kế thừa lớp cha bằng từ khóa `extends`, nó có thể **dùng lại hành vi sẵn có** và bổ sung những phần đặc thù của mình. Một kỹ thuật quan trọng là **ghi đè phương thức (method overriding)**: lớp con cung cấp cách thực hiện mới cho một phương thức thể hiện mà lớp cha cho phép ghi đè.
+When a subclass inherits from a superclass using `extends`, it can **reuse existing behavior** and add specialized behavior. One important technique is **method overriding**: the subclass provides a new implementation of an overridable instance method declared by its superclass.
 
-Ví dụ, hệ thống vận chuyển có một quy tắc tính phí cơ bản. Giao hàng ưu tiên vẫn cần quy tắc ấy nhưng cộng thêm phụ phí. Thay vì chép toàn bộ công thức vào lớp con, ta gọi `super.calculate(...)` để tận dụng hành vi lớp cha rồi thêm phần riêng.
+For example, a shipping system has a base fee calculation. Priority shipping still uses that calculation but adds a surcharge. Rather than copy the entire formula into the subclass, call `super.calculate(...)` to reuse the superclass behavior and then add the specialized part.
 
-Bài này tập trung vào cách **mở rộng hành vi của lớp cha**, ý nghĩa của `super`, phương thức nào có thể ghi đè, cách bảo vệ quy tắc chung và lúc nào nên cân nhắc dùng composition thay cho kế thừa.
+This lesson focuses on **extending superclass behavior**, what `super` means, which methods can be overridden, how to protect shared rules, and when composition may be preferable to inheritance.
 
-## 1. Kế thừa, ghi đè và mở rộng hành vi
+## 1. Inheritance, Overriding, and Behavior Extension
 
-Một lớp con khai báo:
+A subclass declares:
 
 ```java
 class Parent {
@@ -1253,41 +1253,41 @@ class Child extends Parent {
 }
 ```
 
-Khi chạy:
+When executed:
 
 ```java
 new Child().greet();
 ```
 
-Kết quả:
+Output:
 
 ```text
 Xin chào
 Rất vui được gặp bạn
 ```
 
-Cách hoạt động:
+How it works:
 
-1. `Child extends Parent`: `Child` là một lớp con của `Parent`.
-2. `@Override` xác nhận `Child.greet()` ghi đè một phương thức có thể ghi đè của lớp cha. Nếu chữ ký không phù hợp, trình biên dịch sẽ báo lỗi.
-3. `super.greet()` gọi **cách thực hiện của lớp cha** đối với phương thức đó.
-4. Lớp con thực hiện thêm bước riêng sau lời gọi `super.greet()`.
+1. `Child extends Parent`: `Child` is a subclass of `Parent`.
+2. `@Override` confirms that `Child.greet()` overrides an overridable superclass method. The compiler reports incompatible signatures.
+3. `super.greet()` invokes **the superclass implementation** of that method.
+4. The subclass performs its additional step after calling `super.greet()`.
 
-Nếu lớp con **không ghi đè**, nó có thể gọi trực tiếp phương thức được kế thừa (tùy quyền truy cập). Nếu lớp con ghi đè nhưng **không gọi `super`**, nó sẽ thay thế toàn bộ hành vi của phương thức, và phải tự bảo đảm hợp đồng của lớp cha.
+If a subclass **does not override**, it may call the inherited method directly (subject to access rules). If it overrides but **does not call `super`**, it replaces that method's entire behavior and must independently uphold the superclass contract.
 
-| Tình huống | Kết quả |
+| Situation | Result |
 | --- | --- |
-| Không override `greet()` | `Child` dùng hành vi được kế thừa từ `Parent` |
-| Override và gọi `super.greet()` | Chạy hành vi lớp cha, sau đó thực hiện phần bổ sung |
-| Override nhưng không gọi `super.greet()` | Chạy phần triển khai mới của lớp con |
-| Viết `greet(String name)` thay vì `greet()` | Thường là **overloading** (thêm phương thức khác tham số), không ghi đè `greet()` |
-| Viết `super.greet()` ngoài phương thức/constructor instance phù hợp | Không hợp lệ; `super` cần ngữ cảnh lớp con |
+| No override of `greet()` | `Child` uses the behavior inherited from `Parent` |
+| Override and call `super.greet()` | Run the superclass behavior, then the additional behavior |
+| Override without calling `super.greet()` | Execute only the subclass implementation |
+| Declare `greet(String name)` instead of `greet()` | Usually **overloading** (another method with different parameters), not overriding `greet()` |
+| Use `super.greet()` outside an appropriate instance method/constructor | Invalid; `super` requires a subclass context |
 
-**Quan trọng:** Không phải lúc nào “mở rộng” cũng có nghĩa thêm lệnh sau `super`. Có trường hợp cần thao tác **trước**, **sau** hoặc **bao quanh** hành vi của lớp cha (kiểm tra, đo thời gian, logging, làm giàu kết quả). Thứ tự phải dựa trên hợp đồng thực tế.
+**Important:** “Extension” does not always mean adding statements after `super`. It may require actions **before**, **after**, or **around** superclass behavior (validation, timing, logging, enriching results). The appropriate order follows the actual contract.
 
-## 2. Ví dụ Java hoàn chỉnh: giao hàng ưu tiên
+## 2. Complete Java Example: Priority Shipping
 
-Lưu toàn bộ mã sau vào file **`Main.java`** và chạy với Java 17 hoặc Java 21.
+Save all the following code in **`Main.java`** and run it with Java 17 or Java 21.
 
 ```java
 import java.util.List;
@@ -1364,14 +1364,14 @@ public class Main {
 }
 ```
 
-Biên dịch, chạy:
+Compile and run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 Giao tiêu chuẩn: 16000 VND
@@ -1379,37 +1379,37 @@ Giao tiêu chuẩn + ưu tiên: 31000 VND
 Lỗi: Quãng đường phải dương
 ```
 
-Đối với quãng đường 3 km:
+For a distance of 3 km:
 
-- Phí chuẩn: `10_000 + 2_000 × 3 = 16_000` VND.
-- Phí ưu tiên: `16_000 + 15_000 = 31_000` VND.
-- Lớp con không viết lại logic kiểm tra `distanceKm > 0`. Khi `ExpressShippingFee.calculate(0)` gọi `super.calculate(0)`, ngoại lệ của lớp cha tiếp tục được áp dụng.
+- Standard fee: `10_000 + 2_000 × 3 = 16_000` VND.
+- Priority fee: `16_000 + 15_000 = 31_000` VND.
+- The subclass does not duplicate validation of `distanceKm > 0`. When `ExpressShippingFee.calculate(0)` calls `super.calculate(0)`, the superclass exception still applies.
 
-`Math.addExact` và `Math.multiplyExact` giúp phát hiện tràn số `long` (ném `ArithmeticException`) thay vì âm thầm tạo phí sai. Đây là lựa chọn minh họa để công thức đơn giản vẫn có xử lý sai số nguyên.
+`Math.addExact` and `Math.multiplyExact` detect `long` overflow (by throwing `ArithmeticException`) instead of silently producing an incorrect fee. The example uses them to demonstrate integer safety while keeping the formula simple.
 
-### Thành phần nào thuộc lớp cha, lớp con?
+### Which Responsibilities Belong to the Superclass and Subclass?
 
-| Thành phần | `ShippingFee` | `ExpressShippingFee` |
+| Component | `ShippingFee` | `ExpressShippingFee` |
 | --- | --- | --- |
-| Phí cơ bản | Trường `private baseFeeVnd` | Kế thừa hành vi sử dụng trường nhưng không truy cập trực tiếp trường `private` |
-| Tính phí cơ bản | `calculate(distanceKm)` | Dùng `super.calculate(distanceKm)` |
-| Phụ phí ưu tiên | Không có | Trường `private priorityFeeVnd` |
-| Tính phí tổng | Trả phí chuẩn | Override `calculate()` để cộng phụ phí |
-| Tên phương thức hiển thị | `label()` | Override, nối mô tả bổ sung |
-| Khởi tạo | `ShippingFee(long)` | `ExpressShippingFee(long, long)` gọi `super(...)` |
+| Base fee | `private baseFeeVnd` field | Inherits behavior using the field but cannot directly access the `private` field |
+| Base fee calculation | `calculate(distanceKm)` | Uses `super.calculate(distanceKm)` |
+| Priority surcharge | None | `private priorityFeeVnd` field |
+| Total fee calculation | Returns standard fee | Overrides `calculate()` to add the surcharge |
+| Display name | `label()` | Overrides and appends a description |
+| Initialization | `ShippingFee(long)` | `ExpressShippingFee(long, long)` calls `super(...)` |
 
-Lớp con mở rộng **hành vi có sẵn** và **trạng thái riêng**, chứ không sao chép tất cả trường của lớp cha thành các trường mới.
+The subclass extends both **existing behavior** and **its own state**; it does not duplicate every superclass field as a separate field.
 
-## 3. Đa hình: biến kiểu lớp cha có thể chạy phương thức lớp con
+## 3. Polymorphism: A Superclass Reference Can Invoke Subclass Methods
 
-Hai biến trong ví dụ đều có kiểu khai báo `ShippingFee`:
+Both variables in the example have declared type `ShippingFee`:
 
 ```java
 ShippingFee normal = new ShippingFee(10_000);
 ShippingFee express = new ExpressShippingFee(10_000, 15_000);
 ```
 
-Nhưng khi gọi `express.calculate(3)`, Java thực hiện **phiên bản override của `ExpressShippingFee`**, bởi đối tượng thực tế có kiểu `ExpressShippingFee`.
+But calling `express.calculate(3)` executes the **`ExpressShippingFee` override**, because the runtime object is an `ExpressShippingFee`.
 
 ```mermaid
 flowchart TD
@@ -1420,13 +1420,13 @@ flowchart TD
     E --> F["Trả 31000"]
 ```
 
-Hiện tượng lựa chọn phương thức **instance được override** dựa trên đối tượng thực tế được gọi là *dynamic dispatch*. Nhờ đó cùng một đoạn mã `option.calculate(distance)` có thể làm việc với nhiều lớp con của `ShippingFee`.
+Choosing an **overridden instance method** based on the runtime object is called *dynamic dispatch*. It lets the same `option.calculate(distance)` call work with multiple subclasses of `ShippingFee`.
 
-Lưu ý: kiểu khai báo của biến vẫn quyết định **những phương thức nào có thể gọi tại thời điểm biên dịch**. Nếu `ExpressShippingFee` có một phương thức riêng không khai báo trong `ShippingFee`, biến `ShippingFee express` không gọi trực tiếp phương thức đó nếu không có chuyển kiểu hợp lệ. Đa hình không tự thêm API của lớp con vào kiểu lớp cha.
+Remember that a variable's declared type still determines **which methods are callable at compile time**. If `ExpressShippingFee` has a method absent from `ShippingFee`, a `ShippingFee express` reference cannot directly call it without a valid cast. Polymorphism does not add subclass-specific APIs to the superclass type.
 
-## 4. Hai cách dùng `super` phục vụ hai mục tiêu
+## 4. Two Uses of `super` Serve Different Purposes
 
-Trong ví dụ, `super(baseFeeVnd)` **khởi tạo phần superclass** khi tạo `ExpressShippingFee`; còn `super.calculate(distanceKm)` chạy **implementation của phương thức lớp cha** trên chính object hiện tại:
+In the example, `super(baseFeeVnd)` **initializes the superclass portion** when creating `ExpressShippingFee`, whereas `super.calculate(distanceKm)` executes **the superclass method implementation** on the current object:
 
 ~~~java
 ExpressShippingFee(long base, long priority) {
@@ -1441,18 +1441,18 @@ public long calculate(int km) {
 }
 ~~~
 
-Constructor không được override. Trên Java 17/21, `super(...)` hoặc `this(...)` tường minh phải là câu lệnh đầu trong constructor, và nếu không ghi, compiler thử chèn `super()`. Quy tắc chuỗi khởi tạo cùng thứ tự field initializer được học riêng trong bài khởi tạo lớp con.
+Constructors cannot be overridden. In Java 17/21, an explicit `super(...)` or `this(...)` invocation must be the first constructor statement, and the compiler inserts `super()` when neither is written. Constructor chaining and field-initializer order are covered separately in the subclass initialization lesson.
 
-**Điểm tinh tế:** `super.calculate()` chọn thân phương thức cha tại điểm gọi; nếu thân ấy gọi một hook instance được override, hook vẫn dispatch tới implementation của lớp con. Vì vậy không nên xem `super` như một cơ chế bỏ qua mọi hành vi subclass.
+**Subtle point:** `super.calculate()` selects the superclass method body at that call site; if that body invokes an overridable instance hook, the hook still dispatches to the subclass implementation. Do not treat `super` as bypassing every subclass behavior.
 
-## 5. Không nhầm override với overload hoặc static hiding
+## 5. Do Not Confuse Override, Overload, and Static Hiding
 
-| Cơ chế | Nhận biết | Lựa chọn implementation |
+| Mechanism | How to identify it | How implementation is chosen |
 | --- | --- | --- |
-| **Overriding** | Instance method cùng chữ ký phù hợp ở subclass, thường có `@Override` | Theo kiểu runtime |
-| **Overloading** | Phương thức cùng tên, khác danh sách tham số | Chọn chữ ký tại biên dịch |
-| **Static method hiding** | Subclass khai báo static method cùng chữ ký hợp lệ | Theo lớp/kiểu của biểu thức, không theo runtime instance |
-| **Field hiding** | Subclass khai báo field trùng tên | Theo kiểu tĩnh/ngữ cảnh truy cập |
+| **Overriding** | Compatible instance-method signature in the subclass, usually marked `@Override` | Runtime type |
+| **Overloading** | Same method name, different parameter lists | Signature selected at compile time |
+| **Static method hiding** | Subclass declares a static method with the same valid signature | Class/expression type, not the runtime instance |
+| **Field hiding** | Subclass declares a field with the same name | Static type/access context |
 
 ~~~java
 class Base {
@@ -1468,45 +1468,45 @@ System.out.println(value.sound()); // child
 // value.sound(2); // Không biên dịch: Base không có sound(int).
 ~~~
 
-Đặc biệt, **static method không được override**. Đừng dùng `@Override` để đánh dấu một static method trùng tên; nếu có nhu cầu đa hình runtime, dùng instance method và hợp đồng phù hợp.
+In particular, **static methods are not overridden**. Do not mark a same-named static method with `@Override`; for runtime polymorphism, use instance methods with an appropriate contract.
 
-## 6. Các điều kiện để override hợp lệ
+## 6. Requirements for Valid Method Overriding
 
-- Phương thức cha phải là instance method có thể override; `private`, `final` và `static` không tham gia instance overriding.
-- Tên và danh sách tham số phải tương ứng với chữ ký được override. Đổi `int` thành `long` tạo overload khác, và `@Override` sẽ giúp phát hiện nhầm.
-- Kiểu trả về phải tương thích; Java cho phép **covariant return** khi kiểu trả về là reference subtype thích hợp.
-- Không giảm access modifier; ví dụ phương thức cha `public` thì phương thức con cũng phải `public`.
-- Không mở rộng checked exceptions vượt hợp đồng phương thức cha; unchecked exception không bị ràng buộc cú pháp tương tự nhưng vẫn phải tôn trọng hợp đồng hành vi.
+- The superclass method must be an overridable instance method; `private`, `final`, and `static` do not participate in instance overriding.
+- Names and parameter lists must match the overridden signature. Changing `int` to `long` creates an overload, which `@Override` helps catch.
+- Return types must be compatible; Java permits **covariant returns** for suitable reference subtypes.
+- Access cannot be reduced; if a superclass method is `public`, the subclass method must also be `public`.
+- Checked exceptions cannot be broadened beyond the superclass method contract; unchecked exceptions are not restricted the same way syntactically but must still honor behavioral expectations.
 
-Một override hợp lệ về cú pháp vẫn có thể sai nghiệp vụ nếu nó bỏ qua kiểm tra đầu vào, thay đổi bất biến hoặc khiến caller đang dùng kiểu cha nhận kết quả bất ngờ. Khi không cho lớp con thay toàn bộ quy trình, hãy cố định phương thức điều phối bằng `final` và công bố hook phù hợp như ví dụ **Template Method** bên dưới.
+A syntactically valid override can still violate business rules by skipping input validation, changing invariants, or surprising callers using the superclass type. When subclasses must not replace an entire workflow, make the coordinating method `final` and expose appropriate hooks, as in the **Template Method** example below.
 
-## 7. Khi nào phải gọi `super`, khi nào không?
+## 7. When Should You Call `super`, and When Should You Not?
 
-Java **không bắt buộc** phương thức override phải gọi `super.method()`. Điều cần xem là *hợp đồng hành vi*.
+Java **does not require** an overriding method to invoke `super.method()`. The decision depends on the *behavioral contract*.
 
-### Phù hợp với `super`
+### When `super` Is Appropriate
 
-Khi lớp con chỉ cần thêm một quy tắc nhưng vẫn giữ cách thực hiện cơ bản của cha. Trong ví dụ vận chuyển, phụ phí ưu tiên được cộng sau `super.calculate(distanceKm)`.
+When the subclass adds one rule while preserving the superclass's basic implementation. In the shipping example, the priority surcharge is added after `super.calculate(distanceKm)`.
 
-### Không nhất thiết gọi `super`
+### When `super` Is Not Required
 
-Khi hợp đồng cho phép thay thế toàn bộ thuật toán. Ví dụ, lớp cha mô tả một phương pháp vẽ cơ bản nhưng lớp con có một cách vẽ độc lập vẫn đáp ứng đầy đủ ngữ nghĩa.
+When the contract permits replacing the entire algorithm. For example, a superclass may define basic drawing behavior while a subclass provides a completely different drawing implementation that still satisfies the same contract.
 
-### Cần cân nhắc trước khi gọi
+### What to Consider Before Calling It
 
-- Gọi `super` hai lần có thể gây tác động lặp lại nếu phương thức cha thay đổi trạng thái hoặc gọi API bên ngoài.
-- Gọi `super` trước hay sau phần bổ sung quyết định thứ tự side effect, kiểm tra điều kiện và lỗi.
-- Bỏ lời gọi `super` có thể vô tình bỏ qua validation, ghi lịch sử hoặc duy trì invariant của lớp cha.
-- Nếu `super.method()` ném ngoại lệ, các câu lệnh đặt sau sẽ không chạy trừ khi mã chủ động bắt hoặc xử lý lỗi.
-- `super` chỉ gọi triển khai của cha tại vị trí đó; nó không “đóng băng” toàn bộ lời gọi động phát sinh bên trong. Nếu phương thức cha tiếp tục gọi một phương thức có thể override khác, phương thức đó vẫn có thể dispatch vào lớp con.
+- Calling `super` twice may duplicate side effects if the superclass method modifies state or invokes an external API.
+- Calling `super` before or after extra operations changes the order of side effects, validation, and errors.
+- Omitting `super` may accidentally bypass validation, audit history, or maintenance of superclass invariants.
+- If `super.method()` throws, later statements will not execute unless the code explicitly catches or handles the error.
+- `super` selects the parent implementation at that point; it does not “freeze” all subsequent dynamic calls. If the superclass implementation invokes another overridable method, that call may still dispatch to the subclass.
 
-Không nên cố định một quy tắc “override nào cũng phải gọi `super`”. Hãy đọc hợp đồng được lớp cha công bố và thiết kế điểm mở rộng phù hợp.
+Do not impose a rule that “every override must call `super`.” Read the superclass's published contract and design extension points accordingly.
 
-## 8. Mở rộng an toàn bằng Template Method
+## 8. Safe Extensions with Template Method
 
-Override cả một phương thức nghiệp vụ đôi khi khiến lớp con bỏ sót bước quan trọng, chẳng hạn kiểm tra dữ liệu trước khi xử lý. **Template Method** đặt quy trình chính trong một phương thức `final`; lớp con chỉ mở rộng phần được chỉ định qua `protected` hook.
+Overriding an entire business operation can let subclasses accidentally skip essential steps, such as input validation. **Template Method** puts the main workflow in a `final` method; subclasses extend only the specified step through a `protected` hook.
 
-Ví dụ độc lập, lưu trong **`TemplateDemo.java`**:
+A standalone example saved as **`TemplateDemo.java`**:
 
 ```java
 import java.util.Locale;
@@ -1545,17 +1545,17 @@ public class TemplateDemo {
 }
 ```
 
-Chạy `javac TemplateDemo.java` và `java TemplateDemo`:
+Run `javac TemplateDemo.java` and `java TemplateDemo`:
 
 ```text
 Đã xử lý: JAVA OOP
 ```
 
-Trong thiết kế này:
+In this design:
 
-1. `execute()` là quy trình bắt buộc: kiểm tra `null`, chuẩn hóa, từ chối dữ liệu trống rồi tạo kết quả.
-2. `final` chặn lớp con ghi đè `execute()` và vô tình bỏ qua các bước chung.
-3. `transform()` là điểm mở rộng được chỉ định rõ; lớp con thay đổi thuật toán biến đổi, không thay đổi hợp đồng đầu vào của `execute()`.
+1. `execute()` enforces the workflow: check `null`, normalize input, reject empty data, and produce the result.
+2. `final` prevents subclasses from overriding `execute()` and accidentally bypassing shared steps.
+3. `transform()` is the explicit extension point; subclasses change the transformation algorithm without altering the input contract of `execute()`.
 
 ```mermaid
 flowchart TD
@@ -1566,11 +1566,11 @@ flowchart TD
     E --> F["Lớp cha ghép kết quả cuối"]
 ```
 
-Template Method hữu ích khi nhiều lớp con dùng chung **thứ tự xử lý bất biến** nhưng thay đổi một vài bước. Không nên lạm dụng nếu chỉ để thêm một câu lệnh đơn giản hoặc khi các biến thể không có quan hệ kế thừa hợp lý.
+Template Method fits subclasses that share an **invariant processing order** but vary a few steps. Avoid applying it for a single simple statement or when the variations do not form a sound inheritance relationship.
 
-## 9. Mở rộng hành vi sau khi khởi tạo xong
+## 9. Extend Behavior After Construction Completes
 
-Trong khi `super(...)` chạy, field riêng của subclass có thể vẫn đang mang giá trị mặc định. Nếu constructor cha gọi method overridable, Java vẫn dispatch tới override của con:
+While `super(...)` is running, subclass-specific fields may still hold default values. If a superclass constructor invokes an overridable method, Java still dispatches to the subclass override:
 
 ~~~java
 class Parent {
@@ -1584,11 +1584,11 @@ class Child extends Parent {
 // new Child() in null, vì initializer label chưa chạy.
 ~~~
 
-Đây là hệ quả của **thứ tự khởi tạo**, không phải bug ngẫu nhiên hay race condition. Các hook cho subclass nên được gọi sau khi đối tượng hoàn tất khởi tạo. Bài về constructor chain sẽ lần theo thứ tự này cùng static block, instance block và ngoại lệ trong constructor.
+This follows from **initialization order**, not a random bug or race condition. Subclass hooks should be invoked only after the object is fully initialized. The constructor-chain lesson traces this order alongside static blocks, instance blocks, and constructor exceptions.
 
-## 10. Những trường hợp kế thừa không phải lựa chọn tốt
+## 10. When Inheritance Is Not a Good Fit
 
-Kế thừa hợp lý khi lớp con thực sự là **một dạng chuyên biệt của lớp cha** và giữ được hợp đồng hành vi. Nếu chỉ muốn cộng một tính năng tùy chọn (log, metrics, retry, cache, phụ phí), **composition/decorator** đôi khi linh hoạt hơn:
+Inheritance makes sense when a subclass really is **a specialized kind of its superclass** and preserves its contract. If you only need to add an optional feature (logging, metrics, retries, caching, or a surcharge), **composition/decorators** may be more flexible:
 
 ```java
 interface PriceCalculator {
@@ -1614,85 +1614,85 @@ final class SurchargeCalculator implements PriceCalculator {
 }
 ```
 
-Đây là ví dụ **thành phần có thể kết hợp**: `SurchargeCalculator` giữ một `PriceCalculator` khác rồi thêm phí. Khi cần nhiều biến thể kết hợp, không nhất thiết xây một cây lớp con như `ExpressInternationalDiscountedShipping`.
+This illustrates **composable components**: `SurchargeCalculator` holds another `PriceCalculator` and adds a fee. When combining variations, you do not necessarily need a hierarchy such as `ExpressInternationalDiscountedShipping`.
 
-So sánh:
+Comparison:
 
-| Tiêu chí | `extends` / override | Composition / delegate |
+| Criterion | `extends` / override | Composition / delegate |
 | --- | --- | --- |
-| Quan hệ | `is-a`: lớp con là một loại lớp cha | `has-a`: đối tượng chứa/tham chiếu một thành phần khác |
-| Cách dùng lại hành vi | Gọi phương thức kế thừa hoặc `super.method()` | Gọi `delegate.method()` |
-| Điểm mở rộng | Do lớp cha thiết kế; có thể bị ràng buộc bởi `protected` / `final` | Do interface và đối tượng delegate quyết định |
-| Ghép nhiều tính năng | Có thể tạo nhiều lớp con và tổ hợp phức tạp | Thường dễ kết hợp nhiều wrapper |
-| Rủi ro chính | Phụ thuộc chặt vào hợp đồng và chi tiết lớp cha | Có thêm đối tượng/ủy quyền và phải quản lý vòng đời thích hợp |
+| Relationship | `is-a`: a subclass is a kind of superclass | `has-a`: an object contains/references another component |
+| Reusing behavior | Invoke an inherited method or `super.method()` | Invoke `delegate.method()` |
+| Extension points | Designed by the superclass; may be constrained by `protected` / `final` | Determined by interfaces and delegate objects |
+| Combining features | May require many subclasses and complex combinations | Multiple wrappers are often easier to combine |
+| Primary risk | Tight coupling to superclass contracts and details | Additional objects/delegation and the need for appropriate lifecycle management |
 
-Không phải composition luôn tốt hơn: nếu mô hình có quan hệ phân cấp thực sự, các biến thể chia sẻ nhiều quy tắc cố định và lớp cha cung cấp hook rõ ràng, kế thừa vẫn rất hợp lý. Hãy chọn theo quan hệ miền nghiệp vụ và độ ổn định của hợp đồng.
+Composition is not always superior: when a genuine hierarchy exists, variations share many fixed rules, and the superclass exposes clear hooks, inheritance is entirely reasonable. Choose based on domain relationships and contract stability.
 
-## 11. Lỗi thường gặp và cách sửa
+## 11. Common Mistakes and Fixes
 
-| Lỗi | Điều xảy ra | Cách sửa |
+| Mistake | What happens | Fix |
 | --- | --- | --- |
-| Override rồi gọi `calculate(...)` thay vì `super.calculate(...)` trong cùng phương thức | Có thể đệ quy vô hạn (`StackOverflowError`) | Gọi `super.calculate(...)` nếu cần triển khai của cha |
-| Quên `@Override` và đổi kiểu tham số | Tạo overload, không ghi đè | Thêm `@Override` để trình biên dịch kiểm tra |
-| Lớp con bỏ kiểm tra đầu vào vốn do cha bảo đảm | Đối tượng có thể vi phạm hợp đồng | Giữ validation hoặc đưa quy trình chung vào phương thức `final` |
-| Override phương thức `final` hoặc `private` | Không được phép override theo quy tắc Java | Dùng điểm mở rộng mà lớp cha công bố |
-| Nhầm `static` hiding với override | Lựa chọn theo kiểu tham chiếu/lớp, không đa hình instance | Dùng instance method khi cần dynamic dispatch |
-| Lớp cha gọi hook override trong constructor | Lớp con được gọi khi chưa khởi tạo xong | Không gọi phương thức overridable trong constructor |
-| Lớp con sử dụng trực tiếp trường `protected` mutable của cha | Dễ phá invariant của cha | Giữ trường `private`, cung cấp phương thức/hook kiểm soát |
-| Dùng `extends` chỉ để tái sử dụng vài dòng code | Kết hợp tính năng khó, quan hệ `is-a` yếu | Cân nhắc composition/delegation |
+| Calling `calculate(...)` instead of `super.calculate(...)` inside an override | May recurse indefinitely (`StackOverflowError`) | Call `super.calculate(...)` when the superclass implementation is needed |
+| Omitting `@Override` while changing parameter types | Creates an overload instead of an override | Add `@Override` for compiler checks |
+| Subclass skips validation guaranteed by the superclass | Object may violate the contract | Retain validation or put the shared workflow into a `final` method |
+| Overriding a `final` or `private` method | Not permitted under Java override rules | Use the superclass's designated extension point |
+| Confusing `static` hiding with overriding | Dispatch depends on class/reference type, not runtime instance polymorphism | Use instance methods for dynamic dispatch |
+| Superclass invokes an overridden hook from its constructor | Subclass executes before initialization completes | Do not call overridable methods from constructors |
+| Subclass directly modifies mutable `protected` superclass fields | Superclass invariants can break | Keep fields `private` and provide controlled methods/hooks |
+| Using `extends` to reuse only a few lines | Feature composition becomes difficult; weak `is-a` relationship | Consider composition/delegation |
 
-## 12. Tự kiểm tra
+## 12. Self-Check
 
-**Câu 1.** Trong `ExpressShippingFee.calculate()`, vì sao gọi `super.calculate(distanceKm)` thay vì `calculate(distanceKm)`?
+**Question 1.** In `ExpressShippingFee.calculate()`, why call `super.calculate(distanceKm)` instead of `calculate(distanceKm)`?
 
-**Đáp án:** `super` chỉ định triển khai lớp cha. Gọi `calculate(...)` không có `super` ngay trong override thường quay lại phương thức của lớp con và gây đệ quy.
+**Answer:** `super` selects the superclass implementation. Calling `calculate(...)` without `super` inside the override typically invokes the same subclass method again and causes recursion.
 
-**Câu 2.** `ShippingFee shipping = new ExpressShippingFee(10000, 15000);` rồi `shipping.calculate(3)` chạy phương thức nào?
+**Question 2.** After `ShippingFee shipping = new ExpressShippingFee(10000, 15000);`, which method runs when `shipping.calculate(3)` is called?
 
-**Đáp án:** `ExpressShippingFee.calculate()`, vì đây là lời gọi phương thức instance được override và dispatch dựa trên kiểu đối tượng thực tế.
+**Answer:** `ExpressShippingFee.calculate()`, because this is an overridden instance method dispatched according to the object's actual runtime type.
 
-**Câu 3.** Lớp con có thể override constructor không?
+**Question 3.** Can a subclass override a constructor?
 
-**Đáp án:** Không. Constructor không được kế thừa. Lớp con gọi constructor lớp cha bằng `super(...)` trong quá trình khởi tạo.
+**Answer:** No. Constructors are not inherited. A subclass invokes a superclass constructor through `super(...)` during initialization.
 
-**Câu 4.** `protected abstract String transform(...)` và `public final String execute(...)` trong Template Method phân chia trách nhiệm ra sao?
+**Question 4.** How do `protected abstract String transform(...)` and `public final String execute(...)` divide responsibilities in Template Method?
 
-**Đáp án:** `execute()` giữ quy trình cố định và invariant; `transform()` cho lớp con triển khai biến thể được kiểm soát.
+**Answer:** `execute()` preserves the fixed workflow and invariants; `transform()` lets subclasses implement controlled variations.
 
-**Câu 5.** Có nên để lớp cha khai báo `protected List<Order> orders` để lớp con tùy ý chỉnh sửa không?
+**Question 5.** Should the superclass declare `protected List<Order> orders` so subclasses can modify it freely?
 
-**Đáp án:** Không nên nếu lớp cha cần bảo vệ tính nhất quán của dữ liệu. Để trường `private` và cung cấp thao tác/hook có hợp đồng rõ ràng thường an toàn hơn.
+**Answer:** Not if the superclass must protect data consistency. Keeping the field `private` and exposing clearly contracted operations/hooks is usually safer.
 
-**Câu 6.** Khi muốn bổ sung logging, cache và retry theo nhiều tổ hợp, kế thừa có luôn là lựa chọn dễ nhất không?
+**Question 6.** Is inheritance always the easiest way to combine logging, caching, and retry behavior in many combinations?
 
-**Đáp án:** Không. Composition/decorator có thể ghép các khả năng linh hoạt hơn và giảm số lượng lớp con.
+**Answer:** No. Composition/decorators can combine capabilities more flexibly and reduce the number of subclasses.
 
-**Ghi nhớ:** Để mở rộng hành vi lớp cha, dùng `extends` khi quan hệ `is-a` và hợp đồng kế thừa hợp lý, `@Override` để thay hoặc bổ sung triển khai, `super.method()` để tái dùng hành vi cha và `super(...)` để khởi tạo phần lớp cha. Nếu cần bảo vệ một quy trình không cho lớp con bỏ qua, thiết kế `final` template method cùng điểm mở rộng `protected` rõ ràng.
+**Remember:** To extend superclass behavior, use `extends` when the `is-a` relationship and inheritance contract are valid, `@Override` to replace or augment implementations, `super.method()` to reuse superclass behavior, and `super(...)` to initialize the superclass portion. To protect a workflow against subclass bypass, design a `final` template method with an explicit `protected` extension point.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="inheritance-004">Ghi đè phương thức và gọi hành vi lớp cha</a>
+## <a id="inheritance-004">Overriding methods and invoking superclass behavior</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Ghi đè phương thức và gọi hành vi lớp cha trong Java
+# Method Overriding and Invoking Superclass Behavior in Java
 
-**Method overriding (ghi đè phương thức)** cho phép lớp con cung cấp cách thực hiện riêng cho một **phương thức instance có thể kế thừa** từ lớp cha, trong khi mã sử dụng vẫn gọi qua hợp đồng của lớp cha. Khi lớp con muốn **giữ một phần xử lý của lớp cha rồi bổ sung hành vi**, Java cung cấp cú pháp `super.method(...)`.
+**Method overriding** allows a subclass to provide its own implementation of an **inheritable instance method** declared by a superclass, while callers still interact through the superclass contract. When a subclass wants to **preserve part of the superclass's processing and then add behavior**, Java offers `super.method(...)`.
 
-Hai câu hỏi cần phân biệt:
+Distinguish two questions:
 
-- **Ghi đè:** “Khi đối tượng thực tế là lớp con, phương thức nào được chạy?”
-- **Gọi `super`:** “Bên trong phương thức của lớp con, làm sao gọi phiên bản phù hợp được kế thừa từ lớp cha thay vì gọi lại chính phương thức vừa ghi đè?”
+- **Overriding:** “Which method runs when the actual object is a subclass instance?”
+- **Calling `super`:** “Inside a subclass method, how can we invoke the appropriate inherited superclass version instead of recursively calling our own override?”
 
-Bài này sử dụng Java 11 trở lên, minh họa bằng bài toán tính phí giao hàng với hai gói: giao thường và giao nhanh. Ví dụ được đặt trong **một tệp Java** để có thể biên dịch, chạy và tự kiểm tra kết quả ngay.
+This lesson uses Java 11 or later and illustrates shipping-fee calculations for standard and express delivery. The example is contained in **one Java file** so it can be compiled, executed, and checked immediately.
 
-## 1. Nhận diện overriding bằng ví dụ tối giản
+## 1. Recognizing Overriding with a Minimal Example
 
 ```java
 class Notification {
@@ -1709,20 +1709,20 @@ class EmailNotification extends Notification {
 }
 ```
 
-Khi gọi:
+When called:
 
 ```java
 Notification message = new EmailNotification();
 message.send(); // Gửi qua email
 ```
 
-Biến `message` có **kiểu khai báo** là `Notification`, nhưng đối tượng thực tế được tạo bởi `new EmailNotification()`. Vì `send()` là phương thức instance được override, Java chọn phiên bản của **lớp đối tượng thực tế** khi chạy. Đây là **dynamic method dispatch** và là một dạng đa hình (polymorphism).
+The variable `message` has the **declared type** `Notification`, but the actual object is created by `new EmailNotification()`. Because `send()` is an overridden instance method, Java selects the version belonging to the object's **actual runtime class**. This is **dynamic method dispatch**, a form of polymorphism.
 
-`@Override` không phải điều kiện khiến JVM thực hiện ghi đè; nó là annotation để **trình biên dịch xác nhận ý định ghi đè**. Nếu viết sai tên hoặc chữ ký, annotation giúp phát hiện lỗi sớm.
+`@Override` is not what makes the JVM dispatch an override; it is an annotation that **asks the compiler to verify the overriding intent**. A wrong name or signature is caught early.
 
-### Ghi đè khác việc khai báo phương thức mới
+### Overriding Versus Declaring Another Method
 
-Hai phương thức cùng tên không nhất thiết là override. Để ghi đè đúng, phương thức ở lớp con phải phù hợp chữ ký phương thức kế thừa, tức là tên và danh sách kiểu tham số tương ứng theo quy tắc Java; kiểu trả về cũng phải tương thích.
+Two methods with the same name are not necessarily overrides. To override, a subclass method must match the inherited method's signature under Java's rules: name and parameter types must correspond, and the return type must also be compatible.
 
 ```java
 class Parent {
@@ -1743,18 +1743,18 @@ class Child extends Parent {
 }
 ```
 
-Ở đây `process(String)` là **override**, còn `process(int)` là **overload** (cùng tên nhưng tham số khác). Không thể ghi `@Override` trên `process(int)` trong trường hợp này vì lớp cha không có phương thức tương ứng để ghi đè.
+Here, `process(String)` is an **override**, while `process(int)` is an **overload** (same name, different parameters). You cannot use `@Override` on `process(int)` in this example because the superclass has no matching method to override.
 
-## 2. Ví dụ hoàn chỉnh: mở rộng hành vi lớp cha bằng `super`
+## 2. Complete Example: Extending Superclass Behavior with `super`
 
-Yêu cầu:
+Requirements:
 
-- Gói **giao thường**: phí nền 12.000 VND và thêm 3.000 VND cho mỗi km.
-- Gói **giao nhanh**: giữ phép tính của gói thường rồi cộng phụ phí ưu tiên 20.000 VND.
-- Quãng đường phải là số nguyên không âm; nếu tính tiền `long` bị tràn, ném `ArithmeticException` thay vì trả sai.
-- Một phương thức `printQuote` được định nghĩa ở lớp cha có thể sử dụng kết quả của phương thức `fee` đã được lớp con ghi đè.
+- **Standard delivery:** a base fee of 12.000 VND plus 3.000 VND per km.
+- **Express delivery:** preserve the standard calculation and add a priority surcharge of 20.000 VND.
+- Distance must be a nonnegative integer; if a `long` fee calculation overflows, throw `ArithmeticException` rather than returning a wrong value.
+- A superclass `printQuote` method should use the result of the subclass-overridden `fee` method.
 
-Tệp **`OverrideAndSuperDemo.java`**:
+File **`OverrideAndSuperDemo.java`**:
 
 ```java
 public class OverrideAndSuperDemo {
@@ -1820,14 +1820,14 @@ public class OverrideAndSuperDemo {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac OverrideAndSuperDemo.java
 java OverrideAndSuperDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 Giao thường (5 km): 27000 VND
@@ -1837,11 +1837,11 @@ Giao nhanh (nền: Giao thường) (5 km): 47000 VND
 Từ chối: Quãng đường không được âm
 ```
 
-Phí của gói thường ở 5 km là 12.000 + 3.000 × 5 = **27.000 VND**. Gói nhanh gọi lại công thức của lớp cha và cộng thêm 20.000, cho kết quả **47.000 VND**.
+At 5 km, the standard fee is 12.000 + 3.000 × 5 = **27.000 VND**. Express delivery reuses the superclass calculation and adds 20.000, producing **47.000 VND**.
 
-### Vì sao `super.fee(distanceKm)` quan trọng?
+### Why Is `super.fee(distanceKm)` Important?
 
-Trong `ExpressPlan.fee`:
+Inside `ExpressPlan.fee`:
 
 ```java
 @Override
@@ -1851,7 +1851,7 @@ public long fee(int distanceKm) {
 }
 ```
 
-`super.fee(distanceKm)` chọn phiên bản `fee` ở lớp cha `DeliveryPlan`, thực thi cả **kiểm tra quãng đường** lẫn **tính phí nền**, rồi lớp con bổ sung phụ phí. Nếu viết:
+`super.fee(distanceKm)` selects the `fee` implementation in superclass `DeliveryPlan`, performing both **distance validation** and **base fee calculation** before the subclass adds its surcharge. If you write:
 
 ```java
 @Override
@@ -1860,13 +1860,13 @@ public long fee(int distanceKm) {
 }
 ```
 
-thì `fee(distanceKm)` không có `super` sẽ lại gọi `ExpressPlan.fee` trên cùng đối tượng, tiếp tục gọi chính nó và dẫn đến **đệ quy không có điểm dừng**, thường kết thúc bằng `StackOverflowError`. Điều này không có nghĩa mọi lời gọi method cùng tên đều là lỗi; lỗi cụ thể là tự gọi lại mà không có điều kiện dừng.
+then `fee(distanceKm)` without `super` invokes `ExpressPlan.fee` again on the same object, recursively invoking itself and causing **recursion without a terminating condition**, usually ending in `StackOverflowError`. Not every same-named method call is an error; this specific call recurses without a base case.
 
-Chú ý: `super.fee` **không tạo thêm một đối tượng lớp cha**. Nó dùng chính đối tượng `ExpressPlan` hiện tại, nhưng chọn cách thực hiện của phương thức cha tại vị trí lời gọi.
+Note that `super.fee` **does not create another superclass object**. It operates on the current `ExpressPlan` object, but selects the superclass implementation at that call site.
 
-## 3. Đa hình vẫn xảy ra bên trong phương thức của lớp cha
+## 3. Polymorphism Still Occurs Inside Superclass Methods
 
-Điều thú vị trong ví dụ là `printQuote` **không được override**. Tuy vậy, thân của nó gọi:
+Interestingly, `printQuote` **is not overridden** in this example. Nevertheless, its body calls:
 
 ```java
 public void printQuote(int distanceKm) {
@@ -1876,12 +1876,12 @@ public void printQuote(int distanceKm) {
 }
 ```
 
-Khi `express.printQuote(5)` chạy trên đối tượng thực tế là `ExpressPlan`:
+When `express.printQuote(5)` runs on an actual `ExpressPlan` object:
 
-1. `printQuote` của `DeliveryPlan` chạy vì lớp con không override nó.
-2. Lời gọi `label()` trong thân `printQuote` được phân giải động đến `ExpressPlan.label()`.
-3. Lời gọi `fee(5)` được phân giải động đến `ExpressPlan.fee(5)`.
-4. Trong `ExpressPlan.fee(5)`, `super.fee(5)` gọi logic của `DeliveryPlan`, rồi lớp con cộng phụ phí.
+1. `printQuote` in `DeliveryPlan` runs because the subclass does not override it.
+2. The `label()` call inside `printQuote` dynamically dispatches to `ExpressPlan.label()`.
+3. The `fee(5)` call dynamically dispatches to `ExpressPlan.fee(5)`.
+4. Within `ExpressPlan.fee(5)`, `super.fee(5)` runs `DeliveryPlan` logic before the subclass adds its surcharge.
 
 ```mermaid
 sequenceDiagram
@@ -1897,25 +1897,25 @@ sequenceDiagram
     Obj-->>Client: In phí 47000 VND
 ```
 
-Sơ đồ mô tả logic gọi method, **không** có ý rằng một đối tượng `DeliveryPlan` riêng được tạo ra.
+The diagram represents the call flow; it **does not** imply that a separate `DeliveryPlan` object is created.
 
-Điều này giải thích sức mạnh của overriding: lớp cha có thể định nghĩa một quy trình chung gọi các “điểm mở rộng” là phương thức có thể override; lớp con thay đổi các điểm đó mà không phải viết lại toàn bộ quy trình. Tuy nhiên, cần thận trọng khi gọi phương thức có thể override trong **constructor lớp cha** vì tại thời điểm đó field initializer của lớp con có thể chưa chạy.
+This illustrates the power of overriding: a superclass can define a common workflow that invokes overridable “extension points,” letting subclasses change them without rewriting the whole process. However, invoking overridable methods from a **superclass constructor** is dangerous because subclass field initializers may not have run yet.
 
-## 4. `super.method()` và `super(...)` không giống nhau
+## 4. `super.method()` Versus `super(...)`
 
-Cả hai cùng dùng từ khóa `super` nhưng phục vụ hai mục đích khác nhau:
+Both use the `super` keyword but serve different purposes:
 
-| Cú pháp | Mục đích | Được dùng ở đâu? |
+| Syntax | Purpose | Where is it used? |
 | --- | --- | --- |
-| `super.method(args)` | Gọi một phương thức instance phù hợp từ phần cài đặt của superclass | Trong ngữ cảnh instance của lớp con, khi phương thức đó có thể truy cập |
-| `super(args)` | Gọi constructor của lớp cha trong chuỗi xây dựng đối tượng | Trong constructor của lớp con |
-| `this.method(args)` hoặc `method(args)` | Gọi phương thức trên đối tượng hiện tại, có thể được phân giải động | Trong ngữ cảnh instance |
-| `this(args)` | Gọi constructor khác của cùng lớp | Trong constructor, theo quy tắc constructor invocation |
-| `super.field` | Truy cập field của lớp cha nếu mức truy cập cho phép và cần phân biệt tên | Trong ngữ cảnh instance |
+| `super.method(args)` | Invokes an accessible instance method implementation from the superclass | In a subclass instance context where access is allowed |
+| `super(args)` | Invokes the superclass constructor in the object-construction chain | In a subclass constructor |
+| `this.method(args)` or `method(args)` | Invokes a method on the current object, possibly dynamically dispatched | In an instance context |
+| `this(args)` | Invokes another constructor of the same class | In a constructor under constructor-invocation rules |
+| `super.field` | Accesses an accessible superclass field when necessary to disambiguate names | In an instance context |
 
-Trong Java 11, lời gọi `super(args)` hoặc `this(args)` tường minh phải là câu lệnh đầu tiên của constructor. `super.method(args)` là lời gọi phương thức thông thường và **không có yêu cầu vị trí đầu tiên** như thế.
+In Java 11, an explicit `super(args)` or `this(args)` must be the first constructor statement. `super.method(args)` is an ordinary method call and **has no such first-statement requirement**.
 
-Ví dụ constructor:
+Constructor example:
 
 ```java
 class Vehicle {
@@ -1942,13 +1942,13 @@ class Car extends Vehicle {
 }
 ```
 
-Kết quả `new Car("42").code()` là `"CAR-42"`.
+The result of `new Car("42").code()` is `"CAR-42"`.
 
-Một method của superclass được gọi qua `super` vẫn có thể tự gọi method khác theo cơ chế đa hình. `super` quyết định **phiên bản ở điểm gọi ban đầu**, chứ không làm mọi lời gọi sâu bên trong bị “khóa” thành bản cha.
+A superclass method invoked via `super` may itself call another method using polymorphism. `super` selects **the version at the initial call site**; it does not force every nested call to use only superclass implementations.
 
-## 5. Những quy tắc để ghi đè hợp lệ
+## 5. Rules for Valid Overriding
 
-### Cùng tên và tham số; kiểu trả về tương thích
+### Matching Names and Parameters; Compatible Return Types
 
 ```java
 class Document {
@@ -1965,11 +1965,11 @@ class PdfDocument extends Document {
 }
 ```
 
-Đây là ví dụ **covariant return type**: method lớp con được phép trả về kiểu tham chiếu cụ thể hơn, tức `PdfDocument` là kiểu con của `Document`.
+This demonstrates a **covariant return type**: the subclass method may return a more specific reference type because `PdfDocument` is a subtype of `Document`.
 
-Nhưng nếu lớp cha trả `int` thì lớp con không được đổi thành `long` khi override cùng chữ ký, vì kiểu trả về nguyên thủy phải tương thích theo quy tắc Java. Cũng không thể tạo một overload chỉ bằng việc thay đổi kiểu trả về.
+If the superclass returns `int`, the subclass cannot change that to `long` when overriding the same signature: primitive return types must obey Java's compatibility rules. An overload also cannot be distinguished solely by a different return type.
 
-### Không được giảm mức truy cập
+### Access Visibility Cannot Be Reduced
 
 ```java
 class BaseService {
@@ -1986,9 +1986,9 @@ class PublicService extends BaseService {
 }
 ```
 
-Nếu lớp cha khai báo `public void execute()`, lớp con không được override thành `protected void execute()` hoặc package-private. Nếu method cha `protected`, method con có thể giữ `protected` hoặc mở rộng thành `public`.
+If the superclass declares `public void execute()`, the subclass cannot override it with `protected void execute()` or package-private access. If the superclass method is `protected`, the subclass may retain `protected` or widen access to `public`.
 
-### Checked exception không được mở rộng tùy tiện
+### Checked Exceptions Cannot Be Arbitrarily Broadened
 
 ```java
 import java.io.IOException;
@@ -2008,9 +2008,9 @@ class LocalFileSource extends FileSource {
 }
 ```
 
-`FileNotFoundException` là loại con của `IOException`, vì vậy khai báo ở lớp con hợp lệ. Nếu method lớp cha không khai báo checked exception, override không được tự bổ sung một checked exception mới không tương thích. Với **unchecked exception** như `IllegalArgumentException`, Java không áp đặt cùng giới hạn về khai báo `throws`, nhưng lớp con vẫn nên tôn trọng hợp đồng hành vi của lớp cha.
+`FileNotFoundException` is a subtype of `IOException`, so the subclass declaration is valid. If the superclass declares no checked exception, its override cannot introduce a new incompatible checked exception. For **unchecked exceptions** such as `IllegalArgumentException`, Java does not impose the same `throws` declaration restrictions, although the subclass should still honor the superclass's behavioral contract.
 
-### `@Override` giúp bắt lỗi sai chữ ký
+### `@Override` Detects Signature Mistakes
 
 ```java
 class BaseReport {
@@ -2024,21 +2024,21 @@ class CsvReport extends BaseReport {
 }
 ```
 
-`export(Object)` là overload khác tham số, không thay thế `export(String)`. Annotation `@Override` khiến trình biên dịch báo lỗi thay vì để lập trình viên tưởng đã ghi đè thành công.
+`export(Object)` is an overload with different parameters; it does not replace `export(String)`. `@Override` makes the compiler report the mismatch instead of letting a programmer mistakenly believe overriding succeeded.
 
-## 6. Phương thức nào không thể được override theo cách thông thường?
+## 6. Which Methods Cannot Be Overridden Normally?
 
-| Loại method/đặc điểm | Hành vi thực tế |
+| Method type/characteristic | Actual behavior |
 | --- | --- |
-| Instance method có thể kế thừa và không `final` | Có thể override nếu chữ ký, quyền truy cập, kiểu trả về và exception phù hợp |
-| `final` instance method | **Không thể override**; dùng khi cần khóa hành vi ở cấp đó |
-| `static` method | Không override; khai báo cùng tên/chữ ký ở lớp con là **method hiding** |
-| `private` method | Không được kế thừa nên không override được; tên trùng ở lớp con là method riêng |
-| Constructor | Không phải method được kế thừa, nên không override |
-| Abstract method | Lớp con concrete phải cung cấp implementation nếu chưa có implementation kế thừa phù hợp |
-| Interface default method | Lớp triển khai có thể override; có cú pháp gọi phiên bản default phù hợp qua `InterfaceName.super.method()` |
+| Inheritable non-`final` instance method | Can be overridden when signature, access, return type, and exception rules are met |
+| `final` instance method | **Cannot be overridden**; used to lock down behavior at that level |
+| `static` method | Not overridden; a same-named/signature subclass declaration is **method hiding** |
+| `private` method | Not inherited and therefore cannot be overridden; a same-named subclass method is separate |
+| Constructor | Not an inherited method, so cannot be overridden |
+| Abstract method | A concrete subclass must implement it if no suitable inherited implementation exists |
+| Interface default method | Implementing classes may override it; an appropriate default can be invoked using `InterfaceName.super.method()` |
 
-### `static`: method hiding khác overriding
+### `static`: Method Hiding Versus Overriding
 
 ```java
 class Animal {
@@ -2069,9 +2069,9 @@ System.out.println(Dog.category());    // Chó
 System.out.println(a.sound());         // Gâu
 ```
 
-`category()` là static, gọi qua tên lớp để thể hiện rõ method hiding; không có dynamic dispatch như `sound()`. Không thể dùng `@Override` cho `Dog.category()`.
+`category()` is static; invoking it through the class name makes method hiding clear. It does not use dynamic dispatch like `sound()`. The `@Override` annotation cannot be applied to `Dog.category()`.
 
-### `private`: không có method nào để kế thừa
+### `private`: No Inherited Method to Override
 
 ```java
 class Parent {
@@ -2091,9 +2091,9 @@ class Child extends Parent {
 }
 ```
 
-`new Child().run()` in `"Audit nội bộ Parent"`. `Child.audit()` là method mới chứ không override `Parent.audit()`, bởi `private` method của cha không được kế thừa. Việc cho hai method trùng tên không khiến lời gọi bên trong `Parent.run()` trở thành dynamic dispatch tới method của con.
+`new Child().run()` prints `"Audit nội bộ Parent"`. `Child.audit()` is a new method, not an override of `Parent.audit()`, because the superclass's `private` method is not inherited. Same-named methods do not make the call inside `Parent.run()` dynamically dispatch to the subclass method.
 
-### `final`: cấm ghi đè
+### `final`: Prohibiting Overriding
 
 ```java
 class Transaction {
@@ -2108,11 +2108,11 @@ class Payment extends Transaction {
 }
 ```
 
-Từ khóa `final` trên một method ngăn subclass thay đổi cách thực hiện method đó. Điều này có thể bảo vệ một bước bắt buộc trong quy trình. Tuy nhiên, `final` không phải giải pháp thay cho thiết kế hợp đồng tốt.
+Marking a method `final` prevents subclasses from replacing its implementation. This can preserve a mandatory workflow step. However, `final` is not a substitute for a well-designed behavioral contract.
 
-## 7. `super`, field hiding và dynamic dispatch
+## 7. `super`, Field Hiding, and Dynamic Dispatch
 
-Field không hoạt động như method override. Nếu hai lớp khai báo field trùng tên, tên field được chọn theo **kiểu tại thời điểm biên dịch** và ngữ cảnh truy cập.
+Fields do not behave like overridden methods. If a superclass and subclass declare fields with identical names, field access is determined by the **compile-time type** and access context.
 
 ```java
 class Parent {
@@ -2143,15 +2143,15 @@ System.out.println(value.getName());          // Child
 System.out.println(((Child) value).parentField()); // Parent
 ```
 
-Đây là **field hiding**, không phải đa hình field. Hai field trùng tên tạo ra hai trạng thái riêng trong cùng đối tượng, thường dễ gây nhầm lẫn. Trong thiết kế thực tế, nên giữ field `private` và truyền dữ liệu qua API phù hợp thay vì cố tình đặt field trùng tên để thay đổi hành vi.
+This is **field hiding**, not field polymorphism. Same-named fields are two separate state slots within one object, often causing confusion. In production code, prefer `private` fields and a suitable API over intentionally repeating field names to change behavior.
 
-`super.name` chọn field phù hợp được khai báo ở superclass và có thể truy cập từ lớp con; nó không phải cú pháp “gọi getter”.
+`super.name` selects an accessible field declared in the superclass; it is not syntax for “calling a getter.”
 
-## 8. Gọi hành vi cha hay thay thế hoàn toàn?
+## 8. Reuse Superclass Behavior or Replace It Entirely?
 
-Có hai phương án phổ biến khi override:
+There are two common overriding strategies:
 
-**Phương án A — thay thế hoàn toàn**
+**Option A — replace the behavior completely**
 
 ```java
 class TextFormatter {
@@ -2168,9 +2168,9 @@ class UppercaseFormatter extends TextFormatter {
 }
 ```
 
-Ở đây lớp con định nghĩa toàn bộ hành vi mới; không gọi `super.format(...)`. Cần lưu ý `trim` và `strip` khác cách xử lý một số ký tự khoảng trắng Unicode, vì vậy nếu hợp đồng yêu cầu chuẩn hóa chính xác, phải chọn một quy tắc nhất quán. Đây là ví dụ cho thấy **override hợp lệ về cú pháp chưa chắc tương đương về hợp đồng**.
+Here, the subclass defines entirely new behavior without invoking `super.format(...)`. Note that `trim` and `strip` treat some Unicode whitespace characters differently, so a contract requiring precise normalization needs a consistent rule. This demonstrates that **syntactically valid overriding may not preserve the behavioral contract**.
 
-**Phương án B — giữ phần cha rồi bổ sung**
+**Option B — preserve the superclass step and add behavior**
 
 ```java
 class CheckedFormatter extends TextFormatter {
@@ -2185,26 +2185,26 @@ class CheckedFormatter extends TextFormatter {
 }
 ```
 
-Lớp con tái sử dụng bước chuẩn hóa của cha rồi thêm dấu ngoặc. Hợp đồng của kiểu cha phải cho phép định dạng mới này. Nếu phía sử dụng đòi kết quả là **chuỗi trim nguyên bản**, thêm dấu ngoặc có thể phá hợp đồng dù mã chạy đúng.
+The subclass reuses superclass normalization and adds brackets. The supertype contract must permit this new formatting. If clients require the **original trimmed string**, adding brackets could violate the contract even though the code runs.
 
-Do đó, trước khi override, hãy xác định: **điểm mở rộng mà lớp cha cho phép là gì?** Nếu thay đổi hành vi dẫn tới phá điều kiện đầu vào, đầu ra hoặc bất biến được công bố, tốt hơn nên dùng một interface/chiến lược khác thay vì subclass làm sai hợp đồng.
+Before overriding, ask: **Which extension points does the superclass permit?** If a change violates published input conditions, outputs, or invariants, use a different interface or strategy rather than a subclass that breaks the contract.
 
-### Liên hệ Liskov Substitution Principle
+### Connection to the Liskov Substitution Principle
 
-Nếu `Parent` cho phép `process(1)` và cam kết đầu ra hợp lệ, `Child` không được bất ngờ từ chối `1` chỉ vì muốn quy tắc mới nghiêm hơn. Theo nguyên lý thay thế Liskov (LSP), lớp con không nên:
+If `Parent` accepts `process(1)` and promises a valid result, `Child` must not unexpectedly reject `1` just to impose stricter rules. Under the Liskov Substitution Principle (LSP), a subclass should not:
 
-- **Siết chặt tiền điều kiện** đối với lời gọi hợp lệ của lớp cha.
-- **Làm yếu hậu điều kiện** mà lớp cha hứa.
-- **Phá bất biến** hoặc đưa thêm tác động phụ trái với cam kết quan sát được.
-- **Làm thay đổi ngữ nghĩa lỗi** nếu đó là phần hợp đồng đã công bố.
+- **Strengthen preconditions** for calls valid under the superclass.
+- **Weaken postconditions** promised by the superclass.
+- **Violate invariants** or add side effects inconsistent with observable guarantees.
+- **Change error semantics** when they are part of the published contract.
 
-Một method được override có thể gọi `super.method(...)` mà vẫn vi phạm LSP nếu phần bổ sung sau đó làm sai kết quả. Ngược lại, method thay thế hoàn toàn vẫn hợp lệ nếu giữ đúng hợp đồng.
+An overridden method may call `super.method(...)` yet violate LSP if added logic corrupts its result. Conversely, an entirely replaced method can be valid if the contract remains intact.
 
-## 9. Khi `super` không phải lựa chọn tốt nhất
+## 9. When `super` Is Not the Best Choice
 
-Gọi `super.method()` có giá trị khi lớp con thực sự đang **mở rộng** cách thực hiện của lớp cha. Không nên dùng `super` chỉ để tránh sao chép code nếu quan hệ kế thừa về mặt nghiệp vụ không đúng.
+Calling `super.method()` is valuable when a subclass genuinely **extends** superclass behavior. Avoid using `super` solely to save code duplication when the business inheritance relationship is wrong.
 
-Ví dụ: một lớp `AuditEmailSender extends EmailSender` chỉ để tận dụng mã gửi email, rồi override để log, có thể tạo quan hệ kế thừa dễ hỏng khi lớp cha thay đổi. Nếu nghiệp vụ cần bọc hành vi, **composition/decorator** thường diễn đạt rõ hơn: `AuditedSender` giữ một `Sender` bên trong và gọi `delegate.send(...)` rồi ghi log theo hợp đồng.
+For example, an `AuditEmailSender extends EmailSender` class written only to reuse email-sending code and add logging can become fragile when the superclass changes. When the requirement is to wrap behavior, **composition/decorators** often express it better: `AuditedSender` holds a `Sender` and invokes `delegate.send(...)` while logging according to its contract.
 
 ```java
 interface Sender {
@@ -2226,13 +2226,13 @@ class AuditedSender implements Sender {
 }
 ```
 
-Ở đây `delegate.send(...)` là **ủy quyền cho đối tượng khác**, còn `super.send(...)` là gọi implementation trong chuỗi kế thừa của **chính đối tượng hiện tại**. Hai kỹ thuật khác nhau về cấu trúc và mục đích.
+Here, `delegate.send(...)` **delegates to another object**, whereas `super.send(...)` invokes an implementation in the inheritance chain of **the same current object**. The two approaches differ in both structure and purpose.
 
-Khi có nhiều tầng kế thừa `A <- B <- C`, phương thức `C.foo()` gọi `super.foo()` sẽ tìm implementation thích hợp theo chuỗi superclass bắt đầu từ `B`. Không có cú pháp Java thông thường `super.super.foo()` để tự bỏ qua trực tiếp một cấp. Nếu `B.foo()` cần hành vi của `A`, chính `B` quyết định việc gọi `super.foo()`.
+With a hierarchy `A <- B <- C`, `C.foo()` invokes `super.foo()` to find the appropriate superclass implementation starting at `B`. Ordinary Java has no `super.super.foo()` syntax for skipping a level directly. If `B.foo()` needs `A` behavior, `B` itself decides whether to invoke `super.foo()`.
 
-## 10. Cẩn trọng khi constructor lớp cha gọi method override
+## 10. Beware of Overridable Calls from Superclass Constructors
 
-Tình huống sau biên dịch được nhưng dễ gây lỗi:
+The following example compiles but is error-prone:
 
 ```java
 public class ConstructorTrap {
@@ -2265,25 +2265,25 @@ public class ConstructorTrap {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Child.show: null
 Child constructor
 ```
 
-Nguyên nhân:
+Why it happens:
 
-1. Khi tạo `Child`, Java cấp phát object và thiết lập giá trị mặc định cho các field.
-2. Constructor `Parent` chạy **trước** các instance initializer/field initializer của `Child`.
-3. Lời gọi `show()` từ `Parent` vẫn có **dynamic dispatch** đến `Child.show()`.
-4. Vào thời điểm này `Child.value` đang là `null`; phép gán `"Đã sẵn sàng"` chưa thực hiện.
+1. When creating `Child`, Java allocates an object and gives fields their default values.
+2. The `Parent` constructor executes **before** `Child` instance/field initializers.
+3. A call to `show()` from `Parent` still uses **dynamic dispatch** to `Child.show()`.
+4. At this point, `Child.value` is `null`; the assignment `"Đã sẵn sàng"` has not occurred.
 
-Nếu `Child.show()` gọi `value.length()`, có thể xảy ra `NullPointerException`. Vì vậy **tránh gọi method có thể override trong constructor** khi phụ thuộc trạng thái của subclass chưa hoàn tất. Constructor lớp cha nên chỉ dùng dữ liệu và hành vi mà nó kiểm soát an toàn; nếu cần thao tác dựa trên đối tượng hoàn chỉnh, hãy gọi sau khi khởi tạo xong.
+If `Child.show()` calls `value.length()`, it may throw `NullPointerException`. Therefore, **avoid invoking overridable methods from constructors** when they depend on unfinished subclass state. Superclass constructors should use only safely controlled data and behavior; run operations requiring a complete object after initialization.
 
-## 11. Kiểm chứng kết quả ghi đè bằng một chương trình nhỏ
+## 11. Verify Overriding with a Small Program
 
-Tệp **`OverrideCheck.java`** dưới đây minh họa kiểm tra cả kiểu khai báo và kiểu thực tế; có thể biên dịch độc lập:
+The following **`OverrideCheck.java`** demonstrates declared and runtime types and can compile independently:
 
 ```java
 public class OverrideCheck {
@@ -2332,40 +2332,40 @@ public class OverrideCheck {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac OverrideCheck.java
 java OverrideCheck
 ```
 
-Kết quả:
+Output:
 
 ```text
 PASS: overriding và super hoạt động
 ```
 
-Đây là kiểm tra khái niệm; với dự án lớn nên dùng JUnit để viết test cho **hành vi và hợp đồng** thay vì chỉ kiểm tra đã gọi phương thức cha hay chưa. Mã lớp con có thể biên dịch, in log như dự kiến, nhưng vẫn sai quy tắc nghiệp vụ trong tình huống biên.
+This is a conceptual check. In larger projects, use JUnit to test **behavior and contracts**, not merely whether a superclass method was called. Subclass code can compile and log expected messages yet violate business rules at edge cases.
 
-## 12. Những lỗi thường gặp
+## 12. Common Mistakes
 
-| Cách viết / nhận định | Vấn đề | Cách sửa |
+| Code or claim | Problem | Fix |
 | --- | --- | --- |
-| `super.method()` là một đối tượng cha riêng | Sai bản chất: vẫn là cùng một đối tượng subclass | Hiểu `super` là lựa chọn phần implementation được kế thừa |
-| `method()` trong override muốn gọi bản cha | Có thể gọi lại chính override và đệ quy | Dùng `super.method()` nếu muốn bản cha |
-| `@Override` trên overload có tham số khác | Không ghi đè method cha | Khớp chữ ký hoặc bỏ annotation nếu cố ý overload |
-| Giảm `public` thành `protected` | Lỗi biên dịch | Giữ/mở rộng phạm vi truy cập |
-| Ghi đè `final` method | Lỗi biên dịch | Dùng điểm mở rộng hợp lệ khác |
-| Tưởng `static` chạy đa hình | Static method là hiding, không dynamic dispatch | Gọi static qua tên lớp |
-| Tưởng method `private` của cha bị override | Private method không được kế thừa | Dùng API `protected`/`public` nếu thật sự cần mở rộng |
-| Gọi `super.foo()` khi `foo` chỉ abstract, không có thân phù hợp | Không có implementation để gọi theo cách đó | Cài đặt hành vi ở lớp con hoặc thiết kế lại chuỗi kế thừa |
-| Override để từ chối input mà cha cho phép | Có thể vi phạm LSP | Dùng hợp đồng riêng hoặc giữ nguyên miền hợp lệ |
-| Constructor gọi method có thể override | Subclass có thể chưa khởi tạo field | Trì hoãn lời gọi tới sau khởi tạo |
-| Tưởng field trùng tên cũng override | Field hiding dựa trên kiểu tĩnh | Tránh field trùng tên; dùng method khi cần đa hình |
+| Treating `super.method()` as a separate superclass object | Incorrect: it is still the same subclass object | Understand `super` as selecting inherited implementation |
+| Calling `method()` from an override to reach the superclass version | May recursively call the same override | Use `super.method()` to select the superclass version |
+| Placing `@Override` on an overload with different parameters | Does not override the superclass method | Match the signature or omit the annotation when overloading intentionally |
+| Reducing `public` to `protected` | Compilation error | Preserve or widen access |
+| Overriding a `final` method | Compilation error | Use a different permitted extension point |
+| Assuming `static` methods are polymorphic | Static methods are hidden, not dynamically dispatched | Call static methods through class names |
+| Assuming superclass `private` methods can be overridden | Private methods are not inherited | Use `protected`/`public` APIs if extension is truly needed |
+| Calling `super.foo()` when `foo` is only abstract with no suitable body | No implementation exists for such a call | Implement it in the subclass or redesign the inheritance chain |
+| Overriding to reject inputs permitted by the superclass | May violate LSP | Preserve the valid domain or define a separate contract |
+| Calling overridable methods from constructors | Subclass fields may be uninitialized | Defer calls until after construction |
+| Assuming same-named fields override one another | Field hiding depends on static types | Avoid name collisions; use methods for polymorphism |
 
-## 13. Bài tập tự thực hành
+## 13. Practice Exercises
 
-**Bài tập 1 — dự đoán đầu ra**
+**Exercise 1 — predict the output**
 
 ```java
 class A {
@@ -2384,9 +2384,9 @@ A ref = new C();
 System.out.println(ref.name()); // ?
 ```
 
-**Đáp án:** `ABC`. Lời gọi đầu tiên được phân giải tới `C.name()`, sau đó `C` gọi `B.name()`, `B` gọi `A.name()` rồi ghép lần lượt.
+**Answer:** `ABC`. The first call dispatches to `C.name()`, then `C` calls `B.name()`, `B` calls `A.name()`, and their strings are combined in order.
 
-**Bài tập 2 — phân biệt override và overload**
+**Exercise 2 — distinguish overriding and overloading**
 
 ```java
 class Printer {
@@ -2400,67 +2400,67 @@ Printer p = new ColoredPrinter();
 p.print("hello"); // ?
 ```
 
-**Đáp án:** `P:hello`. `print(Object)` của lớp con là overload; `print(String)` của lớp cha không bị override. Trình biên dịch chọn chữ ký dựa trên **kiểu tĩnh** của biểu thức và kiểu tham số; runtime chỉ dispatch động cho phương thức đã chọn khi có override hợp lệ.
+**Answer:** `P:hello`. The subclass `print(Object)` is an overload; it does not override the superclass `print(String)`. The compiler selects the signature from the **static type** of the expression and argument types; runtime dispatch applies to the selected instance method only when a valid override exists.
 
-**Bài tập 3 — mở rộng gói giao hàng**
+**Exercise 3 — extend the delivery plan**
 
-Thêm lớp `DiscountedExpressPlan` theo cách kế thừa hoặc phối hợp phù hợp, giảm 5.000 VND từ phí của gói nhanh (không dưới 0). Nếu dùng kế thừa, lưu ý `ExpressPlan` trong ví dụ đang là `final`, do đó phải chủ động thiết kế lại điểm mở rộng hoặc chọn composition. Hãy giải thích lựa chọn theo **hợp đồng**, không chỉ theo lượng code có thể tái sử dụng.
+Add `DiscountedExpressPlan` through suitable inheritance or composition, subtracting 5.000 VND from the express fee (never below 0). If inheriting, note that `ExpressPlan` is currently `final`, so you must deliberately redesign extension points or use composition. Justify your choice by **contract semantics**, not lines of reused code.
 
-**Bài tập 4 — bảo vệ quy tắc cha**
+**Exercise 4 — protect the superclass rule**
 
-Cho lớp cha có phương thức `calculatePrice` kiểm tra giá không âm, lớp con cần cộng phụ phí nhưng không được bỏ qua validation. Hãy override bằng `super.calculatePrice(...)` rồi cộng phụ phí bằng phép tính kiểm soát tràn số. Viết kiểm tra cho input âm, giá bình thường và giá sát giới hạn `long`.
+Given a superclass `calculatePrice` method that rejects negative prices, the subclass must add a surcharge without bypassing validation. Override using `super.calculatePrice(...)` and add the surcharge with overflow checks. Test negative inputs, ordinary prices, and prices near the `long` limit.
 
-### Ghi nhớ
+### Remember
 
-- **Override** làm thay đổi cách thực hiện phương thức instance được kế thừa, còn client vẫn có thể sử dụng kiểu lớp cha.
-- **Dynamic dispatch** chọn bản override theo loại đối tượng thực tế.
-- **`super.method(...)`** gọi phần thực hiện của superclass từ lớp con để kế thừa và mở rộng hành vi; **`super(...)`** là lời gọi constructor, không phải cùng cú pháp/ý nghĩa.
-- Ghi đè đúng chữ ký chỉ là **đúng cú pháp**. Thiết kế tốt còn phải bảo vệ hợp đồng hành vi, trạng thái hợp lệ và kỳ vọng của mã sử dụng.
+- **Overriding** changes an inherited instance method's implementation while clients may still use the superclass type.
+- **Dynamic dispatch** selects the override according to the actual object type.
+- **`super.method(...)`** invokes a superclass implementation from the subclass to reuse and extend behavior; **`super(...)`** is a constructor invocation with distinct syntax and meaning.
+- Correct signatures are only **syntactic correctness**. A sound design also preserves behavioral contracts, valid state, and client expectations.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="inheritance-005">Khả năng truy cập thành viên được kế thừa</a>
+## <a id="inheritance-005">Accessibility of inherited members</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Khả năng truy cập thành viên được kế thừa trong Java
+# Accessibility of Inherited Members in Java
 
-Khi một lớp **kế thừa** lớp khác bằng `extends`, lớp con có thể sử dụng những thuộc tính và phương thức được lớp cha cung cấp. Nhưng **không phải mọi thành viên của lớp cha đều được lớp con truy cập như nhau**. Quyền truy cập phụ thuộc vào modifier (`public`, `protected`, không ghi modifier hay `private`), vị trí package và đôi khi cả kiểu của biểu thức dùng để truy cập.
+When a class **inherits** another class via `extends`, the subclass can use fields and methods exposed by its superclass. However, **superclass members do not all have the same accessibility from subclass code**. Access depends on modifiers (`public`, `protected`, no modifier, or `private`), package location, and sometimes the type of the expression used to access a member.
 
-Đây là một điểm quan trọng của kế thừa trong OOP: **quan hệ “is-a” không đồng nghĩa với quyền nhìn thấy toàn bộ mã nội bộ của lớp cha**.
+This is crucial in OOP inheritance: **an is-a relationship does not give a subclass unrestricted visibility into superclass internals**.
 
-Ví dụ `PremiumAccount extends Account` nghĩa là tài khoản cao cấp cũng là một loại tài khoản, nhưng không có nghĩa `PremiumAccount` được đọc trực tiếp mã PIN `private` bên trong `Account`.
+For example, `PremiumAccount extends Account` means a premium account is a type of account, but it does not let `PremiumAccount` directly read a `private` PIN inside `Account`.
 
-Bài học sử dụng **Java 17**. Các ví dụ về package được viết thành những tệp riêng biệt và có lệnh biên dịch để kiểm chứng.
+This lesson uses **Java 17**. Cross-package examples are placed in separate files with compilation commands for verification.
 
-## 1. Bảng quy tắc truy cập cần nhớ
+## 1. Access Rules at a Glance
 
-| Modifier của thành viên lớp cha | Trong chính lớp khai báo | Lớp khác cùng package | Lớp con khác package | Code không liên quan ở package khác |
+| Superclass member modifier | Declaring class | Other class in same package | Subclass in another package | Unrelated code in another package |
 |---|---|---|---|---|
-| `public` | Có | Có | Có | Có, nếu kiểu/API khả dụng |
-| `protected` | Có | Có | Có, **theo giới hạn truy cập của lớp con** | Không |
-| *Package-private* (không ghi modifier) | Có | Có | Không | Không |
-| `private` | Có | Không\* | Không\* | Không\* |
+| `public` | Yes | Yes | Yes | Yes, if the type/API is accessible |
+| `protected` | Yes | Yes | Yes, **subject to subclass access restrictions** | No |
+| *Package-private* (no modifier) | Yes | Yes | No | No |
+| `private` | Yes | No\* | No\* | No\* |
 
-`*` Java hiện đại cho phép một số truy cập `private` giữa các lớp **cùng nest** (ví dụ lớp lồng nhau và lớp bao), nhưng đó là ngoại lệ dựa trên *nestmate*, **không phải quyền kế thừa**. Trong trường hợp các lớp top-level thông thường ở ví dụ dưới, thành viên private không truy cập được từ lớp khác.
+`*` Modern Java permits some `private` access between classes **in the same nest** (for example, nested classes and their enclosing class), but this is a *nestmate*-based exception, **not an inheritance privilege**. Ordinary top-level classes in the examples below cannot access one another's private members.
 
-Một số điều kiện cần đọc cùng bảng:
+Read the following conditions alongside the table:
 
-- **Cùng package** nghĩa là cùng tên `package`, không phải chỉ nằm ở thư mục có tên giống nhau hoặc có cùng tiền tố (`demo.core` và `demo.core.sub` là **hai package khác nhau**).
-- Một thành viên `protected` từ lớp cha **khác package** không tự nhiên trở thành public cho mọi biểu thức tham chiếu. Java còn kiểm tra truy cập qua đối tượng có kiểu phù hợp, sẽ trình bày tại phần 3.
-- Bảng chủ yếu nói về **instance field và instance method**. Constructor, field static và một số quy tắc override có điểm khác.
-- Quyền truy cập thành viên không khắc phục được việc **lớp chứa thành viên không truy cập được**. Ví dụ một top-level class package-private không thể được dùng từ package khác chỉ vì một method của nó khai báo public.
-- Với ứng dụng Java modules (JPMS), việc package có được `exports` cho module dùng nó hay không cũng ảnh hưởng tới khả năng sử dụng public API xuyên module.
+- **Same package** means the same `package` name, not just similar folder names or a shared prefix (`demo.core` and `demo.core.sub` are **different packages**).
+- A `protected` member of a superclass **in another package** does not become public through arbitrary reference expressions. Java also checks the type of the receiving expression, as explained in Section 3.
+- The table primarily describes **instance fields and instance methods**. Constructors, static fields, and some override rules differ.
+- Member access does not make an **inaccessible containing class accessible**. For example, a package-private top-level class cannot be used from another package merely because one of its methods is public.
+- With Java modules (JPMS), whether a package is `exports`-ed to the consuming module also affects cross-module public API accessibility.
 
-## 2. Bốn mức truy cập dưới góc nhìn kế thừa
+## 2. Four Access Levels in the Context of Inheritance
 
-### `public`: API được công khai
+### `public`: Exposed API
 
 ~~~java
 package demo.core;
@@ -2472,11 +2472,11 @@ public class Document {
 }
 ~~~
 
-Lớp con ở package khác hoặc code không phải lớp con có thể gọi `getId()`, miễn là chúng được phép nhìn thấy `Document`.
+Subclasses in other packages and unrelated code can call `getId()` as long as they can access `Document`.
 
-`public` nghĩa là phương thức thuộc giao diện công khai của lớp, nên việc sửa hành vi hoặc xóa phương thức có thể ảnh hưởng tới nhiều client. Không nhất thiết công khai field chỉ để lớp con sử dụng; thường nên ưu tiên phương thức mô tả hành vi và getter phù hợp.
+`public` means the method is part of the class's published interface, so removing or changing its behavior may affect many clients. You do not need public fields merely to support subclasses; prefer intentional behavioral methods and appropriate getters.
 
-### `protected`: dùng trong package và hỗ trợ lớp con
+### `protected`: Package Access and Subclass Support
 
 ~~~java
 package demo.core;
@@ -2490,11 +2490,11 @@ public class Account {
 }
 ~~~
 
-Code ở **cùng package `demo.core`** có thể truy cập `balance` và `markUpdated()` ngay cả khi không phải subclass.
+Code **inside the same `demo.core` package** can access `balance` and `markUpdated()` even without being a subclass.
 
-Một subclass ở package khác có thể sử dụng hai thành viên đó trong phạm vi mà quy tắc `protected` cho phép, ví dụ `this.balance`, `super.markUpdated()`. Tuy nhiên, ngoài package, một subclass **không thể dùng protected member trên mọi đối tượng kiểu cha**; ví dụ đầy đủ ở phần kế tiếp.
+A subclass in another package may use these members where `protected` rules permit, such as `this.balance` and `super.markUpdated()`. However, outside the package, a subclass **cannot access protected members through every superclass-typed object**; the next section provides a complete example.
 
-### Không ghi modifier: *package-private*
+### No Access Modifier: *Package-private*
 
 ~~~java
 package demo.core;
@@ -2507,11 +2507,11 @@ public class Account {
 }
 ~~~
 
-`retryCount` và `resetRetryCount()` chỉ được mã thuộc package `demo.core` truy cập. Một subclass nằm ở `demo.feature` không được quyền truy cập trực tiếp chỉ nhờ `extends Account`.
+`retryCount` and `resetRetryCount()` are accessible only to code in package `demo.core`. A subclass in `demo.feature` does not gain direct access merely through `extends Account`.
 
-Đừng gọi mức này là `protected` hoặc “default method”: **package-private** là một kiểu quyền truy cập do không ghi access modifier, còn `default` trong interface là phương thức có sẵn implementation.
+Do not call this access level `protected` or a “default method”: **package-private** is the access level resulting from an omitted access modifier, whereas an interface `default` method supplies an implementation.
 
-### `private`: phần cài đặt riêng của lớp khai báo
+### `private`: Implementation Details of the Declaring Class
 
 ~~~java
 package demo.core;
@@ -2525,15 +2525,15 @@ public class Account {
 }
 ~~~
 
-Một subclass không đọc trực tiếp được `pin`, nhưng vẫn có thể **sử dụng hành vi public/protected của lớp cha** như `verifyPin()`. Việc đóng gói chi tiết nội bộ giúp lớp cha có thể thay cách lưu trữ PIN mà lớp con không lệ thuộc vào cấu trúc dữ liệu ấy.
+A subclass cannot read `pin` directly, but can still **use public/protected superclass behavior** such as `verifyPin()`. Encapsulation lets the superclass change PIN storage without making subclasses depend on that representation.
 
-Không nên tạo một getter public cho mọi field private chỉ nhằm “để con nhìn thấy”. Hãy công khai khả năng mà đối tượng thực sự cần cung cấp.
+Do not expose a public getter for every private field merely so “subclasses can see it.” Expose the capabilities the object actually needs to provide.
 
-## 3. Ví dụ chạy được: `protected` giữa các package
+## 3. Runnable Example: Cross-Package `protected` Access
 
-Đây là ví dụ quan trọng nhất của bài. Ta có lớp cha và một công cụ kiểm tra ở `demo.core`, một lớp con ở `demo.feature`, chương trình gọi ở `demo.app`.
+This is the lesson's most important example. The superclass and an inspector are in `demo.core`, a subclass is in `demo.feature`, and the application entry point is in `demo.app`.
 
-Cấu trúc tệp:
+File structure:
 
 ~~~text
 src/
@@ -2547,7 +2547,7 @@ src/
         └── Main.java
 ~~~
 
-**Tệp `src/demo/core/Document.java`:**
+**File `src/demo/core/Document.java`:**
 
 ~~~java
 package demo.core;
@@ -2581,7 +2581,7 @@ public class Document {
 }
 ~~~
 
-**Tệp `src/demo/core/CoreInspector.java`:**
+**File `src/demo/core/CoreInspector.java`:**
 
 ~~~java
 package demo.core;
@@ -2600,9 +2600,9 @@ public final class CoreInspector {
 }
 ~~~
 
-`CoreInspector` **không kế thừa** `Document`, nhưng vẫn đọc được `protected status` và package-private `internalNote` vì nó ở cùng package.
+`CoreInspector` **does not inherit** from `Document`, yet it can read `protected status` and package-private `internalNote` because it is in the same package.
 
-**Tệp `src/demo/feature/ManagedDocument.java`:**
+**File `src/demo/feature/ManagedDocument.java`:**
 
 ~~~java
 package demo.feature;
@@ -2638,7 +2638,7 @@ public final class ManagedDocument extends Document {
 }
 ~~~
 
-**Tệp `src/demo/app/Main.java`:**
+**File `src/demo/app/Main.java`:**
 
 ~~~java
 package demo.app;
@@ -2669,14 +2669,14 @@ public class Main {
 }
 ~~~
 
-Biên dịch và chạy từ thư mục chứa `src`:
+Compile and run from the directory containing `src`:
 
 ~~~bash
 javac -d out src/demo/core/Document.java src/demo/core/CoreInspector.java src/demo/feature/ManagedDocument.java src/demo/app/Main.java
 java -cp out demo.app.Main
 ~~~
 
-Đầu ra:
+Output:
 
 ~~~text
 this.status: REVIEWED
@@ -2688,17 +2688,17 @@ status: REVIEWED
 token: ***
 ~~~
 
-Ở đây cùng một field `status` có ba cách truy cập khác nhau:
+Here, the same `status` field is accessed in three different ways:
 
-- `ManagedDocument.review()` được phép dùng `this.status` và `super.status`, vì class con có quyền kế thừa protected.
-- `ManagedDocument.compare(...)` được phép dùng `peer.status` vì biểu thức `peer` có kiểu `ManagedDocument`. Nhưng không được dùng `base.status` vì `base` có kiểu `Document` (lớp cha) trong ngữ cảnh package khác.
-- `Main` ở package không liên quan không được đọc `child.status`, mặc dù runtime object thực tế là `ManagedDocument`. Nó có thể gọi public `child.getStatus()`.
+- `ManagedDocument.review()` may use `this.status` and `super.status` because the subclass has protected access.
+- `ManagedDocument.compare(...)` may use `peer.status` because expression `peer` has type `ManagedDocument`. It cannot use `base.status` because `base` has type `Document` (the superclass) in a different-package context.
+- `Main` in an unrelated package cannot read `child.status`, even when the runtime object is a `ManagedDocument`. It can call public `child.getStatus()`.
 
-### Tại sao quy tắc `protected` lại hạn chế kiểu biểu thức?
+### Why Does `protected` Restrict the Qualifier Type?
 
-Java bảo vệ sự đóng gói của lớp cha. Một subclass ở package khác được phép thao tác phần protected **trong vai trò của chính nó và các đối tượng có kiểu lớp con phù hợp**, nhưng không được “mượn” đặc quyền lớp con để sửa mọi instance của lớp cha tồn tại trong hệ thống.
+Java protects superclass encapsulation. A subclass in a different package may access protected state **through its own subclass role and appropriately typed subclass objects**, but cannot “borrow” subclass privileges to modify every unrelated superclass instance in the system.
 
-Theo cách diễn đạt đơn giản cho ví dụ trên: ở `ManagedDocument`, khi truy cập một protected **instance** member được khai báo trong `Document` qua biểu thức `qualifier.member`, kiểu biên dịch của qualifier phải là `ManagedDocument` hoặc kiểu con của nó. `this`, `super`, `peer` phù hợp trong cách gọi của ví dụ; `Document base` không phù hợp. Quy tắc đầy đủ cũng xét hình thức truy cập `super` và sự khác nhau giữa thành viên instance, static và constructor.
+In simplified terms for this example: inside `ManagedDocument`, when accessing a protected **instance** member declared in `Document` through `qualifier.member`, the qualifier's compile-time type must be `ManagedDocument` or its subtype. `this`, `super`, and `peer` are valid in the shown contexts; `Document base` is not. The full rules also distinguish `super` access forms and instance members, static members, and constructors.
 
 ~~~mermaid
 flowchart TD
@@ -2711,20 +2711,20 @@ flowchart TD
     F -->|Không| H["Lỗi biên dịch"]
 ~~~
 
-Đừng coi protected là “public dành riêng cho tất cả đối tượng con”. Đây là quyền truy cập mang ngữ cảnh kế thừa, được compiler kiểm tra.
+Do not treat protected as “public for all subclass objects.” It is a context-dependent inheritance privilege checked by the compiler.
 
-## 4. Kế thừa và khả năng truy cập là hai câu hỏi khác nhau
+## 4. Inheritance and Accessibility Are Different Questions
 
-Hai câu hỏi dễ bị gộp thành một:
+Two commonly conflated questions are:
 
-1. **Thành viên có thuộc tập thành viên được kế thừa của subclass không?**
-2. **Một đoạn code cụ thể có được phép truy cập thành viên ấy không?**
+1. **Does the member belong to the subclass's inherited member set?**
+2. **May a particular code location access that member?**
 
-Ví dụ, một field private của lớp cha vẫn **tồn tại bên trong trạng thái của đối tượng lớp con** theo mô hình đối tượng (lớp cha có phần dữ liệu riêng), nhưng Java không cho lớp con truy cập trực tiếp field đó. Nói “private bị xóa khỏi đối tượng con” là sai.
+A private superclass field still **exists in the state of a subclass instance** under Java's object model (the superclass has its own portion of the data), but Java does not let subclass code directly access it. Saying that “private fields are deleted from subclass objects” is incorrect.
 
-Theo quy tắc kế thừa thành viên của Java, các thành viên private của superclass **không được kế thừa** theo nghĩa thành viên có thể được lớp con sử dụng. Những phần private đó vẫn hoạt động thông qua phương thức của superclass trên một instance subclass.
+Under Java's member-inheritance rules, private superclass members **are not inherited** as members directly usable by subclasses. Those private parts still operate through superclass methods on subclass instances.
 
-Ví dụ:
+For example:
 
 ~~~java
 class Parent {
@@ -2752,15 +2752,15 @@ class Demo {
 }
 ~~~
 
-`Child` không có quyền truy cập trực tiếp `counter`, nhưng gọi được hành vi public kế thừa `increase()` và `value()`. Mã trong `Parent` vẫn quản lý field private trên đối tượng `Child`.
+`Child` cannot directly access `counter`, but can invoke inherited public behavior `increase()` and `value()`. Code in `Parent` still manages the private field on a `Child` instance.
 
-Với một superclass khác package, các package-private member không được sử dụng/kế thừa theo quy tắc thành viên hiện diện trong subclass ngoài package như public/protected. Đừng lẫn việc code runtime có thể gọi một implementation của superclass với khả năng class con được phép nhắc tới tên member không công khai ấy trong mã nguồn.
+For a superclass in another package, package-private members are not accessible/inherited as directly named subclass members across packages as public/protected ones may be. Do not confuse runtime calls to a superclass implementation with the subclass's right to name an inaccessible member in source code.
 
-## 5. Lớp con có thể mở rộng quyền truy cập khi override, nhưng không được thu hẹp
+## 5. Subclasses May Widen Access When Overriding but Cannot Narrow It
 
-Khi override một instance method, Java yêu cầu implementation lớp con không **giảm mức hiển thị** so với method mà nó override.
+When overriding an instance method, Java requires the subclass implementation not to **reduce visibility** relative to the method it overrides.
 
-Ví dụ hợp lệ:
+Valid example:
 
 ~~~java
 class Parent {
@@ -2777,7 +2777,7 @@ class Child extends Parent {
 }
 ~~~
 
-Ví dụ không hợp lệ:
+Invalid example:
 
 ~~~java
 class Parent {
@@ -2790,18 +2790,18 @@ class Child extends Parent {
 }
 ~~~
 
-Về mặt thiết kế, caller đã được hứa là có thể gọi một public method trên kiểu cha. Nếu một subclass được phép biến nó thành protected thì mã dùng object subclass sẽ mất quyền gọi, trái nguyên tắc thay thế.
+The supertype's callers were promised they could invoke a public method. If a subclass could turn it into protected, code receiving that subclass instance would lose access, violating substitutability.
 
-**Chú ý thêm:**
+**Additional notes:**
 
-- `protected` method có thể override thành `public` method; ngược lại không được.
-- Public method phải tiếp tục public khi override.
-- Method `final` không được override, bất kể mức truy cập.
-- Instance method chỉ được override theo quy tắc của Java. Field **không override**; field trong subclass có thể *hide* field cùng tên của superclass.
-- Method `private` của superclass không phải phương thức được subclass override. Subclass có thể khai báo phương thức cùng tên và chữ ký độc lập mà không dùng `@Override` cho phương thức private ấy.
-- Package-private methods giữa các package cần được xem xét theo khả năng kế thừa/override thực tế; không thể suy ra một method cùng tên ở subclass khác package chắc chắn override method không công khai của superclass.
+- A `protected` method may be overridden as `public`, but not the reverse.
+- A public method must remain public in an override.
+- A `final` method cannot be overridden, regardless of accessibility.
+- Instance methods follow Java's overriding rules. Fields **are not overridden**; a subclass field may *hide* a same-named superclass field.
+- A superclass `private` method cannot be overridden. A subclass may independently declare a same-named method with the same signature without using `@Override` on that private method.
+- Package-private methods across package boundaries require actual inheritance/overriding analysis; a same-named method in an out-of-package subclass is not automatically an override of a non-public superclass method.
 
-### Ví dụ field hiding khác method overriding
+### Example: Field Hiding Versus Method Overriding
 
 ~~~java
 class Parent {
@@ -2827,11 +2827,11 @@ System.out.println(value.name);  // Parent
 System.out.println(value.who()); // Child
 ~~~
 
-Với field, Java chọn theo **kiểu tham chiếu ở lúc biên dịch**. Với instance method được override, Java chọn implementation dựa theo **kiểu object thực tế** (dynamic dispatch). Đừng dùng field hiding để thay thế đa hình của method.
+For fields, Java selects by the reference's **compile-time type**. For overridden instance methods, Java selects the implementation by the **actual runtime object type** (dynamic dispatch). Do not use field hiding as a substitute for method polymorphism.
 
-## 6. Constructor được gọi khi tạo subclass, nhưng không được kế thừa
+## 6. Subclass Creation Calls Superclass Constructors, but Does Not Inherit Them
 
-Dù lớp con có thể sử dụng nhiều member của lớp cha, **constructor không được kế thừa**.
+Although subclasses can use many superclass members, **constructors are not inherited**.
 
 ~~~java
 class Device {
@@ -2853,15 +2853,15 @@ class Printer extends Device {
 }
 ~~~
 
-Một caller ngoài package có thể tạo `new Printer("P-001")` nếu `Printer` và constructor của nó được phép truy cập; nhưng không mặc nhiên được gọi trực tiếp constructor protected của `Device` từ code ngoài package.
+A caller outside the package can create `new Printer("P-001")` if `Printer` and its constructor are accessible, but cannot automatically invoke `Device`'s protected constructor directly from unrelated external code.
 
-Trong subclass, `super(...)` phải tuân thủ các quy tắc constructor chaining của Java. Nếu constructor phù hợp của lớp cha là `private` và subclass không có quyền truy cập, compiler không thể dựng đối tượng lớp con qua constructor ấy.
+Within a subclass, `super(...)` must follow Java constructor-chaining rules. If the relevant superclass constructor is `private` and the subclass lacks access, the compiler cannot construct the subclass through it.
 
-Không nên thêm constructor `public` vào superclass chỉ để subclass có thể khởi tạo, nếu điều đó mở khả năng tạo superclass trực tiếp trái ý định. Một `protected` constructor thường là lựa chọn phù hợp cho abstract superclass hoặc superclass chỉ dùng thông qua lớp con.
+Do not add a `public` superclass constructor solely to enable subclass construction if it also permits unwanted direct superclass instances. A `protected` constructor often suits an abstract superclass or a superclass intended to be used only through subclasses.
 
-## 7. `super` không phải “quyền truy cập đặc biệt vượt mọi giới hạn”
+## 7. `super` Does Not Bypass Every Access Restriction
 
-`super.method()` cho phép lớp con gọi một implementation được kế thừa/được phép gọi của superclass, hữu ích khi mở rộng hành vi:
+`super.method()` lets a subclass invoke an accessible/inherited superclass implementation and is useful when extending behavior:
 
 ~~~java
 class Logger {
@@ -2878,13 +2878,13 @@ class TimestampLogger extends Logger {
 }
 ~~~
 
-Lớp con có thể dùng `super.log()` vì phương thức protected được phép truy cập. Nhưng `super.privateField` không được quyền truy cập chỉ vì có từ khóa `super`, và `super` cũng không vượt qua giới hạn package-private ở package khác.
+A subclass may use `super.log()` because the protected method is accessible. But writing `super.privateField` does not grant access merely because of `super`, nor can `super` bypass cross-package package-private restrictions.
 
-Một lớp con nên **hạn chế lệ thuộc vào field protected có thể thay đổi** nếu có thể thay bằng protected helper method hoặc public/protected API bảo vệ invariant. Field protected cho phép lớp con sửa trực tiếp dữ liệu, làm lớp cha khó thay đổi biểu diễn nội bộ.
+Where possible, subclasses should **avoid depending on mutable protected fields** by using protected helper methods or public/protected APIs that enforce invariants. Protected fields let subclasses directly mutate data and make it harder for superclasses to change their internal representation.
 
-## 8. Static member, field và nested type có quy tắc khác method động
+## 8. Static Members, Fields, and Nested Types Follow Different Rules from Dynamic Methods
 
-Kế thừa không chỉ liên quan đến instance method. Một số thành viên `static` của lớp cha có thể được truy cập qua tên lớp con theo quy tắc Java; nhưng static method **không override theo đa hình runtime**, mà có thể bị *hide*.
+Inheritance is not limited to instance methods. Some superclass `static` members may be accessed through the subclass name under Java rules, but static methods **are not overridden through runtime polymorphism**; they may be *hidden*.
 
 ~~~java
 class Parent {
@@ -2900,13 +2900,13 @@ class Child extends Parent {
 }
 ~~~
 
-Ví dụ trong ngữ cảnh cùng package (hoặc phạm vi được truy cập), hai phương thức này hợp lệ nhưng không có `@Override` vì đây là static method hiding. Khi chọn phương thức static, Java dựa vào biểu thức/kiểu tại compile time theo quy tắc resolve method, khác với dynamic dispatch của instance method.
+These two methods are valid in the same-package (or otherwise accessible) context, but neither uses `@Override` because this is static method hiding. Java resolves static calls by the expression/class at compile time, unlike dynamic dispatch of instance methods.
 
-Một số nested classes và interface member cũng có thể được kế thừa hoặc dùng qua tên tương ứng, nhưng mức truy cập của kiểu lồng và lớp chứa vẫn phải được thỏa mãn.
+Some nested classes and interface members can also be inherited or referenced by appropriate names, but accessibility of the nested type and its enclosing class must still be satisfied.
 
-### Interface có quy tắc truy cập khác class
+### Interface Access Rules Differ from Class Access Rules
 
-Trong Java:
+In Java:
 
 ~~~java
 interface Exportable {
@@ -2921,13 +2921,13 @@ class PdfExport implements Exportable {
 }
 ~~~
 
-Method thông thường chỉ khai báo chữ ký trong interface ngầm là **`public abstract`**. Implementation phải công khai `public`, không thể dùng package-private hoặc protected để “giấu bớt” phương thức đã được hứa công khai.
+An ordinary interface method declaring only a signature is implicitly **`public abstract`**. Its implementation must be `public`; package-private or protected access cannot hide a method promised by the interface.
 
-Interface không có instance fields; mọi field trong interface ngầm là `public static final`. Vì vậy đừng đem nguyên cách suy luận về field `protected` hoặc `private` của superclass sang interface.
+Interfaces have no instance fields; their fields are implicitly `public static final`. Do not apply superclass `protected`/`private` field reasoning directly to interfaces.
 
-## 9. Không lạm dụng `protected`: chọn điểm mở rộng đúng
+## 9. Avoid Overusing `protected`: Design Intentional Extension Points
 
-Một protected field tiện cho subclass nhưng cũng làm subclass phụ thuộc vào cấu trúc dữ liệu lớp cha:
+A protected field is convenient for subclasses but also makes them depend on superclass data structures:
 
 ~~~java
 class Account {
@@ -2935,9 +2935,9 @@ class Account {
 }
 ~~~
 
-Giả sử sau này lớp cha muốn chuyển từ `long` sang một value object `Money`. Mọi lớp con đang đọc/sửa `balance` trực tiếp có thể phải thay đổi.
+Suppose the superclass later wants to change from `long` to a `Money` value object. Every subclass that reads or writes `balance` directly may need changes.
 
-Một phương án kiểm soát tốt hơn là giữ field private và đưa ra hành vi có quy tắc:
+A more controlled approach is to keep the field private and expose validated behavior:
 
 ~~~java
 class Account {
@@ -2966,15 +2966,15 @@ class RewardAccount extends Account {
 }
 ~~~
 
-`balance` private, nên subclass không tùy ý gán trực tiếp số âm. Hai protected methods thể hiện những thao tác mà lớp cha cho phép subclass thực hiện, đồng thời có thể kiểm soát invariant.
+Since `balance` is private, a subclass cannot arbitrarily assign a negative value. The two protected methods define operations the superclass permits subclasses to perform while enforcing invariants.
 
-**Nhưng** `protected final credit(...)` cũng là một lời hứa API dành cho lớp con. Đừng tạo quá nhiều protected hooks khi không có nhu cầu mở rộng thực tế, vì chúng tạo thêm trách nhiệm giữ tương thích về sau.
+**However**, `protected final credit(...)` also becomes part of the API promised to subclasses. Do not add excessive protected hooks without a real extension need; they create future compatibility obligations.
 
-Nếu subclass thường phải chạm sâu vào nhiều chi tiết nội bộ để hoạt động, hãy xem xét **composition**: đưa phần thay đổi hành vi ra một collaborator hoặc strategy, để giảm sự gắn kết giữa các thế hệ lớp.
+If subclasses routinely need deep access to many internals, consider **composition**: move variable behavior to collaborators or strategies to reduce coupling across class generations.
 
-## 10. Hệ quả của package và module khi phát hành thư viện
+## 10. Package and Module Implications for Library Distribution
 
-Khi tổ chức source code, package là ranh giới quyền truy cập quan trọng:
+Packages form important access boundaries when organizing source code:
 
 ~~~text
 com.example.core            // package A
@@ -2982,9 +2982,9 @@ com.example.core.internal   // package B khác A
 com.example.plugin          // package C
 ~~~
 
-Mặc dù có cùng tiền tố `com.example.core`, package `com.example.core.internal` **không được** truy cập thành viên package-private của `com.example.core`.
+Despite sharing the prefix `com.example.core`, package `com.example.core.internal` **cannot** access package-private members of `com.example.core`.
 
-Nếu dùng Java Platform Module System (JPMS), thư viện còn có thể đóng package khỏi những module khác:
+With the Java Platform Module System (JPMS), libraries can also hide packages from other modules:
 
 ~~~java
 module com.example.library {
@@ -2992,30 +2992,30 @@ module com.example.library {
 }
 ~~~
 
-Module khác có thể dùng public API trong package được `exports` nếu đáp ứng các điều kiện module liên quan. Public class trong package **không được export** không tự động trở thành public API sử dụng được từ module ngoài.
+Another module can use public APIs in an `exports`-ed package when module-access requirements are met. A public class in a package **that is not exported** does not automatically become usable public API for external modules.
 
-Điều này khác với modifier `protected` ở cấp member: quyền truy cập thành viên chỉ phát huy khi lớp/package chứa thành viên đã accessible trong ngữ cảnh của chương trình.
+This differs from member-level `protected`: member access applies only after the containing class/package is accessible in the program's context.
 
-Không nên coi reflection hoặc `setAccessible(true)` là một quyền tự động vượt qua giới hạn `private`. Cơ chế reflection chịu kiểm tra quyền và ràng buộc mạnh của module; đồng thời việc phụ thuộc vào chi tiết không công khai làm mã dễ vỡ.
+Do not assume reflection or `setAccessible(true)` automatically bypasses `private` restrictions. Reflection is subject to access checks and strong module encapsulation; relying on non-public details also makes code fragile.
 
-## 11. Bảng lỗi thường gặp khi làm việc với thành viên kế thừa
+## 11. Common Errors with Inherited Members
 
-| Lỗi | Nguyên nhân | Cách suy nghĩ đúng |
+| Error | Cause | Correct approach |
 |---|---|---|
-| Subclass khác package gọi trực tiếp field package-private của cha | Package-private chỉ cho cùng package | Chuyển sang API `protected`/`public` cần thiết hoặc thay thiết kế |
-| Subclass đọc `base.protectedField` với biến `Base base` từ package khác | Có thêm quy tắc kiểu qualifier trong protected access | Dùng `this`, `super`, tham chiếu kiểu subclass thích hợp hoặc public API |
-| Code ngoài package gọi `child.protectedMethod()` | Không phải subclass, không cùng package | Cung cấp public hành vi thực sự cần |
-| Gọi `super.privateMethod()` | Private của superclass không được kế thừa/truy cập kiểu này | Dùng hành vi public/protected do cha chủ động cung cấp |
-| Override `public` method thành `protected` | Giảm visibility so với method cha | Giữ public hoặc thiết kế API khác |
-| Thêm `@Override` cho method trùng tên private superclass | Private method không bị override | Hiểu đây là khai báo riêng trong subclass |
-| Nhầm constructor superclass được kế thừa | Constructor không phải member được kế thừa | Dùng `super(...)` để khởi tạo phần superclass |
-| Dùng protected field để subclass ghi tùy ý | Dễ phá invariant | Ưu tiên protected method có validation hoặc composition |
-| Coi `subpackage` là cùng package | Package Java xác định bằng tên đầy đủ | Tách đúng ranh giới module/package |
-| Cho rằng `public` vượt mọi ranh giới JPMS | Package/class còn phải accessible từ module dùng | Thiết kế public API và `exports` thích hợp |
+| A cross-package subclass accesses a superclass package-private field directly | Package-private applies only within one package | Expose a necessary `protected`/`public` API or redesign |
+| A cross-package subclass reads `base.protectedField` through `Base base` | Protected access also restricts qualifier types | Use `this`, `super`, suitably typed subclass references, or a public API |
+| Unrelated code in another package invokes `child.protectedMethod()` | Not a subclass and not in the same package | Expose genuinely needed public behavior |
+| Invoking `super.privateMethod()` | Superclass private members are not inherited/accessed this way | Use behavior the superclass deliberately exposes through public/protected APIs |
+| Overriding a `public` method as `protected` | Reduces visibility relative to the superclass method | Keep it public or design another API |
+| Adding `@Override` to a method named like a superclass private method | Private methods are not overridden | Treat it as a separate subclass declaration |
+| Assuming superclass constructors are inherited | Constructors are not inherited members | Use `super(...)` to initialize the superclass portion |
+| Letting subclasses freely modify protected fields | Easy to violate invariants | Prefer protected validating methods or composition |
+| Assuming a `subpackage` is the same package | Java packages use complete qualified names | Respect package/module boundaries |
+| Assuming `public` bypasses every JPMS boundary | Package/class must also be accessible to the consuming module | Design exported public APIs with suitable `exports` |
 
-## 12. Luyện tập
+## 12. Practice
 
-### Bài 1: dự đoán kết quả
+### Exercise 1: Predict the Result
 
 ~~~java
 class Parent {
@@ -3032,9 +3032,9 @@ Child child = new Child();
 System.out.println(child.getValue());
 ~~~
 
-**Đáp án:** in `7`. Field `value` là private, nhưng phương thức `getValue()` public được kế thừa, và mã của `Parent` đọc được field private của chính nó trên object `Child`.
+**Answer:** Prints `7`. The `value` field is private, but the public `getValue()` method is inherited, and `Parent` code can read its own private field on a `Child` instance.
 
-### Bài 2: hai package
+### Exercise 2: Two Packages
 
 ~~~java
 // package alpha;
@@ -3052,11 +3052,11 @@ public class B extends A {
 }
 ~~~
 
-Giả sử hai class được đặt trong các tệp/package hợp lệ. Dòng nào trong `print` sẽ không biên dịch nếu bỏ comment?
+Assume the classes are in valid files and packages. Which line in `print` fails compilation if uncommented?
 
-**Đáp án:** `a.number`. Bên trong `B` ở package khác, không được truy cập protected instance member từ biểu thức có kiểu `A` như vậy. `this.number` và `b.number` hợp lệ.
+**Answer:** `a.number`. Inside `B` in a different package, a protected instance member cannot be accessed through an expression statically typed as `A`. Both `this.number` and `b.number` are valid.
 
-### Bài 3: override có thể tăng quyền không?
+### Exercise 3: May an Override Widen Access?
 
 ~~~java
 class A {
@@ -3069,9 +3069,9 @@ class B extends A {
 }
 ~~~
 
-**Đáp án:** hợp lệ. `B.run()` tăng quyền từ protected lên public. Nếu đổi ngược public ở cha thành protected ở con thì không hợp lệ.
+**Answer:** Valid. `B.run()` widens visibility from protected to public. The opposite change—from public in the superclass to protected in the subclass—is invalid.
 
-### Bài 4: constructor
+### Exercise 4: Constructors
 
 ~~~java
 class Parent {
@@ -3085,15 +3085,15 @@ class Child extends Parent {
 }
 ~~~
 
-**Đáp án:** subclass `Child` có thể gọi constructor protected của superclass bằng `super(10)` theo quy tắc constructor invocation. Nó **không thừa hưởng** constructor `Parent(int)` như một constructor tên `Child(int)`.
+**Answer:** Subclass `Child` can invoke a protected superclass constructor through `super(10)` under constructor-invocation rules. It **does not inherit** `Parent(int)` as a constructor named `Child(int)`.
 
-### Bài 5: bảo vệ invariant
+### Exercise 5: Preserving Invariants
 
-Một lớp cha có `protected int stock`; subclass có thể viết `stock = -50`. Bạn nên sửa thiết kế ra sao?
+A superclass has `protected int stock`; a subclass can assign `stock = -50`. How should the design change?
 
-**Gợi ý:** đưa field thành private, cung cấp các phương thức `protected` hoặc public mang ý định như `receive(quantity)`, `reserve(quantity)`, `ship(quantity)` có validation. Lớp con chỉ thao tác qua hành vi được phép, tránh phá invariant.
+**Hint:** Make the field private and provide intentional `protected` or public methods, such as `receive(quantity)`, `reserve(quantity)`, and `ship(quantity)`, with validation. Subclasses should use permitted behavior rather than break invariants.
 
-### Bài 6: field hiding
+### Exercise 6: Field Hiding
 
 ~~~java
 class P {
@@ -3108,40 +3108,40 @@ P ref = new C();
 System.out.println(ref.number);
 ~~~
 
-**Đáp án:** in `1`. Field được chọn theo kiểu biên dịch `P` của `ref`. Không nên dùng field hiding làm cơ chế đa hình.
+**Answer:** Prints `1`. Java selects the field according to compile-time type `P` of `ref`. Field hiding should not serve as a polymorphism mechanism.
 
-## 13. Quy trình xác định một truy cập có hợp lệ hay không
+## 13. A Checklist for Determining Whether Access Is Legal
 
-Khi đọc một biểu thức như `obj.someMember` hoặc `super.someMethod()`, hãy hỏi theo thứ tự:
+When reading expressions such as `obj.someMember` or `super.someMethod()`, ask in order:
 
-1. **Thành viên được khai báo ở đâu?** Xác định superclass, member, modifier, và nó có bị hide/override không.
-2. **Code hiện tại thuộc package và class nào?** Trùng package cho phép package-private và protected; subclass ở package khác có quy tắc riêng.
-3. **Biểu thức nhận lời gọi có kiểu gì tại compile time?** Đặc biệt quan trọng đối với protected instance member từ superclass khác package.
-4. **Thành viên là field, instance method, static method hay constructor?** Override và method dispatch chỉ áp dụng theo từng loại.
-5. **Kiểu và module có accessible không?** Với JPMS hoặc package-private top-level class, member `public` chưa đủ để truy cập.
-6. **Truy cập đó có đúng về thiết kế không?** Có thể biên dịch không đồng nghĩa nên mở field cho subclass sửa trực tiếp.
+1. **Where is the member declared?** Identify the superclass, member, modifier, and possible hiding/overriding.
+2. **Which class and package contain the current code?** Being in one package permits package-private and protected access; cross-package subclasses follow additional rules.
+3. **What is the receiver expression's compile-time type?** Particularly important for protected instance members declared in a different-package superclass.
+4. **Is the member a field, instance method, static method, or constructor?** Overriding and dispatch rules depend on member kind.
+5. **Is the type/module accessible?** With JPMS or package-private top-level classes, a `public` member alone may not be accessible.
+6. **Is the access sound design?** Compilation success does not mean subclasses should directly mutate fields.
 
-**Ghi nhớ:** kế thừa giúp lớp con sử dụng và mở rộng hành vi của lớp cha, nhưng `public`, `protected`, package-private và `private` xác định ranh giới truy cập. Trong Java, `protected` có quy tắc đặc biệt khi subclass nằm ngoài package; `private` không được kế thừa như một API truy cập được; constructor không được kế thừa. Thiết kế lớp cha với các phương thức có ý nghĩa và quyền truy cập vừa đủ sẽ giúp hệ kế thừa dễ dùng và ít phụ thuộc chi tiết nội bộ hơn.
+**Remember:** Inheritance lets subclasses reuse and extend superclass behavior, but `public`, `protected`, package-private, and `private` establish access boundaries. In Java, `protected` has special rules for subclasses outside the package; `private` is not inherited as an accessible API; constructors are not inherited. Design superclass methods with clear meaning and only the access needed to keep hierarchies usable without excessive dependency on internals.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="inheritance-006">Khởi tạo lớp con và chuỗi khởi tạo lớp cha</a>
+## <a id="inheritance-006">Subclass initialization and the superclass constructor chain</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Khởi tạo lớp con và chuỗi khởi tạo lớp cha trong Java
+# Subclass Initialization and the Superclass Constructor Chain in Java
 
-> **OOP → Kế thừa.** Khi tạo một đối tượng thuộc lớp con, Java phải khởi tạo phần trạng thái được thừa hưởng từ lớp cha trước, rồi mới hoàn tất phần trạng thái của lớp con. Hiểu **chuỗi constructor**, `super(...)`, `this(...)` và thứ tự chạy các initializer giúp giải thích vì sao một đoạn mã in ra theo thứ tự tưởng như ngược với nơi ta viết `new Child()`.
+> **OOP → Inheritance.** Creating a subclass object requires Java to initialize its inherited superclass state before completing subclass state. Understanding **constructor chaining**, `super(...)`, `this(...)`, and initializer execution order explains why a program may print output in an order that seems opposite to the location of `new Child()`.
 
-## 1. Nhìn ngay vào lời gọi `new Child()`
+## 1. Start with the Call `new Child()`
 
-Giả sử có quan hệ kế thừa:
+Suppose we have this inheritance relationship:
 
 ```mermaid
 classDiagram
@@ -3155,9 +3155,9 @@ classDiagram
     Parent <|-- Child
 ```
 
-Một đối tượng `Child` **cũng chứa phần trạng thái do `Parent` định nghĩa**. Trước khi constructor `Child` hoàn tất, constructor `Parent` phải được thực thi trong chuỗi khởi tạo.
+A `Child` object **also contains state defined by `Parent`**. Before the `Child` constructor completes, the `Parent` constructor must execute as part of the initialization chain.
 
-Ví dụ đơn giản:
+A simple example:
 
 ```java
 public class ConstructorChainDemo {
@@ -3185,14 +3185,14 @@ public class ConstructorChainDemo {
 }
 ```
 
-Lưu thành `ConstructorChainDemo.java` và chạy:
+Save as `ConstructorChainDemo.java` and run:
 
 ```bash
 javac ConstructorChainDemo.java
 java ConstructorChainDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Parent: DEFAULT
@@ -3200,7 +3200,7 @@ Child(String): DEFAULT
 Child()
 ```
 
-Dù bắt đầu bằng `new Child()`, chương trình đi qua constructor `Child()` để chuyển sang `Child(String)`, rồi gọi `Parent(String)`. Các **phần thân constructor** được thực thi từ lớp cha trở xuống, sau đó quay về constructor đã gọi bằng `this(...)`.
+Although execution begins with `new Child()`, it passes through `Child()` to delegate to `Child(String)` and then calls `Parent(String)`. The **constructor bodies** execute from the superclass downward before returning to the delegating constructor through `this(...)`.
 
 ```mermaid
 flowchart TD
@@ -3212,19 +3212,19 @@ flowchart TD
     F --> G["Đối tượng khởi tạo xong"]
 ```
 
-Điểm cần phân biệt: Java không tạo ra ba đối tượng riêng cho `Child()`, `Child(String)` và `Parent(String)`. Chuỗi constructor này khởi tạo **cùng một đối tượng Child**.
+Important distinction: Java does not create three separate objects for `Child()`, `Child(String)`, and `Parent(String)`. This constructor chain initializes **one Child object**.
 
-## 2. `super(...)` và `this(...)` làm gì?
+## 2. What Do `super(...)` and `this(...)` Do?
 
-| Cú pháp | Mục đích | Ví dụ |
+| Syntax | Purpose | Example |
 |---|---|---|
-| `super(args)` | Chọn và gọi một constructor của **lớp cha trực tiếp** | `super(id)` |
-| `this(args)` | Chuyển sang một constructor khác trong **cùng lớp** | `this("DEFAULT")` |
-| Không viết lời gọi nào | Trình biên dịch ngầm thêm lời gọi `super()` khi hợp lệ | Constructor không ghi `super(...)` |
-| `super.someMethod()` | Gọi implementation của phương thức từ lớp cha | Không phải lời gọi constructor |
-| `this.someMethod()` | Gọi phương thức trên đối tượng hiện tại | Không phải lời gọi constructor |
+| `super(args)` | Selects and invokes a constructor of the **direct superclass** | `super(id)` |
+| `this(args)` | Delegates to another constructor in the **same class** | `this("DEFAULT")` |
+| No explicit invocation | Compiler implicitly adds `super()` when valid | Constructor without `super(...)` |
+| `super.someMethod()` | Invokes a superclass method implementation | Not a constructor invocation |
+| `this.someMethod()` | Invokes a method on the current object | Not a constructor invocation |
 
-Với **Java 17**, lời gọi constructor tường minh bằng `this(...)` hoặc `super(...)` phải là **câu lệnh đầu tiên** trong constructor. Không thể gọi cả hai trực tiếp trong cùng một constructor, vì mỗi constructor chỉ có một đường chuyển tiếp khởi tạo phù hợp.
+In **Java 17**, an explicit `this(...)` or `super(...)` constructor invocation must be the **first statement**. You cannot invoke both directly in one constructor because each constructor has only one valid initialization delegation path.
 
 ```java
 class Base {
@@ -3245,11 +3245,11 @@ class Derived extends Base {
 }
 ```
 
-Constructor `Derived()` dùng `this(10)`; `Derived(int)` dùng `super(code)`. Chuỗi đó dẫn tới constructor của lớp cha. Nếu tạo vòng lặp constructor bằng các lời gọi `this(...)` quay về nhau, Java sẽ báo lỗi biên dịch vì recursive constructor invocation.
+`Derived()` delegates through `this(10)`; `Derived(int)` invokes `super(code)`. That chain reaches the superclass constructor. If `this(...)` invocations form a cycle, Java reports a recursive-constructor-invocation compilation error.
 
-**Constructor không phải phương thức bình thường:** không có kiểu trả về, không được kế thừa và không được override. Một lớp con có thể định nghĩa constructor cùng danh sách tham số với lớp cha, nhưng đó là hai constructor độc lập.
+**Constructors are not ordinary methods:** they have no return type, are not inherited, and cannot be overridden. A subclass may declare a constructor with the same parameter list as a superclass constructor, but they are independent constructors.
 
-### Lỗi thường gặp: lớp cha không có constructor không tham số
+### Common Error: No No-Argument Superclass Constructor
 
 ```java
 class Parent {
@@ -3263,7 +3263,7 @@ class Child extends Parent {
 }
 ```
 
-Ví dụ trên **không biên dịch**. Khi đã khai báo `Parent(String)`, Java không tự thêm constructor `Parent()`. Sửa bằng cách chọn constructor có sẵn:
+The example above **does not compile**. Once `Parent(String)` is declared, Java does not automatically add `Parent()`. Fix this by selecting the existing constructor:
 
 ```java
 class Child extends Parent {
@@ -3273,15 +3273,15 @@ class Child extends Parent {
 }
 ```
 
-Hoặc thêm constructor `Parent()` nếu thực sự phù hợp với quy tắc khởi tạo của lớp cha.
+Alternatively, add `Parent()` if it genuinely fits the superclass's initialization contract.
 
-Constructor lớp cha phải **truy cập được** từ lớp con. Ví dụ một constructor `private` của lớp cha thông thường không thể được lớp con độc lập gọi trực tiếp. `protected` là lựa chọn thường gặp khi lớp được thiết kế để kế thừa và cần cho phép lớp con gọi constructor.
+The superclass constructor must be **accessible** to the subclass. A normal subclass cannot directly invoke a `private` superclass constructor. `protected` is often appropriate when a class is designed for inheritance and subclasses need to invoke its constructor.
 
-## 3. Thứ tự đầy đủ: static, instance field, initializer block, constructor
+## 3. Full Initialization Order: Static, Instance Fields, Blocks, and Constructors
 
-Đây là phần dễ gây nhầm nhất. Xét ba tầng kế thừa `Parent → Middle → Child`.
+This is the most easily misunderstood part. Consider three inheritance levels: `Parent → Middle → Child`.
 
-Lưu **toàn bộ** ví dụ thành `InitializationOrderDemo.java` (Java 17+):
+Save the **complete** example as `InitializationOrderDemo.java` (Java 17+):
 
 ```java
 public class InitializationOrderDemo {
@@ -3356,14 +3356,14 @@ public class InitializationOrderDemo {
 }
 ```
 
-Biên dịch/chạy:
+Compile and run:
 
 ```bash
 javac InitializationOrderDemo.java
 java InitializationOrderDemo
 ```
 
-Kết quả chính xác trong lần chạy chương trình này:
+Exact output for this run:
 
 ```text
 main: before new
@@ -3382,23 +3382,23 @@ Child: constructor, value=30
 main: after new
 ```
 
-### Vì sao thứ tự như vậy?
+### Why Does This Order Occur?
 
-Có **hai quá trình cần phân biệt**:
+There are **two distinct processes**:
 
-**A. Khởi tạo lớp (`static`) khi lớp được sử dụng chủ động lần đầu**
+**A. Class initialization (`static`) on first active use**
 
-Trước khi tạo `Child`, JVM cần bảo đảm việc khởi tạo các lớp trong chuỗi kế thừa đã hoàn tất. Khi các lớp chưa từng được khởi tạo, các static initializer lần lượt chạy từ cha đến con:
+Before creating `Child`, the JVM must ensure the classes in its superclass chain are initialized. If they have not been initialized previously, static initializers execute from superclass to subclass:
 
 ```text
 Parent static → Middle static → Child static
 ```
 
-Static field initializer và static initializer block trong **cùng một lớp** được thực hiện theo thứ tự khai báo. Khởi tạo lớp thường chỉ chạy **một lần cho mỗi lần khởi tạo lớp trong class loader tương ứng**, không lặp mỗi khi gọi `new`.
+Within **the same class**, static field initializers and static initialization blocks run in declaration order. Class initialization normally occurs **once per class initialization in the relevant class loader**, not each time `new` is used.
 
-**B. Khởi tạo một instance**
+**B. Per-instance initialization**
 
-Sau bước cấp phát và thiết lập giá trị mặc định cho các trường instance, chuỗi constructor đi từ lớp con ngược lên cho tới lớp cha. Khi thực thi phần khởi tạo của từng lớp, thứ tự quan sát là:
+After allocation and default-value assignment to instance fields, the constructor chain delegates from subclass toward superclass. As each class's initialization executes, the observable order is:
 
 ```text
 Parent instance fields/blocks → Parent constructor body
@@ -3406,9 +3406,9 @@ Parent instance fields/blocks → Parent constructor body
 → Child instance fields/blocks → Child constructor body
 ```
 
-Trong **mỗi lớp**, các instance field initializer và instance initializer block chạy xen kẽ theo **thứ tự xuất hiện trong mã nguồn**, sau khi constructor lớp cha hoàn tất và trước phần thân constructor của lớp hiện tại.
+Within **each class**, instance field initializers and instance initialization blocks run interleaved in **source declaration order**, after the superclass constructor completes and before that class's constructor body.
 
-Một chú ý quan trọng: đừng hiểu rằng *mọi* field initializer của tất cả các lớp luôn chạy trước *mọi* initializer block. Chúng đan xen theo thứ tự khai báo trong từng lớp.
+Do not assume that *all* field initializers across every class run before *all* initialization blocks. Their order interleaves according to declarations within each class.
 
 ```mermaid
 flowchart TD
@@ -3421,21 +3421,21 @@ flowchart TD
     G --> H["new Child() trả tham chiếu"]
 ```
 
-Sơ đồ mô tả hành vi quan sát ở mức học Java. JVM có thể tối ưu cách cấp phát vật lý, nhưng phải giữ ngữ nghĩa khởi tạo mà Java yêu cầu.
+The diagram describes observable behavior for learning Java. The JVM may optimize physical allocation, but must preserve Java's required initialization semantics.
 
-## 4. Giá trị mặc định xuất hiện trước field initializer
+## 4. Default Values Exist Before Field Initializers
 
-Java cấp phát đối tượng và thiết lập giá trị mặc định cho các trường instance trước khi chạy logic khởi tạo:
+Java allocates an object and initializes instance fields to defaults before running initialization logic:
 
-| Loại trường instance | Giá trị mặc định trước khi được khởi tạo |
+| Instance field type | Default value before initialization |
 |---|---|
-| `byte`, `short`, `int`, `long` | `0` (theo kiểu tương ứng) |
+| `byte`, `short`, `int`, `long` | `0` (of the appropriate type) |
 | `float`, `double` | `0.0` |
 | `boolean` | `false` |
-| `char` | Ký tự `'\\u0000'` |
-| Kiểu tham chiếu (`String`, `List`, object...) | `null` |
+| `char` | Character `'\\u0000'` |
+| Reference types (`String`, `List`, objects...) | `null` |
 
-Ví dụ:
+For example:
 
 ```java
 class Counter {
@@ -3448,17 +3448,17 @@ class Counter {
 }
 ```
 
-Sau `new Counter()`, `count == 1` và `label.equals("Ready")`.
+After `new Counter()`, `count == 1` and `label.equals("Ready")` hold.
 
-**Không suy từ đây rằng biến cục bộ cũng tự có giá trị mặc định:** biến local trong phương thức phải được gán trước khi đọc, nếu không sẽ lỗi biên dịch.
+**Do not infer that local variables also receive readable defaults:** local variables in methods must be assigned before being read, or compilation fails.
 
-Các lớp con vẫn có các trường riêng của mình nhận giá trị mặc định trước khi constructor lớp cha thực thi. Điều này đặc biệt quan trọng nếu constructor lớp cha gọi đến một phương thức bị lớp con override.
+Subclass fields also receive default values before the superclass constructor executes. This matters particularly when a superclass constructor invokes a method overridden by the subclass.
 
-## 5. Rủi ro: constructor lớp cha gọi phương thức có thể bị override
+## 5. Risk: Superclass Constructors Calling Overridable Methods
 
-Đây là một tình huống kỹ thuật quan trọng. Khi constructor lớp cha gọi một phương thức instance bị lớp con override, **dynamic dispatch vẫn xảy ra**: phiên bản ở lớp con có thể chạy khi trường của lớp con chưa được khởi tạo bằng field initializer.
+This is an important technical hazard. When a superclass constructor invokes an instance method overridden by a subclass, **dynamic dispatch still occurs**: subclass code may run before subclass fields receive their explicit initializer values.
 
-Ví dụ chạy độc lập, lưu `ConstructorOverrideTrap.java`:
+A standalone example saved as `ConstructorOverrideTrap.java`:
 
 ```java
 public class ConstructorOverrideTrap {
@@ -3488,29 +3488,29 @@ public class ConstructorOverrideTrap {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Parent sees: null
 After construction: Ready
 ```
 
-Lý do:
+Reason:
 
-1. `new Child()` bắt đầu chuỗi khởi tạo.
-2. `Parent()` chạy **trước** field initializer `name = "Ready"` của `Child`.
-3. `Parent()` gọi `description()`, nhưng Java điều phối đến `Child.description()`.
-4. Lúc đó `name` vẫn là giá trị mặc định `null`; chỉ sau khi trở về phần khởi tạo `Child`, trường mới nhận `"Ready"`.
+1. `new Child()` starts the constructor chain.
+2. `Parent()` executes **before** the `name = "Ready"` field initializer of `Child`.
+3. `Parent()` invokes `description()`, but Java dispatches to `Child.description()`.
+4. At that point, `name` still holds its default `null`; only when `Child` initialization resumes does the field receive `"Ready"`.
 
-Nếu `description()` gọi `name.length()` lúc đó, chương trình có thể ném `NullPointerException`.
+If `description()` called `name.length()` then, it could throw `NullPointerException`.
 
-**Quy tắc thiết kế:** tránh gọi phương thức có thể bị override từ constructor. Constructor nên thiết lập những trạng thái mà chính lớp đó sở hữu; hãy chạy các hook mở rộng sau khi toàn bộ đối tượng đã khởi tạo xong, hoặc thiết kế phương thức khởi tạo riêng không thể bị override khi phù hợp.
+**Design rule:** avoid invoking overridable methods from constructors. Constructors should establish state owned by their own class; invoke extension hooks after full object initialization, or design appropriate non-overridable initialization helpers.
 
-## 6. `this(...)` có khiến field initializer của lớp con chạy lại không?
+## 6. Does `this(...)` Rerun Subclass Field Initializers?
 
-**Không.** Khi một constructor chuyển sang constructor khác **trong cùng lớp** bằng `this(...)`, các instance initializer của lớp đó **không chạy lại lần nữa**. Chúng chỉ chạy một lượt cho object đang tạo.
+**No.** When one constructor delegates to another **in the same class** using `this(...)`, that class's instance initializers **do not run again**. They execute once for the object being created.
 
-Ví dụ:
+Example:
 
 ```java
 public class SameClassChainDemo {
@@ -3541,7 +3541,7 @@ public class SameClassChainDemo {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 field initializer
@@ -3550,13 +3550,13 @@ Item()
 5
 ```
 
-`this(5)` không tạo object mới, chỉ chuyển sang một constructor khác để dùng chung đường khởi tạo. Nếu mỗi lần chuyển constructor đều chạy lại field initializer, kết quả sẽ không tương ứng với ngữ nghĩa của Java.
+`this(5)` does not create another object; it delegates to a constructor that shares the initialization path. If every constructor delegation reran field initializers, the result would contradict Java semantics.
 
-Lưu ý: `this(...)` có thể làm nhiều **thân constructor** trong cùng lớp chạy theo thứ tự ngược lại chuỗi lời gọi, nhưng không làm một object được cấp phát nhiều lần.
+Note: `this(...)` can execute multiple **constructor bodies** within a class as delegation returns, but it does not allocate an object multiple times.
 
-## 7. Khi có ngoại lệ trong chuỗi khởi tạo
+## 7. Exceptions During the Constructor Chain
 
-Constructor có thể từ chối đầu vào hoặc thất bại trong khi khởi tạo.
+A constructor can reject input or fail during initialization.
 
 ```java
 class Parent {
@@ -3582,39 +3582,39 @@ class Child extends Parent {
 }
 ```
 
-Nếu gọi `new Child(-1)`, constructor `Parent(-1)` ném `IllegalArgumentException`, nên field initializer `name = createName()` và phần thân constructor `Child` **không được chạy**.
+If `new Child(-1)` is called, `Parent(-1)` throws `IllegalArgumentException`, so the `name = createName()` field initializer and `Child` constructor body **do not execute**.
 
-Điều này dẫn tới một nguyên tắc thực tế: nếu code tạo resource (file, socket, connection) trong quá trình khởi tạo mà bước sau có thể lỗi, phải tự thiết kế cách đóng resource đã mở trên đường thất bại. Java **không tự gọi `close()` cho một đối tượng đang được khởi tạo dở**.
+This leads to a practical rule: if construction opens a resource (file, socket, connection) and a later step can fail, explicitly design cleanup along the failure path. Java **does not automatically call `close()` on a partially constructed object**.
 
-Nếu một static initializer thất bại, đó là lỗi ở **khởi tạo lớp**, khác với lỗi ở constructor instance; JVM có các quy tắc đánh dấu lớp khởi tạo thất bại, và những lần sử dụng tiếp theo có thể ném `NoClassDefFoundError`. Vì vậy, tránh thực hiện quá nhiều I/O hoặc tác động khó phục hồi ngay trong static initializer.
+A failed static initializer is a **class initialization** error, different from an instance-constructor error. The JVM marks class initialization failures according to specific rules, and subsequent uses may throw `NoClassDefFoundError`. Avoid excessive I/O or hard-to-reverse side effects inside static initializers.
 
-## 8. Phân biệt constructor chaining với method overriding
+## 8. Constructor Chaining Versus Method Overriding
 
-| Cơ chế | Được chọn như thế nào? | Thời điểm có ý nghĩa |
+| Mechanism | How is it selected? | When does it matter? |
 |---|---|---|
-| `this(...)` | Constructor overload của cùng lớp; chọn theo kiểu/đối số tại biên dịch | Khi tạo đối tượng |
-| `super(...)` | Constructor của lớp cha trực tiếp, chọn theo tham số và quyền truy cập | Khi khởi tạo phần cha |
-| Override method | Implementation instance được chọn theo kiểu runtime của object | Khi gọi phương thức |
-| `super.method()` | Gọi implementation tương ứng ở lớp cha | Khi thực thi phương thức |
-| Static initializer | JVM kích hoạt khi lớp được khởi tạo theo ngữ nghĩa Java | Thường trước lần tạo instance đầu tiên |
+| `this(...)` | Constructor overload in the same class, resolved from argument types at compile time | During object creation |
+| `super(...)` | Direct superclass constructor, selected by parameters and accessibility | During superclass initialization |
+| Method overriding | Instance implementation selected by the object's runtime type | During method invocation |
+| `super.method()` | Invokes the corresponding superclass implementation | During method execution |
+| Static initializer | JVM activates it when the class initializes according to Java semantics | Usually before the first instance creation |
 
-Không thể override constructor. Tên constructor trùng tên lớp vì cú pháp khởi tạo, không có nghĩa constructor được dispatch đa hình như phương thức instance.
+Constructors cannot be overridden. A constructor has the class's name because of object-initialization syntax, not because it uses polymorphic dispatch like an instance method.
 
-Cũng không cần viết `super()` trong mọi constructor: nếu constructor không bắt đầu bằng `this(...)` hay `super(...)`, Java 17 tự thêm `super()` **chỉ khi** constructor không tham số ở lớp cha truy cập được.
+Nor must every constructor explicitly write `super()`: if it begins with neither `this(...)` nor `super(...)`, Java 17 implicitly adds `super()` **only when** an accessible no-argument superclass constructor exists.
 
-## 9. Kinh nghiệm thiết kế cây kế thừa an toàn
+## 9. Practical Guidelines for Safe Inheritance Hierarchies
 
-1. **Để constructor lớp cha chịu trách nhiệm trạng thái của lớp cha.** Nếu lớp cha cần `id`, hãy nhận và kiểm tra `id` bằng `super(id)`. Lớp con tiếp tục kiểm tra trường của nó sau đó.
-2. **Tránh gọi phương thức override được trong constructor.** Đừng để lớp cha phụ thuộc vào dữ liệu của lớp con chưa khởi tạo.
-3. **Giữ constructor đơn giản.** Constructor nên thiết lập invariant rõ ràng, hạn chế I/O, gửi sự kiện hoặc đăng ký `this` ra bên ngoài quá sớm.
-4. **Dùng `this(...)` để giảm trùng logic khởi tạo.** Tập trung kiểm tra đầu vào ở một constructor chính, tránh lặp một chuỗi câu lệnh ở nhiều overload.
-5. **Không tự giả định lớp cha có constructor mặc định.** Đọc chữ ký constructor và quyền truy cập của lớp cha khi viết `extends`.
-6. **Đặt phần chung ở lớp cha nhưng giữ quyền sở hữu hợp lý.** Không nên dùng kế thừa chỉ để tái sử dụng vài dòng nếu quan hệ “là một loại” không đúng về mặt mô hình.
-7. **Kiểm tra cả trường hợp ngoại lệ.** Nếu constructor cha thất bại, các bước khởi tạo con sẽ không diễn ra; bảo đảm không để lại resource đã mở ở bước trước.
+1. **Make superclass constructors responsible for superclass state.** If a superclass requires `id`, pass and validate `id` through `super(id)`. The subclass then validates its own fields.
+2. **Avoid overridable calls from constructors.** Do not make superclass constructors depend on uninitialized subclass data.
+3. **Keep constructors simple.** Establish clear invariants; limit I/O, event emission, or premature publication of `this`.
+4. **Use `this(...)` to reduce duplicate initialization logic.** Centralize validation in a primary constructor instead of repeating it across overloads.
+5. **Do not assume a superclass has a default constructor.** Read constructor signatures and access levels before writing `extends`.
+6. **Keep shared behavior in the superclass with proper ownership.** Do not inherit just to reuse a few lines when the is-a relationship is wrong.
+7. **Test failure paths as well.** A failed superclass constructor prevents subclass initialization; do not leave earlier-opened resources unreleased.
 
-## 10. Bài tập tự kiểm tra
+## 10. Self-Check Exercises
 
-**Bài 1 — dự đoán kết quả:**
+**Exercise 1 — predict the output:**
 
 ```java
 class A {
@@ -3632,47 +3632,47 @@ class C extends B {
 // new C(); sẽ in gì?
 ```
 
-**Đáp án:** `A B C ` vì các constructor của lớp cha phải hoàn thành trước phần thân constructor lớp con.
+**Answer:** `A B C ` because superclass constructors must complete before the subclass constructor body.
 
-**Bài 2 — sửa lỗi biên dịch.** Viết lớp `Person` chỉ có constructor `Person(String name)`. Viết `Student extends Person`, ban đầu không ghi `super(name)` để xem lỗi. Sau đó sửa constructor `Student(String name, int grade)` và thêm kiểm tra `grade` hợp lệ.
+**Exercise 2 — fix the compilation error.** Write `Person` with only a `Person(String name)` constructor. Write `Student extends Person`, initially omitting `super(name)` to observe the failure. Then fix the `Student(String name, int grade)` constructor and validate `grade`.
 
-**Bài 3 — thứ tự trường và khối initializer.** Tạo `Base` và `Derived`, mỗi lớp có một field initializer, một instance block và một constructor in tên của bước. Dự đoán sáu dòng được in khi `new Derived()`, rồi chạy kiểm chứng.
+**Exercise 3 — order of fields and initializer blocks.** Create `Base` and `Derived`, each with a field initializer, instance block, and constructor printing its step. Predict the six lines when `new Derived()` runs, then verify.
 
-**Bài 4 — lỗi override sớm.** Sửa ví dụ `ConstructorOverrideTrap` để constructor `Parent` không gọi `description()`. Chuyển lời gọi ra `main` sau khi khởi tạo và so sánh kết quả.
+**Exercise 4 — early overriding hazard.** Modify `ConstructorOverrideTrap` so `Parent` does not invoke `description()` in its constructor. Move the call to `main` after construction and compare the output.
 
-**Bài 5 — vòng `this(...)`.** Thử tạo hai constructor `Example()` và `Example(int)` sao cho mỗi constructor đều gọi constructor còn lại. Giải thích lỗi biên dịch và sửa để chuỗi kết thúc bằng một constructor gọi `super(...)`.
+**Exercise 5 — `this(...)` cycle.** Try two constructors, `Example()` and `Example(int)`, each delegating to the other. Explain the compilation error and fix the chain to end in a constructor that invokes `super(...)`.
 
-**Bài 6 — trường hợp lỗi.** Trong ví dụ `Parent/Child` ở mục 7, dự đoán có dòng `Child field initialized` xuất hiện không khi `new Child(-1)`. Giải thích dựa trên chuỗi khởi tạo.
+**Exercise 6 — failure case.** In the `Parent/Child` example in Section 7, predict whether `Child field initialized` appears for `new Child(-1)`. Explain from the constructor chain.
 
-**Ghi nhớ:** Khi `new Child()`, Java phải khởi tạo lớp cha và hoàn tất phần khởi tạo instance của lớp cha trước phần instance của lớp con. `super(...)` chuyển tới constructor lớp cha, `this(...)` nối các constructor cùng lớp, còn **field initializer/instance block của mỗi lớp chạy theo thứ tự khai báo trước thân constructor của chính lớp đó**. Đặc biệt, constructor lớp cha không nên gọi phương thức có thể bị lớp con override vì lúc ấy trường của lớp con chưa sẵn sàng.
+**Remember:** With `new Child()`, Java initializes the superclass and completes its instance initialization before the subclass instance initialization. `super(...)` invokes a superclass constructor, `this(...)` chains constructors within one class, and **each class's field initializers/instance blocks execute in declaration order before its constructor body**. In particular, superclass constructors should not invoke methods overridable by subclasses because subclass fields may not be ready.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="inheritance-007">Thành viên không thể ghi đè và lớp không thể kế thừa</a>
+## <a id="inheritance-007">Non-overridable members and non-extendable classes</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thành viên không thể ghi đè và lớp không thể kế thừa trong Java
+# Non-Overridable Members and Non-Extendable Classes in Java
 
-Trong Java, từ khóa `final` có thể được dùng để **cố định một phần của thiết kế kế thừa**:
+In Java, the `final` keyword can **lock down parts of an inheritance design**:
 
-- Đặt `final` trên **phương thức** để lớp con không thể ghi đè (*override*) phương thức đó.
-- Đặt `final` trên **lớp** để không lớp nào có thể `extends` lớp ấy.
-- Đặt `final` trên **biến hoặc field** để không được gán lại giá trị sau khi đã gán hợp lệ.
+- Apply `final` to a **method** so subclasses cannot override (*override*) it.
+- Apply `final` to a **class** so no other class can `extends` it.
+- Apply `final` to a **variable or field** to prevent reassignment after valid initialization.
 
-Ba ý nghĩa này liên quan đến sự ổn định nhưng **không thay thế nhau**. Đặc biệt, `final class` không tự làm mọi dữ liệu bên trong bất biến; `final method` không ngăn phương thức thay đổi trạng thái; `final field` không khiến đối tượng được tham chiếu trở nên bất biến.
+These three meanings all promote stability, but **they are not interchangeable**. In particular, a `final class` does not automatically make internal data immutable; a `final method` may still mutate state; and a `final field` does not make the referenced object immutable.
 
-Mục tiêu của bài là hiểu chính xác **điều gì bị cấm tại lúc biên dịch**, điều gì vẫn có thể làm, và cách dùng `final` để giữ những quy tắc mà lớp con không được phá vỡ.
+The goal is to understand exactly **what the compiler prohibits**, what remains possible, and how `final` protects rules that subclasses must not violate.
 
-## 1. Phương thức `final`: kế thừa được nhưng không override được
+## 1. `final` Methods: Inheritable but Not Overridable
 
-Một phương thức instance được đánh dấu `final` vẫn có thể được **gọi và kế thừa** bởi lớp con, nhưng lớp con **không được cung cấp implementation mới với cùng chữ ký override**.
+A `final` instance method can still be **called and inherited** by subclasses, but they **cannot provide a new overriding implementation with the same signature**.
 
 ~~~java
 class Account {
@@ -3705,20 +3705,20 @@ SavingsAccount account = new SavingsAccount("An");
 System.out.println(account.getOwner()); // An
 ~~~
 
-Mặc dù `SavingsAccount` không thể **override** `getOwner()`, nó vẫn được sử dụng phương thức được kế thừa. `final` ngăn thay phần triển khai của phương thức; nó **không** làm biến mất API khỏi lớp con.
+Although `SavingsAccount` cannot **override** `getOwner()`, it can still use the inherited method. `final` prevents replacing the method implementation; it **does not** remove the method from the subclass API.
 
-Bảng phân biệt:
+Comparison table:
 
-| Hành động trên phương thức `final` của lớp cha | Có được không? |
+| Action involving a superclass `final` method | Allowed? |
 | --- | --- |
-| Gọi từ đối tượng lớp con | Có, nếu quyền truy cập cho phép |
-| Lớp con kế thừa implementation | Có, theo quy tắc kế thừa Java |
-| Override cùng chữ ký trong lớp con | Không |
-| Lớp con thêm phương thức **overload** khác danh sách tham số | Có |
-| Phương thức `final` sửa field hoặc gọi phương thức khác | Có |
-| Phương thức `final` gọi một hook overridable | Có, nhưng cần thiết kế cẩn thận |
+| Call it on a subclass object | Yes, when access permits |
+| Inherit the implementation in a subclass | Yes, under Java inheritance rules |
+| Override the same signature in a subclass | No |
+| Add a different-parameter **overload** in the subclass | Yes |
+| Let the `final` method mutate a field or call another method | Yes |
+| Let the `final` method call an overridable hook | Yes, but design carefully |
 
-**Ghi đè (override)** và **nạp chồng (overload)** không giống nhau:
+**Overriding (override)** and **overloading (overload)** differ:
 
 ~~~java
 class Parent {
@@ -3741,11 +3741,11 @@ class Child extends Parent {
 }
 ~~~
 
-`send(String, int)` là phương thức mới với chữ ký khác. Nó không sửa phần triển khai của `send(String)`.
+`send(String, int)` is another method with a different signature; it does not replace the `send(String)` implementation.
 
-## 2. Lớp `final`: không thể làm superclass
+## 2. `final` Classes Cannot Be Superclasses
 
-Khi khai báo:
+Given this declaration:
 
 ~~~java
 final class Receipt {
@@ -3761,14 +3761,14 @@ final class Receipt {
 }
 ~~~
 
-Bạn vẫn tạo đối tượng được:
+You can still instantiate it:
 
 ~~~java
 Receipt receipt = new Receipt("RC-001");
 System.out.println(receipt.getCode()); // RC-001
 ~~~
 
-Nhưng không thể khai báo lớp con:
+But cannot declare a subclass:
 
 ~~~java
 // LỖI BIÊN DỊCH:
@@ -3776,7 +3776,7 @@ Nhưng không thể khai báo lớp con:
 // }
 ~~~
 
-Một lớp `final` có thể tự `extends` lớp cha và `implements` các interface:
+A `final` class can itself `extends` a superclass and `implements` interfaces:
 
 ~~~java
 interface Printable {
@@ -3797,9 +3797,9 @@ final class Invoice extends Document implements Printable {
 }
 ~~~
 
-`Invoice` được **kế thừa** từ `Document`, nhưng **không cho lớp khác kế thừa từ Invoice**. Vì thế nhận định “lớp final không liên quan được đến kế thừa” là sai: nó có thể đứng **ở cuối một nhánh** kế thừa.
+`Invoice` **inherits** from `Document` but **cannot be extended further**. So the claim that “final classes cannot participate in inheritance” is wrong: they may appear **at the end of a branch**.
 
-Sơ đồ:
+Diagram:
 
 ~~~mermaid
 classDiagram
@@ -3818,21 +3818,21 @@ classDiagram
     Printable <|.. Invoice
 ~~~
 
-`Invoice` vẫn có thể được sử dụng thông qua biến `Document` hoặc `Printable`. Đánh dấu `final` không loại bỏ đa hình đối với các lớp/interface cha.
+`Invoice` remains usable through a `Document` or `Printable` reference. Marking it `final` does not remove polymorphism through its superclass or implemented interfaces.
 
-## 3. Ví dụ Java chạy được: khóa quy trình chung, mở điểm chuyên biệt hóa
+## 3. Runnable Java Example: Locking Down a Workflow While Exposing Extension Points
 
-Tình huống: ứng dụng có nhiều kênh thanh toán. Mỗi yêu cầu đều cần kiểm tra số tiền trước khi gọi kênh thanh toán cụ thể, và phải trả thông tin giao dịch theo cấu trúc thống nhất.
+Scenario: an application has multiple payment channels. Every request must validate the amount before processing through a specific channel and return transaction information in a consistent structure.
 
-Ta thiết kế:
+Design:
 
-- `PaymentChannel` là hợp đồng cho bên sử dụng.
-- `PaymentProcessor` là lớp cha **abstract**, chứa phương thức `process()` **final** để giữ quy trình chung.
-- `charge()` là điểm mở rộng `protected abstract`; lớp con thực hiện bước xử lý thanh toán.
-- `CardProcessor` là lớp **final**: hoàn thiện xử lý thẻ và không cho subclass thay đổi tiếp.
-- `BankTransferProcessor` là một lớp cụ thể khác, cho thấy nhiều implementation có thể cùng dùng quy trình chung.
+- `PaymentChannel` defines the caller-facing contract.
+- `PaymentProcessor` is an **abstract** superclass with a **final** `process()` method to preserve the shared workflow.
+- `charge()` is a `protected abstract` extension point implemented by subclasses for payment processing.
+- `CardProcessor` is **final**: it implements card payments and prohibits further subclassing.
+- `BankTransferProcessor` is another concrete class illustrating how several implementations share the workflow.
 
-Lưu toàn bộ vào `FinalInheritanceDemo.java`, chạy với **Java 11+**.
+Save everything as `FinalInheritanceDemo.java` and run with **Java 11+**.
 
 ~~~java
 import java.math.BigDecimal;
@@ -3956,14 +3956,14 @@ public class FinalInheritanceDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac FinalInheritanceDemo.java
 java FinalInheritanceDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Xử lý thẻ: 150000
@@ -3973,19 +3973,19 @@ BANK -> BANK-TX-002
 Từ chối: Số tiền phải lớn hơn 0
 ~~~
 
-Ví dụ chỉ mô phỏng thanh toán bằng chuỗi cố định và console; chưa có kết nối ngân hàng hoặc đảm bảo giao dịch thực tế. Mục tiêu là quan sát quy tắc kế thừa và phần mã được bảo vệ bởi `final`.
+This example simulates payments using fixed strings and console output; it neither connects to a bank nor guarantees real transactions. It demonstrates inheritance rules and code protected by `final`.
 
-### Điều gì được cố định, điều gì được mở rộng?
+### What Is Fixed, and What Can Be Extended?
 
-| Thành phần | Vai trò | Có override ở lớp con? |
+| Component | Responsibility | Can subclasses override? |
 | --- | --- | --- |
-| `PaymentProcessor.process()` | Kiểm tra số tiền, gọi `charge`, chuẩn hóa Receipt | **Không**, vì `final` |
-| `PaymentProcessor.charge()` | Hợp đồng để từng kênh thực thi | **Có**, thậm chí bắt buộc ở lớp con concrete |
-| `CardProcessor` | Một loại xử lý thanh toán cụ thể | Không thể có subclass vì class `final` |
-| `BankTransferProcessor` | Loại xử lý cụ thể khác | Có thể được kế thừa thêm vì chưa `final` |
-| `Receipt` | Dữ liệu giao dịch tạo ra sau xử lý | Không thể kế thừa vì class `final` |
+| `PaymentProcessor.process()` | Validates amount, calls `charge`, normalizes Receipt | **No**, because it is `final` |
+| `PaymentProcessor.charge()` | Contract implemented by each payment channel | **Yes**, and concrete subclasses must implement it |
+| `CardProcessor` | A concrete payment processor | No subclasses because the class is `final` |
+| `BankTransferProcessor` | Another concrete processor | Can be subclassed because it is not `final` |
+| `Receipt` | Transaction information produced after processing | Cannot be subclassed because the class is `final` |
 
-**Chi tiết kỹ thuật quan trọng:** `process()` không override được, nhưng lời gọi `charge(amount)` **bên trong** nó vẫn chọn implementation của instance thực tế. Do đó `final` chỉ khóa phần thân `process`, không đóng toàn bộ khả năng đa hình của lớp.
+**Important technical detail:** `process()` cannot be overridden, but its internal call to `charge(amount)` **still dispatches** to the runtime instance's implementation. Thus `final` locks down only `process`'s body, not all polymorphism in the class.
 
 ~~~mermaid
 sequenceDiagram
@@ -4000,35 +4000,35 @@ sequenceDiagram
     P-->>App: Receipt
 ~~~
 
-Sơ đồ biểu diễn **các vai trò trong một lần gọi trên cùng instance CardProcessor**: `PaymentProcessor.process()` là mã kế thừa đang chạy, còn `CardProcessor.charge()` là mã được dispatch động. Không có một instance `PaymentProcessor` độc lập được tạo thêm.
+The diagram shows **the roles in one call on the same CardProcessor instance**: `PaymentProcessor.process()` is inherited code executing, while `CardProcessor.charge()` is dynamically dispatched code. No separate `PaymentProcessor` instance is created.
 
-## 4. Vì sao một phương thức nên là `final`?
+## 4. Why Mark a Method `final`?
 
-Dùng `final` trên phương thức khi phần hành vi đó được xem như **quy tắc cố định của lớp cha**: ví dụ một trình tự kiểm tra trước khi thao tác hoặc một cách biểu diễn định danh không được thay.
+Use `final` when a method embodies **a fixed superclass rule**, such as mandatory validation steps or an identifier representation that must not change.
 
-Các lợi ích thiết kế có thể có:
+Potential design benefits:
 
-1. Ngăn subclass bỏ qua logic quan trọng bằng cách override phương thức.
-2. Cho người đọc biết đây là API có implementation ổn định trong cây kế thừa.
-3. Giữ một quy trình dùng chung trong khi cho phép chuyên biệt hóa tại các hook riêng.
-4. Giảm số cách lớp con có thể làm sai một phần hợp đồng lớp cha.
+1. Prevent subclasses from skipping essential logic by overriding a method.
+2. Signal that this API has a stable implementation across the inheritance hierarchy.
+3. Preserve a shared workflow while permitting specialization through dedicated hooks.
+4. Reduce the ways a subclass can violate part of the superclass contract.
 
-Tuy nhiên, `final` **không phải biện pháp bảo mật tuyệt đối**. Nếu lớp cha công khai các phương thức thay đổi trạng thái khác, hoặc hook overridable có hành vi nguy hiểm, một subclass vẫn có thể tạo tác động sai. Ví dụ trong chương trình trên, `charge()` có thể trả kết quả hợp lệ về mặt cú pháp nhưng thực tế không thu tiền. Phải thiết kế và kiểm chứng hợp đồng của mọi điểm mở rộng.
+However, `final` **is not an absolute security mechanism**. A subclass can still cause incorrect behavior if the superclass exposes other state-changing methods or overridable hooks with dangerous behavior. In the example, `charge()` might return a syntactically valid response without actually collecting money. Every extension point still needs a well-designed and verified contract.
 
-Cũng không nên đánh dấu mọi phương thức `final` theo thói quen rồi vô tình làm khó các biến thể hợp lệ. Trước khi khóa một phương thức, hãy xác định **lý do nghiệp vụ hoặc ràng buộc thiết kế** cụ thể.
+Do not habitually make every method `final` and inadvertently prevent legitimate variations. Before locking down a method, identify a specific **business reason or design constraint**.
 
-## 5. Vì sao một lớp nên là `final`?
+## 5. Why Make a Class `final`?
 
-Dùng `final class` khi thiết kế muốn **đóng khả năng chuyên biệt hóa bằng kế thừa**:
+Use `final class` when the design should **prohibit further specialization through inheritance**:
 
-- Kiểu dữ liệu giá trị (value type) có invariant chặt, không muốn subclass mở rộng và thay đổi kỳ vọng.
-- Một implementation đã hoàn chỉnh, không cung cấp hợp đồng mở rộng cho subclass.
-- Một đối tượng tiện ích hoặc cấu phần chỉ muốn được **sử dụng/ủy quyền** thay vì kế thừa.
-- Một kiểu có quy tắc về danh tính, bình đẳng hoặc xử lý nội bộ khó bảo đảm nếu subclass tùy ý thay đổi hành vi.
+- A value type with strict invariants, where subclassing could change expectations.
+- A complete implementation that exposes no extension contract for subclasses.
+- A utility or component intended to be **used or delegated to** rather than inherited.
+- A type whose identity, equality, or internal rules are difficult to preserve if subclasses can freely change behavior.
 
-Ví dụ lớp `Receipt` ở trên không có setter và các field giữ `String`/`BigDecimal` bất biến. Kết hợp với kiểm tra trong constructor, đây là một kiểu dữ liệu **bất biến theo trạng thái quan sát được** trong ví dụ.
+The `Receipt` class above has no setters and uses immutable `String`/`BigDecimal` values in its fields. Together with constructor validation, this produces an **observably immutable state** in the example.
 
-Nhưng cần phân biệt nguyên nhân:
+But distinguish the underlying reasons:
 
 ~~~java
 final class Counter {
@@ -4050,19 +4050,19 @@ counter.increment();
 System.out.println(counter.getValue()); // 1
 ~~~
 
-`Counter` là lớp `final` **nhưng đối tượng vẫn mutable**. `final` ở cấp class chỉ ngăn `extends Counter`, không cấm cập nhật `value`.
+`Counter` is a `final` class **yet its instances are mutable**. Class-level `final` only prevents `extends Counter`; it does not prohibit updating `value`.
 
-Tương tự, một lớp không `final` vẫn có thể thiết kế bất biến nếu bảo vệ tất cả trạng thái đúng cách; bất biến dữ liệu và hạn chế kế thừa là **hai quyết định khác nhau**.
+Similarly, a non-`final` class can still be designed to be immutable if all state is properly protected. Data immutability and inheritance restrictions are **separate design decisions**.
 
-## 6. Ba vị trí của `final` dễ bị lẫn
+## 6. Three Commonly Confused Uses of `final`
 
-| Vị trí | Ví dụ | Điều bị cấm | Điều vẫn có thể xảy ra |
+| Location | Example | What is prohibited | What remains possible |
 | --- | --- | --- | --- |
-| Class | `final class Receipt` | Lớp khác `extends Receipt` | Tạo object, gọi method, sửa state nếu class cho phép |
-| Method | `public final void process()` | Subclass override cùng chữ ký | Gọi từ subclass, overload với tham số khác |
-| Biến/field | `final List<String> items` | Gán lại `items` sau khi đã gán | `items.add(...)` nếu list mutable |
+| Class | `final class Receipt` | Another class using `extends Receipt` | Creating instances, calling methods, changing state if permitted |
+| Method | `public final void process()` | A subclass overriding the same signature | Calling it from subclasses, overloading with different parameters |
+| Variable/field | `final List<String> items` | Reassigning `items` after assignment | `items.add(...)` if the list is mutable |
 
-Ví dụ `final` trên biến tham chiếu:
+Example of `final` on a reference variable:
 
 ~~~java
 import java.util.ArrayList;
@@ -4073,14 +4073,14 @@ tags.add("Java");       // Hợp lệ: cập nhật đối tượng List.
 // tags = new ArrayList<>(); // Lỗi: không được gán lại biến final.
 ~~~
 
-Với kiểu nguyên thủy:
+For primitive types:
 
 ~~~java
 final int maxAttempts = 3;
 // maxAttempts = 5; // Lỗi biên dịch.
 ~~~
 
-Với tham số phương thức:
+For method parameters:
 
 ~~~java
 void render(final String message) {
@@ -4089,7 +4089,7 @@ void render(final String message) {
 }
 ~~~
 
-Với field không có giá trị tại chỗ khai báo:
+For a field without a declaration initializer:
 
 ~~~java
 class User {
@@ -4101,22 +4101,22 @@ class User {
 }
 ~~~
 
-Một `blank final field` phải được gán đúng theo quy tắc khởi tạo của Java trên mọi đường khởi tạo hoàn tất bình thường; không được gán lại sau đó. Field `final` tham chiếu tới một đối tượng mutable không khóa trạng thái bên trong đối tượng.
+A `blank final field` must be assigned according to Java's initialization rules on every normally completing initialization path; it cannot be reassigned afterward. A `final` field referencing a mutable object does not freeze that object's internal state.
 
-## 7. Thành viên nào không thể override dù không viết `final`?
+## 7. Which Members Cannot Be Overridden Even Without `final`?
 
-Không phải thành viên nào của lớp cha cũng là điểm override hợp lệ.
+Not every superclass member is a valid override point.
 
-| Thành viên | Có override đúng nghĩa? | Giải thích |
+| Member | Truly overridable? | Explanation |
 | --- | --- | --- |
-| Instance method `public/protected`, không final, không static | Thường có | Nếu có quyền truy cập và chữ ký phù hợp |
-| Instance method `final` | Không | Compiler cấm override |
-| Method `private` | Không | Không được kế thừa theo cách cho phép override |
-| Method `static` | Không | Có thể bị **hide** bởi static method ở subclass, trừ các ràng buộc như final |
-| Constructor | Không | Constructor không phải method được kế thừa |
-| Field, kể cả `final field` | Không | Field chỉ có thể bị **hide** (che tên), không override động |
+| Instance method `public/protected`, neither final nor static | Usually yes | If access and signature rules are satisfied |
+| Instance method `final` | No | Compiler prohibits overriding |
+| Method `private` | No | Not inherited in a way that permits overriding |
+| Method `static` | No | May be **hidden** by a subclass static method, subject to restrictions such as final |
+| Constructor | No | Constructors are not inherited methods |
+| Field, including `final field` | No | Fields can only be **hidden** by name, not dynamically overridden |
 
-### `private` và `static` không phải là override
+### `private` and `static` Do Not Mean Overriding
 
 ~~~java
 class Parent {
@@ -4151,20 +4151,20 @@ Child c = new Child();
 c.internal(); // Child internal
 ~~~
 
-Nên gọi static method qua tên class (`Parent.info()`, `Child.info()`) để tránh nhầm với đa hình động.
+Invoke static methods through class names (`Parent.info()`, `Child.info()`) to avoid confusing them with dynamic polymorphism.
 
-Nếu lớp cha khai báo `static final void info()`, lớp con không thể khai báo static method cùng chữ ký để hide. Với `private final void internal()`, subclass vẫn có thể khai báo phương thức mới cùng tên/chữ ký theo quy tắc truy cập, vì đó **không phải override** phương thức private ở cha.
+If the superclass declares `static final void info()`, the subclass cannot declare a same-signature static method to hide it. With `private final void internal()`, a subclass may still declare a separate same-named/same-signature method under access rules because that is **not overriding** the superclass private method.
 
-### Không thể kết hợp `abstract` và `final` trên cùng class/method
+### `abstract` and `final` Cannot Be Combined on the Same Class or Method
 
-Hai từ khóa có yêu cầu đối lập:
+These keywords impose opposite requirements:
 
-- `abstract method` yêu cầu subclass cung cấp implementation.
-- `final method` ngăn subclass cung cấp implementation bằng override.
-- `abstract class` có thể cần/cho phép subclass hoàn thiện.
-- `final class` ngăn tạo subclass.
+- An `abstract method` requires a subclass to supply an implementation.
+- A `final method` prevents a subclass from supplying an implementation through overriding.
+- An `abstract class` may require or allow subclasses to complete its behavior.
+- A `final class` prevents any subclass from being declared.
 
-Do đó các khai báo sau **không hợp lệ**:
+Thus the following declarations are **invalid**:
 
 ~~~java
 // abstract final class Impossible { }
@@ -4174,11 +4174,11 @@ Do đó các khai báo sau **không hợp lệ**:
 // }
 ~~~
 
-Trong khi đó, **abstract class vẫn được chứa method final đã triển khai** — chính là thiết kế `PaymentProcessor.process()` ở ví dụ chạy được.
+By contrast, an **abstract class may contain an implemented final method**—as shown by `PaymentProcessor.process()` in the runnable example.
 
-## 8. Nếu cần khóa một số phương thức nhưng vẫn cho phép mở rộng?
+## 8. What If Some Methods Must Be Fixed While Others Remain Extensible?
 
-Đó là tình huống phổ biến. Có thể dùng một lớp cha **không final** hoặc `abstract class`, rồi đánh dấu đúng các điểm không được override:
+This is a common situation. Use a **non-final** superclass or an `abstract class`, then mark only the steps that must not be overridden:
 
 ~~~java
 abstract class ImportJob {
@@ -4212,15 +4212,15 @@ class CsvImportJob extends ImportJob {
 }
 ~~~
 
-`ImportJob.run()` cố định các bước; subclass chuyên biệt hóa `parse()` và `save()`. Đây là biến thể của mẫu **Template Method**.
+`ImportJob.run()` fixes the step sequence; subclasses specialize `parse()` and `save()`. This is a variation of the **Template Method** pattern.
 
-Quan trọng: nếu `parse()` hay `save()` ném ngoại lệ hoặc sửa trạng thái không hợp lệ, phương thức `final run()` **không tự hoàn tác** các thay đổi. `final` giải quyết **quyền override**, không thay thế kiểm soát lỗi, giao dịch hay đồng bộ.
+Importantly, if `parse()` or `save()` throws or mutates invalid state, `final run()` **does not automatically undo** the changes. `final` controls **overriding permissions**; it does not replace error handling, transactions, or synchronization.
 
-## 9. Những lựa chọn thiết kế thay thế `final` trên class
+## 9. Design Alternatives to Marking a Class `final`
 
-Một lớp `final` áp đặt quy tắc **không có subclass**. Nhưng đôi khi bạn muốn cho phép **một số kiểu con được chọn** mà không mở hoàn toàn.
+A `final` class enforces **no subclassing**, but sometimes you want **only selected subtypes** rather than unlimited extension.
 
-Từ **Java 17**, Java hỗ trợ `sealed class`:
+Since **Java 17**, Java supports `sealed class`:
 
 ~~~java
 // Ví dụ riêng cho Java 17+, không thuộc bản demo Java 11.
@@ -4234,37 +4234,37 @@ final class Card extends PaymentMethod {
 }
 ~~~
 
-Khác nhau:
+Comparison:
 
-| Thiết kế | Ai có thể kế thừa? |
+| Design | Who may inherit? |
 | --- | --- |
-| `class Base` (không final/sealed) | Các lớp phù hợp quyền truy cập và quy tắc ngôn ngữ |
-| `final class Base` | Không ai |
-| `sealed class Base permits A, B` | Chỉ các lớp được phép trực tiếp; các subclass phải khai báo `final`, `sealed` hoặc `non-sealed` theo quy tắc |
-| `abstract class Base` | Có thể kế thừa; bản thân Base không được `new` trực tiếp |
+| `class Base` (neither final nor sealed) | Classes satisfying accessibility and language rules |
+| `final class Base` | No subclass |
+| `sealed class Base permits A, B` | Only directly permitted classes; subclasses must declare `final`, `sealed`, or `non-sealed` as required |
+| `abstract class Base` | May be subclassed, but the type itself cannot be instantiated directly with `new` |
 
-Đừng chọn `sealed` chỉ để thay một chữ khóa. Nó hữu ích khi thực sự có **tập phân loại hữu hạn và chủ đích**. Mã minh họa chính ở phần 3 chỉ cần Java 11; đoạn `sealed` này cần Java 17 trở lên.
+Do not choose `sealed` merely to replace a keyword. It is useful for an intentionally **finite, well-defined set of variants**. The main runnable example in Section 3 requires only Java 11; this `sealed` example requires Java 17 or later.
 
-Khi mục tiêu là thay đổi hành vi có thể hoán đổi, **composition + interface** cũng là lựa chọn đáng cân nhắc: thay vì subclass một class `final`, hãy truyền một đối tượng chiến lược vào constructor. `final` không cấm một class **sử dụng** đối tượng khác để thực hiện công việc.
+For interchangeable behavior, **composition + interface** is worth considering: inject a strategy through a constructor instead of subclassing a `final` class. `final` does not prevent a class from **using** another object.
 
-## 10. Các lỗi biên dịch và suy luận sai thường gặp
+## 10. Common Compilation Errors and Incorrect Assumptions
 
-| Tình huống | Kết luận đúng |
+| Scenario | Correct conclusion |
 | --- | --- |
-| `class B extends FinalA` với `FinalA` là `final class` | Lỗi biên dịch: không thể kế thừa |
-| Override `public final void f()` trong subclass | Lỗi biên dịch: không thể override |
-| Tạo `new FinalA()` khi constructor truy cập được | Hợp lệ |
-| Class `final` implement interface | Hợp lệ |
-| Abstract class có một method `final` | Hợp lệ |
-| Một method vừa `abstract` vừa `final` | Không hợp lệ |
-| Overload một `final method` bằng tham số khác | Hợp lệ |
-| `final List<T>` rồi gọi `add()` | Có thể hợp lệ nếu List mutable |
-| `private` method lớp cha và method cùng tên ở subclass | Không phải override |
-| `static` method cùng tên/chữ ký ở subclass | Hiding nếu hợp lệ, không phải override |
-| Dùng `final` để bảo đảm thread-safety | Không đủ; phải xem cả cách truy cập và thay đổi dữ liệu |
-| “Final class luôn immutable” | Sai: `Counter` là phản ví dụ |
+| `class B extends FinalA` when `FinalA` is a `final class` | Compilation error: cannot inherit |
+| Overriding `public final void f()` in a subclass | Compilation error: cannot override |
+| Constructing `new FinalA()` when the constructor is accessible | Valid |
+| A `final` class implements an interface | Valid |
+| An abstract class declares a `final` method | Valid |
+| A method marked both `abstract` and `final` | Invalid |
+| Overloading a `final method` with different parameters | Valid |
+| Declaring `final List<T>` and invoking `add()` | May be valid when the list is mutable |
+| Superclass `private` method and a same-named subclass method | Not an override |
+| A same-named/signature subclass `static` method | Hiding if legal, not overriding |
+| Using `final` to guarantee thread safety | Insufficient; access and mutation must be considered |
+| “A final class is always immutable” | False: `Counter` is a counterexample |
 
-### Một số trường hợp lỗi có ích để nhận diện
+### Useful Compilation Failures to Recognize
 
 ~~~java
 final class Locked {
@@ -4290,78 +4290,78 @@ class Derived extends Base {
 }
 ~~~
 
-Lý do của lỗi nằm ở **quy tắc kiểu tại thời điểm biên dịch**, không phải vì JVM phát hiện subclass hoạt động sai sau khi đã chạy. Dùng `@Override` khi cố tình override các phương thức được phép là thói quen tốt để compiler kiểm tra giúp.
+The failures arise from **compile-time type rules**, not because the JVM discovers incorrect subclass behavior at runtime. Adding `@Override` to intended legal overrides is good practice because the compiler verifies the signature.
 
-## 11. Khi nào không nên dùng `final`?
+## 11. When Should You Avoid `final`?
 
-`final` nên diễn đạt một **quyết định thiết kế**. Nếu ứng dụng cần cho đối tượng bên thứ ba mở rộng một API để xử lý đúng nhiều biến thể, việc khóa class/method quá sớm có thể làm API khó dùng hoặc buộc người dùng tạo vòng vo.
+`final` should express a **design decision**. If an application needs third-party extensions of an API to support valid variations, locking down classes or methods too early can make that API awkward or force convoluted workarounds.
 
-Một số dấu hiệu nên xem lại:
+Warning signs include:
 
-- Phần hành vi thực sự cần override, nhưng lớp cha lại khóa bằng `final` mà không cung cấp hook hay abstraction khác.
-- Hệ thống mở rộng chức năng thường xuyên và cần thay implementation thông qua interface/strategy, nhưng các phụ thuộc đều gắn vào lớp concrete.
-- Bạn dùng inheritance chỉ để tái sử dụng vài dòng tiện ích trong khi quan hệ “is-a” không đúng.
-- Bạn cho rằng đánh dấu `final` sẽ tự khắc phục tính đồng thời, bảo mật, bất biến hoặc transaction.
+- Behavior genuinely needs to be overridden, but the superclass marks it `final` without offering hooks or another abstraction.
+- New features frequently require interchangeable implementations through interfaces/strategies, yet dependencies are tied to concrete classes.
+- Inheritance is used only to reuse a few utility lines even though the is-a relationship is invalid.
+- You assume that marking something `final` automatically solves concurrency, security, immutability, or transaction problems.
 
-Một quy tắc thực tế: **khóa những phần buộc phải ổn định; mở rộng tại những điểm có hợp đồng rõ ràng**. Với miền nghiệp vụ cần thay đổi linh hoạt, ưu tiên interface/composition hoặc một hook được kiểm soát hơn việc override tùy ý cả quy trình.
+A practical rule: **lock down what must remain stable; extend at points with clear contracts**. In domains needing flexible variation, prefer interfaces/composition or controlled hooks over freely overriding a whole workflow.
 
-## 12. Tự kiểm tra
+## 12. Self-Check
 
-**Câu 1.** Một method `final` có được lớp con gọi không?
+**Question 1.** Can a subclass invoke a `final` method?
 
-**Đáp án:** Có, nếu quyền truy cập cho phép. Lớp con không được **override** phần triển khai, nhưng có thể **kế thừa và sử dụng**.
+**Answer:** Yes, when access permits. A subclass cannot **override** its implementation, but may **inherit and use** it.
 
-**Câu 2.** `final class Printer implements Printable` có hợp lệ không?
+**Question 2.** Is `final class Printer implements Printable` valid?
 
-**Đáp án:** Có. `final` cấm class khác `extends Printer`, còn `implements Printable` cho biết `Printer` đáp ứng hợp đồng của interface.
+**Answer:** Yes. `final` prevents another class from using `extends Printer`, while `implements Printable` states that `Printer` fulfills the interface contract.
 
-**Câu 3.** Trong ví dụ thanh toán, tại sao `process()` là `final` nhưng `CardProcessor.charge()` vẫn được gọi?
+**Question 3.** In the payment example, why is `process()` `final` while `CardProcessor.charge()` is still invoked?
 
-**Đáp án:** `process()` là mã chung được kế thừa, không bị override. Nó gọi một hook `charge()` cho phép/đòi hỏi lớp con triển khai; Java dispatch hook này theo kiểu runtime của đối tượng.
+**Answer:** `process()` is inherited shared code and cannot be overridden. It invokes the `charge()` hook implemented by subclasses; Java dispatches that hook according to the object's runtime type.
 
-**Câu 4.** `final List<String> names = new ArrayList<>(); names.add("An");` có biên dịch không?
+**Question 4.** Does `final List<String> names = new ArrayList<>(); names.add("An");` compile?
 
-**Đáp án:** Có. Không có phép **gán lại** biến `names`; lời gọi `add` làm thay đổi danh sách mutable mà nó tham chiếu.
+**Answer:** Yes. There is no **reassignment** of `names`; calling `add` mutates the referenced list.
 
-**Câu 5.** Phương thức `private void save()` trong lớp cha có thể được subclass override không?
+**Question 5.** Can a subclass override the superclass method `private void save()`?
 
-**Đáp án:** Không. Subclass có thể khai báo phương thức khác cùng tên/chữ ký ở những trường hợp hợp lệ, nhưng phương thức đó không override phương thức `private` của cha.
+**Answer:** No. Where permitted, a subclass may declare a separate same-named/signature method, but it does not override the superclass `private` method.
 
-**Câu 6.** Một lớp `final` có thể đồng thời là `abstract` không?
+**Question 6.** Can a `final` class also be `abstract`?
 
-**Đáp án:** Không. `final` ngăn kế thừa, trong khi `abstract` chỉ ra một kiểu không được khởi tạo trực tiếp và dành cho lớp con hoàn thiện/sử dụng.
+**Answer:** No. `final` prevents subclassing, whereas `abstract` describes a type that cannot be directly instantiated and is designed for subclasses to complete or use.
 
-**Câu 7.** Muốn lớp cha giữ trình tự `validate → execute → audit`, đồng thời mỗi subclass được triển khai `execute` khác nhau, nên đặt `final` ở đâu?
+**Question 7.** If the superclass must preserve `validate → execute → audit` while each subclass implements `execute` differently, where should `final` go?
 
-**Đáp án:** Đặt `final` trên phương thức điều phối trình tự, và cung cấp `protected abstract` hoặc một hook phù hợp cho `execute`. Kiểm soát ngoại lệ và cập nhật trạng thái riêng, vì `final` không tự tạo tính nguyên tử.
+**Answer:** Put `final` on the coordinating method and expose a `protected abstract` method or suitable hook for `execute`. Handle exceptions and state changes separately because `final` does not imply atomicity.
 
-**Câu 8.** Nếu chỉ muốn có đúng ba subclass cụ thể được phép trực tiếp mở rộng một lớp, nên cân nhắc gì ở Java 17+?
+**Question 8.** To allow exactly three concrete subclasses to extend a class directly, what should you consider in Java 17+?
 
-**Đáp án:** Cân nhắc `sealed class` với `permits`. Khác với `final class`, `sealed class` cho phép một tập subclass đã chỉ định theo quy tắc của Java.
+**Answer:** Consider `sealed class` with `permits`. Unlike `final class`, `sealed class` permits a specified set of subclasses under Java's rules.
 
-**Ghi nhớ:** `final method` **khóa khả năng override một phương thức**, `final class` **khóa khả năng có lớp con**, còn `final field/variable` **khóa phép gán lại**. Dùng đúng cấp độ sẽ giúp một hệ phân cấp kế thừa vừa giữ được hành vi quan trọng vừa mở rộng tại những điểm được thiết kế.
+**Remember:** A `final method` **prevents method overriding**, a `final class` **prevents subclassing**, and a `final field/variable` **prevents reassignment**. Using each at the right level preserves essential behavior while allowing deliberately designed extension points.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="inheritance-008">Kế thừa đơn, kế thừa đa và xung đột hành vi</a>
+## <a id="inheritance-008">Single inheritance, multiple inheritance, and behavior conflicts</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kế thừa đơn, kế thừa đa và xung đột hành vi trong Java
+# Single Inheritance, Multiple Inheritance, and Behavior Conflicts in Java
 
-Khi thiết kế OOP, đôi khi một đối tượng cần kết hợp nhiều khả năng: hóa đơn có thể **xuất PDF**, **xuất CSV** và **ghi nhật ký thao tác**; một thiết bị có thể **in** và **quét**. Câu hỏi đặt ra là: Java cho phép kế thừa bao nhiêu lớp, kết hợp được bao nhiêu interface, và nếu nhiều nhánh định nghĩa cùng một hành vi thì phương thức nào được thực thi?
+In OOP, an object sometimes needs several capabilities: an invoice may **export PDF**, **export CSV**, and **log actions**; a device may **print** and **scan**. This raises questions about how many classes Java can inherit, how many interfaces it can combine, and which method executes when multiple branches define the same behavior.
 
-**Kết luận cốt lõi:** Một lớp Java chỉ có **một superclass trực tiếp** (kế thừa đơn với `extends`), nhưng có thể **implement nhiều interface**. Interface có thể `extends` nhiều interface khác. Từ Java 8, interface có `default method` mang phần thân, vì vậy khi kết hợp nhiều interface có thể xuất hiện **xung đột hành vi**, được giải quyết bằng các quy tắc của Java hoặc bằng việc lớp tự override.
+**Key conclusion:** A Java class has **one direct superclass** (single inheritance with `extends`), but may **implement multiple interfaces**. An interface may `extends` several other interfaces. Since Java 8, interfaces may contain `default method` implementations, so combining interfaces can introduce **behavior conflicts** resolved by Java's rules or an explicit class override.
 
-## 1. Kế thừa đơn: mỗi lớp có tối đa một lớp cha trực tiếp
+## 1. Single Inheritance: At Most One Direct Superclass
 
-Ví dụ đơn giản:
+A simple example:
 
 ```java
 class Document {
@@ -4397,7 +4397,7 @@ class Invoice extends Document {
 }
 ```
 
-`Invoice extends Document` nghĩa là một hóa đơn là một loại tài liệu theo mô hình này. Một đối tượng `Invoice` có phần trạng thái do `Document` quản lý và phần trạng thái do `Invoice` khai báo; nó cũng sử dụng được `id()`, `summary()` của lớp cha.
+`Invoice extends Document` means an invoice is modeled as a kind of document. An `Invoice` instance contains state managed by `Document` and state declared by `Invoice`; it also uses inherited `id()` and `summary()`.
 
 ```java
 Invoice invoice = new Invoice("INV-01", 100_000L);
@@ -4407,7 +4407,7 @@ System.out.println(invoice.summary());    // Document INV-01
 System.out.println(invoice.amountVnd());  // 100000
 ```
 
-**Java không cho một lớp trực tiếp extends hai class:**
+**Java does not allow a class to directly extend two classes:**
 
 ```java
 class Printer {}
@@ -4417,21 +4417,21 @@ class Scanner {}
 // class MultiFunction extends Printer, Scanner {}
 ```
 
-Java chỉ chấp nhận một tên lớp cha sau `extends` trong khai báo lớp. Tuy vậy, chuỗi kế thừa có thể dài hơn một tầng, ví dụ `Object -> Document -> Invoice`. “Kế thừa đơn” không có nghĩa toàn bộ hệ phân cấp chỉ có hai lớp.
+Java allows only one superclass name after `extends` in a class declaration. An inheritance chain may still have several levels, such as `Object -> Document -> Invoice`. “Single inheritance” does not mean the whole hierarchy contains only two classes.
 
-### Vì sao Java không hỗ trợ đa kế thừa lớp?
+### Why Doesn't Java Support Multiple Class Inheritance?
 
-Giả sử cả `Printer` và `Scanner` đều có field `status`, constructor yêu cầu dữ liệu và phương thức `reset()`. Nếu một lớp kế thừa trực tiếp cả hai, cần trả lời:
+Suppose both `Printer` and `Scanner` declare a `status` field, constructors requiring input, and a `reset()` method. If one class inherited directly from both, it would need answers to these questions:
 
-- Phần trạng thái nào được lưu và khởi tạo trước?
-- Nếu hai lớp cha có cùng phương thức `reset()`, chọn cách nào?
-- Nếu hai nhánh tổ tiên cùng kế thừa một lớp gốc, phần trạng thái lớp gốc nên tồn tại một hay nhiều lần?
+- Which state should be stored, and which portion should be initialized first?
+- If both superclasses define `reset()`, which implementation should execute?
+- If both ancestry branches inherit the same root class, should its state exist once or multiple times?
 
-Đó là nhóm vấn đề thường liên quan đến **diamond problem** (*bài toán hình kim cương*) trong các ngôn ngữ cho phép đa kế thừa implementation/state từ nhiều lớp. Java tránh loại đa kế thừa lớp này và cung cấp cơ chế interface để kết hợp các hợp đồng hành vi.
+These issues are associated with the **diamond problem** (*diamond problem*) in languages permitting multiple inheritance of implementation/state from classes. Java avoids this kind of multiple class inheritance and offers interfaces for combining behavioral contracts.
 
-## 2. Một lớp có thể thực hiện nhiều interface
+## 2. A Class Can Implement Multiple Interfaces
 
-Interface biểu diễn **khả năng/hợp đồng** thay vì đòi hỏi quan hệ kế thừa trạng thái từ một lớp cha.
+Interfaces represent **capabilities and contracts** rather than requiring inheritance of instance state from a superclass.
 
 ```java
 interface Printable {
@@ -4455,9 +4455,9 @@ class OfficeMachine implements Printable, Scannable {
 }
 ```
 
-`OfficeMachine` triển khai cả hai hợp đồng. Các interface không có constructor và không có instance field thông thường; field khai báo trong interface mặc nhiên là `public static final`, tức hằng số của interface chứ không phải dữ liệu riêng của từng instance.
+`OfficeMachine` implements both contracts. Interfaces have no constructors or ordinary instance fields; interface fields are implicitly `public static final`, meaning interface constants rather than per-instance data.
 
-Một lớp còn có thể **vừa extends một superclass, vừa implements nhiều interface**:
+A class can also **extend a superclass and implement multiple interfaces**:
 
 ```java
 class Asset {
@@ -4489,9 +4489,9 @@ class NetworkPrinter extends Asset implements Printable, AutoCloseable {
 }
 ```
 
-`NetworkPrinter` chỉ kế thừa lớp `Asset`, nhưng cung cấp hai khả năng `Printable` và `AutoCloseable`. Đây là **kế thừa nhiều kiểu/hợp đồng**, không phải đa kế thừa lớp.
+`NetworkPrinter` inherits only class `Asset` but provides the `Printable` and `AutoCloseable` capabilities. This is **multiple inheritance of types/contracts**, not multiple class inheritance.
 
-Một interface cũng có thể kế thừa **nhiều interface**:
+An interface may itself inherit **multiple interfaces**:
 
 ```java
 interface Searchable {
@@ -4507,11 +4507,11 @@ interface SearchableAndAuditable extends Searchable, Auditable {
 }
 ```
 
-Một lớp concrete triển khai `SearchableAndAuditable` phải cung cấp đủ những phương thức trừu tượng cần thiết, trừ khi đã kế thừa implementation phù hợp.
+A concrete class implementing `SearchableAndAuditable` must supply all required abstract methods unless it inherits suitable implementations.
 
-## 3. Khi nào nhiều interface trở thành xung đột?
+## 3. When Do Multiple Interfaces Conflict?
 
-Với interface chỉ có phương thức trừu tượng, nhiều hợp đồng cùng đòi hỏi một chữ ký tương thích thường có thể dùng **một implementation**:
+With abstract-only interfaces, multiple contracts requesting a compatible signature can often be satisfied with **one implementation**:
 
 ```java
 interface Notifier {
@@ -4530,9 +4530,9 @@ class EmailWorker implements Notifier, Dispatcher {
 }
 ```
 
-Hai interface trên cùng yêu cầu `send(String)` trả `void`, không có implementation nào cạnh tranh nhau. `EmailWorker` chỉ cần viết một phương thức để thỏa mãn cả hai.
+Both interfaces request `send(String)` returning `void`; neither provides competing implementation code. `EmailWorker` needs only one method to satisfy both.
 
-Tuy nhiên, nếu hai interface đưa ra những yêu cầu **không thể cùng thỏa mãn**, ví dụ cùng chữ ký nhưng kiểu trả về không tương thích, sẽ không thể kết hợp bằng một class Java hợp lệ:
+If two interfaces instead impose **incompatible requirements**, such as the same signature with incompatible return types, no valid Java class can implement both:
 
 ```java
 interface StringReader {
@@ -4548,13 +4548,13 @@ interface IntegerReader {
 // class BrokenReader implements StringReader, IntegerReader {}
 ```
 
-**Chữ ký phương thức** trong Java không phân biệt chỉ bằng kiểu trả về. Đừng cố tạo hai phương thức `read()` không đối số và chỉ khác kiểu trả về.
+Java **method signatures** are not distinguished solely by return type. You cannot declare two argument-free `read()` methods differing only in return type.
 
-Xung đột hành vi rõ ràng hơn xuất hiện với **`default method`**.
+The more obvious behavior conflicts occur with **`default method`** implementations.
 
-## 4. Default method: hành vi có sẵn trong interface
+## 4. Default Methods: Built-In Interface Behavior
 
-Từ Java 8, interface có thể cung cấp implementation mặc định:
+Since Java 8, an interface can provide a default implementation:
 
 ```java
 interface PdfExportable {
@@ -4570,14 +4570,14 @@ interface CsvExportable {
 }
 ```
 
-Một lớp muốn thực hiện cả hai interface này sẽ gặp câu hỏi: lời gọi `render()` nên sử dụng implementation nào?
+A class implementing both of these interfaces faces a question: which `render()` implementation should a call use?
 
 ```java
 // Không biên dịch: hai default method độc lập cùng chữ ký.
 // class Report implements PdfExportable, CsvExportable {}
 ```
 
-Java không tự chọn ngẫu nhiên một phương thức. Lớp phải cung cấp implementation tường minh:
+Java does not choose one at random. The class must provide an explicit implementation:
 
 ```java
 class Report implements PdfExportable, CsvExportable {
@@ -4590,15 +4590,15 @@ class Report implements PdfExportable, CsvExportable {
 }
 ```
 
-Cú pháp `InterfaceName.super.method()` cho phép gọi implementation `default` của **superinterface trực tiếp thích hợp** trong lớp đang triển khai. Ví dụ trên, `Report` chọn kết hợp cả hai kết quả. Trong bài toán thật, ghép PDF và CSV thành một chuỗi chỉ là ví dụ về **cơ chế phân giải xung đột**; thiết kế export thường nên dùng hai hành vi đặt tên rõ ràng hoặc hai strategy riêng.
+`InterfaceName.super.method()` invokes the `default` implementation of an **appropriate direct superinterface** in the implementing class. In this example, `Report` combines both results. In real systems, concatenating PDF and CSV is just an illustration of **conflict resolution**; exports are often better modeled as separately named operations or strategies.
 
-Điểm chính là **lớp có trách nhiệm xác định ý nghĩa nghiệp vụ khi các hành vi mặc định không thống nhất**.
+The central point is that **a class must define the intended business behavior when default implementations disagree**.
 
-## 5. Ba quy tắc chọn phương thức cần nhớ
+## 5. Three Rules for Choosing Methods
 
-### Quy tắc A — Phương thức instance cụ thể của lớp được ưu tiên
+### Rule A — A Concrete Class Instance Method Takes Precedence
 
-Nếu superclass có một phương thức instance cụ thể cùng chữ ký với default method của interface, **phương thức của lớp** được chọn.
+If a superclass has a concrete instance method with the same signature as an interface default method, **the class method** is selected.
 
 ```java
 class BaseLabel {
@@ -4621,13 +4621,13 @@ LabeledDocument doc = new LabeledDocument();
 System.out.println(doc.label()); // Từ superclass
 ```
 
-Quy tắc này thường gọi là **class wins**: phương thức được kế thừa từ lớp có ưu tiên cao hơn default method cạnh tranh từ interface. Nó giúp việc bổ sung default method vào một interface ít gây thay đổi bất ngờ cho các lớp đã có implementation cụ thể.
+This is often called **class wins**: a method inherited from a class takes precedence over a competing interface default method. This reduces surprises when default methods are added to interfaces that existing classes already implement.
 
-Cần lưu ý: không nên suy rộng thành “mọi phương thức trong superclass đều thắng” bất kể abstract/concrete và truy cập. Trong thiết kế thực tế, nếu superclass khai báo phương thức **abstract** tương ứng, subclass concrete có thể vẫn phải tự triển khai.
+Do not overgeneralize it into “every superclass method wins” regardless of abstract/concrete status and access. If the superclass declares a corresponding **abstract** method, a concrete subclass may still need to provide an implementation.
 
-### Quy tắc B — Interface cụ thể hơn được ưu tiên
+### Rule B — The More Specific Interface Takes Precedence
 
-Nếu một interface kế thừa một interface khác rồi override default method, phương thức của **subinterface cụ thể hơn** được chọn.
+When one interface extends another and overrides its default method, the **more specific subinterface** implementation is selected.
 
 ```java
 interface Named {
@@ -4650,11 +4650,11 @@ class DetailedReport implements Named, DetailedNamed {
 System.out.println(new DetailedReport().name()); // DetailedNamed
 ```
 
-Không có “hai default method ngang hàng” trong ví dụ này: `DetailedNamed` là subtype của `Named`, nên implementation cụ thể hơn đã quyết định kết quả.
+These are not two equally ranked default methods: `DetailedNamed` is a subtype of `Named`, so the more specific implementation determines the result.
 
-### Quy tắc C — Hai default method độc lập cùng mức phải được giải quyết
+### Rule C — Unrelated Peer Default Methods Require Conflict Resolution
 
-Nếu một lớp kế thừa hai default method cùng chữ ký từ hai interface không có quan hệ ưu tiên, compiler yêu cầu lớp giải quyết xung đột:
+When a class inherits two same-signature default methods from unrelated interfaces with no precedence relationship, the compiler requires an explicit resolution:
 
 ```java
 interface A {
@@ -4679,7 +4679,7 @@ class C implements A, B {
 System.out.println(new C().status()); // A + B
 ```
 
-Một lớp có thể chọn hoàn toàn cách thực hiện mới thay vì gọi cả hai default implementation:
+A class may instead provide a wholly new implementation without calling either default:
 
 ```java
 @Override
@@ -4688,11 +4688,11 @@ public String status() {
 }
 ```
 
-Cách nào đúng phụ thuộc hợp đồng nghiệp vụ. **Mục đích của override không phải chỉ để làm cho code biên dịch**, mà để xác định hành vi một cách có chủ đích.
+The correct choice depends on the business contract. **The point of overriding is not merely to make code compile**, but to deliberately define behavior.
 
-## 6. Ví dụ Java hoàn chỉnh: nhiều interface và ba tình huống chọn hành vi
+## 6. Complete Java Example: Multiple Interfaces and Three Behavior-Selection Scenarios
 
-Lưu thành file `InheritanceConflictDemo.java`:
+Save as `InheritanceConflictDemo.java`:
 
 ```java
 public class InheritanceConflictDemo {
@@ -4813,14 +4813,14 @@ public class InheritanceConflictDemo {
 }
 ```
 
-Chạy bằng JDK 11+:
+Run with JDK 11+:
 
 ```bash
 javac InheritanceConflictDemo.java
 java InheritanceConflictDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Document: INV-01
@@ -4831,20 +4831,20 @@ Specific
 PONG
 ```
 
-Đối chiếu:
+Explanation:
 
-| Dòng kết quả | Lý do |
+| Output line | Reason |
 |---|---|
-| `Document: INV-01` | `Invoice` kế thừa phương thức concrete `label()` của superclass |
-| `PDF | CSV` | `Invoice` tự override `render()` để giải quyết hai default method độc lập |
-| `Audit ...` | `Invoice` thực hiện phương thức trừu tượng từ `Auditable` |
-| `Từ class` | Phương thức concrete ở `BaseTitle` được ưu tiên hơn `TitleProvider.default title()` |
-| `Specific` | `SpecificTag` cụ thể hơn `RootTag` |
-| `PONG` | Cả `PingLeft` và `PingRight` cùng thừa hưởng **một** default method gốc từ `PingRoot`, không phải hai implementation độc lập |
+| `Document: INV-01` | `Invoice` inherits the concrete superclass method `label()` |
+| `PDF | CSV` | `Invoice` explicitly overrides `render()` to resolve independent default implementations |
+| `Audit ...` | `Invoice` implements the abstract method from `Auditable` |
+| `Từ class` | The concrete `BaseTitle` method takes precedence over `TitleProvider.default title()` |
+| `Specific` | `SpecificTag` is more specific than `RootTag` |
+| `PONG` | Both `PingLeft` and `PingRight` inherit **one** original default method from `PingRoot`, not two separate implementations |
 
-### Điểm tinh tế: kim cương không luôn tạo xung đột
+### Subtle Point: A Diamond Does Not Always Create a Conflict
 
-Sơ đồ:
+Diagram:
 
 ```mermaid
 classDiagram
@@ -4865,17 +4865,17 @@ classDiagram
     PingRight <|.. DiamondDocument
 ```
 
-Hai nhánh `PingLeft` và `PingRight` **không tự override `ping()`**; cả hai cùng thừa hưởng một khai báo từ `PingRoot`, nên `DiamondDocument` không phải phân giải xung đột.
+Neither `PingLeft` nor `PingRight` **overrides `ping()` independently**; both inherit the same declaration from `PingRoot`, so `DiamondDocument` has no conflict to resolve.
 
-Nếu `PingLeft` và `PingRight` **mỗi bên override `ping()` bằng default riêng**, `DiamondDocument` sẽ nhận hai implementation ngang hàng và bắt buộc tự override.
+If `PingLeft` and `PingRight` **each declared a distinct default override of `ping()`**, `DiamondDocument` would inherit two equally ranked implementations and must override explicitly.
 
-Hình kim cương chỉ mô tả cấu trúc quan hệ; **xung đột có hay không phụ thuộc những phương thức thực sự được kế thừa và quy tắc ưu tiên**.
+A diamond only describes the type relationship; **whether a conflict exists depends on the methods actually inherited and precedence rules**.
 
-## 7. Không chỉ default method: xung đột còn đến từ tên và hợp đồng
+## 7. Conflicts Also Arise from Names and Contracts, Not Just Default Methods
 
-### 7.1. Hằng số trùng tên
+### 7.1. Colliding Constant Names
 
-Field trong interface là `public static final`. Nếu hai interface khai báo hằng số cùng tên, lớp implement cả hai cần chỉ rõ nguồn khi truy cập:
+Interface fields are `public static final`. If two interfaces define constants with the same name, a class implementing both must qualify the reference to disambiguate:
 
 ```java
 interface PdfConfig {
@@ -4894,11 +4894,11 @@ class ExportJob implements PdfConfig, CsvConfig {
 }
 ```
 
-Không có đa hình runtime cho hằng số hay field. **Field hiding/name ambiguity** là chuyện khác với override instance method.
+Constants and fields do not participate in runtime polymorphism. **Field hiding/name ambiguity** differs from overriding instance methods.
 
-### 7.2. Static method của interface
+### 7.2. Interface Static Methods
 
-Static method được gọi bằng **tên interface**; lớp implement không kế thừa static method của interface theo cách gọi qua instance:
+Static methods are invoked through **interface names**; implementing classes do not inherit interface static methods as instance-callable methods:
 
 ```java
 interface Formats {
@@ -4910,19 +4910,19 @@ interface Formats {
 String result = Formats.normalize(" PDF "); // pdf
 ```
 
-Không có xung đột dynamic dispatch giữa hai static method cùng tên từ hai interface, vì chúng được gọi qua tên interface tương ứng.
+Two same-named static methods on different interfaces do not create a dynamic-dispatch conflict because each is invoked through its own interface name.
 
-### 7.3. Cùng chữ ký nhưng hợp đồng ý nghĩa khác nhau
+### 7.3. Matching Signatures with Different Semantic Contracts
 
-Giả sử một interface `MetersProvider` có `double distance()` trả về **mét**, còn một interface khác `KilometersProvider` cũng có `double distance()` nhưng trả về **kilomet**. Chúng có chữ ký tương thích về mặt cú pháp, nhưng ghép hai hợp đồng bằng một phương thức có thể gây lỗi đơn vị.
+Suppose one `MetersProvider` interface defines `double distance()` in **meters** while another `KilometersProvider` declares `double distance()` in **kilometers**. Their signatures are syntactically compatible, but one method implementation cannot safely fulfill conflicting unit contracts.
 
-Ngay cả khi Java cho phép triển khai một phương thức để đáp ứng hai chữ ký, điều đó **không bảo đảm hợp đồng nghiệp vụ tương thích**.
+Even when Java permits one method to implement both signatures, this **does not guarantee compatible business contracts**.
 
-Trong trường hợp này nên tách tên thành `distanceMeters()` / `distanceKilometers()`, dùng kiểu đơn vị rõ nghĩa hoặc thiết kế adapter thay vì cưỡng ép một override mang hai ý nghĩa.
+Instead, use distinct names such as `distanceMeters()` / `distanceKilometers()`, explicit unit types, or an adapter rather than forcing one override to mean two things.
 
-## 8. Trình tự ra quyết định khi có xung đột hành vi
+## 8. A Decision Process for Behavior Conflicts
 
-Có thể kiểm tra theo sơ đồ sau:
+A flowchart can guide the analysis:
 
 ```mermaid
 flowchart TD
@@ -4940,26 +4940,26 @@ flowchart TD
     I --> J
 ```
 
-Đây là quy trình **đọc và kiểm tra thiết kế** cho các tình huống phổ biến, không thay thế toàn bộ quy tắc biên dịch của Java (ví dụ các trường hợp generic, erasure, override-equivalence, abstract method và kiểu trả về covariant).
+This is a **design-reading and review process** for common situations, not a substitute for every Java compile-time rule (including generics, erasure, override-equivalence, abstract methods, and covariant return types).
 
-Một nguyên tắc thực hành hữu ích là: **luôn viết `@Override` khi chủ động triển khai hoặc ghi đè hành vi**; compiler sẽ giúp phát hiện nhiều lỗi do sai chữ ký.
+One useful practice is to **add `@Override` whenever you intentionally implement or override behavior**; the compiler will catch many signature mistakes.
 
-## 9. Nên dùng interface, kế thừa lớp hay composition?
+## 9. When to Use Interfaces, Class Inheritance, or Composition
 
-Có thể kết hợp nhiều interface không có nghĩa đó luôn là cách tổ chức tốt nhất.
+The ability to combine multiple interfaces does not mean this is always the best design.
 
-| Nhu cầu | Lựa chọn thường phù hợp | Vì sao |
+| Requirement | Often suitable choice | Why? |
 |---|---|---|
-| Lớp con thật sự là một loại cụ thể hơn của lớp cha | `extends` một class | Chuyên biệt hóa trạng thái và hành vi theo quan hệ *is-a* |
-| Một loại đối tượng cần nhiều khả năng độc lập | `implements` nhiều interface | Ghép các hợp đồng mà không đa kế thừa trạng thái |
-| Nhiều implementation cần chung API, không cần state chung | Interface | Caller làm việc với hành vi thống nhất |
-| Nhiều lớp cùng một họ cần chung state/constructor/thuật toán | Cân nhắc abstract class làm superclass | Chia sẻ phần hiện thực có kiểm soát |
-| Muốn kết hợp/đổi chiến lược xử lý lúc chạy | Composition/delegation | Không buộc lớp hiện tại phải kế thừa implementation |
-| Hai interface có cùng tên hành vi nhưng ngữ nghĩa khác nhau | Tách hợp đồng hoặc dùng adapter | Tránh ép một phương thức làm hai nhiệm vụ trái nhau |
+| Subclass really is a more specific kind of superclass | `extends` one class | Specializes state and behavior under the *is-a* relationship |
+| A type needs multiple independent capabilities | `implements` multiple interfaces | Combines contracts without multiple inheritance of instance state |
+| Several implementations share an API but no state | Interface | Callers interact through consistent behavior |
+| A family of classes shares state, constructors, and algorithms | Consider an abstract superclass | Shares controlled implementation |
+| Strategies need to be combined/swapped at runtime | Composition/delegation | Avoids forcing the current class to inherit an implementation |
+| Two interfaces use the same operation name for different meanings | Separate contracts or an adapter | Avoids forcing one method to serve contradictory responsibilities |
 
-### Ví dụ composition thay cho cố gắng đa kế thừa lớp
+### Example: Composition Instead of Attempting Multiple Class Inheritance
 
-Một hóa đơn cần xuất PDF và CSV. Thay vì muốn `Invoice extends PdfWriter, CsvWriter` (không hợp lệ), có thể cho hóa đơn **sử dụng** các chiến lược xuất dữ liệu:
+An invoice must export PDF and CSV. Rather than attempting `Invoice extends PdfWriter, CsvWriter` (invalid), let the invoice **use** export strategies:
 
 ```java
 interface Exporter {
@@ -4988,31 +4988,31 @@ final class InvoiceService {
 }
 ```
 
-Ở ví dụ này, `InvoiceService` không phải một loại `PdfExporter` hay `CsvExporter`. Nó **ủy quyền công việc** cho đối tượng phù hợp. Một interface hành vi nhỏ có thể phục vụ nhiều implementation, và việc thêm định dạng mới không cần thay đổi hệ phân cấp của `InvoiceService`.
+Here, `InvoiceService` is not a subtype of `PdfExporter` or `CsvExporter`. It **delegates work** to the appropriate object. A small behavioral interface can support many implementations, and adding another format need not alter the inheritance hierarchy of `InvoiceService`.
 
-Nếu ứng dụng cần xuất PDF/CSV thực sự, các class sẽ trả byte stream, file hoặc kết quả theo hợp đồng rõ ràng thay vì chuỗi tiền tố như mô phỏng.
+For real PDF/CSV exports, implementations should return byte streams, files, or other properly contracted results rather than the example's prefixed strings.
 
-Composition đặc biệt hữu ích khi các nguồn hành vi chứa **state và constructor riêng**, những thứ Java không cho kế thừa từ nhiều class cùng lúc.
+Composition is especially useful when behavior providers have **their own state and constructors**, which Java cannot inherit from multiple classes at once.
 
-## 10. Những hiểu lầm phổ biến
+## 10. Common Misconceptions
 
-| Nhận định | Đúng/Sai | Giải thích |
+| Claim | True/False | Explanation |
 |---|---|---|
-| Java cho phép một class extends hai class | **Sai** | Một superclass trực tiếp |
-| Java cho phép một class implements nhiều interface | **Đúng** | Kết hợp nhiều hợp đồng |
-| Interface có thể extends nhiều interface khác | **Đúng** | Kế thừa nhiều giao diện |
-| Mọi interface chỉ có abstract method | **Sai** | Có thể có default, static, private method tùy phiên bản Java |
-| Hai interface cùng khai báo một abstract method tương thích luôn xung đột | **Sai** | Một implementation có thể đáp ứng cả hai |
-| Hai default method độc lập cùng chữ ký sẽ được chọn ngẫu nhiên | **Sai** | Phải áp dụng quy tắc phân giải; thường cần override |
-| Hai đường đến cùng một default method gốc luôn gây lỗi kim cương | **Sai** | Không có hai implementation độc lập trong trường hợp đó |
-| Phương thức concrete của superclass thường thắng default method interface | **Đúng** | Quy tắc ưu tiên class |
-| Subinterface có default override thường thắng superinterface | **Đúng** | Ưu tiên kiểu cụ thể hơn |
-| Implement nhiều interface giống như kế thừa nhiều instance state | **Sai** | Interface không có instance field/constructor |
-| `InterfaceName.super.method()` gọi được mọi method của interface | **Sai** | Chỉ dùng đúng ngữ cảnh và với default implementation thích hợp; không dùng để gọi abstract/static method tùy ý |
+| Java permits a class to extend two classes | **False** | Only one direct superclass |
+| Java permits a class to implement multiple interfaces | **True** | Combines multiple contracts |
+| An interface can extend multiple interfaces | **True** | Multiple interface inheritance |
+| Every interface only has abstract methods | **False** | May have default, static, or private methods depending on Java version |
+| Two interfaces declaring compatible abstract methods always conflict | **False** | One implementation may satisfy both |
+| Two independent default methods with matching signatures are chosen randomly | **False** | Resolution rules apply; an override is often required |
+| Two paths to one shared default method always create a diamond error | **False** | There are not two independent implementations in that case |
+| A concrete superclass method usually outranks an interface default | **True** | Class precedence rule |
+| A subinterface's overriding default usually outranks the superinterface's default | **True** | More specific type takes precedence |
+| Implementing multiple interfaces also inherits multiple instance states | **False** | Interfaces have no instance fields/constructors |
+| `InterfaceName.super.method()` can invoke every interface method | **False** | Only appropriate default implementations in valid contexts; not arbitrary abstract/static methods |
 
-## 11. Bài tập thực hành
+## 11. Practice Exercises
 
-### Bài 1 — Chương trình có biên dịch không?
+### Exercise 1 — Does the Program Compile?
 
 ```java
 interface Left {
@@ -5031,7 +5031,7 @@ class Combined implements Left, Right {
 }
 ```
 
-**Đáp án:** **Không.** `Combined` phải override `run()` để giải quyết hai default method độc lập cùng chữ ký. Có thể chọn một implementation:
+**Answer:** **No.** `Combined` must override `run()` to resolve two independent same-signature default methods. One implementation can be selected:
 
 ```java
 @Override
@@ -5040,7 +5040,7 @@ public String run() {
 }
 ```
 
-### Bài 2 — Class hay interface được chọn?
+### Exercise 2 — Class or Interface?
 
 ```java
 class Parent {
@@ -5061,9 +5061,9 @@ class Child extends Parent implements Code {
 System.out.println(new Child().code());
 ```
 
-**Đáp án:** `P`, vì `Parent` có phương thức instance concrete và được ưu tiên hơn default của `Code`.
+**Answer:** `P`, because `Parent` has a concrete instance method that takes precedence over the `Code` default.
 
-### Bài 3 — Có xung đột kim cương không?
+### Exercise 3 — Is There a Diamond Conflict?
 
 ```java
 interface Root {
@@ -5079,47 +5079,47 @@ class C implements A, B {}
 System.out.println(new C().value());
 ```
 
-**Đáp án:** Biên dịch được, in `1`. `A` và `B` không tự định nghĩa hai cách thực hiện khác nhau mà cùng kế thừa từ `Root`.
+**Answer:** It compiles and prints `1`. `A` and `B` do not define competing implementations; both inherit the same one from `Root`.
 
-### Bài 4 — Chọn cách thiết kế
+### Exercise 4 — Choose a Design
 
-Một `SmartDevice` cần chức năng **sạc pin**, **định vị GPS** và **phát nhạc**. Có ba class sẵn `BatteryManager`, `GpsEngine` và `MusicPlayer`, mỗi class giữ state và có constructor riêng.
+A `SmartDevice` needs to **charge its battery**, **provide GPS positioning**, and **play music**. Three classes already exist: `BatteryManager`, `GpsEngine`, and `MusicPlayer`, each with its own state and constructor.
 
-**Câu hỏi:** Có nên viết `SmartDevice extends BatteryManager, GpsEngine, MusicPlayer` không?
+**Question:** Should you declare `SmartDevice extends BatteryManager, GpsEngine, MusicPlayer`?
 
-**Gợi ý:** Không thể trong Java. Hãy cân nhắc interface biểu diễn những khả năng cần công khai (`Chargeable`, `Locatable`, `Playable`), còn implementation `SmartDevice` **chứa** các đối tượng `BatteryManager`, `GpsEngine`, `MusicPlayer` và ủy quyền thao tác. Đây là cách giữ được nhiều hành vi mà không cần đa kế thừa state.
+**Hint:** Java does not allow that. Consider capability interfaces (`Chargeable`, `Locatable`, `Playable`), while `SmartDevice` **contains** instances of `BatteryManager`, `GpsEngine`, and `MusicPlayer` and delegates operations. This combines behaviors without multiple inheritance of state.
 
 ---
 
-**Ghi nhớ:** Java dùng **kế thừa đơn cho class**, nhưng cho phép **implement nhiều interface** và **interface extends nhiều interface**. Default method giúp interface chia sẻ hành vi, đồng thời đặt ra quy tắc xung đột: **class concrete được ưu tiên; interface cụ thể hơn được ưu tiên; hai default độc lập phải được giải quyết rõ ràng**. Đừng chỉ sửa cho code biên dịch: hãy kiểm tra các hành vi có cùng ý nghĩa nghiệp vụ hay không, và dùng **composition** khi muốn phối hợp nhiều thành phần mang trạng thái riêng.
+**Remember:** Java uses **single inheritance for classes**, but permits **multiple interface implementations** and **interfaces extending multiple interfaces**. Interface default methods share behavior but introduce conflict rules: **concrete class methods take precedence; more specific interfaces take precedence; independent competing defaults need explicit resolution**. Do not just make the code compile: verify compatible business semantics and use **composition** to coordinate multiple stateful components.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="inheritance-009">Mixin, trait và tái sử dụng hành vi tùy ngôn ngữ</a>
+## <a id="inheritance-009">Mixins, traits, and language-specific behavior reuse</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Mixin, trait và tái sử dụng hành vi tùy ngôn ngữ
+# Mixins, Traits, and Language-Specific Behavior Reuse
 
-Trong lập trình hướng đối tượng, một nhu cầu thường gặp là: **nhiều lớp không cùng một nhánh kế thừa vẫn cần sử dụng chung một hành vi**. Ví dụ, `Article` và `SupportTicket` đều cần thao tác gắn nhiều thẻ, nhưng không nhất thiết có cùng lớp cha về mặt nghiệp vụ.
+In object-oriented programming, a common need is for **classes from unrelated inheritance branches to share behavior**. For example, both `Article` and `SupportTicket` may need to add several tags, even though they do not share a business superclass.
 
-**Mixin** và **trait** là những cách tổ chức khả năng dùng chung như vậy. Tuy nhiên, đây không phải hai từ khóa có định nghĩa cú pháp giống nhau trong mọi ngôn ngữ:
+**Mixins** and **traits** organize such shared capabilities. However, these terms are not identical language keywords with universal syntax:
 
-- **Mixin** thường chỉ một đơn vị cung cấp hành vi để “trộn” vào lớp khác, thay vì buộc mọi lớp tham gia cùng một cây kế thừa.
-- **Trait** thường là một cấu trúc ngôn ngữ mô tả một tập khả năng/phương thức, đôi khi có cài đặt mặc định; quy tắc kết hợp, trạng thái và xung đột phụ thuộc từng ngôn ngữ.
-- **Java** không có từ khóa `mixin` hoặc `trait` riêng. Java sử dụng **interface với `default method`** (từ Java 8) để chia sẻ một số cách thực hiện, đồng thời có thể dùng **composition/delegation** khi cần tái sử dụng trạng thái và thuật toán phức tạp.
+- A **mixin** usually denotes a unit of behavior that can be “mixed into” another class without forcing all participants into one inheritance tree.
+- A **trait** usually represents a language construct describing a set of capabilities/methods, sometimes with default implementations; composition, state, and conflict rules depend on the language.
+- **Java** has no dedicated `mixin` or `trait` keyword. Java uses **interfaces with `default method`** implementations (since Java 8) to share some behavior and **composition/delegation** to reuse state and more complex algorithms.
 
-Điểm học quan trọng là **tái sử dụng hành vi mà không xây dựng một quan hệ `is-a` giả tạo**; đồng thời phải hiểu giới hạn của từng cơ chế thay vì gọi mọi dạng kế thừa là mixin.
+The key lesson is **reusing behavior without inventing an artificial `is-a` relationship**, while understanding the limitations of each mechanism rather than calling every inheritance technique a mixin.
 
-## 1. Vì sao chỉ kế thừa lớp cha chưa đủ?
+## 1. Why Isn't Inheriting a Superclass Enough?
 
-Java cho phép một lớp chỉ `extends` **một lớp cha trực tiếp**, nhưng có thể `implements` **nhiều interface**:
+Java lets a class directly `extends` **one superclass**, but it may `implements` **multiple interfaces**:
 
 ```java
 class BaseEntity {}
@@ -5130,13 +5130,13 @@ interface Exportable {}
 class Article extends BaseEntity implements Searchable, Exportable {}
 ```
 
-Giả sử ứng dụng còn có `SupportTicket extends TicketBase`. Cả `Article` lẫn `SupportTicket` đều cần `addTags(...)`, nhưng việc ép chúng kế thừa một lớp `TaggableBase` vừa có thể đụng giới hạn một lớp cha, vừa tạo quan hệ phân cấp không thực sự phản ánh nghiệp vụ.
+Suppose the application also has `SupportTicket extends TicketBase`. Both `Article` and `SupportTicket` need `addTags(...)`, but forcing them to inherit `TaggableBase` could violate the single-superclass limit and create a hierarchy unrelated to the domain.
 
-Một giải pháp là định nghĩa **khả năng nhỏ** ở interface, rồi để các lớp triển khai khả năng ấy theo trạng thái riêng. Một `default method` có thể cung cấp quy trình dùng chung dựa trên các phương thức trừu tượng của interface.
+One solution is to define a **small capability** in an interface and let each class implement it with its own state. A `default method` can offer a shared workflow using the interface's abstract operations.
 
-## 2. Java: tái sử dụng hành vi bằng interface default method
+## 2. Java: Reusing Behavior Through Interface Default Methods
 
-Ví dụ `Taggable` đặt ra một thao tác cơ bản `addTag(String)` và cung cấp thêm hành vi `addTags(List<String>)`:
+For example, `Taggable` declares a basic `addTag(String)` operation and adds shared `addTags(List<String>)` behavior:
 
 ```java
 interface Taggable {
@@ -5150,15 +5150,15 @@ interface Taggable {
 }
 ```
 
-`addTags()` là một cách thực hiện dùng chung. Lớp triển khai chỉ cần định nghĩa cách thêm **một thẻ** theo chính sách của nó. Phương thức mặc định gọi `addTag()` theo cơ chế dispatch thông thường, do đó sử dụng triển khai của đối tượng thực tế.
+`addTags()` is a reusable implementation. Implementing classes need only define how to add **one tag** under their own rules. The default method invokes `addTag()` through ordinary dispatch, thereby using the runtime object's implementation.
 
-Điều này tương tự một **mixin cung cấp hành vi**: interface không cần biết các thẻ được lưu trong `ArrayList`, `Set` hay một nguồn dữ liệu khác.
+This resembles a **behavior-providing mixin**: the interface need not know whether tags are stored in an `ArrayList`, a `Set`, or another data source.
 
-Tuy nhiên, interface Java **không mang trường instance** để mỗi đối tượng tự có một `List` riêng. Những trường khai báo trong interface đều là hằng/biến cấp interface (`public static final` ngầm định); chúng không trở thành trường mutable độc lập của từng đối tượng.
+However, a Java interface **cannot hold per-instance fields** that give each object its own `List`. Interface fields are implicitly interface-level constants/variables (`public static final`), not independent mutable state in each instance.
 
-## 3. Ví dụ đầy đủ: cùng hành vi cho hai lớp không có chung lớp cha nghiệp vụ
+## 3. Complete Example: Shared Behavior Across Unrelated Domain Classes
 
-Lưu đoạn sau vào **`Main.java`**; chạy bằng Java 17 hoặc Java 21.
+Save the following code as **`Main.java`** and run with Java 17 or Java 21.
 
 ```java
 import java.util.ArrayList;
@@ -5254,14 +5254,14 @@ public class Main {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 [java, oop]
@@ -5269,13 +5269,13 @@ Kết quả:
 [ART-7] đã xuất bản
 ```
 
-**Phân tích:**
+**Analysis:**
 
-1. `Article` và `SupportTicket` đều nhận được `addTags()` từ `Taggable`, không cần sao chép vòng lặp trong hai lớp.
-2. `Article.addTag()` dùng `LinkedHashSet`, loại thẻ trùng và giữ thứ tự chèn. `SupportTicket.addTag()` dùng `ArrayList`, cho phép lặp.
-3. Mỗi lớp tự sở hữu và bảo vệ trạng thái qua trường `private`; `Taggable` không biết cấu trúc lưu trữ.
-4. `Article` còn thực hiện `AuditText`. `auditMessage()` dùng `id()` do `Article` cung cấp; `SupportTicket` không có nghĩa vụ cung cấp chức năng audit.
-5. `List.copyOf(...)` giúp caller không thể sửa cấu trúc các danh sách trả về. Với `String` bất biến, các phần tử cũng an toàn trước việc sửa trạng thái.
+1. Both `Article` and `SupportTicket` inherit `addTags()` from `Taggable` without duplicating the loop in two classes.
+2. `Article.addTag()` uses `LinkedHashSet` to remove duplicate tags while preserving insertion order. `SupportTicket.addTag()` uses `ArrayList` and permits duplicates.
+3. Each class owns and protects its state through `private` fields; `Taggable` does not know their storage structures.
+4. `Article` also implements `AuditText`. Its `auditMessage()` uses `id()` supplied by `Article`; `SupportTicket` has no obligation to support auditing.
+5. `List.copyOf(...)` prevents callers from mutating the structure of returned lists. With immutable `String` elements, there is also no in-place element mutation.
 
 ```mermaid
 flowchart TD
@@ -5290,15 +5290,15 @@ flowchart TD
     S -.->|"implements"| T
 ```
 
-### Một giới hạn cần thấy ngay
+### An Immediate Limitation
 
-`Taggable.addTags()` gọi `addTag()` nhiều lần; **nó không tự bảo đảm tính nguyên tử**. Nếu danh sách có ba thẻ nhưng thẻ thứ ba không hợp lệ, hai thẻ trước có thể đã được thêm. Muốn thao tác “hoặc thêm tất cả, hoặc không thêm gì”, lớp triển khai phải thiết kế lại bước xác thực và cập nhật, hoặc override `addTags()` để thực thi đúng hợp đồng.
+`Taggable.addTags()` invokes `addTag()` repeatedly; **it does not guarantee atomicity**. If three tags are requested and the third is invalid, the first two may already have been added. To achieve “all or nothing,” the implementing class must redesign validation and updates or override `addTags()` to fulfill that contract.
 
-Đó là lý do một `default method` chia sẻ được mã nguồn nhưng **không tự bảo đảm mọi ngữ nghĩa nghiệp vụ** cho tất cả lớp triển khai.
+That is why a `default method` can share implementation code while **not automatically guaranteeing all business semantics** for every implementing class.
 
-## 4. Mixin dựa trên default method phải tính đến xung đột
+## 4. Default-Method Mixins Must Handle Conflicts
 
-Nếu hai interface **độc lập** cùng cung cấp `default String greet()`, lớp implement cả hai phải tự định nghĩa một kết quả:
+If two **independent** interfaces both provide `default String greet()`, a class implementing both must explicitly define the result:
 
 ~~~java
 interface ShortGreeting {
@@ -5316,56 +5316,56 @@ final class Greeter implements ShortGreeting, FriendlyGreeting {
 }
 ~~~
 
-`new Greeter().greet()` trả `"Xin chào / Chào bạn!"`. Nếu bỏ override, compiler sẽ báo xung đột default method. `InterfaceName.super.method()` chỉ gọi default implementation hợp lệ trong ngữ cảnh kế thừa interface, không gọi abstract/static method tùy ý.
+`new Greeter().greet()` returns `"Xin chào / Chào bạn!"`. Omitting the override causes a default-method conflict at compile time. `InterfaceName.super.method()` invokes a valid default implementation within the interface-inheritance context; it cannot invoke arbitrary abstract or static methods.
 
-Java còn ưu tiên phương thức instance concrete từ **class** hơn default của interface và ưu tiên khai báo interface **chuyên biệt hơn** khi có quan hệ kế thừa. Hai đường dẫn đến **cùng một** default method gốc thường không tạo xung đột độc lập. Bài **Kế thừa đơn, kế thừa đa và xung đột hành vi** có bảng và chương trình kiểm chứng đầy đủ các quy tắc này; ở đây điều quan trọng là mixin/default tạo hành vi dùng chung nhưng cũng thêm nghĩa vụ duy trì hợp đồng tương thích.
+Java also prefers concrete instance methods from a **class** over interface defaults and prefers a **more specific** interface when there is a subtype relationship. Two paths to **the same** inherited default method generally do not create independent conflicts. **Single inheritance, multiple inheritance, and behavior conflicts** contains a complete table and runnable verification; here, the important point is that mixin-style defaults share behavior while adding obligations to maintain compatible contracts.
 
-## 5. `default` không biến Java thành đa kế thừa lớp
+## 5. `default` Does Not Give Java Multiple Class Inheritance
 
-Một interface Java có thể chứa:
+A Java interface can contain:
 
-- Phương thức trừu tượng, ví dụ `void addTag(String tag)`.
-- Phương thức `default` có thân để cung cấp một cách thực hiện.
-- Phương thức `static`, được gọi qua tên interface.
-- Phương thức `private` hỗ trợ tái sử dụng mã **trong chính interface** (từ Java 9).
-- Trường hằng `public static final` (kể cả khi không ghi đủ modifier).
+- Abstract methods, such as `void addTag(String tag)`.
+- `default` methods with bodies that provide implementations.
+- `static` methods, invoked through the interface name.
+- `private` helper methods that reuse code **within the same interface** (since Java 9).
+- Constant fields implicitly declared `public static final` (even if the modifiers are omitted).
 
-Nhưng interface Java **không chứa trường instance riêng cho từng đối tượng**. Nó cũng không có constructor giống lớp thông thường, và Java không cho phép một lớp `extends` đồng thời hai lớp cha.
+But Java interfaces **cannot define separate per-instance fields**. They also have no constructors like ordinary classes, and Java does not permit one class to `extends` two superclasses directly.
 
-Ngoài ra, interface không thể định nghĩa `default` method ghi đè các phương thức của `Object` như `equals(Object)`, `hashCode()`, `toString()`. Chúng thuộc hợp đồng gốc của đối tượng; muốn thay cách triển khai, hãy thực hiện ở lớp phù hợp.
+Moreover, interfaces cannot provide `default` methods overriding `Object` methods such as `equals(Object)`, `hashCode()`, and `toString()`. These are core object contracts; implement any alternate behavior in an appropriate class.
 
-Vì vậy, default method là công cụ **chia sẻ hành vi dựa trên hợp đồng**, đặc biệt phù hợp khi hành vi chung được biểu diễn bằng các phép gọi tới phương thức trừu tượng hoặc các phương thức public khác. Nó không phải nơi “nhét” trạng thái mutable dùng chung toàn hệ thống.
+Default methods therefore offer **contract-based behavior sharing**, especially when shared behavior can be expressed through abstract operations or other public interface methods. They are not a place to hide application-wide mutable state.
 
-## 6. Trait/mixin trong các ngôn ngữ khác nhau
+## 6. Traits and Mixins Across Languages
 
-Thuật ngữ có nguồn gốc và quy tắc khác nhau. Bảng sau nêu cách nhìn ở mức thiết kế, không áp một ngôn ngữ làm chuẩn cho tất cả.
+These terms have different origins and rules. The following table gives a design-level comparison without treating one language as universal.
 
-| Ngôn ngữ/cơ chế | Cách tái sử dụng hành vi | Trạng thái và cách xử lý xung đột |
+| Language/mechanism | How behavior is reused | State and conflict resolution |
 | --- | --- | --- |
-| **Java** — interface `default` | Lớp implements nhiều interface, nhận phương thức mặc định | Không có trường instance trong interface; Java có quy tắc ưu tiên và yêu cầu override khi xung đột |
-| **Scala** — `trait` | Lớp kết hợp nhiều trait; trait có thể mang cả triển khai và trạng thái | Có quy tắc linearization/method resolution; các trait có thể khai báo trường, phải hiểu thứ tự kết hợp |
-| **Rust** — `trait` | Định nghĩa hành vi chung và cài đặt cho kiểu (`impl Trait for Type`), có default method | Trait không đưa các trường instance vào struct; method resolution, associated types và quy tắc coherence theo Rust |
-| **Kotlin** — `interface` | Interface hỗ trợ phương thức có thân; một lớp có thể implement nhiều interface | Interface không có backing field cho property; xung đột triển khai cần giải quyết rõ |
-| **Python** — mixin qua multiple inheritance | Lớp mixin cung cấp phương thức để nhiều lớp kế thừa và kết hợp | Hành vi được phân giải bằng MRO; thường dùng `super()` phối hợp trong đa kế thừa |
-| **Ruby** — module | `include`/`prepend` module vào chuỗi tra cứu phương thức | Quy tắc lookup theo ancestor chain; module có thể tương tác với trạng thái instance của object |
-| **C++** — multiple inheritance / CRTP | Có thể dùng lớp mixin/template để bổ sung hành vi | Quy tắc kế thừa, name lookup và diamond khác Java; cần thiết kế rõ quyền sở hữu và ambiguity |
+| **Java** — interface `default` | Classes implement multiple interfaces and inherit default methods | No interface instance fields; Java defines precedence and requires overrides for conflicts |
+| **Scala** — `trait` | Classes combine multiple traits, which may include implementations and state | Linearization and method-resolution rules; traits can declare fields, and composition order matters |
+| **Rust** — `trait` | Defines shared behavior implemented for types (`impl Trait for Type`), possibly with default methods | Traits do not inject instance fields into structs; Rust has method resolution, associated types, and coherence rules |
+| **Kotlin** — `interface` | Interfaces can have methods with bodies; classes can implement multiple interfaces | No backing fields for interface properties; implementation conflicts require explicit resolution |
+| **Python** — mixins via multiple inheritance | A mixin class provides methods for reuse and combination through inheritance | Uses method resolution order (MRO), often with cooperative `super()` in multiple inheritance |
+| **Ruby** — modules | `include`/`prepend` adds modules to the method lookup chain | Ancestor-chain lookup; modules can work with instance state |
+| **C++** — multiple inheritance / CRTP | Mixin classes/templates can add behavior | Inheritance, name lookup, and diamond rules differ from Java; ownership and ambiguity need careful design |
 
-Chẳng hạn, một **Rust trait** thường biểu đạt các phương thức bắt buộc và có thể cung cấp cách thực hiện mặc định; kiểu dữ liệu lưu trường riêng theo định nghĩa struct. Một **Scala trait** có thể mang trạng thái và phối hợp các cách triển khai theo linearization. Vì thế câu “trait luôn không có state” hoặc “mixin luôn sao chép method vào lớp” đều quá tổng quát để áp dụng cho mọi ngôn ngữ.
+For example, a **Rust trait** commonly defines required methods and can provide defaults, while a struct's own definition specifies its fields. A **Scala trait** may contain state and combine implementations through linearization. Claims such as “traits never have state” or “mixins always copy methods into classes” are too broad across languages.
 
-Khi đọc tài liệu một ngôn ngữ cụ thể, cần hỏi: *cơ chế này có giữ trạng thái instance không, có nhiều lớp cha không, ưu tiên phương thức thế nào, và `super` có ý nghĩa gì?*
+When reading documentation for a particular language, ask: *Does this mechanism contain instance state, support multiple superclasses, decide method precedence in a particular way, and what does `super` mean?*
 
-## 7. Khi nào Java nên dùng default method, abstract class hay composition?
+## 7. When Should Java Use Default Methods, Abstract Classes, or Composition?
 
-Ba kỹ thuật có thể cùng đáp ứng nhu cầu dùng lại mã, nhưng phục vụ những kiểu quan hệ khác nhau.
+All three can enable code reuse, but they model different relationships.
 
-| Kỹ thuật | Nên ưu tiên khi | Giới hạn/rủi ro |
+| Technique | Prefer it when | Limits and risks |
 | --- | --- | --- |
-| Interface + `default` | Nhiều lớp khác nguồn gốc cùng có một **khả năng**, và hành vi chung dựa trên hợp đồng nhỏ | Không chứa trạng thái instance; dễ phát sinh xung đột default hoặc hành vi mặc định không phù hợp |
-| Abstract class | Có quan hệ `is-a` thực sự, quy tắc chung, trường instance cần được lớp cha kiểm soát | Java chỉ có một lớp cha trực tiếp; lớp con gắn chặt với phân cấp |
-| Composition/delegation | Muốn dùng lại thuật toán hoặc đối tượng có trạng thái độc lập, có thể thay thế/kết hợp khi chạy | Cần quản lý đối tượng delegate và chuyển tiếp lời gọi |
-| Utility `static` | Thuật toán thuần, không cần hợp đồng của đối tượng | Không biểu diễn khả năng có thể thay thế qua dispatch như interface |
+| Interface + `default` | Unrelated classes share a **capability** whose common behavior uses a small contract | No instance state; potential default-method conflicts or unsuitable default behavior |
+| Abstract class | Genuine `is-a` relationship, shared rules, and instance fields managed by the superclass | Java has one direct superclass; subclasses are coupled to the hierarchy |
+| Composition/delegation | Reuse an algorithm or stateful collaborator that may be replaced/combined at runtime | Requires managing delegate instances and forwarding calls |
+| Utility `static` | Pure algorithm with no object contract | Does not express replaceable capability via interface dispatch |
 
-Một ví dụ delegation với khả năng ghi audit:
+Example of delegation for auditing:
 
 ```java
 interface AuditSink {
@@ -5393,15 +5393,15 @@ final class ArticleService {
 }
 ```
 
-Ở đây `ArticleService` **chứa một `AuditSink`**, không cần kế thừa từ `AuditableBase` và không cần nhét việc I/O vào default method. Có thể thay `ConsoleAuditSink` bằng adapter ghi file, database hay hệ thống sự kiện mà giữ nguyên `ArticleService`.
+Here, `ArticleService` **contains an `AuditSink`** rather than inheriting from `AuditableBase` or putting I/O inside a default method. `ConsoleAuditSink` can be replaced with an adapter that logs to files, databases, or an event system without changing `ArticleService`.
 
-Nếu logic chung **cần tài nguyên, transaction, phụ thuộc được cấu hình hoặc trạng thái riêng có vòng đời**, composition thường rõ ràng hơn một mixin Java với những trường `static` dùng chung.
+If shared logic **needs resources, transactions, configured dependencies, or lifecycle-aware state**, composition is usually clearer than a Java mixin with shared `static` fields.
 
-## 8. Thiết kế hợp đồng cho default method có ích
+## 8. Designing Useful Default-Method Contracts
 
-Có hai cách nhìn sai dễ gặp.
+Two mistaken assumptions are common.
 
-**Sai lầm A: mọi hành vi đều nên đưa vào interface default.**
+**Mistake A: All behavior belongs in interface defaults.**
 
 ```java
 interface PaymentAction {
@@ -5412,9 +5412,9 @@ interface PaymentAction {
 }
 ```
 
-Một method rỗng có thể khiến caller tưởng rằng thanh toán đã thành công. Nếu mỗi triển khai có cách tính/đảm bảo an toàn khác nhau, hãy giữ `charge()` là phương thức trừu tượng và đòi hỏi triển khai đúng hợp đồng.
+An empty method can mislead callers into thinking a payment succeeded. When implementations have different calculations or safety guarantees, leave `charge()` abstract and require each class to meet the contract.
 
-**Sai lầm B: default method có sẵn nghĩa là hành vi luôn an toàn.**
+**Mistake B: A default implementation is automatically safe.**
 
 ```java
 interface MutableAccess {
@@ -5426,79 +5426,79 @@ interface MutableAccess {
 }
 ```
 
-Đoạn trên buộc lớp triển khai làm lộ collection mutable qua `internalTags()`. Caller có thể bỏ qua `append()` và sửa trực tiếp `internalTags()`. Phương án `Taggable` ở ví dụ chính tốt hơn cho mục tiêu đóng gói: nó chỉ yêu cầu **hành vi** `addTag()` và để mỗi lớp giữ dữ liệu `private`.
+This design forces implementations to expose a mutable collection through `internalTags()`. Callers can bypass `append()` and mutate `internalTags()` directly. The main example's `Taggable` contract offers better encapsulation: it requires only the **behavior** `addTag()` and lets each class keep its data `private`.
 
-Khi soạn default method:
+When designing a default method:
 
-1. Mô tả **ngữ nghĩa** của phương thức, gồm tham số hợp lệ, kết quả và lỗi.
-2. Chỉ triển khai hành vi thực sự đúng cho **mọi** lớp đáp ứng interface.
-3. Gọi các primitive operation do lớp thực hiện, thay vì đòi getter lộ trạng thái mutable.
-4. Xác định hành vi khi thực hiện một phần: phương thức mặc định có thể không bảo đảm giao dịch/atomicity.
-5. Không giả định default method tự cung cấp đồng bộ hoặc an toàn đa luồng.
-6. Nếu thêm default vào một interface đã tồn tại, kiểm tra khả năng **xung đột chữ ký** với các interface/lớp khác đang được triển khai.
+1. Describe the method's **semantics**, including valid parameters, results, and errors.
+2. Implement only behavior that is correct for **every** compliant implementation.
+3. Call primitive operations supplied by the implementing class instead of requiring getters that expose mutable state.
+4. Define partial-completion behavior: a default method may offer no transaction or atomicity guarantee.
+5. Do not assume default methods automatically provide synchronization or thread safety.
+6. When adding defaults to an existing interface, check for **signature conflicts** with other implemented interfaces or classes.
 
-Thêm `default method` giúp phát triển API mà không buộc tất cả implementation viết phương thức mới trong trường hợp thông thường, nhưng **không phải lúc nào cũng tương thích**: xung đột với một default khác hoặc hợp đồng hiện có có thể gây lỗi biên dịch hoặc thay đổi hành vi.
+Adding a `default method` can evolve an API without forcing every existing implementation to supply a new method in ordinary cases, but **compatibility is not guaranteed**: another default or an existing contract may cause compilation errors or behavioral changes.
 
-## 9. Một số lỗi cần tránh
+## 9. Mistakes to Avoid
 
-| Lỗi | Hậu quả | Cách xử lý |
+| Mistake | Consequence | Appropriate fix |
 | --- | --- | --- |
-| Coi Java interface là lớp có state instance | Muốn dùng trường như `private List<String> tags` trong interface | Đặt trạng thái ở lớp thực hiện hoặc delegate |
-| Hai interface có default cùng chữ ký | Lớp không biên dịch nếu chưa giải quyết xung đột | Override rõ ràng, có thể dùng `Interface.super.method()` |
-| Override default nhưng quên quy tắc nghiệp vụ | Các lớp thực hiện cho kết quả không tương thích | Viết rõ hợp đồng và kiểm thử chung |
-| Gọi `this.addTags(...)` bên trong chính override `addTags()` | Có thể gọi lại chính phương thức đó và đệ quy | Dùng `Taggable.super.addTags(...)` khi hợp lệ và chủ đích giữ logic mặc định |
-| Đưa trạng thái mutable vào trường interface | Trường thực chất là `public static final` tham chiếu dùng chung | Dùng trường instance `private` của lớp thực hiện |
-| Dùng interface default để thay mọi trường hợp composition | Kéo I/O, DB và stateful services vào hợp đồng | Chọn delegation cho thành phần có vòng đời |
-| Tưởng Scala trait, Rust trait, Java default giống hệt | Hiểu sai trạng thái, linearization và phân giải method | Học quy tắc từng ngôn ngữ |
-| Chia sẻ default method có side effect nhưng không xác định thứ tự | Khó đoán thao tác thành công một phần | Thiết kế ngữ nghĩa transaction và lỗi cụ thể |
+| Treating a Java interface as a class with instance state | Trying to declare a field such as `private List<String> tags` in an interface | Put state in implementing classes or a delegate |
+| Two interfaces define the same-signature default | Class fails to compile without resolving the conflict | Override explicitly, optionally invoking `Interface.super.method()` |
+| Overriding a default but forgetting business rules | Implementations produce inconsistent results | Define contracts and shared tests |
+| Calling `this.addTags(...)` inside the `addTags()` override | May recursively invoke itself | Use `Taggable.super.addTags(...)` when valid and intentionally preserving the default behavior |
+| Storing mutable state in an interface field | It is actually a shared `public static final` reference | Use a `private` instance field on the implementing class |
+| Replacing every composition use case with interface defaults | Pulls I/O, databases, and stateful services into contracts | Delegate to lifecycle-aware components |
+| Assuming Scala traits, Rust traits, and Java defaults are identical | Misunderstands state, linearization, and method resolution | Learn each language's specific rules |
+| Sharing side-effecting defaults with no defined operation order | Partial success becomes hard to predict | Define transaction and error semantics precisely |
 
-## 10. Tự kiểm tra
+## 10. Self-Check
 
-**Câu 1.** Vì sao `Article` và `SupportTicket` có thể dùng chung `Taggable.addTags()` dù không có cùng lớp cha nghiệp vụ?
+**Question 1.** Why can `Article` and `SupportTicket` share `Taggable.addTags()` without sharing a business superclass?
 
-**Đáp án:** Hai lớp đều implements `Taggable`; default method dùng thao tác `addTag()` do từng lớp cung cấp, không phụ thuộc chi tiết lưu trữ hay kế thừa từ một lớp trạng thái chung.
+**Answer:** Both classes implement `Taggable`; the default method invokes `addTag()` supplied by each class and does not depend on storage details or a shared state-owning superclass.
 
-**Câu 2.** Nếu `ShortGreeting` và `FriendlyGreeting` đều có `default String greet()`, một lớp implements cả hai có tự động dùng `ShortGreeting` không?
+**Question 2.** If `ShortGreeting` and `FriendlyGreeting` both define `default String greet()`, does a class implementing both automatically use `ShortGreeting`?
 
-**Đáp án:** Không. Khi không có quan hệ ưu tiên thích hợp và hai default xung đột, lớp phải override `greet()` để định nghĩa rõ hành vi.
+**Answer:** No. Without a suitable precedence relationship, two conflicting defaults require the class to override `greet()` and explicitly define behavior.
 
-**Câu 3.** Có thể khai báo `private int count;` làm trường instance trong Java interface không?
+**Question 3.** Can `private int count;` be declared as an instance field in a Java interface?
 
-**Đáp án:** Không. Trường của interface luôn có ngữ nghĩa `public static final`; không có trường instance riêng trong interface.
+**Answer:** No. Interface fields always have `public static final` semantics; interfaces do not declare individual instance fields.
 
-**Câu 4.** Default `addTags()` gọi `addTag()` ba lần, đến lần thứ ba ném lỗi. Hai thẻ trước có chắc được hoàn tác không?
+**Question 4.** Default `addTags()` invokes `addTag()` three times, and the third invocation throws. Are the first two tags guaranteed to be rolled back?
 
-**Đáp án:** Không. Phương thức default mẫu không triển khai rollback. Nếu cần tính nguyên tử, phải bổ sung hợp đồng và triển khai phù hợp.
+**Answer:** No. The sample default method implements no rollback. Atomicity requires additional contracts and an appropriate implementation.
 
-**Câu 5.** Có nên chuyển một `AuditSink` ghi file và giữ kết nối thành default method của interface chỉ để tái sử dụng code?
+**Question 5.** Should a file-writing, connection-owning `AuditSink` be moved into an interface default solely to reuse code?
 
-**Đáp án:** Thường không. Thành phần có trạng thái, vòng đời và tài nguyên riêng phù hợp hơn với composition/delegation, ví dụ tiêm một `AuditSink` vào đối tượng sử dụng.
+**Answer:** Usually not. A component with its own state, resource lifetime, and ownership fits composition/delegation better, such as injecting an `AuditSink` into the consuming object.
 
-**Câu 6.** Trait ở Rust có thể được kết luận là giống trait ở Scala về trạng thái và method resolution không?
+**Question 6.** Can we assume that Rust traits and Scala traits have identical state and method-resolution behavior?
 
-**Đáp án:** Không. Cùng tên “trait” nhưng luật ngôn ngữ khác nhau: Rust định nghĩa hành vi và các implementation cho kiểu; Scala có cơ chế mixin/linearization và cho phép trạng thái trong trait.
+**Answer:** No. The shared term “trait” hides different language rules: Rust defines behavior and implementations for types; Scala supports mixins/linearization and allows traits to carry state.
 
-**Ghi nhớ:** Hãy tái sử dụng những hành vi **thật sự chung theo hợp đồng**, không ép các lớp khác bản chất vào một lớp cha chỉ vì muốn tiết kiệm mã. Trong Java, interface `default` là công cụ phù hợp cho hành vi chia sẻ không cần state instance; khi hành vi gắn với tài nguyên hoặc phụ thuộc có trạng thái, hãy cân nhắc composition. Còn khi làm việc với mixin/trait ở ngôn ngữ khác, luôn đối chiếu quy tắc kết hợp và xử lý xung đột của chính ngôn ngữ đó.
+**Remember:** Reuse only behavior that is **genuinely shared by contract**; do not force unrelated classes into a superclass just to reduce code. In Java, interface `default` methods suit shared behavior without per-instance state; use composition for resource-owning or stateful dependencies. When working with mixins or traits in other languages, always check each language's composition and conflict-resolution rules.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="inheritance-010">Giới hạn và chi phí của cây kế thừa sâu</a>
+## <a id="inheritance-010">Limitations and costs of deep inheritance hierarchies</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Giới hạn và chi phí của cây kế thừa sâu trong Java
+# Limitations and Costs of Deep Inheritance Hierarchies in Java
 
-> **OOP → Kế thừa.** Kế thừa (`extends`) giúp lớp con tái sử dụng và chuyên biệt hóa hành vi của lớp cha. Nhưng khi một lớp phải đi qua quá nhiều tầng `A → B → C → D → E`, việc hiểu và sửa nó ngày càng tốn công: hành vi có thể nằm rải rác, thay đổi ở lớp cha ảnh hưởng nhiều lớp con, còn kiểm thử phải xét cả các tương tác kế thừa. Bài học này phân biệt **chi phí thiết kế/bảo trì** với **chi phí thực thi**, và chỉ ra khi nào nên chuyển sang composition.
+> **OOP → Inheritance.** Inheritance (`extends`) lets a subclass reuse and specialize superclass behavior. But when a class sits beneath many levels—`A → B → C → D → E`—understanding and modifying it becomes increasingly costly: behavior is scattered, superclass changes affect many subclasses, and tests must cover interactions across levels. This lesson separates **design/maintenance costs** from **runtime costs** and explains when composition is appropriate.
 
-## 1. “Cây kế thừa sâu” nghĩa là gì?
+## 1. What Is a “Deep Inheritance Hierarchy”?
 
-Xét một hệ thống tính phí vận chuyển:
+Consider a shipping-fee calculation system:
 
 ```mermaid
 classDiagram
@@ -5518,20 +5518,20 @@ classDiagram
     PriorityCityDelivery <|-- HolidayPriorityDelivery
 ```
 
-`HolidayPriorityDelivery` có ba lớp tổ tiên trực tiếp/gián tiếp. Để biết `quote(3)` ra bao nhiêu, người đọc phải lần theo phương thức ở các cấp:
+`HolidayPriorityDelivery` has three direct and indirect ancestors. To determine the result of `quote(3)`, a reader must trace methods across several classes:
 
-- `StandardDelivery.quote` quyết định công thức tổng.
-- `StandardDelivery.distanceFee` tính phí khoảng cách mặc định.
-- `PriorityCityDelivery.distanceFee` gọi `super.distanceFee` rồi cộng phí ưu tiên.
-- `HolidayPriorityDelivery.distanceFee` lại gọi `super.distanceFee` rồi cộng phí ngày lễ.
+- `StandardDelivery.quote` determines the overall calculation.
+- `StandardDelivery.distanceFee` calculates the default distance charge.
+- `PriorityCityDelivery.distanceFee` invokes `super.distanceFee` and adds a priority fee.
+- `HolidayPriorityDelivery.distanceFee` again invokes `super.distanceFee` and adds a holiday surcharge.
 
-Càng nhiều tầng **ghi đè và gọi ngược về lớp cha**, càng khó suy ra toàn bộ hành vi chỉ bằng cách nhìn một file.
+More levels of **overrides and calls back to superclass implementations** make it harder to infer behavior from a single file.
 
-**Độ sâu** là số cấp trên đường từ một lớp tới tổ tiên của nó, không phải số lớp con cùng kế thừa một lớp cha. Một cây có một lớp cha và mười lớp con trực tiếp vẫn **nông**; một đường `A → B → C → D → E` mới là ví dụ sâu.
+**Depth** is the number of levels on a path from a class to an ancestor, not the number of sibling subclasses. A hierarchy with one parent and ten immediate children remains **shallow**; a chain `A → B → C → D → E` is deep.
 
-## 2. Ví dụ Java chạy được: chi phí đọc hiểu của nhiều tầng override
+## 2. Runnable Java Example: The Comprehension Cost of Multiple Override Levels
 
-Lưu đoạn mã sau thành `DepthCostDemo.java` (Java 17+):
+Save the following code as `DepthCostDemo.java` (Java 17+):
 
 ```java
 import java.util.List;
@@ -5643,40 +5643,40 @@ public class DepthCostDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac DepthCostDemo.java
 java DepthCostDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Inheritance: 24000
 Composition: 24000
 ```
 
-Với 3 km, cả hai cách đều tính **10.000 phí cơ bản + 6.000 phí khoảng cách + 5.000 phí ưu tiên + 3.000 phí ngày lễ = 24.000 VND**.
+For 3 km, both designs calculate **10.000 base fee + 6.000 distance fee + 5.000 priority fee + 3.000 holiday surcharge = 24.000 VND**.
 
-Sự khác nhau nằm ở **nơi lưu quy tắc** và **cách mở rộng**:
+The difference is **where rules live** and **how extensions work**:
 
-| Mục tiêu | Cây kế thừa sâu | Composition |
+| Goal | Deep inheritance hierarchy | Composition |
 |---|---|---|
-| Tìm nơi tính phí ưu tiên | Phải truy tới lớp `PriorityCityDelivery` | Tìm rule phí ưu tiên trong danh sách cấu hình |
-| Thêm phí ngày lễ | Tạo lớp con mới, override và gọi `super` | Thêm một `FeeRule` |
-| Kết hợp ưu tiên và ngày lễ theo thứ tự khác | Có thể cần thêm biến thể lớp con | Thay tổ hợp các rule |
-| Chia sẻ kiểm tra đầu vào | Lớp cha `quote` | `QuoteService.quote` |
-| Kiểm thử từng loại phí riêng | Có thể phải dựng cả chuỗi lớp | Có thể kiểm thử từng `FeeRule` |
-| Nguy cơ phụ thuộc vào `super` | Cao hơn khi nhiều tầng override | Thấp hơn vì các quy tắc tách biệt |
+| Find the priority-fee calculation | Trace to `PriorityCityDelivery` | Find the priority-fee rule in the configuration list |
+| Add a holiday surcharge | Introduce a subclass, override, and invoke `super` | Add one `FeeRule` |
+| Combine priority and holiday fees in another order | May need further subclass variants | Reorder or recombine rules |
+| Share input validation | Superclass `quote` | `QuoteService.quote` |
+| Test fee categories independently | May require the whole class chain | Test each `FeeRule` independently |
+| Risk from relying on `super` | Higher with numerous override levels | Lower because rules are separate |
 
-**Composition không mặc nhiên tốt hơn trong mọi bài toán**: nếu một họ lớp thực sự có quan hệ “là một loại”, trạng thái chung và ít biến thể, kế thừa nông có thể đơn giản hơn. Mục tiêu là giảm những phụ thuộc không cần thiết, không phải xóa mọi `extends`.
+**Composition is not automatically better in every case**: if a class family genuinely has an is-a relationship, shared state, and few variants, shallow inheritance may be simpler. The goal is to reduce unnecessary dependencies, not to eliminate every `extends`.
 
-## 3. Chi phí thứ nhất: phụ thuộc ngầm và “fragile base class”
+## 3. Cost One: Implicit Dependencies and the Fragile Base Class
 
-Một lớp con được viết dựa trên hành vi hiện tại của lớp cha. Nếu lớp cha thay đổi cách gọi một phương thức `protected` có thể override, hành vi của lớp con có thể đổi mà không cần sửa một dòng nào trong lớp con.
+Subclasses are written against current superclass behavior. If a superclass changes when it invokes an overridable `protected` method, subclass behavior can change without editing any subclass source.
 
-Ví dụ:
+For example:
 
 ```java
 class BaseFormatter {
@@ -5697,9 +5697,9 @@ class UpperFormatter extends BaseFormatter {
 }
 ```
 
-Nếu `BaseFormatter.format` sau này chuyển sang gọi `decorate` hai lần, `UpperFormatter` cũng bị ảnh hưởng. Lớp con phụ thuộc vào **quy ước ngầm về lúc nào, bao nhiêu lần và theo thứ tự nào** lớp cha gọi hook.
+If `BaseFormatter.format` later invokes `decorate` twice, `UpperFormatter` is affected as well. The subclass depends on an **implicit convention about when, how often, and in what order** the superclass invokes that hook.
 
-Với cây nhiều tầng, sự phụ thuộc có thể thành chuỗi:
+Across multiple levels, these dependencies can form a chain:
 
 ```text
 HolidayPriorityDelivery
@@ -5707,21 +5707,21 @@ HolidayPriorityDelivery
     → StandardDelivery.distanceFee
 ```
 
-Sửa công thức ở `StandardDelivery` sẽ ảnh hưởng các lớp con dựa vào `super.distanceFee`. Có khi đây là điều mong muốn, nhưng nếu lớp con giả định công thức cũ thì đây là lỗi phát sinh ngoài dự kiến.
+Changing the formula in `StandardDelivery` affects subclasses relying on `super.distanceFee`. That may be desirable, but subclasses assuming the previous formula may fail unexpectedly.
 
-Hiện tượng này thường được gọi là **fragile base class problem**: sửa lớp nền có thể phá lớp dẫn xuất dù chữ ký API vẫn giữ nguyên.
+This is often called the **fragile base class problem**: changing a base class can break derived classes even when API signatures remain unchanged.
 
-Cách giảm rủi ro:
+Ways to reduce risk:
 
-- Ghi rõ phương thức nào là **extension point** cho lớp con override.
-- Nêu hợp đồng của hook: điều kiện đầu vào, giá trị trả về, việc gọi một lần hay nhiều lần, side effect, ngoại lệ.
-- Đánh dấu `final` cho phương thức kiểm soát quy trình quan trọng nếu lớp con không được thay toàn bộ thuật toán.
-- Giữ trường nội bộ `private` khi có thể; dùng API `protected` có mục đích rõ, thay vì trao quyền sửa trực tiếp.
-- Kiểm thử các implementation chịu ảnh hưởng khi sửa lớp nền.
+- Document which methods are **extension points** intended for subclass overriding.
+- Define hook contracts: input conditions, return values, number and order of invocations, side effects, and exceptions.
+- Mark essential workflow-coordinating methods `final` if subclasses must not replace the whole algorithm.
+- Keep internal fields `private` where possible; use intentionally designed `protected` APIs rather than allowing direct modification.
+- Test affected implementations whenever a base class changes.
 
-## 4. Chi phí thứ hai: constructor phụ thuộc vào hành vi lớp lá
+## 4. Cost Two: Constructors Depending on Leaf-Class Behavior
 
-Với nhiều tầng kế thừa, constructor tổ tiên có thể gọi một method bị lớp lá override trong khi field riêng của lá vẫn chưa chạy initializer. Ví dụ:
+In a deep hierarchy, an ancestor constructor may invoke a method overridden by a leaf class before that leaf's field initializers have run. For example:
 
 ~~~java
 class Base {
@@ -5738,32 +5738,32 @@ class Leaf extends Middle {
 // new Leaf() in "Base sees: null".
 ~~~
 
-Java dùng dynamic dispatch đến `Leaf.display()` ngay trong `Base()`, dù `Leaf.label` mới ở giá trị mặc định `null`. Việc đi qua nhiều lớp trung gian làm điểm xuất phát và implementation được gọi khó truy vết hơn; nếu override gọi `label.toUpperCase()`, sẽ xuất hiện `NullPointerException`.
+Java dynamically dispatches to `Leaf.display()` from `Base()` even while `Leaf.label` holds its default `null`. More intermediate classes make it harder to trace the call site and selected implementation; an override invoking `label.toUpperCase()` would throw `NullPointerException`.
 
-Giữ constructor chỉ thiết lập trạng thái thuộc lớp hiện tại, tránh gọi hook overridable hoặc làm lộ `this` quá sớm. Trong chương này, bài **Khởi tạo lớp con và chuỗi khởi tạo lớp cha** giải thích đầy đủ static/instance initializer và constructor chaining; ở đây trọng tâm là **phạm vi ảnh hưởng tăng theo độ sâu**.
+Constructors should establish state belonging to their declaring class, without calling overridable hooks or exposing `this` prematurely. The lesson **Subclass initialization and the superclass constructor chain** explains static/instance initializers and constructor chaining; this section emphasizes **how the impact expands with depth**.
 
-## 5. Chi phí thứ ba: cây lớp phình to khi kết hợp nhiều biến thể
+## 5. Cost Three: Class Explosion from Combining Variants
 
-Giả sử dịch vụ vận chuyển có các đặc tính độc lập:
+Suppose a shipping service supports independent dimensions:
 
-- Khu vực: nội thành hoặc liên tỉnh.
-- Tốc độ: thường hoặc hỏa tốc.
-- Thời điểm: ngày thường hoặc lễ.
-- Khách hàng: thường hoặc thành viên.
+- Region: local or intercity.
+- Speed: standard or express.
+- Timing: regular days or holidays.
+- Customer: regular or member.
 
-Nếu mỗi tổ hợp đều được mã hóa thành một lớp con, số phương án lý thuyết là:
+If every combination becomes a subclass, the theoretical number of variants is:
 
 \[
 2 \times 2 \times 2 \times 2 = 16
 \]
 
-Nếu thêm một thuộc tính có 3 biến thể, số tổ hợp tăng lên:
+Adding one property with 3 variants increases the possible combinations to:
 
 \[
 16 \times 3 = 48
 \]
 
-Không phải mọi tổ hợp thực tế đều được triển khai, nhưng số tổ hợp có thể tăng nhanh. Các tên lớp như `HolidayExpressMemberIntercityDelivery` báo hiệu thiết kế đang trộn **nhiều chiều thay đổi độc lập** trong một cây kế thừa.
+Not every theoretical combination must be implemented, but the number can grow rapidly. Class names like `HolidayExpressMemberIntercityDelivery` suggest the design is mixing **many independent dimensions of change** into one hierarchy.
 
 ```mermaid
 flowchart LR
@@ -5778,25 +5778,25 @@ flowchart LR
     F --> G["Tính phí"]
 ```
 
-Trong tình huống này, composition thường hợp lý: tách `DistanceFeePolicy`, `SpeedSurcharge`, `HolidaySurcharge`, `MembershipDiscount` thành các chiến lược/quy tắc có giao diện rõ ràng, sau đó phối hợp ở một service.
+Here, composition is usually reasonable: separate `DistanceFeePolicy`, `SpeedSurcharge`, `HolidaySurcharge`, and `MembershipDiscount` into clear strategies/rules, then combine them in a service.
 
-**Lưu ý:** các thành phần có thể có thứ tự áp dụng quan trọng, như giảm 10% trước hoặc sau phụ phí. Composition không tự giải quyết vấn đề đó; service phải định nghĩa thứ tự, quy tắc làm tròn, cách xử lý lỗi và kiểm tra hợp đồng.
+**Note:** application order may matter, such as applying a 10% discount before or after a surcharge. Composition does not resolve that automatically; the service must define ordering, rounding, error handling, and contract checks.
 
-## 6. Chi phí thứ tư: khó kiểm thử và khó đoán phạm vi ảnh hưởng
+## 6. Cost Four: Harder Testing and Impact Prediction
 
-Một thay đổi nhỏ ở lớp cha có thể ảnh hưởng mọi lớp kế thừa, kể cả lớp ở nhánh mà người sửa không để ý.
+A small superclass change can affect all descendants, including branches the developer did not realize were involved.
 
-| Kiểu thay đổi | Cần xem lại điều gì? |
+| Change type | What needs review? |
 |---|---|
-| Thêm kiểm tra đầu vào ở lớp cha | Lớp con có truyền dữ liệu hợp lệ, có xử lý ngoại lệ mới không? |
-| Đổi cách gọi hook `protected` | Override ở mọi nhánh còn đúng ngữ nghĩa không? |
-| Thay cấu trúc trạng thái lớp cha | Lớp con có phụ thuộc trường/logic cũ không? |
-| Thêm overload hoặc đổi visibility | Có gây nhầm lời gọi hoặc phá API lớp con không? |
-| Chỉnh constructor lớp cha | Chuỗi `super(...)` và invariant lớp con có còn đúng không? |
+| Add input validation in the superclass | Do subclasses pass valid data and handle new exceptions? |
+| Change the invocation of a `protected` hook | Do overrides in every branch still preserve semantics? |
+| Modify superclass state representation | Do subclasses depend on old fields or logic? |
+| Add an overload or change visibility | Could it make calls ambiguous or break subclass APIs? |
+| Change a superclass constructor | Are `super(...)` chains and subclass invariants still valid? |
 
-Mỗi đường đi qua nhiều tầng lớp đều là một bối cảnh kiểm thử. Điều này không có nghĩa phải thử mọi tổ hợp bất khả thi, mà là **phạm vi regression có thể rộng hơn nhiều so với file vừa chỉnh**.
+Each path through multiple class levels adds a testing context. This does not require testing impossible combinations; it means **the regression scope may be much wider than the edited file**.
 
-Một cách kiểm soát tốt là có **contract tests** cho hành vi lớp nền và các implementation quan trọng:
+Use **contract tests** for base behavior and key implementations:
 
 ```java
 static void assertQuote(DepthCostDemo.StandardDelivery plan,
@@ -5814,70 +5814,70 @@ static void assertQuote(DepthCostDemo.StandardDelivery plan,
 assertQuote(new DepthCostDemo.HolidayPriorityDelivery(), 3, 24_000);
 ```
 
-Ví dụ này dùng các kiểu nested package-private trong `DepthCostDemo` và là đoạn kiểm tra minh họa đặt cùng package; phương thức `assertQuote` cần nằm trong một class khi biên dịch. Trong dự án thật có thể dùng JUnit để kiểm thử tham số hóa nhiều implementation.
+This snippet uses nested package-private types from `DepthCostDemo` and illustrates a check in the same package; `assertQuote` must be inside a class to compile. Real projects can use JUnit parameterized tests across implementations.
 
-Với thiết kế composition, có thể kiểm thử riêng từng rule (phí khoảng cách, phí ngày lễ) và thêm bài kiểm thử phối hợp cho `QuoteService`. Sự tách biệt thường giúp xác định lỗi ở một chính sách cụ thể thay vì đi qua toàn bộ cây lớp.
+With composition, you can test each rule separately (distance fees, holiday surcharges) and add coordination tests for `QuoteService`. Isolation often makes faults easier to pinpoint than tracing the entire hierarchy.
 
-## 7. Chi phí runtime: có phải càng sâu càng chậm?
+## 7. Runtime Cost: Does Deeper Always Mean Slower?
 
-**Không nên kết luận độ sâu của cây kế thừa tự động khiến chương trình chậm.** Cần tách các loại chi phí:
+**Do not assume deeper inheritance automatically slows a program down.** Separate the following cost categories:
 
-| Nhóm chi phí | Điều gì có thể tăng? | Có xảy ra trong mọi trường hợp? |
+| Cost category | What may increase? | Does it always occur? |
 |---|---|---|
-| Đọc hiểu/bảo trì | Phải lần theo nhiều override, constructor, trạng thái, nhánh lớp | Thường tăng khi phụ thuộc nhiều tầng |
-| Kiểm thử/regression | Nhiều lớp con bị ảnh hưởng bởi thay đổi ở cha | Phụ thuộc thiết kế và số nhánh |
-| Khởi tạo lớp và object | Có thêm constructor, initializer, trường instance cần xử lý | Tùy số lớp và code thực tế |
-| Bộ nhớ object | Trường instance kế thừa và trường mới được lưu trong object | Tùy cấu trúc trường; không phải mỗi tầng là một object độc lập |
-| Gọi phương thức | Có thể xuất hiện nhiều lớp gọi `super.method()` nối tiếp | Tùy code; JIT có thể inline/tối ưu |
-| Class metadata | Nhiều class phải được nạp và quản lý hơn | Có, nhưng quy mô tác động cần đo |
+| Understanding/maintenance | Tracing many overrides, constructors, state slots, and inheritance branches | Often increases with multi-level dependencies |
+| Testing/regression | More descendants affected by superclass changes | Depends on design and branch count |
+| Class/object initialization | More constructors, initializers, and instance fields to process | Depends on classes and executed code |
+| Object memory | Inherited and newly declared instance fields occupy the object | Depends on field layout; not one separate object per level |
+| Method calls | Multiple chained `super.method()` calls may execute | Depends on code; the JIT can inline and optimize |
+| Class metadata | More classes may need loading and management | Yes, but measure the magnitude |
 
-Java dùng **dynamic dispatch** cho phương thức instance có thể override. JVM/JIT hiện đại có thể inline các lời gọi mà nó suy ra được đích, kể cả trên cây kế thừa, và tối ưu theo profile runtime. Vì vậy không có quy tắc kiểu “thêm một tầng `extends` thì mỗi lời gọi tăng X mili giây”.
+Java uses **dynamic dispatch** for overridable instance methods. Modern JVM/JIT compilers can inline calls with predictable targets even in inheritance hierarchies and optimize from runtime profiles. There is no rule that “adding one level of `extends` increases every call by X milliseconds.”
 
-Mặt khác, một override có gọi `super` nhiều tầng và mỗi tầng thực hiện thêm tính toán/I/O thì tổng công việc **thật sự** tăng. Đó là chi phí của **logic được chạy**, không phải chi phí vô điều kiện của từ khóa `extends`.
+On the other hand, if an override invokes `super` through many levels and each adds computation or I/O, the total executed work **does increase**. That is the cost of **executed logic**, not an unconditional penalty for the `extends` keyword.
 
-Khi đánh giá hiệu năng:
+When evaluating performance:
 
-1. Xác định đường chạy thực tế cần tối ưu.
-2. Dùng profiler hoặc benchmark có warm-up phù hợp (ví dụ JMH cho microbenchmark Java).
-3. Đo latency, throughput, allocation và GC trước/sau thay đổi.
-4. Ưu tiên thiết kế dễ bảo trì nếu chưa có bằng chứng cây kế thừa là nút thắt hiệu năng.
+1. Identify the actual hot path to optimize.
+2. Use a profiler or a properly warmed-up benchmark (such as JMH for Java microbenchmarks).
+3. Compare latency, throughput, allocations, and GC before and after changes.
+4. Prefer maintainability unless evidence identifies the inheritance hierarchy as a performance bottleneck.
 
-Tránh viết microbenchmark bằng một vòng lặp rỗng gọi phương thức và suy luận ngay từ thời gian đo: JVM có thể loại bỏ công việc không có tác động quan sát được.
+Avoid timing a bare microbenchmark loop and inferring performance directly: the JVM can eliminate work with no observable effect.
 
-## 8. Khi nào kế thừa vẫn là lựa chọn hợp lý?
+## 8. When Is Inheritance Still Reasonable?
 
-Một hệ phân cấp thường hợp lý khi:
+A hierarchy is usually appropriate when:
 
-- Thực sự tồn tại quan hệ **is-a** ổn định: mọi `Circle` đều là một `Shape`.
-- Lớp con thực hiện đúng hợp đồng lớp cha và có thể thay thế lớp cha ở vị trí gọi (**Liskov Substitution Principle — LSP**).
-- Có hành vi hoặc trạng thái chung rõ ràng, không phải chỉ chia sẻ vài dòng tiện ích.
-- Các điểm mở rộng được tài liệu hóa, có kiểm thử và không phụ thuộc quá nhiều vào chi tiết nội bộ của tổ tiên.
-- Cây nông và các thay đổi của lớp cha ít làm lớp con phải hiểu lại toàn bộ quy tắc.
+- A stable **is-a** relationship genuinely exists: every `Circle` is a `Shape`.
+- Subclasses honor superclass contracts and are substitutable at call sites (**Liskov Substitution Principle — LSP**).
+- Shared behavior or state is clear, rather than just a few utility lines.
+- Extension points are documented and tested, without excessive dependence on ancestor internals.
+- The hierarchy is shallow, with superclass changes seldom forcing descendants to reinterpret their contracts.
 
-Ví dụ `abstract class Shape` với `abstract double area()` và các lớp `Circle`, `Rectangle` trực tiếp kế thừa có thể rất dễ hiểu. Không cần thay một cây đơn giản, đúng bản chất bằng hàng loạt chiến lược và factory chỉ vì muốn tránh kế thừa.
+For example, `abstract class Shape` with `abstract double area()` and immediate subclasses `Circle` and `Rectangle` can be easy to understand. There is no need to replace a simple, semantically correct hierarchy with numerous strategies and factories merely to avoid inheritance.
 
-### Tín hiệu nên xem lại cây hiện tại
+### Signs That an Existing Hierarchy Needs Review
 
-- Mỗi chức năng mới thường đòi một lớp con với tên ngày càng dài.
-- Override hầu hết chỉ gọi `super.method()` rồi cộng/trừ một chút logic.
-- Thay lớp nền gây lỗi ở nhánh không liên quan.
-- Nhiều lớp con phải ghi đè phương thức bằng implementation rỗng hoặc ném `UnsupportedOperationException`.
-- Test lớp lá phải thiết lập rất nhiều trạng thái của tổ tiên.
-- Lớp con đọc/sửa nhiều trường `protected` mà lớp cha lẽ ra phải tự bảo vệ.
-- Phải dùng `instanceof` hoặc ép kiểu liên tục để biết loại lớp con rồi xử lý riêng.
+- Each new feature tends to require a subclass with an ever-longer name.
+- Most overrides merely invoke `super.method()` and add or subtract a little logic.
+- Base-class changes break unrelated branches.
+- Many subclasses override methods with empty implementations or throw `UnsupportedOperationException`.
+- Tests for leaf classes require extensive ancestor-state setup.
+- Subclasses read or mutate numerous `protected` fields that the superclass should protect.
+- The code repeatedly uses `instanceof` checks or casts to identify subclass types and handle each separately.
 
-Đây là **dấu hiệu cần phân tích**, không phải bằng chứng tuyệt đối. Một số cây phân loại dữ liệu cố định vẫn thích hợp với inheritance.
+These are **signals worth investigating**, not conclusive evidence. Some fixed classification hierarchies still suit inheritance.
 
-## 9. Cách giảm độ sâu mà vẫn giữ được hành vi
+## 9. Reducing Depth While Preserving Behavior
 
-Cách làm an toàn nhất là bắt đầu từ **hợp đồng quan sát được** thay vì xóa `extends` ngay.
+The safest starting point is the **observable contract**, not immediately removing `extends`.
 
-1. **Liệt kê các trường hợp đang được hỗ trợ:** loại vận chuyển, tham số đầu vào, kết quả, exception và tác động phụ.
-2. **Ghi lại hành vi hiện tại bằng kiểm thử:** đặc biệt là những lớp lá quan trọng và các trường hợp biên.
-3. **Tách những chiều thay đổi độc lập:** ví dụ phí khoảng cách, ngày lễ, ưu tiên thành `FeeRule` hoặc các interface riêng.
-4. **Đưa quy trình phối hợp vào một service/composer:** một nơi kiểm tra đầu vào, thứ tự áp dụng rule và xử lý overflow.
-5. **Thay dần mã gọi ở ranh giới:** giữ adapter cho API cũ nếu cần tương thích, tránh thay toàn hệ thống trong một bước.
-6. **So sánh kết quả cũ/mới theo trường hợp nghiệp vụ:** sau đó mới loại các lớp trung gian không còn giá trị.
+1. **List existing supported cases:** shipping types, input parameters, outputs, exceptions, and side effects.
+2. **Capture current behavior in tests:** especially important leaf classes and edge cases.
+3. **Separate independent dimensions of change:** for example, distance, holiday, and priority fees into `FeeRule` or dedicated interfaces.
+4. **Move coordination into a service/composer:** centralize input validation, rule order, and overflow handling.
+5. **Migrate call sites incrementally at boundaries:** retain adapters for legacy APIs when needed, rather than replacing everything at once.
+6. **Compare old and new results on domain cases:** only then remove intermediate classes that add no value.
 
 ```mermaid
 flowchart TD
@@ -5889,11 +5889,11 @@ flowchart TD
     F --> G["Gỡ tầng kế thừa không cần thiết"]
 ```
 
-Có thể dùng **composition + interface** cho khả năng tùy biến, và giữ lại một **abstract class nông** nếu thật sự cần khung thuật toán chung. Hai kỹ thuật không loại trừ nhau.
+You can use **composition + interface** for configurable behavior while retaining a **shallow abstract class** when a shared algorithm structure is genuinely needed. These techniques are not mutually exclusive.
 
-## 10. Dùng `final` và `sealed` để kiểm soát phạm vi kế thừa
+## 10. Using `final` and `sealed` to Control Inheritance
 
-Khi không muốn ai cũng tùy ý tạo lớp con, có thể hạn chế khả năng mở rộng:
+When arbitrary subclassing is undesirable, extension can be restricted:
 
 ```java
 final class FixedPolicy {
@@ -5901,7 +5901,7 @@ final class FixedPolicy {
 }
 ```
 
-Từ Java 17, `sealed` cho phép một lớp/interface công khai tập subtype trực tiếp được phép:
+Since Java 17, `sealed` allows a class or interface to specify its permitted direct subtypes:
 
 ```java
 sealed interface DeliveryMode
@@ -5915,25 +5915,25 @@ record Express() implements DeliveryMode {
 }
 ```
 
-`Economy` và `Express` là record nên ngầm định `final`; chúng có thể triển khai sealed interface theo quy tắc Java. Ví dụ sử dụng các kiểu trong cùng file/package phù hợp. Các subtype trực tiếp của sealed class/interface phải tuân theo quy tắc `final`, `sealed` hoặc `non-sealed` khi áp dụng.
+`Economy` and `Express` are records and therefore implicitly `final`; they can implement the sealed interface under Java's rules. The example assumes suitable types in the same file/package. Direct subclasses of sealed classes/interfaces must use `final`, `sealed`, or `non-sealed` as applicable.
 
-`sealed` hữu ích khi tập biến thể thực sự có giới hạn. Nó giúp biết những subtype nào hợp lệ, nhưng **không tự giảm độ sâu của một cây đã dài**; dùng nó để kiểm soát khả năng mở rộng theo thiết kế. `final` phù hợp với những lớp không được xây dựng để trở thành lớp cha.
+`sealed` is useful when the variant set is genuinely bounded. It identifies valid subtypes but **does not shorten an already-deep hierarchy**; use it to control extension intentionally. `final` suits classes not designed to serve as superclasses.
 
-## 11. Các bài tập thực hành
+## 11. Practice Exercises
 
-**Bài 1 — vẽ đường gọi.** Với `DepthCostDemo`, hãy vẽ chuỗi các phương thức chạy khi gọi `new HolidayPriorityDelivery().quote(4)`. Tính kết quả và xác định chỗ nào có thể gây overflow.
+**Exercise 1 — trace the calls.** For `DepthCostDemo`, draw the method sequence executed by `new HolidayPriorityDelivery().quote(4)`. Calculate the result and identify potential overflow points.
 
-**Bài 2 — thay quy tắc.** Thay phí ưu tiên thành 7.000 VND. So sánh vị trí phải sửa trong thiết kế inheritance và composition; giải thích vì sao không thể chỉ dựa vào số dòng code để kết luận thiết kế nào tốt hơn.
+**Exercise 2 — change the rule.** Change the priority surcharge to 7.000 VND. Compare which code must change in inheritance and composition designs; explain why line count alone does not determine design quality.
 
-**Bài 3 — thêm biến thể.** Một loại giao hàng cần phụ phí giờ cao điểm nhưng không có phụ phí ngày lễ. Hãy thiết kế phiên bản composition có thể kết hợp phí khoảng cách, phí cao điểm và phí ưu tiên mà không tạo thêm một chuỗi subclass dài.
+**Exercise 3 — add a variant.** A shipping type requires a peak-hour surcharge but no holiday surcharge. Design a composition version combining distance, peak-hour, and priority fees without extending a long subclass chain.
 
-**Bài 4 — bẫy constructor.** Đưa ví dụ `Base → Middle → Leaf` ở mục 4 vào một lớp `main`, giải thích vì sao in `Base sees: null`; sau đó sửa để chỉ gọi `display()` sau khi khởi tạo hoàn tất.
+**Exercise 4 — constructor pitfall.** Move the `Base → Middle → Leaf` example from Section 4 into a `main` class and explain why it prints `Base sees: null`; then fix it to invoke `display()` only after construction finishes.
 
-**Bài 5 — đánh giá cây lớp thật.** Chọn một cây kế thừa trong project Java của bạn và trả lời: quan hệ is-a có đúng không, có bao nhiêu tầng, có bao nhiêu override gọi `super`, thay đổi ở lớp cha ảnh hưởng những lớp nào, và có chiều biến thể nào độc lập nên tách ra không?
+**Exercise 5 — review a real hierarchy.** Choose an inheritance hierarchy in your Java project: is the is-a relationship valid, how many levels and overrides invoke `super`, which descendants would a superclass change affect, and should any independent dimensions be extracted?
 
-**Ghi nhớ:** Giới hạn quan trọng nhất của cây kế thừa sâu là **sự kết dính giữa các lớp và chi phí suy luận về hành vi**, chứ không phải một “hình phạt tốc độ” mặc định do JVM áp đặt. Hãy giữ kế thừa cho quan hệ is-a rõ ràng; khi các đặc tính thay đổi độc lập hoặc chuỗi override trở nên khó kiểm soát, dùng **composition, interface và các quy tắc nhỏ** để giảm phụ thuộc.
+**Remember:** The greatest limitation of deep inheritance is **interclass coupling and the cost of reasoning about behavior**, not an automatic JVM “speed penalty.” Keep inheritance for clear is-a relationships; when features vary independently or override chains become unmanageable, use **composition, interfaces, and small rules** to reduce dependency.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

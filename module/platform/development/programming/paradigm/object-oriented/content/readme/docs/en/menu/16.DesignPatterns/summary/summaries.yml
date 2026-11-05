@@ -1,443 +1,443 @@
 summaries:
 - id: design-patterns-001
-  title: 'Mẫu thiết kế: vấn đề, bối cảnh và đánh đổi'
+  title: 'Design Patterns: Problems, Context, and Trade-offs'
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Mẫu thiết kế: vấn đề, bối cảnh và đánh đổi**
+    **Design Patterns: Problems, Context, and Trade-offs**
 
-    Nhận diện mẫu thiết kế như giải pháp có bối cảnh, không phải danh sách tên hay quy tắc bắt buộc. Qua module checkout với các chính sách chiết khấu, bài hướng dẫn so sánh switch với Strategy theo biến thể thực tế, hợp đồng, chi phí gián tiếp, kiểm thử và ghi quyết định thiết kế thay vì áp pattern theo khẩu hiệu.
+    Recognize design patterns as context-dependent solutions, not a list of names or mandatory rules. Through a checkout module with discount policies, this lesson shows how to compare switch with Strategy based on actual variations, contracts, indirection costs, testing, and documented design decisions rather than adopting patterns by slogan.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Bài toán và điều kiện lựa chọn
+    ### Problems and Selection Criteria
 
-    1. Design Pattern khác một thư viện hoặc đoạn mã sao chép được ở điểm nào, và vì sao phải mô tả vấn đề trước khi chọn tên mẫu?
-    2. Những thay đổi, ràng buộc hợp đồng, tần suất biến thể và chi phí tổ chức nào quyết định pattern có phù hợp?
-    3. Với ba chính sách giảm giá ổn định, điều kiện nào khiến switch tập trung đủ tốt và điều kiện nào khiến Strategy đáng dùng?
+    1. How does a Design Pattern differ from a library or reusable code snippet, and why should the problem be described before a pattern is chosen?
+    2. Which changes, contract constraints, frequency of variation, and organizational costs determine whether a pattern is appropriate?
+    3. Given three stable discount policies, when is a centralized switch sufficient, and when is Strategy worth using?
 
-    ### So sánh giải pháp và xác minh
+    ### Comparing Solutions and Verifying Them
 
-    1. Vì sao lựa chọn một pattern có thể giảm coupling nhưng tăng indirection, chi phí wiring và khó debug?
-    2. Adapter khác Decorator và Factory Method khác static factory ở mục đích thực tế nào?
-    3. Một ADR và bộ contract tests cho chiết khấu nên ghi quyết định, kết quả, giới hạn và dấu hiệu xem xét lại ra sao?
+    1. Why can choosing a pattern reduce coupling while increasing indirection, wiring costs, and debugging difficulty?
+    2. How do Adapter and Decorator differ in practical intent, and how does Factory Method differ from a static factory?
+    3. How should an ADR and a set of discount contract tests record decisions, outcomes, limitations, and conditions for reconsideration?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Phát biểu bài toán | Viết mô tả vấn đề chọn thuật toán chiết khấu theo thay đổi và điều kiện thành công, không mở đầu bằng tên pattern. |
-    | Đối chiếu lựa chọn | So sánh switch và Strategy về điểm thay đổi, số abstraction, kiểm thử và tracing. |
-    | Phân biệt ý định | Chọn đúng Adapter, Decorator, Strategy hoặc factory theo thay đổi cần giải quyết. |
-    | Kiểm tra contract | Đề xuất test cho discount không âm, không vượt subtotal và xử lý biến thể không hợp lệ. |
-    | Ghi quyết định | Soạn ADR ngắn nêu bối cảnh, phương án, đánh đổi và điều kiện xem xét lại. |
+    | State the problem | Describe the problem of selecting a discount algorithm based on expected changes and success conditions, without starting with a pattern name. |
+    | Compare alternatives | Compare switch and Strategy in terms of change points, number of abstractions, tests, and tracing. |
+    | Distinguish intentions | Choose Adapter, Decorator, Strategy, or a factory according to the change that needs to be addressed. |
+    | Check contracts | Propose tests for nonnegative discounts, discounts that do not exceed the subtotal, and invalid variants. |
+    | Record decisions | Write a brief ADR stating the context, options, trade-offs, and conditions for reconsideration. |
 - id: design-patterns-002
-  title: Factory Method và Abstract Factory
+  title: Factory Method and Abstract Factory
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Factory Method và Abstract Factory**
+    **Factory Method and Abstract Factory**
 
-    Phân biệt hai hướng tách việc tạo sản phẩm khỏi code sử dụng. Factory Method đặt điểm tạo một loại sản phẩm trong Creator để subclass override; Abstract Factory cung cấp cả họ sản phẩm liên quan như Button và Checkbox của cùng theme. Bài còn chỉ rõ sự khác biệt với simple/static factory, dependency injection và việc kiểm soát vòng đời hoặc lỗi khởi tạo.
+    Distinguish two approaches to separating product creation from the code that uses products. Factory Method places the creation point for one product type in a Creator for subclasses to override; Abstract Factory supplies a related product family, such as Button and Checkbox for the same theme. The lesson also clarifies differences from simple/static factories and dependency injection, and how to manage lifecycles and creation failures.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Hai cấu trúc tạo đối tượng
+    ### Two Object-Creation Structures
 
-    1. Creator, Concrete Creator và Product phối hợp thế nào khi EmailCampaign hoặc SmsCampaign override createSender()?
-    2. Abstract Factory tạo Button và Checkbox đồng bộ cho Light/Dark UI bằng các interface và factory cụ thể như thế nào?
-    3. Factory Method khác Abstract Factory ở cơ chế thay đổi, số loại sản phẩm và quan hệ inheritance/composition ra sao?
+    1. How do Creator, Concrete Creator, and Product collaborate when EmailCampaign or SmsCampaign overrides createSender()?
+    2. How does Abstract Factory produce matching Button and Checkbox components for Light/Dark UI through interfaces and concrete factories?
+    3. How do Factory Method and Abstract Factory differ in their extension mechanisms, number of product types, and inheritance/composition relationships?
 
-    ### Áp dụng, hợp đồng và đánh đổi
+    ### Application, Contracts, and Trade-offs
 
-    1. Vì sao static Sender create(Channel) chỉ là simple factory chứ chưa phải Factory Method theo GoF?
-    2. Khi thêm một theme mới so với thêm một loại component UI mới, Abstract Factory cần thay đổi những phần nào?
-    3. Lỗi tạo object, null, lifecycle và kiểm thử family consistency nên được kiểm soát tại ranh giới nào?
+    1. Why is static Sender create(Channel) a simple factory rather than the GoF Factory Method pattern?
+    2. Which parts of Abstract Factory must change when adding a new theme versus a new UI component type?
+    3. At which boundaries should object-creation failures, null, lifecycles, and product-family consistency tests be handled?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Nhận diện Factory Method | Chỉ ra Creator sở hữu quy trình gửi tin và subclass override điểm tạo Sender trong ví dụ campaign. |
-    | Dựng Abstract Factory | Phác thảo UiFactory tạo hai product cùng theme, client không cần biết class cụ thể. |
-    | Phân loại factory | So sánh simple factory, static factory, GoF Factory Method, Abstract Factory với DI. |
-    | Phân tích mở rộng | Dự đoán chi phí khi thêm họ Light/Dark mới và khi thêm loại UI Product. |
-    | Kiểm chứng contract | Nêu test Creator dùng fake product và test concrete factory tạo cả họ product nhất quán. |
+    | Recognize Factory Method | Identify how Creator owns the sending workflow and subclasses override the Sender creation point in the campaign example. |
+    | Build an Abstract Factory | Sketch a UiFactory that creates two products for the same theme without exposing concrete classes to clients. |
+    | Classify factories | Compare simple factories, static factories, GoF Factory Method, and Abstract Factory with DI. |
+    | Analyze extension costs | Predict the cost of adding a new Light/Dark family and a new UI Product type. |
+    | Verify contracts | Describe tests using fake products for Creator and tests ensuring concrete factories produce consistent product families. |
 - id: design-patterns-003
-  title: Builder và việc tạo đối tượng phức tạp
+  title: Builder and Complex Object Creation
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Builder và việc tạo đối tượng phức tạp**
+    **Builder and Complex Object Creation**
 
-    Làm chủ quy trình tạo Order có nhiều tùy chọn và ràng buộc bằng fluent Builder. Người học thấy cách khai báo trường bắt buộc, kiểm tra trước và tại build(), áp mặc định, dùng BigDecimal/List.copyOf để bảo vệ dữ liệu, và cân nhắc dùng constructor, record, static factory hoặc staged builder khi phù hợp.
+    Master the process of creating an Order with many options and constraints using a fluent Builder. Learners see how to declare required fields, validate before and at build(), apply defaults, protect data using BigDecimal/List.copyOf, and consider constructors, records, static factories, or staged builders when appropriate.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Builder và trạng thái khởi tạo
+    ### Builders and Initialization State
 
-    1. Vì sao constructor nhiều tham số và việc dùng setter liên tiếp khó biểu diễn ràng buộc cho một Order nhiều tùy chọn?
-    2. Fluent Builder cho phép nhập trường bắt buộc, thêm line item và gọi build() theo luồng nào?
-    3. Kiểm tra độc lập nên làm khi cấu hình, còn bất biến liên trường và tính hoàn chỉnh phải kiểm ở giai đoạn nào?
+    1. Why do constructors with many parameters and sequences of setter calls make constraints difficult to express for an Order with many options?
+    2. What sequence does a fluent Builder provide for supplying required fields, adding line items, and calling build()?
+    3. When should individual values be validated during configuration, and when should cross-field invariants and completeness be checked?
 
-    ### Bất biến, lựa chọn và kiểm thử
+    ### Invariants, Alternatives, and Testing
 
-    1. Vì sao Builder mutable vẫn có thể tạo Order immutable và List.copyOf giúp tránh aliasing sau build()?
-    2. Fluent Builder, staged Builder và Director khác nhau về độ phức tạp và yêu cầu trình tự như thế nào?
-    3. Một ReportConfig cho CSV/PDF với giới hạn biểu đồ và khoảng ngày nên được test những trường hợp mặc định/lỗi nào?
+    1. Why can a mutable Builder still create an immutable Order, and how does List.copyOf prevent aliasing after build()?
+    2. How do fluent Builders, staged Builders, and Directors differ in complexity and sequence requirements?
+    3. Which default and error cases should be tested for a ReportConfig supporting CSV/PDF with chart-count limits and date ranges?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Thiết kế API tạo object | Viết luồng Order.builder(required...).addItem(...).build() đọc rõ ý nghĩa từng trường. |
-    | Bảo vệ invariant | Phân loại validation từng bước và validation liên trường ở build() để không tạo product thiếu dữ liệu. |
-    | Kiểm tra defensive copy | Chứng minh thay đổi builder/list gốc sau build không sửa danh sách item của Order đã tạo. |
-    | Lựa chọn kỹ thuật | Giải thích trường hợp chỉ cần record/constructor và khi staged Builder hoặc Director thực sự có ích. |
-    | Thiết kế test | Lập test cho required fields, defaults, BigDecimal, tổ hợp không hợp lệ và tái sử dụng Builder. |
+    | Design object-creation APIs | Write a clear Order.builder(required...).addItem(...).build() flow that communicates each field's meaning. |
+    | Protect invariants | Distinguish per-step validation from cross-field validation at build() so incomplete products cannot be created. |
+    | Verify defensive copies | Show that modifying the Builder or original list after build does not change the created Order's item list. |
+    | Choose creation techniques | Explain when a record/constructor is sufficient and when a staged Builder or Director is genuinely useful. |
+    | Design tests | Create tests for required fields, defaults, BigDecimal, invalid combinations, and Builder reuse. |
 - id: design-patterns-004
-  title: Singleton và rủi ro trạng thái dùng chung
+  title: Singleton and the Risks of Shared State
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Singleton và rủi ro trạng thái dùng chung**
+    **Singleton and the Risks of Shared State**
 
-    Hiểu Singleton chỉ kiểm soát số lượng và điểm truy cập instance trong một phạm vi nhất định, không tự làm object thread-safe. Qua static holder, enum counter, AtomicLong và bean Spring, bài phân biệt việc khởi tạo, đồng bộ thao tác, phạm vi request, dependency injection và vòng đời tài nguyên.
+    Understand that Singleton controls instance count and access points within a particular scope; it does not automatically make an object thread-safe. Using a static holder, enum counter, AtomicLong, and Spring beans, the lesson distinguishes initialization, operation synchronization, request scopes, dependency injection, and resource lifecycles.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Phạm vi instance và an toàn đồng thời
+    ### Instance Scope and Concurrency Safety
 
-    1. Một instance trong static Singleton, mỗi class loader, Spring singleton bean và toàn cụm ứng dụng khác nhau thế nào?
-    2. Vì sao holder hoặc enum giúp khởi tạo an toàn nhưng không biến mutable currentOrder hay total++ thành thao tác thread-safe?
-    3. Trong hai request đồng thời, việc lưu user/order/amount trong field singleton có thể tạo xen kẽ sai lệch ra sao?
+    1. How do the scopes of one instance in a static Singleton, per class loader, a Spring singleton bean, and an entire application cluster differ?
+    2. Why do a holder or enum support safe initialization without making mutable currentOrder or total++ thread-safe?
+    3. With two concurrent requests, how can storing user/order/amount in singleton fields cause incorrect interleaving?
 
-    ### Thiết kế thay thế và bảo đảm
+    ### Alternative Designs and Guarantees
 
-    1. Khi nào AtomicLong, ConcurrentHashMap hoặc lock phù hợp với dữ liệu chia sẻ, và tại sao vẫn không thay thế transaction?
-    2. Constructor injection với MailClient fake giải quyết phụ thuộc ẩn getInstance() trong unit test như thế nào?
-    3. Tại sao singleton bean inject một prototype ShoppingCart không tự tạo cart mới cho mỗi HTTP request?
+    1. When are AtomicLong, ConcurrentHashMap, or locks appropriate for shared data, and why do they still not replace transactions?
+    2. How does constructor injection with a fake MailClient eliminate the hidden getInstance() dependency in unit tests?
+    3. Why doesn't injecting a prototype ShoppingCart into a singleton bean automatically create a new cart for every HTTP request?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Xác định scope | Nêu phạm vi instance Java class loader, IoC container, process và phân tán mà không khẳng định một object toàn cầu. |
-    | Mô phỏng race | Chỉ ra trình tự hai request làm rò rỉ/sai trạng thái currentUser, currentOrder trong service dùng chung. |
-    | Sửa quyền sở hữu trạng thái | Chuyển dữ liệu request sang tham số/biến cục bộ và chọn dependency đúng scope. |
-    | Chọn đồng bộ | Phân biệt AtomicLong bảo vệ phép tăng với các bất biến nhiều bước cần khóa/transaction. |
-    | Cải thiện kiểm thử | Thay global getInstance bằng constructor injection, test riêng và cơ chế quản lý lifecycle. |
+    | Identify scopes | Describe instance scope for Java class loaders, IoC containers, processes, and distributed systems without assuming a globally unique object. |
+    | Simulate races | Trace two requests that leak or corrupt currentUser and currentOrder state in a shared service. |
+    | Fix state ownership | Move request data into parameters/local variables and choose dependencies with the correct scope. |
+    | Choose synchronization | Distinguish AtomicLong protecting an increment from multistep invariants requiring locks or transactions. |
+    | Improve testability | Replace global getInstance access with constructor injection, isolated tests, and lifecycle management. |
 - id: design-patterns-005
-  title: Adapter và tích hợp giao diện khác nhau
+  title: Adapter and Integrating Different Interfaces
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Adapter và tích hợp giao diện khác nhau**
+    **Adapter and Integrating Different Interfaces**
 
-    Hiểu Adapter như một ranh giới giữa PaymentGateway của ứng dụng và LegacyPaymentSdk không tương thích, không phải bộ đổi tên phương thức. Bài dùng BigDecimal USD → long cents chính xác, ánh xạ trạng thái approved/declined, phân biệt timeout chưa biết kết quả và cảnh báo retry thanh toán có thể gây giao dịch trùng.
+    Understand Adapter as a boundary between the application's PaymentGateway and an incompatible LegacyPaymentSdk, not merely a method renamer. The lesson uses exact BigDecimal USD → long cents conversion, maps approved/declined statuses, distinguishes timeouts with unknown outcomes, and warns that retrying payments can create duplicate transactions.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Hợp đồng Target và ánh xạ SDK
+    ### Target Contracts and SDK Mapping
 
-    1. Target, Adapter, Adaptee và Client đảm nhận vai trò gì trong luồng CheckoutService → PaymentGateway → LegacyPaymentApi?
-    2. Vì sao 12.34 USD đổi thành 1234 cents bằng movePointRight(2).longValueExact() an toàn hơn dùng double và phép ép long?
-    3. Khi legacy trả mã "00" hoặc "05", Adapter cần chuyển thành PaymentReceipt có ý nghĩa nghiệp vụ như thế nào?
+    1. What roles do Target, Adapter, Adaptee, and Client play in the CheckoutService → PaymentGateway → LegacyPaymentApi flow?
+    2. Why is converting 12.34 USD to 1234 cents with movePointRight(2).longValueExact() safer than using double and casting to long?
+    3. When the legacy system returns code "00" or "05", how should Adapter translate it into a PaymentReceipt with business meaning?
 
-    ### Lỗi và thiết kế tích hợp
+    ### Failures and Integration Design
 
-    1. Vì sao timeout thanh toán không được tự coi là DECLINED hay tự retry vô điều kiện?
-    2. Object Adapter dùng composition khác Class Adapter kế thừa ở khả năng thay SDK và dùng fake cho test ra sao?
-    3. Adapter khác Facade và Decorator ở ý định gì, và những trường hợp pending/response lỗi cần hợp đồng gì?
+    1. Why must a payment timeout not automatically be treated as DECLINED or retried unconditionally?
+    2. How does an Object Adapter using composition differ from an inheritance-based Class Adapter in swapping SDKs and testing with fakes?
+    3. How does Adapter differ in intent from Facade and Decorator, and what contracts are needed for pending outcomes and erroneous responses?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Vẽ luồng chuyển đổi | Mô tả Target PaymentGateway, Adaptee SDK và chuyển đổi dữ liệu/trạng thái trong LegacyPaymentAdapter. |
-    | Kiểm tra tính chính xác tiền | Dự đoán kết quả 12.34 USD→1234 cents và từ chối số không biểu diễn nguyên cent. |
-    | Phân biệt lỗi | Thiết kế kết quả approved/declined/unknown khi SDK trả mã hoặc timeout. |
-    | Giảm phụ thuộc vendor | Xác định vì sao CheckoutService chỉ nên biết PaymentGateway chứ không nhận LegacyReply. |
-    | Xác minh tích hợp | Thiết kế fake LegacyPaymentApi và test mapping, lỗi, timeout, idempotency/reconciliation. |
+    | Diagram the conversion flow | Describe Target PaymentGateway, the SDK Adaptee, and data/status conversion in LegacyPaymentAdapter. |
+    | Verify monetary accuracy | Predict the 12.34 USD→1234 cents conversion and reject amounts that cannot be represented as whole cents. |
+    | Distinguish failures | Design approved/declined/unknown outcomes for SDK response codes and timeouts. |
+    | Reduce vendor coupling | Explain why CheckoutService should depend on PaymentGateway rather than receiving LegacyReply. |
+    | Verify integration | Design a fake LegacyPaymentApi and test mappings, failures, timeouts, idempotency, and reconciliation. |
 - id: design-patterns-006
-  title: Decorator và bổ sung hành vi
+  title: Decorator and Adding Behavior
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Decorator và bổ sung hành vi**
+    **Decorator and Adding Behavior**
 
-    Khám phá cách một MessageChannel bọc một MessageChannel khác cùng hợp đồng để thêm prefix, giới hạn chiều dài, đếm lời gọi mà không sửa ConsoleChannel. Bài nhấn mạnh thứ tự lớp bọc, định nghĩa lần gửi thành công, exception và lựa chọn decorator so với proxy, inheritance hoặc một helper đơn giản.
+    Explore how one MessageChannel can wrap another under the same contract to add prefixes, length limits, and call counts without modifying ConsoleChannel. The lesson emphasizes wrapper order, the definition of a successful send, exceptions, and choosing decorators versus proxies, inheritance, or simple helpers.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Cấu trúc và composition
+    ### Structure and Composition
 
-    1. Component, Concrete Component, base Decorator và Concrete Decorator được xác định ra sao trong MessageChannel?
-    2. Một PrefixDecorator hoặc CountingDecorator có thể giữ cùng interface và delegate thao tác send() như thế nào?
-    3. Vì sao BufferedInputStream bọc InputStream là ví dụ rõ về bổ sung hành vi mà client vẫn dùng read()?
+    1. How are Component, Concrete Component, base Decorator, and Concrete Decorator identified in the MessageChannel design?
+    2. How can PrefixDecorator or CountingDecorator retain the same interface and delegate send()?
+    3. Why is BufferedInputStream wrapping InputStream a clear example of adding behavior while clients still call read()?
 
-    ### Thứ tự, contract và giới hạn
+    ### Order, Contracts, and Limitations
 
-    1. Khi đặt PrefixDecorator trước hay sau LengthLimitDecorator giới hạn 12 code points, vì sao có chuỗi được chấp nhận dù kết quả vượt giới hạn?
-    2. CountingDecorator tăng bộ đếm sau khi delegate trả về bình thường thì đang đếm điều gì, và không chứng minh điều gì về giao hàng?
-    3. Vì sao AtomicInteger không tự khiến toàn bộ decorator chain thread-safe, và khi nào không đáng tạo nhiều wrapper?
+    1. When PrefixDecorator is placed before or after LengthLimitDecorator with a 12-code-point limit, why can some strings be accepted even when the result exceeds that limit?
+    2. When CountingDecorator increments its counter only after the delegate returns normally, what does it count, and what does that not prove about delivery?
+    3. Why doesn't AtomicInteger automatically make an entire decorator chain thread-safe, and when are multiple wrappers not worth creating?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Đọc cấu trúc bọc | Chỉ ra delegate của từng MessageChannel và giữ nguyên contract send() qua các lớp wrapper. |
-    | Dự đoán thứ tự | Mô phỏng hai thứ tự Prefix/LengthLimit để xác định độ dài thông điệp được kiểm tra. |
-    | Kiểm thử riêng từng lớp | Tạo fake channel và quan sát delegate, prefix, lỗi giới hạn và số lần đếm sau success. |
-    | Phân biệt pattern | Giải thích Decorator khác Adapter/Proxy/inheritance ở mục tiêu bổ sung hành vi cùng interface. |
-    | Đánh giá chi phí | Chọn giữ helper hoặc ít wrapper khi chain làm call path khó theo dõi và phụ thuộc thứ tự. |
+    | Read wrapper structures | Identify each MessageChannel delegate and preserve the send() contract across wrappers. |
+    | Predict ordering effects | Simulate both Prefix/LengthLimit orders to identify which message length is checked. |
+    | Test each layer independently | Create a fake channel and observe delegation, prefixes, length-limit failures, and the count after success. |
+    | Distinguish patterns | Explain how Decorator differs from Adapter, Proxy, and inheritance in adding behavior under the same interface. |
+    | Evaluate costs | Prefer a helper or fewer wrappers when a chain makes call paths hard to trace and order-dependent. |
 - id: design-patterns-007
-  title: Facade và đơn giản hóa cách sử dụng
+  title: Facade and Simplifying Client Usage
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Facade và đơn giản hóa cách sử dụng**
+    **Facade and Simplifying Client Usage**
 
-    Học cách tạo một điểm vào cấp cao cho use case báo giá, thay vì để nhiều client tự ghép Catalog, Inventory, Discount và Shipping. Bài giải thích Facade ẩn trình tự, không làm mất độ phức tạp bên dưới, không tự tạo transaction phân tán hay giảm latency, và cần test kết quả cùng nhánh lỗi.
+    Learn to create a high-level entry point for the quoting use case instead of having multiple clients combine Catalog, Inventory, Discount, and Shipping themselves. The lesson explains that Facade hides the sequence but does not eliminate underlying complexity, automatically provide distributed transactions, or reduce latency, and that both results and failure paths require testing.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Ranh giới Facade
+    ### Facade Boundaries
 
-    1. Tại sao controller tự gọi lần lượt Catalog, Inventory, Discount và Shipping dẫn đến coupling và lặp trình tự?
-    2. Facade quote(sku, quantity, member) có thể ẩn bước nào mà vẫn giữ riêng trách nhiệm Catalog/Inventory?
-    3. Nếu phí vận chuyển được miễn khi tiền hàng sau giảm đạt ngưỡng, vì sao thứ tự tính toán phải nằm trong hợp đồng?
+    1. Why does a controller calling Catalog, Inventory, Discount, and Shipping in sequence cause coupling and repeated orchestration?
+    2. Which steps can Facade quote(sku, quantity, member) hide while keeping Catalog/Inventory responsibilities separate?
+    3. If shipping is free when the post-discount merchandise total reaches a threshold, why must the calculation order be part of the contract?
 
-    ### Giới hạn và kiểm chứng
+    ### Limitations and Verification
 
-    1. Vì sao quote kiểm tra tồn kho chưa phải reserve/order và không tự bảo đảm inventory lúc đặt hàng thật?
-    2. Facade khác Adapter, Decorator và application service ở mục đích/boundary thế nào?
-    3. Lợi ích đơn giản hóa API có thể đánh đổi bằng God Facade, latency và sai lệch transaction ra sao?
+    1. Why is a quote that checks inventory not the same as a reservation/order and unable to guarantee inventory availability at actual order placement?
+    2. How does Facade differ from Adapter, Decorator, and an application service in purpose and boundaries?
+    3. How can the benefits of a simplified API be offset by a God Facade, latency, and transaction inconsistencies?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Thiết kế API use case | Đề xuất CheckoutFacade.quote nhận input đủ dùng và trả Quote thay vì lộ API subsystem. |
-    | Phân tích chuỗi bước | Chỉ ra thứ tự tìm sản phẩm, xác minh tồn, giảm giá rồi tính shipping trong flow báo giá. |
-    | Phân biệt ranh giới | Giải thích quote không cấp quyền giữ hàng hoặc giải quyết consistency khi nhiều request cạnh tranh. |
-    | So sánh pattern | Đặt Facade cạnh Adapter/Decorator và nêu khác biệt về ý định đơn giản hóa API. |
-    | Kiểm thử kết quả | Nêu test thành viên, nonmember, SKU sai, hết hàng, discount và phí giao đúng. |
+    | Design use-case APIs | Propose CheckoutFacade.quote that accepts sufficient input and returns Quote without exposing subsystem APIs. |
+    | Analyze step sequences | Trace product lookup, inventory verification, discounts, and shipping calculations in the quoting flow. |
+    | Distinguish boundaries | Explain why quoting neither reserves stock nor resolves consistency issues among competing requests. |
+    | Compare patterns | Compare Facade with Adapter/Decorator and explain its distinct intent to simplify APIs. |
+    | Test results | Describe tests for members, nonmembers, invalid SKUs, out-of-stock products, discounts, and correct shipping fees. |
 - id: design-patterns-008
-  title: Strategy và thay thế thuật toán
+  title: Strategy and Interchangeable Algorithms
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Strategy và thay thế thuật toán**
+    **Strategy and Interchangeable Algorithms**
 
-    Thực hành thay thuật toán tính chiết khấu bằng đối tượng cùng hợp đồng DiscountStrategy được Checkout sử dụng qua composition. Bài đi từ nhánh điều kiện, interface, concrete strategies và lambda đến contract test, lựa chọn tại composition root, BigDecimal có giới hạn hai chữ số và kiểm soát lựa chọn strategy từ dữ liệu người dùng.
+    Practice replacing discount-calculation algorithms with objects sharing the DiscountStrategy contract, used by Checkout through composition. The lesson progresses from conditional branches, interfaces, concrete strategies, and lambdas to contract tests, selection at the composition root, a two-decimal-place limit for BigDecimal, and controlled strategy selection from user input.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Vai trò và điểm thay đổi
+    ### Roles and Variation Points
 
-    1. Context, Strategy interface và Concrete Strategies phối hợp thế nào để Checkout không phụ thuộc từng chính sách giảm giá?
-    2. Vì sao composition giúp chọn DiscountStrategy khác nhau khi tạo Checkout hoặc chuyển đổi lúc chạy?
-    3. Lambda có thể đóng vai trò Strategy khi nào, và trường hợp thuật toán phức tạp nào nên tạo class riêng?
+    1. How do Context, the Strategy interface, and Concrete Strategies collaborate so Checkout does not depend on each individual discount policy?
+    2. Why does composition allow different DiscountStrategy implementations to be selected when Checkout is created or switched at runtime?
+    3. When can a lambda serve as a Strategy, and which complex algorithms warrant a separate class?
 
-    ### Hợp đồng và lựa chọn an toàn
+    ### Contracts and Safe Selection
 
-    1. DiscountStrategy cần cam kết những điều kiện nào về subtotal, discount và BigDecimal scale?
-    2. Vì sao đổi strategy qua setter trong singleton nhiều request có thể tạo race condition giữa đơn hàng?
-    3. Khi policy key lấy từ HTTP, vì sao chỉ nên ánh xạ sang registry strategy đã đăng ký thay vì phản chiếu class tùy ý?
+    1. Which conditions regarding subtotal, discount, and BigDecimal scale must DiscountStrategy guarantee?
+    2. Why can switching strategies through a setter on a singleton serving many requests cause races between orders?
+    3. When a policy key comes from HTTP, why should it be mapped only to a registry of registered strategies instead of using reflection on arbitrary classes?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Dựng cấu trúc | Vẽ Checkout → DiscountStrategy → các concrete strategies và mô tả chiều dependency. |
-    | Thay biến thể | Mô phỏng việc lắp policy khác vào Context không cần sửa thuật toán checkout. |
-    | Kiểm tra contract | Thiết kế contract tests bảo đảm discount không âm, không vượt subtotal và biểu diễn đúng hai chữ số. |
-    | Sử dụng lambda hợp lý | Giải thích một functional interface Strategy dùng lambda được khi xử lý ngắn. |
-    | Đánh giá concurrency/config | Lựa chọn strategy bất biến theo request và registry hữu hạn khi đầu vào bên ngoài quyết định biến thể. |
+    | Build the structure | Diagram Checkout → DiscountStrategy → concrete strategies and describe dependency direction. |
+    | Swap variants | Demonstrate injecting a different policy into Context without changing checkout algorithms. |
+    | Check contracts | Design contract tests ensuring discounts are nonnegative, do not exceed subtotals, and have the correct two-decimal-place representation. |
+    | Use lambdas appropriately | Explain when a functional-interface Strategy can be implemented with a lambda for short operations. |
+    | Evaluate concurrency and configuration | Choose immutable per-request strategies and a bounded registry when external input determines the variant. |
 - id: design-patterns-009
-  title: State và hành vi theo trạng thái
+  title: State and State-Dependent Behavior
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **State và hành vi theo trạng thái**
+    **State and State-Dependent Behavior**
 
-    Đưa vòng đời đơn hàng từ các nhánh kiểm tra rải rác vào State objects có quy tắc chuyển trạng thái rõ. Bài dạy Context Order, OrderState và các state CREATED/PAID/SHIPPED/CANCELLED, test ma trận trạng thái × thao tác, hạn chế public setStatus và ranh giới lưu trạng thái, transaction, xử lý đồng thời.
+    Move order lifecycle behavior from scattered conditional branches into State objects with explicit transition rules. The lesson covers Context Order, OrderState, CREATED/PAID/SHIPPED/CANCELLED states, testing a state × operation matrix, limiting public setStatus access, and the boundaries of state persistence, transactions, and concurrency.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Trạng thái, lệnh và phép chuyển
+    ### States, Commands, and Transitions
 
-    1. CREATED, PAID, SHIPPED, CANCELLED khác các thao tác confirmPayment(), markShipped(), cancel() và guard ở đâu?
-    2. Context Order ủy quyền cho OrderState như thế nào và vì sao private state tốt hơn public setStatus()?
-    3. Điều gì xảy ra khi gọi cancel() từ PAID hoặc markShipped() từ CREATED trong ví dụ OrderStateDemo?
+    1. How do CREATED, PAID, SHIPPED, and CANCELLED states differ from confirmPayment(), markShipped(), cancel(), and guards?
+    2. How does Context Order delegate to OrderState, and why is private state preferable to public setStatus()?
+    3. What happens when cancel() is called from PAID or markShipped() from CREATED in OrderStateDemo?
 
-    ### Chọn State và giữ đúng nghiệp vụ
+    ### Choosing State and Preserving Business Rules
 
-    1. State khác Strategy ở nguồn quyết định đổi hành vi và việc chuyển trạng thái như thế nào?
-    2. Khi nào enum + switch ngắn là đủ, khi nào nhiều quy tắc/transition khiến State Pattern đáng dùng?
-    3. Hai request confirm/cancel đồng thời hoặc phát event trước DB commit có thể gây sai lệch nào; test matrix cần bao phủ gì?
+    1. How does State differ from Strategy in what drives behavior changes and in state transitions?
+    2. When is a short enum + switch sufficient, and when do numerous rules/transitions make State Pattern worthwhile?
+    3. What inconsistencies can concurrent confirm/cancel requests or publishing events before DB commit cause, and what must the test matrix cover?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Mô hình hóa state machine | Vẽ bảng CREATED/PAID/SHIPPED/CANCELLED với từng thao tác hợp lệ hay bị từ chối. |
-    | Thiết kế ranh giới | Dùng command methods của Order và giấu việc chuyển state trong Context/State hợp lệ. |
-    | Dự đoán kết quả | Theo dõi CREATED→PAID→SHIPPED và lỗi thao tác không hợp lệ mà không tự ý đổi trạng thái. |
-    | Kiểm tra vòng đời | Thiết kế test các transition hợp lệ và tất cả nhánh invalid trong ma trận. |
-    | Đánh giá tính nhất quán | Giải thích nhu cầu optimistic locking, transaction/outbox khi state gắn dữ liệu bền và event. |
+    | Model state machines | Draw a CREATED/PAID/SHIPPED/CANCELLED table showing valid and rejected operations. |
+    | Design boundaries | Use Order command methods and keep state transitions inside valid Context/State logic. |
+    | Predict outcomes | Trace CREATED→PAID→SHIPPED and invalid-operation failures without changing state arbitrarily. |
+    | Test lifecycles | Design tests for valid transitions and every invalid branch in the matrix. |
+    | Evaluate consistency | Explain the need for optimistic locking and transaction/outbox mechanisms when states involve persistent data and events. |
 - id: design-patterns-010
-  title: Observer và thông báo thay đổi
+  title: Observer and Change Notifications
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Observer và thông báo thay đổi**
+    **Observer and Change Notifications**
 
-    Bài học mô hình hóa quan hệ Publisher–Listener qua OrderStatusChanged bất biến, subscribe/unsubscribe và nhiều phản ứng phụ khi đơn đổi trạng thái. Người học nắm thời điểm phát, không phát khi không đổi, xử lý lỗi listener, memory leak, reentrancy, đồng bộ vs async và ranh giới transaction/outbox khi mở rộng sang message broker.
+    This lesson models Publisher–Listener relationships using immutable OrderStatusChanged events, subscribe/unsubscribe operations, and multiple secondary reactions to order-state changes. Learners examine publication timing, avoiding events when nothing changes, listener failures, memory leaks, reentrancy, synchronous versus asynchronous dispatch, and transaction/outbox boundaries when extending to a message broker.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Luồng publish và quan hệ listener
+    ### Publication Flow and Listener Relationships
 
-    1. Subject, Listener, Event payload và Subscription đóng vai trò gì khi OrderService chuyển CREATED→PAID?
-    2. Vì sao nên mô tả oldStatus/newStatus trong event và không phát khi trạng thái giữ nguyên?
-    3. Push model khác Pull model ở coupling và nguy cơ đọc trạng thái đã thay đổi thêm lần nữa như thế nào?
+    1. What roles do Subject, Listener, Event payload, and Subscription play when OrderService transitions from CREATED→PAID?
+    2. Why should an event include oldStatus/newStatus and not be published when the state remains unchanged?
+    3. How do Push and Pull models differ in coupling and the risk of reading state that has since changed again?
 
-    ### Lỗi, vòng đời và dữ liệu bền
+    ### Failures, Lifecycles, and Persistent Data
 
-    1. Vì sao quên unsubscribe listener được Subject giữ bằng strong reference có thể gây memory leak?
-    2. Tại sao Observer callback không mặc định chạy async và thứ tự dispatch/reentrancy có thể khiến xử lý sự kiện sai?
-    3. Vì sao phát event trước commit DB hoặc retry qua broker cần outbox, eventId và xử lý idempotent?
+    1. Why can failing to unsubscribe a listener retained by Subject through a strong reference cause a memory leak?
+    2. Why aren't Observer callbacks asynchronous by default, and how can dispatch ordering and reentrancy cause incorrect event handling?
+    3. Why do publishing before DB commit or retrying through a broker require an outbox, eventId, and idempotent handling?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Thiết kế event contract | Đề xuất OrderStatusChanged chứa mã đơn, old/new status và data tối thiểu, không phát no-op. |
-    | Quản lý đăng ký | Mô tả subscribe trả handle rồi close/unsubscribe để tránh callback trùng và giữ tham chiếu lâu. |
-    | Dự đoán dispatch | Phân tích thứ tự callback, lỗi listener, reentrant emit và ảnh hưởng của handler chậm. |
-    | Phân biệt event flow | So sánh Observer đồng bộ trong JVM, event bus và pub/sub qua broker. |
-    | Kiểm tra consistency | Đề xuất contract test và giải thích thời điểm publish, outbox, duplicate eventId và idempotent consumer. |
+    | Design event contracts | Propose OrderStatusChanged carrying order IDs, old/new statuses, and minimal data, with no publication for no-op changes. |
+    | Manage subscriptions | Explain how subscribe returns a handle for close/unsubscribe to prevent duplicate callbacks and long-lived references. |
+    | Predict dispatch | Analyze callback order, listener errors, reentrant emission, and the effects of slow handlers. |
+    | Distinguish event flows | Compare synchronous in-JVM Observer, event buses, and broker-based pub/sub. |
+    | Check consistency | Propose contract tests and explain publication timing, outbox, duplicate eventId values, and idempotent consumers. |
 - id: design-patterns-011
-  title: Template Method và khung thuật toán
+  title: Template Method and Algorithm Skeletons
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Template Method và khung thuật toán**
+    **Template Method and Algorithm Skeletons**
 
-    Phân tích khung generate() cố định ở SalesReportTemplate và các bước header(), row(), footer() biến thiên cho báo cáo Text/Markdown. Bài dạy phân biệt phương thức final, primitive operation, hook tùy chọn, kiểm tra thứ tự và rủi ro kế thừa khi gọi override trong constructor hoặc tạo quá nhiều điểm mở rộng.
+    Analyze the fixed generate() skeleton in SalesReportTemplate and the variable header(), row(), and footer() steps for Text/Markdown reports. The lesson distinguishes final methods, primitive operations, and optional hooks, and covers step-order checks and inheritance risks when calling overrides from constructors or introducing too many extension points.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Bước bất biến và bước có thể thay
+    ### Fixed and Customizable Steps
 
-    1. Template Method giữ thứ tự validate→calculateTotal→render như thế nào khi các subclass cung cấp định dạng riêng?
-    2. Bước chung, protected abstract primitive operation và hook tùy chọn khác nhau về nhiệm vụ và cách override?
-    3. Vì sao generate() có thể khai báo final để subclass không viết lại cả workflow?
+    1. How does Template Method preserve validate→calculateTotal→render ordering when subclasses supply different formats?
+    2. How do shared steps, protected abstract primitive operations, and optional hooks differ in responsibilities and overriding?
+    3. Why can generate() be declared final to prevent subclasses from rewriting the entire workflow?
 
-    ### Giới hạn kế thừa và kiểm chứng
+    ### Inheritance Limitations and Verification
 
-    1. Vì sao gọi configure() overridable trong constructor superclass có thể gặp field của subclass chưa được khởi tạo?
-    2. Khi có nhiều trục thay đổi như format, ngôn ngữ, kênh xuất, vì sao Strategy/composition có thể giảm bùng nổ subclass?
-    3. Contract tests nào chứng minh thứ tự bước, hook mặc định, tổng doanh thu và dữ liệu đầu vào không bị thay đổi?
+    1. Why can calling overridable configure() from a superclass constructor encounter uninitialized subclass fields?
+    2. With multiple variation dimensions such as format, language, and output channel, why can Strategy/composition reduce subclass proliferation?
+    3. Which contract tests verify step order, default hooks, total revenue, and unchanged input data?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Nhận diện khung thuật toán | Xác định method generate() và các bước cố định/abstract/hook của SalesReportTemplate. |
-    | Dự đoán dispatch | Giải thích cách Text và Markdown subclass ghi đè format nhưng không thay thứ tự tổng thể. |
-    | Bảo vệ invariant | Đề xuất final template, dữ liệu bất biến và tránh gọi hook từ constructor chưa hoàn tất. |
-    | So sánh cơ chế | Đối chiếu Template Method inheritance với Strategy composition và Factory Method điểm tạo object. |
-    | Kiểm thử workflow | Nêu test thứ tự các bước và kết quả của subclass có hoặc không có optional hook. |
+    | Identify algorithm skeletons | Identify generate() and the fixed, abstract, and hook steps in SalesReportTemplate. |
+    | Predict dispatch | Explain how Text and Markdown subclasses override formatting without changing the overall sequence. |
+    | Protect invariants | Propose a final template, immutable data, and avoidance of hook calls from incomplete constructors. |
+    | Compare mechanisms | Contrast Template Method inheritance with Strategy composition and Factory Method creation points. |
+    | Test workflows | Describe tests for step order and outcomes of subclasses with and without optional hooks. |
 - id: design-patterns-012
-  title: Command và đóng gói yêu cầu
+  title: Command and Encapsulating Requests
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Command và đóng gói yêu cầu**
+    **Command and Encapsulating Requests**
 
-    Hiểu cách biến một yêu cầu thành object để tách nguồn gọi (UI, phím tắt, scheduler) khỏi TaskBoard thực hiện. Ví dụ AddTaskCommand, CompleteTaskCommand và CommandManager làm rõ Receiver/Invoker, lưu trạng thái trước khi thay đổi, undo/redo stacks, xử lý thất bại và giới hạn lệnh có hiệu ứng ngoài tiến trình.
+    Understand how turning a request into an object decouples the caller (UI, keyboard shortcut, or scheduler) from the executing TaskBoard. Examples using AddTaskCommand, CompleteTaskCommand, and CommandManager clarify Receiver/Invoker roles, saving state before changes, undo/redo stacks, failure handling, and the limitations of commands with effects outside the process.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Vai trò và quản lý lệnh
+    ### Roles and Command Management
 
-    1. Command, Concrete Command, Receiver và Invoker khác nhau thế nào trong TaskBoard và CommandManager?
-    2. Vì sao AddTaskCommand cần nhớ mã công việc đã thêm, còn CompleteTaskCommand phải lưu giá trị done trước đó?
-    3. UndoStack và RedoStack cần thay đổi tại thời điểm nào để thao tác lỗi không làm mất lịch sử?
+    1. How do Command, Concrete Command, Receiver, and Invoker differ in TaskBoard and CommandManager?
+    2. Why must AddTaskCommand remember the added task's ID while CompleteTaskCommand saves its previous done value?
+    3. When must UndoStack and RedoStack change so a failed operation does not destroy history?
 
-    ### Tính đúng đắn và ranh giới
+    ### Correctness and Boundaries
 
-    1. Undo một thao tác gửi email hay thanh toán thật khác với hoàn tác field trong bộ nhớ như thế nào?
-    2. Command cần lưu tham số, trạng thái và version nào để replay/redo không gây tác dụng phụ sai khi Receiver đã đổi?
-    3. Khi nào Runnable/lambda là đủ và khi nào command object có identity, history, queue hoặc retry thực sự tạo giá trị?
+    1. How does undoing a real email or payment operation differ from reverting an in-memory field?
+    2. Which parameters, state, and versions must a Command store so replay/redo does not cause incorrect side effects after its Receiver changes?
+    3. When is Runnable/lambda sufficient, and when do command objects with identity, history, queues, or retries add real value?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Phân biệt vai trò | Vẽ luồng Invoker→Command→Receiver và giải thích UI không giữ business logic. |
-    | Mô phỏng undo/redo | Theo dõi AddTask và CompleteTask để khôi phục đúng trạng thái trước thao tác. |
-    | Quản lý lịch sử | Phân tích khi nào push/pop undo/redo stack sau khi execute, undo hoặc redo thành công. |
-    | Giới hạn hiệu ứng phụ | Giải thích vì sao network command cần idempotency, transaction hoặc compensation, không thể undo bằng cách đảo field. |
-    | Đánh giá pattern | Chọn Command hay Runnable/lambda theo yêu cầu lịch sử, audit, xếp hàng và chi phí lớp. |
+    | Distinguish roles | Diagram the Invoker→Command→Receiver flow and explain why UI code does not own business logic. |
+    | Simulate undo/redo | Trace AddTask and CompleteTask to restore the exact state preceding an operation. |
+    | Manage history | Analyze when to push/pop undo/redo stacks after successful execute, undo, or redo operations. |
+    | Limit side effects | Explain why network commands need idempotency, transactions, or compensation and cannot be undone merely by reversing fields. |
+    | Evaluate patterns | Choose Command or Runnable/lambda based on history, auditing, queueing, and class-cost requirements. |
 - id: design-patterns-013
-  title: Khi mẫu thiết kế làm hệ thống phức tạp hơn cần thiết
+  title: When Design Patterns Add Unnecessary Complexity
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Khi mẫu thiết kế làm hệ thống phức tạp hơn cần thiết**
+    **When Design Patterns Add Unnecessary Complexity**
 
-    Củng cố cách chống abstraction quá sớm qua ví dụ ba mức phí giao hàng cố định. Bài so sánh enum đơn giản với Strategy+Factory+Registry, chỉ rõ các chi phí nhận thức, kiểm thử, DI và debug, đồng thời nêu dấu hiệu nhu cầu thay đổi thật, YAGNI/KISS/DRY, giữ port hữu ích và quy trình giảm lớp an toàn theo test hành vi.
+    Reinforce how to avoid premature abstraction through an example with three fixed shipping fees. The lesson compares a simple enum with Strategy+Factory+Registry, identifies cognitive, testing, DI, and debugging costs, and describes evidence of genuine change requirements, YAGNI/KISS/DRY, preserving useful ports, and safely reducing classes through behavior-based tests.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Đánh giá giá trị của abstraction
+    ### Evaluating the Value of Abstractions
 
-    1. Vì sao ba mức phí cố định STANDARD/EXPRESS/PRIORITY chưa cần Strategy, Factory và Facade chỉ chuyển tiếp?
-    2. Những chi phí nhận thức, điều hướng, bảo trì và kiểm thử nào xuất hiện khi một request phải đi qua nhiều lớp bọc?
-    3. YAGNI, KISS, DRY và Rule of Three gợi ý điều gì khi chưa có nhiều biến thể thực tế?
+    1. Why don't three fixed STANDARD/EXPRESS/PRIORITY fees yet justify Strategy, Factory, and a pass-through Facade?
+    2. What cognitive, navigation, maintenance, and testing costs arise when one request must pass through many wrapper layers?
+    3. What do YAGNI, KISS, DRY, and the Rule of Three suggest when there are not yet many real variants?
 
-    ### Thay đổi yêu cầu và refactor an toàn
+    ### Requirement Changes and Safe Refactoring
 
-    1. Khi EXPRESS bắt đầu tính thêm 8000 VND/kg và nhiều đội làm thuật toán, những bằng chứng nào ủng hộ Strategy?
-    2. Vì sao một interface chỉ có một implementation như PaymentGateway vẫn có thể là ranh giới hạ tầng cần giữ?
-    3. Khi xóa God Factory hoặc các lớp chỉ forward, cần những contract tests/compatibility checks nào để không phá khách hàng?
+    1. When EXPRESS starts charging an additional 8000 VND/kg and multiple teams work on algorithms, what evidence supports using Strategy?
+    2. Why can an interface with just one implementation, such as PaymentGateway, still be a necessary infrastructure boundary?
+    3. When removing a God Factory or pass-through classes, which contract tests and compatibility checks are needed to avoid breaking clients?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Đánh giá overengineering | Chỉ ra lớp Factory/Strategy/Facade thừa trong sơ đồ báo giá có ba hằng phí. |
-    | Thiết kế đủ nhu cầu | Đề xuất enum hoặc cấu hình đơn giản cho bảng phí ổn định, có validation và test. |
-    | Nhận diện điểm tách | Giải thích khi biến thể trở thành thuật toán độc lập thì Strategy bắt đầu có lợi hơn chi phí. |
-    | Giữ boundary hữu ích | Phân biệt adapter/port PaymentGateway bảo vệ miền nghiệp vụ với interface chỉ forward không có giá trị. |
-    | Lập kế hoạch refactor | Thiết kế bước giảm indirection có test giữ output, lỗi, side effect, API và concurrency. |
+    | Evaluate overengineering | Identify unnecessary Factory/Strategy/Facade classes in a quoting design with three fixed fees. |
+    | Design only what is needed | Propose an enum or simple configuration for a stable fee table, with validation and tests. |
+    | Recognize when to separate behavior | Explain when variants become independent algorithms so Strategy's benefits outweigh its costs. |
+    | Preserve useful boundaries | Distinguish a PaymentGateway adapter/port that protects the business domain from a valueless pass-through interface. |
+    | Plan refactoring | Design steps to reduce indirection with tests preserving outputs, errors, side effects, APIs, and concurrency. |

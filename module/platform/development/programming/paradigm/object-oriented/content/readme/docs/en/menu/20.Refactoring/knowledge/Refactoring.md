@@ -1,108 +1,108 @@
 <a id="back-to-top"></a>
 
-# Tái cấu trúc
+# Refactoring
 
 ## Menu
-- [Nhận diện dấu hiệu cần cải thiện thiết kế](#refactoring-001)
-- [Đổi tên để làm rõ ý định](#refactoring-002)
-- [Tách phương thức và tách lớp](#refactoring-003)
-- [Di chuyển hành vi về đối tượng chịu trách nhiệm](#refactoring-004)
-- [Đóng gói trường dữ liệu và cấu trúc nội bộ](#refactoring-005)
-- [Thay điều kiện theo loại bằng đa hình](#refactoring-006)
-- [Thay kế thừa bằng kết hợp](#refactoring-007)
-- [Gộp hoặc loại bỏ trừu tượng không cần thiết](#refactoring-008)
-- [Cải thiện thiết kế từng bước với kiểm thử bảo vệ](#refactoring-009)
+- [Recognizing Signs That Design Needs Improvement](#refactoring-001)
+- [Renaming to Clarify Intent](#refactoring-002)
+- [Extracting Methods and Classes](#refactoring-003)
+- [Moving Behavior to the Responsible Object](#refactoring-004)
+- [Encapsulating Fields and Internal Structures](#refactoring-005)
+- [Replacing Type-Based Conditionals with Polymorphism](#refactoring-006)
+- [Replacing Inheritance with Composition](#refactoring-007)
+- [Consolidating or Removing Unnecessary Abstractions](#refactoring-008)
+- [Improving Design Incrementally with Protective Tests](#refactoring-009)
 
-## <a id="refactoring-001">Nhận diện dấu hiệu cần cải thiện thiết kế</a>
+## <a id="refactoring-001">Recognizing Signs That Design Needs Improvement</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Nhận diện dấu hiệu cần cải thiện thiết kế OOP
+# Recognizing Signs That OOP Design Needs Improvement
 
-> **Chủ đề:** Tái cấu trúc (refactoring) — nhận ra lúc thiết kế bắt đầu gây khó khăn, xác định nguyên nhân và chọn bước cải thiện nhỏ, có kiểm chứng.
+> **Topic:** Refactoring — recognizing when design starts causing difficulties, identifying underlying causes, and choosing small, verifiable improvements.
 
-Một chương trình Java **chạy đúng** chưa chắc đã **dễ thay đổi**. Dấu hiệu cần cải thiện thường xuất hiện khi thêm một quy tắc nhỏ mà phải sửa nhiều nơi, một lớp phụ trách nhiều việc, cùng một điều kiện nghiệp vụ bị sao chép, hoặc kiểm thử một chức năng đơn giản lại cần khởi tạo hàng loạt phụ thuộc.
+A Java program that **runs correctly** is not necessarily **easy to change**. Warning signs appear when adding one small rule requires edits in many places, one class handles unrelated concerns, a business condition is duplicated, or testing a simple feature requires constructing numerous dependencies.
 
-Các hiện tượng như vậy thường được gọi là **code smell**: tín hiệu gợi ý rằng cấu trúc mã có vấn đề đáng xem xét. **Code smell không tự động là lỗi** và không có quy tắc “cứ gặp là phải refactor”. Mục tiêu là đánh giá *tác động* của thiết kế đến sửa lỗi, mở rộng, hiểu mã và kiểm thử; sau đó cải thiện với chi phí hợp lý.
+Such symptoms are commonly called **code smells**: signals that a code structure may deserve investigation. **A code smell is not automatically a defect**, and there is no rule requiring every smell to be refactored. Instead, assess the design's *impact* on debugging, extension, comprehension, and testing, then improve it at a reasonable cost.
 
-## 1. Nhìn vào khó khăn khi thay đổi, không chỉ độ dài của mã
+## 1. Examine the Difficulty of Change, Not Just Code Length
 
-Hãy đặt câu hỏi thực tế:
+Ask practical questions:
 
-- Khi thêm một tính năng nhỏ, phải mở và chỉnh sửa bao nhiêu class? Các vị trí đó có cùng một lý do thay đổi không?
-- Khi sửa lỗi, điều kiện hay công thức nghiệp vụ có bị lặp ở nhiều nơi?
-- Có class nào vừa tính toán nghiệp vụ, vừa truy vấn dữ liệu, vừa định dạng giao diện, vừa gửi email không?
-- Một hàm có dễ đọc từ tên và mức trừu tượng của các bước không, hay cần theo dõi nhiều cờ, nhánh lồng nhau và biến tạm?
-- Test có thể tạo đối tượng một cách đơn giản, kiểm tra hành vi được không, hay phải mock nhiều chi tiết nội bộ?
-- Sau khi sửa một class, có thường xuyên phát sinh lỗi ở các class tưởng như không liên quan?
+- When adding a small feature, how many classes must be opened and modified? Do those edits share one reason to change?
+- When fixing a bug, are business conditions or formulas duplicated in several places?
+- Does a class perform business calculations, query data, format UI content, and send email?
+- Can a method be understood from its name and the abstraction level of its steps, or must readers track many flags, nested branches, and temporary variables?
+- Can tests easily construct objects and verify behavior, or must they mock numerous implementation details?
+- Does modifying one class frequently cause defects in seemingly unrelated classes?
 
-Những câu trả lời này hữu ích hơn việc chỉ đếm số dòng: một phương thức dài nhưng ổn định, diễn đạt tuyến tính có thể ít rủi ro hơn một phương thức ngắn có nhiều tác dụng phụ khó thấy.
+These answers are more useful than line counts alone: a long, stable method expressing a straightforward sequence may be less risky than a short method with hidden side effects.
 
-### Các dấu hiệu thường gặp
+### Common Warning Signs
 
-| Dấu hiệu (code smell) | Quan sát trong code Java | Nguy cơ thực tế | Hướng xem xét, chưa phải mệnh lệnh |
+| Code smell | Observation in Java code | Practical risk | Possible direction, not a mandate |
 |---|---|---|---|
-| **Long Method** | Một phương thức chứa nhiều bước, nhiều nhánh hoặc mức trừu tượng lẫn lộn | Khó đọc, khó test từng quy tắc | `Extract Method` để đặt tên cho các bước có ý nghĩa |
-| **Large Class / God Object** | Class nắm nhiều trách nhiệm không liên quan, nhiều field và nhóm method | Mỗi thay đổi gây ảnh hưởng diện rộng | Tách theo lý do thay đổi, tăng tính kết dính |
-| **Duplicate Code** | Cùng điều kiện/công thức nghiệp vụ xuất hiện ở nhiều nơi | Sửa thiếu một nơi dẫn đến sai lệch | Tập trung quy tắc chung; tránh trừu tượng hóa sự giống nhau tình cờ |
-| **Shotgun Surgery** | Một yêu cầu nhỏ bắt buộc sửa nhiều class | Thay đổi phân tán, khó review | Đưa logic liên quan về một đầu mối phù hợp |
-| **Divergent Change** | Một class liên tục sửa vì các lý do khác nhau | Phạm vi trách nhiệm mờ, rủi ro sửa chéo | Tách trách nhiệm theo các hướng biến đổi |
-| **Feature Envy** | Method của A liên tục truy cập dữ liệu/chi tiết của B để ra quyết định | Quy tắc đặt sai chỗ, kết dính thấp | Cân nhắc `Move Method` hoặc API giàu ngữ nghĩa trên B |
-| **Primitive Obsession** | `String`/`int`/`boolean` gánh nhiều quy tắc miền, “magic string” | Dễ nhầm đơn vị, trạng thái không hợp lệ | `enum`, record/value object hoặc kiểu dữ liệu miền |
-| **Long Parameter List / Data Clumps** | Nhiều hàm lặp cùng cụm tham số, nhiều cờ boolean | Gọi nhầm thứ tự, tăng chi phí thay đổi | Gom thành parameter object nếu thực sự là một khái niệm |
-| **Conditional Complexity** | `switch`/`if` nhiều nhánh theo loại đối tượng và lặp ở nhiều vị trí | Thêm loại mới phải sửa nhiều nơi | Polymorphism, Strategy, bảng quy tắc nếu phù hợp |
-| **Inappropriate Intimacy / Tight Coupling** | Một class biết sâu về dữ liệu/nội bộ của class khác, khởi tạo trực tiếp nhiều dependency | Test khó, thay implementation khó | Giảm coupling, inject dependency ở ranh giới hợp lý |
-| **Data Class / Anemic Model** | Object miền chỉ là getter/setter; quy tắc liên quan rải ở service | Bất biến khó được bảo vệ | Đưa *hành vi thuộc trách nhiệm miền* vào nơi phù hợp |
-| **Speculative Generality** | Interface, inheritance, plugin point chưa có nhu cầu thực tế | Quá nhiều lớp, khó định hướng | Xóa tầng trừu tượng không đem lại lợi ích rõ ràng |
-| **Comments as Deodorant** | Bình luận phải diễn giải các nhánh tối nghĩa | Ý định bị che bởi cấu trúc khó hiểu | Làm rõ tên gọi, phân rã logic; giữ comment về lý do |
-| **Mutable Shared State** | Nhiều object sửa cùng danh sách/cache dùng chung | Bug theo thứ tự chạy, race condition | Bất biến dữ liệu, quản lý ownership và concurrency |
+| **Long Method** | A method mixes many steps, branches, or abstraction levels | Difficult to read and test individual rules | Use `Extract Method` to name meaningful steps |
+| **Large Class / God Object** | A class owns unrelated responsibilities and many fields and method groups | Every change has a broad impact | Split by reasons to change; improve cohesion |
+| **Duplicate Code** | A business condition or formula appears in multiple places | Missing an update creates inconsistent behavior | Centralize genuinely shared rules; avoid abstracting coincidental similarities |
+| **Shotgun Surgery** | A small requirement forces edits across many classes | Scattered changes are difficult to review | Move related logic to an appropriate owner |
+| **Divergent Change** | A class repeatedly changes for unrelated reasons | Unclear responsibilities and cross-impact risks | Separate responsibilities along distinct change axes |
+| **Feature Envy** | A method on A repeatedly inspects B's data/details to make decisions | Rules live in the wrong place; low cohesion | Consider `Move Method` or a meaningful API on B |
+| **Primitive Obsession** | `String`/`int`/`boolean` carry many domain rules and "magic strings" | Unit confusion and invalid states | Use `enum`, records/value objects, or domain types |
+| **Long Parameter List / Data Clumps** | Repeated parameter groups and many boolean flags | Wrong argument order and expensive changes | Introduce a parameter object when the group represents one concept |
+| **Conditional Complexity** | Repeated `switch`/`if` branches based on object type | Each new type requires edits in many places | Consider polymorphism, Strategy, or rule tables |
+| **Inappropriate Intimacy / Tight Coupling** | A class knows another class's internals and directly constructs many dependencies | Testing and substitution are difficult | Reduce coupling; inject dependencies at meaningful boundaries |
+| **Data Class / Anemic Model** | Domain objects only expose getters/setters while associated rules live in services | Invariants are hard to enforce | Move *domain-owned behavior* to its appropriate owner |
+| **Speculative Generality** | Interfaces, inheritance, and plugin points lack a real need | Too many classes and poor navigability | Remove abstraction layers without clear benefits |
+| **Comments as Deodorant** | Comments must explain obscure branches | Intent is hidden behind confusing structure | Improve names and decompose logic; retain comments explaining why |
+| **Mutable Shared State** | Many objects mutate the same shared list/cache | Order-dependent bugs and race conditions | Prefer immutable data and explicit ownership/concurrency management |
 
-**Không dùng số dòng hoặc số class làm luật cứng.** Một class nhỏ nhưng chứa quy tắc mâu thuẫn vẫn có vấn đề. Ngược lại, chia một đoạn logic đơn giản thành 15 interface có thể khiến thiết kế tệ hơn.
+**Do not impose rigid line-count or class-count rules.** A small class with conflicting rules can still be problematic. Conversely, splitting simple logic across 15 interfaces may make the design worse.
 
-## 2. Phân biệt những dấu hiệu dễ nhầm
+## 2. Distinguishing Easily Confused Code Smells
 
-**Divergent Change** và **Shotgun Surgery** đều gây đau khi sửa code nhưng khác góc nhìn:
+**Divergent Change** and **Shotgun Surgery** both make code changes painful, but from different perspectives:
 
-- **Divergent Change:** *một class* phải sửa vì nhiều **lý do** khác nhau; ví dụ `OrderManager` cùng chịu ảnh hưởng của thay đổi chính sách giá, định dạng email và schema lưu trữ.
-- **Shotgun Surgery:** *một lý do thay đổi* buộc sửa **nhiều class**; ví dụ đổi ngưỡng miễn phí vận chuyển phải cập nhật `Cart`, `Checkout`, `Invoice`, `OrderPreview`.
+- **Divergent Change:** *One class* must change for several independent **reasons**; for example, `OrderManager` is affected by pricing policy, email-format, and storage-schema changes.
+- **Shotgun Surgery:** *One reason for change* forces edits in **many classes**; for example, changing the free-shipping threshold requires updates to `Cart`, `Checkout`, `Invoice`, and `OrderPreview`.
 
-Tương tự, **Duplicate Code** không có nghĩa mọi đoạn giống nhau phải gom lại. Hai quy tắc hiện tại trông giống nhau nhưng thuộc hai ngữ cảnh có vòng đời thay đổi độc lập có thể nên giữ riêng. Khi trừu tượng hóa, cần chứng minh **cùng một tri thức/nguyên tắc**, không chỉ cùng cú pháp.
+Likewise, **Duplicate Code** does not mean every similar snippet must be merged. Rules that look alike today but belong to contexts that change independently may be better kept separate. An abstraction should represent **shared knowledge or policy**, not merely shared syntax.
 
-**Long Method** khác **Complex Method**: dài vì ánh xạ nhiều bước tuần tự không nhất thiết khó hiểu; ngắn nhưng có nhiều tương tác trạng thái và side effect vẫn có thể phức tạp.
+**Long Method** differs from **Complex Method**: a method that describes many sequential steps is not necessarily hard to understand, while a short method involving state interactions and side effects may be complex.
 
-### Từ quan sát đến giả thuyết thiết kế
+### From Observation to a Design Hypothesis
 
-| Quan sát thực tế | Giả thuyết cần kiểm tra | Bằng chứng nên tìm |
+| Observation | Hypothesis to test | Evidence to seek |
 |---|---|---|
-| Sửa một quy tắc phải sửa 5 file | Quy tắc bị phân tán | Diff của các thay đổi trước, vị trí công thức trùng lặp |
-| Test một class phải mock 8 collaborator | Class gánh nhiều trách nhiệm/coupling cao | Constructor, lời gọi IO, setup trong test |
-| Người mới mất nhiều thời gian hiểu một method | Mức trừu tượng hoặc tên chưa rõ | Các nhánh lồng nhau, nhiều biến tạm, diễn giải trong review |
-| Có nhiều cờ `boolean` | Một hành vi bị điều khiển bởi nhiều chế độ | Những tổ hợp cờ, trường hợp bất hợp lệ và test thiếu |
-| Bug lặp tại nhiều màn hình | Cùng quy tắc bị cài khác nhau | Input và output gây bug, bản sao của quy tắc |
-| Tốc độ thay đổi giảm rõ rệt | Có điểm nóng thiết kế | Tần suất sửa, lỗi hồi quy, thời gian review, phạm vi diff |
+| Changing one rule requires editing 5 files | The rule is scattered | Previous diffs and duplicated formulas |
+| Testing one class requires 8 mocked collaborators | Too many responsibilities or high coupling | Constructors, I/O calls, and test setup |
+| Newcomers take a long time to understand a method | Unclear abstraction levels or names | Nested branches, temporary variables, explanations needed during review |
+| Many `boolean` flags | Multiple modes control one behavior | Flag combinations, invalid combinations, and missing tests |
+| The same bug occurs across multiple screens | The same rule has inconsistent implementations | Failing inputs/outputs and copies of the rule |
+| Change velocity noticeably declines | A design hotspot may exist | Edit frequency, regressions, review time, and diff scope |
 
-Để tránh kết luận vội: nhìn vào **trách nhiệm**, **lịch sử thay đổi**, **lỗi thực tế** và **test hiện hữu**. Công cụ static analysis/cảnh báo complexity có thể giúp khoanh vùng; con số metric chỉ là tín hiệu bổ trợ.
+To avoid hasty conclusions, examine **responsibilities**, **change history**, **actual defects**, and **existing tests**. Static analysis and complexity warnings can help locate candidates, but metrics only provide supporting signals.
 
-## 3. Ví dụ: ba trách nhiệm bị trộn trong một class
+## 3. Example: Three Responsibilities Mixed in One Class
 
-Giả sử hệ thống báo giá có hợp đồng đã được thống nhất:
+Suppose a quotation system has an established contract:
 
-- `subtotalCents` là số tiền hàng theo **cent**, từ `0` đến `1_000_000`.
-- Loại khách hàng hợp lệ: chuỗi phân biệt hoa/thường `"STANDARD"` hoặc `"VIP"`.
-- Khách VIP được giảm `10%` tiền hàng (làm tròn xuống từng cent) và miễn phí vận chuyển.
-- Khách thường không giảm giá; miễn phí vận chuyển khi `subtotalCents >= 100_000`, còn lại trả `15_000` cent.
+- `subtotalCents` is the goods subtotal in **cents**, from `0` to `1_000_000`.
+- Valid customer types are the case-sensitive strings `"STANDARD"` and `"VIP"`.
+- VIP customers receive a `10%` discount on goods (rounded down to the cent) and free shipping.
+- Standard customers receive no discount; shipping is free when `subtotalCents >= 100_000` and otherwise costs `15_000` cents.
 - `total = subtotal - discount + shipping`.
-- Dữ liệu không hợp lệ phải ném `IllegalArgumentException`.
-- Chuỗi kết quả có định dạng `discount=...;shipping=...;total=...`.
+- Invalid input must throw `IllegalArgumentException`.
+- The result string has the format `discount=...;shipping=...;total=...`.
 
-Phiên bản ban đầu kết hợp **kiểm tra đầu vào**, **tính giá**, **định dạng đầu ra** trong một method. Khi thay quy tắc vận chuyển, đổi output format hoặc bổ sung loại khách hàng, nhóm code này cùng bị tác động. Đó là dấu hiệu **Divergent Change**, đi kèm **Primitive Obsession** vì giá trị `String` đại diện cho loại khách hàng.
+The initial version combines **input validation**, **pricing calculations**, and **output formatting** in one method. Changes to shipping rules, output format, or customer types all affect that code. This suggests **Divergent Change** as well as **Primitive Obsession**, because a `String` represents the customer type.
 
-Refactor có thể tách một **bộ quy tắc giá**, một **bộ định dạng**, và một **facade** giữ API cũ. Đây chỉ là *một* phương án hợp lý khi các phần có lý do thay đổi độc lập; với ứng dụng rất nhỏ, chi phí thêm lớp có thể không đáng.
+One refactoring option extracts **pricing rules**, a **formatter**, and a **facade** preserving the old API. This is only *one* sensible choice when those parts have independent reasons to change; adding classes may not be worth the cost in a tiny application.
 
-### Chạy thử trước và sau refactor (Java 17+)
+### Running Before and After Refactoring (Java 17+)
 
-Tạo tệp `DesignSmellsDemo.java`, đặt toàn bộ đoạn sau vào tệp đó:
+Create `DesignSmellsDemo.java` and place the complete code below in it:
 
 ~~~java
 import java.util.List;
@@ -265,14 +265,14 @@ public class DesignSmellsDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac DesignSmellsDemo.java
 java DesignSmellsDemo
 ~~~
 
-Đầu ra kỳ vọng:
+Expected output:
 
 ~~~text
 PASS: original business rules
@@ -281,18 +281,18 @@ PASS: same public API and observable output
 discount=25000;shipping=0;total=225001
 ~~~
 
-Ở đây, **lợi ích thiết kế** nằm ở việc có thể kiểm thử và sửa `PricingRules` độc lập với `QuoteFormatter`, đồng thời giảm khả năng việc đổi cách trình bày vô tình tác động chính sách giá. `CustomerType` thay chuỗi tự do bằng enum ở tầng domain; API bên ngoài vẫn nhận chuỗi theo hợp đồng ban đầu.
+Here, the **design benefit** is the ability to test and modify `PricingRules` independently from `QuoteFormatter` while reducing the risk that presentation changes unintentionally affect pricing. `CustomerType` replaces unrestricted strings with a domain enum; the external API still accepts strings under the original contract.
 
-**Nhận xét quan trọng:** Ví dụ cố ý nhỏ để có thể chạy độc lập. Không nên kết luận rằng mọi phương thức giống `LegacyQuoteService.quote` đều bắt buộc phải tách thành ba class. Hãy cân nhắc tần suất thay đổi và lợi ích kiểm thử trước khi tăng số lượng abstraction.
+**Important note:** This example is intentionally small so it can run independently. Do not conclude that every method resembling `LegacyQuoteService.quote` must be split into three classes. Consider change frequency and testing benefits before introducing additional abstractions.
 
-## 4. Nhận diện bằng luồng thay đổi: sửa ở đâu, tác động tới đâu?
+## 4. Follow the Change: Where Must You Edit, and What Is Affected?
 
-Cùng quan sát một yêu cầu: “Tăng ngưỡng miễn phí vận chuyển từ 100.000 lên 120.000 cent”.
+Consider a request: "Raise the free-shipping threshold from 100.000 to 120.000 cents."
 
-- Nếu chỉ thay một chính sách rõ ràng, có test cho các ngưỡng mới và không làm ảnh hưởng định dạng output, thiết kế có điểm tập trung trách nhiệm tốt.
-- Nếu phải sửa cùng hằng số ở `CartController`, `CheckoutService`, `OrderConfirmationEmail` và `InvoiceExporter`, rất có thể tồn tại **Shotgun Surgery**. Cần kiểm tra chúng có dùng *cùng một quy tắc nghiệp vụ* hay không.
-- Nếu phải sửa class vừa chứa công thức giá, logic lưu DB, gửi SMS và dựng HTML, có thể class đang chịu **Divergent Change**.
-- Nếu thêm loại khách hàng luôn phải sửa các `switch` ở năm class, xem xét **polymorphism/Strategy** hoặc chuyển logic về một nơi thích hợp. Một `switch` duy nhất không nhất thiết là smell.
+- If one clearly defined policy is updated, tests cover the new thresholds, and output formatting remains unaffected, the design has a good responsibility boundary.
+- If the same constant must change in `CartController`, `CheckoutService`, `OrderConfirmationEmail`, and `InvoiceExporter`, **Shotgun Surgery** is likely. Verify whether they really share *the same business rule*.
+- If the affected class contains pricing formulas, DB persistence, SMS delivery, and HTML rendering, it may suffer from **Divergent Change**.
+- If adding a customer type always requires updating `switch` blocks in five classes, consider **polymorphism/Strategy** or moving the logic to an appropriate owner. A single `switch` is not necessarily a smell.
 
 ~~~mermaid
 flowchart TD
@@ -308,126 +308,126 @@ flowchart TD
     I -->|Có| K["Giữ thay đổi, ghi lại lý do thiết kế"]
 ~~~
 
-## 5. Chọn phép tái cấu trúc tương ứng với nguyên nhân
+## 5. Choose Refactorings That Address the Cause
 
-| Vấn đề đã xác nhận | Kỹ thuật có thể phù hợp | Điểm cần cẩn thận |
+| Confirmed problem | Potential technique | Important caution |
 |---|---|---|
-| Một method gồm các nhóm thao tác rõ ý nghĩa | `Extract Method`, đổi tên theo ý định | Không tạo hàng loạt method chỉ gọi tiếp nhau mà không tăng độ rõ |
-| Class trộn UI, nghiệp vụ, truy cập dữ liệu | `Extract Class`, phân lớp trách nhiệm | Giữ contract ở ranh giới, tránh tạo coupling vòng |
-| Cùng quy tắc được sao chép | `Extract Function`, chuyển sang service/value object dùng chung | Chỉ hợp nhất khi thực sự cùng một quy tắc |
-| Tham số miền chỉ là chuỗi/mã số dễ sai | `Replace Primitive with Object`, `enum`, `record` | Giữ khả năng serialize/deserialize và tương thích API |
-| Nhánh phân loại lặp ở nhiều chỗ | `Replace Conditional with Polymorphism` hoặc Strategy | Đừng thêm hierarchy cho một điều kiện đơn giản, ổn định |
-| Method thao tác nhiều vào dữ liệu class khác | `Move Method`, `Encapsulate Field` | Tránh phá encapsulation khi di chuyển |
-| Ràng buộc tạo đối tượng gắn chặt với dependency | Constructor injection, interface ở ranh giới phù hợp | Không phải mọi class đều cần interface |
-| Kế thừa chỉ để tái dùng vài dòng code | Chuyển sang composition hoặc delegate | Kiểm tra hành vi thay thế và compatibility trước khi bỏ kế thừa |
-| Cờ boolean điều khiển hai hành vi khác nhau | `Replace Parameter with Explicit Methods` hoặc loại miền | Cân nhắc API dành cho client, không chỉ tên nội bộ |
-| Nhiều getter/setter cho phép trạng thái sai | Đưa validation/bất biến vào entity/value object | Không biến object dữ liệu thuần thành class quá phức tạp |
+| A method contains several meaningful groups of operations | `Extract Method` and intention-revealing names | Avoid chains of forwarding methods that add no clarity |
+| A class mixes UI, business logic, and data access | `Extract Class` and responsibility-based layering | Preserve boundary contracts and avoid cyclic dependencies |
+| The same rule is duplicated | `Extract Function` or move to a shared service/value object | Consolidate only genuinely shared rules |
+| Domain parameters are error-prone strings/numbers | `Replace Primitive with Object`, `enum`, `record` | Preserve serialization/deserialization and API compatibility |
+| Type-based branches repeat across components | `Replace Conditional with Polymorphism` or Strategy | Avoid hierarchies for one simple, stable condition |
+| A method manipulates another class's data extensively | `Move Method`, `Encapsulate Field` | Avoid breaking encapsulation when moving behavior |
+| Object creation tightly couples a class to dependencies | Constructor injection and interfaces at suitable boundaries | Not every class needs an interface |
+| Inheritance exists only to reuse a few lines | Switch to composition or delegation | Verify substitutability and compatibility before removing inheritance |
+| A boolean flag selects two different behaviors | `Replace Parameter with Explicit Methods` or a domain type | Consider client-facing APIs, not only internal naming |
+| Many getters/setters permit invalid states | Move validation/invariants into entities/value objects | Avoid making pure data objects unnecessarily complex |
 
-**Cohesion (tính kết dính)**: các phần trong một class cùng phục vụ một trách nhiệm có ý nghĩa. **Coupling (sự phụ thuộc)**: mức độ module cần biết về nhau. Mục tiêu thường là tăng cohesion và giảm coupling không cần thiết, nhưng cũng phải cân bằng với độ phức tạp do thêm abstraction.
+**Cohesion:** The parts of a class serve one meaningful responsibility. **Coupling:** The degree to which modules need to know about each other. We generally want higher cohesion and less unnecessary coupling while balancing the complexity introduced by abstractions.
 
-## 6. Bốn mức bằng chứng trước khi đề xuất refactor
+## 6. Four Levels of Evidence Before Proposing a Refactoring
 
-### Mức 1: Dấu hiệu đọc code
+### Level 1: Code-Reading Signals
 
-Nhìn tên lớp, tên method, điều kiện lặp, field ít liên quan, số dependency; lập giả thuyết. Đây là bằng chứng ban đầu, **chưa đủ** để kết luận chi phí thiết kế.
+Examine class/method names, repeated conditions, unrelated fields, and dependency counts to form a hypothesis. This is preliminary evidence, **not enough** to determine design costs.
 
-### Mức 2: Thay đổi thật
+### Level 2: Actual Changes
 
-Lấy một yêu cầu cụ thể và lần theo vùng ảnh hưởng: sửa bao nhiêu vị trí, lỗi phát sinh ở đâu, code review khó điều gì. Những vùng thường xuyên vừa **thay đổi** vừa **phức tạp** đáng ưu tiên xem xét hơn mã cũ ít khi đụng tới.
+Trace one specific requirement: how many places change, where defects occur, and what makes review difficult. Areas that are both **frequently changed** and **complex** deserve higher priority than old code rarely touched.
 
-### Mức 3: Kiểm thử hành vi
+### Level 3: Behavioral Tests
 
-Xác định input, expected output, loại ngoại lệ, trạng thái và side effect mà client quan sát. Viết test cho trường hợp thường, biên, lỗi và chuỗi thao tác. Có regression test rồi mới refactor khi thay đổi liên quan logic quan trọng.
+Identify inputs, expected outputs, exception types, state, and observable side effects. Test ordinary cases, boundaries, failures, and operation sequences. Establish regression tests before refactoring important business logic.
 
-### Mức 4: Đánh giá sau cải thiện
+### Level 4: Evaluation After Improvement
 
-Một refactor có chất lượng khi những thay đổi tiếp theo dễ xác định vị trí hơn, test rõ hơn, logic ít trùng lặp hơn và không làm sai hợp đồng. Nếu kết quả chỉ là số class tăng lên, abstraction khó hiểu hơn, thì chưa có đủ cơ sở để coi đó là cải thiện.
+A good refactoring makes subsequent changes easier to locate, tests clearer, and rules less duplicated without violating contracts. If it merely increases class count and makes abstractions harder to understand, there is insufficient evidence of improvement.
 
-Một vài metric có thể tham khảo: **cyclomatic complexity**, số dependency, mức lặp, các file thường sửa cùng nhau, thời gian sửa lỗi, số regression phát sinh. Không có một ngưỡng metric phổ quát áp dụng đúng cho mọi dự án.
+Useful metrics include **cyclomatic complexity**, dependency counts, duplication, files frequently edited together, time to fix bugs, and regression counts. No universal threshold is correct for every project.
 
-## 7. Khi nào không nên refactor ngay?
+## 7. When Should You Avoid Refactoring Immediately?
 
-- **Không có yêu cầu thay đổi, ít rủi ro và đoạn code đủ rõ:** ghi nhận, ưu tiên khu vực khác có tác động lớn hơn.
-- **Code thiếu test và liên quan tiền bạc, dữ liệu hoặc quy trình quan trọng:** nên tạo characterization/contract tests trước, tránh refactor dựa trên phỏng đoán.
-- **Chưa hiểu quy tắc nghiệp vụ:** hỏi người chịu trách nhiệm miền, làm rõ các trường hợp biên rồi mới chia class.
-- **Đang trong một thay đổi sửa lỗi khẩn cấp:** có thể cô lập bản sửa và bổ sung regression test; refactor rộng cần scope riêng nếu làm tăng rủi ro.
-- **Một abstraction chỉ có một implementation, ổn định và không đơn giản hóa test/đổi dependency:** cân nhắc dùng class cụ thể; interface không tự tạo ra thiết kế tốt.
-- **Hai đoạn code giống nhau về cú pháp nhưng thay đổi độc lập:** gom lại có thể tạo coupling sai, khiến thay đổi ở miền A phá miền B.
+- **No current change need, little risk, and sufficiently clear code:** Document the issue and prioritize areas with greater impact.
+- **Code lacks tests and handles money, data, or critical workflows:** First write characterization/contract tests rather than refactor based on guesses.
+- **Business rules are not yet understood:** Consult domain owners and clarify edge cases before splitting classes.
+- **An urgent bug fix is underway:** Isolate the fix and add regression tests; scope large refactorings separately if they increase risk.
+- **An abstraction has one stable implementation and does not simplify tests or substitution:** Consider using a concrete class; interfaces do not automatically improve design.
+- **Two snippets share syntax but change independently:** Merging them may introduce inappropriate coupling, causing changes in domain A to break domain B.
 
-**Technical debt** có thể dùng để diễn tả chi phí tương lai của thiết kế hiện tại; không nên mặc định mọi smell là nợ cần thanh toán ngay. Hãy xét tác động, xác suất phải thay đổi và chi phí sửa.
+**Technical debt** can describe the future costs of an existing design, but not every smell is a debt that must be repaid immediately. Consider impact, likelihood of change, and the cost of improvement.
 
-## 8. Checklist phân tích một class Java
+## 8. Checklist for Analyzing a Java Class
 
-Khi review một class, có thể đi theo trình tự:
+When reviewing a class, use this sequence:
 
-1. **Mục đích:** Viết một câu mô tả trách nhiệm của class. Nếu cần nối nhiều cụm “và” không liên quan, xem lại cohesion.
-2. **Ranh giới:** Client dùng những method nào? Có dựa vào chi tiết nội bộ, thứ tự lời gọi, trạng thái ẩn không?
-3. **Thay đổi:** Nêu 2–3 yêu cầu gần đây sẽ buộc class sửa. Chúng có cùng một lý do không?
-4. **Phụ thuộc:** Class tự tạo dependency và thao tác IO ở mọi method, hay dependency được quản lý theo ranh giới rõ?
-5. **Biểu diễn miền:** Có thể truyền các giá trị không hợp lệ bằng `String`/`int`/nhiều boolean không? Nên dùng enum/value object không?
-6. **Lặp:** Logic nghiệp vụ có xuất hiện nơi khác? Là quy tắc dùng chung hay chỉ tình cờ giống nhau?
-7. **Kiểm thử:** Có thể nêu một input và expected output/exception rõ ràng? Test hiện có có bảo vệ thay đổi không?
-8. **Quy mô sửa:** Phép refactor nhỏ nhất là gì, và làm sao chứng minh hành vi vẫn được giữ?
+1. **Purpose:** Describe the class's responsibility in one sentence. If it needs several unrelated "and" clauses, reassess cohesion.
+2. **Boundary:** Which methods do clients use? Do they depend on internals, call order, or hidden state?
+3. **Changes:** Identify 2–3 recent requirements that would force class edits. Do they share one reason to change?
+4. **Dependencies:** Does the class create dependencies and perform I/O throughout its methods, or are dependencies managed at clear boundaries?
+5. **Domain representation:** Can invalid values be passed using `String`/`int`/multiple booleans? Would an enum/value object help?
+6. **Duplication:** Does the business logic exist elsewhere? Is it genuinely shared or merely coincidentally similar?
+7. **Tests:** Can you state a clear input and expected output/exception? Do existing tests protect the change?
+8. **Scope:** What is the smallest refactoring, and how can unchanged behavior be demonstrated?
 
-Một báo cáo code review hữu ích nên có dạng: **“Trong thay đổi X, chúng ta phải sửa cùng quy tắc ở A/B/C; đây là nguy cơ sai lệch. Đề nghị chuyển quy tắc chung vào Y và giữ các test ranh giới Z.”** Cách này cụ thể hơn nhận xét “code xấu, phải áp dụng SOLID”.
+A useful code-review report might say: **"For change X, we had to edit the same rule in A/B/C, risking inconsistency. Move the shared rule into Y and preserve boundary tests Z."** This is more actionable than "the code is bad; apply SOLID."
 
-## 9. Sai lầm thường gặp
+## 9. Common Mistakes
 
-**Áp dụng SOLID như một danh sách phải hoàn thành.** SRP, OCP, LSP, ISP và DIP là nguyên tắc định hướng, không yêu cầu mỗi method hay mỗi class đều có interface. Hãy bắt đầu từ vấn đề thực tế rồi chọn nguyên tắc liên quan.
+**Treating SOLID as a mandatory checklist.** SRP, OCP, LSP, ISP, and DIP are design guidelines; they do not require an interface for every method or class. Start with a real problem and apply the relevant principle.
 
-**Refactor và đổi nghiệp vụ cùng lúc nhưng không tách phạm vi.** Nếu yêu cầu giá mới làm expected output thay đổi, ghi rõ đó là sửa chức năng. Refactor thuần túy phải giữ nguyên hợp đồng quan sát được.
+**Mixing refactoring with business changes without separating their scopes.** If a new pricing requirement changes expected output, document it as a functional change. Pure refactoring must preserve the observable contract.
 
-**Thay thế test kết quả bằng test chi tiết triển khai.** Test assert method private được gọi mấy lần sẽ hỏng khi chia class, dù đầu ra đúng. Ưu tiên public behavior; chỉ test tương tác khi bản thân nó là hợp đồng có ý nghĩa (ví dụ chỉ được gửi thông báo một lần).
+**Replacing outcome tests with implementation-detail tests.** Tests asserting how often a private method is called break when classes are split, even if results stay correct. Prefer public behavior; test interactions only when they form a meaningful contract (for example, sending a notification at most once).
 
-**Chỉ đo complexity trước và sau.** Complexity giảm không đủ nếu API khó dùng hơn, thời gian xử lý tăng mạnh hoặc hệ thống phát sinh state không an toàn. Cần test và xem tác động lên công việc thật.
+**Measuring only complexity before and after.** Lower complexity metrics are insufficient if the API becomes harder to use, processing gets significantly slower, or unsafe state emerges. Test and assess actual development impact.
 
-**Nhầm thêm lớp với tăng khả năng mở rộng.** Nhiều interface không có biến thể thực tế có thể làm logic bị rải rác. Trừu tượng tốt phải làm ý định và hướng thay đổi dễ hiểu hơn.
+**Mistaking additional classes for extensibility.** Numerous interfaces without real variants can scatter logic. Good abstractions make intent and likely change directions easier to understand.
 
-**Bỏ qua tính tương thích.** Khi chuyển `String` thành `enum` trong core, vẫn có thể cần adapter giữ dữ liệu JSON/API hoặc cơ sở dữ liệu hiện tại. Refactor nội bộ không mặc nhiên cho phép phá API công khai.
+**Ignoring compatibility.** Replacing `String` with `enum` in the core may still require adapters preserving existing JSON/API or database representations. Internal refactoring does not automatically permit breaking public APIs.
 
-## 10. Bài tập tự đánh giá
+## 10. Self-Assessment Exercises
 
-**Bài 1 — Nhận dạng:** Class `ReportManager` có các method `loadFromDatabase()`, `calculateTax()`, `renderHtml()` và `sendEmail()`. Hãy nêu những lý do thay đổi độc lập, cho biết có thể là smell nào và đề xuất ranh giới class thích hợp. Đừng kết luận chỉ dựa vào tên; xét xem những method có luôn thay đổi cùng nhau không.
+**Exercise 1 — Recognition:** A `ReportManager` class has methods `loadFromDatabase()`, `calculateTax()`, `renderHtml()`, and `sendEmail()`. Identify independent reasons to change, possible smells, and appropriate class boundaries. Do not decide based on names alone; consider whether the methods always change together.
 
-**Bài 2 — Shotgun Surgery:** Đổi mã VAT phải sửa cùng một bảng mã ở ba service. Xác định một nơi duy nhất quản lý quy tắc VAT, thiết kế test cho những trường hợp đang được sử dụng và giải thích vì sao thay đổi mới chỉ nên sửa ở đó.
+**Exercise 2 — Shotgun Surgery:** Changing VAT codes requires updating the same lookup table in three services. Identify one owner for VAT rules, design tests covering existing cases, and explain why future rule changes should occur there.
 
-**Bài 3 — Primitive Obsession:** Chữ ký `createAccount(String type, String status, int level, boolean active)` cho phép tổ hợp trạng thái mâu thuẫn. Đề xuất enum hoặc value object nhằm loại bỏ các trạng thái bất hợp lệ. Nêu một trường hợp mà không cần tạo thêm class.
+**Exercise 3 — Primitive Obsession:** The signature `createAccount(String type, String status, int level, boolean active)` allows conflicting state combinations. Propose an enum or value object that rules out invalid states. Give one case where a new class would be unnecessary.
 
-**Bài 4 — Refactor an toàn:** Trong `DesignSmellsDemo`, đổi tên `PricingRules` và tách phương thức `shippingFor`. Chạy lại bài test để xác nhận output không đổi. Sau đó cố tình đổi điều kiện miễn phí từ `>=` sang `>` và chỉ ra ca test bắt được lỗi ở mức 100.000 cent.
+**Exercise 4 — Safe refactoring:** In `DesignSmellsDemo`, rename `PricingRules` and extract `shippingFor`. Rerun tests to confirm unchanged output. Then deliberately change the free-shipping condition from `>=` to `>` and identify the test that detects the error at 100.000 cents.
 
-**Bài 5 — Ưu tiên:** Có hai vùng mã: A dài 800 dòng nhưng 18 tháng không có thay đổi; B dài 150 dòng nhưng mỗi tuần được sửa và thường gây regression. Hãy chọn vùng cần đánh giá trước, mô tả dữ liệu nào cần thu thập và nêu khi nào lựa chọn có thể khác.
+**Exercise 5 — Prioritization:** Two areas of code exist: A has 800 lines but has not changed for 18 months; B has 150 lines, changes weekly, and often causes regressions. Choose which to evaluate first, describe the evidence to collect, and explain when the choice might differ.
 
-### Tiêu chí hoàn thành
+### Completion Criteria
 
-Bạn có thể chỉ ra **một biểu hiện cụ thể**, giải thích **vì sao nó gây chi phí hoặc rủi ro**, tìm bằng chứng từ hành vi và lịch sử thay đổi, chọn một phép refactor có phạm vi rõ, và viết kiểm thử chứng minh hợp đồng Java vẫn đúng sau thay đổi. Nhận diện code smell là bước chẩn đoán; **cải thiện thiết kế phải được xác nhận bằng kết quả**, không chỉ bằng việc số dòng hoặc số class thay đổi.
+You can identify **a concrete symptom**, explain **why it creates cost or risk**, gather evidence from behavior and change history, select a clearly scoped refactoring, and write tests proving that Java contracts remain correct afterward. Recognizing a code smell is diagnostic; **design improvements must be validated by outcomes**, not by changed line or class counts.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="refactoring-002">Đổi tên để làm rõ ý định</a>
+## <a id="refactoring-002">Renaming to Clarify Intent</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đổi tên để làm rõ ý định (Rename for Intent) trong Java OOP
+# Renaming to Clarify Intent (Rename for Intent) in Java OOP
 
-## Vì sao một cái tên có thể làm code khó hiểu?
+## How Can a Name Make Code Hard to Understand?
 
-Xét một lời gọi trong chương trình bán hàng:
+Consider a call in a sales application:
 
 ~~~java
 long total = Calc.f(items, true);
 ~~~
 
-Người đọc chưa biết `f` làm gì, `true` bật điều kiện nào, và `total` đã bao gồm những khoản tiền gì. Nếu muốn sửa code, họ phải mở phần cài đặt, lần theo các biến và tự suy luận nghiệp vụ.
+The reader cannot tell what `f` does, which condition `true` enables, or which amounts `total` includes. To modify the code, they must inspect the implementation, trace variables, and infer the business rules.
 
-Đổi tên để làm rõ ý định là một thao tác **refactoring**: thay tên class, method, field, biến hoặc hằng số bằng tên thể hiện chính xác vai trò của nó, trong khi **giữ nguyên hành vi quan sát được của chương trình**.
+Renaming to clarify intent is a **refactoring**: changing a class, method, field, variable, or constant name to express its actual purpose while **preserving the program's observable behavior**.
 
-Ví dụ cùng ý tưởng với tên rõ ràng hơn:
+The same idea with clearer names:
 
 ~~~java
 long payableAmountVnd =
@@ -435,32 +435,32 @@ long payableAmountVnd =
                 orderLines, includeDeliveryFee);
 ~~~
 
-Tên mới giúp trả lời ngay ba câu hỏi: giá trị là **số tiền phải trả**, đơn vị là **VND**, tham số boolean quyết định **có cộng phí giao hàng hay không**.
+The names now answer three questions: the value is **the payable amount**, the unit is **VND**, and the boolean controls **whether a delivery fee is included**.
 
-> Một tên tốt tiết lộ ý định; nó không chỉ mô tả kiểu dữ liệu. `orderLines` hữu ích hơn `list`, `remainingStock` hữu ích hơn `number`, và `isPaymentApproved` hữu ích hơn `flag`.
+> A good name reveals intent rather than just a data type. `orderLines` is more useful than `list`, `remainingStock` more useful than `number`, and `isPaymentApproved` more useful than `flag`.
 
-## Những tên nên thay đổi
+## Names Worth Improving
 
-| Vị trí trong OOP | Tên khó hiểu | Tên diễn đạt ý định | Vì sao rõ hơn? |
+| OOP element | Unclear name | Intention-revealing name | Why it helps |
 |---|---|---|---|
-| Class | `DataManager` | `OrderRepository` | Chỉ rõ trách nhiệm lưu/truy xuất đơn hàng |
-| Method | `process()` | `confirmOrder()` | Thể hiện thao tác nghiệp vụ |
-| Method tính toán | `getTotal()` | `calculatePayableAmountVnd()` | Nêu hành động tính và ý nghĩa kết quả |
-| Field | `n` | `quantity` | Chỉ rõ con số đại diện điều gì |
-| Collection | `data` | `unpaidInvoices` | Nêu phần tử và tiêu chí của tập dữ liệu |
-| Boolean | `flag` | `includeDeliveryFee` | Nêu ý nghĩa của `true` |
-| Boolean trạng thái | `status` | `isOrderCancelled` | Đọc được như một điều kiện đúng/sai |
-| Hằng số | `LIMIT` | `MAX_LOGIN_ATTEMPTS` | Nêu giới hạn áp dụng cho nghiệp vụ nào |
-| Đơn vị | `timeout` | `connectionTimeoutMillis` | Tránh hiểu nhầm mili giây với giây |
-| Thời điểm | `time` | `paymentExpiresAt` | Phân biệt mốc thời gian với khoảng thời gian |
+| Class | `DataManager` | `OrderRepository` | Identifies responsibility for storing/retrieving orders |
+| Method | `process()` | `confirmOrder()` | Names the business operation |
+| Calculation method | `getTotal()` | `calculatePayableAmountVnd()` | Clarifies the calculation and its result |
+| Field | `n` | `quantity` | Explains what the number represents |
+| Collection | `data` | `unpaidInvoices` | Identifies the items and selection criterion |
+| Boolean | `flag` | `includeDeliveryFee` | Explains what `true` means |
+| Boolean state | `status` | `isOrderCancelled` | Reads naturally as a true/false condition |
+| Constant | `LIMIT` | `MAX_LOGIN_ATTEMPTS` | Identifies the business limit |
+| Unit | `timeout` | `connectionTimeoutMillis` | Avoids confusing milliseconds with seconds |
+| Time point | `time` | `paymentExpiresAt` | Distinguishes a timestamp from a duration |
 
-Bảng là ví dụ có điều kiện: **tên đúng phải được suy ra từ hành vi thật**. Không thể đổi `DataManager` thành `OrderRepository` nếu class thực tế phụ trách nhiều loại dữ liệu. Cũng không nên đổi `getTotal()` thành `calculatePayableAmountVnd()` nếu method trả về số lượng sản phẩm thay vì tiền.
+These examples are conditional: **the correct name must follow actual behavior**. Do not rename `DataManager` to `OrderRepository` if it manages many data types. Nor should `getTotal()` become `calculatePayableAmountVnd()` if it returns a product count rather than money.
 
-## Minh họa refactor có thể chạy: trước và sau đổi tên
+## Runnable Refactoring Example: Before and After Renaming
 
-Chương trình sau mô phỏng tính tổng tiền các dòng hàng, tùy chọn cộng phí giao hàng cố định 30.000 VND. Hai cách viết `Before` và `After` được giữ song song **chỉ để kiểm chứng trong bài học**; ở code thực tế, sau khi refactor ta giữ một triển khai và xóa tên cũ nếu không còn tương thích API cần duy trì.
+The following program calculates line-item totals with an optional fixed delivery fee of 30.000 VND. The `Before` and `After` implementations coexist **only to demonstrate verification in this lesson**; in real code, keep one implementation after refactoring and remove old names when no API-compatibility requirement remains.
 
-Lưu đoạn sau thành **RenameForIntentDemo.java** (Java 11 trở lên):
+Save the following code as **RenameForIntentDemo.java** (Java 11 or later):
 
 ~~~java
 import java.util.List;
@@ -556,34 +556,34 @@ public final class RenameForIntentDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac RenameForIntentDemo.java
 java RenameForIntentDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Rename preserves behavior: PASS
 ~~~
 
-Các thay đổi chính trong thân phương thức:
+The main changes within the method:
 
-| Trước | Sau | Vai trò |
+| Before | After | Purpose |
 |---|---|---|
-| `f` | `calculatePayableAmountVnd` | Phép tính tiền phải trả |
-| `x` | `orderLines` | Tập các dòng hàng |
-| `y` | `includeDeliveryFee` | Có cộng phí giao hàng |
-| `z` | `payableAmountVnd` | Giá trị tích lũy và kết quả |
-| `i` | `orderLine` | Phần tử đang duyệt |
+| `f` | `calculatePayableAmountVnd` | Calculates the amount due |
+| `x` | `orderLines` | Collection of order lines |
+| `y` | `includeDeliveryFee` | Whether to add the delivery fee |
+| `z` | `payableAmountVnd` | Accumulated amount and result |
+| `i` | `orderLine` | Current element in the iteration |
 
-Bản `Before` và `After` đều dùng đúng một hằng phí giao hàng, cùng `Math.addExact` và `Math.multiplyExact`. Vì vậy sự khác nhau đang được khảo sát là **cách đặt tên**, không bị trộn với thay đổi công thức hay xử lý tràn số. Ví dụ kiểm tra một số trường hợp cụ thể; trong dự án thật cần chạy toàn bộ test và các trường hợp biên quan trọng.
+Both `Before` and `After` use the same delivery-fee constant, `Math.addExact`, and `Math.multiplyExact`. Therefore, the change under examination is **naming**, not calculations or overflow handling. The example checks a few specific cases; real projects should run the full suite, including important boundary cases.
 
-## Đổi tên thế nào để thực sự phản ánh ý định?
+## How Can Names Accurately Express Intent?
 
-### 1. Tên phương thức nên thể hiện hành động hoặc câu hỏi
+### 1. Method Names Should Express Actions or Questions
 
 ~~~java
 // Mơ hồ: tên không thể hiện kết quả.
@@ -596,11 +596,11 @@ void confirmOrder(Order order);
 boolean isEligibleForFreeShipping(Order order);
 ~~~
 
-Một method có tên `validateOrder` cần có hợp đồng rõ: trả `boolean`, trả danh sách lỗi, hay ném exception? Nếu method **ném lỗi khi không hợp lệ**, `requireValidOrder` đôi khi diễn đạt hành vi chuẩn xác hơn; nếu nó trả `boolean`, `isOrderValid` có thể dễ hiểu hơn. Chọn theo hợp đồng có thật.
+A method named `validateOrder` needs a clear contract: does it return a `boolean`, a list of errors, or throw an exception? If it **throws on invalid input**, `requireValidOrder` may communicate that behavior more accurately; if it returns a `boolean`, `isOrderValid` may be clearer. Choose according to the actual contract.
 
-Với JavaBean, JPA, thư viện serialization hoặc framework dựa vào getter, các tiền tố `get`, `is`, `set` đôi khi là một phần của quy ước kỹ thuật. Đổi tên vẫn phải phù hợp hợp đồng/framework.
+For JavaBeans, JPA, serialization libraries, or getter-based frameworks, prefixes such as `get`, `is`, and `set` may be part of technical conventions. Renaming must respect those contracts and framework rules.
 
-### 2. Tên dữ liệu nên thể hiện ý nghĩa nghiệp vụ và đơn vị
+### 2. Data Names Should Convey Business Meaning and Units
 
 ~~~java
 long delay = 5_000;                 // 5.000 giây hay mili giây?
@@ -610,9 +610,9 @@ int count = 3;                      // Đếm cái gì?
 int failedLoginAttempts = 3;        // Số lần đăng nhập thất bại.
 ~~~
 
-Trong code mới, kiểu miền giúp tránh nhầm hơn nữa, ví dụ `Duration.ofSeconds(5)`. Tuy nhiên, **đổi từ `long` sang `Duration` là thay đổi kiểu dữ liệu**, không còn là thao tác chỉ đổi tên; cần tách thành bước refactor khác và có kiểm thử tương ứng.
+In new code, a domain type can reduce ambiguity further, for example `Duration.ofSeconds(5)`. However, **changing from `long` to `Duration` changes the data type**, not just the name; it should be a separate refactoring step with suitable tests.
 
-### 3. Tên boolean phải tránh hai cách hiểu
+### 3. Boolean Names Must Avoid Ambiguity
 
 ~~~java
 boolean active;              // Ai đang hoạt động?
@@ -622,15 +622,15 @@ boolean send;                // Gửi thứ gì, lúc nào?
 boolean sendConfirmationEmail;
 ~~~
 
-Đừng dùng các tên phủ định kép như `isNotDisabled` nếu có thể diễn đạt trực tiếp bằng `isEnabled`. Tuy nhiên, **đảo nghĩa một cờ** (`disabled` sang `enabled` rồi đảo giá trị) không phải rename đơn thuần, bởi `true` đã mang nghĩa khác; phải thay toàn bộ logic sử dụng và kiểm thử thật kỹ.
+Avoid double negatives such as `isNotDisabled` when `isEnabled` expresses the intent directly. However, **reversing a flag's meaning** (changing `disabled` to `enabled` and inverting its value) is not a simple rename because `true` now means something different; all usage logic must be updated and thoroughly tested.
 
-### 4. Cân bằng giữa độ ngắn và đủ ngữ cảnh
+### 4. Balance Concision with Sufficient Context
 
-`customerId` tốt hơn `c`, nhưng `customerIdOfTheCustomerCurrentlyBeingProcessed` lại quá dài. Trong vòng lặp nhỏ, `index` hoặc `item` có thể đủ; ở một method xử lý cả `orders`, `invoices` và `receipts`, tên `currentOrder` rõ hơn `item`.
+`customerId` is better than `c`, but `customerIdOfTheCustomerCurrentlyBeingProcessed` is excessively long. In a short loop, `index` or `item` may be enough; in a method handling `orders`, `invoices`, and `receipts`, `currentOrder` is clearer than `item`.
 
-Phạm vi càng rộng (public class, public API, field sống lâu), tên càng cần tự giải thích. Trong biểu thức rất cục bộ, một tên ngắn nhưng rõ ngữ cảnh vẫn chấp nhận được.
+The broader the scope (public classes, public APIs, long-lived fields), the more self-explanatory names should be. A short but contextually clear name is fine in a very local expression.
 
-## Quy trình đổi tên an toàn trong dự án Java
+## A Safe Renaming Process in Java Projects
 
 ~~~mermaid
 flowchart TD
@@ -644,27 +644,27 @@ flowchart TD
     G --> H
 ~~~
 
-1. **Đọc chính method/class được đổi tên:** xác định ý nghĩa, điều kiện, kết quả và side effect. Không đoán qua tên cũ.
-2. **Chọn tên mới:** thể hiện đúng hành động/đối tượng/đơn vị/trạng thái, giữ nhất quán với ngôn ngữ miền của dự án.
-3. **Dùng refactor Rename của IDE:** IntelliJ IDEA thường dùng **Shift+F6**, VS Code với Java tooling thường dùng **F2**. Tính năng này tìm các tham chiếu theo symbol, an toàn hơn thao tác tìm-thay-chuỗi toàn file.
-4. **Kiểm tra diff và các nơi gọi:** constructor, method reference, override/implements, test, annotation, cấu hình và tài liệu liên quan. Xem cả phạm vi nhiều module nếu symbol được dùng chéo module.
-5. **Chạy compile và kiểm thử:** so sánh hành vi trước/sau. Với API public hoặc storage, kiểm chứng các consumer và dữ liệu thực tế.
-6. **Giữ thay đổi nhỏ:** commit refactor đổi tên riêng với sửa logic nghiệp vụ sẽ dễ review, truy lỗi và revert hơn (chỉ thực hiện commit khi quy trình dự án yêu cầu).
+1. **Read the method/class being renamed:** Understand its meaning, conditions, results, and side effects. Do not guess from its old name.
+2. **Choose the new name:** Express the actual action, object, unit, or state and follow the project's domain vocabulary.
+3. **Use the IDE's Rename refactoring:** IntelliJ IDEA commonly uses **Shift+F6**, and VS Code with Java tooling often uses **F2**. Symbol-aware reference updates are safer than global string replacement.
+4. **Inspect the diff and call sites:** Review constructors, method references, overrides/implementations, tests, annotations, configuration, and documentation. Check multiple modules when the symbol crosses module boundaries.
+5. **Compile and test:** Compare behavior before and after. For public APIs and persistence, verify consumers and real data contracts.
+6. **Keep changes small:** Separating naming refactors from business-logic edits makes commits easier to review, debug, and revert (commit only when the project's workflow requires it).
 
-Nếu chỉ đổi tên biến cục bộ bằng công cụ hỗ trợ, rủi ro thường thấp. Đổi tên method public, property hoặc tên lớp dùng bên ngoài có thể cần kế hoạch tương thích/migration.
+IDE-assisted local-variable renaming is usually low risk. Renaming public methods, properties, or externally referenced classes may require a compatibility/migration plan.
 
-## Ranh giới quan trọng: tên trong source chưa chắc là tên trong runtime
+## Important Boundary: Source Names May Differ from Runtime Names
 
-| Trường hợp | Điều có thể hỏng | Hướng xử lý |
+| Scenario | What can break | Mitigation |
 |---|---|---|
-| Đổi method trong interface công khai | Dự án khác biên dịch lỗi; client nhị phân có thể lỗi khi liên kết | Cập nhật các consumer, version API hoặc duy trì adapter/deprecated method theo chính sách |
-| Đổi field trong JSON payload | Contract của API đổi, client đọc field cũ thất bại | Giữ tên wire bằng annotation phù hợp (ví dụ `@JsonProperty`) hoặc làm migration có version |
-| Đổi tên property của JPA entity | Có thể tác động mapping, query theo property, hoặc schema nếu đang dựa quy ước đặt tên | Kiểm tra `@Column`, derived queries, JPQL, migrations và integration test |
-| Đổi tên `@Bean`, `@Qualifier` hoặc component | Dependency injection dựa tên có thể không tìm đúng bean | Kiểm tra cấu hình bean và khởi động context test |
-| Tên method/field được dùng trong reflection | String literal cũ không tự cập nhật khi Rename Symbol | Tìm tất cả lời gọi reflection, tên trong config/test, cập nhật và chạy thử |
-| Đổi tên file/class/package public | Build, import, resource/config hoặc caller có thể lệch | Refactor bằng IDE, xem cả test, build scripts và external references |
+| Rename a method in a public interface | Other projects may fail to compile; binary clients may fail at linkage | Update consumers, version the API, or maintain adapters/deprecated methods as policy requires |
+| Rename a field in a JSON payload | The API contract changes and clients expecting the old field fail | Preserve the wire name with annotations (such as `@JsonProperty`) or use versioned migration |
+| Rename a JPA entity property | Mapping, property-based queries, or convention-driven schema names may change | Check `@Column`, derived queries, JPQL, migrations, and integration tests |
+| Rename `@Bean`, `@Qualifier`, or a component | Name-based dependency injection may fail to resolve the right bean | Check bean configuration and context-startup tests |
+| Rename a method/field referenced through reflection | Old string literals are not necessarily updated by Rename Symbol | Find reflection calls and names in config/tests; update and execute them |
+| Rename a public file/class/package | Builds, imports, resources/configuration, or callers may break | Use IDE refactoring and inspect tests, build scripts, and external references |
 
-Ví dụ rename tên field Java nhưng vẫn bảo vệ contract JSON công khai (khi dự án có Jackson):
+Example of renaming a Java field while preserving a public JSON contract (in a project using Jackson):
 
 ~~~java
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -679,25 +679,25 @@ public final class PaymentResponse {
 }
 ~~~
 
-Trong ví dụ này, tên JSON `"total"` được gắn **trên getter** để bảo vệ tên field khi serialize. Đoạn trích chỉ minh họa chiều đọc ra; muốn deserialize đúng contract cần constructor/setter hoặc cấu hình creator phù hợp. Đây chỉ là minh họa mapping: nếu ứng dụng thực tế có setter, constructor, record, chiến lược serialization hoặc visibility rule khác, hãy kiểm chứng JSON input/output thực tế bằng test. Import Jackson ở đoạn này thuộc dự án có dependency tương ứng, **không nằm trong file Java chạy độc lập phía trên**.
+Here, the JSON name `"total"` is applied **to the getter** to preserve the serialized field name. The snippet only illustrates output serialization; deserialization also requires an appropriate constructor/setter or creator configuration. This is merely a mapping example: when a real application uses different setters, constructors, records, serialization strategies, or visibility rules, verify actual JSON input/output in tests. This Jackson import belongs in a project with the corresponding dependency and is **not part of the standalone Java file above**.
 
-Với Java, đổi tên method được `@Override` còn phải đồng bộ với hợp đồng của interface/superclass; nếu interface thuộc thư viện bên ngoài, không thể tùy tiện đổi signature mà vẫn bảo đảm implement đúng.
+In Java, renaming an `@Override` method must remain consistent with the interface/superclass contract; when the interface comes from an external library, its signature cannot be changed arbitrarily while preserving correct implementation.
 
-## Khi nào tên mới chưa đủ?
+## When Is a Better Name Insufficient?
 
-Có lúc vấn đề lớn hơn tên gọi. Ví dụ:
+Sometimes the problem goes beyond naming. For example:
 
 ~~~java
 void processOrder(Order order);
 ~~~
 
-Nếu method vừa kiểm tra tồn kho, thanh toán, cập nhật đơn và gửi email, đổi thành `processValidatedOrderAndChargeAndSendEmail` vẫn không làm trách nhiệm rõ ràng. Khi đó nên cân nhắc **Extract Method**, **Extract Class** hoặc thiết kế collaborator theo trách nhiệm, mỗi bước có tên riêng. Đó là những refactoring khác, cần được đánh giá và kiểm thử độc lập.
+If a method checks inventory, charges a payment, updates an order, and sends email, renaming it `processValidatedOrderAndChargeAndSendEmail` still does not create clear responsibilities. Consider **Extract Method**, **Extract Class**, or responsibility-based collaborators with separately named steps. These are different refactorings and should be assessed and tested separately.
 
-Tương tự, `calculatePayableAmountVnd(orderLines, true)` vẫn khiến người đọc tại **call site** phải tự nhớ ý nghĩa của `true`. Đặt tên tham số tốt giúp phần khai báo, nhưng Java không hỗ trợ named argument. Nếu bài toán phức tạp, có thể cân nhắc method tường minh hơn hoặc enum cho lựa chọn nghiệp vụ. Đổi chữ ký/enum là bước thay đổi API riêng, không nên ngụy trang thành rename.
+Likewise, `calculatePayableAmountVnd(orderLines, true)` still forces a reader at the **call site** to remember what `true` means. Good parameter names improve declarations, but Java lacks named arguments. For more complex cases, consider an explicit method or an enum representing the business choice. Changing a signature or introducing an enum is a separate API change, not merely a rename.
 
-## Bài tập tự kiểm tra
+## Self-Check Exercises
 
-**Bài 1 — Tìm tên ý định:** đề xuất tên đúng cho các đoạn sau, sau khi xác minh logic thật:
+**Exercise 1 — Name the intent:** After checking actual behavior, propose meaningful names for the following snippets:
 
 ~~~java
 boolean a = invoice.getDueDate().isBefore(today) && !invoice.isPaid();
@@ -705,65 +705,65 @@ int n = cart.getItems().size();
 long t = priceCents * quantity;
 ~~~
 
-Gợi ý: `isInvoiceOverdue` (nếu business rule cho rằng quá hạn và chưa thanh toán), `cartItemCount`, `lineAmountCents`.
+Suggested names: `isInvoiceOverdue` (if the business rule requires both overdue and unpaid), `cartItemCount`, and `lineAmountCents`.
 
-**Bài 2 — Giữ nguyên hành vi:** trong file `RenameForIntentDemo.java`, đổi method `After.calculatePayableAmountVnd` thành `calculateOrderPayableAmountVnd` bằng Rename Symbol, kiểm tra lời gọi tại `main` được cập nhật, rồi chạy lại chương trình. Console vẫn cần báo `PASS`.
+**Exercise 2 — Preserve behavior:** In `RenameForIntentDemo.java`, rename `After.calculatePayableAmountVnd` to `calculateOrderPayableAmountVnd` using Rename Symbol, verify that the call in `main` changes, and rerun the program. The console must still print `PASS`.
 
-**Bài 3 — Nhận diện rủi ro:** có API trả JSON với field `"total"`. Đề xuất cách đổi tên Java field thành `payableAmountVnd` mà client hiện tại vẫn nhận `"total"`, và viết bài test serialization nếu dự án có Jackson.
+**Exercise 3 — Identify risks:** An API returns JSON with the field `"total"`. Propose a way to rename the Java field to `payableAmountVnd` while existing clients still receive `"total"`; write a serialization test if the project uses Jackson.
 
-**Tự đánh giá:** giải thích vì sao đổi `flag` thành `includeDeliveryFee` là rename, còn đổi `boolean includeDeliveryFee` thành `ShippingMethod shippingMethod` là thiết kế lại hợp đồng; nêu bài test nào chứng minh không thay đổi tổng tiền.
+**Self-assessment:** Explain why changing `flag` to `includeDeliveryFee` is renaming, whereas replacing `boolean includeDeliveryFee` with `ShippingMethod shippingMethod` redesigns the contract. Identify tests proving that totals remain unchanged.
 
-Đổi tên đạt chất lượng khi người đọc hiểu **đối tượng làm gì, dữ liệu có nghĩa gì, điều kiện đại diện cho điều gì** ngay tại vị trí sử dụng; mã vẫn chạy cùng hành vi mong đợi, và các hợp đồng ngoài source được xem xét đầy đủ.
+A successful rename lets readers understand **what an object does, what its data means, and what a condition represents** right where the name is used; code retains its expected behavior, and contracts beyond source code have been considered.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="refactoring-003">Tách phương thức và tách lớp</a>
+## <a id="refactoring-003">Extracting Methods and Classes</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tách phương thức và tách lớp (Extract Method / Extract Class) trong Java OOP
+# Extracting Methods and Classes (Extract Method / Extract Class) in Java OOP
 
-## 1. Vì sao cần tách?
+## 1. Why Extract Code?
 
-Khi một phương thức ngày càng dài, nó thường làm nhiều việc: kiểm tra dữ liệu, tính toán, cập nhật trạng thái, tạo thông báo, gọi dịch vụ ngoài. Khi một lớp chứa quá nhiều nhóm trách nhiệm khác nhau, chỉ một thay đổi nhỏ cũng buộc ta đọc, sửa và kiểm thử cả lớp.
+As a method grows, it often accumulates multiple jobs: validating data, calculating values, updating state, generating notifications, and calling external services. When a class contains too many distinct responsibility groups, even a small change forces developers to read, modify, and test the entire class.
 
-**Tái cấu trúc (refactoring)** là cải thiện cấu trúc bên trong mà **giữ nguyên hành vi quan sát được**. Hai kỹ thuật cơ bản:
+**Refactoring** improves internal structure while **preserving observable behavior**. Two foundational techniques are:
 
-- **Extract Method (Tách phương thức):** chọn một nhóm câu lệnh có mục đích rõ ràng, đặt chúng vào phương thức có tên mô tả ý định, rồi thay nhóm câu lệnh cũ bằng lời gọi phương thức đó.
-- **Extract Class (Tách lớp):** chuyển một nhóm dữ liệu và hành vi có trách nhiệm riêng sang lớp mới; lớp ban đầu giao việc cho lớp mới thông qua giao diện rõ ràng.
+- **Extract Method:** Select a cohesive block of statements, move it into a method whose name expresses its purpose, and replace the original block with a call to that method.
+- **Extract Class:** Move related data and behavior with a distinct responsibility into a new class; the original class delegates through a clear API.
 
-Hai kỹ thuật có thể kết hợp: đầu tiên tách các bước của một phương thức dài, sau đó phát hiện một số phương thức thuộc trách nhiệm của lớp khác và chuyển chúng sang lớp đó.
+The techniques can be combined: first extract steps from a long method, then identify methods that belong to another class's responsibility and move them there.
 
-**Kết quả mong đợi:** code dễ đọc hơn, trách nhiệm rõ hơn, dễ tái sử dụng và kiểm thử; các giá trị trả về, exception, tác dụng phụ và quy tắc nghiệp vụ đã cam kết vẫn tương đương.
+**Expected outcome:** More readable code, clearer responsibilities, and easier reuse and testing, while preserving promised return values, exceptions, side effects, and business rules.
 
-| Tiêu chí | Extract Method | Extract Class |
+| Criterion | Extract Method | Extract Class |
 |---|---|---|
-| Dấu hiệu | Một phương thức thực hiện nhiều bước độc lập về ý nghĩa | Một lớp chứa nhiều nhóm lý do phải thay đổi |
-| Thao tác | Tách đoạn code sang method có tên rõ | Chuyển field/method liên quan sang object mới |
-| Mức thay đổi | Chủ yếu tổ chức nội bộ của một lớp | Phân chia trách nhiệm giữa các đối tượng |
-| Ví dụ | Tách calculateSubtotal, applyDiscount | Tách PricingPolicy và ReceiptFormatter khỏi CheckoutService |
-| Lỗi hay gặp | Quá nhiều method một dòng, truyền quá nhiều tham số, đổi thứ tự side effect | Tạo lớp rỗng nghĩa, làm lộ dữ liệu, circular dependency, phân mảnh quá mức |
+| Signal | A method performs several semantically distinct steps | A class has several groups of reasons to change |
+| Action | Move code into a clearly named method | Move related fields/methods into another object |
+| Scale | Mostly reorganizes a class's internals | Redistributes responsibilities among objects |
+| Example | Extract calculateSubtotal and applyDiscount | Extract PricingPolicy and ReceiptFormatter from CheckoutService |
+| Common pitfalls | Too many trivial methods, excessive parameters, changed side-effect order | Meaningless classes, exposed data, circular dependencies, excessive fragmentation |
 
-## 2. Dấu hiệu nên bắt đầu
+## 2. Signals That Extraction May Help
 
-Một số tín hiệu hữu ích (không phải quy tắc tuyệt đối):
+Useful signals, not absolute rules:
 
-1. Bạn phải đọc rất nhiều dòng mới hiểu một thao tác nghiệp vụ.
-2. Trong cùng một hàm, các đoạn code có thể được mô tả bằng những tên mục đích khác nhau: *validate → calculate → format → persist*.
-3. Một lớp đổi vì nhiều nguyên nhân không liên quan: thay quy tắc giá **hoặc** thay cách trình bày hóa đơn.
-4. Nhiều phương thức cùng dùng một tập field và hầu như không cần phần còn lại của lớp; đó là một nhóm có độ gắn kết (cohesion) riêng.
-5. Kiểm thử một quy tắc nhỏ buộc phải khởi tạo nhiều dependency không liên quan.
+1. Understanding one business operation requires reading many lines.
+2. Different blocks in the same method have distinct purposes: *validate → calculate → format → persist*.
+3. One class changes for unrelated reasons, such as changes to pricing rules **or** invoice presentation.
+4. Several methods share a group of fields but hardly use the rest of the class; they form a distinct cohesive group.
+5. Testing one small rule requires constructing many unrelated dependencies.
 
-Độ dài chỉ là **tín hiệu**. Một method 40 dòng mô tả một thuật toán tuyến tính, rõ ràng có thể dễ bảo trì hơn 10 method vụn. Mục tiêu là tăng **cohesion**, giảm coupling, giữ ý nghĩa nghiệp vụ và đường dữ liệu rõ ràng.
+Length is only a **signal**. A clear 40-line method describing a linear algorithm may be easier to maintain than 10 fragmented methods. Aim for greater **cohesion**, lower coupling, and clear business meaning and data flow.
 
-## 3. Tách phương thức: cách làm từng bước
+## 3. Extract Method: A Step-by-Step Approach
 
-Giả sử hàm checkout đang chứa tất cả logic đơn hàng:
+Suppose a checkout method contains all order logic:
 
 ~~~java
 // Phác thảo cấu trúc ban đầu:
@@ -777,7 +777,7 @@ CheckoutResult checkout(Order order) {
 }
 ~~~
 
-Ta có thể đặt tên cụ thể cho các bước thuần tính toán:
+We can name the individual calculation steps:
 
 ~~~java
 // Phác thảo sau Extract Method:
@@ -793,27 +793,27 @@ CheckoutResult checkout(Order order) {
 }
 ~~~
 
-Các method như calculateDiscount hoặc calculateShipping có thể là private và có đầu vào/đầu ra rõ ràng. Nếu một đoạn cần dùng hoặc sửa quá nhiều biến cục bộ, hãy xác định chính xác dữ liệu cần truyền/giá trị cần trả về, thay vì biến chúng thành field chung để có thể truy cập từ mọi nơi.
+Methods such as calculateDiscount or calculateShipping can remain private with clear inputs and outputs. If a block reads or modifies too many local variables, determine which values it actually needs and returns rather than turning locals into shared fields accessible from everywhere.
 
-Quy trình Extract Method an toàn:
+Safe Extract Method procedure:
 
-1. Chạy test hoặc xác định một bộ trường hợp đầu vào/đầu ra hiện tại để làm mốc.
-2. Chọn khối lệnh có mục đích độc lập; đặt tên theo **việc nó làm**, không chỉ theo thao tác kỹ thuật.
-3. Phân tích biến được đọc, biến được cập nhật, giá trị trả về, exception và side effect.
-4. Tạo method; chuyển chính xác khối lệnh, truyền dependency cần thiết bằng tham số; thay code cũ bằng lời gọi.
-5. Biên dịch và chạy lại test ngay sau mỗi bước nhỏ.
-6. Tiếp tục tách nếu mục đích mới rõ hơn, dừng nếu việc tách chỉ làm code khó lần theo.
+1. Run tests or establish existing input/output scenarios as a behavioral baseline.
+2. Select a block with a distinct purpose; name it after **what it does**, not merely the technical operation.
+3. Identify read variables, updated variables, return values, exceptions, and side effects.
+4. Create the method, move the exact block, pass required dependencies as parameters, and replace the original code with a call.
+5. Compile and rerun tests immediately after each small step.
+6. Extract more only if intent becomes clearer; stop when extraction makes the flow harder to trace.
 
-Ví dụ: tên **calculateShipping** diễn đạt mục đích tốt hơn **processStep4**. Tránh truyền nguyên đối tượng lớn chỉ để dùng một field, nếu truyền một giá trị cụ thể khiến hợp đồng dễ hiểu hơn; nhưng cũng tránh danh sách 10 tham số bằng cách chọn một parameter object thật sự có ý nghĩa.
+For example, **calculateShipping** expresses intent better than **processStep4**. Avoid passing a large object to use one field when a specific value makes the contract clearer; also avoid 10-parameter lists by choosing a parameter object that genuinely represents a concept.
 
-## 4. Tách lớp: phân biệt trách nhiệm
+## 4. Extract Class: Separate Responsibilities
 
-Sau khi tách các method, giả sử CheckoutService có hai nhóm:
+After extracting methods, suppose CheckoutService has two groups:
 
-- **Định giá:** subtotal, giảm giá VIP, phí vận chuyển, tổng tiền.
-- **Trình bày:** định dạng biên nhận để hiển thị.
+- **Pricing:** Subtotals, VIP discounts, shipping fees, and totals.
+- **Presentation:** Formatting receipts for display.
 
-Chúng thay đổi vì các lý do khác nhau. Ta chuyển nhóm thứ nhất sang **PricingPolicy**, nhóm thứ hai sang **ReceiptFormatter**, giữ **CheckoutService** làm lớp điều phối.
+These groups change for different reasons. Move the first to **PricingPolicy**, the second to **ReceiptFormatter**, and retain **CheckoutService** as the coordinator.
 
 ~~~mermaid
 flowchart TB
@@ -826,21 +826,21 @@ flowchart TB
     end
 ~~~
 
-Đây là ứng dụng của **Single Responsibility Principle (SRP)**: mỗi lớp nên có một nhóm lý do thay đổi rõ ràng. SRP không có nghĩa mỗi lớp chỉ có đúng một method. Việc tách cũng khuyến khích phụ thuộc vào abstraction khi có nhu cầu thay thế implementation, nhưng không bắt buộc tạo interface cho mọi lớp.
+This applies the **Single Responsibility Principle (SRP)**: each class should have one coherent group of reasons to change. SRP does not mean exactly one method per class. Separation can also encourage abstraction-based dependencies when implementations need substitution, but not every class requires an interface.
 
-## 5. Chương trình Java hoàn chỉnh: so sánh trước/sau refactor
+## 5. Complete Java Program: Comparing Before and After Refactoring
 
-Ví dụ giữ cùng yêu cầu nghiệp vụ cho cả hai phiên bản:
+Both versions preserve the same business requirements:
 
-- Một đơn hàng có ít nhất một dòng. SKU không rỗng, số lượng dương, đơn giá không âm.
-- **subtotal** là tổng của đơn giá nhân số lượng; dùng số nguyên VND để tránh sai lệch do float/double.
-- Nếu khách VIP và subtotal từ **500.000 VND**, giảm **10% subtotal**, làm tròn xuống theo chia số nguyên.
-- Phí vận chuyển là **0 VND** nếu số tiền sau giảm giá từ **700.000 VND**, ngược lại **30.000 VND**.
+- An order has at least one line. SKU is nonblank, quantities are positive, and unit prices are nonnegative.
+- **subtotal** is the sum of unit price multiplied by quantity; integer VND avoids floating-point inaccuracies.
+- VIP customers with subtotals of at least **500.000 VND** get a **10% subtotal** discount, rounded down using integer division.
+- Shipping is **0 VND** when the post-discount amount reaches **700.000 VND**; otherwise it is **30.000 VND**.
 - **total = subtotal − discount + shipping**.
-- Biên nhận có định dạng chuỗi cố định như ví dụ.
-- Các phép toán dùng Math.addExact, multiplyExact, subtractExact để lỗi tràn số không âm thầm thay đổi kết quả.
+- Receipts use the fixed string format shown in the example.
+- Calculations use Math.addExact, multiplyExact, and subtractExact so overflows do not silently alter results.
 
-Lưu toàn bộ vào **OrderRefactoringDemo.java**. Đây là chương trình tự chạy với **Java 11+**, không cần dependency ngoài. Phiên bản LegacyCheckout gom nghiệp vụ trong một method; phiên bản sau refactor chia thành PricingPolicy, ReceiptFormatter và CheckoutService.
+Save everything as **OrderRefactoringDemo.java**. This standalone **Java 11+** program has no external dependencies. LegacyCheckout combines business logic in one method; the refactored version separates PricingPolicy, ReceiptFormatter, and CheckoutService.
 
 ~~~java
 import java.util.List;
@@ -1085,127 +1085,127 @@ public class OrderRefactoringDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac OrderRefactoringDemo.java
 java OrderRefactoringDemo
 ~~~
 
-Đầu ra kỳ vọng:
+Expected output:
 
 ~~~text
 3 equivalent cases + invalid input: PASS
 ~~~
 
-Ví dụ này **không chỉ so sánh tổng tiền**: nó so sánh subtotal, discount, shipping, total và cả chuỗi receipt; đồng thời xác minh hai phiên bản đều từ chối cùng một loại input sai. Khi refactor có tác dụng phụ hoặc làm việc với hệ thống ngoài, cần bổ sung kiểm thử những hiệu ứng quan sát được ở ranh giới tương ứng.
+This example **compares more than totals**: it checks subtotal, discount, shipping, total, and receipt strings, and verifies that both versions reject the same invalid input categories. For refactorings with side effects or external systems, add tests for observable effects at those boundaries.
 
-**Giới hạn ví dụ:** Chương trình mô phỏng việc tính giá thuần trong bộ nhớ, chưa có repository, transaction, gửi email hay số lượng lớn. Trong ứng dụng thật, kiểm thử thêm trạng thái database, thứ tự side effect có ý nghĩa, tính an toàn luồng và lỗi tích hợp trước khi kết luận hành vi được giữ nguyên.
+**Example limitations:** The program models pure in-memory pricing without repositories, transactions, email delivery, or high volume. In real applications, test database state, meaningful side-effect ordering, thread safety, and integration failures before claiming behavior is preserved.
 
-## 6. Nhận diện trách nhiệm sau khi tách
+## 6. Identifying Responsibilities After Extraction
 
-| Thành phần | Trách nhiệm hiện tại | Lý do có thể thay đổi |
+| Component | Current responsibility | Possible reason to change |
 |---|---|---|
-| Order / Item | Dữ liệu đơn hàng và dòng hàng | Hợp đồng dữ liệu |
-| PricingPolicy | Kiểm tra đầu vào và tính giá, giảm giá, phí | Chính sách bán hàng |
-| Pricing | Kết quả tính toán đã xác định | Cấu trúc dữ liệu giá |
-| ReceiptFormatter | Chuyển kết quả định giá thành chuỗi | Yêu cầu hiển thị |
-| CheckoutService | Gọi PricingPolicy rồi ReceiptFormatter | Luồng nghiệp vụ phối hợp |
+| Order / Item | Order and line-item data | Data contracts |
+| PricingPolicy | Input validation and pricing, discounts, fees | Sales policies |
+| Pricing | Calculated pricing result | Pricing data structure |
+| ReceiptFormatter | Convert pricing results to a string | Display requirements |
+| CheckoutService | Invoke PricingPolicy, then ReceiptFormatter | Coordinated business workflow |
 
-Việc truyền PricingPolicy và ReceiptFormatter qua constructor là **dependency injection** đơn giản. Không bắt buộc phải dùng Spring. Khi cần nhiều biến thể giá/định dạng, có thể cân nhắc interface tương ứng; với một implementation duy nhất, class cụ thể đã đủ rõ.
+Passing PricingPolicy and ReceiptFormatter through a constructor is simple **dependency injection**. Spring is not required. If multiple pricing/formatting variants are needed, consider matching interfaces; with just one implementation, concrete classes may be sufficient.
 
-**Khi nào giữ một method trong lớp cũ?** Nếu nó sử dụng phần lớn trạng thái và nằm sát trách nhiệm cốt lõi của lớp. Extract Class nên chuyển cả nhóm hành vi và dữ liệu thật sự gắn nhau, thay vì chỉ tạo một lớp "Utils" chứa nhiều static method không liên quan.
+**When should a method stay in its original class?** When it uses most of that class's state and closely serves its core responsibility. Extract Class should move genuinely related behavior and data together rather than create a "Utils" class containing unrelated static methods.
 
-## 7. Những rủi ro cần kiểm tra trước khi gọi là refactor thành công
+## 7. Risks to Examine Before Declaring a Refactoring Successful
 
-### Đổi thứ tự xử lý hoặc hiệu ứng ngoài
+### Changing Execution Order or External Effects
 
-Trong ví dụ thuần tính toán, chuyển method có ít rủi ro. Nhưng đổi thứ tự *thanh toán → trừ kho → ghi log/gửi email* có thể làm thay đổi business rule. Nếu refactor dính transaction, lock, retry hoặc event, phải giữ nguyên các bất biến và ranh giới transaction đã cam kết.
+Moving methods in the pure calculation example carries little risk. However, changing the order *charge payment → decrement inventory → log/send email* can alter business behavior. Refactorings involving transactions, locks, retries, or events must preserve promised invariants and transaction boundaries.
 
-### Đổi thời điểm ném exception
+### Changing When Exceptions Are Thrown
 
-Khi chuyển validation sang lớp khác, lỗi có thể xuất hiện sớm hoặc muộn hơn. Ví dụ nếu dòng đầu gây tràn số và dòng sau không hợp lệ, đưa validation toàn giỏ hàng lên đầu sẽ đổi exception quan sát được. Với hệ thống có contract về exception hoặc side effect, giữ đúng thứ tự và viết test thích hợp trước khi di chuyển logic.
+Moving validation to another class may cause errors to surface earlier or later. For example, if the first line overflows and a later line is invalid, validating the entire cart up front changes the observable exception. Where exceptions or side effects are contractual, preserve ordering and write appropriate tests before moving logic.
 
-### Làm lộ chi tiết dữ liệu
+### Exposing Data Internals
 
-Tránh biến toàn bộ field private thành public chỉ để lớp mới truy cập. Có thể dùng đối tượng giá trị bất biến, method truy vấn có ý nghĩa, hoặc chuyển ownership của trạng thái sang lớp chuyên trách.
+Do not make private fields public merely to let a new class access them. Use immutable value objects, meaningful query methods, or transfer state ownership to the responsible class.
 
-### Tạo phụ thuộc vòng tròn
+### Introducing Circular Dependencies
 
-CheckoutService phụ thuộc PricingPolicy là hợp lý; nếu PricingPolicy lại phải gọi ngược CheckoutService, trách nhiệm đang bị chia thiếu rõ ràng. Thiết kế hướng phụ thuộc một chiều, tránh để các lớp nắm tham chiếu lẫn nhau chỉ để truy cập helper.
+It makes sense for CheckoutService to depend on PricingPolicy; if PricingPolicy must call back into CheckoutService, the responsibility split may be unclear. Favor one-way dependency direction rather than mutual references just to access helpers.
 
-### Tách quá nhỏ
+### Extracting Too Much
 
-Một lớp có đúng một dòng chuyển tiếp sang lớp khác chưa chắc hữu ích. Nếu mỗi phép cộng là một lớp hoặc một method thì độ phân mảnh sẽ tăng. Tách theo ý nghĩa nghiệp vụ, cohesion và lý do thay đổi, không theo mục tiêu tối đa số file.
+A class containing a single forwarding line is not necessarily valuable. Making every addition a class or method increases fragmentation. Extract according to business meaning, cohesion, and reasons to change—not to maximize file counts.
 
-### Vô tình thay đổi hiệu năng hoặc luồng dữ liệu
+### Accidentally Changing Performance or Data Flow
 
-Di chuyển method có thể tạo copy bộ sưu tập, cache khác vòng đời hoặc gọi dependency nhiều hơn. Nếu hiệu năng, identity, thứ tự, khả năng song song hoặc idempotency là phần hợp đồng, hãy có phép kiểm tra tương ứng. Chú ý khác biệt Java reference, đối tượng mutable và data race khi chuyển state sang lớp dùng chung.
+Moving a method can introduce collection copies, caches with different lifetimes, or additional dependency calls. If performance, identity, ordering, concurrency, or idempotency are contractual, add corresponding checks. Watch Java reference semantics, mutable objects, and data races when moving state into shared classes.
 
-## 8. Test trước và sau khi refactor
+## 8. Testing Before and After Refactoring
 
-Một trình tự thực tế:
+A practical sequence:
 
-1. **Characterization tests:** ghi lại hành vi hiện tại của code cũ trong các kịch bản quan trọng, đặc biệt khi chưa có test.
-2. **Extract Method nhỏ:** chuyển một khối lệnh và chạy lại các test liên quan.
-3. **Extract Class theo trách nhiệm:** di chuyển phương thức/field, cập nhật dependency trong constructor và caller.
-4. **Kiểm tra tương đương:** kết quả, exception, trạng thái và các side effect có ý nghĩa.
-5. **Chạy unit + integration test:** những đường nối với database, API, transaction phải được kiểm chứng thật khi cần.
-6. **Review phạm vi diff:** những thay đổi chính sách nghiệp vụ nên được tách khỏi refactor để dễ phát hiện regression.
+1. **Characterization tests:** Record existing behavior in important scenarios, especially where tests are missing.
+2. **Small Extract Method steps:** Move one block and rerun the related tests.
+3. **Responsibility-based Extract Class:** Move methods/fields and update dependencies in constructors and callers.
+4. **Check equivalence:** Compare results, exceptions, state, and meaningful side effects.
+5. **Run unit and integration tests:** Validate database, API, and transaction boundaries against real integrations where needed.
+6. **Review diff scope:** Separate business-policy changes from refactoring to make regressions easier to detect.
 
-Đối với code gốc có lỗi đã biết, đừng vô tình đổi hành vi khi tuyên bố "refactor thuần". Có thể tạo một thay đổi riêng để sửa lỗi với test mô tả hành vi mong đợi mới.
+When existing code has known defects, do not silently change behavior while claiming a "pure refactoring." Fix the bug separately with tests specifying the new expected behavior.
 
-Ví dụ, nếu chính sách giá phải đổi từ giảm 10% thành 15%, hãy thực hiện việc đó **sau** một lần refactor bảo toàn hành vi, có test độc lập. Khi một commit vừa tách lớp vừa thay quy tắc, nếu test đỏ khó xác định nguyên nhân.
+For example, if a pricing policy must change from a 10% discount to 15%, make that change **after** a behavior-preserving refactoring and test it separately. When a commit both extracts classes and changes rules, a failing test is harder to diagnose.
 
-## 9. Bài tập thực hành
+## 9. Practice Exercises
 
-**Bài 1 — Extract Method:** Trong LegacyCheckout, tách riêng tính subtotal, giảm giá, phí vận chuyển và định dạng. Sau mỗi bước chạy lại cùng bộ test; giải thích đầu vào/đầu ra của từng method.
+**Exercise 1 — Extract Method:** In LegacyCheckout, extract subtotal, discount, shipping-fee, and formatting calculations. Rerun the same tests after each step and explain each method's inputs and outputs.
 
-**Bài 2 — Extract Class:** Chuyển riêng trách nhiệm ReceiptFormatter và kiểm tra việc đổi định dạng không đòi sửa PricingPolicy. Phân tích vì sao đây là sự cải thiện cohesion.
+**Exercise 2 — Extract Class:** Move the ReceiptFormatter responsibility separately and verify that changing output formatting does not require editing PricingPolicy. Explain how this improves cohesion.
 
-**Bài 3 — Ca biên:** Bổ sung test subtotal đúng 500.000 cho VIP, payable đúng 700.000, đơn rỗng, giá âm, số lượng 0 và số tiền vượt giới hạn long. Chạy cả hai phiên bản để kiểm tra tương đương.
+**Exercise 3 — Boundary cases:** Add tests for VIP subtotals of exactly 500.000, payable amounts of exactly 700.000, empty orders, negative prices, quantities of 0, and values exceeding the long limit. Run both versions to check equivalence.
 
-**Bài 4 — Phát hiện thay đổi hành vi:** Cố tình tính phí vận chuyển trên subtotal trước giảm giá thay vì payable sau giảm giá. Viết một input làm hai kết quả khác nhau để test bắt regression.
+**Exercise 4 — Detect behavior changes:** Deliberately calculate shipping on the pre-discount subtotal instead of the post-discount payable amount. Construct an input where the results differ so a test catches the regression.
 
-**Bài 5 — Thiết kế lại:** Nếu có chính sách giảm giá cho nhiều quốc gia hoặc nhiều loại khách, cân nhắc interface DiscountPolicy. Giải thích khi nào chiến lược thay thế (Strategy) tốt hơn việc tiếp tục thêm nhiều nhánh if trong PricingPolicy, và khi nào interface là quá sớm.
+**Exercise 5 — Redesign:** If discount policies vary by country or customer type, consider a DiscountPolicy interface. Explain when Strategy is preferable to adding more if branches in PricingPolicy and when an interface would be premature.
 
-## 10. Kết luận
+## 10. Conclusion
 
-**Extract Method** đặt tên cho các bước có mục đích rõ ràng để method chính dễ đọc hơn. **Extract Class** gom dữ liệu và hành vi theo trách nhiệm, để mỗi phần thay đổi độc lập hơn. Cả hai là tái cấu trúc chỉ khi **hợp đồng quan sát được vẫn giữ nguyên**. Tách từng bước nhỏ, đặt tên theo nghiệp vụ, kiểm tra trước/sau và dừng khi sự phân chia giúp người đọc hiểu hệ thống tốt hơn.
+**Extract Method** gives meaningful names to steps so the main method reads more clearly. **Extract Class** groups data and behavior by responsibility so components can evolve more independently. Both qualify as refactorings only when **the observable contract remains unchanged**. Make small, domain-named changes, verify before and after, and stop when the separation improves understanding.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="refactoring-004">Di chuyển hành vi về đối tượng chịu trách nhiệm</a>
+## <a id="refactoring-004">Moving Behavior to the Responsible Object</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Di chuyển hành vi về đối tượng chịu trách nhiệm trong Java OOP
+# Moving Behavior to the Responsible Object in Java OOP
 
-## 1. Bài toán: dữ liệu ở một lớp, phép xử lý lại nằm ở lớp khác
+## 1. The Problem: Data Lives in One Class, Behavior in Another
 
-Trong lập trình hướng đối tượng, mỗi đối tượng nên chịu trách nhiệm về những hành vi gắn trực tiếp với trạng thái và quy tắc mà nó nắm giữ. Một dấu hiệu thiết kế chưa tốt xuất hiện khi lớp A thường xuyên lấy dữ liệu của lớp B, rồi tự thực hiện phần lớn phép tính hay quyết định vốn thuộc về B.
+In object-oriented programming, objects should be responsible for behavior directly related to the state and rules they own. A warning sign appears when class A repeatedly retrieves class B's data and performs calculations or decisions that naturally belong to B.
 
-Ví dụ: dịch vụ thanh toán phải đi qua từng dòng hàng, lấy đơn giá và số lượng, tự nhân để ra thành tiền, cộng tổng rồi áp dụng giảm giá của đơn hàng. Dịch vụ này đang biết quá nhiều về cấu trúc bên trong của đơn hàng.
+For example, a checkout service iterates over order lines, retrieves unit prices and quantities, multiplies them, adds totals, and applies an order discount. It knows too much about the order's internal structure.
 
-Mùi mã này thường được gọi là **Feature Envy** (một phương thức quá quan tâm đến dữ liệu của đối tượng khác). Cách tái cấu trúc phù hợp trong nhiều trường hợp là **Move Method — chuyển phương thức/hành vi tới đối tượng sở hữu thông tin và quy tắc liên quan**. Đôi khi cần chia một phương thức lớn thành nhiều hành vi nhỏ rồi chuyển chúng tới những đối tượng khác nhau.
+This code smell is commonly called **Feature Envy**: a method is excessively interested in another object's data. A suitable refactoring is often **Move Method — relocating behavior to the object that owns the relevant information and rules**. Sometimes a large method must first be split into smaller behaviors that can move to different objects.
 
-Mục tiêu là:
-- Đưa tính toán thành tiền về **OrderLine**, vì nó biết đơn giá và số lượng.
-- Đưa tổng tiền và chính sách giảm giá cố định của đơn về **Order**, vì nó sở hữu các dòng hàng và thông tin ưu đãi.
-- Giữ thao tác gọi cổng thanh toán trong **CheckoutService**, vì đây là trách nhiệm phối hợp với hệ thống bên ngoài.
-- Duy trì kết quả, lỗi và hợp đồng được kiểm thử trong quá trình refactor.
+The goals are:
+- Move line amount calculations to **OrderLine**, which knows the unit price and quantity.
+- Move the total and fixed order-level discount rule to **Order**, which owns the line items and discount information.
+- Keep payment-gateway calls in **CheckoutService**, whose responsibility is coordinating external interactions.
+- Preserve results, errors, and tested contracts throughout the refactoring.
 
-**Không có quy tắc "mọi phương thức phải nằm trong lớp giữ dữ liệu".** Chọn nơi đặt hành vi dựa trên trách nhiệm nghiệp vụ, tính kết dính, mức phụ thuộc và khả năng thay đổi.
+**There is no rule that "every method must live in the class storing the data."** Place behavior according to domain responsibility, cohesion, coupling, and expected changes.
 
-## 2. Nhìn vào thiết kế trước khi refactor
+## 2. Examining the Design Before Refactoring
 
-Đoạn mã minh họa dưới đây dùng hai lớp dữ liệu kiểu cũ. Phần tính tiền nằm hoàn toàn trong một dịch vụ:
+The following simplified example uses two legacy-style data classes. All pricing logic lives in a service:
 
 ~~~java
 import java.util.List;
@@ -1233,11 +1233,11 @@ final class LegacyCheckoutService {
 }
 ~~~
 
-Đây là mã lược giản để thấy vị trí trách nhiệm, chưa có xác thực dữ liệu hoặc kiểm tra tràn số. Logic nghiệp vụ minh họa: khách VIP giảm **10% của tổng tiền**, phần giảm làm tròn xuống theo đơn vị VND.
+This intentionally simplified code illustrates responsibility placement; it does not yet validate data or detect overflow. The example rule grants VIP customers **10% of the subtotal** as a discount, rounded down to whole VND.
 
-Vấn đề không nằm ở cú pháp vòng lặp. Vấn đề là LegacyCheckoutService biết cách định giá từng dòng hàng, biết cách cộng đơn và biết quy tắc ưu đãi. Khi OrderLine thay đổi cách tính thành tiền hoặc đơn hàng thêm quy tắc mới, lớp dịch vụ phải sửa dù vai trò chính của nó chỉ là điều phối checkout.
+The issue is not loop syntax. LegacyCheckoutService knows how to price line items, sum an order, and apply discounts. When OrderLine changes its calculation or the order gains a rule, the service must change even though its primary role should be checkout coordination.
 
-Một dấu hiệu thường gặp là chuỗi truy vấn:
+A common symptom is a chain of data queries:
 
 ~~~text
 service → order.lines() → line.priceVnd()
@@ -1245,7 +1245,7 @@ service → order.lines() → line.priceVnd()
                         → tính toán ngoài đối tượng dữ liệu
 ~~~
 
-Thiết kế mong muốn:
+Desired design:
 
 ~~~text
 CheckoutService → Order.payableVnd()
@@ -1254,20 +1254,20 @@ CheckoutService → Order.payableVnd()
                       └── Quy tắc giảm giá của đơn
 ~~~
 
-Điểm khác biệt: lớp gọi yêu cầu **đối tượng làm việc của nó**, thay vì lấy hết dữ liệu để tự làm thay. Tư tưởng này thường được diễn đạt bằng nguyên tắc *Tell, Don't Ask*.
+The difference is that the caller asks **the object to do its own work** instead of retrieving its data and doing that work itself. This is often described by *Tell, Don't Ask*.
 
-## 3. Xác định đúng chủ sở hữu hành vi
+## 3. Identifying the Right Owner for Behavior
 
-| Hành vi | Đặt ở đâu? | Vì sao? |
+| Behavior | Appropriate owner | Why |
 | --- | --- | --- |
-| Nhân đơn giá với số lượng | OrderLine | Cả hai dữ liệu và bất biến của dòng hàng nằm tại đây |
-| Cộng các dòng hàng | Order | Order sở hữu danh sách OrderLine |
-| Tính số tiền phải trả theo ưu đãi VIP cố định của đơn | Order | Quy tắc gắn với trạng thái VIP của đơn trong ví dụ |
-| Gọi API thu tiền | CheckoutService / PaymentGateway | Có tác dụng phụ, liên quan quy trình và hạ tầng |
-| In hóa đơn dạng PDF hoặc JSON | Formatter / Presenter / Serializer | Quy tắc biểu diễn bên ngoài, không phải nghiệp vụ tính tiền |
-| Tính khuyến mãi thay đổi theo chiến dịch/coupon phức tạp | DiscountPolicy hoặc PricingService chuyên trách | Quy tắc có vòng đời và nguồn dữ liệu độc lập với Order |
+| Multiply unit price by quantity | OrderLine | Both data fields and line-item invariants live there |
+| Sum order lines | Order | Order owns the list of OrderLine objects |
+| Calculate amount due under the order's fixed VIP discount | Order | The rule is tied to the order's VIP state in this example |
+| Invoke a payment API | CheckoutService / PaymentGateway | Side effects belong to process coordination and infrastructure |
+| Export an invoice as PDF or JSON | Formatter / Presenter / Serializer | External representation is distinct from pricing rules |
+| Calculate campaign/coupon discounts with complex variations | A dedicated DiscountPolicy or PricingService | Those rules have lifecycles and data sources independent of Order |
 
-**Câu hỏi quyết định:** Đối tượng nào phải biết ít nhất về bên ngoài nhưng vẫn có đủ dữ liệu và trách nhiệm để thực hiện hành vi đúng? Nếu hành vi cần dữ liệu của nhiều aggregate hay gọi I/O, một domain service/application service có thể hợp lý hơn phương thức của entity.
+**Key question:** Which object needs the least external knowledge while owning enough information and responsibility to perform the behavior correctly? If behavior spans several aggregates or performs I/O, a domain/application service may be more appropriate than an entity method.
 
 ~~~mermaid
 classDiagram
@@ -1297,11 +1297,11 @@ classDiagram
     CheckoutService --> PaymentGateway : yêu cầu thanh toán
 ~~~
 
-Ở đây mối quan hệ Order–OrderLine là quan hệ sở hữu về mặt mô hình. Order giữ một bản sao bất biến của danh sách để bên ngoài không thay đổi nội dung thông qua danh sách đã truyền vào.
+Here, Order–OrderLine expresses ownership in the domain model. Order retains an immutable copy of the list so callers cannot modify its contents through the list supplied to the constructor.
 
-## 4. Ví dụ sau refactor: chương trình Java 17 chạy được
+## 4. After Refactoring: Runnable Java 17 Example
 
-Ví dụ dùng JDK 17, Maven và JUnit 5. Mỗi lớp public nằm trong tệp tương ứng.
+The example uses JDK 17, Maven, and JUnit 5. Each public class belongs in its own file.
 
 ~~~text
 move-behavior-oop/
@@ -1350,7 +1350,7 @@ move-behavior-oop/
 </project>
 ~~~
 
-### 4.2. Đưa phép tính dòng hàng vào OrderLine
+### 4.2. Move Line-Item Calculations into OrderLine
 
 **src/main/java/vn/example/OrderLine.java**
 
@@ -1380,16 +1380,16 @@ public record OrderLine(String sku, long unitPriceVnd, int quantity) {
 }
 ~~~
 
-Những chi tiết đáng chú ý:
+Important details:
 
-- Record giữ trạng thái bất biến (các thành phần của record là final).
-- Quy tắc quantity > 0, unitPriceVnd >= 0 được kiểm soát tại nơi tạo dòng hàng.
-- OrderLine trả lời được câu hỏi "dòng hàng này có thành tiền bao nhiêu?" mà không cần lớp ngoài lấy hai trường rồi nhân.
-- Math.multiplyExact ném ArithmeticException khi kết quả vượt miền long; toán tử nhân thông thường có thể tràn số âm/dương âm thầm.
+- The record preserves immutable state (record components are final).
+- The quantity > 0 and unitPriceVnd >= 0 rules are enforced when creating a line item.
+- OrderLine answers "what is this line item's amount?" without another class fetching its fields and multiplying them.
+- Math.multiplyExact throws ArithmeticException when a product exceeds the long range; ordinary multiplication can silently wrap into positive or negative values.
 
-Ta cho phép đơn giá 0 để biểu diễn hàng tặng; điều này là **một lựa chọn hợp đồng** của ví dụ, không phải quy tắc bắt buộc cho mọi hệ thống.
+We allow a unit price of 0 for complimentary items; this is **a contract choice** in the example, not a universal rule.
 
-### 4.3. Đưa tổng tiền và quy tắc VIP về Order
+### 4.3. Move Totals and the VIP Rule into Order
 
 **src/main/java/vn/example/Order.java**
 
@@ -1441,11 +1441,11 @@ public final class Order {
 }
 ~~~
 
-Order chịu trách nhiệm phối hợp các dòng hàng để xác định giá trị của **chính đơn hàng đó**. Không cần đưa danh sách lines công khai để lớp CheckoutService duyệt. Cần xem xét trước khi thêm getter trả trạng thái nội bộ: một API truy vấn phục vụ hiển thị có thể hợp lệ, nhưng không nên dùng getter đó để lặp lại quy tắc tính tiền ở những lớp khác.
+Order coordinates its line items to determine **its own value**. CheckoutService does not need a publicly exposed lines list to iterate. Before adding getters that expose internal state, consider their purpose: query APIs for display can be legitimate, but they should not encourage duplicating pricing rules in other classes.
 
-Trong phương thức payableVnd(), phép chia nguyên làm tròn xuống phần tiền giảm. Ví dụ subtotal 99 VND thì VIP giảm 9 VND, phải trả 90 VND. Khi nghiệp vụ đổi sang quy tắc làm tròn khác, thay đổi nên được kiểm thử rõ ràng.
+In payableVnd(), integer division rounds the discount down. For a subtotal of 99 VND, VIP discount is 9 VND, leaving 90 VND due. If business rules adopt different rounding, tests should explicitly cover the change.
 
-### 4.4. Giữ hành vi điều phối tại CheckoutService
+### 4.4. Keep Coordination in CheckoutService
 
 **src/main/java/vn/example/PaymentGateway.java**
 
@@ -1480,7 +1480,7 @@ public final class CheckoutService {
 }
 ~~~
 
-CheckoutService vẫn có một trách nhiệm rõ ràng: tổ chức hành động thanh toán. Nó không giữ phép nhân, vòng lặp cộng tiền hoặc nhánh VIP. Khi cần thay cổng thanh toán thật bằng fake trong unit test, ta tiêm implementation PaymentGateway khác.
+CheckoutService retains one clear responsibility: coordinating payment. It contains no multiplication, subtotal loops, or VIP branches. In unit tests, a different PaymentGateway implementation can be injected instead of a real payment integration.
 
 **src/main/java/vn/example/Main.java**
 
@@ -1513,7 +1513,7 @@ public class Main {
 }
 ~~~
 
-Chạy từ thư mục dự án:
+Run from the project directory:
 
 ~~~bash
 mvn test
@@ -1521,7 +1521,7 @@ mvn -q -DskipTests package
 java -cp target/classes vn.example.Main
 ~~~
 
-Kết quả mong đợi:
+Expected output:
 
 ~~~text
 Subtotal: 230000
@@ -1530,11 +1530,11 @@ Payment request: DH-100 = 207000 VND
 Accepted: true
 ~~~
 
-Ở bản demo, PaymentGateway chỉ in thông tin và trả true; đây không phải giao dịch thanh toán thật. Đối tượng Order có thể tự xác định tiền phải trả, còn lớp điều phối chỉ giao tiếp với cổng thanh toán.
+In the demo, PaymentGateway only prints information and returns true; it does not perform a real payment. Order determines the amount payable, while the coordinator communicates only with the payment gateway.
 
-## 5. Viết kiểm thử bảo vệ hành vi khi di chuyển phương thức
+## 5. Writing Tests to Protect Behavior When Moving Methods
 
-Refactor đúng nghĩa phải giữ nguyên hành vi bên ngoài theo **hợp đồng đã chọn**. Trước khi di chuyển mã trong một dự án đang hoạt động, nên có những test đặc trưng (characterization tests) xác định giá trị và nhánh hiện tại. Sau khi di chuyển, test ở cấp đối tượng và cấp luồng phải tiếp tục đạt.
+True refactoring preserves externally observable behavior under **the chosen contract**. Before moving code in an existing project, establish characterization tests for current values and branches. Object-level and workflow-level tests must continue passing after the move.
 
 **src/test/java/vn/example/OrderTest.java**
 
@@ -1679,36 +1679,36 @@ class CheckoutServiceTest {
 }
 ~~~
 
-Đây là **9 phương thức @Test** (6 test Order và 3 test CheckoutService). Khi chạy đúng cấu trúc Maven trên, bộ test dự kiến có 9 lượt và không có failure/error.
+These are **9 @Test methods** (6 for Order and 3 for CheckoutService). With the Maven structure above, the suite is expected to run 9 tests without failures/errors.
 
-Các test cấp Order chứng minh trách nhiệm đã được chuyển đúng nơi và phép tính vẫn chính xác. Các test CheckoutService chứng minh luồng bên ngoài tiếp tục dùng đúng số tiền, truyền đúng mã đơn và không gọi cổng thanh toán sai trường hợp. Test không cần truy cập trường private của Order.
+Order-level tests show that responsibilities moved to the right place and calculations remain correct. CheckoutService tests confirm that the external workflow still uses the right amount and order ID and avoids gateway calls in invalid cases. Tests need no access to Order's private fields.
 
-| Kiểm thử | Trách nhiệm được kiểm tra | Sai sót có thể phát hiện |
+| Test | Responsibility verified | Possible defect detected |
 | --- | --- | --- |
-| subtotalComesFromOrderLines | Order tổng hợp các thành tiền từ OrderLine | Quên dòng hàng hoặc tính nhầm số lượng |
-| vipDiscountIsAppliedOnceAtOrderLevel | Giảm 10% một lần trên tổng đơn | Giảm hai lần hoặc tính sai phạm vi |
-| fractionalDiscountIsRoundedDownInVnd | Làm tròn theo hợp đồng | Sai 1 VND ở biên |
-| orderDoesNotChangeWhenInputListChanges | Đóng gói và snapshot bất biến | Thay đổi đơn từ bên ngoài |
-| validatesItsOwnInvariants | Bất biến ở chủ sở hữu dữ liệu | Cho dữ liệu sai đi sâu vào quy trình |
-| rejectsOverflowInsteadOfSilentlyWrapping | Phép tính có kiểm tra tràn | Thành tiền âm vì overflow |
-| passesComputedAmountToGatewayExactlyOnce | Điều phối vẫn đúng sau refactor | Gửi số tiền cũ, gọi gateway lặp |
-| preservesPaymentRejection | Giữ ngữ nghĩa kết quả | Đổi false thành true |
-| nullOrderIsRejectedBeforeCallingGateway | Không gây tác dụng phụ khi đầu vào null | Gọi phụ thuộc với dữ liệu không hợp lệ |
+| subtotalComesFromOrderLines | Order sums amounts from OrderLine | Missing a line or multiplying by the wrong quantity |
+| vipDiscountIsAppliedOnceAtOrderLevel | Apply the 10% discount once to the whole order | Duplicate discount or wrong scope |
+| fractionalDiscountIsRoundedDownInVnd | Preserve contractual rounding | A 1 VND boundary error |
+| orderDoesNotChangeWhenInputListChanges | Encapsulation and immutable snapshots | External changes modifying the order |
+| validatesItsOwnInvariants | Invariants enforced by the data owner | Invalid data reaching later workflow stages |
+| rejectsOverflowInsteadOfSilentlyWrapping | Overflow-checked calculations | Negative line amounts from overflow |
+| passesComputedAmountToGatewayExactlyOnce | Preserve coordination after refactoring | Sending an old amount or invoking the gateway repeatedly |
+| preservesPaymentRejection | Preserve result semantics | Changing false into true |
+| nullOrderIsRejectedBeforeCallingGateway | Avoid side effects for null input | Calling dependencies with invalid data |
 
-## 6. Các bước refactor an toàn trong hệ thống hiện có
+## 6. Safe Refactoring Steps in an Existing System
 
-Thực hiện trên một thay đổi nhỏ, có thể kiểm chứng:
+Use small, verifiable changes:
 
-1. **Khoanh vùng hành vi.** Xác định phương thức đang đọc nhiều trường của đối tượng khác. Hỏi nó thực sự tính/ra quyết định dựa trên dữ liệu nào, và có gây I/O không.
-2. **Chốt hợp đồng cũ.** Viết hoặc giữ test cho các trường hợp phổ biến, biên, lỗi, làm tròn và các caller quan trọng. Với tính toán tiền, kiểm tra tràn số và đơn vị tiền tệ.
-3. **Tạo phương thức tại đối tượng đích.** Bắt đầu với OrderLine.subtotalVnd(); cho phương thức cũ gọi phương thức mới để có thể kiểm chứng từng bước.
-4. **Di chuyển phần tổng hợp.** Thêm Order.subtotalVnd() rồi Order.payableVnd(). Chuyển những chi tiết tính tiền ra khỏi lớp điều phối.
-5. **Chỉnh caller.** CheckoutService hỏi order.payableVnd() thay vì duyệt order.lines() và kiểm tra trạng thái VIP.
-6. **Chạy kiểm thử mỗi bước.** Đảm bảo kết quả, số lần tương tác, exception và quy tắc rounding không đổi khi chuyển.
-7. **Dọn đường gọi cũ.** Nếu phương thức cũ là API công khai, cân nhắc giữ adapter ủy quyền trong giai đoạn chuyển đổi; khi caller đã chuyển hết và không còn yêu cầu tương thích, loại bỏ hàm tính trùng. Nếu là API nội bộ, có thể xóa ngay khi đã xác minh không còn caller.
-8. **Đánh giá lại thiết kế.** Xem coupling, cohesion, vòng đời đối tượng, quyền thay đổi dữ liệu và liệu phương thức đích có thật sự hiểu quy tắc nghiệp vụ.
+1. **Locate the behavior.** Find methods that read many fields on another object. Determine which data drives their calculations/decisions and whether they perform I/O.
+2. **Establish the old contract.** Write or preserve tests for normal cases, boundaries, errors, rounding, and important callers. For monetary calculations, test overflow and currency units.
+3. **Create a method on the target object.** Start with OrderLine.subtotalVnd(), letting the old method delegate to it so each move can be verified.
+4. **Move aggregation logic.** Add Order.subtotalVnd() and then Order.payableVnd(). Remove pricing calculations from the coordinator.
+5. **Update callers.** Have CheckoutService ask order.payableVnd() instead of iterating over order.lines() and checking VIP state.
+6. **Test each step.** Preserve results, interaction counts, exceptions, and rounding rules throughout the move.
+7. **Retire old entry points.** For public APIs, temporarily retain a delegating adapter during migration; remove duplicate calculations once callers have migrated and compatibility no longer requires them. For private APIs, delete them after confirming there are no callers.
+8. **Reassess the design.** Check coupling, cohesion, object lifecycles, data mutation ownership, and whether the target method really understands the business rule.
 
-Có thể dùng trình tự nhỏ thay vì chuyển cả một khối mã lớn. Các IDE Java hỗ trợ thao tác *Move Instance Method*, nhưng công cụ tự động không hiểu đầy đủ ranh giới nghiệp vụ: vẫn phải kiểm thử và rà soát API.
+Prefer incremental steps over moving a large code block at once. Java IDEs support *Move Instance Method*, but automated tools do not fully understand business boundaries: tests and API review remain necessary.
 
 ~~~mermaid
 flowchart TD
@@ -1724,71 +1724,71 @@ flowchart TD
     H -->|Có| J["Dọn phương thức trùng và kết thúc"]
 ~~~
 
-## 7. Mối liên hệ với các nguyên tắc OOP
+## 7. Connections to OOP Principles
 
-**Encapsulation (đóng gói).** Đối tượng có thể bảo vệ bất biến khi chính nó thực hiện thao tác trên dữ liệu mình sở hữu. Caller không cần biết danh sách dòng hàng được lưu bằng ArrayList, cấu trúc bất biến hay cơ chế lazy loading.
+**Encapsulation.** An object can protect invariants by operating on data it owns. Callers need not know whether line items are stored in an ArrayList, immutable structure, or lazy-loaded collection.
 
-**High Cohesion (kết dính cao).** Phép tính thành tiền nằm cùng đơn giá và số lượng. Quy tắc tổng tiền nằm cùng toàn bộ đơn hàng. Mỗi thay đổi liên quan có xu hướng tập trung vào lớp thích hợp.
+**High Cohesion.** Line amounts are calculated beside unit prices and quantities. Order totals belong with the complete order. Related changes tend to remain localized in the appropriate class.
 
-**Low Coupling (liên kết lỏng).** CheckoutService chỉ phụ thuộc vào giao diện nghiệp vụ gọn của Order: id() và payableVnd(), thay vì từng getter trên các dòng hàng và quy tắc VIP. Chuyển nhiều dòng code sang đối tượng khác nhưng vẫn yêu cầu caller đọc cùng lượng dữ liệu không thực sự cải thiện coupling.
+**Low Coupling.** CheckoutService depends only on Order's concise business API—id() and payableVnd()—rather than individual line-item getters and VIP rules. Moving many lines to another object without reducing how much data callers must inspect does not meaningfully reduce coupling.
 
-**Single Responsibility Principle (SRP).** Lý do thay đổi liên quan giá trị dòng hàng thuộc OrderLine; lý do thay đổi quy tắc tính tổng cơ bản thuộc Order; thay đổi quy trình thu tiền thuộc CheckoutService. SRP không có nghĩa mỗi lớp chỉ được có một phương thức.
+**Single Responsibility Principle (SRP).** Changes to line-item values belong to OrderLine, basic order-total rules belong to Order, and payment-workflow changes belong to CheckoutService. SRP does not mean one method per class.
 
-**Information Expert (nguyên tắc GRASP).** Giao trách nhiệm cho đối tượng có đủ thông tin để làm tốt nhiệm vụ. Đây là hướng dẫn hữu ích để chọn nơi đặt phương thức, nhưng phải cân bằng với ranh giới transaction, security, phân quyền, hiệu năng và domain.
+**Information Expert (a GRASP principle).** Assign responsibility to an object with the information needed to perform it. This guides method placement but must be balanced against transaction, security, authorization, performance, and domain boundaries.
 
-**Tell, Don't Ask.** Hãy gọi một hành vi biểu đạt ý định như order.payableVnd() thay vì hỏi hết dữ liệu rồi tự suy luận. Tuy nhiên, đọc dữ liệu qua API truy vấn cho UI, báo cáo hoặc serialization là nhu cầu chính đáng; không phải getter nào cũng là mùi mã.
+**Tell, Don't Ask.** Invoke meaningful behavior such as order.payableVnd() rather than retrieving all data and inferring the result. However, query APIs for UIs, reports, or serialization are legitimate; not every getter is a code smell.
 
-## 8. Khi nào KHÔNG nên chuyển phương thức?
+## 8. When Should You NOT Move a Method?
 
-| Tình huống | Vì sao không nên chuyển vội | Phương án cân nhắc |
+| Situation | Why not move it hastily? | Alternative |
 | --- | --- | --- |
-| Hành vi sử dụng nhiều domain object ngang vai trò | Không có một đối tượng tự nhiên chịu toàn bộ quy tắc | Domain service / policy riêng |
-| Thuật toán phụ thuộc API mạng, database, gửi email | Entity sẽ mang phụ thuộc I/O và khó kiểm soát transaction | Application service hoặc adapter |
-| Quy tắc khuyến mãi thường đổi, cần nhiều chiến lược | Nhồi toàn bộ điều kiện vào Order làm lớp phình to | DiscountPolicy / Strategy |
-| Logic định dạng màn hình hoặc xuất file | Làm domain object phụ thuộc giao diện hiển thị | Presenter / formatter |
-| Di chuyển tạo phụ thuộc vòng giữa các lớp | Kết dính có thể giảm, thiết kế khó hiểu hơn | Tách collaborator hoặc xem lại ranh giới |
-| Phương thức đọc nhiều dữ liệu từ hai aggregate lớn | Có thể gây nạp dư dữ liệu hoặc phá transaction boundary | Query service, domain service hoặc DTO chuyên dụng |
-| Mã logic thực sự dùng trạng thái của đối tượng nguồn | Chuyển sẽ làm đích phải phụ thuộc ngược lại nguồn | Giữ tại nguồn hoặc trích thành phần nhỏ |
+| Behavior uses several peer domain objects | No natural single owner for the entire rule | Dedicated domain service / policy |
+| Algorithm depends on network APIs, databases, or email | An entity would acquire I/O dependencies and complicate transactions | Application service or adapter |
+| Promotional rules change frequently and require multiple strategies | Packing every condition into Order makes the class bloated | DiscountPolicy / Strategy |
+| Screen formatting or file export | Domain objects become coupled to presentation | Presenter / formatter |
+| Moving causes circular dependencies | Cohesion may decrease and comprehension worsen | Extract a collaborator or revisit boundaries |
+| A method reads extensive data from two large aggregates | May over-fetch data or violate transaction boundaries | Query service, domain service, or dedicated DTO |
+| Logic genuinely depends on source-object state | Moving it makes the destination depend back on the source | Keep it at the source or extract a smaller component |
 
-Một nguyên tắc thực hành: **chuyển phần có cùng lý do thay đổi, không di chuyển máy móc chỉ vì thấy nhiều dấu chấm getter**.
+A practical rule: **move behavior that shares a reason to change, not every method that happens to use many getters**.
 
-Ví dụ, nếu giảm giá được tính theo mã chiến dịch từ nhiều hệ thống, việc đưa toàn bộ chiến dịch vào Order sẽ khiến Order phụ thuộc vào API coupon. Giải pháp hợp lý có thể là PricingPolicy tính mức giảm và Order quản lý các bất biến của đơn; CheckoutService phối hợp các bước cần thiết.
+For example, if discounts depend on campaign codes across multiple systems, moving all campaign logic into Order would couple it to coupon APIs. A better choice may be for PricingPolicy to calculate the discount, Order to maintain order invariants, and CheckoutService to coordinate the necessary steps.
 
-## 9. Bài tập mở rộng
+## 9. Extension Exercises
 
-**Bài 1 — Phát hiện hành vi đặt sai chỗ.** Giả sử ReportService duyệt danh sách OrderLine để tính số lượng sản phẩm. Hãy phân biệt hai nhu cầu:
-- Nếu muốn biết tổng số lượng của **một đơn**, cân nhắc Order.totalQuantity().
-- Nếu muốn tổng số lượng đã bán trong **một khoảng thời gian từ nhiều đơn**, báo cáo/query service có thể là chủ sở hữu hợp lý.
+**Exercise 1 — Find misplaced behavior.** Suppose ReportService iterates over OrderLine objects to count products. Distinguish two needs:
+- For the total quantity in **one order**, consider Order.totalQuantity().
+- For the total quantity sold **over a period across multiple orders**, a report/query service may be the right owner.
 
-**Bài 2 — Refactor giỏ hàng.** Tạo CartItem(price, quantity) và Cart(items). Ban đầu CartService tính tổng; sau đó chuyển phép tính từng dòng vào CartItem và phép cộng vào Cart. Viết test bảo vệ trường hợp giỏ rỗng, số lượng không hợp lệ, tràn số và thay đổi danh sách đầu vào.
+**Exercise 2 — Refactor a cart.** Create CartItem(price, quantity) and Cart(items). Initially, CartService calculates totals; then move per-line calculations into CartItem and aggregation into Cart. Test empty carts, invalid quantities, overflow, and modifications to the supplied list.
 
-**Bài 3 — Chính sách giảm giá có thể thay đổi.** Thêm interface DiscountPolicy với phương thức tính số tiền giảm. Thử thiết kế để Order chịu trách nhiệm tổng hợp còn chính sách giảm giá do một đối tượng chuyên trách đảm nhiệm. Xác định rõ chính sách nào được cung cấp tại construction hoặc khi định giá, và tránh lưu giá không còn hợp lệ theo thời gian.
+**Exercise 3 — Changing discount policies.** Add a DiscountPolicy interface with a method that calculates discounts. Design Order to aggregate amounts while a dedicated object handles discount policy. Specify which policy is supplied at construction or pricing time, and avoid storing prices that become stale.
 
-**Bài 4 — Xử lý migration API.** Nếu một module khác vẫn gọi PriceService.calculatePayable(order), hãy giữ tạm phương thức cũ ủy quyền cho order.payableVnd(), đánh dấu deprecated khi phù hợp, chuyển caller rồi xóa khi đã kiểm tra tác động tương thích.
+**Exercise 4 — API migration.** If another module still calls PriceService.calculatePayable(order), temporarily retain the old method delegating to order.payableVnd(), mark it deprecated when appropriate, migrate callers, and remove it once compatibility impact is checked.
 
-**Tự đánh giá:** Sau refactor, một phương thức dùng dữ liệu của đối tượng nào thì trách nhiệm chủ yếu nằm tại đối tượng đó; các lớp điều phối hiểu ít hơn về chi tiết nội bộ; hành vi bên ngoài được test bảo vệ; và không phát sinh phụ thuộc vòng hay nhồi thêm I/O vào domain object.
+**Self-assessment:** After refactoring, behavior primarily belongs to the object whose data it uses; coordinators know fewer internal details; tests preserve external behavior; and no new circular dependencies or domain-object I/O coupling appear.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="refactoring-005">Đóng gói trường dữ liệu và cấu trúc nội bộ</a>
+## <a id="refactoring-005">Encapsulating Fields and Internal Structures</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đóng gói trường dữ liệu và cấu trúc nội bộ trong Java OOP
+# Encapsulating Fields and Internal Structures in Java OOP
 
-> **Phạm vi:** Tái cấu trúc — *Encapsulate Field*, *Encapsulate Collection* và *Hide Representation*. Mục tiêu là để mỗi đối tượng tự bảo vệ trạng thái hợp lệ và cho phép bên ngoài làm việc qua một API ổn định.
+> **Scope:** Refactoring — *Encapsulate Field*, *Encapsulate Collection*, and *Hide Representation*. The goal is for objects to protect their own valid state and expose a stable API to callers.
 
-## 1. Vấn đề thực tế: field `private` chưa đủ
+## 1. The Practical Problem: A `private` Field Is Not Enough
 
-Trong lập trình hướng đối tượng, **đóng gói (encapsulation)** có nghĩa là đối tượng kiểm soát cách trạng thái của nó được đọc hoặc thay đổi. Client cần biết **đối tượng có thể làm gì**, thay vì biết **nó lưu dữ liệu như thế nào**.
+In object-oriented programming, **encapsulation** means an object controls how its state is read and changed. Clients should know **what an object can do**, not **how it stores its data**.
 
-Hai tình huống làm mất đóng gói:
+Two situations that undermine encapsulation:
 
 ~~~java
 class Order {
@@ -1796,7 +1796,7 @@ class Order {
 }
 ~~~
 
-`final` chỉ ngăn gán lại **tham chiếu** `lines`; nó **không** ngăn `order.lines.clear()`, `add()` hay sửa phần tử nằm trong danh sách.
+`final` prevents reassigning the **reference** `lines`; it **does not** prevent `order.lines.clear()`, `add()`, or mutation of elements inside the list.
 
 ~~~java
 class Order {
@@ -1808,53 +1808,53 @@ class Order {
 }
 ~~~
 
-Dù field đã `private`, client vẫn sửa danh sách trực tiếp qua getter:
+Even though the field is `private`, the client can still modify the list directly through the getter:
 
 ~~~java
 order.getLines().clear();
 ~~~
 
-Vấn đề này được gọi là **representation exposure**: cấu trúc dữ liệu dùng để biểu diễn trạng thái nội bộ bị lộ ra, cho phép mã khác thay đổi nó mà không đi qua quy tắc của đối tượng.
+This is **representation exposure**: the data structure representing internal state is exposed, letting other code modify it without going through the object's rules.
 
-### Kết quả cần đạt
+### Learning Outcomes
 
-Sau bài này, bạn có thể:
+After this lesson, you should be able to:
 
-- Nhận biết field bị lộ, mutable collection, mutable element và tham chiếu alias gây rò rỉ trạng thái.
-- Áp dụng `Encapsulate Field` bằng việc giữ field `private` và cung cấp thao tác có ý nghĩa, thay vì tự động tạo getter/setter cho mọi field.
-- Giấu `ArrayList`, `HashMap` hoặc mảng đằng sau một **hợp đồng hành vi** không phụ thuộc loại cấu trúc lưu trữ.
-- Phân biệt **bản chụp bất biến**, **view không sửa được** và **deep copy**.
-- Viết kiểm thử chứng minh client không sửa được trạng thái nội bộ qua tham chiếu được trả về.
-- Tái cấu trúc có kiểm soát, giữ hành vi công khai đã cam kết và xử lý điểm tương thích API khi cần.
+- Recognize exposed fields, mutable collections, mutable elements, and aliased references that leak state.
+- Apply `Encapsulate Field` by keeping fields `private` and exposing meaningful operations rather than generating getters/setters for every field.
+- Hide `ArrayList`, `HashMap`, or arrays behind a **behavioral contract** independent of the underlying storage structure.
+- Distinguish **immutable snapshots**, **unmodifiable views**, and **deep copies**.
+- Write tests proving clients cannot modify internal state through returned references.
+- Refactor carefully, preserve promised public behavior, and handle API compatibility when necessary.
 
-## 2. Tại sao cần đóng gói cấu trúc nội bộ?
+## 2. Why Encapsulate Internal Structures?
 
-Giả sử `ShoppingCart` có các quy tắc:
+Suppose `ShoppingCart` has these rules:
 
-1. Mỗi SKU xuất hiện tối đa một lần.
-2. SKU phải khác `null`, không phải chuỗi trống hay chỉ có khoảng trắng.
-3. Đơn giá (cent) không âm, số lượng luôn dương khi dòng hàng tồn tại.
-4. Thay đổi số lượng về `0` có nghĩa là xóa dòng hàng, không lưu dòng có số lượng `0`.
-5. Tổng tiền bằng tổng `unitPriceCents × quantity` của các dòng; không được trả số âm hoặc kết quả sai vì tràn `long`.
+1. Each SKU appears at most once.
+2. An SKU must be non-`null`, nonempty, and not whitespace-only.
+3. Unit prices (in cents) are nonnegative; quantities are positive for existing lines.
+4. Changing a quantity to `0` removes the line rather than storing a line with quantity `0`.
+5. The total is the sum of `unitPriceCents × quantity` across lines; it must not return a negative or incorrect result due to `long` overflow.
 
-Nếu client được `cart.lines.add(...)` hoặc `cart.lines.get(0).quantity = -5`, mọi quy tắc này có thể bị phá mà `ShoppingCart` không biết.
+If clients can call `cart.lines.add(...)` or assign `cart.lines.get(0).quantity = -5`, they can break all these rules without `ShoppingCart` knowing.
 
-**Bất biến (invariant)** là điều kiện phải đúng với mọi trạng thái có thể quan sát được của đối tượng sau một thao tác công khai thành công. API của giỏ hàng nên cho phép `putLine`, `changeQuantity`, `removeLine` và `totalCents`, thay vì cho phép client tùy ý sửa `Map`/`List`.
+An **invariant** is a condition that must hold in every observable object state after a successful public operation. The cart API should provide `putLine`, `changeQuantity`, `removeLine`, and `totalCents` rather than letting clients freely mutate its `Map`/`List`.
 
-| Cách thiết kế | Có bảo vệ bất biến? | Điểm cần nhớ |
+| Design | Protects invariants? | Key point |
 |---|---|---|
-| `public List<Line> lines` | Không | Client thay đổi trực tiếp collection |
-| `private List<Line> lines` + getter trả tham chiếu gốc | Không | Chỉ thay cú pháp, chưa ẩn representation |
-| Getter trả `Collections.unmodifiableList(lines)` | Chỉ chặn sửa qua view | View **sống**, vẫn phản ánh thay đổi từ nguồn; element mutable vẫn sửa được |
-| Getter trả `List.copyOf(lines)` | Chặn sửa cấu trúc snapshot | Sao chép **nông**: element mutable vẫn có thể bị sửa |
-| Snapshot của các **value object bất biến** | Thường phù hợp cho đọc an toàn | Client không thể sửa list hoặc phần tử qua reference được trả |
-| API mutation có kiểm tra quy tắc | Có thể bảo vệ invariant | Mọi thay đổi hợp lệ đi qua phương thức kiểm soát |
+| `public List<Line> lines` | No | Clients mutate the collection directly |
+| `private List<Line> lines` + getter returning the original reference | No | Syntax changes, but representation remains exposed |
+| Getter returning `Collections.unmodifiableList(lines)` | Prevents edits through the view only | A **live** view still reflects source changes; mutable elements remain editable |
+| Getter returning `List.copyOf(lines)` | Prevents structural edits to the snapshot | **Shallow** copy: mutable elements can still change |
+| Snapshot containing **immutable value objects** | Usually safe for reading | Clients cannot modify the list or elements through returned references |
+| Rule-checked mutation API | Can enforce invariants | Every valid change passes through a controlled method |
 
-**Encapsulation không đồng nghĩa bất biến tuyệt đối:** một giỏ hàng vẫn có thể thay đổi trạng thái thông qua các phương thức công khai **được phép**. Điều quan trọng là không có đường tắt vượt qua validation và business rules.
+**Encapsulation does not imply total immutability:** A cart may still change through **permitted** public operations. What matters is that no shortcut bypasses validation and business rules.
 
-## 3. Ví dụ Java 17 chạy được: từ giỏ hàng rò rỉ dữ liệu sang API an toàn
+## 3. Runnable Java 17 Example: From Leaky Cart to Safe API
 
-Tạo tệp duy nhất `EncapsulationDemo.java`, dùng JDK 17 trở lên. Ví dụ có cả phiên bản **cố ý không an toàn** để minh họa hậu quả và phiên bản đã cải thiện để kiểm thử.
+Create one `EncapsulationDemo.java` file with JDK 17 or later. The example includes an **intentionally unsafe** version to demonstrate the consequences and an improved version to test.
 
 ~~~java
 import java.util.ArrayList;
@@ -2032,14 +2032,14 @@ public class EncapsulationDemo {
 }
 ~~~
 
-Biên dịch, chạy:
+Compile and run:
 
 ~~~bash
 javac EncapsulationDemo.java
 java EncapsulationDemo
 ~~~
 
-Kết quả mong đợi:
+Expected output:
 
 ~~~text
 LEAK: client changed old cart total to -300
@@ -2049,19 +2049,19 @@ PASS: old snapshot is independent
 Final total (cents): 99
 ~~~
 
-**Tại sao phiên bản mới an toàn hơn?**
+**Why Is the New Version Safer?**
 
-1. `lines` là `private`: client không thể thêm/xóa dòng bằng truy cập field.
-2. `putLine` và `changeQuantity` là **cửa ngõ duy nhất** thay đổi các dòng trong mô hình này. Validation xảy ra **trước** khi cập nhật trạng thái.
-3. `LineSnapshot` là record có component `String`, `long` và `int`; không có reference tới object có thể thay đổi. Khi cập nhật số lượng, giỏ tạo record mới.
-4. `List.copyOf(lines.values())` tạo danh sách snapshot không sửa được. Snapshot cũ không thay đổi khi `ShoppingCart` cập nhật nội bộ.
-5. `Math.multiplyExact` và `Math.addExact` phát hiện tràn số bằng `ArithmeticException`; không để `long` âm đi vì phép toán tràn rồi âm thầm trả số sai.
+1. `lines` is `private`, so clients cannot add/delete lines through field access.
+2. `putLine` and `changeQuantity` are the **only entry points** for line changes in this model. Validation occurs **before** state updates.
+3. `LineSnapshot` is a record with `String`, `long`, and `int` components; it contains no mutable-object references. The cart creates a new record when changing quantity.
+4. `List.copyOf(lines.values())` creates an unmodifiable snapshot. Old snapshots do not change when `ShoppingCart` is updated internally.
+5. `Math.multiplyExact` and `Math.addExact` detect overflow by throwing `ArithmeticException`, preventing silently incorrect negative `long` results.
 
-Ví dụ chưa xử lý **concurrency**: `LinkedHashMap` không thread-safe. Nếu nhiều thread cùng thay đổi giỏ, cần giới hạn ownership theo request/transaction hoặc đồng bộ tại đúng ranh giới; tính bất biến của snapshot không tự khiến toàn bộ `ShoppingCart` thread-safe.
+The example does not address **concurrency**: `LinkedHashMap` is not thread-safe. If multiple threads modify the cart, restrict ownership per request/transaction or synchronize at the correct boundary; immutable snapshots do not automatically make the whole `ShoppingCart` thread-safe.
 
-## 4. Ba khái niệm hay bị nhầm: copy, view và immutable element
+## 4. Three Commonly Confused Concepts: Copy, View, and Immutable Element
 
-Xét `List<Person>` mà `Person` có setter:
+Consider a `List<Person>` where `Person` has a setter:
 
 ~~~java
 final class Person {
@@ -2072,21 +2072,21 @@ final class Person {
 }
 ~~~
 
-| Câu lệnh | Có sửa được cấu trúc danh sách trả về? | Có thấy nguồn thay đổi sau khi lấy? | Có thể sửa `Person` qua reference? |
+| Statement | Can the returned list's structure be changed? | Are later source changes visible? | Can `Person` be mutated through the reference? |
 |---|---|---|---|
-| `return people;` | Có | Có, cùng object | Có |
-| `return Collections.unmodifiableList(people);` | Không qua view | **Có** (live view) | **Có** |
-| `return new ArrayList<>(people);` | Có, nhưng chỉ bản sao list | Không thấy thêm/xóa của nguồn sau copy | **Có** |
-| `return List.copyOf(people);` | Không | Thường là snapshot đối với thay đổi cấu trúc khi nguồn mutable | **Có** |
-| `return people.stream().map(p -> new ImmutablePerson(p.getName())).toList();` | Không qua danh sách trả về | Không, nếu thành phần immutable | Không |
+| `return people;` | Yes | Yes, same object | Yes |
+| `return Collections.unmodifiableList(people);` | Not through the view | **Yes** (live view) | **Yes** |
+| `return new ArrayList<>(people);` | Yes, but only in the copy | Later source additions/removals are not visible | **Yes** |
+| `return List.copyOf(people);` | No | Generally a structural snapshot of a mutable source | **Yes** |
+| `return people.stream().map(p -> new ImmutablePerson(p.getName())).toList();` | Not through the returned list | No, when elements are immutable | No |
 
-`List.copyOf` sao chép cấu trúc từ collection mutable, nhưng **không sao chép sâu** các phần tử. Nếu object trong list có thể thay đổi thì cả bản sao và nguồn vẫn nhìn thấy cùng object đó. `Collections.unmodifiableList` chỉ bọc list, còn chủ sở hữu list ban đầu vẫn có thể thay đổi nội dung, nên view có thể đổi theo.
+`List.copyOf` copies a mutable collection's structure but **does not deep-copy** elements. If an element is mutable, both source and copy still reference the same object. `Collections.unmodifiableList` only wraps a list; its original owner may still change it, and the view will reflect those changes.
 
-`Stream.toList()` (Java 16+) tạo danh sách không hỗ trợ các thao tác cập nhật, nhưng **cũng không tự deep-copy element**.
+`Stream.toList()` (Java 16+) produces an unmodifiable list, but **also does not automatically deep-copy its elements**.
 
-### Khi có mutable element, dùng defensive copy thực sự
+### Use Real Defensive Copies for Mutable Elements
 
-Nếu buộc giữ class `Person` mutable, có thể tạo bản sao tại **đầu ra**:
+If `Person` must remain mutable, copy elements on **output**:
 
 ~~~java
 public List<Person> peopleSnapshot() {
@@ -2096,7 +2096,7 @@ public List<Person> peopleSnapshot() {
 }
 ~~~
 
-Và tạo bản sao tại **đầu vào**:
+And copy them on **input**:
 
 ~~~java
 public void addPerson(Person incoming) {
@@ -2105,11 +2105,11 @@ public void addPerson(Person incoming) {
 }
 ~~~
 
-Như vậy, việc caller sửa `incoming` sau `addPerson` hoặc sửa một `Person` nhận về từ `peopleSnapshot` không ảnh hưởng trạng thái lưu bên trong, **với điều kiện** tên là `String` immutable và class chỉ có field đang sao chép. Với object lồng nhau, mảng, collection hay mutable `Date`, cần quyết định sao chép sâu các thành phần sở hữu phù hợp. Không có một hàm clone vạn năng tự đảm bảo an toàn cho mọi object graph.
+This way, mutating `incoming` after `addPerson` or changing a `Person` returned by `peopleSnapshot` does not affect internal state, **provided** names are immutable `String` values and the class contains only the fields being copied. Nested objects, arrays, collections, and mutable `Date` values may require deeper copies of owned components. No universal clone function safely handles every object graph.
 
-## 5. Đóng gói trường dữ liệu (Encapsulate Field) đúng cách
+## 5. Applying Encapsulate Field Correctly
 
-Ví dụ field public:
+Consider a public field:
 
 ~~~java
 class BankAccount {
@@ -2117,7 +2117,7 @@ class BankAccount {
 }
 ~~~
 
-Sửa cơ học thành `private` + setter là chưa đủ:
+Mechanically changing it to `private` plus a setter is insufficient:
 
 ~~~java
 class BankAccount {
@@ -2130,7 +2130,7 @@ class BankAccount {
 }
 ~~~
 
-Nếu hợp đồng là “số dư không âm”, API nên thể hiện **hành động hợp lệ**:
+If the contract is "the balance must remain nonnegative," the API should expose **valid actions**:
 
 ~~~java
 final class BankAccount {
@@ -2163,21 +2163,21 @@ final class BankAccount {
 }
 ~~~
 
-Ưu điểm là client chỉ có thể tăng/giảm số dư trong điều kiện hợp lệ. Nếu cần chuyển tiền giữa hai tài khoản, phải thiết kế thao tác giao dịch thích hợp; chỉ hai lời gọi `withdraw` rồi `deposit` không tự bảo đảm tính nguyên tử nếu một bước thất bại.
+This lets clients increase/decrease balances only under valid conditions. Transferring between accounts requires an appropriate transactional operation; merely calling `withdraw` and then `deposit` does not guarantee atomicity if either step fails.
 
-### Chọn API theo bản chất state
+### Choose APIs According to the Nature of State
 
-- Field cấu hình chỉ đọc: dùng `private final` và getter an toàn hoặc truyền qua constructor.
-- Giá trị nghiệp vụ có ràng buộc: ưu tiên `deposit`, `withdraw`, `changeQuantity`, `rename`, `activate`… thay cho `setAnything`.
-- Danh sách thuộc quyền sở hữu object: cho xem snapshot; thay đổi qua `add/remove/update` có validation.
-- Giá trị tính được: ưu tiên method `totalCents()` thay vì cho caller sửa một field `total` dễ mất đồng bộ.
-- DTO chỉ chuyển dữ liệu giữa tầng/API: record hoặc JavaBean có setter có thể là lựa chọn hợp lý; không cần ép mọi DTO thành rich domain model.
+- Read-only configuration fields: use `private final` with a safe getter or constructor arguments.
+- Constrained business values: prefer `deposit`, `withdraw`, `changeQuantity`, `rename`, and `activate` over `setAnything`.
+- Object-owned collections: expose snapshots and validate mutations through `add/remove/update`.
+- Computed values: prefer a `totalCents()` method rather than letting clients update a `total` field that may become inconsistent.
+- DTOs that transfer data between layers/APIs: records or JavaBeans with setters may be appropriate; not every DTO must be a rich domain model.
 
-**Điểm cốt lõi:** Không phải “càng ít getter/setter càng tốt”. Thiết kế API phải tương ứng với điều người dùng đối tượng được phép làm và những bất biến cần giữ.
+**Key point:** The goal is not "as few getters/setters as possible." An API should reflect permitted object operations and the invariants that must be maintained.
 
-## 6. Che giấu cấu trúc dữ liệu là giảm phụ thuộc vào implementation
+## 6. Hiding Data Structures Reduces Implementation Coupling
 
-Hãy so sánh hai API:
+Compare these two APIs:
 
 ~~~java
 // Client phụ thuộc vào cấu trúc lưu trữ.
@@ -2190,7 +2190,7 @@ List<LineSnapshot> lines();     // snapshot đọc
 long totalCents();
 ~~~
 
-Với thiết kế thứ hai, implementation có thể chuyển từ `LinkedHashMap` sang cấu trúc phù hợp hơn, thêm chỉ mục theo SKU, cache tổng tiền hoặc lưu các bản ghi khác mà caller vẫn dựa vào hợp đồng công khai.
+With the second design, the implementation can switch from `LinkedHashMap` to a more suitable structure, add an SKU index, cache totals, or store other records while callers continue using the public contract.
 
 ~~~mermaid
 classDiagram
@@ -2216,18 +2216,18 @@ classDiagram
     ShoppingCart o--> LineSnapshot : chứa dữ liệu bất biến
 ~~~
 
-**Che giấu implementation** không có nghĩa client không biết gì về dữ liệu. Client vẫn cần tên SKU, giá, số lượng nếu đó là mục đích nghiệp vụ; điều nó không cần biết là object lưu chúng bằng `ArrayList`, `LinkedHashMap` hay bảng DB.
+**Hiding implementation details** does not mean clients know nothing about the data. Clients may need SKU names, prices, and quantities for legitimate business purposes; they need not know whether those values are stored in an `ArrayList`, `LinkedHashMap`, or database table.
 
-## 7. Quy trình refactor an toàn trong dự án đang chạy
+## 7. Safe Refactoring in a Running Project
 
-1. **Xác định ownership của dữ liệu:** Ai được quyền tạo, giữ, thay và hủy collection hoặc object? Tìm mọi đường sửa hiện có: field public, getter, setter, alias từ constructor, callback, serialization.
-2. **Ghi hợp đồng trước thay đổi:** Field có cho phép null không, duplicate không, thứ tự có ý nghĩa không, kiểu ngoại lệ nào được công bố, hành động nào phải bảo toàn dữ liệu?
-3. **Thêm characterization/regression tests:** Kiểm tra dữ liệu hợp lệ, input sai, giá trị biên và tác dụng phụ mà client thực sự trông đợi.
-4. **Đưa thao tác cập nhật vào class sở hữu state:** Ví dụ `addLine`, `removeLine`, `changeQuantity`. Validation trước mutation; giữ trạng thái hợp lệ cả khi exception xảy ra.
-5. **Thu hẹp quyền truy cập field:** Chuyển thành `private` khi có thể; thay client bằng API mới một cách có kiểm soát.
-6. **Bảo vệ đầu vào/đầu ra:** Copy collection khi nhận vào nếu nhận ownership; trả snapshot hoặc view thích hợp; nếu element mutable cần bản sao an toàn hoặc value object.
-7. **Dọn đường tắt cũ:** Ngừng trả tham chiếu mutable, tránh setter tùy ý phá invariant. Với public API đã phát hành, lên kế hoạch deprecation/migration hoặc adapter phù hợp.
-8. **Chạy test và review diff:** Xác nhận invariant, concurrency contract nếu có, hiệu năng đối với collection lớn và serialization/API compatibility.
+1. **Identify data ownership:** Who may create, hold, modify, and discard collections or objects? Find every existing mutation path: public fields, getters, setters, constructor aliases, callbacks, and serialization.
+2. **Document the contract first:** Does the field allow null or duplicates? Does order matter? Which exception types are promised? Which operations must preserve data?
+3. **Add characterization/regression tests:** Cover valid data, invalid inputs, boundaries, and side effects clients actually expect.
+4. **Move updates into the state owner:** For example, `addLine`, `removeLine`, and `changeQuantity`. Validate before mutating, keeping state valid even when exceptions occur.
+5. **Restrict field access:** Make fields `private` where possible, migrating clients to the new API in controlled steps.
+6. **Protect inputs and outputs:** Copy incoming collections when taking ownership; return suitable snapshots or views; for mutable elements, use safe copies or value objects.
+7. **Retire old shortcuts:** Stop returning mutable references and exposing arbitrary setters that break invariants. For published public APIs, plan deprecation/migration or compatible adapters.
+8. **Run tests and review diffs:** Check invariants, concurrency contracts where applicable, performance with large collections, and serialization/API compatibility.
 
 ~~~mermaid
 flowchart TD
@@ -2241,31 +2241,31 @@ flowchart TD
     F -->|Có| H["Đổi client, dọn API cũ, review"]
 ~~~
 
-### Các điểm tương thích cần cân nhắc
+### Compatibility Concerns
 
-- **API/source compatibility:** Đổi field `public` thành `private` khiến client đang gọi field không biên dịch. Nếu thư viện đã được xuất bản, cần migration plan và versioning.
-- **Hợp đồng collection:** Nếu client được cam kết **thứ tự**, việc chuyển `LinkedHashMap` sang `HashMap` rồi trả list có thể làm thay đổi thứ tự quan sát được. Nếu thứ tự không phải hợp đồng, đừng thêm test buộc thứ tự.
-- **ORM/JPA/serialization:** Framework có thể cần constructor, access strategy hoặc annotation phù hợp. Bảo đảm dùng được với framework thay vì mở field public chỉ vì tiện.
-- **Hiệu năng:** `List.copyOf` tạo snapshot khi cần; trả snapshot của collection rất lớn với tần suất cao có chi phí. Có thể cung cấp truy vấn theo trang, iterator có kiểm soát hoặc immutable data structure thích hợp. Không được hy sinh invariant chỉ vì muốn tránh copy.
-- **Thread safety:** Trả snapshot an toàn không tự làm thao tác cập nhật trên collection thread-safe. Cần chiến lược đồng bộ, immutable aggregate hoặc transaction tùy ngữ cảnh.
-- **Biểu diễn JSON:** DTO có thể khác mô hình miền. Một adapter/mapper nên chịu trách nhiệm chuyển đổi, tránh lộ cấu trúc lưu trữ của domain ra payload công khai.
+- **API/source compatibility:** Changing a `public` field to `private` breaks client code accessing it. Published libraries need migration plans and versioning.
+- **Collection contracts:** If clients are promised **ordering**, switching from `LinkedHashMap` to `HashMap` and returning a list may change observable order. If order is not contractual, avoid tests that unnecessarily impose one.
+- **ORM/JPA/serialization:** Frameworks may require constructors, access strategies, or annotations. Maintain framework compatibility rather than exposing public fields for convenience.
+- **Performance:** `List.copyOf` creates snapshots when needed; frequent snapshots of very large collections can be costly. Consider paged queries, controlled iterators, or suitable immutable data structures without sacrificing invariants.
+- **Thread safety:** Returning a safe snapshot does not automatically make collection updates thread-safe. Depending on context, use synchronization, immutable aggregates, or transactions.
+- **JSON representation:** DTOs may differ from domain models. Adapters/mappers should convert between them without leaking domain storage structures into public payloads.
 
-## 8. Kiểm thử đóng gói: chứng minh bên ngoài không phá được trạng thái
+## 8. Testing Encapsulation: Prove Callers Cannot Break State
 
-Các test nên xác nhận **hành vi**, không chỉ kiểm tra rằng field mang từ khóa `private`.
+Tests should verify **behavior**, not just whether a field is marked `private`.
 
-| Ca kiểm thử | Thao tác | Kết quả kỳ vọng |
+| Test case | Action | Expected result |
 |---|---|---|
-| Không lộ list mutable | Nhận `lines()` rồi gọi `clear()` | Bị chặn; giỏ hàng không đổi |
-| Snapshot độc lập | Lấy snapshot A, update giỏ, lấy B | A giữ trạng thái cũ; B phản ánh trạng thái mới |
-| Không lộ mutable element | Thử thay đổi element đã nhận | Không có đường sửa trực tiếp; nếu DTO mutable thì phải copy |
-| Validate trước ghi | Gọi `putLine("", 100, 1)` | Ném `IllegalArgumentException`; tổng và lineCount giữ nguyên |
-| Bất biến số lượng | `changeQuantity("BOOK", 0)` | Xóa dòng BOOK, không lưu quantity = 0 |
-| Thao tác sai | `changeQuantity("UNKNOWN", 2)` | Ném `NoSuchElementException`; dữ liệu hiện có giữ nguyên |
-| Tràn phép tính | Dữ liệu đủ lớn gây overflow | Không trả tổng đã wrap; có lỗi được phát hiện rõ |
-| Tính ổn định hợp đồng | Đổi internal `Map` thành triển khai khác | Các ca client hợp lệ vẫn có kết quả đúng |
+| Do not expose mutable lists | Receive `lines()` and call `clear()` | Blocked; cart remains unchanged |
+| Independent snapshots | Take snapshot A, update the cart, then take B | A retains old state; B reflects new state |
+| Do not expose mutable elements | Attempt to modify a returned element | No direct mutation path; copy mutable DTOs |
+| Validate before writing | Call `putLine("", 100, 1)` | Throw `IllegalArgumentException`; total and lineCount remain unchanged |
+| Quantity invariant | Call `changeQuantity("BOOK", 0)` | Remove BOOK; do not store quantity = 0 |
+| Invalid operation | Call `changeQuantity("UNKNOWN", 2)` | Throw `NoSuchElementException`; existing data stays unchanged |
+| Calculation overflow | Provide values large enough to overflow | Never return a wrapped total; report a detectable error |
+| Contract stability | Replace the internal `Map` implementation | Valid client scenarios still produce correct results |
 
-Có thể dùng JUnit 5 (JUnit Jupiter), đặt test trong cùng package với `EncapsulationDemo`:
+Use JUnit 5 (JUnit Jupiter), placing tests in the same package as `EncapsulationDemo`:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -2313,31 +2313,31 @@ class ShoppingCartTest {
 }
 ~~~
 
-Ví dụ test trên dựa vào class demo cùng package (các nested class không khai báo `public`). Dự án thực tế nên đặt mỗi kiểu vào tệp thích hợp và tổ chức access modifier theo API của package/module.
+The tests rely on demo classes in the same package (nested classes are not declared `public`). Real projects should place each type in an appropriate file and choose access modifiers based on package/module APIs.
 
-Cũng cần kiểm thử ở **ranh giới đối tượng đầu vào**. Nếu constructor nhận `List<MutableLine>` rồi lưu tham chiếu trực tiếp, người gọi vẫn có thể sửa `MutableLine` hoặc list sau khi constructor trả về, dù getter đã defensive copy.
+Also test **input-object boundaries**. If a constructor accepts `List<MutableLine>` and stores the reference directly, callers can still change `MutableLine` objects or the list afterward, even if getters perform defensive copies.
 
-## 9. Những lỗi refactor dễ mắc
+## 9. Common Refactoring Mistakes
 
-**Lỗi 1 — “Private rồi là xong”.** Getter trả `List`/`Map` gốc vẫn lộ dữ liệu. Cần xem toàn bộ **đường tham chiếu** vào và ra object.
+**Mistake 1 — "Private fixes everything."** Getters returning the original `List`/`Map` still expose data. Examine all **reference paths** into and out of the object.
 
-**Lỗi 2 — Tạo setter cho mọi field.** Setter tự do cho `balance`, `items`, `status` có thể cho phép trạng thái bất hợp lệ. Nên chọn những thao tác hợp lệ của miền.
+**Mistake 2 — Adding setters for every field.** Unrestricted setters for `balance`, `items`, and `status` may permit invalid states. Prefer valid domain operations.
 
-**Lỗi 3 — Nghĩ `final` làm object bất biến.** `private final List<T>` vẫn bị thay đổi nội dung khi lớp sở hữu gọi `add/remove`; điều này hoàn toàn hợp lệ nếu có kiểm soát. Nếu reference bị lộ, bên ngoài cũng có thể thay đổi nó.
+**Mistake 3 — Assuming `final` makes an object immutable.** A `private final List<T>` can still change contents when the owner calls `add/remove`; that is valid when controlled. If the reference leaks, outside code can modify it too.
 
-**Lỗi 4 — Nhầm unmodifiable view với snapshot.** `Collections.unmodifiableList(source)` không cho sửa qua wrapper nhưng vẫn thấy sửa đổi từ `source`; `List.copyOf(source)` tạo snapshot cấu trúc (nhưng phần tử vẫn được chia sẻ).
+**Mistake 4 — Confusing an unmodifiable view with a snapshot.** `Collections.unmodifiableList(source)` blocks edits through the wrapper but still reflects changes in `source`; `List.copyOf(source)` creates a structural snapshot (while sharing element references).
 
-**Lỗi 5 — Sao chép list mà quên element.** `new ArrayList<>(people)` không deep-copy `Person`. Sửa `peopleCopy.get(0).setName("X")` có thể sửa dữ liệu nội bộ nếu phần tử cùng tham chiếu.
+**Mistake 5 — Copying a list but not its elements.** `new ArrayList<>(people)` does not deep-copy `Person`. Calling `peopleCopy.get(0).setName("X")` may modify internal data when both lists share the same element.
 
-**Lỗi 6 — Dựa hoàn toàn vào record để khẳng định deep immutable.** Record với `List`, `Date` hoặc mảng chỉ có field cuối cùng; phần tử/đối tượng lồng nhau có thể mutable. Phải defensive copy tại constructor và accessor khi cần.
+**Mistake 6 — Assuming records are deeply immutable.** Records containing `List`, `Date`, or arrays only have final fields; elements and nested objects may be mutable. Make defensive copies in constructors and accessors as needed.
 
-**Lỗi 7 — Bỏ quên tính nguyên tử khi mutate.** Nếu update state trước rồi mới validate hoặc gọi logic có thể ném lỗi, object có thể bị dở dang. Tính trước, kiểm tra trước, rồi mới commit; với nhiều resource có thể cần transaction.
+**Mistake 7 — Forgetting atomicity during mutation.** Updating state before validation or potentially failing logic can leave an object partially changed. Calculate and validate first, then commit; multiple resources may require a transaction.
 
-**Lỗi 8 — Phá giao diện công khai của thư viện mà không có kế hoạch.** Không nên xem thay `public field` thành private là refactor hoàn toàn tương thích ở ranh giới người dùng thư viện. Cần kiểm thử tương thích API và hướng dẫn migration.
+**Mistake 8 — Breaking a library's public API without a plan.** Changing a `public field` to private is not automatically a compatible refactoring at the library boundary. API compatibility tests and migration guidance may be necessary.
 
-## 10. Bài tập áp dụng
+## 10. Practice Exercises
 
-**Bài 1 — Chỉ ra lỗ hổng:**
+**Exercise 1 — Identify the Exposure:**
 
 ~~~java
 class Library {
@@ -2348,39 +2348,39 @@ class Library {
 }
 ~~~
 
-Hãy mô tả **hai đường** làm thay đổi tiêu đề nội bộ ngoài ý muốn: sửa `StringBuilder` sau khi truyền vào `add`, và sửa một `StringBuilder` nhận được từ `getTitles`. Thử sửa thiết kế bằng `List<String>` (với `String` immutable) hoặc copy giá trị khi vào/ra.
+Describe **two paths** that unintentionally change internal titles: modifying `StringBuilder` after passing it into `add`, and modifying a `StringBuilder` returned by `getTitles`. Try fixing the design with `List<String>` (using immutable `String` elements) or by copying values on input/output.
 
-**Bài 2 — Thay API setter:** Một `Employee` có `setSalaryCents(long)` công khai. Hãy xác định invariant tiền lương và đề xuất method chuyên biệt (`adjustSalary` hoặc `changeSalary` với kiểm tra, xác thực quyền theo ngữ cảnh). Viết test cho số âm và số vượt giới hạn nghiệp vụ.
+**Exercise 2 — Replace Setter APIs:** An `Employee` exposes `setSalaryCents(long)` publicly. Define salary invariants and propose domain-specific methods (`adjustSalary` or `changeSalary` with validation and context-appropriate authorization). Test negative amounts and values exceeding business limits.
 
-**Bài 3 — Danh sách đơn hàng:** Đổi `ShoppingCart.lines()` sang trả live unmodifiable view thay vì snapshot. Viết test để phân biệt **A có giữ nguyên sau update hay không**, rồi quyết định hành vi nào phù hợp contract.
+**Exercise 3 — Cart Lines:** Change `ShoppingCart.lines()` to return a live unmodifiable view instead of a snapshot. Write a test distinguishing **whether A remains unchanged after an update**, then decide which behavior matches the contract.
 
-**Bài 4 — Đổi cấu trúc bên trong:** Thay `LinkedHashMap` bằng một cấu trúc khác nhưng giữ `putLine`, `changeQuantity`, `removeLine` và `totalCents`. Nếu thứ tự trả về chưa được công bố, không cần buộc client phụ thuộc vào thứ tự nội bộ.
+**Exercise 4 — Change Internal Representation:** Replace `LinkedHashMap` with another structure while keeping `putLine`, `changeQuantity`, `removeLine`, and `totalCents`. If result ordering was never promised, do not make clients depend on the internal order.
 
-**Bài 5 — Xử lý null, race và overflow:** Mở rộng bộ test với null SKU, SKU không tồn tại, số tiền lớn và gọi đồng thời. Nêu rõ đâu là lỗi validation và đâu là yêu cầu thread-safety cần bổ sung vào hợp đồng.
+**Exercise 5 — Null, Races, and Overflow:** Extend tests for null SKUs, missing SKUs, large monetary values, and concurrent calls. Distinguish validation defects from thread-safety requirements that need to be added to the contract.
 
-### Tiêu chí hoàn thành
+### Completion Criteria
 
-Bạn có thể nhận ra đường rò rỉ trạng thái qua field, getter, constructor hoặc phần tử mutable; thiết kế API mutation giữ invariant; chọn **snapshot/view/copy** phù hợp; và chứng minh bằng Java test rằng mã client không thể tùy ý làm hỏng cấu trúc nội bộ. Khi refactor thư viện hoặc hệ thống đang chạy, bạn cũng biết kiểm tra tương thích giao diện công khai, framework và concurrency.
+You can identify state leaks through fields, getters, constructors, or mutable elements; design mutation APIs that maintain invariants; choose appropriate **snapshots/views/copies**; and prove with Java tests that clients cannot arbitrarily corrupt internal structures. When refactoring libraries or running systems, also check public API, framework, and concurrency compatibility.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="refactoring-006">Thay điều kiện theo loại bằng đa hình</a>
+## <a id="refactoring-006">Replacing Type-Based Conditionals with Polymorphism</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thay điều kiện theo loại bằng đa hình (Replace Conditional with Polymorphism) — Java OOP
+# Replacing Type-Based Conditionals with Polymorphism (Replace Conditional with Polymorphism) — Java OOP
 
-## 1. Bài toán: vì sao nhiều nhánh theo loại gây khó bảo trì?
+## 1. The Problem: Why Are Many Type-Based Branches Hard to Maintain?
 
-Giả sử ứng dụng bán hàng hỗ trợ ba hình thức nhận hàng: STANDARD (giao thường), EXPRESS (giao nhanh), PICKUP (khách tự nhận). Mỗi loại có quy tắc tính phí và thời gian giao khác nhau.
+Suppose a sales application supports three delivery modes: STANDARD (regular delivery), EXPRESS (fast delivery), and PICKUP (customer collection). Each has different fee and delivery-time rules.
 
-Cách viết ban đầu thường kiểm tra loại bằng switch hoặc chuỗi if/else:
+Initial implementations often inspect the type with a switch or chain of if/else conditions:
 
 ~~~java
 switch (request.type) {
@@ -2390,24 +2390,24 @@ switch (request.type) {
 }
 ~~~
 
-Một khối như vậy không tự động là lỗi. Vấn đề xuất hiện khi **cùng một điều kiện theo loại** lặp lại ở nhiều nghiệp vụ (tính phí, xác định thời gian giao, xử lý yêu cầu, xuất thông báo), khiến bổ sung loại mới phải sửa nhiều chỗ. Những nhánh có liên quan dễ bị bỏ sót, và một lớp dần gánh nhiều hành vi của các loại đối tượng khác nhau.
+Such a block is not automatically a defect. Problems arise when **the same type-based decision** repeats across operations (fee calculation, delivery estimates, request processing, notification output), requiring edits in many places for each new type. Related branches are easily missed, and one class accumulates behavior for many variants.
 
-**Thay điều kiện theo loại bằng đa hình** là kỹ thuật refactoring: đưa hành vi thay đổi theo loại vào các implementation của một hợp đồng chung. Đoạn gọi chỉ yêu cầu đối tượng thực hiện hành vi; Java chọn phương thức tương ứng qua **dynamic dispatch**.
+**Replace Conditional with Polymorphism** is a refactoring technique that moves type-varying behavior into implementations of a shared contract. Callers ask an object to perform an operation, and Java selects the corresponding method through **dynamic dispatch**.
 
-> Mục tiêu là thay đổi cách tổ chức code **mà vẫn giữ nguyên hợp đồng quan sát được**: đầu vào hợp lệ, kết quả, exception và side effect đã được cam kết. Không phải cứ thấy switch là phải tạo hệ phân cấp lớp.
+> The objective is to reorganize code **while preserving the observable contract**: valid inputs, results, exceptions, and promised side effects. Encountering a switch does not automatically justify a class hierarchy.
 
-## 2. Phân biệt cấu trúc trước và sau
+## 2. Comparing Structures Before and After
 
-| Góc nhìn | Điều kiện theo loại | Đa hình |
+| Aspect | Type-based conditionals | Polymorphism |
 |---|---|---|
-| Chọn hành vi | Caller dùng if/else, switch, instanceof | Caller gọi phương thức chung trên interface/lớp cha |
-| Vị trí quy tắc | Nhiều nhánh trong một lớp lớn | Mỗi implementation nắm quy tắc riêng |
-| Bổ sung loại | Sửa từng switch có liên quan | Thêm implementation và đăng ký ở ranh giới tạo/chọn đối tượng |
-| Kiểm thử | Một lớp ôm nhiều nhánh | Test hợp đồng chung và từng biến thể |
-| Khả năng mở rộng | Dễ bỏ sót nhánh | Phụ thuộc cách tổ chức đăng ký và cấu trúc loại |
-| Chi phí | Ít lớp, đơn giản cho vài nhánh | Nhiều đối tượng và lớp hơn, cần thiết kế interface hợp lý |
+| Behavior selection | Caller uses if/else, switch, or instanceof | Caller invokes a common method on an interface/superclass |
+| Rule location | Numerous branches in one large class | Each implementation owns its rules |
+| Adding a type | Edit each relevant switch | Add an implementation and register it at object selection/creation boundaries |
+| Testing | One class contains many branches | Shared contract tests and tests for each variant |
+| Extensibility | Easy to overlook branches | Depends on registration design and type structure |
+| Cost | Fewer classes and simplicity with a few branches | More classes/objects and the need for a sensible interface |
 
-Kỹ thuật này thường liên quan **Open/Closed Principle**: mở rộng hành vi bằng implementation mới, hạn chế sửa code nghiệp vụ đã ổn định. Nó không loại bỏ mọi bước chọn loại: dữ liệu đầu vào vẫn có thể chứa mã loại, và tại một ranh giới vẫn cần ánh xạ mã đó sang đối tượng phù hợp.
+This technique often supports the **Open/Closed Principle**: extend behavior through new implementations while limiting edits to stable business code. It does not eliminate type selection entirely: inputs may still contain type codes, which must be mapped to suitable objects at a boundary.
 
 ~~~mermaid
 flowchart LR
@@ -2418,23 +2418,23 @@ flowchart LR
     K["PickupPolicy"] -.-> P
 ~~~
 
-Trong mô hình này, DeliveryService không biết công thức phí của từng loại. Nó chỉ dùng interface DeliveryPolicy.
+In this model, DeliveryService does not know each variant's fee formula. It only uses the DeliveryPolicy interface.
 
-## 3. Ví dụ Java 11 chạy được: chuyển từ switch sang đa hình
+## 3. Runnable Java 11 Example: From Switch to Polymorphism
 
-### Hợp đồng nghiệp vụ
+### Business Contract
 
-Đơn hàng có giá trị tiền hàng (VND) không âm và trọng lượng nguyên dương (kg). Ta giả định trọng lượng tính theo kg nguyên để tập trung vào refactor, không phải bài toán đo lường thực tế.
+An order has a nonnegative goods value (VND) and a positive integer weight (kg). Whole-kilogram weights are assumed to focus on refactoring rather than real-world measurements.
 
-| Loại | Quy tắc phí vận chuyển | Số ngày giao dự kiến |
+| Type | Shipping-fee rule | Estimated delivery days |
 |---|---|---:|
-| STANDARD | Nếu giá trị đơn từ 500.000 VND: 0; nếu thấp hơn: 20.000 + 5.000 × kg | 5 |
+| STANDARD | If order value is at least 500.000 VND: 0; otherwise: 20.000 + 5.000 × kg | 5 |
 | EXPRESS | 45.000 + 10.000 × kg | 1 |
-| PICKUP | 0 VND | 0 (khách tự đến lấy) |
+| PICKUP | 0 VND | 0 (customer collects the order) |
 
-Kết quả của dịch vụ là DeliveryQuote gồm feeVnd và etaDays. Bản cũ và bản sau refactor phải cho **cùng kết quả** đối với toàn bộ đầu vào hợp lệ, đồng thời không thay đổi quy tắc xác thực đã cam kết.
+The service returns a DeliveryQuote containing feeVnd and etaDays. The legacy and refactored versions must produce **identical results** for all valid inputs without changing promised validation rules.
 
-Lưu toàn bộ chương trình dưới đây trong file **DeliveryRefactoringDemo.java**. Mã sử dụng Java 11 trở lên, không cần Maven, Spring hoặc thư viện kiểm thử.
+Save the complete program below in **DeliveryRefactoringDemo.java**. It uses Java 11 or later and requires neither Maven nor Spring nor a testing library.
 
 ~~~java
 import java.util.Map;
@@ -2647,48 +2647,48 @@ public class DeliveryRefactoringDemo {
 }
 ~~~
 
-Biên dịch và chạy trong thư mục chứa file:
+Compile and run in the file's directory:
 
 ~~~bash
 javac DeliveryRefactoringDemo.java
 java DeliveryRefactoringDemo
 ~~~
 
-Khi các phép kiểm tra đều đạt:
+When all checks pass:
 
 ~~~text
 4 scenarios + 3 invalid inputs: PASS
 ~~~
 
-Chương trình cố tình viết kiểm chứng **hai chiều**: so sánh giá trị trước/sau refactor, đồng thời so sánh với kỳ vọng nghiệp vụ độc lập. Chỉ so hai phiên bản với nhau là chưa đủ, vì cả hai hoàn toàn có thể cùng thực hiện sai một công thức.
+The program deliberately verifies behavior **in two ways**: comparing before/after results and comparing them against independent business expectations. Comparing versions alone is insufficient because both could implement the same incorrect formula.
 
-### Điều gì đã thay đổi và điều gì giữ nguyên?
+### What Changed, and What Remained the Same?
 
-| Nội dung | Trước refactor | Sau refactor |
+| Concern | Before refactoring | After refactoring |
 |---|---|---|
-| Công thức giao thường | Nhánh STANDARD trong LegacyDeliveryService | StandardPolicy.quote |
-| Công thức giao nhanh | Nhánh EXPRESS | ExpressPolicy.quote |
-| Tự đến lấy | Nhánh PICKUP | PickupPolicy.quote |
-| Chọn loại phù hợp | switch theo enum | Map ánh xạ enum → DeliveryPolicy |
-| Chạy hành vi theo loại | Thực thi nhánh đã chọn | Gọi policy.quote; JVM chọn implementation |
-| Điều kiện miễn phí tại 500.000 | Giữ nguyên | Giữ nguyên |
-| Kết quả và quy tắc kiểm tra dữ liệu | Hợp đồng gốc | Giữ nguyên |
+| Standard-delivery formula | STANDARD branch in LegacyDeliveryService | StandardPolicy.quote |
+| Express-delivery formula | EXPRESS branch | ExpressPolicy.quote |
+| Customer pickup | PICKUP branch | PickupPolicy.quote |
+| Policy selection | Switch on enum | Map from enum → DeliveryPolicy |
+| Variant-specific execution | Execute the selected branch | Call policy.quote; JVM selects implementation |
+| Free-shipping threshold at 500.000 | Unchanged | Unchanged |
+| Results and input-validation rules | Original contract | Unchanged |
 
-### Vì sao đây là đa hình?
+### Why Is This Polymorphism?
 
-Biến policy có kiểu **DeliveryPolicy**, nhưng đối tượng thực tế có thể là StandardPolicy, ExpressPolicy hoặc PickupPolicy. Khi gọi policy.quote(request), JVM thực thi phương thức override trên class thực tế. Đoạn DeliveryService không cần biết công thức nào được chạy.
+The policy variable has type **DeliveryPolicy**, but the actual object may be StandardPolicy, ExpressPolicy, or PickupPolicy. Calling policy.quote(request) causes the JVM to execute the overriding method on the concrete class. DeliveryService need not know which formula runs.
 
-Đây là **đa hình lúc chạy (runtime polymorphism)** qua interface và method overriding, không chỉ là việc đổi switch thành ba phương thức private. Nếu ba công thức vẫn nằm trong một class với điều kiện rẽ nhánh theo enum, hành vi theo loại chưa được phân phối cho từng đối tượng.
+This is **runtime polymorphism** through an interface and method overriding, not merely a switch rewritten as three private methods. If all three formulas stay in one class with enum-based branching, type-specific behavior has not been distributed to objects.
 
-## 4. Các bước refactor có thể áp dụng trong dự án
+## 4. Refactoring Steps for a Real Project
 
-1. **Khoanh vùng điều kiện theo loại.** Tìm các nhánh đang kiểm tra cùng một type/discriminator như enum, mã chuỗi hoặc instanceof. Xác định nhánh nào thật sự thuộc cùng một hành vi.
-2. **Viết characterization tests.** Ghi nhận kết quả hiện tại của các input quan trọng: loại phổ biến, loại ít dùng, ngưỡng giá, trường hợp lỗi và side effect có ý nghĩa.
-3. **Rút ra hợp đồng chung.** Ví dụ DeliveryPolicy.quote(request). Chọn method theo trách nhiệm nghiệp vụ, không tạo interface chỉ để che giấu một switch.
-4. **Tách implementation từng loại.** Di chuyển lần lượt công thức và logic đặc thù từ nhánh sang StandardPolicy, ExpressPolicy và PickupPolicy. Mỗi lần di chuyển đều biên dịch/test lại.
-5. **Giới hạn nơi lựa chọn implementation.** Dùng factory, dependency injection container hoặc registry Map ở ranh giới tạo/chọn đối tượng. Code nghiệp vụ chỉ nhận hoặc tra về DeliveryPolicy.
-6. **Xóa điều kiện cũ khi không còn cần.** Tránh duy trì song song switch cũ và hệ policy mới quá lâu vì rất dễ lệch hành vi.
-7. **Chạy test hồi quy và integration test.** Xác nhận đầu ra, exception, hợp đồng collaborator, transaction và tài nguyên bên ngoài nếu ứng dụng thực có sử dụng.
+1. **Locate type-based conditions.** Find branches examining the same discriminator, such as an enum, string code, or instanceof. Determine which branches represent the same kind of behavior.
+2. **Write characterization tests.** Record current results for important inputs: common and rare types, price thresholds, failures, and meaningful side effects.
+3. **Extract a shared contract.** For example, DeliveryPolicy.quote(request). Name methods after business responsibilities rather than creating an interface simply to hide a switch.
+4. **Extract per-type implementations.** Move formulas and variant-specific logic into StandardPolicy, ExpressPolicy, and PickupPolicy one at a time, compiling and testing after each move.
+5. **Centralize implementation selection.** Use a factory, DI container, or Map registry at the object creation/selection boundary. Business code receives or looks up DeliveryPolicy only.
+6. **Remove obsolete conditionals.** Avoid maintaining the old switch alongside the new policy system for long, because their behavior can diverge.
+7. **Run regression and integration tests.** Validate results, exceptions, collaborator contracts, transactions, and external resources where the real application uses them.
 
 ~~~mermaid
 sequenceDiagram
@@ -2704,15 +2704,15 @@ sequenceDiagram
     S-->>C: DeliveryQuote
 ~~~
 
-## 5. Chọn interface, lớp trừu tượng, subclass hay Strategy?
+## 5. Choosing Interfaces, Abstract Classes, Subclasses, or Strategy
 
-**Interface + implementation** như ví dụ phù hợp khi các biến thể chia sẻ hợp đồng nhưng công thức khác nhau, không có nhiều trạng thái/chức năng chung cần kế thừa.
+**Interface + implementation**, as in the example, suits variants with a shared contract but different formulas and little common state/behavior to inherit.
 
-**Abstract class + subclass** phù hợp nếu có bất biến và một số bước xử lý mặc định thật sự dùng chung, ví dụ mọi phương thức đều cần một cách kiểm tra dữ liệu thống nhất. Tránh dồn quá nhiều logic điều kiện ngược trở lại lớp cha.
+**Abstract class + subclass** fits when genuine shared invariants and default processing steps exist, such as common input validation. Avoid moving too much conditional logic back into the base class.
 
-**Strategy pattern (ưu tiên composition)** phù hợp nếu hành vi được chọn theo cấu hình hoặc thay đổi lúc chạy, không đồng nhất với kiểu của thực thể miền. Trong ví dụ, STANDARD/EXPRESS/PICKUP là chính sách giao hàng được gán theo yêu cầu, không nhất thiết cần tạo các lớp con của Order.
+**Strategy pattern (favoring composition)** fits when behavior is selected by configuration or changes at runtime rather than being intrinsic to an entity's type. STANDARD/EXPRESS/PICKUP are delivery policies chosen per request, so they do not necessarily require Order subclasses.
 
-**Enum có method riêng cho từng hằng** cũng là một hình thức đa hình trong Java:
+**Enum constants with their own methods** are another form of polymorphism in Java:
 
 ~~~java
 enum SimpleDelivery {
@@ -2731,42 +2731,42 @@ enum SimpleDelivery {
 }
 ~~~
 
-Đây là ví dụ ngắn **minh họa cú pháp**, không thay thế hợp đồng tính phí đầy đủ ở mục 3 (chưa có miễn phí theo giá trị đơn, kiểm tra input hoặc xử lý tràn số). Enum-specific method thích hợp với tập biến thể cố định, logic ngắn. Nếu các chính sách phức tạp, cần dependency ngoài hoặc muốn đăng ký implementation mới theo module, các lớp Strategy độc lập thường linh hoạt và dễ kiểm thử hơn.
+This short example **illustrates syntax**, not the full fee contract in section 3 (it omits value-based free shipping, input validation, and overflow handling). Enum-specific methods work well for fixed variants with short logic. Complex policies, external dependencies, or module-level registration of new implementations often favor separate Strategy classes for flexibility and testing.
 
-## 6. Những sai lầm thường gặp
+## 6. Common Mistakes
 
-| Sai lầm | Vì sao không đạt mục tiêu? | Hướng xử lý |
+| Mistake | Why it misses the goal | How to address it |
 |---|---|---|
-| Tạo interface nhưng service vẫn switch theo type để gọi các class cụ thể | Caller vẫn nắm chi tiết và phải sửa nhiều nhánh | Đưa lựa chọn sang factory/registry, gọi một hợp đồng |
-| Dùng instanceof rồi ép kiểu cho mọi biến thể | Phụ thuộc subtype còn nguyên | Gọi phương thức đa hình; type-check chỉ giữ nếu thật sự cần ở boundary |
-| Mọi policy lại tự kiểm tra request.type rồi quyết định xử lý | Điều kiện bị sao chép sang nhiều class | Registry chọn đúng policy; policy chỉ xử lý quy tắc của nó |
-| Thêm superclass khổng lồ để chia sẻ nhiều chi tiết không liên quan | Coupling cao, thay lớp cha ảnh hưởng mọi loại | Tách abstraction gọn, ưu tiên composition |
-| Di chuyển code đồng thời sửa công thức nghiệp vụ | Khó chứng minh refactor bảo toàn hành vi | Giữ refactor và thay đổi chính sách ở những bước có test riêng |
-| Thêm subtype mà quên đăng ký trong registry | Lỗi runtime khi gặp loại mới | Kiểm tra tính đầy đủ đăng ký, fail fast khi khởi tạo |
-| Coi mọi switch là code smell | Tạo nhiều lớp cho một điều kiện đơn giản, ổn định | Giữ switch khi dễ hiểu và ít thay đổi |
-| Test chỉ xác minh phương thức policy được gọi một lần | Không chứng minh phí giao hàng đúng | Assert feeVnd, etaDays và các ca biên độc lập |
+| Creating an interface while the service still switches on types to call concrete classes | Callers still know details and require branch edits | Move selection into a factory/registry and call a shared contract |
+| Using instanceof and casting for every variant | Subtype coupling remains | Invoke polymorphic methods; retain type checks only when truly needed at boundaries |
+| Every policy inspects request.type before deciding what to do | Conditions are duplicated across classes | Let the registry select policies; each policy handles its own rule |
+| Adding a huge superclass to share unrelated details | High coupling; changes to the parent affect all types | Extract a concise abstraction and favor composition |
+| Moving code while changing business formulas | Behavior preservation becomes hard to prove | Refactor and change policies in separately tested steps |
+| Adding a subtype but forgetting registry registration | Runtime failure on the new type | Test complete registration and fail fast at startup |
+| Treating every switch as a code smell | Many classes for simple, stable conditions | Keep a switch when it remains clear and rarely changes |
+| Testing only that a policy method was called once | Does not prove shipping fees are correct | Assert feeVnd, etaDays, and independent boundary cases |
 
-### Bổ sung loại mới có hoàn toàn không cần sửa code cũ?
+### Can New Types Be Added Without Editing Any Existing Code?
 
-Không tuyệt đối. Trong kiến trúc dùng enum và Map ở ví dụ, khi thêm SAME_DAY, ta vẫn phải khai báo hằng enum, tạo SameDayPolicy và đăng ký vào Map. Điều quan trọng là **DeliveryService.quote không cần thêm công thức hoặc nhánh mới**. Nếu yêu cầu cho phép plugin đăng ký động, có thể đưa quá trình khám phá implementation vào DI container/factory; đổi lại sẽ có chi phí cấu hình, kiểm tra trùng và xử lý thiếu policy.
+Not absolutely. With the example's enum and Map architecture, adding SAME_DAY still requires defining an enum constant, creating SameDayPolicy, and registering it in the Map. The important point is that **DeliveryService.quote needs no new formula or branch**. If requirements call for dynamic plugin registration, a DI container/factory may discover implementations, at the cost of configuration, duplicate checks, and missing-policy handling.
 
-### Có nên đưa các field đặc thù vào interface chung?
+### Should Variant-Specific Fields Enter the Shared Interface?
 
-Không nên bắt mọi loại chứa dữ liệu không dùng tới chỉ để đồng nhất hình dạng. Nếu mỗi loại có đầu vào hoàn toàn khác, cân nhắc request chuyên biệt, abstraction theo hành vi, hoặc ranh giới xác thực rõ ràng. Interface nên thể hiện khả năng chung thật sự, không phải một tập method buộc nhiều lớp override rồi ném UnsupportedOperationException.
+Do not force every variant to hold unused fields merely for uniformity. If each type needs very different input, consider specialized requests, behavioral abstractions, or explicit validation boundaries. Interfaces should express real common capabilities, not methods that implementations must override only to throw UnsupportedOperationException.
 
-### Vấn đề với đối tượng có trạng thái
+### Concerns with Stateful Objects
 
-Các policy trong ví dụ là stateless nên có thể dùng chung an toàn. Nếu một implementation ghi vào field mutable khi phục vụ nhiều request, phải xét vòng đời object, thread safety và đồng bộ. Refactor không được vô tình biến trạng thái riêng của mỗi request thành shared singleton state.
+The example's policies are stateless and can be shared safely. If an implementation writes mutable fields while serving multiple requests, consider object lifetime, thread safety, and synchronization. Refactoring must not accidentally turn per-request state into shared singleton state.
 
-## 7. Kiểm thử để chứng minh không đổi hành vi
+## 7. Testing to Prove Behavior Has Not Changed
 
-Việc thay switch bằng đa hình không được làm mất trường hợp biên. Nên kiểm thử ở hai mức:
+Replacing switches with polymorphism must not lose boundary cases. Test at these levels:
 
-- **Contract tests cho DeliveryService:** mỗi loại trả đúng phí và ETA, STANDARD đúng ngưỡng 499.999/500.000, input không hợp lệ bị từ chối, loại mới được đăng ký đầy đủ.
-- **Unit tests từng policy:** tập trung vào công thức đặc thù và tràn số. Ví dụ ExpressPolicy.quote với trọng lượng lớn phải dùng phép toán long chính xác hoặc ném ArithmeticException khi tràn.
-- **Integration tests khi có hệ thống ngoài:** kiểm tra việc factory/DI tạo đúng policy, thực thi thanh toán/gửi yêu cầu giao hàng với adapter thật trong môi trường kiểm thử.
+- **DeliveryService contract tests:** Each type returns correct fees and ETA; STANDARD handles the 499.999/500.000 threshold; invalid inputs are rejected; new types are fully registered.
+- **Per-policy unit tests:** Focus on each formula and overflow. For example, ExpressPolicy.quote with large weights must use exact long arithmetic or throw ArithmeticException on overflow.
+- **Integration tests for external systems:** Verify that the factory/DI selects the correct policy and that real adapters perform payment/delivery requests in a controlled testing environment.
 
-Ví dụ kiểm thử JUnit 5 riêng cho biên giao thường (giả định file chương trình ở trên nằm cùng package):
+Example JUnit 5 tests for the standard-delivery boundary (assuming the program above resides in the same package):
 
 ~~~java
 import org.junit.jupiter.api.Test;
@@ -2796,86 +2796,86 @@ class StandardPolicyTest {
 }
 ~~~
 
-Dùng JUnit Jupiter trong test scope để chạy ví dụ trên. Lưu ý policy.quote nhận DeliveryRequest có type để minh họa contract với hệ thống hiện có, nhưng bản thân StandardPolicy không dựa vào trường type; DeliveryService là nơi quyết định đúng policy từ type. Trong thiết kế trưởng thành, có thể truyền riêng dữ liệu cần thiết cho policy để tránh gây hiểu nhầm rằng policy luôn phải kiểm tra enum.
+Use JUnit Jupiter in the test scope to run the example. Note that policy.quote receives DeliveryRequest containing a type to illustrate an existing-system contract, but StandardPolicy does not inspect that field; DeliveryService selects the correct policy by type. A mature design might pass only the data each policy needs, avoiding the impression that policies must always check the enum.
 
-## 8. Khi nào KHÔNG nên áp dụng?
+## 8. When Should You NOT Apply This Refactoring?
 
-Một switch ngắn, đứng ở **một nơi**, phân loại mã trạng thái để log hoặc ánh xạ đơn giản thường dễ hiểu hơn cả một cây class. Nếu tập loại là cố định và các hành vi hiếm khi thay đổi, chi phí interface, factory và nhiều file có thể lớn hơn lợi ích.
+A short switch in **one place** for classifying status codes, logging, or simple mappings is often easier to understand than an entire hierarchy. For a fixed set of types whose behavior rarely changes, the cost of interfaces, factories, and files may exceed their benefits.
 
-Cũng không nên thay một phép kiểm tra điều kiện theo **giá trị hoặc trạng thái** bằng subtype chỉ vì có if. Ví dụ ngưỡng miễn phí vận chuyển (orderValueVnd >= 500.000) là quy tắc **bên trong StandardPolicy**, không phải một loại giao hàng mới. Đa hình lựa chọn *họ hành vi* theo loại; các điều kiện nghiệp vụ bên trong mỗi biến thể có thể và nên tiếp tục tồn tại.
+Likewise, do not replace checks based on **values or state** with subtypes merely because they use if. For instance, the free-shipping threshold (orderValueVnd >= 500.000) is a rule **inside StandardPolicy**, not a new delivery type. Polymorphism selects *families of behavior* by type; business conditions inside each variant can and should remain.
 
-Trước khi refactor, đặt ba câu hỏi:
+Before refactoring, ask three questions:
 
-1. Điều kiện có lặp lại ở nhiều hành vi và thường phải sửa đồng thời không?
-2. Các biến thể có một hợp đồng chung đủ rõ để caller sử dụng mà không biết class cụ thể không?
-3. Bài test hiện có có thể bảo vệ đầu ra, lỗi và side effect khi chuyển code sang implementation khác không?
+1. Does the condition recur across behaviors and often require synchronized updates?
+2. Do variants share a contract clear enough for callers to use without knowing concrete classes?
+3. Can existing tests protect results, failures, and side effects when code moves to different implementations?
 
-Nếu cả ba câu trả lời đều có, Replace Conditional with Polymorphism thường đem lại lợi ích rõ rệt.
+If all three answers are yes, Replace Conditional with Polymorphism often provides substantial value.
 
-## 9. Bài tập
+## 9. Exercises
 
-**Bài 1 — Thêm SAME_DAY:** Giả sử phí giao trong ngày là 80.000 + 12.000 × kg, ETA = 0 ngày (trong ngày). Thêm DeliveryType.SAME_DAY, SameDayPolicy và đăng ký policy. Viết test độc lập xác minh chính xác công thức, không thêm nhánh vào DeliveryService.quote.
+**Exercise 1 — Add SAME_DAY:** Assume same-day delivery costs 80.000 + 12.000 × kg with ETA = 0 days (within the day). Add DeliveryType.SAME_DAY, implement SameDayPolicy, and register it. Write independent tests for the exact formula without adding a branch to DeliveryService.quote.
 
-**Bài 2 — Phát hiện regression:** Cố tình đổi ngưỡng miễn phí STANDARD thành lớn hơn 500.000 (thay vì lớn hơn hoặc bằng). Chạy chương trình; case bằng đúng 500.000 phải fail.
+**Exercise 2 — Detect regressions:** Deliberately change the STANDARD free-shipping rule to greater than 500.000 instead of greater than or equal to. Run the program; the case exactly at 500.000 must fail.
 
-**Bài 3 — Nhận diện trùng điều kiện:** Nếu một class khác cũng dùng switch theo DeliveryType để format mô tả dịch vụ, cân nhắc đưa tên hiển thị vào DeliveryPolicy. Giải thích trường hợp việc đưa trách nhiệm định dạng vào policy lại làm giảm cohesion, và đề xuất một collaborator riêng nếu cần.
+**Exercise 3 — Recognize duplicated conditions:** If another class switches on DeliveryType to format a service description, consider including display names in DeliveryPolicy. Explain when adding formatting responsibilities to a policy would reduce cohesion and propose a separate collaborator if appropriate.
 
-**Bài 4 — Kiểm tra đăng ký:** Bỏ một policy trong Map; hãy kiểm tra constructor của DeliveryService từ chối cấu hình thiếu bằng IllegalArgumentException trước khi tiếp nhận request.
+**Exercise 4 — Verify registration:** Remove one policy from the Map and confirm that the DeliveryService constructor rejects incomplete configuration with IllegalArgumentException before accepting requests.
 
-**Bài 5 — Lựa chọn kỹ thuật:** Với bốn mã trạng thái chỉ đổi màu nhãn trên UI, so sánh một switch ngắn với bốn class. Chọn phương án có độ phức tạp thấp hơn và giải thích vì sao đa hình không phải lúc nào cũng tốt.
+**Exercise 5 — Choose a technique:** For four status codes that only change the color of a UI label, compare one short switch with four classes. Choose the less complex approach and explain why polymorphism is not always beneficial.
 
-## 10. Ghi nhớ
+## 10. Key Takeaways
 
-**Replace Conditional with Polymorphism** giúp đưa hành vi biến đổi theo loại vào đúng đối tượng chịu trách nhiệm. Caller gọi hợp đồng chung, Java tự dispatch đến implementation tương ứng. Đây là một kỹ thuật **tái cấu trúc**, nên cần bảo toàn hành vi trong quá trình thực hiện; không nhầm việc thay đổi kiến trúc với việc thay đổi chính sách nghiệp vụ. Chọn đa hình khi nó thực sự giảm nhánh lặp, tăng cohesion, giảm coupling và giúp bổ sung biến thể một cách kiểm soát được.
+**Replace Conditional with Polymorphism** moves type-dependent behavior to the objects responsible for it. Callers use a common contract, and Java dispatches to the right implementation. This is **refactoring**, so behavior must be preserved; do not confuse architectural restructuring with changing business policy. Choose polymorphism when it genuinely reduces repeated branches, improves cohesion, lowers coupling, and enables controlled extension.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="refactoring-007">Thay kế thừa bằng kết hợp</a>
+## <a id="refactoring-007">Replacing Inheritance with Composition</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thay kế thừa bằng kết hợp (Replace Inheritance with Composition) trong Java OOP
+# Replacing Inheritance with Composition (Replace Inheritance with Composition) in Java OOP
 
-## 1. Vấn đề cần giải quyết
+## 1. The Problem to Solve
 
-**Kế thừa** cho phép một lớp mở rộng lớp khác bằng cú pháp `extends`. Đây là cơ chế hữu ích khi quan hệ phân loại giữa hai lớp thực sự phù hợp với quy tắc **is-a**: đối tượng lớp con có thể được dùng ở mọi nơi chấp nhận lớp cha mà vẫn giữ đúng hợp đồng hành vi.
+**Inheritance** lets one class extend another using `extends`. It is useful when their classification genuinely satisfies an **is-a** relationship: a subclass object can be used anywhere the superclass is accepted while honoring its behavioral contract.
 
-Tuy nhiên, trong thực tế có trường hợp một lớp kế thừa chỉ vì muốn **tận dụng vài phương thức** của lớp khác. Khi đó lớp con bị ràng buộc vào API, trạng thái và thay đổi của lớp cha. Một thay đổi trong lớp cha có thể ảnh hưởng ngoài ý muốn tới lớp con; lớp con cũng dễ phải ghi đè phương thức không liên quan đến trách nhiệm của mình.
+In practice, a class sometimes extends another simply to **reuse a few methods**. The subclass then becomes coupled to the parent's API, state, and changes. A parent-class change may unexpectedly affect it, and the subclass may need to override methods unrelated to its own responsibilities.
 
-**Thay kế thừa bằng kết hợp (Replace Inheritance with Composition)** là cách tái cấu trúc từ thiết kế "lớp A extends lớp B để mượn hành vi" sang thiết kế "lớp A **chứa một đối tượng** cung cấp hành vi cần dùng và **ủy quyền** công việc cho đối tượng đó".
+**Replace Inheritance with Composition** changes a design from "class A extends class B to borrow behavior" to "class A **contains an object** providing the needed capability and **delegates** work to it."
 
-Mục đích:
-- Tách **trách nhiệm nghiệp vụ** khỏi **cơ chế thực thi**.
-- Giảm sự phụ thuộc vào chi tiết của lớp cha.
-- Cho phép cấu hình các cách thực hiện qua interface.
-- Giúp viết unit test bằng fake/stub mà không phải kích hoạt hệ thống thật.
-- Giữ nguyên hành vi quan sát được khi refactor, trừ những thay đổi API đã được lên kế hoạch.
+Goals:
+- Separate **business responsibilities** from **execution mechanisms**.
+- Reduce dependency on superclass implementation details.
+- Make implementations configurable through interfaces.
+- Enable unit testing with fakes/stubs without activating real external systems.
+- Preserve observable behavior during refactoring, except for explicitly planned API changes.
 
-Đây **không phải quy tắc cấm kế thừa**. Kế thừa vẫn đúng khi có quan hệ phân loại ổn định và lớp con thỏa hợp đồng của lớp cha. Vấn đề là chọn cơ chế phù hợp với trách nhiệm của đối tượng.
+This **does not prohibit inheritance**. Inheritance remains appropriate for stable classifications where subclasses satisfy the superclass contract. The goal is to choose a mechanism that fits the object's responsibility.
 
-## 2. Phân biệt kế thừa và kết hợp
+## 2. Comparing Inheritance and Composition
 
-| Góc nhìn | Kế thừa | Kết hợp (composition) |
+| Aspect | Inheritance | Composition |
 | --- | --- | --- |
-| Quan hệ mô hình | **is-a**: một loại của lớp cha | **has-a/uses-a**: sở hữu hoặc sử dụng cộng tác viên |
-| Java | `class Child extends Parent` | Trường tham chiếu: `private final Capability capability;` |
-| Tái sử dụng | Nhận phương thức và cơ chế của lớp cha | Gọi phương thức trên đối tượng được tiêm vào |
-| Mức phụ thuộc | Thường gắn chặt vào cấu trúc/hợp đồng lớp cha | Có thể phụ thuộc vào interface nhỏ |
-| Thay cách thực hiện | Thường cần lớp con khác hoặc sửa cấu trúc kế thừa | Có thể cung cấp implementation khác khi tạo đối tượng |
-| Kiểm thử | Dễ bị kéo theo hành vi của lớp cha | Tiêm fake/mock ở ranh giới cộng tác |
-| Chi phí | Ít đối tượng ủy quyền hơn; dễ hiểu nếu is-a thực sự đúng | Thêm field, constructor và mã ủy quyền; cần thiết kế vòng đời |
+| Model relationship | **is-a**: a specialization of the parent | **has-a/uses-a**: owns or uses a collaborator |
+| Java | `class Child extends Parent` | Reference field: `private final Capability capability;` |
+| Reuse | Inherit the parent's methods and mechanisms | Invoke methods on an injected object |
+| Coupling | Often tightly bound to superclass structure/contracts | Can depend on a small interface |
+| Replacing implementations | Often requires another subclass or inheritance changes | Supply a different implementation at construction |
+| Testing | May bring along superclass behavior | Inject fakes/mocks at collaboration boundaries |
+| Costs | Fewer delegates; clear when the is-a relationship is real | Adds fields, constructors, delegation, and lifecycle decisions |
 
-Lưu ý: trong Java, **kế thừa lớp** bằng `extends` và **thực thi interface** bằng `implements` không đồng nghĩa về mức độ ràng buộc. Một đối tượng vẫn có thể `implements MessageChannel` để tuân thủ hợp đồng, trong khi một đối tượng khác sử dụng `MessageChannel` qua kết hợp.
+Note: In Java, **class inheritance** through `extends` and **interface implementation** through `implements` impose different forms of coupling. An object can `implements MessageChannel` to fulfill a contract while another uses `MessageChannel` through composition.
 
-## 3. Ví dụ trước khi refactor: lớp cảnh báo kế thừa bộ gửi email
+## 3. Before Refactoring: An Alert Class Inherits from an Email Sender
 
-Giả sử một hệ thống cần gửi cảnh báo nghiêm trọng cho nhân viên vận hành. Phiên bản đầu dùng email:
+Suppose a system must send critical alerts to operations staff. Its first version uses email:
 
 ~~~java
 class EmailSender {
@@ -2892,13 +2892,13 @@ class CriticalAlert extends EmailSender {
 }
 ~~~
 
-Mã hoạt động khi chỉ có email, nhưng quan hệ `CriticalAlert extends EmailSender` không mô tả đúng nghiệp vụ: **cảnh báo không phải là một loại bộ gửi email**. Cảnh báo chỉ *sử dụng* phương tiện gửi tin.
+This works while email is the only channel, but `CriticalAlert extends EmailSender` misrepresents the domain: **an alert is not a kind of email sender**. An alert merely *uses* a delivery mechanism.
 
-Khi bổ sung SMS, webhook hoặc kênh thông báo nội bộ, thiết kế này dễ dẫn tới nhân bản các lớp cảnh báo theo từng loại kênh. Lớp cảnh báo cũng thừa hưởng toàn bộ API public/protected của EmailSender, kể cả những phương thức có thể được thêm sau này nhưng không phù hợp với vai trò cảnh báo.
+Adding SMS, webhooks, or internal notifications can lead to separate alert subclasses for every channel. The alert also inherits the entire public/protected EmailSender API, including future methods unrelated to the alert's responsibility.
 
-Nếu một lớp con phải ghi đè phương thức cha để ném `UnsupportedOperationException` hoặc thay đổi hậu điều kiện mà caller của lớp cha đang trông đợi, còn có nguy cơ vi phạm **Liskov Substitution Principle (LSP)**. Không phải mọi quan hệ kế thừa đều vi phạm LSP; vấn đề xuất hiện khi lớp con không thể thay thế lớp cha theo hợp đồng.
+If a subclass must override parent methods to throw `UnsupportedOperationException` or weaken postconditions expected by superclass clients, it risks violating the **Liskov Substitution Principle (LSP)**. Not all inheritance violates LSP; the problem is failure to substitute under the contract.
 
-Có thể hình dung trước và sau:
+Visualize the before-and-after structure:
 
 ~~~mermaid
 classDiagram
@@ -2935,15 +2935,15 @@ classDiagram
     RetryingChannel o--> MessageChannel : bọc
 ~~~
 
-## 4. Thiết kế sau refactor: kết hợp qua interface
+## 4. After Refactoring: Composition Through an Interface
 
-Ta tách hai trách nhiệm:
-- `AlertService` hiểu nghiệp vụ: thế nào là cảnh báo nghiêm trọng và cách đặt nội dung cảnh báo.
-- `MessageChannel` hiểu việc gửi thông điệp. Email, SMS, và kênh có retry là các cách thực hiện khác nhau.
+Separate two responsibilities:
+- `AlertService` understands the business: what constitutes a critical alert and how its message is composed.
+- `MessageChannel` handles message delivery. Email, SMS, and retry-capable channels are alternative implementations.
 
-`AlertService` **có một** `MessageChannel`, chứ không **là một** `MessageChannel`.
+`AlertService` **has a** `MessageChannel`; it **is not a** `MessageChannel`.
 
-Quy trình được ủy quyền:
+The delegated workflow:
 
 ~~~mermaid
 sequenceDiagram
@@ -2957,9 +2957,9 @@ sequenceDiagram
     A-->>Operator: Hoàn thành hoặc truyền lỗi
 ~~~
 
-### 4.1. Cấu trúc dự án
+### 4.1. Project Structure
 
-Ví dụ dưới đây dùng **Java 17, Maven và JUnit Jupiter 5**. Các lớp production được viết ở từng tệp Java để có thể sao chép và chạy được.
+The example uses **Java 17, Maven, and JUnit Jupiter 5**. Production classes are provided as separate Java files so they can be copied and run.
 
 ~~~text
 composition-demo/
@@ -3012,7 +3012,7 @@ composition-demo/
 </project>
 ~~~
 
-### 4.2. Định nghĩa hợp đồng gửi thông điệp
+### 4.2. Define the Message-Delivery Contract
 
 **src/main/java/vn/example/MessageChannel.java**
 
@@ -3029,9 +3029,9 @@ public interface MessageChannel {
 }
 ~~~
 
-Một interface nhỏ đủ cho nhu cầu của AlertService. Nó không ép lớp cảnh báo biết SMTP, HTTP endpoint hay định dạng SMS. Trong dự án thực tế, hợp đồng cần nói rõ `send` đồng nghĩa với đã giao tới nhà cung cấp, đã xếp vào hàng đợi hay đã đến thiết bị nhận; các mức bảo đảm này không giống nhau.
+A small interface is enough for AlertService. It does not require the alert class to know SMTP, HTTP endpoints, or SMS formatting. In a real project, the contract must specify whether `send` means provider acceptance, queueing, or actual device delivery; those guarantees differ.
 
-### 4.3. Đối tượng nghiệp vụ chỉ ủy quyền cho cộng tác viên
+### 4.3. Let the Business Object Delegate to a Collaborator
 
 **src/main/java/vn/example/AlertService.java**
 
@@ -3060,16 +3060,16 @@ public final class AlertService {
 }
 ~~~
 
-Điểm quan trọng:
-1. Constructor injection cho phép cung cấp đối tượng phụ thuộc tại nơi dựng ứng dụng.
-2. `final` giữ cộng tác viên cố định trong vòng đời AlertService; không bị thay bất ngờ trong lúc xử lý.
-3. Phương thức public biểu đạt **hành vi nghiệp vụ**, không phơi bày toàn bộ API của kênh gửi.
-4. Việc validate xảy ra **trước khi gọi kênh**, nên input không hợp lệ không gây tác dụng phụ.
-5. AlertService không biết implementation cụ thể; chỉ yêu cầu kênh thực thi hợp đồng `send`.
+Important points:
+1. Constructor injection supplies dependencies during application assembly.
+2. `final` keeps the collaborator reference fixed for AlertService's lifetime, preventing unexpected replacement mid-operation.
+3. Public methods express **business behavior** instead of exposing the entire delivery-channel API.
+4. Validation happens **before calling the channel**, so invalid inputs have no external side effects.
+5. AlertService knows no concrete implementation; it only requires the channel to fulfill `send`.
 
-### 4.4. Hai implementation email và SMS
+### 4.4. Email and SMS Implementations
 
-Để chương trình có thể chạy trực tiếp mà không cần tài khoản bên ngoài, hai lớp dưới đây **in ra console**. Chúng đại diện cho adapter minh họa, không gửi email/SMS thật.
+To run without external accounts, the following classes **print to the console**. They are illustrative adapters, not real email/SMS senders.
 
 **src/main/java/vn/example/EmailChannel.java**
 
@@ -3097,13 +3097,13 @@ public final class SmsChannel implements MessageChannel {
 }
 ~~~
 
-Cả hai tuân thủ cùng interface và không phải là lớp cha của AlertService. Do đó, khi cần phương tiện mới, ta thêm implementation, thay vì cho lớp nghiệp vụ kế thừa một loại phương tiện mới.
+Both follow the same interface without becoming superclasses of AlertService. To add another channel, create an implementation instead of making the business class inherit from a new transport type.
 
-### 4.5. Kết hợp nhiều khả năng: wrapper thử lại khi gặp lỗi đã phân loại
+### 4.5. Combine Capabilities: A Wrapper That Retries Classified Failures
 
-Giả sử muốn thử gửi lại khi xảy ra lỗi tạm thời. Nếu dùng kế thừa, người ta dễ tạo các lớp như `RetryingEmailChannel`, `RetryingSmsChannel`, `LoggingRetryingEmailChannel`... gây nhiều tổ hợp lớp.
+Suppose temporary failures should trigger retries. Inheritance can lead to classes such as `RetryingEmailChannel`, `RetryingSmsChannel`, and `LoggingRetryingEmailChannel`, creating a combinatorial explosion of variants.
 
-Với kết hợp, ta tạo một đối tượng **bọc (decorator)** implement cùng interface và chứa một `MessageChannel` khác. Chỉ khi delegate ném `DeliveryException` thì wrapper mới retry.
+With composition, create a **wrapper (decorator)** implementing the same interface while containing another `MessageChannel`. The wrapper retries only when the delegate throws `DeliveryException`.
 
 **src/main/java/vn/example/DeliveryException.java**
 
@@ -3154,15 +3154,15 @@ public final class RetryingChannel implements MessageChannel {
 }
 ~~~
 
-Ta có thể kết hợp tùy ý:
+These can be composed as needed:
 - `new RetryingChannel(new EmailChannel(), 3)`
 - `new RetryingChannel(new SmsChannel(), 3)`
 - `new AlertService(new EmailChannel())`
 - `new AlertService(new RetryingChannel(new SmsChannel(), 3))`
 
-**Đếm đúng số lượt:** `maxAttempts = 3` nghĩa là nhiều nhất **3 lần gửi tổng cộng**, không phải một lượt ban đầu cộng ba lượt retry. Wrapper này không có backoff, timeout hoặc chính sách idempotency; nó chỉ phục vụ việc học cách kết hợp hành vi.
+**Count attempts correctly:** `maxAttempts = 3` means at most **3 total sends**, not an initial send plus three retries. This wrapper lacks backoff, timeouts, and idempotency policies; it only demonstrates behavior composition.
 
-### 4.6. Composition root: chỗ chọn implementation
+### 4.6. Composition Root: Selecting Implementations
 
 **src/main/java/vn/example/Main.java**
 
@@ -3186,7 +3186,7 @@ public final class Main {
 }
 ~~~
 
-Chạy tại thư mục chứa `pom.xml`:
+Run in the directory containing `pom.xml`:
 
 ~~~bash
 mvn test
@@ -3194,18 +3194,18 @@ mvn -q -DskipTests package
 java -cp target/classes vn.example.Main
 ~~~
 
-Đầu ra demo dự kiến:
+Expected demo output:
 
 ~~~text
 EMAIL -> ops@example.com: [CRITICAL] Database is unavailable
 SMS -> +84900000000: [CRITICAL] API latency is high
 ~~~
 
-Các lựa chọn cụ thể nằm tại **composition root** — nơi dựng đồ thị đối tượng lúc khởi động ứng dụng. AlertService không có nhánh kiểu `if (channelType.equals("SMS"))` và cũng không tạo `new EmailChannel()` bên trong phương thức nghiệp vụ.
+Concrete choices belong in the **composition root**, where the object graph is assembled at startup. AlertService has no `if (channelType.equals("SMS"))` branch and does not construct `new EmailChannel()` inside business methods.
 
-## 5. Unit test: xác minh sự thay thế được và quy tắc retry
+## 5. Unit Tests: Verify Substitutability and Retry Rules
 
-Ta kiểm tra chức năng bằng các implementation giả trong bộ nhớ, không cần kết nối email hay SMS thật.
+Test behavior with in-memory fake implementations, without connecting to real email or SMS services.
 
 **src/test/java/vn/example/AlertServiceTest.java**
 
@@ -3334,37 +3334,37 @@ class AlertServiceTest {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 mvn test
 ~~~
 
-Với đúng các tệp ở trên, JUnit có **6 phương thức `@Test`**. Các ca kiểm tra không cần môi trường mạng, có thể chủ động dựng tình huống thành công, lỗi tạm thời và lỗi không được retry.
+With the files above, JUnit provides **6 `@Test` methods**. The tests need no network and can deliberately simulate success, transient failures, and non-retryable failures.
 
-| Kiểm thử | Điều được xác minh | Giá trị của thiết kế kết hợp |
+| Test | What it verifies | Benefit of composition |
 | --- | --- | --- |
-| sendsCriticalMessageThroughInjectedChannel | Nội dung và người nhận được chuyển đúng tới cộng tác viên | Dùng fake thay email thật mà không thay đổi AlertService |
-| invalidInputDoesNotTouchTheChannel | Input sai bị chặn trước tác dụng phụ | Quy tắc nghiệp vụ độc lập implementation |
-| retryingChannelEventuallySucceeds | Thất bại 2 lần, thành công lần 3 | Wrapper có thể bọc một implementation bất kỳ |
-| retryingChannelStopsAfterAttemptLimit | Giới hạn tối đa 2 lần gọi được tuân thủ | Chính sách retry có thể kiểm thử riêng |
-| unexpectedExceptionIsNotRetried | Lỗi không thuộc loại retry không bị gọi lặp | Ranh giới chính sách lỗi rõ ràng |
-| dependenciesAndRetryLimitMustBeValid | Không tạo object ở trạng thái thiếu phụ thuộc | Constructor xác lập bất biến |
+| sendsCriticalMessageThroughInjectedChannel | Correct message and recipient reach the collaborator | Replace real email with a fake without changing AlertService |
+| invalidInputDoesNotTouchTheChannel | Invalid input is blocked before side effects | Business rules remain independent of implementation |
+| retryingChannelEventuallySucceeds | Fails 2 times and succeeds on attempt 3 | The wrapper can decorate any implementation |
+| retryingChannelStopsAfterAttemptLimit | A maximum of 2 calls is respected | Retry policy can be tested independently |
+| unexpectedExceptionIsNotRetried | Non-retryable failures do not trigger repeated calls | Clear failure-policy boundaries |
+| dependenciesAndRetryLimitMustBeValid | Objects cannot be created with missing required dependencies | Constructors establish invariants |
 
-Vì AlertService nhận một `MessageChannel`, việc kiểm thử cả các trường hợp gửi email, SMS hoặc fake dùng chung phần nghiệp vụ trở nên đơn giản. Các adapter giao tiếp dịch vụ ngoài vẫn phải có **integration test riêng** để xác minh API, cấu hình và lỗi thực tế.
+Because AlertService accepts a `MessageChannel`, the same business behavior can be tested with email, SMS, or fake channels. Adapters talking to external services still need **separate integration tests** for real APIs, configuration, and failures.
 
-## 6. Các bước tái cấu trúc từ kế thừa sang kết hợp
+## 6. Steps for Refactoring Inheritance into Composition
 
-Không nên xóa `extends` ngay khi chưa hiểu các caller và hợp đồng public. Trình tự an toàn:
+Do not remove `extends` before understanding clients and public contracts. A safe sequence:
 
-1. **Xác nhận quan hệ hiện tại.** Hỏi "AlertService có thực sự là EmailSender không?" và "nó kế thừa vì quan hệ phân loại hay chỉ muốn dùng `send`?".
-2. **Chốt hành vi đang sử dụng.** Viết test cho thông điệp, tham số, lỗi và số lần gửi. Đặc biệt kiểm tra code hiện tại có phụ thuộc vào việc lớp con được dùng như lớp cha hay không.
-3. **Tìm phụ thuộc tối thiểu.** Nếu lớp con chỉ cần `send(recipient, body)`, tạo interface `MessageChannel` thay vì kéo toàn bộ API của EmailSender vào đối tượng mới.
-4. **Tạo trường kết hợp.** Thêm `private final MessageChannel channel` và constructor nhận interface. Nếu chuyển đổi theo từng bước, giữ API cũ bằng phương thức ủy quyền ngắn trong giai đoạn chuyển tiếp.
-5. **Đổi các lời gọi kế thừa.** Thay `send(...)` bằng `channel.send(...)`. Test hồi quy phải tiếp tục đạt.
-6. **Chuyển các caller.** Nơi trước đây tạo `new CriticalAlert()` nay cung cấp implementation phù hợp. Nếu có API nhận `EmailSender` và truyền `CriticalAlert`, cần phân tích thiết kế hoặc adapter chuyển tiếp; bỏ `extends` sẽ là **thay đổi tương thích kiểu**.
-7. **Loại bỏ kế thừa dư thừa.** Sau khi rà soát các caller và điều kiện tương thích, xóa `extends` và các override chỉ tồn tại vì lớp cha.
-8. **Kiểm chứng cả thiết kế lẫn hành vi.** Biên dịch, unit test, integration test cần thiết, kiểm tra API public và khả năng chọn implementation theo cấu hình.
+1. **Confirm the current relationship.** Ask "Is AlertService really an EmailSender?" and "does it inherit for classification or just to use `send`?"
+2. **Establish existing behavior.** Test messages, parameters, errors, and send counts. In particular, check whether callers rely on using the subclass as its superclass.
+3. **Find the minimal dependency.** If the subclass only needs `send(recipient, body)`, introduce `MessageChannel` rather than exposing all of EmailSender's API.
+4. **Introduce composition.** Add `private final MessageChannel channel` and a constructor receiving the interface. During gradual migration, retain a short delegating method for old APIs if needed.
+5. **Replace inherited calls.** Change `send(...)` to `channel.send(...)`. Regression tests must still pass.
+6. **Migrate callers.** Code that previously created `new CriticalAlert()` now supplies an appropriate implementation. If an API accepts `EmailSender` and clients pass `CriticalAlert`, assess transitional adapters; removing `extends` is a **type-compatibility change**.
+7. **Remove unnecessary inheritance.** After checking callers and compatibility, remove `extends` and overrides that existed solely for the superclass.
+8. **Verify design and behavior.** Compile, run unit and necessary integration tests, check public APIs, and confirm implementation selection through configuration.
 
 ~~~mermaid
 flowchart TD
@@ -3380,61 +3380,61 @@ flowchart TD
     H -->|Có| J["Bỏ extends dư thừa, rà soát thiết kế"]
 ~~~
 
-### 6.1. Khi nào cần giữ adapter tương thích?
+### 6.1. When Is a Compatibility Adapter Needed?
 
-Ví dụ, nếu một thư viện công khai cung cấp `CriticalAlert extends EmailSender`, code bên ngoài có thể viết:
+For example, if a public library exposes `CriticalAlert extends EmailSender`, external code may write:
 
 ~~~java
 // Ví dụ từ API cũ:
 EmailSender sender = new CriticalAlert();
 ~~~
 
-Sau khi đổi CriticalAlert thành lớp có trường MessageChannel, dòng trên **không còn biên dịch**. Đây không phải lỗi thuật toán nhưng là breaking change đối với caller. Cần xác định yêu cầu tương thích nhị phân/nguồn, lên kế hoạch version hoặc dùng một lớp adapter công khai trong thời gian chuyển đổi.
+Once CriticalAlert becomes a class containing MessageChannel, that line **no longer compiles**. This is not an algorithmic defect but a breaking change for callers. Determine binary/source compatibility requirements, plan versioning, or supply a public adapter during migration.
 
-Trong một codebase nội bộ có toàn quyền sửa caller, có thể di chuyển gọn hơn. Với API đã phát hành, thay đổi quan hệ kế thừa cần đánh giá kỹ hơn việc thay phương thức private.
+In an internal codebase where all callers can be changed, migration may be simpler. For a published API, altering inheritance relationships requires more scrutiny than renaming a private method.
 
-## 7. Strategy, Decorator và Dependency Injection liên quan thế nào?
+## 7. How Do Strategy, Decorator, and Dependency Injection Relate?
 
-**Composition** là quan hệ một đối tượng chứa/sử dụng đối tượng khác. Nó là cơ chế nền.
+**Composition** is the relationship in which one object contains or uses another. It is the underlying mechanism.
 
-**Strategy pattern** sử dụng các implementation có thể thay thế nhau cho cùng một interface. Trong bài, `EmailChannel` và `SmsChannel` là các chiến lược gửi khác nhau; chọn chiến lược tại lúc tạo AlertService.
+**Strategy pattern** uses interchangeable implementations of the same interface. Here, `EmailChannel` and `SmsChannel` are alternative delivery strategies selected when constructing AlertService.
 
-**Decorator pattern** bọc một implementation bằng một implementation cùng interface để bổ sung hành vi. `RetryingChannel` vừa implement `MessageChannel` vừa chứa `MessageChannel`, thêm chính sách retry nhưng không buộc sửa EmailChannel/SmsChannel.
+**Decorator pattern** wraps an implementation with another implementation of the same interface to extend behavior. `RetryingChannel` implements `MessageChannel` while also containing a `MessageChannel`, adding retries without modifying EmailChannel/SmsChannel.
 
-**Dependency Injection (DI)** là cách cung cấp collaborator từ bên ngoài. `new AlertService(new SmsChannel())` đã là constructor injection; không cần framework DI mới dùng được kết hợp.
+**Dependency Injection (DI)** supplies collaborators externally. `new AlertService(new SmsChannel())` already uses constructor injection; composition does not require a DI framework.
 
-| Câu hỏi | Khái niệm phù hợp |
+| Question | Relevant concept |
 | --- | --- |
-| Đối tượng A sử dụng năng lực của B như thế nào? | Composition + delegation |
-| Chọn email hay SMS cho cùng một nhu cầu? | Strategy |
-| Thêm retry hoặc logging mà không sửa kênh cơ sở? | Decorator |
-| Ai khởi tạo và đưa kênh vào AlertService? | Dependency injection / composition root |
+| How does object A use the capabilities of B? | Composition + delegation |
+| How can email or SMS be selected for the same need? | Strategy |
+| How can retries or logging be added without modifying the base channel? | Decorator |
+| Who constructs and supplies the channel to AlertService? | Dependency injection / composition root |
 
-Các mẫu này **có thể phối hợp**, không loại trừ nhau. `AlertService` dùng Strategy được tiêm qua constructor; Strategy ấy có thể là Decorator bọc một adapter khác.
+These patterns **can work together** rather than exclude one another. `AlertService` receives a Strategy through its constructor; that Strategy may itself be a Decorator wrapping another adapter.
 
-## 8. Khi nào kế thừa vẫn là lựa chọn hợp lý?
+## 8. When Is Inheritance Still Appropriate?
 
-Kế thừa có giá trị khi lớp con là một dạng chuyên biệt đúng nghĩa của lớp cha, dựa trên hợp đồng ổn định và không thay đổi tiền/hậu điều kiện làm caller bị bất ngờ. Ví dụ một hierarchy nội bộ có các hook được thiết kế công khai để mở rộng hoặc một base class ổn định trong framework. Dù vậy, vẫn cần test hợp đồng của lớp cha trên các lớp con khi điều này có ý nghĩa.
+Inheritance adds value when subclasses are genuine specializations of their superclass, honor a stable contract, and do not unexpectedly strengthen preconditions or weaken postconditions. Examples include internal hierarchies with documented extension hooks or stable framework base classes. Even then, shared superclass-contract tests may be warranted.
 
-Ngược lại, nếu lớp con ghi đè nhiều phương thức để làm rỗng, ném lỗi, hoặc cần biết trường `protected` của lớp cha để giữ trạng thái nhất quán, đó là tín hiệu nên xét lại thiết kế.
+Conversely, if subclasses override many methods to do nothing, throw exceptions, or rely on superclass `protected` fields to maintain consistent state, revisit the design.
 
-Một quyết định thực tế:
+A practical decision guide:
 
-| Dấu hiệu | Hướng ưu tiên |
+| Signal | Preferred direction |
 | --- | --- |
-| "A là một B" và có thể thay B theo đúng hợp đồng | Có thể dùng kế thừa |
-| "A có một B", "A dùng dịch vụ của B" | Kết hợp |
-| Cần chọn nhiều cách thực hiện theo môi trường | Kết hợp qua interface |
-| Cần ghép logging, retry, metrics theo lớp | Kết hợp/Decorator |
-| Các lớp con phình ra theo mọi tổ hợp tính năng | Tách chức năng độc lập, kết hợp |
-| Thay lớp cha khiến nhiều lớp con hỏng ngoài dự kiến | Giảm ràng buộc với lớp cha, xem lại kết hợp |
-| Chỉ có một thuật toán nhỏ, không có lý do thay thế | Có thể để trực tiếp trong lớp, tránh abstraction thừa |
+| "A is a B" and can substitute for B under its contract | Inheritance may fit |
+| "A has a B" or "A uses B's service" | Composition |
+| Different implementations are selected by environment | Composition through an interface |
+| Logging, retries, and metrics need to be layered | Composition/Decorator |
+| Subclasses proliferate for every feature combination | Separate and compose independent capabilities |
+| Changing a superclass unexpectedly breaks many subclasses | Reduce superclass coupling; consider composition |
+| One small algorithm exists with no need for substitution | Keep it directly in the class; avoid needless abstractions |
 
-**Đừng tạo interface cho mọi lớp một cách máy móc.** Nếu một phép tính thuần túy đơn giản không có nhiều implementation hợp lý hoặc ranh giới cần cô lập, thêm interface và đối tượng delegate chỉ làm tăng công việc đọc code.
+**Do not mechanically create an interface for every class.** If a simple pure calculation has no meaningful alternative implementation or boundary needing isolation, an interface and delegate object only increase reading overhead.
 
-## 9. Các lỗi thường gặp khi chuyển đổi
+## 9. Common Conversion Mistakes
 
-### 9.1. Chuyển extends thành field nhưng vẫn lộ toàn bộ API
+### 9.1. Replacing Extends with a Field While Exposing the Whole API
 
 ~~~java
 // Ví dụ cách chuyển chưa tốt:
@@ -3447,84 +3447,84 @@ class PoorAlertService {
 }
 ~~~
 
-Nó đã dùng kết hợp về cú pháp, nhưng vẫn tự khóa vào `EmailChannel` cụ thể và public API còn phản ánh hoạt động gửi thô thay vì nghiệp vụ cảnh báo. Nếu nhu cầu thực sự có nhiều kênh, nhận `MessageChannel` qua constructor sẽ tách trách nhiệm tốt hơn.
+This uses composition syntactically but remains bound to a concrete `EmailChannel`, and its public API still exposes raw sending instead of alert business behavior. If multiple channels are truly needed, receiving `MessageChannel` through the constructor gives a better separation.
 
-### 9.2. Biến một service thành "God Object"
+### 9.2. Turning a Service into a "God Object"
 
-Dùng kết hợp không có nghĩa một lớp được giữ hàng chục dependency và quyết định mọi thứ. Nếu AlertService vừa tính tiền, vừa phân quyền, vừa lập lịch, vừa gửi email, vấn đề chính vẫn là trách nhiệm quá lớn. Hãy tách use case, policy và adapter theo nhu cầu.
+Composition does not justify one class containing dozens of dependencies and making every decision. If AlertService calculates prices, authorizes users, schedules tasks, and sends emails, its primary problem is still too much responsibility. Separate use cases, policies, and adapters where needed.
 
-### 9.3. Retry bừa các thao tác không idempotent
+### 9.3. Blindly Retrying Non-Idempotent Operations
 
-Ví dụ retry chỉ định nghĩa cho `DeliveryException` của kênh. Trong dịch vụ thật, request đầu tiên có thể đã được nhà cung cấp tiếp nhận nhưng phản hồi bị mất; gửi lại có thể tạo hai email/SMS. Với các hành động quan trọng như thanh toán, cần idempotency key, lưu trạng thái bền vững, truy vấn/đối soát, backoff và quy tắc retry cụ thể. Composition giúp **đặt** chính sách tại lớp thích hợp, không tự bảo đảm chính sách ấy an toàn.
+The example retries only channel `DeliveryException` failures. In real services, the provider may accept the initial request while the response is lost; retrying can send duplicate emails/SMS messages. Critical actions such as payments require idempotency keys, durable state, queries/reconciliation, backoff, and explicit retry rules. Composition helps **locate** a policy in the right component; it does not automatically make that policy safe.
 
-### 9.4. Nhầm lẫn kết hợp với kế thừa interface
+### 9.4. Confusing Composition with Interface Implementation
 
-`EmailChannel implements MessageChannel` là sử dụng interface để khai báo hợp đồng. `AlertService` kết hợp `MessageChannel` bởi nó có trường `channel`. Hai quan hệ cùng xuất hiện là điều bình thường và có mục đích khác nhau.
+`EmailChannel implements MessageChannel` uses an interface to declare a contract. `AlertService` composes a `MessageChannel` because it has a `channel` field. Both relationships can coexist and serve different purposes.
 
-### 9.5. Bỏ qua vòng đời và thread-safety
+### 9.5. Ignoring Lifecycle and Thread Safety
 
-Nếu nhiều thread dùng chung một collaborator có trạng thái thay đổi, cần xác định collaborator có an toàn đồng thời hay không. `private final` chỉ cố định **tham chiếu**, không bảo đảm đối tượng được tham chiếu là immutable hoặc thread-safe.
+If multiple threads share a stateful collaborator, verify that the collaborator is concurrency-safe. `private final` fixes the **reference**, not the immutability or thread safety of the referenced object.
 
-## 10. Thực hành có hướng dẫn
+## 10. Guided Practice
 
-**Bài tập 1 — Thêm kênh Webhook.** Tạo `WebhookChannel implements MessageChannel` với implementation demo chỉ ghi URL và thông điệp vào danh sách. Dùng `new AlertService(new WebhookChannel(...))` và kiểm tra nội dung cảnh báo, không sửa AlertService.
+**Exercise 1 — Add a Webhook Channel.** Implement `WebhookChannel implements MessageChannel` as a demo that records URLs and messages in a list. Use `new AlertService(new WebhookChannel(...))`, verify the alert content, and leave AlertService unchanged.
 
-**Bài tập 2 — Thêm LoggingChannel.** Viết một decorator bọc `MessageChannel` để ghi số lần gọi. Thử `new LoggingChannel(new RetryingChannel(new EmailChannel(), 3))` và `new RetryingChannel(new LoggingChannel(new EmailChannel()), 3)`. Hai cách sắp thứ tự wrapper có thể ghi các số liệu khác nhau; giải thích vì sao.
+**Exercise 2 — Add LoggingChannel.** Write a decorator around `MessageChannel` that counts calls. Try `new LoggingChannel(new RetryingChannel(new EmailChannel(), 3))` and `new RetryingChannel(new LoggingChannel(new EmailChannel()), 3)`. Explain why wrapper order can produce different counts.
 
-**Bài tập 3 — Đánh giá test retry.** Viết fake thất bại lần 1 rồi thành công lần 2. Kiểm tra maxAttempts = 1 thì lỗi được truyền ra, maxAttempts = 2 thì thành công. Đảm bảo không retry `IllegalArgumentException`.
+**Exercise 3 — Assess Retry Tests.** Create a fake that fails on attempt 1 and succeeds on attempt 2. Verify that maxAttempts = 1 propagates the failure, while maxAttempts = 2 succeeds. Ensure `IllegalArgumentException` is never retried.
 
-**Bài tập 4 — Nhận diện quan hệ.** Cho các câu: "Car dùng Engine", "SavingsAccount là một Account", "OrderService dùng EmailSender", "CSV exporter là một Formatter". Với mỗi câu, chỉ ra đâu là quan hệ dữ liệu/nghiệp vụ thật, đâu là khả năng có thể thay thế; giải thích khi nào `extends`, `implements` hoặc field kết hợp là hợp lý.
+**Exercise 4 — Identify Relationships.** Consider: "Car uses Engine," "SavingsAccount is an Account," "OrderService uses EmailSender," and "CSV exporter is a Formatter." For each, distinguish genuine business/data relationships from substitutable capabilities; explain when `extends`, `implements`, or a composed field is appropriate.
 
-**Bài tập 5 — Đánh giá API public.** Tìm những caller đang sử dụng đối tượng lớp con dưới kiểu lớp cha trước refactor. Ghi lại các lời gọi phụ thuộc quan hệ kế thừa và đề xuất adapter/đường chuyển đổi trước khi bỏ extends.
+**Exercise 5 — Assess the Public API.** Find callers using subclass instances as their superclass type before refactoring. Document calls that rely on inheritance and propose adapters/migration paths before removing extends.
 
-### Checklist sau refactor
+### Post-Refactoring Checklist
 
-- [ ] Vai trò của mỗi lớp có thể giải thích bằng một trách nhiệm rõ ràng.
-- [ ] Lớp sử dụng phụ thuộc vào interface nhỏ, không biết cấu trúc của adapter cụ thể khi không cần thiết.
-- [ ] Không để lộ các phương thức kế thừa không phù hợp với ngữ nghĩa lớp sử dụng.
-- [ ] Các trường hợp thành công, lỗi, validation và giới hạn retry có test.
-- [ ] Các caller và hợp đồng public được kiểm tra về tính tương thích.
-- [ ] Các tác dụng phụ thực tế được kiểm thử tích hợp ở ranh giới hạ tầng.
-- [ ] Kết hợp được dùng vì làm thiết kế rõ hơn, không chỉ để tránh từ khóa `extends`.
+- [ ] Each class has a role that can be explained as one clear responsibility.
+- [ ] Consumers depend on small interfaces without unnecessary knowledge of concrete adapter internals.
+- [ ] Inherited methods inconsistent with the consumer's semantics are not exposed.
+- [ ] Success, failure, validation, and retry-limit cases are tested.
+- [ ] Callers and public contracts have been checked for compatibility.
+- [ ] Real external side effects are covered by integration tests at infrastructure boundaries.
+- [ ] Composition is used because it improves clarity, not merely to avoid the keyword `extends`.
 
-**Kết quả cần đạt:** Bạn có thể thay phương tiện gửi cảnh báo hoặc bổ sung retry bằng cách **lắp ghép đối tượng**, không sửa lớp nghiệp vụ và không tạo thêm phân cấp lớp con cho mỗi tổ hợp tính năng.
+**Expected outcome:** You can replace alert-delivery channels or add retries through **object composition** without editing business classes or adding subclass hierarchies for every feature combination.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="refactoring-008">Gộp hoặc loại bỏ trừu tượng không cần thiết</a>
+## <a id="refactoring-008">Consolidating or Removing Unnecessary Abstractions</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Gộp hoặc loại bỏ trừu tượng không cần thiết trong OOP
+# Consolidating or Removing Unnecessary Abstractions in OOP
 
-> **Chủ đề:** Tái cấu trúc (Refactoring) — làm thiết kế Java đơn giản hơn bằng cách gộp những lớp, interface hoặc phương thức trung gian không còn mang trách nhiệm rõ ràng, đồng thời giữ nguyên hành vi mà client đang sử dụng.
+> **Topic:** Refactoring — simplifying Java design by consolidating intermediary classes, interfaces, or methods that no longer have clear responsibilities while preserving the behavior clients rely on.
 
-Một thiết kế OOP tốt không được đánh giá bằng **số lượng interface, class hay pattern**. Trừu tượng hóa chỉ hữu ích khi nó mô tả một khái niệm đáng đặt tên, che giấu sự biến đổi, bảo vệ ranh giới trách nhiệm hoặc tạo ra khả năng thay thế có nhu cầu thực tế.
+Good OOP design is not measured by **the number of interfaces, classes, or patterns**. An abstraction is useful when it names a meaningful concept, hides variation, protects responsibility boundaries, or supports genuinely needed substitution.
 
-Khi một lớp chỉ chuyển tiếp mọi lời gọi sang lớp khác, một interface chỉ lặp lại chính xác API của implementation mà không phục vụ hợp đồng riêng, hoặc một hierarchy tồn tại do dự đoán tính năng chưa xảy ra, hệ thống có thể trở nên khó hiểu hơn. Việc loại bỏ những tầng này thường được gọi là **Inline Class**, **Remove Middle Man**, **Collapse Hierarchy** hoặc **Inline Method**, tùy cấu trúc đang được đơn giản hóa.
+When a class merely forwards all calls, an interface duplicates an implementation's API without providing a distinct contract, or a hierarchy exists only for speculative future features, the system can become harder to understand. Removing these layers may involve **Inline Class**, **Remove Middle Man**, **Collapse Hierarchy**, or **Inline Method**, depending on the structure being simplified.
 
-**Điểm quan trọng:** Không phải interface có một implementation nào cũng thừa. Một interface đơn lẻ vẫn có thể định nghĩa **ranh giới IO**, hợp đồng thư viện, cơ chế plugin, hoặc một phép thay thế cần thiết trong kiến trúc. Hãy dựa vào lý do tồn tại và chi phí thay đổi thực tế trước khi quyết định xóa.
+**Important:** Not every interface with one implementation is redundant. A single-implementation interface may still define an **I/O boundary**, library contract, plugin mechanism, or architecturally necessary substitution point. Evaluate its purpose and real change costs before deleting it.
 
-## 1. Mục tiêu học tập
+## 1. Learning Objectives
 
-Sau bài này, bạn có thể:
+After this lesson, you should be able to:
 
-- Phân biệt **trừu tượng hữu ích** với **tầng chuyển tiếp không thêm giá trị**.
-- Nhận ra các dấu hiệu như `Middle Man`, `Speculative Generality`, hierarchy thừa, wrapper chỉ forward, method được tách quá mức.
-- Chọn đúng kỹ thuật: `Inline Class`, `Remove Middle Man`, `Collapse Hierarchy`, `Inline Method` hoặc đơn giản hóa một tham số/adapter.
-- Refactor theo từng bước, xác nhận kết quả bằng **regression/contract tests**.
-- Cân nhắc rủi ro khi API đã được công bố, DI container, framework, serialization hoặc khả năng mở rộng thật sự phụ thuộc abstraction.
-- Biết khi nào **giữ nguyên interface**, dù code hiện tại mới có một implementation.
+- Distinguish **valuable abstractions** from **forwarding layers that add no value**.
+- Recognize `Middle Man`, `Speculative Generality`, redundant hierarchies, forwarding-only wrappers, and excessively extracted methods.
+- Choose `Inline Class`, `Remove Middle Man`, `Collapse Hierarchy`, `Inline Method`, or parameter/adapter simplification appropriately.
+- Refactor incrementally and validate outcomes with **regression/contract tests**.
+- Assess risks involving published APIs, DI containers, frameworks, serialization, or actual extension needs that depend on abstractions.
+- Recognize when to **retain an interface** despite currently having just one implementation.
 
-## 2. Một abstraction hữu ích đang giải quyết việc gì?
+## 2. What Problem Does a Valuable Abstraction Solve?
 
-Ví dụ một hệ thống thanh toán có interface:
+Consider a payment system with an interface:
 
 ~~~java
 interface PaymentGateway {
@@ -3532,9 +3532,9 @@ interface PaymentGateway {
 }
 ~~~
 
-Ứng dụng có thể chỉ chạy với một cổng thanh toán lúc này, nhưng `PaymentGateway` vẫn đáng giữ nếu nó tách nghiệp vụ khỏi nhà cung cấp dịch vụ, định nghĩa hợp đồng lỗi, tạo ranh giới network IO hoặc cho phép chạy sandbox trong môi trường kiểm thử.
+The application may currently use one payment gateway, but `PaymentGateway` can still be worth keeping if it separates business code from the provider, defines failure contracts, establishes a network I/O boundary, or permits sandbox testing.
 
-Ngược lại:
+By contrast:
 
 ~~~java
 interface GreetingPort {
@@ -3557,7 +3557,7 @@ final class GreetingEngine {
 }
 ~~~
 
-Nếu `GreetingPort` và `GreetingPortImpl` chỉ được dùng nội bộ tại một nơi, không phải API ổn định, không có thay thế thực tế và không đóng vai trò ranh giới kiến trúc, có thể đơn giản thành:
+If `GreetingPort` and `GreetingPortImpl` are used internally in one place, do not form a stable API, have no genuine substitution need, and serve no architectural boundary, they could be simplified to:
 
 ~~~java
 final class Greeter {
@@ -3567,23 +3567,23 @@ final class Greeter {
 }
 ~~~
 
-Đây là **ví dụ có điều kiện**. Nếu `GreetingPort` đang được một thư viện công khai, DI module, plugin hay client bên ngoài sử dụng, xóa nó có thể gây lỗi biên dịch hoặc phá tương thích. Trước tiên phải kiểm tra người dùng thực tế của API.
+This is a **conditional example**. If `GreetingPort` is used by a public library, DI module, plugin, or external client, removing it may break compilation or compatibility. First inspect the API's real consumers.
 
-| Câu hỏi | Dấu hiệu nên giữ | Dấu hiệu có thể gộp |
+| Question | Reasons to retain | Reasons to consolidate |
 |---|---|---|
-| Có **nhiều hành vi hợp lệ** cần thay thế không? | Strategy/plugin/adapter có nhiều lựa chọn thật | Chỉ một đường đi, không có biến thể được yêu cầu |
-| Có **ranh giới hạ tầng** không? | API, DB, network, message broker, thời gian, file system | Wrapper thuần logic chuyển tiếp trong cùng module |
-| Abstraction có **hợp đồng độc lập** không? | Bảo đảm hành vi, lỗi, quyền hạn và invariants riêng | Chữ ký và ý nghĩa hoàn toàn trùng lớp được bọc |
-| Có giúp **giảm phụ thuộc** không? | Domain không cần biết về framework/vendor | Người đọc phải đi qua nhiều file mà phụ thuộc không giảm |
-| Đã có **client bên ngoài** chưa? | Được phát hành/serialize/reflect/DI theo tên type | Chỉ private/internal call site, có thể chỉnh đồng bộ |
-| Có **lý do thay đổi độc lập** không? | Các lớp thường phát triển khác nhau | Cả hai luôn thay đổi cùng lúc và không tạo ranh giới có ý nghĩa |
-| Có **lợi ích test thật** không? | Tách external side effect, kiểm thử hợp đồng độc lập | Mock một lớp chỉ forward và test lặp lại cùng logic |
+| Are there **multiple valid behaviors** to substitute? | Real Strategy/plugin/adapter choices | One path with no requested variants |
+| Is there an **infrastructure boundary**? | APIs, databases, networks, message brokers, time, file systems | Pure forwarding wrappers within one module |
+| Does the abstraction define an **independent contract**? | Distinct behavior, error, permission, or invariant guarantees | Same signatures and semantics as the wrapped class |
+| Does it **reduce coupling**? | Domain code need not know frameworks/vendors | Readers traverse extra files without any coupling reduction |
+| Are there **external clients**? | Published, serialized, reflected, or type-name-based DI usage | Only private/internal call sites that can change together |
+| Are there **independent reasons to change**? | The classes evolve separately | Both always change together without forming a useful boundary |
+| Is there a **real testing benefit**? | Isolated external side effects and independent contract tests | Mocking a forwarding class and duplicating the same tests |
 
-**Không dùng các luật cứng** kiểu “một implementation thì phải xóa interface”, “class dưới 20 dòng thì gộp” hay “mọi delegate đều thừa”. Giá trị của abstraction nằm ở trách nhiệm và tính ổn định của hợp đồng.
+**Do not use rigid rules** such as "one implementation means delete the interface," "merge every class shorter than 20 lines," or "all delegates are redundant." An abstraction's value lies in responsibility and contract stability.
 
-## 3. Dấu hiệu phổ biến của sự trừu tượng hóa quá mức
+## 3. Common Signs of Excessive Abstraction
 
-### Middle Man — lớp trung gian gần như chỉ ủy quyền
+### Middle Man — An Intermediary That Mostly Delegates
 
 ~~~java
 final class OrderFacade {
@@ -3599,17 +3599,17 @@ final class OrderFacade {
 }
 ~~~
 
-Nếu facade không thêm ý nghĩa cho API, không kiểm tra quyền, không điều phối nhiều collaborator, không dịch ngoại lệ và không ổn định hóa ranh giới, client có thể gọi `OrderService` trực tiếp. Nhưng facade là cần thiết nếu nó đại diện một **use case** hoặc che giấu sự phức tạp thật.
+If a facade adds no API meaning, authorization checks, multi-collaborator coordination, exception translation, or stable boundary, clients may call `OrderService` directly. However, a facade is valuable when it represents a **use case** or hides real complexity.
 
-### Speculative Generality — chuẩn bị trước cho tương lai chưa có
+### Speculative Generality — Preparing for an Imaginary Future
 
-Ví dụ tạo `AbstractReportFactoryBuilderBase`, `ReportFactoryProvider` và ba tầng interface chỉ vì “sau này có thể thêm định dạng”. Nếu hiện tại chỉ một loại báo cáo và chưa có yêu cầu thay đổi, các tầng đó có thể làm onboarding và debugging khó hơn.
+For example, adding `AbstractReportFactoryBuilderBase`, `ReportFactoryProvider`, and three interface layers solely because "more formats may be added later" can complicate onboarding and debugging when only one report type exists and no changes are required.
 
-### Collapsed responsibility — nhiều lớp chia nhau một trách nhiệm nhỏ
+### Fragmented Responsibility — Many Classes Sharing One Small Job
 
-Một chuỗi `TaxInputWrapper → TaxCalculatorFacade → TaxCalculatorImpl` có thể chỉ truyền cùng hai tham số và trả lại một số nguyên. Nếu không có lý do tách biệt, đưa logic về class thể hiện rõ trách nhiệm sẽ làm mã ngắn đường đi hơn.
+A chain such as `TaxInputWrapper → TaxCalculatorFacade → TaxCalculatorImpl` may merely pass the same two parameters and return one integer. Without a meaningful reason for separation, moving logic into the class that clearly owns the responsibility shortens the path.
 
-### Hierarchy không tạo đa hình có ý nghĩa
+### Hierarchies Without Meaningful Polymorphism
 
 ~~~java
 class BaseOrderPrinter {
@@ -3620,37 +3620,37 @@ class BaseOrderPrinter {
 final class DefaultOrderPrinter extends BaseOrderPrinter { }
 ~~~
 
-Nếu subclass không có hành vi riêng, không có contract cho extension và inheritance chỉ tồn tại để thêm tên class, có thể bỏ cấp kế thừa sau khi kiểm tra các client phụ thuộc.
+If a subclass adds no behavior, has no extension contract, and exists only to introduce another class name, consider removing that inheritance level after checking dependent clients.
 
-### Tiny Method không làm rõ ý định
+### Tiny Methods That Do Not Clarify Intent
 
 ~~~java
 long add(long a, long b) { return a + b; }
 long sum(long a, long b) { return add(a, b); }
 ~~~
 
-Một phương thức chỉ có tác dụng gọi một phương thức khác đôi khi đáng inline. Tuy nhiên, các tên như `taxableAmount`, `validateAccess` có thể đại diện **ngữ nghĩa miền** hoặc một điểm kiểm soát tập trung; chúng đáng giữ dù rất ngắn.
+A method that only calls another method may be worth inlining. However, names such as `taxableAmount` and `validateAccess` can express **domain meaning** or a centralized control point, making them valuable even when short.
 
-## 4. Ví dụ Java chạy được: bỏ hai tầng forwarding dư thừa
+## 4. Runnable Java Example: Removing Two Unnecessary Forwarding Layers
 
-**Bối cảnh:** Dịch vụ checkout tính phí vận chuyển và giảm giá. Mã cũ có ba tầng:
+**Context:** A checkout service calculates shipping fees and discounts. The legacy code has three layers:
 
-1. `CheckoutFacade` chỉ ủy quyền `quote`.
-2. `PricingAdapter` implement `PricingPort` nhưng chỉ gọi `PricingEngine`.
-3. `PricingEngine` thực sự kiểm tra đầu vào và tính giá.
+1. `CheckoutFacade` only delegates `quote`.
+2. `PricingAdapter` implements `PricingPort` but only calls `PricingEngine`.
+3. `PricingEngine` actually validates inputs and calculates prices.
 
-Không có network/database/plugin hay chính sách bổ sung ở hai tầng trung gian trong ví dụ. Hệ thống nội bộ chỉ có một client sử dụng API `Checkout`. Ta giữ abstraction này là **hợp đồng mà client thấy**, nhưng thay chuỗi forward nội bộ bằng `SimplifiedCheckout` trực tiếp thực hiện nghiệp vụ.
+In this example, neither intermediary introduces network/database/plugin boundaries or additional policies. The internal system has one client of the `Checkout` API. Keep that abstraction as **the client-facing contract**, but replace the internal forwarding chain with `SimplifiedCheckout` performing the business logic directly.
 
-### Hợp đồng cần giữ nguyên
+### Contract to Preserve
 
-- `subtotalCents` là số cent từ `0` đến `1_000_000`, bao gồm hai biên.
-- Khách VIP được giảm **10%** (`subtotal / 10`, làm tròn xuống) và miễn phí vận chuyển.
-- Khách thường không được giảm giá. Đơn từ **100.000 cent trở lên** miễn phí vận chuyển; nhỏ hơn thì phí **15.000 cent**.
+- `subtotalCents` is an amount in cents from `0` through `1_000_000`, inclusive.
+- VIP customers receive a **10%** discount (`subtotal / 10`, rounded down) and free shipping.
+- Standard customers receive no discount. Orders of **100.000 cents or more** ship free; below that, shipping costs **15.000 cents**.
 - `totalCents = subtotalCents - discountCents + shippingCents`.
-- Đầu vào ngoài miền hợp lệ ném `IllegalArgumentException`.
-- Hàm báo giá không có side effect và cho kết quả ổn định với cùng đầu vào.
+- Out-of-range inputs throw `IllegalArgumentException`.
+- Quoting has no side effects and returns stable results for the same input.
 
-Tạo tệp `AbstractionRemovalDemo.java` bằng JDK **17 trở lên**:
+Create `AbstractionRemovalDemo.java` with JDK **17 or later**:
 
 ~~~java
 import java.util.List;
@@ -3804,14 +3804,14 @@ public class AbstractionRemovalDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac AbstractionRemovalDemo.java
 java AbstractionRemovalDemo
 ~~~
 
-Kết quả kỳ vọng:
+Expected output:
 
 ~~~text
 PASS: legacy contract
@@ -3820,9 +3820,9 @@ PASS: before/after comparison
 Invoice[discountCents=25000, shippingCents=0, totalCents=225001]
 ~~~
 
-Các lớp cũ và mới cùng tồn tại **chỉ để minh họa và so sánh trong tệp demo**. Khi áp dụng refactor cho dự án thật, sau khi kiểm chứng và chuyển toàn bộ call site, ta nên xóa các tầng `PricingPort`, `PricingAdapter`, `PricingEngine` và `LegacyCheckout` không còn được dùng. Không duy trì song song hai đường đi sản xuất nếu không có lý do tương thích hoặc chuyển đổi cụ thể.
+The old and new classes coexist **only for demonstration and comparison in the demo file**. In a real project, after validation and migrating all call sites, remove unused `PricingPort`, `PricingAdapter`, `PricingEngine`, and `LegacyCheckout` layers. Do not maintain parallel production paths without a specific compatibility or migration reason.
 
-### Trước và sau refactor
+### Before and After Refactoring
 
 ~~~mermaid
 flowchart LR
@@ -3839,27 +3839,27 @@ flowchart LR
     end
 ~~~
 
-Điều được cải thiện là **đường đi của hành vi rõ hơn**: không còn phải mở nhiều lớp chỉ để tìm nơi thực sự tính tiền. Điều không thay đổi là lời gọi qua `Checkout`, kiểu `Invoice` trả về và quy tắc input/output.
+The improvement is a **clearer execution path**: readers no longer open multiple classes to find where pricing is calculated. Calls through `Checkout`, the returned `Invoice` type, and input/output rules remain unchanged.
 
-## 5. Chọn kỹ thuật gộp/loại bỏ đúng vấn đề
+## 5. Choosing the Right Consolidation or Removal Technique
 
-| Kỹ thuật | Khi nào dùng | Ví dụ | Rủi ro cần kiểm tra |
+| Technique | When to use it | Example | Risks to check |
 |---|---|---|---|
-| **Inline Method** | Method chỉ gọi một method khác, tên không truyền thêm ý nghĩa | `int calc() { return addTax(); }` không thêm contract | Tên method có thể là ngôn ngữ miền hữu ích |
-| **Inline Class** | Class làm quá ít việc, không có trách nhiệm độc lập | `AddressFormatterHelper` dùng riêng trong `AddressFormatter` | Class được framework/client bên ngoài tham chiếu |
-| **Remove Middle Man** | Class phần lớn là chuỗi delegate đơn thuần | `Facade → Adapter → Engine` thuần forward | Delegate có thể là boundary bảo mật, transaction hay IO |
-| **Collapse Hierarchy** | Superclass/subclass không khác biệt đáng kể về hành vi/trách nhiệm | `DefaultPrinter extends BasePrinter` mà không bổ sung logic | Hành vi đa hình, binary/source compatibility, override |
-| **Remove Unused Abstraction** | Interface/abstract class/factory không còn caller hợp lệ | Interface chỉ tồn tại cho tính năng đã bỏ | Plugin, reflection, DI configuration, client bên ngoài |
-| **Simplify Parameter Object** | Object chỉ bọc một giá trị, không có invariant/ý nghĩa riêng | `NameWrapper` không có chính sách và không được tái sử dụng | Có thể là value object cần bảo vệ unit/validation |
-| **Replace Hierarchy with Composition** | Kế thừa phức tạp, dùng chỉ để tái sử dụng vài hành vi | Nhiều subclass vì phối hợp hai chiều biến đổi | Không phải lúc nào cũng **giảm** abstraction; đánh giá riêng |
+| **Inline Method** | A method only calls another and adds no meaning | `int calc() { return addTax(); }` adds no contract | The method name may encode useful domain language |
+| **Inline Class** | A class does too little and has no distinct responsibility | `AddressFormatterHelper` used only by `AddressFormatter` | Frameworks or external clients may reference the class |
+| **Remove Middle Man** | A class mostly consists of pure delegation | `Facade → Adapter → Engine` forwarding chain | Delegates may protect security, transaction, or I/O boundaries |
+| **Collapse Hierarchy** | Superclass/subclass differ little in behavior/responsibility | `DefaultPrinter extends BasePrinter` without extra logic | Polymorphic behavior, binary/source compatibility, overrides |
+| **Remove Unused Abstraction** | An interface/abstract class/factory has no remaining legitimate consumers | An interface only for a removed feature | Plugins, reflection, DI configuration, external clients |
+| **Simplify Parameter Object** | An object only wraps a value without invariants or distinct meaning | `NameWrapper` with no policies or reuse | Could be a value object protecting units/validation |
+| **Replace Hierarchy with Composition** | Complex inheritance only reuses a few behaviors | Many subclasses combining two dimensions of variation | Does not always **reduce** abstraction; assess separately |
 
-**Đừng gộp trách nhiệm độc lập chỉ để giảm số file.** Nếu `PricingEngine` được nhiều use case dùng hoặc chịu trách nhiệm riêng, giữ nó và chỉ bỏ adapter dư thừa. Chọn mức đơn giản hóa sao cho *cohesion* tăng, *coupling* không xấu đi và test vẫn dễ viết.
+**Do not merge independent responsibilities just to reduce file counts.** If `PricingEngine` serves multiple use cases or has its own responsibility, retain it and remove only the redundant adapter. Simplify in ways that improve *cohesion*, do not worsen *coupling*, and keep testing straightforward.
 
-## 6. Inline Class và Collapse Hierarchy khác nhau thế nào?
+## 6. How Do Inline Class and Collapse Hierarchy Differ?
 
-### Inline Class: đưa trách nhiệm nhỏ về nơi nó thực sự thuộc về
+### Inline Class: Return a Small Responsibility to Its Proper Owner
 
-Giả sử:
+Suppose:
 
 ~~~java
 final class NameJoiner {
@@ -3877,7 +3877,7 @@ final class CustomerLabel {
 }
 ~~~
 
-Nếu `NameJoiner` chỉ có một caller này, không tái sử dụng, không phụ thuộc IO, không encapsulate luật định dạng chung, có thể inline:
+If `NameJoiner` has only this one caller, is not reused, has no I/O dependency, and does not encapsulate a shared formatting rule, it could be inlined:
 
 ~~~java
 final class CustomerLabel {
@@ -3887,11 +3887,11 @@ final class CustomerLabel {
 }
 ~~~
 
-Nhưng nếu toàn hệ thống phải tuân theo quy tắc hiển thị tên có địa phương hóa, định dạng độc lập là một trách nhiệm quan trọng. Khi đó nên giữ một dịch vụ/kiểu dữ liệu thể hiện đúng contract của nó.
+But if the entire system must follow localized name-display rules, independent formatting is an important responsibility. In that case, retain a service/type expressing the proper contract.
 
-### Collapse Hierarchy: bỏ mức kế thừa không có khác biệt
+### Collapse Hierarchy: Remove an Inheritance Level Without Distinction
 
-Trước:
+Before:
 
 ~~~java
 class BaseFormatter {
@@ -3905,7 +3905,7 @@ final class DefaultFormatter extends BaseFormatter {
 }
 ~~~
 
-Nếu không có consumer nào cần phân biệt `BaseFormatter` và `DefaultFormatter`, có thể thay bằng một class:
+If no consumer needs to distinguish `BaseFormatter` from `DefaultFormatter`, they can be replaced by one class:
 
 ~~~java
 final class Formatter {
@@ -3915,11 +3915,11 @@ final class Formatter {
 }
 ~~~
 
-Trường hợp này không có nghĩa mọi subclass rỗng đều phải xóa: class con có thể được dùng làm **marker type**, được framework tìm qua annotation, đại diện cho một hợp đồng tương thích hoặc sắp nhận extension đã có yêu cầu cụ thể. Phải kiểm tra client, annotation và cấu hình trước khi thay hierarchy.
+This does not mean every empty subclass must disappear: a subclass might be a **marker type**, discovered through framework annotations, preserve a compatibility contract, or have a confirmed upcoming extension requirement. Inspect clients, annotations, and configuration before changing the hierarchy.
 
-## 7. Nhận diện ranh giới thật sự trước khi xóa abstraction
+## 7. Identify Real Boundaries Before Deleting Abstractions
 
-Cùng là một tầng gọi chuyển tiếp, nhưng ý nghĩa có thể rất khác:
+Similar-looking forwarding layers may serve very different purposes:
 
 ~~~java
 interface Clock {
@@ -3927,7 +3927,7 @@ interface Clock {
 }
 ~~~
 
-Đây có thể là ranh giới hữu ích để kiểm thử hành vi phụ thuộc thời gian mà không phải chờ đồng hồ thật. Nếu `Clock` giúp domain không phụ thuộc system clock, bỏ nó có thể làm test khó hơn.
+This may be a useful boundary for testing time-dependent behavior without waiting for the real clock. If `Clock` isolates domain logic from the system clock, removing it can make testing harder.
 
 ~~~java
 interface CustomerRepository {
@@ -3935,9 +3935,9 @@ interface CustomerRepository {
 }
 ~~~
 
-Có thể là một ranh giới giữa **domain/application** và **database**, ngay cả khi chỉ một implementation dùng JDBC. Loại bỏ interface có thể kéo SQL/hạ tầng vào nơi không nên phụ thuộc.
+This may be a boundary between **domain/application** and **database**, even with just one JDBC implementation. Removing the interface could pull SQL/infrastructure into code that should not depend on it.
 
-Ngược lại:
+By contrast:
 
 ~~~java
 final class IdEchoAdapter {
@@ -3947,29 +3947,29 @@ final class IdEchoAdapter {
 }
 ~~~
 
-Nếu đây chỉ là một lớp vô nghĩa, không validation, transformation, boundary hay semantics, không có lý do kiến trúc rõ để giữ.
+If this is merely a meaningless layer with no validation, transformation, boundary, or semantics, there is no clear architectural reason to retain it.
 
-**Bảng quyết định nhanh:**
+**Quick Decision Table:**
 
-| Loại ranh giới | Nên giữ khi… | Cân nhắc gộp khi… |
+| Boundary type | Retain when… | Consider consolidating when… |
 |---|---|---|
-| Domain ↔ database/network | Ẩn side effect, cho phép thay hạ tầng và test ổn định | Lớp trung gian chỉ copy tên, contract đã được định nghĩa ở nơi khác |
-| Use case ↔ domain | Điều phối transaction, authorization, nhiều collaborator | Use case chỉ forward không có semantic riêng |
-| API ↔ DTO/domain | Validation, versioning, mapping, serialization | Wrapper không chuyển đổi gì và không phải API công khai |
-| Strategy/Plugin | Có biến thể thực tế hoặc hợp đồng mở rộng | Chỉ là dự đoán tương lai, không có người sử dụng |
-| Value object | Đảm bảo đơn vị, ràng buộc, ý nghĩa miền | Wrapper chỉ đổi tên primitive, không thêm semantic |
-| Module facade | Che giấu nhiều subsystem, làm API ổn định | Facade chỉ chuyển tiếp 100% và không che chi tiết nào |
+| Domain ↔ database/network | Hides side effects, permits infrastructure substitution and stable tests | An intermediary merely renames methods and the contract already lives elsewhere |
+| Use case ↔ domain | Coordinates transactions, authorization, or several collaborators | A use case simply forwards without distinct meaning |
+| API ↔ DTO/domain | Handles validation, versioning, mapping, or serialization | A wrapper performs no conversion and is not a public API |
+| Strategy/Plugin | Real variants or an extension contract exist | Only a speculative future with no consumers |
+| Value object | Enforces units, constraints, or domain meaning | A wrapper only renames a primitive without semantics |
+| Module facade | Hides several subsystems and stabilizes APIs | The facade forwards 100% of calls without hiding details |
 
-## 8. Quy trình refactor an toàn: bỏ thừa mà vẫn giữ hợp đồng
+## 8. Safe Refactoring: Remove Redundancy While Preserving Contracts
 
-1. **Xác định đường đi hiện tại.** Vẽ hoặc đọc chuỗi gọi từ public API tới nơi có nghiệp vụ. Đánh dấu mọi class/interface chỉ chuyển tiếp; ghi nhận chúng phục vụ client nào.
-2. **Tìm lý do tồn tại.** Kiểm tra dependency, test, DI configuration, annotation, visibility, framework integration và các điểm extension. Đánh dấu boundary cần giữ.
-3. **Chốt hành vi công khai.** Viết test từ specification cho input hợp lệ, biên, exception, output và side effect; lấy thêm các trường hợp đặc biệt từ bug thực tế.
-4. **Chọn phép biến đổi nhỏ.** Có thể bỏ một lớp delegate trước khi xét gộp engine; không cần xóa cả hierarchy trong một commit lớn.
-5. **Chuyển call site một cách nhất quán.** Gọi trực tiếp abstraction còn lại; giữ tên API cần ổn định; tránh để đường đi cũ và mới vô tình xử lý khác nhau.
-6. **Chạy compiler, unit, regression và integration tests.** Với DI/reflection, cần kiểm tra khởi động ứng dụng, cấu hình bean, serialization và runtime route.
-7. **Đo tác động thực tế.** Xem số bước tìm logic, số class phải chỉnh khi thêm yêu cầu, khả năng test, sự rõ ràng trong review. Loại bỏ tầng thừa có thể đáng giá hơn việc đếm giảm bao nhiêu dòng.
-8. **Dọn code chết.** Sau khi chắc chắn không còn consumer, bỏ import, class, interface, file cấu hình và test chi tiết triển khai lỗi thời; giữ các test hành vi.
+1. **Map the current call path.** Draw or trace calls from the public API to the business rules. Mark forwarding-only classes/interfaces and identify their clients.
+2. **Find the reason for each layer.** Inspect dependencies, tests, DI configuration, annotations, visibility, framework integration, and extension points. Mark boundaries worth keeping.
+3. **Establish public behavior.** Write specification-based tests for valid inputs, boundaries, exceptions, outputs, and side effects, incorporating special cases from real defects.
+4. **Choose a small transformation.** Remove one delegate before considering whether to merge an engine; do not delete a whole hierarchy in one large commit.
+5. **Migrate call sites consistently.** Invoke the surviving abstraction directly, retain API names that must stay stable, and prevent old and new paths from diverging.
+6. **Run compiler, unit, regression, and integration tests.** For DI/reflection, verify application startup, bean configuration, serialization, and runtime routing.
+7. **Measure actual impact.** Evaluate steps needed to locate logic, classes edited for new requirements, testability, and review clarity. Removing a redundant layer can be more valuable than reducing line counts.
+8. **Clean dead code.** Once consumers are absent, remove obsolete imports, classes, interfaces, configuration, and implementation-detail tests while retaining behavioral tests.
 
 ~~~mermaid
 flowchart TD
@@ -3985,35 +3985,35 @@ flowchart TD
     H -->|Có| J["Xóa đường đi dư, review thiết kế"]
 ~~~
 
-### Thứ tự thao tác khi public API đã có người dùng
+### Sequence When External Clients Use the Public API
 
-Nếu `PricingPort` được công khai trong một thư viện, thay lời gọi client ngay lập tức có thể là **breaking change**. Một hướng an toàn hơn:
+If `PricingPort` is public in a library, immediately changing client calls may be a **breaking change**. A safer approach is:
 
-- Giữ **adapter tương thích** trong thời gian chuyển đổi và đánh dấu `@Deprecated` nếu phù hợp.
-- Công bố API mới, hướng dẫn migration, di chuyển call site đã biết.
-- Kiểm tra source/binary compatibility và phiên bản phát hành; chỉ xóa API cũ trong lần phát hành cho phép breaking change.
-- Xác minh cả cấu hình DI, plugin, reflection và dữ liệu serialize có dùng tên type cũ không.
+- Keep a **compatibility adapter** during migration and mark it `@Deprecated` when appropriate.
+- Publish the new API, document migration, and update known call sites.
+- Check source/binary compatibility and release versions; remove old APIs only in a release allowing breaking changes.
+- Verify whether DI configuration, plugins, reflection, and serialized data reference old type names.
 
-Ở một ứng dụng nội bộ được build cùng lúc, việc di chuyển mọi call site có thể thực hiện trực tiếp hơn, nhưng vẫn phải chạy test và kiểm tra runtime.
+In an internal application built as a unit, all call sites may be migrated more directly, but tests and runtime checks are still required.
 
-## 9. Kiểm thử tính đúng đắn của refactor
+## 9. Testing Refactoring Correctness
 
-Khi **mục tiêu là đổi thiết kế, không đổi chức năng**, các test nên kiểm tra *kết quả client quan sát* hơn là số lớp hoặc số method.
+When **the goal is design change rather than functional change**, tests should focus on *client-observable outcomes* instead of class or method counts.
 
-| Nhóm test | Ví dụ | Điều được bảo vệ |
+| Test category | Example | What it protects |
 |---|---|---|
-| Specification test | `quote(100_000, false)` miễn phí vận chuyển | Kết quả nghiệp vụ đúng độc lập với mã cũ |
-| Boundary test | 0; 99.999; 100.000; 100.001; 1.000.000 | Không mất nhánh/điều kiện khi inline |
-| Negative test | -1; 1.000.001 | Validation và loại lỗi giữ đúng |
-| Differential test | 1.000 input random với seed cố định | Phát hiện khác biệt giữa hai đường đi |
-| Side-effect test | Không phát sinh thao tác IO/charge ngoài hợp đồng | Bỏ tầng trung gian không tạo tác dụng phụ |
-| Integration test | Khởi động DI, gọi API qua transport | Xóa type không phá wiring/runtime |
-| Client compilation | Biên dịch module phụ thuộc, nếu có | Không phá chữ ký công khai vô ý |
-| Performance check | Đo luồng bị ảnh hưởng nếu có SLA | Không tạo tính toán/IO thừa khi gộp |
+| Specification test | `quote(100_000, false)` qualifies for free shipping | Business correctness independently of old code |
+| Boundary test | 0; 99.999; 100.000; 100.001; 1.000.000 | No branch/condition is lost during inlining |
+| Negative test | -1; 1.000.001 | Validation and error types remain correct |
+| Differential test | 1.000 random inputs with a fixed seed | Detect differences between old and new paths |
+| Side-effect test | No extra I/O/charges beyond the contract | Removing intermediaries adds no side effects |
+| Integration test | Start DI and invoke the API through the transport | Type removal does not break wiring/runtime |
+| Client compilation | Compile dependent modules, if any | Avoid unintentional public-signature breakage |
+| Performance check | Measure affected flows when SLAs exist | Consolidation adds no unnecessary computation/I/O |
 
-### Ví dụ JUnit 5
+### JUnit 5 Example
 
-Nếu dự án đã khai báo `org.junit.jupiter:junit-jupiter` và test cùng package với class demo, thêm tệp `CheckoutRefactoringTest.java`:
+If the project declares `org.junit.jupiter:junit-jupiter` and tests reside in the same package as the demo class, add `CheckoutRefactoringTest.java`:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -4060,123 +4060,123 @@ class CheckoutRefactoringTest {
 }
 ~~~
 
-Trong demo các nested type có quyền truy cập package-private; đặt test cùng package. Ở code production nên tổ chức mỗi type và visibility đúng với kiến trúc của ứng dụng.
+Demo nested types have package-private access, so place tests in the same package. Production code should organize types and visibility according to the application's architecture.
 
-**Không chỉ dựa vào phép so sánh phiên bản cũ/mới.** Nếu phiên bản cũ sai từ trước, việc copy đúng lỗi cũ vẫn pass differential test. Các `Invoice` kỳ vọng trong demo được viết **trực tiếp theo yêu cầu**, đóng vai trò oracle độc lập.
+**Do not rely solely on comparing old and new versions.** If the old version was already wrong, faithfully preserving its defect can still pass differential tests. Expected `Invoice` values in the demo are written **directly from the requirements** as an independent oracle.
 
-## 10. Những sai lầm thường gặp
+## 10. Common Mistakes
 
-**Xóa interface chỉ vì có một implementation.** Số implementation không phản ánh đầy đủ giá trị. Một abstraction ở ranh giới DB, IO, clock hay payment gateway có thể là yếu tố bảo vệ domain quan trọng.
+**Deleting an interface simply because it has one implementation.** Implementation count is not a complete measure of value. An abstraction at a database, I/O, clock, or payment-gateway boundary may be important for protecting domain code.
 
-**Gộp class theo số dòng.** Hai class mỗi class 10 dòng vẫn nên tách nếu chúng có **lý do thay đổi độc lập**. Ngược lại, một chuỗi class 100 dòng chỉ chuyển tiếp có thể cần đơn giản hóa.
+**Merging classes based on line counts.** Two 10-line classes should remain separate if they have **independent reasons to change**. Conversely, a chain of 100-line classes doing nothing but forwarding may need simplification.
 
-**Chuyển hết logic vào một “God Class”.** Mục đích không phải giảm class bằng mọi giá. Nếu sau gộp class chịu nhiều trách nhiệm không liên quan, khả năng bảo trì sẽ xấu đi.
+**Moving everything into a "God Class."** The objective is not to minimize classes at any cost. If consolidation leaves a class with unrelated responsibilities, maintainability deteriorates.
 
-**Refactor và đổi nghiệp vụ cùng lúc.** Nếu tổng tiền thay đổi do chính sách giá mới, đó là thay đổi chức năng phải được mô tả riêng. Refactor chỉ được coi là giữ hành vi khi contract được xác minh không đổi.
+**Refactoring while changing business rules.** If totals change due to a new pricing policy, that is a functional change that must be documented separately. A refactoring preserves behavior only when the contract is verified unchanged.
 
-**Không kiểm tra reflection, DI hoặc API ngoài module.** Code có thể compile nhưng ứng dụng lỗi lúc runtime vì bean name, annotation, constructor injection hoặc cấu hình dựa vào class đã xóa.
+**Neglecting reflection, DI, or APIs outside the module.** Code may compile but fail at runtime because bean names, annotations, constructor injection, or configuration referenced a removed class.
 
-**Chỉ test chi tiết cấu trúc.** Một test xác nhận `PricingAdapter.calculate()` đã được gọi một lần trở nên vô nghĩa khi `PricingAdapter` bị bỏ. Thay bằng test của `Checkout.quote()` và những side effect thật sự có ý nghĩa.
+**Testing only structural details.** A test asserting that `PricingAdapter.calculate()` was called once becomes meaningless after removing `PricingAdapter`. Replace it with tests for `Checkout.quote()` and genuinely relevant side effects.
 
-**Inline phương thức lặp logic ở nhiều nơi.** Bỏ một method chung rồi copy nội dung sang nhiều client có thể tạo `Duplicate Code` và tăng chi phí thay đổi. Chỉ inline khi logic thực sự thuộc về caller và không làm phân tán một quy tắc chung.
+**Inlining methods by duplicating logic across clients.** Removing a shared method and copying its body into many callers can create `Duplicate Code` and increase change costs. Inline only when the logic belongs to the caller and does not scatter a common rule.
 
-**Không cân nhắc ràng buộc kiểu/visibility.** Chuyển method từ class này sang class khác có thể làm lộ field private, mở rộng quyền truy cập hoặc thay đổi overload/generics. Hãy dùng compiler, test và review access modifiers.
+**Ignoring type and visibility constraints.** Moving methods between classes may expose private fields, broaden access, or affect overloads/generics. Use the compiler, tests, and access-modifier reviews.
 
-## 11. Bài tập thực hành
+## 11. Practice Exercises
 
-**Bài 1 — Phân loại:** Với các kiểu `UserRepository` (giao tiếp DB), `UserRepositoryImpl` (SQL thật), `UserRepositoryProxy` (chỉ forward), `UserService` (nghiệp vụ), hãy xác định lớp nào có thể là middle man. Nêu **bằng chứng cần kiểm tra** trước khi bỏ.
+**Exercise 1 — Classify:** Given `UserRepository` (DB contract), `UserRepositoryImpl` (real SQL), `UserRepositoryProxy` (forwarding only), and `UserService` (business logic), identify the likely middle man. Specify **evidence to verify** before removing it.
 
-**Bài 2 — Inline Class:** Một `NamePrinter` chỉ được một `GreetingService` dùng để nối họ tên và không có định dạng chung. Viết lại để bỏ lớp phụ. Tạo test cho input thường, input rỗng và `null` theo hợp đồng hiện hành.
+**Exercise 2 — Inline Class:** A `NamePrinter` used only by `GreetingService` joins names without any shared formatting rule. Rewrite the code without the helper class. Test normal, empty, and `null` inputs according to the current contract.
 
-**Bài 3 — Collapse Hierarchy:** `DefaultDiscountCalculator extends DiscountCalculator` nhưng không override gì và không có client nào dùng kiểu con như một marker. Thiết kế lại thành một class, dự đoán ảnh hưởng đến constructor và các `import`.
+**Exercise 3 — Collapse Hierarchy:** `DefaultDiscountCalculator extends DiscountCalculator` but overrides nothing, and no client uses the subclass as a marker. Redesign it as one class and predict effects on constructors and `import` statements.
 
-**Bài 4 — Refactor có giới hạn:** Trong demo `AbstractionRemovalDemo`, thử chỉ xóa `PricingAdapter` và giữ `PricingEngine` nếu engine được một use case khác tái sử dụng. Đánh giá xem lớp còn lại có trách nhiệm rõ hơn không.
+**Exercise 4 — Scoped Refactoring:** In `AbstractionRemovalDemo`, try removing only `PricingAdapter` while retaining `PricingEngine` if another use case reuses it. Assess whether the remaining class has a clearer responsibility.
 
-**Bài 5 — Lỗi ở ranh giới:** Cố tình sửa `subtotalCents >= FREE_SHIPPING_AT` thành `subtotalCents > FREE_SHIPPING_AT` ở `SimplifiedCheckout`. Chạy regression tests, giải thích chính xác case nào phát hiện lỗi. Khôi phục điều kiện đúng.
+**Exercise 5 — Boundary Defect:** Deliberately change `subtotalCents >= FREE_SHIPPING_AT` to `subtotalCents > FREE_SHIPPING_AT` in `SimplifiedCheckout`. Run regression tests, identify exactly which case detects the bug, and restore the correct condition.
 
-**Bài 6 — Review thật:** Tìm một chuỗi lời gọi dài trong ứng dụng. Vẽ đường gọi, đánh dấu mỗi tầng cung cấp contract, validation, transaction, auth, IO, mapping hay chỉ forward. Đề xuất loại bỏ **ít nhất một tầng có bằng chứng thừa**, viết test hành vi trước và ghi lại thay đổi sau khi chạy test.
+**Exercise 6 — Real Review:** Find a long call chain in an application. Diagram it, marking which layers provide contracts, validation, transactions, authorization, I/O, mapping, or mere forwarding. Propose removing **at least one demonstrably redundant layer**, write behavioral tests first, and record the results after testing.
 
-## 12. Tiêu chí hoàn thành
+## 12. Completion Criteria
 
-Bạn có thể trả lời được ba câu trước khi loại bỏ một abstraction:
+Before removing an abstraction, you should be able to answer three questions:
 
-1. **Nó đang bảo vệ điều gì?** Hợp đồng, ranh giới phụ thuộc, biến thể có thật hay chỉ là một lời gọi chuyển tiếp?
-2. **Việc gộp giúp ích gì?** Giảm số bước tìm logic, giảm chỗ phải sửa, làm rõ trách nhiệm hay đơn giản hóa kiểm thử mà không tạo coupling mới?
-3. **Làm sao biết refactor an toàn?** Có test đặc tả, test biên, test ngoại lệ và kiểm tra các client/API chịu ảnh hưởng; kết quả public behavior vẫn đúng.
+1. **What does it protect?** A contract, dependency boundary, real variant, or merely a forwarding call?
+2. **What will consolidation improve?** Fewer steps to locate logic, fewer edit points, clearer responsibilities, or easier testing without new coupling?
+3. **How do we know the refactoring is safe?** Specification, boundary, and exception tests plus checks of affected clients/APIs demonstrate that public behavior remains correct.
 
-Khi cả ba câu đều có bằng chứng, việc **gộp hoặc loại bỏ trừu tượng không cần thiết** làm thiết kế OOP bớt vòng vo mà không đánh đổi sự rõ ràng và khả năng mở rộng thực sự.
+When evidence supports all three, **consolidating or removing unnecessary abstractions** makes OOP design more direct without sacrificing clarity or genuine extensibility.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="refactoring-009">Cải thiện thiết kế từng bước với kiểm thử bảo vệ</a>
+## <a id="refactoring-009">Improving Design Incrementally with Protective Tests</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Cải thiện thiết kế từng bước với kiểm thử bảo vệ — Java OOP
+# Improving Design Incrementally with Protective Tests — Java OOP
 
-## 1. Mục tiêu của bài học
+## 1. Lesson Objectives
 
-**Refactoring (tái cấu trúc)** là thay đổi cách tổ chức bên trong của mã nguồn để code dễ hiểu, dễ mở rộng, dễ kiểm thử hơn, trong khi **giữ nguyên hành vi quan sát được đã cam kết**. Nó có thể bao gồm tách phương thức, chuyển trách nhiệm sang lớp phù hợp, làm rõ tên, xóa lặp và giảm phụ thuộc.
+**Refactoring** reorganizes source-code internals to improve understandability, extensibility, and testability while **preserving promised observable behavior**. It may include extracting methods, moving responsibilities to appropriate classes, clarifying names, removing duplication, and reducing coupling.
 
-Đổi nhiều thứ cùng lúc khiến ta khó biết lỗi bắt đầu ở đâu. Cách an toàn hơn là áp dụng chu trình ngắn:
+Changing many things at once makes it hard to locate the source of failures. A safer approach uses a short cycle:
 
-**Xác định hành vi → viết kiểm thử bảo vệ → thay đổi thiết kế nhỏ → chạy kiểm thử → xem lại code → lặp tiếp.**
+**Identify behavior → write protective tests → make a small design change → run tests → review code → repeat.**
 
-Một **kiểm thử bảo vệ** (safety-net test) là bài test giúp phát hiện thay đổi ngoài ý muốn trong hành vi hiện có. Nó không chứng minh toàn bộ hệ thống hoàn toàn đúng, nhưng tạo một hàng rào hồi quy khi ta sửa cấu trúc.
+A **protective test** (safety-net test) helps detect unintended changes to existing behavior. It cannot prove the entire system is correct, but it provides regression protection while restructuring code.
 
-Đừng nhầm ba loại thay đổi:
+Do not confuse three kinds of change:
 
-| Loại thay đổi | Ý định | Cần kiểm chứng |
+| Change type | Intent | What to verify |
 |---|---|---|
-| Refactoring | Đổi cấu trúc, giữ hợp đồng | Các test hành vi trước/sau vẫn đạt |
-| Bug fix | Sửa hành vi sai thành đúng | Test tái hiện bug thất bại trước khi sửa, đạt sau khi sửa |
-| Thay đổi tính năng | Thay hoặc mở rộng hợp đồng | Test mới cho yêu cầu mới và test hồi quy cũ |
+| Refactoring | Change structure while preserving contracts | Behavioral tests pass before and after |
+| Bug fix | Correct faulty behavior | A reproducing test fails before the fix and passes afterward |
+| Feature change | Change or extend a contract | New tests cover requirements, existing regression tests still pass |
 
-**Quy tắc thực tế:** Khi một bước refactor bất ngờ làm test đỏ, cần tìm nguyên nhân và xử lý trước khi chuyển sang bước khác. Không xóa assertion chỉ để test xanh trở lại.
+**Practical rule:** When a refactoring step unexpectedly fails a test, investigate and resolve the cause before continuing. Do not delete assertions just to make tests green.
 
-## 2. Kiểm thử bảo vệ điều gì?
+## 2. What Should Protective Tests Cover?
 
-Hợp đồng của một lớp OOP có thể gồm:
+A class's OOP contract may include:
 
-- Giá trị trả về: tổng tiền, trạng thái xử lý, kết quả sắp xếp.
-- Dữ liệu bị thay đổi: tồn kho, trạng thái đơn hàng, bộ đếm đã công bố.
-- Exception hoặc tín hiệu lỗi được quy định: input rỗng, số lượng âm, dữ liệu trùng.
-- Tác dụng phụ có ý nghĩa: gửi thông báo, ghi repository, gọi hệ thống thanh toán.
-- Quy tắc biên: đúng ngưỡng giảm giá, thời hạn, 0, 1, rỗng, giới hạn số.
+- Return values: totals, processing status, and sorting results.
+- Changed data: inventory, order state, and published counters.
+- Specified exceptions/error signals: empty inputs, negative quantities, and duplicates.
+- Meaningful side effects: notifications, repository writes, and payment-gateway calls.
+- Boundary rules: exact discount thresholds, deadlines, 0, 1, empty inputs, and numeric limits.
 
-Ngược lại, một test ràng buộc số lần gọi private helper, tên private field, cấu trúc vòng lặp hoặc loại collection tùy ý thường **quá phụ thuộc implementation**. Những chi tiết ấy có thể thay đổi hợp lệ khi refactor.
+By contrast, tests asserting private-helper call counts, private-field names, loop structure, or arbitrary collection implementations are often **overly coupled to implementation details**. Those details may legitimately change during refactoring.
 
-**Một câu hỏi để review test:** Nếu đổi hoàn toàn thuật toán nhưng client vẫn nhận cùng kết quả và hiệu ứng đã cam kết, bài test có nên tiếp tục PASS không? Với unit test nghiệp vụ thông thường, câu trả lời thường là có.
+**A test-review question:** If the algorithm changes completely but clients still receive the same results and promised effects, should the test continue to PASS? For ordinary business unit tests, usually yes.
 
-## 3. Khi code cũ chưa có test: characterization test
+## 3. When Legacy Code Has No Tests: Characterization Tests
 
-Đôi khi ta cần cải thiện lớp cũ nhưng không có tài liệu đầy đủ. **Characterization test** ghi lại hành vi đang thực sự diễn ra, kể cả chi tiết bất ngờ, để nhận biết thay đổi vô tình.
+Sometimes an old class needs improvement but lacks complete documentation. A **characterization test** records what it actually does, including surprises, so accidental behavior changes are detectable.
 
-Ví dụ một phương thức tính phí giao hàng hiện dùng điều kiện **từ 700.000 VND trở lên** để miễn phí. Trước khi tách phương thức, ghi lại các case 699.999 và 700.000 VND. Nếu refactor biến dấu >= thành >, test sẽ báo lỗi ở đúng ngưỡng.
+For example, a shipping-fee method currently grants free shipping at **700.000 VND or above**. Before extraction, record cases at 699.999 and 700.000 VND. If refactoring changes >= into >, the test detects the boundary error.
 
-Lưu ý: hành vi hiện tại không phải lúc nào cũng là hành vi **mong muốn**. Nếu phát hiện bug cũ, ghi nhận nó, làm rõ yêu cầu, rồi sửa bug trong một bước riêng có test biểu diễn kỳ vọng đúng. Không đóng băng bug chỉ vì characterization test đang xanh.
+Note that current behavior is not always **desired** behavior. If an old bug is found, record it, clarify the requirement, and fix it separately with tests expressing the correct expectation. Do not freeze a defect merely because characterization tests pass.
 
-Cần ưu tiên vài kịch bản có giá trị cao trước: luồng thường dùng, ngưỡng quan trọng, lỗi input, tác dụng phụ, số tiền hoặc tài nguyên có nguy cơ lớn. Không cần viết hàng trăm test trước khi thay một dòng, nhưng cũng không nên refactor vùng rủi ro mà không có kiểm chứng.
+Prioritize high-value scenarios: common paths, important thresholds, invalid inputs, side effects, and sensitive money/resources. Hundreds of tests are not needed before every one-line change, but risky code should not be refactored without verification.
 
-## 4. Ví dụ xuyên suốt: cải thiện lớp thanh toán qua nhiều bước
+## 4. End-to-End Example: Improving Checkout in Several Steps
 
-Ta dùng cùng một bài toán để quan sát cấu trúc **trước và sau**:
+Use one scenario to examine the structure **before and after**:
 
-- Một đơn hàng có danh sách dòng hàng. Mỗi dòng có mã sản phẩm, số lượng dương và đơn giá không âm, tính bằng **VND nguyên**.
-- **Subtotal** là tổng của số lượng × đơn giá; một đơn phải có ít nhất một dòng.
-- Khách VIP được giảm **10% subtotal**, làm tròn xuống theo chia số nguyên, nếu subtotal **từ 500.000 VND**.
+- An order contains line items. Each line has a product code, positive quantity, and nonnegative unit price in **whole VND**.
+- **Subtotal** sums quantity × unit price; an order must contain at least one line.
+- VIP customers receive a **10% subtotal** discount, rounded down using integer division, when subtotal is **at least 500.000 VND**.
 - **Payable** = subtotal − discount.
-- **Shipping** = 0 VND nếu payable **từ 700.000 VND**; nếu thấp hơn thì 30.000 VND.
+- **Shipping** = 0 VND when payable is **at least 700.000 VND**; otherwise 30.000 VND.
 - **Total** = payable + shipping.
-- Biên nhận dùng một định dạng văn bản ổn định trong phạm vi bài học.
+- Receipts use a stable text format throughout the lesson.
 
-Phiên bản ban đầu gom toàn bộ validation, tính tiền và format receipt vào một phương thức. Phiên bản sau refactor tách tính giá thành **PricingPolicy**, tạo **ReceiptFormatter** để định dạng, và để **CheckoutService** điều phối hai collaborator.
+The initial version combines validation, pricing, and receipt formatting in one method. The refactored version moves pricing into **PricingPolicy**, extracts **ReceiptFormatter**, and leaves **CheckoutService** to coordinate those collaborators.
 
 ~~~mermaid
 flowchart LR
@@ -4191,17 +4191,17 @@ flowchart LR
     T --> C
 ~~~
 
-Các bước cải thiện được thực hiện theo thứ tự:
-1. Khóa lại các kết quả đầu ra và trường hợp lỗi bằng test.
-2. Tách phần tính giá ra phương thức có tên rõ ràng.
-3. Nhóm các phương thức tính giá liên quan vào một đối tượng PricingPolicy.
-4. Tách trách nhiệm định dạng sang ReceiptFormatter.
-5. Cho CheckoutService nhận collaborator qua constructor để luồng chính dễ đọc và dễ thay thế.
-6. Sau **mỗi bước**, chạy lại cùng test. Chỉ loại bỏ code cũ khi đã kiểm chứng tương đương.
+Improvements proceed in this order:
+1. Lock down outputs and failure cases with tests.
+2. Extract pricing into clearly named methods.
+3. Group related pricing methods into a PricingPolicy object.
+4. Move formatting responsibility into ReceiptFormatter.
+5. Supply CheckoutService collaborators through a constructor for a readable, replaceable workflow.
+6. Run the same tests **after every step**. Remove legacy code only after confirming equivalence.
 
-### Chương trình Java 11 tự chạy
+### Standalone Java 11 Program
 
-Lưu toàn bộ trong file **SafeRefactoringDemo.java**; ví dụ không cần thư viện bên ngoài. Bản cũ và bản mới cùng triển khai interface Checkout. Một bộ test chạy cho cả hai và so sánh với kết quả **độc lập từ yêu cầu**, tránh tình huống hai implementation cùng sai mà vẫn được coi là tương đương.
+Save everything in **SafeRefactoringDemo.java**; no external libraries are required. Both versions implement the Checkout interface. One test suite runs against both and compares results with **independently specified expectations**, preventing two equally incorrect implementations from being accepted as equivalent.
 
 ~~~java
 import java.util.List;
@@ -4489,35 +4489,35 @@ public class SafeRefactoringDemo {
 }
 ~~~
 
-Chạy bằng terminal trong thư mục chứa file:
+Run in a terminal from the file's directory:
 
 ~~~bash
 javac SafeRefactoringDemo.java
 java SafeRefactoringDemo
 ~~~
 
-Kết quả nếu các assertion đều đạt:
+Output if all assertions pass:
 
 ~~~text
 PASS: same 4 business cases and 5 error cases in both versions
 ~~~
 
-Chương trình có **5 kịch bản tính tiền và 5 kịch bản lỗi** cho mỗi implementation: 4 trường hợp dữ liệu sai và 1 trường hợp tràn số. Kỳ vọng được ghi trực tiếp trong test chứ không được lấy từ code cũ; nhờ vậy test không chỉ xác nhận hai phiên bản tương đương mà còn bảo vệ những quy tắc đã nêu.
+For each implementation, the program has **5 pricing scenarios and 5 failure scenarios**: 4 invalid-input cases and 1 overflow case. Expectations are specified directly in tests rather than copied from legacy code, so the tests verify both equivalence and the stated business rules.
 
-Trong code này, Math.multiplyExact, Math.addExact và Math.subtractExact giúp lỗi tràn số được phát hiện rõ. Với tiền tệ có phần thập phân, hãy dùng kiểu biểu diễn phù hợp như BigDecimal và chính sách làm tròn được công bố; ví dụ cố tình dùng VND nguyên để đơn giản và nhất quán.
+Math.multiplyExact, Math.addExact, and Math.subtractExact make overflow detectable. For currencies with fractional units, use an appropriate type such as BigDecimal and a documented rounding policy; the example intentionally uses whole VND for simplicity and consistency.
 
-## 5. Trình tự cải thiện cụ thể
+## 5. Concrete Improvement Sequence
 
-| Vòng | Thay đổi nhỏ | Điều nên kiểm tra ngay |
+| Step | Small change | Immediate verification |
 |---|---|---|
-| 0 | Chạy lại code cũ với bộ test bảo vệ | Test pass ổn định, các case quan trọng có kỳ vọng xác định |
-| 1 | Đặt tên rõ cho biến subtotal, discount, payable | Kết quả/exception không đổi |
-| 2 | Tách calculateSubtotal từ phương thức lớn | Case dữ liệu sai, phép cộng tiền, overflow giữ nguyên |
-| 3 | Tách calculateDiscount và calculateShipping | Các ngưỡng 500.000 và 700.000 giữ nguyên |
-| 4 | Gom các method giá liên quan vào PricingPolicy | Không thay đổi giá trị và thứ tự lỗi đã cam kết |
-| 5 | Tách ReceiptFormatter | Định dạng receipt không bị thay đổi ngoài ý muốn |
-| 6 | Cho CheckoutService nhận dependency qua constructor | Caller vẫn nhận cùng Quote theo hợp đồng |
-| 7 | Xóa implementation dư, tối giản tên/visibility | Chạy lại kiểm thử, review diff và integration nếu có |
+| 0 | Rerun legacy code with protective tests | Stable passing tests and explicit expectations for important cases |
+| 1 | Give subtotal, discount, and payable variables clear names | Results/exceptions unchanged |
+| 2 | Extract calculateSubtotal from the large method | Invalid-input behavior, sums, and overflow unchanged |
+| 3 | Extract calculateDiscount and calculateShipping | Thresholds at 500.000 and 700.000 preserved |
+| 4 | Group related pricing methods in PricingPolicy | Values and promised error ordering unchanged |
+| 5 | Extract ReceiptFormatter | Receipt format remains unchanged unintentionally |
+| 6 | Inject dependencies into CheckoutService through its constructor | Callers still receive the same contractual Quote |
+| 7 | Remove obsolete implementations and simplify names/visibility | Rerun tests, review diffs, and check integrations where needed |
 
 ~~~mermaid
 flowchart TD
@@ -4533,39 +4533,39 @@ flowchart TD
     H -- "Không" --> I["Kết thúc refactor và kiểm thử tích hợp phù hợp"]
 ~~~
 
-Chú ý: vòng kiểm thử có thể không bảo vệ mọi nhánh chưa được đưa vào test. Coverage giúp nhận biết chỗ chưa chạy, nhưng **100% line coverage không bảo đảm mọi assertion đúng hoặc tất cả quy tắc nghiệp vụ được kiểm tra**.
+Note: The test suite may not protect branches that have never been exercised. Coverage reveals unexecuted code, but **100% line coverage does not guarantee correct assertions or coverage of every business rule**.
 
-## 6. Cách thiết kế test để refactor không làm test vỡ vô lý
+## 6. Designing Tests That Do Not Break Needlessly During Refactoring
 
-**Kiểm tra kết quả và hiệu ứng công khai.** Với lớp định giá, ưu tiên kiểm tra số tiền. Với lớp gửi biên nhận, kiểm tra rằng yêu cầu gửi đến đúng người, đúng nội dung, đúng thời điểm theo hợp đồng.
+**Verify public results and effects.** For pricing classes, focus on monetary amounts. For receipt senders, verify the right recipient, content, and timing under the contract.
 
-**Đặt tên test theo hành vi.** Ví dụ vipDiscountStartsAtThreshold hoặc failedPaymentDoesNotSendReceipt dễ hiểu hơn testCallsCalculateDiscountTwice.
+**Name tests after behavior.** For example, vipDiscountStartsAtThreshold or failedPaymentDoesNotSendReceipt is clearer than testCallsCalculateDiscountTwice.
 
-**Không đóng băng thứ tự helper không liên quan.** Việc đổi từ for sang Stream hoặc thay HashMap bằng cấu trúc khác không nên làm test nghiệp vụ thất bại, nếu các kết quả và cam kết không thay đổi.
+**Do not freeze irrelevant helper ordering.** Replacing for loops with Stream or HashMap with another structure should not fail business tests when contractual results and guarantees stay the same.
 
-**Dùng test double đúng vai trò.** Fake repository giúp kiểm tra logic với dữ liệu trong bộ nhớ; stub điều khiển kết quả cổng thanh toán; mock phù hợp khi chính lời gọi bên ngoài là một phần yêu cầu. Chúng không thay thế hoàn toàn integration test với DB, queue hoặc API thật.
+**Use test doubles for the right purpose.** Fake repositories test logic against in-memory data; stubs control payment-gateway results; mocks are appropriate when the external interaction itself is required behavior. They do not replace integration tests with real databases, queues, or APIs.
 
-**Giữ test dễ đọc, độc lập, lặp lại được.** Tránh dùng đồng hồ hệ thống, randomness hoặc network thực cho unit test nếu các yếu tố ấy không phải mục tiêu. Có thể inject java.time.Clock, random generator và collaborator để kiểm soát input.
+**Keep tests readable, independent, and repeatable.** Avoid real clocks, randomness, or networks in unit tests unless they are the subject of testing. Inject java.time.Clock, random generators, and collaborators to control inputs.
 
-**Đừng chỉ so output của bản cũ với bản mới.** Nếu bản cũ chứa bug, cả hai có thể trả cùng kết quả sai. Kết hợp phép so sánh trước/sau với **expected values độc lập** lấy từ yêu cầu và ví dụ kiểm chứng.
+**Do not compare only old and new outputs.** If the legacy version contains a bug, both may return the same wrong result. Combine before/after comparisons with **independent expected values** derived from requirements and worked examples.
 
-## 7. Refactor có side effect cần cẩn thận hơn
+## 7. Refactoring Side Effects Requires Extra Care
 
-Ví dụ tính giá ở trên gần như thuần chức năng. Nhưng nhiều phương thức ngoài thực tế còn mở transaction, ghi DB, gửi email hoặc gọi payment gateway.
+The pricing example is nearly pure, but real methods often open transactions, write to databases, send emails, or call payment gateways.
 
-Nếu trước đây thứ tự là:
-1. Xác thực và kiểm tra tồn kho.
-2. Thu tiền.
-3. Ghi đơn hàng.
-4. Yêu cầu gửi email xác nhận.
+If the original order was:
+1. Validate and check inventory.
+2. Charge payment.
+3. Persist the order.
+4. Request a confirmation email.
 
-Việc tách method/class **không được vô tình** thay đổi quy tắc như "giao dịch thất bại thì không gửi email", hoặc đổi ranh giới transaction. Khi đó cần kiểm thử:
-- Trạng thái lưu trữ và tính nhất quán sau thành công/thất bại.
-- Những lời gọi ngoài hệ thống mà nghiệp vụ quy định phải xảy ra hoặc không xảy ra.
-- Thứ tự thực sự mang ý nghĩa, idempotency và việc thử lại khi cần.
-- Hợp đồng giữa application service với adapter thật qua integration test.
+Extracting methods/classes **must not accidentally** change rules such as "do not email after failed payment" or move transaction boundaries. Test:
+- Persisted state and consistency after success or failure.
+- External calls that must or must not occur under business rules.
+- Truly meaningful ordering, idempotency, and retries where required.
+- Contracts between application services and real adapters through integration tests.
 
-Ví dụ ý tưởng với Mockito + JUnit 5, giả định lớp CheckoutService và các interface này đã được định nghĩa trong một ứng dụng thực:
+Illustrative Mockito + JUnit 5 example, assuming CheckoutService and the interfaces already exist in a real application:
 
 ~~~java
 when(gateway.charge(orderId, amountVnd)).thenReturn(false);
@@ -4576,65 +4576,65 @@ assertEquals(CheckoutResult.PAYMENT_DECLINED, result);
 verifyNoInteractions(receiptSender);
 ~~~
 
-Đây là **interaction verification có ý nghĩa** vì "không gửi biên nhận khi thanh toán lỗi" là hợp đồng. Nó khác với việc xác minh chính xác số lần private helper chạy trong code.
+This is **meaningful interaction verification** because "do not send a receipt when payment fails" is contractual behavior. It differs from checking how many times an internal private helper runs.
 
-## 8. Sai lầm phổ biến khi cải thiện thiết kế
+## 8. Common Mistakes When Improving Design
 
-| Sai lầm | Hậu quả | Cách xử lý |
+| Mistake | Consequence | Mitigation |
 |---|---|---|
-| Đổi công thức nghiệp vụ trong cùng bước tách lớp | Khó tách regression khỏi thay đổi tính năng | Chia thành hai thay đổi riêng, mỗi thay đổi có test |
-| Di chuyển hàng trăm dòng một lần | Khó khoanh vùng lỗi | Thực hiện từng phép biến đổi nhỏ có kiểm chứng |
-| Xóa test đỏ mà không điều tra | Có thể bỏ lỡ regression | Xác định test bảo vệ hợp đồng hay chỉ bám implementation |
-| Chỉ đo line coverage | Dễ tưởng đã kiểm tra đủ | Thêm test biên, test lỗi, assertion cụ thể |
-| Tạo quá nhiều class/method một dòng | Tăng phân mảnh và coupling | Tách theo trách nhiệm và lý do thay đổi thực tế |
-| Biến private field thành public để refactor cho nhanh | Phá encapsulation | Truyền dữ liệu qua constructor, method, value object phù hợp |
-| Thay đổi thứ tự validation | Thay đổi loại exception hoặc tác dụng phụ | Ghi nhận và kiểm tra thứ tự quan sát được nếu là hợp đồng |
-| Tin rằng fake mô phỏng hoàn hảo DB | Thiếu phát hiện lỗi constraint, transaction, concurrency | Bổ sung integration test |
-| Test phụ thuộc ngày hiện tại hoặc ID ngẫu nhiên | Test không ổn định | Inject Clock/ID generator, dùng giá trị cố định |
+| Changing business formulas while extracting classes | Difficult to distinguish regressions from feature changes | Separate the changes and test each one |
+| Moving hundreds of lines at once | Hard to locate failures | Make small, independently verified transformations |
+| Deleting failing tests without investigating | Regressions may be missed | Determine whether the test protects a contract or merely implementation details |
+| Measuring only line coverage | False confidence in completeness | Add boundary and failure tests with specific assertions |
+| Creating too many one-line classes/methods | Increased fragmentation and coupling | Extract according to actual responsibilities and reasons to change |
+| Making private fields public to refactor faster | Breaks encapsulation | Pass data through suitable constructors, methods, or value objects |
+| Changing validation order | Different exceptions or side effects | Document and test observable ordering when contractual |
+| Assuming a fake perfectly simulates a database | Constraint, transaction, and concurrency defects go undetected | Add integration tests |
+| Tests relying on current dates or random IDs | Unstable tests | Inject Clock/ID generators and use fixed values |
 
-**Lưu ý về thứ tự và lỗi:** Nếu dữ liệu chứa hai lỗi khác nhau, đổi thứ tự validation có thể đổi exception xuất hiện đầu tiên. Điều này có thể là thay đổi quan sát được; hãy xác định yêu cầu trước khi kết luận việc đổi thứ tự là an toàn.
+**Note on ordering and failures:** If input contains two separate defects, changing validation order can change which exception occurs first. This may be observable behavior; establish the requirements before declaring the reordering safe.
 
-## 9. Cách tổ chức công việc khi refactor code thật
+## 9. Organizing Refactoring Work in Real Code
 
-Với một phần hệ thống đang chạy, có thể thực hiện theo quy trình sau:
+For part of a running system, follow this process:
 
-**Bước A — Khoanh phạm vi và lập baseline.** Chọn một trách nhiệm rõ ràng, kiểm tra caller, ghi nhận test hiện có và xác nhận hành vi cần giữ. Nếu code quá cũ, viết characterization tests dựa trên input/output hoặc side effect hiện tại. Xác nhận các test chạy ổn định trước khi sửa.
+**Step A — Scope the work and establish a baseline.** Choose one clear responsibility, inspect callers, record existing tests, and identify behavior to preserve. For legacy code, write characterization tests based on current input/output or side effects. Confirm tests are stable before editing.
 
-**Bước B — Phân tích điểm thay đổi.** Một lớp phình to vì validation, pricing, persistence và presentation thường có nhiều lý do thay đổi. Xác định đường dữ liệu, vòng đời đối tượng và ranh giới transaction. Chọn điểm tách nhỏ nhất có tác dụng làm code rõ hơn.
+**Step B — Analyze change points.** A class bloated with validation, pricing, persistence, and presentation often has multiple reasons to change. Identify data flow, object lifecycles, and transaction boundaries. Choose the smallest extraction that improves clarity.
 
-**Bước C — Thay đổi từng lần.** Rename biến, extract method, move method hoặc extract class. Thực hiện một phép biến đổi hoàn chỉnh, biên dịch/test, rồi mới tiếp tục. Dùng công cụ refactor của IDE khi thuận tiện, nhưng vẫn đọc diff vì IDE không thể xác nhận mọi quy tắc nghiệp vụ.
+**Step C — Change one thing at a time.** Rename variables, extract methods, move methods, or extract classes. Complete a transformation, compile/test, then continue. Use IDE refactoring tools when convenient, but inspect diffs because the IDE cannot verify every business rule.
 
-**Bước D — Tối ưu kiểm thử khi kiến trúc đã rõ.** Test theo hành vi công khai, không khóa quá chặt vào helper mới. Chia unit/integration test theo ranh giới chịu trách nhiệm. Không nhân bản toàn bộ bộ test chỉ để test từng class sau khi tách.
+**Step D — Refine tests once architecture is clear.** Test public behavior without tightly coupling tests to new helpers. Organize unit/integration tests around responsibility boundaries. Avoid duplicating the entire suite just to test every extracted class.
 
-**Bước E — Kiểm chứng cuối.** Kiểm tra rằng không còn đường code cũ được sử dụng ngầm, public API không đổi ngoài chủ đích, test pass, và các tác dụng phụ đã được xác minh. Nếu cần thay đổi hành vi, lập một thay đổi riêng có test kỳ vọng mới.
+**Step E — Final verification.** Confirm that no obsolete code path remains implicitly used, public APIs have only intended changes, tests pass, and side effects are verified. If behavior must change, handle it separately with tests expressing the new expectations.
 
-Không cần chờ toàn bộ hệ thống "sạch" mới tiếp tục phát triển. Refactor hiệu quả là những **bước nhỏ, có mục đích, có chứng cứ** được thực hiện gần phần code đang cần thay đổi.
+There is no need to wait for the entire system to be "clean" before developing further. Effective refactoring consists of **small, purposeful, evidence-backed steps** near code that needs to change.
 
-## 10. Bài thực hành
+## 10. Practice Exercises
 
-**Bài 1 — Bắt lỗi tại ngưỡng:** Trong PricingPolicy, đổi điều kiện miễn phí shipping từ lớn hơn hoặc bằng 700.000 thành lớn hơn 700.000. Viết thêm case khách thường subtotal bằng đúng 700.000; kỳ vọng shipping = 0. Test phải phát hiện lỗi.
+**Exercise 1 — Detect a Threshold Bug:** In PricingPolicy, change the free-shipping rule from greater than or equal to 700.000 to greater than 700.000. Add a standard-customer case with subtotal exactly 700.000, expecting shipping = 0. The test must detect the bug.
 
-**Bài 2 — Bắt lỗi giảm giá:** Đổi ngưỡng VIP từ lớn hơn hoặc bằng 500.000 thành lớn hơn 500.000. Case VIP subtotal 500.000 trong bộ test phải FAIL.
+**Exercise 2 — Detect a Discount Bug:** Change the VIP threshold from greater than or equal to 500.000 to greater than 500.000. The test case with VIP subtotal 500.000 must FAIL.
 
-**Bài 3 — Extract Method:** Từ LegacyCheckout, tự tách validate, subtotal, discount, shipping, rồi chạy lại contractTests sau mỗi phép tách. Ghi lại việc các lỗi và kết quả giữ nguyên.
+**Exercise 3 — Extract Method:** Starting with LegacyCheckout, extract validation, subtotal, discount, and shipping logic, then rerun contractTests after every extraction. Record how errors and results remain unchanged.
 
-**Bài 4 — Extract Class:** Chuyển phần format receipt sang class riêng. Thử đổi riêng yêu cầu định dạng biên nhận và giải thích tại sao PricingPolicy không cần sửa. Đây là thay đổi tính năng riêng, không còn là refactor bảo toàn hành vi.
+**Exercise 4 — Extract Class:** Move receipt formatting into a separate class. Then change receipt-format requirements separately and explain why PricingPolicy does not need to change. That is a separate feature change, not a behavior-preserving refactoring.
 
-**Bài 5 — Characterization test cho lỗi cũ:** Giả sử hệ thống cũ tính sai phí của một trường hợp đặc biệt. Viết test tái hiện hành vi hiện tại để bảo vệ quá trình tách, sau đó viết test kỳ vọng mới cho bug fix và sửa ở bước riêng.
+**Exercise 5 — Characterization Test for a Legacy Bug:** Suppose the old system miscalculates fees for a special case. Write a test reproducing current behavior to protect extraction, then specify the correct expectation in a new bug-fix test and fix it separately.
 
-**Bài 6 — Ranh giới tích hợp:** Phác thảo fake PaymentGateway và mock ReceiptSender; chứng minh thanh toán bị từ chối thì không gửi biên nhận. Nêu thêm integration test cần có để biết adapter thanh toán thật xử lý mã lỗi đúng.
+**Exercise 6 — Integration Boundary:** Sketch a fake PaymentGateway and mock ReceiptSender; prove rejected payments never trigger receipt delivery. Identify additional integration tests needed to verify that the real payment adapter handles failure codes correctly.
 
-## 11. Tự kiểm tra kiến thức
+## 11. Knowledge Self-Check
 
-1. Tại sao kiểm thử so sánh bản cũ với bản mới chưa đủ nếu bản cũ có bug?
-2. Tại sao test về số lần gọi private helper có thể ngăn refactor đúng?
-3. Khi nào thứ tự tương tác với collaborator là một phần hợp đồng?
-4. Sau khi tách PricingPolicy và ReceiptFormatter, vì sao CheckoutService nên giữ vai trò điều phối?
-5. Nếu một thay đổi khiến test đỏ, làm thế nào phân biệt lỗi nghiệp vụ với test quá phụ thuộc implementation?
+1. Why is comparing old and new implementations insufficient when the old one has a bug?
+2. Why can tests asserting private-helper call counts prevent legitimate refactoring?
+3. When is collaborator interaction order part of a contract?
+4. After extracting PricingPolicy and ReceiptFormatter, why should CheckoutService remain the coordinator?
+5. If a change causes a failing test, how can you distinguish a business regression from an overly implementation-coupled test?
 
-**Điều cần ghi nhớ:** Kiểm thử bảo vệ giúp bạn cải thiện cấu trúc với phản hồi nhanh, nhưng chất lượng của hàng rào phụ thuộc vào **những hành vi nó thực sự xác minh**. Refactor từng bước nhỏ, giữ rõ ranh giới trách nhiệm OOP, kiểm tra ngay sau mỗi bước và bảo vệ cả trường hợp bình thường, ca biên, lỗi và side effect có ý nghĩa.
+**Key takeaway:** Protective tests provide fast feedback while improving structure, but the strength of that safety net depends on **which behaviors the tests actually verify**. Refactor in small steps, maintain clear OOP responsibility boundaries, check immediately after each change, and protect normal cases, edge cases, failures, and meaningful side effects.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

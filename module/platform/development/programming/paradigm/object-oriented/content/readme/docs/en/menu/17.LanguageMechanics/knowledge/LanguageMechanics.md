@@ -1,33 +1,33 @@
 <a id="back-to-top"></a>
 
-# Cơ chế ngôn ngữ
+# Language Mechanics
 
 ## Menu
-- [Kiểu tổng quát và lớp có tham số kiểu](#language-mechanics-001)
-- [Ràng buộc tham số kiểu](#language-mechanics-002)
-- [Quan hệ kiểu của các cấu trúc tổng quát](#language-mechanics-003)
-- [Kiểu tĩnh, kiểu động và kiểm tra kiểu](#language-mechanics-004)
-- [Toán tử, thuộc tính và quy ước của ngôn ngữ](#language-mechanics-005)
-- [Hợp đồng so sánh bằng và mã băm](#language-mechanics-006)
-- [Biểu diễn chuỗi và thông tin chẩn đoán của đối tượng](#language-mechanics-007)
-- [Ngoại lệ, trạng thái lỗi và hợp đồng phương thức](#language-mechanics-008)
-- [Khác biệt ngôn ngữ khi hiện thực cùng một thiết kế OOP](#language-mechanics-009)
+- [Generic types and parameterized classes](#language-mechanics-001)
+- [Type parameter bounds](#language-mechanics-002)
+- [Type relationships in generic constructs](#language-mechanics-003)
+- [Static types, dynamic types, and type checking](#language-mechanics-004)
+- [Operators, properties, and language conventions](#language-mechanics-005)
+- [Equality and hash-code contracts](#language-mechanics-006)
+- [Object string representations and diagnostic information](#language-mechanics-007)
+- [Exceptions, error states, and method contracts](#language-mechanics-008)
+- [Language differences when implementing the same OOP design](#language-mechanics-009)
 
-## <a id="language-mechanics-001">Kiểu tổng quát và lớp có tham số kiểu</a>
+## <a id="language-mechanics-001">Generic types and parameterized classes</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Java Generics: Kiểu tổng quát và lớp có tham số kiểu
+# Java Generics: Generic types and parameterized classes
 
-> **Chủ đề:** OOP → Cơ chế ngôn ngữ → Kiểu tổng quát và lớp có tham số kiểu.  
-> **Mục tiêu:** Tự khai báo và sử dụng lớp `Box<T>`, `Pair<K,V>` và lớp lưu trữ dữ liệu có tham số kiểu; hiểu generic type, type parameter, type argument, type inference, giới hạn kiểu, wildcard và type erasure; tránh các lỗi phổ biến khi thiết kế API Java.
+> **Topic:** OOP → Language Mechanics → Generic types and parameterized classes.  
+> **Goal:** Declare and use `Box<T>`, `Pair<K,V>`, and parameterized data-storage classes; understand generic types, type parameters, type arguments, type inference, type bounds, wildcards, and type erasure; and avoid common Java API design mistakes.
 
-## 1. Generics giải quyết vấn đề gì?
+## 1. What problems do generics solve?
 
-**Generics** (kiểu tổng quát) cho phép khai báo lớp, interface hoặc phương thức mà **một số kiểu dữ liệu được để thành tham số**, thay vì viết lại mã cho từng kiểu. Nhờ đó, trình biên dịch Java phát hiện nhiều thao tác sai kiểu ngay khi biên dịch.
+**Generics** let classes, interfaces, and methods declare **some data types as parameters** instead of duplicating code for each type. The Java compiler can therefore catch many type mismatches at compile time.
 
-Ví dụ trước thời kỳ dùng generic type an toàn:
+An example from before type-safe generics:
 
 ~~~java
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ String name = (String) raw.get(1);
 // gặp ClassCastException vì phần tử ở vị trí 1 là Integer.
 ~~~
 
-Với generic type, hợp đồng kiểu trở nên rõ ràng:
+With generics, the type contract becomes explicit:
 
 ~~~java
 List<String> names = new ArrayList<>();
@@ -53,23 +53,23 @@ names.add("OOP");
 String first = names.get(0); // Không phải ép kiểu thủ công.
 ~~~
 
-**Điểm cốt lõi:** Generics tăng **type safety tại compile time**, làm rõ ý nghĩa API và giảm ép kiểu. Nó **không tạo ra một bản sao class riêng tại runtime cho mỗi tham số kiểu**: Java chủ yếu triển khai generics bằng cơ chế *type erasure* (xóa thông tin tham số kiểu trong bytecode ở nhiều vị trí), sẽ giải thích ở phần sau.
+**Key point:** Generics improve **compile-time type safety**, clarify API intent, and reduce casts. They **do not create a separate runtime class for every type argument**: Java implements generics largely through *type erasure* (removing type-parameter information from many places in bytecode), explained below.
 
-## 2. Đọc đúng cú pháp generic type
+## 2. Reading generic-type syntax correctly
 
-| Cú pháp | Ý nghĩa | Ví dụ |
+| Syntax | Meaning | Example |
 |---|---|---|
-| `class Box<T>` | Khai báo **lớp có một tham số kiểu** tên `T` | `Box<String>` |
-| `interface Store<K,V>` | Interface có hai tham số kiểu | `Store<Long,User>` |
-| `Box<String>` | Một **parameterized type**: kiểu cụ thể khi sử dụng `Box` với đối số kiểu `String` | `Box<String> x` |
-| `T`, `K`, `V` | **Type parameters**, những tên tượng trưng trong khai báo | `T value` |
-| `String`, `Long`, `User` | **Type arguments**, những kiểu được truyền khi dùng generic | `new Box<String>(...)` |
-| `<>` | **Diamond operator**, trình biên dịch suy luận type arguments phù hợp | `new Box<>("Hi")` |
-| `<T> T first(...)` | Phương thức generic khai báo tham số kiểu **riêng** | `static <T> T first(List<T> list)` |
+| `class Box<T>` | Declares **a class with one type parameter** named `T` | `Box<String>` |
+| `interface Store<K,V>` | An interface with two type parameters | `Store<Long,User>` |
+| `Box<String>` | A **parameterized type**: a specific use of `Box` with the type argument `String` | `Box<String> x` |
+| `T`, `K`, `V` | **Type parameters**: symbolic names in a declaration | `T value` |
+| `String`, `Long`, `User` | **Type arguments**: types supplied when using a generic | `new Box<String>(...)` |
+| `<>` | The **diamond operator**: lets the compiler infer suitable type arguments | `new Box<>("Hi")` |
+| `<T> T first(...)` | A generic method declaring its **own** type parameter | `static <T> T first(List<T> list)` |
 
-Tên `T` không phải từ khóa của Java. Các tên quy ước thường gặp: `T` (Type), `E` (Element), `K` (Key), `V` (Value), `R` (Result), `S` (một kiểu khác). Có thể chọn tên rõ nghĩa hơn cho hệ thống phức tạp, ví dụ `ENTITY`, `ID`, nhưng chữ hoa ngắn giúp đọc các API Java phổ biến.
+`T` is not a Java keyword. Common conventions include `T` (Type), `E` (Element), `K` (Key), `V` (Value), `R` (Result), and `S` (another type). More descriptive names such as `ENTITY` or `ID` may suit complex systems, though short uppercase names keep familiar Java APIs readable.
 
-Phân biệt hai cách viết:
+Compare these two declarations:
 
 ~~~java
 class Holder<T> {
@@ -90,17 +90,17 @@ class Holder<T> {
 }
 ~~~
 
-Một phương thức `static` **không** thể dùng `T` của class để khai báo field hoặc method signature phụ thuộc vào instance type parameter, vì thành viên static thuộc về class, không thuộc riêng `Holder<String>` hay `Holder<Integer>`. Nhưng phương thức static **có thể tự khai báo** `<U>` như `identity`.
+A `static` method **cannot** use the class's `T` to declare a field or method signature tied to an instance type parameter because static members belong to the class, not a particular `Holder<String>` or `Holder<Integer>`. A static method **can declare its own** `<U>`, as `identity` does.
 
-## 3. Ví dụ Java 17 hoàn chỉnh: lớp Box, Pair và Repository tổng quát
+## 3. Complete Java 17 example: generic Box, Pair, and Repository
 
-Ví dụ sau chạy độc lập bằng JDK 17+, không cần Spring hay thư viện ngoài. Nó minh họa ba cấp độ sử dụng:
+This standalone example runs on JDK 17+ with no Spring or external libraries. It demonstrates three levels of use:
 
-1. `Box<T>` lưu một giá trị với kiểu cụ thể được quyết định ở nơi sử dụng.
-2. `Pair<K,V>` có **hai** tham số kiểu độc lập.
-3. `InMemoryRepository<ID,T>` tái sử dụng cùng một implementation lưu dữ liệu cho nhiều loại entity và ID, nhưng vẫn ràng buộc kiểu đúng.
+1. `Box<T>` stores a value whose concrete type is chosen at the usage site.
+2. `Pair<K,V>` has **two** independent type parameters.
+3. `InMemoryRepository<ID,T>` reuses one data-storage implementation for different entity and ID types while enforcing type consistency.
 
-Tạo tệp **`GenericsDemo.java`**:
+Create **`GenericsDemo.java`**:
 
 ~~~java
 import java.util.HashMap;
@@ -187,14 +187,14 @@ public class GenericsDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac GenericsDemo.java
 java GenericsDemo
 ~~~
 
-Kết quả dự kiến:
+Expected output:
 
 ~~~text
 Box<String>: Java
@@ -204,20 +204,20 @@ Hóa đơn: HD-01 = 180000
 Người dùng: Lan
 ~~~
 
-### Đọc luồng kiểu
+### Tracing the type flow
 
-- Với `Box<String> language`, mọi chỗ sử dụng `T` trong thành viên instance của `Box<T>` được **trình biên dịch xem là `String`**. `language.set(123)` sẽ không biên dịch.
-- Với `Box<Integer> counter`, `counter.get()` có kiểu trả về `Integer` tại compile time.
-- `<R> Box<R> map(...)` cho phép biến một loại dữ liệu sang một loại khác: `Box<String>` thành `Box<Integer>`. Tham số kiểu `R` là của method, độc lập với `T` của class.
-- `Pair<K,V>` chỉ thể hiện cấu trúc hai giá trị có thể khác kiểu. Khi sử dụng `Pair<String,Long>`, `key()` trả `String`, `value()` trả `Long`.
-- `InMemoryRepository<ID,T>` giữ nhất quán **kiểu khóa** và **kiểu entity**. Trong ví dụ, `findById` nhận `String` và trả `Optional<User>`; không cần ép kiểu từ `Object`.
-- `User::id` là method reference dùng làm hàm trích khóa `Function<User,String>`. Repository không cần biết field `id` được lưu như thế nào trong từng loại entity.
+- For `Box<String> language`, every use of `T` in an instance member of `Box<T>` is **treated as `String` by the compiler**. `language.set(123)` will not compile.
+- For `Box<Integer> counter`, `counter.get()` has the return type `Integer` at compile time.
+- `<R> Box<R> map(...)` converts between different value types, such as `Box<String>` to `Box<Integer>`. The method's type parameter `R` is independent of the class's `T`.
+- `Pair<K,V>` represents two values that can have different types. With `Pair<String,Long>`, `key()` returns `String` and `value()` returns `Long`.
+- `InMemoryRepository<ID,T>` keeps the **key type** and **entity type** consistent. Here `findById` accepts `String` and returns `Optional<User>` without casting from `Object`.
+- `User::id` is a method reference that extracts a key as a `Function<User,String>`. The repository need not know how each entity stores its `id` field.
 
-**Phạm vi của ví dụ:** `InMemoryRepository` chỉ minh họa type safety và khả năng tái sử dụng; nó chưa cung cấp transaction, lưu trữ bền vững, xử lý truy cập đa luồng hoặc kiểm soát trùng khóa. Không nên dùng trực tiếp như repository production trong ứng dụng nhiều luồng.
+**Example scope:** `InMemoryRepository` demonstrates type safety and reuse; it does not implement transactions, durable persistence, concurrent access, or duplicate-key controls. Do not use it directly as a production repository for a multithreaded application.
 
-## 4. Lớp có nhiều tham số kiểu và đặt ràng buộc ở đâu
+## 4. Multiple type parameters and where to apply bounds
 
-Một class tổng quát có thể định nghĩa nhiều tham số kiểu:
+A generic class can declare multiple type parameters:
 
 ~~~java
 interface Repository<ID, ENTITY> {
@@ -226,20 +226,20 @@ interface Repository<ID, ENTITY> {
 }
 ~~~
 
-Ví dụ các kiểu sử dụng khác nhau:
+Examples of different usages:
 
 ~~~java
 Repository<Long, Product> products;
 Repository<String, Customer> customers;
 ~~~
 
-`Product` và `Customer` ở đây là các kiểu nghiệp vụ minh họa, cần được định nghĩa trong dự án. Mỗi cách kết hợp tạo một **parameterized type ở phía mã nguồn**: không phải một class bytecode riêng cho từng tổ hợp.
+`Product` and `Customer` are illustrative domain types that must be defined in the project. Each combination creates a **source-level parameterized type**, not a separate bytecode class.
 
-Nên dùng bao nhiêu tham số kiểu? Chỉ thêm tham số khi **client cần kiểm soát và kiểm tra kiểu tương ứng**. Nếu một generic class có năm, sáu tham số làm chữ ký khó đọc, cân nhắc chia vai trò, dùng type alias ở lớp trừu tượng riêng (Java không có cú pháp type alias tổng quát như một số ngôn ngữ khác) hoặc gói nhiều thuộc tính vào một domain type.
+How many type parameters should a class have? Add one only when **clients need to specify and check that type**. If a generic class has five or six parameters and an unreadable signature, consider splitting responsibilities, adding a type alias via a separate abstraction (Java lacks a general-purpose type-alias syntax found in some languages), or wrapping related properties in a meaningful domain type.
 
-### 4.1. Khi thuật toán cần giới hạn `T`
+### 4.1. When an algorithm requires a bound on `T`
 
-Một `Box<T>` chỉ lưu/trả dữ liệu thì không cần biết `T` hỗ trợ những hành vi nào. Ngược lại, muốn gọi `doubleValue()` phải ghi `<T extends Number>`; muốn `compareTo` thì dùng bound như sau:
+A `Box<T>` that only stores/returns values need not know what operations `T` supports. To call `doubleValue()`, however, declare `<T extends Number>`; to call `compareTo`, use a bound as follows:
 
 ~~~java
 static <T extends Comparable<? super T>> T greater(T a, T b) {
@@ -247,13 +247,13 @@ static <T extends Comparable<? super T>> T greater(T a, T b) {
 }
 ~~~
 
-`extends` trong khai báo generic chấp nhận **cả class và interface**. Nhiều bound dùng `&` (class nếu có phải đầu tiên): `<T extends Number & Comparable<? super T>>`. Java không có cú pháp `<T super Number>`; lower-bound chỉ có ở wildcard `? super Number`.
+In generic declarations, `extends` accepts **both classes and interfaces**. Multiple bounds use `&` (with the class first, if any): `<T extends Number & Comparable<? super T>>`. Java does not support `<T super Number>`; lower bounds are only supported on wildcards such as `? super Number`.
 
-Bound bảo đảm API khả dụng tại compile time, **không** xác minh giá trị nghiệp vụ, null hay quan hệ thứ tự hợp lệ. Bài **Ràng buộc tham số kiểu** phát triển riêng `NumberBox`, `Comparable<? super T>`, intersection/recursive bounds, phép thử và các giới hạn erasure.
+A bound ensures an API is available at compile time; it **does not** validate business values, nulls, or ordering semantics. The **Type parameter bounds** lesson covers `NumberBox`, `Comparable<? super T>`, intersection/recursive bounds, tests, and erasure limitations in detail.
 
-### 4.2. Generic method khác generic class
+### 4.2. Generic methods versus generic classes
 
-Không cần cả class tổng quát khi chỉ có **một phương thức** làm việc với nhiều kiểu:
+A whole generic class is unnecessary when only **one method** works across multiple types:
 
 ~~~java
 import java.util.List;
@@ -276,17 +276,17 @@ String title = Lists.first(List.of("Java", "OOP"));
 Integer number = Lists.first(List.of(10, 20));
 ~~~
 
-Cả hai lời gọi dùng **cùng một phương thức**; trình biên dịch suy luận `T = String` hoặc `T = Integer` dựa vào đối số và ngữ cảnh. Có thể chỉ rõ đối số kiểu:
+Both calls use **the same method**; the compiler infers `T = String` or `T = Integer` from arguments and context. You can also specify a type argument explicitly:
 
 ~~~java
 String title = Lists.<String>first(List.of("Java", "OOP"));
 ~~~
 
-Cách viết tường minh ít cần thiết khi type inference đã đủ. Nếu trong dự án đã có biến `title` từ đoạn trước, hãy đặt ví dụ này trong method riêng để tránh khai báo trùng biến cục bộ.
+Explicit syntax is rarely needed when inference suffices. If the project already declares a `title` variable in an earlier snippet, put this example in a separate method to avoid redeclaring a local variable.
 
-## 5. Type inference: trình biên dịch suy luận được bao nhiêu?
+## 5. Type inference: how much can the compiler infer?
 
-Java hỗ trợ suy luận đối số kiểu trong nhiều trường hợp:
+Java infers type arguments in many situations:
 
 ~~~java
 Box<String> box = new Box<>("Hello");  // Diamond operator
@@ -294,9 +294,9 @@ var another = new Box<>("World");      // Suy ra Box<String> trong JDK 10+
 Pair<String, Integer> pair = new Pair<>("SKU-7", 3);
 ~~~
 
-**Suy luận không phải dynamic typing**: `var another` vẫn có một kiểu tĩnh xác định tại compile time, là `Box<String>`. Gọi `another.set(100)` vẫn là lỗi biên dịch.
+**Inference is not dynamic typing**: `var another` still has a definite static compile-time type, `Box<String>`. Calling `another.set(100)` is still a compilation error.
 
-Một tình huống cần cẩn trọng khi constructor generic tự suy luận kiểu theo biểu thức khởi tạo và không có target type:
+Be careful when a generic constructor infers its type from an initializer expression with no target type:
 
 ~~~java
 var emptyStrings = new java.util.ArrayList<String>();
@@ -307,11 +307,11 @@ emptyStrings.add("A");
 // kiểu Object; không thể tự kỳ vọng là String.
 ~~~
 
-Khi API yêu cầu rõ kiểu phần tử, hãy khai báo `List<String> names = new ArrayList<>();` hoặc dùng constructor có type arguments tường minh. Đọc generic signature của method trước khi “sửa” bằng cast.
+When an API needs an explicit element type, declare `List<String> names = new ArrayList<>();` or use a constructor with explicit type arguments. Read the generic method signature before attempting to “fix” code with a cast.
 
-## 6. Invariance: vì sao Box<Integer> không phải Box<Number>?
+## 6. Invariance: why isn't Box<Integer> a Box<Number>?
 
-`Integer extends Number` là quan hệ subtype hợp lệ. Nhưng với generic type thông thường, Java **không tự suy ra** `Box<Integer> extends Box<Number>`. Tương tự, `List<Integer>` không phải subtype của `List<Number>`.
+`Integer extends Number` is a valid subtype relationship. But with ordinary generic types, Java **does not infer** that `Box<Integer> extends Box<Number>`. Likewise, `List<Integer>` is not a subtype of `List<Number>`.
 
 ~~~java
 Box<Integer> ints = new Box<>(10);
@@ -319,7 +319,7 @@ Box<Integer> ints = new Box<>(10);
 // Box<Number> numbers = ints; // KHÔNG biên dịch.
 ~~~
 
-Nếu điều này được phép, client có thể đưa `Double` vào hộp được tạo để chỉ chứa `Integer`:
+If it were allowed, a client could insert a `Double` into a box intended to hold only `Integer` values:
 
 ~~~java
 // Giả sử giả định sai: Box<Number> numbers = ints;
@@ -327,27 +327,27 @@ numbers.set(3.14);             // 3.14 là Double hợp lệ cho Number
 Integer x = ints.get();        // Nhưng ints lẽ ra chỉ chứa Integer!
 ~~~
 
-Vì vậy, với các generic type như `Box<T>` và `List<T>`, type arguments mặc định **invariant**. Đừng giải quyết lỗi bằng raw type hoặc ép kiểu không kiểm tra. Hãy xem API có cần wildcard hay một abstraction khác không.
+Therefore, type arguments of generics such as `Box<T>` and `List<T>` are **invariant** by default. Do not bypass the error with raw types or unchecked casts; consider whether the API needs wildcards or another abstraction.
 
-So sánh với array: Java array có **covariance**, nhưng có thể phát hiện lỗi ghi kiểu ở runtime:
+By contrast, Java arrays are **covariant**, but invalid writes may fail at runtime:
 
 ~~~java
 Number[] nums = new Integer[1];
 nums[0] = 3.14; // ArrayStoreException lúc chạy.
 ~~~
 
-Generic invariance tránh một nhóm lỗi kiểu ngay ở compile time. Đây là một khác biệt quan trọng khi chuyển API array sang generic collection.
+Generic invariance prevents a class of type errors at compile time. This matters when migrating an array-based API to generic collections.
 
-## 7. Wildcard để nhận nhiều kiểu collection an toàn
+## 7. Wildcards for safely accepting different collection types
 
-Generic thông thường **bất biến**: `List<Integer>` không gán cho `List<Number>`. Wildcard diễn đạt nơi sử dụng cần **đọc** hoặc **ghi** giá trị mà vẫn giữ kiểm tra kiểu:
+Ordinary generics are **invariant**: `List<Integer>` cannot be assigned to `List<Number>`. Wildcards express which types may be **read** or **written** while retaining type checks:
 
-| Chữ ký | Lời hứa của compiler | Phép thêm phần tử |
+| Signature | Compiler guarantee | Adding elements |
 | --- | --- | --- |
-| `List<?>` | Đọc được dưới `Object` | Chỉ `null` hợp lệ về kiểu |
-| `List<? extends Number>` | Đọc được dưới `Number` | Không thêm `Integer`/`Double` tùy ý |
-| `List<? super Integer>` | Thêm `Integer` an toàn; đọc dưới `Object` | Được thêm `Integer` |
-| `List<Number>` | Đọc/ghi theo kiểu `Number` chính xác | Được thêm subtype của `Number` |
+| `List<?>` | Reads as `Object` | Only `null` is type-safe to add |
+| `List<? extends Number>` | Reads as `Number` | Cannot arbitrarily add `Integer`/`Double` |
+| `List<? super Integer>` | Can safely add `Integer`; reads as `Object` | Can add `Integer` |
+| `List<Number>` | Reads/writes as exactly `Number` | May add `Number` subtypes |
 
 ~~~java
 static double sum(List<? extends Number> source) {
@@ -362,13 +362,13 @@ static <T> void copyAll(
 }
 ~~~
 
-`sum(List.of(1, 2, 3))` biên dịch dù nguồn là `List<Integer>`; `copyAll` có thể đưa dữ liệu từ `List<Integer>` vào `List<Number>`. **PECS** (Producer Extends, Consumer Super) mô tả vai trò nguồn/đích trong phương thức, không làm collection immutable. Những collection `List.of` vẫn từ chối `add` tại runtime dù chữ ký cho phép.
+`sum(List.of(1, 2, 3))` compiles even when the source is a `List<Integer>`; `copyAll` can copy a `List<Integer>` into a `List<Number>`. **PECS** (Producer Extends, Consumer Super) describes source/destination roles in a method; it does not make collections immutable. Collections created by `List.of` still reject `add` at runtime even when the signature permits writing.
 
-Wildcard khác `<T>`: đặt tên `T` khi cần ràng buộc các vị trí input/output cùng kiểu. Bài **Quan hệ kiểu của các cấu trúc tổng quát** là nơi dạy chính invariance, wildcard capture, PECS và generic inheritance với bảng compile/error và test đầy đủ.
+Wildcards differ from `<T>`: name the type parameter `T` when several input/output positions must have related types. The **Type relationships in generic constructs** lesson covers invariance, wildcard capture, PECS, and generic inheritance with complete compile/error tables and tests.
 
-## 8. Erasure: compiler biết `T`, runtime không có class riêng cho từng đối số kiểu
+## 8. Erasure: the compiler knows `T`, but runtime has no separate class per type argument
 
-Với Java generics, compiler kiểm tra `List<String>` và `List<Integer>` theo type argument, nhưng hai `ArrayList` vẫn là cùng một runtime class:
+With Java generics, the compiler checks `List<String>` and `List<Integer>` using type arguments, yet both `ArrayList` instances have the same runtime class:
 
 ~~~java
 var texts = new java.util.ArrayList<String>();
@@ -376,23 +376,23 @@ var ints = new java.util.ArrayList<Integer>();
 System.out.println(texts.getClass() == ints.getClass()); // true
 ~~~
 
-Sau **type erasure**, `T` không bound thường được thay bằng `Object`; nếu có bound thì thường bị erase thành bound trái nhất, ví dụ `T extends Number` thành `Number`. Compiler có thể thêm cast/bridge methods để giữ hành vi đã kiểm tra.
+After **type erasure**, an unbounded `T` is generally replaced with `Object`; a bounded parameter is generally erased to its leftmost bound, such as `T extends Number` becoming `Number`. The compiler may insert casts and bridge methods to preserve verified behavior.
 
-| Không hợp lệ trực tiếp | Lý do |
+| Directly invalid expression | Reason |
 |---|---|
-| `new T()`, `T.class`, `new T[10]` | Runtime không biết kiểu cụ thể của `T` |
-| `obj instanceof List<String>` | `List<String>` không phải kiểu reifiable để kiểm tra type argument |
-| `static T shared` trong `class Box<T>` | Thành viên static không thuộc một biến thể `Box<String>` riêng |
-| Overload `f(List<String>)` và `f(List<Integer>)` | Hai chữ ký trùng nhau sau erasure |
-| `class CustomError<T> extends Exception` | Subclass của `Throwable` không được generic |
+| `new T()`, `T.class`, `new T[10]` | Runtime does not know the concrete type of `T` |
+| `obj instanceof List<String>` | `List<String>` is not reifiable for checking its type argument |
+| `static T shared` in `class Box<T>` | A static member does not belong to a separate `Box<String>` variant |
+| Overloading `f(List<String>)` and `f(List<Integer>)` | Both signatures collide after erasure |
+| `class CustomError<T> extends Exception` | Subclasses of `Throwable` cannot be generic |
 
-Khi cần tạo `T`, truyền `Supplier<? extends T>`; khi cần kiểm tra class lúc chạy, truyền `Class<T>` và dùng `isInstance/cast`. Reflection có thể nhìn thấy **generic signature trong khai báo**, nhưng không biến `ArrayList<String>` thành runtime class khác `ArrayList<Integer>`.
+To construct `T`, pass a `Supplier<? extends T>`; for runtime class checks, pass `Class<T>` and use `isInstance/cast`. Reflection can inspect **declared generic signatures** but does not turn `ArrayList<String>` into a different runtime class from `ArrayList<Integer>`.
 
-Raw type và unchecked cast ở mục kế tiếp có thể phá tính an toàn compiler đã bảo đảm.
+Raw types and unchecked casts in the next section can undermine the compiler's type-safety guarantees.
 
-## 9. Raw type, unchecked warning và heap pollution
+## 9. Raw types, unchecked warnings, and heap pollution
 
-**Raw type** bỏ toàn bộ type arguments: `List` thay vì `List<String>`, `Box` thay vì `Box<User>`. Nó thường tồn tại vì mã Java cũ hoặc API không generic; dùng raw type trong code mới làm mất nhiều kiểm tra kiểu quan trọng.
+A **raw type** omits all type arguments: `List` instead of `List<String>`, or `Box` instead of `Box<User>`. Raw types often appear in older Java code or nongeneric APIs; using them in new code loses important type checks.
 
 ~~~java
 import java.util.ArrayList;
@@ -405,46 +405,46 @@ String name = names.get(1);
 // ClassCastException khi đọc: Integer đã được thêm ở chỉ số 1.
 ~~~
 
-Hiện tượng biến/collection được khai báo với parameterized type nhưng thực tế chứa giá trị không tương thích gọi là **heap pollution**. Khi Java báo `unchecked assignment`, `unchecked call` hoặc `unchecked cast`, đừng chỉ tắt cảnh báo. Hãy lần theo boundary với raw type và chuyển đổi về kiểu có kiểm chứng.
+When a variable/collection declared with a parameterized type contains incompatible values, that is **heap pollution**. If Java reports `unchecked assignment`, `unchecked call`, or `unchecked cast`, do not simply suppress the warning. Trace the boundary to raw types and convert with meaningful checks.
 
-Nếu phải giao tiếp với API legacy trả `List<?>`, có thể đọc từng phần tử, dùng `instanceof String` để kiểm tra rồi chép sang `List<String>` mới; đó là kiểm tra runtime có ý nghĩa. Một cast `(List<String>) raw` đơn thuần không xác minh được từng phần tử.
+If a legacy API returns `List<?>`, inspect each element using `instanceof String` and copy validated values into a new `List<String>`; that performs meaningful runtime checking. A mere cast to `(List<String>) raw` cannot validate every element.
 
-Sự khác biệt này rất quan trọng trong API công khai: **type safety nhờ generics chỉ có thể đáng tin khi không vô tình vượt qua ranh giới bằng unchecked cast hoặc raw type**.
+This distinction matters for public APIs: **generic type safety is trustworthy only when unchecked casts or raw types do not silently bypass its guarantees**.
 
-## 10. Thiết kế generic class: nên tổng quát đến đâu?
+## 10. Designing generic classes: how general should they be?
 
-Generics có giá trị khi nhiều kiểu dữ liệu chia sẻ cùng **cấu trúc và quy tắc xử lý**, trong khi type argument làm rõ các mối quan hệ cần thiết. Không nên tổng quát hóa mọi domain class chỉ vì có thể viết `<T>`.
+Generics are useful when types share **structures and processing rules** while type arguments capture meaningful relationships. Do not make every domain class generic merely because `<T>` is available.
 
-### Trường hợp phù hợp
+### Appropriate uses
 
-- `Box<T>`, `Optional<T>`: đóng gói một giá trị hoặc khả năng không có giá trị.
-- `Pair<K,V>`, `Map<K,V>`: liên hệ nhiều giá trị có kiểu rõ ràng.
-- `Repository<ID,ENTITY>`: quan hệ kiểu khóa/entity lặp lại nhiều nơi.
-- `Result<T>`: đóng gói kết quả thành công với kiểu dữ liệu xác định, kèm trạng thái lỗi có hợp đồng rõ.
-- Bộ xử lý tập hợp hoặc thuật toán không phụ thuộc kiểu cụ thể, trừ các khả năng được yêu cầu trong bound.
+- `Box<T>`, `Optional<T>`: wrap a value or its possible absence.
+- `Pair<K,V>`, `Map<K,V>`: relate multiple typed values.
+- `Repository<ID,ENTITY>`: reuse the same key/entity type relationship.
+- `Result<T>`: wrap a successful result of a known type with an explicitly modeled failure state.
+- Collection processors or algorithms independent of specific types except for capabilities required by their bounds.
 
-### Trường hợp không nên ép generic
+### Cases where generics should not be forced
 
-Giả sử domain thực sự chỉ có `BankAccount` với quy tắc nghiệp vụ số tài khoản, trạng thái và số dư. Đổi nó thành `BankAccount<TBalance,TState,TId>` mà không có nhu cầu dùng nhiều kiểu khác nhau có thể làm API khó đọc và che mất khái niệm nghiệp vụ. Hãy ưu tiên những type có ý nghĩa trong domain, rồi dùng generics ở các abstraction thật sự tái sử dụng.
+Suppose the domain contains only a `BankAccount` governed by account-number, status, and balance rules. Turning it into `BankAccount<TBalance,TState,TId>` with no actual need for multiple types can obscure the business concept and hurt readability. Favor meaningful domain types and introduce generics only at genuinely reusable abstractions.
 
-### Một vài quy tắc thiết kế
+### Practical design guidelines
 
-1. **Lộ đúng type parameter cần thiết** trong API công khai: một method trả `Object` buộc client cast sẽ làm giảm lợi ích của `<T>`.
-2. **Ưu tiên collection interface** cho tham số nếu không cần khả năng riêng của `ArrayList`, `HashSet`, v.v.
-3. **Giới hạn bound vừa đủ**; đừng ép `T extends SomeBaseClass` chỉ vì code hiện dùng class đó nếu interface nhỏ hơn đã đáp ứng thuật toán.
-4. **Ghi rõ null policy**. `Box<T>` trong demo chủ động từ chối null; trong Java generics, `T` tự thân **không bảo đảm non-null**.
-5. **Giữ thông tin kiểu nhất quán** giữa method/constructor: `Repository<ID,T>.findById(ID)` phải trả `Optional<T>`, tránh `Object`/unchecked cast.
-6. **Kiểm thử kiểu sai ở compile time** và hành vi đúng ở runtime; đừng chỉ chứng minh rằng class có thể chứa một giá trị.
-7. **Không nhầm generic type với đa hình kế thừa**. `List<Integer>` không kế thừa `List<Number>`; wildcard diễn đạt các ràng buộc linh hoạt khi cần.
+1. **Expose necessary type parameters accurately** in public APIs: returning `Object` and forcing callers to cast undermines the value of `<T>`.
+2. **Prefer collection interfaces** as parameters when no `ArrayList`- or `HashSet`-specific behavior is needed.
+3. **Keep bounds no stricter than necessary**; do not require `T extends SomeBaseClass` merely because current code uses that class when a smaller interface satisfies the algorithm.
+4. **Document the null policy**. The example `Box<T>` rejects null, but Java's type parameter `T` **does not inherently guarantee non-null values**.
+5. **Maintain consistent types** across methods/constructors: `Repository<ID,T>.findById(ID)` should return `Optional<T>` rather than `Object` or an unchecked cast.
+6. **Test invalid type usage at compile time** and correct behavior at runtime; merely demonstrating that a class can hold a value is insufficient.
+7. **Do not confuse generic types with inheritance polymorphism**. `List<Integer>` does not extend `List<Number>`; wildcards express more flexible constraints when necessary.
 
-## 11. Kiểm thử generic class và contract của nó
+## 11. Testing generic classes and their contracts
 
-Kiểm thử generics có hai tầng bổ sung nhau:
+Generic testing has two complementary levels:
 
-- **Compile-time type safety:** Ví dụ `Box<String> box; box.set(1);` phải bị trình biên dịch từ chối. Đây là tính chất của hệ thống kiểu, không phải một exception runtime cần bắt bằng JUnit.
-- **Runtime behavior:** Dù generic signature đúng, class vẫn có thể sai logic (trả nhầm giá trị, thay đổi trạng thái, nhận null trái hợp đồng).
+- **Compile-time type safety:** `Box<String> box; box.set(1);` must be rejected by the compiler. This is a type-system property, not a runtime exception to catch with JUnit.
+- **Runtime behavior:** Even a correctly typed generic signature does not guarantee correct implementation logic (returning the wrong value, altering state, or violating a null contract).
 
-Ví dụ JUnit Jupiter 5 cho `Box<T>` và `InMemoryRepository<ID,T>` ở phần 3, đặt tệp `GenericsDemoTest.java` trong source set kiểm thử cùng package:
+Example JUnit Jupiter 5 tests for `Box<T>` and `InMemoryRepository<ID,T>` in section 3, are placed in `GenericsDemoTest.java` in the same package's test source set:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -488,33 +488,33 @@ class GenericsDemoTest {
 }
 ~~~
 
-Đoạn test yêu cầu dependency `org.junit.jupiter:junit-jupiter` và JUnit runner tương thích. Các test ở đây xác minh logic và null contract của implementation cụ thể; **không cần** tạo test runtime cho từng đối số kiểu `T` nếu thuật toán là một và trình biên dịch đã kiểm tra quan hệ kiểu.
+These tests require the `org.junit.jupiter:junit-jupiter` dependency and a compatible JUnit runner. They verify implementation behavior and null contracts; **there is no need** for separate runtime tests for every `T` argument when the algorithm is the same and the compiler already checks type relationships.
 
-Đối với thư viện generic phức tạp, nên có test với nhiều nhóm type khác nhau, ví dụ `String`, `Integer`, record/domain object, và các ràng buộc nâng cao để phát hiện những giả định bất hợp lý trong thuật toán.
+For complex generic libraries, test diverse type families such as `String`, `Integer`, records/domain objects, and advanced bounds to detect unreasonable algorithm assumptions.
 
-## 12. Những câu hỏi thường gặp
+## 12. Frequently asked questions
 
-**Q1. `List<String>` có phải class riêng kế thừa `List`?**  
-Không. `List<String>` là **parameterized type** từ generic interface `List<E>`. Nó chỉ định type argument ở compile time; không có một bản copy runtime class riêng theo từng `String`.
+**Q1. Is `List<String>` a separate class inheriting from `List`?**  
+No. `List<String>` is a **parameterized type** of the generic `List<E>` interface. It specifies a type argument at compile time; the runtime does not create separate classes for every `String` argument.
 
-**Q2. Vì sao `Box<int>` không dùng được nhưng `Box<Integer>` được?**  
-Generic type arguments trong Java phải là reference types. Boxing/unboxing cho phép chuyển đổi giữa `int` và `Integer` trong nhiều biểu thức, nhưng không biến primitive thành type argument hợp lệ.
+**Q2. Why is `Box<int>` invalid but `Box<Integer>` valid?**  
+Java generic type arguments must be reference types. Boxing/unboxing converts between `int` and `Integer` in many expressions, but does not make a primitive type argument valid.
 
-**Q3. Một lớp có tham số kiểu bắt buộc phải là abstract class hoặc interface?**  
-Không. `class Box<T>` có thể là concrete class như ví dụ. `record Pair<K,V>` và `interface Repository<ID,T>` cũng được phép có tham số kiểu.
+**Q3. Must a class with type parameters be abstract or an interface?**  
+No. `class Box<T>` can be concrete, as in this example. `record Pair<K,V>` and `interface Repository<ID,T>` may also declare type parameters.
 
-**Q4. Generics có giúp thay thế kế thừa/đa hình không?**  
-Không hoàn toàn. Kế thừa/interface polymorphism mô tả **hợp đồng hành vi**, trong khi generics mô tả **quan hệ giữa các kiểu ở API** và tái sử dụng thuật toán/cấu trúc cho nhiều type arguments. Chúng có thể kết hợp.
+**Q4. Do generics replace inheritance/polymorphism?**  
+Not entirely. Inheritance/interface polymorphism defines **behavioral contracts**, while generics express **type relationships in APIs** and reuse algorithms/structures with different type arguments. They work together.
 
-**Q5. `T extends Number` có cho phép mọi class tự định nghĩa phép toán `+` không?**  
-Không. Java không định nghĩa toán tử cộng generic cho `Number`. Để thao tác số chính xác, cần giao diện tính toán riêng, strategy hoặc API cụ thể phù hợp; `doubleValue()` có thể mất độ chính xác.
+**Q5. Does `T extends Number` define generic addition using `+` for every class?**  
+No. Java defines no generic addition operator for `Number`. Precise arithmetic may require a dedicated interface, strategy, or appropriate concrete API; `doubleValue()` can lose precision.
 
-**Q6. Khi nào dùng `<?>` thay `<T>`?**  
-Khi không cần đặt tên và liên hệ kiểu giữa nhiều vị trí, dùng wildcard sẽ biểu đạt API gọn hơn. Khi cần cùng một type parameter xuất hiện trong cả input/output, `<T>` thường có ý nghĩa hơn.
+**Q6. When should `<?>` be used instead of `<T>`?**  
+When there is no need to name and connect types across several positions, a wildcard is more concise. When the same type parameter relates inputs and outputs, `<T>` is usually more meaningful.
 
-## 13. Bài tập thực hành: viết Cache<K,V> an toàn kiểu
+## 13. Practice: implement a type-safe Cache<K,V>
 
-Hãy cài đặt một lớp:
+Implement this class:
 
 ~~~java
 public final class Cache<K, V> {
@@ -527,47 +527,47 @@ public final class Cache<K, V> {
 }
 ~~~
 
-Yêu cầu:
+Requirements:
 
-1. Từ chối key null và value null theo chính sách bạn chọn, ghi rõ bằng JavaDoc.
-2. Tạo `Cache<String,User>`, lưu `User("U-01", "Lan")` và đọc lại đúng kiểu `Optional<User>`.
-3. Tạo `Cache<Long,String>` bằng cùng class, với ID kiểu `Long`.
-4. Thử `cache.put(123L, user)` khi cache là `Cache<String,User>` để tự quan sát lỗi biên dịch.
-5. Nếu muốn copy dữ liệu giữa các collection, viết helper `<T> void copyAll(List<? extends T>, List<? super T>)` và giải thích PECS.
-6. Thử đặt một field `static V lastValue` trong `Cache<K,V>` rồi giải thích vì sao Java từ chối.
-7. Nếu cần cache có TTL, đa luồng và eviction, hãy xác định **những yêu cầu runtime bổ sung** thay vì giả định generic signature giải quyết được.
+1. Reject null keys and values according to your chosen policy, documented in JavaDoc.
+2. Create `Cache<String,User>`, store `User("U-01", "Lan")`, and retrieve an appropriately typed `Optional<User>`.
+3. Create `Cache<Long,String>` with the same class and `Long` IDs.
+4. Try `cache.put(123L, user)` when the cache is a `Cache<String,User>` to observe the compilation error.
+5. If copying between collections is needed, write a `<T> void copyAll(List<? extends T>, List<? super T>)` helper and explain PECS.
+6. Try declaring a `static V lastValue` field inside `Cache<K,V>` and explain why Java rejects it.
+7. If the cache needs TTL, concurrency, or eviction, identify the **additional runtime requirements** rather than assuming generic signatures address them.
 
-### Tự kiểm tra sau bài học
+### Self-check after this lesson
 
-- `<T>` được khai báo ở đâu? Khác biệt giữa `class Box<T>` và `static <T> T identity(T value)`?
-- Vì sao `List<Integer>` không gán trực tiếp cho `List<Number>` dù `Integer extends Number`?
-- Khi cần đọc số từ nhiều subtype, `List<? extends Number>` có lợi gì?
-- Vì sao không thể dùng `new T()` trong generic class, và `Supplier<? extends T>` giải quyết vấn đề như thế nào?
-- Raw type và unchecked cast có thể làm chương trình gặp lỗi gì ở runtime?
-- Type erasure ảnh hưởng thế nào tới `instanceof`, overload method và việc tạo array generic?
+- Where is `<T>` declared? How do `class Box<T>` and `static <T> T identity(T value)` differ?
+- Why can't `List<Integer>` be assigned directly to `List<Number>` even though `Integer extends Number`?
+- What is gained by using `List<? extends Number>` to read values from multiple numeric subtypes?
+- Why is `new T()` invalid in a generic class, and how does `Supplier<? extends T>` solve the problem?
+- What runtime failure can raw types and unchecked casts cause?
+- How does type erasure affect `instanceof`, method overloading, and generic-array creation?
 
-**Ghi nhớ:** Generics giúp viết **một cấu trúc hoặc thuật toán có thể sử dụng với nhiều kiểu mà vẫn kiểm tra được quan hệ kiểu tại compile time**. Khi thiết kế lớp có tham số kiểu, hãy nghĩ tới hợp đồng API, tính bất biến/biến thiên, wildcard phù hợp và ranh giới type erasure, thay vì chỉ thêm ký hiệu `<T>`.
+**Remember:** Generics let us write **one structure or algorithm reusable across multiple types while checking type relationships at compile time**. When designing parameterized classes, consider API contracts, variance/invariance, appropriate wildcards, and type-erasure boundaries rather than simply appending `<T>`.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="language-mechanics-002">Ràng buộc tham số kiểu</a>
+## <a id="language-mechanics-002">Type parameter bounds</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Ràng buộc tham số kiểu (Bounded Type Parameters) trong Java Generics
+# Type Parameter Bounds (Bounded Type Parameters) in Java Generics
 
-**Chủ đề:** OOP → Cơ chế ngôn ngữ → Ràng buộc tham số kiểu.  
-**Mục tiêu:** hiểu cách giới hạn tập kiểu có thể truyền cho một lớp hoặc phương thức generic; sử dụng đúng `extends`, nhiều ràng buộc với `&`, tự viết thuật toán với `Comparable`, phân biệt type parameter với wildcard và nhận biết giới hạn do type erasure.
+**Topic:** OOP → Language Mechanics → Type parameter bounds.  
+**Goal:** Understand how to restrict types accepted by generic classes or methods; correctly use `extends` and multiple bounds with `&`; write algorithms using `Comparable`; distinguish type parameters from wildcards; and recognize type-erasure limitations.
 
-## 1. Tại sao generic cần ràng buộc?
+## 1. Why do generics need bounds?
 
-Generics cho phép viết một cấu trúc hoặc thuật toán hoạt động với nhiều kiểu mà vẫn được kiểm tra ở thời điểm biên dịch:
+Generics let one structure or algorithm work with multiple types while preserving compile-time type checking:
 
 ```java
 final class Box<T> {
@@ -583,9 +583,9 @@ final class Box<T> {
 }
 ```
 
-`Box<String>` và `Box<Integer>` đều hợp lệ. Nhưng nếu muốn viết `value.doubleValue()` trong `Box<T>`, trình biên dịch không chấp nhận: `T` có thể là bất cứ kiểu tham chiếu nào, chưa chắc có phương thức `doubleValue()`.
+Both `Box<String>` and `Box<Integer>` are valid. But calling `value.doubleValue()` inside `Box<T>` is rejected: `T` may be any reference type and does not necessarily expose `doubleValue()`.
 
-**Bounded type parameter** giới hạn các kiểu hợp lệ và cho phép code generic sử dụng những thành viên được bảo đảm bởi ràng buộc:
+A **bounded type parameter** restricts valid types and allows generic code to use members guaranteed by that bound:
 
 ```java
 final class NumberBox<T extends Number> {
@@ -612,25 +612,25 @@ NumberBox<java.math.BigDecimal> b =
 // NumberBox<String> wrong = new NumberBox<>("42");
 ```
 
-Dấu `extends` ở đây mang nghĩa **phải tương thích với upper bound**. Nó dùng được khi ràng buộc là **class** hoặc **interface**, kể cả khi quan hệ giữa các interface về mặt Java được gọi là `implements`.
+Here `extends` means **the type must satisfy an upper bound**. It works with a **class** or **interface** bound, even though Java normally calls the relation to an interface `implements`.
 
-Ví dụ `<T extends Number>` nhận `Integer`, `Long`, `Double`, `BigDecimal` và các subtype `Number` khác. Nó không cho phép `String`.
+For example, `<T extends Number>` accepts `Integer`, `Long`, `Double`, `BigDecimal`, and other `Number` subtypes. It rejects `String`.
 
-**Lưu ý:** `T extends Number` không hứa mọi toán tử số học đều dùng được với `T`. Java không cho viết `a + b` khi `a`, `b` có kiểu `T`; bạn chỉ gọi được các phương thức bảo đảm bởi `Number` (như `doubleValue()`) hoặc dịch vụ số học được truyền vào. Việc chuyển sang `double` có thể mất độ chính xác, đặc biệt với tiền tệ.
+**Note:** `T extends Number` does not make every arithmetic operator valid on `T`. Java does not permit `a + b` when `a` and `b` have type `T`; only operations guaranteed by `Number` (such as `doubleValue()`) or explicitly supplied arithmetic services are available. Conversion to `double` may lose precision, especially for money.
 
-## 2. Cú pháp và vị trí khai báo
+## 2. Declaration syntax and placement
 
-| Mục đích | Cú pháp Java | Điều được bảo đảm |
+| Purpose | Java syntax | Guarantee |
 | --- | --- | --- |
-| Class generic không ràng buộc | `class Box<T>` | `T` mặc định có upper bound `Object` |
-| Class generic có upper bound | `class NumberBox<T extends Number>` | `T` là subtype của `Number` |
-| Ràng buộc bằng interface | `<T extends Comparable<T>>` | Có `compareTo(T)` thông qua interface |
-| Phương thức generic | `static <T extends Number> double value(T x)` | Bound chỉ thuộc type parameter của phương thức |
-| Nhiều ràng buộc | `<T extends Number & Comparable<T>>` | Phải tương thích cả hai ràng buộc |
-| Wildcard upper bound | `List<? extends Number>` | Danh sách có phần tử thuộc subtype nào đó của `Number` |
-| Wildcard lower bound | `List<? super Integer>` | Danh sách có kiểu phần tử `Integer` hoặc supertype của nó |
+| Unbounded generic class | `class Box<T>` | `T` has a default upper bound of `Object` |
+| Generic class with an upper bound | `class NumberBox<T extends Number>` | `T` is a subtype of `Number` |
+| Interface bound | `<T extends Comparable<T>>` | `compareTo(T)` is available through the interface |
+| Generic method | `static <T extends Number> double value(T x)` | The bound belongs to the method's type parameter |
+| Multiple bounds | `<T extends Number & Comparable<T>>` | Must satisfy both bounds |
+| Upper-bounded wildcard | `List<? extends Number>` | List elements belong to some subtype of `Number` |
+| Lower-bounded wildcard | `List<? super Integer>` | List element type is `Integer` or its supertype |
 
-Với phương thức, **khai báo tham số kiểu nằm trước kiểu trả về**:
+For methods, **the type-parameter declaration precedes the return type**:
 
 ```java
 static <T extends Number> double twiceAsDouble(T value) {
@@ -638,9 +638,9 @@ static <T extends Number> double twiceAsDouble(T value) {
 }
 ```
 
-Trong đoạn trên, `T` là kiểu generic **của phương thức**, không đòi hỏi lớp chứa phương thức cũng phải là generic.
+In this snippet, `T` is a generic type parameter **of the method**; the containing class need not be generic.
 
-Với class generic, có thể sử dụng `T` ở trường, constructor, tham số, kiểu trả về và phương thức instance:
+For a generic class, `T` can appear in fields, constructors, arguments, return types, and instance methods:
 
 ```java
 final class Pair<T extends CharSequence> {
@@ -662,11 +662,11 @@ final class Pair<T extends CharSequence> {
 }
 ```
 
-`String`, `StringBuilder` đều triển khai `CharSequence`, nhưng **StringBuilder có thể thay đổi** nên một `Pair<StringBuilder>` không tự động bất biến chỉ vì các field là `final`.
+Both `String` and `StringBuilder` implement `CharSequence`, but **StringBuilder is mutable**, so a `Pair<StringBuilder>` does not automatically become immutable merely because its fields are `final`.
 
-## 3. Nhiều ràng buộc: intersection types
+## 3. Multiple bounds: intersection types
 
-Một thuật toán đôi khi cần **nhiều khả năng cùng lúc**. Ví dụ muốn một giá trị vừa là số (`Number`) vừa so sánh được (`Comparable`):
+Sometimes an algorithm needs **several capabilities at once**. For example, a value may need to be numeric (`Number`) and comparable (`Comparable`):
 
 ```java
 static <T extends Number & Comparable<? super T>>
@@ -677,14 +677,14 @@ T greater(T first, T second) {
 }
 ```
 
-Ở đây:
+Here:
 
-- `Number` là upper bound ở dạng class, chứng minh `T` có API của `Number`.
-- `Comparable<? super T>` yêu cầu `T` hỗ trợ phép so sánh với `T` hoặc một supertype phù hợp.
-- Dấu **`&`** diễn đạt **đồng thời thỏa nhiều bound**, không phải chọn một trong các bound.
-- Khi có class bound và interface bound, **class phải đứng đầu**; các phần sau là interface. Java không cho đưa hai class độc lập vào chuỗi bounds.
+- `Number` is the class upper bound on `T`, providing the API of `Number`.
+- `Comparable<? super T>` requires `T` to support comparison with `T` or a suitable supertype.
+- **`&`** means **all bounds must hold**, not that one of them is enough.
+- When bounds contain a class and interfaces, **the class must be first**; subsequent bounds must be interfaces. Java cannot combine two unrelated class bounds.
 
-Hợp lệ:
+Valid:
 
 ```java
 <T extends Number & Comparable<T>>
@@ -692,7 +692,7 @@ Hợp lệ:
 <T extends Number & java.io.Serializable & Comparable<T>>
 ```
 
-Không hợp lệ:
+Invalid:
 
 ```java
 // Class Number phải đứng trước các interface.
@@ -705,29 +705,29 @@ Không hợp lệ:
 // <T extends Number, Comparable<T>>
 ```
 
-Dấu phẩy trong `<T, U>` dùng để **khai báo các tham số kiểu khác nhau**, chẳng hạn `<T extends Number, U extends CharSequence>`. Nếu nhiều ràng buộc thuộc **cùng một T**, dùng `&`.
+A comma in `<T, U>` declares **separate type parameters**, as in `<T extends Number, U extends CharSequence>`. Use `&` for multiple bounds on **the same T**.
 
-### Vì sao nên dùng `Comparable<? super T>`?
+### Why use `Comparable<? super T>`?
 
-Viết `<T extends Comparable<T>>` là đúng cho các kiểu như `String` hoặc `Integer`, nhưng có thể hạn chế subtype.
+`<T extends Comparable<T>>` works for types such as `String` and `Integer` but may exclude valid subtypes.
 
-Giả sử `Person implements Comparable<Person>` và `Employee extends Person`. Một `Employee` kế thừa khả năng so sánh của `Person`, **không nhất thiết triển khai `Comparable<Employee>`**. Vì vậy:
+Suppose `Person implements Comparable<Person>` and `Employee extends Person`. An `Employee` inherits `Person` comparison behavior but **does not necessarily implement `Comparable<Employee>`**. Thus:
 
 ```java
 <T extends Comparable<? super T>>
 ```
 
-linh hoạt hơn:
+the following is more flexible:
 
-- `Employee` có thể so sánh với một `Person`.
-- `Person` là supertype của `Employee`.
-- `Comparable<Person>` phù hợp với `Comparable<? super Employee>`.
+- `Employee` can be compared to a `Person`.
+- `Person` is a supertype of `Employee`.
+- `Comparable<Person>` satisfies `Comparable<? super Employee>`.
 
-Đây là cách khai báo rất hữu ích cho hàm tìm phần tử lớn nhất hoặc sắp xếp theo **natural ordering**.
+This is useful for maximum-element algorithms and sorting by **natural ordering**.
 
-## 4. Ví dụ Java 17 chạy độc lập
+## 4. Standalone runnable Java 17 example
 
-Tạo file **BoundedGenericsDemo.java**. Ví dụ có ba tác vụ: tìm phần tử lớn nhất với `Comparable`, giữ một khoảng giá trị số hợp lệ và xử lý enum với ràng buộc đệ quy. Cả ba dùng cùng ý tưởng: chỉ cho phép những kiểu có các khả năng thuật toán cần.
+Create **BoundedGenericsDemo.java**. It demonstrates three operations: selecting a maximum using `Comparable`, maintaining a valid numeric range, and handling enums through recursive bounds. All rely on one principle: accept only types with the required algorithmic capabilities.
 
 ```java
 import java.math.BigDecimal;
@@ -842,14 +842,14 @@ public class BoundedGenericsDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac BoundedGenericsDemo.java
 java BoundedGenericsDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Max score: 25
@@ -859,21 +859,21 @@ In range: true
 Priority: HIGH
 ```
 
-**Đọc kết quả theo từng bound:**
+**Interpret each bound's result:**
 
-1. `max(List.of(10, 25, 14))`: `Integer` cung cấp `Comparable<Integer>`, đáp ứng upper bound.
-2. `max(List<LocalDate>)`: `LocalDate` có natural ordering thông qua `ChronoLocalDate`, một superinterface phù hợp với `Comparable<? super LocalDate>`.
-3. `max(List<Employee>)`: lớp con so sánh được qua `Comparable<Person>`; ràng buộc `<? super T>` giúp loại trường hợp hợp lệ này không bị loại bỏ.
-4. `NumericRange<BigDecimal>`: `BigDecimal` vừa mở rộng `Number` vừa triển khai `Comparable<BigDecimal>`, nên thỏa intersection bound.
-5. `parseEnum(Priority.class, "HIGH")`: `Priority` là enum và tương thích ràng buộc `<E extends Enum<E>>`.
+1. `max(List.of(10, 25, 14))`: `Integer` supplies `Comparable<Integer>`, satisfying the upper bound.
+2. `max(List<LocalDate>)`: `LocalDate` provides natural ordering through `ChronoLocalDate`, a superinterface compatible with `Comparable<? super LocalDate>`.
+3. `max(List<Employee>)`: the subclass inherits comparison through `Comparable<Person>`; the `<? super T>` bound keeps this valid case available.
+4. `NumericRange<BigDecimal>`: `BigDecimal` extends `Number` and implements `Comparable<BigDecimal>`, satisfying the intersection bound.
+5. `parseEnum(Priority.class, "HIGH")`: `Priority` is an enum matching `<E extends Enum<E>>`.
 
-`BigDecimal.compareTo` so sánh **giá trị số**, khác `equals` có xét scale (ví dụ `1.0` và `1.00`). Để xét thuộc khoảng số, `compareTo` là lựa chọn phù hợp với quy tắc giá trị được giả định; với miền khác cần định nghĩa comparator và logic biên theo nghiệp vụ.
+`BigDecimal.compareTo` compares **numeric values**, whereas `equals` also considers scale (such as `1.0` and `1.00`). For numeric ranges, `compareTo` is appropriate under the assumed value semantics; other domains must specify their own comparator and boundary rules.
 
-Ví dụ cố ý không trộn `Double` và `BigDecimal` vào cùng một `NumericRange<T>`: thuật toán so sánh dùng một hợp đồng so sánh chung của **một T**, thay vì tự chuyển đổi và so sánh lẫn các biểu diễn có ngữ nghĩa hoặc độ chính xác khác nhau.
+The example intentionally does not combine `Double` and `BigDecimal` in one `NumericRange<T>`: comparisons use a consistent contract for **one T**, not implicit conversions across representations with potentially different precision or meaning.
 
-## 5. Bound giúp trình biên dịch kiểm tra được gì?
+## 5. What can the compiler verify through bounds?
 
-Xét phương thức:
+Consider the method:
 
 ```java
 static <T extends CharSequence> int countChars(T text) {
@@ -881,37 +881,37 @@ static <T extends CharSequence> int countChars(T text) {
 }
 ```
 
-Hợp lệ:
+Valid:
 
 ```java
 countChars("Java");                  // String implements CharSequence
 countChars(new StringBuilder("OOP")); // StringBuilder cũng vậy
 ```
 
-Không hợp lệ:
+Invalid:
 
 ```java
 // Integer không triển khai CharSequence.
 // countChars(123);
 ```
 
-Khi gọi một phương thức generic, Java suy luận `T` từ đối số, kiểu đích trong một số ngữ cảnh và ràng buộc. Nếu không có cách suy luận một `T` thỏa tất cả điều kiện, chương trình bị từ chối khi biên dịch.
+At a generic method call, Java infers `T` from arguments, target types in some contexts, and constraints. Compilation fails when no inference yields a `T` satisfying all requirements.
 
-**Điều upper bound không làm được:**
+**What upper bounds do not guarantee:**
 
-- Không chặn truyền `null` ở thời điểm biên dịch. Ràng buộc về subtype không phải annotation non-null hoặc hệ thống null safety.
-- Không xác thực quy tắc nghiệp vụ, ví dụ “số phải dương” hay “ngày bắt đầu trước ngày kết thúc”; cần điều kiện runtime.
-- Không tự khiến `T` trở nên bất biến hoặc thread-safe.
-- Không giúp dùng mọi toán tử nguyên thủy như `+`, `<` với biến kiểu `T`.
-- Không bảo đảm một kết quả `doubleValue()` chính xác cho mọi subtype `Number`.
+- They do not prohibit passing `null` at compile time. A subtype bound is not a non-null annotation or null-safety type system.
+- They do not validate business rules, such as “amount must be positive” or “start date precedes end date”; runtime checks are required.
+- They do not make `T` immutable or thread-safe automatically.
+- They do not enable every primitive operator, such as `+` or `<`, on variables of type `T`.
+- They do not guarantee that `doubleValue()` is exact for every `Number` subtype.
 
-Nhờ bound, code bên trong có thể gọi API đã được định nghĩa bởi upper bound. Mọi ràng buộc nghiệp vụ ngoài hệ thống kiểu vẫn phải được xử lý rõ ràng.
+Bounds permit calling APIs defined by the upper bound. Business constraints outside the type system must still be validated explicitly.
 
-## 6. Phân biệt bounded type parameter và bounded wildcard
+## 6. Bounded type parameters versus bounded wildcards
 
-Hai hình thức cùng dùng từ khóa `extends`, nhưng chúng phục vụ mục đích khác nhau:
+Both forms use `extends` but serve different purposes:
 
-**Tham số kiểu có tên (`T extends Number`):** đặt tên cho kiểu để dùng **lại nhất quán** trong chữ ký.
+**Named type parameter (`T extends Number`):** assigns a reusable name to a type to express **consistent relationships** across a signature.
 
 ```java
 static <T extends Number> T firstOf(List<T> values) {
@@ -919,9 +919,9 @@ static <T extends Number> T firstOf(List<T> values) {
 }
 ```
 
-Kết quả có kiểu `T`: truyền `List<Integer>` thì lời gọi có thể nhận lại `Integer`. Nhờ tên `T`, ta diễn đạt mối quan hệ giữa kiểu phần tử đầu vào và kiểu trả về.
+The result has type `T`: if you pass `List<Integer>`, the call can return `Integer`. The name `T` expresses the link between input element type and return type.
 
-**Wildcard (`? extends Number`):** nhận một kiểu phần tử chưa biết, nhưng biết nó thỏa một upper bound.
+**Wildcard (`? extends Number`):** accepts an unknown element type known to satisfy an upper bound.
 
 ```java
 static double sumAsDouble(List<? extends Number> values) {
@@ -933,9 +933,9 @@ static double sumAsDouble(List<? extends Number> values) {
 }
 ```
 
-`sumAsDouble(List.of(1, 2, 3))` nhận `List<Integer>`, nhưng phương thức **không cần biết** kiểu phần tử chính xác để giữ lại hay trả về. Nó chỉ cần đọc các giá trị như `Number`.
+`sumAsDouble(List.of(1, 2, 3))` accepts `List<Integer>`; the method **does not need to know** its precise element type or preserve/return it. It only reads values as `Number`.
 
-**Không thể suy ra rằng `List<Integer>` là subtype của `List<Number>`**. Generics Java **invariant** đối với tham số kiểu cụ thể:
+**`List<Integer>` is not a subtype of `List<Number>`**. Concrete Java generic parameters are **invariant**:
 
 ```java
 List<Integer> integers = List.of(1, 2, 3);
@@ -947,9 +947,9 @@ List<? extends Number> readableNumbers = integers;
 Number n = readableNumbers.get(0);
 ```
 
-Với `List<? extends Number>`, ta không thể thêm một `Integer` hoặc `Double` thông thường, vì kiểu phần tử thực sự có thể là một subtype khác của `Number`. Vẫn có thể thêm `null` nếu danh sách cho phép, nhưng điều đó không đem lại giá trị cho một API chỉ đọc.
+With `List<? extends Number>`, you cannot ordinarily add an `Integer` or `Double` because the actual element type could be another `Number` subtype. `null` may be added if the collection permits it, but that is not useful for a read-only API.
 
-**Lower-bounded wildcard** dùng `super` để diễn đạt đích ghi chấp nhận một kiểu và các subtype của kiểu đó:
+A **lower-bounded wildcard** uses `super` to express a destination that accepts a type and its subtypes:
 
 ```java
 static void addDefaults(List<? super Integer> target) {
@@ -959,27 +959,27 @@ static void addDefaults(List<? super Integer> target) {
 }
 ```
 
-Lời gọi có thể truyền một `List<Integer>`, `List<Number>` hoặc `List<Object>` có thể sửa được. Vì kiểu phần tử cụ thể của `target` chưa rõ, khi lấy ra chỉ có thể coi an toàn là `Object` (nếu không biết thêm gì).
+A caller can pass a mutable `List<Integer>`, `List<Number>`, or `List<Object>`. Because the concrete element type of `target` is unknown, retrieved values can safely be treated only as `Object` without further knowledge.
 
-| Công cụ | Dùng khi | Có thể đọc an toàn là | Có thể thêm gì? |
+| Construct | When to use | Safe read type | What can be added? |
 | --- | --- | --- | --- |
-| `<T extends Number>` | Cần tên kiểu `T` dùng chung trong chữ ký | `T` hoặc `Number` | Theo API của cấu trúc mang `T` |
-| `List<? extends Number>` | Chủ yếu **đọc** giá trị số | `Number` | Không thêm giá trị khác `null` qua reference này |
-| `List<? super Integer>` | Chủ yếu **ghi** `Integer` | `Object` | `Integer` (và subtype, nếu có) |
-| `List<Number>` | Chính xác danh sách có element type `Number` | `Number` | Các subtype `Number` hợp lệ |
+| `<T extends Number>` | Need a reusable name `T` in the signature | `T` or `Number` | According to the API of the structure carrying `T` |
+| `List<? extends Number>` | Mainly **reading** numeric values | `Number` | No non-`null` values through this reference |
+| `List<? super Integer>` | Mainly **writing** `Integer` | `Object` | `Integer` (and subtypes, if any) |
+| `List<Number>` | Exactly a list with element type `Number` | `Number` | Valid `Number` subtypes |
 
-Gợi nhớ **PECS — Producer Extends, Consumer Super**: nơi **sản sinh/cấp giá trị** cho ta đọc thường dùng `extends`; nơi **tiêu thụ/nhận giá trị** để ghi thường dùng `super`. Đây là quy tắc chọn API, không phải một quy tắc áp dụng máy móc cho mọi phương thức.
+Remember **PECS — Producer Extends, Consumer Super**: use `extends` for a source that **produces values to read** and `super` for a destination that **consumes values to write**. This is an API-selection heuristic, not an inflexible rule for every method.
 
-### `super` không dùng để ràng buộc tham số kiểu có tên
+### `super` does not bound named type parameters
 
-Không hợp lệ:
+Invalid:
 
 ```java
 // Java không cho khai báo lower bound trực tiếp cho T.
 // class Box<T super Integer> {}
 ```
 
-Hợp lệ:
+Valid:
 
 ```java
 static void putInteger(List<? super Integer> output) {
@@ -987,11 +987,11 @@ static void putInteger(List<? super Integer> output) {
 }
 ```
 
-Một điểm dễ nhầm: `Comparable<? super T>` **vẫn nằm trong một upper bound của `T`**, nhưng bản thân đối số kiểu của `Comparable` là lower-bounded wildcard. Chúng là hai cấp cú pháp khác nhau.
+An easy distinction to miss: `Comparable<? super T>` **is still within an upper bound for `T`**, but the type argument of `Comparable` is itself a lower-bounded wildcard. Those are two separate syntactic levels.
 
-## 7. Thiết kế API: lúc nào nên dùng T, lúc nào nên dùng wildcard?
+## 7. API design: when to name T and when to use wildcards
 
-Giả sử đọc một danh sách số:
+Suppose you want to read a list of numbers:
 
 ```java
 static double average(List<? extends Number> numbers) {
@@ -1006,9 +1006,9 @@ static double average(List<? extends Number> numbers) {
 }
 ```
 
-Ở đây **không cần T** vì phương thức không tạo mối quan hệ kiểu giữa các giá trị được đọc và kết quả. Wildcard làm hợp đồng gọn hơn.
+Here **T is unnecessary** because the method does not link the type of an input value to an output type. A wildcard gives a simpler contract.
 
-Ngược lại, khi kết quả cần **cùng kiểu cụ thể** với phần tử của collection:
+In contrast, when a result must have **the same concrete type** as an element in the collection:
 
 ```java
 static <T extends Comparable<? super T>> T chooseMax(
@@ -1026,13 +1026,13 @@ static <T extends Comparable<? super T>> T chooseMax(
 }
 ```
 
-Tên `T` diễn đạt giá trị trả về có quan hệ chặt chẽ với element type của danh sách. Trong một API công khai, hãy ưu tiên wildcard khi nó tăng tính linh hoạt mà không làm mất mối quan hệ kiểu cần thiết.
+The name `T` links the return type to the list's element type. In a public API, prefer wildcards where they add flexibility without sacrificing required type relationships.
 
-**Tránh overengineering:** không thêm generic type parameter chỉ để thay một `Number` bằng ký hiệu `T`, khi nó không cung cấp thông tin kiểu hữu ích nào cho client.
+**Avoid overengineering:** do not introduce a generic type parameter merely to replace `Number` with `T` if it conveys no useful type information to callers.
 
-## 8. Ràng buộc đệ quy (recursive hoặc F-bounded types)
+## 8. Recursive bounds (including F-bounded types)
 
-Một bound có thể nhắc tới chính type parameter đang được khai báo:
+A bound may refer to the type parameter being declared:
 
 ```java
 interface SelfComparable<T extends SelfComparable<T>>
@@ -1040,9 +1040,9 @@ interface SelfComparable<T extends SelfComparable<T>>
 }
 ```
 
-Ý tưởng là các implementation tự biểu diễn khả năng thao tác với kiểu phù hợp của chính chúng. Đây được gọi là **F-bounded polymorphism**. Cách này xuất hiện trong những API muốn giữ quan hệ kiểu qua inheritance hoặc builder nhiều cấp.
+The idea is for implementations to describe operations using their own compatible types. This is **F-bounded polymorphism**. It appears in APIs that retain type relationships across inheritance or multilevel builders.
 
-Ví dụ quen thuộc của JDK:
+A familiar JDK example:
 
 ```java
 public abstract class Enum<E extends Enum<E>>
@@ -1051,13 +1051,13 @@ public abstract class Enum<E extends Enum<E>>
 }
 ```
 
-Khi khai báo:
+When declaring:
 
 ```java
 enum Status { NEW, DONE }
 ```
 
-`Status` là một kiểu enum tương thích với bound `<E extends Enum<E>>`. Vì vậy helper sau có thể nhận đúng loại enum:
+`Status` is an enum type compatible with `<E extends Enum<E>>`. Therefore this helper accepts the appropriate enum type:
 
 ```java
 static <E extends Enum<E>> E parseEnum(
@@ -1066,15 +1066,15 @@ static <E extends Enum<E>> E parseEnum(
 }
 ```
 
-`parseEnum(Status.class, "DONE")` trả giá trị kiểu `Status`, không cần ép kiểu thủ công. Chuỗi sai tên hằng khiến `Enum.valueOf` ném `IllegalArgumentException`; đó là lỗi runtime về dữ liệu đầu vào, không phải lỗi suy luận kiểu.
+`parseEnum(Status.class, "DONE")` returns `Status` without a manual cast. An invalid constant name makes `Enum.valueOf` throw `IllegalArgumentException`; that is a runtime input-data error, not a type-inference error.
 
-**Không tự áp F-bounds cho mọi interface**. Chúng có thể tạo ra chữ ký khó đọc, đặc biệt nếu dùng nhiều cấp kế thừa, wildcard và recursive generics. Chỉ sử dụng khi mối liên hệ “kiểu này dùng chính kiểu cụ thể của nó” mang lại lợi ích rõ ràng.
+**Do not apply F-bounds to every interface**. They can produce hard-to-read signatures, especially with multiple inheritance levels, wildcards, and recursive generics. Use them only when the relation “this type uses its own concrete type” adds clear value.
 
-## 9. Type erasure và những giới hạn cần biết
+## 9. Type erasure and its limitations
 
-Generics Java chủ yếu được kiểm tra ở **compile time**. Trong mã thực thi, nhiều thông tin tham số kiểu bị **erase** thành bound tương ứng; trình biên dịch có thể chèn phép ép kiểu và sinh **bridge method** để giữ tính đa hình khi cần.
+Java generics are primarily checked at **compile time**. In executable bytecode, much type-parameter information is **erased** to its bounds; the compiler can insert casts and generate **bridge methods** to preserve polymorphism.
 
-Ví dụ:
+For example:
 
 ```java
 final class NumberBox<T extends Number> {
@@ -1090,9 +1090,9 @@ final class NumberBox<T extends Number> {
 }
 ```
 
-Về mặt ý tưởng sau erasure, `T` có upper bound đầu tiên là `Number`, nên field/method tương ứng dùng `Number` ở mức bytecode. Đây là **mô hình giải thích**, không phải mã Java do compiler xuất chính xác từng dòng.
+Conceptually after erasure, the first upper bound of `T` is `Number`, so corresponding fields/methods use `Number` in bytecode. This is **an explanatory model**, not an exact line-by-line Java listing emitted by the compiler.
 
-Với nhiều bounds:
+With multiple bounds:
 
 ```java
 class Store<T extends Number & Comparable<T>> {
@@ -1100,9 +1100,9 @@ class Store<T extends Number & Comparable<T>> {
 }
 ```
 
-**Erasure của T là bound bên trái**, tức `Number`. Vì thứ tự bounds có ý nghĩa đối với erasure, Java yêu cầu class bound đứng trước những interface còn lại. Bất cứ method nào trên các bound khác đều được trình biên dịch xử lý để giữ hợp đồng kiểu ở compile time.
+**T erases to its leftmost bound**, namely `Number`. Since bound order matters for erasure, Java requires class bounds to precede interfaces. The compiler handles calls to methods on other bounds to preserve compile-time typing contracts.
 
-### Những việc không thể làm trực tiếp với T
+### Operations you cannot perform directly with T
 
 ```java
 class Example<T extends Number> {
@@ -1120,12 +1120,12 @@ class Example<T extends Number> {
 }
 ```
 
-Giải pháp tùy mục đích:
+Choose a solution based on the goal:
 
-- Muốn tạo instance của `T`: truyền `Supplier<T>`, factory hoặc `Class<T>` cùng cơ chế tạo được kiểm soát.
-- Muốn chứa nhiều `T`: ưu tiên `List<T>` thay vì generic array nếu hợp lý.
-- Muốn kiểm tra kiểu lúc chạy: truyền `Class<T>` và dùng `Class.isInstance/cast`, nhưng không giả định `Class<List<String>>` sẽ giữ được `String` của danh sách tại runtime.
-- Muốn giữ logic dùng `T` trong context static: dùng **static generic method** với type parameter riêng.
+- To create an instance of `T`: pass a `Supplier<T>`, factory, or `Class<T>` with a controlled creation mechanism.
+- To hold multiple `T` values: prefer `List<T>` over generic arrays when appropriate.
+- To check types at runtime: pass `Class<T>` and call `Class.isInstance/cast`, without assuming `Class<List<String>>` retains the list's `String` element type at runtime.
+- To use `T` in a static context: declare a **static generic method** with its own type parameter.
 
 ```java
 static <T extends Number> T requireNumber(T value) {
@@ -1133,7 +1133,7 @@ static <T extends Number> T requireNumber(T value) {
 }
 ```
 
-Hai kiểu tham số hóa cùng **raw class** thường không phân biệt bằng `instanceof`:
+Two parameterizations of the same **raw class** generally cannot be distinguished with `instanceof`:
 
 ```java
 Object value = java.util.List.of("A", "B");
@@ -1146,7 +1146,7 @@ if (value instanceof java.util.List<?> list) {
 // if (value instanceof java.util.List<String> strings) { ... }
 ```
 
-Erasure cũng khiến hai phương thức chỉ khác nhau ở tham số kiểu của cùng một raw collection có thể đụng chữ ký:
+Erasure can also make two methods whose only difference is the type argument of one raw collection collide after erasure:
 
 ```java
 // Không thể cùng khai báo trong một class:
@@ -1155,78 +1155,78 @@ Erasure cũng khiến hai phương thức chỉ khác nhau ở tham số kiểu 
 // Sau erasure cả hai đều nhận List.
 ```
 
-**Quan trọng:** type erasure không có nghĩa generics “vô dụng ở runtime”. Việc kiểm tra tại compile time là điểm mạnh chính; một số thông tin generic declaration vẫn có thể quan sát qua reflection trên những chữ ký nhất định. Nhưng JVM không gắn nhãn `List<String>` riêng cho mỗi instance `ArrayList`.
+**Important:** Type erasure does not make generics “useless at runtime.” Compile-time type checks are their primary advantage; reflection can still expose some generic declaration details in certain signatures. But the JVM does not assign a distinct `List<String>` runtime label to each `ArrayList` instance.
 
-## 10. Những lỗi thường gặp và cách sửa
+## 10. Common mistakes and remedies
 
-| Lỗi | Vì sao sai / khó bảo trì | Cách tiếp cận |
+| Mistake | Why it is wrong / hard to maintain | Approach |
 | --- | --- | --- |
-| `<T extends Number>` rồi viết `a + b` | Toán tử số học không định nghĩa trên type variable tham chiếu | Dùng `Number` API có ý thức độ chính xác hoặc truyền chiến lược cộng |
-| Dùng `<T extends Comparable<T>>` khắp nơi | Có thể loại subtype chỉ comparable theo supertype | Cân nhắc `Comparable<? super T>` |
-| Thử `<T super Number>` | Java không hỗ trợ lower bound trực tiếp cho type parameter | Dùng `? super ...` ở vị trí wildcard |
-| `List<Number> x = new ArrayList<Integer>()` | Generic parameter invariant | Dùng `List<? extends Number>` nếu chủ yếu đọc |
-| Ghi giá trị cụ thể vào `List<? extends Number>` | Element type thực tế chưa biết | Dùng `List<? super Integer>` nếu cần ghi Integer |
-| Đặt interface trước class trong intersection bound | Class bound nếu có phải đứng đầu | `<T extends Number & Comparable<T>>` |
-| Giả định upper bound loại trừ null | `null` vẫn có thể đi qua reference generic | `Objects.requireNonNull` và validation |
-| Dùng `doubleValue()` để xử lý tiền chính xác | Có thể mất precision và scale | Dùng `BigDecimal` với policy làm tròn rõ |
-| Dùng raw type `Comparable` để “dễ hơn” | Mất type safety, có thể dẫn tới lỗi ép kiểu khi chạy | Dùng tham số hóa `Comparable<T>` hoặc `Comparable<? super T>` |
-| Tạo generic API quá phức tạp chỉ có một kiểu sử dụng | Chi phí hiểu/duy trì lớn hơn khả năng tái sử dụng | Dùng kiểu cụ thể hoặc abstraction nhỏ phù hợp |
+| With `<T extends Number>`, writing `a + b` | Arithmetic operators are not defined on reference type variables | Use `Number` APIs with precision awareness or inject an addition strategy |
+| Using `<T extends Comparable<T>>` everywhere | Can exclude subtypes comparable through a supertype | Consider `Comparable<? super T>` |
+| Trying `<T super Number>` | Java does not support direct lower bounds on type parameters | Use `? super ...` in wildcard positions |
+| `List<Number> x = new ArrayList<Integer>()` | Generic parameters are invariant | Use `List<? extends Number>` if mostly reading |
+| Adding concrete values to `List<? extends Number>` | Actual element type is unknown | Use `List<? super Integer>` when writing Integer values |
+| Placing an interface before a class in an intersection bound | Class bound must come first | `<T extends Number & Comparable<T>>` |
+| Assuming upper bounds exclude null | `null` can still pass through generic references | Use `Objects.requireNonNull` and validation |
+| Using `doubleValue()` for exact money arithmetic | Can lose precision and scale | Use `BigDecimal` with a clear rounding policy |
+| Using raw `Comparable` for “simplicity” | Loses type safety and may fail with runtime casts | Parameterize `Comparable<T>` or `Comparable<? super T>` |
+| Overly complex generic APIs for one concrete use | Understanding/maintenance costs outweigh reuse | Use concrete types or focused abstractions |
 
-### Có thể ràng buộc T với primitive không?
+### Can T be bound to a primitive?
 
-Không: Java generics chỉ nhận **reference type** làm type argument. Các kiểu `int`, `double` không thể dùng thành `List<int>` hoặc `Box<int>`. Dùng wrapper `Integer`, `Double` (autoboxing) hoặc các kiểu chuyên biệt cho primitive như `IntStream`, `int[]` khi hiệu năng/bộ nhớ là yếu tố quan trọng.
+No: Java generics accept **reference types** as type arguments. Primitive `int` and `double` cannot be used in `List<int>` or `Box<int>`. Use wrapper types `Integer` and `Double` (autoboxing), or primitive-specific structures such as `IntStream` and `int[]` when performance/memory matters.
 
-### Bound nhiều interface có phải implements tất cả ở lớp đích không?
+### Must a class explicitly implement all interfaces in multiple bounds?
 
-Một kiểu có thể đáp ứng ràng buộc qua **thừa kế** và **các interface được triển khai gián tiếp**, không bắt buộc viết trực tiếp tất cả tên interface trong câu lệnh `implements`. Java kiểm tra quan hệ kiểu thực tế theo hệ thống phân cấp.
+A type can satisfy bounds through **inheritance** or **indirectly implemented interfaces**; it need not list every interface name directly in an `implements` clause. Java checks actual type relationships in the hierarchy.
 
-### Upper bound là giao diện hay điều kiện giá trị?
+### Is an upper bound a type constraint or a value constraint?
 
-Bound là **ràng buộc kiểu**, không phải điều kiện trên **giá trị**. `T extends Number` không diễn đạt `T > 0`. Muốn số dương, phải kiểm tra giá trị runtime. `T extends Comparable<T>` cũng không tự chứng minh phép `compareTo` là đúng, bắc cầu hoặc nhất quán với `equals`; implementation phải tuân thủ hợp đồng `Comparable`.
+Bounds constrain **types**, not **values**. `T extends Number` does not express `T > 0`. Positive-number requirements need runtime validation. `T extends Comparable<T>` does not prove that `compareTo` is correct, transitive, or consistent with `equals`; implementations must honor the `Comparable` contract.
 
-## 11. Bài tập: kho dữ liệu có giá trị đo
+## 11. Exercise: repository for sensor measurements
 
-Xây dựng một mô hình lưu phép đo cảm biến. Mỗi phép đo có **mã cảm biến**, **giá trị** và **thời gian ghi nhận**.
+Build a model to store sensor readings. Every measurement has **a sensor ID**, **a value**, and **a recorded timestamp**.
 
-1. Viết `Measurement<T extends Number & Comparable<? super T>>` bằng `record`; không chấp nhận cảm biến rỗng hoặc giá trị null.
-2. Viết `maxMeasurement(List<Measurement<T>>)` trả về phép đo có giá trị lớn nhất, với type parameter được bound thích hợp. Danh sách rỗng phải báo lỗi rõ.
-3. Tạo ví dụ với `Integer` và `BigDecimal`. Giải thích vì sao hai kiểu phải được so sánh trong một hợp đồng nhất quán thay vì tự động trộn mọi `Number`.
-4. Viết phương thức chỉ **đọc** danh sách `List<? extends Number>` và tính tổng gần đúng bằng `double`; nêu giới hạn khi dùng với dữ liệu tài chính.
-5. Viết phương thức thêm giá trị mặc định vào `List<? super Integer>`, rồi thử gọi với `List<Integer>`, `List<Number>` và `List<Object>`.
-6. Viết test JUnit 5 cho null, danh sách rỗng, trường hợp hai giá trị bằng nhau, giá trị âm và subtype kế thừa `Comparable` của supertype.
+1. Write `Measurement<T extends Number & Comparable<? super T>>` as a `record`; reject blank sensor IDs and null values.
+2. Write `maxMeasurement(List<Measurement<T>>)` to return the measurement with the largest value using an appropriately bounded type parameter. Reject empty lists explicitly.
+3. Create examples with `Integer` and `BigDecimal`. Explain why comparisons need a consistent contract rather than automatically mixing all `Number` representations.
+4. Write a method that only **reads** `List<? extends Number>` and computes an approximate `double` sum; describe limitations for financial data.
+5. Write a method to append a default value to `List<? super Integer>`, then invoke it using `List<Integer>`, `List<Number>`, and `List<Object>`.
+6. Write JUnit 5 tests for null, empty lists, equal values, negative values, and a subtype inheriting `Comparable` from a supertype.
 
-**Tự kiểm tra:** biến nào thật sự phải cùng kiểu `T`? Đâu là chỗ chỉ cần wildcard? Những điều kiện nào được compiler bảo đảm, điều kiện nào cần kiểm tra lúc chạy? Tác động của `Comparable<? super T>` khi kiểu con kế thừa cách so sánh từ lớp cha là gì?
+**Self-check:** Which variables truly must share type `T`? Where is a wildcard enough? Which conditions does the compiler guarantee, and which need runtime checks? What does `Comparable<? super T>` do when a subclass inherits its comparison from a superclass?
 
-## 12. Ghi nhớ để áp dụng đúng
+## 12. Key points for correct usage
 
-- `<T extends Bound>` là **upper-bounded type parameter**: giới hạn kiểu có thể dùng và những thành viên có thể gọi an toàn.
-- Một `T` có thể có **nhiều bound với `&`**; nếu có class bound thì đặt nó đầu tiên.
-- `Comparable<? super T>` thường phù hợp hơn `Comparable<T>` khi muốn hỗ trợ kiểu con so sánh qua supertype.
-- `T` có tên khi cần **nối quan hệ kiểu** giữa tham số, trường và kết quả; wildcard phù hợp khi không cần đặt tên mối quan hệ đó.
-- `? extends` hỗ trợ đọc phần tử ở upper bound, `? super` hỗ trợ ghi kiểu cụ thể theo quy tắc PECS.
-- **Type erasure** giới hạn một số thao tác runtime; generic bounds giúp kiểm tra kiểu khi biên dịch chứ không thay thế xác thực dữ liệu hoặc test.
-- Hãy chọn bound nhỏ nhất đáp ứng đúng thuật toán. Ràng buộc quá chặt loại bỏ những kiểu vẫn có thể xử lý hợp lệ, còn ràng buộc quá lỏng buộc code phải ép kiểu nguy hiểm.
+- `<T extends Bound>` is an **upper-bounded type parameter**: it restricts accepted types and which members can be invoked safely.
+- One `T` may have **multiple bounds joined by `&`**; place the class bound first when present.
+- `Comparable<? super T>` is often preferable to `Comparable<T>` for subtypes that inherit comparison against a supertype.
+- A named `T` expresses **type relationships** across arguments, fields, and results; wildcards fit where that relationship need not be named.
+- `? extends` supports reading at the upper bound; `? super` supports writing a concrete type under PECS.
+- **Type erasure** restricts some runtime operations; generic bounds ensure compile-time type checking but do not replace validation or tests.
+- Choose the weakest bound that satisfies the algorithm. Overly strict bounds exclude usable types, while overly loose bounds force risky casts.
 
-**Kết luận:** ràng buộc tham số kiểu là cách diễn đạt **những năng lực mà thuật toán đòi hỏi** ngay trong API Java. Dùng đúng bound giúp mã tái sử dụng được, an toàn kiểu và dễ hiểu; hiểu thêm wildcard, erasure và điều kiện runtime sẽ tránh được các giới hạn thường gây nhầm lẫn khi học Generics.
+**Conclusion:** Type parameter bounds describe **the capabilities an algorithm requires** directly in Java APIs. Appropriate bounds make code reusable, type-safe, and understandable; knowing wildcard, erasure, and runtime constraints avoids common generics pitfalls.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="language-mechanics-003">Quan hệ kiểu của các cấu trúc tổng quát</a>
+## <a id="language-mechanics-003">Type relationships in generic constructs</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Quan hệ kiểu của các cấu trúc tổng quát trong Java (Generic Type Relationships)
+# Type relationships in generic constructs in Java (Generic Type Relationships)
 
-> **Phạm vi:** Cơ chế ngôn ngữ Java, đặc biệt là *generics*: quan hệ subtype giữa các kiểu tham số hóa, tính bất biến (*invariance*), wildcard `? extends`/`? super`, kiểu bị chặn (*bounded type parameter*), kế thừa generic và ảnh hưởng của *type erasure*. Mục tiêu là đọc đúng chữ ký API, giải thích được mã nào biên dịch và viết các phương thức generic an toàn.
+> **Scope:** Java language mechanics, especially *generics*: subtype relationships among parameterized types, *invariance*, wildcards `? extends`/`? super`, *bounded type parameters*, generic inheritance, and *type erasure*. The goal is to read API signatures correctly, explain what compiles, and write type-safe generic methods.
 
-## 1. “Cấu trúc tổng quát” và “quan hệ kiểu” là gì?
+## 1. What are “generic constructs” and “type relationships”?
 
-Trong Java, generic cho phép một lớp, interface hoặc phương thức diễn đạt thuật toán/hợp đồng với **kiểu dữ liệu chưa được cố định**:
+In Java, generics let classes, interfaces, and methods describe algorithms/contracts using **types that have not yet been fixed**:
 
 ```java
 final class Box<T> {
@@ -1238,14 +1238,14 @@ final class Box<T> {
 }
 ```
 
-- `Box<T>` là một khai báo generic; `T` là **type parameter**.
-- `Box<String>`, `Box<Number>` là **parameterized types**; `String` và `Number` là **type arguments**.
-- `List<Integer>`, `List<? extends Number>` và `List<?>` đều là các kiểu tham số hóa, nhưng khả năng đọc/ghi và quan hệ gán được khác nhau.
-- **Subtype** (`A <: B`) nghĩa là một giá trị kiểu `A` có thể dùng ở vị trí yêu cầu `B` mà không cần ép kiểu không an toàn. Ví dụ `Integer <: Number <: Object`.
+- `Box<T>` is a generic declaration; `T` is a **type parameter**.
+- `Box<String>` and `Box<Number>` are **parameterized types**; `String` and `Number` are **type arguments**.
+- `List<Integer>`, `List<? extends Number>`, and `List<?>` are all parameterized types, but with different read/write capabilities and assignment relationships.
+- **Subtype** (`A <: B`) means values of type `A` can be used where `B` is required without unsafe casts. For example, `Integer <: Number <: Object`.
 
-Một câu hỏi rất quan trọng: nếu `Integer` là subtype của `Number`, liệu `List<Integer>` cũng là subtype của `List<Number>`? **Không.** Quan hệ của *type argument* và quan hệ giữa *toàn bộ parameterized type* không được tự động truyền theo cùng cách.
+A key question: if `Integer` is a subtype of `Number`, is `List<Integer>` also a subtype of `List<Number>`? **No.** Relationships between *type arguments* do not automatically carry over to *entire parameterized types*.
 
-### Sơ đồ trực giác
+### An intuitive diagram
 
 ```mermaid
 flowchart TB
@@ -1262,22 +1262,22 @@ flowchart TB
     end
 ```
 
-Các mũi tên ở phần generics thể hiện **gán tương thích** (`x` có kiểu bên trái có thể gán vào biến kiểu bên phải), không diễn đạt quan hệ kế thừa giữa `Integer` và `Number` trong khai báo generic.
+The arrows in the generics diagram indicate **assignment compatibility** (a value `x` with the type on the left can be assigned to the type on the right), not inheritance between `Integer` and `Number` in generic declarations.
 
-## 2. Generic mặc định là bất biến (*invariant*)
+## 2. Generic type arguments are invariant by default
 
-Đối với cùng một generic declaration `G<T>`, Java thông thường **không cho phép suy ra**:
+For the same generic declaration `G<T>`, Java generally **does not permit this inference**:
 
 `A <: B` ⟹ `G<A> <: G<B>`.
 
-Ví dụ **không biên dịch**:
+An example that **does not compile**:
 
 ```java
 List<Integer> integers = new ArrayList<>();
 List<Number> numbers = integers; // COMPILE ERROR!
 ```
 
-Tại sao? Giả sử Java cho gán đó:
+Why? Suppose Java allowed that assignment:
 
 ```java
 List<Integer> integers = new ArrayList<>();
@@ -1286,31 +1286,31 @@ numbers.add(3.14);                // Hợp lệ đối với List<Number>
 Integer value = integers.get(0);  // Có thể gặp Double: sai type!
 ```
 
-Nếu được phép, cùng một danh sách vừa “chỉ chứa Integer” vừa cho thêm `Double`. Trình biên dịch chặn ngay **quan hệ gán**, không đợi xảy ra `ClassCastException` khi chạy.
+Then the same list could claim to “contain only Integer” while permitting insertion of `Double`. The compiler blocks **the assignment**, rather than waiting for a runtime `ClassCastException`.
 
-| Kiểu nguồn | Kiểu đích | Kết quả |
+| Source type | Target type | Result |
 |---|---|---|
-| `Integer` | `Number` | Hợp lệ: kế thừa lớp |
-| `ArrayList<Integer>` | `List<Integer>` | Hợp lệ: `ArrayList<E> implements List<E>` |
-| `List<Integer>` | `List<Number>` | **Không hợp lệ**: generic bất biến |
-| `List<Integer>` | `List<Object>` | **Không hợp lệ** |
-| `List<Number>` | `List<Number>` | Hợp lệ |
-| `List<Integer>` | `List<? extends Number>` | Hợp lệ |
-| `List<Number>` | `List<? super Integer>` | Hợp lệ |
-| `List<String>` | `List<?>` | Hợp lệ |
+| `Integer` | `Number` | Valid: class inheritance |
+| `ArrayList<Integer>` | `List<Integer>` | Valid: `ArrayList<E> implements List<E>` |
+| `List<Integer>` | `List<Number>` | **Invalid**: generic invariance |
+| `List<Integer>` | `List<Object>` | **Invalid** |
+| `List<Number>` | `List<Number>` | Valid |
+| `List<Integer>` | `List<? extends Number>` | Valid |
+| `List<Number>` | `List<? super Integer>` | Valid |
+| `List<String>` | `List<?>` | Valid |
 
-**Phân biệt hai trục:**
+**Two different dimensions:**
 
-1. **Kế thừa giữa các generic classes/interfaces:** `ArrayList<String>` là subtype của `List<String>` vì `ArrayList<E>` implement `List<E>`.
-2. **Thay đổi type argument trong cùng generic:** `List<String>` không phải subtype của `List<Object>`, dù `String` là subtype của `Object`.
+1. **Inheritance across generic class/interface declarations:** `ArrayList<String>` is a subtype of `List<String>` because `ArrayList<E>` implements `List<E>`.
+2. **Changing the argument within one generic:** `List<String>` is not a subtype of `List<Object>` even though `String` is a subtype of `Object`.
 
-Đây là lỗi phổ biến nhất khi đọc các API dùng generic trong Java.
+This is one of the most common mistakes when interpreting Java generic APIs.
 
-## 3. Ba dạng wildcard: `?`, `? extends U`, `? super L`
+## 3. Three wildcard forms: `?`, `? extends U`, `? super L`
 
-Wildcard không tạo một “class runtime” mới. Chúng diễn đạt **một tập các kiểu tham số hóa có thể chấp nhận** tại vị trí sử dụng (*use-site variance*).
+Wildcards do not create new “runtime classes.” They describe **sets of acceptable parameterized types** at the usage site (*use-site variance*).
 
-### 3.1. `List<?>` — danh sách phần tử chưa biết kiểu
+### 3.1. `List<?>` — list with an unknown element type
 
 ```java
 static void printAny(List<?> values) {
@@ -1320,17 +1320,17 @@ static void printAny(List<?> values) {
 }
 ```
 
-Có thể gọi `printAny(List.of(1, 2))` hay `printAny(List.of("a", "b"))` vì method không giả định kiểu cụ thể của các phần tử.
+Both `printAny(List.of(1, 2))` and `printAny(List.of("a", "b"))` work because the method does not assume a concrete element type.
 
-Với biến `List<?> list`:
-- Đọc `list.get(0)` dưới kiểu an toàn chung là `Object`.
-- **Không thể** gọi `list.add("x")`, `list.add(12)` hoặc `list.add(new Object())`: kiểu phần tử thực chưa biết.
-- `list.add(null)` về mặt kiểm tra kiểu là hợp lệ, nhưng **collection có thể cấm null hoặc không cho chỉnh sửa**; không nên hiểu wildcard là cơ chế làm danh sách immutable.
-- `list.clear()` có thể biên dịch vì không thêm phần tử sai kiểu; việc có chạy được hay không còn tùy tính mutable của collection.
+With a `List<?> list` variable:
+- `list.get(0)` can safely be read as `Object`.
+- You **cannot** invoke `list.add("x")`, `list.add(12)`, or `list.add(new Object())`: the actual element type is unknown.
+- `list.add(null)` is type-correct, but **the collection may forbid null or mutation**; wildcards do not make a collection immutable.
+- `list.clear()` can compile because it does not insert wrongly typed values; runtime success still depends on whether the collection is mutable.
 
-**`List<?>` không đồng nghĩa `List<Object>`.** `List<Object>` cho phép thêm bất kỳ object nào (trên danh sách mutable), còn `List<?>` chỉ biết một type argument nào đó chưa xác định.
+**`List<?>` is not `List<Object>`.** A mutable `List<Object>` can accept any object, whereas `List<?>` merely says the element type argument is unknown.
 
-### 3.2. `? extends U` — giới hạn trên, đọc kiểu U an toàn
+### 3.2. `? extends U` — upper bound, safely read as U
 
 ```java
 static double sum(List<? extends Number> values) {
@@ -1342,7 +1342,7 @@ static double sum(List<? extends Number> values) {
 }
 ```
 
-Method này nhận `List<Integer>`, `List<Double>`, `List<BigDecimal>` và `List<Number>`; đều có phần tử thuộc `Number` hoặc subtype của nó.
+This method accepts `List<Integer>`, `List<Double>`, `List<BigDecimal>`, and `List<Number>`, all containing `Number` values or subtypes.
 
 ```java
 List<Integer> ints = new ArrayList<>(List.of(2, 4, 6));
@@ -1353,9 +1353,9 @@ Number n = source.get(0); // HỢP LỆ: phần tử là Number
 // source.add(3.5);       // COMPILE ERROR
 ```
 
-Vì sao không thêm `Integer` dù khai báo “extends Number”? Biến `source` **có thể đang trỏ tới `List<Double>`**, nên Java không cho thêm giá trị khác `null` khi chưa biết chính xác kiểu phần tử. `extends` là **giới hạn kiểu**, không phải chỉ dẫn “collection chỉ đọc”; các phương thức như `remove`, `clear` vẫn có thể được gọi nếu collection hỗ trợ.
+Why can't we add an `Integer` even when the declaration says “extends Number”? `source` **could refer to `List<Double>`**, so Java disallows non-`null` additions without knowing the concrete element type. `extends` is a **type bound**, not a “read-only collection” directive; operations such as `remove` and `clear` may still be allowed on mutable collections.
 
-### 3.3. `? super L` — giới hạn dưới, ghi L an toàn
+### 3.3. `? super L` — lower bound, safely write L
 
 ```java
 static void addDefaults(List<? super Integer> destination) {
@@ -1367,36 +1367,36 @@ static void addDefaults(List<? super Integer> destination) {
 }
 ```
 
-Biến `List<? super Integer>` có thể trỏ tới:
+A `List<? super Integer>` reference may point to:
 - `List<Integer>`;
 - `List<Number>`;
 - `List<Object>`.
 
-Vì mọi tập chứa một trong các kiểu đó đều chứa được `Integer`, Java cho phép thêm `Integer`. Ngược lại, khi đọc ra, kiểu được bảo đảm chung là `Object`, vì có thể chính là `List<Object>`.
+All those lists can hold `Integer`, so Java allows adding `Integer`. When reading, however, the shared guaranteed type is only `Object` because the list could be `List<Object>`.
 
-**Không được suy ra `List<? super Integer>` chỉ chứa Integer.** Nếu đó là `List<Object>`, nó có thể đã chứa `String` và nhiều loại khác.
+**Do not infer that `List<? super Integer>` contains only Integers.** If its actual type is `List<Object>`, it may already contain `String` values and others.
 
-### Bảng đọc/ghi
+### Read/write reference table
 
-| Kiểu tham chiếu | Đọc an toàn dưới kiểu | Thêm phần tử an toàn |
+| Reference type | Safe read type | Safe additions |
 |---|---|---|
-| `List<Integer>` | `Integer` | `Integer` hoặc `null` nếu collection cho phép |
-| `List<Number>` | `Number` | `Number` và các subtype |
-| `List<?>` | `Object` | Không phần tử khác `null` |
-| `List<? extends Number>` | `Number` | Không phần tử khác `null` |
-| `List<? super Integer>` | `Object` | `Integer` và subtype của `Integer` (trong thực tế `Integer` là final) |
+| `List<Integer>` | `Integer` | `Integer` or `null` if permitted by the collection |
+| `List<Number>` | `Number` | `Number` and its subtypes |
+| `List<?>` | `Object` | No non-`null` elements |
+| `List<? extends Number>` | `Number` | No non-`null` elements |
+| `List<? super Integer>` | `Object` | `Integer` and subtypes of `Integer` (in practice `Integer` is final) |
 
-“Đọc” ở đây là **kiểu được trình biên dịch bảo đảm**, không phải kiểu runtime duy nhất có thể xuất hiện. “Thêm” nói về **kiểm tra kiểu khi biên dịch**; một collection không chỉnh sửa được vẫn có thể ném `UnsupportedOperationException` lúc chạy.
+“Reading” refers to the **type guaranteed by the compiler**, not the only runtime type possible. “Adding” refers to **compile-time type checks**; an unmodifiable collection can still throw `UnsupportedOperationException` at runtime.
 
 ## 4. PECS: Producer Extends, Consumer Super
 
-**PECS** là quy tắc kinh nghiệm khi một tham số là nguồn dữ liệu hoặc nơi nhận dữ liệu.
+**PECS** is a guideline for parameters acting as data sources or destinations.
 
-- **Producer extends:** nếu tham số tạo ra dữ liệu để ta lấy về, dùng `? extends T`.
-- **Consumer super:** nếu tham số nhận dữ liệu loại `T` do ta đưa vào, dùng `? super T`.
-- Nếu cùng một tham số vừa cần đọc **đúng T** vừa cần ghi **T**, có thể cần `List<T>` hoặc một phương thức generic khác. Đừng cố ép mọi API vào wildcard.
+- **Producer extends:** when an argument produces values to read, use `? extends T`.
+- **Consumer super:** when an argument receives values of type `T` to write, use `? super T`.
+- If a parameter must both read **exactly T** and write **T**, use `List<T>` or another generic method where appropriate. Do not force wildcards into every API.
 
-Ví dụ `copy`:
+An example `copy` method:
 
 ```java
 static <T> void copy(
@@ -1408,8 +1408,8 @@ static <T> void copy(
 }
 ```
 
-- `source` sản sinh giá trị `T` ⇒ `? extends T`.
-- `destination` tiêu thụ giá trị `T` ⇒ `? super T`.
+- `source` produces values of type `T` ⇒ `? extends T`.
+- `destination` consumes values of type `T` ⇒ `? super T`.
 
 ```java
 List<Integer> source = List.of(1, 2, 3);
@@ -1417,9 +1417,9 @@ List<Number> destination = new ArrayList<>();
 copy(destination, source); // Hợp lệ: Integer -> Number
 ```
 
-Tương tự, Java chuẩn có `Collections.copy(List<? super T> dest, List<? extends T> src)`, nhưng chú ý **cách hoạt động khác**: hàm chuẩn **ghi đè các vị trí có sẵn** và đích phải có đủ phần tử; nó không tự `add` để tăng kích thước như hàm minh họa phía trên.
+Java also provides `Collections.copy(List<? super T> dest, List<? extends T> src)`, but its **behavior differs**: it **replaces existing positions**, and the destination must already contain enough elements; unlike the sample above, it does not `add` to grow the list.
 
-### Luồng dữ liệu
+### Data flow
 
 ```mermaid
 flowchart LR
@@ -1429,13 +1429,13 @@ flowchart LR
     E["? super T<br/>consumer"] -.-> B
 ```
 
-**Không phải mọi `List` đều là producer hoặc consumer tuyệt đối.** Mô tả đó liên quan tới **vai trò trong phương thức cụ thể**. Một `List<Integer>` thực tế có thể vừa đọc vừa ghi ở ngữ cảnh khác.
+**A `List` is not inherently always a producer or a consumer.** The designation describes **its role in a particular method**. A `List<Integer>` may be read and written in another context.
 
-## 5. Ví dụ Java 17 độc lập, biên dịch được
+## 5. Standalone, compilable Java 17 example
 
-Ví dụ gồm một generic class `Box<T>`, quan hệ `ArrayList<Integer> → List<Integer>`, wildcard hai chiều, phương thức generic copy, và phương thức chọn giá trị lớn nhất với bound liên quan đến `Comparable`.
+The example combines a generic `Box<T>` class, `ArrayList<Integer> → List<Integer>` inheritance, bidirectional wildcards, a generic copy method, and a maximum-selection method bounded by `Comparable`.
 
-Lưu thành `GenericTypeRelationsDemo.java`:
+Save as `GenericTypeRelationsDemo.java`:
 
 ```java
 import java.util.ArrayList;
@@ -1527,22 +1527,22 @@ public class GenericTypeRelationsDemo {
 }
 ```
 
-Chạy trong JDK 17 trở lên:
+Run on JDK 17 or later:
 
 ```bash
 javac GenericTypeRelationsDemo.java
 java GenericTypeRelationsDemo
 ```
 
-**Tại sao `maximum` dùng `Comparable<? super T>`?**
+**Why does `maximum` use `Comparable<? super T>`?**
 
-Một đối tượng kiểu `T` cần so sánh được với đối tượng kiểu `T`, nhưng interface `Comparable` có thể được cài đặt cho **một supertype của T**. Bound `T extends Comparable<? super T>` linh hoạt hơn `T extends Comparable<T>`, đồng thời vẫn cho phép gọi `item.compareTo(best)`. Đây là một ứng dụng khác của nguyên tắc “consumer super”: phương thức `compareTo` **tiêu thụ** đối tượng đem so sánh.
+A value of type `T` must be comparable to another `T`, but `Comparable` may be implemented for **a supertype of T**. The bound `T extends Comparable<? super T>` is more flexible than `T extends Comparable<T>` and still allows `item.compareTo(best)`. This is another example of “consumer super”: `compareTo` **consumes** the value being compared.
 
-Trong ví dụ, `List.of(...)` trả danh sách không chỉnh sửa được; các lời gọi `total` và `maximum` chỉ đọc nên phù hợp. Hàm `copy` phải nhận đích mutable vì nó thực hiện `add`.
+In this example, `List.of(...)` returns an unmodifiable list; calls to `total` and `maximum` only read it. The `copy` method requires a mutable destination because it invokes `add`.
 
-## 6. Bound trong khai báo khác wildcard tại nơi dùng
+## 6. Declaration-site bounds versus use-site wildcards
 
-Bound của một type parameter nói **thuật toán có quyền dùng API nào trên T**:
+A type parameter's bound specifies **which APIs the algorithm can use on T**:
 
 ~~~java
 class NumericBox<T extends Number> {
@@ -1552,13 +1552,13 @@ class NumericBox<T extends Number> {
 }
 ~~~
 
-`NumericBox<Integer>` hợp lệ, `NumericBox<String>` không biên dịch. Một type parameter có thể có nhiều upper bounds, ví dụ `<T extends Number & Comparable<T>>`; class bound phải đứng trước các interface. `? extends Number & Comparable<?>` **không** là cú pháp Java hợp lệ.
+`NumericBox<Integer>` is valid; `NumericBox<String>` does not compile. A type parameter can have multiple upper bounds such as `<T extends Number & Comparable<T>>`, with the class bound before interfaces. `? extends Number & Comparable<?>` **is not** valid Java syntax.
 
-Khác với bound khai báo, `List<? extends Number>` và `List<? super Integer>` là **use-site wildcard** để diễn đạt quan hệ gán/khả năng đọc ghi ở vị trí sử dụng. Bài **Ràng buộc tham số kiểu** là phần giảng chính về intersection, `Comparable<? super T>`, recursive bounds và erasure của từng bound. Tại bài này, điều cần giữ là: **giới hạn T không khiến List<T> tự trở thành covariant**.
+Unlike declaration-site bounds, `List<? extends Number>` and `List<? super Integer>` are **use-site wildcards** expressing assignment/read/write relationships. The **Type parameter bounds** lesson covers intersections, `Comparable<? super T>`, recursive bounds, and erasure of individual bounds in depth. Here the key is that **bounding T does not make List<T> covariant**.
 
-## 7. Generic class kế thừa generic class/interface
+## 7. Generic classes extending generic classes/interfaces
 
-Xem hai quan hệ riêng:
+Consider two distinct relationships:
 
 ```java
 interface Store<T> {
@@ -1579,12 +1579,12 @@ class StringStore extends MemoryStore<String> {
 }
 ```
 
-Khi đó:
+Therefore:
 
-- `MemoryStore<String>` **là** `Store<String>`.
-- `StringStore` **là** `MemoryStore<String>` và `Store<String>`.
-- `Store<String>` **không là** `Store<Object>`.
-- `StringStore` có thể gán cho `Store<? extends CharSequence>` vì `String` implement `CharSequence`.
+- `MemoryStore<String>` **is** a `Store<String>`.
+- `StringStore` **is** a `MemoryStore<String>` and `Store<String>`.
+- `Store<String>` **is not** a `Store<Object>`.
+- `StringStore` can be assigned to `Store<? extends CharSequence>` because `String` implements `CharSequence`.
 
 ```java
 Store<String> a = new MemoryStore<>("abc");
@@ -1595,46 +1595,46 @@ CharSequence x = c.find();
 // Store<Object> invalid = b; // COMPILE ERROR
 ```
 
-Trong kiểu `Store<? extends CharSequence>`, việc gọi `find()` an toàn cho `CharSequence`. Vì interface `Store<T>` trong ví dụ **chỉ có thao tác đọc**, có thể bạn tự hỏi vì sao `Store<String>` vẫn không tự động thành `Store<Object>`? Java không phân tích “interface này chỉ đọc” để suy ra covariance cho type argument; generics tại khai báo `Store<T>` vẫn bất biến. Ta diễn đạt nhu cầu covariance bằng wildcard tại vị trí sử dụng.
+In `Store<? extends CharSequence>`, calling `find()` safely returns `CharSequence`. Although `Store<T>` here **only exposes reads**, why doesn't `Store<String>` automatically become `Store<Object>`? Java does not infer covariance by inspecting an interface's read-only methods; the declaration `Store<T>` remains invariant. Express covariance with use-site wildcards.
 
-### Chữ ký generic được kế thừa và cố định T
+### Inherited generic signatures with a fixed T
 
-Nếu lớp con cố định `T` thành `String`, compiler xem `find()` ở lớp con trả về `String` phù hợp khai báo. Điều này khác với cast runtime tùy ý: ràng buộc được compiler kiểm tra.
+If a subclass fixes `T` to `String`, the compiler treats its `find()` return type as `String`, consistent with the declaration. This is compiler-verified typing, not an arbitrary runtime cast.
 
-Một lớp không được triển khai cùng một generic interface ở hai kiểu tham số không tương thích trong cùng cây kế thừa, ví dụ cố có cả `Comparable<String>` và `Comparable<Integer>`; việc xóa type arguments khi biên dịch cũng làm các superinterface dạng đó xung đột.
+A class cannot implement the same generic interface with incompatible type arguments along one inheritance tree, such as both `Comparable<String>` and `Comparable<Integer>`; erasure makes those superinterfaces conflict too.
 
-## 8. Quan hệ kiểu với wildcard không phải phép thay thế tùy ý
+## 8. Wildcard type relationships are not arbitrary substitutions
 
-Bảng sau giúp đọc các khai báo thường gặp:
+The following table explains common assignments:
 
-| Gán | Kết quả | Giải thích |
+| Assignment | Result | Explanation |
 |---|---|---|
-| `List<Integer> → List<? extends Number>` | Được | Integer là subtype Number |
-| `List<Double> → List<? extends Number>` | Được | Double là subtype Number |
-| `List<Number> → List<? extends Object>` | Được | Number là subtype Object |
-| `List<Integer> → List<? super Integer>` | Được | Giới hạn dưới có thể là Integer |
-| `List<Number> → List<? super Integer>` | Được | Number là supertype của Integer |
-| `List<Object> → List<? super Integer>` | Được | Object là supertype của Integer |
-| `List<String> → List<? extends Number>` | **Không** | String không phải subtype Number |
-| `List<Object> → List<? extends Number>` | **Không** | Object có thể chứa kiểu không phải Number |
-| `List<Number> → List<? super Number>` | Được | Number là giới hạn dưới |
-| `List<Integer> → List<? super Number>` | **Không** | Integer không phải supertype Number |
-| `List<Integer> → List<Number>` | **Không** | Invariance |
-| `List<?> → List<Object>` | **Không** | Không biết type argument thật |
+| `List<Integer> → List<? extends Number>` | Allowed | Integer is a subtype of Number |
+| `List<Double> → List<? extends Number>` | Allowed | Double is a subtype of Number |
+| `List<Number> → List<? extends Object>` | Allowed | Number is a subtype of Object |
+| `List<Integer> → List<? super Integer>` | Allowed | The lower bound may be Integer |
+| `List<Number> → List<? super Integer>` | Allowed | Number is a supertype of Integer |
+| `List<Object> → List<? super Integer>` | Allowed | Object is a supertype of Integer |
+| `List<String> → List<? extends Number>` | **Not allowed** | String is not a subtype of Number |
+| `List<Object> → List<? extends Number>` | **Not allowed** | Object may contain non-Number types |
+| `List<Number> → List<? super Number>` | Allowed | Number satisfies the lower bound |
+| `List<Integer> → List<? super Number>` | **Not allowed** | Integer is not a supertype of Number |
+| `List<Integer> → List<Number>` | **Not allowed** | Invariance |
+| `List<?> → List<Object>` | **Not allowed** | Actual type argument is unknown |
 
-**Chú ý chiều gán:** biến `List<? extends Number>` có thể tham chiếu tới nhiều kiểu nguồn khác nhau, nhưng bạn không được gán chính biến này cho `List<Number>` vì có thể nó đang tham chiếu `List<Integer>`. Tương tự, `List<? super Integer>` không tự đồng nghĩa `List<Integer>`.
+**Mind the assignment direction:** a `List<? extends Number>` variable may refer to different source types, but cannot itself be assigned to `List<Number>`: it might refer to `List<Integer>`. Likewise, `List<? super Integer>` is not equivalent to `List<Integer>`.
 
-### Wildcard “có thể là nhiều loại” không phải union type
+### A wildcard covering multiple types is not a union type
 
-`List<? extends Number>` là cách dùng existential wildcard với một bound. Nó không phải `List<Integer | Double>` và không bảo đảm phần tử đều có cùng kiểu runtime cụ thể mà client có thể biết. API chỉ được khai thác những gì bound bảo đảm.
+`List<? extends Number>` uses an existential wildcard with one bound. It is not `List<Integer | Double>` and does not reveal one concrete runtime element type to the caller. An API may use only what the bound guarantees.
 
-Cũng không nên cho rằng `? super Integer` là một phép kiểm tra “giá trị phải là Number/Object”. Nó chỉ giới hạn type argument của *collection*, trong khi mỗi phần tử đã có trong collection có thể khác nhau nếu type argument thật là `Object`.
+Nor does `? super Integer` test whether “values must be Number/Object.” It constrains the *collection's* type argument; existing elements may be of different types when the actual argument is `Object`.
 
-## 9. Wildcard capture: tại sao đôi lúc cần phương thức helper?
+## 9. Wildcard capture: why is a helper sometimes needed?
 
-Một `List<?>` có một kiểu phần tử **cụ thể nhưng chưa được compiler đặt tên**. Tính năng *capture conversion* cho phép một phương thức generic đặt tên tạm kiểu đó để thao tác mà vẫn an toàn.
+A `List<?>` has a **concrete element type that the compiler has not named**. *Capture conversion* lets a generic helper temporarily name it and safely operate on that type.
 
-Ví dụ hoán đổi hai phần tử đầu của một danh sách mutable:
+For example, swap the first two elements of a mutable list:
 
 ```java
 static void swapFirstTwo(List<?> values) {
@@ -1651,15 +1651,15 @@ private static <T> void swapCaptured(List<T> values) {
 }
 ```
 
-Gọi `swapFirstTwo(new ArrayList<>(List.of("A", "B")))` là hợp lệ. `swapCaptured` đảm bảo hai giá trị đều thuộc **cùng kiểu T của danh sách nguồn**. Với `List<?>` trong thân phương thức ngoài, viết `values.set(0, values.get(1))` có thể gặp lỗi capture do compiler không xem các expression wildcard không tên như cùng một tham số kiểu ở lời gọi phù hợp; helper làm ràng buộc đó rõ ràng.
+`swapFirstTwo(new ArrayList<>(List.of("A", "B")))` is valid. `swapCaptured` ensures both values have **the same type T as the source list**. In the outer method handling `List<?>`, directly writing `values.set(0, values.get(1))` may produce a capture error because the compiler cannot prove that the unnamed wildcard expressions share the necessary type. A helper makes that relationship explicit.
 
-Thư viện Java cũng có `Collections.swap(List<?>, int, int)` đã giải quyết tình huống này; không cần tự viết helper nếu chỉ muốn đổi vị trí.
+Java's `Collections.swap(List<?>, int, int)` already solves this case; no custom helper is needed just to exchange elements.
 
-**Giới hạn:** biên dịch được không có nghĩa danh sách mutable. `List.of("A", "B")` vẫn có thể ném `UnsupportedOperationException` nếu bạn gọi `set`; muốn sửa, hãy dùng `new ArrayList<>(...)`.
+**Limitation:** compilation does not guarantee mutability. `List.of("A", "B")` can still throw `UnsupportedOperationException` on `set`; use `new ArrayList<>(...)` when modification is needed.
 
-## 10. Wildcard khác generic method return type
+## 10. Wildcards versus generic-method return types
 
-So sánh:
+Compare:
 
 ```java
 static Object takeUnknown(List<?> items) {
@@ -1671,17 +1671,17 @@ static <T> T takeTyped(List<T> items) {
 }
 ```
 
-Với `List<String> strings`:
-- `takeUnknown(strings)` có kiểu trả về `Object`.
-- `takeTyped(strings)` có kiểu trả về `String` do compiler suy luận `T = String`.
+With `List<String> strings`:
+- `takeUnknown(strings)` has return type `Object`.
+- `takeTyped(strings)` returns `String` because the compiler infers `T = String`.
 
-Khi một API phải **giữ quan hệ giữa kiểu đầu vào và đầu ra**, type parameter có tên thường cần thiết hơn wildcard.
+When an API must **preserve the relationship between input and output types**, a named type parameter is generally more appropriate than a wildcard.
 
-Ví dụ API chọn phần tử đầu tiên của hai danh sách phải cân nhắc việc dùng chung `T`; nếu hai danh sách thuộc những generic type khác nhau, compiler có thể suy luận một **supertype chung**, và kiểu trả về cũng chỉ bảo đảm ở mức đó. Type inference giúp tiết kiệm khai báo, nhưng không thay đổi nguyên lý type safety.
+For an API selecting the first element from two lists, shared `T` requires care; if the lists have different generic types, the compiler may infer **a common supertype**, and only that type is guaranteed in the result. Type inference reduces syntax, not type-safety requirements.
 
-## 11. Mảng và generics có quan hệ khác nhau
+## 11. Arrays and generics follow different type relationships
 
-Java array **covariant**:
+Java arrays are **covariant**:
 
 ```java
 Integer[] numbers = new Integer[2];
@@ -1689,25 +1689,25 @@ Number[] refs = numbers;     // Biên dịch được
 refs[0] = 3.14;              // Runtime: ArrayStoreException
 ```
 
-Mảng biết component type tại runtime, nên JVM có thể phát hiện việc gán `Double` vào mảng `Integer[]`.
+Arrays preserve their component type at runtime, so the JVM can detect attempts to store a `Double` in an `Integer[]` array.
 
-Generics mặc định **invariant**:
+Generics are **invariant** by default:
 
 ```java
 List<Integer> integers = new ArrayList<>();
 // List<Number> refs = integers; // Lỗi lúc biên dịch
 ```
 
-Không có cảnh báo runtime tương đương cho mảng được tạo là `new List<String>[10]`, vì **không thể tạo mảng generic như vậy**. Java cấm tạo generic array với component type không reifiable:
+There is no equivalent runtime warning for an array created as `new List<String>[10]` because **you cannot create such a generic array**. Java forbids arrays with non-reifiable generic component types:
 
 ```java
 // List<String>[] a = new List<String>[10]; // COMPILE ERROR
 // T[] values = new T[10];                   // COMPILE ERROR
 ```
 
-Một số thao tác kết hợp arrays, varargs và generic có thể gây **heap pollution** nếu code bỏ qua cảnh báo hoặc dùng raw types. Đó là lý do nên ưu tiên `List<T>` trong API collection thay vì pha trộn mảng generic với cast không kiểm soát.
+Combining arrays, varargs, and generics can lead to **heap pollution** if warnings are ignored or raw types are used. Prefer `List<T>` in collection APIs instead of mixing generic arrays with uncontrolled casts.
 
-## 12. Type erasure ảnh hưởng các phép gán như thế nào?
+## 12. How type erasure affects assignments
 
 ```java
 List<String> a = new ArrayList<>();
@@ -1715,7 +1715,7 @@ List<Integer> b = new ArrayList<>();
 System.out.println(a.getClass() == b.getClass()); // true
 ```
 
-Java kiểm tra generic tại compile time nhưng không tạo class runtime riêng cho mỗi type argument. Hệ quả: không thể `instanceof List<String>`, overload chỉ khác `List<String>`/`List<Integer>` hay tạo `new List<String>[10]`. Có thể dùng `instanceof List<?>` và kiểm chứng từng phần tử nếu dữ liệu đến từ API không tin cậy.
+Java checks generic types at compile time but does not create a separate runtime class for every type argument. Thus `instanceof List<String>`, overloads differing only in `List<String>`/`List<Integer>`, and `new List<String>[10]` are invalid. `instanceof List<?>` can be used, with individual elements validated when data comes from untrusted APIs.
 
 ~~~java
 List<String> names = new ArrayList<>();
@@ -1724,28 +1724,28 @@ raw.add(42);           // Unchecked warning: mất kiểm tra kiểu.
 String first = names.get(0); // ClassCastException khi đọc Integer.
 ~~~
 
-**Heap pollution** xảy ra khi biến parameterized type tham chiếu tập dữ liệu chứa phần tử không phù hợp, thường qua raw/unchecked operations. Type erasure không làm compiler mất khả năng kiểm tra những lời gọi generic đúng chuẩn; rủi ro xuất hiện ở ranh giới phá bỏ kiểm tra đó.
+**Heap pollution** occurs when a parameterized-type variable refers to data containing incompatible elements, often through raw/unchecked operations. Type erasure does not prevent compile-time checking of properly typed generic calls; the risk arises where those checks are bypassed.
 
-Bài nhập môn **Kiểu tổng quát và lớp có tham số kiểu** giới thiệu `Supplier<T>` và metadata reflection; còn bài hiện tại tập trung vào quan hệ gán/đọc-ghi mà compiler chứng minh được.
+The introductory **Generic types and parameterized classes** lesson covers `Supplier<T>` and reflection metadata; this lesson focuses on assignment and read/write relationships the compiler can prove.
 
-## 13. Chọn chữ ký bằng dữ liệu thực sự được đọc và ghi
+## 13. Choose signatures based on actual reads and writes
 
-| Nhu cầu của client | Chữ ký phù hợp | Kiểu được bảo đảm |
+| Client requirement | Suitable signature | Guaranteed type |
 |---|---|---|
-| In mọi phần tử, không cần kiểu cụ thể | `printAll(List<?>)` | Đọc `Object` |
-| Tổng từ nhiều loại số | `sum(List<? extends Number>)` | Đọc `Number` |
-| Thêm `Integer` vào nhiều loại đích | `seed(List<? super Integer>)` | Thêm `Integer`, đọc `Object` |
-| Sao chép giữa danh sách tương thích | `<T> copy(List<? super T>, List<? extends T>)` | Quan hệ nguồn/đích được compiler kiểm tra |
-| Giữ kiểu trả về trùng kiểu đầu vào | `<T> T first(List<T>)` | Trả `T` |
-| Hoán đổi hai phần tử của cùng `List<?>` | Helper `<T>` capture một kiểu ẩn | Thao tác `set` hợp lệ trên mutable list |
+| Print all elements without a concrete type | `printAll(List<?>)` | Reads `Object` |
+| Sum different numeric types | `sum(List<? extends Number>)` | Reads `Number` |
+| Insert `Integer` into different destinations | `seed(List<? super Integer>)` | Adds `Integer`, reads `Object` |
+| Copy between compatible lists | `<T> copy(List<? super T>, List<? extends T>)` | Compiler checks source/destination type relationships |
+| Preserve input type in a result | `<T> T first(List<T>)` | Returns `T` |
+| Swap two elements of one `List<?>` | Helper `<T>` captures a hidden type | `set` is valid on mutable lists |
 
-Nếu `average(List<Number>)` chỉ đọc thì nó **không** nhận `List<Integer>`; đổi tham số thành `List<? extends Number>`. Nếu `seed(List<? extends Number>)` muốn `add(1)` thì không biên dịch vì subtype thực có thể là `Double`; đổi thành `List<? super Integer>` khi mục tiêu là ghi.
+If `average(List<Number>)` only reads, it **does not** accept `List<Integer>`; change the parameter to `List<? extends Number>`. If `seed(List<? extends Number>)` tries to `add(1)`, it does not compile because the actual subtype could be `Double`; use `List<? super Integer>` when writing is the goal.
 
-Đây là cách suy luận theo *producer/consumer*, thay vì chỉ nhớ thuộc lòng PECS. Độ an toàn của phép gán kiểu khác với tính mutable, null policy, thread safety và hợp đồng nghiệp vụ của từng collection.
+Reason from *producer/consumer* roles instead of just memorizing PECS. Assignment safety is distinct from mutability, null policies, thread safety, and business contracts.
 
-## 14. Bài kiểm tra nhỏ với JUnit 5
+## 14. A small JUnit 5 test suite
 
-Các test bên dưới sử dụng class độc lập `GenericTypeRelationsDemo` ở mục 5. Đặt file `GenericTypeRelationsDemoTest.java` trong cùng package và thêm dependency JUnit Jupiter phù hợp hệ thống build.
+The following tests use the standalone `GenericTypeRelationsDemo` class from section 5. Put `GenericTypeRelationsDemoTest.java` in the same package and add the appropriate JUnit Jupiter dependency to the build.
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1796,34 +1796,34 @@ class GenericTypeRelationsDemoTest {
 }
 ```
 
-Để kiểm thử các **lỗi không biên dịch** (ví dụ gán `List<Integer>` cho `List<Number>`), không thể đặt trực tiếp dòng lỗi vào một test Java thông thường rồi mong bộ test chạy. Nên viết snippet giải thích hoặc dùng compile-testing trong một dự án thực sự cần kiểm chứng lỗi compiler.
+To test **noncompiling code** (such as assigning `List<Integer>` to `List<Number>`), do not place a compilation error directly in an ordinary Java test and expect the test suite to run. Instead use documented snippets or a compile-testing tool when a project genuinely needs compiler-error tests.
 
-## 15. Các lỗi thường gặp và cách sửa
+## 15. Common mistakes and remedies
 
-| Biểu hiện | Nguyên nhân | Cách xử lý |
+| Symptom | Cause | Remedy |
 |---|---|---|
-| `List<Integer> cannot be converted to List<Number>` | Generic bất biến | Dùng `List<? extends Number>` nếu chỉ cần đọc |
-| Không `add(Integer)` vào `List<? extends Number>` | Kiểu phần tử thật chưa biết | Nếu cần ghi, cân nhắc `List<? super Integer>` |
-| Lấy từ `List<? super Integer>` không gán thẳng vào `Integer` | Có thể là danh sách Number/Object | Nhận `Object` hoặc thiết kế lại contract |
-| `List<?>` bị hiểu là `List<Object>` | Wildcard không xác định type argument cụ thể | Dùng đúng yêu cầu đọc/ghi của method |
-| Compiler báo `capture of ?` | Không thể chứng minh một thao tác giữ cùng kiểu không tên | Dùng helper `<T>` để capture |
-| `new T()`, `new T[]` không biên dịch | Type erasure / generic arrays | Supplier/factory, collection, hoặc mảng tạo có kiểm soát |
-| Overload hai `List<T>` khác T báo name clash | Cùng signature sau erasure | Đổi tên/hợp đồng hoặc API phân biệt rõ |
-| Ép raw type để hết lỗi | Vô hiệu hóa kiểm tra generic | Loại raw type, sửa bound hoặc adapter |
-| Lạm dụng `<T>` cho mọi method | Chữ ký dài, inference khó | Chỉ đặt tên T khi cần kết nối nhiều vị trí |
-| `List.of(...)` bị lỗi khi thêm phần tử | Collection không mutable, không liên quan variance | Dùng `new ArrayList<>(...)` nếu cần sửa |
-| Tưởng wildcard bảo đảm đồng bộ/immutable | Generics chỉ kiểm tra kiểu | Xem riêng concurrency và tính mutable |
-| Dùng `extends`/`super` như kế thừa object thông thường | Nhầm quan hệ type argument với subtype của collection | Vẽ nguồn và đích, xác định đọc/ghi |
+| `List<Integer> cannot be converted to List<Number>` | Generic invariance | Use `List<? extends Number>` if only reading |
+| Cannot `add(Integer)` to `List<? extends Number>` | Actual element type is unknown | Consider `List<? super Integer>` for writes |
+| Cannot assign a result from `List<? super Integer>` directly to `Integer` | It could be a Number/Object list | Read as `Object` or redesign the contract |
+| Treating `List<?>` as `List<Object>` | Wildcard does not specify a concrete argument | Follow the method's real read/write needs |
+| Compiler reports `capture of ?` | Cannot prove an operation preserves one unnamed type | Use a `<T>` helper to capture |
+| `new T()` or `new T[]` fails to compile | Type erasure / generic arrays | Suppliers/factories, collections, or carefully created arrays |
+| Overloads on different `List<T>` arguments cause a name clash | Same signature after erasure | Rename or distinguish API contracts |
+| Casting to a raw type to silence an error | Defeats generic checking | Remove raw types; correct bounds/adapters |
+| Overusing `<T>` in every method | Long signatures and difficult inference | Name T only when connecting positions |
+| `List.of(...)` fails when adding an element | The collection is unmodifiable; unrelated to variance | Use `new ArrayList<>(...)` for mutations |
+| Assuming wildcards enforce synchronization/immutability | Generics only check types | Review concurrency and mutability separately |
+| Treating `extends`/`super` as ordinary object inheritance | Confuses type-argument constraints with collection subtyping | Draw source/destination types and identify reads/writes |
 
-## 16. Luyện tập phân tích quan hệ kiểu
+## 16. Practice analyzing type relationships
 
-**Bài 1 — Chọn kiểu tham số đúng.** Cho `List<Integer>`, `List<Double>` và `List<Number>`. Viết hàm tính tổng hỗ trợ cả ba, không cast và không raw type. Giải thích vì sao tham số `List<Number>` không đủ tổng quát.
+**Exercise 1 — Choose the proper parameter type.** Given `List<Integer>`, `List<Double>`, and `List<Number>`, write a sum method accepting all three without casts or raw types. Explain why `List<Number>` is insufficiently general.
 
-**Bài 2 — Di chuyển giá trị.** Viết `<T> void moveAll(List<? super T> dst, List<? extends T> src)` có hành vi thêm từng phần tử nguồn vào đích. Giải thích trường hợp src và dst tham chiếu cùng danh sách có thể gây vấn đề khi vừa lặp vừa thêm; chọn chụp snapshot hoặc ràng buộc điều kiện sử dụng. Cần để ý danh sách nguồn có mutable hay không.
+**Exercise 2 — Move values.** Write `<T> void moveAll(List<? super T> dst, List<? extends T> src)` that appends source elements to the destination. Explain what can go wrong if src and dst refer to the same list while iterating and adding; choose a snapshot or document preconditions. Consider whether the source is mutable.
 
-**Bài 3 — Sửa chữ ký.** Một API khai báo `void addScores(List<Number> xs)` nhưng caller có `List<Object>` và chỉ muốn thêm Integer. Hãy sửa chữ ký theo ý định phương thức và kiểm tra điều gì được bảo đảm khi đọc.
+**Exercise 3 — Fix a signature.** An API declares `void addScores(List<Number> xs)`, but its caller has `List<Object>` and only wants to append Integer values. Rewrite the signature to express that intent and check safe reads.
 
-**Bài 4 — Đoán compile/error.** Với `List<Integer> a` và `List<Number> b`:
+**Exercise 4 — Predict compile errors.** Given `List<Integer> a` and `List<Number> b`:
 
 ```java
 List<?> x = a;
@@ -1837,71 +1837,71 @@ z.add(3);                // ?
 Object p = z.get(0);     // ?
 ```
 
-Giải thích từng dòng bằng **kiểu nguồn, kiểu đích và khả năng đọc/ghi**. Đáp án: `b = a` và `y.add(3)` không biên dịch; các dòng còn lại biên dịch, giả định danh sách có phần tử khi `get(0)` được thực thi.
+Explain each line using **source type, destination type, and read/write capabilities**. Answers: `b = a` and `y.add(3)` do not compile; the other lines compile, assuming a list contains elements when `get(0)` is executed.
 
-**Bài 5 — Generic inheritance.** Tạo `Repository<T>` và `InMemoryRepository<T> implements Repository<T>`. Chỉ ra phép gán hợp lệ giữa `InMemoryRepository<String>`, `Repository<String>`, `Repository<Object>` và `Repository<?>`.
+**Exercise 5 — Generic inheritance.** Define `Repository<T>` and `InMemoryRepository<T> implements Repository<T>`. Identify valid assignments among `InMemoryRepository<String>`, `Repository<String>`, `Repository<Object>`, and `Repository<?>`.
 
-**Bài 6 — So sánh với array.** Tại sao `Integer[]` có thể được gán cho `Number[]` nhưng có thể gây `ArrayStoreException`, trong khi `List<Integer>` không gán được cho `List<Number>`? Liên hệ với kiểu phần tử được kiểm tra ở compile time và runtime.
+**Exercise 6 — Compare with arrays.** Why can `Integer[]` be assigned to `Number[]` but produce `ArrayStoreException`, whereas `List<Integer>` cannot be assigned to `List<Number>`? Relate compile-time versus runtime element checks.
 
-## 17. Checklist trước khi thiết kế một API generic
+## 17. Checklist before designing a generic API
 
-- [ ] Tôi phân biệt được **kế thừa giữa các type declarations** với **quan hệ giữa type arguments**.
-- [ ] Tôi biết generics của Java thường **bất biến**.
-- [ ] Tôi dùng `? extends T` khi tham số **cấp dữ liệu kiểu T** cho code đọc.
-- [ ] Tôi dùng `? super T` khi tham số **nhận dữ liệu kiểu T** do code ghi.
-- [ ] Tôi dùng `<T>` khi cần liên hệ kiểu giữa nhiều tham số hoặc với giá trị trả về.
-- [ ] Tôi không nhầm wildcard với collection chỉ đọc hoặc immutable.
-- [ ] Tôi kiểm tra riêng mutability, null, thread safety, ngoại lệ và quy tắc nghiệp vụ.
-- [ ] Tôi hiểu erasure, raw types, generic array và giới hạn kiểm tra kiểu ở runtime.
-- [ ] Ví dụ API của tôi có test với cả các kiểu subtype và supertype cần hỗ trợ.
-- [ ] Tôi có thể giải thích **tại sao** một phép gán hoặc lời gọi biên dịch, không chỉ nhớ PECS.
+- [ ] I can distinguish **inheritance between type declarations** from **relationships between type arguments**.
+- [ ] I understand Java generics are normally **invariant**.
+- [ ] I use `? extends T` when a parameter **provides data of type T** to read.
+- [ ] I use `? super T` when a parameter **accepts data of type T** to write.
+- [ ] I use `<T>` to relate types across parameters or to return values.
+- [ ] I do not mistake wildcards for read-only/immutable collections.
+- [ ] I separately check mutability, null, thread safety, exceptions, and business rules.
+- [ ] I understand erasure, raw types, generic arrays, and runtime-checking limits.
+- [ ] My API examples include tests for supported subtypes and supertypes.
+- [ ] I can explain **why** an assignment or call compiles, not just recite PECS.
 
-**Ghi nhớ:** `Integer <: Number` **không suy ra** `List<Integer> <: List<Number>`. Quan hệ kiểu generic trong Java được kiểm soát bằng kế thừa của **generic declaration**, bound của **type parameter** và wildcard ở **vị trí sử dụng**. Thiết kế tốt dựa trên dữ liệu được *đọc*, dữ liệu được *ghi* và quan hệ kiểu mà compiler có thể chứng minh an toàn.
+**Remember:** `Integer <: Number` **does not imply** `List<Integer> <: List<Number>`. Generic type relationships in Java depend on inheritance among **generic declarations**, bounds on **type parameters**, and wildcards at **use sites**. Design around data *read*, data *written*, and the type relationships the compiler can prove safe.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="language-mechanics-004">Kiểu tĩnh, kiểu động và kiểm tra kiểu</a>
+## <a id="language-mechanics-004">Static types, dynamic types, and type checking</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kiểu tĩnh, kiểu động và kiểm tra kiểu trong Java
+# Static types, dynamic types, and type checking in Java
 
-> **Chủ đề:** OOP → Cơ chế ngôn ngữ → Kiểu tĩnh, kiểu động và kiểm tra kiểu.  
-> **Mục tiêu:** Phân biệt *statically typed* và *dynamically typed*, hiểu **kiểu tại thời điểm biên dịch** với **kiểu thực tế của đối tượng lúc chạy**, giải thích Java vừa kiểm tra kiểu tĩnh vừa có đa hình động, biết vị trí cần kiểm tra runtime và xử lý đúng những giới hạn của generic type.
+> **Topic:** OOP → Language Mechanics → Static types, dynamic types, and type checking.  
+> **Goal:** Distinguish *statically typed* from *dynamically typed* languages; understand **compile-time types** versus **actual runtime object classes**; explain why Java combines static type checking with dynamic polymorphism; identify when runtime checks are needed; and handle generic-type limitations.
 
-## 1. “Kiểu” đang nói về điều gì?
+## 1. What does “type” refer to?
 
-**Kiểu dữ liệu (type)** mô tả những giá trị một biểu thức có thể biểu diễn và những thao tác được phép thực hiện với biểu thức đó. Java có kiểu nguyên thủy như `int`, `boolean`, `double` và kiểu tham chiếu như `String`, `List<String>`, `User` hoặc interface `PaymentService`.
+A **data type** describes the values an expression may represent and the operations permitted on it. Java has primitive types such as `int`, `boolean`, and `double`, and reference types such as `String`, `List<String>`, `User`, or the `PaymentService` interface.
 
-Trong một hệ thống kiểu, cần phân biệt ít nhất ba câu hỏi:
+A type system prompts at least three distinct questions:
 
-1. **Biểu thức/biến có kiểu gì tại thời điểm biên dịch?** Java dùng thông tin kiểu này để kiểm tra phép gán, lời gọi phương thức, toán tử và phần lớn ràng buộc generic.
-2. **Giá trị đang trỏ tới đối tượng thuộc lớp thực tế nào khi chạy?** Một biến có kiểu tĩnh là interface có thể tham chiếu tới các implementation khác nhau.
-3. **Những kiểm tra nào vẫn cần tại runtime?** Ép kiểu xuống lớp con, ghi vào mảng, kiểm tra input, phản chiếu (*reflection*) và nhiều điều kiện nghiệp vụ chỉ có thể xác nhận khi chạy.
+1. **What is the expression/variable's compile-time type?** Java uses it to check assignments, method calls, operators, and most generic constraints.
+2. **What is the actual class of the referenced object at runtime?** A variable with an interface static type can refer to different implementations.
+3. **What checks remain necessary at runtime?** Downcasts, array writes, input validation, *reflection*, and many business constraints can only be confirmed during execution.
 
-Hai chữ “tĩnh/động” có thể chỉ **hệ thống kiểm tra kiểu** hoặc **cơ chế phân giải lời gọi phương thức**, là hai khái niệm không đồng nhất. Java là ngôn ngữ **kiểm tra kiểu tĩnh**, nhưng có **dynamic dispatch** cho phương thức instance được override.
+The terms “static/dynamic” can describe either **type checking** or **method dispatch**, which are different concepts. Java uses **static type checking** but supports **dynamic dispatch** for overridden instance methods.
 
-## 2. Statically typed và dynamically typed
+## 2. Statically typed and dynamically typed languages
 
-Trong ngôn ngữ **statically typed**, kiểu của biểu thức được phân tích và phần lớn quan hệ kiểu được kiểm tra **trước khi chương trình chạy**. Java thuộc nhóm này: những lời gọi phương thức hoặc phép gán không phù hợp sẽ bị từ chối khi biên dịch, nếu chúng xuất hiện trong mã nguồn được trình biên dịch kiểm tra bình thường.
+In a **statically typed** language, expression types are analyzed and many type relationships are checked **before execution**. Java belongs to this category: incompatible assignments and calls are rejected at compilation in ordinarily compiled source code.
 
-Trong ngôn ngữ **dynamically typed**, các biến/tên thường không bị ràng buộc vào một kiểu khai báo cố định theo cách của Java; thao tác trên giá trị được kiểm tra nhiều hơn **trong khi chương trình chạy**. Python và JavaScript là ví dụ quen thuộc. Điều này không có nghĩa ngôn ngữ động “không có kiểu”: giá trị/đối tượng vẫn có kiểu và thao tác không hợp lệ vẫn có thể gây lỗi runtime.
+In **dynamically typed** languages, variable names are generally not tied to one declared type as in Java; more operations are checked **during execution**. Python and JavaScript are familiar examples. Dynamic typing does not mean “no types”: values still have types, and unsupported operations can fail at runtime.
 
-| Tiêu chí | Java (kiểu tĩnh) | Python/JavaScript (kiểu động, mô tả tổng quát) |
+| Criterion | Java (static typing) | Python/JavaScript (dynamic typing, broadly) |
 |---|---|---|
-| Kiểm tra trước khi chạy | Trình biên dịch kiểm tra kiểu của nhiều biểu thức, phép gán và lời gọi | Nhiều lỗi do dùng kiểu không phù hợp chỉ lộ ra khi nhánh mã được thực thi |
-| Gán lại biến | Biến local có kiểu xác định; giá trị mới phải tương thích với kiểu đó | Một tên biến có thể được gán lần lượt các giá trị khác kiểu |
-| Đa hình | Có, ví dụ biến interface tham chiếu implementation khác nhau | Có thể đạt đa hình bằng nhiều cơ chế của từng ngôn ngữ |
-| Lỗi runtime | Vẫn có: `ClassCastException`, `ArrayStoreException`, input không hợp lệ... | Vẫn có lỗi khi thao tác với giá trị không được hỗ trợ |
-| Ví dụ công cụ | `javac` kiểm tra kiểu khi biên dịch | Có thể dùng type checker/linter bổ sung, nhưng chính sách tùy hệ sinh thái |
+| Checks before execution | Compiler checks many expression, assignment, and method-call types | Many type-related mistakes appear only when affected code executes |
+| Reassignment | Local variables have fixed types; new values must be compatible | Names may be successively bound to values of different types |
+| Polymorphism | Yes: an interface variable can reference different implementations | Achievable through language-specific mechanisms |
+| Runtime failures | Still possible: `ClassCastException`, `ArrayStoreException`, invalid input, etc. | Unsupported operations on values can still fail |
+| Tooling | `javac` performs compile-time checks | Optional type checkers/linters exist; ecosystem policies vary |
 
-So sánh cú pháp ngắn:
+A short syntax comparison:
 
 ~~~java
 // Java: kiểu của biến được xác định tại compile time.
@@ -1919,11 +1919,11 @@ value = 123
 # Một thao tác không được đối tượng hỗ trợ có thể báo lỗi khi chạy.
 ~~~
 
-Việc Java cho phép `Object value` lần lượt chứa `String` rồi `Integer` **không biến Java thành ngôn ngữ kiểu động**. Kiểu **của biến** vẫn là `Object`; các phép toán trên biến vẫn bị giới hạn theo API của `Object` cho tới khi có một bước kiểm tra hoặc chuyển kiểu hợp lệ.
+Java allowing `Object value` to hold first a `String` and later an `Integer` **does not make Java dynamically typed**. The **variable's type** remains `Object`; operations remain limited to the `Object` API until a valid cast or type check.
 
-**Cần tránh kết luận quá mức:** “Kiểu tĩnh” không đồng nghĩa tuyệt đối “mọi lỗi kiểu đều phát hiện ở compile time”; “kiểu động” cũng không đồng nghĩa “mọi lỗi chỉ phát hiện ở runtime”. Công cụ phân tích, annotation, hệ thống kiểu tùy chọn và kiểm tra runtime có thể kết hợp theo nhiều cách.
+**Avoid overgeneralizing:** “Static typing” does not mean “every type error is caught at compile time,” and “dynamic typing” does not mean “errors only occur at runtime.” Analysis tools, annotations, optional type systems, and runtime checks can be combined.
 
-## 3. Luồng từ nguồn Java đến runtime
+## 3. From Java source to runtime
 
 ~~~mermaid
 flowchart TD
@@ -1939,13 +1939,13 @@ flowchart TD
     I --> J
 ~~~
 
-Java compiler không chỉ “xem có method trùng tên hay không”; nó còn dùng kiểu biểu thức, khả năng truy cập, overload resolution, subtype, generic constraints và những quy tắc khác để quyết định chương trình hợp lệ.
+The Java compiler does more than “check for matching method names”: it considers expression types, accessibility, overload resolution, subtypes, generic constraints, and other language rules.
 
-JVM có quá trình **bytecode verification** nhằm kiểm tra các ràng buộc an toàn của bytecode đã nạp. Cơ chế này không thay thế việc xác thực dữ liệu nghiệp vụ, quyền truy cập hay logic của ứng dụng. Runtime vẫn cần giải quyết kiểu thực tế của object và kiểm tra các phép cast phù hợp.
+The JVM performs **bytecode verification** to enforce safety constraints on loaded bytecode. This does not replace business-data validation, access authorization, or application logic. Runtime still resolves actual object classes and verifies relevant casts.
 
-## 4. Kiểu tĩnh của biến và kiểu động của đối tượng
+## 4. Variables' static types and objects' runtime classes
 
-Xét hai class cùng triển khai một interface:
+Consider two classes implementing the same interface:
 
 ~~~java
 interface Message {
@@ -1971,32 +1971,32 @@ final class SmsMessage implements Message {
 }
 ~~~
 
-Đoạn này khai báo:
+This code declares:
 
 ~~~java
 Message msg = new EmailMessage();
 ~~~
 
-- **Kiểu tĩnh của biểu thức biến `msg`**: `Message`. Compiler cho phép gọi `msg.render()` vì `Message` có phương thức đó.
-- **Lớp thực tế của đối tượng được tham chiếu lúc này**: `EmailMessage`. JVM sẽ chạy implementation `EmailMessage.render()`.
-- `msg.addressDomain()` **không hợp lệ khi biên dịch**, vì interface `Message` không công bố phương thức `addressDomain()`, dù đối tượng thực tế có phương thức ấy.
-- Khi gán `msg = new SmsMessage()`, **kiểu tĩnh của biến vẫn là `Message`**, còn đối tượng thực tế trở thành `SmsMessage`.
+- **Static type of the variable expression `msg`**: `Message`. The compiler permits `msg.render()` because `Message` declares that method.
+- **Actual class of the currently referenced object**: `EmailMessage`. The JVM runs `EmailMessage.render()`.
+- `msg.addressDomain()` **does not compile** because `Message` does not expose `addressDomain()`, even though the actual object has it.
+- When assigning `msg = new SmsMessage()`, **the variable's static type remains `Message`**, but it now refers to an `SmsMessage`.
 
-Các khái niệm liên quan:
+Related concepts:
 
-| Khái niệm | Thời điểm xác định | Ví dụ |
+| Concept | Determined when | Example |
 |---|---|---|
-| **Declared/static type của biến** | Compile time | `Message msg` |
-| **Actual/runtime class của đối tượng** | Runtime | `new EmailMessage()` |
-| **Subtype/polymorphism** | Quan hệ type được compiler kiểm tra, hành vi được thực thi khi chạy | `EmailMessage implements Message` |
-| **Dynamic dispatch** | Runtime đối với lời gọi phương thức instance được override | `msg.render()` chạy `EmailMessage.render()` |
-| **Downcast** | Phải được compiler chấp nhận về khả năng cast; cast tham chiếu được kiểm tra khi chạy | `(EmailMessage) msg` |
+| **Declared/static variable type** | Compile time | `Message msg` |
+| **Actual/runtime object class** | Runtime | `new EmailMessage()` |
+| **Subtype/polymorphism** | Type relationship checked at compile time; behavior executed at runtime | `EmailMessage implements Message` |
+| **Dynamic dispatch** | At runtime for overridden instance methods | `msg.render()` invokes `EmailMessage.render()` |
+| **Downcast** | Cast possibility checked at compile time; reference cast validated at runtime | `(EmailMessage) msg` |
 
-**Quan trọng:** Trong Java, đối tượng `new EmailMessage()` không “đổi class” thành `SmsMessage`. Chỉ là biến `msg` trỏ tới **đối tượng khác** sau phép gán. Với primitive như `int`, cũng không có đối tượng tham chiếu có runtime class theo mô hình trên.
+**Important:** An object created with `new EmailMessage()` does not “change its class” to `SmsMessage`. Instead, `msg` refers to **another object** after reassignment. Primitives such as `int` do not have referenced objects with runtime classes in this model.
 
-## 5. Chương trình Java 17: compile-time checking, dynamic dispatch, cast và overload
+## 5. Java 17 program: compile-time checks, dynamic dispatch, casts, and overloads
 
-Lưu đoạn dưới đây thành tệp **`TypeCheckingDemo.java`**. Có thể chạy trực tiếp với JDK 17 trở lên mà không cần thư viện ngoài.
+Save the following to **`TypeCheckingDemo.java`**. It runs on JDK 17 or later without external libraries.
 
 ~~~java
 import java.util.ArrayList;
@@ -2088,14 +2088,14 @@ public class TypeCheckingDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac TypeCheckingDemo.java
 java TypeCheckingDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 EMAIL: đơn hàng đã được xác nhận
@@ -2109,15 +2109,15 @@ Cast sai ở runtime
 Code: ORD-1
 ~~~
 
-### 5.1. Vì sao `deliver(notification)` gọi đúng implementation?
+### 5.1. Why does `deliver(notification)` invoke the correct implementation?
 
-Compiler xác nhận `notification` có static type `Notification` và interface ấy khai báo `format()`. Runtime chọn implementation đã override ứng với lớp thực tế: `EmailNotification.format()` hoặc `SmsNotification.format()`.
+The compiler confirms that `notification` has static type `Notification`, whose interface declares `format()`. Runtime selects the overridden implementation on the actual class: `EmailNotification.format()` or `SmsNotification.format()`.
 
-Đây là **đa hình động (runtime polymorphism)**. Nó tồn tại **bên trong Java statically typed**, nên không nên lấy dynamic dispatch làm bằng chứng “Java là ngôn ngữ kiểu động”.
+This is **dynamic polymorphism (runtime polymorphism)**. It exists **within statically typed Java**, so dynamic dispatch is not evidence that “Java is dynamically typed.”
 
-### 5.2. Vì sao hai lời gọi `describe(...)` khác nhau?
+### 5.2. Why do the two `describe(...)` calls differ?
 
-Trong ví dụ:
+In this example:
 
 ~~~java
 Object value = "Java";
@@ -2125,15 +2125,15 @@ System.out.println(describe(value));          // overload(Object)
 System.out.println(describe((String) value)); // overload(String)
 ~~~
 
-**Overloading** được giải quyết **theo kiểu biểu thức tại compile time**. Lời gọi `describe(value)` được chọn là `describe(Object)` vì kiểu tĩnh của `value` là `Object`; compiler không tự nhìn runtime object để chọn overload `String`.
+**Overloading** is resolved **using expression types at compile time**. `describe(value)` selects `describe(Object)` because `value` has static type `Object`; the compiler does not inspect the runtime object to select the `String` overload.
 
-Lời gọi `describe((String) value)` có một **biểu thức sau cast** mang kiểu tĩnh `String`, nên compiler chọn `describe(String)`. Bản thân cast tham chiếu vẫn được kiểm tra ở runtime.
+`describe((String) value)` uses an **expression after casting** whose static type is `String`, so the compiler selects `describe(String)`. The reference cast itself is still checked at runtime.
 
-**Overriding** thì khác: khi đã chọn chữ ký một phương thức instance thích hợp, JVM có thể chọn implementation override theo class thực tế lúc chạy. Phân biệt hai giai đoạn này để tránh kết quả “lạ” khi gặp overload kết hợp inheritance.
+**Overriding** is different: once the appropriate instance-method signature has been selected, the JVM can dispatch to an override based on the actual runtime class. Keep these stages distinct when overloads interact with inheritance.
 
-### 5.3. Kiểu của `var` có “động” không?
+### 5.3. Is `var` dynamically typed?
 
-Không. Java `var` (từ Java 10) cho phép **suy luận kiểu cục bộ** (*local variable type inference*); nó không cho biến đổi sang kiểu không tương thích:
+No. Java `var` (introduced in Java 10) enables **local variable type inference**; it does not let a variable change to an incompatible type:
 
 ~~~java
 var score = 100;       // int
@@ -2144,7 +2144,7 @@ var label = "READY";   // String
 // label = false;      // Sai compile time
 ~~~
 
-Hơn nữa, `var` không thay thế kiểu khai báo cho mọi vị trí:
+Furthermore, `var` cannot replace declared types everywhere:
 
 ~~~java
 // int calculate(var value) { ... } // Không hợp lệ: var
@@ -2153,11 +2153,11 @@ Hơn nữa, `var` không thay thế kiểu khai báo cho mọi vị trí:
 // var field = 1; // Không hợp lệ cho field thông thường.
 ~~~
 
-Một ngoại lệ về cú pháp là `var` có thể xuất hiện ở formal parameter của **lambda** trong một số trường hợp theo quy tắc ngôn ngữ; không nên nhầm với tham số của phương thức khai báo bình thường.
+One syntax exception lets `var` appear in some **lambda** formal parameters under specific language rules; do not confuse this with ordinary declared-method parameters.
 
-## 6. Kiểm tra kiểu tại compile time: phát hiện gì, bỏ sót gì?
+## 6. Compile-time type checking: what does it catch and miss?
 
-Một số lỗi `javac` thường chặn được:
+Some mistakes are routinely rejected by `javac`:
 
 ~~~java
 String label = "READY";
@@ -2174,24 +2174,24 @@ class ConsolePrinter implements Printer {
 }
 ~~~
 
-Nhiều ràng buộc Java được kiểm tra từ **khai báo, chữ ký, cách dùng generic, khả năng truy cập và subtype**. Tuy vậy, compiler không biết trước dữ liệu thực tế từ mạng, file, database, phản hồi HTTP hoặc user nhập vào.
+Java checks many constraints using **declarations, signatures, generic usage, accessibility, and subtyping**. Yet the compiler cannot know actual inputs from networks, files, databases, HTTP responses, or users ahead of time.
 
-| Trường hợp | Có thể chặn ở compile time? | Runtime cần làm gì? |
+| Scenario | Can compile-time checks reject it? | What must happen at runtime? |
 |---|---|---|
-| Gán `String` vào `int` trực tiếp | Có | Không chạy được nếu vẫn còn lỗi |
-| Gọi method không tồn tại trên static type | Có | Không chạy được nếu vẫn còn lỗi |
-| Thêm `String` vào `List<Integer>` đúng kiểu khai báo | Có | Không chạy được nếu vẫn còn lỗi |
-| Ép `Object` chứa `Integer` xuống `String` | Không thể biết chắc đối tượng thực tế | Cast bị kiểm tra, có thể ném `ClassCastException` |
-| Ghi `Double` vào mảng thực tế là `Integer[]` qua tham chiếu `Number[]` | Compiler cho phép do array covariance | Có thể ném `ArrayStoreException` |
-| Dữ liệu người dùng có định dạng email đúng | Không | Cần validation nghiệp vụ |
-| `100 / divisor` khi `divisor` do runtime cung cấp | Không thể xác nhận mọi trường hợp | Có thể ném `ArithmeticException` nếu phép chia nguyên cho 0 |
-| Class được nạp/khởi tạo qua reflection | Không chứng minh đầy đủ từ tên class runtime | Có thể cần kiểm tra `Class<?>` và xử lý reflection exceptions |
+| Assigning `String` directly to `int` | Yes | Code cannot run until the error is fixed |
+| Calling an absent method on a static type | Yes | Code cannot run until the error is fixed |
+| Adding `String` to a correctly declared `List<Integer>` | Yes | Code cannot run until the error is fixed |
+| Downcasting an `Object` containing `Integer` to `String` | Cannot determine the actual object with certainty | Cast is checked and may throw `ClassCastException` |
+| Writing `Double` to an actual `Integer[]` array through a `Number[]` reference | Compiler allows covariance of arrays | May throw `ArrayStoreException` |
+| Whether an email from a user has valid formatting | No | Business validation required |
+| `100 / divisor` with a runtime-provided `divisor` | Cannot validate all cases | May throw `ArithmeticException` on integer division by 0 |
+| Class loaded/created by reflection | Cannot fully prove runtime class names | May require checking `Class<?>` and handling reflection exceptions |
 
-**Loại lỗi không phải một khái niệm duy nhất:** `NullPointerException`, `IndexOutOfBoundsException`, lỗi validation hoặc logic sai đều có thể xảy ra trong chương trình có kiểu tĩnh đúng. Không nên coi “biên dịch thành công” đồng nghĩa “chương trình chạy đúng”.
+**Not all errors are type errors:** `NullPointerException`, `IndexOutOfBoundsException`, validation failures, and incorrect logic can all occur in correctly statically typed programs. Successful compilation does not guarantee correct execution.
 
-## 7. `instanceof`, pattern matching và cast an toàn
+## 7. `instanceof`, pattern matching, and safe casts
 
-Khi nhận một giá trị có static type rộng như `Object`, hãy **kiểm tra kiểu thực tế** trước khi truy cập hành vi của subtype:
+When a value has a broad static type like `Object`, **check its actual type** before accessing subtype-specific behavior:
 
 ~~~java
 static String describeValue(Object value) {
@@ -2205,9 +2205,9 @@ static String describeValue(Object value) {
 }
 ~~~
 
-Đoạn trên dùng **pattern matching for `instanceof`** (có ở Java 17). Biến `text` chỉ được phép sử dụng tại những vị trí mà trình biên dịch xác định pattern đã match; đây là quy tắc **flow scoping**. `null instanceof String` trả `false`, nên nhánh cuối xử lý luôn `null`.
+The example uses **pattern matching for `instanceof`** (available in Java 17). The `text` variable is in scope only where the compiler knows the pattern matched, under **flow scoping**. `null instanceof String` returns `false`, so the last branch also handles `null`.
 
-Đôi khi một downcast đã được xác thực bằng hợp đồng nghiệp vụ và có thể được viết tường minh, nhưng đừng “đoán” class để cast:
+Sometimes a downcast is justified by a validated business contract, but do not guess the class:
 
 ~~~java
 Object incoming = Integer.valueOf(42);
@@ -2220,11 +2220,11 @@ if (incoming instanceof Integer number) {
 }
 ~~~
 
-Trong Java, toán tử cast có **nhiều mục đích khác nhau**. `(String) someObject` là cast kiểu tham chiếu và có thể bị kiểm tra runtime; `(int) 3.9` là chuyển đổi số nguyên thủy, cho kết quả `3` do quy tắc narrowing conversion, **không phải** `ClassCastException`. Không đánh đồng mọi phép cast.
+Java casts serve **different purposes**. `(String) someObject` is a reference cast that may be checked at runtime; `(int) 3.9` is a primitive numeric narrowing conversion yielding `3`, **not** a `ClassCastException`. Do not treat all casts alike.
 
-### 7.1. Tránh lạm dụng `instanceof`
+### 7.1. Avoid excessive `instanceof` checks
 
-Nếu code liên tục làm:
+If code repeatedly does this:
 
 ~~~java
 if (notification instanceof EmailNotification) {
@@ -2234,11 +2234,11 @@ if (notification instanceof EmailNotification) {
 }
 ~~~
 
-trong khi interface đã có thao tác chung phù hợp, hãy để các class **override method** và gọi qua interface. `instanceof` nên được dùng khi thật sự cần **phân loại dữ liệu**, kiểm tra input không biết kiểu hoặc xử lý khả năng đặc biệt mà abstraction không thể biểu diễn hợp lý.
+when an interface already provides the common operation, have classes **override the method** and invoke through the interface. Use `instanceof` for genuine **data classification**, unknown-type input validation, or special capabilities that cannot reasonably be expressed by the abstraction.
 
-**Nguyên tắc thực tế:** Dùng interface và đa hình cho **hành vi chung**; dùng pattern matching/cast có kiểm soát ở **ranh giới dữ liệu không đồng nhất** hoặc nơi cần xử lý từng trường hợp riêng biệt.
+**Practical rule:** Use interfaces and polymorphism for **shared behavior**; use controlled pattern matching/casts at **heterogeneous-data boundaries** or where different cases require different handling.
 
-## 8. Generics: compile time biết type argument, runtime cần xác thực dữ liệu ngoài
+## 8. Generics: compile-time type arguments versus external runtime data
 
 ```java
 List<String> codes = new ArrayList<>();
@@ -2247,9 +2247,9 @@ codes.add("ORD-1");
 System.out.println(codes.get(0)); // ORD-1
 ```
 
-Nhưng `ArrayList<String>` và `ArrayList<Integer>` dùng cùng runtime class; Java không cho kiểm tra `instanceof List<String>`, chỉ kiểm tra được `List<?>` và sau đó xác nhận phần tử nếu cần. Raw type hoặc unchecked cast có thể làm **heap pollution** và gây `ClassCastException` khi đọc.
+But `ArrayList<String>` and `ArrayList<Integer>` use the same runtime class; Java cannot test `instanceof List<String>`, only `List<?>` with element checks when needed. Raw types and unchecked casts can cause **heap pollution** and a `ClassCastException` on retrieval.
 
-Khi dữ liệu được nhận từ JSON/plugin/legacy API, đừng ép `(List<String>)` chỉ để compiler hết báo lỗi. Kiểm tra từng giá trị rồi tạo collection typed mới:
+For data received from JSON/plugins/legacy APIs, do not cast to `(List<String>)` merely to silence a compiler error. Validate values individually and construct a new typed collection:
 
 ~~~java
 static List<String> requireStrings(List<?> source) {
@@ -2265,13 +2265,13 @@ static List<String> requireStrings(List<?> source) {
 }
 ~~~
 
-`null` cũng bị từ chối vì không match `String`. Danh sách mới không sửa được nhưng đó là **quyết định API**, không phải đặc tính của wildcard. Chi tiết variance/capture và erasure trong bài **Quan hệ kiểu của các cấu trúc tổng quát**; phần này nhấn mạnh **ranh giới từ kiểm tra kiểu tĩnh sang dữ liệu runtime không đáng tin**.
+`null` is also rejected because it does not match `String`. The new list is unmodifiable, but that is **an API choice**, not a wildcard property. The **Type relationships in generic constructs** lesson covers variance/capture and erasure; here the focus is **the boundary between static type checks and untrusted runtime data**.
 
-## 9. Reflection, JSON và dữ liệu không tin cậy: kiểm tra kiểu đến đâu?
+## 9. Reflection, JSON, and untrusted data: how far does type checking reach?
 
-Khi nhận `Object` từ một plugin, kết quả JSON được ánh xạ thành giá trị hoặc object được tạo qua reflection, kiểm tra kiểu ở compile time không thể xác nhận hết những gì runtime sẽ mang đến.
+Receiving `Object` from a plugin, mapped JSON values, or reflection-created objects introduces runtime data that compile-time checks cannot fully verify.
 
-Ví dụ dùng `Class<T>` để kiểm tra class thực tế trước khi ép kiểu:
+For example, use `Class<T>` to check an object's runtime class before casting:
 
 ~~~java
 final class TypedReaders {
@@ -2291,32 +2291,32 @@ String name = TypedReaders.requireType("Lan", String.class);
 // TypedReaders.requireType(42, String.class) -> IllegalArgumentException.
 ~~~
 
-`Class<T>.isInstance` và `Class<T>.cast` là API runtime type checking hữu ích. Tuy nhiên, `Class<List<String>>` không biểu diễn trực tiếp được bằng `List<String>.class`. Những framework JSON sử dụng *type token* / `Type` / `ParameterizedType` để biểu diễn cấu trúc generic có tham số và ánh xạ dữ liệu sâu hơn. **Không** giả định rằng `List.class` kiểm chứng được kiểu từng phần tử của `List<String>`.
+`Class<T>.isInstance` and `Class<T>.cast` provide useful runtime type checking. However, `Class<List<String>>` cannot be represented directly as `List<String>.class`. JSON frameworks may use *type tokens*, `Type`, or `ParameterizedType` to describe parameterized generic structures and map nested data. **Do not** assume `List.class` validates the types of elements in `List<String>`.
 
-Kiểm tra đúng class vẫn **chưa đủ để bảo đảm dữ liệu hợp lệ**. Chẳng hạn `String email` có type `String` nhưng có thể là `""`; `BigDecimal amount` có đúng type nhưng có thể âm; một object request được deserialize hợp lệ vẫn có thể vi phạm giới hạn nghiệp vụ. Cần phân biệt:
+Checking the correct class is **still insufficient for data validity**. For example, a `String email` may have type `String` yet be `""`; a `BigDecimal amount` may have the right type but be negative; a properly deserialized request may violate business limits. Distinguish:
 
-1. **Type checking**: giá trị có thuộc kiểu mong đợi hoặc thỏa quan hệ subtype?
-2. **Validation**: giá trị có đúng ý nghĩa nghiệp vụ, format, khoảng giá trị và quyền truy cập?
-3. **Business rules**: hành động có được phép ở trạng thái hiện tại hay không?
+1. **Type checking:** Is the value of the expected type or an acceptable subtype?
+2. **Validation:** Does it satisfy business meaning, formats, ranges, and permissions?
+3. **Business rules:** Is the action allowed in the current state?
 
-Không nên dùng cast để thay validation và cũng không cần tự kiểm tra `instanceof` tại mọi dòng nếu static type đã diễn đạt đúng hợp đồng.
+Do not use casting as a substitute for validation or check `instanceof` everywhere when static types already express the contract.
 
-## 10. Khái niệm thường bị đánh đồng
+## 10. Frequently confused concepts
 
-| Cặp khái niệm | Phân biệt đúng | Ví dụ |
+| Concept pair | Correct distinction | Example |
 |---|---|---|
-| **Static typing vs dynamic typing** | Hệ thống xác định/kiểm tra kiểu biểu thức trước hay trong runtime, theo đặc trưng ngôn ngữ | Java vs Python |
-| **Static type vs runtime class** | Kiểu biểu thức mà compiler biết vs class của object thực tế | `Notification n = new EmailNotification()` |
-| **Type inference vs dynamic typing** | Compiler **suy luận một kiểu tĩnh** vs binding linh hoạt hơn khi chạy | `var x = 1` vẫn là `int` |
-| **Overloading vs overriding** | Chọn chữ ký overload chủ yếu ở compile time vs chọn implementation của instance override ở runtime | `describe(Object)` / `describe(String)` vs `format()` |
-| **Subtype vs cast** | Quan hệ kiểu bảo đảm một số phép gán vs phép chuyển kiểu tham chiếu cần kiểm tra | `EmailNotification` là `Notification`; `(EmailNotification) n` |
-| **Type safety vs logic correctness** | Hạn chế thao tác sai kiểu vs bảo đảm kết quả nghiệp vụ đúng | `List<String>` không ngăn gửi email trống |
-| **Generic type vs runtime generic check** | Compiler có thể bảo đảm quan hệ kiểu; runtime erasure không giữ mọi type argument | `List<String>`, `instanceof List<?>` |
-| **Static method vs dynamically dispatched instance method** | Phương thức static được ẩn (hiding), không override đa hình | `Parent.print()` vs `child.render()` |
+| **Static typing vs dynamic typing** | When expression types are determined/checked under the language's type system | Java vs Python |
+| **Static type vs runtime class** | Compiler-known expression type versus the referenced object's actual class | `Notification n = new EmailNotification()` |
+| **Type inference vs dynamic typing** | Compiler **infers one static type** versus more flexible runtime bindings | `var x = 1` still has type `int` |
+| **Overloading vs overriding** | Overload signature usually selected at compile time; overridden instance implementation selected at runtime | `describe(Object)` / `describe(String)` vs `format()` |
+| **Subtype vs cast** | Type relationships guarantee some assignments; reference casts require validation | `EmailNotification` is a `Notification`; `(EmailNotification) n` |
+| **Type safety vs logical correctness** | Preventing incompatible-type operations versus ensuring correct business outcomes | `List<String>` does not prevent blank emails |
+| **Generic type vs runtime generic check** | Compiler verifies type relationships; erasure does not retain every runtime type argument | `List<String>`, `instanceof List<?>` |
+| **Static method vs dynamically dispatched instance method** | Static methods are hidden, not overridden polymorphically | `Parent.print()` vs `child.render()` |
 
-### Static member hiding không phải dynamic dispatch
+### Static member hiding is not dynamic dispatch
 
-Đây là một ví dụ nhỏ chạy được trong method bất kỳ có hai class sau:
+The following small example runs in any method given these two classes:
 
 ~~~java
 class Parent {
@@ -2336,29 +2336,29 @@ System.out.println(item.category()); // Parent: theo static type Parent.
 System.out.println(item.name());     // Child: dispatch theo object.
 ~~~
 
-Java cho phép cú pháp gọi static method qua biến, nhưng **nên** gọi rõ `Parent.category()` hoặc `Child.category()` để tránh hiểu nhầm đó là polymorphism. Field cùng tên giữa cha và con cũng **bị ẩn**, không override như instance method.
+Java permits calling a static method through an instance, but **prefer** explicit `Parent.category()` or `Child.category()` to avoid confusing it with polymorphism. Identically named fields in parent and child classes are also **hidden**, not overridden like instance methods.
 
-## 11. Trường hợp Java biên dịch được nhưng vẫn sai runtime
+## 11. When Java compiles but runtime still fails
 
-Bảng này giúp chọn cách phòng ngừa đúng thay vì chỉ thêm cast:
+This table helps choose appropriate safeguards rather than adding casts blindly:
 
-| Hiện tượng | Ví dụ nguyên nhân | Biện pháp |
+| Symptom | Example cause | Prevention |
 |---|---|---|
-| `ClassCastException` | Downcast `Object` sai subtype | Dùng interface chung hoặc `instanceof`/`Class.cast` có kiểm tra |
-| `ArrayStoreException` | Ghi sai runtime component type của array covariant | Ưu tiên generic collection khi phù hợp; tránh gán mảng subtype cho biến supertype rồi ghi |
-| `NullPointerException` | Dùng tham chiếu null như object hợp lệ | Thiết kế null policy, `Objects.requireNonNull` ở boundary, mô hình hóa optional nếu thích hợp |
-| `ArithmeticException` | Chia nguyên cho 0 hoặc phép toán số học không hợp lệ | Kiểm tra điều kiện toán học trước phép tính |
-| `IndexOutOfBoundsException` | Chỉ số vượt kích thước mảng/list | Xác thực chỉ số hoặc dùng iteration an toàn |
-| `IllegalArgumentException` | Đầu vào đúng Java type nhưng sai quy tắc nghiệp vụ | Validation ở boundary và test trường hợp biên |
-| `NoSuchMethodException` / lỗi reflection khác | Tên member runtime không tồn tại hoặc không phù hợp | Hạn chế reflection tùy tiện; kiểm tra API và xử lý lỗi nạp động |
+| `ClassCastException` | Downcasting `Object` to an incompatible subtype | Use common interfaces or checked `instanceof`/`Class.cast` |
+| `ArrayStoreException` | Writing incompatible runtime element types into a covariant array | Prefer generic collections where appropriate; avoid writing through a supertype array reference into a subtype array |
+| `NullPointerException` | Treating a null reference as a valid object | Define a null policy; use `Objects.requireNonNull` at boundaries or model optionality |
+| `ArithmeticException` | Integer division by 0 or invalid arithmetic | Check mathematical preconditions |
+| `IndexOutOfBoundsException` | Index exceeds array/list bounds | Validate indices or iterate safely |
+| `IllegalArgumentException` | Java type is correct but violates a business rule | Validate at boundaries and test edge cases |
+| `NoSuchMethodException` / other reflection errors | Runtime member name missing/incompatible | Limit ad hoc reflection; validate APIs and handle dynamic-loading failures |
 
-Static typing góp phần giảm những lỗi liên quan kiểu, nhưng không thay thế unit test, integration test, xử lý ngoại lệ và thiết kế hợp đồng rõ ràng.
+Static typing reduces type-related errors but cannot replace unit tests, integration tests, exception handling, or explicit contracts.
 
-## 12. Kiểm thử những ranh giới kiểu quan trọng
+## 12. Testing important type boundaries
 
-Các quy tắc compile-time nên được chứng minh bằng **ví dụ không biên dịch** (comment trong demo), tài liệu API hoặc compile-testing tools nếu cần xây dựng thư viện. JUnit thông thường không chạy được một chương trình mà `javac` đã từ chối.
+Demonstrate compile-time rules with **noncompiling examples** (comments in the demo), API documentation, or compile-testing tools for libraries that need them. Ordinary JUnit cannot run code already rejected by `javac`.
 
-Test runtime, ngược lại, có thể xác nhận kiểu đối tượng khác nhau vẫn đáp ứng cùng interface và kiểm tra đầu vào không biết kiểu. Ví dụ JUnit Jupiter 5, giả sử dùng các class từ `TypeCheckingDemo.java`, đặt test cùng package:
+Runtime tests can verify that different object types implement the same interface and validate unknown-type inputs. For JUnit Jupiter 5, use the classes from `TypeCheckingDemo.java` and place tests in the same package:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -2395,13 +2395,13 @@ class RuntimeTypingTest {
 }
 ~~~
 
-`TypedReaders` nằm ở ví dụ riêng trong phần reflection; để chạy test cuối, cần đưa class ấy vào cùng package của test. Các class khác đến từ demo. Thêm dependency `org.junit.jupiter:junit-jupiter` và cấu hình JUnit runner đúng dự án.
+`TypedReaders` appears in a separate reflection example; to run the final test, place it in the test's package. Other classes come from the demo. Add `org.junit.jupiter:junit-jupiter` and configure the project's JUnit runner.
 
-Một test `ClassCastException` chứng minh JVM kiểm tra cast tại runtime, **không** có nghĩa viết downcast sai là một cách thiết kế tốt. Trên đường xử lý chính, hãy giữ API theo interface/generic type đủ rõ để ít cần cast.
+A `ClassCastException` test shows the JVM checks casts at runtime; it **does not** make incorrect downcasts good design. Prefer clearly typed interfaces/generic APIs on main execution paths to minimize casts.
 
-## 13. So sánh Java với TypeScript và Python
+## 13. Comparing Java, TypeScript, and Python
 
-Java dùng hệ thống kiểu tĩnh với dynamic dispatch cho override. **TypeScript** kiểm tra shape/annotation khi biên dịch nhưng phần lớn kiểu bị xóa khi chạy JavaScript; `JSON.parse(...) as User` **không** xác minh object có đúng shape. **Python** mặc định kiểm tra nhiều thao tác khi chạy, dù công cụ như mypy/Pyright có thể dùng type hints để phát hiện sớm một số lỗi.
+Java has static typing and dynamically dispatched overrides. **TypeScript** checks shapes/annotations at compilation but erases most types when generating JavaScript; `JSON.parse(...) as User` **does not** validate the resulting object's shape. **Python** checks many operations at runtime, though tools such as mypy/Pyright can analyze type hints for some errors earlier.
 
 ~~~typescript
 type User = { id: number; name: string };
@@ -2417,23 +2417,23 @@ value = "forty-two"  # Một tên có thể lần lượt giữ giá trị khác
 print(value.upper())
 ~~~
 
-So sánh này nhấn mạnh **thời điểm kiểm tra và hợp đồng runtime**, không xếp hạng ngôn ngữ nào luôn an toàn hơn. Bài **Khác biệt ngôn ngữ khi hiện thực cùng một thiết kế OOP** sẽ dùng một mô hình ShippingPolicy chạy qua Java/Kotlin/Python/TypeScript/C# để đối chiếu chi tiết.
+This comparison emphasizes **check timing and runtime contracts**; it does not rank one language as universally safer. The **Language differences when implementing the same OOP design** lesson compares a ShippingPolicy model implemented in Java/Kotlin/Python/TypeScript/C# in detail.
 
-## 14. Bài tập thực hành: xử lý thông báo hỗn hợp
+## 14. Exercise: processing heterogeneous notification data
 
-Một API nhận dữ liệu đã được hệ thống khác chuyển thành `List<?>`; một số phần tử là `String`, một số là `Integer`, một số có thể là `null`. Bạn cần dựng các nhãn hiển thị.
+An API receives data that another system converted into `List<?>`; some entries are `String`, some `Integer`, and some `null`. Build display labels for them.
 
-**Yêu cầu:**
+**Requirements:**
 
-1. Viết `static List<String> labels(List<?> input)`.
-2. Với `String` khác rỗng sau `trim()`, thêm `"TEXT: " + value`.
-3. Với `Integer` không âm, thêm `"NUMBER: " + value`.
-4. Với các phần tử khác hoặc null, ném `IllegalArgumentException` nêu vị trí phần tử.
-5. Trả một danh sách không sửa đổi được; xử lý input `null` có chủ đích.
-6. Viết test cho dữ liệu hợp lệ, số âm, chuỗi rỗng, phần tử null và kiểu bất ngờ.
-7. Giải thích tại sao kiểu khai báo `List<?>` không thể bảo đảm tất cả phần tử đã là `String`, và vì sao ở đây `instanceof` là hợp lý hơn việc ép `(List<String>) input`.
+1. Implement `static List<String> labels(List<?> input)`.
+2. For nonblank `String` after `trim()`, append `"TEXT: " + value`.
+3. For nonnegative `Integer`, append `"NUMBER: " + value`.
+4. For other elements or null, throw `IllegalArgumentException` indicating the element position.
+5. Return an unmodifiable list; handle `null` inputs deliberately.
+6. Test valid values, negative numbers, blank strings, null elements, and unexpected types.
+7. Explain why `List<?>` does not guarantee every element is already `String` and why `instanceof` is more appropriate here than casting to `(List<String>) input`.
 
-Khung gợi ý:
+Suggested scaffold:
 
 ~~~java
 static java.util.List<String> labels(java.util.List<?> input) {
@@ -2456,59 +2456,59 @@ static java.util.List<String> labels(java.util.List<?> input) {
 }
 ~~~
 
-Khung trên cũng là một lời giải tham khảo. Hãy viết lại mà không dựa vào `instanceof` rải rác nhiều tầng: thực hiện phân loại tại boundary, chuyển về model có kiểu rõ ràng (ví dụ một `sealed interface` với hai record subtype) rồi xử lý model thống nhất ở lớp nghiệp vụ.
+The scaffold is also a reference solution. Rework it without scattered `instanceof` checks across multiple layers: classify at the boundary, convert to a strongly typed model (for example, a `sealed interface` with two record subtypes), and handle that model consistently in business logic.
 
-### Câu hỏi tự kiểm tra
+### Self-check questions
 
-1. Với `Message msg = new EmailMessage()`, kiểu của **biến** và class thực tế của **đối tượng** là gì?
-2. Vì sao `var x = 10; x = "ten";` không biên dịch?
-3. Vì sao `print(Object)` được chọn khi gọi `print(value)` dù runtime object là `String`?
-4. Khác biệt giữa **overloading** và **overriding** về thời điểm quyết định là gì?
-5. Vì sao `List<String>` và `List<Integer>` có thể dùng cùng runtime class mà compiler vẫn kiểm tra kiểu phần tử?
-6. Khi nào `instanceof` là phương án kiểm tra boundary hợp lý, khi nào nó là dấu hiệu thiếu polymorphism?
-7. Làm sao phân biệt lỗi **không đúng Java type**, lỗi **không đúng format dữ liệu**, và lỗi **vi phạm quy tắc nghiệp vụ**?
+1. Given `Message msg = new EmailMessage()`, what is the **variable's** type and the **object's** actual class?
+2. Why doesn't `var x = 10; x = "ten";` compile?
+3. Why is `print(Object)` selected for `print(value)` even when the runtime object is `String`?
+4. When are **overloading** and **overriding** decisions made?
+5. Why can `List<String>` and `List<Integer>` use the same runtime class while the compiler still checks element types?
+6. When is `instanceof` useful for boundary validation, and when does it signal missing polymorphism?
+7. How can you distinguish **wrong Java types**, **invalid data formats**, and **violated business rules**?
 
-**Ghi nhớ:** Java kiểm tra kiểu **tĩnh** cho nhiều phép toán và lời gọi, nhưng tham chiếu interface có thể trỏ tới những object có **runtime class khác nhau**; overriding được phân giải động. `var` chỉ suy luận kiểu tĩnh. Những dữ liệu ngoài chương trình, cast, reflection, array covariance và ranh giới generics vẫn cần kiểm tra hoặc validation runtime. Thiết kế tốt là để compiler bảo vệ tối đa các quan hệ kiểu, còn runtime kiểm tra đúng những gì compiler không thể biết trước.
+**Remember:** Java **statically** checks many operations and calls, but interface references may point to objects with **different runtime classes**; overriding uses dynamic dispatch. `var` only infers a static type. External data, casts, reflection, array covariance, and generics boundaries still require runtime type checks or validation. Good design maximizes compiler-verified type relationships while checking at runtime precisely what the compiler cannot know in advance.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="language-mechanics-005">Toán tử, thuộc tính và quy ước của ngôn ngữ</a>
+## <a id="language-mechanics-005">Operators, properties, and language conventions</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Toán tử, thuộc tính và quy ước của ngôn ngữ Java
+# Operators, properties, and conventions in Java
 
-**Chủ đề:** OOP → Cơ chế ngôn ngữ.  
-**Mục tiêu:** dùng đúng các nhóm toán tử, hiểu thứ tự và kiểu kết quả của biểu thức; phân biệt trường dữ liệu (*field*) với thuộc tính theo quy ước JavaBeans, getter/setter và thành phần của `record`; áp dụng quy ước Java để viết mã rõ ràng, an toàn, dễ bảo trì.
+**Topic:** OOP → Language Mechanics.  
+**Goal:** Use operator groups correctly; understand expression precedence and result types; distinguish data *fields* from JavaBeans-style properties, getters/setters, and `record` components; apply Java conventions for clear, safe, maintainable code.
 
-Java có bộ quy tắc cú pháp và hệ thống kiểu tương đối chặt chẽ. Một biểu thức “hợp lệ khi biên dịch” vẫn có thể cho kết quả sai vì chia số nguyên, tràn số, so sánh nhầm tham chiếu, tác dụng phụ trong biểu thức hoặc thứ tự đánh giá không được hiểu đúng. Tương tự, việc một trường có thể truy cập từ nơi khác không có nghĩa nên biến toàn bộ trạng thái của đối tượng thành `public`.
+Java has fairly strict syntax and type rules. An expression that compiles can still yield wrong results due to integer division, overflow, mistaken reference comparison, side effects, or misunderstood evaluation order. Likewise, a field being accessible externally does not mean all object state should be `public`.
 
-## 1. Tổng quan các nhóm toán tử
+## 1. Operator groups at a glance
 
-| Nhóm | Ký hiệu thường gặp | Công dụng | Lưu ý |
+| Group | Common symbols | Purpose | Caution |
 | --- | --- | --- | --- |
-| Số học | `+`, `-`, `*`, `/`, `%` | Tính toán; `+` còn nối chuỗi | `int/int` vẫn chia số nguyên; `%` là phép lấy phần dư |
-| Tăng/giảm | `++`, `--` | Cập nhật biến tăng/giảm một đơn vị | Tiền tố và hậu tố khác thời điểm lấy giá trị |
-| Dấu và phủ định | `+x`, `-x`, `!flag`, `~bits` | Đổi dấu, phủ định boolean hoặc từng bit | `!` chỉ dùng với boolean; `~` áp dụng cho kiểu số nguyên |
-| So sánh | `<`, `<=`, `>`, `>=` | So sánh số hoặc kiểu có quy tắc toán tử tương ứng | Không so sánh trực tiếp hai `String` bằng `<` |
-| Bằng nhau | `==`, `!=` | So sánh primitive theo giá trị, reference theo danh tính | Nội dung object thường so bằng `equals()` |
-| Logic | `&&`, `\|\|`, `!` | Kết hợp điều kiện boolean | `&&` / `\|\|` có cơ chế short-circuit |
-| Bit | `&`, `\|`, `^`, `~` | Thao tác từng bit trên integral types; `&`/`\|`/`^` cũng dùng cho boolean | `&` và `\|` với boolean luôn đánh giá hai vế |
-| Dịch bit | `<<`, `>>`, `>>>` | Dịch trái, phải có dấu và phải điền 0 | Khoảng dịch được giới hạn theo kích thước kiểu |
-| Gán | `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, … | Cập nhật biến | Gán kết hợp có thể ép kiểu ngầm về kiểu vế trái |
-| Ba ngôi | `condition ? x : y` | Chọn một trong hai biểu thức | Chỉ đánh giá nhánh được chọn |
-| Kiểm tra kiểu | `instanceof` | Xác định khả năng đối tượng thuộc một kiểu tại runtime | Với `null`, kết quả là `false` |
-| Truy cập/gọi | `.`, `[]`, `()`, `new` | Truy cập thành viên, phần tử, gọi hàm, tạo object | Hành vi còn phụ thuộc visibility và kiểu biểu thức |
+| Arithmetic | `+`, `-`, `*`, `/`, `%` | Computation; `+` also concatenates strings | `int/int` uses integer division; `%` yields a remainder |
+| Increment/decrement | `++`, `--` | Increase/decrease a variable by one | Prefix and postfix differ in when a value is read |
+| Sign and negation | `+x`, `-x`, `!flag`, `~bits` | Negate a number, Boolean, or individual bits | `!` is for Booleans; `~` operates on integral types |
+| Comparison | `<`, `<=`, `>`, `>=` | Compare numbers or types with supported operators | You cannot compare two `String` values using `<` |
+| Equality | `==`, `!=` | Compare primitives by value and references by identity | Object contents usually use `equals()` |
+| Logical | `&&`, `\|\|`, `!` | Combine Boolean conditions | `&&` / `\|\|` short-circuit |
+| Bitwise | `&`, `\|`, `^`, `~` | Operate on bits of integral types; `&`/`\|`/`^` also accept Boolean values | Boolean `&` and `\|` evaluate both sides |
+| Bit shifting | `<<`, `>>`, `>>>` | Left, signed right, and 0-fill right shifts | Shift counts are masked by type width |
+| Assignment | `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, … | Update variables | Compound assignments can narrow implicitly to the left-side type |
+| Ternary | `condition ? x : y` | Select one of two expressions | Only the selected branch executes |
+| Type testing | `instanceof` | Check whether an object is a type at runtime | For `null`, the result is `false` |
+| Access/call | `.`, `[]`, `()`, `new` | Access members/elements, call methods, construct objects | Behavior depends on visibility and expression types |
 
-`->` của lambda và `::` của method reference cũng là cú pháp quan trọng, nhưng không nên coi chúng như phép toán số học thông thường. Chúng biểu diễn hàm/điểm tham chiếu phương thức phù hợp với functional interface.
+Lambda `->` and method-reference `::` syntax are also important, but they are not ordinary arithmetic operators. They describe functions/method references compatible with functional interfaces.
 
-### Ví dụ nhỏ: kết quả của toán tử
+### Small example: operator results
 
 ```java
 int a = 7;
@@ -2526,34 +2526,34 @@ System.out.println(++count); // 7: tăng trước rồi dùng
 System.out.println(-7 % 3); // -1: dấu của phần dư theo số bị chia
 ```
 
-Trong Java, **phần dư `%` không đồng nhất với phép modulo luôn không âm**. Nếu cần kết quả không âm cho số chia dương, dùng `Math.floorMod(a, b)` thay vì tự giả định `a % b >= 0`. Ví dụ `Math.floorMod(-7, 3) == 2`.
+In Java, **the remainder operator `%` is not the same as always-nonnegative modulo**. For a nonnegative result with a positive divisor, use `Math.floorMod(a, b)` rather than assuming `a % b >= 0`. For example, `Math.floorMod(-7, 3) == 2`.
 
-## 2. Độ ưu tiên, tính kết hợp và thứ tự đánh giá
+## 2. Precedence, associativity, and evaluation order
 
-Nên đọc biểu thức theo hai khái niệm khác nhau:
+Read expressions using three distinct concepts:
 
-- **Precedence** (độ ưu tiên) quyết định biểu thức được nhóm như thế nào khi thiếu ngoặc.
-- **Associativity** (tính kết hợp) quyết định cách nhóm các toán tử **cùng mức**; phần lớn toán tử nhị phân là trái sang phải, phép gán và toán tử điều kiện nhóm từ phải sang trái.
-- **Evaluation order** (thứ tự đánh giá) là lúc các toán hạng thực sự được tính và side effect xảy ra. Java nhìn chung đánh giá toán hạng từ trái sang phải theo quy tắc của từng biểu thức; điều này không đồng nghĩa với “mọi toán tử được thực hiện từ trái sang phải”.
+- **Precedence** determines how expressions are grouped when parentheses are omitted.
+- **Associativity** determines grouping among operators at **the same precedence**; most binary operators group left to right, while assignments and conditionals group right to left.
+- **Evaluation order** describes when operands are computed and side effects occur. Java generally evaluates operands from left to right according to expression rules; this does not mean “every operator executes left to right.”
 
-Bảng rút gọn mức ưu tiên thường cần khi đọc Java (trên → dưới, cao → thấp):
+A shortened Java precedence table (top to bottom, highest to lowest):
 
-| Mức | Nhóm | Ví dụ |
+| Level | Group | Example |
 | --- | --- | --- |
-| Cao nhất trong bảng | Truy cập, gọi hàm, chỉ số, hậu tố | `object.field`, `f()`, `array[i]`, `x++` |
-| | Đơn ngôi, ép kiểu, tiền tố | `!ok`, `~mask`, `(long) x`, `++x` |
-| | Nhân/chia/chia dư | `*`, `/`, `%` |
-| | Cộng/trừ | `+`, `-` |
-| | Dịch bit | `<<`, `>>`, `>>>` |
-| | Quan hệ/kiểm tra kiểu | `<`, `<=`, `>`, `>=`, `instanceof` |
-| | Bằng nhau | `==`, `!=` |
-| | AND, XOR, OR trên bit hoặc boolean | `&` rồi `^` rồi `\|` |
-| | AND logic | `&&` |
-| | OR logic | `\|\|` |
-| | Điều kiện | `?:` |
-| Thấp | Gán và gán kết hợp | `=`, `+=`, `-=`, … |
+| Highest in this table | Member access, calls, indexing, postfix | `object.field`, `f()`, `array[i]`, `x++` |
+| | Unary, casts, prefixes | `!ok`, `~mask`, `(long) x`, `++x` |
+| | Multiplication/division/remainder | `*`, `/`, `%` |
+| | Addition/subtraction | `+`, `-` |
+| | Bit shifts | `<<`, `>>`, `>>>` |
+| | Relational/type tests | `<`, `<=`, `>`, `>=`, `instanceof` |
+| | Equality | `==`, `!=` |
+| | Bitwise or Boolean AND, XOR, OR | `&` then `^` then `\|` |
+| | Logical AND | `&&` |
+| | Logical OR | `\|\|` |
+| | Conditional | `?:` |
+| Lowest | Assignment and compound assignment | `=`, `+=`, `-=`, … |
 
-Ví dụ:
+For example:
 
 ```java
 int result = 2 + 3 * 4;       // 14
@@ -2566,20 +2566,20 @@ int x = 1, y = 2, z = 3;
 x = y = z; // Tương đương x = (y = z)
 ```
 
-**Đặt dấu ngoặc khi nó giúp người đọc hiểu ý định**, nhất là khi trộn bitwise với logic, ghép điều kiện dài hoặc chuyển đổi số. Không nên cố tạo biểu thức ngắn bằng nhiều lần `++`, gán và gọi phương thức có side effect trong cùng một dòng.
+**Use parentheses when they clarify intent**, particularly for mixed bitwise/logical operators, long conditions, and numerical conversions. Avoid cramming multiple `++` operations, assignments, or side-effecting calls into one line.
 
-Điểm dễ nhầm:
+A common pitfall:
 
 ```java
 System.out.println("Tổng: " + 1 + 2);     // Tổng: 12
 System.out.println("Tổng: " + (1 + 2));   // Tổng: 3
 ```
 
-Các phép cộng và nối chuỗi cùng mức được nhóm từ trái qua phải; sau khi vế trái trở thành chuỗi, `+` nối chuỗi tiếp theo. Java không tự suy đoán bạn muốn cộng số trước.
+Addition and string concatenation have the same precedence and associate left to right; once the left operand becomes a string, subsequent `+` operations concatenate. Java will not infer that you intended numeric addition first.
 
-## 3. Kiểu kết quả, nâng kiểu số và tràn số
+## 3. Result types, numeric promotion, and overflow
 
-### 3.1. Phép chia và numeric promotion
+### 3.1. Division and numeric promotion
 
 ```java
 int total = 5;
@@ -2589,9 +2589,9 @@ double wrong = total / portions;           // 2.0
 double correct = (double) total / portions; // 2.5
 ```
 
-Ở dòng đầu, biểu thức `total / portions` được tính bằng `int` **trước** khi gán vào `double`, nên phần thập phân đã mất. Ép kiểu một toán hạng trước phép chia sẽ thay đổi kiểu tính toán.
+On the first line, `total / portions` is evaluated using `int` arithmetic **before** assignment to `double`, so the fractional part is lost. Casting one operand before division changes the arithmetic type.
 
-Đối với các phép toán số học thông thường trên `byte`, `short`, `char`, Java thực hiện **binary numeric promotion**; các giá trị nhỏ hơn `int` thường được nâng lên `int`:
+For ordinary arithmetic on `byte`, `short`, and `char`, Java applies **binary numeric promotion**: types smaller than `int` are usually promoted to `int`:
 
 ```java
 byte first = 10;
@@ -2603,9 +2603,9 @@ byte second = 20;
 int sum = first + second; // 30
 ```
 
-`short`, `char` cũng chịu quy tắc tương ứng. Nếu một toán hạng là `long`, `float` hoặc `double`, kết quả thường được nâng theo kiểu lớn hơn trong thứ tự binary numeric promotion. Quy tắc cụ thể còn phụ thuộc loại toán tử.
+`short` and `char` follow similar rules. If an operand is `long`, `float`, or `double`, promotion usually follows the wider type under binary numeric-promotion rules. Exact details depend on the operator.
 
-### 3.2. Gán kết hợp có thể gây narrowing
+### 3.2. Compound assignments can narrow types
 
 ```java
 byte value = 127;
@@ -2613,9 +2613,9 @@ value += 1;
 System.out.println(value); // -128
 ```
 
-Gán kết hợp `E1 op= E2` tương đương về mặt giá trị với `E1 = (T) ((E1) op (E2))`, trong đó `T` là kiểu của `E1`, **ngoại trừ `E1` chỉ được đánh giá một lần**. Bởi vậy, `byte += int` có thể ép ngầm về `byte` và tạo kết quả tràn mà lập trình viên không nhận ra.
+Compound assignment `E1 op= E2` is equivalent in value to `E1 = (T) ((E1) op (E2))`, where `T` is the type of `E1`, **except that `E1` is evaluated only once**. Thus `byte += int` can implicitly narrow back to `byte` and overflow unnoticed.
 
-Trong ngữ cảnh tài chính, số đếm lớn, phiên bản dữ liệu hoặc phép tính quan trọng, hãy kiểm tra miền giá trị và cân nhắc `Math.addExact`, `Math.subtractExact`, `Math.multiplyExact` khi làm việc với `int`/`long`:
+For financial operations, large counters, data versions, and other critical calculations, validate ranges and consider `Math.addExact`, `Math.subtractExact`, and `Math.multiplyExact` with `int`/`long`:
 
 ```java
 try {
@@ -2626,17 +2626,17 @@ try {
 }
 ```
 
-Các phép cộng/trừ/nhân nguyên thủy thông thường **không tự ném lỗi khi tràn số**; chúng cho kết quả tràn theo độ rộng kiểu. Chia số nguyên cho 0 thì ném `ArithmeticException`.
+Ordinary primitive integer addition/subtraction/multiplication **do not throw on overflow**; values wrap according to type width. Integer division by 0 throws `ArithmeticException`.
 
-### 3.3. Dấu phẩy động và tiền tệ
+### 3.3. Floating-point numbers and currency
 
 ```java
 System.out.println(0.1 + 0.2 == 0.3); // false (IEEE 754)
 ```
 
-`float`/`double` dùng biểu diễn dấu phẩy động nhị phân; một số số thập phân không có biểu diễn chính xác. Không dùng `==` cho kết quả phép tính dấu phẩy động nếu bài toán yêu cầu ngưỡng sai số hoặc cách làm tròn rõ ràng.
+`float`/`double` use binary floating-point representations; some decimals cannot be represented exactly. Do not compare computed floating-point results with `==` if the problem requires a tolerance or specific rounding policy.
 
-Với tiền, có thể dùng **đơn vị nguyên nhỏ nhất** (`long` VND nếu miền giá trị phù hợp) hoặc `BigDecimal` với quy tắc làm tròn được xác định:
+For money, use **integer minor units** (for example, `long` VND when the domain range permits) or `BigDecimal` with explicit rounding rules:
 
 ```java
 java.math.BigDecimal price =
@@ -2647,18 +2647,18 @@ java.math.BigDecimal tax =
 System.out.println(price.add(tax).toPlainString()); // 0.30
 ```
 
-Tránh `new BigDecimal(0.1)` nếu muốn biểu diễn chính xác số thập phân `0.1`; ưu tiên constructor từ chuỗi hoặc `BigDecimal.valueOf(double)` khi đầu vào đã là `double` và bạn hiểu ngữ nghĩa chuyển đổi.
+Avoid `new BigDecimal(0.1)` when exact representation of decimal `0.1` is required; favor string-based constructors or `BigDecimal.valueOf(double)` when the input is already a `double` and conversion semantics are understood.
 
-## 4. So sánh: `==`, `equals()` và các kiểu giá trị
+## 4. Comparing `==`, `equals()`, and value types
 
-Với **primitive**, `==` so sánh giá trị sau các quy tắc chuyển đổi số cần thiết:
+For **primitives**, `==` compares values after applicable numeric conversions:
 
 ```java
 int a = 42, b = 42;
 System.out.println(a == b); // true
 ```
 
-Với **reference type**, `==` so sánh **hai tham chiếu có trỏ tới cùng một object** hay không:
+For **reference types**, `==` tests **whether references point to the same object**:
 
 ```java
 String first = new String("Java");
@@ -2668,17 +2668,17 @@ System.out.println(first == second);      // false
 System.out.println(first.equals(second)); // true
 ```
 
-`new String` tạo các object khác nhau trong ví dụ. Việc so sánh hai literal `"Java" == "Java"` có thể trả `true` nhờ string intern, nhưng **không dùng `==` để kiểm tra nội dung String**.
+`new String` creates distinct objects in this example. Two literals `"Java" == "Java"` may compare `true` due to string interning, but **do not use `==` to compare String contents**.
 
-Để so sánh nội dung có khả năng `null`, dùng:
+For null-safe content comparison where values may be `null`, use:
 
 ```java
 java.util.Objects.equals(first, second);
 ```
 
-`Objects.equals(null, null)` là `true`; `Objects.equals(null, "x")` là `false`. Nếu object tự định nghĩa `equals()`, phải tuân thủ các quy tắc phản xạ, đối xứng, bắc cầu, nhất quán và so với `null` là false. Khi override `equals()`, đồng thời override `hashCode()` sao cho hai object bằng nhau có cùng hash code.
+`Objects.equals(null, null)` is `true`, while `Objects.equals(null, "x")` is `false`. Custom `equals()` implementations must be reflexive, symmetric, transitive, consistent, and false for `null`. When overriding `equals()`, also override `hashCode()` so equal objects share a hash code.
 
-Với mảng:
+For arrays:
 
 ```java
 int[] left = {1, 2};
@@ -2688,9 +2688,9 @@ System.out.println(left == right); // false
 System.out.println(java.util.Arrays.equals(left, right)); // true
 ```
 
-`Arrays.equals` so sánh các phần tử tương ứng của mảng một chiều; mảng lồng nhau có thể cần `Arrays.deepEquals`. `record` tự sinh `equals/hashCode/toString` theo thành phần, nhưng **thành phần là mảng vẫn dùng ngữ nghĩa equals của mảng**; không tự động so sánh sâu nội dung mảng.
+`Arrays.equals` compares corresponding elements of one-dimensional arrays; nested arrays may need `Arrays.deepEquals`. `record` generates `equals/hashCode/toString` based on components, but **array components still use array equality semantics**; records do not automatically compare nested array contents deeply.
 
-Với `BigDecimal`, `equals()` còn xét **scale** còn `compareTo()` so sánh giá trị số:
+For `BigDecimal`, `equals()` considers **scale**, whereas `compareTo()` compares numeric values:
 
 ```java
 var x = new java.math.BigDecimal("1.0");
@@ -2700,11 +2700,11 @@ System.out.println(x.equals(y));        // false
 System.out.println(x.compareTo(y) == 0); // true
 ```
 
-Lựa chọn cách so sánh phải phù hợp với bài toán: giá trị tiền, định dạng nhập liệu hay tính duy nhất trong collection.
+Choose comparison semantics appropriate to the domain, such as monetary values, input formatting, or collection uniqueness.
 
-## 5. Logic ngắn mạch, bitwise và toán tử điều kiện
+## 5. Short-circuit logic, bitwise operations, and conditionals
 
-### 5.1. `&&` và `||` có short-circuit
+### 5.1. `&&` and `||` short-circuit
 
 ```java
 String input = null;
@@ -2713,9 +2713,9 @@ boolean valid = input != null && !input.isBlank();
 System.out.println(valid); // false; vế phải không chạy
 ```
 
-Nếu vế trái của `&&` là false, Java không đánh giá vế phải. Nếu vế trái của `||` là true, Java không đánh giá vế phải. Tính chất này giúp viết guard điều kiện an toàn và tránh công việc không cần thiết.
+When the left side of `&&` is false, Java skips the right side. When the left side of `||` is true, Java also skips the right side. Short-circuiting makes guards safe and avoids unnecessary work.
 
-Ngược lại, `&` và `|` dùng được với boolean nhưng **đánh giá cả hai vế**:
+In contrast, `&` and `|` also work on Booleans but **evaluate both operands**:
 
 ```java
 boolean firstCheck = false;
@@ -2725,9 +2725,9 @@ System.out.println(firstCheck && secondCheck); // false
 System.out.println(firstCheck & secondCheck);  // false
 ```
 
-Kết quả có thể giống nhau, nhưng điều kiện bên phải của `&` vẫn được tính. Ví dụ `input != null & !input.isBlank()` sẽ ném `NullPointerException` khi input null. Dùng `&&`/`||` cho điều kiện điều khiển thông thường, và `&`/`|` khi muốn xử lý bit hoặc thực sự muốn đánh giá cả hai vế.
+Results may match, but `&` still evaluates its right operand. For example, `input != null & !input.isBlank()` throws `NullPointerException` when input is null. Use `&&`/`||` for ordinary control-flow conditions, and `&`/`|` for bits or when evaluation of both sides is intentional.
 
-### 5.2. Bitwise và dịch bit
+### 5.2. Bitwise operations and bit shifts
 
 ```java
 int mask = 0b1010;
@@ -2740,11 +2740,11 @@ System.out.println(-8 >>> 1);       // 2147483644: dịch phải điền 0
 System.out.println(1L << 32);       // 4294967296
 ```
 
-`>>` dịch phải bảo toàn bit dấu; `>>>` dịch phải điền 0. Với `int`, Java chỉ sử dụng **5 bit thấp** của số lượng dịch; với `long`, sử dụng **6 bit thấp**. Vì vậy `1 << 32` cho kết quả `1`, không phải `4294967296`; muốn phép dịch 32 bit trên long cần `1L << 32`.
+`>>` is a sign-preserving right shift; `>>>` shifts right, filling with 0. For `int`, Java uses only the **lowest 5 bits** of the shift distance; for `long`, only the **lowest 6 bits**. Thus `1 << 32` evaluates to `1`, not `4294967296`; to shift by 32 bits on long, use `1L << 32`.
 
-Không dùng toán tử bitwise như một “cách tối ưu” số học nếu nó làm mất ý nghĩa; JVM/JIT đã có nhiều tối ưu và biểu thức rõ ràng dễ được kiểm chứng hơn.
+Avoid bitwise operators as a supposed “optimization” when they obscure arithmetic intent; the JVM/JIT performs many optimizations already, while readable code is easier to verify.
 
-### 5.3. Toán tử ba ngôi
+### 5.3. Ternary operator
 
 ```java
 long goodsTotalVnd = 600_000L;
@@ -2753,13 +2753,13 @@ long deliveryFeeVnd = goodsTotalVnd >= 500_000L
         : 30_000L;
 ```
 
-Biểu thức `?:` chọn một trong hai nhánh; nhánh không được chọn sẽ không chạy. Nó phù hợp cho lựa chọn gọn có cùng ý nghĩa kiểu dữ liệu; khi nhiều điều kiện, có side effect hoặc cần xử lý lỗi chi tiết, `if/else` thường dễ đọc hơn.
+`?:` evaluates one of two branches; the unselected branch does not run. It works well for concise choices with compatible types. Prefer `if/else` for complex conditions, side effects, or detailed error handling.
 
-**Lưu ý kiểu của toán tử ba ngôi:** Java có các quy tắc riêng để quyết định kiểu kết quả theo hai nhánh và ngữ cảnh; đặc biệt việc trộn primitive với wrapper có thể gây **unboxing** và `NullPointerException` trong tình huống khó đoán. Đừng giả định luôn lấy kiểu “chung chung nhất”; khi nhánh có null hoặc kiểu khác nhau, cân nhắc `if/else` rõ ràng.
+**Ternary expression types:** Java has specific rules for selecting a result type based on branch types and context; mixing primitives with wrappers can trigger **unboxing** and `NullPointerException` unexpectedly. Do not assume the broadest common type always wins; use explicit `if/else` when nulls or mixed types make semantics unclear.
 
-## 6. `instanceof`, ép kiểu và pattern matching
+## 6. `instanceof`, casts, and pattern matching
 
-Với Java 17, có thể dùng **pattern matching cho `instanceof`**:
+In Java 17, you can use **pattern matching for `instanceof`**:
 
 ```java
 static int normalizedTextLength(Object value) {
@@ -2770,9 +2770,9 @@ static int normalizedTextLength(Object value) {
 }
 ```
 
-Nếu điều kiện `instanceof String text` thành công, biến `text` có kiểu `String` và có hiệu lực trong phạm vi Java chứng minh pattern đã match. Nếu `value == null`, `instanceof` cho `false`, không ném lỗi.
+When `instanceof String text` succeeds, `text` has type `String` and is in scope where Java can prove the pattern matched. If `value == null`, `instanceof` evaluates to `false` without throwing.
 
-Cách truyền thống:
+The traditional approach:
 
 ```java
 if (value instanceof String) {
@@ -2781,33 +2781,33 @@ if (value instanceof String) {
 }
 ```
 
-Cần phân biệt **ép kiểu tham chiếu** (runtime có thể ném `ClassCastException`) với **chuyển đổi số primitive** (có thể mất phần thập phân hoặc tràn miền):
+Distinguish **reference casting** (which may throw `ClassCastException` at runtime) from **primitive numeric conversions** (which may truncate fractions or overflow their range):
 
 ```java
 double original = 12.9;
 int truncated = (int) original; // 12: bỏ phần thập phân
 ```
 
-Ép kiểu không phải công cụ “sửa” thiết kế generic: nếu phải cast liên tục giữa các lớp, hãy xem có thể biểu diễn hợp đồng bằng kiểu chính xác hơn hay không.
+Casting is not a way to “repair” generic API design. If code repeatedly casts between classes, consider expressing its contract using more precise types.
 
-## 7. Thuộc tính trong Java: field, accessor và property
+## 7. Properties in Java: fields, accessors, and properties
 
-Trong lập trình hướng đối tượng, “thuộc tính của đối tượng” thường là dữ liệu tạo nên trạng thái của object, nhưng Java cần phân biệt vài khái niệm:
+In OOP, an object's “properties” often refer to state-defining data, but Java distinguishes several concepts:
 
-| Khái niệm | Ví dụ | Ý nghĩa |
+| Concept | Example | Meaning |
 | --- | --- | --- |
-| **Field (trường)** | `private String email;` | Biến được khai báo trong class, thuộc instance hoặc class |
-| **Instance field** | `private boolean active;` | Mỗi object có bản trạng thái riêng |
-| **Static field** | `private static int count;` | Giá trị thuộc class, dùng chung cho các instance |
-| **Accessor/getter** | `getEmail()`, `isActive()` | Phương thức cho phép đọc trạng thái qua API |
-| **Mutator/setter** | `setActive(boolean)` | Phương thức cập nhật trạng thái có thể kèm validation |
-| **JavaBeans property** | Property `email` suy từ `getEmail()`/`setEmail(...)` | Quy ước getter/setter được framework và công cụ sử dụng |
-| **Record component** | `record User(String email)` | Thành phần record sinh field private final và accessor `email()` |
-| **Local variable** | `int total = 0;` trong method | Biến trong phạm vi cục bộ, không phải field của object |
+| **Field** | `private String email;` | A variable declared in a class, belonging to an instance or the class |
+| **Instance field** | `private boolean active;` | Each object has its own state |
+| **Static field** | `private static int count;` | Value belongs to the class and is shared among instances |
+| **Accessor/getter** | `getEmail()`, `isActive()` | Method that exposes readable state through an API |
+| **Mutator/setter** | `setActive(boolean)` | Method updating state, possibly with validation |
+| **JavaBeans property** | Property `email` inferred from `getEmail()`/`setEmail(...)` | Getter/setter convention used by frameworks and tools |
+| **Record component** | `record User(String email)` | Record component generating a private final field and `email()` accessor |
+| **Local variable** | `int total = 0;` inside a method | Variable with local scope, not an object field |
 
-**Java không có cú pháp property khai báo sẵn kiểu C#** như `public string Name { get; set; }`. Từ “property” trong nhiều thư viện Java thường là quy ước được nhận diện qua method, hoặc metadata của framework. Truy cập `user.email` là truy cập field nếu visibility cho phép; nó **không tự gọi** `getEmail()`.
+**Java has no built-in property declaration syntax like C#** `public string Name { get; set; }`. In Java libraries, “property” often means a convention recognized through methods or framework metadata. Accessing `user.email` accesses a visible field; it **does not automatically invoke** `getEmail()`.
 
-Ví dụ class giữ dữ liệu được đóng gói:
+Example of an encapsulated data class:
 
 ```java
 public final class UserProfile {
@@ -2835,7 +2835,7 @@ public final class UserProfile {
 }
 ```
 
-`email` chỉ được gán lúc tạo; `active` có thể thay đổi. Không phải field nào cũng cần setter. Với nghiệp vụ thật, việc cập nhật trạng thái có thể cần tên hành vi rõ hơn:
+`email` is assigned only during construction; `active` can change. Not every field needs a setter. Real business operations may deserve more expressive names:
 
 ```java
 public void activate() {
@@ -2846,20 +2846,20 @@ public void activate() {
 }
 ```
 
-Phương thức có ý nghĩa domain thường dễ bảo vệ bất biến hơn API setter tổng quát. Nếu trạng thái kích hoạt phụ thuộc phê duyệt hoặc quyền truy cập, các kiểm tra đó phải được tổ chức ở ranh giới có trách nhiệm tương ứng.
+Domain-specific methods are often better at enforcing invariants than generic setters. If activation requires approvals or permissions, checks belong at appropriate responsibility boundaries.
 
-### 7.1. Quyền truy cập và đóng gói
+### 7.1. Access modifiers and encapsulation
 
-| Modifier | Có thể truy cập từ đâu? | Hướng áp dụng |
+| Modifier | Where is it accessible? | Intended use |
 | --- | --- | --- |
-| `private` | Bên trong lớp/nhóm nested tương ứng theo quy tắc ngôn ngữ | Field nội bộ, invariant, helper |
-| Không ghi modifier (*package-private*) | Cùng package | Thành phần triển khai chỉ dùng trong package |
-| `protected` | Cùng package; và trong subclass ở package khác theo quy tắc truy cập `protected` | API mở rộng có chủ đích cho kế thừa |
-| `public` | Nơi có thể nhìn thấy kiểu chứa thành viên | API công khai cần ổn định |
+| `private` | Inside the class/related nested structures according to Java rules | Internal fields, invariants, helpers |
+| No modifier (*package-private*) | Within the same package | Package-scoped implementation components |
+| `protected` | Same package; also subclasses in other packages under `protected` access rules | Deliberate subclass extension APIs |
+| `public` | Where the enclosing type is visible | Stable public APIs |
 
-Ưu tiên **visibility hẹp nhất vẫn đáp ứng nhu cầu thực**. Việc một getter công khai không có nghĩa getter được phép lộ mật khẩu, token, giá trị nhạy cảm hoặc trạng thái mutable nội bộ.
+Prefer **the narrowest visibility that meets actual needs**. A public getter does not entitle callers to passwords, tokens, sensitive values, or mutable internal state.
 
-Nếu field chứa collection mutable, trả trực tiếp field qua getter có thể cho client sửa trái phép dữ liệu:
+If a field holds a mutable collection, returning it directly allows callers to change internal data:
 
 ```java
 private final java.util.List<String> tags =
@@ -2870,14 +2870,14 @@ public java.util.List<String> getTags() {
 }
 ```
 
-`List.copyOf` tạo danh sách không sửa được và tách cấu trúc danh sách khỏi nguồn, **không sao chép sâu các phần tử mutable**. Với phần tử là `String` như ví dụ, điều này không gây vấn đề. Nếu phần tử là object có setter, cần cân nhắc immutable value object hoặc defensive copy các phần tử.
+`List.copyOf` creates an unmodifiable list separate from the source list's structure but **does not deep-copy mutable elements**. The example uses `String` elements, so this is safe. Mutable objects with setters may require immutable Value Objects or defensive copies of each element.
 
-### 7.2. `static`, `final`, `var`, `record`
+### 7.2. `static`, `final`, `var`, and `record`
 
-- `static` đánh dấu thành viên ở cấp lớp; `static final` thường dùng cho hằng số. **Không phải mọi `static final` là hằng số compile-time**.
-- `final` trên biến/field ngăn **gán lại reference hoặc giá trị sau khi được gán hợp lệ**, nhưng không bảo đảm object tham chiếu tới là bất biến.
-- `var` (Java 10+) hỗ trợ suy luận kiểu cho **biến cục bộ có initializer**, một số biến vòng lặp và tham số lambda trong những trường hợp được phép; không dùng để khai báo field hay kiểu trả về phương thức. `var x = null;` không hợp lệ.
-- `record` (ổn định từ Java 16) phù hợp cho dữ liệu mang cấu trúc giá trị. Record **không tự tạo bất biến sâu** nếu component chứa mảng/list/object mutable.
+- `static` marks class-level members; `static final` is commonly used for constants. **Not every `static final` value is a compile-time constant**.
+- `final` prevents **reassignment of a variable/field reference or value once initialized**, but does not make its referenced object immutable.
+- `var` (Java 10+) infers **local variables with initializers**, certain loop variables, and lambda parameters in permitted situations; it cannot declare fields or method return types. `var x = null;` is invalid.
+- `record` (stable since Java 16) fits data modeled as values. Records **do not provide deep immutability** for array/list/mutable object components.
 
 ```java
 final java.util.List<String> names =
@@ -2887,13 +2887,13 @@ names.add("Java"); // Hợp lệ: sửa object mà names trỏ tới
 // names = new java.util.ArrayList<>(); // Lỗi: gán lại biến final
 ```
 
-`volatile` là công cụ về **visibility và thứ tự bộ nhớ giữa các thread**, không khiến những thao tác như `count++` trở thành nguyên tử. Không dùng `volatile` để thay locking hoặc `AtomicInteger` khi cần atomic read-modify-write.
+`volatile` governs **visibility and memory ordering between threads**; it does not make operations like `count++` atomic. Do not use `volatile` instead of locking or `AtomicInteger` when atomic read-modify-write is required.
 
-## 8. JavaBeans và record: lựa chọn hợp đồng dữ liệu
+## 8. JavaBeans and records: choosing data contracts
 
-### 8.1. Getter/setter theo quy ước
+### 8.1. Conventional getters/setters
 
-Quy ước JavaBeans thường dùng:
+JavaBeans conventions typically use:
 
 ```java
 String getName()
@@ -2901,11 +2901,11 @@ void setName(String value)
 boolean isEnabled()
 ```
 
-Các công cụ JavaBeans và nhiều framework có thể suy ra tên property từ tên method. Tuy nhiên, **không phải mọi class có getter/setter đều là một JavaBean đầy đủ theo đặc tả**, vì JavaBeans còn các quy ước khác liên quan đến cơ chế khởi tạo, sự kiện, introspection và khả năng serializable tùy trường hợp.
+JavaBeans tooling and many frameworks derive property names from methods. However, **not every class with getters/setters is a full JavaBean under the specification**, which also describes conventions for construction, events, introspection, and sometimes serializability.
 
-Setter tùy ý trên entity có thể làm sai bất biến; đừng sinh getter/setter cho mọi field như một quy tắc bắt buộc. Một API `changeEmail(...)` có kiểm tra dữ liệu, trạng thái và quyền có thể tốt hơn setter trống logic.
+Arbitrary entity setters can break invariants; do not generate getters/setters for every field automatically. An API such as `changeEmail(...)` with data, state, and permission validation may be preferable to a logic-free setter.
 
-### 8.2. Record không dùng accessor `getX()` mặc định
+### 8.2. Records do not generate `getX()` accessors by default
 
 ```java
 record Product(String sku, long unitPriceVnd) {
@@ -2925,43 +2925,43 @@ System.out.println(product.sku());          // P-01
 System.out.println(product.unitPriceVnd()); // 125000
 ```
 
-Record sinh accessor `sku()`, `unitPriceVnd()`, chứ không phải `getSku()`, `getUnitPriceVnd()` theo mặc định. Nó cũng tự sinh `equals`, `hashCode`, `toString` theo các component. Quy ước của framework serialization/binding cần được kiểm tra riêng khi dùng record thay cho JavaBean.
+Records generate `sku()` and `unitPriceVnd()`, not `getSku()` and `getUnitPriceVnd()` by default. They also generate `equals`, `hashCode`, and `toString` from components. Check each serialization/binding framework's conventions when replacing JavaBeans with records.
 
-### 8.3. Khi nào nên có property mutable?
+### 8.3. When should properties be mutable?
 
-Một object UI form có thể cần cập nhật dần nhiều trường. Một domain value object thể hiện địa chỉ giao hàng đã hợp lệ thường phù hợp bất biến. Entity của ORM có thể có ràng buộc tạo, hydrate hoặc proxy riêng.
+A UI form may require incremental edits to several fields. A valid shipping-address domain Value Object is often better immutable. ORM entities may have special construction, hydration, or proxy requirements.
 
-Hãy xác định **ai được phép sửa, sửa lúc nào và điều kiện hợp lệ là gì** trước khi quyết định setter public, builder, constructor, record hoặc phương thức domain chuyên biệt.
+Decide **who may modify state, when, and under what valid conditions** before introducing public setters, builders, constructors, records, or domain-specific operations.
 
-## 9. Quy ước đặt tên và tổ chức mã Java
+## 9. Java naming and code organization conventions
 
-Các quy ước phổ biến trong cộng đồng Java giúp code được hiểu nhất quán; chúng không phải toàn bộ đều là luật compiler.
+Common Java conventions improve consistency and comprehension; not all are compiler-enforced rules.
 
-| Thành phần | Quy ước | Ví dụ |
+| Element | Convention | Example |
 | --- | --- | --- |
-| Package | Chữ thường; thường theo reverse-domain | `com.example.order` |
+| Package | Lowercase, often reverse-domain | `com.example.order` |
 | Class/record/interface/enum | `UpperCamelCase` | `OrderService`, `Money`, `PaymentStatus` |
-| Method và field | `lowerCamelCase` | `calculateTotal()`, `totalPrice` |
-| Biến cục bộ | `lowerCamelCase`, tên có nghĩa | `deliveryFeeVnd`, `isExpired` |
-| Hằng số `static final` có nghĩa hằng số | `UPPER_SNAKE_CASE` | `MAX_RETRIES`, `DEFAULT_TIMEOUT` |
-| Type parameter generic | Tên ngắn theo vai trò khi dễ hiểu | `T` = Type, `E` = Element, `K` = Key, `V` = Value |
-| Tên test | Nêu hành vi hoặc điều kiện | `rejectsNegativePrice` |
-| File Java public top-level type | Tên file tương ứng với kiểu public | `OrderService.java` |
+| Methods and fields | `lowerCamelCase` | `calculateTotal()`, `totalPrice` |
+| Local variables | `lowerCamelCase`, meaningful name | `deliveryFeeVnd`, `isExpired` |
+| Constants that really are constant `static final` | `UPPER_SNAKE_CASE` | `MAX_RETRIES`, `DEFAULT_TIMEOUT` |
+| Generic type parameters | Short role-based names when clear | `T` = Type, `E` = Element, `K` = Key, `V` = Value |
+| Test names | Describe behavior or conditions | `rejectsNegativePrice` |
+| Java files with public top-level types | Filename matches public type | `OrderService.java` |
 
-Các nguyên tắc đọc mã hữu ích:
+Helpful code-reading practices:
 
-1. Một method nên có **tên mô tả hành động**, không chỉ `process()` nếu thiếu ngữ cảnh; với predicate boolean, thường chọn `isActive()`, `hasAccess()`, `canRetry()`.
-2. Dùng `@Override` khi override phương thức để compiler giúp phát hiện sai chữ ký.
-3. Dùng `final` có chủ đích cho những tham chiếu không nên được gán lại; không giả định chỉ thêm `final` là dữ liệu đã immutable.
-4. Khi thể hiện đơn vị đo, ghi vào tên hoặc dùng value object: `timeoutMillis`, `priceVnd` giúp tránh nhầm milliseconds với seconds hoặc tiền tệ khác.
-5. Không che giấu lỗi bằng `catch (Exception ignored)`; chỉ xử lý loại lỗi mà tầng hiện tại có trách nhiệm.
-6. Giữ class, package, API public đủ nhỏ theo trách nhiệm; không tạo getter/setter chỉ để đạt “đủ tính OOP”.
+1. A method needs **an action-oriented name**, not just `process()` without context; Boolean predicates may use `isActive()`, `hasAccess()`, or `canRetry()`.
+2. Use `@Override` when overriding methods so the compiler detects mismatched signatures.
+3. Apply `final` deliberately for references that should not be reassigned; merely adding `final` does not make data immutable.
+4. Convey units in names or Value Objects: `timeoutMillis` and `priceVnd` help distinguish milliseconds from seconds and currencies.
+5. Do not hide failures with `catch (Exception ignored)`; handle only errors owned by the current layer.
+6. Keep classes, packages, and public APIs focused on responsibilities; getter/setter counts are not a measure of “being OOP.”
 
-**Cú pháp có thể được IDE formatter chuẩn hóa**, còn lựa chọn tên phụ thuộc ngôn ngữ nghiệp vụ. Đặt tên rõ ràng có ích hơn việc cực đoan chọn một số lượng ký tự hoặc dòng cố định.
+**IDE formatters can standardize syntax**, but naming depends on business vocabulary. Clear names matter more than arbitrary fixed character counts or line limits.
 
-## 10. Chương trình Java 17 kết hợp toán tử và thuộc tính
+## 10. Java 17 program combining operators and properties
 
-Lưu toàn bộ ví dụ sau vào file **LanguageMechanicsDemo.java**. Mã chạy với JDK 17+ và không dùng thư viện ngoài.
+Save the complete example as **LanguageMechanicsDemo.java**. It runs on JDK 17+ without external libraries.
 
 ```java
 import java.math.BigDecimal;
@@ -3067,14 +3067,14 @@ public class LanguageMechanicsDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac LanguageMechanicsDemo.java
 java LanguageMechanicsDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 P-01
@@ -3089,20 +3089,20 @@ true
 0.3
 ```
 
-Ở đây:
+In this example:
 
-- **Toán tử số học** xuất hiện khi tính tiền hàng; `Math.multiplyExact` và `Math.addExact` làm rõ chính sách với số nguyên bị tràn.
-- **`||` và `?:`** biểu diễn lựa chọn phí vận chuyển có short-circuit.
-- **`instanceof String text`** lọc đầu vào trước khi xử lý chuỗi.
-- **Product record** thể hiện value object; hai sản phẩm khác instance nhưng bằng nhau theo nội dung, do đó `equals()` khác `==`.
-- **CartLine** đóng gói state mutable và chỉ cho thay đổi số lượng qua `increaseQuantity()` có validation.
-- **Accessor** giúp client đọc trạng thái nhưng không sửa trực tiếp `quantity`; quy ước `getQuantity()` khác accessor `product.sku()` của record.
+- **Arithmetic operators** calculate item totals; `Math.multiplyExact` and `Math.addExact` make integer-overflow behavior explicit.
+- **`||` and `?:`** implement shipping-fee choices with short-circuiting.
+- **`instanceof String text`** filters input before string processing.
+- The **Product record** is a Value Object; two separate instances may have equal contents, so `equals()` and `==` differ.
+- **CartLine** encapsulates mutable state and changes quantities only through validated `increaseQuantity()`.
+- **Accessors** let clients read without directly changing `quantity`; the conventional `getQuantity()` differs from a record's `product.sku()` accessor.
 
-Dùng `long` cho đơn vị VND là giả định của bài. Một ứng dụng thật cần xác định tiền tệ, thuế, giảm giá, làm tròn và miền giá trị; không chuyển máy móc sang `double` khi xử lý tiền.
+Using `long` VND amounts is an exercise assumption. Real applications must specify currency, tax, discounts, rounding, and valid ranges; do not blindly switch to `double` for money.
 
-## 11. Kiểm thử hành vi thay vì kiểm tra mẹo toán tử
+## 11. Test behavior rather than operator tricks
 
-Ví dụ test bằng **JUnit Jupiter 5** (đặt vào file **LanguageMechanicsDemoTest.java**; JUnit cần được cấu hình trong dự án):
+Example **JUnit Jupiter 5** tests (in **LanguageMechanicsDemoTest.java**; JUnit must be configured in the project):
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -3175,67 +3175,67 @@ class LanguageMechanicsDemoTest {
 }
 ```
 
-Một bộ kiểm thử tốt chú trọng **ràng buộc đầu vào, miền giá trị, kết quả nghiệp vụ, tình huống biên và exception**. Đừng cố tạo biểu thức cực kỳ rối chỉ để kiểm thử compiler. Khi logic tiền tệ dùng `BigDecimal`, cần kiểm tra rõ phép chia, scale, rounding mode và so sánh giá trị.
+A strong test suite focuses on **input constraints, ranges, business results, boundary cases, and exceptions**. Avoid constructing needlessly convoluted expressions just to test the compiler. When using `BigDecimal` for money, verify division, scale, rounding mode, and numeric comparisons explicitly.
 
-## 12. Các lỗi Java thường gặp khi áp dụng quy ước
+## 12. Common Java mistakes involving conventions
 
-| Tình huống | Vấn đề | Cách xử lý |
+| Scenario | Problem | Remedy |
 | --- | --- | --- |
-| `if (name == "admin")` | So sánh identity, không bảo đảm nội dung | `"admin".equals(name)` hoặc `Objects.equals` |
-| `double rate = 5 / 2;` | Chia nguyên rồi mới chuyển thành double | `5.0 / 2` hoặc `(double) 5 / 2` |
-| `int result = a * b;` trên giá trị lớn | Có thể overflow âm thầm | `Math.multiplyExact` hoặc kiểu/thuật toán phù hợp |
-| `x != null & x.isReady()` | Vế phải chạy dù `x == null` | Dùng `&&` khi cần short-circuit |
-| `List` được trả trực tiếp qua getter | Client có thể sửa nội bộ | Snapshot/immutable view và invariant phù hợp |
-| Tất cả field đều `public` | Không kiểm soát thay đổi trạng thái | `private`, constructor và method nghiệp vụ |
-| Mặc định sinh setter cho mọi trạng thái | Client có thể vượt quy tắc vòng đời | Chỉ expose hành vi được phép |
-| Hiểu `final List` là không thể sửa danh sách | `final` chỉ ngăn gán lại reference | Dùng immutable collection/defensive copy |
-| `record` có component là `int[]` và tin `equals()` so theo nội dung mảng | Mảng dùng equality theo reference | Thiết kế value object hoặc xử lý equals/hashCode phù hợp |
-| `volatile int count; count++` | `++` không atomic | `AtomicInteger`, lock hoặc mô hình đồng bộ phù hợp |
-| Đặt tên `timeout` mà không nói đơn vị | Dễ nhầm seconds/millis | `timeoutMillis`, `Duration` |
-| Dùng một biểu thức nhiều side effect | Khó theo dõi thứ tự và debug | Tách các bước, đặt biến trung gian có tên rõ |
+| `if (name == "admin")` | Compares identity rather than guaranteed content | Use `"admin".equals(name)` or `Objects.equals` |
+| `double rate = 5 / 2;` | Performs integer division before converting to double | Use `5.0 / 2` or `(double) 5 / 2` |
+| `int result = a * b;` with large values | May overflow silently | Use `Math.multiplyExact` or a suitable type/algorithm |
+| `x != null & x.isReady()` | Right operand runs even if `x == null` | Use `&&` when short-circuiting is required |
+| Returning a `List` directly from a getter | Callers can mutate internal state | Provide snapshots/immutable views and enforce invariants |
+| All fields are `public` | State changes cannot be controlled | Use `private`, constructors, and domain methods |
+| Generating setters for every state | Callers can bypass lifecycle rules | Expose only allowed operations |
+| Treating a `final List` as immutable | `final` only prohibits reference reassignment | Use immutable collections/defensive copies |
+| Using a `record` with an `int[]` component and assuming `equals()` compares arrays by contents | Arrays use reference equality | Design suitable value objects or implement equality/hash codes |
+| `volatile int count; count++` | `++` is not atomic | `AtomicInteger`, locks, or suitable concurrency control |
+| Naming a `timeout` without units | Seconds/milliseconds become ambiguous | Use `timeoutMillis` or `Duration` |
+| Putting many side effects in one expression | Difficult evaluation-order reasoning and debugging | Split steps into named intermediate variables |
 
-## 13. Bài tập thực hành
+## 13. Practical exercise
 
-Xây dựng `InvoiceLine` với `unitPriceVnd` và `quantity`, cùng `Invoice` chứa nhiều dòng hóa đơn.
+Build `InvoiceLine` with `unitPriceVnd` and `quantity`, and `Invoice` containing multiple invoice lines.
 
-**Yêu cầu:**
+**Requirements:**
 
-1. Dùng `record` hoặc class bất biến để biểu diễn đơn giá và mã hàng; kiểm tra đơn giá không âm, số lượng dương.
-2. Viết `goodsTotalVnd()` có kiểm soát overflow. Tính phí vận chuyển theo quy tắc: đơn từ **1.000.000 VND** hoặc thành viên VIP thì miễn phí; ngược lại 25.000 VND.
-3. Không cho client thêm phần tử trực tiếp vào collection thuộc `Invoice`. Chọn `List.copyOf` hoặc defensive copy thích hợp.
-4. Kiểm tra sự khác nhau giữa `==`, `equals()` cho hai value object bằng nhau nhưng được khởi tạo riêng.
-5. Viết điều kiện `String coupon != null && !coupon.isBlank()`; thử giải thích nếu thay `&&` bằng `&` trong trường hợp null.
-6. Viết test cho đúng ngưỡng miễn phí, lượng hàng tăng, giá trị 0, overflow, null và dữ liệu không hợp lệ.
-7. Review tên: field, method, class, hằng số, đơn vị tiền, tính công khai và tính bất biến có diễn đạt đúng domain không?
+1. Use a `record` or immutable class for unit prices and item codes; reject negative prices and nonpositive quantities.
+2. Implement `goodsTotalVnd()` with overflow protection. Shipping is free for orders of at least **1.000.000 VND** or VIP members; otherwise it costs 25.000 VND.
+3. Prevent callers from directly appending to the `Invoice` collection. Use `List.copyOf` or defensive copies.
+4. Compare `==` and `equals()` for two separately created but equal Value Objects.
+5. Write the `String coupon != null && !coupon.isBlank()` condition; explain what happens if `&&` becomes `&` when null is possible.
+6. Test the free-shipping threshold, increased quantities, values of 0, overflow, nulls, and invalid data.
+7. Review whether names, fields, methods, classes, constants, monetary units, visibility, and immutability accurately express the domain.
 
-**Tiêu chí đạt:** mã biên dịch và chạy trên Java 17+, không dựa vào trùng tham chiếu để so nội dung, không làm mất phần thập phân ngoài chủ đích, tránh overflow âm thầm ở phép tính trọng yếu, dữ liệu nội bộ được đóng gói, và API tuân thủ quy ước Java rõ ràng.
+**Acceptance criteria:** Code compiles and runs on Java 17+, does not use reference identity for content equality, does not unintentionally lose fractional values, prevents silent overflow in critical calculations, encapsulates internal data, and follows clear Java conventions.
 
-**Ghi nhớ:** toán tử quyết định **biểu thức được tính ra sao**, hệ thống kiểu quyết định **thao tác nào được phép**, còn field/property và quy ước Java quyết định **trạng thái được trình bày và kiểm soát như thế nào**. Hiểu cả ba giúp code OOP vừa đúng hành vi vừa dễ đọc và bảo trì.
+**Remember:** Operators determine **how expressions are evaluated**; the type system determines **which operations are permitted**; and Java fields/properties and conventions determine **how state is exposed and controlled**. Understanding all three produces correct, readable, maintainable OOP code.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="language-mechanics-006">Hợp đồng so sánh bằng và mã băm</a>
+## <a id="language-mechanics-006">Equality and hash-code contracts</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Hợp đồng so sánh bằng và mã băm trong Java: `equals()` và `hashCode()`
+# Equality and hash-code contracts in Java: `equals()` and `hashCode()`
 
-> **Chủ đề:** Cơ chế ngôn ngữ Java – định nghĩa “hai đối tượng bằng nhau”, bảo đảm hai phương thức `equals(Object)` và `hashCode()` nhất quán, và sử dụng an toàn các đối tượng làm phần tử của `HashSet` hoặc khóa của `HashMap`. Bài học sử dụng Java 17.
+> **Topic:** Java language mechanics — defining when “two objects are equal,” ensuring `equals(Object)` and `hashCode()` are consistent, and safely using objects as `HashSet` elements or `HashMap` keys. This lesson uses Java 17.
 
-## 1. Khi nào hai object được coi là “bằng nhau”?
+## 1. When are two objects considered “equal”?
 
-Với đối tượng Java, có ít nhất ba câu hỏi khác nhau:
+With Java objects, at least three distinct questions arise:
 
-- **Cùng tham chiếu?** Hai biến có đang trỏ tới cùng một object trên heap không?
-- **Bằng nhau theo giá trị/ngữ nghĩa?** Hai object khác nhau có biểu diễn cùng một định danh hoặc giá trị nghiệp vụ không?
-- **Sắp xếp ngang nhau?** Một bộ so sánh `Comparator` hoặc `Comparable` có trả kết quả `0` cho hai giá trị không?
+- **Same reference?** Do both variables point to the same heap object?
+- **Value/semantic equality?** Do two different objects represent the same business value or identifier?
+- **Equal in ordering?** Does a `Comparator` or `Comparable` return `0` for the pair?
 
-Không nên mặc định ba điều này tương đương.
+Do not assume these three relationships are equivalent.
 
 ```java
 String a = new String("java");
@@ -3245,45 +3245,45 @@ System.out.println(a == b);      // false: hai object riêng
 System.out.println(a.equals(b)); // true: String so sánh ký tự
 ```
 
-Toán tử `==` áp dụng lên hai tham chiếu object để kiểm tra **identity**; `equals` là phương thức có thể được ghi đè để kiểm tra **equality theo ngữ nghĩa**. Với primitive, `==` lại so sánh các giá trị primitive theo quy tắc ngôn ngữ, không phải địa chỉ.
+On object references, `==` checks **identity**; `equals` is an overridable method for **semantic equality**. On primitives, `==` instead compares primitive values under Java's conversion rules, not addresses.
 
-Một đối tượng có thể có:
-- **Identity equality:** đúng khi hai biến trỏ cùng object. Đây là mặc định từ `Object.equals`.
-- **Value equality:** dựa trên các thuộc tính được định nghĩa trong hợp đồng, ví dụ hai `CustomerId("KH-01")` là cùng định danh logic.
-- **Domain-specific equality:** tùy yêu cầu, ví dụ tài khoản có định danh ổn định không nên so sánh toàn bộ số dư hoặc địa chỉ hiện tại.
+An object may use:
+- **Identity equality:** true only when variables point to the same object. This is the default behavior of `Object.equals`.
+- **Value equality:** compares properties defined in a contract; for example, two `CustomerId("KH-01")` values represent the same logical identifier.
+- **Domain-specific equality:** depends on business needs; an account with a stable ID should not be compared through its entire balance or current address.
 
-**Câu hỏi thiết kế đầu tiên:** Những thuộc tính nào xác định cùng một giá trị/định danh, và những thuộc tính nào có thể thay đổi mà không khiến đối tượng trở thành một đối tượng khác?
+**First design question:** Which properties define the same value or identity, and which may change without making the entity a different entity?
 
-## 2. Hợp đồng chính thức của `equals(Object)`
+## 2. The formal `equals(Object)` contract
 
-Theo hợp đồng của `java.lang.Object.equals`, quan hệ bằng nhau phải đáp ứng các thuộc tính sau đối với các đối tượng không null:
+Under `java.lang.Object.equals`, equality between non-null objects must satisfy:
 
-| Tính chất | Công thức trực giác | Ý nghĩa |
+| Property | Intuitive expression | Meaning |
 |---|---|---|
-| **Reflexive – phản xạ** | `x.equals(x) == true` | Một object bằng chính nó |
-| **Symmetric – đối xứng** | `x.equals(y) == y.equals(x)` | Không có chuyện A coi B bằng, B lại không coi A bằng |
-| **Transitive – bắc cầu** | Nếu A = B và B = C thì A = C | Không tạo nhóm bằng nhau mâu thuẫn |
-| **Consistent – nhất quán** | Gọi lặp lại trả cùng kết quả khi dữ liệu dùng so sánh không đổi | Không dựa vào trạng thái ngẫu nhiên, clock hoặc yếu tố không ổn định |
-| **Non-null** | `x.equals(null) == false` | Object không bằng null |
+| **Reflexive** | `x.equals(x) == true` | An object equals itself |
+| **Symmetric** | `x.equals(y) == y.equals(x)` | If A equals B, B must also equal A |
+| **Transitive** | If A = B and B = C, then A = C | Equality cannot form contradictory groups |
+| **Consistent** | Repeated calls agree when comparison data is unchanged | Do not depend on random values, clocks, or volatile conditions |
+| **Non-null** | `x.equals(null) == false` | Objects do not equal null |
 
-Không nên gọi `null.equals(x)` vì `null` không có phương thức: biểu thức ném `NullPointerException`. Khi cần so sánh an toàn với null, có thể dùng `Objects.equals(a, b)`; hàm này trả `true` nếu cả hai cùng null hoặc nếu `a.equals(b)` đúng.
+Do not call `null.equals(x)` because `null` has no methods; it throws `NullPointerException`. For null-safe comparison, use `Objects.equals(a, b)`, which returns `true` if both arguments are null or `a.equals(b)` is true.
 
-### So sánh bằng không nhất thiết so sánh tất cả field
+### Equality does not always compare every field
 
-Ví dụ `CustomerId` chứa duy nhất chuỗi mã khách hàng. Mã này thể hiện định danh; những trường như tên hiển thị, email, thời điểm cập nhật hoặc cache không thuộc equality. Đối với entity, việc so sánh mọi field có thể gây lỗi khi field mutable hoặc quan hệ object có chu kỳ.
+For example, `CustomerId` contains only a customer ID string. This ID determines identity; display names, email, update timestamps, and caches are not part of equality. Comparing all entity fields can break when fields are mutable or object relationships are cyclic.
 
-Đối với value object như `Money(100_000, "VND")`, cả số tiền và đơn vị tiền có thể là thành phần equality. `100_000 VND` không thể tự coi bằng `100_000 USD`.
+For Value Objects such as `Money(100_000, "VND")`, both the amount and currency may contribute to equality. `100_000 VND` cannot be considered equal to `100_000 USD` automatically.
 
-## 3. Hợp đồng của `hashCode()`
+## 3. The `hashCode()` contract
 
-`hashCode()` trả về một số nguyên `int` dùng để phân nhóm/tra cứu trong các cấu trúc dựa trên hash.
+`hashCode()` returns an `int` used for grouping and lookup in hash-based collections.
 
-Các yêu cầu quan trọng:
+Important requirements:
 
-1. Nếu `a.equals(b)` là `true`, thì **bắt buộc** `a.hashCode() == b.hashCode()`.
-2. Khi những thuộc tính có mặt trong phép so sánh bằng nhau không thay đổi, các lần gọi `hashCode()` phải trả cùng giá trị trong một lần chạy ứng dụng.
-3. Nếu `a.equals(b)` là `false` thì **không bắt buộc** hai hash khác nhau; **hash collision** là hợp lệ.
-4. Các lần chạy JVM khác nhau không bị yêu cầu phải có cùng hashCode cho cùng một object hay cùng một giá trị. **Không dùng `hashCode()` như định danh bền vững**, key truyền qua mạng hay checksum bảo mật.
+1. If `a.equals(b)` is `true`, then **`a.hashCode() == b.hashCode()` is required**.
+2. If equality-relevant properties remain unchanged, repeated `hashCode()` calls must return the same value during one application run.
+3. If `a.equals(b)` is `false`, hashes **need not differ**; **hash collisions** are valid.
+4. Different JVM runs need not produce the same hashCode for the same object or value. **Do not use `hashCode()` as a persistent identifier**, cross-network key, or security checksum.
 
 ```text
 equals(a, b) == true  =>  hash(a) == hash(b)       (BẮT BUỘC)
@@ -3292,9 +3292,9 @@ hash(a) == hash(b)    =>  equals(a, b) ?           (CHƯA BIẾT)
 equals(a, b) == false =>  hash(a) == hash(b) ?     (CÓ THỂ)
 ```
 
-Đây là quan hệ **một chiều**, không có quy tắc “hash bằng nhau thì object bằng nhau”.
+This implication is **one-way**: equal hashes do not prove equal objects.
 
-### Ví dụ va chạm hash
+### Hash collision example
 
 ```java
 System.out.println("FB".hashCode()); // 2236
@@ -3302,11 +3302,11 @@ System.out.println("Ea".hashCode()); // 2236
 System.out.println("FB".equals("Ea")); // false
 ```
 
-Hai chuỗi khác nhau có cùng mã băm. `HashMap` phải dùng **cả hashCode và equals** để xác định key trùng nhau; hash chỉ giúp tìm vùng ứng viên nhanh hơn.
+Different strings can have the same hash. `HashMap` uses **both hashCode and equals** to determine duplicate keys; the hash only narrows down candidates.
 
-## 4. Điều gì xảy ra trong `HashSet` và `HashMap`?
+## 4. How do `HashSet` and `HashMap` behave?
 
-Cách hiểu ở mức API:
+At the API level:
 
 ```mermaid
 flowchart TD
@@ -3320,18 +3320,18 @@ flowchart TD
     D -- "Không" --> H
 ```
 
-Đây là mô hình tư duy; thuật toán cụ thể và cấu trúc bucket bên trong có thể thay đổi theo phiên bản JDK. Không nên dựa vào thứ tự duyệt, bucket index hoặc cấu trúc cây nội bộ như một hợp đồng public.
+This is a mental model; actual algorithms and internal bucket structures may differ across JDK versions. Do not depend on iteration order, bucket indices, or tree structures as public contracts.
 
-- `HashSet.add(x)` dùng equality để quyết định phần tử đã tồn tại hay chưa.
-- `HashMap.put(key, value)` dùng equality để tìm key tương đương và thay giá trị tương ứng.
-- `HashSet.contains(x)` và `HashMap.get(key)` cần `hashCode` phù hợp để tìm tới các key ứng viên.
-- Nếu ghi đè `equals` mà bỏ quên `hashCode`, hai object bằng nhau về logic có thể bị đặt vào các vị trí khác nhau, làm tập hợp/map hành xử sai với ý định nghiệp vụ.
+- `HashSet.add(x)` uses equality to determine whether an element already exists.
+- `HashMap.put(key, value)` uses equality to find the matching key and replace its associated value.
+- `HashSet.contains(x)` and `HashMap.get(key)` require appropriate `hashCode` values to reach candidate keys.
+- Overriding `equals` without `hashCode` can place logically equal objects in different lookup regions, producing behavior that contradicts domain intent.
 
-**Điểm nhấn:** `HashMap` không gọi `equals` lên tất cả key trong mọi lần tra cứu; nó tìm ứng viên dựa trên mã băm và sau đó mới so sánh equality khi cần.
+**Key point:** `HashMap` does not check `equals` on every key for every lookup; it identifies candidates by hash first and compares equality when needed.
 
-## 5. Một lỗi điển hình: ghi đè `equals` nhưng quên `hashCode`
+## 5. A typical mistake: overriding `equals` but not `hashCode`
 
-Đoạn sau cố ý sai:
+The following example is intentionally wrong:
 
 ```java
 final class BrokenCustomerId {
@@ -3360,19 +3360,19 @@ System.out.println(x.hashCode() == y.hashCode());
 // Không có bảo đảm true: VI PHẠM HỢP ĐỒNG
 ```
 
-Mặc định `Object.hashCode` không gắn với nội dung field `value`; vì vậy không đáp ứng yêu cầu “hai object equals phải có hash bằng nhau”. Không nên dựa vào một lần chạy thấy hai giá trị hash có vẻ giống nhau hoặc khác nhau để kết luận chính xác về logic của `hashCode` mặc định.
+The default `Object.hashCode` is not based on the `value` field, so it fails to guarantee equal objects have equal hashes. Do not infer the default `hashCode` behavior from a single run where hash values happened to match or differ.
 
-Nếu key có hợp đồng equality sai, các thao tác `HashSet.contains` hoặc `HashMap.get` có thể không tìm thấy key tương đương.
+When a key's equality contract is broken, `HashSet.contains` or `HashMap.get` may fail to locate an equivalent key.
 
-## 6. Java 17 hoàn chỉnh: value object bất biến, `equals` và `hashCode` đúng
+## 6. Complete Java 17 example: immutable Value Object with correct `equals` and `hashCode`
 
-Thiết kế một kiểu `CustomerId`:
-- Mã khách hàng không null, không trống.
-- Equality dựa trên giá trị mã.
-- Một instance sau khi tạo không bị thay đổi.
-- `hashCode` được tính từ đúng field tham gia equality.
+Design a `CustomerId` type:
+- A customer ID must be non-null and nonblank.
+- Equality is based on the ID value.
+- Instances cannot change after construction.
+- `hashCode` uses exactly the field included in equality.
 
-Lưu thành file `EqualityHashDemo.java` rồi chạy:
+Save as `EqualityHashDemo.java` and run:
 
 ```bash
 javac EqualityHashDemo.java
@@ -3471,24 +3471,24 @@ public class EqualityHashDemo {
 }
 ```
 
-**Điểm thiết kế đáng chú ý:**
+**Noteworthy design choices:**
 
-1. `CustomerId` là `final` để tránh subclass thay đổi ngữ nghĩa equality và làm hỏng tính đối xứng/bắc cầu.
-2. Field `value` là `final` và bản thân `String` bất biến, nên mã băm ổn định khi object được dùng làm key.
-3. `equals(Object)` dùng đúng chữ ký của `Object`; pattern matching `instanceof CustomerId that` có trong Java 17.
-4. `hashCode()` chỉ dựa vào `value` vì `equals` cũng chỉ dựa vào `value`.
-5. Một `CustomerId` được tạo riêng vẫn tra được giá trị qua `HashMap.get` nếu có cùng mã; đây là công dụng rõ ràng của value equality.
-6. `Money` dùng `record` nhằm minh họa equality dựa trên components; trong ứng dụng thực tế phải thống nhất đơn vị và quy tắc số tiền. `Money(100_000, "VND")` khác `Money(100_000, "USD")`.
+1. `CustomerId` is `final` to prevent subclasses from changing equality semantics and breaking symmetry/transitivity.
+2. The `value` field is `final`, and `String` is immutable, so the hash remains stable while the object serves as a key.
+3. `equals(Object)` matches `Object`'s signature; `instanceof CustomerId that` pattern matching is available in Java 17.
+4. `hashCode()` depends only on `value` because `equals` also depends only on `value`.
+5. A separately created `CustomerId` can retrieve a value through `HashMap.get` if its ID matches; that demonstrates value equality in practice.
+6. `Money` uses a `record` to illustrate component-based equality; real applications must agree on monetary units and rules. `Money(100_000, "VND")` differs from `Money(100_000, "USD")`.
 
-Ví dụ giữ nguyên chuỗi mã: `"kh-01"` và `"KH-01"` **khác nhau**. Nếu nghiệp vụ yêu cầu không phân biệt hoa thường, hãy quy định và **chuẩn hóa mã tại constructor** (theo quy tắc domain, ví dụ `Locale.ROOT` khi phù hợp) trước khi áp dụng equality; không âm thầm áp dụng một phép so sánh mà phần còn lại của hệ thống không hiểu.
+The example preserves IDs verbatim: `"kh-01"` and `"KH-01"` **differ**. If business rules require case-insensitive IDs, define and **normalize IDs in the constructor** under an explicit domain policy (such as `Locale.ROOT` when appropriate) before applying equality; do not silently impose a rule the rest of the system does not share.
 
-### Vì sao không cần `Objects.hash(value)` trong ví dụ này?
+### Why not use `Objects.hash(value)` here?
 
-`Objects.hash(value)` cũng có thể tạo hash nhất quán, nhưng có thêm bước xử lý varargs; `value.hashCode()` đơn giản và phù hợp cho một field bắt buộc khác null. Với nhiều field, có thể dùng `Objects.hash(field1, field2)` để giữ công thức rõ ràng.
+`Objects.hash(value)` can also produce consistent hashes but includes varargs processing; `value.hashCode()` is simpler for one required non-null field. For multiple fields, `Objects.hash(field1, field2)` can keep the formula clear.
 
-## 7. Công thức chuẩn khi có nhiều field
+## 7. Standard approach for multiple fields
 
-Với một kiểu bất biến, hãy xác định rõ các field tạo thành value equality:
+For an immutable type, clearly identify the fields that define value equality:
 
 ```java
 final class ProductKey {
@@ -3515,7 +3515,7 @@ final class ProductKey {
 }
 ```
 
-**Bắt buộc sử dụng cùng tập dữ liệu mang ý nghĩa equality** ở cả hai phương thức. Không được so sánh bằng `shopId + sku` rồi chỉ hash `sku`? Về hợp đồng, hash một tập con field **vẫn có thể hợp lệ** nếu các object bằng nhau chắc chắn hash bằng nhau, nhưng làm nhiều collision và thường không phản ánh tốt ý định. Ngược lại, hash **thêm một field không tham gia equals** có thể làm hai object equals nhưng hash khác nhau, **vi phạm hợp đồng**.
+**The same semantically relevant equality data** must inform both methods. Comparing `shopId + sku` while hashing only `sku`? Strictly, hashing a subset of equality fields **can satisfy the contract** if equal objects always hash alike, but causes more collisions and often obscures intent. Conversely, hashing **an additional field outside equals** can make equal objects hash differently and **violate the contract**.
 
 ```java
 // Sai nếu "displayName" không được dùng trong equals():
@@ -3525,16 +3525,16 @@ public int hashCode() {
 }
 ```
 
-Đối với primitive:
-- `int`, `long`: dùng `Integer.hashCode`, `Long.hashCode` hoặc `Objects.hash`.
-- `boolean`: dùng `Boolean.hashCode`.
-- `double`/`float`: cân nhắc kỹ biểu diễn số thực, `NaN`, `+0.0` và `-0.0`; `Double.compare` và `Double.hashCode` tuân một chiến lược nhất quán cho boxed double, nhưng không đồng nhất với so sánh primitive bằng `==` ở mọi trường hợp.
-- `String`/enum/value object bất biến: gọi `equals` và `hashCode` tương ứng.
-- Array: `Objects.equals(arrayA, arrayB)` kiểm tra **tham chiếu** của mảng, không so sánh từng phần tử.
+For primitives:
+- `int`, `long`: use `Integer.hashCode`, `Long.hashCode`, or `Objects.hash`.
+- `boolean`: use `Boolean.hashCode`.
+- `double`/`float`: carefully handle floating-point representations, `NaN`, `+0.0`, and `-0.0`. `Double.compare` and `Double.hashCode` provide consistent boxed-double semantics but do not always match primitive `==`.
+- `String`/enum/immutable Value Objects: use appropriate `equals` and `hashCode` methods.
+- Arrays: `Objects.equals(arrayA, arrayB)` compares **array references**, not individual elements.
 
-## 8. Mảng và collection: so sánh đúng cấu trúc
+## 8. Arrays and collections: compare structures correctly
 
-Nếu một class chứa `byte[]` hoặc `int[]` và muốn equality theo **nội dung phần tử**, phải chọn công cụ phù hợp:
+If a class has `byte[]` or `int[]` and needs equality based on **element contents**, use suitable APIs:
 
 ```java
 import java.util.Arrays;
@@ -3548,15 +3548,15 @@ System.out.println(Arrays.hashCode(a) ==
                    Arrays.hashCode(b));         // true
 ```
 
-| Dữ liệu | So sánh theo nội dung | Tính hash phù hợp |
+| Data | Content equality | Suitable hash |
 |---|---|---|
-| `byte[]`, `int[]`, `String[]` một chiều | `Arrays.equals(a,b)` | `Arrays.hashCode(a)` |
-| Mảng lồng nhau | `Arrays.deepEquals(a,b)` | `Arrays.deepHashCode(a)` |
-| `List<E>` | `List.equals` so sánh phần tử theo thứ tự | `List.hashCode` tương ứng |
-| `Set<E>` | `Set.equals` so sánh thành viên không phụ thuộc thứ tự | `Set.hashCode` tương ứng |
-| `Map<K,V>` | `Map.equals` so sánh mapping key/value | `Map.hashCode` tương ứng |
+| One-dimensional `byte[]`, `int[]`, `String[]` | `Arrays.equals(a,b)` | `Arrays.hashCode(a)` |
+| Nested arrays | `Arrays.deepEquals(a,b)` | `Arrays.deepHashCode(a)` |
+| `List<E>` | `List.equals` compares elements in order | Corresponding `List.hashCode` |
+| `Set<E>` | `Set.equals` compares members regardless of order | Corresponding `Set.hashCode` |
+| `Map<K,V>` | `Map.equals` compares key/value mappings | Corresponding `Map.hashCode` |
 
-Nếu value object **giữ mảng mutable** bên trong, cần copy phòng vệ trong constructor và khi trả getter để object bất biến thật sự:
+If a Value Object **contains a mutable array**, defensively copy it in the constructor and when returning getters to preserve immutability:
 
 ```java
 final class BinaryKey {
@@ -3584,13 +3584,13 @@ final class BinaryKey {
 }
 ```
 
-Đáng chú ý: **record chứa một component `byte[]` không tự động so sánh nội dung mảng**. Phần triển khai `equals`/`hashCode` được sinh cho record sử dụng equality/hash của component; với mảng, đó là so sánh theo tham chiếu. Muốn semantics theo nội dung mảng, phải tự thiết kế lại và xử lý copy phòng vệ.
+Notably, **a record with a `byte[]` component does not automatically compare array contents**. Its generated `equals`/`hashCode` use component equality/hash; arrays use reference equality. For content-based semantics, implement the appropriate methods and defensive copies.
 
-## 9. Khóa mutable: `hashCode` đúng mà `HashMap` vẫn tra sai
+## 9. Mutable keys: correct `hashCode` but broken `HashMap` lookups
 
-Một object có thể hiện thực `equals`/`hashCode` đúng về mặt công thức **nhưng vẫn không phù hợp làm key** nếu field tham gia hash bị thay đổi sau khi chèn.
+An object may implement `equals`/`hashCode` correctly as formulas **yet still be unsuitable as a key** if a hash-relevant field changes after insertion.
 
-Ví dụ phản ví dụ:
+A counterexample:
 
 ```java
 import java.util.HashMap;
@@ -3628,15 +3628,15 @@ class MutableKeyProblem {
 }
 ```
 
-Map ghi lại vị trí phục vụ tra cứu khi key được chèn. Khi mã băm của key thay đổi, lời gọi tìm kiếm có thể bắt đầu ở một bucket khác và bỏ lỡ entry đang tồn tại. Kết quả là một dạng **lỗi logic do sử dụng key không ổn định**, không thể khắc phục bằng cách “hashCode tính lại thật chính xác”.
+The map stores key location information when inserting a key. If the key's hash changes, a later lookup may search another bucket and miss the existing entry. This is **a logic bug caused by an unstable key**, not something fixed by “recalculating hashCode perfectly.”
 
-**Cách đúng:** dùng value object bất biến hoặc một định danh ổn định không đổi trong suốt thời gian object là key; nếu bắt buộc đổi thông tin tạo key, hãy **remove entry bằng key cũ trước khi thay đổi rồi put lại** (hoặc tạo object key mới).
+**Correct approach:** Use immutable Value Objects or stable IDs throughout the key's lifetime in a hash collection. If the key-defining information must change, **remove the entry using the old key before modifying it, then insert it again** (or construct a new key).
 
-Thêm nữa, tránh dùng các field liên quan dữ liệu quan hệ có thể bị lazy load hoặc thay đổi như `List<OrderItem>` vào hash của entity JPA. Các entity ORM cần chọn chính sách identity phù hợp với lifecycle và proxy của framework, thay vì chép một công thức `getClass() + id` duy nhất cho mọi dự án.
+Also avoid including lazily loaded or mutable relationship fields such as `List<OrderItem>` in an ORM entity's hash. JPA entities need identity policies suitable for their lifecycle and framework proxies; do not blindly copy one `getClass() + id` formula into every project.
 
-## 10. Kế thừa khiến tính đối xứng dễ bị phá vỡ
+## 10. Inheritance can break symmetry
 
-Giả sử một class `Point` so sánh chỉ theo `x` và `y`, còn `ColoredPoint` thêm `color`:
+Suppose a `Point` class compares only `x` and `y`, while `ColoredPoint` adds `color`:
 
 ```java
 class Point {
@@ -3688,20 +3688,20 @@ System.out.println(plain.equals(red)); // true
 System.out.println(red.equals(plain)); // false
 ```
 
-**Vi phạm symmetry.** Nguyên nhân: lớp cha chấp nhận mọi subclass qua `instanceof Point`, nhưng lớp con yêu cầu thêm `color`.
+**This violates symmetry.** The parent accepts subclasses through `instanceof Point`, but the child requires an additional `color` match.
 
-Có nhiều chiến lược, **không có một mẹo áp dụng cho mọi hệ phân cấp**:
+Several strategies exist; **no single trick fits every hierarchy**:
 
-1. **Ưu tiên composition và `final` cho value object**. `ColoredPoint` có thể chứa `Point` thay vì kế thừa nếu equality cần thêm component.
-2. **Dùng `getClass()` để chỉ chấp nhận đúng runtime class** trong một hierarchy mà các lớp cùng thống nhất quy tắc; nhưng có thể không phù hợp với **proxy của ORM** hoặc những hệ phân cấp đòi hỏi tính thay thế.
-3. Một số mô hình dùng cơ chế `canEqual` để kiểm soát symmetry, nhưng làm hợp đồng phức tạp; phải thử symmetry/transitivity giữa mọi cặp lớp.
-4. Đối với **entity**, cân nhắc định danh bền vững và trạng thái chưa lưu DB; không quyết định chỉ dựa trên việc “hai object có cùng tên” hoặc “id mặc định đều null”.
+1. **Prefer composition and `final` for Value Objects.** `ColoredPoint` can contain a `Point` instead of extending it when equality requires extra components.
+2. **Use `getClass()` to require exactly matching runtime classes** in hierarchies sharing that rule; this may not fit **ORM proxies** or hierarchies requiring substitutability.
+3. Some models use `canEqual` to enforce symmetry, but that adds contractual complexity; test symmetry/transitivity across class pairs.
+4. For **entities**, consider persistent identity and unsaved state; do not decide solely because “two objects share a name” or “both IDs default to null.”
 
-**Tại sao `final` giúp?** Nếu không có subclass, `instanceof CustomerId` kiểm tra đúng loại mong đợi; không thể có lớp con bổ sung điều kiện equality trái với lớp cha.
+**Why does `final` help?** Without subclasses, `instanceof CustomerId` checks the expected type; no child can add equality conditions that contradict the parent.
 
-## 11. `record` có giúp khỏi viết `equals`/`hashCode` không?
+## 11. Does `record` eliminate handwritten `equals`/`hashCode`?
 
-Có, với **record thông thường** Java tự sinh `equals`/`hashCode` và `toString` từ các component:
+Yes. For ordinary **records**, Java generates `equals`/`hashCode` and `toString` from components:
 
 ```java
 record Coordinate(int row, int column) {}
@@ -3713,18 +3713,18 @@ System.out.println(p.equals(q)); // true
 System.out.println(p.hashCode() == q.hashCode()); // true
 ```
 
-Record hữu ích cho **dữ liệu bất biến nông**, nhất là DTO/value object nhỏ. Tuy nhiên:
-- Record không cho phép kế thừa class thông thường (record ngầm `final`), giảm nhiều rủi ro equality do subclass.
-- Nếu component là collection/mảng mutable, bản thân record chưa bảo đảm bất biến sâu.
-- Với array component, equality mặc định **không so sánh phần tử trong mảng**.
-- Nếu cần so sánh chỉ trên một phần subset các component, hoặc áp dụng ngữ nghĩa đặc biệt (chuẩn hóa code, bỏ timestamp khỏi equality), phải cân nhắc class riêng hoặc ghi đè hợp đồng nhất quán.
-- Record có tất cả component trong cấu trúc equality theo mặc định, do đó không nhất thiết phù hợp làm entity mutable hoặc object cần identity theo một field.
+Records help with **shallowly immutable data**, especially small DTOs/Value Objects. However:
+- Records cannot extend ordinary classes (records are implicitly `final`), reducing subclass-related equality risks.
+- Mutable collection/array components prevent deep immutability.
+- With array components, default equality **does not compare array elements**.
+- If equality should include only a subset of components or follow special semantics (code normalization, excluding timestamps), consider another class or a consistent custom contract.
+- Records include all components in default equality, so they may not fit mutable entities or objects identified by one field.
 
-Không nên nói “record luôn tự động deep equals”. Đối với một `record Snapshot(List<String> items)`, `List.equals` so sánh phần tử theo thứ tự, nhưng nếu ai đó còn giữ list mutable và thay nội dung, equality/hash của record cũng có thể thay đổi.
+Do not claim “records always perform deep equality.” For `record Snapshot(List<String> items)`, `List.equals` compares ordered elements, but if a mutable list is still shared and modified, the record's equality/hash may change.
 
-## 12. `BigDecimal`: `equals` và `compareTo` không giống nhau
+## 12. `BigDecimal`: `equals` differs from `compareTo`
 
-Đây là ví dụ quan trọng trong nghiệp vụ tiền:
+This matters greatly for money:
 
 ```java
 import java.math.BigDecimal;
@@ -3737,9 +3737,9 @@ System.out.println(a.equals(b));    // false: khác scale
 System.out.println(a.hashCode() == b.hashCode()); // thường false
 ```
 
-`BigDecimal.equals` xét **cả giá trị và scale**. `compareTo` so sánh theo giá trị số học.
+`BigDecimal.equals` checks **both value and scale**. `compareTo` checks numeric value.
 
-Hệ quả với collection:
+Consequences for collections:
 
 ```java
 var hashSet = new java.util.HashSet<BigDecimal>();
@@ -3753,13 +3753,13 @@ treeSet.add(new BigDecimal("1.00"));
 System.out.println(treeSet.size()); // 1
 ```
 
-`HashSet` dùng `equals`/`hashCode`; `TreeSet` dùng `compareTo` hoặc `Comparator` để phân biệt phần tử. Hai collection có thể cho cardinality khác nhau là **đúng theo hợp đồng riêng** của chúng.
+`HashSet` uses `equals`/`hashCode`, while `TreeSet` uses `compareTo` or `Comparator` to distinguish elements. Different cardinalities can be **correct under their respective contracts**.
 
-Nếu domain muốn coi `1.0` và `1.00` bằng nhau, có thể chuẩn hóa quy tắc scale, hoặc xây một value object riêng với equality được định nghĩa rõ. Đừng tùy tiện dùng `stripTrailingZeros()` mà chưa thống nhất biểu diễn giá trị, quy tắc số tiền và đơn vị: `new BigDecimal("1000").stripTrailingZeros()` có thể dùng scientific notation/scale âm.
+If a domain treats `1.0` and `1.00` as equal, normalize scale under a defined policy or use a custom Value Object with explicit equality. Do not apply `stripTrailingZeros()` indiscriminately without agreeing on representation, currencies, and monetary rules: `new BigDecimal("1000").stripTrailingZeros()` may produce scientific notation/negative scale.
 
-### Đồng nhất thức so sánh trong sorted collections
+### Consistency of ordering in sorted collections
 
-Với `TreeSet` và `TreeMap`, một comparator nhất quán với `equals` là điều **được khuyến nghị mạnh** để hành vi giống quy ước của `Set`/`Map` nói chung. Nếu `compare(a,b)==0` nhưng `!a.equals(b)`, collection có thể coi hai key là một mặc dù `HashMap` xem là hai.
+For `TreeSet` and `TreeMap`, comparators consistent with `equals` are **strongly recommended** to match the general `Set`/`Map` conventions. If `compare(a,b)==0` but `!a.equals(b)`, a sorted collection may treat two keys as one although `HashMap` treats them as distinct.
 
 ```java
 record Person(String id, String name) {}
@@ -3772,21 +3772,21 @@ people.add(new Person("2", "An"));
 System.out.println(people.size()); // 1 theo comparator
 ```
 
-Hai người khác `id` nhưng trùng `name`: comparator xem tương đương. Nếu yêu cầu lưu cả hai, comparator nên có tie-breaker bằng `id`, ví dụ `comparing(Person::name).thenComparing(Person::id)`.
+Two people with different `id` values but the same `name` compare as equivalent. To retain both, use an `id` tie-breaker, such as `comparing(Person::name).thenComparing(Person::id)`.
 
-## 13. `Objects.equals`, `Objects.hash`, `identityHashCode`
+## 13. `Objects.equals`, `Objects.hash`, and `identityHashCode`
 
-Một số tiện ích chuẩn rất hữu ích:
+Several standard utilities are useful:
 
-| API | Ý nghĩa | Lưu ý |
+| API | Meaning | Caution |
 |---|---|---|
-| `Objects.equals(a,b)` | So sánh null-safe theo `equals` của đối tượng | Không tự thực hiện deep equals |
-| `Objects.deepEquals(a,b)` | Với hai object là mảng, hỗ trợ so sánh nội dung sâu | Chỉ dùng khi đúng ngữ nghĩa dữ liệu |
-| `Objects.hash(f1,f2)` | Tạo mã băm từ nhiều field | Dùng cùng các field trong equality |
-| `Objects.hashCode(x)` | Null-safe, trả 0 cho null | Tốt cho một field có thể null |
-| `Arrays.equals(a,b)` | So sánh mảng theo phần tử | Khác `a.equals(b)` của mảng |
-| `Arrays.hashCode(a)` | Hash dựa trên phần tử mảng | Dùng cùng `Arrays.equals` |
-| `System.identityHashCode(x)` | Mã băm identity theo cơ chế mặc định | Không phải định danh duy nhất hoặc bền vững |
+| `Objects.equals(a,b)` | Null-safe equality using the object's `equals` | Does not automatically perform deep equality |
+| `Objects.deepEquals(a,b)` | Supports deep content comparison when both objects are arrays | Use only with suitable semantics |
+| `Objects.hash(f1,f2)` | Produces a hash from multiple fields | Include the fields used in equality |
+| `Objects.hashCode(x)` | Null-safe, returns 0 for null | Useful for a nullable single field |
+| `Arrays.equals(a,b)` | Compares array elements | Unlike an array's `a.equals(b)` |
+| `Arrays.hashCode(a)` | Hash based on array elements | Pair with `Arrays.equals` |
+| `System.identityHashCode(x)` | Identity hash using default behavior | Neither unique nor persistent as an identifier |
 
 ```java
 String nullable = null;
@@ -3794,21 +3794,21 @@ System.out.println(java.util.Objects.equals(nullable, null)); // true
 System.out.println(java.util.Objects.hashCode(nullable));     // 0
 ```
 
-**Cảnh báo:** `System.identityHashCode(x)` có thể trùng nhau cho hai object khác nhau, và không được dùng làm unique ID. Với `hashCode()` bị override, `System.identityHashCode` bỏ qua override để trả hash identity, nhưng điều này cũng không chứng minh hai object có cùng hay khác danh tính.
+**Warning:** `System.identityHashCode(x)` may collide across distinct objects and must not be used as a unique ID. When `hashCode()` is overridden, `System.identityHashCode` bypasses that override to return the identity hash; this does not prove whether objects have identical identities.
 
-## 14. Nguyên tắc chọn field và đối tượng làm key
+## 14. Choosing fields and keys
 
-Trước khi viết equality cho một kiểu dùng làm key, hãy trả lời:
+Before implementing equality for a key type, ask:
 
-1. Hai instance khác nhau nhưng cùng **mã định danh nghiệp vụ** có cần được xem là bằng nhau không?
-2. Mã đó có **duy nhất trong đúng phạm vi** không? Ví dụ `customerId` có thể cần cả `tenantId`.
-3. Các field tham gia equality có **được giữ ổn định** suốt thời gian object ở trong hash collection không?
-4. Dữ liệu có cần **chuẩn hóa** (hoa thường, khoảng trắng, Unicode normalization, timezone, đơn vị tiền) không?
-5. Field nào có thể null, và hai null có phải là “cùng giá trị” không?
-6. Có subclass/ORM proxy nào có thể làm ngữ nghĩa `instanceof` hoặc `getClass` thay đổi không?
-7. Có bắt buộc định nghĩa thứ tự bằng `Comparable`/`Comparator` và giữ nó nhất quán với equality không?
+1. Should distinct instances with the same **business identifier** count as equal?
+2. Is the identifier **unique within the right scope**? For example, `customerId` might need `tenantId` as well.
+3. Are equality-relevant fields **stable** for as long as the object remains in a hash collection?
+4. Must data be **normalized** (case, whitespace, Unicode normalization, time zones, monetary units)?
+5. Which fields may be null, and should two nulls mean the “same value”?
+6. Could subclasses/ORM proxies change the meaning of `instanceof` or `getClass`?
+7. Must ordering be defined by `Comparable`/`Comparator` and kept consistent with equality?
 
-Ví dụ hệ thống đa khách thuê:
+A multitenant example:
 
 ```java
 record CustomerKey(String tenantId, String customerId) {
@@ -3822,27 +3822,27 @@ record CustomerKey(String tenantId, String customerId) {
 }
 ```
 
-Chỉ so sánh `customerId` có thể làm trùng khách hàng ở hai tenant. Equality nên dựa vào **định danh thực tế của domain**, không tự động theo tên một field thường gặp.
+Comparing only `customerId` can merge customers from different tenants. Equality should use **actual domain identity**, not simply a conventionally named field.
 
-## 15. Equality của entity ORM/JPA cần thận trọng
+## 15. ORM/JPA entity equality needs care
 
-Entity khác value object vì nó có **identity và lifecycle**:
+Entities differ from Value Objects through **identity and lifecycle**:
 
-- Một entity mới tạo có thể **chưa có database ID**.
-- Sau khi persist, ID có thể được database sinh và gán.
-- ORM có thể dùng **proxy subclass** để lazy-load.
-- Quan hệ hai chiều có thể tạo vòng lặp nếu tự động gọi `equals`/`hashCode` trên mọi field.
-- Hash code đổi sau khi entity được cho vào `HashSet` có thể khiến tra cứu thất bại.
+- Newly created entities may **lack database IDs**.
+- The database may generate and assign an ID after persistence.
+- ORMs may use **proxy subclasses** for lazy loading.
+- Bidirectional relationships may create recursion if every field participates in `equals`/`hashCode`.
+- Changing a hash after an entity is inserted in a `HashSet` can break lookups.
 
-Vì vậy không có một công thức “mọi JPA entity dùng `Objects.hash(id)`” luôn đúng. Một số dự án dùng **business key bất biến**, một số áp dụng **ID sau persist** với chính sách hash đặc biệt, và cần xem xét proxy/lifecycle cụ thể.
+Thus no single “all JPA entities use `Objects.hash(id)`” formula always works. Some projects use **immutable business keys**, others use **post-persistence IDs** with special hash rules, and all must account for proxies/lifecycles.
 
-Một chiến lược thường gặp là dành equality theo khóa DB cho các entity đã persist, và dùng **reference equality** cho transient entities; nhưng phải kiểm soát tính nhất quán của `hashCode` và cách so class thực khi có proxy. Đừng sao chép code từ framework khác mà không thử create–persist–load–detach, hash collection và proxy.
+One approach uses database-key equality for persisted entities but **reference equality** for transient ones; this still requires consistent `hashCode` and runtime-class behavior with proxies. Do not copy framework-specific code without testing create–persist–load–detach, hash collections, and proxies.
 
-**Với value object thuần Java, nên ưu tiên bất biến**; với entity, nên bắt đầu từ định nghĩa identity của mô hình và tài liệu ORM đang sử dụng.
+**Favor immutability for plain Java Value Objects**. For entities, start with domain identity definitions and the actual ORM documentation.
 
-## 16. Test hợp đồng bằng JUnit 5
+## 16. Testing equality contracts with JUnit 5
 
-Sau khi có `EqualityHashDemo.java` ở mục 6, tạo `EqualityHashDemoTest.java` trong cùng package, dùng JUnit Jupiter 5:
+After creating `EqualityHashDemo.java` in section 6, place `EqualityHashDemoTest.java` in the same package and use JUnit Jupiter 5:
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -3902,45 +3902,45 @@ class EqualityHashDemoTest {
 }
 ```
 
-Những test này kiểm tra **một tập representative cases**, không tự động chứng minh hợp đồng đúng với **mọi object có thể tạo**. Khi equality có nhiều field, kiểu kế thừa phức tạp hoặc dữ liệu ngẫu nhiên, có thể dùng property-based testing để tạo nhiều trường hợp và kiểm tra phản xạ, đối xứng, bắc cầu, nhất quán hash.
+These tests cover **representative cases**, not every possible object. For equality with many fields, complicated inheritance, or random data, property-based testing can exercise more cases and verify reflexivity, symmetry, transitivity, and hash consistency **across generated inputs**.
 
-### Một bảng ca kiểm thử nên có
+### Suggested test-case matrix
 
-| Trường hợp | Điều cần xác nhận |
+| Scenario | What to verify |
 |---|---|
-| Cùng reference | `x.equals(x)` là `true` |
-| Hai instance cùng field equality | Hai chiều `equals` đều true, hash bằng nhau |
-| Khác một field có ý nghĩa | `equals` là false |
-| Một field không tham gia equality thay đổi | Không làm thay đổi equality/hash theo hợp đồng |
-| `null` hoặc object khác kiểu | `equals` false, không ném exception không cần thiết |
-| Ba object có cùng giá trị | Bắc cầu |
-| Thêm key tương đương vào `HashSet` | Kích thước không tăng |
-| Tra `HashMap` bằng key mới nhưng tương đương | Lấy được value đã chèn |
-| Đối tượng chứa array | So sánh theo nội dung nếu domain yêu cầu |
-| Lớp cha và lớp con | Không phá đối xứng/bắc cầu |
-| Khóa bất biến | Hash không thay đổi suốt lifecycle trong collection |
+| Same reference | `x.equals(x)` is `true` |
+| Separate instances with matching equality fields | Both directions of `equals` return true; hashes match |
+| One meaningful field differs | `equals` is false |
+| A non-equality field changes | Equality/hash remains unchanged according to the contract |
+| `null` or another object type | `equals` returns false without unnecessary exceptions |
+| Three equal-valued objects | Transitivity |
+| Insert equivalent key into `HashSet` | Size does not increase |
+| Look up `HashMap` with a new equivalent key | Retrieves the stored value |
+| Object contains arrays | Content equality when the domain requires it |
+| Parent and subclass | Symmetry/transitivity preserved |
+| Immutable key | Hash stays stable throughout use in a collection |
 
-Không nên viết test đòi hỏi hash của hai object **không bằng nhau** phải luôn khác. Không có yêu cầu đó; collision là hợp lệ.
+Do not assert that **unequal** objects must have different hashes. No such guarantee exists; collisions are valid.
 
-## 17. Những sai lầm thường gặp
+## 17. Common mistakes
 
-| Sai lầm | Hậu quả | Khắc phục |
+| Mistake | Consequence | Remedy |
 |---|---|---|
-| Override `equals` nhưng quên `hashCode` | `HashSet`/`HashMap` có thể không nhận diện key tương đương | Override cả hai theo cùng equality fields |
-| Viết `boolean equals(CustomerId x)` thay vì `equals(Object)` | Đây là overload, `Object.equals` vẫn giữ identity | Thêm `@Override`, dùng đúng chữ ký |
-| Equality so một tập field, hash lại thêm field khác | Hai object bằng nhau có thể hash khác nhau | Đồng bộ dữ liệu quyết định equality/hash |
-| Coi hash bằng nhau là hai object bằng nhau | Collision làm nhận diện sai | Luôn dùng `equals` để xác nhận |
-| Cho field mutable vào hash rồi sửa khi object đang là key | Không tìm thấy entry | Dùng key bất biến hoặc remove/reinsert |
-| Dùng `==` cho `String`/value object | So sánh reference thay vì giá trị | Dùng `equals`/`Objects.equals` |
-| So sánh array bằng `array.equals` | So sánh identity của mảng | Dùng `Arrays.equals`/`deepEquals` và hash tương ứng |
-| Kế thừa rồi mỗi lớp thêm một điều kiện equals | Có thể mất symmetry/transitivity | Thiết kế value object final/composition hoặc protocol rõ |
-| Đồng nhất `BigDecimal.compareTo` với `equals` | `HashSet`/`TreeSet` cho kết quả khác | Chọn normalization/equality/comparator theo domain |
-| Dùng `hashCode` làm ID hay checksum bảo mật | Va chạm và thiếu ổn định giữa JVM/run | Dùng ID thích hợp hoặc cryptographic hash đúng yêu cầu |
-| Dùng record chứa list/array mutable và tưởng deep immutable | Hash thay đổi hoặc equality không đúng mong đợi | Defensive copy, thiết kế component bất biến |
-| Tạo equality trên toàn bộ entity ORM | Chu kỳ tham chiếu, lazy load, hash đổi khi persist | Thiết kế theo identity và lifecycle của ORM |
-| Dùng `Objects.hash` tràn lan cho logic hiệu năng nhạy cảm | Có thể có overhead boxing/varargs | Đo benchmark trước khi tối ưu, chọn công thức phù hợp |
+| Overriding `equals` without `hashCode` | `HashSet`/`HashMap` may miss equivalent keys | Override both using matching equality fields |
+| Writing `boolean equals(CustomerId x)` instead of `equals(Object)` | Overloads, leaving `Object.equals` as identity equality | Use `@Override` with the correct signature |
+| Comparing one set of fields but hashing extra fields | Equal objects can have different hashes | Align equality/hash input fields |
+| Treating equal hashes as proof of object equality | Collisions cause incorrect matches | Confirm with `equals` |
+| Mutating a hash-relevant key field during collection membership | Existing entries become unreachable | Use immutable keys or remove/reinsert |
+| Using `==` for `String`/Value Objects | Compares references, not values | Use `equals`/`Objects.equals` |
+| Using `array.equals` for array contents | Compares array identity | Use `Arrays.equals`/`deepEquals` and matching hash |
+| Subclassing with additional equality conditions per class | Can violate symmetry/transitivity | Prefer final Value Objects/composition or a clear protocol |
+| Equating `BigDecimal.compareTo` with `equals` | `HashSet`/`TreeSet` may behave differently | Define normalization/equality/comparators for the domain |
+| Using `hashCode` as an ID/security checksum | Collisions and instability across runs | Use suitable IDs or cryptographic hashes |
+| Assuming records with mutable lists/arrays are deeply immutable | Hashes change or equality surprises | Defensive copying and immutable components |
+| Including every ORM entity field in equality | Reference cycles, lazy loading, hash changes | Model identity and ORM lifecycle |
+| Overusing `Objects.hash` in performance-critical logic | Potential boxing/varargs overhead | Benchmark before optimizing |
 
-## 18. Quy trình thiết kế và review `equals`/`hashCode`
+## 18. Workflow for designing and reviewing `equals`/`hashCode`
 
 ```mermaid
 flowchart TD
@@ -3956,93 +3956,93 @@ flowchart TD
     I --> J["Test HashSet và HashMap với key tương đương"]
 ```
 
-Trình tự gợi ý:
+Suggested sequence:
 
-1. Viết định nghĩa domain bằng một câu: “hai `CustomerKey` bằng nhau nếu cùng `tenantId` và `customerId`”.
-2. Quyết định có cần normalize giá trị ở constructor, và có những validation bất biến nào.
-3. Nếu là value object, ưu tiên `record` hoặc `final class` bất biến với field không mutable.
-4. Chọn cách so field: primitive bằng quy tắc phù hợp, reference bằng `Objects.equals`/`equals`, array bằng `Arrays.equals` nếu cần so nội dung.
-5. Cài `hashCode` nhất quán với equality, không kỳ vọng không có collision.
-6. Rà soát kế thừa và ORM proxy, đặc biệt nếu kiểu này là entity.
-7. Kiểm thử các thuộc tính hợp đồng và hành vi với hash collections.
-8. Đánh giá tính ổn định nếu object là key lâu dài hoặc sống trong cache.
-9. Nếu sử dụng Lombok/IDE sinh mã, **vẫn review tập field được chọn**; công cụ chỉ sinh code theo cấu hình, không quyết định ngữ nghĩa domain thay bạn.
+1. Define domain equality in one sentence: “Two `CustomerKey` values are equal when both `tenantId` and `customerId` match.”
+2. Decide whether values need constructor normalization and invariant validation.
+3. For Value Objects, prefer a `record` or immutable `final class` with nonmutable fields.
+4. Select comparison methods: primitives use suitable rules, references use `Objects.equals`/`equals`, arrays use `Arrays.equals` when content semantics apply.
+5. Implement `hashCode` consistently with equality, without assuming collisions never occur.
+6. Review inheritance and ORM proxies, particularly for entity types.
+7. Test contractual properties and hash-collection behavior.
+8. Assess stability for objects used as long-lived keys or cache entries.
+9. With Lombok/IDE generated code, **still review the selected fields**; tools generate code according to configuration, not domain semantics.
 
-## 19. Bài tập thực hành
+## 19. Practice exercises
 
-**Bài 1 – Khóa sản phẩm nhiều tenant.** Viết `record ProductKey(String tenantId, String sku)` và test: hai product cùng SKU nhưng khác tenant phải khác nhau trong `HashMap`. Thử thêm cùng giá trị bằng instance khác và giải thích số lượng entry.
+**Exercise 1 – Multitenant product keys.** Implement `record ProductKey(String tenantId, String sku)` and test two products with the same SKU but different tenants in `HashMap`. Insert a second instance with equivalent values and explain the entry count.
 
-**Bài 2 – Kiểu email.** Tạo `EmailAddress` bất biến, nêu rõ quy tắc canonicalization của hệ thống (ví dụ domain có thể không phân biệt hoa thường; local-part theo nghiệp vụ riêng). Viết `equals`/`hashCode` và test cả input chưa chuẩn hóa. Không tự ý áp quy tắc case-insensitive cho mọi email nếu sản phẩm chưa quy định.
+**Exercise 2 – Email types.** Build an immutable `EmailAddress` and specify canonicalization rules (for example, domains may be case-insensitive, local-parts require explicit policy). Implement `equals`/`hashCode` and test nonnormalized inputs. Do not assume every email is case-insensitive without product requirements.
 
-**Bài 3 – Lớp chứa array.** Viết `ImageFingerprint` có field `byte[]` và semantics bằng nhau theo nội dung. Bảo vệ khỏi sửa mảng sau khi constructor nhận vào và sau khi getter trả về. Viết test hash collection và thử sửa mảng nguồn.
+**Exercise 3 – An array-containing class.** Write an `ImageFingerprint` with a `byte[]` field and content-based equality. Defend against modifications to the source array and the array returned from a getter. Test hash collections after modifying input arrays.
 
-**Bài 4 – Phân tích lỗi kế thừa.** Dùng `Point` và `ColoredPoint`, chỉ ra tại sao `plain.equals(red)` khác `red.equals(plain)`. Thiết kế một cách thay thế dùng composition hoặc final class, giải thích trade-off.
+**Exercise 4 – Inheritance bug.** With `Point` and `ColoredPoint`, explain why `plain.equals(red)` differs from `red.equals(plain)`. Redesign with composition or a final class and discuss trade-offs.
 
-**Bài 5 – BigDecimal.** Với `1.0` và `1.00`, so sánh kết quả `equals`, `compareTo`, `HashSet`, `TreeSet`. Nếu nghiệp vụ muốn lưu giá trị tiền quy định 2 chữ số thập phân, đề xuất bước chuẩn hóa trước khi tạo value object.
+**Exercise 5 – BigDecimal.** Compare `1.0` and `1.00` using `equals`, `compareTo`, `HashSet`, and `TreeSet`. If the domain requires monetary values with 2 decimal places, propose a normalization step before creating Value Objects.
 
-**Bài 6 – Entity với generated ID.** Phác họa lifecycle transient → persisted → detached. Đặt câu hỏi về ID null, proxy class và hash stability. Thiết kế ít nhất hai chiến lược equality khác nhau, nêu điểm mạnh/yếu và các test cần có trước khi áp dụng thật.
+**Exercise 6 – Generated-ID entities.** Sketch transient → persisted → detached lifecycles. Consider null IDs, proxy classes, and hash stability. Design at least two equality strategies and explain strengths, weaknesses, and tests before real use.
 
-## 20. Checklist ghi nhớ
+## 20. Review checklist
 
-- [ ] `==` trên object là **cùng tham chiếu**; `equals` có thể là **bằng nhau theo giá trị**.
-- [ ] `equals` tuân **phản xạ, đối xứng, bắc cầu, nhất quán, khác null**.
-- [ ] **`equals(a,b)` true ⇒ `hash(a) == hash(b)`**, nhưng chiều ngược lại sai.
-- [ ] Tôi không dùng hashCode làm định danh duy nhất hay hash bảo mật.
-- [ ] Field tham gia equality/hash ổn định khi object là key.
-- [ ] Tôi viết đúng `equals(Object)` và `hashCode()` với `@Override`.
-- [ ] Tôi phân biệt cách xử lý `String`, mảng, collection, `BigDecimal` và số thực.
-- [ ] Tôi đặc biệt chú ý khi có inheritance hoặc entity ORM.
-- [ ] Test kiểm tra trực tiếp `HashSet`/`HashMap` ngoài các thuộc tính hợp đồng.
-- [ ] Tôi dùng record/IDE/Lombok có ý thức: ngữ nghĩa equality vẫn do domain quyết định.
+- [ ] `==` on objects means **same reference**; `equals` may express **value equality**.
+- [ ] `equals` satisfies **reflexivity, symmetry, transitivity, consistency, and non-null behavior**.
+- [ ] **`equals(a,b)` true ⇒ `hash(a) == hash(b)`**, but the converse is false.
+- [ ] I do not use hash codes as unique IDs or security hashes.
+- [ ] Equality/hash fields stay stable while the object is a key.
+- [ ] I implement `equals(Object)` and `hashCode()` with `@Override`.
+- [ ] I distinguish `String`, arrays, collections, `BigDecimal`, and floating-point comparisons.
+- [ ] I pay particular attention to inheritance and ORM entities.
+- [ ] I test `HashSet`/`HashMap` behavior as well as contractual properties.
+- [ ] I use records/IDEs/Lombok deliberately; the domain still defines equality semantics.
 
-**Ghi nhớ:** `equals` quyết định “cùng giá trị theo nghĩa nào”; `hashCode` phải phù hợp với định nghĩa ấy để các cấu trúc băm hoạt động đúng. Điều quan trọng nhất không phải công thức số băm thật phức tạp, mà là **hợp đồng rõ ràng, nhất quán và ổn định**.
+**Remember:** `equals` defines what “same value” means; `hashCode` must align with that meaning for hash-based structures to work. The most important quality is not a complicated hashing formula, but **a clear, consistent, stable contract**.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="language-mechanics-007">Biểu diễn chuỗi và thông tin chẩn đoán của đối tượng</a>
+## <a id="language-mechanics-007">Object string representations and diagnostic information</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Biểu diễn chuỗi và thông tin chẩn đoán của đối tượng trong Java
+# Object string representations and diagnostic information in Java
 
-> **Chủ đề:** OOP → Cơ chế ngôn ngữ.  
-> **Mục tiêu:** Hiểu vai trò của `Object.toString()`, phân biệt thông tin biểu diễn cho lập trình viên với dữ liệu dùng cho người dùng hoặc API, biết thiết kế một chuỗi chẩn đoán ngắn gọn và an toàn, sử dụng logging/exception đúng mục đích và kiểm thử nguy cơ rò rỉ dữ liệu.
+> **Topic:** OOP → Language Mechanics.  
+> **Goal:** Understand `Object.toString()`; distinguish developer diagnostics from user-facing or API data; design concise, safe diagnostic strings; use logging/exceptions appropriately; and test for sensitive-data leakage.
 
-## 1. Vì sao một đối tượng cần được biểu diễn thành chuỗi?
+## 1. Why represent objects as strings?
 
-Khi một ứng dụng đang chạy, ta thường muốn biết **đối tượng nào đang được xử lý và trạng thái đáng chú ý của nó**. Ví dụ, khi một đơn hàng không chuyển được từ `CREATED` sang `PAID`, một dòng log như:
+While an application runs, we often need to know **which object is being processed and which parts of its state matter**. For example, when an order fails to transition from `CREATED` to `PAID`, a log line like:
 
 ~~~text
 Order{id='ORD-42', status=CREATED, itemCount=2, traceId='REQ-72'}
 ~~~
 
-hữu ích hơn một chuỗi tương tự:
+is more useful than something like:
 
 ~~~text
 com.example.Order@6d06d69c
 ~~~
 
-Chuỗi đầu giúp người phát triển xác định mã đơn, trạng thái, số mặt hàng và mã truy vết. Chuỗi thứ hai chủ yếu cho biết lớp của đối tượng và một giá trị hash, thường chưa đủ để chẩn đoán.
+The first identifies the order ID, status, item count, and trace ID. The second mostly shows the object's class and a hash value, often insufficient for debugging.
 
-Trong Java, **`toString()`** là phương thức căn bản để cung cấp biểu diễn văn bản của một đối tượng. Nó được khai báo trong `java.lang.Object`, nên mọi đối tượng Java đều kế thừa được phương thức này:
+In Java, **`toString()`** is the fundamental method for providing an object's text representation. It is declared by `java.lang.Object` and inherited by all Java objects:
 
 ~~~java
 public String toString()
 ~~~
 
-Một class có thể **override** `toString()` để trình bày thông tin có ý nghĩa hơn. Mục đích điển hình là **quan sát đối tượng khi debug, ghi log hoặc xem trong trình gỡ lỗi (debugger)**.
+A class can **override** `toString()` to display more meaningful information. Typical uses include **debugging, logging, and viewing objects in a debugger**.
 
-**Điểm cần phân biệt ngay từ đầu:** Chuỗi từ `toString()` không nhất thiết là dữ liệu dành cho người dùng cuối, không có cam kết là định dạng JSON/XML, và thường **không nên** là định dạng trao đổi giữa các hệ thống. Nếu cần dữ liệu có schema ổn định, hãy dùng DTO và serializer phù hợp.
+**An essential distinction:** A `toString()` result need not be suitable for end users, does not promise JSON/XML formatting, and generally **should not** be an interchange format between systems. Use DTOs and suitable serializers for stable schemas.
 
-## 2. Mặc định `Object.toString()` tạo ra gì?
+## 2. What does `Object.toString()` produce by default?
 
-Triển khai mặc định của `Object.toString()` về cơ bản tương đương:
+The default implementation of `Object.toString()` is conceptually equivalent to:
 
 ~~~java
 public String toString() {
@@ -4051,9 +4051,9 @@ public String toString() {
 }
 ~~~
 
-Điều này tạo ra chuỗi gồm **tên lớp đầy đủ**, dấu `@` và kết quả `hashCode()` được biểu diễn theo hệ thập lục phân.
+It produces the **fully qualified class name**, an `@` sign, and a hexadecimal representation of `hashCode()`.
 
-Ví dụ:
+For example:
 
 ~~~java
 class Ticket {
@@ -4064,25 +4064,25 @@ Ticket ticket = new Ticket();
 System.out.println(ticket);
 ~~~
 
-Có thể in ra chuỗi có dạng:
+It may print a string shaped like:
 
 ~~~text
 Ticket@1b6d3586
 ~~~
 
-Giá trị phía sau `@` **không cố định**, có thể khác giữa các lần chạy. Đừng dùng nó để khẳng định vị trí bộ nhớ, định danh database hoặc mã nghiệp vụ của đối tượng.
+The value after `@` **is not fixed** and may differ between runs. Do not treat it as a memory address, database ID, or domain identifier.
 
-### Ba điều dễ hiểu nhầm về chuỗi mặc định
+### Three misconceptions about the default string
 
-1. `hashCode()` **không phải địa chỉ bộ nhớ**. Không có bảo đảm API Java rằng chuỗi `@...` chứa địa chỉ vật lý hoặc vị trí heap.
-2. `Object.toString()` gọi **`hashCode()`**, nên nếu class ghi đè `hashCode()`, chuỗi mặc định của nó có thể chịu ảnh hưởng bởi cách hash được định nghĩa.
-3. Hai đối tượng khác nhau **có thể trùng hash code**. `hashCode()` không phải một ID duy nhất hoặc khóa truy vết nghiệp vụ.
+1. `hashCode()` **is not a memory address**. Java's API does not guarantee that `@...` contains a physical address or heap location.
+2. `Object.toString()` calls **`hashCode()`**, so a class overriding `hashCode()` may affect its default string representation.
+3. Distinct objects **may share a hash code**. `hashCode()` is not a unique identifier or business trace key.
 
-Nếu thật sự cần một giá trị hash theo identity mà không phụ thuộc override `hashCode()`, Java có `System.identityHashCode(object)`; song giá trị ấy vẫn **không bảo đảm duy nhất tuyệt đối** và không thay thế ID nghiệp vụ.
+When an identity-based hash independent of overridden `hashCode()` is needed, Java provides `System.identityHashCode(object)`; even this value **is not guaranteed globally unique** and cannot substitute for business IDs.
 
-### `toString()` liên quan thế nào đến `println` và nối chuỗi?
+### How does `toString()` relate to `println` and string concatenation?
 
-Java tự gọi cơ chế chuyển đối tượng sang chuỗi trong nhiều ngữ cảnh:
+Java converts objects to strings automatically in many contexts:
 
 ~~~java
 Ticket ticket = new Ticket();
@@ -4093,9 +4093,9 @@ String text = String.valueOf(ticket);       // String.valueOf(Object)
 String formatted = String.format("%s", ticket);
 ~~~
 
-Các thao tác này thông thường sử dụng kết quả `toString()` khi đối tượng khác `null`. Bởi vậy, chỉ cần override đúng một phương thức, nhiều vị trí debug/logging sẽ dễ đọc hơn.
+These operations generally use `toString()` for non-`null` objects. Overriding one method can therefore improve readability across many debugging/logging situations.
 
-Trường hợp null cần nhớ:
+Remember how null is handled:
 
 ~~~java
 Object missing = null;
@@ -4105,19 +4105,19 @@ System.out.println(java.util.Objects.toString(
         missing, "<chưa có>"));               // "<chưa có>"
 ~~~
 
-Đừng tự gọi `missing.toString()`: lời gọi đó ném `NullPointerException`. `String.valueOf(Object)` và `Objects.toString(Object, String)` có chính sách xử lý null riêng.
+Do not call `missing.toString()` directly: it throws `NullPointerException`. `String.valueOf(Object)` and `Objects.toString(Object, String)` have their own null-handling conventions.
 
-## 3. Ví dụ thực tế Java 17: chẩn đoán một đơn hàng
+## 3. Practical Java 17 example: diagnosing an order
 
-Giả sử lớp `Order` giữ cả thông tin nghiệp vụ lẫn dữ liệu nhạy cảm:
+Suppose an `Order` holds business information and sensitive data:
 
-- **Hữu ích khi chẩn đoán:** mã đơn, trạng thái, số mặt hàng, mã truy vết.
-- **Không nên in ra:** email khách hàng, access token dùng gọi dịch vụ ngoài.
-- **Không nên đưa trực tiếp vào `toString()`:** toàn bộ lịch sử xử lý dài, danh sách đối tượng lớn, thông tin có thể phải truy vấn từ database.
+- **Useful diagnostics:** order ID, status, item count, and trace ID.
+- **Do not print:** customer email addresses or access tokens for external services.
+- **Avoid including directly in `toString()`:** full processing histories, huge object collections, and data requiring database queries.
 
-Ta viết `toString()` **có chủ đích chọn trường** (*allowlist*), không lấy tất cả field.
+Implement `toString()` with a **deliberate field allowlist**, rather than including everything.
 
-Tạo file **`ObjectDiagnosticsDemo.java`** và chạy bằng JDK 17 trở lên:
+Create **`ObjectDiagnosticsDemo.java`** and run it on JDK 17 or later:
 
 ~~~java
 import java.util.List;
@@ -4227,14 +4227,14 @@ public class ObjectDiagnosticsDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac ObjectDiagnosticsDemo.java
 java ObjectDiagnosticsDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Order{id='ORD-42', status=CREATED, itemCount=2, traceId='REQ-72'}
@@ -4243,48 +4243,48 @@ Kiểm tra: Order{id='ORD-42', status=CREATED, itemCount=2, traceId='REQ-72'}
 OrderLine[sku=SKU-1, quantity=2]
 ~~~
 
-### Vì sao thiết kế này hữu ích?
+### Why is this design useful?
 
-- `Order.toString()` cung cấp **bối cảnh tối thiểu cần cho việc điều tra**: đơn nào, trạng thái nào, có bao nhiêu dòng, trace nào.
-- Không đưa `customerEmail` và `accessToken` vào chuỗi. Thậm chí dữ liệu bị che một phần vẫn cần đánh giá lại theo chính sách riêng tư; giải pháp mặc định an toàn hơn là **không thêm trường đó**.
-- `lines` được chụp bằng `List.copyOf` khi dựng đối tượng, giảm nguy cơ một bên khác thay đổi cấu trúc danh sách từ bên ngoài. Vì `OrderLine` là record chỉ chứa `String` và `int`, phần tử ví dụ này cũng không có state mutable bên trong.
-- `customerMessage()` diễn đạt **nội dung dành cho khách hàng**. Nó có hợp đồng riêng, không phụ thuộc chuỗi dành cho developer.
-- `traceId` là một mã được truyền từ luồng xử lý; có thể dùng để liên kết sự kiện qua nhiều lớp. Nó **không tự sinh ra correlation/tracing** nếu hệ thống chưa thiết kế cơ chế truyền và ghi nhận trace.
+- `Order.toString()` provides **the minimum useful investigation context**: which order, its status, line count, and trace.
+- It omits `customerEmail` and `accessToken`. Even partially masked data must be evaluated against privacy policies; a safer default is **not including those fields**.
+- `lines` is snapshotted with `List.copyOf` during construction, preventing external changes to the list structure. Because `OrderLine` is a record containing only `String` and `int` components, its sample values have no internal mutable state.
+- `customerMessage()` expresses **customer-facing content** under its own contract, independent of developer diagnostic text.
+- `traceId` is supplied by the processing flow and can link events across components. It **does not create correlation/tracing automatically** unless the system propagates and records trace IDs.
 
-Đoạn trên minh họa một **snapshot đơn giản**. Trong hệ thống thực, thay vì trực tiếp lấy trạng thái từ entity phức tạp hoặc lazy-loaded ORM object ở `toString()`, có thể dùng một diagnostic DTO hoặc tập các trường đã chuẩn hóa.
+The example uses a **simple snapshot**. In real systems, consider normalized diagnostic DTOs/fields rather than making `toString()` navigate complex entities or lazy-loaded ORM objects.
 
-## 4. Quy tắc thiết kế một `toString()` tốt
+## 4. Principles for a good `toString()` method
 
-Không có một định dạng bắt buộc cho mọi class. Thay vào đó, nên đánh giá qua các tiêu chí thực tế:
+No single format is mandatory for every class. Instead, evaluate practical criteria:
 
-| Tiêu chí | Cách áp dụng | Rủi ro khi làm sai |
+| Criterion | Practice | Risk if ignored |
 |---|---|---|
-| **Ngắn gọn** | Chọn ID, trạng thái và vài thuộc tính liên quan lỗi | Log quá dài, khó đọc, tăng chi phí lưu trữ |
-| **Có ngữ nghĩa** | `orderId`, `status`, `itemCount` | Chỉ thấy hash hoặc các field không rõ ý nghĩa |
-| **An toàn thông tin** | Dùng allowlist, bỏ token, mật khẩu, thông tin cá nhân không cần thiết | Rò rỉ dữ liệu qua log và công cụ giám sát |
-| **Không tác dụng phụ** | Không đổi trạng thái, không gọi mạng, không ghi DB | Việc “xem object” gây hành vi ngoài ý muốn |
-| **Chịu được null** | Xử lý trường tùy chọn có thể null | `NullPointerException` khi ghi log |
-| **Hiệu năng dự đoán được** | Không tải quan hệ lazy, không duyệt graph khổng lồ | N+1 query, treo luồng, tạo chuỗi lớn |
-| **Không phụ thuộc format như API** | Cho phép sửa chữ mô tả để tăng khả năng chẩn đoán | Consumer parse `toString()` bị hỏng khi refactor |
-| **Dễ hiểu khi đa luồng** | Snapshot bất biến hoặc đọc trạng thái có cơ chế đồng bộ rõ | Chuỗi tổng hợp từ nhiều thời điểm khác nhau |
+| **Concise** | Choose IDs, status, and a few error-relevant attributes | Excessive logs, poor readability, increased storage costs |
+| **Meaningful** | `orderId`, `status`, `itemCount` | Only hashes or obscure fields |
+| **Data-safe** | Use allowlists; exclude tokens, passwords, and unnecessary personal information | Leaks through logs and monitoring tools |
+| **Free of side effects** | Do not change state, access networks, or write to databases | Inspecting an object causes unexpected behavior |
+| **Null-tolerant** | Handle optional nullable fields | `NullPointerException` while logging |
+| **Predictable performance** | Avoid lazy-loading relationships and huge object graphs | N+1 queries, blocked threads, enormous strings |
+| **Not treated as a stable API format** | Allow wording changes to aid diagnostics | Consumers parsing `toString()` break after refactoring |
+| **Concurrency-aware** | Use immutable snapshots or consistent synchronized state reads | String combines data from different instants |
 
-Một `toString()` được gọi rất thường xuyên: trên console, trong IDE, khi format chuỗi, khi ghi log có đối số object hoặc trong một thông báo exception. Vì vậy việc thực thi nên **nhanh, an toàn và không bất ngờ**.
+A `toString()` method may be invoked frequently in consoles, IDEs, string formatting, object arguments to loggers, and exception messages. It should be **fast, safe, and unsurprising**.
 
-### Những gì không nên đưa mặc định vào `toString()`
+### Information that should not appear in `toString()` by default
 
-- Mật khẩu, access token, refresh token, API key, session cookie, mã OTP, secret nội bộ.
-- Thông tin cá nhân chi tiết (email, số điện thoại, địa chỉ, định danh) nếu không có căn cứ rõ ràng để ghi log.
-- Nội dung request/response thô có thể chứa dữ liệu người dùng.
-- Toàn bộ collection lớn, file, ảnh, blob hoặc kết quả truy vấn.
-- Đối tượng service, connection, ORM proxy, graph hai chiều hoặc những quan hệ có thể kích hoạt truy vấn.
+- Passwords, access/refresh tokens, API keys, session cookies, OTP codes, and internal secrets.
+- Detailed personal information (email, phone, address, identifiers) without a clear logging justification.
+- Raw request/response bodies that may contain user data.
+- Entire large collections, files, images, blobs, or query results.
+- Service objects, connections, ORM proxies, bidirectional graphs, or relationships that could trigger queries.
 
-Kể cả **ID** cũng có thể được xem là dữ liệu nhạy cảm trong một số hệ thống. Hãy tuân theo chính sách phân loại dữ liệu; không mặc định rằng “không phải password” nghĩa là an toàn để ghi log.
+Even **IDs** may be sensitive in some systems. Follow data-classification policies; do not assume “not a password” means safe to log.
 
-## 5. `toString()` của `record`, collection và array
+## 5. `toString()` for `record`, collection, and array types
 
-### 5.1. Record tự tạo chuỗi dựa trên thành phần khai báo
+### 5.1. Records generate strings from declared components
 
-Java `record` tự sinh `toString()`, `equals()` và `hashCode()` theo các thành phần của record nếu ta không override. Ví dụ:
+Java `record` automatically generates `toString()`, `equals()`, and `hashCode()` from components unless overridden. For example:
 
 ~~~java
 record Coordinate(int x, int y) {}
@@ -4293,7 +4293,7 @@ System.out.println(new Coordinate(2, 5));
 // Coordinate[x=2, y=5]
 ~~~
 
-Điều này hữu ích với **value object chứa dữ liệu đã được phép hiển thị**. Nhưng hãy cẩn thận với record giữ dữ liệu nhạy cảm:
+This is convenient for **Value Objects containing approved display data**. But beware of records containing sensitive fields:
 
 ~~~java
 // RỦI RO nếu để record tự sinh toString().
@@ -4303,7 +4303,7 @@ record Credentials(String username, String password) {}
 // Có thể làm lộ cả password trong biểu diễn mặc định.
 ~~~
 
-Ta có thể override:
+You can override it:
 
 ~~~java
 record SafeCredentials(String username, String password) {
@@ -4315,9 +4315,9 @@ record SafeCredentials(String username, String password) {
 }
 ~~~
 
-Trong production, cũng nên cân nhắc ẩn `username` nếu đó là dữ liệu cần bảo vệ. **Không chỉ log** mới có thể gọi `toString()`; đôi khi trình debug hoặc code xử lý exception cũng làm điều tương tự.
+In production, consider hiding `username` too if it is sensitive. **Logging is not the only caller** of `toString()`: debuggers and exception handlers may also invoke it.
 
-### 5.2. Collection có thể lồng `toString()` của từng phần tử
+### 5.2. Collections may invoke each element's `toString()`
 
 ~~~java
 List<OrderLine> lines = List.of(
@@ -4329,13 +4329,13 @@ System.out.println(lines);
 //  OrderLine[sku=SKU-2, quantity=1]]
 ~~~
 
-Đây là ví dụ logic; output thực tế thường nằm trên **một dòng**. Phương thức `toString()` của collection có thể gọi `String.valueOf`/`toString()` cho phần tử, vì vậy **một phần tử chứa dữ liệu nhạy cảm có thể làm cả collection bị lộ**.
+This is a conceptual example; actual output is usually **on one line**. Collection `toString()` may invoke `String.valueOf`/`toString()` for elements, so **one sensitive element can leak the whole collection's data**.
 
-Đừng nối `list.toString()` vào log ở đường chạy nóng nếu collection có hàng nghìn phần tử. Thay bằng `size`, số phần tử lỗi hoặc vài ID đã được chọn lọc. Với collection thay đổi đồng thời, việc duyệt để tạo chuỗi còn có thể chịu ảnh hưởng của concurrency.
+Avoid appending `list.toString()` to logs on hot paths when a collection contains thousands of elements. Log the `size`, failed-item counts, or a few approved IDs instead. Concurrent modifications may also affect iteration during string construction.
 
-### 5.3. Array khác collection
+### 5.3. Arrays differ from collections
 
-Array Java mặc định không có cách biểu diễn nội dung theo phần tử như `List`:
+Java arrays do not default to a per-element string representation like `List`:
 
 ~~~java
 int[] values = {1, 2, 3};
@@ -4347,7 +4347,7 @@ System.out.println(java.util.Arrays.toString(values));
 // [1, 2, 3]
 ~~~
 
-Với array lồng nhau:
+For nested arrays:
 
 ~~~java
 int[][] matrix = {{1, 2}, {3, 4}};
@@ -4359,13 +4359,13 @@ System.out.println(java.util.Arrays.deepToString(matrix));
 // [[1, 2], [3, 4]]
 ~~~
 
-Lưu ý `Arrays.deepToString` cũng có thể in một lượng dữ liệu lớn; với cấu trúc phức tạp, chỉ sử dụng cho dữ liệu đã được phép xuất ra log.
+`Arrays.deepToString` can also print large amounts of data; apply it only to information approved for logging in complex structures.
 
-### 5.4. Chu kỳ tham chiếu dễ gây lỗi đệ quy
+### 5.4. Cyclic references can cause recursive failures
 
-Hai object có thể tham chiếu lẫn nhau: `Parent → Child → Parent`. Nếu `Parent.toString()` nối `child` và `Child.toString()` lại nối `parent`, hai phương thức có thể gọi qua lại vô hạn dẫn tới `StackOverflowError`.
+Two objects can reference each other: `Parent → Child → Parent`. If `Parent.toString()` includes `child`, while `Child.toString()` includes `parent`, they can recurse indefinitely until `StackOverflowError`.
 
-Ví dụ cần tránh:
+An example to avoid:
 
 ~~~java
 class Parent {
@@ -4387,7 +4387,7 @@ class Child {
 }
 ~~~
 
-Thay vì in cả graph, nên in **ID của đối tượng liên quan** hoặc một mô tả cạn (*shallow representation*):
+Instead of printing the whole graph, print **related object IDs** or a *shallow representation*:
 
 ~~~java
 // Hướng thiết kế tốt hơn (minh họa ý tưởng):
@@ -4395,27 +4395,27 @@ Thay vì in cả graph, nên in **ID của đối tượng liên quan** hoặc m
 // "Child{id=20, parentId=10}"
 ~~~
 
-Tránh lạm dụng reflection để in tất cả field: khó kiểm soát dữ liệu nhạy cảm, quan hệ vòng, lazy loading và hiệu năng.
+Avoid reflection-based printing of every field: sensitive data, reference cycles, lazy loading, and performance are hard to control.
 
-## 6. `toString()` không phải `equals()` hay `hashCode()`
+## 6. `toString()` is not `equals()` or `hashCode()`
 
-Ba phương thức từ `Object` có mục đích khác nhau:
+These three methods from `Object` have different purposes:
 
-| Phương thức | Trả về | Mục đích điển hình |
+| Method | Returns | Typical purpose |
 |---|---|---|
-| `toString()` | `String` | Quan sát/biểu diễn đối tượng |
-| `equals(Object)` | `boolean` | Kiểm tra ngữ nghĩa “bằng nhau” theo hợp đồng class |
-| `hashCode()` | `int` | Hỗ trợ bảng băm, như `HashMap`/`HashSet`, theo hợp đồng với `equals` |
+| `toString()` | `String` | Inspect/represent an object |
+| `equals(Object)` | `boolean` | Test the class's defined equality semantics |
+| `hashCode()` | `int` | Support hash structures such as `HashMap`/`HashSet` under the `equals` contract |
 
-Một class override `toString()` **không cần** override `equals()` hay `hashCode()` chỉ vì mục đích chẩn đoán. Ngược lại, nếu định nghĩa lại `equals()`, phải bảo đảm các đối tượng bằng nhau có cùng `hashCode()`.
+Overriding `toString()` **does not require** overriding `equals()` or `hashCode()` for diagnostic purposes. Conversely, custom `equals()` must ensure equal objects share `hashCode()` values.
 
-Đừng đưa chuỗi `toString()` vào thuật toán `equals()` hoặc làm key lưu trữ mặc định. Nếu thay format để debug dễ hơn, điều đó không nên làm thay đổi định danh nghiệp vụ hoặc cấu trúc của tập hợp.
+Do not feed `toString()` output into `equals()` algorithms or use it as a default persistence key. Improving a debug format must not change business identity or collection behavior.
 
-### `toString()` có phải định dạng ổn định?
+### Is `toString()` a stable format?
 
-Không có cam kết chung nào bắt buộc biểu diễn `toString()` của lớp tùy biến phải là schema ổn định theo phiên bản. Dù một vài lớp Java có format được document cụ thể, vẫn phải **xem hợp đồng từng API** trước khi dựa vào nó.
+There is no universal guarantee that custom `toString()` representations are version-stable schemas. Some Java types document specific formats, but **read each API's contract** before relying on it.
 
-Ví dụ:
+For example:
 
 ~~~java
 // KHÔNG NÊN:
@@ -4428,21 +4428,21 @@ String responseBody = order.toString(); // coi như JSON cho client
 // DTO -> JSON serializer có schema/validation/phân quyền rõ ràng.
 ~~~
 
-Nếu cần dấu vết có cấu trúc, ghi các trường được phép như `orderId`, `status`, `traceId` riêng biệt thông qua hệ thống log hỗ trợ structured logging; nếu cần giao tiếp API, dùng DTO với schema xác định.
+For structured traces, log permitted fields such as `orderId`, `status`, and `traceId` separately through a structured logging system. For API communication, use DTOs with defined schemas.
 
-## 7. Ghi log và chẩn đoán lỗi đúng cách
+## 7. Logging and diagnosing failures correctly
 
-`System.out.println` hữu ích để học nhanh, nhưng trong ứng dụng Java/Spring nên dùng một **logging API** có level, nơi ghi, cấu hình định dạng và khả năng xử lý exception.
+`System.out.println` is useful for quick demonstrations, but Java/Spring applications should use a **logging API** that supports levels, destinations, formatting configuration, and exception handling.
 
-Các loại thông tin có giá trị trong chẩn đoán thường gồm:
+Useful diagnostic information often includes:
 
-- **Sự kiện:** đang tạo đơn, từ chối thanh toán, đã đổi trạng thái.
-- **Định danh và tương quan:** `orderId`, `traceId`, request/correlation ID đã được cấp.
-- **Trạng thái cần thiết:** giá trị hiện tại và hành động được thử.
-- **Nguyên nhân thất bại:** loại exception, message phù hợp, stack trace và cause chain.
-- **Thời gian và ngữ cảnh:** timestamp và môi trường, nhưng thường để logger/tracing framework tự bổ sung.
+- **Events:** creating an order, rejecting payment, or completing a state transition.
+- **Identifiers and correlation:** `orderId`, `traceId`, and assigned request/correlation IDs.
+- **Relevant state:** current values and attempted actions.
+- **Failure causes:** exception type, appropriate message, stack trace, and cause chain.
+- **Time and context:** timestamps and environments, usually supplied by logging/tracing frameworks.
 
-### 7.1. Java Util Logging (JDK có sẵn)
+### 7.1. Java Util Logging (built into the JDK)
 
 ~~~java
 import java.util.logging.Level;
@@ -4465,13 +4465,13 @@ final class OrderDiagnostics {
 }
 ~~~
 
-Đây là snippet riêng, giả sử `Order` là class ở ví dụ chính. Gọi `OrderDiagnostics.inspect(order)` chỉ hữu ích nếu logger được cấu hình để ghi `FINE`. Dùng overload nhận `Supplier<String>` có thể tránh tạo chuỗi khi mức log bị tắt.
+This standalone snippet assumes `Order` is defined as in the main example. `OrderDiagnostics.inspect(order)` is useful only if the logger is configured to emit `FINE`. The `Supplier<String>` overload avoids building the string when that log level is disabled.
 
-**Chú ý:** `Supplier` không tự xử lý dữ liệu nhạy cảm; nếu `Order.toString()` làm lộ token, log vẫn rò rỉ khi được bật. Và nếu `orderId` đến trực tiếp từ dữ liệu người dùng, cần hạn chế ký tự xuống dòng/ký tự điều khiển để tránh log injection; ID trong ví dụ chính đã được kiểm soát định dạng.
+**Note:** `Supplier` cannot sanitize sensitive data: if `Order.toString()` exposes tokens, enabled logging still leaks them. User-provided `orderId` values also need control-character/newline filtering to prevent log injection; the primary example validates ID format.
 
 ### 7.2. SLF4J / Spring: parameterized logging
 
-Trong ứng dụng dùng SLF4J, cú pháp thường gặp:
+In SLF4J applications, typical syntax looks like:
 
 ~~~java
 // Snippet dành cho dự án đã có SLF4J, không chạy bằng JDK trần.
@@ -4482,11 +4482,11 @@ log.debug("Processing order: {}", order);
 log.warn("Failed processing order {}", order.id(), exception);
 ~~~
 
-`CheckoutService` ở đây là tên class minh họa; hãy thay bằng class thật của dự án. Đối số `order` có thể được chuyển thành chuỗi khi logger xử lý sự kiện, vì vậy phải **thiết kế `toString()` an toàn ngay từ gốc**. SLF4J parameterized logging thường tránh nối chuỗi trước khi xác định có cần ghi log, nhưng chi phí phụ thuộc implementation và cách sử dụng.
+`CheckoutService` is an illustrative class name; replace it with your actual class. The `order` argument may be stringified during logger processing, so **`toString()` must be safe by design**. SLF4J's parameterized logging usually avoids string concatenation until logging is needed, although performance depends on implementation and usage.
 
-Với việc báo lỗi, truyền `Throwable` qua overload phù hợp giúp hệ thống log giữ **stack trace**, thay vì chỉ ghép `exception.toString()` vào chuỗi. Lưu ý backend/cấu hình có thể xử lý stack trace khác nhau.
+For errors, passing a `Throwable` to a suitable logging overload retains **stack traces**, instead of only concatenating `exception.toString()`. Backends and configurations may handle traces differently.
 
-### 7.3. `Exception.toString()`, `getMessage()` và stack trace
+### 7.3. `Exception.toString()`, `getMessage()`, and stack traces
 
 ~~~java
 try {
@@ -4498,20 +4498,20 @@ try {
 }
 ~~~
 
-Về mặt khái niệm:
+Conceptually:
 
-| Cách lấy | Thông tin chính |
+| Method | Main information |
 |---|---|
-| `ex.getMessage()` | Lời nhắn gắn với exception (có thể null) |
-| `ex.toString()` | Tên lớp exception và message nếu có |
-| `ex.printStackTrace()` | Stack trace cùng thông tin exception/cause; ghi tới stream |
-| `logger.log(Level.WARNING, "...", ex)` | Gửi exception cho logger để xử lý theo cấu hình |
+| `ex.getMessage()` | Exception message (possibly null) |
+| `ex.toString()` | Exception class and message, if available |
+| `ex.printStackTrace()` | Stack trace and exception/cause information written to a stream |
+| `logger.log(Level.WARNING, "...", ex)` | Sends the exception to a configured logger |
 
-Đừng gọi `ex.printStackTrace()` một cách tràn lan trong service production nếu đã có logger, vì nó ghi trực tiếp đến stream mặc định và khó tổ chức theo pipeline log. Stack trace cũng có thể mang thông tin nhạy cảm từ message; exception message cần được thiết kế cẩn thận.
+Avoid indiscriminate `ex.printStackTrace()` calls in production services when a logger is available: writing directly to a default stream makes log routing difficult. Stack traces can also expose sensitive exception-message data, so exception messages need careful design.
 
-## 8. Những lỗi hay gặp khi override `toString()`
+## 8. Common mistakes when overriding `toString()`
 
-### Lỗi A: tự động in mọi field mà không kiểm tra bảo mật
+### Mistake A: automatically printing all fields without a security review
 
 ~~~java
 // Minh họa SAI:
@@ -4522,9 +4522,9 @@ public String toString() {
 }
 ~~~
 
-Một lần `log.info("{}", account)` có thể khiến secret đi vào log và lưu lại lâu dài. Hãy xây **allowlist các field chẩn đoán** và kiểm tra các lớp lồng nhau.
+One `log.info("{}", account)` call can leak secrets into long-lived logs. Build **an allowlist of diagnostic fields** and review nested objects.
 
-### Lỗi B: lấy dữ liệu từ hệ thống bên ngoài trong `toString()`
+### Mistake B: fetching external data inside `toString()`
 
 ~~~java
 // Minh họa SAI:
@@ -4534,9 +4534,9 @@ public String toString() {
 }
 ~~~
 
-Một lời gọi `println(order)` có thể vô tình tạo I/O, N+1 queries, deadlock hoặc thất bại vì connection bị đóng. Lấy thông tin cần thiết **trước** khi tạo diagnostic snapshot; `toString()` chỉ format dữ liệu có sẵn.
+A `println(order)` call could inadvertently cause I/O, N+1 queries, deadlocks, or errors from closed connections. Gather needed information **before** creating a diagnostic snapshot; let `toString()` format only readily available data.
 
-### Lỗi C: phụ thuộc `toString()` để kiểm tra nghiệp vụ
+### Mistake C: depending on `toString()` for business decisions
 
 ~~~java
 // Không nên dùng:
@@ -4545,11 +4545,11 @@ if (order.toString().contains("status=PAID")) {
 }
 ~~~
 
-Hành vi nghiệp vụ phải dựa vào `order.status()`, enum hoặc phương thức có hợp đồng rõ, không parse văn bản phục vụ con người.
+Business rules must rely on `order.status()`, enums, or explicitly contracted methods, not parsing text intended for humans.
 
-### Lỗi D: trả về null hoặc ném exception ngoài dự tính
+### Mistake D: returning null or unexpectedly throwing exceptions
 
-Hợp đồng `Object.toString()` kỳ vọng một chuỗi biểu diễn đối tượng. Override nên trả về **chuỗi khác null**, đồng thời tránh phụ thuộc vào field tùy chọn mà có thể chưa khởi tạo.
+The `Object.toString()` contract expects an object representation string. Overrides should return **a non-null string** without depending on uninitialized optional fields.
 
 ~~~java
 // Nếu nickname có thể null:
@@ -4561,19 +4561,19 @@ public String toString() {
 }
 ~~~
 
-Snippet trên giả định có một field `nickname`. Dùng dữ liệu đã có, không gọi callback hoặc method virtual phức tạp khiến việc in đối tượng gặp lỗi khó lường.
+The snippet assumes a `nickname` field. Use existing data; avoid complex callbacks or virtual method calls that might fail while formatting the object.
 
-### Lỗi E: kết quả không giới hạn hoặc không an toàn khi đa luồng
+### Mistake E: unbounded or concurrency-unsafe output
 
-In hàng chục nghìn phần tử có thể tạo áp lực GC và tăng độ trễ. Đọc nhiều field mutable mà không có cơ chế đồng bộ có thể tạo **ảnh chụp trạng thái không nhất quán**. Với dữ liệu lớn hoặc concurrent, nên tạo diagnostic DTO bất biến, có giới hạn kích thước, thu thập trong ranh giới đồng bộ khi cần và log theo dạng có cấu trúc.
+Printing tens of thousands of elements can increase GC pressure and latency. Reading mutable fields without synchronization may yield **an inconsistent state snapshot**. For large or concurrent data, consider a size-limited immutable diagnostic DTO, collected under suitable synchronization and logged in a structured form.
 
-Không nhất thiết mọi `toString()` phải dùng `StringBuilder`: phép nối chuỗi ngắn bằng dấu `+` rõ ràng và compiler/JVM thường tối ưu phù hợp. Chỉ tối ưu khi đo được chi phí thực tế và mục tiêu hiệu năng.
+Not every `toString()` needs a `StringBuilder`. Short `+` string concatenations are clear and usually optimized by the compiler/JVM. Optimize based on measured costs and performance goals.
 
-## 9. Kiểm thử biểu diễn chuỗi và chính sách bảo mật
+## 9. Testing string representations and security policies
 
-Unit test cho `toString()` có thể kiểm tra **các thuộc tính quan trọng**: có ID để tra cứu, có trạng thái, không chứa dữ liệu nhạy cảm, không ném exception khi đối tượng hợp lệ.
+Unit tests for `toString()` should check **important properties**: a lookup ID is included, the state appears, sensitive data does not leak, and valid objects do not trigger exceptions.
 
-Đặt tệp `ObjectDiagnosticsDemoTest.java` trong source set kiểm thử cùng package với `ObjectDiagnosticsDemo.java`, với dependency JUnit Jupiter 5:
+Place `ObjectDiagnosticsDemoTest.java` in the same package test source set as `ObjectDiagnosticsDemo.java`, with a JUnit Jupiter 5 dependency:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -4629,19 +4629,19 @@ class ObjectDiagnosticsDemoTest {
 }
 ~~~
 
-**Vì sao không luôn `assertEquals` toàn bộ `toString()`?** Nếu mục đích chỉ là chẩn đoán, test khớp toàn bộ dấu câu có thể quá giòn khi đổi format hợp lý. Hãy kiểm tra trường nào **bắt buộc có hoặc bắt buộc không được lộ**. Chỉ kiểm tra nguyên văn khi định dạng là một phần hợp đồng rõ ràng.
+**Why not always `assertEquals` the entire `toString()`?** If its purpose is only diagnostics, exact punctuation assertions can be brittle under reasonable format changes. Check which fields **must appear or must remain hidden**. Compare the whole string only when its format is an explicit contract.
 
-**Giới hạn của kiểm thử bảo mật:** Việc assert hai chuỗi bí mật không xuất hiện **không chứng minh tuyệt đối** không có dữ liệu nhạy cảm khác. Cần review field mới, xem nội dung của nested objects, kiểm tra log thực tế và áp dụng quy định phân loại dữ liệu.
+**Security testing limitation:** Proving two known secrets are absent **does not establish** that all other sensitive information is excluded. Review new fields, nested object contents, actual logs, and data-classification rules.
 
-## 10. Khi nào nên tạo mô hình chẩn đoán riêng?
+## 10. When should you create a separate diagnostic model?
 
-`toString()` rất phù hợp cho chuỗi quan sát ngắn. Nhưng hệ thống lớn thường cần nhiều mức độ chi tiết:
+`toString()` suits brief human-readable descriptions, but larger systems often need varying levels of detail:
 
-- **Thông tin công khai:** mã theo dõi được phép chia sẻ, trạng thái mà người dùng cần biết.
-- **Thông tin cho lập trình viên:** ID nội bộ hợp lệ, mã correlation, trạng thái kỹ thuật, tên component.
-- **Thông tin phục vụ điều tra chuyên sâu:** timing, số lần retry, error codes, span IDs, chi tiết đã được làm sạch và được kiểm soát quyền truy cập.
+- **Public information:** approved tracking IDs and statuses that users may see.
+- **Developer information:** permitted internal IDs, correlation codes, technical states, and component names.
+- **Deep investigation data:** timings, retry counts, error codes, sanitized span IDs, and access-controlled details.
 
-Khi một object có thể hiển thị khác nhau tùy mục đích, đừng ép mọi nhu cầu vào `toString()`. Tạo các API khác nhau:
+When an object needs different representations for different purposes, do not force everything into `toString()`. Define distinct APIs:
 
 ~~~java
 record OrderDiagnostic(
@@ -4657,15 +4657,15 @@ record OrderPublicView(
 ) {}
 ~~~
 
-Hai record này là ví dụ về **hình dạng dữ liệu**. Trong API thực, đừng serialize `OrderDiagnostic` ra public endpoint chỉ vì nó là record: cần quyết định rõ nơi gửi, quyền truy cập và trường được phép. Bản thân record tự sinh `toString()` từ component, nên việc chọn component an toàn vẫn cực kỳ quan trọng.
+These records illustrate **data shapes**. In real APIs, do not serialize `OrderDiagnostic` to public endpoints merely because it is a record: specify destinations, permissions, and approved fields. Record-generated `toString()` methods also expose components, so safe component selection matters.
 
-Với logging có cấu trúc, thay vì chỉ có:
+With structured logging, instead of writing only:
 
 ~~~text
 Order{id='ORD-42', status=CREATED, traceId='REQ-72'}
 ~~~
 
-hệ thống có thể ghi các trường riêng:
+a system can record individual fields:
 
 ~~~json
 {
@@ -4676,103 +4676,103 @@ hệ thống có thể ghi các trường riêng:
 }
 ~~~
 
-JSON trên là **ví dụ minh họa schema log**, không phải kết quả của `Object.toString()`. Một logging framework có khả năng structured logging cần xử lý phần serialize, lọc field, làm sạch dữ liệu và giới hạn kích thước.
+This JSON is **an illustrative logging schema**, not the output of `Object.toString()`. A structured-logging framework must handle serialization, field filtering, sanitization, and size limits.
 
-## 11. Bài tập thực hành: chẩn đoán PaymentAttempt
+## 11. Practice exercise: diagnosing PaymentAttempt
 
-Tạo một class `PaymentAttempt` với những field:
+Build a `PaymentAttempt` class with these fields:
 
-| Field | Ví dụ | Được phép xuất trong chuỗi demo? |
+| Field | Example | May appear in the demo string? |
 |---|---|---|
-| `attemptId` | `ATT-17` | Có |
-| `orderId` | `ORD-42` | Có |
-| `status` | `PENDING` | Có |
-| `retryCount` | `2` | Có |
-| `providerToken` | `sk_example_secret` | **Không** |
-| `payerEmail` | `customer@example.com` | **Không** |
-| `failureCode` | `PROVIDER_TIMEOUT` | Có khi là mã lỗi đã kiểm duyệt |
+| `attemptId` | `ATT-17` | Yes |
+| `orderId` | `ORD-42` | Yes |
+| `status` | `PENDING` | Yes |
+| `retryCount` | `2` | Yes |
+| `providerToken` | `sk_example_secret` | **No** |
+| `payerEmail` | `customer@example.com` | **No** |
+| `failureCode` | `PROVIDER_TIMEOUT` | Yes, if an approved error code |
 
-Các yêu cầu:
+Requirements:
 
-1. Override `toString()` để trả chuỗi ngắn có ID, status, retry count và mã lỗi nếu có.
-2. Không đưa email, token hoặc nội dung raw provider response vào chuỗi.
-3. Nếu `failureCode` là null, hiển thị một giá trị cố định như `none` mà không ném lỗi.
-4. Viết test chứng minh secret không xuất hiện và chuỗi vẫn có các trường cần để điều tra.
-5. Tạo danh sách 100.000 attempts và giải thích vì sao không nên log toàn bộ danh sách chỉ để biết số retry lỗi.
-6. Viết method riêng `toCustomerMessage()` hoặc mapper DTO, chỉ trả trạng thái thân thiện với khách hàng.
-7. Với trường hợp exception khi gọi provider, log `Throwable` qua API phù hợp để giữ stack trace; không chỉ ghép `ex.toString()`.
+1. Override `toString()` to return a short string with IDs, status, retry count, and an optional error code.
+2. Do not include email, tokens, or raw provider responses in the string.
+3. If `failureCode` is null, display a fixed value such as `none` without throwing.
+4. Write tests proving secrets are absent and the string contains the required diagnostic fields.
+5. Create a list of 100.000 attempts and explain why logging the whole list merely to find failed retry counts is unwise.
+6. Write a separate `toCustomerMessage()` method or DTO mapper returning only customer-friendly status.
+7. When a provider call raises an exception, log the `Throwable` through a suitable API to retain the stack trace instead of concatenating `ex.toString()`.
 
-### Câu hỏi tự kiểm tra
+### Self-check questions
 
-1. Vì sao chuỗi dạng `ClassName@1a2b3c` không được xem như địa chỉ bộ nhớ hoặc ID nghiệp vụ?
-2. `System.out.println(order)` thường dùng phương thức nào của đối tượng?
-3. `String.valueOf(null)` khác gì gọi `nullReference.toString()`?
-4. Record tự sinh `toString()` dựa vào đâu, và vì sao điều đó có thể nguy hiểm?
-5. Khi nào nên dùng `Arrays.toString` và `Arrays.deepToString`?
-6. Vì sao hai đối tượng trỏ vòng nhau có thể gây `StackOverflowError` trong `toString()` tự viết?
-7. Vì sao parse `toString()` để xác định trạng thái đơn hàng là thiết kế kém bền vững?
-8. Gửi `Exception` trực tiếp cho logger khác gì chỉ ghi `ex.getMessage()`?
-9. Khi nào một diagnostic DTO hoặc structured logging phù hợp hơn `toString()`?
+1. Why is a `ClassName@1a2b3c` string not a memory address or business ID?
+2. Which object method does `System.out.println(order)` generally use?
+3. How does `String.valueOf(null)` differ from calling `nullReference.toString()`?
+4. What does a record-generated `toString()` include, and why can it be dangerous?
+5. When should `Arrays.toString` and `Arrays.deepToString` be used?
+6. Why can cyclic references cause `StackOverflowError` in custom `toString()` methods?
+7. Why is parsing `toString()` for order status an unstable design?
+8. How does passing `Exception` to a logger differ from only writing `ex.getMessage()`?
+9. When is a diagnostic DTO or structured logging preferable to `toString()`?
 
-**Ghi nhớ:** **`toString()` là một biểu diễn hữu ích cho việc quan sát đối tượng**, do chính class quyết định. Hãy ưu tiên **ngữ nghĩa rõ, dữ liệu được phép hiển thị, xử lý nhanh và không có tác dụng phụ**. Những thông tin phục vụ khách hàng, serialization API, hợp đồng nghiệp vụ và điều tra bằng structured logs nên có giao diện thích hợp riêng, thay vì phụ thuộc vào một chuỗi debug.
+**Remember:** **`toString()` provides a useful representation for inspecting objects**, defined by the class. Favor **clear semantics, approved data, fast execution, and no side effects**. Customer-facing details, API serialization, domain contracts, and structured diagnostic logs deserve their own interfaces rather than depending on a debug string.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="language-mechanics-008">Ngoại lệ, trạng thái lỗi và hợp đồng phương thức</a>
+## <a id="language-mechanics-008">Exceptions, error states, and method contracts</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Ngoại lệ, trạng thái lỗi và hợp đồng phương thức trong Java
+# Exceptions, error states, and method contracts in Java
 
-**Chủ đề:** OOP → Cơ chế ngôn ngữ
+**Topic:** OOP → Language Mechanics
 
-Một phương thức Java có thể **hoàn thành và trả kết quả**, **từ chối một yêu cầu nghiệp vụ**, hoặc **không thể hoàn thành do lỗi**. Việc chọn trả về `boolean`, `Optional`, một kiểu kết quả có cấu trúc hay ném exception sẽ quyết định cách những người gọi API phải xử lý tình huống đó.
+A Java method may **complete and return a result**, **reject a business request**, or **fail to complete because of an error**. Choosing between `boolean`, `Optional`, a structured result type, and exceptions determines how API callers handle each situation.
 
-Bài này giúp bạn hiểu cơ chế exception trong Java, cách biểu diễn trạng thái lỗi và cách thiết kế **method contract**: ai được phép gọi phương thức với đầu vào nào, kết quả thành công được bảo đảm ra sao, điều gì xảy ra khi thất bại, và trạng thái đối tượng còn hợp lệ hay không.
+This lesson explains Java exception mechanics, error-state representation, and **method contracts**: valid callers and inputs, guarantees on success, behavior on failure, and whether object invariants remain intact.
 
-## 1. Bắt đầu bằng tình huống thực tế
+## 1. Start with a practical scenario
 
-Một cửa hàng cho khách đặt giữ sách. Hiện kho còn 2 cuốn, khách yêu cầu giữ 3 cuốn.
+A bookstore accepts reservations. Only 2 copies remain, but a customer requests 3 copies.
 
-- **Hết hàng** là tình huống dự kiến trong kinh doanh. Giao diện cần biết lý do để hiển thị “Chỉ còn 2 cuốn”.
-- **Số lượng yêu cầu bằng -3** là đầu vào vi phạm quy tắc phương thức. Client không nên dùng API như vậy.
-- **Không truy cập được database** là sự cố kỹ thuật. Nếu chuyển thành “hết hàng”, hệ thống đang nói dối về tồn kho.
-- **Giữ hàng thành công** phải làm giảm tồn kho chính xác; giữ không thành công không được trừ hàng.
+- **Out of stock** is an expected business condition. The UI should explain “Only 2 copies remain.”
+- **A requested quantity of -3** violates the method contract. Clients should not call the API this way.
+- **Database unavailable** is a technical failure. Representing it as “out of stock” misstates inventory.
+- **Successful reservation** must reduce inventory by the correct count; failed reservations must not deduct stock.
 
-Bốn trường hợp có ý nghĩa khác nhau:
+These four cases have different meanings:
 
-| Tình huống | Điều caller cần biết | Một cách biểu diễn hợp lý |
+| Scenario | What callers need to know | Reasonable representation |
 | --- | --- | --- |
-| Đã giữ được sách | Số lượng giữ và tồn còn lại | `Reserved` |
-| Không đủ hàng | Lý do từ chối và số lượng hiện có | `Rejected(OUT_OF_STOCK)` |
-| Tham số vi phạm hợp đồng | Vị trí sử dụng sai API | `IllegalArgumentException` |
-| Cơ sở dữ liệu mất kết nối | Có sự cố để phục hồi, thử lại có điều kiện hoặc báo lỗi | Exception hạ tầng có nguyên nhân rõ ràng |
+| Successfully reserved | Reserved amount and remaining inventory | `Reserved` |
+| Insufficient inventory | Rejection reason and current stock | `Rejected(OUT_OF_STOCK)` |
+| Contract-breaking argument | Where API usage is invalid | `IllegalArgumentException` |
+| Database connection failure | An issue requiring recovery, conditional retry, or an error report | Infrastructure exception with a clear cause |
 
-Nguyên tắc thực dụng: **đừng dùng một tín hiệu duy nhất để mô tả mọi loại thất bại**. Đặc biệt, `null` hoặc `false` có thể quá mơ hồ khi caller phải quyết định hành động khác nhau.
+Practical principle: **do not use one signal for every kind of failure**. In particular, `null` or `false` can be ambiguous when callers must take different actions.
 
-## 2. Hợp đồng phương thức gồm những gì?
+## 2. What constitutes a method contract?
 
-Một method contract mô tả những điều mà **bên gọi** và **bên cài đặt** thống nhất:
+A method contract describes what **callers** and **implementers** agree on:
 
-| Thành phần | Câu hỏi | Ví dụ của `reserve` |
+| Element | Question | Example for `reserve` |
 | --- | --- | --- |
-| **Precondition** — tiền điều kiện | Trước khi gọi phải đúng điều gì? | SKU không rỗng, số lượng là số nguyên dương |
-| **Postcondition** — hậu điều kiện | Khi thành công bảo đảm điều gì? | Số lượng trong kho giảm đúng số đã giữ |
-| **Invariant** — bất biến | Điều gì luôn phải đúng với đối tượng? | Tồn kho không âm |
-| **Failure contract** | Nếu không thành công, điều gì được trả/ném? | `Rejected` nếu thiếu hàng, exception nếu tham số sai |
-| **Side effect** | Phương thức thay đổi gì bên ngoài? | Thay đổi tồn kho; chưa gửi email/thu tiền |
-| **Atomicity** | Khi thất bại, có thể bị cập nhật dở không? | Việc từ chối phải giữ nguyên tồn kho |
-| **Concurrency** | Hai yêu cầu đồng thời có thể làm sai state không? | Kiểm tra và giảm hàng phải cùng một thao tác được bảo vệ |
+| **Precondition** | What must hold before calling? | Nonblank SKU; positive integer quantity |
+| **Postcondition** | What does successful completion guarantee? | Inventory decreases by exactly the reserved quantity |
+| **Invariant** | What must always hold for the object? | Inventory never becomes negative |
+| **Failure contract** | What is returned/thrown on failure? | `Rejected` for insufficient stock; exception for invalid arguments |
+| **Side effect** | What external state changes? | Adjusts inventory, but does not email/charge a payment |
+| **Atomicity** | Can a failed operation leave partial changes? | Rejections leave inventory unchanged |
+| **Concurrency** | Can simultaneous requests corrupt state? | Stock checks and deductions must form one protected operation |
 
-Chữ ký `int reserve(String sku, int amount)` chỉ mô tả kiểu dữ liệu, chưa nói được kết quả `-1` nghĩa là không tìm thấy, hết hàng hay lỗi hệ thống.
+The signature `int reserve(String sku, int amount)` specifies types but cannot tell us whether `-1` means not found, out of stock, or system failure.
 
-Có thể làm hợp đồng rõ hơn bằng **kiểu trả về đặt tên tốt**, Javadoc và test:
+A contract can be clearer through **well-named return types**, Javadoc, and tests:
 
 ~~~java
 /**
@@ -4790,11 +4790,11 @@ Có thể làm hợp đồng rõ hơn bằng **kiểu trả về đặt tên t�
 ReserveResult reserve(String sku, int quantity);
 ~~~
 
-Javadoc là **lời cam kết**, nhưng chỉ code, các ràng buộc dữ liệu và kiểm thử phù hợp mới chứng minh lời cam kết được giữ.
+Javadoc is **a promise**; only implementation, data constraints, and suitable tests provide evidence that the promise is upheld.
 
-## 3. Exception là gì? Checked và unchecked khác nhau thế nào?
+## 3. What are exceptions? How do checked and unchecked differ?
 
-Java dùng `Throwable` làm gốc của hệ thống ngoại lệ. Hai nhánh chính là `Exception` và `Error`; `RuntimeException` kế thừa `Exception`.
+Java's exception hierarchy starts at `Throwable`. Its two principal branches are `Exception` and `Error`; `RuntimeException` extends `Exception`.
 
 ~~~mermaid
 classDiagram
@@ -4807,23 +4807,23 @@ classDiagram
     RuntimeException <|-- NullPointerException
 ~~~
 
-**Checked exception** là subclass của `Throwable` nhưng không nằm dưới `RuntimeException` hoặc `Error`. Khi một checked exception có thể thoát khỏi phương thức, Java buộc code gọi phải **bắt** hoặc **khai báo `throws`**. Ví dụ: `IOException`, `SQLException`.
+A **checked exception** extends `Throwable` but not `RuntimeException` or `Error`. When one can escape a method, callers must **catch** it or **declare it with `throws`**. Examples include `IOException` and `SQLException`.
 
-**Unchecked exception** gồm `RuntimeException` và các subclass; compiler không buộc caller bắt hoặc khai báo. Thường dùng cho vi phạm hợp đồng, lỗi trạng thái hoặc những failure mà API lựa chọn cách báo này.
+**Unchecked exceptions** include `RuntimeException` and its subclasses. Callers are not compiler-required to catch or declare them. They often represent contract violations, invalid states, or failures whose APIs use this reporting style.
 
-**`Error`** như `OutOfMemoryError`, `LinkageError` thường liên quan môi trường chạy nghiêm trọng. Phần lớn code nghiệp vụ không nên `catch (Throwable)` rồi tiếp tục như không có lỗi.
+**`Error`** types such as `OutOfMemoryError` and `LinkageError` often indicate serious runtime problems. Most business code should not `catch (Throwable)` and then continue as though nothing happened.
 
-| Loại | Ví dụ | Compiler có bắt khai báo/xử lý không? | Ghi nhớ |
+| Category | Example | Compiler requires handling/declaration? | Key point |
 | --- | --- | --- | --- |
-| Checked | `IOException` | Có | Có thể bắt hoặc truyền tiếp |
-| Unchecked | `IllegalArgumentException` | Không | Vẫn cần ghi rõ điều kiện ném trong hợp đồng |
-| Error | `OutOfMemoryError` | Không | Không biến thành lỗi nghiệp vụ thông thường |
+| Checked | `IOException` | Yes | Catch or propagate |
+| Unchecked | `IllegalArgumentException` | No | Still document triggering conditions |
+| Error | `OutOfMemoryError` | No | Do not convert to routine business rejections |
 
-**Không suy diễn** “checked = chắc chắn khôi phục được” hoặc “unchecked = chắc chắn bug”. Thư viện HTTP có thể báo lỗi mạng bằng unchecked exception; ngược lại một checked exception vẫn có thể không xử lý được ở tầng hiện tại.
+**Do not assume** “checked means recoverable” or “unchecked means a bug.” HTTP libraries may report network failures through unchecked exceptions, while some checked failures cannot be handled meaningfully at the current layer.
 
-## 4. `throw`, `throws`, `try` và `catch`
+## 4. `throw`, `throws`, `try`, and `catch`
 
-`throw` thực sự ném một exception object:
+`throw` actually throws an exception object:
 
 ~~~java
 static void requirePositive(int quantity) {
@@ -4834,7 +4834,7 @@ static void requirePositive(int quantity) {
 }
 ~~~
 
-`throws` **khai báo** ngoại lệ mà phương thức có thể để thoát ra ngoài:
+`throws` **declares** exceptions allowed to propagate from a method:
 
 ~~~java
 import java.io.IOException;
@@ -4846,7 +4846,7 @@ static String readSettings(Path file) throws IOException {
 }
 ~~~
 
-Nếu caller có cách xử lý hữu ích, nó bắt exception:
+A caller that can respond meaningfully catches the exception:
 
 ~~~java
 try {
@@ -4858,11 +4858,11 @@ try {
 }
 ~~~
 
-Các đoạn trên là các **snippet phương thức/lời gọi** đặt trong class thích hợp. Một caller khác có thể khai báo `throws IOException` để tầng trên quyết định. Không cần bắt và log ở mọi tầng.
+These are **method/call snippets** intended for appropriate classes. Another caller may declare `throws IOException` and let a higher layer decide. Not every layer needs to catch and log.
 
-**Khi ném exception**, Java ngắt đường chạy bình thường và tìm `catch` phù hợp dọc call stack. Nếu không có handler, exception truyền tới ranh giới thread/framework quản lý. Phần code sau lệnh ném trong cùng đường chạy sẽ không được thực thi bình thường.
+**On throwing an exception**, Java interrupts normal execution and searches up the call stack for a matching `catch`. Without a handler, it reaches the thread/framework boundary. Statements after a throw on the same path do not execute normally.
 
-### Bắt lỗi cụ thể trước lỗi tổng quát
+### Catch specific exceptions before general ones
 
 ~~~java
 try {
@@ -4874,9 +4874,9 @@ try {
 }
 ~~~
 
-Đặt subclass ở nhánh `catch` trước class cha. Java từ chối các `catch` không thể tới được; không thể bắt `RuntimeException` rồi sau đó mới bắt `IllegalArgumentException` riêng.
+Catch subclasses in a `catch` clause before superclass handlers. Java rejects unreachable `catch` clauses: catching `RuntimeException` before a separate `IllegalArgumentException` handler is invalid.
 
-Có thể dùng **multi-catch** nếu các loại lỗi có cùng chính sách:
+Use **multi-catch** when different errors share a policy:
 
 ~~~java
 catch (IllegalArgumentException | IllegalStateException failure) {
@@ -4884,11 +4884,11 @@ catch (IllegalArgumentException | IllegalStateException failure) {
 }
 ~~~
 
-Các lựa chọn trong một multi-catch không được có quan hệ subclass/superclass với nhau. Trong code thật, không tự động gom mọi exception chỉ để tránh viết thêm dòng.
+Alternatives in a multi-catch cannot have a subclass/superclass relationship. Do not combine every exception merely to reduce code length.
 
-## 5. Chọn kết quả nghiệp vụ hay exception?
+## 5. Choosing between business results and exceptions
 
-Ba API giả định đều có thể hợp lệ nhưng phục vụ hợp đồng khác nhau:
+Three hypothetical API designs can all be valid under different contracts:
 
 ~~~java
 // Không cần phân biệt nguyên nhân, ví dụ một thao tác thử đơn giản.
@@ -4901,13 +4901,13 @@ java.util.Optional<Book> findByIsbn(String isbn);
 ReserveResult reserve(String sku, int quantity);
 ~~~
 
-Với `Optional.empty()`, caller hiểu “không có sách” nếu hợp đồng `findByIsbn` nói vậy. Khi DB mất kết nối, **không nên** bí mật trả empty: caller sẽ tưởng sản phẩm không tồn tại.
+With `Optional.empty()`, callers understand “no book” when `findByIsbn` specifies that behavior. **Do not** silently return empty on database connection failures: clients would mistakenly believe the book does not exist.
 
-Một số hệ thống chọn ném **domain exception** cho yêu cầu hết hàng; cách đó cũng có thể đúng nếu API/UX/handler thống nhất theo quy ước ấy. Nhưng khi từ chối là một nhánh được dự kiến và caller thường xuyên phải phân biệt, **kiểu Result có cấu trúc** thường khiến luồng xử lý rõ ràng.
+Some systems throw **domain exceptions** for out-of-stock requests, which can also be valid when API, UX, and handlers consistently follow that convention. But for expected rejections that callers commonly distinguish, **structured Result types** often make control flow clearer.
 
-## 6. Ví dụ Java 17 hoàn chỉnh: kết quả thành công/từ chối và lỗi hợp đồng
+## 6. Complete Java 17 example: successful/rejected results and contract errors
 
-Tạo file **ErrorContractDemo.java**. Ví dụ dùng `sealed interface` để giới hạn các nhánh kết quả, `record` để biểu diễn dữ liệu kết quả bất biến, và `synchronized` cho thao tác kiểm tra–cập nhật tồn kho trong **một instance**.
+Create **ErrorContractDemo.java**. The example uses `sealed interface` for closed result variants, `record` for immutable result data, and `synchronized` for checking/updating inventory in **one instance**.
 
 ~~~java
 import java.util.HashMap;
@@ -5025,14 +5025,14 @@ public class ErrorContractDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac ErrorContractDemo.java
 java ErrorContractDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Reserved[sku=JAVA, quantity=2, remaining=1]
@@ -5041,19 +5041,19 @@ Remaining: 1
 INPUT_ERROR: Số lượng phải dương
 ~~~
 
-**Phân tích theo hợp đồng:**
+**Analyzing the contract:**
 
-1. Lần giữ đầu tiên trả `Reserved`; tồn kho từ 3 còn 1.
-2. Lần giữ thứ hai vượt số lượng hiện có nên trả `Rejected`. Không có dữ liệu nào bị trừ thêm.
-3. Yêu cầu với số lượng 0 vi phạm precondition, nên bị từ chối bằng `IllegalArgumentException`.
-4. `stock` thuộc quyền sở hữu của `StockService`: dữ liệu từ map đầu vào đã được sao chép, không giữ reference mutable từ bên ngoài.
-5. `synchronized` khiến kiểm tra và giảm số lượng cùng được bảo vệ bởi monitor của service instance. Điều này **không thay transaction database** và không bảo vệ khi có nhiều JVM/instance cùng ghi dữ liệu dùng chung.
+1. The first reservation returns `Reserved`; stock falls from 3 to 1.
+2. The second reservation exceeds available stock and returns `Rejected`. No additional units are deducted.
+3. A request for quantity 0 violates the precondition and throws `IllegalArgumentException`.
+4. `stock` is owned by `StockService`: the input map is copied, so no external mutable reference is retained.
+5. `synchronized` protects both checking and decrementing under the service instance's monitor. This **does not replace a database transaction** or protect shared data across multiple JVMs/instances.
 
-Nếu muốn client ở package khác dùng các kiểu kết quả, hãy tổ chức chúng thành public API với visibility thích hợp. Các kiểu được để package-private trong ví dụ nhằm cung cấp một file Java chạy độc lập.
+To expose result types to clients in other packages, define public APIs with suitable visibility. The example uses package-private types to keep the runnable Java program in one file.
 
-## 7. Test cả giá trị trả về và trạng thái sau thất bại
+## 7. Test return values and state after failure
 
-Đặt đoạn sau vào **ErrorContractDemoTest.java**, trong cùng package, và cấu hình **JUnit Jupiter 5**:
+Place the following in **ErrorContractDemoTest.java**, in the same package, with **JUnit Jupiter 5** configured:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -5112,11 +5112,11 @@ class ErrorContractDemoTest {
 }
 ~~~
 
-Các test này xác minh **cả hậu điều kiện lẫn bất biến**. Không chỉ kiểm tra exception được ném, mà còn xác minh tồn kho không bị sửa trong trường hợp thất bại. Chúng chưa chứng minh khả năng chống race giữa các máy chủ hoặc xử lý transaction với DB thật; cần test tích hợp cho những điều đó.
+These tests verify **postconditions as well as invariants**. They check not only which exception is thrown but also that failures leave stock unchanged. They do not prove race safety across servers or real database transaction behavior; integration tests are needed.
 
-## 8. Stack trace, propagation và giữ chuỗi nguyên nhân
+## 8. Stack traces, propagation, and preserving cause chains
 
-Khi exception được ném, nó tìm handler trên call stack. Nếu repository đọc file gặp lỗi nhưng application service cần thêm bối cảnh nghiệp vụ, tầng service có thể chuyển đổi exception:
+When thrown, an exception searches up the call stack for a handler. If a repository encounters an error while reading a file, an application service may add business context by translating it:
 
 ~~~java
 final class InventoryUnavailableException
@@ -5137,9 +5137,9 @@ static String loadInventoryText(java.nio.file.Path file) {
 }
 ~~~
 
-Đây là các snippet dùng trong một class hoặc file Java thích hợp. Lỗi mới vẫn giữ **cause** để người điều tra lần được xuống `IOException` gốc. Nếu mọi tầng đều bắt, in stack trace rồi ném exception mới, log sẽ bị nhân bản và rất khó tìm điểm xảy ra lỗi thực sự.
+These snippets belong in suitable Java classes/files. New exceptions retain the **cause** so investigations can trace back to the original `IOException`. Catching, printing stack traces, and rewrapping at every layer duplicates logs and obscures root causes.
 
-Một nguyên tắc hữu ích là **catch tại tầng có khả năng đưa ra quyết định**:
+A useful rule is to **catch at the layer capable of making a decision**:
 
 ~~~mermaid
 sequenceDiagram
@@ -5154,15 +5154,15 @@ sequenceDiagram
     Note over Caller: Quyết định phản hồi, log, retry có điều kiện
 ~~~
 
-Không dùng `new RuntimeException(e.getMessage())` nếu muốn giữ nguyên nhân; truyền `e` làm `cause`.
+Do not use `new RuntimeException(e.getMessage())` when you need the cause chain; pass `e` as the `cause`.
 
-### `getMessage()` không nên là mã lỗi
+### `getMessage()` should not serve as an error code
 
-Một lỗi có thể được hiển thị bằng tiếng Việt hôm nay, tiếng Anh ngày mai hoặc thêm ngữ cảnh sau khi refactor. Caller nên phân biệt bằng **kiểu exception** hoặc **error code cấu trúc**, thay vì parse nội dung chuỗi `getMessage()`.
+One error message might be Vietnamese today, English tomorrow, or gain detail after refactoring. Callers should distinguish failures by **exception type** or **structured error code**, not by parsing `getMessage()` text.
 
-## 9. Try-with-resources, `finally` và suppressed exceptions
+## 9. Try-with-resources, `finally`, and suppressed exceptions
 
-Khi đọc tệp, ghi stream hoặc dùng connection, cần đóng tài nguyên. `try-with-resources` làm việc đó theo hợp đồng `AutoCloseable`:
+When reading files, writing streams, or using connections, resources need closing. `try-with-resources` follows the `AutoCloseable` contract:
 
 ~~~java
 import java.io.BufferedReader;
@@ -5181,36 +5181,36 @@ static long countLines(Path file) throws IOException {
 }
 ~~~
 
-Nếu cả thân `try` lẫn `close()` đều ném exception, exception ở thân thường là **primary exception**; lỗi từ close được lưu trong `getSuppressed()`. Điều này giúp không làm mất lỗi ban đầu.
+If both the `try` body and `close()` throw, the body exception normally remains the **primary exception**, while the close failure appears in `getSuppressed()`. This preserves the original failure.
 
-`finally` thường dùng để dọn dẹp sau `try`/`catch`, nhưng không nên `return` trong finally: nó có thể che giá trị trả về hoặc exception đang chờ. `finally` cũng không được đảm bảo chạy nếu JVM bị chấm dứt đột ngột hoặc tiến trình bị hủy từ bên ngoài.
+`finally` commonly performs cleanup after `try`/`catch`, but avoid `return` inside it: that can mask a pending result or exception. `finally` is not guaranteed when the JVM terminates abruptly or the process is killed externally.
 
-**Resource cleanup không phải database rollback.** Nếu code đã gửi email hoặc trừ tiền rồi ném lỗi, việc đóng resource không tự động hoàn tác tác dụng phụ.
+**Resource cleanup does not equal database rollback.** Closing resources does not undo a previously sent email or a payment already charged before failure.
 
-## 10. Exception không bảo đảm thao tác nguyên tử
+## 10. Exceptions do not guarantee atomic operations
 
-Xét đoạn:
+Consider:
 
 ~~~java
 balance -= amount;
 sendConfirmationEmail(); // Có thể ném exception.
 ~~~
 
-Nếu gửi email thất bại, `balance` đã bị trừ. Việc bắt exception không tự khôi phục số dư.
+If email delivery fails, `balance` has already been debited. Catching the exception does not automatically restore the balance.
 
-Cần xác định tính **failure atomicity**: thao tác thất bại có để lại một phần thay đổi không? Với dữ liệu quan trọng, có thể cần:
+Define **failure atomicity**: can an unsuccessful operation leave partial changes? Important data may require:
 
-- Validate điều kiện độc lập **trước** khi sửa state.
-- Dùng transaction cho các thay đổi thuộc cùng một nguồn dữ liệu có khả năng giao dịch.
-- Với database và message broker, cân nhắc **transactional outbox** để đồng bộ thay đổi state và việc ghi sự kiện.
-- Với lệnh có thể bị lặp sau timeout, dùng **idempotency key** hoặc điều kiện chống thực hiện trùng.
-- Dùng optimistic locking, conditional update hoặc locking phù hợp để tránh mất cập nhật khi nhiều yêu cầu cùng sửa tài nguyên.
+- Validate independent conditions **before** state changes.
+- Use transactions for changes within the same transactional data source.
+- For databases and message brokers, consider a **transactional outbox** to coordinate state updates and event persistence.
+- For commands retried after timeout, use **idempotency keys** or duplicate-prevention conditions.
+- Use optimistic locking, conditional updates, or suitable locks to prevent lost updates under concurrency.
 
-Một `@Transactional` trong Spring không tự rollback email đã gửi, và kết quả rollback của transaction manager còn phụ thuộc loại exception, cấu hình, điểm đi qua proxy và tài nguyên được quản lý. Phải kiểm thử tình huống lỗi ở chính ranh giới đó.
+Spring `@Transactional` does not undo sent email automatically; transaction-manager rollback behavior also depends on exception types, configuration, proxy boundaries, and managed resources. Test failures at the actual boundary.
 
-## 11. Hợp đồng exception khi override và đa hình
+## 11. Exception contracts under overriding and polymorphism
 
-Giả sử client sử dụng abstraction:
+Suppose clients use this abstraction:
 
 ~~~java
 interface AccountStore {
@@ -5219,35 +5219,35 @@ interface AccountStore {
 }
 ~~~
 
-Một implementation không thể coi lỗi mạng là `Optional.empty()`, vì điều đó phá nghĩa “không tồn tại” mà client đang dựa vào. Chữ ký vẫn đúng nhưng **hợp đồng hành vi đã sai**.
+An implementation must not misreport network errors as `Optional.empty()`, which violates the “not found” meaning clients expect. The signature may be valid while **the behavioral contract is broken**.
 
-Với **Liskov Substitution Principle (LSP)**, implementation thay thế nên giữ:
+Under the **Liskov Substitution Principle (LSP)**, substitutable implementations should preserve:
 
-- **Precondition:** không buộc caller thỏa thêm yêu cầu bất ngờ so với hợp đồng.
-- **Postcondition:** không giảm những bảo đảm khi kết thúc thành công.
-- **Invariant:** giữ điều kiện trạng thái mà abstraction đã công bố.
-- **Failure semantics:** giữ ý nghĩa của các trường hợp từ chối, lỗi và side effect.
+- **Preconditions:** do not impose unexpected extra requirements on callers.
+- **Postconditions:** do not weaken guarantees on successful completion.
+- **Invariants:** preserve state conditions promised by the abstraction.
+- **Failure semantics:** keep rejection/error meanings and side-effect contracts.
 
-Ở mức cú pháp Java, method override **không thể thêm checked exception mới rộng hơn** checked exception của phương thức được override. Nhưng Java không chặn một implementation tự ném unchecked exception ở runtime; vì vậy cần thiết kế và test hành vi, không chỉ dựa vào compiler.
+At the Java syntax level, overriding methods **cannot introduce broader new checked exceptions** than the overridden method allows. But Java cannot forbid implementations from throwing unchecked runtime exceptions; behavior needs design and testing beyond compiler checks.
 
-Ví dụ một `ReadOnlyRepository` triển khai giao diện hứa có `save()` rồi luôn ném `UnsupportedOperationException`: đây là dấu hiệu hợp đồng có thể quá rộng hoặc subtype không phù hợp, nên xem lại phân tách interface.
+For example, implementing `ReadOnlyRepository` against an interface promising `save()` but always throwing `UnsupportedOperationException` suggests an overly broad contract or an unsuitable subtype; review interface segregation.
 
-## 12. Cách ánh xạ lỗi giữa domain và API
+## 12. Mapping errors between the domain and APIs
 
-| Tầng | Ví dụ | Việc nên đảm nhiệm |
+| Layer | Example | Responsibility |
 | --- | --- | --- |
-| Controller/API | JSON thiếu field, số lượng âm | Xác thực đầu vào, phản hồi có cấu trúc, tránh lộ dữ liệu nội bộ |
-| Application service | Yêu cầu giữ hàng hoặc hủy đơn | Phối hợp nghiệp vụ, quyền, transaction và side effect |
-| Domain object | Vi phạm bất biến, trạng thái không cho thao tác | Bảo vệ precondition/postcondition, trả kết quả hoặc ném lỗi domain phù hợp |
-| Repository/adapter | Database unavailable, timeout | Giữ nguyên nhân và truyền hoặc chuyển lỗi đúng ranh giới |
-| Job/queue consumer | Command xử lý thất bại | Xác định retry/backoff, dead-letter và xử lý lặp |
-| HTTP boundary | Ngoại lệ chưa được xử lý | Quyết định status/response an toàn, log có ngữ cảnh |
+| Controller/API | JSON missing fields, negative quantity | Validate inputs, return structured responses, avoid leaking internal data |
+| Application service | Reservation/order cancellation request | Coordinate business rules, permissions, transactions, and side effects |
+| Domain object | Invariant violation or disallowed state transition | Enforce preconditions/postconditions, return results or domain-specific failures |
+| Repository/adapter | Database unavailable, timeout | Preserve causes, propagate or translate errors at appropriate boundaries |
+| Job/queue consumer | Failed command handling | Define retries/backoff, dead-letter processing, and duplicate handling |
+| HTTP boundary | Unhandled exceptions | Choose safe response statuses, log useful context |
 
-**Mã lỗi nghiệp vụ không nhất thiết trùng mã HTTP.** `OUT_OF_STOCK` có thể là một enum ổn định trong domain; controller lựa chọn HTTP status theo chính sách API. Đừng để domain object phụ thuộc trực tiếp vào một framework web chỉ để biểu diễn tình huống bị từ chối.
+**Domain error codes need not equal HTTP status codes.** `OUT_OF_STOCK` can be a stable domain enum; controllers choose HTTP status based on API policy. Do not couple domain objects to a web framework merely to express a rejection.
 
-### Có nên tạo exception riêng?
+### Should you define custom exceptions?
 
-Nếu caller cần phân biệt bằng loại exception, có thể tạo:
+When callers distinguish failures by type, consider:
 
 ~~~java
 final class OrderAlreadyShippedException
@@ -5258,13 +5258,13 @@ final class OrderAlreadyShippedException
 }
 ~~~
 
-Không nhất thiết tạo một class exception cho mỗi câu thông báo. Chọn loại có ý nghĩa, ổn định; tránh ghi token, thông tin thanh toán hoặc dữ liệu nhạy cảm vào message rồi vô tình đưa vào log.
+You do not need a class per message. Choose meaningful stable exception types; keep tokens, payment details, and sensitive data out of messages that may reach logs.
 
-## 13. Retry, interrupt và lỗi bất đồng bộ
+## 13. Retries, interrupts, and asynchronous failures
 
-**Không retry tất cả exception.** `IllegalArgumentException` từ số lượng âm sẽ không tự khỏi sau ba lần gọi. Lỗi timeout có thể là tạm thời, nhưng timeout xảy ra **sau khi hệ thống ngoài đã xử lý** thì retry mù có thể thu tiền/gửi tin hai lần.
+**Do not retry every exception.** An `IllegalArgumentException` from a negative quantity will not recover after three attempts. A timeout may be temporary, but a timeout **after an external system processed the command** can cause duplicate charges or notifications if retried blindly.
 
-Với `InterruptedException`, nếu đã bắt nhưng không truyền tiếp, nên khôi phục cờ interrupt:
+When catching `InterruptedException` without propagating it, restore the thread's interrupt flag:
 
 ~~~java
 try {
@@ -5275,79 +5275,79 @@ try {
 }
 ~~~
 
-Nếu method có thể khai báo `throws InterruptedException`, việc truyền tiếp thường rõ ràng hơn. Không nuốt interrupt khiến task bỏ qua yêu cầu hủy hoặc shutdown.
+If a method can declare `throws InterruptedException`, propagating is often clearer. Do not swallow interrupts and make tasks ignore cancellation or shutdown.
 
-`CompletableFuture` có thể kết thúc theo cách **exceptional completion**. Caller nhìn thấy failure ở `join()`/`get()` qua các wrapper exception tương ứng. Hợp đồng cần phân biệt “đã lập lịch”, “đã xử lý xong trong bộ nhớ” và “bên ngoài xác nhận hoàn tất”.
+`CompletableFuture` can end with **exceptional completion**. A caller sees failures from `join()`/`get()` through their respective wrapper exceptions. Contracts must distinguish “scheduled,” “completed in memory,” and “confirmed by the external system.”
 
-## 14. Những lỗi thiết kế thường gặp
+## 14. Common design mistakes
 
-| Lỗi | Hậu quả | Lựa chọn tốt hơn |
+| Mistake | Consequence | Better approach |
 | --- | --- | --- |
-| `catch (Exception e) { return null; }` | Không phân biệt mất kết nối và không có giá trị | Optional cho “không có”; exception/result riêng cho lỗi |
-| `catch (Exception ignored) {}` | Báo thành công giả | Xử lý có chủ đích hoặc truyền tiếp |
-| `catch (Throwable t)` trong nghiệp vụ | Nuốt cả Error nghiêm trọng | Bắt loại exception có thể xử lý |
-| `throw new RuntimeException(e.getMessage())` | Mất original cause | `new RuntimeException("...", e)` |
-| Log toàn bộ stack trace ở mọi tầng | Log trùng và khó tìm boundary | Log tại ranh giới chịu trách nhiệm |
-| So sánh `getMessage()` với chuỗi cứng | Dễ vỡ khi đổi ngôn ngữ/thông điệp | Kiểu exception hoặc error code |
-| Trả `false` cho mọi failure | Mất ngữ cảnh xử lý | Result có lý do hoặc exception thích hợp |
-| Sửa state rồi mới validate | Có thể để lại state không hợp lệ | Validate trước, transaction nếu cần |
-| Catch exception và cho rằng đã rollback | Side effect trước đó vẫn tồn tại | Thiết kế atomicity/compensation |
-| Retry lệnh có side effect mà không chống trùng | Xử lý hai lần | Idempotency key và kiểm soát cập nhật |
-| Coi checked luôn recoverable, unchecked luôn bug | Sai trong nhiều API | Đọc hợp đồng và chính sách phục hồi |
+| `catch (Exception e) { return null; }` | Cannot distinguish connection loss from missing values | Optional for absence; separate exceptions/results for errors |
+| `catch (Exception ignored) {}` | Reports false success | Deliberately handle or propagate |
+| `catch (Throwable t)` in business code | Swallows serious Errors | Catch exceptions that can be handled |
+| `throw new RuntimeException(e.getMessage())` | Loses original cause | `new RuntimeException("...", e)` |
+| Logging full stack traces at every layer | Duplicate logs obscure error boundaries | Log at the responsible boundary |
+| Comparing `getMessage()` with a literal string | Breaks when language/message changes | Use exception types or error codes |
+| Returning `false` for every failure | Discards important context | Return a reasoned result or suitable exception |
+| Mutating state before validation | May leave invalid state | Validate first; use transactions if needed |
+| Catching exceptions and assuming rollback | Prior side effects may remain | Design atomicity/compensation |
+| Retrying effectful commands without duplicate protection | Processes them twice | Idempotency keys and guarded updates |
+| Treating all checked as recoverable and unchecked as bugs | Wrong for many APIs | Follow contracts and recovery policies |
 
-## 15. Bài tập: hợp đồng chuyển tiền giữa hai tài khoản
+## 15. Exercise: contract for transfers between accounts
 
-Thiết kế `transfer(fromId, toId, amountVnd)` với các yêu cầu:
+Design `transfer(fromId, toId, amountVnd)` with these requirements:
 
-1. ID không rỗng, hai ID khác nhau, số tiền phải dương.
-2. Một tài khoản có thể không tồn tại, bị khóa hoặc không đủ số dư.
-3. Nếu thành công, nguồn bị trừ đúng số tiền, đích tăng đúng số tiền, tổng số dư hai tài khoản không đổi.
-4. Nếu bị từ chối, **không tài khoản nào được thay đổi**.
-5. Nếu database lỗi, không được biến lỗi đó thành “không tìm thấy tài khoản”.
-6. Nếu số dư dùng `long` VND, phải xử lý overflow bằng `Math.addExact` hoặc cách biểu diễn phù hợp.
-7. Nếu có hai lệnh đồng thời hoặc một lệnh được gửi lại qua queue, cần mô tả transaction, version/lock và idempotency key.
+1. IDs must be nonblank and distinct; transfer amounts must be positive.
+2. Accounts may be missing, locked, or insufficiently funded.
+3. On success, debit the source and credit the destination by exactly the amount; combined balances remain unchanged.
+4. On rejection, **neither account may change**.
+5. Database failures must not be reported as “account not found.”
+6. If balances use `long` VND, handle overflow with `Math.addExact` or appropriate representation.
+7. For concurrent transfers or queue-delivered duplicate commands, describe transactions, versioning/locking, and idempotency keys.
 
-Hãy viết hợp đồng bằng bảng **preconditions/postconditions/invariants/failures**, chọn có lý do giữa `TransferResult` và typed domain exception, rồi viết JUnit test cho thành công, thiếu tiền, tài khoản khóa, số tiền âm, overflow và bảo toàn số dư khi thất bại.
+Specify the contract in a **preconditions/postconditions/invariants/failures** table, choose deliberately between `TransferResult` and typed domain exceptions, and write JUnit tests for success, insufficient funds, locked accounts, negative amounts, overflow, and unchanged balances after failure.
 
-**Tự kiểm tra:** caller có phân biệt được từ chối nghiệp vụ với lỗi hạ tầng không? Có trường hợp ném exception sau khi đã sửa một nửa dữ liệu không? Hợp đồng lỗi có đang phụ thuộc vào nội dung message dễ thay đổi không?
+**Self-check:** Can callers distinguish business rejections from infrastructure failures? Can any exception occur after half the state has changed? Does the error contract depend on changeable message text?
 
-**Điều cần nhớ:** trong Java, exception là một cơ chế báo và truyền failure; **hợp đồng phương thức** quyết định failure đó có ý nghĩa gì, caller phải xử lý ra sao và đối tượng phải giữ bất biến nào. Một API tốt làm rõ cả đường thành công lẫn đường thất bại.
+**Remember:** Java exceptions provide a mechanism for reporting/propagating failures; **method contracts** define what failures mean, what callers must do, and which invariants objects must preserve. Good APIs document both success and failure paths.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="language-mechanics-009">Khác biệt ngôn ngữ khi hiện thực cùng một thiết kế OOP</a>
+## <a id="language-mechanics-009">Language differences when implementing the same OOP design</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Khác biệt ngôn ngữ khi hiện thực cùng một thiết kế OOP
+# Language differences when implementing the same OOP design
 
-**Một thiết kế hướng đối tượng có thể giữ nguyên ý tưởng nhưng mang hình thức rất khác nhau trong Java, Kotlin, Python, TypeScript và C#.** Có ngôn ngữ yêu cầu khai báo rõ interface; có ngôn ngữ chấp nhận đối tượng miễn là nó cung cấp đúng phương thức. Có ngôn ngữ kiểm tra kiểu chủ yếu lúc biên dịch; có ngôn ngữ chỉ kiểm tra khi chương trình chạy. Cả hai nhóm đều có thể xây dựng hệ thống OOP tốt nếu hợp đồng nghiệp vụ được giữ vững.
+**One object-oriented design can preserve its intent while taking very different forms in Java, Kotlin, Python, TypeScript, and C#.** Some languages require explicit interface declarations; others accept objects with the expected methods. Some check types primarily at compilation, others at runtime. Both approaches can support sound OOP systems when business contracts remain intact.
 
-Bài học sẽ dùng **cùng một thiết kế tính phí vận chuyển** xuyên suốt các ví dụ. Mục tiêu là nhận ra điều gì thuộc về thiết kế OOP, điều gì là quy tắc của từng ngôn ngữ, và cách tránh lỗi khi chuyển thiết kế giữa các hệ sinh thái.
+This lesson follows **one shipping-fee design** across examples. The goal is to distinguish OOP design decisions from language mechanics and avoid mistakes when porting designs between ecosystems.
 
-## 1. Giữ nguyên bài toán, không giữ nguyên từng dòng mã
+## 1. Preserve the problem, not every line of code
 
-Một hệ thống đặt hàng cần tính phí vận chuyển theo mã dịch vụ:
+An order-management system calculates shipping fees by service code:
 
-| Dịch vụ | Quy tắc |
+| Service | Rule |
 |---|---|
-| `standard` | Phí cố định **20.000 VND** |
-| `express` | **35.000 VND + 8.000 VND × số kg làm tròn lên** |
+| `standard` | Fixed fee of **20.000 VND** |
+| `express` | **35.000 VND + 8.000 VND × kilograms rounded up** |
 
-Đầu vào là trọng lượng tính bằng **gram nguyên**, hợp lệ từ **1 đến 100.000 gram**. Phí trả về là **số nguyên VND**, không dùng số thực để biểu diễn phần lẻ tiền. Mã dịch vụ không được hỗ trợ hoặc trọng lượng không hợp lệ đều phải bị từ chối rõ ràng.
+Input weight is an **integer number of grams**, valid from **1 to 100.000 grams**. The returned fee is **an integer VND amount**, not a fractional floating-point currency value. Unsupported service codes or invalid weights must be rejected explicitly.
 
-Ví dụ: 1.200 gram tương ứng 2 kg tính phí; `express` trả `35.000 + 8.000 × 2 = 51.000 VND`.
+For example, 1.200 grams is billed as 2 kg; `express` returns `35.000 + 8.000 × 2 = 51.000 VND`.
 
-Ta xác định ba vai trò:
+Identify three roles:
 
-1. **Request:** giữ dữ liệu đầu vào và quy tắc hợp lệ.
-2. **ShippingPolicy:** hợp đồng tính phí, cho phép nhiều cách hiện thực.
-3. **ShippingService:** chọn chính sách theo mã và gọi hợp đồng mà không cần biết chi tiết công thức.
+1. **Request:** holds input data and validation rules.
+2. **ShippingPolicy:** a fee calculation contract with multiple implementations.
+3. **ShippingService:** selects a policy by code and invokes the contract without embedding formula details.
 
 ```mermaid
 classDiagram
@@ -5374,13 +5374,13 @@ classDiagram
     ShippingPolicy ..> ShippingRequest : nhận dữ liệu
 ```
 
-Sơ đồ là **thiết kế khái niệm**, không áp đặt phải tạo cùng số lượng class ở mọi ngôn ngữ. Việc chọn interface, protocol, function type, record hay data class tùy tính năng và phong cách của từng ngôn ngữ.
+The diagram shows **a conceptual design** rather than requiring identical class counts in every language. Choosing interfaces, protocols, function types, records, or data classes depends on each language's features and idioms.
 
-## 2. Java: interface danh nghĩa, kiểu tường minh và đa hình
+## 2. Java: nominal interfaces, explicit types, and polymorphism
 
-Trong Java, một class cần khai báo `implements ShippingPolicy` để được xem là hiện thực của interface đó theo hệ thống kiểu danh nghĩa (*nominal typing*). Lời gọi `policy.quote(request)` được phân phối động đến implementation thực tế.
+In Java, a class declares `implements ShippingPolicy` to formally implement that interface under *nominal typing*. Calling `policy.quote(request)` dynamically dispatches to the actual implementation.
 
-Ví dụ chạy với **Java 17+**. Lưu vào `ShippingDemo.java`:
+Runnable **Java 17+** example. Save it as `ShippingDemo.java`:
 
 ```java
 import java.util.Map;
@@ -5449,28 +5449,28 @@ public class ShippingDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac ShippingDemo.java
 java ShippingDemo
 ```
 
-Những lựa chọn quan trọng:
+Important choices:
 
-- `interface` biểu diễn hợp đồng; `implements` khai báo tường minh quan hệ kiểu.
-- `record` (Java 16+) tự tạo accessor, `equals`, `hashCode`, `toString` theo các thành phần; compact constructor giúp chặn trọng lượng sai ngay khi tạo request. `record` tạo **bất biến nông**, không tự biến mọi đối tượng tham chiếu bên trong thành bất biến.
-- `final` ở implementation ngăn kế thừa class đó; không ngăn implementation khác tham gia cùng interface.
-- `Map.copyOf` tạo bản map không sửa được qua API chuẩn, giúp tránh sửa registry từ bên ngoài sau khi khởi tạo. Nó không tự làm các `ShippingPolicy` bên trong thread-safe.
-- `long` đủ cho phạm vi phí đã định; nếu bài toán có tiền thập phân, có thể cần `BigDecimal` và quy tắc làm tròn rõ ràng.
+- `interface` specifies the contract; `implements` explicitly declares a type relationship.
+- `record` (Java 16+) generates accessors, `equals`, `hashCode`, and `toString` from components; compact constructors reject invalid weights upon request creation. A `record` provides **shallow immutability**, not automatic immutability for nested references.
+- `final` on an implementation prevents subclassing it, not implementing the same interface elsewhere.
+- `Map.copyOf` produces an unmodifiable map through standard APIs, preventing callers from changing the policy registry externally after construction. It does not make the contained `ShippingPolicy` objects thread-safe.
+- `long` covers the defined fee range; fractional monetary values may require `BigDecimal` and explicit rounding policies.
 
-**Điểm OOP cốt lõi:** `ShippingService` phụ thuộc vào hợp đồng `ShippingPolicy`. Bổ sung `SameDayShipping implements ShippingPolicy` là mở rộng hành vi; phần chọn và gọi chính sách không phải chứa thêm nhánh công thức.
+**Core OOP insight:** `ShippingService` depends on `ShippingPolicy`. Adding `SameDayShipping implements ShippingPolicy` extends behavior without embedding another fee formula branch in policy selection.
 
-## 3. Kotlin: thiết kế tương tự Java, biểu đạt ngắn hơn
+## 3. Kotlin: similar design, more concise syntax
 
-Kotlin vẫn dùng hệ thống kiểu danh nghĩa cho interface/class. Tuy nhiên, ngôn ngữ có `data class`, cú pháp property gọn và null-safety tại thời điểm biên dịch. Các class Kotlin là `final` theo mặc định, khác với class Java thông thường.
+Kotlin also uses nominal typing for interfaces/classes, but offers `data class`, concise property syntax, and compile-time null safety. Kotlin classes are `final` by default, unlike ordinary Java classes.
 
-Ví dụ Kotlin/JVM trong `ShippingDemo.kt`:
+Kotlin/JVM example in `ShippingDemo.kt`:
 
 ```kotlin
 data class ShippingRequest(val weightGrams: Int) {
@@ -5519,14 +5519,14 @@ fun main() {
 }
 ```
 
-Điểm khác Java:
+Differences from Java:
 
-- `data class` tạo `equals`/`hashCode`/`toString` và `copy` từ các property trong primary constructor.
-- `val` ngăn gán lại property từ phía mã gọi, nhưng **không bảo đảm bất biến sâu**. `registry = policies.toMap()` tạo bản sao map thông thường; interface `Map` của Kotlin là read-only ở góc nhìn API, không mang nghĩa collection bất biến tuyệt đối trong mọi tình huống.
-- Kiểu `ShippingPolicy` mặc định không nhận `null`; muốn nullable phải viết `ShippingPolicy?`. Điều này giúp loại một nhóm lỗi ở mã Kotlin thuần, nhưng dữ liệu đến từ Java, reflection hoặc nguồn ngoài vẫn cần chú ý.
-- `override` là bắt buộc khi hiện thực phương thức interface. Không cần `new` khi tạo object.
+- `data class` generates `equals`/`hashCode`/`toString` and `copy` from primary-constructor properties.
+- `val` prevents property reassignment by callers but **does not guarantee deep immutability**. `registry = policies.toMap()` produces an ordinary map copy; Kotlin's `Map` interface is read-only from the API perspective, not proof of absolute immutability in every scenario.
+- `ShippingPolicy` is non-`null` by default; nullable references require `ShippingPolicy?`. This prevents some errors in pure Kotlin, but Java interop, reflection, and external data still need attention.
+- `override` is required to implement interface methods. Object construction needs no `new`.
 
-Có thể dùng **function type** khi điểm mở rộng chỉ có một thao tác:
+A **function type** can replace interfaces for extensions requiring just one operation:
 
 ```kotlin
 typealias FeeRule = (ShippingRequest) -> Long
@@ -5536,13 +5536,13 @@ val expressRule: FeeRule = { request ->
 }
 ```
 
-Cùng ý tưởng “truyền hành vi vào service” nhưng không cần class cho mỗi quy tắc. Khi mỗi chính sách có thêm cấu hình, dependency, logging riêng hoặc nhiều phương thức, interface/class lại có thể rõ ràng hơn. Không có lý do ép mọi thiết kế OOP sang một dạng cú pháp duy nhất.
+The same idea of “supplying behavior to a service” works without a class per policy. Where policies need separate configuration, dependencies, logging, or multiple methods, interfaces/classes can express responsibilities better. No reason exists to force every OOP design into one syntax.
 
-## 4. Python: Protocol, duck typing và kiểm tra lúc chạy
+## 4. Python: Protocol, duck typing, and runtime checks
 
-Python cho phép đa hình nhờ **duck typing**: đối tượng dùng được nếu ở thời điểm gọi nó có thao tác cần thiết. `Protocol` cung cấp cách mô tả hợp đồng **structural typing** để công cụ như mypy hoặc Pyright kiểm tra tĩnh; Python thông thường không tự thực thi chú giải kiểu khi chạy.
+Python supports polymorphism via **duck typing**: an object works when it provides the needed operation at call time. `Protocol` describes a **structural typing** contract for tools such as mypy or Pyright; Python generally does not enforce type annotations at runtime.
 
-Ví dụ với **Python 3.10+**, lưu `shipping_demo.py`:
+Example for **Python 3.10+**, saved as `shipping_demo.py`:
 
 ```python
 from dataclasses import dataclass
@@ -5597,23 +5597,23 @@ if __name__ == "__main__":
     print(service.quote("express", request))   # 51000
 ```
 
-Chạy `python shipping_demo.py`.
+Run `python shipping_demo.py`.
 
-Điểm đặc trưng:
+Distinctive aspects:
 
-- `StandardShipping` và `ExpressShipping` **không cần kế thừa** `ShippingPolicy`. Chúng đáp ứng protocol bằng chữ ký và hành vi được kỳ vọng. Công cụ kiểm tra kiểu mới có thể xác nhận mức độ phù hợp.
-- `@dataclass(frozen=True)` ngăn phép gán field thông thường sau khi tạo, nhưng chỉ bất biến nông. `__post_init__` thực thi ràng buộc trọng lượng tại runtime.
-- `int` có độ chính xác nguyên không giới hạn theo kích thước số nguyên (giới hạn thực tế bởi bộ nhớ), khác `long` 64-bit trong Java/Kotlin/C#.
-- Toán tử `//` là phép chia lấy phần nguyên theo hướng âm vô cực; với đầu vào dương đã được bảo đảm, công thức làm tròn lên ở trên khớp Java.
-- Chú thích `request: ShippingRequest` không ngăn caller truyền sai object vào lúc chạy. Nếu truyền một đối tượng không có thuộc tính/phương thức cần thiết, lỗi có thể chỉ xuất hiện khi truy cập.
+- `StandardShipping` and `ExpressShipping` **need not inherit** `ShippingPolicy`. They satisfy the protocol through expected signatures and behavior, which optional type checkers can analyze.
+- `@dataclass(frozen=True)` prevents ordinary field reassignment after construction, but provides only shallow immutability. `__post_init__` validates weight at runtime.
+- `int` supports arbitrary-precision integers subject to memory limits, unlike 64-bit `long` in Java/Kotlin/C#.
+- `//` uses floor division; for validated positive inputs, the rounding-up formula matches Java.
+- The annotation `request: ShippingRequest` does not prevent callers from passing an incompatible object at runtime. An error may appear only when a missing attribute/method is accessed.
 
-Không nên hiểu “Python linh hoạt” là khỏi cần hợp đồng. Vì trình thông dịch không kiểm tra trước mọi đường gọi, **kiểm thử hợp đồng và kiểm tra input ở ranh giới hệ thống** càng có giá trị.
+Do not interpret Python's flexibility as an absence of contracts. Because the interpreter does not precheck all call paths, **boundary validation and contract tests** are especially valuable.
 
-## 5. TypeScript: interface cấu trúc, biến mất khi chạy
+## 5. TypeScript: structural interfaces erased at runtime
 
-TypeScript cũng hỗ trợ structural typing: object có đúng các thành phần cần thiết thường được xem là phù hợp với interface dù không khai báo `implements`. Tuy nhiên, phần lớn khai báo kiểu bị **xóa khi biên dịch thành JavaScript**. Vì vậy object từ API/JSON phải được kiểm tra tại runtime; `interface` và `Readonly` không tự làm được việc đó.
+TypeScript also supports structural typing: an object with the necessary members usually satisfies an interface without explicitly declaring `implements`. However, most type declarations are **erased when compiled to JavaScript**. Thus API/JSON objects require runtime validation; neither `interface` nor `Readonly` performs it automatically.
 
-Ví dụ lưu `shipping_demo.ts`:
+Save the example as `shipping_demo.ts`:
 
 ```typescript
 type ShippingRequest = Readonly<{ weightGrams: number }>;
@@ -5668,14 +5668,14 @@ console.log(service.quote("standard", request)); // 20000
 console.log(service.quote("express", request));  // 51000
 ```
 
-Sau khi cài TypeScript compiler, có thể dùng:
+After installing the TypeScript compiler, you can run:
 
 ```bash
 tsc shipping_demo.ts --strict --target ES2020 --module commonjs
 node shipping_demo.js
 ```
 
-Một object literal cũng có thể đáp ứng hợp đồng mà không cần class:
+An object literal can satisfy the contract without a class:
 
 ```typescript
 const weekendPolicy: ShippingPolicy = {
@@ -5683,19 +5683,19 @@ const weekendPolicy: ShippingPolicy = {
 };
 ```
 
-Những điểm cần phân biệt:
+Important distinctions:
 
-- TypeScript kiểm tra kiểu **trước lúc chạy**; JavaScript runtime không giữ interface `ShippingPolicy` để dùng `instanceof ShippingPolicy`.
-- `readonly` trong type và `private` thông thường là ràng buộc chủ yếu của TypeScript compiler, không phải lớp bảo vệ bất biến hoặc quyền truy cập lúc chạy. JavaScript có trường tư hữu `#field` với cơ chế runtime khác.
-- `number` là số dấu phẩy động IEEE 754. Với trọng lượng giới hạn tối đa 100.000 gram và phí trong ví dụ, mọi phép tính đều cho giá trị nguyên chính xác trong phạm vi số nguyên an toàn. Với tiền lớn, tỷ giá hoặc số lẻ, hãy chọn biểu diễn tiền phù hợp (ví dụ đơn vị nguyên nhỏ nhất cùng kiểm tra phạm vi, `bigint` khi tương thích, hoặc thư viện decimal).
-- `ReadonlyMap` chỉ mô tả API cho phép đọc từ TypeScript; `new Map(policies)` giúp service giữ bản sao registry. Không nên giả định type là cơ chế bảo vệ dữ liệu chạy trên server.
-- Event loop JavaScript cũng không chứng minh mọi state dùng chung an toàn: các bước bất đồng bộ có thể xen kẽ logic theo thời gian.
+- TypeScript checks types **before execution**; the JavaScript runtime does not retain a `ShippingPolicy` interface for `instanceof ShippingPolicy`.
+- `readonly` on types and ordinary `private` are primarily TypeScript compiler constraints, not runtime guarantees of immutability or access control. JavaScript `#field` private fields use a distinct runtime mechanism.
+- `number` uses IEEE 754. With the sample weight limit of 100.000 grams and these fees, integer calculations remain exact within the safe-integer range. For large monetary amounts, exchange rates, or fractions, choose a suitable representation (such as validated integer minor units, compatible `bigint`, or a decimal library).
+- `ReadonlyMap` describes a read-only TypeScript API; `new Map(policies)` gives the service a copy of the registry. Do not assume type declarations protect server data at runtime.
+- The JavaScript event loop also does not guarantee that shared state is safe: asynchronous steps may interleave over time.
 
-**Ví dụ lỗi chuyển ngôn ngữ:** trong Java, compiler có thể thấy class không hiện thực interface; với một JSON tùy ý ở TypeScript, compiler không tự xác minh object thực tế của HTTP response. Ranh giới nhận dữ liệu cần runtime validation.
+**Cross-language pitfall:** In Java, the compiler can detect classes missing required interface implementations. For arbitrary JSON in TypeScript, the compiler cannot verify actual HTTP response objects. Validate at input boundaries.
 
-## 6. C#: interface danh nghĩa, record struct và decimal
+## 6. C#: nominal interfaces, record structs, and decimal
 
-C# có interface danh nghĩa như Java, property và access modifier, cùng hệ thống generic và tính năng record riêng. Dưới đây là ví dụ console **.NET 8**, đặt trong `Program.cs` của dự án console:
+C# has nominal interfaces like Java, properties and access modifiers, and its own generics and records. This is a **.NET 8** console example, placed in a console project's `Program.cs`:
 
 ```csharp
 using System;
@@ -5758,50 +5758,50 @@ public sealed class ShippingService
 }
 ```
 
-Có thể tạo project bằng `dotnet new console -n ShippingDemo`, thay nội dung `Program.cs` và chạy `dotnet run` trong thư mục project.
+Create a project using `dotnet new console -n ShippingDemo`, replace `Program.cs`, and run `dotnet run` from the project folder.
 
-Điểm đáng chú ý:
+Noteworthy differences:
 
-- `: IShippingPolicy` xác nhận class thực thi interface; lời gọi interface có phân phối động tương tự Java.
-- `readonly record struct` là **kiểu giá trị**; khi truyền như tham số trong ví dụ, dữ liệu nhỏ này được sao chép theo value semantics. Ngược lại, Java `record` là **kiểu tham chiếu** và có `equals` theo giá trị các thành phần.
-- Ví dụ C# chủ ý đặt validation tại `ShippingService`. Điều đó bảo đảm đầu vào của nghiệp vụ `Quote`; tuy nhiên vẫn có thể tạo `new ShippingRequest(0)`. Nếu cần bất biến ngay lúc tạo request như Java/Kotlin/Python, nên đưa validation vào constructor/factory phù hợp.
-- C# có `decimal` cho số thập phân cơ số 10 với độ chính xác và giới hạn riêng; không có nghĩa cứ đổi `long` sang `decimal` là khỏi cần quy tắc làm tròn, currency và overflow.
-- `readonly` trên field `_registry` ngăn gán lại tham chiếu field, **không** tự biến mọi giá trị trong dictionary thành bất biến. Đây là dictionary nội bộ được sao chép một lần và service không cung cấp phương thức sửa nó.
+- `: IShippingPolicy` declares interface implementation; interface calls dispatch dynamically much like Java.
+- `readonly record struct` is a **value type**; passing the small value as a parameter copies its value semantics. By contrast, Java `record` is a **reference type** with component-based `equals`.
+- This C# example deliberately validates inputs in `ShippingService`, ensuring valid arguments for `Quote`. However, `new ShippingRequest(0)` can still be constructed. For creation-time invariants as in Java/Kotlin/Python, use an appropriate constructor/factory.
+- C# `decimal` represents base-10 decimals with its own precision and limits; switching `long` to `decimal` alone does not remove the need for rounding, currency, and overflow rules.
+- `readonly` on `_registry` prevents reassigning the field reference but **does not** make every dictionary value immutable. The internal dictionary is copied once and the service exposes no mutation methods.
 
-Nếu ứng dụng chạy qua ASP.NET Core, DI container có thể khởi tạo `ShippingService` và các policy. Đừng nhầm lifetime của DI với lựa chọn record/class hay tính an toàn của trạng thái thay đổi.
+When using ASP.NET Core, a DI container may create `ShippingService` and its policies. Do not confuse DI lifetimes with choices between records/classes or safety of mutable state.
 
-## 7. So sánh trực diện: cùng vai trò, khác cơ chế
+## 7. Direct comparison: same roles, different mechanisms
 
-| Câu hỏi | Java | Kotlin | Python | TypeScript | C# |
+| Question | Java | Kotlin | Python | TypeScript | C# |
 |---|---|---|---|---|---|
-| Hợp đồng hành vi | `interface` | `interface` hoặc function type | `Protocol`, ABC hoặc duck typing | `interface` hoặc type/function | `interface` hoặc delegate |
-| Một class được xem là hiện thực hợp đồng | Phải `implements` (nominal) | Phải khai báo `: Interface` (nominal) | `Protocol` có thể khớp theo cấu trúc; runtime duck typing | Khớp theo cấu trúc ở compile time | Phải khai báo `: Interface` (nominal) |
-| Kiểm tra kiểu | Chủ yếu compile time + runtime type checks | Chủ yếu compile time + runtime type checks | Type hints không ép kiểu runtime; optional type checker | Compile time; kiểu bị xóa phần lớn khi transpile | Compile time + thông tin kiểu CLR ở runtime |
-| Biểu diễn dữ liệu request | `record` hoặc class | `data class` | `dataclass` | Object + `type`/`interface` | `record`/`record struct`/class |
-| Giá trị rỗng | Reference có thể `null`; annotations tùy công cụ | `T` khác `T?` | `None`, annotation dạng `T \| None` | `null`/`undefined`, `strictNullChecks` | Nullable reference types: `T?` |
-| Phí nguyên | `long` có giới hạn 64-bit | `Long` 64-bit | `int` độ lớn linh hoạt | `number` giới hạn chính xác số nguyên | `long` 64-bit |
-| Interface còn tồn tại lúc chạy? | Có kiểu runtime | Có kiểu trên JVM | `Protocol` chủ yếu cho static typing; tùy cơ chế kiểm tra runtime | Không; bị xóa trong JS | Có kiểu CLR runtime |
-| Runtime validation đầu vào ngoài | Cần | Cần | Cần | Cần đặc biệt với JSON/`unknown` | Cần |
+| Behavioral contract | `interface` | `interface` or function type | `Protocol`, ABC, or duck typing | `interface` or type/function | `interface` or delegate |
+| When a class satisfies the contract | Must `implements` (nominal) | Must declare `: Interface` (nominal) | `Protocol` may match structurally; runtime duck typing | Structural match at compile time | Must declare `: Interface` (nominal) |
+| Type checking | Mostly compile-time plus runtime type checks | Mostly compile-time plus runtime type checks | Hints do not enforce runtime types; optional type checkers | Compile-time; most types erased on transpilation | Compile-time plus runtime CLR type metadata |
+| Request data representation | `record` or class | `data class` | `dataclass` | Object + `type`/`interface` | `record`/`record struct`/class |
+| Nullable values | References may be `null`; annotations depend on tooling | `T` differs from `T?` | `None`, annotation `T \| None` | `null`/`undefined`, `strictNullChecks` | Nullable references: `T?` |
+| Integer monetary fees | `long` is 64-bit | `Long` is 64-bit | `int` has flexible precision | `number` has a safe-integer range | `long` is 64-bit |
+| Interfaces at runtime? | Runtime type exists | JVM runtime type exists | `Protocol` is mainly static; runtime behavior depends on checks | No; interface erased in JS | CLR runtime type exists |
+| Runtime validation of external inputs | Required | Required | Required | Especially important with JSON/`unknown` | Required |
 
-**Lưu ý:** bảng tóm tắt hành vi phổ biến trong cấu hình ngôn ngữ/hệ runtime được nêu. Một số cơ chế tùy compiler, platform hoặc thư viện; không nên suy từ một ô trong bảng rằng mọi chương trình thuộc ngôn ngữ đó luôn có tính chất ấy.
+**Note:** The table summarizes common behavior under the described language/runtime configurations. Some details depend on compilers, platforms, or libraries; do not assume every program in a language shares all these properties.
 
-### Danh tính đối tượng khác bình đẳng về giá trị
+### Object identity versus value equality
 
-Hai object chứa cùng trọng lượng có thể **bằng nhau về dữ liệu** nhưng **không phải cùng object**. Đây là điểm rất dễ nhầm khi dịch mã OOP.
+Two objects storing the same weight may be **equal by data** yet **not be the same object**. This distinction is easy to miss when porting OOP code.
 
-| Ngôn ngữ | So sánh giá trị | So sánh danh tính/tham chiếu |
+| Language | Value comparison | Identity/reference comparison |
 |---|---|---|
-| Java | `a.equals(b)` (với `record` được tạo sẵn) | `a == b` đối với hai tham chiếu |
-| Kotlin | `a == b` gọi equality an toàn với null | `a === b` |
-| Python | `a == b` qua `__eq__` | `a is b` |
-| TypeScript/JavaScript | `===` so sánh giá trị primitive, nhưng object theo identity | `a === b` với object |
-| C# | Phụ thuộc overload `==`/`Equals`; record hỗ trợ value equality | `ReferenceEquals(a,b)` cho đối tượng tham chiếu |
+| Java | `a.equals(b)` (generated for `record`) | `a == b` for two references |
+| Kotlin | `a == b` uses null-safe equality | `a === b` |
+| Python | `a == b` invokes `__eq__` | `a is b` |
+| TypeScript/JavaScript | `===` compares primitive values; objects by identity | `a === b` for objects |
+| C# | Depends on overloaded `==`/`Equals`; records support value equality | `ReferenceEquals(a,b)` for references |
 
-Trong Java, `new ShippingRequest(1200).equals(new ShippingRequest(1200))` là `true` nhưng `==` giữa hai record vừa tạo là `false`. Với TypeScript, hai object literal `{weightGrams: 1200}` riêng biệt so sánh bằng `===` là `false`. Lựa chọn key trong map, caching, deduplication và test có thể thay đổi kết quả nếu nhầm **identity** với **value equality**.
+In Java, `new ShippingRequest(1200).equals(new ShippingRequest(1200))` evaluates to `true`, whereas `==` between two newly created records is `false`. In TypeScript, comparing separate object literals `{weightGrams: 1200}` with `===` is `false`. Map keys, caching, deduplication, and tests can behave differently if **identity** and **value equality** are confused.
 
-## 8. Phần thiết kế nào phải bất biến khi chuyển ngôn ngữ?
+## 8. Which design decisions must survive translation between languages?
 
-Điểm không thể “dịch máy móc” nằm ở chỗ **hợp đồng quan sát được** quan trọng hơn tên lớp.
+The part that cannot be “translated mechanically” is that **observable contracts** matter more than class names.
 
 ```mermaid
 flowchart TD
@@ -5813,46 +5813,46 @@ flowchart TD
     D --> F[Phí nguyên VND]
 ```
 
-**Các hợp đồng phải giữ nguyên:**
+**The following contracts must remain unchanged:**
 
-- Trọng lượng chỉ nhận số nguyên trong `[1, 100000]` gram. Lưu ý Python có `bool` là subclass của `int`; TypeScript có thể nhận giá trị ngoài type khi đọc dữ liệu không tin cậy.
-- `standard` trả `20000` cho mọi trọng lượng hợp lệ.
-- `express` trả `35000 + 8000 × ceil(weightGrams / 1000)`.
-- Mã không có trong registry tạo lỗi; không âm thầm trả 0 hoặc chuyển sang dịch vụ mặc định.
-- Service không chứa từng công thức; chọn implementation và gọi theo hợp đồng.
-- Mỗi implementer cần trả phí hợp lệ, không sửa input và tuân thủ đơn vị VND.
+- Weight must be an integer in the range `[1, 100000]` grams. Note that Python's `bool` is a subclass of `int`; TypeScript may receive values outside static types when reading untrusted input.
+- `standard` returns `20000` for every valid weight.
+- `express` returns `35000 + 8000 × ceil(weightGrams / 1000)`.
+- Unknown registry codes fail; do not silently return 0 or switch to a default service.
+- The service selects and invokes implementations without embedding their formulas.
+- Every implementation returns valid fees, leaves inputs unchanged, and uses VND units.
 
-Phần **có thể khác**: nơi đặt validation (constructor hoặc service), cách mô tả interface, kiểu số, naming convention, exception class, cú pháp registry, cơ chế tạo instance, kiểu bất biến và DI framework.
+What **may differ**: validation location (constructors or services), interface syntax, numeric types, naming conventions, exception classes, registry syntax, object creation, immutability style, and DI frameworks.
 
-### Bộ kiểm thử chung cho cả năm phiên bản
+### Shared test matrix for all five versions
 
-| Trường hợp | `standard` | `express` | Giải thích |
+| Case | `standard` | `express` | Explanation |
 |---|---:|---:|---|
-| 1 gram | 20.000 | 43.000 | Tối thiểu 1 kg tính phí |
-| 1.000 gram | 20.000 | 43.000 | Tròn đúng 1 kg |
-| 1.001 gram | 20.000 | 51.000 | Bước qua mốc, tính 2 kg |
-| 1.200 gram | 20.000 | 51.000 | Làm tròn lên 2 kg |
-| 100.000 gram | 20.000 | 835.000 | Tối đa 100 kg |
-| 0 hoặc 100.001 gram | Lỗi | Lỗi | Vi phạm input contract |
-| Mã `unknown` | Lỗi | Lỗi | Không có policy đăng ký |
+| 1 gram | 20.000 | 43.000 | Minimum billable 1 kg |
+| 1.000 grams | 20.000 | 43.000 | Exactly 1 kg |
+| 1.001 grams | 20.000 | 51.000 | Crosses threshold, billed for 2 kg |
+| 1.200 grams | 20.000 | 51.000 | Rounds up to 2 kg |
+| 100.000 grams | 20.000 | 835.000 | Maximum 100 kg |
+| 0 or 100.001 grams | Error | Error | Input contract violation |
+| `unknown` code | Error | Error | Policy not registered |
 
-Với ca 100.000 gram, phép tính là `35.000 + 8.000 × 100 = 835.000`. Nếu bất kỳ implementation nào trả con số khác, lỗi nằm ở logic chuyển đổi/thi hành, dù cú pháp trông “đúng OOP”.
+For the 100.000-gram case, the calculation is `35.000 + 8.000 × 100 = 835.000`. Any differing result indicates a translation/implementation logic defect, even if the syntax looks “properly object-oriented.”
 
-Đừng chỉ kiểm thử các lời gọi thành công. Cần test ranh giới kiểu (ví dụ `true` trong Python, `NaN` hay số không nguyên từ JavaScript), đầu vào bất hợp lệ và registration missing. Mục tiêu là **parity về hành vi** chứ không phải parity về số lượng class hoặc tên phương thức.
+Test more than successful calls. Check type boundaries (such as Python `true`, JavaScript `NaN`, and noninteger numbers), invalid data, and missing registrations. The goal is **behavioral parity**, not identical class counts or method names.
 
-## 9. Khi nào một interface là quá nhiều?
+## 9. When is an interface too much?
 
-Ví dụ vận chuyển dùng hai chính sách để làm rõ đa hình. Nhưng thiết kế thật có thể chỉ cần **một hàm** truyền vào service:
+The example has two shipping policies to demonstrate polymorphism. In practice, the service may only need **a function**:
 
-- Java: `ToLongFunction<ShippingRequest>` (lưu ý xử lý tên mã và dependency nơi gọi).
+- Java: `ToLongFunction<ShippingRequest>` (account for code selection and caller dependencies).
 - Kotlin: `(ShippingRequest) -> Long`.
 - Python: `Callable[[ShippingRequest], int]`.
 - TypeScript: `(request: ShippingRequest) => number`.
 - C#: `Func<ShippingRequest, long>`.
 
-Các lựa chọn này vẫn diễn đạt **đảo ngược phụ thuộc vào hành vi được cung cấp**. Chọn class/interface khi policy có danh tính nghiệp vụ rõ, có nhiều phương thức, dependency, vòng đời hoặc cần công khai một hợp đồng bền vững. Chọn function khi hành vi nhỏ, độc lập và dễ đọc.
+These still express **dependency inversion toward supplied behavior**. Use classes/interfaces when a policy has meaningful identity, multiple methods, dependencies, a lifecycle, or a stable public contract. Use functions when behavior is small, independent, and readable.
 
-Ví dụ Java có thể chấp nhận các rule dưới dạng function:
+Java can also accept rules as functions:
 
 ```java
 import java.util.Map;
@@ -5869,76 +5869,76 @@ long fee = rules.get("express").applyAsLong(
         new ShippingRequest(1_200)); // 51000
 ```
 
-Đoạn này là **mảnh mã minh họa đặt trong phạm vi có thể truy cập `ShippingRequest`**. Khi viết ứng dụng thật, cần kiểm tra mã tồn tại trước khi gọi `applyAsLong`; `rules.get(...)` trả `null` nếu key không có. Function type giảm số class nhưng không tự giải quyết validation, registry, logging và quy tắc lỗi.
+This is **an illustrative snippet within scope of `ShippingRequest`**. In real applications, verify a code exists before calling `applyAsLong`; `rules.get(...)` returns `null` for missing keys. Function types reduce class count but do not solve validation, registries, logging, or failure policy on their own.
 
-## 10. Khác biệt về đóng gói, kế thừa và đa hình
+## 10. Differences in encapsulation, inheritance, and polymorphism
 
-Một thiết kế OOP tốt cần nêu **ai sở hữu trạng thái** và **người ngoài được phép làm gì**, bởi mỗi ngôn ngữ bảo vệ ranh giới này ở mức khác nhau.
+Sound OOP design specifies **who owns state** and **what outsiders may do**, since languages enforce those boundaries differently.
 
-**Đóng gói:**
+**Encapsulation:**
 
-- Java/C#: `private`, `protected` và các mức truy cập khác được ngôn ngữ/runtime hỗ trợ. Reflection hoặc các cơ chế đặc biệt vẫn cần xét riêng.
-- Kotlin: `private`, `protected`, `internal`, `public`; `internal` phục vụ ranh giới module ở mức ngôn ngữ, cần hiểu thêm cách biên dịch/interop.
-- Python: tiền tố `_field` chủ yếu là quy ước API nội bộ; `__field` dùng *name mangling* để giảm xung đột tên, không tạo ranh giới bảo mật tuyệt đối.
-- TypeScript: `private` thường được compiler kiểm tra; trường JavaScript `#field` có kiểm soát runtime. Đừng dùng `readonly` để thay cơ chế bảo vệ dữ liệu không tin cậy.
+- Java/C#: `private`, `protected`, and other access levels are enforced by language/runtime mechanisms. Reflection and exceptional access mechanisms need separate consideration.
+- Kotlin: `private`, `protected`, `internal`, `public`; `internal` serves module boundaries at language level, with compilation/interoperability details to consider.
+- Python: `_field` usually signals an internal API convention; `__field` uses *name mangling* to reduce naming conflicts, not create a security boundary.
+- TypeScript: `private` is generally compiler-checked; JavaScript `#field` has runtime privacy. Do not rely on `readonly` to secure untrusted data.
 
-**Kế thừa:**
+**Inheritance:**
 
-- Java, Kotlin, C#, TypeScript: một class thường chỉ kế thừa trực tiếp **một class nền**, nhưng có thể hiện thực nhiều interface; các ngôn ngữ hỗ trợ khác nhau về default implementation.
-- Python: hỗ trợ kế thừa nhiều class và tra cứu theo **MRO** (*method resolution order*). Đây là công cụ mạnh nhưng có thể gây khó hiểu khi nhiều class nền cùng định nghĩa một phương thức.
+- Java, Kotlin, C#, TypeScript: classes typically inherit directly from **one base class** but can implement multiple interfaces; default implementations differ by language.
+- Python: supports multiple class inheritance with **MRO** (*method resolution order*). This is powerful but can be confusing when base classes define the same methods.
 
-**Đa hình:**
+**Polymorphism:**
 
-- Java/Kotlin/C#: quan hệ khai báo với interface/class có vai trò trung tâm trong static typing.
-- Python: runtime dispatch dựa trên object thực tế; `Protocol` giúp static tooling mô tả kỳ vọng.
-- TypeScript: compiler kiểm tra shape, còn JavaScript thực thi lời gọi method trên object thực tế; interface không có runtime identity.
+- Java/Kotlin/C#: declared class/interface relations are central to static typing.
+- Python: runtime dispatch uses actual objects; `Protocol` lets static tooling describe expectations.
+- TypeScript: the compiler checks object shapes and JavaScript invokes actual object methods; interfaces have no runtime identity.
 
-Đừng cố sao chép một hệ phân cấp class sâu từ Java sang Python/TypeScript. Nếu ngôn ngữ có function, composition, protocol hoặc object literal phù hợp hơn, có thể giữ **cùng trách nhiệm và hợp đồng** bằng cấu trúc gọn hơn.
+Do not copy deep Java class hierarchies into Python/TypeScript mechanically. Functions, composition, protocols, or object literals may preserve **the same responsibilities and contracts** with clearer structures.
 
-## 11. Rủi ro khi port thiết kế OOP giữa ngôn ngữ
+## 11. Risks when porting OOP designs between languages
 
-| Tình huống | Sai lầm thường gặp | Hướng xử lý |
+| Scenario | Common mistake | Better approach |
 |---|---|---|
-| Copy công thức `(w + 999) / 1000` | Quên khác biệt phép chia nguyên/dấu phẩy động | Java/Kotlin/C# dùng phép chia nguyên với toán hạng nguyên; Python `//`; TypeScript `Math.ceil` |
-| Giả định type annotation chặn runtime input | JSON sai lọt vào TypeScript/Python | Validation ở boundary; test `NaN`/`bool`/giá trị ngoài phạm vi |
-| Dùng `==`/`===` như nhau | Trộn identity và value equality | Test rõ semantics từng kiểu và ngôn ngữ |
-| Tin `readonly`/`final` bảo đảm deep immutability | Collection bên trong vẫn thay đổi | Defensive copy, immutable data và ownership rõ |
-| Dịch mọi class 1:1 | Quá nhiều boilerplate hoặc bỏ qua idiom địa phương | Bảo toàn trách nhiệm, hợp đồng và đường phụ thuộc |
-| Dùng inheritance để tái sử dụng mọi thứ | Phụ thuộc implementation và override khó đoán | Composition và interface/function type khi phù hợp |
-| Cho rằng DI singleton = an toàn đa luồng | Service có field thay đổi theo request | Thiết kế stateless hoặc kiểm soát concurrency thật sự |
-| Bỏ qua xử lý lỗi và lifecycle | Resource leak, retry khác nhau, API bất nhất | Đặc tả lỗi, transaction, close/dispose và thử nghiệm tích hợp |
+| Copying `(w + 999) / 1000` | Forgetting integer versus floating-point division | Java/Kotlin/C# use integer division for integral operands; Python `//`; TypeScript `Math.ceil` |
+| Assuming annotations prevent runtime invalid input | Malformed JSON reaches TypeScript/Python | Validate boundaries; test `NaN`/`bool`/out-of-range values |
+| Treating `==`/`===` as equivalent across languages | Confusing identity with value equality | Test semantics of each type and language |
+| Believing `readonly`/`final` guarantee deep immutability | Inner collections still mutate | Defensive copying, immutable data, clear ownership |
+| Translating classes 1:1 mechanically | Excessive boilerplate or non-idiomatic code | Preserve responsibilities, contracts, and dependency direction |
+| Using inheritance for every kind of reuse | Couples implementations and creates unpredictable overrides | Favor composition and interfaces/function types where appropriate |
+| Assuming DI singleton means thread-safe | Service stores per-request mutable fields | Design stateless services or control concurrency explicitly |
+| Ignoring failure handling and lifecycle | Leaks resources, inconsistent retries/APIs | Specify errors, transactions, closing/disposal, and integration tests |
 
-Một vấn đề thường ẩn sau “cùng code nhưng chạy khác” là **hệ sinh thái thực thi**: Java trên JVM, Kotlin có nhiều target, Python runtime, JavaScript engine của Node/browser và CLR của .NET có mô hình I/O, GC, scheduling, reflection, serialization, package khác nhau. Không được suy ra hiệu năng, thread safety hay cách giải phóng tài nguyên chỉ từ sơ đồ class.
+A hidden reason why “the same code behaves differently” is the **execution ecosystem**: Java/JVM, Kotlin's various targets, Python runtimes, Node/browser JavaScript engines, and .NET CLR differ in I/O, GC, scheduling, reflection, serialization, and package models. Do not infer performance, thread safety, or resource cleanup from class diagrams alone.
 
-Ví dụ, Java có `AutoCloseable`/try-with-resources, C# có `IDisposable`/`using`, Python có context manager/`with`; TypeScript/JavaScript thường dùng `try/finally` và API close/dispose tương ứng. **Ý đồ** vẫn là giải phóng tài nguyên có trách nhiệm, còn **cơ chế** phụ thuộc runtime.
+Java uses `AutoCloseable`/try-with-resources; C# uses `IDisposable`/`using`; Python uses context managers/`with`; TypeScript/JavaScript commonly uses `try/finally` and related close/dispose APIs. **The intent** is still responsible resource cleanup, but **the mechanism** depends on runtime.
 
-## 12. Một cách chuyển thiết kế có kiểm soát
+## 12. A controlled approach to porting designs
 
-Giả sử đội ngũ đã có bản Java và muốn viết dịch vụ tương đương bằng TypeScript:
+Suppose a team already has the Java version and wants to implement an equivalent TypeScript service:
 
-1. **Chốt hợp đồng trước:** đầu vào, đơn vị, phạm vi, công thức, quy tắc lỗi, trạng thái và kỳ vọng đồng thời.
-2. **Chuyển các vai trò:** Request, Policy, Service. Chỉ sau đó mới quyết định dùng `class`, function hay object literal.
-3. **Đổi biểu diễn dữ liệu có chủ ý:** `long` Java sang `number` TypeScript chỉ được khi chứng minh giới hạn giá trị; thêm runtime checks.
-4. **Kiểm tra boundary thực tế:** HTTP JSON không mang interface TypeScript; validate trước khi đưa vào domain.
-5. **Áp dụng cùng bảng ca kiểm thử:** kết quả phải khớp về VND và trường hợp lỗi, dù exception class khác.
-6. **Rà soát runtime và lifecycle:** registry có bị sửa ngoài ý muốn không, async có gây xen kẽ trạng thái không, tài nguyên giải phóng thế nào.
-7. **Đánh giá idiomatic code:** code nhận diện được ý tưởng ban đầu nhưng vẫn dễ hiểu với lập trình viên của ngôn ngữ đích.
+1. **Specify contracts first:** inputs, units, ranges, formulas, failures, state, and concurrency expectations.
+2. **Translate roles:** Request, Policy, Service. Only then decide between `class`, functions, and object literals.
+3. **Choose data representations intentionally:** Java `long` to TypeScript `number` is safe only when value limits are established; add runtime checks.
+4. **Validate actual boundaries:** HTTP JSON does not carry TypeScript interfaces; validate before entering the domain.
+5. **Run the shared test matrix:** VND values and failure outcomes must agree despite different exception classes.
+6. **Review runtime and lifecycles:** can registry state be modified externally, do async steps interleave state mutations, how are resources released?
+7. **Assess idiomatic code:** preserve the design intent while remaining understandable to target-language developers.
 
-### Bài tập
+### Exercises
 
-**Bài 1:** Bổ sung `same-day` giá cố định 70.000 VND vào hai trong năm implementation. Không sửa công thức của `ShippingService`; chỉ viết policy mới và đăng ký mã. Phân tích ngôn ngữ nào bắt buộc khai báo quan hệ interface.
+**Exercise 1:** Add fixed-price `same-day` at 70.000 VND in two of the five implementations. Do not change `ShippingService` formulas; write and register a new policy. Explain which languages require an explicit interface declaration.
 
-**Bài 2:** Thay `ShippingRequest` thành đối tượng chứa `List<String> notes` hoặc mảng ghi chú. So sánh mức “bất biến” của Java record, Kotlin data class, Python frozen dataclass, TypeScript Readonly và C# record khi collection bên trong vẫn mutable.
+**Exercise 2:** Replace `ShippingRequest` with an object containing `List<String> notes` or a notes array. Compare “immutability” of Java records, Kotlin data classes, Python frozen dataclasses, TypeScript Readonly, and C# records when inner collections remain mutable.
 
-**Bài 3:** Tạo hai request có cùng trọng lượng 1.200 gram và thử so sánh equality vs identity trong Java, Kotlin, Python, TypeScript và C#. Giải thích kết quả; không giả định ký hiệu `==` có ý nghĩa giống nhau ở mọi ngôn ngữ.
+**Exercise 3:** Create two requests of the same weight, 1.200 grams, and compare equality versus identity in Java, Kotlin, Python, TypeScript, and C#. Explain the results; do not assume `==` means the same thing in every language.
 
-**Bài 4:** Phân tích hai đầu vào đến từ JSON: `{"weightGrams": 1200}` và `{"weightGrams": "1200"}`. Xác định ở đâu cần parse/validate để không tự chuyển chuỗi sang số một cách mập mờ. Viết một test ngăn cả TypeScript lẫn Python vô tình chấp nhận kiểu dữ liệu sai.
+**Exercise 4:** Examine two JSON inputs: `{"weightGrams": 1200}` and `{"weightGrams": "1200"}`. Decide where parsing/validation should happen to avoid ambiguous coercion of strings into numbers. Write tests preventing both TypeScript and Python from accepting unintended data types.
 
-**Câu hỏi tự đánh giá:** Nếu bỏ tên `interface`, `Protocol`, `data class` và `record` khỏi bản mô tả, bạn còn giải thích được ai chịu trách nhiệm tính phí, ai chọn chính sách, hợp đồng nào phải được giữ và cách kiểm chứng hay không? Nếu có, bạn đã nắm được **thiết kế OOP độc lập với cú pháp**.
+**Self-assessment:** If you remove `interface`, `Protocol`, `data class`, and `record` labels from a description, can you still explain who calculates fees, who selects policies, which contracts must hold, and how to verify them? If so, you understand **OOP design independent of syntax**.
 
-**Điều cần nhớ:** một thiết kế OOP được nhận diện bằng **trách nhiệm, hợp đồng, ranh giới trạng thái và cách các đối tượng cộng tác**. Java, Kotlin, Python, TypeScript và C# cung cấp những công cụ khác nhau để biểu đạt các quyết định đó. Dịch thiết kế thành công là giữ đúng hành vi và bất biến nghiệp vụ, đồng thời dùng đúng cơ chế kiểu, runtime và idiom của ngôn ngữ đích.
+**Remember:** OOP designs are defined by **responsibilities, contracts, state boundaries, and object collaboration**. Java, Kotlin, Python, TypeScript, and C# offer different tools to express those decisions. Successful porting preserves behavior and domain invariants while using the target language's type system, runtime mechanisms, and idioms correctly.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

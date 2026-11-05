@@ -1,6 +1,7 @@
 package com.example.learning.task.sheets.task
 
 import com.example.learning.task.sheets.service.ModuleTranslationCatalogService
+import com.example.learning.task.sheets.service.ModuleTranslationProgressService
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.provider.Property
@@ -33,9 +34,21 @@ abstract class ModuleTranslationAuditTask extends DefaultTask {
                 throw new GradleException('BLOCKER: INVALID_TRANSLATION_WORKER_COUNT')
             }
         }
+        if (operation.get() == 'PREPARE' && requested == 'APPLY') {
+            new ModuleTranslationProgressService().preflightPrepare(
+                    project.rootProject.projectDir, project.projectDir, runId.get())
+        }
         Map result = new ModuleTranslationCatalogService().execute(
                 project.rootProject.projectDir, project.projectDir,
                 runId.get(), operation.get(), requested == 'APPLY', workerMode.get(), count)
+        // The journal is a Prime-side recovery checkpoint, not part of the
+        // immutable baseline and never owned by translation workers.
+        if (operation.get() == 'PREPARE' && requested == 'APPLY') {
+            Map checkpoint = new ModuleTranslationProgressService().initialize(
+                    project.rootProject.projectDir, project.projectDir, runId.get())
+            logger.lifecycle('[STEP-11-PROGRESS] {} revision={} file={}',
+                    checkpoint.result, checkpoint.revision, checkpoint.path)
+        }
         logger.lifecycle('[STEP-11] {} module={} run={} total={} jobs={} mode={} maxWorkers={} ' +
                 'translated={} pending={} manifest={} semanticQA={}',
                 result.status, result.module, result.runId,

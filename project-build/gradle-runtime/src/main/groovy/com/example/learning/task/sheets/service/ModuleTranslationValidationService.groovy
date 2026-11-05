@@ -13,7 +13,11 @@ class ModuleTranslationValidationService {
     private static final Pattern CODE = Pattern.compile(
             '(?ms)^([ \\t]*)(\\x60{3,}|\\x7E{3,})[^\\r\\n]*\\R.*?^\\1\\2[ \\t]*(?=\\R|$)')
     private static final Pattern INLINE_CODE = Pattern.compile('\\x60+[^\\x60\\r\\n]+\\x60+')
-    private static final Pattern HTML_TAG = Pattern.compile('<[^>]+>')
+    // Match markup tags, not comparison operators such as "<=" in protected Java code.
+    private static final Pattern HTML_TAG = Pattern.compile('</?[A-Za-z][^<>]*>|<![^<>]*>|<\\?[^<>]*>')
+    private static final Pattern HTML_CODE = Pattern.compile('(?is)<code\\b[^>]*>.*?</code>')
+    private static final Pattern QUALIFIED_IDENTIFIER = Pattern.compile(
+            '(?<![A-Za-z0-9_$])(?:[A-Za-z_$][A-Za-z0-9_$]*\\.)+[A-Za-z_$][A-Za-z0-9_$]*(?:\\([^()]*\\))?')
     private static final Pattern LINKS = Pattern.compile('!?\\[[^\\]\\r\\n]*\\]\\(([^)\\r\\n]+)\\)')
     private static final Pattern ANCHORS = Pattern.compile(
             '<a\\s+id\\s*=\\s*["\\x27]([^"\\x27]+)["\\x27]', Pattern.CASE_INSENSITIVE)
@@ -152,6 +156,13 @@ class ModuleTranslationValidationService {
                 markdown(a as String, b as String)
             } else {
                 lockedTokens(a as String, b as String, path)
+                if (type == 'SWAGGER_API_CASES' && path.contains('.observations[')) {
+                    identical(path + ' HTML code literals',
+                            matches(HTML_CODE, a as String), matches(HTML_CODE, b as String))
+                    identical(path + ' qualified technical identifiers',
+                            matches(QUALIFIED_IDENTIFIER, a as String),
+                            matches(QUALIFIED_IDENTIFIER, b as String))
+                }
             }
         } else if (a != b || a?.getClass() != b?.getClass()) {
             throw new GradleException('Protected translation field changed: ' + path)
@@ -192,7 +203,8 @@ class ModuleTranslationValidationService {
             case 'SWAGGER_API_EXECUTION':
                 return path ==~ /[^.]+\..+\.execution/
             case 'SWAGGER_API_CASES':
-                return path ==~ /[^.]+\..+\.cases\[\d+\]\.(title|description|detailDescription)/
+                return path ==~ /[^.]+\..+\.cases\[\d+\]\.(title|description|detailDescription)/ ||
+                        path ==~ /[^.]+\..+\.cases\[\d+\]\.observations\[\d+\]\.(source|program|expect\.(results|conclusion))/
             default:
                 return false
         }

@@ -1,68 +1,68 @@
 version: 1
 type: LEARNING_ROADMAP
-title: SOLID — LIÊN KẾT BÀI HỌC
-roadmapHeading: Mạch liên kết bài học
+title: SOLID — LESSON CONNECTIONS
+roadmapHeading: Learning Path Through the Lessons
 roadmap:
 - id: solid-001
   order: 1
-  title: Mục đích và phạm vi áp dụng SOLID
-  description: Đặt SOLID vào mục tiêu giảm tác động thay đổi và kiểm thử qua SolidScopeDemo; phân biệt năm nguyên tắc với các vấn đề như transaction, security không được giải quyết tự động.
+  title: Purpose and Scope of SOLID
+  description: Use SolidScopeDemo to frame SOLID as a way to reduce the impact of changes and improve testability; distinguish the five principles from issues such as transactions and security, which they do not automatically solve.
   transition:
     to: solid-002
-    description: '**Từ mục tiêu SOLID → đào sâu cách xác định một nhóm trách nhiệm và lý do thay đổi**'
+    description: '**From SOLID’s goals → explore how to identify a group of responsibilities and reasons for change**'
 - id: solid-002
   order: 2
-  title: 'Trách nhiệm đơn: một nhóm lý do thay đổi'
-  description: SRP nhóm các quy tắc vòng đời và tổng tiền trong Invoice, trong khi formatter, repository và sender nhận các nhóm lý do thay đổi riêng; InvoiceWorkflow điều phối use case.
+  title: 'Single Responsibility: One Group of Reasons to Change'
+  description: SRP groups lifecycle and total-calculation rules within Invoice, while formatters, repositories, and senders handle separate reasons for change; InvoiceWorkflow coordinates the use case.
   transition:
     to: solid-003
-    description: '**Từ trách nhiệm đã rõ → đặt điểm mở rộng cho biến thể mà không liên tục sửa lõi**'
+    description: '**From clearly defined responsibilities → establish extension points for variants without repeatedly changing the core**'
 - id: solid-003
   order: 3
-  title: 'Đóng-mở: mở rộng hành vi với thay đổi có kiểm soát'
-  description: 'OCP đặt trục thay đổi ở ShippingPolicy: thêm Standard, Express, SameDay và decorator phụ phí mà ShippingService giữ lời gọi feeFor, với registration ở composition root.'
+  title: 'Open–Closed: Extending Behavior with Controlled Changes'
+  description: 'OCP places the variation point in ShippingPolicy: add Standard, Express, SameDay, and surcharge decorators while ShippingService keeps its feeFor call, with registration at the composition root.'
   transition:
     to: solid-004
-    description: '**Từ mở rộng nhiều implementation → bảo đảm mỗi loại giữ đúng hợp đồng**'
+    description: '**From extending with multiple implementations → ensure each one honors the contract**'
 - id: solid-004
   order: 4
-  title: 'Thay thế Liskov: bảo toàn hợp đồng của kiểu cha'
-  description: LSP yêu cầu mọi DiscountPolicy giữ precondition, postcondition, invariant và lỗi; BadVipDiscount và BadFixedDiscount là hai vi phạm khác nhau dù implements hợp lệ.
+  title: 'Liskov Substitution: Preserving the Supertype Contract'
+  description: LSP requires every DiscountPolicy to preserve preconditions, postconditions, invariants, and error behavior; BadVipDiscount and BadFixedDiscount violate the contract in different ways despite valid implements declarations.
   transition:
     to: solid-005
-    description: '**Từ hợp đồng thay thế → thu hẹp nghĩa vụ theo nhu cầu riêng của từng client**'
+    description: '**From substitution contracts → narrow obligations to each client’s needs**'
 - id: solid-005
   order: 5
-  title: 'Phân tách giao diện: hợp đồng phù hợp từng bên sử dụng'
-  description: ISP tách DocumentReader, DocumentWriter, DocumentDeleter đúng client; kho chỉ đọc không cần giả vờ hỗ trợ ghi/xóa, còn một implementation có thể thực hiện nhiều vai trò.
+  title: 'Interface Segregation: Contracts Tailored to Each Client'
+  description: ISP separates DocumentReader, DocumentWriter, and DocumentDeleter according to client needs; a read-only archive need not pretend to support writing/deletion, while one implementation may fulfill multiple roles.
   transition:
     to: solid-006
-    description: '**Từ client chỉ cần hợp đồng phù hợp → điều chỉnh hướng phụ thuộc giữa nghiệp vụ và hạ tầng**'
+    description: '**From giving clients suitable contracts → adjust dependency direction between business logic and infrastructure**'
 - id: solid-006
   order: 6
-  title: 'Đảo ngược phụ thuộc: phụ thuộc vào sự trừu tượng'
-  description: DIP giữ CustomerSpendingService phụ thuộc PurchaseReader, còn in-memory/JDBC adapter triển khai port; dịch vụ giữ quy tắc tổng mua hàng độc lập chi tiết SQL.
+  title: 'Dependency Inversion: Depending on Abstractions'
+  description: DIP keeps CustomerSpendingService dependent on PurchaseReader while in-memory/JDBC adapters implement the port; the service retains purchase-total rules independently of SQL details.
   transition:
     to: solid-007
-    description: '**Từ đảo hướng phụ thuộc → phân biệt nguyên lý kiến trúc với kỹ thuật lắp ghép object**'
+    description: '**From inverting dependency direction → distinguish the architectural principle from object wiring techniques**'
 - id: solid-007
   order: 7
-  title: Phân biệt đảo ngược phụ thuộc và tiêm phụ thuộc
-  description: So sánh DIP (hướng source dependency), DI (cấp dependency) và IoC (quyền điều khiển rộng hơn) bằng PaymentGateway, CheckoutService và composition root/Spring.
+  title: Distinguishing Dependency Inversion from Dependency Injection
+  description: Compare DIP (source dependency direction), DI (providing dependencies), and IoC (broader inversion of control) using PaymentGateway, CheckoutService, and a composition root/Spring.
   transition:
     to: solid-008
-    description: '**Từ hiểu năm nguyên tắc và DI → cân nhắc chi phí abstraction trong tình huống thực tế**'
+    description: '**From understanding the five principles and DI → weigh abstraction costs in real-world situations**'
 - id: solid-008
   order: 8
-  title: Cân bằng các nguyên tắc với độ phức tạp thực tế
-  description: 'Đánh giá KISS/YAGNI/DRY và change surface: từ SimpleCheckout một rule đến DeliveryFeePolicy khi Standard/Express thay đổi riêng, giữ kiểm thử và tránh overengineering.'
+  title: Balancing the Principles with Real-World Complexity
+  description: 'Evaluate KISS/YAGNI/DRY and change surface: move from SimpleCheckout with one rule to DeliveryFeePolicy when Standard/Express vary independently, preserving tests and avoiding overengineering.'
   transition: null
 comparisonMarkdown: |-
-  ## 2. Bảng đối chiếu các bài học
+  ## 2. Lesson Comparison Table
 
-  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 |
+  | Criterion | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 | Lesson 6 | Lesson 7 | Lesson 8 |
   | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-  | Tên | Mục đích và phạm vi áp dụng SOLID | Trách nhiệm đơn: một nhóm lý do thay đổi | Đóng-mở: mở rộng hành vi với thay đổi có kiểm soát | Thay thế Liskov: bảo toàn hợp đồng của kiểu cha | Phân tách giao diện: hợp đồng phù hợp từng bên sử dụng | Đảo ngược phụ thuộc: phụ thuộc vào sự trừu tượng | Phân biệt đảo ngược phụ thuộc và tiêm phụ thuộc | Cân bằng các nguyên tắc với độ phức tạp thực tế |
-  | Vấn đề cần hiểu | SOLID cần để giải quyết điều gì và ở phạm vi nào? | Một nhóm trách nhiệm và actor thay đổi là gì? | Khi thêm biến thể, sửa phần lõi bao nhiêu? | Subtype có còn đáp ứng lời hứa của supertype? | Client có phải thấy API nó không dùng? | Nghiệp vụ đang import công nghệ hay port? | DIP và DI khác nhau cụ thể ở đâu? | Khi nào abstraction có lợi hơn code đơn giản? |
-  | Giá trị đối với OOP/module | Có khung đánh giá năm nguyên tắc | Cohesion cao, tách I/O khỏi Invoice | Thêm policy giảm hồi quy vào ShippingService | Tương thích hành vi giữa các policy | ReadOnlyArchive không giả vờ ghi/xóa | Thay JDBC/REST mà không đổi use case | Lắp ghép/test được và đúng hướng module | Giảm độ phức tạp không có giá trị |
-  | Tư duy hình thành | Nhìn thay đổi và contract | Nhóm theo lý do thay đổi | Xác định phần ổn định và biến thiên | Viết tiền/hậu điều kiện, test chung | Thiết kế từ nhu cầu client | Abstraction thuộc phía dùng | Tách dependency graph khỏi wiring | Kiểm chứng đánh đổi qua ca thực tế |
+  | Name | Purpose and Scope of SOLID | Single Responsibility: One Group of Reasons to Change | Open–Closed: Extending Behavior with Controlled Changes | Liskov Substitution: Preserving the Supertype Contract | Interface Segregation: Contracts Tailored to Each Client | Dependency Inversion: Depending on Abstractions | Distinguishing Dependency Inversion from Dependency Injection | Balancing the Principles with Real-World Complexity |
+  | Key question | What problems should SOLID solve, and within what scope? | What defines one group of responsibilities and the actors driving change? | How much core code must change when adding a variant? | Does the subtype still honor the supertype's promises? | Must a client see APIs it does not use? | Does business logic import a technology or depend on a port? | What exactly distinguishes DIP from DI? | When does an abstraction offer more value than simple code? |
+  | Value for OOP/the module | Provide a framework for evaluating all five principles | Improve cohesion and separate I/O from Invoice | Add policies with less regression risk in ShippingService | Preserve behavioral compatibility across policies | Avoid forcing ReadOnlyArchive to pretend it can write/delete | Replace JDBC/REST without changing the use case | Enable composition and testing with correct module dependency direction | Reduce complexity that adds no value |
+  | Mental model developed | Consider changes and contracts | Group by reasons for change | Identify stable and variable parts | Specify preconditions/postconditions and share contract tests | Design around client needs | Place abstractions on the consuming side | Separate dependency graphs from wiring | Verify trade-offs using real scenarios |

@@ -1,308 +1,308 @@
 summaries:
 - id: refactoring-001
-  title: Nhận diện dấu hiệu cần cải thiện thiết kế
+  title: Identifying Signs That Design Needs Improvement
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Nhận diện dấu hiệu cần cải thiện thiết kế**
+    **Identifying Signs That Design Needs Improvement**
 
-    Bài giúp chẩn đoán khi một thiết kế OOP khiến việc sửa đổi và kiểm thử trở nên tốn kém. Từ các dấu hiệu Long Method, Large Class, Duplicate Code, Shotgun Surgery, Divergent Change, Feature Envy và Speculative Generality, người học học cách đưa ra giả thuyết dựa trên trách nhiệm, lịch sử thay đổi và hợp đồng công khai trước khi quyết định refactor.
+    This lesson helps diagnose when an OOP design makes changes and testing costly. Using the smells Long Method, Large Class, Duplicate Code, Shotgun Surgery, Divergent Change, Feature Envy, and Speculative Generality, learners form hypotheses based on responsibilities, change history, and public contracts before deciding to refactor.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Nhận diện dấu hiệu và chi phí thay đổi
+    ### Identifying Smells and Change Costs
 
-    1. Divergent Change khác Shotgun Surgery thế nào khi theo dõi một class và một lý do thay đổi qua nhiều class?
-    2. Vì sao Long Method hay Duplicate Code chưa tự chứng minh cần tách/gộp, và những bằng chứng nào giúp kết luận?
-    3. Một class vừa pricing, định dạng và lưu dữ liệu có thể biểu hiện những code smell nào?
+    1. How does Divergent Change differ from Shotgun Surgery when tracking one class and one reason for change across multiple classes?
+    2. Why do Long Method and Duplicate Code not, by themselves, prove that code should be extracted or consolidated, and what evidence supports that decision?
+    3. Which code smells might appear in a class responsible for pricing, formatting, and persistence?
 
-    ### Chọn can thiệp có chứng cứ
+    ### Choosing Evidence-Based Interventions
 
-    1. Làm sao dùng tần suất sửa, bug hồi quy, dependency và setup test để xếp ưu tiên vùng cần xem xét?
-    2. Trong DesignSmellsDemo, tách PricingRules và QuoteFormatter giúp phân định những lý do thay đổi nào?
-    3. Những trường hợp nào abstraction mới làm mã phức tạp hơn và nên giữ code hiện tại?
+    1. How can change frequency, regression bugs, dependencies, and test setup costs help prioritize areas for review?
+    2. In DesignSmellsDemo, which reasons for change are separated by extracting PricingRules and QuoteFormatter?
+    3. When would a new abstraction make the code more complex, making it preferable to retain the current code?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Phân loại code smell | Chỉ ra Long Method, Feature Envy, Primitive Obsession và Speculative Generality trên ví dụ cụ thể. |
-    | Phân biệt mô hình thay đổi | Giải thích Divergent Change và Shotgun Surgery bằng vị trí phải chỉnh khi có yêu cầu mới. |
-    | Thu thập bằng chứng | Lập giả thuyết từ lịch sử diff, lỗi và bài test thay vì chỉ số dòng. |
-    | Đề xuất refactor | Chọn phép tách/đổi kiểu/di chuyển thích hợp với vấn đề được chứng minh. |
-    | Bảo vệ hành vi | Đối chiếu đầu ra trước/sau ở sáu ca tính giá và những input không hợp lệ. |
+    | Classifying code smells | Identify Long Method, Feature Envy, Primitive Obsession, and Speculative Generality in concrete examples. |
+    | Distinguishing change patterns | Explain Divergent Change and Shotgun Surgery by identifying which locations must change for new requirements. |
+    | Gathering evidence | Form hypotheses from diff history, bugs, and tests rather than line counts alone. |
+    | Proposing refactorings | Choose appropriate extraction, type changes, or behavior moves based on demonstrated problems. |
+    | Preserving behavior | Compare before-and-after outputs for six pricing cases and invalid inputs. |
 - id: refactoring-002
-  title: Đổi tên để làm rõ ý định
+  title: Renaming to Clarify Intent
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Đổi tên để làm rõ ý định**
+    **Renaming to Clarify Intent**
 
-    Bài dạy Rename for Intent như một refactor chỉ đổi định danh và giữ nguyên kết quả, ngoại lệ, luồng tính toán. Với phép tính đơn hàng, tên phương thức, field, biến, boolean và đơn vị VND được làm rõ; người học còn kiểm tra ảnh hưởng lên API công khai, Jackson, JPA, reflection và IDE Rename Symbol.
+    This lesson teaches Rename for Intent as a refactoring that changes only identifiers while preserving results, exceptions, and calculation flow. In an order-calculation example, method, field, variable, and boolean names and VND units become clearer; learners also check impacts on public APIs, Jackson, JPA, reflection, and IDE Rename Symbol.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Chọn tên đúng hợp đồng
+    ### Choosing Names That Reflect Contracts
 
-    1. Vì sao `Calc.f(items, true)` khó hiểu và `calculatePayableAmountVnd` mô tả kết quả rõ hơn như thế nào?
-    2. Nên đặt tên boolean, số tiền, timeout và phương thức validate theo ngữ nghĩa thật ra sao?
-    3. Khi nào một tên mới quá dài, sai miền nghiệp vụ hoặc đổi nghĩa cờ thay vì chỉ rename?
+    1. Why is `Calc.f(items, true)` difficult to understand, and how does `calculatePayableAmountVnd` describe the result more clearly?
+    2. How should booleans, monetary amounts, timeouts, and validation methods be named according to their actual semantics?
+    3. When is a new name too long, inconsistent with the domain, or changing the meaning of a flag rather than merely renaming it?
 
-    ### Đổi tên và kiểm chứng tương thích
+    ### Renaming and Verifying Compatibility
 
-    1. Trong RenameForIntentDemo, tại sao `Before.f` và `After.calculatePayableAmountVnd` phải giữ đúng 95.000 và 125.000 VND?
-    2. IDE Rename Symbol giúp gì so với thay chuỗi thủ công và vì sao vẫn cần review diff?
-    3. Khi đổi property JSON, getter JavaBean, JPA, bean name hoặc public API, cần kiểm tra những hợp đồng ngoài mã nào?
+    1. In RenameForIntentDemo, why must `Before.f` and `After.calculatePayableAmountVnd` preserve the exact amounts of 95.000 and 125.000 VND?
+    2. What does IDE Rename Symbol offer over manual string replacement, and why is a diff review still necessary?
+    3. When renaming JSON properties, JavaBean getters, JPA mappings, bean names, or public APIs, which external contracts must be checked?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Phát hiện tên mơ hồ | Đánh giá tên class, method, field, boolean và đơn vị dựa trên vai trò thật. |
-    | Thực hiện rename | Dùng IDE Rename Symbol và rà soát các điểm gọi/override. |
-    | Dự đoán hành vi | Chứng minh phép tính cũ/mới cùng số tiền và exception. |
-    | Phân biệt phạm vi biến đổi | Chỉ ra việc đổi boolean sang enum hoặc đảo nghĩa cờ vượt quá rename. |
-    | Kiểm chứng tương thích | Liệt kê trường hợp cần serialization, JPA, reflection hoặc consumer tests. |
+    | Identifying ambiguous names | Evaluate class, method, field, boolean, and unit names against their actual roles. |
+    | Performing renames | Use IDE Rename Symbol and review call sites and overrides. |
+    | Predicting behavior | Prove that old and new calculations produce the same amounts and exceptions. |
+    | Distinguishing change scope | Show why replacing a boolean with an enum or reversing a flag's meaning exceeds a rename. |
+    | Verifying compatibility | Identify cases requiring serialization, JPA, reflection, or consumer tests. |
 - id: refactoring-003
-  title: Tách phương thức và tách lớp
+  title: Extracting Methods and Classes
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Tách phương thức và tách lớp**
+    **Extracting Methods and Classes**
 
-    Bài hướng dẫn Extract Method đặt tên cho các bước xử lý có ý nghĩa và Extract Class đưa nhóm dữ liệu/hành vi có trách nhiệm riêng vào đối tượng mới. Qua checkout, PricingPolicy, ReceiptFormatter và CheckoutService, người học tách tính toán khỏi định dạng mà vẫn giữ tổng tiền, validation, exception và side effect theo hợp đồng trước đó.
+    This lesson uses Extract Method to name meaningful processing steps and Extract Class to move data and behavior with distinct responsibilities into new objects. Through checkout, PricingPolicy, ReceiptFormatter, and CheckoutService, learners separate calculations from formatting while preserving totals, validation, exceptions, and side effects under the original contract.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Phân biệt mức tách
+    ### Distinguishing Extraction Levels
 
-    1. Khi nào tách một khối thành calculateSubtotal thay vì đưa toàn bộ nhóm pricing sang class mới?
-    2. Vì sao chiều dài hàm không đủ để kết luận cần Extract Method hay Extract Class?
-    3. Nhóm field/method thường thay đổi cùng nhau giúp xác định cohesion và trách nhiệm riêng thế nào?
+    1. When should a block be extracted into calculateSubtotal rather than moving the entire pricing group into a new class?
+    2. Why is method length insufficient to justify Extract Method or Extract Class?
+    3. How do groups of fields and methods that frequently change together reveal cohesion and distinct responsibilities?
 
-    ### Bảo toàn hợp đồng
+    ### Preserving Contracts
 
-    1. Khi tách method, phải xử lý biến cục bộ, input/output và tác dụng phụ thế nào để tránh đổi kết quả?
-    2. Điều gì thay đổi về thứ tự ném exception nếu chuyển validation trước phép tính gây overflow?
-    3. Các test nào xác minh CheckoutService mới giữ subtotal, discount, shipping, total và receipt như bản cũ?
+    1. When extracting a method, how must local variables, inputs/outputs, and side effects be handled to avoid changing results?
+    2. How does the order of thrown exceptions change if validation is moved ahead of a calculation that overflows?
+    3. Which tests verify that the new CheckoutService preserves the original subtotal, discount, shipping, total, and receipt?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Tách phương thức | Đưa các bước tính subtotal, discount, shipping thành method với tham số và kết quả rõ. |
-    | Tách lớp có trách nhiệm | Phân chia PricingPolicy, ReceiptFormatter và CheckoutService. |
-    | Đánh giá thiết kế | Chỉ ra nơi tăng cohesion và giảm phụ thuộc sau khi tách. |
-    | Phát hiện regression | Kiểm tra thứ tự validation, side effect và exception trước/sau refactor. |
-    | Xác minh tính tương đương | Đọc ca VIP 570.000 VND, miễn phí shipping và input sai của hai phiên bản. |
+    | Extracting methods | Turn subtotal, discount, and shipping calculations into methods with clear parameters and results. |
+    | Extracting responsible classes | Separate PricingPolicy, ReceiptFormatter, and CheckoutService. |
+    | Evaluating design | Identify where extraction increases cohesion and reduces dependencies. |
+    | Detecting regressions | Check validation order, side effects, and exceptions before and after refactoring. |
+    | Verifying equivalence | Examine the 570.000 VND VIP case, free shipping, and invalid inputs in both versions. |
 - id: refactoring-004
-  title: Di chuyển hành vi về đối tượng chịu trách nhiệm
+  title: Moving Behavior to the Responsible Object
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Di chuyển hành vi về đối tượng chịu trách nhiệm**
+    **Moving Behavior to the Responsible Object**
 
-    Bài giải thích Move Method khi một service truy vấn quá nhiều chi tiết của domain object để tính toán thay nó. Qua OrderLine.subtotalVnd, Order.subtotalVnd/payableVnd và CheckoutService, người học đưa hành vi dựa vào dữ liệu sở hữu về đúng đối tượng, nhưng giữ I/O thu tiền trong lớp điều phối và xét khi domain service/policy phù hợp hơn.
+    This lesson explains Move Method when a service queries too many details of a domain object to perform calculations on its behalf. Through OrderLine.subtotalVnd, Order.subtotalVnd/payableVnd, and CheckoutService, learners move data-dependent behavior to the object that owns the data, retain payment I/O in the coordinating service, and consider when a domain service or policy is more appropriate.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Xác định chủ sở hữu hành vi
+    ### Identifying the Owner of Behavior
 
-    1. Vì sao việc CheckoutService liên tục duyệt line.priceVnd và quantity là dấu hiệu Feature Envy?
-    2. Tại sao thành tiền thuộc OrderLine, tổng/giảm VIP trong ví dụ thuộc Order còn gọi PaymentGateway thuộc service?
-    3. Khi giảm giá phụ thuộc nhiều hệ thống/coupon, vì sao không nhất thiết chuyển mọi logic về Order?
+    1. Why is CheckoutService repeatedly reading line.priceVnd and quantity a sign of Feature Envy?
+    2. Why do line totals belong to OrderLine, order totals and VIP discounts belong to Order in this example, and PaymentGateway calls belong to the service?
+    3. When discounts depend on multiple systems or coupons, why should not all logic necessarily be moved into Order?
 
-    ### Thực hiện di chuyển và kiểm thử
+    ### Moving Behavior and Testing It
 
-    1. OrderLine dùng Math.multiplyExact và Order dùng Math.addExact bảo vệ quy tắc gì?
-    2. Vì sao List.copyOf(lines) và OrderLine record bảo vệ trạng thái khi di chuyển phép tính vào Order?
-    3. Những test nào chứng minh CheckoutService vẫn gửi đúng 207.000 VND một lần và giữ hành vi từ chối thanh toán?
+    1. Which rules are protected by OrderLine using Math.multiplyExact and Order using Math.addExact?
+    2. Why do List.copyOf(lines) and the OrderLine record protect state when calculations move into Order?
+    3. Which tests prove that CheckoutService still sends exactly 207.000 VND once and preserves payment rejection behavior?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Phát hiện Feature Envy | Chỉ ra service đọc quá nhiều dữ liệu của Order/OrderLine để tự ra quyết định. |
-    | Chọn chủ sở hữu | Phân bổ subtotalVnd cho OrderLine, payableVnd cho Order và charge cho service/gateway. |
-    | Thiết kế API giàu hành vi | Cho caller yêu cầu order.payableVnd thay vì duyệt cấu trúc list. |
-    | Chặn dữ liệu không hợp lệ | Áp dụng record validation, snapshot list và phép số học Exact. |
-    | Bảo vệ hành vi bên ngoài | Đọc/viết test cho số tiền, rounding, overflow, số lần gọi gateway và lỗi đầu vào. |
+    | Detecting Feature Envy | Identify services that read excessive Order/OrderLine data to make decisions themselves. |
+    | Choosing the responsible owner | Assign subtotalVnd to OrderLine, payableVnd to Order, and charge to the service/gateway. |
+    | Designing behavior-rich APIs | Let callers request order.payableVnd rather than traverse the list structure. |
+    | Rejecting invalid data | Apply record validation, list snapshots, and Exact arithmetic. |
+    | Preserving external behavior | Read or write tests for amounts, rounding, overflow, gateway invocation counts, and invalid inputs. |
 - id: refactoring-005
-  title: Đóng gói trường dữ liệu và cấu trúc nội bộ
+  title: Encapsulating Fields and Internal Structures
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Đóng gói trường dữ liệu và cấu trúc nội bộ**
+    **Encapsulating Fields and Internal Structures**
 
-    Bài giúp tái cấu trúc class phơi public field hoặc getter trả collection nội bộ thành API thao tác có kiểm tra. LeakyCart được thay bằng ShoppingCart có putLine, changeQuantity, removeLine, lines snapshot và totalCents; qua đó người học phân biệt live view, structural copy và immutable element cùng vấn đề migration public API.
+    This lesson refactors classes exposing public fields or getters that return internal collections into APIs with validated operations. LeakyCart is replaced by ShoppingCart with putLine, changeQuantity, removeLine, lines snapshots, and totalCents; learners distinguish live views, structural copies, and immutable elements while considering public API migration.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Representation exposure và bảo vệ bất biến
+    ### Representation Exposure and Invariant Protection
 
-    1. Vì sao public final List vẫn cho client phá invariant và private list kèm getter trả gốc chưa giải quyết vấn đề?
-    2. Trong ShoppingCart, tại sao quantity bằng 0 phải xóa dòng và giá/số lượng sai phải bị chặn trước put?
-    3. Các đường rò qua constructor, getter và phần tử MutableLine khác nhau thế nào?
+    1. Why can a public final List still let clients violate invariants, and why does a private list with a getter returning the original collection not solve the problem?
+    2. In ShoppingCart, why must quantity 0 remove a line and invalid prices or quantities be rejected before put?
+    3. How do exposure paths through constructors, getters, and MutableLine elements differ?
 
-    ### Snapshot và refactor hợp đồng
+    ### Snapshots and Contract-Preserving Refactoring
 
-    1. List.copyOf kết hợp LineSnapshot record chặn kiểu mutation nào, khác unmodifiableList ra sao?
-    2. Math.multiplyExact và Math.addExact bảo vệ totalCents trước lỗi tính toán nào?
-    3. Khi đổi public field sang private hoặc đổi LinkedHashMap sang Map khác, compatibility/thứ tự quan sát cần kiểm tra gì?
+    1. Which mutations do List.copyOf and the LineSnapshot record prevent, and how does this differ from unmodifiableList?
+    2. Which calculation errors do Math.multiplyExact and Math.addExact prevent in totalCents?
+    3. When changing public fields to private or replacing LinkedHashMap with another Map, which compatibility and observable ordering guarantees must be checked?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Nhận diện rò rỉ | Chỉ ra alias của field/getter/element cho phép sửa state ngoài validation. |
-    | Thiết kế API an toàn | Cài putLine, changeQuantity, removeLine kèm invariant SKU/price/quantity. |
-    | Trả snapshot đúng hợp đồng | So sánh List.copyOf, unmodifiable view và copy từng element mutable. |
-    | Kiểm chứng không đổi state khi lỗi | Mô tả test exception, snapshot cũ và phép tính totalCents. |
-    | Đánh giá migration | Nêu thay đổi source compatibility, thứ tự list, serialization và concurrency. |
+    | Identifying representation leaks | Identify field/getter/element aliases that allow state changes outside validation. |
+    | Designing safe APIs | Implement putLine, changeQuantity, and removeLine with SKU/price/quantity invariants. |
+    | Returning contract-compliant snapshots | Compare List.copyOf, unmodifiable views, and copies of individual mutable elements. |
+    | Verifying unchanged state after errors | Describe tests for exceptions, previous snapshots, and totalCents calculations. |
+    | Evaluating migration | Explain changes to source compatibility, list ordering, serialization, and concurrency. |
 - id: refactoring-006
-  title: Thay điều kiện theo loại bằng đa hình
+  title: Replacing Type Conditionals with Polymorphism
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Thay điều kiện theo loại bằng đa hình**
+    **Replacing Type Conditionals with Polymorphism**
 
-    Bài hướng dẫn Replace Conditional with Polymorphism khi cùng phép switch theo loại giao hàng lặp ở nhiều nghiệp vụ. DeliveryService chuyển sang hợp đồng DeliveryPolicy với StandardPolicy, ExpressPolicy và PickupPolicy; lựa chọn nằm ở registry, còn dynamic dispatch chạy công thức theo implementation mà vẫn giữ phí, ETA và quy tắc input.
+    This lesson applies Replace Conditional with Polymorphism when the same switch on delivery type recurs across business operations. DeliveryService moves to the DeliveryPolicy contract with StandardPolicy, ExpressPolicy, and PickupPolicy; a registry selects the policy, while dynamic dispatch runs the implementation's formula and preserves fees, ETAs, and input rules.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Đánh giá điều kiện và đa hình
+    ### Evaluating Conditionals and Polymorphism
 
-    1. Khi nào switch theo DeliveryType thực sự tạo conditional complexity cần refactor?
-    2. Vì sao ba class chỉ được gọi qua if/else trong service chưa đạt mục tiêu đa hình?
-    3. DeliveryPolicy, registry và dynamic dispatch phân chia trách nhiệm lựa chọn/chạy công thức thế nào?
+    1. When does switching on DeliveryType genuinely create conditional complexity that warrants refactoring?
+    2. Why does having three classes selected only through if/else in the service fail to achieve the goal of polymorphism?
+    3. How do DeliveryPolicy, the registry, and dynamic dispatch divide responsibility for selecting and executing formulas?
 
-    ### Kiểm chứng và giới hạn
+    ### Verification and Limits
 
-    1. Ở ngưỡng STANDARD 499.999 và 500.000 VND, phí/ETA phải được giữ thế nào sau refactor?
-    2. Khi thêm SAME_DAY, code nào cần đăng ký và phần tính phí của DeliveryService nào không phải sửa?
-    3. Khi nào switch ngắn hay enum-specific method dễ hiểu hơn hệ class Strategy?
+    1. At the STANDARD thresholds of 499.999 and 500.000 VND, which fees and ETAs must remain unchanged after refactoring?
+    2. When adding SAME_DAY, which code must register the new policy, and which DeliveryService fee calculations need no changes?
+    3. When is a short switch or an enum-specific method clearer than a set of Strategy classes?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Nhận diện điều kiện lặp | Tìm discriminator được switch/if ở nhiều nơi và mô tả chi phí thêm loại. |
-    | Trích hợp đồng đa hình | Thiết kế DeliveryPolicy.quote và implementation riêng cho STANDARD/EXPRESS/PICKUP. |
-    | Thiết kế registry | Ánh xạ enum sang policy, fail-fast khi thiếu implementation. |
-    | Giải thích dispatch | Theo dấu lời gọi policy.quote tới đúng class runtime. |
-    | Kiểm chứng hợp đồng | So sánh fee/ETA cũ-mới ở bốn kịch bản và ba input sai. |
+    | Identifying repeated conditionals | Find discriminators used in switches/if statements across multiple locations and describe the cost of adding a type. |
+    | Extracting polymorphic contracts | Design DeliveryPolicy.quote and separate implementations for STANDARD/EXPRESS/PICKUP. |
+    | Designing a registry | Map enum values to policies and fail fast when an implementation is missing. |
+    | Explaining dispatch | Trace policy.quote calls to the correct runtime class. |
+    | Verifying contracts | Compare old and new fees/ETAs across four scenarios and three invalid inputs. |
 - id: refactoring-007
-  title: Thay kế thừa bằng kết hợp
+  title: Replacing Inheritance with Composition
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Thay kế thừa bằng kết hợp**
+    **Replacing Inheritance with Composition**
 
-    Bài phân tích lúc subclass extends một class chỉ để tái dùng vài method và trở nên phụ thuộc vào API cha. CriticalAlert không phải EmailSender; thiết kế chuyển thành AlertService chứa MessageChannel, hỗ trợ Email/SMS và RetryingChannel decorator. Người học kiểm tra interface, DI constructor, retry hợp đồng và khả năng tương thích khi bỏ extends.
+    This lesson examines subclasses that extend a class merely to reuse a few methods, becoming coupled to the parent API. CriticalAlert is not an EmailSender; the design becomes an AlertService containing a MessageChannel, supporting Email/SMS and a RetryingChannel decorator. Learners examine interfaces, constructor DI, retry contracts, and compatibility when removing extends.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Quan hệ và trách nhiệm
+    ### Relationships and Responsibilities
 
-    1. Tại sao CriticalAlert extends EmailSender là quan hệ is-a không phù hợp dù send chạy được?
-    2. Một subclass override rồi ném UnsupportedOperationException có thể gây vấn đề LSP như thế nào?
-    3. Composition, Strategy, Decorator và constructor injection liên hệ nhưng khác trách nhiệm ở đâu?
+    1. Why is CriticalAlert extends EmailSender an inappropriate is-a relationship even though send works?
+    2. How can a subclass override that throws UnsupportedOperationException violate LSP?
+    3. How are Composition, Strategy, Decorator, and constructor injection related, and how do their responsibilities differ?
 
-    ### Chuyển đổi có kiểm chứng
+    ### Verified Migration
 
-    1. AlertService dùng MessageChannel qua constructor giúp chuyển email/SMS và fake trong test như thế nào?
-    2. RetryingChannel maxAttempts bằng 3 thực hiện tối đa mấy lần gửi và chỉ retry ngoại lệ nào?
-    3. Nếu caller đã dùng CriticalAlert như EmailSender, bỏ extends ảnh hưởng compatibility gì và cần chuyển đổi ra sao?
+    1. How does AlertService receiving MessageChannel through its constructor enable email/SMS substitution and test fakes?
+    2. With RetryingChannel maxAttempts set to 3, what is the maximum number of send attempts, and which exceptions are retried?
+    3. If callers have used CriticalAlert as EmailSender, how does removing extends affect compatibility and what migration is needed?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Đánh giá is-a/has-a | Chỉ ra quan hệ kế thừa chỉ để mượn send là sai ngữ nghĩa nghiệp vụ. |
-    | Tái cấu trúc bằng composition | Thiết kế AlertService nhận MessageChannel và ủy quyền hành vi gửi. |
-    | Chọn Strategy/Decorator | Thay adapter email/SMS và ghép RetryingChannel mà không sửa AlertService. |
-    | Kiểm thử retry có điều kiện | Dự đoán số lần gửi khi lỗi DeliveryException và khi gặp IllegalArgumentException. |
-    | Rà soát tương thích | Phát hiện caller phụ thuộc extends và đề xuất adapter/migration phù hợp. |
+    | Evaluating is-a/has-a | Explain why inheritance used only to borrow send is incorrect in domain terms. |
+    | Refactoring with composition | Design AlertService to accept MessageChannel and delegate sending behavior. |
+    | Choosing Strategy/Decorator | Replace email/SMS adapters and compose RetryingChannel without changing AlertService. |
+    | Testing conditional retries | Predict send counts for DeliveryException and IllegalArgumentException failures. |
+    | Reviewing compatibility | Identify callers depending on extends and propose appropriate adapters or migration. |
 - id: refactoring-008
-  title: Gộp hoặc loại bỏ trừu tượng không cần thiết
+  title: Consolidating or Removing Unnecessary Abstractions
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Gộp hoặc loại bỏ trừu tượng không cần thiết**
+    **Consolidating or Removing Unnecessary Abstractions**
 
-    Bài đánh giá lúc interface/class/method trung gian chỉ forward, không có ranh giới, hợp đồng hoặc biến thể thật. Thông qua PricingPort → PricingAdapter → PricingEngine và SimplifiedCheckout, người học chọn Remove Middle Man, Inline Class/Method hoặc Collapse Hierarchy nhưng bảo vệ interface quan trọng như PaymentGateway, Clock, Repository và API public.
+    This lesson evaluates intermediate interfaces, classes, or methods that only forward calls without defining meaningful boundaries, contracts, or variations. Through PricingPort → PricingAdapter → PricingEngine and SimplifiedCheckout, learners choose Remove Middle Man, Inline Class/Method, or Collapse Hierarchy while preserving important interfaces such as PaymentGateway, Clock, Repository, and public APIs.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Phát hiện abstraction thừa
+    ### Detecting Redundant Abstractions
 
-    1. Khi nào OrderFacade, PricingAdapter hay GreetingPortImpl chỉ là middle man không thêm hợp đồng?
-    2. Vì sao interface chỉ có một implementation vẫn nên giữ nếu đại diện ranh giới DB/network/clock?
-    3. Inline Method, Inline Class, Remove Middle Man và Collapse Hierarchy phù hợp với vấn đề nào khác nhau?
+    1. When are OrderFacade, PricingAdapter, or GreetingPortImpl merely middlemen that add no contract?
+    2. Why might an interface with only one implementation still be worth retaining if it represents a database, network, or clock boundary?
+    3. Which different problems are addressed by Inline Method, Inline Class, Remove Middle Man, and Collapse Hierarchy?
 
-    ### Gộp có căn cứ và an toàn
+    ### Evidence-Based, Safe Consolidation
 
-    1. Tại sao không thể xóa type đang được DI, reflection, plugin hoặc client thư viện sử dụng mà không xem xét compatibility?
-    2. Các case ngưỡng 99.999, 100.000, 100.001 cent bảo vệ việc gộp checkout ra sao?
-    3. Vì sao kiểm thử differential 1.000 đầu vào vẫn cần oracle specification độc lập để tránh giữ lại cùng một lỗi?
+    1. Why should a type used by DI, reflection, plugins, or library clients not be removed without considering compatibility?
+    2. How do the boundary cases of 99.999, 100.000, and 100.001 cents safeguard checkout consolidation?
+    3. Why do differential tests with 1.000 inputs still need an independent specification oracle to avoid preserving the same bug?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Đánh giá giá trị abstraction | Đối chiếu contract riêng, ranh giới IO, coupling và số client thật trước khi xóa. |
-    | Chọn phép đơn giản hóa | Phân biệt Inline Class/Method, Remove Middle Man, Collapse Hierarchy. |
-    | Đơn giản hóa luồng gọi | Giảm chuỗi forward về Checkout → SimplifiedCheckout khi không mất trách nhiệm. |
-    | Bảo vệ interface quan trọng | Giải thích giữ PaymentGateway, Clock hay Repository khi chúng cô lập phụ thuộc ngoài. |
-    | Kiểm tra tương đương | Dùng case hợp đồng và differential test có seed để xác minh phí/tổng/ngoại lệ. |
+    | Assessing abstraction value | Examine distinct contracts, I/O boundaries, coupling, and actual client counts before removing abstractions. |
+    | Choosing simplifications | Distinguish Inline Class/Method, Remove Middle Man, and Collapse Hierarchy. |
+    | Simplifying call flows | Reduce forwarding chains to Checkout → SimplifiedCheckout without losing responsibilities. |
+    | Preserving important interfaces | Explain why PaymentGateway, Clock, or Repository should remain when isolating external dependencies. |
+    | Checking equivalence | Use contract cases and seeded differential tests to verify fees, totals, and exceptions. |
 - id: refactoring-009
-  title: Cải thiện thiết kế từng bước với kiểm thử bảo vệ
+  title: Improving Design Incrementally with Safety-Net Tests
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Cải thiện thiết kế từng bước với kiểm thử bảo vệ**
+    **Improving Design Incrementally with Safety-Net Tests**
 
-    Bài tổ chức refactoring thành các vòng nhỏ: xác định public contract, bổ sung characterization/specification tests, đổi tên hoặc tách method/class, chạy kiểm thử và xem diff sau từng bước. SafeRefactoringDemo so sánh LegacyCheckout và CheckoutService qua kết quả định giá, ngưỡng VIP 500.000, shipping 700.000, exception, overflow và receipt; bài cũng phân biệt refactor với bug fix/feature.
+    This lesson organizes refactoring into small iterations: identify public contracts, add characterization/specification tests, rename or extract methods/classes, run tests, and review diffs after each step. SafeRefactoringDemo compares LegacyCheckout and CheckoutService through pricing results, the VIP threshold of 500.000, shipping threshold of 700.000, exceptions, overflow, and receipts; it also distinguishes refactoring from bug fixes and features.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Hợp đồng và test bảo vệ
+    ### Contracts and Protective Tests
 
-    1. Refactoring, bug fix và feature change khác nhau ở điều gì được phép thay đổi?
-    2. Characterization test giúp gì với code cũ chưa có tài liệu, và vì sao expected từ code cũ chưa đủ?
-    3. Tại sao test kiểm private helper đã gọi mấy lần thường cản trở refactor hợp lệ?
+    1. How do refactoring, bug fixes, and feature changes differ in what may be changed?
+    2. How do characterization tests help with undocumented legacy code, and why are expected results derived from old code insufficient?
+    3. Why do tests asserting how many times a private helper was called often obstruct valid refactoring?
 
-    ### Quy trình từng bước và ranh giới
+    ### Incremental Process and Boundaries
 
-    1. Thay >= bằng > ở ngưỡng VIP 500.000 hoặc shipping 700.000 sẽ bị ca biên nào phát hiện?
-    2. Theo vòng Rename → Extract Method → PricingPolicy → ReceiptFormatter → CheckoutService, mỗi bước cần kiểm chứng gì?
-    3. Khi checkout có database, gateway hoặc email, ngoài unit test cần bảo vệ những side effect, transaction và lỗi tích hợp nào?
+    1. Which boundary cases detect replacing >= with > at the VIP threshold of 500.000 or shipping threshold of 700.000?
+    2. In the Rename → Extract Method → PricingPolicy → ReceiptFormatter → CheckoutService sequence, what must be verified at each step?
+    3. When checkout involves a database, gateway, or email, which side effects, transactions, and integration failures must be protected beyond unit tests?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Phân loại thay đổi | Tách refactor giữ hành vi khỏi bug fix và thay đổi hợp đồng. |
-    | Thiết kế safety-net test | Ghi yêu cầu, expected độc lập, ca thường, ngưỡng, invalid input và overflow. |
-    | Tái cấu trúc theo vòng ngắn | Thực hiện mỗi phép rename/extract nhỏ rồi compile/test và review diff. |
-    | Phát hiện lỗi biên | Dùng test 500.000 và 700.000 bắt sai khác giữa >= và >. |
-    | Bảo vệ hiệu ứng ngoài | Nêu kiểm thử gateway, repository, thông báo và integration khi có transaction. |
-    | Đánh giá test hợp đồng | Bỏ ràng buộc vào private helper, ưu tiên output và side effect public. |
+    | Classifying changes | Distinguish behavior-preserving refactoring from bug fixes and contract changes. |
+    | Designing safety-net tests | Document requirements, independent expected results, normal cases, thresholds, invalid inputs, and overflow. |
+    | Refactoring in short iterations | Apply each small rename/extract change, then compile, test, and review the diff. |
+    | Detecting boundary defects | Use tests at 500.000 and 700.000 to catch differences between >= and >. |
+    | Protecting external effects | Describe tests for gateways, repositories, notifications, and integrations involving transactions. |
+    | Evaluating contract tests | Avoid coupling tests to private helpers and prioritize public outputs and side effects. |

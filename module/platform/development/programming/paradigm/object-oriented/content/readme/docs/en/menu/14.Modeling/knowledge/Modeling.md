@@ -1,198 +1,198 @@
 <a id="back-to-top"></a>
 
-# Mô hình hóa
+# Modeling
 
 ## Menu
-- [Thu thập tình huống sử dụng và quy tắc nghiệp vụ](#modeling-001)
-- [Nhận diện đối tượng từ yêu cầu](#modeling-002)
-- [Phân chia trách nhiệm và đối tượng cộng tác](#modeling-003)
-- [Thẻ CRC: lớp, trách nhiệm và cộng tác](#modeling-004)
-- [Sơ đồ lớp: thành viên và quan hệ](#modeling-005)
-- [Sơ đồ đối tượng: các thể hiện tại một thời điểm](#modeling-006)
-- [Sơ đồ tuần tự: thứ tự tương tác](#modeling-007)
-- [Sơ đồ trạng thái: chuyển trạng thái hợp lệ](#modeling-008)
-- [Đối chiếu mô hình với mã và tình huống thực tế](#modeling-009)
+- [Gathering use cases and business rules](#modeling-001)
+- [Identifying objects from requirements](#modeling-002)
+- [Assigning responsibilities and collaborators](#modeling-003)
+- [CRC cards: classes, responsibilities, and collaborators](#modeling-004)
+- [Class diagrams: members and relationships](#modeling-005)
+- [Object diagrams: instances at a point in time](#modeling-006)
+- [Sequence diagrams: interaction order](#modeling-007)
+- [State diagrams: valid state transitions](#modeling-008)
+- [Validating models against code and real scenarios](#modeling-009)
 
-## <a id="modeling-001">Thu thập tình huống sử dụng và quy tắc nghiệp vụ</a>
+## <a id="modeling-001">Gathering use cases and business rules</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thu thập tình huống sử dụng và quy tắc nghiệp vụ để mô hình hóa OOP
+# Gathering Use Cases and Business Rules for OOP Modeling
 
-**Mục tiêu:** Đi từ câu chuyện của người dùng đến **use case**, **business rule**, **điều kiện bất biến**, rồi mới xác định trách nhiệm của đối tượng và xây dựng Java API có thể kiểm thử. Bài học dùng ví dụ **sinh viên đăng ký khóa học**; các quy tắc trong ví dụ là giả định minh họa, không phải luật áp dụng mặc định cho mọi nền tảng đào tạo.
+**Goal:** Start with the user's story, identify **use cases**, **business rules**, and **invariants**, and only then determine object responsibilities and build testable Java APIs. This lesson uses **student course enrollment**; its business rules are illustrative assumptions, not default policies for every learning platform.
 
-## 1. Vì sao phải thu thập trước khi thiết kế lớp?
+## 1. Why Gather Requirements Before Designing Classes?
 
-Một yêu cầu ban đầu thường rất ngắn:
+An initial requirement is often very brief:
 
-> “Sinh viên muốn đăng ký một khóa học. Hệ thống báo thành công nếu đăng ký được.”
+> “A student wants to enroll in a course. The system reports success if enrollment is possible.”
 
-Nếu bắt đầu ngay bằng lớp `Student`, `Course`, `EnrollmentService`, `Database`, ta dễ bỏ qua những câu hỏi quyết định hành vi:
+Starting immediately with classes such as `Student`, `Course`, `EnrollmentService`, and `Database` risks overlooking questions that determine behavior:
 
-- Sinh viên chưa được kích hoạt tài khoản có thể đăng ký không?
-- Khóa học đã đóng đăng ký thì sao?
-- Phải hoàn thành môn tiên quyết trước hay có ngoại lệ?
-- Có được đăng ký cùng một khóa hai lần?
-- Nếu chỗ cuối cùng được hai người chọn đồng thời, ai nhận chỗ?
-- Khi thành công, phải lưu thông tin nào và trả gì cho người dùng?
-- Nếu gửi email thông báo lỗi, đăng ký có còn thành công không?
-- Ai có quyền thay đổi sức chứa, thời hạn, danh sách môn tiên quyết?
+- May students enroll before their accounts are activated?
+- What happens when course registration is closed?
+- Must prerequisites be completed first, or are exceptions allowed?
+- Can a student enroll in the same course twice?
+- If two students simultaneously request the last available seat, who gets it?
+- What information must be stored and returned after successful enrollment?
+- If the notification email fails, is the enrollment still successful?
+- Who may change capacity, deadlines, and prerequisite lists?
 
-**Use case** mô tả một mục tiêu mà **actor** đạt được nhờ tương tác với hệ thống. **Business rule** diễn tả điều kiện, chính sách hoặc ràng buộc của tổ chức mà các use case phải tuân thủ. Hai thứ bổ sung nhau:
+A **use case** describes a goal an **actor** achieves through interaction with a system. A **business rule** specifies organizational conditions, policies, or constraints that use cases must follow. They complement each other:
 
-- Use case trả lời: **Ai làm gì, để đạt mục tiêu nào, theo các luồng nào?**
-- Business rule trả lời: **Trong điều kiện nào hệ thống được hoặc không được làm việc đó?**
-- Domain model trả lời: **Những khái niệm nào tồn tại, giữ trạng thái gì và chịu trách nhiệm bảo vệ điều kiện nào?**
+- A use case asks: **Who does what, toward which goal, and through which flows?**
+- A business rule asks: **Under which conditions may or must the system permit or reject that action?**
+- A domain model asks: **Which concepts exist, what state do they hold, and which constraints must they protect?**
 
-Đừng suy luận rằng mỗi danh từ trong yêu cầu trở thành một class, hoặc mỗi dòng use case trở thành một method. Mô hình hóa là bước chuyển từ ngôn ngữ nghiệp vụ sang trách nhiệm và hợp đồng phần mềm.
+Do not assume every noun in a requirement must become a class or every use-case step a method. Modeling translates business language into software responsibilities and contracts.
 
-## 2. Chọn đúng phạm vi và người cung cấp thông tin
+## 2. Identify Scope and Information Sources
 
-Trước khi phỏng vấn, xác định **ranh giới hệ thống** (system boundary), mục tiêu và các bên liên quan.
+Before interviewing stakeholders, establish the **system boundary**, objectives, and involved parties.
 
-| Thành phần | Câu hỏi cần làm rõ | Ví dụ trong hệ thống đăng ký học |
+| Element | Question to clarify | Example in the course-enrollment system |
 |---|---|---|
-| Actor chính | Ai khởi động tương tác để đạt mục tiêu? | Sinh viên |
-| Bên liên quan khác | Ai đặt/duyệt quy tắc, ai chịu hậu quả? | Phòng đào tạo, giảng viên, quản trị viên |
-| Mục tiêu | Kết quả có giá trị với actor là gì? | Có một suất học hợp lệ |
-| Hệ thống ngoài | Phụ thuộc vào hệ thống nào? | Đăng nhập, quản lý học vụ, email |
-| Phạm vi | Phần nào do ứng dụng này chịu trách nhiệm? | Kiểm tra điều kiện và ghi danh |
-| Điều chưa chắc chắn | Ai được quyền quyết định câu trả lời? | Phòng đào tạo xác nhận chính sách đủ điều kiện |
-| Ràng buộc phi chức năng | Khối lượng, thời gian phản hồi, an toàn, audit? | Nhiều lượt đăng ký cùng lúc, không vượt sức chứa |
+| Primary actor | Who initiates the interaction to accomplish the goal? | Student |
+| Other stakeholders | Who defines/approves rules, and who is affected? | Academic office, instructors, administrators |
+| Goal | What outcome brings value to the actor? | A valid place in a course |
+| External systems | Which systems does this depend on? | Authentication, academic records, email |
+| Scope | Which part is this application responsible for? | Eligibility checks and enrollment |
+| Uncertainty | Who has authority to decide the answer? | Academic office confirms eligibility policy |
+| Nonfunctional constraints | Volume, response time, security, auditing? | Concurrent enrollments without exceeding capacity |
 
-Một yêu cầu “kiểm tra sinh viên đã học môn A” có thể lấy dữ liệu từ hệ thống đào tạo khác. Khi đó cần biết hệ thống nào là **nguồn sự thật** (*source of truth*), thời điểm dữ liệu được cập nhật và cách ứng dụng xử lý khi dịch vụ đó không sẵn sàng.
+A request to “check whether a student has completed course A” may require data from another academic system. Identify the **source of truth**, when it updates, and how the application behaves when that service is unavailable.
 
-## 3. Thu thập yêu cầu bằng tình huống cụ thể
+## 3. Gather Requirements Through Concrete Scenarios
 
-Các kỹ thuật thực tế nên kết hợp thay vì chỉ hỏi “cần những màn hình nào?”.
+Combine practical techniques rather than only asking “which screens are needed?”
 
-### Phỏng vấn theo mục tiêu
+### Goal-Oriented Interviews
 
-Hỏi sinh viên về thao tác, hỏi phòng đào tạo về chính sách, hỏi vận hành về ngoại lệ và sai lệch dữ liệu. Ví dụ:
+Ask students about their steps, academic staff about policies, and operations teams about exceptions and inconsistent data. For example:
 
-1. “Lần gần nhất bạn đăng ký môn học diễn ra như thế nào, từ đầu tới cuối?”
-2. “Có tình huống nào hệ thống từ chối nhưng cán bộ vẫn chấp nhận ngoại lệ?”
-3. “Thế nào được tính là **một** suất trong khóa học: mỗi tài khoản, mỗi sinh viên, mỗi lần ghi danh?”
-4. “Khi hai người đăng ký chỗ cuối cùng cùng lúc, hệ thống phải quyết định thế nào?”
-5. “Chúng ta kiểm chứng đăng ký thành công bằng dữ liệu hoặc sự kiện nào?”
-6. “Ai có thể điều chỉnh chính sách, và có cần giữ lịch sử phiên bản không?”
+1. “What happened the last time you enrolled in a course, from beginning to end?”
+2. “When has the system rejected enrollment even though an authorized staff member granted an exception?”
+3. “What counts as **one** course seat: one account, one student, or one enrollment event?”
+4. “How should the system decide when two people request the last seat simultaneously?”
+5. “What data or event proves enrollment succeeded?”
+6. “Who may change the policy, and do we need version history?”
 
-Tránh câu hỏi gợi ý “Mình nên có nút Đăng ký chứ?” vì dễ chuyển cuộc thảo luận sang UI trước khi hiểu mục tiêu.
+Avoid leading questions like “Should we have an Enroll button?” They shift discussion toward UI before the goal is understood.
 
-### Quan sát và đi theo quy trình (observation / shadowing)
+### Observation and Process Shadowing
 
-Xem nhân viên nghiệp vụ xử lý hồ sơ thật, đầu vào, quyết định và các thao tác ngoại lệ. Một câu “đăng ký hợp lệ” có thể che giấu kiểm tra tín chỉ, lịch trùng, môn tiên quyết và khoản nợ học phí. Đừng thêm các quy tắc này vào mô hình nếu bên nghiệp vụ chưa xác nhận.
+Observe staff processing real cases, inputs, decisions, and exceptional procedures. “Valid enrollment” may conceal credit limits, timetable clashes, prerequisites, and tuition debt checks. Do not add these rules to the model unless stakeholders confirm them.
 
-### Workshop ví dụ và phản ví dụ
+### Workshops with Examples and Counterexamples
 
-Dùng ví dụ có số liệu để tránh từ mơ hồ:
+Use numerical examples to clarify ambiguous wording:
 
-| Tình huống được đưa ra | Câu hỏi cần chốt |
+| Proposed scenario | Question to settle |
 |---|---|
-| Còn 1 chỗ, có 2 lượt đăng ký đồng thời | Ai thắng? Có hàng đợi không? |
-| Sinh viên học xong môn tiên quyết nhưng bảng điểm chưa đồng bộ | Từ chối, chờ đồng bộ hay cho đăng ký có điều kiện? |
-| Đã ghi danh và gửi yêu cầu giống hệt lần nữa | Báo “đã đăng ký”, trả kết quả cũ hay tạo lỗi? |
-| Đăng ký thành công, email thất bại | Có hủy đăng ký không? Có retry không? |
-| Khóa học đầy, quản trị viên tăng sức chứa | Ai được phép làm và có audit không? |
+| 1 seat remains; 2 simultaneous requests arrive | Who wins? Is there a queue? |
+| A student completed a prerequisite, but academic records have not synchronized | Reject, await synchronization, or conditionally enroll? |
+| Already enrolled; the same request is sent again | Report “already enrolled,” return the previous result, or signal an error? |
+| Enrollment succeeds; the email fails | Cancel enrollment? Retry notification? |
+| Course is full; an administrator increases capacity | Who may do this, and must it be audited? |
 
-Mỗi ví dụ nên có **đầu vào, trạng thái trước, hành động, kết quả mong đợi, lý do**. Nếu stakeholder trả lời khác nhau, ghi lại xung đột cùng người quyết định, không tự chọn một đáp án.
+Every example should specify **input, prior state, action, expected result, and rationale**. When stakeholders disagree, record the conflict and decision owner rather than picking an answer yourself.
 
-### Event storming nhẹ
+### Lightweight Event Storming
 
-Viết các sự kiện đã xảy ra như “Sinh viên yêu cầu ghi danh”, “Đăng ký bị từ chối”, “Sinh viên đã ghi danh” rồi lần ngược lại:
+Write down events that have occurred, such as “Student requested enrollment,” “Enrollment rejected,” or “Student enrolled,” then work backward:
 
-- Điều gì kích hoạt sự kiện?
-- Ai/đối tượng nào quyết định?
-- Điều kiện nào phải đúng trước khi sự kiện xảy ra?
-- Có cần lưu sự kiện, hay chỉ cần trạng thái cuối?
-- Có hệ thống nào phản ứng sau sự kiện không?
+- What triggered the event?
+- Which actor or object made the decision?
+- Which conditions had to hold before the event?
+- Must the event be stored, or is the final state enough?
+- Does another system react to the event afterward?
 
-Event storming giúp tìm ranh giới trách nhiệm, nhưng **không bắt buộc** triển khai event sourcing hay message broker.
+Event storming helps reveal responsibility boundaries, but **does not require** event sourcing or a message broker.
 
-## 4. Chuẩn hóa một tình huống sử dụng (Use Case Specification)
+## 4. Standardize a Use Case Specification
 
-Ví dụ use case **UC-01 – Đăng ký khóa học**, trong phạm vi hệ thống giả định:
+An example use case, **UC-01 – Enroll in a Course**, within the hypothetical system:
 
-| Thuộc tính | Nội dung |
+| Attribute | Description |
 |---|---|
-| **ID / Tên** | UC-01 / Đăng ký khóa học |
-| **Mục tiêu** | Sinh viên có một lượt ghi danh hợp lệ vào khóa học |
-| **Actor chính** | Sinh viên đã xác thực |
-| **Kích hoạt** | Sinh viên yêu cầu đăng ký một khóa học được chọn |
-| **Tiền điều kiện** | Hệ thống đã xác định danh tính sinh viên và khóa học; người dùng có quyền gửi yêu cầu |
-| **Luồng thành công** | 1. Nhận yêu cầu → 2. Tải trạng thái sinh viên và khóa học → 3. Kiểm tra chính sách → 4. Ghi danh nguyên tử → 5. Trả xác nhận |
-| **Luồng thay thế** | Tài khoản chưa kích hoạt, lớp đóng, thiếu môn tiên quyết, đăng ký trùng, hết chỗ |
-| **Hậu điều kiện thành công** | Có đúng một ghi danh cho cặp sinh viên–khóa học; số chỗ trống giảm theo chính sách |
-| **Bảo đảm khi thất bại** | Không tạo ghi danh mới hoặc vượt quá sức chứa |
-| **Đầu ra** | Mã khóa học, mã sinh viên, trạng thái và thông điệp phù hợp |
-| **Ngoài phạm vi ví dụ** | Thanh toán, hủy ghi danh, danh sách chờ, đăng ký thủ công của nhân viên |
+| **ID / Name** | UC-01 / Enroll in a Course |
+| **Goal** | A student obtains a valid enrollment in a course |
+| **Primary actor** | Authenticated student |
+| **Trigger** | Student requests enrollment in a selected course |
+| **Preconditions** | The system identifies both student and course; user has permission to submit the request |
+| **Success flow** | 1. Receive request → 2. Load student and course state → 3. Check policies → 4. Enroll atomically → 5. Return confirmation |
+| **Alternative flows** | Inactive account, closed registration, missing prerequisites, duplicate enrollment, no remaining seats |
+| **Success postconditions** | Exactly one enrollment exists for the student–course pair; available seats decrease according to policy |
+| **Failure guarantee** | No new enrollment is created and capacity is never exceeded |
+| **Output** | Course ID, student ID, status, and appropriate message |
+| **Out of scope for this example** | Payment, withdrawal, waiting lists, manual enrollment by staff |
 
-Tiền điều kiện “đã xác thực” khác quy tắc “tài khoản đang **hoạt động**”: người dùng có thể đăng nhập được nhưng đang bị khóa ghi danh theo chính sách. Một use case specification tốt phân biệt các điều kiện đó.
+The “authenticated” precondition differs from the rule that an account must be **active**: a user may be able to sign in but be barred from enrollment by policy. A good use case specification distinguishes them.
 
-Đừng chèn chi tiết như “click nút màu xanh ở góc phải” vào **use case nghiệp vụ**. Đó là UI design hoặc test giao diện; use case cần đủ trừu tượng để API, web hay mobile đều thực hiện cùng mục tiêu.
+Avoid details like “click the green button at the top right” in a **business use case**. That belongs to UI design or interface testing; a use case should remain abstract enough for APIs, web, and mobile clients to achieve the same goal.
 
-## 5. Ghi business rule sao cho kiểm tra được
+## 5. Write Business Rules That Can Be Tested
 
-Các quy tắc sau là **giả định được chọn để xây dựng ví dụ**:
+The following rules are **assumptions chosen for the example**:
 
-| ID | Quy tắc nghiệp vụ | Kết quả khi vi phạm |
+| ID | Business rule | Result of violation |
 |---|---|---|
-| BR-01 | Chỉ sinh viên có trạng thái **active** được ghi danh | Từ chối, không ghi danh |
-| BR-02 | Chỉ nhận đăng ký khi khóa còn **mở** | Từ chối |
-| BR-03 | Sinh viên đã hoàn thành **tất cả môn tiên quyết** của khóa | Từ chối |
-| BR-04 | Một sinh viên có **tối đa một** ghi danh trong cùng một khóa | Từ chối yêu cầu trùng |
-| BR-05 | Số ghi danh không được vượt **capacity** của khóa | Từ chối khi hết chỗ |
-| BR-06 | Ghi danh thành công cập nhật trạng thái **một cách nguyên tử** | Không có trạng thái ghi một nửa |
+| BR-01 | Only students with **active** status may enroll | Reject without enrolling |
+| BR-02 | Enrollments are accepted only while registration is **open** | Reject |
+| BR-03 | A student must have completed **all prerequisites** for the course | Reject |
+| BR-04 | A student may have **at most one** enrollment in the same course | Reject duplicate request |
+| BR-05 | Enrollments must not exceed course **capacity** | Reject when full |
+| BR-06 | Successful enrollment updates state **atomically** | No partially recorded state |
 
-Quy tắc tốt cần có:
+A well-specified rule includes:
 
-- **ID ổn định** để tham chiếu trong use case, ticket, test và tài liệu.
-- **Mệnh đề rõ ràng**: dữ liệu đầu vào, điều kiện và hành vi khi điều kiện không thỏa.
-- **Người sở hữu quy tắc**: bộ phận nghiệp vụ có thẩm quyền quyết định.
-- **Phạm vi áp dụng**: loại khóa học, chương trình học, khu vực, thời gian và ngoại lệ.
-- **Hiệu lực và phiên bản** nếu chính sách có thể thay đổi theo học kỳ.
-- **Ví dụ đúng/sai** để loại bỏ mơ hồ.
+- **Stable ID** for use in use cases, tickets, tests, and documentation.
+- **Clear statement** of inputs, conditions, and behavior when conditions are not met.
+- **Rule owner**: the business group authorized to make decisions.
+- **Applicability**: course type, study program, location, time period, and exceptions.
+- **Effective date and version** if policies change by term.
+- **Valid and invalid examples** to remove ambiguity.
 
-Ví dụ cụm “được đăng ký đủ điều kiện” không thể kiểm thử. Thay bằng “BR-03: trước khi ghi danh, tập môn đã hoàn thành phải chứa toàn bộ tập môn tiên quyết của khóa học”.
+For example, “eligible to enroll” is not testable. Replace it with “BR-03: before enrollment, the set of completed courses must include every prerequisite of the selected course.”
 
-Phân biệt **business rule** và **technical constraint**:
+Distinguish **business rules** from **technical constraints**:
 
-- “Không vượt quá 30 sinh viên trong lớp có capacity = 30” là luật nghiệp vụ.
-- “Cột `student_id` có type VARCHAR(36)” là lựa chọn kỹ thuật.
-- “Mỗi sinh viên chỉ có một lượt ghi danh cho một khóa” là business rule; unique constraint `(course_id, student_id)` trong DB là **một cơ chế** để thực thi luật đó.
+- “A class with capacity = 30 must not enroll more than 30 students” is a business rule.
+- “Column `student_id` has type VARCHAR(36)” is a technical choice.
+- “Each student may have one enrollment per course” is a business rule; a DB unique constraint on `(course_id, student_id)` is **one mechanism** for enforcing it.
 
-## 6. Các luồng ngoại lệ phải được đặc tả ngang với luồng thành công
+## 6. Specify Failure Flows as Carefully as Success Flows
 
-Đừng dừng ở “thành công thì lưu vào DB”. Lập ma trận nghiệp vụ:
+Do not stop at “save to DB on success.” Build a business decision matrix:
 
-| Trạng thái trước khi gọi | Hành động | Kết quả mong đợi | Quy tắc |
+| Initial state | Action | Expected outcome | Rule |
 |---|---|---|---|
-| Sinh viên active, khóa mở, đủ tiên quyết, còn chỗ | Ghi danh | Thành công, số chỗ giảm 1 | BR-01..06 |
-| Sinh viên không active | Ghi danh | Từ chối, không thay đổi số ghi danh | BR-01 |
-| Khóa đóng | Ghi danh | Từ chối, trạng thái không đổi | BR-02 |
-| Thiếu môn tiên quyết | Ghi danh | Từ chối, không giữ chỗ | BR-03 |
-| Đã ghi danh khóa đó | Ghi danh lại | Từ chối hoặc trả kết quả cũ theo chính sách được chọn | BR-04 |
-| Khóa đủ sức chứa | Ghi danh | Từ chối, không vượt capacity | BR-05 |
-| Hai lượt giữ chỗ cuối cùng cùng lúc | Ghi danh | Tối đa một lượt thành công | BR-05, BR-06 |
+| Active student, open course, prerequisites met, seat available | Enroll | Success; available seats decrease by 1 | BR-01..06 |
+| Inactive student | Enroll | Reject; enrollment count unchanged | BR-01 |
+| Registration closed | Enroll | Reject; state unchanged | BR-02 |
+| Prerequisites missing | Enroll | Reject; do not reserve a seat | BR-03 |
+| Already enrolled in the course | Enroll again | Reject or return prior result, depending on chosen policy | BR-04 |
+| Course at capacity | Enroll | Reject; capacity not exceeded | BR-05 |
+| Two requests compete for the last seat | Enroll | At most one succeeds | BR-05, BR-06 |
 
-Các phản ví dụ này trực tiếp trở thành acceptance criteria và test. Với yêu cầu gửi lại do mạng, hãy **chốt chính sách idempotency**: “yêu cầu trùng” và “retry cùng một yêu cầu” có thể cần hành vi khác nhau. Ví dụ Java đơn giản bên dưới chọn **từ chối đăng ký trùng**, chưa làm idempotency key.
+These counterexamples become acceptance criteria and tests. For retransmitted network requests, **establish an idempotency policy**: a “duplicate enrollment” and “retry of the same request” may need different behavior. The simple Java example below **rejects duplicate enrollments** and does not implement idempotency keys.
 
-## 7. Chuyển từ use case và business rule sang mô hình lớp
+## 7. Map Use Cases and Business Rules to a Class Model
 
-Đầu tiên tách **khái niệm**, **trạng thái**, **invariant** và **hành vi**:
+First separate **concepts**, **state**, **invariants**, and **behavior**:
 
-| Khái niệm | Trạng thái tối thiểu | Hành vi / trách nhiệm |
+| Concept | Minimal state | Behavior / responsibility |
 |---|---|---|
-| `Student` | ID, active, các môn đã hoàn thành | Cung cấp thông tin đủ điều kiện, giữ trạng thái sinh viên nhất quán |
-| `Course` | ID, capacity, trạng thái mở, môn tiên quyết, tập sinh viên ghi danh | Quyết định có chấp nhận một lượt ghi danh; bảo vệ capacity/trùng |
-| `EnrollmentReceipt` | Mã khóa, mã sinh viên, số ghi danh sau thao tác | Trả kết quả bất biến cho caller |
-| `EnrollmentUseCase` (khi có DB/API thật) | Các dependency cần thiết | Tải dữ liệu, kiểm tra quyền, gọi domain, lưu transaction, trả kết quả |
-| Repository / Adapter | Công nghệ lưu trữ | Lưu/tải domain state, đảm bảo transaction theo thiết kế |
+| `Student` | ID, active status, completed courses | Supplies eligibility facts and keeps student state consistent |
+| `Course` | ID, capacity, registration status, prerequisites, enrolled student IDs | Decides whether to accept enrollment; enforces capacity and uniqueness |
+| `EnrollmentReceipt` | Course ID, student ID, enrollment count after operation | Returns immutable data to the caller |
+| `EnrollmentUseCase` (with a real DB/API) | Required dependencies | Loads data, checks permissions, invokes domain logic, persists in a transaction, returns result |
+| Repository / Adapter | Storage technology | Loads/saves domain state and ensures transactions as designed |
 
-Không phải danh từ nào cũng là class. “Nút đăng ký”, “màn hình”, “email” có thể thuộc presentation/integration, không nhất thiết là domain entity. Quy tắc “sức chứa” chưa cần lớp `CapacityValidator` riêng nếu nó chỉ là một invariant đơn giản, thuộc trách nhiệm của `Course`.
+Not every noun is a class. “Enroll button,” “screen,” and “email” may belong to presentation or integration rather than the domain. A simple capacity invariant does not justify a separate `CapacityValidator` class when `Course` can own it.
 
-Có thể coi `Course` là **aggregate root** cho đăng ký chỗ trong ví dụ thu nhỏ, nếu tất cả lượt đăng ký được quản lý qua nó. Với hệ thống lớn, ghi danh có thể là aggregate riêng và việc bảo vệ capacity đặt ở reservation service/database; cách chia ranh giới phải dựa vào transaction, khối lượng truy cập và invariant thực tế.
+In this simplified example, `Course` can be viewed as an **aggregate root** for seat enrollment if every enrollment is managed through it. In a larger system, enrollment may be its own aggregate, with capacity protected by a reservation service or database. Boundaries should follow actual transactions, access volume, and invariants.
 
 ~~~mermaid
 classDiagram
@@ -218,11 +218,11 @@ classDiagram
     Course ..> EnrollmentReceipt : tạo kết quả
 ~~~
 
-Quan hệ phía trên là **phụ thuộc hành vi**, không đủ dữ liệu để kết luận composition hay aggregation. Nếu cần mô hình hóa vòng đời ghi danh như một entity riêng, có thể thêm `Enrollment` với identity và trạng thái; không nên thêm chỉ vì sơ đồ có nhiều danh từ.
+The diagram shows **behavioral dependencies**, not enough evidence to infer composition or aggregation. If enrollment has a separate lifecycle, introduce an `Enrollment` entity with identity and state; do not add one merely because the diagram contains several nouns.
 
-## 8. Java 17+: hiện thực mẫu dựa trên quy tắc đã thu thập
+## 8. Java 17+: A Sample Implementation Based on the Collected Rules
 
-Đây là một ví dụ **chạy được trong một tệp `EnrollmentModelingDemo.java`**. Dùng trạng thái trong bộ nhớ để làm rõ domain. Nó **không** thay thế transaction và unique constraint của database thật.
+This is a **runnable, single-file example in `EnrollmentModelingDemo.java`**. It uses in-memory state to illustrate the domain and **does not** replace real database transactions or unique constraints.
 
 ~~~java
 import java.util.LinkedHashSet;
@@ -335,42 +335,42 @@ public class EnrollmentModelingDemo {
 }
 ~~~
 
-Chạy bằng JDK 17 trở lên:
+Run with JDK 17 or newer:
 
 ~~~bash
 javac EnrollmentModelingDemo.java
 java EnrollmentModelingDemo
 ~~~
 
-**Ý nghĩa thiết kế:**
+**Design implications:**
 
-- `Student` là `record` bất biến, `Set.copyOf` tránh caller thay đổi danh sách môn đã hoàn thành sau khi tạo.
-- `Course.enroll()` bảo vệ các business rule thuộc trách nhiệm của khóa, thay vì đặt ở controller rồi hy vọng mọi caller đều kiểm tra.
-- `BusinessRuleViolation.ruleId()` tạo **liên kết truy vết** giữa yêu cầu BR-xx, code và test; không nên trả stack trace nội bộ cho người dùng cuối.
-- `synchronized` bảo đảm kiểm tra và thêm sinh viên không bị xen ngang khi **cùng một instance `Course` trong một JVM** được truy cập bởi nhiều luồng.
-- `EnrollmentReceipt` chỉ chứa dữ liệu cần trả cho use case. Trong hệ thống thật có thể bổ sung enrollment ID, trạng thái, thời gian và version theo yêu cầu đã được xác nhận.
+- `Student` is an immutable `record`; `Set.copyOf` prevents callers from changing completed-course data after construction.
+- `Course.enroll()` enforces rules owned by the course instead of putting them in a controller and hoping every caller checks them.
+- `BusinessRuleViolation.ruleId()` creates **traceability** among BR-xx requirements, code, and tests; internal stack traces should not be shown to end users.
+- `synchronized` prevents interleaving between checks and additions when **multiple threads access the same `Course` instance in one JVM**.
+- `EnrollmentReceipt` contains only data returned by the use case. A real system may add enrollment ID, status, timestamps, and version when requirements confirm them.
 
-**Ranh giới quan trọng:** Nếu ứng dụng chạy trên nhiều node và mỗi node tải một `Course` riêng từ DB, các khóa `synchronized` **không** đồng bộ giữa các node. Để bảo vệ BR-04/BR-05/BR-06 trong hệ thống thực cần transaction đúng, unique constraint theo `(course_id, student_id)`, cơ chế khóa/optimistic version hoặc update có điều kiện và kiểm tra kết quả. Luật nghiệp vụ không tự được bảo đảm chỉ vì có `if` trong Java.
+**Important boundary:** If an application runs on several nodes and each loads a separate `Course` from the DB, `synchronized` locks **do not** coordinate across nodes. Enforcing BR-04/BR-05/BR-06 in production requires correct transactions, a unique constraint on `(course_id, student_id)`, locking/optimistic versioning or conditional updates, and checking their results. A business rule is not guaranteed merely because Java contains an `if` statement.
 
-## 9. Truy vết yêu cầu → lớp → kiểm thử
+## 9. Trace Requirements to Classes and Tests
 
-Ma trận traceability giúp kiểm soát phạm vi và thấy luật nào thiếu kiểm chứng:
+A traceability matrix helps manage scope and reveal unverified rules:
 
-| Nguồn yêu cầu | Nơi thể hiện trong model | Ca kiểm thử |
+| Requirement source | Where it appears in the model | Test case |
 |---|---|---|
-| UC-01 luồng thành công | `Course.enroll()`, `EnrollmentReceipt` | Sinh viên hợp lệ được ghi danh, số chỗ giảm 1 |
-| BR-01 | `Student.active()`, `Course.enroll()` | Sinh viên inactive bị từ chối |
-| BR-02 | `Course.registrationOpen` | Khóa đóng bị từ chối |
-| BR-03 | `Student.completedCourses`, `Course.prerequisites` | Thiếu môn bị từ chối |
-| BR-04 | `Course.enrolledStudentIds` | Ghi danh lần hai bị từ chối |
-| BR-05 | `Course.capacity` | Hết chỗ bị từ chối |
-| BR-06 | `Course.enroll()` và persistence transaction khi dùng DB | Lỗi không thêm bản ghi, hai request tranh chỗ không vượt capacity |
+| UC-01 success flow | `Course.enroll()`, `EnrollmentReceipt` | Eligible student enrolls; available seats decrease by 1 |
+| BR-01 | `Student.active()`, `Course.enroll()` | Inactive student is rejected |
+| BR-02 | `Course.registrationOpen` | Closed registration is rejected |
+| BR-03 | `Student.completedCourses`, `Course.prerequisites` | Missing prerequisite is rejected |
+| BR-04 | `Course.enrolledStudentIds` | Second enrollment attempt is rejected |
+| BR-05 | `Course.capacity` | Full course rejects enrollment |
+| BR-06 | `Course.enroll()` and persistence transaction when using a DB | Failed operation adds no record; competing requests never exceed capacity |
 
-Một tiêu chí nghiệp vụ có thể cần **nhiều** test; ngược lại một test có thể đi qua nhiều quy tắc. Traceability hữu ích khi chính sách thay đổi: tìm nhanh code và test phải sửa mà không buộc tất cả quy tắc thành một lớp lớn.
+One business criterion may require **multiple** tests, while one test may exercise several rules. Traceability is useful when policy changes: find affected code and tests without putting every rule into a giant class.
 
-### Test JUnit Jupiter 5 minh họa
+### Illustrative JUnit Jupiter 5 Tests
 
-**`EnrollmentModelingTest.java`** (đặt cùng package với tệp demo):
+**`EnrollmentModelingTest.java`** (in the same package as the demo file):
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -447,11 +447,11 @@ class EnrollmentModelingTest {
 }
 ~~~
 
-Các test trên kiểm tra hành vi đúng với quy tắc. Chúng chưa chứng minh uniqueness/atomicity đa node; cần integration test có DB và kiểm thử cạnh tranh phù hợp trước khi dùng cho hệ thống thật.
+These tests check behavior against the chosen rules. They do not prove multi-node uniqueness or atomicity; a real system also needs DB integration tests and suitable concurrency tests.
 
-## 10. Acceptance criteria bằng Given–When–Then
+## 10. Acceptance Criteria Using Given–When–Then
 
-Use case dài hữu ích cho bối cảnh, còn **Given–When–Then** biến từng tình huống thành tiêu chí có thể chấp nhận.
+Detailed use cases provide context, while **Given–When–Then** turns individual scenarios into testable acceptance criteria.
 
 ~~~gherkin
 Feature: Đăng ký khóa học
@@ -471,11 +471,11 @@ Feature: Đăng ký khóa học
       And số chỗ trống không thay đổi
 ~~~
 
-Đoạn Gherkin chỉ là **đặc tả tình huống**; để chạy tự động cần công cụ và step definitions thích hợp (ví dụ Cucumber). Nó không tự thực thi khi đặt vào file README.
+The Gherkin is a **scenario specification**; automated execution requires an appropriate tool and step definitions (such as Cucumber). Merely placing it in a README does not execute it.
 
-Không biến mọi chi tiết UI thành tiêu chí acceptance. “Nút xanh xuất hiện” có thể cần test giao diện riêng; rule BR-04 phải được kiểm tra ở tầng nghiệp vụ ngay cả khi caller không dùng giao diện web.
+Not every UI detail is an acceptance criterion. “Green button is visible” might warrant a separate interface test; BR-04 must be enforced at the domain level even when a caller bypasses the web UI.
 
-## 11. Luồng nghiệp vụ, trạng thái và điểm quyết định
+## 11. Business Flows, State, and Decision Points
 
 ~~~mermaid
 flowchart TD
@@ -494,35 +494,35 @@ flowchart TD
     H --> I[Trả biên nhận]
 ~~~
 
-Sơ đồ giúp stakeholder phát hiện nhánh chưa xác định. Thứ tự kiểm tra lỗi trong sơ đồ **chỉ là một lựa chọn của ví dụ**: trong hệ thống thật có thể ưu tiên kiểm tra quyền trước, hạn chế lộ thông tin khóa học hoặc xử lý trường hợp “đã đăng ký” khác. Thứ tự lỗi trả về là một phần hợp đồng cần xác nhận.
+The diagram helps stakeholders identify undefined branches. Its error-check order is **only one illustrative choice**: a real system might check authorization first to avoid exposing course details or handle “already enrolled” differently. Error precedence is part of the contract that stakeholders must confirm.
 
-Nếu có vòng đời nhiều trạng thái (`Requested → Approved → Cancelled`, chẳng hạn), hãy vẽ **state machine** và ghi quy tắc chuyển trạng thái. Nhưng nếu use case chỉ có quyết định thành công/thất bại và chưa có trạng thái dài hạn bổ sung, không cần tự tạo hàng loạt state giả.
+If there is a longer lifecycle with states such as (`Requested → Approved → Cancelled`), draw a **state machine** and specify transition rules. But if the use case only decides success/failure and has no additional enduring states, do not invent numerous artificial states.
 
-## 12. Quy tắc nghiệp vụ khác gì yêu cầu chức năng và phi chức năng?
+## 12. Business Rules Versus Functional and Nonfunctional Requirements
 
-| Nhóm | Ví dụ | Tác động lên mô hình |
+| Category | Example | Effect on the model |
 |---|---|---|
-| **Use case / functional requirement** | Sinh viên đăng ký khóa học | Cần thao tác điều phối và trả kết quả |
-| **Business rule** | Không vượt sức chứa; không đăng ký trùng | Invariant và validation ở domain/transaction |
-| **Non-functional requirement** | 99% yêu cầu trả lời trong ngưỡng do stakeholder quy định | Ảnh hưởng chiến lược truy cập DB, cache, phân tải |
-| **Security rule** | Chỉ chủ tài khoản hoặc nhân viên được ủy quyền mới đăng ký thay | Authorization tại entry point và nơi thích hợp |
-| **Data constraint** | Unique `(course_id, student_id)` | Bảo vệ tính nhất quán ở nơi lưu trữ |
-| **UI behavior** | Hiển thị số chỗ còn lại, disabled khi đầy | Presentation; không thay thế kiểm tra của command |
+| **Use case / functional requirement** | Student enrolls in a course | Requires orchestration and a returned outcome |
+| **Business rule** | Do not exceed capacity or allow duplicates | Domain/transaction invariants and validation |
+| **Non-functional requirement** | 99% of requests respond within a stakeholder-approved threshold | Influences database, caching, and load-distribution strategies |
+| **Security rule** | Only account owners or authorized staff may enroll on someone else's behalf | Authorization at entry points and other suitable boundaries |
+| **Data constraint** | Unique `(course_id, student_id)` | Protects consistency in storage |
+| **UI behavior** | Show available seats and disable enrollment when full | Presentation; does not replace command validation |
 
-Không viết một business rule mơ hồ thành ràng buộc cứng tại nhiều chỗ rồi quên quản lý phiên bản. Nếu cùng quy tắc được áp dụng ở API, DB và UI, xác định **nguồn định nghĩa chính** cùng chiến lược nhất quán giữa các lớp.
+Do not encode a vague business rule as hard constraints in several places and forget versioning. When the same rule is enforced by API, DB, and UI, specify the **authoritative definition** and a consistency strategy across those layers.
 
-## 13. Quy trình thu thập và mô hình hóa có thể áp dụng ngay
+## 13. A Practical Requirements-to-Modeling Workflow
 
-1. **Xác định mục tiêu và system boundary.** Lập danh sách actor, hệ thống liên quan và kết quả mong đợi, tránh khởi đầu bằng danh sách class.
-2. **Thu thập câu chuyện thực tế.** Phỏng vấn, quan sát workflow, dùng ví dụ có dữ liệu và phản ví dụ. Ghi rõ ai nói gì và điểm chưa được phê duyệt.
-3. **Đặt tên use case theo động từ + kết quả.** Ví dụ “Đăng ký khóa học”, “Hủy ghi danh”, “Duyệt yêu cầu ngoại lệ”. Mỗi use case có actor và mục tiêu rõ.
-4. **Đặc tả luồng chính và ngoại lệ.** Ghi trigger, preconditions, postconditions, bảo đảm khi lỗi và tình huống cạnh tranh.
-5. **Chắt lọc business rule riêng.** Cấp mã BR-xx, diễn giải bằng điều kiện quan sát được, xác định owner, phạm vi, ngoại lệ và phiên bản.
-6. **Xác nhận bằng ví dụ cụ thể.** Dùng bảng quyết định/Given–When–Then để stakeholder xác nhận cả dữ liệu sát biên, null/blank, trùng lặp và concurrency.
-7. **Phác thảo domain model.** Xác định entity, value object, aggregate, invariants và trách nhiệm; chỉ thêm abstraction khi có nhu cầu thật.
-8. **Thiết kế API/use case.** Command phải bảo vệ quy tắc tại nơi quản lý dữ liệu, query chỉ đọc; giao diện kỹ thuật không sở hữu tùy tiện policy nghiệp vụ.
-9. **Tạo traceability.** Ánh xạ use case → business rule → class/method → test; duy trì cùng khi yêu cầu thay đổi.
-10. **Review với stakeholder và người vận hành.** Kiểm tra tính thực thi, lỗi, audit, transaction, tích hợp và khả năng thay đổi theo thời gian.
+1. **Define goals and the system boundary.** List actors, related systems, and desired outcomes instead of starting with classes.
+2. **Gather real stories.** Interview stakeholders, observe workflows, and use data-rich examples and counterexamples. Record who said what and which decisions remain unapproved.
+3. **Name use cases using verbs and outcomes.** Examples: “Enroll in Course,” “Withdraw Enrollment,” “Approve Exception.” Give each a clear actor and goal.
+4. **Specify main and exceptional flows.** Capture triggers, preconditions, postconditions, failure guarantees, and concurrent scenarios.
+5. **Extract business rules separately.** Assign BR-xx IDs, use observable conditions, and specify owner, applicability, exceptions, and version.
+6. **Confirm with concrete examples.** Use decision tables and Given–When–Then to confirm boundaries, null/blank cases, duplicates, and concurrency with stakeholders.
+7. **Sketch the domain model.** Identify entities, value objects, aggregates, invariants, and responsibilities; introduce abstractions only where justified.
+8. **Design APIs and use cases.** Commands should protect rules where data is managed; queries only read. Technical interfaces should not arbitrarily own domain policy.
+9. **Create traceability.** Map use case → business rule → class/method → test, maintaining links as requirements change.
+10. **Review with stakeholders and operations.** Assess feasibility, errors, auditing, transactions, integrations, and changes over time.
 
 ~~~mermaid
 flowchart LR
@@ -534,105 +534,105 @@ flowchart LR
     F -. phát hiện thiếu hoặc mâu thuẫn .-> B
 ~~~
 
-Việc mô hình hóa là **lặp lại có kiểm soát**, không phải viết tài liệu một lần rồi bỏ. Nếu test khám phá một trường hợp nghiệp vụ chưa rõ, quay lại người sở hữu quy tắc để xác nhận thay vì chỉ thêm `if` theo phán đoán kỹ thuật.
+Modeling is **a controlled iterative process**, not a one-time document. If tests reveal an unclear domain case, return to the rule owner for confirmation rather than adding an `if` based solely on technical judgment.
 
-## 14. Rủi ro thu thập yêu cầu và cách tránh
+## 14. Requirements-Gathering Risks and Mitigations
 
-| Sai lầm | Hệ quả | Cách phòng tránh |
+| Mistake | Consequence | Prevention |
 |---|---|---|
-| Chỉ ghi yêu cầu UI | Thiếu quy tắc domain, API khác dễ bỏ qua kiểm tra | Thu use case ở mức mục tiêu người dùng |
-| Hỏi một stakeholder cho mọi quy tắc | Thiếu ngoại lệ và quyền quyết định | Xác định owner, người duyệt và các bên liên quan |
-| Quy tắc dùng từ “hợp lệ”, “đủ”, “nhanh” | Không kiểm thử được | Thay bằng điều kiện, ngưỡng, ví dụ cụ thể |
-| Lẫn policy với cách cài đặt | Lúc đổi DB/framework phải sửa tài liệu nghiệp vụ | Tách BR khỏi SQL, HTTP và class cụ thể |
-| Chỉ mô tả happy path | Lỗi dữ liệu, thao tác cạnh tranh và retry không có định nghĩa | Tạo decision table và luồng thất bại |
-| Biến mọi danh từ thành class | Nhiều lớp không có trách nhiệm rõ, coupling tăng | Xác định identity, state và invariants trước |
-| Chỉ kiểm tra ở controller | Job/background caller bỏ qua rule | Đặt invariant ở domain/persistence phù hợp |
-| Không gắn BR với test | Thay policy mà không biết vùng ảnh hưởng | Traceability BR-ID → behavior test |
-| Xem in-memory lock là bảo đảm phân tán | Vượt capacity trên nhiều server | DB transaction/constraint/locking thích hợp |
-| Không ghi giả định và phạm vi | Dev lặng lẽ quyết định chính sách thay stakeholder | Danh sách câu hỏi mở, quyết định, phiên bản |
+| Recording only UI requirements | Missing domain rules that alternate APIs can bypass | Capture goal-level use cases |
+| Asking one stakeholder to define every rule | Missed exceptions and decision rights | Identify owners, approvers, and affected parties |
+| Using words like “valid,” “enough,” or “fast” | Untestable rules | Specify conditions, thresholds, and concrete examples |
+| Confusing policy with implementation | Business documents must change when DB/framework changes | Separate business rules from SQL, HTTP, and classes |
+| Describing only the happy path | Data failures, concurrency, and retries are undefined | Create decision tables and failure flows |
+| Turning every noun into a class | More classes without clear responsibilities; increased coupling | Identify identity, state, and invariants first |
+| Validating only in controllers | Jobs/background callers bypass rules | Enforce invariants at suitable domain/storage boundaries |
+| Not linking rules to tests | Policy changes with unknown impact | Trace BR-ID to behavioral tests |
+| Treating in-memory locking as distributed protection | Capacity can be exceeded across servers | Use suitable database transactions, constraints, and locking |
+| Not recording assumptions or scope | Developers silently make stakeholder policy decisions | Maintain open questions, decisions, and versions |
 
-## 15. Bài tập tự thực hành
+## 15. Practice Exercise
 
-**Bối cảnh khác:** hệ thống thư viện cho độc giả mượn sách.
+**Another context:** a library lending books to members.
 
-Hãy thu thập và mô hình hóa use case **“Mượn một bản sách”** với yêu cầu ban đầu: “Độc giả được mượn sách còn sẵn”. Trước khi code, đề xuất ít nhất các câu hỏi về tài khoản hoạt động, số sách tối đa đang mượn, hạn mượn, bản sách cụ thể, việc đặt trước, trễ hạn, retry request và nhiều độc giả chọn cùng bản cuối.
+Gather and model the **“Borrow a Book Copy”** use case starting with “Members may borrow available books.” Before coding, propose questions about active accounts, maximum concurrent loans, due dates, specific book copies, reservations, overdue loans, request retries, and multiple members competing for the last copy.
 
-Sau khi có câu trả lời, hãy:
+Once the answers are known:
 
-1. Viết một use case UC-LIB-01 với actor, trigger, luồng thành công, các nhánh thất bại và hậu điều kiện.
-2. Lập bảng BR-LIB-01... và ví dụ đúng/sai cho từng rule đã được xác nhận.
-3. Xác định `BookTitle`, `BookCopy`, `Member`, `Loan` có danh tính và vòng đời thế nào; trách nhiệm giữ bản cuối nên đặt ở đâu.
-4. Vẽ một sơ đồ use case flow và một class diagram vừa đủ; không tạo class chỉ từ danh từ.
-5. Viết API Java cho command `borrowCopy(...)` và query `availableCopies(...)`; kiểm tra race condition ở hệ thống lưu trữ thật.
-6. Chuyển ít nhất ba business rules thành acceptance tests và ánh xạ ID tương ứng.
+1. Write use case UC-LIB-01 with actor, trigger, success flow, failure branches, and postconditions.
+2. Build a BR-LIB-01... table with valid/invalid examples for each confirmed rule.
+3. Determine the identities and lifecycles of `BookTitle`, `BookCopy`, `Member`, and `Loan`, including where to protect the last available copy.
+4. Draw concise use-case-flow and class diagrams; do not create classes solely from nouns.
+5. Write Java APIs for command `borrowCopy(...)` and query `availableCopies(...)`, and check storage-level race conditions.
+6. Convert at least three business rules into acceptance tests and map their IDs.
 
-**Tiêu chí hoàn thành:** Một stakeholder có thể đọc các tình huống và xác nhận hành vi; lập trình viên xác định được trách nhiệm của mỗi class; người kiểm thử lần theo được mỗi rule tới ca kiểm thử; và trường hợp lỗi không để dữ liệu ở trạng thái trái chính sách.
+**Completion criteria:** Stakeholders can review scenarios and confirm behavior; developers can identify each class's responsibility; testers can trace every rule to a test case; failure paths cannot leave data violating policy.
 
 ---
 
-**Ghi nhớ:** Mô hình OOP tốt bắt đầu từ **người dùng muốn đạt kết quả gì** và **tổ chức cho phép kết quả đó trong điều kiện nào**. Use case cung cấp luồng mục tiêu; business rule cung cấp chính sách/invariant; Java class và test là cách hiện thực, bảo vệ và chứng minh hai loại yêu cầu đó.
+**Remember:** Good OOP modeling begins with **the outcome users want** and **the conditions under which the organization permits it**. Use cases define goal-oriented flows, business rules define policies/invariants, and Java classes and tests implement, protect, and verify both.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="modeling-002">Nhận diện đối tượng từ yêu cầu</a>
+## <a id="modeling-002">Identifying objects from requirements</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Nhận diện đối tượng từ yêu cầu trong OOP (Java)
+# Identifying Objects from Requirements in OOP (Java)
 
-## Bài toán của bước mô hình hóa
+## The Modeling Challenge
 
-Khi nhận một yêu cầu như “Độc giả mượn bản sách, hệ thống kiểm tra bản sách còn cho mượn được hay không, ghi nhận lượt mượn và tính hạn trả”, người thiết kế chưa nên viết ngay một class cho mỗi danh từ. Trước hết cần tìm ra **các khái niệm có ý nghĩa trong nghiệp vụ**, thông tin nào thuộc về chúng, hành vi nào chúng chịu trách nhiệm và quan hệ nào phải được giữ nhất quán.
+Given a requirement such as “A member borrows a book copy; the system checks whether it is available, records the loan, and calculates a due date,” designers should not immediately write one class per noun. First identify **meaningful domain concepts**, the information they own, the behavior they govern, and the relationships that must stay consistent.
 
-**Nhận diện đối tượng từ yêu cầu** là quá trình chuyển cách diễn đạt của người dùng thành các *đối tượng ứng viên* (*candidate objects*), kiểm tra vai trò của từng ứng viên, rồi đề xuất mô hình lớp. Đây là bước khám phá và kiểm chứng giả thuyết, không phải thao tác tìm danh từ một cách máy móc.
+**Identifying objects from requirements** translates the user's language into *candidate objects*, evaluates each candidate's role, and proposes a class model. This is discovery and hypothesis validation, not a mechanical noun-finding exercise.
 
-Kết thúc bài, bạn sẽ có thể:
+By the end, you should be able to:
 
-- Đọc mô tả nghiệp vụ để trích xuất đối tượng, thuộc tính, hành vi, sự kiện và quy tắc.
-- Phân biệt **entity**, **value object**, đối tượng điều phối và các phụ thuộc bên ngoài.
-- Loại bỏ những “class giả” chỉ là thuộc tính, màn hình, vai trò hay cách triển khai kỹ thuật.
-- Kiểm chứng mô hình bằng tình huống nghiệp vụ, bất biến, sơ đồ UML và ví dụ Java chạy độc lập.
-- Biết khi nào nên sửa mô hình vì yêu cầu chưa rõ hoặc quy tắc mới làm xuất hiện đối tượng có vòng đời riêng.
+- Read domain descriptions to extract objects, attributes, behavior, events, and rules.
+- Distinguish **entities**, **value objects**, coordinating objects, and external dependencies.
+- Discard misleading “classes” that are merely attributes, screens, roles, or technical implementation details.
+- Validate models using domain scenarios, invariants, UML diagrams, and standalone runnable Java examples.
+- Recognize when an unclear requirement or new rule calls for an object with an independent lifecycle.
 
-## 1. Bắt đầu từ ngôn ngữ nghiệp vụ
+## 1. Begin with Domain Language
 
-Xét yêu cầu mẫu:
+Consider this sample requirement:
 
-> “Độc giả có mã thành viên và tên. Thư viện có nhiều bản sách, mỗi bản có mã riêng và thuộc một đầu sách. Độc giả được mượn tối đa hai bản cùng lúc. Một bản sách không được có hai lượt mượn đang hoạt động. Khi mượn, hệ thống ghi ngày mượn và hạn trả sau 14 ngày. Nhân viên có thể tra cứu các lượt mượn đang hoạt động.”
+> “Members have member IDs and names. A library holds many book copies; each copy has a unique ID and belongs to one book title. Members may borrow at most two copies simultaneously. No copy may have two active loans. When a loan starts, the system records its start date and a due date 14 days later. Staff can search active loans.”
 
-Đây là **một yêu cầu ví dụ** để luyện kỹ năng phân tích, không phải hệ thống thư viện chuẩn áp dụng cho mọi tổ chức. Các con số hai bản và 14 ngày là quy tắc riêng của ví dụ.
+This is **an illustrative requirement** for analysis practice, not a universal library policy. The two-copy limit and 14-day term are example-specific rules.
 
-Gạch chân những nhóm từ cần làm rõ:
+Underline phrases that need clarification:
 
-| Cụm từ trong yêu cầu | Ứng viên đầu tiên | Câu hỏi để xác nhận |
+| Phrase in the requirement | Initial candidate | Question to confirm |
 | --- | --- | --- |
-| Độc giả | `Borrower` | Có mã định danh, vòng đời và lịch sử riêng không? |
-| Mã thành viên, tên | Thuộc tính của `Borrower` | Có cần quy tắc định dạng/một kiểu giá trị riêng không? |
-| Đầu sách | `BookTitle` hoặc `Book` | Có ISBN, tác giả, thông tin xuất bản riêng không? |
-| Bản sách | `BookCopy` | Có mã riêng, có thể mượn độc lập các bản khác không? |
-| Mượn bản sách | `Loan` và hành vi `borrow(...)` | Một lượt mượn có ngày, trạng thái và danh tính riêng không? |
-| Hai bản cùng lúc | `LoanPolicy` hoặc quy tắc miền | Áp dụng cho ai? Có ngoại lệ theo loại độc giả không? |
-| Lượt mượn đang hoạt động | Trạng thái/điều kiện trên `Loan` | Trả sách có kết thúc lượt mượn hay xóa lịch sử? |
-| Ngày mượn, hạn trả | Thuộc tính của `Loan` | Dùng `LocalDate` hay `Instant`? Hạn tính theo múi giờ nào? |
-| Tra cứu | Hành vi use case/query | Có cần `LoanQueryService` hay chỉ một repository query? |
-| Thư viện | Khái niệm bối cảnh | Có thực sự cần đối tượng `Library` trong phạm vi chức năng này không? |
+| Member | `Borrower` | Does it have an independent ID, lifecycle, and history? |
+| Member ID, name | Attributes of `Borrower` | Are special formatting rules or value types needed? |
+| Book title | `BookTitle` or `Book` | Does it have ISBN, authors, and publication metadata? |
+| Physical book copy | `BookCopy` | Does each copy have its own ID and independent lending availability? |
+| Borrow a copy | `Loan` and `borrow(...)` behavior | Does each loan have distinct dates, state, and identity? |
+| Two copies concurrently | `LoanPolicy` or a domain rule | Who is affected? Do member categories have exceptions? |
+| Active loan | Status/condition on `Loan` | Does returning a copy close the loan or erase its history? |
+| Borrow date, due date | Attributes of `Loan` | Use `LocalDate` or `Instant`? Which time zone applies? |
+| Search | Use-case/query behavior | Is `LoanQueryService` needed, or just a repository query? |
+| Library | Contextual concept | Does this feature actually require a `Library` object? |
 
-**Đầu sách và bản sách là hai khái niệm khác nhau.** Có thể có ba bản vật lý của cùng một tựa sách. Nếu chỉ tạo `Book(title)` mà bỏ danh tính từng bản, hệ thống không thể xác định chính xác bản nào đang được mượn. Đây là ví dụ quan trọng về việc hỏi đúng câu hỏi nghiệp vụ trước khi chọn class.
+**A book title and a physical copy are different concepts.** Three physical copies may share the same title. If the model only has `Book(title)` with no per-copy identity, it cannot identify which exact copy is on loan. This shows why domain questions must precede class selection.
 
-## 2. Kỹ thuật danh từ – động từ – quy tắc
+## 2. The Noun–Verb–Rule Technique
 
-Có thể thực hiện bước phân tích đầu tiên bằng ba lượt đọc:
+Make three passes over the requirements:
 
-1. **Danh từ và cụm danh từ:** tìm thực thể, vật, tài liệu, vai trò, kết quả có thể có danh tính hoặc giá trị riêng.
-2. **Động từ:** tìm hành vi như *mượn*, *trả*, *xác nhận*, *tính*, *chuyển*, *hủy*, *tra cứu*.
-3. **Điều kiện/ràng buộc:** đánh dấu *phải*, *không được*, *tối đa*, *ít nhất*, *chỉ khi*, *nếu... thì...*, *sau ... ngày*.
+1. **Nouns and noun phrases:** find entities, objects, documents, roles, and results with potential independent identity or value.
+2. **Verbs:** identify actions such as *borrow*, *return*, *confirm*, *calculate*, *transfer*, *cancel*, and *search*.
+3. **Conditions/constraints:** highlight *must*, *must not*, *at most*, *at least*, *only if*, *if... then...*, and *after ... days*.
 
-Ví dụ:
+Example:
 
 ```text
 "Cá nhân [độc giả] mượn [bản sách]."
@@ -650,40 +650,40 @@ Ví dụ:
   Vị trí ứng viên: LoanPolicy hoặc nghiệp vụ tạo Loan
 ```
 
-Kỹ thuật này chỉ **tạo danh sách ứng viên**. Không áp dụng công thức “mỗi danh từ → một class”, “mỗi động từ → một service”. Chẳng hạn “ngày mượn” thường là một `LocalDate` trong `Loan`, còn “kiểm tra” có thể là một method, không cần class `Check`.
+This technique only **generates candidates**. Do not apply “one noun → one class” or “one verb → one service.” A “borrow date” is often a `LocalDate` in `Loan`; a “check” may be a method rather than a `Check` class.
 
-## 3. Phân loại đối tượng ứng viên bằng những câu hỏi có thể kiểm chứng
+## 3. Classify Candidates with Testable Questions
 
-Một ứng viên đáng trở thành class nếu có **vai trò riêng** mà việc gom vào class khác sẽ làm mất thông tin hoặc khiến trách nhiệm lẫn lộn.
+A candidate deserves a class if it has **a distinct role** that would be lost or confused if merged with another class.
 
-| Loại | Cách nhận diện | Ví dụ | Cách biểu diễn |
+| Category | Recognition criteria | Example | Representation |
 | --- | --- | --- | --- |
-| Entity | Có danh tính và vòng đời; cùng ID vẫn là cùng thực thể dù thuộc tính đổi | `Borrower`, `BookCopy`, `Loan` | Class có ID, hành vi và bất biến |
-| Value object | Phân biệt bằng giá trị; thường bất biến, không cần ID riêng | `DateRange`, `Money`, `Address` | `record` hoặc class immutable |
-| Aggregate root | Quản lý bất biến và cập nhật của một nhóm đối tượng | `Loan` hoặc một đối tượng quản lý việc mượn theo thiết kế cụ thể | API thay đổi có kiểm soát |
-| Domain policy/service | Quy tắc cần nhiều đầu vào, không thuộc riêng một entity | `LoanPolicy` | Class/record có hành vi rõ |
-| Application service | Điều phối một use case: lấy dữ liệu, áp chính sách, ghi nhận | `BorrowingService` | Service phụ thuộc port |
-| Repository/port | Hợp đồng truy cập dữ liệu bên ngoài domain | `LoanRepository` | Interface và adapter |
-| DTO/Command | Dữ liệu vào/ra qua API, CLI, message | `BorrowRequest` | Record/data carrier |
-| Domain event | Sự kiện đã xảy ra có ích cho các phần khác | `LoanCreated` | Record/event object khi cần |
+| Entity | Has identity and lifecycle; the same ID still identifies it when attributes change | `Borrower`, `BookCopy`, `Loan` | Class with ID, behavior, and invariants |
+| Value object | Distinguished by value; usually immutable, no separate ID needed | `DateRange`, `Money`, `Address` | `record` or immutable class |
+| Aggregate root | Controls invariants and updates of a set of objects | `Loan` or another borrowing coordinator, depending on design | Controlled mutation API |
+| Domain policy/service | Rule requiring several inputs, not owned by one entity | `LoanPolicy` | Class/record with explicit behavior |
+| Application service | Orchestrates a use case: loads data, applies policy, records result | `BorrowingService` | Service depending on ports |
+| Repository/port | Contract for data access outside the domain | `LoanRepository` | Interface plus adapter |
+| DTO/Command | Input/output carried across API, CLI, or message boundaries | `BorrowRequest` | Record/data carrier |
+| Domain event | A significant event that has occurred | `LoanCreated` | Record/event object when needed |
 
-Không phải phải có đủ mọi loại. Với chức năng nhỏ, chỉ vài class rõ trách nhiệm là đủ. **Entity, value object, service** là những cách phân vai theo vấn đề cần giải quyết, không phải các nhãn buộc mọi đối tượng đi vào một khuôn.
+You do not need every category. Small features can have only a few focused classes. **Entities, value objects, and services** are responsibility roles chosen for the problem, not labels every object must fit.
 
-### Ba phép thử cho một ứng viên
+### Three Tests for a Candidate
 
-- **Phép thử danh tính:** nếu đổi tên nhưng giữ mã, có phải vẫn là cùng một đối tượng? Nếu có, rất có thể đó là entity.
-- **Phép thử trách nhiệm:** đối tượng này có dữ liệu hoặc hành vi riêng mà không đối tượng khác nào nên quản lý không?
-- **Phép thử vòng đời:** khi tạo, thay đổi, kết thúc hoặc lưu lịch sử, có cần theo dõi nó độc lập không?
+- **Identity test:** if the name changes but the ID remains, is it still the same object? If so, it is probably an entity.
+- **Responsibility test:** does this candidate own information or behavior that no other object should manage?
+- **Lifecycle test:** must creation, changes, completion, or history be tracked independently?
 
-Ví dụ một “lượt mượn” có người mượn, bản sách, ngày bắt đầu, ngày trả và trạng thái. Nó có vòng đời khác bản sách và người mượn, nên `Loan` là một đối tượng có ý nghĩa, thay vì chỉ đặt `borrowerId` trực tiếp trong `BookCopy` rồi mất lịch sử.
+A “loan” has a borrower, copy, start date, return date, and state. Its lifecycle differs from those of the book and borrower, making `Loan` meaningful as an object instead of storing `borrowerId` directly on `BookCopy` and losing history.
 
-## 4. Từ ứng viên đến mô hình quan hệ
+## 4. From Candidates to a Relationship Model
 
-Đặt câu hỏi ở **cả hai đầu** của mỗi quan hệ:
+Ask questions at **both ends** of each relationship:
 
-- Một đầu sách có bao nhiêu bản sách? Mỗi bản thuộc bao nhiêu đầu sách?
-- Một độc giả có bao nhiêu lượt mượn? Mỗi lượt mượn thuộc bao nhiêu độc giả?
-- Một bản sách có thể có bao nhiêu lượt mượn **trong lịch sử**, và bao nhiêu lượt **đang hoạt động**?
+- How many copies can a book title have? How many titles can one copy belong to?
+- How many loans can a member have? How many members does each loan belong to?
+- How many loans can a copy have **historically**, and how many may be **active**?
 
 ```mermaid
 classDiagram
@@ -717,31 +717,31 @@ classDiagram
     LoanPolicy ..> Loan : quy định
 ```
 
-**Không suy luận sai từ số lượng:** `BookCopy 1 <-- 0..* Loan` không có nghĩa một bản được nhiều người mượn cùng lúc. Đây là **số lượt mượn trong lịch sử**. Ràng buộc “tối đa một lượt active cho một bản” phải được bảo vệ riêng bằng logic và, trong hệ thống lưu trữ thực, bằng chiến lược giao dịch/ràng buộc dữ liệu phù hợp.
+**Do not misread multiplicities:** `BookCopy 1 <-- 0..* Loan` does not mean a copy can be loaned to many people simultaneously. It is the **historical number of loans**. The “at most one active loan per copy” constraint must be enforced separately by business logic and, in persistent systems, appropriate transactional/data constraints.
 
-Trong UML, hướng mũi tên chỉ là một quyết định điều hướng (*navigability*). Chưa cần đặt collection hai chiều trong mọi class. Nếu một hướng đã đáp ứng use case, có thể truy vấn những hướng còn lại qua repository.
+In UML, the arrow direction indicates a navigability decision. Not every class needs a bidirectional collection. If one traversal direction serves the use case, other directions can be queried through a repository.
 
-## 5. Chọn thuộc tính và hành vi đúng chủ sở hữu
+## 5. Assign Attributes and Behavior to the Right Owner
 
-Không phải sau khi tìm thấy class là đặt tất cả field công khai. Cần quyết định lớp nào **biết** thông tin, lớp nào **được quyền thay đổi** và luật nào phải đúng trong suốt vòng đời.
+Finding classes does not mean making every field public. Decide which class **knows** each fact, which class **may change it**, and which rules must hold throughout its lifecycle.
 
-| Đối tượng | Dữ liệu có nghĩa | Hành vi hoặc bất biến |
+| Object | Meaningful data | Behavior or invariant |
 | --- | --- | --- |
-| `Borrower` | `memberId`, `name` | ID hợp lệ; có thể thêm trạng thái thành viên khi có yêu cầu |
-| `BookTitle` | ISBN, tiêu đề | Kiểm tra ISBN/metadata nếu phạm vi yêu cầu |
-| `BookCopy` | `copyId`, ID đầu sách | Mã bản không rỗng; độc lập với các bản cùng đầu sách |
-| `Loan` | ID lượt, ID người, ID bản, ngày mượn, hạn trả | Ngày hạn trả sau ngày mượn; trạng thái chuyển hợp lệ |
-| `LoanPolicy` | Giới hạn số lượt, số ngày | Từ chối vượt giới hạn; tính hạn trả |
-| `BorrowingService` | Repository, policy, clock, ID generator | Điều phối kiểm tra điều kiện, tạo Loan, lưu kết quả |
-| `LoanRepository` | Không cần lưu trạng thái trong interface | Truy vấn lượt active, đếm lượt theo người và lưu |
+| `Borrower` | `memberId`, `name` | Valid ID; member status may be added if required |
+| `BookTitle` | ISBN, title | Validate ISBN/metadata where requirements demand it |
+| `BookCopy` | `copyId`, book-title ID | Nonblank copy ID; independent of copies sharing its title |
+| `Loan` | Loan ID, borrower ID, copy ID, start and due dates | Due date after start date; valid state transitions |
+| `LoanPolicy` | Loan-count limit, duration in days | Reject limit violations; calculate due dates |
+| `BorrowingService` | Repository, policy, clock, ID generator | Coordinate eligibility checks, loan creation, persistence |
+| `LoanRepository` | Interface need not hold state | Query active loans, count loans per borrower, and save |
 
-**Nguyên tắc Information Expert:** ưu tiên đặt hành vi nơi có thông tin cần thiết để thực hiện nó. `Loan` đủ biết ngày mượn và hạn trả để bảo vệ thứ tự ngày; `LoanPolicy` biết thời hạn cho phép. `BorrowingService` cần nhiều thành phần để điều phối quá trình mượn, nhưng không nên tự nhân bản công thức tính ngày ở nhiều nơi.
+**Information Expert principle:** place behavior where the information it needs is held. `Loan` knows its start and due dates and can enforce date ordering; `LoanPolicy` defines permitted terms. `BorrowingService` coordinates several components but should not duplicate date calculations in multiple places.
 
-## 6. Ví dụ Java 17 hoàn chỉnh: biến yêu cầu thành object model
+## 6. Complete Java 17 Example: Turning Requirements into an Object Model
 
-Để tập trung vào bước nhận diện đối tượng, ví dụ là chương trình **mượn sách trong bộ nhớ**. Mỗi lần mượn hợp lệ tạo một `Loan`; `LoanRepository` trong demo chỉ giữ các lượt active, chưa triển khai trả sách/lưu lịch sử. Độc giả, bản sách, policy và Loan có trách nhiệm riêng, còn service điều phối.
+To focus on object identification, the example is an **in-memory book-lending program**. Each valid borrow creates a `Loan`; the demo `LoanRepository` retains only active loans and does not yet implement returns or history. Borrowers, copies, policies, and loans own distinct responsibilities; the service coordinates them.
 
-Tạo file `IdentifyObjectsDemo.java`:
+Create `IdentifyObjectsDemo.java`:
 
 ```java
 import java.time.Clock;
@@ -931,14 +931,14 @@ public class IdentifyObjectsDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac IdentifyObjectsDemo.java
 java IdentifyObjectsDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 Loan: LOAN-1, due 2026-10-29
@@ -947,26 +947,26 @@ Active of An: 2
 Borrow limit reached
 ```
 
-### Gắn ví dụ code trở lại từng câu yêu cầu
+### Trace the Example Back to Requirements
 
-| Câu yêu cầu | Thành phần trong code | Điểm chứng minh |
+| Requirement statement | Code component | Evidence |
 | --- | --- | --- |
-| Độc giả có mã, tên | `Borrower` | `record Borrower(memberId, name)` |
-| Bản sách có mã riêng | `BookCopy` | `copyId` định danh bản |
-| Hệ thống ghi một lần mượn | `Loan` | Có `loanId`, borrower, copy, ngày |
-| Một bản không được cho mượn trùng | `LoanRepository`, `BorrowingService` | Kiểm tra active; `putIfAbsent` từ chối trùng |
-| Tối đa hai bản | `LoanPolicy` | `ensureAllowed(activeCount)` |
-| Hạn trả sau 14 ngày | `LoanPolicy` | `borrowedOn.plusDays(loanDays)` |
-| Quy trình mượn cần nhiều thành phần | `BorrowingService` | Kiểm tra, tạo Loan, lưu |
-| Cần thay DB/nguồn thời gian | `LoanRepository`, `Clock` | Dependency injection vào service |
+| Member has ID and name | `Borrower` | `record Borrower(memberId, name)` |
+| Each copy has its own ID | `BookCopy` | `copyId` identifies the copy |
+| System records a loan | `Loan` | Includes `loanId`, borrower, copy, and dates |
+| One copy cannot be loaned twice at once | `LoanRepository`, `BorrowingService` | Check active status; `putIfAbsent` rejects duplication |
+| At most two copies | `LoanPolicy` | `ensureAllowed(activeCount)` |
+| Due 14 days later | `LoanPolicy` | `borrowedOn.plusDays(loanDays)` |
+| Loan workflow requires several components | `BorrowingService` | Validate, construct Loan, persist |
+| DB/time source should be replaceable | `LoanRepository`, `Clock` | Inject dependencies into the service |
 
-Code dùng `record` để ngắn gọn và bất biến trong demo. **Một entity không bắt buộc là record**, và có thể cần class có method chuyển trạng thái khi bổ sung nghiệp vụ trả sách, gia hạn, mất sách hoặc hủy mượn. Ở đây đối tượng `Loan` có danh tính riêng theo nghĩa domain dù được hiện thực bằng record bất biến.
+The demo uses `record` for brevity and immutable data. **Entities need not be records**; they may require classes with state-transition methods when returns, renewals, lost copies, or cancellations are added. Here `Loan` has domain identity even though it is implemented as an immutable record.
 
-**Giới hạn kỹ thuật:** mẫu này chạy tuần tự. Hai request đồng thời có thể cùng thấy độc giả còn hạn mức rồi cùng `save`, vượt giới hạn tổng; `LinkedHashMap` cũng không thread-safe. Để chạy production, phải áp đặt giao dịch/khóa hoặc cách đảm bảo atomicity phù hợp, xác thực mã độc giả/bản sách thực sự tồn tại, lưu lịch sử khi trả sách và có ràng buộc database ngăn hai lượt mượn active cho cùng một bản. **Phân chia object hợp lý là điều kiện giúp xử lý đúng, không tự thay thế kiểm soát đồng thời.**
+**Technical limitation:** this example executes sequentially. Two concurrent requests may each see remaining borrower quota and both invoke `save`, exceeding the total limit; `LinkedHashMap` is not thread-safe either. Production requires appropriate transactions/locking or other atomicity mechanisms, validation that borrower/copy IDs actually exist, history retention on return, and database constraints preventing two active loans for a copy. **A good object model enables correctness but does not itself provide concurrency control.**
 
-## 7. Mô phỏng sự cộng tác để kiểm chứng mô hình
+## 7. Simulate Collaboration to Validate the Model
 
-Sau khi đề xuất class, hãy **chạy thử use case trên giấy**. Nếu không giải thích được ai sở hữu một bước hoặc phải trao quyền sửa dữ liệu lung tung, mô hình chưa ổn.
+After proposing classes, **walk through the use case on paper**. If no one can explain who owns a step or the design needs arbitrary access to others' data, the model is not ready.
 
 ```mermaid
 sequenceDiagram
@@ -993,73 +993,73 @@ sequenceDiagram
     UI-->>R: Xác nhận và hạn trả
 ```
 
-Đây là một **đường đi thành công**. Phải mô phỏng thêm đường đi thất bại: bản đang được mượn, người mượn đạt hạn mức, đầu vào không hợp lệ, lưu DB lỗi. Mỗi đường đi cần có một nơi chịu trách nhiệm xử lý và trạng thái không được sai lệch.
+This is a **successful path**. Also simulate failures: copy already on loan, borrower at limit, invalid input, or database save failure. Each path needs an accountable component and must not leave inconsistent state.
 
-Đừng để giao diện quyết định thay `LoanPolicy` rằng 3 bản vẫn hợp lệ; giao diện có thể kiểm tra nhanh để phản hồi tốt hơn, nhưng quy tắc nghiệp vụ cần được thực thi ở tầng có thẩm quyền.
+Do not let the UI override `LoanPolicy` and allow 3 copies. A UI may precheck to provide feedback, but authorized domain code must enforce the rule.
 
-## 8. Các dấu hiệu nhận diện class sai
+## 8. Signs of Incorrect Class Identification
 
-### 8.1 Biến mọi danh từ thành class
+### 8.1 Turning Every Noun into a Class
 
-Từ “ngày mượn”, “tên”, “số lượng” thường chỉ là field hoặc value object quen thuộc (`LocalDate`, `String`, `int`). Chỉ nâng thành kiểu miền riêng khi có **quy tắc/ý nghĩa** đáng được bảo vệ, ví dụ `MembershipId` có định dạng đặc biệt hoặc `Money` có currency và phép toán.
+Words such as “borrow date,” “name,” and “quantity” often denote fields or familiar value types (`LocalDate`, `String`, `int`). Introduce domain-specific types only for **meaningful rules or semantics**, such as `MembershipId` with special formatting or `Money` with currency and operations.
 
-### 8.2 Biến mọi động từ thành class service
+### 8.2 Turning Every Verb into a Service Class
 
-Có thể thiết kế một service `AddItemService`, `SetDueDateService`, `ChangeStatusService` cho mọi thao tác nhỏ, nhưng nếu hành vi gắn với trạng thái và bất biến của entity, method trực tiếp trên entity có thể rõ nghĩa hơn. `Loan.extendDueDate(...)` có thể phù hợp hơn cho quy tắc gia hạn nội tại, còn `RenewalService` hữu ích nếu gia hạn phải phối hợp tồn kho, tài khoản và chính sách ngoài entity.
+It is possible to create `AddItemService`, `SetDueDateService`, or `ChangeStatusService` for each tiny action, but if behavior belongs to an entity's state and invariants, an entity method is clearer. `Loan.extendDueDate(...)` may express an intrinsic renewal rule better, while `RenewalService` helps when renewal must coordinate inventory, accounts, and external policy.
 
-### 8.3 Gộp hai khái niệm có vòng đời khác nhau
+### 8.3 Combining Concepts with Different Lifecycles
 
-Gộp “đầu sách” và “bản sách” khiến không lưu được số bản và từng tình trạng. Gộp “độc giả” với “lượt mượn” khiến lịch sử, gia hạn và trả sách phức tạp. Hãy so sánh **ID, tuổi thọ và nguyên nhân thay đổi** của từng khái niệm.
+Combining “book title” and “copy” loses per-copy inventory and condition. Combining “borrower” and “loan” complicates history, renewal, and returns. Compare the **identity, lifetime, and reasons for change** of each concept.
 
-### 8.4 Nhầm role/actor với đối tượng miền
+### 8.4 Confusing Actors or Roles with Domain Objects
 
-“Nhân viên thư viện” là actor trong use case; có thể cần entity `StaffMember` nếu hệ thống thực sự quản lý nhân viên, phân quyền và ca làm. Nếu chức năng chỉ mô tả “nhân viên nhấn nút tra cứu”, chưa đủ cơ sở để thêm một lớp miền `Librarian`. Vai trò sử dụng hệ thống và mô hình dữ liệu bên trong là hai phạm vi khác nhau.
+“Librarian” is a use-case actor. An entity `StaffMember` may be justified if staff schedules, identity, and permissions are in scope. But “staff clicks Search” alone does not justify a domain class `Librarian`. System roles and the internal domain model serve different scopes.
 
-### 8.5 Biến `System`, `Manager`, `Helper` thành kho mọi trách nhiệm
+### 8.5 Making `System`, `Manager`, or `Helper` Responsible for Everything
 
-Một `LibrarySystem` biết từ ISBN, lịch, tính phí đến gửi email thường là “God Object”. Hỏi lại mỗi hành vi cần thông tin nào và thuộc một khái niệm nghiệp vụ nào. Một service điều phối nhiều thành phần được phép tồn tại nhưng không nên tự sở hữu mọi quy tắc nội tại.
+A `LibrarySystem` that handles ISBN data, schedules, fees, and email is often a God Object. Ask which concept owns the information each action requires. A coordinating service may work with many components but should not own every internal domain rule.
 
-### 8.6 Thiết kế quá sớm từ bảng hoặc màn hình
+### 8.6 Prematurely Designing Around Tables or Screens
 
-Một bảng DB có thể chứa nhiều cột không đồng nghĩa chính xác với một domain object. Một trang “Thông tin độc giả và lịch sử mượn” có thể hiển thị dữ liệu tổng hợp từ nhiều thực thể. Mô hình nghiệp vụ nên dựa vào **định danh, hành vi và bất biến**, sau đó mới quyết định bảng, màn hình và DTO tương ứng.
+A DB table with many columns is not necessarily one domain object. A “Member Details and Loan History” screen may aggregate data from several entities. Model the domain using **identity, behavior, and invariants** before deciding tables, screens, and DTOs.
 
-## 9. Kiểm chứng class ứng viên bằng vòng CRC ngắn
+## 9. Validate Candidates with a Brief CRC Exercise
 
-Sau khi xác định các class ứng viên, thử một lượt **Class–Responsibilities–Collaborators (CRC)**: mỗi ứng viên phải có một nghĩa vụ riêng và chỉ biết những cộng tác viên cần thiết.
+After identifying candidate classes, try a **Class–Responsibilities–Collaborators (CRC)** pass: each candidate must own a distinct obligation and know only its necessary collaborators.
 
-- `Borrower`: danh tính độc giả; không cần biết kho sách.
-- `BookCopy`: danh tính bản vật lý; không quyết định hạn mức độc giả.
-- `Loan`: một lượt mượn có ngày tháng, identity và vòng đời.
-- `LoanPolicy`: quy tắc hạn mức, hạn trả.
-- `BorrowingService`: điều phối policy, repository, đồng hồ và nguồn ID.
+- `Borrower`: member identity; need not know inventory.
+- `BookCopy`: physical copy identity; does not decide borrower loan limits.
+- `Loan`: a lending event with dates, identity, and lifecycle.
+- `LoanPolicy`: limits and due-date rules.
+- `BorrowingService`: coordinates policy, repository, clock, and ID source.
 
-Thử kịch bản **trả sách rồi mượn lại**: class nào kết thúc lượt cũ, class nào bảo vệ bản sách còn sẵn, class nào giữ lịch sử? Nếu xóa một ứng viên mà không mất khái niệm hay trách nhiệm nào, ứng viên đó có thể chỉ cần là field/method.
+Try **returning and reborrowing a copy**: which class closes the prior loan, protects availability, and retains history? If removing a candidate loses no concept or responsibility, it may only need to be a field or method.
 
-Đây chỉ là bước *xác minh đối tượng vừa tìm được*; cách viết thẻ CRC và role-play cộng tác đầy đủ được trình bày ở bài **Thẻ CRC: lớp, trách nhiệm và cộng tác**.
+This only *validates the discovered candidates*; the lesson **CRC cards: classes, responsibilities, and collaborators** covers full CRC card writing and collaboration role-play.
 
-## 10. Khi yêu cầu mới làm thay đổi mô hình
+## 10. When New Requirements Change the Model
 
-Không có mô hình nào cố định ngay từ lần đọc đầu. Ví dụ:
+No model is fixed after the first reading. For example:
 
-**Bổ sung “Có thể đặt trước khi bản sách đã được mượn.”** Khái niệm `Reservation` xuất hiện, có thứ tự chờ và trạng thái. Đừng nhét toàn bộ hàng chờ vào một biến `nextBorrowerId` của `BookCopy` nếu nghiệp vụ đặt trước có vòng đời riêng.
+**New requirement: “Allow reservations while a copy is on loan.”** A `Reservation` concept emerges with queue position and status. Avoid storing the entire waitlist as a `nextBorrowerId` field on `BookCopy` if reservations have their own lifecycle.
 
-**Bổ sung “Gia hạn tối đa hai lần, trừ khi đã có người đặt trước.”** `Loan` có thể cần `renewalCount` và hành vi gia hạn; điều kiện về hàng chờ cần dữ liệu từ `ReservationRepository`/policy, không nhất thiết đặt toàn bộ truy vấn vào entity.
+**New requirement: “Renew at most twice, unless another member has reserved the copy.”** `Loan` may need `renewalCount` and renewal behavior; checking the queue requires `ReservationRepository`/policy data, not necessarily all queries inside the entity.
 
-**Bổ sung “Mỗi bản sách có nhiều lịch sử sửa chữa.”** Có thể cần `MaintenanceRecord` với ngày, chi phí, loại lỗi; một field `lastRepairDate` không giữ được danh sách lịch sử.
+**New requirement: “Each copy has a history of repairs.”** A `MaintenanceRecord` with dates, costs, and defect categories may be required; a single `lastRepairDate` field cannot preserve historical records.
 
-**Bổ sung “Trả sách có thể phát sinh tiền phạt.”** `Fine` có thể là value object số tiền, entity nghĩa vụ thanh toán hoặc kết quả tính toán tạm thời tùy cách theo dõi thu/hoàn tiền. Không thể quyết định chỉ từ từ “phạt”; phải hỏi về định danh, trạng thái và vòng đời.
+**New requirement: “Returns may incur a fine.”** `Fine` could be a monetary value object, a payment-obligation entity, or a temporary calculation result, depending on payment/refund tracking. The word “fine” alone is insufficient; ask about identity, status, and lifecycle.
 
-| Thay đổi yêu cầu | Dấu hiệu xuất hiện đối tượng mới | Cần hỏi |
+| Requirement change | Signal of a new object | Question to ask |
 | --- | --- | --- |
-| Đặt trước sách | Hàng chờ có lượt, trạng thái, thứ tự | Mỗi người đặt một hay nhiều lượt? Khi nào hết hạn? |
-| Gia hạn | Lượt mượn có chuyển trạng thái/quy tắc | Ai được gia hạn? Có cần lưu lịch sử? |
-| Sửa chữa bản sách | Sự kiện và chi phí theo từng lần | Có cần audit và truy vấn nhiều năm? |
-| Phí phạt | Tiền, hạn nộp, thanh toán | Đây là giá trị tính được hay khoản nợ có ID? |
-| Email nhắc hạn | Tác vụ bên ngoài/asynchronous | Sự kiện nào kích hoạt? Retry/idempotency ra sao? |
+| Reserve a book | Waitlist entries with status and position | May a person reserve multiple times? When does a reservation expire? |
+| Renew a loan | Loan has state changes/rules | Who may renew? Must renewal history be kept? |
+| Repair a book copy | Dated events and per-repair costs | Are audits and multi-year queries required? |
+| Fine | Amount, deadline, payment | Is this a calculated value or an ID-bearing debt? |
+| Due-date reminder email | External/asynchronous operation | What triggers it? How do retry and idempotency work? |
 
-Nhận diện đối tượng là **hoạt động lặp lại theo hiểu biết nghiệp vụ**: từ use case → class ứng viên → thử cộng tác → làm rõ câu hỏi → chỉnh sửa mô hình.
+Object identification is **iterative as domain understanding evolves**: use case → candidate classes → simulate collaboration → clarify questions → revise the model.
 
-## 11. Một quy trình thực hành có thể áp dụng ngay
+## 11. An Immediately Usable Analysis Workflow
 
 ```mermaid
 flowchart TD
@@ -1075,139 +1075,139 @@ flowchart TD
     I -->|Có| J["Vẽ UML, định nghĩa API, viết Java và test"]
 ```
 
-Trong một buổi phân tích thực tế:
+During a real analysis session:
 
-1. **Giữ nguyên câu nói của người dùng.** Tránh đổi ngay mọi từ nghiệp vụ sang ngôn ngữ kỹ thuật như “table”, “controller”, “service”.
-2. **Viết danh sách ứng viên có lý do.** Mỗi tên nên có một câu cho biết tại sao nó cần tồn tại.
-3. **Xác định thuật ngữ mơ hồ.** “Sách” là tựa sách hay bản vật lý? “Đăng ký” là tài khoản hay lượt đăng ký một khóa?
-4. **Thử hai tình huống trái ngược.** Một người mượn hai bản, hai người muốn mượn cùng một bản, trả rồi mượn lại.
-5. **Chọn nguồn chân lý.** Bản sách “đang mượn” được suy ra từ lượt active hay lưu cờ riêng? Nếu lưu cả hai, ai phải cập nhật đồng bộ?
-6. **Chỉ sau đó mới chọn kiểu Java.** `record`, class, enum, interface, `List`, `Map`, repository, DTO.
-7. **Viết test từ câu yêu cầu.** Tên test nên phản ánh chính sách, ví dụ `cannotBorrowCopyAlreadyOnLoan`, không chỉ `testGetter`.
+1. **Preserve the user's own wording.** Do not immediately translate domain language into technical terms such as “table,” “controller,” or “service.”
+2. **List candidates with reasons.** Every proposed class should have one sentence explaining why it exists.
+3. **Identify ambiguous terms.** Does “book” mean title or physical copy? Does “registration” mean an account or an enrollment in a course?
+4. **Try contrasting scenarios.** One borrower takes two copies; two borrowers want one copy; a copy is returned and borrowed again.
+5. **Choose the source of truth.** Is “on loan” derived from active loans or stored as a separate flag? If both, who keeps them consistent?
+6. **Only then select Java types.** Consider `record`, classes, enums, interfaces, `List`, `Map`, repositories, and DTOs.
+7. **Derive tests from requirements.** Name tests after policy, such as `cannotBorrowCopyAlreadyOnLoan`, not merely `testGetter`.
 
-Một mô hình tốt không nhất thiết có nhiều class. Nó phải mô tả đúng **đối tượng quan trọng của bài toán** và tạo ra điểm đặt hành vi/ràng buộc rõ ràng.
+A good model need not contain many classes. It must capture the **important domain objects** with clear places to put behavior and constraints.
 
-## 12. Những câu hỏi nên hỏi người cung cấp yêu cầu
+## 12. Questions for Requirements Stakeholders
 
-Khi mô hình chưa rõ, hỏi những câu có thể làm thay đổi thiết kế:
+When the model is unclear, ask questions that could alter its design:
 
-- “Một đầu sách có thể có nhiều bản vật lý độc lập không? Mỗi bản có mã duy nhất trên toàn hệ thống chứ?”
-- “Lượt mượn đã trả có còn phải lưu lại để tra cứu lịch sử không?”
-- “Hai lần mượn cùng bản sách ở hai ngày khác nhau là hai lượt độc lập hay sửa lượt cũ?”
-- “Giới hạn hai bản áp dụng cho mọi loại độc giả hay mỗi nhóm một chính sách?”
-- “Hạn 14 ngày là ngày lịch, ngày làm việc hay tính đến giờ chính xác?”
-- “Có trạng thái mất, hỏng, bảo trì khiến bản sách không thể cho mượn dù không có lượt active không?”
-- “Khi hai yêu cầu mượn đến đồng thời, điều kiện nào bắt buộc phải được đảm bảo ở database?”
+- “Can a title have multiple independent physical copies? Is every copy ID globally unique?”
+- “Must returned loans remain stored for historical lookup?”
+- “Are loans of the same copy on different dates separate records or updates to the old loan?”
+- “Does the two-copy limit apply to every member type or vary by group?”
+- “Does a 14-day term mean calendar days, business days, or an exact elapsed duration?”
+- “Can lost, damaged, or maintenance states make a copy unavailable despite no active loan?”
+- “When two borrowing requests arrive together, what must be guaranteed by the database?”
 
-Những câu hỏi này giúp nhận ra `BookCopy`, `Loan`, `LoanPolicy`, `CopyStatus`, `Reservation` có cần là các khái niệm riêng. Đừng coi mọi câu trả lời “chưa biết” như một tín hiệu phải thêm abstraction phòng xa.
+These questions establish whether `BookCopy`, `Loan`, `LoanPolicy`, `CopyStatus`, and `Reservation` should remain separate concepts. Do not turn every “unknown” into a speculative abstraction.
 
-## 13. Bài tập tự luyện
+## 13. Practice Exercises
 
-### Bài 1 — Hệ thống bán vé xem phim
+### Exercise 1 — Cinema Ticketing
 
-Yêu cầu: “Khán giả chọn suất chiếu, chọn hai ghế trống, thanh toán và nhận vé. Một ghế của cùng suất chiếu không được bán hai lần. Vé có mã QR.”
+Requirement: “A moviegoer selects a screening and two available seats, pays, and receives tickets. One seat at a screening cannot be sold twice. A ticket has a QR code.”
 
-Hãy tìm danh từ/động từ/ràng buộc, sau đó đề xuất các class ứng viên. Phân biệt `Movie` (phim), `Screening` (suất chiếu), `Seat` (ghế vật lý), `SeatReservation` (giữ ghế theo suất) và `Ticket` (vé) nếu chúng cần vòng đời riêng. Giải thích vì sao “ghế A5” không thể bị đánh dấu đã bán vĩnh viễn cho mọi suất.
+Extract nouns, verbs, and constraints, then propose candidate classes. Distinguish `Movie` (film), `Screening` (showtime), `Seat` (physical seat), `SeatReservation` (per-screening reservation), and `Ticket` (ticket) when they have distinct lifecycles. Explain why “seat A5” cannot be permanently marked sold for every screening.
 
-### Bài 2 — Giỏ hàng
+### Exercise 2 — Shopping Cart
 
-Yêu cầu: “Người mua thêm sản phẩm vào giỏ, chỉnh số lượng, xem tổng tiền và áp mã giảm giá.”
+Requirement: “Customers add products to carts, change quantities, view totals, and apply discount codes.”
 
-Xác định ứng viên `Cart`, `CartLine`, `Product`, `Money`, `DiscountPolicy`. Chỉ ra trường hợp “mã giảm giá” nên là `String`, value object hoặc entity riêng. Thiết kế ít nhất ba invariant của `Cart`.
+Identify candidates `Cart`, `CartLine`, `Product`, `Money`, and `DiscountPolicy`. Explain when a “discount code” should be a `String`, value object, or separate entity. Define at least three `Cart` invariants.
 
-### Bài 3 — Quản lý khóa học
+### Exercise 3 — Course Management
 
-Yêu cầu: “Sinh viên đăng ký nhiều lớp học phần, mỗi lớp có tối đa 30 sinh viên, một sinh viên không được đăng ký trùng cùng một lớp.”
+Requirement: “Students enroll in multiple course sections; each section has at most 30 students, and no student can enroll twice in the same section.”
 
-Xác định `Student`, `Course`, `Section`, `Enrollment`; cho biết `Course` và `Section` có cần tách không. Vẽ UML multiplicity và giải thích luật “tối đa 30” được kiểm soát ở đâu khi có đăng ký đồng thời.
+Identify `Student`, `Course`, `Section`, and `Enrollment`; decide whether `Course` and `Section` must be separate. Draw UML multiplicities and explain where the “at most 30” rule is enforced under concurrent enrollment.
 
-### Bài 4 — Phản biện danh sách class
+### Exercise 4 — Critique a Class List
 
-Một người đề xuất: `Library`, `Name`, `Borrow`, `Check`, `Date`, `Database`, `Screen`, `Book`, `Loan`.
+Someone proposes: `Library`, `Name`, `Borrow`, `Check`, `Date`, `Database`, `Screen`, `Book`, `Loan`.
 
-Hãy phân loại: class miền có cơ sở, hành vi, thuộc tính/value có sẵn, adapter kỹ thuật, và ứng viên chưa đủ thông tin. Giải thích bằng **danh tính, trách nhiệm và vòng đời**, không chỉ bằng “từ này là danh từ”.
+Classify domain classes with justification, actions, attributes/standard value types, technical adapters, and candidates lacking sufficient information. Explain using **identity, responsibility, and lifecycle**, not merely “this is a noun.”
 
-### Bài 5 — Mở rộng demo Java
+### Exercise 5 — Extend the Java Demo
 
-Bổ sung `returnCopy(copyId, date)`: giữ lịch sử, một lượt mượn chỉ được trả một lần, sau khi trả bản sách có thể được mượn tiếp. Chọn giữa biến `Loan` thành entity có status hoặc tạo record lịch sử mới; cập nhật repository và viết test cho thứ tự mượn → trả → mượn lại.
+Add `returnCopy(copyId, date)` while preserving history, preventing a loan from being returned twice, and allowing the same copy to be borrowed again after return. Decide whether `Loan` becomes a stateful entity or history gets a separate record; update the repository and test borrow → return → borrow again.
 
-## 14. Checklist trước khi chốt mô hình
+## 14. Checklist Before Finalizing the Model
 
-| Câu hỏi | Dấu hiệu đã sẵn sàng |
+| Question | Ready when |
 | --- | --- |
-| Mỗi ứng viên có ý nghĩa nghiệp vụ riêng không? | Có một câu mô tả trách nhiệm/định danh rõ |
-| Có tách khái niệm chỉ giống tên nhưng khác vòng đời không? | Ví dụ phân biệt đầu sách, bản sách, lượt mượn |
-| Có loại những ứng viên chỉ là từ ngữ/thuộc tính/hành vi không? | Không tạo class rỗng vô nghĩa |
-| Entity và value object có được phân biệt không? | Biết so sánh theo ID hay theo giá trị |
-| Đã xác định invariant và nơi kiểm soát chưa? | “Tối đa một lượt active” có điểm thực thi rõ |
-| Quan hệ hai phía và multiplicity đã đúng chưa? | Có ví dụ phản chứng, không lẫn lịch sử với trạng thái hiện tại |
-| Hành vi nằm ở nơi có đủ thông tin không? | Entity giữ bất biến, policy giữ chính sách, service điều phối |
-| Mô hình có phụ thuộc thừa vào HTTP/DB/UI không? | Có thể kiểm thử logic chính mà không khởi động công nghệ bên ngoài |
-| Có xử lý được các tình huống lỗi và cạnh tranh không? | Biết cần transaction/constraint ở đâu |
-| Có thể nối mỗi câu yêu cầu tới code/test không? | Không có quy tắc “biến mất” sau khi triển khai |
+| Does every candidate represent a distinct domain concept? | Its responsibility or identity is clear in one sentence |
+| Have similar-sounding concepts with different lifecycles been separated? | Titles, physical copies, and loans are distinguished |
+| Have mere words, properties, and actions been filtered out? | No meaningless empty classes |
+| Are entities distinguished from value objects? | ID-based versus value-based equality is understood |
+| Are invariants identified and assigned to enforcers? | “At most one active loan” has a clear enforcement point |
+| Are relationships and multiplicities correct at both ends? | Counterexamples separate historical from current state |
+| Is behavior placed where the information exists? | Entities protect invariants, policies encode rules, services coordinate |
+| Is the model unnecessarily tied to HTTP/DB/UI? | Core logic is testable without starting external technologies |
+| Can it handle errors and concurrency? | Transaction and constraint responsibilities are known |
+| Can each requirement be traced to code/tests? | No rule disappears after implementation |
 
-**Ghi nhớ:** trích danh từ chỉ là cách **khởi đầu**. Đối tượng đúng phải có lý do tồn tại trong miền, dữ liệu và hành vi tương ứng, quan hệ rõ ràng cùng bất biến được bảo vệ. Hãy mô phỏng yêu cầu thực tế và điều chỉnh mô hình trước khi viết nhiều code.
+**Remember:** noun extraction is only **a starting point**. Appropriate objects have domain reasons for existing, corresponding data and behavior, clear relationships, and protected invariants. Simulate real scenarios and refine the model before writing large amounts of code.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="modeling-003">Phân chia trách nhiệm và đối tượng cộng tác</a>
+## <a id="modeling-003">Assigning responsibilities and collaborators</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phân chia trách nhiệm và đối tượng cộng tác khi mô hình hóa OOP
+# Assigning Responsibilities and Collaborators in OOP Modeling
 
-## 1. Từ yêu cầu nghiệp vụ đến các đối tượng biết làm việc cùng nhau
+## 1. From Business Requirements to Collaborating Objects
 
-Giả sử xây dựng hệ thống thư viện với yêu cầu:
+Suppose you are developing a library system with this requirement:
 
-> Một thành viên có thể mượn sách nếu tài khoản còn hoạt động, chưa đạt giới hạn số lượt mượn và bản sách còn sẵn. Khi mượn, hệ thống lập phiếu có hạn trả. Khi trả, phiếu được đóng, bản sách lại sẵn sàng và số lượt mượn đang hoạt động của thành viên giảm đi.
+> A member may borrow a book if the account is active, the loan limit has not been reached, and the copy is available. When borrowing, the system creates a loan with a due date. When returning, the loan closes, the copy becomes available again, and the member's active-loan count decreases.
 
-Ta có thể đặt toàn bộ kiểm tra và thao tác trong một `LibraryService` khổng lồ. Nhưng khi quy tắc thay đổi, mọi phần của service phải hiểu chi tiết trạng thái `Member`, `BookCopy` và `Loan`. Cách mô hình hóa hướng đối tượng hữu ích hơn là xác định:
+One approach is to put every check and operation into a huge `LibraryService`. But when policies change, all parts of the service must understand `Member`, `BookCopy`, and `Loan` state. A better object-oriented model identifies:
 
-- **Trách nhiệm (responsibility):** một đối tượng cần *biết gì* và *làm gì* để thực hiện vai trò của nó?
-- **Đối tượng cộng tác (collaborator):** đối tượng nào cung cấp thông tin/hành vi để đối tượng hiện tại hoàn thành trách nhiệm đó?
-- **Ranh giới (boundary):** phần nào là bất biến cục bộ của một đối tượng, phần nào là quy trình phối hợp nhiều đối tượng?
-- **Hợp đồng (contract):** đối tượng cần lời gọi/đầu vào/đầu ra nào từ cộng tác viên, và lỗi được biểu diễn thế nào?
+- **Responsibility:** what must an object *know* and *do* to fulfill its role?
+- **Collaborator:** which object provides information or behavior that lets another fulfill its responsibilities?
+- **Boundary:** which invariants belong to one object, and which operations coordinate several objects?
+- **Contract:** which calls, inputs, outputs, and error representations are expected from collaborators?
 
-Mô hình tốt không yêu cầu mỗi lớp phải tự làm hết mọi việc. Nó yêu cầu mỗi trách nhiệm **có chủ sở hữu rõ ràng** và các đối tượng cộng tác qua API có ý nghĩa.
+A good model does not require every class to do everything independently. It gives each responsibility **a clear owner** and enables meaningful collaboration through APIs.
 
-### Phân biệt hai kiểu trách nhiệm
+### Two Kinds of Responsibility
 
-| Loại | Câu hỏi | Ví dụ |
+| Kind | Question | Example |
 |---|---|---|
-| **Knowing (biết)** | Đối tượng phải nắm những dữ liệu/quan hệ nào? | `BookCopy` biết mã bản sách và nó đang sẵn sàng hay đã được mượn |
-| **Doing (làm)** | Đối tượng chịu trách nhiệm hành động/quy tắc gì? | `BookCopy.markBorrowed()` ngăn cho mượn một bản sách không còn sẵn |
+| **Knowing** | Which data and relationships must the object know? | `BookCopy` knows its copy ID and whether it is available or already borrowed |
+| **Doing** | Which action or rule does the object enforce? | `BookCopy.markBorrowed()` prevents borrowing a copy that is unavailable |
 
-Một đối tượng thường có cả hai: `Member` biết số lượt mượn đang mở và thực thi quy tắc giới hạn; `Loan` biết ngày đến hạn và bảo vệ việc đóng phiếu đúng một lần.
+Objects often do both: `Member` tracks open loans and enforces limits; `Loan` knows its due date and permits closing a loan only once.
 
-**Không đồng nhất “biết dữ liệu” với “cho lớp ngoài quyền thay đổi mọi field”.** Trạng thái nên được kiểm soát qua hành vi rõ nghĩa, thay vì chuỗi getter/setter công khai.
+**Knowing data does not imply exposing every field for external modification.** Control state through meaningful behaviors rather than unrestricted public getters and setters.
 
-## 2. Dùng CRC để nhìn **luồng cộng tác**, không chỉ danh sách lớp
+## 2. Use CRC to Explore **Collaboration Flows**, Not Just Class Lists
 
-Một bảng CRC nhỏ giúp kiểm tra “ai cần nhờ ai” trước khi viết sequence diagram:
+A small CRC table helps identify “who asks whom” before drawing a sequence diagram:
 
-| Class | Trách nhiệm trong use case mượn/trả | Cộng tác viên |
+| Class | Responsibility in borrow/return use cases | Collaborators |
 |---|---|---|
-| `Member` | Bảo vệ điều kiện đủ quyền mượn và số lượt đang hoạt động | Không cần biết `BookCopy` |
-| `BookCopy` | Bảo vệ khả năng cho mượn của một bản | Không cần biết quota `Member` |
-| `Loan` | Bảo vệ một lượt mượn và quy tắc đóng phiếu | Tham chiếu member/copy |
-| `LendingService` | Điều phối đúng thứ tự các hành vi ở trên | `Member`, `BookCopy`, `Loan`, `Clock` |
+| `Member` | Enforces borrowing eligibility and active-loan count | Need not know `BookCopy` |
+| `BookCopy` | Enforces availability of one copy | Need not know `Member` quota |
+| `Loan` | Controls a loan and the rule for closing it | References member/copy |
+| `LendingService` | Coordinates those behaviors in the correct order | `Member`, `BookCopy`, `Loan`, `Clock` |
 
-**Diễn tập:** service yêu cầu member xác nhận quota, copy xác nhận sẵn sàng, tạo loan, rồi mới thay trạng thái. Nếu đổi người kiểm tra quota từ `Member` sang `BookCopy`, đối tượng bản sách phải biết dữ liệu không thuộc vai trò của nó. Đó là dấu hiệu phân công trách nhiệm sai.
+**Walkthrough:** the service asks the member to validate quota, asks the copy to confirm availability, creates a loan, and then updates state. If quota checking moves from `Member` to `BookCopy`, the copy must know unrelated data—a sign of misplaced responsibility.
 
-CRC chi tiết (cách viết thẻ, role-play và các nhánh lỗi) được học ở bài **Thẻ CRC: lớp, trách nhiệm và cộng tác**. Bài hiện tại đi tiếp câu hỏi **chọn chủ sở hữu cho mỗi quy tắc và thiết kế lời gọi giữa các đối tượng**.
+The lesson **CRC cards: classes, responsibilities, and collaborators** covers detailed cards, role-play, and failure paths. Here the focus is **choosing the owner of each rule and designing calls among objects**.
 
-## 3. Chọn nơi đặt quy tắc: đừng tách dữ liệu khỏi chủ sở hữu của nó
+## 3. Put Rules Where Their Data Is Owned
 
-Một quy tắc chỉ phụ thuộc vào trạng thái của **một** đối tượng thường nên ở ngay đối tượng đó.
+A rule that depends only on **one** object's state usually belongs in that object.
 
-Ví dụ:
+For example:
 
 ```java
 // Kiểu thiết kế yếu: service tự đọc rồi sửa trạng thái của Member.
@@ -1217,22 +1217,22 @@ if (member.getActiveLoanCount() < member.getMaxLoans()) {
 }
 ```
 
-Đoạn trên khiến nhiều caller có thể bỏ qua điều kiện giới hạn, tăng sai số lượng hoặc gọi setter vào thời điểm không thích hợp.
+This design allows callers to bypass the limit, increment incorrect counts, or invoke setters at inappropriate times.
 
-Thay vào đó:
+Instead:
 
 ```java
 // API theo ý nghĩa nghiệp vụ:
 member.recordBorrow();
 ```
 
-`Member` tự kiểm tra quy tắc và thực hiện thay đổi hợp lệ. Nếu quy tắc “tài khoản bị khóa không được mượn” xuất hiện, vị trí thay đổi rất rõ.
+`Member` checks the rule and performs the permitted change. When a rule is added that suspended accounts may not borrow, the modification point is clear.
 
-Tương tự, `BookCopy` nên thực thi “một bản sách không thể được đánh dấu đã mượn hai lần khi chưa trả”, còn `Loan` nên kiểm soát “một phiếu không được đóng hai lần”.
+Similarly, `BookCopy` should enforce “a copy cannot be marked borrowed twice before return,” while `Loan` should enforce “a loan cannot be closed twice.”
 
-Nhưng hành vi **mượn sách** tác động đồng thời đến thành viên, bản sách và phiếu. Không nên cố bắt `Member` truy cập trực tiếp cơ sở dữ liệu của kho sách để hoàn tất mọi thứ. Đây là nơi **đối tượng điều phối** có thể giúp các object cộng tác.
+But **borrowing a book** affects the member, copy, and loan together. Do not force `Member` to access inventory databases directly just to complete the whole operation. A **coordinator object** is appropriate for collaboration.
 
-## 4. Nhìn quan hệ qua UML class diagram
+## 4. Understand Relationships Through a UML Class Diagram
 
 ```mermaid
 classDiagram
@@ -1277,16 +1277,16 @@ classDiagram
     LendingService ..> Loan : tạo và kết thúc
 ```
 
-Đọc sơ đồ:
+Read the diagram as follows:
 
-- Một `Loan` liên kết với đúng một `Member` và một `BookCopy`.
-- Một thành viên hoặc bản sách có thể xuất hiện trong nhiều phiếu **theo thời gian**. Khả năng đang mượn được bảo vệ bởi trạng thái và bất biến. Bội số `0..*` ở đây **không** cho phép cùng một bản sách được mượn đồng thời nhiều lần.
-- `LendingService` nhận các đối tượng và gửi thông điệp tới chúng. Đường phụ thuộc nét đứt không có nghĩa service sở hữu vòng đời những đối tượng này.
-- `Clock` là cộng tác viên kỹ thuật cung cấp thời gian có thể kiểm soát khi kiểm thử; nó không phải một thực thể miền.
+- Each `Loan` is associated with exactly one `Member` and one `BookCopy`.
+- A member or copy may appear on many loans **over time**. Availability is protected by state and invariants. Multiplicity `0..*` **does not** permit a copy to be borrowed concurrently more than once.
+- `LendingService` receives objects and sends messages to them. A dashed dependency does not mean the service owns their lifecycles.
+- `Clock` is a technical collaborator providing testable time, not a domain entity.
 
-**Sơ đồ lớp** cho biết ai giữ thông tin và có phương thức gì. Để kiểm chứng quy trình cộng tác thực sự, hãy bổ sung **sơ đồ trình tự**.
+A **class diagram** shows who holds information and what methods exist. To validate actual collaboration, add a **sequence diagram**.
 
-## 5. Sơ đồ trình tự: mỗi object thực hiện phần việc của mình
+## 5. Sequence Diagrams: Each Object Performs Its Part
 
 ```mermaid
 sequenceDiagram
@@ -1306,13 +1306,13 @@ sequenceDiagram
     S-->>Reader: Loan
 ```
 
-Mỗi bước có một người chịu trách nhiệm. Nếu `ensureCanBorrow()` từ chối, service kết thúc và không thay đổi `BookCopy`. Nếu `ensureAvailable()` từ chối, service không lập phiếu.
+Each step has an owner. If `ensureCanBorrow()` rejects the request, the service stops without changing `BookCopy`. If `ensureAvailable()` rejects it, no loan is created.
 
-Sơ đồ trình tự trên minh họa **luồng bình thường, tuần tự trong bộ nhớ**. Nó chưa phải một transaction nguyên tử trong tình huống đa luồng, nhiều tiến trình hoặc DB. Khi đưa vào hệ thống thật, một lỗi sau bước thay đổi trạng thái có thể cần rollback hoặc cơ chế bù trừ; sẽ bàn ở phần sau.
+The sequence diagram shows the **normal sequential in-memory flow**, not an atomic transaction across threads, processes, or databases. Production failures after state changes may require rollback or compensating actions, discussed later.
 
-## 6. Ví dụ Java chạy được: nhiều đối tượng, mỗi đối tượng một trách nhiệm
+## 6. Runnable Java Example: Distinct Objects with Distinct Responsibilities
 
-Lưu toàn bộ mã sau thành `ResponsibilityDemo.java` (JDK 11+):
+Save the complete code as `ResponsibilityDemo.java` (JDK 11+):
 
 ```java
 import java.time.Clock;
@@ -1548,14 +1548,14 @@ public class ResponsibilityDemo {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac ResponsibilityDemo.java
 java ResponsibilityDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 Due: 2026-10-29
@@ -1568,41 +1568,41 @@ Second loan due: 2026-10-29
 State checks passed
 ```
 
-### Những quyết định đáng chú ý trong ví dụ
+### Noteworthy Design Decisions
 
-**`Member` là nơi duy nhất thực thi giới hạn mượn.** Nếu thay quy tắc từ một lên ba cuốn, hoặc cần khóa thành viên nợ phí, logic điều kiện thuộc về thành viên hoặc policy nghiệp vụ mà nó cộng tác. `LendingService` không truy xuất rồi tự so sánh `activeLoanCount` và `loanLimit`.
+**`Member` is the sole enforcer of the borrowing limit.** If the policy changes from one to three books, or members with outstanding fees must be blocked, that logic belongs in the member or its collaborating domain policy. `LendingService` does not read and compare `activeLoanCount` and `loanLimit` itself.
 
-**`BookCopy` quyết định trạng thái của bản sách.** Dù service muốn cho mượn, bản sách có quyền từ chối `markBorrowed()` nếu đang được mượn. Service không thể đơn giản đặt `available=false` bằng setter công khai.
+**`BookCopy` controls its own availability state.** Even if the service wants to lend it, the copy may reject `markBorrowed()` when unavailable. The service cannot simply set `available=false` through a public setter.
 
-**`Loan` giữ danh tính của giao dịch mượn và ngày hẹn trả.** Một `Loan` khác có thể liên kết đến cùng `BookCopy` trong lịch sử, nhưng chỉ một phiếu đang hoạt động được phép chiếm bản sách tại một thời điểm.
+**`Loan` owns the loan's identity and due date.** Another `Loan` may refer to the same `BookCopy` historically, but only one active loan may occupy it at a given time.
 
-**`LendingService` điều phối các bước.** Nó không tự tính xem thành viên còn quota hay bản sách sẵn không. Nó cần biết *gọi ai* và *ở thời điểm nào*, chứ không phải biết cấu trúc field nội bộ. `Clock` được tiêm vào để có thể kiểm tra ngày đến hạn mà không dựa vào đồng hồ máy thực tế.
+**`LendingService` coordinates the steps.** It does not independently calculate a member's remaining quota or the copy's availability. It needs to know *whom to call* and *when*, not internal field layouts. An injected `Clock` makes due dates testable without using the system clock.
 
-**Đây là demo mô hình miền trong một luồng.** Hai lệnh thay đổi trạng thái `member.recordBorrow()` và `copy.markBorrowed()` là những thao tác riêng lẻ, chưa được bao bọc trong giao dịch hay khóa. Vì vậy code demo **không an toàn khi hai luồng/tiến trình cho mượn đồng thời**, không bảo đảm atomicity khi tích hợp DB hoặc xảy ra sự cố giữa các bước. Với hệ thống thực tế, phải thiết kế transaction, ràng buộc dữ liệu, chiến lược khóa/optimistic concurrency và thời điểm phát thông báo phù hợp.
+**This is a single-threaded domain-model demo.** The state changes `member.recordBorrow()` and `copy.markBorrowed()` are separate operations without a transaction or lock. Therefore the example is **unsafe for concurrent borrowing across threads/processes** and does not guarantee atomicity with a DB or failures between steps. Production requires transactions, data constraints, locking/optimistic concurrency strategies, and suitable notification timing.
 
-## 7. Chọn cộng tác viên theo GRASP
+## 7. Selecting Collaborators with GRASP
 
-**GRASP** (*General Responsibility Assignment Software Patterns*) là nhóm nguyên tắc giúp trả lời “giao trách nhiệm này cho ai?”. Không cần biến mọi pattern thành một lớp riêng, nhưng các câu hỏi sau rất hữu ích khi mô hình hóa.
+**GRASP** (*General Responsibility Assignment Software Patterns*) offers principles for deciding “who should own this responsibility?” Not every pattern needs a separate class, but these questions help with modeling.
 
-| Nguyên tắc | Câu hỏi | Áp dụng trong thư viện |
+| Principle | Question | Library application |
 |---|---|---|
-| **Information Expert** | Ai đang sở hữu thông tin cần để thực thi quy tắc? | `Member` biết quota; `BookCopy` biết trạng thái sẵn sàng |
-| **Creator** | Ai nên tạo đối tượng mới vì có đủ dữ liệu/quan hệ cần thiết? | Use case `LendingService` tạo `Loan` từ member, copy và hạn trả |
-| **Controller** | Ai nhận yêu cầu của một sự kiện/use case và phối hợp? | `LendingService.lend(...)` điều phối luồng mượn |
-| **Low Coupling** | Có thể tránh cho một lớp biết chi tiết không liên quan của nhiều lớp khác không? | Service gọi hành vi có tên, không can thiệp field |
-| **High Cohesion** | Trách nhiệm của một lớp có cùng mục đích, dễ giải thích không? | `BookCopy` bảo vệ trạng thái của một bản sách |
-| **Polymorphism** | Các biến thể hành vi cùng một vai trò có thể dùng hợp đồng chung không? | Chính sách tính phí trễ có thể theo `LateFeePolicy` |
-| **Indirection** | Cần một trung gian để tách hai phía đang liên kết chặt không? | Adapter cổng thông báo tách domain khỏi SMTP/HTTP |
-| **Pure Fabrication** | Có trách nhiệm kỹ thuật không thuộc tự nhiên về một entity không? | `LoanRepository` để lưu/tải loan |
-| **Protected Variations** | Thay đổi nào cần được che sau một hợp đồng ổn định? | `NotificationSender` trừu tượng hóa email/SMS |
+| **Information Expert** | Who owns the information needed to enforce the rule? | `Member` knows quota; `BookCopy` knows availability |
+| **Creator** | Who should create an object because it has the necessary data/relationships? | Use case `LendingService` builds a `Loan` from the member, copy, and due date |
+| **Controller** | Who receives a system/use-case event and coordinates it? | `LendingService.lend(...)` coordinates borrowing |
+| **Low Coupling** | Can a class avoid knowing unrelated internals of others? | Service invokes named behavior rather than mutating fields |
+| **High Cohesion** | Are a class's responsibilities focused and explainable? | `BookCopy` protects one copy's state |
+| **Polymorphism** | Can behavior variants use one role-based contract? | Overdue-fee strategies may implement `LateFeePolicy` |
+| **Indirection** | Is an intermediary needed to decouple tightly linked sides? | A notification port separates the domain from SMTP/HTTP |
+| **Pure Fabrication** | Is there a technical responsibility that naturally belongs to no entity? | `LoanRepository` persists and loads loans |
+| **Protected Variations** | Which changes should be hidden behind a stable contract? | `NotificationSender` abstracts email/SMS |
 
-Không phải lúc nào áp dụng một nguyên tắc cũng hoàn toàn thỏa mãn nguyên tắc khác. Ví dụ `LendingService` dùng nhiều cộng tác viên là hợp lý vì bản thân nhiệm vụ điều phối đòi hỏi nhiều object; tránh coupling không có nghĩa là service chỉ được biết một class.
+One GRASP principle does not always maximize another. It is fine for `LendingService` to have several collaborators because coordination inherently needs multiple objects; low coupling does not mean a service can know only one class.
 
-## 8. Cộng tác với đối tượng trực tiếp, tránh chuỗi lấy dữ liệu rồi quyết định hộ
+## 8. Collaborate Through Behavior Instead of Fetching Data to Decide for Others
 
-Xem hai cách kiểm tra quyền mượn.
+Compare two ways to verify borrowing eligibility.
 
-**Cách A: service đọc từng field và tự quyết định.**
+**Approach A: service reads fields and decides for itself.**
 
 ```java
 // Minh họa anti-pattern.
@@ -1614,17 +1614,17 @@ if (member.isActive()
 }
 ```
 
-Cách này khiến logic bị phân tán: bất kỳ controller hay service nào cũng có thể bỏ qua một điều kiện.
+This disperses logic: any controller or service can forget a condition.
 
-**Cách B: giao việc cho đối tượng sở hữu quy tắc.**
+**Approach B: delegate the rule to its owner.**
 
 ```java
 member.recordBorrow();
 ```
 
-API theo hành vi bảo vệ quy tắc ngay trong `Member`.
+A behavior-oriented API protects the rule within `Member`.
 
-Đôi khi một service đào sâu:
+Sometimes a service digs too deeply:
 
 ```java
 long fee = loan.getBorrower()
@@ -1633,34 +1633,34 @@ long fee = loan.getBorrower()
            * overdueDays;
 ```
 
-Thay bằng một yêu cầu đúng trách nhiệm như `loan.calculateLateFee(overdueDays)` hoặc một `LateFeePolicy` được cung cấp đầu vào phù hợp sẽ giúp caller không phải hiểu nhiều nấc cấu trúc. Đây là tinh thần của **Law of Demeter** và **Tell, Don't Ask**.
+Instead, ask a responsible object to perform `loan.calculateLateFee(overdueDays)` or provide suitable data to a `LateFeePolicy`; callers then need not understand every layer of the object graph. This reflects the **Law of Demeter** and **Tell, Don't Ask**.
 
-Tuy nhiên, không cấm hoàn toàn getter. DTO chỉ để hiển thị, dữ liệu truy vấn, Value Object bất biến và fluent API đều có thể cho phép đọc cấu trúc. Điều cần tránh là **caller tự giữ và sao chép quy tắc thuộc trách nhiệm của đối tượng khác**.
+This does not prohibit getters entirely. Display DTOs, query data, immutable value objects, and fluent APIs can expose readable structure. Avoid **callers duplicating and owning rules that belong to another object**.
 
-## 9. Khi nào một trách nhiệm nên thuộc Service thay vì Entity?
+## 9. When Does Responsibility Belong to a Service Rather Than an Entity?
 
-Đặt hành vi vào Entity/Value Object nếu quy tắc **gắn chặt với trạng thái và bất biến của nó**:
+Put behavior into an entity or value object when its rule is **tightly coupled to that object's state and invariants**:
 
-- `BookCopy.markBorrowed()` không cho mượn khi đã mượn;
-- `Member.recordBorrow()` không cho vượt quota;
-- `Loan.close()` không cho đóng hai lần;
-- `Money.plus()` từ chối cộng khác tiền tệ.
+- `BookCopy.markBorrowed()` rejects borrowing when already loaned;
+- `Member.recordBorrow()` prevents exceeding quota;
+- `Loan.close()` prevents closing twice;
+- `Money.plus()` rejects adding different currencies.
 
-Dùng **Domain Service** khi hành vi có ý nghĩa miền rõ ràng nhưng **không thuộc tự nhiên vào một đối tượng duy nhất**. Ví dụ tính lịch xếp ca dựa trên nhiều nhân viên và quy tắc phân công, hoặc áp dụng chính sách phí cho nhiều loại thành viên.
+Use a **domain service** when behavior has clear domain meaning but **does not naturally belong to one object**. Examples include scheduling shifts across several employees or applying a fee policy to multiple member types.
 
-Dùng **Application Service/use-case controller** khi nhiệm vụ chủ yếu là điều phối:
+Use an **application service/use-case controller** when the primary responsibility is coordination:
 
-- kiểm tra quyền người gọi;
-- tải các entity từ repository;
-- mở transaction;
-- yêu cầu các domain object thực thi quy tắc;
-- lưu kết quả, gửi event hoặc điều phối thông báo.
+- check caller permissions;
+- load entities from repositories;
+- begin a transaction;
+- ask domain objects to enforce rules;
+- persist results, emit events, or coordinate notifications.
 
-Trong bài toán mượn sách đơn giản, `LendingService` đang gộp vai trò điều phối luồng vào một lớp để dễ thấy sự cộng tác. Nếu ứng dụng có database và phân lớp rõ, có thể tách `LendBookApplicationService` (tải/lưu/transaction) khỏi logic miền thích hợp. **Không cần ép tách** nếu chưa có độ phức tạp thực tế.
+In this simple lending example, `LendingService` combines coordination in one class to make collaboration visible. A database-backed layered application may split `LendBookApplicationService` (load/save/transaction) from suitable domain logic. **Do not force the split** before the complexity justifies it.
 
-## 10. Nhận diện đối tượng cộng tác ổn định và dependency ở biên
+## 10. Identify Stable Collaborators and Boundary Dependencies
 
-Một service thường cần cộng tác viên hạ tầng như repository, đồng hồ, công cụ gửi thông báo. Đừng cho Entity phải biết SQL, HTTP hay cách tạo email.
+Services often need infrastructure collaborators such as repositories, clocks, and notification senders. Domain entities should not need to know SQL, HTTP, or email construction.
 
 ```mermaid
 flowchart TD
@@ -1673,7 +1673,7 @@ flowchart TD
     DB[("Database")] <--> RepoImpl
 ```
 
-Một hợp đồng repository có thể là:
+A repository contract could be:
 
 ```java
 interface LoanRepository {
@@ -1687,100 +1687,100 @@ interface BookCopyRepository {
 }
 ```
 
-Đoạn trên là **phác thảo interface**, giả định `Loan` và `BookCopy` thuộc cùng miền hoặc được import thích hợp. Các lớp Entity không phải chứa kết nối database; tầng application/infrastructure có thể cấp cộng tác viên qua constructor.
+This is an **interface sketch**, assuming `Loan` and `BookCopy` belong to the same domain or are properly imported. Entities need not hold database connections; application/infrastructure layers can supply collaborators through constructors.
 
-**Dependency injection** hữu ích vì dễ thay adapter và giả lập khi kiểm thử. Nhưng đừng tạo interface cho mọi class ngay từ đầu: `Member`, `BookCopy` và những Value Object có quy tắc ổn định có thể được dùng trực tiếp. Interface đặc biệt có ý nghĩa ở ranh giới có nhiều implementation hoặc cần tách khỏi hạ tầng.
+**Dependency injection** makes adapters replaceable and tests easier to isolate. But do not introduce an interface for every class from the beginning: `Member`, `BookCopy`, and stable value objects can be used directly. Interfaces are valuable where alternative implementations exist or infrastructure boundaries must be isolated.
 
-## 11. Vấn đề giao dịch: hợp tác đúng trách nhiệm vẫn phải giữ tính nhất quán
+## 11. Transactions: Correct Collaboration Still Requires Consistency
 
-Tưởng tượng quy trình mượn trong ứng dụng thật:
+Imagine a real application's lending workflow:
 
-1. Tải `Member` và `BookCopy` từ database.
-2. Kiểm tra điều kiện mượn.
-3. Tạo bản ghi `Loan`.
-4. Cập nhật số lượng phiếu đang mở và trạng thái bản sách.
-5. Commit giao dịch.
-6. Thông báo cho người đọc.
+1. Load `Member` and `BookCopy` from the database.
+2. Check lending eligibility.
+3. Create a `Loan` record.
+4. Update active-loan count and copy status.
+5. Commit the transaction.
+6. Notify the member.
 
-Nếu một tiến trình khác cũng lấy cùng `BookCopy` trong khoảng giữa kiểm tra và commit, cả hai có thể tưởng bản sách còn sẵn (*race condition*).
+Another process may fetch the same `BookCopy` between checks and commit, with both believing it available (a *race condition*).
 
-Một thiết kế ứng dụng hoàn chỉnh cần trả lời:
+A complete application design must address:
 
-| Rủi ro | Cách xử lý cần cân nhắc |
+| Risk | Mitigation to consider |
 |---|---|
-| Hai yêu cầu mượn cùng một bản sách | Optimistic locking/version, khóa phù hợp, kiểm tra điều kiện cập nhật trong transaction |
-| DB lỗi sau khi một phần dữ liệu đã được thay đổi | Transaction để commit/rollback các cập nhật liên quan |
-| Thông báo gửi lỗi sau khi DB đã commit | Outbox/event sau commit, retry có kiểm soát |
-| Người dùng gửi lại cùng yêu cầu | Idempotency key hoặc ràng buộc nghiệp vụ phát hiện bản mượn trùng |
-| Đóng phiếu hai lần | Entity bảo vệ trạng thái và ràng buộc DB/concurrency tương ứng |
-| Quy tắc quota bị vượt bởi nhiều yêu cầu song song | Lock/version hoặc cập nhật điều kiện tại dữ liệu gốc, kiểm tra lại trước commit |
+| Two requests borrow the same copy | Optimistic locking/versioning, suitable locks, conditional updates within a transaction |
+| DB failure after some data has changed | Transaction commits or rolls back related updates together |
+| Notification fails after DB commit | Post-commit outbox/events and controlled retries |
+| User resends the same request | Idempotency key or domain constraints detecting duplicates |
+| Loan is closed twice | Entity state protection plus relevant DB/concurrency constraints |
+| Concurrent requests exceed borrower quota | Lock/version or conditional source-data update; recheck before commit |
 
-**Không nên gửi email trong transaction database nếu điều đó giữ khóa quá lâu**. Phối hợp giữa DB và hệ thống gửi thư thường cần cơ chế hậu giao dịch hoặc outbox. Một “Controller” biết phối hợp không có nghĩa được tự sửa dữ liệu bypass các bất biến.
+**Avoid sending email inside a DB transaction if it holds locks too long.** DB-to-mail coordination often needs post-commit processing or an outbox. A coordinating controller must not bypass domain invariants by directly mutating state.
 
-## 12. Mô hình không phải bản sao cơ sở dữ liệu
+## 12. The Model Is Not a Copy of the Database
 
-Nhiều dự án tạo mỗi bảng một class có getter/setter, sau đó dồn tất cả logic vào `XYZService`. Cách này có thể phục vụ CRUD đơn giản, nhưng với miền nghiệp vụ nhiều quy tắc, đối tượng chỉ là túi dữ liệu và khả năng cộng tác OOP chưa được tận dụng.
+Many projects map every table to a class of getters/setters and put all business logic in `XYZService`. That may be adequate for simple CRUD, but a rule-rich domain becomes a collection of data bags without meaningful OOP collaboration.
 
-Hãy thử phân biệt:
+Compare the approaches:
 
-| Câu hỏi | Thiết kế chỉ dựa bảng | Thiết kế theo trách nhiệm |
+| Question | Table-driven design | Responsibility-driven design |
 |---|---|---|
-| Ai kiểm soát giới hạn mượn? | Controller đọc `member.limit` và đếm loan | Hành vi miền/policy bảo vệ quy tắc quota, application cung cấp dữ liệu cần thiết |
-| Ai cho phép trả lại bản sách? | Service gán hai cột `available` và `returned` | `BookCopy.markReturned()` và `Loan.close()` có điều kiện |
-| Ai xác định ngày hẹn trả? | Caller tự cộng ngày ở mỗi nơi | Một chính sách hoặc coordinator dùng `Clock` và quy tắc hạn trả |
-| Ai truy cập DB? | Mọi Entity tự mở connection | Repository/adapter được cấp qua ranh giới ứng dụng |
+| Who enforces the borrowing limit? | Controller reads `member.limit` and counts loans | Domain behavior/policy protects quota with necessary data supplied by the application |
+| Who permits returning a copy? | Service sets `available` and `returned` columns | Guarded `BookCopy.markReturned()` and `Loan.close()` |
+| Who determines the due date? | Each caller adds days independently | One policy or coordinator uses `Clock` and due-date rules |
+| Who accesses the database? | Entities open their own connections | Repositories/adapters are supplied at the application boundary |
 
-Trách nhiệm nghiệp vụ đôi khi cần dữ liệu từ nhiều đối tượng hoặc truy vấn DB. Khi đó chọn một **domain policy/service** hoặc **đối tượng điều phối** hợp lý thay vì cố buộc mọi ràng buộc vào một Entity không đủ thông tin.
+Domain responsibilities may require data from multiple objects or DB queries. Use a suitable **domain policy/service** or **coordinator** rather than forcing every constraint into an entity without enough information.
 
-## 13. Kiểm tra thiết kế bằng kịch bản thay đổi
+## 13. Test the Design Against Change Scenarios
 
-Bản thiết kế nào dễ thay đổi khi yêu cầu phát triển?
+Which design adapts when requirements evolve?
 
-**Yêu cầu 1: thành viên Premium được mượn nhiều hơn.** Nếu `Member` giữ chính sách giới hạn, thay đổi sẽ tập trung ở Entity hoặc một `BorrowingPolicy` được cung cấp cho Entity. Tránh sửa riêng từng controller.
+**Requirement 1: Premium members may borrow more books.** If `Member` owns quota policy, the change belongs in the entity or a collaborating `BorrowingPolicy`. Avoid modifying each controller separately.
 
-**Yêu cầu 2: có bản sách điện tử với quyền truy cập khác bản giấy.** Hãy xác định điểm khác nhau thực sự. Có thể thêm một hợp đồng `BorrowableItem` hoặc policy nếu quy trình cho mượn thực sự thay đổi theo loại tài nguyên. Không vội kế thừa mọi thứ từ `BookCopy`.
+**Requirement 2: E-books have access rules different from physical copies.** Determine the real behavior differences. Introduce a `BorrowableItem` contract or policy if borrowing truly varies by resource type. Do not rush to subclass everything from `BookCopy`.
 
-**Yêu cầu 3: gửi SMS thay email.** Nếu thông báo chỉ đi qua một cổng `NotificationSender`, thay adapter không cần đổi các bất biến mượn/trả.
+**Requirement 3: Send SMS instead of email.** If notifications use a `NotificationSender` port, replacing the adapter does not affect borrowing invariants.
 
-**Yêu cầu 4: hết hạn mượn phụ thuộc loại thành viên và kỳ nghỉ.** Có thể trích `DueDatePolicy.calculate(member, copy, borrowedAt)` rồi để use case cộng tác với policy. Khi công thức không thuộc tự nhiên của riêng Member hay BookCopy, một domain service/policy là ứng viên phù hợp.
+**Requirement 4: Due dates vary by member category and holidays.** Extract `DueDatePolicy.calculate(member, copy, borrowedAt)` if appropriate and let the use case collaborate with that policy. A domain service/policy fits when the formula belongs to neither member nor copy alone.
 
-**Yêu cầu 5: phải ghi lịch sử thao tác.** Domain có thể tạo sự kiện “LoanCreated”, “LoanReturned”, còn application lưu/phát sự kiện sau transaction. Đừng bắt mỗi Entity tự mở file log hoặc gọi HTTP.
+**Requirement 5: Record an audit trail.** The domain may produce “LoanCreated” and “LoanReturned” events, while application logic persists or publishes them after the transaction. Do not make each entity open log files or call HTTP.
 
-Một kịch bản thay đổi tốt **chỉ ra nơi cần sửa và các đối tượng cần cộng tác**, thay vì làm mọi lớp biết thêm về nhau.
+A useful change scenario **identifies the change location and necessary collaborators** instead of forcing every class to know more about the others.
 
-## 14. Dấu hiệu phân chia trách nhiệm chưa ổn
+## 14. Signs of Poor Responsibility Allocation
 
-| Dấu hiệu | Vấn đề thường gặp | Cách xem xét |
+| Symptom | Common problem | Remedy to consider |
 |---|---|---|
-| `LibraryService` dài hàng nghìn dòng | Một lớp chứa nhiều quy tắc không cùng lý do thay đổi | Di chuyển bất biến về Entity/VO; trích policy/use case khi có ý nghĩa |
-| Entity chỉ có getter/setter | Logic nghiệp vụ ở bên ngoài có thể bypass bất biến | Bổ sung hành vi `borrow`, `return`, `close` có điều kiện |
-| Lớp A gọi `b.getC().getD().setX()` | A biết quá sâu cấu trúc của nhiều cộng tác viên | Gửi hành vi đến object gần, hoặc truyền VO/policy phù hợp |
-| Một thay đổi quota sửa nhiều controller | Quy tắc bị nhân bản | Đặt quy tắc vào một thành phần có chủ sở hữu rõ |
-| Mọi lớp đều phụ thuộc vào database hoặc framework | Logic miền khó chạy/kiểm thử độc lập | Dùng repository và adapter ở ranh giới |
-| Hai Entity được cập nhật riêng không transaction | Dữ liệu có thể lệch khi lỗi hoặc cạnh tranh | Xác định transaction boundary, locking và tính idempotent |
-| Mỗi class nhỏ đều có interface tương ứng | Indirection và file thừa, khó lần theo luồng | Chỉ trừu tượng hóa nơi có biến thể/ranh giới hữu ích |
-| Một interface có hàng chục phương thức không liên quan | Caller phụ thuộc nhiều chức năng không dùng | Phân tách interface theo vai trò cộng tác |
-| Nhiều nơi vừa kiểm tra vừa sửa cùng một field | Quy tắc mất chủ sở hữu và dễ bị đua tranh | Cung cấp hành vi bảo vệ trạng thái; xử lý concurrency đúng |
+| `LibraryService` spans thousands of lines | Unrelated rules with different reasons to change are combined | Move invariants to entities/value objects; extract policies/use cases when meaningful |
+| Entities expose only getters/setters | External logic can bypass domain invariants | Introduce guarded `borrow`, `return`, or `close` behavior |
+| Class A calls `b.getC().getD().setX()` | A knows too much of collaborators' internal structure | Request behavior from a closer object or pass an appropriate value object/policy |
+| Changing quota modifies many controllers | Rule is duplicated | Assign it to one explicit owner |
+| Every class depends on DB/framework details | Domain logic is hard to test or run independently | Place repositories/adapters at boundaries |
+| Two entities are updated separately with no transaction | Failures or races can leave inconsistent data | Define transaction boundaries, locking, and idempotency |
+| Every small class has a matching interface | Unnecessary indirection/files obscure flows | Abstract only meaningful variation points and boundaries |
+| An interface contains dozens of unrelated methods | Clients depend on unused capabilities | Split interfaces by collaboration roles |
+| Multiple locations check and mutate one field | Rules lack ownership and become race-prone | Expose behavior that protects state and handle concurrency correctly |
 
-## 15. Bài tập thực hành
+## 15. Practice Exercises
 
-### Bài 1 – Lập CRC cho chức năng đặt vé
+### Exercise 1 – CRC Cards for Ticket Reservations
 
-Cho yêu cầu: một khách hàng có thể đặt ghế còn trống; sự kiện có sức chứa; sau khi đặt phải có mã đặt chỗ và gửi xác nhận.
+Requirement: a customer may reserve an available seat; events have capacity; successful reservations need IDs and confirmations.
 
-Hãy liệt kê CRC cho `Customer`, `Seat`, `Reservation` và `ReservationService`.
+Create CRC cards for `Customer`, `Seat`, `Reservation`, and `ReservationService`.
 
-**Gợi ý:**
+**Hints:**
 
-- `Seat` sở hữu quy tắc ghế có thể đặt;
-- `Reservation` ghi định danh/lifecycle của lượt đặt;
-- `ReservationService` điều phối yêu cầu;
-- `Customer` biết trạng thái hoặc điều kiện đặt nếu đó là quy tắc theo khách;
-- một `NotificationSender` gửi thông báo, tránh để `Seat` tự gọi email.
+- `Seat` owns the rule determining whether it can be reserved;
+- `Reservation` records reservation identity and lifecycle;
+- `ReservationService` coordinates the request;
+- `Customer` knows customer-specific status or eligibility conditions if the domain requires them;
+- a `NotificationSender` sends confirmations rather than making `Seat` send email.
 
-### Bài 2 – Ai sở hữu quy tắc?
+### Exercise 2 – Who Owns the Rule?
 
-Trong một ứng dụng thương mại, `Order` có trạng thái và các dòng hàng. Service viết:
+In a commerce application, `Order` has a status and order lines. The service writes:
 
 ```java
 if (!order.getStatus().equals("CANCELLED")) {
@@ -1788,19 +1788,19 @@ if (!order.getStatus().equals("CANCELLED")) {
 }
 ```
 
-**Đáp án gợi ý:** `Order` nên cung cấp `addLine(...)` để tự bảo vệ trạng thái, quy tắc số lượng, giá và tính nhất quán. Nếu cần tra kho ngoài Order, application/domain service cộng tác với Inventory nhưng không sửa trực tiếp collection nội bộ.
+**Suggested answer:** `Order` should expose `addLine(...)` to protect its own status, quantity rules, pricing, and consistency. If external stock checks are needed, application/domain services collaborate with Inventory without directly modifying the order's internal collection.
 
-### Bài 3 – Vẽ sequence diagram theo nhánh thất bại
+### Exercise 3 – Sequence Diagram for a Failure Branch
 
-Từ kịch bản mượn sách, giả sử `BookCopy.ensureAvailable()` ném `IllegalStateException`.
+In the library scenario, suppose `BookCopy.ensureAvailable()` throws `IllegalStateException`.
 
-Hãy vẽ luồng và nêu đối tượng nào phải giữ nguyên. **Gợi ý:** Service kết thúc trước khi tạo Loan và gọi hai thao tác ghi trạng thái; `Member.activeLoanCount` và `BookCopy.available` vẫn giữ nguyên trong luồng tuần tự.
+Draw the flow and identify which objects must remain unchanged. **Hint:** The service stops before constructing Loan or making either state mutation, so `Member.activeLoanCount` and `BookCopy.available` remain unchanged in the sequential flow.
 
-### Bài 4 – Mở rộng chương trình
+### Exercise 4 – Extend the Program
 
-Trong `ResponsibilityDemo.java`, thêm `Member.deactivate()` rồi thử mượn một bản sách vẫn còn sẵn.
+In `ResponsibilityDemo.java`, add `Member.deactivate()` and then try to borrow an otherwise available copy.
 
-Cần kiểm tra:
+Verify:
 
 ```java
 Member blocked = new Member("MEM-02", 2);
@@ -1819,45 +1819,45 @@ if (!free.isAvailable() || blocked.activeLoanCount() != 0) {
 }
 ```
 
-Đặt đoạn mã trong `main` của ví dụ, sau khi có biến `lending`. Điều cần xác nhận là **logic từ chối nằm ở Member**, còn service chỉ gọi hợp đồng.
+Place the code inside the example's `main`, after creating the `lending` variable. Verify that **Member owns the rejection logic** and the service only invokes its contract.
 
-### Bài 5 – Khi nào không cần thêm Service?
+### Exercise 5 – When Is Another Service Unnecessary?
 
-Một Value Object `Money` có hai trường số tiền và loại tiền. Tính năng cộng hai Money cùng currency nên nằm ở `Money.plus(other)` hay `MoneyAdditionService.add(a, b)`?
+A `Money` value object has an amount and currency. Should adding two Money values of the same currency belong to `Money.plus(other)` or `MoneyAdditionService.add(a, b)`?
 
-**Gợi ý:** quy tắc cộng và kiểm tra currency thuộc tự nhiên về Money, nên `plus` thường rõ nghĩa hơn. Dùng service khi bài toán đòi policy/tỷ giá/nguồn dữ liệu nằm ngoài một Money, hoặc liên quan nhiều đối tượng khác nhau.
+**Hint:** Addition and currency checks naturally belong to Money, making `plus` clearer in most cases. A service fits when policy, exchange rates, or data outside one Money object are involved.
 
 ---
 
-**Điều cần nắm:** thiết kế lớp không dừng ở việc tìm danh từ để tạo class. Hãy **giao đúng trách nhiệm cho đối tượng sở hữu thông tin và bất biến**, xác định **những cộng tác viên tối thiểu cần thiết**, rồi diễn tả sự phối hợp bằng thông điệp, hợp đồng và sơ đồ trình tự. Nhờ vậy các thay đổi thường tập trung đúng nơi, code dễ kiểm thử và các lớp giữ được mục đích rõ ràng.
+**Key takeaway:** class design extends beyond turning nouns into classes. **Assign responsibility to the object that owns the information and invariants**, identify the **minimal necessary collaborators**, and describe cooperation through messages, contracts, and sequence diagrams. Changes then tend to stay localized, code is easier to test, and classes remain focused.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="modeling-004">Thẻ CRC: lớp, trách nhiệm và cộng tác</a>
+## <a id="modeling-004">CRC cards: classes, responsibilities, and collaborators</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thẻ CRC: lớp, trách nhiệm và cộng tác trong mô hình hóa OOP
+# CRC Cards: Classes, Responsibilities, and Collaborators in OOP Modeling
 
-Thẻ **CRC** (*Class–Responsibilities–Collaborators*) là công cụ phân tích thiết kế hướng đối tượng: mỗi thẻ nêu **lớp nào**, lớp đó **chịu trách nhiệm gì**, và cần **cộng tác với lớp nào** để hoàn thành công việc. Khi các thẻ được đặt cạnh nhau và dùng để diễn tập tình huống nghiệp vụ, nhóm thiết kế có thể phát hiện những trách nhiệm bị bỏ quên, bị trùng lặp hoặc bị đặt sai nơi trước khi đầu tư vào code.
+**CRC** cards (*Class–Responsibilities–Collaborators*) are an object-oriented analysis technique: each card identifies **which class**, **what it is responsible for**, and **which classes it collaborates with**. By arranging cards and role-playing business scenarios, teams discover missing, duplicated, or misplaced responsibilities before committing to code.
 
-CRC đặc biệt hữu ích khi yêu cầu được diễn đạt theo ngôn ngữ người dùng nhưng chưa rõ cách chia thành các lớp Java. Nó giúp trả lời ba câu hỏi xuyên suốt:
+CRC is especially useful when user requirements have not yet been divided into Java classes. It addresses three recurring questions:
 
-1. **Class:** Khái niệm hoặc vai trò nào thực sự cần được mô hình hóa?
-2. **Responsibilities:** Mỗi lớp phải biết hoặc phải làm điều gì để các quy tắc nghiệp vụ đúng?
-3. **Collaborators:** Khi một lớp không có đủ thông tin để làm một việc, nó cần hỏi hoặc nhờ lớp nào?
+1. **Class:** Which concepts or roles genuinely need modeling?
+2. **Responsibilities:** What must each class know or do to uphold business rules?
+3. **Collaborators:** When a class lacks information to complete a task, which other class should it ask for help?
 
-CRC là phương pháp khám phá **trách nhiệm và sự cộng tác**, không phải bản đặc tả mọi field, constructor hay chữ ký method. Sau khi trách nhiệm ổn định mới triển khai API, UML và code phù hợp.
+CRC explores **responsibilities and collaboration** rather than specifying every field, constructor, or method signature. Once responsibilities are stable, design the appropriate APIs, UML, and code.
 
-## 1. Cấu trúc của một thẻ CRC
+## 1. Anatomy of a CRC Card
 
-Một thẻ có ba phần:
+Each card has three sections:
 
 ```text
 +-----------------------------------------------------+
@@ -1872,88 +1872,88 @@ Một thẻ có ba phần:
 +-----------------------------+-----------------------+
 ```
 
-**Class:** tên thể hiện khái niệm đủ cụ thể trong ngữ cảnh, chẳng hạn `Workshop`, `Enrollment` thay vì `DataManager` hay `Helper`.
+**Class:** a name expressing a specific contextual concept, such as `Workshop` or `Enrollment`, rather than `DataManager` or `Helper`.
 
-**Responsibilities:** mô tả **nghĩa vụ** và **kết quả** của lớp bằng câu nghiệp vụ: “không cho đăng ký trùng”, “giữ giới hạn sức chứa”, “tính hạn trả”. Tránh chỉ ghi “có hàm `setX`” vì đó là chi tiết cài đặt, chưa giải thích trách nhiệm.
+**Responsibilities:** describe the class's **obligations** and **outcomes** in business terms: “reject duplicate registrations,” “enforce capacity,” or “calculate the due date.” Avoid only listing “has `setX`,” which is an implementation detail, not a responsibility.
 
-**Collaborators:** những lớp mà nó thực sự cần trao đổi để hoàn thành trách nhiệm; không phải toàn bộ các class có trong dự án. Một class không có collaborator vẫn có thể hoàn toàn hợp lệ, như một value object tự kiểm tra dữ liệu của mình.
+**Collaborators:** classes it genuinely needs to communicate with—not every class in the project. A class with no collaborators may be perfectly valid, such as a value object validating itself.
 
-| Phần trên thẻ | Câu hỏi kiểm tra | Dấu hiệu chưa tốt |
+| Card section | Review question | Warning sign |
 | --- | --- | --- |
-| Class | Có một vai trò rõ, cần phân biệt với các khái niệm khác không? | `EverythingService`, `GeneralUtils` |
-| Responsibilities | Lớp sở hữu tri thức hay hành vi nghiệp vụ nào? | Chỉ liệt kê getter/setter |
-| Collaborators | Cần ai cung cấp thông tin hoặc thực hiện phần việc khác? | Liệt kê mọi class trong hệ thống |
-| Ranh giới | Thay đổi quy tắc này nên sửa lớp nào trước? | Cùng một quy tắc nằm ở ba lớp |
+| Class | Is its role distinct and clearly different from other concepts? | `EverythingService`, `GeneralUtils` |
+| Responsibilities | What business knowledge or behavior does it own? | Only getters/setters are listed |
+| Collaborators | Who supplies information or performs other tasks? | Every class in the system is listed |
+| Boundary | Which class should change first if this rule changes? | Same rule belongs to three classes |
 
-Thẻ CRC có thể viết trên giấy, bảng trắng, trong tài liệu Markdown hoặc công cụ thiết kế. Hình thức vật lý không quyết định chất lượng; **tranh luận và kiểm nghiệm trách nhiệm** mới là giá trị chính.
+CRC cards can be written on paper, whiteboards, Markdown, or design tools. Their physical form is secondary; **discussion and validation of responsibilities** provide the value.
 
-## 2. Tình huống thực tế để xây dựng các thẻ
+## 2. A Practical Scenario for Building Cards
 
-Ví dụ nghiệp vụ: “Một trung tâm tổ chức lớp thực hành. Học viên chọn một lớp có mã riêng để đăng ký. Mỗi lớp có số chỗ giới hạn. Một học viên chỉ được đăng ký **một lần** vào cùng lớp. Khi đăng ký hợp lệ, hệ thống lưu lượt đăng ký, ghi ngày đăng ký và gửi thông báo. Học viên có thể hủy đăng ký để trả lại chỗ.”
+Scenario: “A training center runs workshops. Students choose a uniquely coded workshop to register for. Each workshop has limited seats. A student may register **only once** in a workshop. After valid registration, the system stores enrollment, records the registration date, and sends a notification. Students may withdraw to release seats.”
 
-Hãy ghi các trường hợp tối thiểu:
+Capture at least these cases:
 
-- **Luồng thành công:** An đăng ký lớp Java còn chỗ.
-- **Đăng ký trùng:** An đăng ký lại cùng lớp, phải từ chối.
-- **Hết chỗ:** Chi đăng ký lớp đã đầy, phải từ chối và không tạo lượt đăng ký.
-- **Hủy:** Một người đã đăng ký hủy lượt, số chỗ trống tăng.
-- **Thông báo lỗi:** Lưu được đăng ký nhưng gửi thông báo thất bại; cần chính sách xử lý rõ.
-- **Đồng thời:** Hai người cùng tranh chỗ cuối; số lượt thành công không được vượt sức chứa.
+- **Success flow:** An registers for a Java workshop with available seats.
+- **Duplicate registration:** An attempts to register again and is rejected.
+- **Full workshop:** Chi requests a full workshop; reject without creating enrollment.
+- **Withdrawal:** An enrolled student withdraws, increasing available seats.
+- **Notification failure:** Enrollment persists, but notification fails; a policy must define how to handle it.
+- **Concurrency:** Two students compete for the last seat; successful registrations cannot exceed capacity.
 
-Chưa cần quyết định SQL, REST API hay JPA trong bước này. Hãy tìm trách nhiệm tồn tại **dù công nghệ thay đổi**.
+Do not decide SQL, REST APIs, or JPA yet. Look for responsibilities that remain **even if technology changes**.
 
-### Danh sách lớp ứng viên
+### Candidate Classes
 
-| Ứng viên | Lý do xuất hiện | Kết luận bước đầu |
+| Candidate | Why it appears | Preliminary conclusion |
 | --- | --- | --- |
-| `Student` | Có danh tính học viên riêng | Lớp/record miền |
-| `Workshop` | Có mã, sức chứa và danh sách đăng ký | Lớp miền quản lý quy tắc |
-| `Enrollment` | Một lần đăng ký có học viên, ngày và vòng đời riêng | Lớp/record miền |
-| `RegistrationService` | Điều phối tìm lớp, đăng ký, lưu, thông báo | Application service |
-| `WorkshopRepository` | Tải/lưu trạng thái lớp | Interface truy cập dữ liệu |
-| `RegistrationNotifier` | Thông báo sau khi đăng ký | Port tương tác ngoài |
-| `RegistrationDate` | Ngày đăng ký | Chưa cần class mới: dùng `LocalDate` |
-| `RegisterButton` | Nút trong giao diện | Không phải đối tượng miền cần CRC ở phạm vi này |
-| `RegistrationValidator` | Tên được nghĩ ra cho “kiểm tra” | Chưa cần nếu `Workshop` đã biết và bảo vệ quy tắc |
-| `Database` | Chi tiết lưu trữ | Adapter/infrastructure, không phải quy tắc miền |
+| `Student` | Has independent student identity | Domain class/record |
+| `Workshop` | Has code, capacity, and enrollment list | Domain class enforcing rules |
+| `Enrollment` | Each registration has its own student, date, and lifecycle | Domain class/record |
+| `RegistrationService` | Coordinates lookup, registration, persistence, and notification | Application service |
+| `WorkshopRepository` | Loads/persists workshop state | Data-access interface |
+| `RegistrationNotifier` | Sends registration notifications | External interaction port |
+| `RegistrationDate` | Registration date | No new class yet; use `LocalDate` |
+| `RegisterButton` | UI button | Not a domain object needing CRC in this scope |
+| `RegistrationValidator` | Tentative name for “validation” | Unnecessary if `Workshop` already owns and enforces the rule |
+| `Database` | Persistence detail | Adapter/infrastructure rather than domain rule |
 
-Một ứng viên chưa được xác nhận vĩnh viễn. Ví dụ khi đăng ký có trạng thái `WAITLISTED`, thanh toán và lịch sử, `Enrollment` có thể trở thành entity có hành vi thay vì record bất biến chỉ mô tả kết quả.
+Candidates are not permanent decisions. If registration later includes `WAITLISTED` status, payment, or history, `Enrollment` may become a behavior-rich entity instead of an immutable result record.
 
-## 3. Lập bộ thẻ CRC đầu tiên
+## 3. Create an Initial Set of CRC Cards
 
-Các thẻ dưới đây là bản thử nghiệm để **diễn tập**, không phải bộ lớp bắt buộc cho mọi hệ thống đăng ký.
+These cards are hypotheses for **role-play**, not mandatory classes for every registration system.
 
 | Class | Responsibilities | Collaborators |
 | --- | --- | --- |
-| `Student` | Giữ danh tính hợp lệ của học viên | Không bắt buộc |
-| `Workshop` | Biết sức chứa; giữ danh sách đăng ký; quyết định thêm/hủy; ngăn trùng và quá chỗ | `Student`, `Enrollment` |
-| `Enrollment` | Biểu diễn lượt đăng ký hợp lệ: học viên và ngày đăng ký | `Student` qua ID |
-| `RegistrationService` | Điều phối use case đăng ký/hủy; lấy ngày hiện tại; tải/lưu lớp; yêu cầu thông báo | `Workshop`, `WorkshopRepository`, `RegistrationNotifier`, `Clock` |
-| `WorkshopRepository` | Cung cấp cách lấy và lưu `Workshop` | `Workshop`; adapter thực thi |
-| `RegistrationNotifier` | Công bố thông tin đăng ký tới kênh ngoài | `Student`, `Workshop`, `Enrollment` |
+| `Student` | Maintains valid student identity | Not required |
+| `Workshop` | Knows capacity; tracks enrollments; decides add/withdraw; prevents duplicates and oversubscription | `Student`, `Enrollment` |
+| `Enrollment` | Represents valid enrollment with student and registration date | `Student` via ID |
+| `RegistrationService` | Coordinates registration/withdrawal use cases; gets current date; loads/saves workshops; requests notification | `Workshop`, `WorkshopRepository`, `RegistrationNotifier`, `Clock` |
+| `WorkshopRepository` | Provides retrieval and persistence of `Workshop` | `Workshop`; implementing adapter |
+| `RegistrationNotifier` | Publishes registration details to an external channel | `Student`, `Workshop`, `Enrollment` |
 
-**Quan sát:** Quy tắc không trùng và không vượt sức chứa được đặt ở `Workshop`, vì đối tượng này quản lý toàn bộ tập đăng ký của một lớp. `RegistrationService` không nên tự sửa collection hay chép lại các điều kiện đó. Ngược lại, `Workshop` không cần biết cách ghi database hoặc gửi email.
+**Observation:** Duplicate and capacity rules belong to `Workshop` because it manages all registrations for that workshop. `RegistrationService` should not mutate the collection or copy those checks. Conversely, `Workshop` need not know how to persist to a database or send email.
 
-Nếu bỏ `RegistrationService` và để `Workshop.register()` tự mở JDBC connection và gửi SMTP, class miền sẽ phụ thuộc công nghệ; như vậy trách nhiệm đang đặt sai.
+If `RegistrationService` is removed and `Workshop.register()` opens JDBC connections and sends SMTP itself, the domain class becomes technology-dependent; responsibilities are misplaced.
 
-### CRC khác bảng phân công công việc
+### CRC Is Not a Project Staffing Matrix
 
-Thẻ `Workshop` không ghi “developer A chịu trách nhiệm” mà ghi “**đối tượng Workshop** chịu trách nhiệm bảo vệ sức chứa”. CRC nói về **vai trò của các đối tượng trong phần mềm**, không phải người triển khai.
+The `Workshop` card does not say “developer A is responsible.” It says “**the Workshop object** is responsible for preserving capacity.” CRC describes **software object roles**, not implementers.
 
-“Collaborator” cũng không nhất thiết là quan hệ sở hữu. `RegistrationService` sử dụng `WorkshopRepository`; điều đó không khiến service sở hữu vòng đời database hay có quyền đóng kết nối dùng chung.
+A collaborator is not necessarily an owned component. `RegistrationService` uses `WorkshopRepository`, but this does not give the service ownership of the database lifecycle or the right to close shared connections.
 
-## 4. Cách diễn tập thẻ CRC (*role-playing*)
+## 4. Role-Playing CRC Cards
 
-Một người hoặc một tấm thẻ đại diện cho mỗi lớp. Người điều phối đọc từng tình huống. Đối tượng nào có trách nhiệm phải “nhận việc”; nếu cần dữ liệu khác, nó nhờ collaborator. Nhờ vậy nhóm phát hiện được bước bị thiếu hoặc vòng phụ thuộc không tự nhiên.
+One person or card represents each class. The facilitator reads a scenario; the responsible object accepts a task and asks collaborators for needed data. This exposes missing steps and unnatural dependency loops.
 
-**Kịch bản A — An đăng ký thành công:**
+**Scenario A — An Registers Successfully:**
 
-1. Giao diện đưa yêu cầu `register(student, workshopCode)` cho `RegistrationService`.
-2. `RegistrationService` nhờ `WorkshopRepository` tải `Workshop` theo mã.
-3. Service lấy ngày hiện tại qua `Clock`, giao `Workshop` thực hiện đăng ký.
-4. `Workshop` kiểm tra trùng và sức chứa; tạo `Enrollment` rồi giữ nó.
-5. Service yêu cầu repository lưu `Workshop` đã thay đổi.
-6. Service nhờ `RegistrationNotifier` gửi thông báo.
+1. The UI submits `register(student, workshopCode)` to `RegistrationService`.
+2. `RegistrationService` asks `WorkshopRepository` to load `Workshop` by code.
+3. The service gets the current date from `Clock` and asks `Workshop` to register.
+4. `Workshop` checks duplicates and capacity, creates an `Enrollment`, and holds it.
+5. The service asks the repository to persist the changed `Workshop`.
+6. The service asks `RegistrationNotifier` to send confirmation.
 
 ```mermaid
 sequenceDiagram
@@ -1979,11 +1979,11 @@ sequenceDiagram
     A-->>S: Xác nhận đăng ký
 ```
 
-**Kịch bản B — Đăng ký trùng:** `Workshop` phát hiện đã có `studentId`, từ chối trước khi sửa trạng thái. Service không gọi `save` và không thông báo thành công.
+**Scenario B — Duplicate Registration:** `Workshop` detects `studentId` already exists and rejects before changing state. The service neither invokes `save` nor sends success notification.
 
-**Kịch bản C — Hết chỗ:** `Workshop` thấy số đăng ký bằng sức chứa, từ chối. Không tạo `Enrollment`. Chính lớp giữ ràng buộc cũng quyết định có được sửa hay không.
+**Scenario C — Full Workshop:** `Workshop` sees enrollment count equals capacity and rejects. No `Enrollment` is created. The class enforcing the constraint also decides whether mutation is allowed.
 
-**Kịch bản D — Hủy đăng ký:** `RegistrationService` tải `Workshop`; `Workshop` kiểm tra người đó có đăng ký và loại liên kết; service lưu kết quả. Nếu sau này cần email xác nhận hủy, bổ sung cộng tác với notifier ở luồng hủy.
+**Scenario D — Withdrawal:** `RegistrationService` loads `Workshop`; `Workshop` confirms enrollment and removes the association; the service persists the result. Add notifier collaboration to the withdrawal flow if confirmation emails become required.
 
 ```mermaid
 flowchart TD
@@ -1997,11 +1997,11 @@ flowchart TD
     F --> G["Notifier phát thông báo"]
 ```
 
-Sau mỗi lượt role-play, hãy hỏi: “Bước này ai sở hữu trách nhiệm?”, “Nếu thất bại thì class nào chịu trách nhiệm xử lý?”, “Cần thêm collaborator hay chỉ cần sửa một thẻ?”. Một thẻ có quá nhiều hành vi không liên quan là dấu hiệu xem lại phân chia.
+After each role-play, ask: “Who owns this step?”, “Which class handles failures?”, and “Does this require another collaborator or just a corrected card?” A card holding many unrelated behaviors indicates poor allocation.
 
-## 5. Từ thẻ CRC sang sơ đồ lớp
+## 5. From CRC Cards to Class Diagrams
 
-CRC Cards xác định *trách nhiệm và cộng tác*. UML class diagram giúp cụ thể hơn về association, multiplicity và API:
+CRC cards identify *responsibilities and collaborations*. UML class diagrams make associations, multiplicities, and APIs more concrete:
 
 ```mermaid
 classDiagram
@@ -2042,25 +2042,25 @@ classDiagram
     Workshop ..> Student : xác thực đối tượng
 ```
 
-Một số quyết định trong sơ đồ là **lựa chọn thiết kế cho ví dụ**: `Workshop` là điểm kiểm soát tập đăng ký, còn `Enrollment` thuộc vòng đời của tập này. Nếu yêu cầu lưu lịch sử đăng ký đã hủy, đổi lớp và quan hệ cho phù hợp. CRC **không tự suy ra** composition, interface, transaction hay kiểu collection; các chi tiết này được xác nhận khi thiết kế sâu hơn.
+Some diagram choices are **specific to this example**: `Workshop` controls enrollment, and `Enrollment` belongs to its lifecycle. If canceled registration history must persist, revise classes and relationships. CRC **does not itself determine** composition, interfaces, transactions, or collection types; these emerge through further design.
 
-### Từ trách nhiệm thành API
+### Turning Responsibilities into APIs
 
-| Trách nhiệm CRC | API Java dự kiến | Kiểm chứng |
+| CRC responsibility | Proposed Java API | Verification |
 | --- | --- | --- |
-| Mã và tên học viên hợp lệ | `Student` constructor | ID/tên rỗng bị từ chối |
-| Lớp giới hạn sức chứa | `Workshop.enroll(...)` | Đủ chỗ được thêm; đầy bị từ chối |
-| Cấm học viên đăng ký trùng | `Workshop.enroll(...)` | Cùng ID lần hai bị từ chối |
-| Hủy và trả chỗ | `Workshop.withdraw(...)` | Số chỗ trống tăng |
-| Tìm lớp theo mã | `WorkshopRepository.getRequired(...)` | Không tìm thấy báo lỗi |
-| Điều phối một yêu cầu | `RegistrationService.register(...)` | Gọi đúng bước và xử lý lỗi |
-| Thông báo sau đăng ký | `RegistrationNotifier.registered(...)` | Chỉ thực hiện sau ghi thành công ở luồng đơn giản |
+| Valid student code and name | `Student` constructor | Empty ID/name rejected |
+| Workshop capacity limit | `Workshop.enroll(...)` | Available seat accepted; full workshop rejected |
+| No duplicate student registrations | `Workshop.enroll(...)` | Second request with the same ID rejected |
+| Withdraw and release a seat | `Workshop.withdraw(...)` | Available seats increase |
+| Find workshop by code | `WorkshopRepository.getRequired(...)` | Missing workshop produces an error |
+| Coordinate a request | `RegistrationService.register(...)` | Calls correct steps and handles errors |
+| Notify after registration | `RegistrationNotifier.registered(...)` | In the simple flow, runs only after a successful save |
 
-Đây là **cầu nối từ tư duy CRC đến thiết kế lớp**. Một method có thể thực hiện nhiều phần của một trách nhiệm; không cần ánh xạ một trách nhiệm thành đúng một method.
+This is **the bridge from CRC thinking to class design**. A single method can implement multiple aspects of a responsibility; there is no required one-to-one mapping between responsibilities and methods.
 
-## 6. Chương trình Java 17 hoàn chỉnh
+## 6. Complete Java 17 Program
 
-Tạo file `CrcCardsDemo.java`. Ví dụ sử dụng repository trong bộ nhớ và notifier in console để làm rõ việc cộng tác; có thời gian cố định để kết quả tái lập.
+Create `CrcCardsDemo.java`. The example uses an in-memory repository and console notifier to illustrate collaboration, with a fixed clock for reproducible output.
 
 ```java
 import java.time.Clock;
@@ -2272,14 +2272,14 @@ public class CrcCardsDemo {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac CrcCardsDemo.java
 java CrcCardsDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Notified ST-01 for WS-01 on 2026-10-15
@@ -2290,94 +2290,94 @@ Remaining: 0
 After withdrawal: 1
 ```
 
-### Đối chiếu chương trình với từng thẻ
+### Map the Program Back to Each Card
 
-- **`Student`** không biết database, danh sách lớp hay cách gửi email. Định danh và tên được xác thực khi tạo.
-- **`Enrollment`** là giá trị ghi lại một lượt đăng ký với ngày cụ thể; ở phạm vi demo nó bất biến.
-- **`Workshop`** sở hữu tập người đăng ký của lớp và từ chối trùng/hết chỗ; không có setter tùy ý cho collection.
-- **`WorkshopRepository`** định nghĩa việc lấy/lưu; cài đặt `InMemoryWorkshopRepository` giữ `Map`, không chứa quy tắc sức chứa.
-- **`RegistrationNotifier`** là cổng thông báo. `ConsoleRegistrationNotifier` chịu trách nhiệm in ra console, không quyết định đăng ký hợp lệ.
-- **`RegistrationService`** phối hợp repository, đối tượng nghiệp vụ, clock và notifier. Phương thức này không tự tính sức chứa hoặc ghi trực tiếp vào `enrollments`.
+- **`Student`** knows nothing about databases, workshop lists, or email delivery. Its identity and name are validated on construction.
+- **`Enrollment`** records a dated registration; it is immutable within the demo scope.
+- **`Workshop`** owns its enrollment set and rejects duplicates/full capacity; it provides no arbitrary collection setter.
+- **`WorkshopRepository`** defines retrieval/persistence; `InMemoryWorkshopRepository` stores a `Map` without implementing capacity rules.
+- **`RegistrationNotifier`** defines the notification port. `ConsoleRegistrationNotifier` prints to the console rather than deciding whether registration is valid.
+- **`RegistrationService`** coordinates the repository, domain objects, clock, and notifier without calculating capacity or writing into `enrollments` itself.
 
-Trong `Workshop.enroll(...)`, các lỗi về trùng/hết chỗ xảy ra **trước khi sửa Map**. Thao tác `withdraw` từ chối nếu người học chưa có trong lớp. Do đó kết quả đơn luồng khớp các quy tắc được phân công trên thẻ.
+Within `Workshop.enroll(...)`, duplicate/full checks occur **before modifying the Map**. `withdraw` rejects students who were not enrolled. Thus the single-threaded outcome follows the responsibilities assigned on the cards.
 
-**Ranh giới demo:** `InMemoryWorkshopRepository` lưu và trả cùng một tham chiếu `Workshop`; phương thức `enroll` làm thay đổi đối tượng trước khi `save` được gọi. Đây là mô hình trong bộ nhớ tuần tự để giảng về trách nhiệm, **không phải transaction có rollback**. Trong hệ thống thật, cần kiểm tra sức chứa và lưu dưới cơ chế đồng bộ/giao dịch phù hợp để hai yêu cầu không vượt quá chỗ trống. Nếu notifier lỗi sau khi đã lưu, phải có chính sách phát lại, trạng thái đơn và idempotency; ví dụ thường dùng transactional outbox.
+**Demo boundary:** `InMemoryWorkshopRepository` stores and returns the same `Workshop` reference; `enroll` mutates it before `save` is called. This is a sequential in-memory model for teaching responsibilities, **not a transaction with rollback**. Production requires coordinated checks and persistence under suitable synchronization/transactions to prevent concurrent oversubscription. If the notifier fails after persistence, define delivery retries, request state, and idempotency; a transactional outbox is a common solution.
 
-## 7. Kiểm chứng CRC bằng test tình huống
+## 7. Validate CRC Through Scenario Tests
 
-Một bộ CRC tốt phải hỗ trợ suy ra test từ trách nhiệm, đặc biệt test khi quy tắc thất bại.
+A good CRC set should support deriving tests from responsibilities, especially when rules fail.
 
-| Thẻ | Tình huống test | Kết quả cần có |
+| Card | Test scenario | Required outcome |
 | --- | --- | --- |
-| `Student` | ID rỗng, tên rỗng | Constructor từ chối |
-| `Workshop` | Tạo lớp capacity 0 | Constructor từ chối |
-| `Workshop` | Đăng ký lần đầu khi còn chỗ | Có thêm một `Enrollment` |
-| `Workshop` | Cùng học viên đăng ký lại | Từ chối, tập đăng ký không đổi |
-| `Workshop` | Lớp đầy | Từ chối, số chỗ không âm |
-| `Workshop` | Hủy người chưa đăng ký | Từ chối, trạng thái không đổi |
-| `RegistrationService` | Đăng ký hợp lệ | Tải lớp, áp hành vi, lưu, yêu cầu thông báo |
-| `RegistrationService` | Lớp từ chối | Không báo thành công, không yêu cầu gửi thông báo |
-| Repository adapter | Lớp không tồn tại | Trả lỗi rõ ràng |
-| Tích hợp nhiều request | Hai người đăng ký chỗ cuối | Tối đa một yêu cầu thành công |
+| `Student` | Blank ID or name | Constructor rejects |
+| `Workshop` | Construct with capacity 0 | Constructor rejects |
+| `Workshop` | First registration with a seat available | Adds an `Enrollment` |
+| `Workshop` | Same student registers again | Reject; enrollment set unchanged |
+| `Workshop` | Workshop is full | Reject; available seats never negative |
+| `Workshop` | Withdraw a student not enrolled | Reject; state unchanged |
+| `RegistrationService` | Valid registration | Load workshop, invoke behavior, persist, request notification |
+| `RegistrationService` | Workshop rejects | Do not report success or request notification |
+| Repository adapter | Workshop does not exist | Return an explicit error |
+| Concurrent request integration | Two students request the last seat | At most one succeeds |
 
-Có thể mở rộng ví dụ bằng fake `RegistrationNotifier` để đếm số lần gọi; thay `ConsoleRegistrationNotifier` mà không sửa `Workshop`. Đó là phép thử trực tiếp cho **sự phân chia trách nhiệm và mức phụ thuộc**.
+Extend the example with a fake `RegistrationNotifier` that counts calls; replace `ConsoleRegistrationNotifier` without changing `Workshop`. This directly tests **responsibility boundaries and coupling**.
 
-Unit test thuần trên `Workshop` kiểm tra quy tắc đơn luồng. Nó chưa chứng minh thread safety; cần integration/concurrency test tại tầng DB hoặc transaction để xác nhận bất biến toàn hệ thống.
+Unit tests on `Workshop` verify sequential business rules, not thread safety. Add database-level integration and concurrency tests to validate system-wide invariants.
 
-## 8. Đánh giá chất lượng thẻ CRC
+## 8. Assess CRC Card Quality
 
-### Tính gắn kết (*cohesion*)
+### Cohesion
 
-Các trách nhiệm trên cùng một thẻ có cùng phục vụ một mục tiêu không?
+Do responsibilities on one card serve the same purpose?
 
-- Tốt: `Workshop` quản lý sức chứa, danh sách đăng ký và tính hợp lệ khi đăng ký.
-- Đáng xem lại: `Workshop` vừa quản lý sức chứa vừa xuất PDF, kết nối SMTP và parse JSON.
+- Good: `Workshop` manages capacity, enrolled students, and registration validity.
+- Reconsider: `Workshop` handles capacity while exporting PDF, connecting to SMTP, and parsing JSON.
 
-### Mức phụ thuộc (*coupling*)
+### Coupling
 
-Class có phụ thuộc quá nhiều chi tiết của class khác không?
+Does the class depend on too many internal details of others?
 
-- Tốt: `RegistrationService` dùng `WorkshopRepository` interface.
-- Đáng xem lại: service biết cấu trúc bảng SQL của repository và phải tự sửa `Workshop.enrollments` bên trong.
+- Good: `RegistrationService` uses the `WorkshopRepository` interface.
+- Reconsider: the service knows repository SQL schemas and modifies `Workshop.enrollments` directly.
 
-### Nguồn chân lý của quy tắc
+### Authoritative Rule Ownership
 
-Nếu giới hạn sức chứa được kiểm tra ở `Workshop`, không nên có bản sao công thức giới hạn trong controller, notifier và repository. Controller có thể kiểm tra nhanh để hiển thị lỗi, nhưng điểm có thẩm quyền giữ bất biến phải được xác định rõ.
+If capacity is enforced in `Workshop`, do not duplicate the formula in the controller, notifier, and repository. The UI may precheck for helpful feedback, but the authoritative invariant enforcement point must be clear.
 
-### Khả năng thay đổi
+### Adaptability
 
-Thử những biến động độc lập:
+Try independent changes:
 
-| Thay đổi | Thẻ nào nên được xem xét? | Thẻ nào ít cần đổi? |
+| Change | Which cards need review? | Which cards likely need no change? |
 | --- | --- | --- |
-| Lớp giới hạn 30 người thay vì 20 | Dữ liệu cấu hình `Workshop` | Notifier, repository interface |
-| Chuyển từ console sang email | Cài đặt `RegistrationNotifier` | `Workshop`, `Enrollment` |
-| Chuyển lưu bộ nhớ sang PostgreSQL | Adapter của `WorkshopRepository` | Quy tắc đăng ký trong `Workshop` |
-| Cho phép danh sách chờ | `Workshop`, có thể thêm `WaitlistEntry` | HTTP adapter có thể chỉ đổi DTO cần thiết |
-| Thu phí trước khi xác nhận | Quy trình/service, payment port, trạng thái enrollment | Các lớp không liên quan đến thanh toán |
-| Học viên có quyền ưu tiên | `RegistrationPolicy` hoặc quy tắc miền phù hợp | Adapter gửi thông báo |
+| Workshop limit becomes 30 rather than 20 | `Workshop` configuration data | Notifier, repository interface |
+| Switch console output to email | `RegistrationNotifier` implementation | `Workshop`, `Enrollment` |
+| Switch in-memory persistence to PostgreSQL | `WorkshopRepository` adapter | `Workshop` registration rules |
+| Introduce waiting lists | `Workshop`, possibly new `WaitlistEntry` | HTTP adapter may only need DTO changes |
+| Require payment before confirmation | Workflow/service, payment port, enrollment state | Classes unrelated to payments |
+| Grant priority to certain students | `RegistrationPolicy` or an appropriate domain rule | Notification adapter |
 
-Nếu một thay đổi hạ tầng buộc sửa nhiều lớp domain, hãy kiểm tra lại collaborators và hướng phụ thuộc.
+If an infrastructure change forces modifications across many domain classes, revisit collaborators and dependency direction.
 
-## 9. Tái phân công trách nhiệm khi yêu cầu mở rộng
+## 9. Reassigning Responsibilities as Requirements Grow
 
-CRC là tài liệu **sống** trong lúc mô hình hóa. Những tình huống mới có thể làm thay đổi thẻ chứ không phải chỉ thêm một method.
+CRC is a **living artifact** during modeling. New scenarios may revise cards rather than merely add methods.
 
-**Tình huống: “Khi lớp đầy, học viên được vào danh sách chờ theo thời gian.”**
+**Scenario: “When a workshop is full, students join a time-ordered waitlist.”**
 
-Các câu hỏi mới: ai giữ thứ tự chờ, khi có người hủy ai được mời, lời mời có hết hạn không? Nếu danh sách chờ có ngày và trạng thái riêng, cân nhắc class `WaitlistEntry`. `Workshop` có thể điều phối chỗ trống và hàng chờ, hoặc cộng tác với một policy để quyết định người ưu tiên. Cập nhật CRC trước khi thêm field tùy tiện.
+New questions: who tracks order, who gets invited after cancellation, and do offers expire? If entries have independent dates and states, consider `WaitlistEntry`. `Workshop` may coordinate seats and the queue or delegate priority decisions to a policy. Update CRC before adding arbitrary fields.
 
-**Tình huống: “Mỗi học viên có một hạng thành viên, hạng VIP được ưu tiên.”**
+**Scenario: “Each student has a membership tier, and VIP members have priority.”**
 
-Đừng để notifier quyết định ai được nhận vào lớp chỉ vì nó nhìn thấy email VIP. Đây là **quy tắc phân bổ**; cân nhắc thẻ `AdmissionPolicy` cộng tác với `Workshop` và thông tin hạng học viên.
+Do not let the notifier decide admission just because it sees a VIP email. This is an **allocation rule**: consider an `AdmissionPolicy` collaborating with `Workshop` and student-tier information.
 
-**Tình huống: “Đăng ký chỉ hợp lệ sau thanh toán.”**
+**Scenario: “Registration is valid only after payment.”**
 
-`Enrollment` không còn chỉ là giá trị bất biến một dòng. Có thể cần entity `Enrollment` với trạng thái `PENDING_PAYMENT`, `CONFIRMED`, `CANCELLED`, thêm `PaymentGateway`, timeout và quy tắc giải phóng chỗ. Xác định rõ chỗ được giữ từ lúc nào, giao dịch nào tạo entitlement và cách xử lý webhook trả về nhiều lần.
+`Enrollment` is no longer just a one-line immutable value. It may need an entity `Enrollment` with `PENDING_PAYMENT`, `CONFIRMED`, and `CANCELLED` states, plus `PaymentGateway`, timeouts, and seat-release rules. Define when a seat is reserved, what transaction grants entitlement, and how to handle repeated webhooks.
 
-**Tình huống: “Một học viên không thể đăng ký hai lớp trùng giờ.”**
+**Scenario: “Students cannot register for two overlapping workshops.”**
 
-`Workshop` riêng lẻ không biết lịch ở các lớp khác. Quy tắc này cần collaborator có quyền truy vấn danh sách đăng ký/lịch của học viên hoặc một service/policy ở ranh giới thích hợp. Đó là dấu hiệu bổ sung trách nhiệm mới **vượt phạm vi một lớp**.
+An individual `Workshop` cannot know other schedules. This rule needs a collaborator authorized to query a student's registrations/schedule or a policy/service at the appropriate boundary. It introduces responsibility **beyond one workshop**.
 
 ```mermaid
 flowchart TD
@@ -2393,120 +2393,120 @@ flowchart TD
     H -->|Có| I["Cập nhật UML, code và test"]
 ```
 
-## 10. Lỗi thường gặp khi dùng CRC Cards
+## 10. Common CRC Card Mistakes
 
-**Lỗi 1 — Class nào cũng thành service.** Ghi `WorkshopService` “quản lý tất cả”, `Workshop` chỉ có setter. Hãy thử chuyển những bất biến của lớp về `Workshop`, còn service giữ nhiệm vụ điều phối use case. Nhưng không ép các quy tắc cần nhiều aggregate vào một entity thiếu dữ liệu.
+**Mistake 1 — Turning every class into a service.** A `WorkshopService` “manages everything” while `Workshop` contains only setters. Move appropriate invariants back into `Workshop` and keep use-case coordination in the service, without forcing cross-aggregate rules into an entity lacking the data.
 
-**Lỗi 2 — Chỉ mô tả method và field.** “Có `getCapacity`, `setCapacity`, `getStudents`” chưa làm rõ *lớp chịu trách nhiệm ngăn quá chỗ*. Viết trách nhiệm trước, suy ra API sau.
+**Mistake 2 — Describing only methods and fields.** Listing `getCapacity`, `setCapacity`, and `getStudents` does not explain *who prevents oversubscription*. Write responsibilities first and derive the API later.
 
-**Lỗi 3 — Tạo một class cho mỗi danh từ.** “Ngày đăng ký” không nhất thiết cần `RegistrationDateManager`; `LocalDate` có thể đủ. Một class mới cần có ý nghĩa, quy tắc hoặc vòng đời độc lập.
+**Mistake 3 — Creating one class per noun.** “Registration date” does not necessarily require `RegistrationDateManager`; `LocalDate` may suffice. A new class needs distinct meaning, rules, or lifecycle.
 
-**Lỗi 4 — Collaborators là toàn bộ dependency trong ứng dụng.** Nếu thẻ `Workshop` liệt kê database, REST controller, log framework, email client mà không dùng trực tiếp cho hành vi miền, đó có thể là ghép tầng kỹ thuật vào sai nơi.
+**Mistake 4 — Listing every application dependency as a collaborator.** If a `Workshop` card names databases, REST controllers, logging frameworks, and email clients unrelated to its domain behavior, technical layers may be mixed into the wrong place.
 
-**Lỗi 5 — Hai lớp cùng làm chủ một quyết định.** Nếu cả `RegistrationService` và `Workshop` đều tự kiểm tra và cập nhật sức chứa theo logic khác nhau, dễ xuất hiện hai câu trả lời mâu thuẫn. Chọn nơi có thẩm quyền bảo vệ bất biến và định nghĩa rõ hợp đồng.
+**Mistake 5 — Two classes own the same decision.** If `RegistrationService` and `Workshop` each validate and update capacity differently, inconsistent outcomes can result. Choose the authority enforcing the invariant and define its contract.
 
-**Lỗi 6 — Chỉ diễn tập luồng thành công.** Đăng ký trùng, hết chỗ, lỗi lưu, mất mạng, hủy lặp, request đồng thời mới phát hiện phân công thiếu trách nhiệm.
+**Mistake 6 — Role-playing only success.** Duplicates, full capacity, persistence failures, network loss, repeated cancellation, and concurrent requests expose missing responsibilities.
 
-**Lỗi 7 — Nghĩ CRC thay thế thiết kế chi tiết.** CRC giúp hình dung trách nhiệm và cộng tác; nó **không** chứng minh tính đúng đắn của code, thread safety, thiết kế bảng, transactional outbox hay permission. Các quyết định đó cần thêm UML/API, test, review và kiểm chứng hệ thống.
+**Mistake 7 — Thinking CRC replaces detailed design.** CRC explores responsibilities and collaboration but **does not** prove code correctness, thread safety, table schemas, transactional outbox design, or permissions. These require APIs/UML, tests, reviews, and system verification.
 
-**Lỗi 8 — Gộp actor người dùng với class miền một cách máy móc.** “Nhân viên hỗ trợ gửi thông báo” có thể là một vai trò trong use case, không có nghĩa phải có object `SupportStaff` nếu không quản lý định danh/quy tắc của nhân viên trong phạm vi ứng dụng.
+**Mistake 8 — Automatically equating user actors with domain classes.** “Support staff sends notification” may describe a use-case role without requiring a `SupportStaff` object when staff identity/policy is outside scope.
 
-## 11. CRC, UML và các công cụ thiết kế khác
+## 11. CRC, UML, and Other Design Tools
 
-| Công cụ | Trả lời tốt nhất | Nên dùng lúc nào |
+| Tool | Main question answered | When to use it |
 | --- | --- | --- |
-| User story / use case | Người dùng muốn kết quả gì? Khi nào thành công/thất bại? | Khi khám phá nhu cầu |
-| CRC Cards | Lớp nào nhận trách nhiệm gì và nhờ ai? | Khi phân chia đối tượng và điều phối |
-| UML class diagram | Lớp, quan hệ, multiplicity và API là gì? | Khi cần mô tả cấu trúc chính xác |
-| UML sequence diagram | Các collaborator gọi nhau theo thứ tự nào? | Khi kiểm tra luồng tương tác |
-| State machine | Đối tượng có thể chuyển những trạng thái nào? | Khi nghiệp vụ có vòng đời phức tạp |
-| Unit/integration tests | Hành vi đã triển khai có đúng yêu cầu không? | Khi xác thực code và tích hợp |
+| User story / use case | What outcome does the user want? When does it succeed/fail? | During requirements discovery |
+| CRC cards | Which classes own which responsibilities, and whom do they consult? | During object/responsibility allocation |
+| UML class diagram | What are classes, relationships, multiplicities, and APIs? | When precise structure is needed |
+| UML sequence diagram | In what order do collaborators invoke one another? | When validating interaction flows |
+| State machine | Which states and transitions can an object have? | For complex domain lifecycles |
+| Unit/integration tests | Does implementation meet requirements? | To validate code and integration |
 
-Một quá trình hiệu quả là **use case → CRC role-play → UML ở mức cần thiết → Java/test → sửa lại thẻ khi học thêm về nghiệp vụ**. CRC không phải tài liệu phải giữ nguyên bất chấp code và thực tế đổi khác.
+An effective progression is **use case → CRC role-play → UML at the needed level → Java/tests → revise cards as the domain becomes clearer**. CRC need not remain frozen while code and real operations evolve.
 
-## 12. Bài tập thực hành
+## 12. Practice Exercises
 
-### Bài 1 — Thẻ CRC cho đặt vé xem phim
+### Exercise 1 — CRC Cards for Movie Ticketing
 
-Yêu cầu: “Khán giả chọn suất chiếu, giữ ghế trong 5 phút, thanh toán rồi nhận vé. Một ghế trong cùng một suất không được bán cho hai người.”
+Requirement: “A viewer selects a screening, holds seats for 5 minutes, pays, and receives tickets. A seat at a screening may not be sold to two people.”
 
-Hãy đề xuất CRC cho `Screening`, `SeatHold`, `Ticket`, `BookingService`, `PaymentGateway`, `BookingRepository`. Chỉ rõ lớp nào quyết định giữ ghế hợp lệ, lớp nào biết thời hạn giữ, và class nào điều phối xác nhận thanh toán.
+Propose CRC cards for `Screening`, `SeatHold`, `Ticket`, `BookingService`, `PaymentGateway`, and `BookingRepository`. Identify who validates seat holds, who knows the hold expiration, and who coordinates payment confirmation.
 
-### Bài 2 — Tìm trách nhiệm trùng lặp
+### Exercise 2 — Identify Duplicated Responsibilities
 
-Một thiết kế có `RegistrationController`, `RegistrationService`, `Workshop` và `WorkshopRepository`; cả bốn đều kiểm tra “lớp đã đủ 30 người chưa?”. Hãy viết lại thẻ CRC để chỉ rõ nguồn chân lý, giữ validation cần thiết tại ranh giới mà không nhân bản quyết định nghiệp vụ.
+A design includes `RegistrationController`, `RegistrationService`, `Workshop`, and `WorkshopRepository`; all four check “has the workshop reached 30 students?” Rewrite CRC cards to identify one source of truth, preserving needed boundary validation without duplicating business decisions.
 
-### Bài 3 — Diễn tập luồng lỗi
+### Exercise 3 — Role-Play a Failure Flow
 
-Dùng bộ thẻ của bài Java, giả sử `save(workshop)` thất bại rồi notifier vẫn gửi email “đã đăng ký”. Thẻ nào cần thay đổi trách nhiệm hoặc hợp đồng? Đề xuất trạng thái, transaction và chính sách retry hợp lý. Giải thích tại sao không thể giải quyết chỉ bằng cách gọi lại `register` tùy ý.
+Using the Java example's cards, suppose `save(workshop)` fails but the notifier still sends an “enrolled” email. Which cards need revised responsibilities or contracts? Propose suitable states, transactions, and retry policies. Explain why blindly retrying `register` is insufficient.
 
-### Bài 4 — Thêm danh sách chờ
+### Exercise 4 — Add a Waiting List
 
-Lớp 30 người đã đầy; học viên tiếp theo được thêm vào hàng chờ. Khi một người hủy, hệ thống dành chỗ cho học viên đầu tiên trong hàng chờ trong 15 phút. Vẽ CRC mới, mô tả trạng thái `WAITING/OFFERED/CONFIRMED/EXPIRED` và ai quản lý thời gian hết hạn.
+A workshop with 30 seats is full; the next student joins a waitlist. When someone withdraws, the first student on the waitlist receives an offer held for 15 minutes. Draw new CRC cards, describe `WAITING/OFFERED/CONFIRMED/EXPIRED` states, and assign expiration ownership.
 
-### Bài 5 — Chuyển CRC thành test và code
+### Exercise 5 — Turn CRC into Tests and Code
 
-Bổ sung `registrationCount()`, test `Workshop` từ 0 đến sức chứa, test đăng ký trùng không làm thay đổi count, test hủy trả chỗ. Viết fake notifier đếm số lần gọi và kiểm tra `RegistrationService` không báo thành công khi `Workshop` từ chối.
+Add `registrationCount()`, test `Workshop` from 0 up to capacity, confirm duplicates do not change the count, and verify that withdrawal releases a seat. Write a fake notifier counting calls and check that `RegistrationService` never reports success after `Workshop` rejects.
 
-## 13. Checklist hoàn thành một vòng thiết kế CRC
+## 13. CRC Design Completion Checklist
 
-- Mỗi class có **một mục đích dễ giải thích bằng ngôn ngữ nghiệp vụ**?
-- Các responsibility dùng động từ có ý nghĩa và thể hiện **nghĩa vụ** thay vì chỉ liệt kê method?
-- Mọi điều kiện “phải/không được/tối đa/chỉ khi” đều có một nơi chịu trách nhiệm bảo vệ?
-- Những collaborator được liệt kê có thực sự cần để hoàn thành trách nhiệm?
-- Có vòng gọi lại, phụ thuộc chéo hoặc hai class cùng làm chủ một quy tắc?
-- Mỗi class có đủ thông tin để giữ invariant của mình hay đang sửa lén dữ liệu class khác?
-- Đã diễn tập luồng thành công, lỗi và trạng thái cần hoàn tác?
-- Đã phân biệt đối tượng miền, policy, service điều phối, repository và adapter bên ngoài?
-- Nếu yêu cầu thay đổi, có biết **thẻ nào cần sửa** và vì sao không?
-- Đã chuyển trách nhiệm thành API/UML và tình huống kiểm thử rõ ràng?
-- Khi chạy đồng thời hoặc có DB/network, đã xác định nơi cần transaction, locking, retry và idempotency?
+- Does each class have **a purpose expressible in business language**?
+- Do responsibilities use meaningful verbs and describe **obligations**, not merely list methods?
+- Is every “must/must not/at most/only if” condition assigned to a responsible enforcer?
+- Are listed collaborators genuinely needed to fulfill responsibilities?
+- Are there dependency cycles, excessive cross-references, or two classes claiming one rule?
+- Can every class protect its invariants, or does it secretly mutate other classes' data?
+- Have success, failure, and rollback-required flows been role-played?
+- Have domain objects, policies, coordinators, repositories, and external adapters been distinguished?
+- If requirements change, can you identify **which card must change** and why?
+- Have responsibilities become explicit APIs/UML elements and test scenarios?
+- With concurrent DB/network calls, are transaction, locking, retry, and idempotency boundaries identified?
 
-**Ghi nhớ:** một thẻ CRC tốt không thắng vì có nhiều class hay nhiều dòng. Nó tốt khi người đọc có thể kể được “ai làm gì, vì sao người đó làm, và nhờ ai khi cần”, rồi kiểm chứng được câu trả lời đó bằng các tình huống thực tế và code OOP rõ ràng.
+**Remember:** a good CRC card is not better merely because it contains more classes or lines. It is useful when a reader can explain “who does what, why, and with whose help” and verify those answers using real scenarios and clear OOP code.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="modeling-005">Sơ đồ lớp: thành viên và quan hệ</a>
+## <a id="modeling-005">Class diagrams: members and relationships</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Sơ đồ lớp UML: thành viên và quan hệ trong thiết kế OOP Java
+# UML Class Diagrams: Members and Relationships in Java OOP Design
 
-> **Mục tiêu:** Đọc, vẽ và kiểm tra sơ đồ lớp (*UML class diagram*) gồm tên lớp, thuộc tính, phương thức, phạm vi truy cập, kiểu dữ liệu, bội số và các quan hệ giữa lớp. Biết chuyển sơ đồ thành Java và nhận ra những điều sơ đồ chỉ **mô tả** chứ Java/UML không tự thực thi.
+> **Goal:** Read, draw, and validate *UML class diagrams* showing class names, attributes, operations, visibility, types, multiplicity, and relationships. Translate them into Java and recognize what diagrams merely **describe**, rather than enforce automatically in Java/UML.
 
-## 1. Sơ đồ lớp giúp trả lời câu hỏi nào?
+## 1. What Questions Do Class Diagrams Answer?
 
-Một sơ đồ lớp là **mô hình cấu trúc tĩnh**: hệ thống có những khái niệm nào, mỗi khái niệm có trạng thái và hành vi gì, và các khái niệm liên hệ với nhau như thế nào.
+A class diagram is a **static structural model** showing which concepts exist, their state and behavior, and the relationships connecting them.
 
-Chẳng hạn với ứng dụng bán hàng, yêu cầu “khách hàng đặt đơn, mỗi đơn chứa nhiều dòng hàng, mỗi dòng chọn một sản phẩm, thanh toán qua cổng thanh toán” cần trả lời:
+For example, an e-commerce requirement where “customers place orders, each order has several lines, each line selects a product, and payment uses a gateway” raises these questions:
 
-- `Customer`, `Order`, `OrderLine`, `Product` nên có những dữ liệu nào?
-- Ai **sở hữu** các dòng đơn hàng, ai chỉ **tham chiếu** đến sản phẩm?
-- Một khách hàng có thể có bao nhiêu đơn? Một đơn có thể chưa có dòng khi còn là bản nháp không?
-- Những hành vi nào cần đặt vào `Order` để bảo vệ quy tắc nghiệp vụ?
-- `CheckoutService` phụ thuộc vào `PaymentGateway` như thế nào, và implementation thay thế được bằng cách nào?
+- Which data belongs to `Customer`, `Order`, `OrderLine`, and `Product`?
+- Who **owns** order lines, and who merely **references** products?
+- How many orders may a customer have? May a draft order have no lines?
+- Which behaviors belong in `Order` to protect business rules?
+- How does `CheckoutService` depend on `PaymentGateway`, and how can implementations be swapped?
 
-Sơ đồ lớp hỗ trợ **trao đổi thiết kế, phân chia trách nhiệm, nhận diện liên kết và review kiến trúc**. Nó không phải sơ đồ tuần tự thực thi: muốn mô tả thứ tự gọi khi checkout, dùng *sequence diagram* hoặc *activity diagram* thích hợp hơn.
+Class diagrams aid **design communication, responsibility allocation, relationship discovery, and architecture reviews**. They do not describe execution order; use an appropriate *sequence diagram* or *activity diagram* for checkout call sequences.
 
-Sơ đồ có thể xuất hiện ở ba mức:
+Class diagrams can be drawn at three levels:
 
-| Mức mô hình | Trọng tâm | Chi tiết nên thể hiện |
+| Model level | Focus | Useful details |
 |---|---|---|
-| **Phân tích miền nghiệp vụ** | Các khái niệm và quy tắc | `Order` chứa `OrderLine`; `Customer` đặt `Order` |
-| **Thiết kế phần mềm** | Trách nhiệm, API, phụ thuộc | `Order.addLine(...)`, `PaymentGateway.charge(...)`, bội số |
-| **Triển khai** | Cấu trúc code gần với Java | visibility, kiểu cụ thể, constructor, collection, interface, static |
+| **Domain analysis** | Concepts and rules | `Order` contains `OrderLine`; `Customer` places `Order` |
+| **Software design** | Responsibilities, APIs, dependencies | `Order.addLine(...)`, `PaymentGateway.charge(...)`, multiplicities |
+| **Implementation** | Structure close to Java code | Visibility, concrete types, constructors, collections, interfaces, static members |
 
-Đừng đưa mọi getter, setter, DTO, kiểu thư viện và dependency hạ tầng vào một sơ đồ phân tích đơn giản. Chỉ đưa vào những thành viên và quan hệ cần thiết để giải thích quyết định thiết kế của sơ đồ đó.
+Do not crowd a simple analysis diagram with every getter, setter, DTO, library type, and infrastructure dependency. Include only members and relationships necessary to explain its design decisions.
 
-## 2. Hình hộp lớp gồm những thành viên nào?
+## 2. What Does a Class Box Contain?
 
-Cách vẽ phổ biến dùng một hình chữ nhật chia ba ngăn: **tên lớp**, **thuộc tính**, **phương thức**.
+The usual notation is a rectangle divided into three compartments: **class name**, **attributes**, and **operations**.
 
 ~~~text
 ┌──────────────────────────────────────┐
@@ -2522,28 +2522,28 @@ Cách vẽ phổ biến dùng một hình chữ nhật chia ba ngăn: **tên l�
 └──────────────────────────────────────┘
 ~~~
 
-Các quy ước UML thường dùng:
+Common UML conventions:
 
-- **Tên lớp** ở ngăn trên cùng; lớp trừu tượng có thể viết nghiêng hoặc gắn nhãn `«abstract»`.
-- **Thuộc tính** biểu diễn trạng thái: `visibility name: Type [multiplicity] = defaultValue {property}`. Không cần mọi thành phần trong một sơ đồ.
-- **Phương thức/operation** biểu diễn dịch vụ/hành vi: `visibility name(parameter: Type = default): ReturnType`. Có thể có nhiều tham số.
-- Có thể **ẩn ngăn** hoặc ẩn thành viên không liên quan để sơ đồ dễ đọc; đó là thay đổi mức chi tiết trình bày, không có nghĩa lớp không có những phương thức ấy.
-- UML phân biệt *operation* (hợp đồng có thể gọi) với *method* (cách triển khai). Trong tài liệu hướng Java, người học thường gọi chung là “phương thức”, nhưng không nên suy diễn rằng sơ đồ luôn mô tả body của phương thức.
+- **Class name** goes in the top compartment; abstract classes may be italicized or marked `«abstract»`.
+- **Attributes** describe state using `visibility name: Type [multiplicity] = defaultValue {property}`. Not every part must appear on every diagram.
+- **Operations** describe provided behavior using `visibility name(parameter: Type = default): ReturnType`. Several parameters may appear.
+- **Compartments or irrelevant members may be hidden** to improve readability; this changes the presentation detail, not what methods the class actually has.
+- UML distinguishes *operations* (callable contracts) from *methods* (implementations). Java tutorials often call both “methods,” but the diagram does not necessarily show the method body.
 
-### Ký hiệu phạm vi truy cập
+### Visibility Symbols
 
-| UML | Ý nghĩa | Java gần tương ứng |
+| UML | Meaning | Approximate Java equivalent |
 |---|---|---|
 | `+` | Public | `public` |
 | `-` | Private | `private` |
 | `#` | Protected | `protected` |
-| `~` | Package visibility | Không ghi modifier (package-private) |
+| `~` | Package visibility | No modifier (package-private) |
 
-Một điểm dễ nhầm: Java `protected` cho phép truy cập trong cùng package và từ subclass theo những quy tắc riêng; không thể xem nó đồng nhất hoàn toàn với mọi đặc tả truy cập trong mọi ngôn ngữ UML.
+One subtlety: Java `protected` permits same-package access and specific cross-package subclass access; it is not necessarily identical to all UML access interpretations across programming languages.
 
-Để mô hình hóa **thuộc tính dẫn xuất**, UML thường dùng dấu `/` trước tên, ví dụ `/totalCents: long`: giá trị tính từ các dòng hàng, không nhất thiết có field `totalCents` được lưu. Với giá trị bất biến/read-only, có thể dùng thuộc tính ràng buộc như `{readOnly}`. Thành viên `static` thường được **gạch dưới** trong UML chuẩn; ở code Java tương ứng `static`. Tool vẽ có thể cung cấp cú pháp riêng cho các biểu diễn này, nên cần biết giới hạn của công cụ.
+UML marks **derived attributes** with `/`, such as `/totalCents: long`: a value computed from order lines rather than necessarily stored in a Java `totalCents` field. Constraints like `{readOnly}` can represent readonly properties. Standard UML **underlines** `static` members; in Java they correspond to `static`. Diagram tools may have their own syntax and limitations for these details.
 
-### Ví dụ UML bằng Mermaid
+### UML Example with Mermaid
 
 ~~~mermaid
 classDiagram
@@ -2557,11 +2557,11 @@ classDiagram
     }
 ~~~
 
-Mermaid phù hợp README vì có thể giữ sơ đồ cùng phiên bản với tài liệu. Tuy nhiên một số tính năng UML chi tiết, đặc biệt định dạng text, thuộc tính phái sinh hay constraint phức tạp, có thể không được thể hiện chính xác bằng mọi renderer Mermaid. Với các chi tiết quan trọng, hãy bổ sung mô tả bằng văn bản ngay bên cạnh.
+Mermaid fits READMEs because diagrams can be versioned alongside documentation. However, UML details such as text styling, derived properties, and complex constraints may not render faithfully across Mermaid implementations. Add nearby prose for important details.
 
-## 3. Đọc thuộc tính và operation một cách chính xác
+## 3. Read Attributes and Operations Precisely
 
-Các dòng thuộc tính minh họa:
+Sample attribute declarations:
 
 ~~~text
 - id: UUID
@@ -2570,14 +2570,14 @@ Các dòng thuộc tính minh họa:
 - /remainingSeats: int {readOnly}
 ~~~
 
-Diễn giải:
+Interpretation:
 
-- `id` có kiểu định danh `UUID` và được che giấu phía ngoài.
-- `capacity` có giá trị mặc định trong mô hình là 30 (không đồng nghĩa Java chắc chắn đã gán 30 nếu code khác sơ đồ).
-- `members` giữ nhiều tham chiếu `Member`; multiplicity `[0..*]` biểu thị số lượng kết quả/thành phần mong đợi trong mô hình.
-- `remainingSeats` là giá trị **tính ra** và chỉ đọc; code Java có thể triển khai bằng method `remainingSeats()` thay vì field.
+- `id` has identifier type `UUID` and is hidden from external access.
+- `capacity` has a model default of 30 (which does not guarantee that the Java implementation sets 30).
+- `members` holds several `Member` references; multiplicity `[0..*]` specifies the expected number of associated elements.
+- `remainingSeats` is a **derived**, read-only value; Java may implement it as `remainingSeats()` rather than a stored field.
 
-Các dòng phương thức minh họa:
+Sample operation declarations:
 
 ~~~text
 + enroll(student: Student): EnrollmentReceipt
@@ -2586,7 +2586,7 @@ Các dòng phương thức minh họa:
 # onStatusChanged(old: Status, next: Status): void
 ~~~
 
-UML đặt **tên tham số trước kiểu**, trong khi Java viết `Type parameterName`. Ví dụ:
+UML puts **parameter names before types**, while Java uses `Type parameterName`. For example:
 
 ~~~java
 public EnrollmentReceipt enroll(Student student) {
@@ -2595,9 +2595,9 @@ public EnrollmentReceipt enroll(Student student) {
 }
 ~~~
 
-`Optional<Member>` là kiểu Java của **kết quả trả về**, không phải bội số trên association UML. Không nên suy luận từ `Optional` rằng entity bắt buộc được lưu trữ dưới dạng một collection, hay từ `List<>` rằng quan hệ bắt buộc là aggregation.
+`Optional<Member>` is a Java **return type**, not an association multiplicity. Do not infer from `Optional` that an entity must be stored in a collection, or from `List<>` that the association must be aggregation.
 
-### Interface, abstract class, enum
+### Interfaces, Abstract Classes, and Enums
 
 ~~~mermaid
 classDiagram
@@ -2616,55 +2616,55 @@ classDiagram
     }
 ~~~
 
-Với Java:
+In Java:
 
-- `interface` xác định hợp đồng hành vi; lớp cụ thể dùng `implements`.
-- `abstract class` có thể chứa trạng thái và phương thức đã triển khai, đồng thời khai báo abstract method.
-- `enum` là tập giá trị hữu hạn có thể sở hữu hành vi; đưa vào sơ đồ nếu trạng thái chuyển đổi hoặc giá trị được giới hạn là phần quan trọng của thiết kế.
-- Không nhất thiết phải tạo abstract class hoặc interface cho mọi class. Chỉ dùng khi cần hợp đồng chung hoặc điểm thay thế có ý nghĩa.
+- An `interface` defines a behavioral contract; concrete classes use `implements`.
+- An `abstract class` can hold state and implemented methods as well as declare abstract methods.
+- An `enum` represents a finite set of values and can have behavior; include it where transitions or allowed values matter.
+- Not every class needs an interface or abstract superclass. Use these when a shared contract or meaningful substitution point exists.
 
-## 4. Bảng phân biệt các loại quan hệ UML
+## 4. Comparing UML Relationship Types
 
-Đầu mũi tên và hình thoi chứa ý nghĩa khác nhau; **không nên dùng mọi loại đường chỉ để trang trí**.
+Arrowheads and diamonds convey distinct meanings; **do not decorate diagrams with every line type without purpose**.
 
-| Quan hệ | Dấu hiệu UML / Mermaid | Ý nghĩa | Java thường gặp |
+| Relationship | UML / Mermaid notation | Meaning | Common Java representation |
 |---|---|---|---|
-| **Association** (liên kết) | `--` hoặc `-->` | Đối tượng có liên kết với đối tượng khác | Field/tham chiếu hoặc mô hình nghiệp vụ |
-| **Shared aggregation** (tập hợp) | `o--` | Toàn thể–bộ phận theo nghĩa gom nhóm, quyền sở hữu không mạnh | `Team` tham chiếu `Employee` độc lập |
-| **Composition** (hợp thành) | `*--` | Toàn thể sở hữu part; part thuộc tối đa một composite tại một thời điểm | `Order` sở hữu `OrderLine` |
-| **Generalization** (kế thừa) | `<|--` | Subclass là một dạng của superclass | `extends` |
-| **Realization** (hiện thực hợp đồng) | `<|..` | Lớp hiện thực interface | `implements` |
-| **Dependency** (phụ thuộc) | `<..` / `..>` | Một phần tử sử dụng phần tử khác để định nghĩa/thực hiện | Tham số, local variable, method call |
+| **Association** | `--` or `-->` | Objects are associated with each other | Field/reference or domain relationship |
+| **Shared aggregation** | `o--` | Whole–part grouping with weak ownership semantics | `Team` references an independent `Employee` |
+| **Composition** | `*--` | Whole owns a part; a part belongs to at most one composite at a time | `Order` owns `OrderLine` |
+| **Generalization** | `<|--` | Subclass is a kind of superclass | `extends` |
+| **Realization** | `<|..` | Class implements an interface | `implements` |
+| **Dependency** | `<..` / `..>` | One element uses another for definitions or operations | Parameter, local variable, method call |
  
-Đặc trưng nên ghi nhớ:
+Key characteristics:
 
-**Association:** Quan hệ cấu trúc hai đối tượng có liên hệ. Đường **không mũi tên** biểu thị association nhưng không tự mô tả hướng điều hướng; một mũi tên chỉ khả năng điều hướng/hướng quan hệ trong cách biểu diễn. **Không mặc định hai phía phải giữ field tham chiếu nhau.**
+**Association:** A structural connection between objects. A line **without an arrow** indicates association but does not by itself specify navigability; an arrow conveys navigation or direction in the chosen notation. **Both classes need not hold reciprocal reference fields.**
 
-**Aggregation:** Hình thoi **rỗng ở phía toàn thể**, ví dụ đội nhóm và nhân viên. Chuẩn UML dành cho shared aggregation ít ngữ nghĩa ràng buộc hơn composition; nếu không có nhu cầu nhấn mạnh whole–part, association thường rõ và ít gây hiểu nhầm hơn.
+**Aggregation:** A **hollow diamond at the whole end**, such as a team grouping employees. UML shared aggregation has fewer strict ownership semantics than composition; ordinary association is often clearer unless whole–part grouping is important.
 
-**Composition:** Hình thoi **đặc ở phía whole**. Part chịu quan hệ sở hữu mạnh; không được đồng thời thuộc hai composite. Chính luật nghiệp vụ và API phải bảo vệ điều này. Trong Java, GC không tự “xóa part ngay lúc whole bị xóa”; nếu dùng DB, cascade/orphan removal cũng phải cấu hình có chủ đích.
+**Composition:** A **filled diamond at the whole end**. Parts have strong ownership and cannot belong to two composites simultaneously. Domain rules and APIs must enforce this. Java GC does not automatically “delete a part when the whole is deleted”; DB cascading/orphan removal must also be configured intentionally.
 
-**Generalization:** Mũi **tam giác rỗng chỉ về superclass**. Quan hệ `Car extends Vehicle` chỉ hợp lý khi `Car` thực sự tuân thủ hợp đồng của `Vehicle`. Kế thừa để “vay code” thường làm thiết kế khó bảo trì.
+**Generalization:** A **hollow triangle pointing to the superclass**. `Car extends Vehicle` is sound only when `Car` fulfills the `Vehicle` contract. Inheritance merely to “borrow code” often harms maintainability.
 
-**Realization:** Đường **nét đứt kết thúc bằng tam giác rỗng** về interface. `StripeGateway implements PaymentGateway` là minh họa, nhưng không ngụ ý mọi interface phải có nhiều implementation.
+**Realization:** A **dashed line ending with a hollow triangle** pointing to the interface. `StripeGateway implements PaymentGateway` illustrates this, but an interface does not have to have multiple implementations.
 
-**Dependency:** Đường **nét đứt và mũi tên thường** chỉ về phía được sử dụng. Nó thường mô tả việc lớp nhận tham số hoặc gọi API khác mà **không nhất thiết lưu tham chiếu dài hạn**. Đừng tự đồng nhất dependency với composition.
+**Dependency:** A **dashed line with a plain arrowhead** toward the used element. It often means a class receives a parameter or calls another API **without necessarily retaining a long-lived reference**. Do not equate dependency with composition.
 
-Một cách nhớ ngắn: **đường liên kết** thể hiện quan hệ đối tượng, **hình thoi** thể hiện toàn thể–bộ phận, **tam giác rỗng** thể hiện kiểu cha/hợp đồng, **đường nét đứt đơn giản** thể hiện phụ thuộc sử dụng.
+A quick mnemonic: **association lines** connect objects; **diamonds** mark whole–part; **hollow triangles** indicate a parent type or contract; **simple dashed lines** indicate usage dependencies.
 
-## 5. Bội số, tên vai trò, hướng điều hướng
+## 5. Multiplicity, Role Names, and Navigability
 
-Multiplicity diễn tả có bao nhiêu đối tượng ở một đầu liên kết cho **một đối tượng phía kia**.
+Multiplicity says how many objects at one end can correspond to **one object at the other end**.
 
-| Bội số UML | Cách đọc |
+| UML multiplicity | Interpretation |
 |---|---|
-| `1` | Chính xác một |
-| `0..1` | Không có hoặc một |
-| `*` hay `0..*` | Không hoặc nhiều |
-| `1..*` | Ít nhất một |
-| `2..5` | Từ hai đến năm (bao gồm hai đầu) |
+| `1` | Exactly one |
+| `0..1` | Zero or one |
+| `*` or `0..*` | Zero or many |
+| `1..*` | At least one |
+| `2..5` | From two through five, inclusive |
 
-Ví dụ:
+Example:
 
 ~~~mermaid
 classDiagram
@@ -2673,15 +2673,15 @@ classDiagram
     OrderLine "0..*" --> "1" Product : refers to
 ~~~
 
-Cách hiểu các quan hệ:
+Interpret the relationships:
 
-- **Một `Order` thuộc về đúng một `Customer`**; một khách hàng có thể có 0 hoặc nhiều đơn.
-- **Một `OrderLine` thuộc về đúng một `Order`**; đơn nháp có thể có 0 dòng. Nếu đơn đã xác nhận phải có từ một dòng trở lên, đó là một **ràng buộc trạng thái** cần kiểm tra riêng.
-- **Mỗi `OrderLine` tham chiếu một `Product`**; một sản phẩm có thể được chọn trong nhiều dòng của nhiều đơn hàng. Bản ghi sản phẩm độc lập và **không** là part bị xóa cùng đơn.
+- **Each `Order` belongs to exactly one `Customer`**; a customer may have 0 or more orders.
+- **Each `OrderLine` belongs to exactly one `Order`**; a draft may have 0 lines. If confirmed orders require at least one line, that is a separate **state-dependent constraint**.
+- **Each `OrderLine` references one `Product`**; a product may appear in many order lines across orders. Products exist independently and **are not** parts deleted with orders.
 
-**Hình thoi ở phía `Order`**, không phải phía `OrderLine`. Với những quan hệ có role name (ví dụ `customer`, `lines`) có thể đặt tên tại đầu association để truyền đạt mục đích; mỗi công cụ dựng sơ đồ có mức hỗ trợ nhãn role khác nhau.
+**The diamond is at `Order`**, not `OrderLine`. For relationships with role names (such as `customer` and `lines`), label association ends to clarify their roles; renderer support varies.
 
-Ví dụ API Java tương ứng:
+Corresponding Java API example:
 
 ~~~java
 final class Order {
@@ -2691,19 +2691,19 @@ final class Order {
 }
 ~~~
 
-Trong Java, **cú pháp field không tự enforce bội số**: `Customer customer` vẫn có thể null nếu constructor cho phép; `List<OrderLine>` vẫn có thể chứa phần tử được tạo từ đơn khác nếu API không kiểm tra. Muốn bảo vệ mô hình, phải kiểm tra invariant, ngăn sửa collection trực tiếp, và bổ sung constraint ở DB nếu cần.
+In Java, **field syntax does not automatically enforce multiplicity**: `Customer customer` may still be null if allowed by the constructor, and `List<OrderLine>` may contain an element from a different order unless checked. Enforce invariants, prevent direct collection mutation, and add DB constraints where necessary.
 
-## 6. Ví dụ thiết kế hoàn chỉnh: khách hàng – đơn hàng – thanh toán
+## 6. Full Design Example: Customer, Order, and Payment
 
-Yêu cầu giả định:
+Assumed requirements:
 
-1. Khách hàng có thể tạo nhiều đơn; đơn thuộc một khách hàng.
-2. Mỗi đơn giữ **các dòng riêng** có sản phẩm, số lượng và đơn giá được chốt lúc thêm.
-3. Sản phẩm trong catalog vẫn tồn tại độc lập khi một đơn bị hủy/xóa.
-4. Đơn nháp có thể chưa có dòng; đơn không rỗng mới được xác nhận.
-5. Checkout gửi yêu cầu thanh toán qua interface để có thể đổi adapter.
+1. A customer may create many orders; each order belongs to one customer.
+2. Every order has **its own lines**, each containing a product, quantity, and unit price fixed when added.
+3. Catalog products remain independent when an order is canceled or deleted.
+4. Draft orders may have no lines; only nonempty orders can be confirmed.
+5. Checkout sends payment requests through an interface to allow adapter replacement.
 
-### Sơ đồ lớp
+### Class Diagram
 
 ~~~mermaid
 classDiagram
@@ -2756,18 +2756,18 @@ classDiagram
     ConsolePaymentGateway ..|> PaymentGateway : implements
 ~~~
 
-Phân tích từng lựa chọn:
+Reasons for each choice:
 
-- `Customer` được `Order` tham chiếu, nhưng có thể tồn tại không cần đơn: **association**. Sơ đồ không đòi hỏi `Customer` giữ collection đơn ở chiều ngược lại.
-- `OrderLine` là part do `Order` tạo và quản lý: **composition**. Mỗi dòng là một mục riêng của một đơn; không chia sẻ cùng instance dòng giữa hai đơn.
-- `Product` là thực thể/cấu trúc tham chiếu độc lập, không phải child của một đơn: **association**.
-- `CheckoutService` gọi các hành vi của `Order` qua tham số method: dùng **dependency**. Nó giữ `PaymentGateway` trong field do constructor cung cấp: association/dependency được mô hình hóa bằng đường có hướng.
-- `ConsolePaymentGateway` hiện thực interface `PaymentGateway`: **realization**. Thay adapter khác mà không sửa giao diện checkout.
-- Các stereotype `«entity»` ở `Customer` và `Product` nhấn mạnh danh tính ổn định theo `id`/`sku` và vòng đời độc lập với `Order`. Ví dụ Java dùng `record` làm biểu diễn bất biến đơn giản; `record` không tự quyết định một đối tượng miền là entity hay value object.
+- `Customer` is referenced by `Order` but can exist without orders: **association**. The diagram does not require a reverse collection on `Customer`.
+- `OrderLine` is a part created and managed by `Order`: **composition**. Each line belongs to one order and its instance is not shared across orders.
+- `Product` is an independent referenced entity/structure, not an order child: **association**.
+- `CheckoutService` invokes `Order` behavior through parameters: **dependency**. It stores a constructor-injected `PaymentGateway` field; its directed line models association/dependency.
+- `ConsolePaymentGateway` implements `PaymentGateway`: **realization**. Other adapters can replace it without changing checkout's interface.
+- The `«entity»` stereotypes on `Customer` and `Product` emphasize stable `id`/`sku` identity and lifecycles independent of `Order`. The Java example uses immutable `record` types for simplicity; `record` alone does not determine whether a domain object is an entity or value object.
 
-### Mã Java 17+ chạy trong một tệp
+### Runnable Single-File Java 17+ Example
 
-Tạo tệp **`OrderDiagramDemo.java`** với toàn bộ nội dung sau:
+Create **`OrderDiagramDemo.java`** with the full code below:
 
 ~~~java
 import java.util.ArrayList;
@@ -2936,14 +2936,14 @@ public class OrderDiagramDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac OrderDiagramDemo.java
 java OrderDiagramDemo
 ~~~
 
-Kết quả dự kiến:
+Expected output:
 
 ~~~text
 280000
@@ -2952,20 +2952,20 @@ CONFIRMED
 Linh
 ~~~
 
-Với sơ đồ ở trên, những điểm cần chú ý khi so code với UML:
+When comparing the diagram above with the Java code, note these points:
 
-- `Order.customer` là **private field**, nhưng đối tượng `Customer` có thể vẫn tồn tại và được tham chiếu độc lập.
-- `OrderLine` là một **private nested class**; sơ đồ tách thành một hình hộp riêng để người đọc hiểu cấu trúc thành phần.
-- `Order.addLine(...)` không trả ra `OrderLine`, ngăn caller lấy part của đơn A gắn sang đơn B.
-- `Product.priceCents` dùng ở thời điểm tạo dòng và được chốt lại trong `unitPriceCents`. Một thiết kế bán hàng thực cần quy định thêm giá khuyến mãi, thuế, tiền tệ, làm tròn và hiệu lực bảng giá.
-- `CheckoutService` không kế thừa `PaymentGateway`, mà cộng tác với một instance của interface.
-- `Order.confirm()` chuyển trạng thái sang `CONFIRMED` nhưng không tự giải quyết toàn bộ giao dịch phân tán.
+- `Order.customer` is a **private field**, but `Customer` may still exist independently and be referenced elsewhere.
+- `OrderLine` is a **private nested class**; the diagram draws it as a separate box to clarify its structural role.
+- `Order.addLine(...)` does not expose `OrderLine`, so callers cannot attach a part of order A to order B.
+- `Product.priceCents` is sampled when creating a line and fixed as `unitPriceCents`. Real commerce requires additional rules for discounts, tax, currency, rounding, and price validity periods.
+- `CheckoutService` does not inherit `PaymentGateway`; it collaborates with an instance of the interface.
+- `Order.confirm()` changes state to `CONFIRMED` without solving an entire distributed transaction.
 
-**Phạm vi của ví dụ:** Đây là luồng một luồng (single-thread), mô phỏng thanh toán bằng console. Nếu payment gateway thật đã charge xong nhưng ứng dụng lỗi trước khi lưu `CONFIRMED`, có thể xảy ra trạng thái không nhất quán. Hệ thống thật cần chiến lược transaction, idempotency và đối soát. Sơ đồ lớp không thể hiện đầy đủ các tình huống thời gian như vậy.
+**Example scope:** This is a single-threaded flow with simulated console payments. If a real gateway charges money but the app fails before persisting `CONFIRMED`, state may become inconsistent. Production systems need transaction, idempotency, and reconciliation strategies. Class diagrams cannot fully express these temporal failure scenarios.
 
-## 7. Từ Java sang UML: tránh vẽ nhầm quan hệ
+## 7. From Java to UML: Avoid Incorrect Relationships
 
-Đoạn Java sau:
+Consider this Java code:
 
 ~~~java
 final class ReportService {
@@ -2982,7 +2982,7 @@ final class ReportService {
 }
 ~~~
 
-Có thể mô hình hóa `ReportService → ReportRepository` là một quan hệ định hướng vì service **giữ field tham chiếu**. Tuy nhiên, `Report` chỉ xuất hiện trong tham số/giá trị trả về của operation: tùy mức chi tiết có thể xem là dependency, không nhất thiết là association dài hạn.
+Model `ReportService → ReportRepository` as a directed relationship because the service **holds a reference field**. However, `Report` appears only as an operation parameter/return type; at the relevant detail level this may be a dependency rather than a persistent association.
 
 ~~~mermaid
 classDiagram
@@ -2995,23 +2995,23 @@ classDiagram
     ReportService ..> Report : uses as result
 ~~~
 
-Một số quy tắc ánh xạ hữu ích:
+Useful mapping heuristics:
 
-| Dấu hiệu code | Có thể biểu diễn bằng | Điều còn phải hỏi |
+| Code pattern | Possible UML relationship | Further questions |
 |---|---|---|
-| `private B b;` | Association từ A sang B | B có thể null? Có owner hay chỉ tham chiếu? |
-| `List<B> members;` | Association với multiplicity nhiều | Có chia sẻ? Ai quản lý lifecycle? |
-| `new B()` trong A | Có thể gợi ý composition | Có thực sự sở hữu độc quyền B không? |
-| `A extends B` | Generalization | A có giữ hợp đồng thay thế cho B không? |
-| `A implements I` | Realization | I là hợp đồng ở tầng nào? |
-| B là local variable hoặc tham số method | Dependency | Quan hệ có ý nghĩa đủ lớn để đưa lên sơ đồ không? |
-| `@OneToMany` trong JPA | Association với multiplicity | Cascade, orphan removal, ownership phía DB có đúng domain? |
+| `private B b;` | Association from A to B | Can B be null? Is it owned or only referenced? |
+| `List<B> members;` | Association with many-valued multiplicity | Are elements shared? Who manages their lifecycle? |
+| `new B()` inside A | May suggest composition | Does A exclusively own B? |
+| `A extends B` | Generalization | Does A fulfill B's substitutability contract? |
+| `A implements I` | Realization | At which layer does I define a contract? |
+| B is a local variable or method parameter | Dependency | Is the relationship important enough for this diagram? |
+| `@OneToMany` in JPA | Association with multiplicity | Do cascades, orphan removal, and DB ownership match the domain? |
 
-**Không có suy luận tự động** “có field ⇒ composition”. Một `Order` có field `Customer` nhưng không sở hữu vòng đời của khách hàng. Và “không có field ⇒ không liên quan”: method có tham số `Customer` vẫn tạo dependency ở cấp mã nguồn.
+**There is no automatic inference** from “has a field ⇒ composition.” An `Order` may reference a `Customer` without owning the customer's lifecycle. Nor does “no field ⇒ no relationship” hold: methods accepting `Customer` create source-code dependencies.
 
-## 8. Kế thừa, interface và tính thay thế trong sơ đồ
+## 8. Inheritance, Interfaces, and Substitutability in Diagrams
 
-Ví dụ minh họa độc lập về các kiểu quan hệ giữa các lớp:
+A separate example illustrating class relationship types:
 
 ~~~mermaid
 classDiagram
@@ -3034,7 +3034,7 @@ classDiagram
     Shelter ..> Identifiable : parameter
 ~~~
 
-Trong Java:
+In Java:
 
 ~~~java
 abstract class Animal {
@@ -3068,54 +3068,54 @@ final class Shelter {
 }
 ~~~
 
-**Đọc chính xác đường UML:**
+**Read the UML lines accurately:**
 
-- `Dog --|> Animal` là **generalization**: Dog là subtype của Animal.
-- `Dog ..|> Identifiable` là **realization**: Dog hiện thực interface.
-- `Shelter ..> Identifiable` là **dependency**: shelter nhận tham số kiểu contract; sơ đồ này không khẳng định shelter lưu trữ mọi animal.
+- `Dog --|> Animal` is **generalization**: Dog is a subtype of Animal.
+- `Dog ..|> Identifiable` is **realization**: Dog implements the interface.
+- `Shelter ..> Identifiable` is **dependency**: the shelter accepts a contract-typed parameter; this diagram does not claim it stores every animal.
 
-Khi vẽ inheritance, cần kiểm tra nguyên tắc thay thế (*Liskov Substitution Principle*): một `Dog` phải đáp ứng kỳ vọng của `Animal`. Đừng kế thừa chỉ để dùng lại helper method.
+When drawing inheritance, check the *Liskov Substitution Principle*: `Dog` must meet the expectations of `Animal`. Do not inherit merely to reuse a helper method.
 
-## 9. Checklist chất lượng cho sơ đồ lớp
+## 9. Class Diagram Quality Checklist
 
-Một sơ đồ hữu ích không nhất thiết có nhiều lớp. Khi review, kiểm tra:
+A useful diagram need not contain many classes. During review, check:
 
-1. **Phạm vi và mức độ chi tiết:** Sơ đồ nói về domain, thiết kế hay implementation? Có đang trộn các mức quá nhiều không?
-2. **Tên lớp:** Dùng danh từ nghiệp vụ hoặc vai trò kỹ thuật rõ ràng, tránh `Manager`/`Util` cho tập hợp trách nhiệm không liên quan.
-3. **Thuộc tính:** Đặt đúng nơi sở hữu trạng thái và invariant. Field có bị public không cần thiết không?
-4. **Operation:** Có đặt hành vi ở đúng chủ thể không? Những thao tác thay đổi trạng thái có nêu intent rõ không?
-5. **Visibility:** Public API vừa đủ? Helper nội bộ nên private/protected/package-private?
-6. **Kiểu dữ liệu:** Các kiểu đơn vị như tiền, định danh, thời gian có được xác định rõ? Có dùng `double` cho tiền một cách thiếu kiểm soát không?
-7. **Multiplicity:** Nhãn `1`, `0..1`, `0..*`, `1..*` có được giải thích và enforced khi cần không?
-8. **Hướng quan hệ:** Mũi tên đi đúng hướng phụ thuộc/điều hướng? Hình thoi đặt ở đầu whole?
-9. **Ownership:** Quan hệ whole–part là association, shared aggregation hay composition? Có lý do nghiệp vụ đủ mạnh để dùng hình thoi đặc?
-10. **Kế thừa/realization:** Tam giác rỗng hướng về superclass/interface? Có quan hệ *is-a* và hợp đồng subtype?
-11. **Vòng phụ thuộc:** Có đường A → B → A không cần thiết? Có thể trích xuất policy/port hoặc điều phối ở tầng trên?
-12. **Tính nhất quán với code:** Có method, field, kiểu, quyền truy cập quan trọng nào khác với sơ đồ mà chưa cập nhật?
-13. **Giới hạn biểu diễn:** Điều kiện giao dịch, concurrency, state transition và lỗi vận hành có cần sơ đồ khác hoặc ghi chú?
+1. **Scope and detail level:** Is this domain analysis, design, or implementation? Are levels mixed excessively?
+2. **Class names:** Use domain nouns or clear technical roles rather than unrelated collections of responsibilities named `Manager`/`Util`.
+3. **Attributes:** Place state and invariants with their owners. Are fields unnecessarily public?
+4. **Operations:** Does each behavior belong to the correct object? Are mutations named to convey intent?
+5. **Visibility:** Is the public API minimal? Should helpers be private/protected/package-private?
+6. **Types:** Are units such as money, identifiers, and time explicit? Is `double` used unsafely for monetary values?
+7. **Multiplicity:** Are `1`, `0..1`, `0..*`, and `1..*` labels explained and enforced where needed?
+8. **Relationship direction:** Are dependencies/navigability arrows correct? Is the diamond at the whole end?
+9. **Ownership:** Is a whole–part relationship association, shared aggregation, or composition? Is there sufficient domain justification for a filled diamond?
+10. **Inheritance/realization:** Do hollow triangles point to the superclass/interface? Is there a valid *is-a* relationship and subtype contract?
+11. **Dependency cycles:** Are there unnecessary A → B → A paths? Could a policy/port be extracted or coordination moved up a level?
+12. **Code consistency:** Are any important methods, fields, types, or access levels different from the diagram without updates?
+13. **Notation limitations:** Do transactions, concurrency, state transitions, or operational failures need another diagram or explanatory note?
 
-Một sơ đồ bỏ bớt thuộc tính nội bộ để tập trung vào domain không phải “sai”. Nhưng **quan hệ sai loại hoặc multiplicity không tương thích với yêu cầu nghiệp vụ** có thể khiến người triển khai đưa ra quyết định kiến trúc sai.
+A diagram that omits internal attributes to emphasize the domain is not necessarily “wrong.” But **incorrect relationship types or multiplicities inconsistent with domain requirements** can mislead implementation and architecture decisions.
 
-## 10. Sai lầm thường gặp khi vẽ sơ đồ lớp
+## 10. Common Class Diagram Mistakes
 
-| Lỗi | Vì sao chưa đúng | Cách sửa |
+| Mistake | Why it is wrong | Correction |
 |---|---|---|
-| Đặt hình thoi ở phía part | Đảo ngữ nghĩa toàn thể–bộ phận | Đặt hình thoi tại đầu whole |
-| Vẽ composition vì có `List<T>` | Collection không nói lên ownership | Xác minh vòng đời và tính độc quyền |
-| Vẽ inherit để tái sử dụng một method | Mô hình hóa sai kiểu *is-a* | Dùng collaboration/delegation khi hợp lý |
-| Quên multiplicity | Không biết 0, 1 hay nhiều đối tượng | Ghi và giải thích bội số hai đầu |
-| Vẽ dependency như association lâu dài | Làm sơ đồ gợi ý object giữ state | Chọn nét đứt nếu chỉ sử dụng ngắn hạn |
-| Mặc định getter/setter cho mọi field | Rò rỉ trạng thái, phá đóng gói | Dùng hành vi miền và query cần thiết |
-| Tất cả field/method đều public | Caller dễ sửa invariant của đối tượng | Dùng visibility nhỏ nhất hợp lý |
-| Nhồi đủ database table lên sơ đồ domain | Đánh mất ý nghĩa và trách nhiệm lớp | Tách domain model với ERD/persistence mapping |
-| Cho rằng UML ép code thi hành rule | Sơ đồ chỉ là mô tả | Viết validation, test và DB constraint cần thiết |
-| Bỏ qua code thay đổi sau khi vẽ | Tài liệu trở nên sai lệch | Duy trì sơ đồ và code qua review/version control |
+| Diamond placed at the part end | Reverses whole–part meaning | Place diamond at the whole end |
+| Drawing composition merely because of `List<T>` | Collections do not imply ownership | Check lifecycle and exclusivity |
+| Drawing inheritance to reuse one method | Misrepresents the *is-a* type relationship | Use collaboration/delegation where appropriate |
+| Omitting multiplicity | Cannot tell whether 0, 1, or many instances relate | Label and explain both association ends |
+| Drawing transient dependency as long-lived association | Suggests an object stores state it does not own | Use dashed dependency when only briefly used |
+| Defaulting to getters/setters for every field | Exposes state and breaks encapsulation | Use domain behaviors and necessary queries |
+| Marking all fields and methods public | Callers can violate invariants easily | Use minimum appropriate visibility |
+| Putting every DB table on the domain diagram | Loses class responsibility and meaning | Separate domain models from ERDs/persistence mappings |
+| Assuming UML enforces rules in code | Diagrams are descriptive | Implement validation, tests, and needed DB constraints |
+| Not updating diagrams after code changes | Documentation drifts from reality | Maintain diagram and code through reviews/version control |
 
-## 11. Kiểm thử những điều sơ đồ hứa hẹn
+## 11. Test What the Diagram Promises
 
-Sơ đồ tự nó không chạy được. Hãy chọn **invariant của các quan hệ** và kiểm tra chúng bằng hành vi Java.
+Diagrams cannot execute themselves. Select **relationship invariants** and verify them through Java behavior.
 
-Với `OrderDiagramDemo.java` ở trên, có thể tạo `OrderDiagramTest.java` dùng JUnit Jupiter 5:
+For `OrderDiagramDemo.java` above, create `OrderDiagramTest.java` with JUnit Jupiter 5:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -3182,11 +3182,11 @@ class OrderDiagramTest {
 }
 ~~~
 
-Test xác nhận những gì có ý nghĩa trên mô hình: các đơn chia sẻ tham chiếu khách hàng/sản phẩm độc lập, giữ **dòng riêng**, tổng tiền đúng, trạng thái không bị chuyển khi cổng thanh toán báo lỗi, và đơn rỗng không thể xác nhận.
+The test checks meaningful model commitments: orders share references to independent customers/products, own **separate lines**, calculate totals correctly, do not transition on payment errors, and reject confirmation of empty orders.
 
-**Giới hạn:** Test không thể chứng minh “không bao giờ có line được chia sẻ” trong mọi phiên bản code, nhưng API đang dùng private nested `OrderLine` và không lộ phương thức gắn lại part. Test cũng không bảo đảm giao dịch thanh toán thực hoàn toàn rollback được khi gặp lỗi mạng giữa quá trình xử lý; cần integration test và chiến lược đối soát thích hợp.
+**Limitation:** One test cannot prove that lines are “never shared” across every possible code revision, but this API uses a private nested `OrderLine` and exposes no operation for reattaching a part. Nor does the test prove that real payment transactions roll back completely after a network failure mid-processing; integration tests and reconciliation are still needed.
 
-## 12. Một quy trình vẽ class diagram từ yêu cầu
+## 12. A Workflow for Drawing Class Diagrams from Requirements
 
 ~~~mermaid
 flowchart TD
@@ -3201,70 +3201,70 @@ flowchart TD
     H -->|Rồi| I[Chốt sơ đồ cho mức thiết kế đã chọn]
 ~~~
 
-**Cách làm thực tế:**
+**Practical approach:**
 
-1. **Thu thập use case:** ví dụ “Khách hàng thêm sản phẩm vào đơn nháp và thanh toán”. Xác định happy path và ngoại lệ như đơn rỗng, số lượng không hợp lệ, thanh toán lỗi.
-2. **Chọn đối tượng có trách nhiệm:** `Order` chịu trách nhiệm bảo vệ trạng thái và danh sách dòng; `PaymentGateway` làm cổng tích hợp.
-3. **Chỉ ra dữ liệu phải được sở hữu:** dòng hàng riêng của mỗi đơn so với tham chiếu sản phẩm chung.
-4. **Xác định API cần gọi:** `addLine`, `totalCents`, `confirm`, `checkout`, `charge`; tránh thêm setter công khai cho `status` và `lines`.
-5. **Chọn loại quan hệ:** composition cho Order–Line; association cho Order–Customer/Product; realization cho gateway implementation; dependency cho use case sử dụng Order.
-6. **Ghi multiplicity:** cân nhắc cả trạng thái nháp và trạng thái xác nhận; bổ sung constraint riêng nếu bội số thay đổi theo trạng thái.
-7. **Kiểm chứng bằng Java và test:** object nào được tạo ở đâu? Ai được sửa? Có test bảo vệ invariant? Mã có thay đổi sơ đồ nào không?
+1. **Gather use cases:** for example, “Customer adds products to a draft order and pays.” Include the happy path and exceptions such as empty orders, invalid quantities, and failed payment.
+2. **Select objects with responsibilities:** `Order` protects state and its line collection; `PaymentGateway` is an integration port.
+3. **Identify owned data:** compare lines belonging to individual orders with shared product references.
+4. **Identify necessary APIs:** `addLine`, `totalCents`, `confirm`, `checkout`, `charge`; avoid public setters on `status` and `lines`.
+5. **Choose relationships:** composition for Order–Line, association for Order–Customer/Product, realization for a gateway implementation, dependency when a use case uses Order.
+6. **Label multiplicities:** consider draft and confirmed states; specify an additional constraint if multiplicity depends on state.
+7. **Verify with Java and tests:** where are objects created? Who may mutate them? Do tests protect invariants? Has code changed the diagram?
 
-**Không cần vẽ mọi thứ**: nếu sơ đồ quá nhiều lớp hoặc mũi tên, hãy tách theo bounded context, use case hoặc mức thiết kế, đồng thời ghi rõ quan hệ nào bị lược bỏ.
+**You need not draw everything:** if too many classes or arrows clutter a diagram, split it by bounded context, use case, or design level and note omitted relationships.
 
-## 13. Bài tập vận dụng: thư viện và phiếu mượn
+## 13. Applied Exercise: Library Loans
 
-**Yêu cầu mẫu:** Thư viện quản lý `BookTitle` và từng bản sách vật lý `BookCopy`. Một `Member` có thể mượn nhiều bản sách theo các `Loan`, nhưng mỗi bản vật lý chỉ được một lượt mượn **đang hoạt động** tại một thời điểm. Phiếu mượn chứa ngày mượn, hạn trả, trạng thái.
+**Sample requirement:** The library manages `BookTitle` records and physical `BookCopy` instances. A `Member` may borrow multiple copies through `Loan` records, but each physical copy may have at most one **active** loan at a time. Each loan records borrowing date, due date, and status.
 
-Hãy thực hiện:
+Complete the following:
 
-1. Viết các lớp/mối quan hệ tối thiểu: `BookTitle`, `BookCopy`, `Member`, `Loan`. Quyết định danh tính của từng loại: ISBN mô tả đầu sách, copy ID mô tả bản vật lý, loan ID mô tả lượt mượn.
-2. Vẽ một sơ đồ class có thuộc tính, operation và visibility. Ghi rõ tên và kiểu tham số ở `borrowCopy(member, copy)`, `returnCopy()`, `isAvailable()`.
-3. Gắn multiplicity cho quan hệ `BookTitle–BookCopy`, `Member–Loan` và `Loan–BookCopy`. Lưu ý “một bản sách có nhiều Loan **lịch sử**” khác “tối đa một Loan **đang hoạt động**”.
-4. Chọn association/aggregation/composition chỉ khi xác nhận vòng đời. Nếu xóa đầu sách khỏi catalog có phải hủy luôn bản vật lý không? Nếu xóa thành viên có cần giữ lịch sử mượn vì quy định lưu trữ không?
-5. Viết Java model bảo vệ quy tắc “một bản không thể có hai loan active đồng thời”, thiết kế command và query phù hợp.
-6. Kiểm thử một lượt mượn thành công, mượn trùng bản chưa trả, trả sách, và hai yêu cầu mượn cạnh tranh; ghi rõ cơ chế DB transaction nếu chạy nhiều node.
+1. Identify minimal classes/relationships: `BookTitle`, `BookCopy`, `Member`, `Loan`. Decide identities: ISBN identifies a title, copy ID identifies a physical copy, loan ID identifies a borrowing event.
+2. Draw a class diagram with attributes, operations, and visibility. Label parameter names/types in `borrowCopy(member, copy)`, `returnCopy()`, and `isAvailable()`.
+3. Add multiplicities to `BookTitle–BookCopy`, `Member–Loan`, and `Loan–BookCopy` relationships. Distinguish “many **historical** loans for one copy” from “at most one **active** loan.”
+4. Choose association, aggregation, or composition only after confirming lifecycles. Does removing a catalog title require destroying physical copies? Must member loan history remain for retention rules after deletion?
+5. Implement a Java model preserving “one copy cannot have two simultaneous active loans,” with suitable commands and queries.
+6. Test a successful loan, a duplicate active loan, returns, and competing requests; specify the DB transaction mechanism for multi-node execution.
 
-**Câu hỏi tự đánh giá:** Nhìn vào sơ đồ, một đồng đội mới có xác định được **ai sở hữu dữ liệu nào**, **phương thức nào bảo vệ bất biến**, **một instance liên kết tối đa bao nhiêu instance khác**, và **phụ thuộc đi về phía nào** không?
+**Self-assessment:** Can a new teammate use the diagram to determine **who owns which data**, **which operations protect invariants**, **how many other instances one object can reference**, and **which direction dependencies point**?
 
 ---
 
-**Ghi nhớ:** Sơ đồ lớp mạnh ở việc diễn đạt **thành viên và quan hệ** có ý nghĩa: tên lớp và trách nhiệm; thuộc tính, operation và phạm vi truy cập; association, aggregation, composition, generalization, realization, dependency; cùng multiplicity và hướng điều hướng. Hãy đọc sơ đồ như một **hợp đồng thiết kế cần được Java và kiểm thử bảo vệ**, không như hình vẽ tự động bảo đảm mọi quy tắc.
+**Remember:** Class diagrams communicate meaningful **members and relationships**: class names and responsibilities; attributes, operations, and visibility; association, aggregation, composition, generalization, realization, dependency; plus multiplicity and navigability. Treat a diagram as a **design contract that Java and tests must enforce**, not as a picture that automatically guarantees every rule.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="modeling-006">Sơ đồ đối tượng: các thể hiện tại một thời điểm</a>
+## <a id="modeling-006">Object diagrams: instances at a point in time</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Sơ đồ đối tượng (Object Diagram): các thể hiện tại một thời điểm
+# Object Diagrams: Instances at a Point in Time
 
-## 1. Sơ đồ đối tượng trả lời câu hỏi gì?
+## 1. What Questions Do Object Diagrams Answer?
 
-**Sơ đồ đối tượng (UML Object Diagram)** biểu diễn **những đối tượng cụ thể, giá trị thuộc tính và liên kết giữa chúng tại một thời điểm**. Đây là một “ảnh chụp” của trạng thái hệ thống, còn gọi là *snapshot*.
+A **UML Object Diagram** depicts **specific objects, their attribute values, and links among them at a particular moment**. It is a snapshot of system state.
 
-Xét một ứng dụng bán hàng: lớp `Order` mô tả đơn hàng nói chung, nhưng khi khách Lan đặt đơn `O-001`, chương trình có **một object Order cụ thể** chứa mã đơn và tham chiếu đến object khách hàng Lan. Đơn có thể chứa nhiều object `OrderItem`; mỗi item liên kết đến một object `Product`.
+Consider an e-commerce system: class `Order` describes orders generally, but when Lan places order `O-001`, the program has **one concrete Order object** holding an order code and a reference to Lan's customer object. The order may contain `OrderItem` objects, each linking to a `Product` object.
 
-Sơ đồ đối tượng giúp trả lời những câu hỏi có tính cụ thể:
+Object diagrams answer concrete questions:
 
-- Đúng thời điểm này, đơn `O-001` đang trỏ tới khách hàng **nào**?
-- Đơn đang có **bao nhiêu** item; item nào ứng với sản phẩm nào?
-- Hai item có tham chiếu cùng một object sản phẩm hay hai object khác nhau?
-- Nếu thêm item, đồ thị đối tượng thay đổi ra sao?
+- At this moment, **which customer** does order `O-001` reference?
+- **How many** items does the order currently contain, and which products do they reference?
+- Do two items reference the same product instance or two different objects?
+- How does the object graph change after adding an item?
 
-Đừng nhầm với sơ đồ lớp: “Một Order **có thể có** nhiều OrderItem” là quy tắc ở mức **kiểu/lớp**; “Object `o01` hiện có hai item `i01`, `i02`” là sự thật ở mức **instance** tại một thời điểm.
+Do not confuse class diagrams with instance snapshots: “An Order **may have** many OrderItems” describes a **type/class-level** rule; “object `o01` currently has items `i01` and `i02`” states an **instance-level** fact at a specific time.
 
-## 2. Ký pháp UML: đối tượng, thuộc tính và liên kết
+## 2. UML Notation: Objects, Slots, and Links
 
-Một **object** thường được vẽ bằng hình chữ nhật. Phần tiêu đề theo dạng `tênĐốiTượng:TênLớp` và **được gạch chân** trong ký pháp UML chuẩn. Ví dụ `o01:Order` nghĩa là thể hiện mang tên `o01` của lớp `Order`. Có thể viết `:Order` khi không quan tâm đến tên object, hoặc `o01` khi kiểu đã rõ trong ngữ cảnh.
+A UML **object** is commonly drawn as a rectangle. Its heading has the form `tênĐốiTượng:TênLớp` and is **underlined** in standard notation. For example, `o01:Order` is an instance named `o01` of class `Order`. Use `:Order` when the object name is not important, or `o01` when its type is clear from context.
 
-Trong phần thân object, UML có thể hiển thị *slot* — giá trị của thuộc tính tại lúc chụp:
+An object's body may show *slots*—attribute values at snapshot time:
 
 ```text
 ┌──────────────────────────────┐
@@ -3275,30 +3275,30 @@ Trong phần thân object, UML có thể hiển thị *slot* — giá trị củ
 └──────────────────────────────┘
 ```
 
-**Link** là đường nối giữa **hai object cụ thể**, thể hiện một instance của association. Khi muốn làm rõ field/role, có thể ghi nhãn `customer`, `items`, `product` lên liên kết.
+A **link** connects **two concrete objects**, representing an instance of an association. To clarify fields or roles, annotate links with `customer`, `items`, or `product`.
 
-Phân biệt các thành phần:
+Distinguish these elements:
 
-| Thành phần | Trên sơ đồ lớp | Trên sơ đồ đối tượng |
+| Element | In a class diagram | In an object diagram |
 |---|---|---|
-| Kiểu | `Order`, `Customer` | `o01:Order`, `c01:Customer` |
-| Thuộc tính | `code: String` | `code = "O-001"` |
-| Quan hệ | `Order → Customer` | Link từ `o01` đến `c01` |
-| Bội số | `0..*`, `1` cho **mọi** instance hợp lệ | Số object/link **đang có** trong snapshot |
-| Mục đích | Khai báo cấu trúc có thể xảy ra | Minh họa trạng thái thực tế đang xảy ra |
+| Type | `Order`, `Customer` | `o01:Order`, `c01:Customer` |
+| Attribute | `code: String` | `code = "O-001"` |
+| Relationship | `Order → Customer` | Link from `o01` to `c01` |
+| Multiplicity | `0..*`, `1` across **all** valid instances | Number of objects/links **present** in the snapshot |
+| Purpose | Declares possible structure | Shows an actual state at a particular moment |
 
-Tên object và giá trị trong sơ đồ là **nhãn để con người theo dõi**; chúng không nhất thiết là tên biến Java, cũng không nhất thiết là khóa chính của một bản ghi database.
+Object labels and values are **human-readable identifiers for the diagram**; they need not be Java variable names or database primary keys.
 
-## 3. Ví dụ xuyên suốt: đơn hàng lúc t0
+## 3. Running Example: An Order at t0
 
-Giả sử hệ thống có các đối tượng sau:
+Suppose these objects exist:
 
-- `c01:Customer` — khách hàng Lan.
-- `o01:Order` — đơn `O-001`, đang thuộc về Lan.
-- `i01:OrderItem` — dòng hàng số 1, số lượng 2.
-- `p01:Product` — sản phẩm có SKU `BOOK-01`.
+- `c01:Customer` — Lan, the customer.
+- `o01:Order` — order `O-001`, belonging to Lan.
+- `i01:OrderItem` — line number 1, quantity 2.
+- `p01:Product` — product with SKU `BOOK-01`.
 
-**Snapshot t0:** đơn vừa có một dòng hàng.
+**Snapshot t0:** the order contains one item line.
 
 ```mermaid
 flowchart LR
@@ -3312,25 +3312,25 @@ flowchart LR
     i -->|"product"| p
 ```
 
-Sơ đồ được vẽ bằng **Mermaid flowchart** để tiện hiển thị trong Markdown; đây là **cách minh họa object graph tương đương về ý nghĩa**, không phải một trình biên dịch UML Object Diagram đầy đủ. Trong UML chính thức, tiêu đề instance được gạch chân và liên kết thường thể hiện bằng đường nối. Mũi tên Mermaid ở đây chỉ làm rõ **tham chiếu nào được lần theo**, không mô tả trình tự thực thi, lời gọi hàm hay dữ liệu đang di chuyển.
+The diagram uses a **Mermaid flowchart** for Markdown display; it is **an object-graph illustration with equivalent meaning**, not a full UML Object Diagram compiler. In formal UML, object headings are underlined and links are usually plain lines. The Mermaid arrows clarify **which references are followed**, not execution order, method calls, or data movement.
 
-Đọc hình theo một đường dẫn:
+Trace one path through the diagram:
 
 ```text
 o01 (Order) --items--> i01 (OrderItem) --product--> p01 (Product)
 ```
 
-Và một đường khác:
+And another:
 
 ```text
 o01 (Order) --customer--> c01 (Customer)
 ```
 
-Điểm quan trọng: **link nối các instance**, ví dụ `o01 → c01`, chứ không nối khái niệm `Order` và `Customer` chung chung.
+Crucially, **links connect instances**, such as `o01 → c01`, rather than generic concepts `Order` and `Customer`.
 
-## 4. Sơ đồ lớp cho phép những trạng thái nào?
+## 4. Which States Does a Class Diagram Permit?
 
-Trước khi vẽ object diagram, cần hiểu quy tắc cấu trúc do lớp và association quy định. Với ví dụ đang xét:
+Before drawing object diagrams, understand the structural rules imposed by classes and associations. For this example:
 
 ```mermaid
 classDiagram
@@ -3355,19 +3355,19 @@ classDiagram
     OrderItem "0..*" --> "1" Product : product
 ```
 
-Cách đọc bội số trên association:
+Read association multiplicities as follows:
 
-- Mỗi `Order` liên kết với **1 Customer**; một `Customer` có thể được **0 hoặc nhiều Order** tham chiếu.
-- Mỗi `OrderItem` thuộc **1 Order** theo quy tắc nghiệp vụ mô hình; một `Order` có thể chứa **0 hoặc nhiều OrderItem**. Đoạn Java dưới đây đảm bảo mỗi item chỉ được thêm vào một order theo luồng demo, nhưng nếu muốn cưỡng chế tuyệt đối quy tắc “mỗi item có đúng một order” trong mọi trường hợp, ta cần bổ sung ownership/validation phù hợp.
-- Mỗi `OrderItem` có **1 Product**; một `Product` có thể được **nhiều item** tham chiếu.
+- Each `Order` is linked to **1 Customer**; one `Customer` may be referenced by **0 or more Orders**.
+- Each `OrderItem` belongs to **1 Order** by the domain model; an `Order` may contain **0 or more OrderItems**. The Java code below ensures each item is added to one order in this demo, but universal enforcement of “each item belongs to exactly one order” requires appropriate ownership and validation.
+- Each `OrderItem` has **1 Product**; a `Product` may be referenced by **many items**.
 
-Ở sơ đồ đối tượng lúc **t0**, ta chỉ thấy *một* customer, *một* order, *một* item và *một* product. Điều đó không có nghĩa ứng dụng chỉ cho phép bốn object hoặc đơn hàng bị giới hạn một dòng hàng.
+At **t0**, the object diagram contains only *one* customer, *one* order, *one* item, and *one* product. That does not imply the entire application permits only four objects or one item per order.
 
-**Một object diagram không cần liệt kê toàn bộ object trong JVM.** Nó thường chọn một phần của object graph vừa đủ để minh họa một kịch bản, một bất biến hoặc một lỗi.
+**Object diagrams need not show every object in the JVM.** Usually they select just enough of an object graph to illustrate a scenario, invariant, or bug.
 
-## 5. Java chạy được: tạo object graph và chụp hai thời điểm
+## 5. Runnable Java: Create an Object Graph and Capture Two Moments
 
-Tạo tệp `ObjectDiagramDemo.java`. Ví dụ không cần framework, tương thích Java 11 trở lên.
+Create `ObjectDiagramDemo.java`. No framework is needed; the example works with Java 11 or later.
 
 ```java
 import java.util.ArrayList;
@@ -3474,14 +3474,14 @@ public class ObjectDiagramDemo {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac ObjectDiagramDemo.java
 java ObjectDiagramDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 === t0 ===
@@ -3508,13 +3508,13 @@ Same customer: true
 Same first item: true
 ```
 
-**Vì sao đây là snapshot?** `printSnapshot("t0", o01)` quan sát graph trước khi thêm `i02`. Lần gọi thứ hai quan sát **cùng object `o01`** sau khi danh sách `items` có thêm một liên kết. Java không cần tạo một object `Order` mới để có sơ đồ khác.
+**Why is this a snapshot?** `printSnapshot("t0", o01)` observes the graph before `i02` is added. The second call observes **the same `o01` object** after a new link appears in its `items` list. Java does not need a new `Order` instance for a different snapshot.
 
-Lưu ý: `label` chỉ giúp ánh xạ instance sang tên trong hình. Java sử dụng **tham chiếu object**; dấu `==` trong hai dòng cuối xác nhận hai tham chiếu trỏ đến đúng **cùng instance**. Hai object có cùng `code` hoặc `sku` chưa chắc là cùng instance.
+Note: `label` maps instances to diagram names. Java uses **object references**; `==` in the final two lines confirms that two references point to **the exact same instance**. Two different objects may have equal `code` or `sku` values.
 
-## 6. Snapshot t1: cùng đơn hàng, nhiều liên kết hơn
+## 6. Snapshot t1: Same Order, More Links
 
-Sau khi thêm item thứ hai, object graph trông như sau:
+After adding the second item, the graph looks like this:
 
 ```mermaid
 flowchart LR
@@ -3532,27 +3532,27 @@ flowchart LR
     i2 -->|"product"| p2
 ```
 
-*Hai snapshot chỉ hiển thị những field thực sự có trong mã Java minh họa (`code`, `name`, `quantity`, `sku`) và các link giữa instance. Nếu nghiệp vụ bổ sung `status`, hãy thêm cả field Java, giá trị snapshot và test thay vì đặt một nhãn trạng thái chưa được triển khai.*
+*Both snapshots show only fields actually present in the illustrative Java code (`code`, `name`, `quantity`, `sku`) and links among instances. If the domain introduces `status`, add the Java field, snapshot value, and test instead of inventing an unimplemented state label.*
 
-So sánh:
+Comparison:
 
-| Quan sát | Snapshot `t0` | Snapshot `t1` |
+| Observation | Snapshot `t0` | Snapshot `t1` |
 |---|---|---|
-| `o01:Order` | Có | Cùng object `o01` |
-| `c01:Customer` | Có | Cùng object `c01` |
-| `i01:OrderItem` | Có, quantity = 2 | Vẫn có, quantity = 2 |
-| `i02:OrderItem` | Chưa liên kết vào `o01`; trong demo chưa được tạo | Có, quantity = 1 |
-| Link `o01 → i01` | Có | Có |
-| Link `o01 → i02` | Không | Có |
-| Lớp `Order`, `OrderItem` | Không đổi | Không đổi |
+| `o01:Order` | Present | Same `o01` object |
+| `c01:Customer` | Present | Same `c01` object |
+| `i01:OrderItem` | Present, quantity = 2 | Still present, quantity = 2 |
+| `i02:OrderItem` | Not linked to `o01`; not yet created in the demo | Present, quantity = 1 |
+| Link `o01 → i01` | Present | Present |
+| Link `o01 → i02` | Absent | Present |
+| Classes `Order`, `OrderItem` | Unchanged | Unchanged |
 
-Việc có hai ảnh tĩnh **không tự tạo thành sequence diagram**. Hai ảnh thể hiện trạng thái “trước/sau”; còn sequence diagram trả lời **ai gọi ai, thông điệp gì, theo trình tự nào**.
+Two static pictures **do not constitute a sequence diagram**. Snapshots show “before/after” states; sequence diagrams answer **who calls whom, what messages are exchanged, and in what order**.
 
-## 7. Nhiều tham chiếu đến cùng một object
+## 7. Multiple References to One Object
 
-Một lợi ích nổi bật của sơ đồ đối tượng là chỉ rõ **chia sẻ tham chiếu (aliasing)**.
+An important use of object diagrams is illustrating **shared references (aliasing)**.
 
-Giả sử hai đơn hàng khác nhau đều thuộc về một khách Lan:
+Suppose two different orders both belong to customer Lan:
 
 ```mermaid
 flowchart LR
@@ -3563,7 +3563,7 @@ flowchart LR
     o2 -->|"customer"| c
 ```
 
-Đây là **ba object**, không phải bốn: hai object `Order`, một object `Customer`. Hai link cùng đi tới `c01`. Trong Java:
+There are **three objects**, not four: two `Order` objects and one `Customer` object. Both links point to `c01`. In Java:
 
 ```java
 Customer c01 = new Customer("c01", "Lan");
@@ -3573,25 +3573,25 @@ Order o02 = new Order("o02", "O-002", c01);
 System.out.println(o01.customer == o02.customer); // true
 ```
 
-Đoạn này chạy khi đặt bên trong `main` của `ObjectDiagramDemo` (dùng các lớp lồng đã khai báo). Nếu tạo **hai** object `Customer` khác nhau cùng tên “Lan”, snapshot phải vẽ **hai hộp** riêng. Việc trùng nội dung thuộc tính không làm chúng thành một instance.
+This snippet runs inside `main` of `ObjectDiagramDemo` using the declared nested classes. If you create **two** different `Customer` objects with the name “Lan,” the snapshot needs **two separate boxes**. Equal attribute values do not make two objects one instance.
 
-Điều này rất hữu ích khi tìm lỗi cập nhật dữ liệu: sửa một object được chia sẻ có thể được nhìn thấy qua nhiều đường tham chiếu; sửa một object khác có cùng dữ liệu thì không.
+This is helpful for debugging data updates: changing a shared object may be observed through multiple reference paths, whereas changing another object with equal values is not.
 
-## 8. Khi nào dùng sơ đồ đối tượng?
+## 8. When Should You Use Object Diagrams?
 
-**Làm rõ yêu cầu và ví dụ nghiệp vụ.** Trong hệ thống đặt chỗ, chụp trạng thái có `room01`, `booking17`, `guest03` để cùng kiểm tra “phòng này đã được đặt bởi ai vào thời điểm xác định”.
+**Clarify requirements and domain scenarios.** For reservations, snapshot `room01`, `booking17`, and `guest03` to discuss “who reserved this room at a specified moment.”
 
-**Kiểm tra ràng buộc và bội số.** Nếu class diagram nói mỗi `OrderItem` phải gắn một `Product`, snapshot có item không có product là **một trạng thái vi phạm quy tắc**. Diagram giúp đưa ra phản ví dụ trực quan.
+**Check constraints and multiplicities.** If a class diagram requires every `OrderItem` to have a `Product`, a snapshot with an item lacking a product is **a rule-violating state**. The diagram makes the counterexample visible.
 
-**Giải thích aliasing và trạng thái dùng chung.** Hai đường link đến cùng một object làm rõ tại sao một thay đổi có thể được quan sát từ nhiều object khác.
+**Explain aliasing and shared state.** Two links to one object clarify why a change can be observed through different objects.
 
-**Gỡ lỗi object graph.** Khi test thất bại do item thuộc sai đơn hoặc user giữ quyền truy cập cũ, sơ đồ trước/sau có thể chỉ ra link nào sai. Nên chú ý rằng object graph trong heap và quan hệ lưu trong database có thể khác nhau nếu dữ liệu chưa được flush hoặc đang bị cache.
+**Debug object graphs.** When tests fail because an item belongs to the wrong order or a user retains outdated access, before/after diagrams reveal incorrect links. Heap graphs can differ from database relationships before flushing or because of caches.
 
-**Thiết kế test.** Snapshot mô tả trạng thái đầu vào mong muốn, rồi mô tả trạng thái kết quả của một hành vi. Kỳ vọng test có thể kiểm tra số link, identity, giá trị thuộc tính và bất biến nghiệp vụ.
+**Design tests.** Define an expected input snapshot and a resulting post-operation snapshot. Assertions can verify link counts, identities, attribute values, and domain invariants.
 
-### Dùng cùng test Java để kiểm tra snapshot
+### Verify the Snapshot with Java Tests
 
-Thêm các kiểm tra phù hợp vào cuối `main` trong ví dụ:
+Add suitable checks at the end of the example's `main`:
 
 ```java
 if (o01.getItems().size() != 2) {
@@ -3607,91 +3607,91 @@ if (o01.getItems().get(1).product != p02) {
 }
 ```
 
-Các kiểm tra khẳng định những quan hệ **tại t1**. Nếu thay đổi yêu cầu làm đơn cho phép nhiều khách hàng, class diagram, object diagram và test phải được cập nhật nhất quán.
+These assertions verify relationships **at t1**. If requirements change to allow multiple customers per order, update class diagrams, object diagrams, and tests consistently.
 
-## 9. Những sai lầm thường gặp
+## 9. Common Mistakes
 
-| Sai lầm | Vì sao sai | Cách làm đúng |
+| Mistake | Why it is wrong | Better approach |
 |---|---|---|
-| Vẽ các lớp `Order`, `Customer` rồi gọi là object diagram | Chưa có instance cụ thể | Viết `o01:Order`, `c01:Customer` và link cụ thể |
-| Ghi `quantity: int` trong hộp instance | Đó là khai báo kiểu thuộc tính | Ghi `quantity = 2` để thể hiện trạng thái |
-| Vẽ hai hộp cho cùng một instance | Làm người đọc tưởng hai object khác nhau | Dùng một hộp, nối nhiều link đến hộp đó |
-| Cho rằng thiếu link là link không thể xảy ra | Snapshot có thể cố ý lược bớt phần graph | Nêu rõ phạm vi được chụp và các giả định |
-| Đọc snapshot thành trình tự xử lý | Object diagram không mang thời gian trên từng cạnh | Vẽ t0, t1 riêng; cần diễn tiến chi tiết thì dùng sequence/activity diagram |
-| Đồng nhất nhãn `o01` với biến/ID DB | Object identity khác tên biến, khóa nghiệp vụ hay khóa DB | Ghi rõ quy ước đặt nhãn; kiểm tra identity bằng tham chiếu khi cần |
-| Vẽ một trạng thái trái bội số mà không giải thích | Dễ khiến quy tắc miền bị hiểu sai | Đánh dấu đây là ví dụ lỗi hoặc chỉnh quan hệ |
-| Cho rằng mũi tên của hình Mermaid là lời gọi hàm | Link giữa object biểu diễn association | Dùng nhãn field/role, tránh nhầm với message của sequence diagram |
+| Drawing classes `Order`, `Customer` and calling it an object diagram | No concrete instances are shown | Show `o01:Order`, `c01:Customer` and their links |
+| Writing `quantity: int` inside an instance box | This declares an attribute's type | Write `quantity = 2` to show current state |
+| Drawing two boxes for the same instance | Suggests two separate objects | Use one box with multiple links to it |
+| Assuming missing links are impossible | A snapshot may intentionally omit some graph portions | State snapshot scope and assumptions |
+| Treating snapshots as an execution sequence | Object links have no individual timestamps | Draw separate t0/t1 snapshots; use sequence/activity diagrams for processing steps |
+| Equating the `o01` label with Java variable or DB ID | Object identity differs from variable names and domain/DB keys | Define labeling conventions; check reference identity when needed |
+| Drawing a state violating multiplicity without explanation | Misleads readers about domain rules | Mark it as invalid or fix the association |
+| Treating Mermaid arrows as method calls | Links between objects represent associations | Use field/role labels; distinguish from sequence-diagram messages |
 
-## 10. Bài tập tự luyện
+## 10. Practice Exercises
 
-**Bài 1 — Nhận diện instance:** Hệ thống có `Student` và `Course`. Sinh viên An và Bình cùng đăng ký khóa Java. Cần vẽ bao nhiêu object sinh viên và object khóa học?
+**Exercise 1 — identify instances:** The system has `Student` and `Course`. Students An and Binh both enroll in a Java course. How many student and course objects are needed?
 
-**Gợi ý:** hai object `Student` khác nhau, **một** object `Course` được cả hai liên kết đến, nếu đó là cùng khóa Java.
+**Hint:** Two distinct `Student` objects and **one** `Course` object linked to both, assuming they refer to the same Java course.
 
-**Bài 2 — Từ lớp sang snapshot:** Sơ đồ lớp có `Library 1 — 0..* Book`. Tại thời điểm chụp, thư viện `L1` giữ hai cuốn sách `B1`, `B2`. Hãy vẽ ba hộp instance và hai link. Điều gì thay đổi khi chuyển `B2` sang thư viện `L2`?
+**Exercise 2 — class model to snapshot:** A class diagram shows `Library 1 — 0..* Book`. At snapshot time, library `L1` holds books `B1` and `B2`. Draw three instance boxes and two links. What changes when `B2` moves to library `L2`?
 
-**Gợi ý:** trước: `L1—B1` và `L1—B2`. Sau: `L1—B1` và `L2—B2`. Các object sách có thể vẫn là chính những instance ban đầu.
+**Hint:** Before: `L1—B1` and `L1—B2`. After: `L1—B1` and `L2—B2`. Book objects may remain the original instances.
 
-**Bài 3 — Phát hiện trạng thái lỗi:** Quy tắc là mỗi `OrderItem` phải có đúng một sản phẩm. Snapshot có `i03:OrderItem` nhưng không có link đến `Product`. Có thể kết luận lỗi chắc chắn không?
+**Exercise 3 — detect an invalid state:** Every `OrderItem` must reference exactly one product. A snapshot shows `i03:OrderItem` without a link to `Product`. Can you conclude that it is definitely an error?
 
-**Gợi ý:** nếu snapshot được công bố là **đầy đủ cho các link product**, đây là trạng thái vi phạm; nếu là hình cố ý lược bỏ chi tiết, cần kiểm tra trước khi kết luận.
+**Hint:** If the snapshot is **complete with respect to product links**, it violates the constraint; if it intentionally omits details, verify before concluding.
 
-**Bài 4 — Hai ảnh có phải sequence diagram?** Một ảnh có đơn ở trạng thái `DRAFT`, ảnh khác có `PAID`. Hai ảnh cho biết điều gì, và không cho biết điều gì?
+**Exercise 4 — are two pictures a sequence diagram?** One shows an order in `DRAFT`, the other in `PAID`. What do the images reveal, and what do they omit?
 
-**Gợi ý:** biết giá trị ở hai thời điểm; không biết ai gọi API nào, transaction thực hiện ra sao hoặc thứ tự thông điệp giữa các thành phần.
+**Hint:** They show values at two moments but not which APIs were called, how transactions ran, or the order of messages among components.
 
-**Bài 5 — Kiểm tra identity:** Hai đơn hàng cùng trỏ tới `customerA` và `customerB`, cả hai có tên Lan nhưng `customerA != customerB`. Hãy vẽ sơ đồ với đúng số hộp và liên kết.
+**Exercise 5 — check identity:** Two orders reference `customerA` and `customerB`, both named Lan, but `customerA != customerB`. Draw the correct number of boxes and links.
 
-**Gợi ý:** bốn object — hai đơn và hai customer — vì có hai instance customer riêng.
+**Hint:** Four objects—two orders and two customers—because the customers are separate instances.
 
 ---
 
-**Ghi nhớ:** sơ đồ lớp mô tả *kiểu và quy tắc cấu trúc*, còn sơ đồ đối tượng mô tả *các instance, giá trị và link tại một thời điểm được chọn*. Để sơ đồ có ích, hãy nêu rõ thời điểm, phạm vi snapshot, nhãn identity và mối liên hệ giữa từng link với trạng thái thực của chương trình.
+**Remember:** Class diagrams describe *types and structural rules*, while object diagrams describe *instances, values, and links at a chosen moment*. State the snapshot time, graph scope, identity labels, and how each link corresponds to real program state.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="modeling-007">Sơ đồ tuần tự: thứ tự tương tác</a>
+## <a id="modeling-007">Sequence diagrams: interaction order</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Sơ đồ tuần tự (Sequence Diagram): thứ tự tương tác trong OOP
+# Sequence Diagrams: Interaction Order in OOP
 
-Khi một tính năng liên quan đến nhiều đối tượng, sơ đồ lớp cho ta biết **những đối tượng nào có quan hệ**, còn **sơ đồ tuần tự (UML Sequence Diagram)** cho thấy **đối tượng nào gọi đối tượng nào, theo thứ tự nào và kết quả được trả về ra sao** trong một tình huống cụ thể.
+When a feature involves several objects, a class diagram shows **which objects are related**; a **UML sequence diagram** shows **who calls whom, in what order, and how results return** for a particular scenario.
 
-Ví dụ: độc giả nhấn “Mượn sách”, hệ thống phải kiểm tra bản sách còn trống, kiểm tra số sách độc giả đang mượn, xác định hạn trả, lưu phiếu mượn, rồi phản hồi. Một sơ đồ tuần tự tốt làm rõ **ai chịu trách nhiệm ở từng bước** và **nhánh nào xảy ra khi yêu cầu không hợp lệ**.
+For example, when a library member selects “Borrow Book,” the system checks copy availability, active-loan limits, due dates, and persistence before responding. A sequence diagram clarifies **who owns each step** and **which branch handles an invalid request**.
 
-## 1. Khi nào cần sơ đồ tuần tự?
+## 1. When Do You Need a Sequence Diagram?
 
-Dùng sơ đồ tuần tự để trả lời những câu hỏi như:
+Use sequence diagrams to answer:
 
-- Lời gọi nào xuất phát từ tác nhân (actor), và đối tượng nào tiếp nhận đầu tiên?
-- Một use case cần qua controller, service, repository, domain object theo **thứ tự** nào?
-- Kết quả của mỗi lời gọi được dùng để ra quyết định gì?
-- Khi kiểm tra thất bại, luồng dừng tại đâu? Có tiếp tục ghi dữ liệu không?
-- Có lời gọi lặp, tùy chọn hoặc xử lý song song/bất đồng bộ nào?
-- Trách nhiệm đang nằm đúng lớp hay controller/service đang ôm quá nhiều việc?
+- Which call originates from an actor, and which object receives it first?
+- In what **order** does a use case pass through controller, service, repository, and domain objects?
+- How is each call's result used to make decisions?
+- Where does processing stop on failure? Is anything still persisted?
+- Are there loops, optional calls, or parallel/asynchronous operations?
+- Are responsibilities correctly placed, or does a controller/service do too much?
 
-Sơ đồ mô tả **một tương tác hoặc một nhóm tình huống của một hành vi**, không nhất thiết vẽ toàn bộ hệ thống. Thường bắt đầu từ **một use case có thể phát biểu thành câu**: “Độc giả mượn một bản sách”.
+A diagram describes **one interaction or a group of scenarios for one behavior**, not necessarily the whole system. Start with **a use case that can be stated as a sentence**, such as “A member borrows a book copy.”
 
-| Câu hỏi | Loại sơ đồ thường phù hợp hơn |
+| Question | More suitable diagram type |
 | --- | --- |
-| Lớp nào có thuộc tính/phương thức và liên hệ gì? | Class diagram |
-| Các bước xử lý, nhánh quyết định trong một thuật toán? | Activity diagram |
-| Đối tượng nào gửi thông điệp cho ai và theo thứ tự nào? | **Sequence diagram** |
-| Đối tượng chuyển qua các trạng thái nào? | State machine |
-| Thành phần triển khai/kết nối theo kiến trúc nào? | Component/deployment diagram |
+| Which classes have attributes, operations, and relationships? | Class diagram |
+| Which steps and decision branches form an algorithm? | Activity diagram |
+| Who sends which messages, and in what order? | **Sequence diagram** |
+| Which states can an object transition through? | State machine |
+| How are deployable components connected architecturally? | Component/deployment diagram |
 
-Sequence diagram rất hữu ích khi nhiều đối tượng cộng tác, nhưng nếu chỉ cần mô tả phép cộng hai số bên trong một phương thức thì sơ đồ có thể phức tạp hơn chính đoạn code.
+Sequence diagrams help when objects collaborate, but adding one merely to document two numbers being added inside a method may be more complex than the code.
 
-## 2. Thành phần và cách đọc từ trên xuống
+## 2. Elements and Top-to-Bottom Reading
 
-Một sơ đồ tuần tự có **trục ngang** là các bên tham gia (*participants/lifelines*) và **trục dọc** thể hiện thứ tự diễn ra của các thông điệp. Các thông điệp ở vị trí càng thấp thường xuất hiện càng muộn trong tình huống được mô tả.
+A sequence diagram uses a **horizontal axis** for participants/lifelines and a **vertical axis** for message ordering. Messages lower on the diagram generally occur later in the scenario.
 
 ```mermaid
 sequenceDiagram
@@ -3713,32 +3713,32 @@ sequenceDiagram
     deactivate C
 ```
 
-| Thành phần | Ý nghĩa | Cách đọc trong Mermaid |
+| Element | Meaning | Mermaid interpretation |
 | --- | --- | --- |
-| **Actor** | Người hoặc hệ thống bên ngoài khởi tạo tương tác | `actor U as Độc giả` |
-| **Participant** | Đối tượng, service, thành phần nhận/gửi thông điệp | `participant S as BorrowService` |
-| **Lifeline** | Đường thẳng đứng thể hiện một bên tham gia xuyên suốt tương tác | Hiện dưới tên participant |
-| **Message (call)** | Một lời gọi/yêu cầu có hướng từ bên gửi đến bên nhận | `S->>R: isOnLoan(copyId)` |
-| **Return message** | Kết quả quay về bên gọi, thường vẽ nét đứt | `R-->>S: false` |
-| **Activation** | Khoảng một participant đang thực hiện công việc trong tương tác | `activate S`, `deactivate S` |
-| **Combined fragment** | Khung thể hiện nhánh, lặp, tùy chọn, song song... | `alt`, `opt`, `loop`, `par` |
-| **Note** | Ghi chú quy tắc/giả định quan trọng | `Note over S,R: ...` |
+| **Actor** | User or external system initiating interaction | `actor U as Độc giả` |
+| **Participant** | Object, service, or component sending/receiving messages | `participant S as BorrowService` |
+| **Lifeline** | Vertical line showing participant presence during interaction | Shown below participant label |
+| **Message (call)** | Directed call or request from sender to recipient | `S->>R: isOnLoan(copyId)` |
+| **Return message** | Result sent back, often drawn with a dashed arrow | `R-->>S: false` |
+| **Activation** | Interval where a participant executes work in the interaction | `activate S`, `deactivate S` |
+| **Combined fragment** | Box for branches, loops, options, parallel paths, etc. | `alt`, `opt`, `loop`, `par` |
+| **Note** | Annotation for important rules or assumptions | `Note over S,R: ...` |
 
-Trong UML chuẩn, khái niệm *activation* còn được gọi là **execution specification**; nó biểu diễn khoảng thực thi, **không bắt buộc** trùng thời lượng CPU hoặc thời gian đo đạc thực. Mỗi lifeline cũng không nhất thiết là một thread riêng.
+In standard UML, an *activation* is also called an **execution specification**. It represents an execution interval, **not necessarily** CPU time or measured duration. Lifelines are not necessarily separate threads.
 
-**Lưu ý quan trọng về thứ tự:** sơ đồ cho biết thứ tự tương đối của các tương tác được biểu diễn. Khoảng cách dọc giữa hai mũi tên **không mặc nhiên** cho biết số mili giây; nếu cần thời lượng, timeout hoặc deadline, phải ghi rõ bằng note/ràng buộc hay sơ đồ phục vụ mục đích định thời.
+**Important ordering note:** the diagram shows relative order of depicted interactions. The vertical distance between two arrows **does not automatically** represent elapsed milliseconds. Annotate durations, timeouts, or deadlines explicitly when needed.
 
-## 3. Các loại thông điệp cần phân biệt
+## 3. Distinguish Message Types
 
-### 3.1. Lời gọi đồng bộ và trả về
+### 3.1. Synchronous Calls and Returns
 
-Với một lời gọi Java thông thường:
+For an ordinary Java invocation:
 
 ```java
 boolean borrowed = repository.isOnLoan(copyId);
 ```
 
-Đối tượng gọi chờ lời gọi hoàn thành hoặc ném exception, rồi mới xử lý tiếp trên cùng luồng điều khiển. Biểu diễn phổ biến:
+The caller waits for completion or an exception before continuing along the same control flow. One common notation is:
 
 ```mermaid
 sequenceDiagram
@@ -3750,11 +3750,11 @@ sequenceDiagram
     deactivate R
 ```
 
-Trong Mermaid, `->>` là nét liền có đầu mũi tên và `-->>` là mũi tên nét đứt; **ngữ nghĩa đồng bộ/bất đồng bộ phải dựa cả vào nội dung và cách diễn đạt**, không chỉ vào một ký tự mũi tên. Trong UML chuẩn, call/return cũng là những loại message có ký hiệu riêng.
+In Mermaid, `->>` is a solid arrow and `-->>` a dashed return arrow; **synchronous versus asynchronous semantics depend on the message meaning as well as notation**, not one arrow character alone. Standard UML has distinct call/return message notation.
 
-### 3.2. Lời gọi bất đồng bộ
+### 3.2. Asynchronous Calls
 
-Ví dụ ứng dụng gửi lệnh tạo email vào queue và tiếp tục xử lý mà không chờ email được gửi xong:
+For example, an application enqueues an email-generation request and continues without waiting for the email to be sent:
 
 ```mermaid
 sequenceDiagram
@@ -3767,32 +3767,32 @@ sequenceDiagram
     W->>W: sendEmail()
 ```
 
-Cách viết `-)` trong Mermaid diễn tả thông điệp có đầu mũi tên mở, thường dùng để diễn giải asynchronous message. Tuy nhiên **chỉ đổi ký hiệu trên sơ đồ không làm code Java tự trở nên bất đồng bộ**. Cần có cơ chế thực tế: queue, event bus, callback, `CompletableFuture`, worker, hoặc một giao thức không chờ kết quả.
+Mermaid `-)` denotes an open arrowhead often used for asynchronous messages. However, **changing a diagram symbol cannot make Java code asynchronous**. Real mechanisms include queues, event buses, callbacks, `CompletableFuture`, workers, or nonblocking protocols.
 
-Ngoài ra, `publish(...)` có thể vẫn là lời gọi đồng bộ của client queue (chờ broker nhận message), trong khi **việc xử lý email** mới diễn ra bất đồng bộ. Phải chỉ rõ ranh giới giữa *ghi/đẩy sự kiện* và *thực thi tác vụ*.
+Also, `publish(...)` may itself be a synchronous queue-client call that waits for broker acknowledgment, while **email processing** runs asynchronously. Distinguish *publishing/enqueuing an event* from *executing the task*.
 
-### 3.3. Thông điệp tự gọi, tạo và kết thúc đối tượng
+### 3.3. Self-Messages, Creation, and Destruction
 
-- **Self-message:** một đối tượng gọi chính phương thức khác của nó, ví dụ `validator.validateState()`.
-- **Create message:** một đối tượng yêu cầu tạo instance mới, như `new Loan(...)`.
-- **Destroy message:** mô tả kết thúc vòng đời của đối tượng trong mô hình tương tác.
+- **Self-message:** an object invokes another of its own methods, such as `validator.validateState()`.
+- **Create message:** an object requests a new instance, such as `new Loan(...)`.
+- **Destroy message:** indicates the end of an object's lifecycle in the interaction model.
 
-Không nhầm dấu kết thúc lifeline với thao tác Java garbage collection. JVM không đảm bảo thời điểm thu hồi object chỉ vì một biến ra khỏi scope; tài nguyên `AutoCloseable` cũng phải có chính sách đóng tường minh.
+Do not confuse the end of a lifeline with Java garbage collection. The JVM does not guarantee collection when a variable leaves scope, and `AutoCloseable` resources still need explicit closing policies.
 
-## 4. Combined fragments: biểu diễn nhánh và lặp
+## 4. Combined Fragments: Branches and Loops
 
-Các khung điều khiển trong sequence diagram giúp không cần vẽ một hình riêng cho từng kết quả.
+Control fragments avoid separate diagrams for every outcome.
 
-| Fragment | Ý nghĩa | Ví dụ |
+| Fragment | Meaning | Example |
 | --- | --- | --- |
-| `alt` | Các nhánh thay thế nhau theo điều kiện | Sách đã mượn / sách còn trống |
-| `opt` | Khối tùy chọn: chạy hoặc bỏ qua | Có mã giảm giá mới tính giảm |
-| `loop` | Lặp khối tương tác | Kiểm tra lần lượt từng dòng hàng |
-| `par` | Các phần có thể diễn ra song song/đan xen | Hai công việc độc lập chạy đồng thời |
-| `break` | Kết thúc sớm phần tương tác bao quanh khi điều kiện thỏa | Xác thực thất bại thì dừng xử lý |
-| `critical` | Vùng tương tác quan trọng cần thực hiện không bị xen ngang theo ràng buộc mô hình | Thao tác cần bảo vệ khỏi cập nhật tranh chấp |
+| `alt` | Mutually exclusive branches based on guards | Copy borrowed / copy available |
+| `opt` | Optional block that may execute or be skipped | Apply discount only when code exists |
+| `loop` | Repeated interaction block | Check each order line in turn |
+| `par` | Segments may run concurrently/interleave | Two independent jobs overlap |
+| `break` | Early exit from surrounding interaction on a guard | Stop after authentication failure |
+| `critical` | Critical interaction region requiring no interleaving under the model constraint | Operation protected against concurrent updates |
 
-Ví dụ ba fragment thường gặp:
+Example of three common fragments:
 
 ```mermaid
 sequenceDiagram
@@ -3818,19 +3818,19 @@ sequenceDiagram
     end
 ```
 
-**Không được hiểu `par` hay `critical` là cơ chế đồng bộ hóa đã tồn tại trong ứng dụng.** Fragment chỉ ghi nhận ý đồ thiết kế. Nếu nhiều transaction cùng tranh chấp dữ liệu, code vẫn cần lock, isolation, optimistic concurrency, unique constraint hoặc giải pháp tương đương tại đúng ranh giới.
+**Do not treat `par` or `critical` as synchronization mechanisms already present in the application.** Fragments record design intent. Competing transactions still require locks, isolation, optimistic concurrency, unique constraints, or equivalent enforcement at appropriate boundaries.
 
-## 5. Tình huống xuyên suốt: mượn một bản sách
+## 5. Running Scenario: Borrowing a Book Copy
 
-Bài toán:
+Requirements:
 
-1. Độc giả gửi `memberId` và `copyId`.
-2. Hệ thống từ chối nếu bản sách đang được mượn.
-3. Hệ thống từ chối nếu độc giả đã đạt giới hạn số lượt mượn đang hoạt động.
-4. Nếu hợp lệ, hệ thống tính hạn trả từ ngày mượn và chính sách, tạo phiếu mượn, lưu kết quả.
-5. Đầu vào thành công nhận **201** và dữ liệu phiếu mượn; bản sách không sẵn có nhận **409**; vượt hạn mức nhận **422** (đây là quyết định API minh họa, không phải luật bắt buộc cho mọi API).
+1. Member submits `memberId` and `copyId`.
+2. System rejects if the copy is currently borrowed.
+3. System rejects if the member has reached the active-loan limit.
+4. If allowed, calculate the due date from the borrowing date and policy, create a loan, and persist the result.
+5. Success responds with **201** and loan data; unavailable copy returns **409**; quota violation returns **422** (illustrative API choices, not mandatory for every API).
 
-### Sơ đồ tuần tự cho luồng đầy đủ
+### Full-Flow Sequence Diagram
 
 ```mermaid
 sequenceDiagram
@@ -3875,13 +3875,13 @@ sequenceDiagram
     deactivate C
 ```
 
-Sơ đồ dùng `autonumber` để đánh số **thứ tự message hiển thị**, không phải mã dòng Java hoặc số request HTTP. Các mũi tên exception được dùng như cách diễn giải phản hồi lỗi ở ranh giới service/controller; trong Java, exception thực tế **không phải** giá trị trả về thông thường.
+The diagram uses `autonumber` for **displayed message ordering**, not Java source lines or HTTP request counts. Exception arrows depict error responses across service/controller boundaries; Java exceptions **are not** ordinary return values.
 
-Ở nhánh “bản sách đã mượn”, **không có** lời gọi `countActive` hay `save`. Ở nhánh “đạt hạn mức”, **không có** lời gọi `dueDate` hoặc `save`. Những chi tiết này cho phép kiểm tra thứ tự và tác dụng phụ, không chỉ kết quả cuối cùng.
+When “copy already borrowed,” there is **no** `countActive` or `save` call. When “quota reached,” there is **no** `dueDate` or `save` call. These details validate call ordering and side effects, not merely final outcomes.
 
-## 6. Chương trình Java 17 chạy được khớp với sơ đồ
+## 6. Runnable Java 17 Program Matching the Diagram
 
-Đặt toàn bộ code sau vào một file `SequenceDiagramDemo.java`:
+Put all code below in `SequenceDiagramDemo.java`:
 
 ```java
 import java.time.Clock;
@@ -4066,14 +4066,14 @@ public class SequenceDiagramDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac SequenceDiagramDemo.java
 java SequenceDiagramDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 201 Loan created, due 2026-10-29
@@ -4082,28 +4082,28 @@ Kết quả dự kiến:
 201 Loan created, due 2026-10-29
 ```
 
-### Đối chiếu message với phương thức Java
+### Match Messages to Java Methods
 
-| Thứ tự logic | Mũi tên trên sơ đồ | Lời gọi trong code | Kết quả/nhánh |
+| Logical order | Diagram arrow | Code invocation | Result / branch |
 | --- | --- | --- | --- |
-| 1 | Endpoint → Service | `service.borrow(memberId, copyId)` | Bắt đầu use case |
-| 2 | Service → Repository | `loans.isOnLoan(copyId)` | Nếu true: ném `UNAVAILABLE`, dừng |
-| 3 | Service → Repository | `loans.countActive(memberId)` | Trả số lượt active |
-| 4 | Service → Policy | `policy.ensureEligible(activeCount)` | Nếu vượt giới hạn: ném `LIMIT`, dừng |
-| 5 | Service → Clock/Policy | `LocalDate.now(clock)`, `policy.dueDate(today)` | Tính ngày mượn/hạn trả |
-| 6 | Service → Loan | `new Loan(...)` | Tạo Loan hợp lệ |
-| 7 | Service → Repository | `loans.save(loan)` | Lưu, hoặc từ chối nếu copy bị chiếm |
-| 8 | Service → Endpoint → Actor | `return loan` / `Response` | Thành công 201 hoặc lỗi 409/422 |
+| 1 | Endpoint → Service | `service.borrow(memberId, copyId)` | Starts the use case |
+| 2 | Service → Repository | `loans.isOnLoan(copyId)` | If true: throw `UNAVAILABLE` and stop |
+| 3 | Service → Repository | `loans.countActive(memberId)` | Returns active loan count |
+| 4 | Service → Policy | `policy.ensureEligible(activeCount)` | If over limit: throw `LIMIT` and stop |
+| 5 | Service → Clock/Policy | `LocalDate.now(clock)`, `policy.dueDate(today)` | Calculate borrow/due dates |
+| 6 | Service → Loan | `new Loan(...)` | Construct a valid Loan |
+| 7 | Service → Repository | `loans.save(loan)` | Persist or reject if copy was taken |
+| 8 | Service → Endpoint → Actor | `return loan` / `Response` | Success 201 or error 409/422 |
 
-Sơ đồ đặt `Loan` như một participant để minh họa tạo object. Không nhất thiết tạo participant riêng cho mọi `String`, `List` hoặc hàm hỗ trợ đơn giản; chỉ vẽ những nơi quan trọng với **trách nhiệm và giao tiếp** của use case.
+The diagram treats `Loan` as a participant to illustrate object creation. You need not give every `String`, `List`, or simple helper a lifeline. Show the participants important to **responsibility and communication** in the use case.
 
-Ví dụ cố tình giới hạn các Loan trong repository đều là lượt đang hoạt động. Luồng trả sách, phân quyền người mượn và việc đăng ký bản sách hợp lệ chưa được mô hình hóa.
+The example deliberately treats all loans in the repository as active. Returns, borrower authorization, and validation of genuine book-copy registration remain outside the model.
 
-**Giới hạn về đồng thời:** code in-memory ở trên minh họa thứ tự tuần tự cho một lời gọi, chưa cung cấp transaction đa request. Hai lời gọi đồng thời có thể cùng vượt qua `countActive` và làm một độc giả vượt giới hạn; `LinkedHashMap` còn không thread-safe. Với ứng dụng thật, phải kiểm tra/ràng buộc dưới giao dịch, khóa hoặc cơ chế duy trì invariant thích hợp, dùng repository/database có xử lý đồng thời. Sequence diagram là mô hình tương tác, **không tự bảo đảm atomicity**.
+**Concurrency limitation:** the in-memory code demonstrates one sequential call, not multi-request transactions. Concurrent calls can both pass `countActive` and exceed one member's limit; `LinkedHashMap` is also not thread-safe. Production must check/enforce rules under suitable transactions, locks, or other invariant-preserving mechanisms with concurrency-safe repositories/databases. A sequence diagram describes interactions and **does not guarantee atomicity**.
 
-## 7. Dùng sơ đồ để phát hiện lỗi thiết kế
+## 7. Use Diagrams to Identify Design Defects
 
-### Lỗi A: gọi nhầm thứ tự làm phát sinh tác dụng phụ
+### Defect A: Wrong Call Order Causes Side Effects
 
 ```mermaid
 sequenceDiagram
@@ -4117,42 +4117,42 @@ sequenceDiagram
     Note over S,R: Đã lưu rồi mới từ chối, cần rollback/compensation
 ```
 
-Nếu `save` đã commit, kiểm tra policy sau đó là quá muộn. Trong code chạy dưới transaction, một exception có thể kích hoạt rollback nếu cấu hình đúng; nhưng không nên xây thiết kế dựa trên giả định transaction luôn tồn tại.
+If `save` has already committed, policy checks are too late. A correctly configured transaction may roll back after an exception, but the design should not assume transactions always exist.
 
-### Lỗi B: controller làm thay domain rule
+### Defect B: Controller Duplicates Domain Rules
 
-Nếu sơ đồ có chuỗi `Controller -> Repository -> Controller -> Policy -> Controller -> Repository` và controller tự tính tiền/hạn mức, có thể đang phân bổ trách nhiệm chưa tốt. Khi đó application service hoặc domain service có thể là nơi điều phối hợp lý hơn. **Không phải mọi sơ đồ nhiều mũi tên đều xấu**; chỉ cảnh báo khi giao tiếp lộ chi tiết nghiệp vụ sang sai tầng.
+If a diagram shows `Controller -> Repository -> Controller -> Policy -> Controller -> Repository` with the controller calculating prices/quotas, responsibilities may be misallocated. An application or domain service may coordinate better. **Many arrows are not inherently bad**; the concern is business details leaking to the wrong layer.
 
-### Lỗi C: bỏ qua đường thất bại
+### Defect C: Missing Failure Paths
 
-Sơ đồ chỉ có “save → success” có thể thiếu kiểm tra, lỗi timeout hoặc trường hợp lưu dữ liệu không thành công. Ít nhất mô tả các nhánh ảnh hưởng tới **hợp đồng của use case**: người dùng nhận thông báo gì, có gọi tiếp không, có trạng thái được ghi dở dang không.
+A “save → success” diagram may omit validation, timeouts, or failed persistence. At least describe branches that affect the **use-case contract**: what the user sees, which later calls are skipped, and whether partial state remains.
 
-### Lỗi D: nhầm thông báo bất đồng bộ với kết quả đã hoàn tất
+### Defect D: Confusing Asynchronous Notification with Completion
 
-Nếu service phát sự kiện `OrderCreated` rồi trả thành công, đó là thành công của phần đồng bộ. Không thể vẽ như thể email đã được gửi, trừ khi hệ thống thực sự chờ kết quả. Với event bus, mô tả riêng xử lý retry, dead-letter và bảo đảm at-least-once khi cần.
+If a service emits `OrderCreated` and returns success, it has completed its synchronous portion. Do not depict email as already sent unless the system waits for the result. With event buses, model retries, dead letters, and at-least-once guarantees where relevant.
 
-## 8. Từ yêu cầu đến sơ đồ tuần tự: quy trình 7 bước
+## 8. From Requirements to Sequence Diagrams: 7 Steps
 
-1. **Chọn một scenario rõ ràng.** Đầu vào, tiền điều kiện, kết quả thành công, các kết quả thất bại quan trọng.
-2. **Xác định participants thật.** Actor, adapter/controller, application service, domain policy/entity, repository, dịch vụ ngoài. Đừng tự tạo một class chỉ để có thêm mũi tên.
-3. **Đặt luồng thành công trước.** Viết lần lượt các lời gọi thực tế từ trên xuống; bên nhận phải có trách nhiệm phù hợp.
-4. **Bổ sung return có ý nghĩa.** Giá trị trả về hoặc exception làm thay đổi quyết định; không cần vẽ mọi câu lệnh `return`.
-5. **Thêm `alt`, `opt`, `loop`.** Diễn đạt rõ các điều kiện và chỗ luồng dừng, tránh những nhánh chỉ xuất hiện vì chi tiết nhỏ.
-6. **Kiểm tra các tác dụng phụ.** Các lời gọi `save`, `publish`, `send`, `charge` có xảy ra sau kiểm tra chưa? Khi lỗi, trạng thái còn đúng không?
-7. **So với code và test.** Đối chiếu thứ tự giữa sơ đồ và phương thức thật; chỉnh lại một trong hai khi thiết kế thay đổi.
+1. **Choose a specific scenario.** Capture inputs, preconditions, successful outcome, and significant failures.
+2. **Identify real participants.** Actor, adapter/controller, application service, domain policy/entity, repository, and external service. Do not create a class just to draw another arrow.
+3. **Draw the success flow first.** List actual calls top-to-bottom; each recipient should own the requested behavior.
+4. **Include meaningful returns.** Show results or exceptions that change decisions, not every Java `return` statement.
+5. **Add `alt`, `opt`, and `loop`.** Clarify conditions and stopping points without diagramming insignificant branches.
+6. **Review side effects.** Are `save`, `publish`, `send`, and `charge` called only after appropriate checks? Is state valid on failure?
+7. **Compare against code and tests.** Check diagram order against actual methods and update one or both as design evolves.
 
-Sơ đồ là tài liệu để trao đổi và kiểm tra thiết kế. Nó hữu ích nhất khi đủ chính xác để người khác đối chiếu với mã nguồn, đồng thời đủ gọn để đọc được.
+Diagrams support communication and design verification. They are most useful when precise enough to compare against source code yet concise enough to read.
 
-## 9. Kiểm thử thứ tự tương tác
+## 9. Testing Interaction Order
 
-Không phải luồng nào cũng cần kiểm tra đúng **toàn bộ** thứ tự các lời gọi nội bộ. Nên kiểm tra thứ tự khi thứ tự đó là một **yêu cầu hành vi**:
+Not every flow needs an assertion for **every** internal call order. Test order when it is part of a **behavioral requirement**:
 
-- Nếu bản sách đã có người mượn, tuyệt đối không gọi `save`.
-- Nếu vượt hạn mức, không gọi `save`.
-- Nếu kiểm tra không hợp lệ, không phát thông báo xác nhận thành công.
-- Nếu hệ thống phát event sau commit, cần kiểm chứng vị trí phát event so với lưu dữ liệu (hoặc outbox).
+- If a copy is already on loan, `save` must never be called.
+- If a member is over quota, `save` must not be called.
+- If validation fails, no success notification must be emitted.
+- If events are published after commit, verify publishing relative to persistence (or an outbox).
 
-Một **spy repository** có thể ghi các lời gọi quan sát được:
+A **spy repository** can record observable calls:
 
 ```java
 // Minh họa ý tưởng spy; có thể viết thành class implements LoanRepository.
@@ -4166,109 +4166,109 @@ List<String> expected =
         List.of("isOnLoan", "countActive", "save");
 ```
 
-Với nhánh `UNAVAILABLE`, mong đợi chỉ `["isOnLoan"]`. Với `LIMIT`, mong đợi `["isOnLoan", "countActive"]`. Các test này xác nhận không xảy ra **tác dụng phụ sai thứ tự**, thay vì khóa chặt mọi chi tiết implementation. Trong dự án có JUnit/Mockito, có thể dùng spy/mock và xác nhận tương tác nếu đó là hợp đồng cần bảo vệ.
+For the `UNAVAILABLE` branch, expect only `["isOnLoan"]`. For `LIMIT`, expect `["isOnLoan", "countActive"]`. Such tests assert the absence of **incorrectly ordered side effects** without freezing every implementation detail. JUnit/Mockito projects may use spies/mocks for interactions that form part of the protected contract.
 
-Khi có tính đồng thời, một sequence diagram tuần tự đơn lẻ không đủ chứng minh thứ tự giữa các request độc lập. Phải bổ sung mô hình cạnh tranh, constraint ở nơi lưu và integration/concurrency test.
+Under concurrency, one sequential sequence diagram cannot prove ordering between independent requests. Add contention models, storage constraints, and integration/concurrency tests.
 
-## 10. Những lưu ý UML để tránh hiểu sai
+## 10. Avoiding Common UML Misinterpretations
 
-| Hiểu sai thường gặp | Cách hiểu đúng |
+| Common misconception | Correct interpretation |
 | --- | --- |
-| Mỗi participant là một thread | Participant thường là instance hoặc vai trò tham gia, không nhất thiết là thread |
-| Mũi tên nằm thấp hơn tức chạy chậm hơn N mili giây | Vị trí dọc mô tả thứ tự tương tác, không tự biểu diễn độ trễ |
-| Mũi tên nét đứt là message “bất đồng bộ” | Return message thường là nét đứt; asynchronous message là khái niệm riêng |
-| Có `par` trên sơ đồ thì Java chắc chắn chạy song song | Phải có cơ chế thực thi song song thật |
-| `alt` là hai nhánh đồng thời xảy ra | `alt` chọn một nhánh theo điều kiện |
-| Sơ đồ phải chứa từng setter/getter | Chỉ cần message quan trọng cho kịch bản và trách nhiệm cần làm rõ |
-| Sequence diagram thay thế class diagram | Hai sơ đồ trả lời câu hỏi khác nhau và bổ sung cho nhau |
-| Diagram thể hiện lưu thành công là đã an toàn đa luồng | Cần transaction/locking/constraint theo invariant |
-| Mọi exception đều vẽ như giá trị return | Có thể mô hình hóa đường lỗi, nhưng phải phân biệt exception với normal return |
+| Every participant is a thread | Usually an instance or role, not necessarily a thread |
+| A lower arrow means N milliseconds later | Vertical position indicates relative order, not measured delay |
+| Dashed arrow means an “asynchronous” message | Return messages are often dashed; asynchronous messages have separate semantics |
+| Adding `par` makes Java execute concurrently | Real parallel-execution mechanisms are required |
+| `alt` means both branches run simultaneously | `alt` selects one conditional branch |
+| Diagram must show every setter/getter | Show messages important to the scenario and its responsibility allocation |
+| Sequence diagrams replace class diagrams | They answer complementary, different questions |
+| Diagram shows successful persistence, therefore it is thread-safe | Enforce invariants with suitable transactions/locking/constraints |
+| Every exception is drawn as a return value | Error paths may be modeled but differ from normal returns |
 
-Đặt nhãn message theo **ý nghĩa thực tế** như `countActive(memberId)`, `save(loan)`, `publish(event)`; tránh chỉ ghi những từ mơ hồ như “xử lý”, “gọi”, “trả dữ liệu”. Ở mỗi nhánh `alt`, ghi điều kiện đủ cụ thể để người đọc phân biệt.
+Label messages with **actual operations** such as `countActive(memberId)`, `save(loan)`, and `publish(event)` instead of vague “process,” “call,” or “return data.” Give each `alt` guard enough detail to distinguish paths.
 
-## 11. Bài tập thực hành
+## 11. Practice Exercises
 
-**Bài A — Đăng nhập.** Vẽ sequence diagram cho actor, `LoginController`, `AuthenticationService`, `UserRepository`, `PasswordVerifier`, `TokenIssuer`. Mô tả nhánh không tìm thấy người dùng, mật khẩu sai và đăng nhập thành công. Chỉ phát token sau xác thực; không vẽ việc so sánh mật khẩu bằng `==` với chuỗi plaintext trong ứng dụng thực tế.
+**Exercise A — Login.** Draw a sequence diagram for an actor, `LoginController`, `AuthenticationService`, `UserRepository`, `PasswordVerifier`, and `TokenIssuer`. Show missing-user, incorrect-password, and successful-login branches. Issue tokens only after authentication; do not show real systems using `==` against plaintext passwords.
 
-**Bài B — Giỏ hàng.** Vẽ `loop` kiểm tra từng dòng hàng, `opt` có promo và `alt` đơn hợp lệ/không hợp lệ. Đối chiếu mũi tên trong sơ đồ với phương thức Java của các lớp do bạn tự thiết kế.
+**Exercise B — Shopping Cart.** Draw a `loop` over cart lines, an `opt` for promotions, and an `alt` for valid/invalid orders. Match diagram arrows to methods on Java classes you design.
 
-**Bài C — Sửa thứ tự sai.** Một sơ đồ thanh toán đang có `notifySuccess()` trước `charge()`, `charge()` trước `checkAvailability()`. Hãy vẽ lại quy trình và giải thích tại sao hoàn trả tiền/giữ hàng cần một chính sách rõ khi tác dụng phụ từ hệ thống ngoài đã xảy ra.
+**Exercise C — Fix Incorrect Ordering.** A payment diagram calls `notifySuccess()` before `charge()` and calls `charge()` before `checkAvailability()`. Redraw the flow and explain why refunds/inventory reservations need an explicit policy after external side effects.
 
-**Bài D — Không nhầm đồng bộ và bất đồng bộ.** Sau khi ghi đơn, ứng dụng đặt một sự kiện vào queue rồi lập tức trả `202 Accepted`. Vẽ rõ phần publish và consumer xử lý sau; thêm note cho retry/idempotency và chỉ ra điều kiện nào mới có thể gọi là “email đã gửi”.
+**Exercise D — Distinguish Synchronous from Asynchronous.** After persisting an order, the application enqueues an event and immediately returns `202 Accepted`. Show publishing separately from later consumer processing, annotate retries/idempotency, and specify when “email sent” is actually true.
 
-**Bài E — Kiểm thử theo sơ đồ.** Viết fake/spy `LoanRepository` cho ví dụ Java trên. Ghi nhận thứ tự lời gọi ở ba trường hợp: bản sách đã được mượn, độc giả đạt hạn mức, và mượn thành công. Đảm bảo không có `save` trong hai trường hợp bị từ chối.
+**Exercise E — Test Against the Diagram.** Write a fake/spy `LoanRepository` for the Java example. Record call order for three cases: copy borrowed, member at quota, and successful borrow. Ensure neither rejected case invokes `save`.
 
-### Checklist trước khi hoàn thành sequence diagram
+### Sequence Diagram Completion Checklist
 
-- Sơ đồ phục vụ một scenario hoặc một use case được phát biểu rõ ràng?
-- Mỗi participant có vai trò cụ thể trong mã nguồn/thiết kế?
-- Các message đi **đúng người nhận và đúng thứ tự**?
-- Nhánh `alt` thể hiện kết quả thành công và thất bại cần thiết?
-- Return/exception có được phân biệt với asynchronous delivery?
-- `loop`, `opt`, `par` chỉ được dùng khi có lý do nghiệp vụ/thực thi?
-- Tác dụng phụ như lưu, thanh toán, phát sự kiện có đúng vị trí?
-- Sơ đồ có khớp với thứ tự trong code và test?
-- Những giả định về transaction, độ đồng thời và thời gian có được nói rõ?
+- Does the diagram serve a clearly stated scenario or use case?
+- Does each participant have a specific role in source code/design?
+- Do messages reach **the right recipient in the right order**?
+- Does `alt` include necessary success and failure outcomes?
+- Are returns/exceptions distinguished from asynchronous delivery?
+- Are `loop`, `opt`, and `par` used only for business/execution reasons?
+- Are side effects such as persistence, payments, and event publication correctly ordered?
+- Does the diagram match code and test call order?
+- Are transaction, concurrency, and timing assumptions explicit?
 
-**Ghi nhớ:** sơ đồ tuần tự là cách kể lại **một hành vi OOP theo thời gian** bằng những thông điệp giữa các đối tượng. Giá trị của nó không nằm ở số lượng mũi tên mà ở việc phát hiện sai thứ tự, trách nhiệm đặt sai lớp và luồng lỗi còn thiếu trước khi những sai sót đó đi vào mã nguồn.
+**Remember:** A sequence diagram tells the story of **one OOP behavior over time** through messages among objects. Its value lies not in arrow count but in exposing ordering errors, misplaced responsibilities, and missing failure paths before those defects enter the code.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="modeling-008">Sơ đồ trạng thái: chuyển trạng thái hợp lệ</a>
+## <a id="modeling-008">State diagrams: valid state transitions</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Sơ đồ trạng thái: chuyển trạng thái hợp lệ trong OOP
+# State Diagrams: Valid State Transitions in OOP
 
-## 1. Vì sao phải mô hình hóa trạng thái?
+## 1. Why Model State?
 
-Một đối tượng không phải lúc nào cũng được phép thực hiện mọi hành động. Đơn hàng mới tạo có thể được gửi để chờ thanh toán; đơn đã thanh toán có thể chuyển sang đóng gói; đơn đã giao không thể quay trở lại trạng thái mới tạo chỉ bằng cách gán một giá trị khác vào trường `status`.
+An object is not always allowed to perform every action. A new order may be submitted for payment; a paid order may proceed to packing; a delivered order cannot return to its newly created state just by assigning another value to `status`.
 
-Nếu chỉ dùng:
+If you only use:
 
 ```java
 order.setStatus("SHIPPED");
 ```
 
-thì bất kỳ đoạn mã nào cũng có thể đánh dấu “đã gửi hàng”, kể cả khi đơn chưa thanh toán hoặc chưa có mã vận đơn. Khi quy tắc nằm rải rác trong controller, service và repository, việc bổ sung luồng mới dễ tạo ra các trạng thái bất hợp lệ.
+then any code can mark an order “shipped,” even before payment or without a tracking number. When rules are scattered across controllers, services, and repositories, new flows can easily introduce invalid states.
 
-**Sơ đồ trạng thái (UML state machine/state diagram)** diễn tả vòng đời của **một đối tượng**: nó có những trạng thái nào, sự kiện nào làm phát sinh chuyển trạng thái, điều kiện nào phải thỏa mãn và hành động nào được thực hiện khi chuyển.
+A **UML state machine/state diagram** describes **one object's lifecycle**: available states, events triggering transitions, required conditions, and actions performed upon transition.
 
-Mô hình này hữu ích cho đơn hàng, phiếu hỗ trợ, hợp đồng, tài khoản, yêu cầu phê duyệt, đơn vận chuyển hoặc tác vụ nền có vòng đời rõ ràng.
+This is useful for orders, support tickets, contracts, accounts, approval requests, shipments, and background jobs with clear lifecycles.
 
-## 2. Năm thành phần cần đọc trên một sơ đồ trạng thái
+## 2. Five Elements of a State Diagram
 
-| Thành phần | Ý nghĩa | Ví dụ đơn hàng |
+| Element | Meaning | Order example |
 |---|---|---|
-| **State – trạng thái** | Tình huống mà đối tượng đang ở trong đó; chi phối các hành vi được phép | `DRAFT`, `PAID`, `SHIPPED` |
-| **Event/trigger – sự kiện kích hoạt** | Điều gì được gửi/xảy ra để yêu cầu chuyển trạng thái | `SUBMIT`, `CONFIRM_PAYMENT` |
-| **Guard – điều kiện gác** | Biểu thức Boolean phải đúng để chuyển theo một nhánh | `[paidAmount == total]` |
-| **Effect/action – hiệu ứng chuyển trạng thái** | Việc thực hiện khi chuyển thành công | Lưu mã vận đơn; tạo dữ liệu nghiệp vụ |
-| **Transition – cạnh chuyển** | Quy tắc nối trạng thái nguồn với trạng thái đích | `PAID --START_PACKING--> PACKING` |
+| **State** | Situation in which the object exists, determining available behavior | `DRAFT`, `PAID`, `SHIPPED` |
+| **Event/trigger** | Occurrence or request triggering a transition | `SUBMIT`, `CONFIRM_PAYMENT` |
+| **Guard** | Boolean expression required to take a transition | `[paidAmount == total]` |
+| **Effect/action** | Operation performed on a successful transition | Store tracking number; create domain data |
+| **Transition** | Edge connecting a source state to a target state | `PAID --START_PACKING--> PACKING` |
 
-Một nhãn chuyển trạng thái trong UML thường có dạng:
+A UML transition label commonly follows this form:
 
 ```text
 event [guard] / effect
 ```
 
-Ví dụ:
+For example:
 
 ```text
 PACKING --> SHIPPED : SHIP [trackingCode hợp lệ] / lưu trackingCode
 ```
 
-Đọc thành lời: “Khi đơn ở trạng thái `PACKING` và nhận yêu cầu `SHIP`, chỉ cho phép chuyển sang `SHIPPED` nếu mã vận đơn hợp lệ; khi chuyển, lưu mã vận đơn”.
+Read it as: “If an order is in `PACKING` and receives `SHIP`, it may transition to `SHIPPED` only with a valid tracking number; the transition saves that number.”
 
-Một **guard không đạt** nghĩa là nhánh chuyển này **không được thực hiện**. Cần xác định rõ chính sách xử lý yêu cầu không hợp lệ: trả lỗi nghiệp vụ, giữ nguyên trạng thái, hoặc xử lý qua một nhánh khác. Trong ví dụ Java, ta chọn **ném ngoại lệ và giữ nguyên trạng thái**.
+A **failed guard** means this transition **cannot execute**. Define what happens to invalid requests: a business error, unchanged state, or another branch. In the Java example, we **throw an exception without changing state**.
 
-## 3. Sơ đồ vòng đời của một đơn hàng
+## 3. Order Lifecycle State Diagram
 
 ```mermaid
 stateDiagram-v2
@@ -4284,47 +4284,47 @@ stateDiagram-v2
     CANCELLED --> [*]
 ```
 
-Trong sơ đồ:
+In the diagram:
 
-- **`[*]` bên trái** là ký hiệu bắt đầu (initial pseudostate). Nó biểu diễn việc khởi tạo state machine ở `DRAFT`.
-- **Hình chữ nhật bo góc** (Mermaid thể hiện tên trạng thái) là các trạng thái ổn định của đơn hàng.
-- **Mũi tên** diễn tả chuyển trạng thái; nhãn chỉ sự kiện, guard và action khi có.
-- **`[*]` bên phải** là trạng thái kết thúc (final state) của vòng đời được mô tả. Điều đó **không có nghĩa object Java hoặc bản ghi database tự bị xóa**.
-- `CANCELLED` là đích hợp lệ chỉ từ `DRAFT` và `WAITING_PAYMENT` **trong ví dụ này**. Sau thanh toán, nghiệp vụ hoàn tiền thường đòi hỏi một quy trình khác, không nên tự ý cho `PAID → CANCELLED` rồi bỏ qua tiền đã thu.
+- **`[*]` on the left** denotes the initial pseudostate and entry into `DRAFT`.
+- **Rounded rectangles** (state labels in Mermaid) are stable order states.
+- **Arrows** depict transitions, with labels for events, guards, and actions where relevant.
+- **`[*]` on the right** denotes the modeled lifecycle's final state. It **does not mean the Java object or database record is automatically deleted**.
+- `CANCELLED` is reachable from `DRAFT` and `WAITING_PAYMENT` **in this example only**. After payment, refunds generally need a separate workflow rather than simply allowing `PAID → CANCELLED` and ignoring collected money.
 
-Sơ đồ trả lời ngay những câu hỏi:
+The diagram quickly answers:
 
-- Đơn đang `DRAFT` có thể gửi hoặc hủy: **có**.
-- Đơn đang `PAID` có thể chuyển thẳng sang `SHIPPED`: **không**, phải sang `PACKING`.
-- Đơn đang `SHIPPED` có thể xác nhận đã giao: **có**.
-- Đơn đã `DELIVERED` có thể bị hủy theo luồng đơn giản này: **không**.
+- Can a `DRAFT` order be submitted or canceled? **Yes.**
+- Can a `PAID` order move directly to `SHIPPED`? **No;** it must enter `PACKING` first.
+- Can a `SHIPPED` order be confirmed delivered? **Yes.**
+- Can a `DELIVERED` order be canceled in this simple flow? **No.**
 
-Không cần vẽ mọi chuyển trạng thái không hợp lệ bằng mũi tên cấm. **Những cạnh không tồn tại mặc định không được phép** trong một state machine có danh sách chuyển đóng, trừ khi mô hình định nghĩa cách xử lý khác.
+You need not draw every prohibited transition. **Missing edges are disallowed by default** in a closed-transition state machine unless the model specifies another treatment.
 
-## 4. Bảng chuyển trạng thái là “hợp đồng” kiểm chứng được
+## 4. Transition Tables as Testable Contracts
 
-| Trạng thái hiện tại | Event | Guard | Hành động/hiệu ứng trong domain | Trạng thái tiếp theo |
+| Current state | Event | Guard | Domain action/effect | Next state |
 |---|---|---|---|---|
-| `DRAFT` | `SUBMIT` | Không thêm điều kiện | Ghi nhận đơn đã gửi | `WAITING_PAYMENT` |
-| `DRAFT` | `CANCEL` | Không thêm điều kiện | Ghi nhận hủy | `CANCELLED` |
-| `WAITING_PAYMENT` | `CONFIRM_PAYMENT` | Số tiền xác nhận bằng tổng tiền đơn | Chấp nhận thanh toán đã xác thực | `PAID` |
-| `WAITING_PAYMENT` | `CANCEL` | Không thêm điều kiện | Ghi nhận hủy | `CANCELLED` |
-| `PAID` | `START_PACKING` | Không thêm điều kiện | Bắt đầu xử lý đóng gói | `PACKING` |
-| `PACKING` | `SHIP` | Mã vận đơn có nội dung hợp lệ | Lưu mã vận đơn | `SHIPPED` |
-| `SHIPPED` | `CONFIRM_DELIVERY` | Không thêm điều kiện trong ví dụ | Ghi nhận giao thành công | `DELIVERED` |
+| `DRAFT` | `SUBMIT` | No additional guard | Record order submission | `WAITING_PAYMENT` |
+| `DRAFT` | `CANCEL` | No additional guard | Record cancellation | `CANCELLED` |
+| `WAITING_PAYMENT` | `CONFIRM_PAYMENT` | Confirmed amount equals order total | Accept verified payment | `PAID` |
+| `WAITING_PAYMENT` | `CANCEL` | No additional guard | Record cancellation | `CANCELLED` |
+| `PAID` | `START_PACKING` | No additional guard | Begin packing | `PACKING` |
+| `PACKING` | `SHIP` | Tracking number contains valid content | Store tracking number | `SHIPPED` |
+| `SHIPPED` | `CONFIRM_DELIVERY` | No additional guard in example | Record successful delivery | `DELIVERED` |
 
-Mọi tổ hợp `(state, event)` ngoài bảng đều **bị từ chối**. Thêm một trạng thái mới phải xem lại những cạnh vào/ra, guard, tác động và ca kiểm thử; chỉ bổ sung một hằng số vào enum là chưa đủ.
+Every `(state, event)` combination absent from the table is **rejected**. Adding a state requires reviewing incoming/outgoing edges, guards, effects, and tests; adding an enum constant alone is insufficient.
 
-Một số quy tắc quan trọng:
+Important rules:
 
-1. **Guard được đánh giá dựa trên trạng thái hiện tại và dữ liệu của event.** Tránh làm thay đổi dữ liệu trong quá trình “chỉ kiểm tra”.
-2. **Transition không phải setter tùy ý.** Một event có thể cần tham số; ví dụ xác nhận thanh toán cần số tiền, gửi hàng cần mã vận đơn.
-3. **Những trạng thái kết thúc cần chính sách rõ.** Có thể vẫn cho phép xem, xuất báo cáo, tra cứu; chỉ các event thay đổi vòng đời bị khóa.
-4. **Danh sách trạng thái chỉ là một phần của mô hình.** Chính bảng event/guard/transition mới xác định hành vi hợp lệ.
+1. **Guards are evaluated using current state and event data.** Avoid mutations during a “check-only” phase.
+2. **Transitions are not arbitrary setters.** Events may need parameters: payment confirmation needs an amount, shipping needs a tracking number.
+3. **Terminal states need an explicit policy.** Reading, exporting, or reporting may remain allowed; lifecycle-mutating events are restricted.
+4. **State lists are only part of the model.** Event/guard/transition tables determine valid behavior.
 
-## 5. Ví dụ Java hoàn chỉnh: từ chối mọi chuyển trạng thái sai
+## 5. Complete Java Example: Reject Invalid State Transitions
 
-Lưu mã sau vào `OrderStateMachineDemo.java`. Ví dụ dùng JDK 11+ và **không cần thư viện ngoài**.
+Save as `OrderStateMachineDemo.java`. This uses JDK 11+ and **no external dependencies**.
 
 ```java
 import java.util.ArrayList;
@@ -4535,14 +4535,14 @@ public class OrderStateMachineDemo {
 }
 ```
 
-Chạy chương trình:
+Run:
 
 ```bash
 javac OrderStateMachineDemo.java
 java OrderStateMachineDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 Từ chối số tiền sai
@@ -4555,30 +4555,30 @@ Không gửi lại đơn đã hủy
 Các chuyển trạng thái đều hợp lệ
 ```
 
-### Điều gì đảm bảo trạng thái hợp lệ?
+### How Are Valid States Enforced?
 
-- `status` là `private`, bên ngoài không có `setStatus(...)`.
-- `RULES` chứa **duy nhất** các cạnh được phép, không có “chuyển tự do” giữa hai enum bất kỳ.
-- `nextStatus(event)` thất bại nếu không có cạnh tương ứng.
-- `confirmPayment(...)` và `ship(...)` kiểm tra dữ liệu **trước khi cập nhật trạng thái**.
-- `change(...)` là nơi tập trung cập nhật state và ghi lịch sử; caller sử dụng các API nghiệp vụ có tên.
-- `history()` trả bản sao không sửa được, tránh người gọi tùy tiện thay đổi lịch sử nội bộ.
+- `status` is `private`; there is no external `setStatus(...)`.
+- `RULES` contains **only** permitted edges; arbitrary enum-to-enum transitions are impossible.
+- `nextStatus(event)` fails if the corresponding edge does not exist.
+- `confirmPayment(...)` and `ship(...)` validate data **before updating state**.
+- `change(...)` centralizes state updates and history recording; callers use named business APIs.
+- `history()` returns an unmodifiable snapshot so callers cannot arbitrarily rewrite internal history.
 
-Lớp `Order` trong ví dụ đóng vai trò **entity nắm giữ bất biến vòng đời**. Việc điều phối cổng thanh toán, repository, quyền người dùng hoặc email nằm ở các đối tượng khác; không nên bắt `Order` tự mở HTTP/SQL để hoàn thành một chuyển trạng thái.
+The sample `Order` is an **entity enforcing lifecycle invariants**. Payment gateways, repositories, caller authorization, and emails belong to collaborators; `Order` should not open HTTP/SQL connections to complete a transition.
 
-**Giới hạn kỹ thuật của demo:** các thao tác cập nhật field và danh sách lịch sử chỉ dành cho luồng xử lý tuần tự trong bộ nhớ. Chúng **không** tạo atomic transaction đa luồng hay cơ sở dữ liệu; phần dưới sẽ nói cách bảo toàn trạng thái trong ứng dụng thực.
+**Technical limitation:** The demo's field/history mutations run sequentially in memory. They **do not** establish atomic cross-thread or database transactions; later sections discuss preserving state in real applications.
 
-## 6. Khi nào nên dùng enum, bảng chuyển, State Pattern hoặc workflow engine?
+## 6. When to Use Enums, Transition Tables, State Pattern, or Workflow Engines
 
-| Cách hiện thực | Phù hợp khi | Điểm cần chú ý |
+| Implementation | Appropriate when | Caveats |
 |---|---|---|
-| `enum Status` + phương thức nghiệp vụ | Vài trạng thái, luật đơn giản, ít thay đổi | Dễ tạo `if/switch` lớn nếu hành vi phình to |
-| Bảng chuyển (như `RULES`) | Muốn liệt kê cạnh rõ ràng, kiểm tra trạng thái nguồn/event/đích | Guard phụ thuộc dữ liệu vẫn phải được mô hình hóa |
-| **State Pattern** | Mỗi trạng thái có nhiều hành vi riêng, dễ phát triển độc lập | Tăng số lớp; không cần thiết cho 3–5 trạng thái đơn giản |
-| State machine library | Nhiều nhánh, guard, entry/exit action, cấp trạng thái lồng nhau | Cần hiểu cơ chế event, persistence và idempotency của thư viện |
-| Workflow/process engine | Quy trình dài ngày, nhiều bên tham gia, retry/timer/approval | Phức tạp vận hành; không thay thế các bất biến miền nghiệp vụ |
+| `enum Status` with domain methods | Few states, simple and stable rules | May grow into large `if/switch` blocks |
+| Transition table (such as `RULES`) | Explicit edges with source/event/target validation | Data-dependent guards still require modeling |
+| **State Pattern** | Each state has many distinct behaviors that evolve separately | Adds classes; unnecessary for simple 3–5-state workflows |
+| State machine library | Many branches, guards, entry/exit actions, nested states | Understand its event, persistence, and idempotency semantics |
+| Workflow/process engine | Long-running flows with several parties, retries/timers/approvals | Operational complexity; does not replace domain invariants |
 
-Một ví dụ nhỏ của **State Pattern**:
+A small **State Pattern** example:
 
 ```java
 interface OrderState {
@@ -4599,27 +4599,27 @@ final class DraftState implements OrderState {
 }
 ```
 
-Đoạn này **chỉ minh họa cấu trúc pattern**, giả định các lớp `OrderContext`, `WaitingPaymentState` và `CancelledState` được xây dựng riêng. Trong project thật, các state implementation phải cùng bảo đảm rằng mọi event khác đều bị từ chối, và context chỉ cho phép chuyển thông qua cơ chế kiểm soát. Chưa cần tạo một lớp cho mỗi trạng thái nếu enum và bảng chuyển đã đủ rõ.
+This snippet **only illustrates the pattern's structure**, assuming `OrderContext`, `WaitingPaymentState`, and `CancelledState` are defined separately. In a real project, every state implementation must reject unsupported events and the context must permit changes only through controlled transitions. There is no need for one class per state if an enum and transition table suffice.
 
-## 7. Các ký hiệu mở rộng trong UML state machine
+## 7. Extended UML State Machine Notation
 
-Sơ đồ trạng thái có thể phong phú hơn một đồ thị các enum. Những ký hiệu quan trọng cần biết:
+A state diagram can express more than a graph of enum constants. Important symbols include:
 
-| Ký hiệu/khái niệm | Cách đọc | Trường hợp áp dụng |
+| Symbol / concept | Interpretation | Example use |
 |---|---|---|
-| Initial pseudostate | Điểm bắt đầu mặc định của state machine hoặc vùng | Đơn mới tạo vào `DRAFT` |
-| Final state | Hoàn tất tiến trình của state machine hoặc vùng | Luồng đặt hàng đã kết thúc |
-| Self-transition | Một event đưa trạng thái quay lại chính nó, có thể chạy exit/entry | Tiếp nhận lại thông tin khi vẫn chờ duyệt |
-| Internal transition | Xử lý event *trong* trạng thái, không rời rồi vào lại trạng thái | Cập nhật thông tin phụ khi đang chờ |
-| Entry / exit / do activity | Hành vi khi vào trạng thái, khi rời, hoặc trong lúc ở trạng thái | Khởi động/tắt một tác vụ theo trạng thái |
-| Choice / junction | Rẽ nhánh hoặc ghép các đường chuyển | Dựa trên kết quả xét duyệt |
-| Composite state | Trạng thái chứa các trạng thái con | `PROCESSING` chứa đóng gói và kiểm tra |
-| History pseudostate | Quay lại một substate trước đó của composite state | Tiếp tục quy trình bị tạm dừng |
-| Orthogonal regions | Nhiều vùng trạng thái tiến triển đồng thời | Thanh toán và vận chuyển là hai chiều trạng thái |
+| Initial pseudostate | Default entry point for a state machine or region | A new order enters `DRAFT` |
+| Final state | Completes the state machine or region | Order processing has ended |
+| Self-transition | An event returns to the same state, possibly executing exit/entry behaviors | Receive updated details while awaiting approval |
+| Internal transition | Handles an event *within* a state without exiting and re-entering | Update supporting details while waiting |
+| Entry / exit / do activity | Behavior on entering, leaving, or remaining in a state | Start/stop a task based on state |
+| Choice / junction | Branches or joins transitions | Decide based on an approval result |
+| Composite state | A state containing substates | `PROCESSING` contains packing and verification |
+| History pseudostate | Returns to a previously active substate of a composite state | Resume a paused workflow |
+| Orthogonal regions | Several state regions progress concurrently | Payment and shipping are separate state dimensions |
 
-Cần cẩn thận với **self-transition** và **internal transition**: cả hai có thể giữ nguyên *tên* trạng thái, nhưng hành vi entry/exit có thể khác. Không nên suy rằng mọi event không đổi enum đều là “không có gì xảy ra”.
+Distinguish **self-transitions** from **internal transitions**: both may leave the *state name* unchanged, but entry/exit behavior can differ. Do not assume an event that leaves an enum constant unchanged means “nothing happened.”
 
-Ví dụ thể hiện entry/exit trong Mermaid:
+Mermaid example showing entry/exit behavior:
 
 ```mermaid
 stateDiagram-v2
@@ -4634,36 +4634,36 @@ stateDiagram-v2
     APPROVED --> [*]
 ```
 
-Sơ đồ này dùng **composite state** `WAITING` chứa hai trạng thái con `READY` và `REVIEWING`. Khi hệ thống lớn hơn, trạng thái lồng nhau giảm trùng lặp điều kiện so với việc ép mọi biến thể vào một enum phẳng.
+This diagram uses a **composite state** `WAITING` with two substates, `READY` and `REVIEWING`. In larger workflows, nested states reduce duplicate conditions compared with forcing every variation into a flat enum.
 
-## 8. Guard, action, invariant và quyền gọi là bốn việc khác nhau
+## 8. Guards, Actions, Invariants, and Authorization Are Different Concerns
 
-Đừng gom mọi quy tắc thành một điều kiện `if` mơ hồ:
+Do not collapse every rule into one vague `if`:
 
-**Guard:** điều kiện để đi theo một cạnh cụ thể, chẳng hạn `paidAmount == total`.
+**Guard:** a condition required to take a specific transition, such as `paidAmount == total`.
 
-**Action/effect:** tác động nghiệp vụ khi cạnh được thực hiện, chẳng hạn ghi mã vận đơn, tạo sự kiện miền hoặc cập nhật thời điểm xác nhận.
+**Action/effect:** a domain effect executed when the transition occurs, such as saving a tracking number, creating a domain event, or updating a confirmation timestamp.
 
-**Invariant:** điều luôn phải đúng với đối tượng ở trạng thái hợp lệ, ví dụ:
+**Invariant:** a condition that must always hold for an object in a valid state, for example:
 
-- Nếu `status == SHIPPED` hoặc `DELIVERED` thì `trackingCode` phải tồn tại và không trống.
-- Nếu `status == PAID` thì phải có một xác nhận thanh toán hợp lệ tương ứng (trong hệ thống thực).
-- Một trạng thái kết thúc không thể được quay về trạng thái chưa xử lý nếu không có chuyển trạng thái được định nghĩa tường minh.
+- If `status == SHIPPED` or `DELIVERED`, a nonblank `trackingCode` must exist.
+- If `status == PAID`, there must be a corresponding valid payment confirmation (in a real system).
+- A terminal state cannot return to an unprocessed state without an explicitly defined transition.
 
-**Authorization:** ai có quyền phát sinh event? Ví dụ nhân viên kho có thể gọi `ship()`; cổng thanh toán đã xác minh mới có thể yêu cầu `confirmPayment()`. Một transition **hợp lệ về trạng thái** vẫn có thể **không được phép về bảo mật** nếu người gọi không có quyền. Quyền thường được kiểm tra ở tầng application/API, cùng với dữ liệu xác thực của yêu cầu.
+**Authorization:** who may initiate an event? For example, warehouse staff may invoke `ship()`, while only a verified payment provider may request `confirmPayment()`. A transition **valid under state rules** can still be **forbidden for security reasons** if the caller lacks authorization. Authorization is generally checked at the application/API boundary using authenticated request information.
 
-Mỗi quy tắc cần có nơi chịu trách nhiệm rõ để không bị bỏ qua khi hệ thống thêm API mới.
+Each rule needs an explicit owner so that new APIs cannot bypass it.
 
-## 9. Sơ đồ trạng thái khác sơ đồ lớp và sơ đồ trình tự
+## 9. State Diagrams Versus Class and Sequence Diagrams
 
-| Sơ đồ | Trả lời câu hỏi gì? | Cách dùng với bài toán đơn hàng |
+| Diagram | Question answered | Application to orders |
 |---|---|---|
-| **Class diagram** | Có những lớp, field, method và quan hệ nào? | `Order` có `status`, `totalCents`, `ship()` |
-| **State diagram** | Đối tượng đang ở trạng thái nào, event nào cho phép sang đâu? | `PACKING --SHIP--> SHIPPED` |
-| **Sequence diagram** | Trong một kịch bản cụ thể, object nào gọi object nào theo thời gian? | Controller → service → payment gateway → Order → repository |
-| **Activity diagram** | Công việc và các nhánh xử lý thực hiện theo luồng nào? | Kiểm tra thanh toán, nhập kho, đóng gói, giao hàng |
+| **Class diagram** | Which classes, fields, methods, and relationships exist? | `Order` has `status`, `totalCents`, `ship()` |
+| **State diagram** | Which state is an object in, and which events permit transitions? | `PACKING --SHIP--> SHIPPED` |
+| **Sequence diagram** | In a scenario, which objects call one another over time? | Controller → service → payment gateway → Order → repository |
+| **Activity diagram** | How do activities and processing branches flow? | Verify payment, receive goods, pack, ship |
 
-Ví dụ phối hợp xác nhận thanh toán:
+Example of coordinating payment confirmation:
 
 ```mermaid
 sequenceDiagram
@@ -4681,31 +4681,31 @@ sequenceDiagram
     App-->>Gateway: kết quả xử lý
 ```
 
-**State diagram** quy định `WAITING_PAYMENT → PAID` là hợp lệ khi guard đúng; **sequence diagram** cho thấy *ai* xác thực callback, tải object và lưu state. Hai sơ đồ bổ trợ, không thay thế nhau.
+A **state diagram** permits `WAITING_PAYMENT → PAID` when the guard holds; a **sequence diagram** shows *who* verifies the callback, loads the object, and persists the state. These diagrams complement rather than replace one another.
 
-## 10. Lỗi thực tế: callback trùng, hai luồng và transaction
+## 10. Real-World Failure Cases: Duplicate Callbacks, Concurrency, and Transactions
 
-Sơ đồ chỉ xác định chuyển hợp lệ trong mô hình. Khi nhiều request tác động vào cùng một object lưu trong database, cần cơ chế bảo đảm dữ liệu.
+A diagram describes valid modeled transitions. When several requests affect the same database-backed object, additional mechanisms must preserve data consistency.
 
-### Callback thanh toán bị gửi hai lần
+### Duplicate Payment Callbacks
 
-Nhà cung cấp thanh toán có thể gửi lại callback. Lần đầu đơn chuyển `WAITING_PAYMENT → PAID`, lần thứ hai thấy đơn ở `PAID`. Nếu cứ ném lỗi HTTP và nhà cung cấp tiếp tục retry, hệ thống có thể lặp vô hạn.
+A payment provider may resend callbacks. The first transitions the order from `WAITING_PAYMENT → PAID`; the second finds it already `PAID`. Repeated HTTP errors may lead the provider to retry indefinitely.
 
-Có thể áp dụng **idempotency** ở lớp xử lý event:
+Apply **idempotency** at the event-handling layer:
 
-1. Xác thực chữ ký và đối chiếu thanh toán.
-2. Kiểm tra event ID/payment ID đã xử lý chưa.
-3. Nếu cùng event đã xử lý thành công, trả kết quả phù hợp mà **không ghi nhận thêm lần thanh toán**.
-4. Nếu event mới, thực hiện transition hợp lệ trong transaction và lưu khóa idempotency.
-5. Nếu event có cùng mã nhưng nội dung khác, xử lý như lỗi hoặc dấu hiệu bất thường.
+1. Verify the signature and reconcile payment details.
+2. Check whether the event ID/payment ID was already processed.
+3. If the same event succeeded before, return an appropriate result **without recording payment again**.
+4. For a new event, perform a valid transition within a transaction and store the idempotency key.
+5. If an event has the same identifier but different content, treat it as an error or suspicious discrepancy.
 
-Không nên đơn giản thêm `PAID --CONFIRM_PAYMENT--> PAID` mà bỏ qua xác minh dữ liệu; việc chấp nhận một self-transition tùy tiện có thể che giấu callback sai.
+Do not simply add `PAID --CONFIRM_PAYMENT--> PAID` while skipping validation; accepting an arbitrary self-transition can conceal invalid callbacks.
 
-### Hai yêu cầu cùng xử lý trạng thái cũ
+### Two Requests Processing the Same Stale State
 
-Giả sử hai nhân viên kho cùng tải đơn `PACKING` rồi cả hai gửi `SHIP`. Cả hai object trong bộ nhớ đều thấy event hợp lệ. Nếu update database không kiểm tra phiên bản, có thể xảy ra **lost update**, ghi đè mã vận đơn hoặc tạo hai yêu cầu vận chuyển.
+Suppose two warehouse employees both load an order in `PACKING` and submit `SHIP`. Both in-memory objects see a valid event. Without version checks on the database update, a **lost update** may overwrite a tracking number or create duplicate shipping requests.
 
-Cơ chế điển hình là **optimistic locking**:
+A common mechanism is **optimistic locking**:
 
 ```sql
 -- Ví dụ giả định bảng orders có cột version.
@@ -4718,57 +4718,57 @@ WHERE id = :orderId
   AND version = :expectedVersion;
 ```
 
-Chỉ một request có thể cập nhật thành công phiên bản mong đợi; nếu số dòng bị ảnh hưởng là 0, cần tải lại và trả lỗi xung đột hoặc xử lý lại theo chính sách. Đây là SQL minh họa, cách binding tham số phụ thuộc thư viện.
+Only one request can update the expected version successfully. If the affected row count is 0, reload and report a conflict or retry according to policy. This SQL is illustrative; parameter binding depends on the library.
 
-### Ghi DB thành công nhưng gửi thông báo lỗi
+### Database Save Succeeds but Notification Fails
 
-Đổi state và ghi database nên nằm trong transaction phù hợp. Gửi email/HTTP ra ngoài **không tự tham gia ACID transaction** với database. Thường nên ghi **outbox event** trong cùng transaction, sau commit mới chuyển thông báo bằng worker có retry/idempotency.
+Updating state and persisting it should occur in a suitable transaction. External email/HTTP delivery **does not automatically participate in an ACID database transaction**. Often, an **outbox event** is stored within the transaction, then a worker delivers notifications after commit with retries/idempotency.
 
-Đừng đặt các hành động mạng khó kiểm soát trực tiếp vào setter trạng thái nếu chúng có thể thất bại giữa chừng và khiến object hoặc DB rơi vào tình trạng không nhất quán.
+Avoid uncontrolled network operations inside state setters: failures halfway through may leave objects or stored data inconsistent.
 
-## 11. Kiểm thử chuyển trạng thái theo bảng
+## 11. Test State Transitions Using a Matrix
 
-Thay vì chỉ kiểm thử “đơn giao thành công”, hãy kiểm thử **mọi cạnh hợp lệ** và những event bất hợp lệ quan trọng.
+Rather than only testing “order delivered successfully,” cover **every valid edge** and important invalid events.
 
-| Trạng thái ban đầu | Thao tác | Kết quả cần kiểm tra |
+| Initial state | Operation | Expected result |
 |---|---|---|
 | `DRAFT` | `submit()` | `WAITING_PAYMENT` |
 | `DRAFT` | `cancel()` | `CANCELLED` |
 | `WAITING_PAYMENT` | `confirmPayment(total)` | `PAID` |
-| `WAITING_PAYMENT` | `confirmPayment(wrongAmount)` | Lỗi, vẫn `WAITING_PAYMENT` |
+| `WAITING_PAYMENT` | `confirmPayment(wrongAmount)` | Error; remains `WAITING_PAYMENT` |
 | `WAITING_PAYMENT` | `cancel()` | `CANCELLED` |
 | `PAID` | `startPacking()` | `PACKING` |
-| `PAID` | `cancel()` | Lỗi, vẫn `PAID` |
-| `PACKING` | `ship("")` | Lỗi, vẫn `PACKING` |
-| `PACKING` | `ship("VN123")` | `SHIPPED` và tracking được lưu |
+| `PAID` | `cancel()` | Error; remains `PAID` |
+| `PACKING` | `ship("")` | Error; remains `PACKING` |
+| `PACKING` | `ship("VN123")` | `SHIPPED` and tracking number saved |
 | `SHIPPED` | `confirmDelivery()` | `DELIVERED` |
-| `CANCELLED` | `submit()` | Lỗi, vẫn `CANCELLED` |
-| `DELIVERED` | `confirmDelivery()` lần nữa | Lỗi hoặc idempotent theo chính sách cụ thể |
+| `CANCELLED` | `submit()` | Error; remains `CANCELLED` |
+| `DELIVERED` | `confirmDelivery()` again | Error or idempotent result according to explicit policy |
 
-Với mỗi yêu cầu không hợp lệ, xác nhận **cả trạng thái lẫn các dữ liệu liên quan không bị thay đổi ngoài ý muốn**. Ví dụ `ship("")` không được lưu chuỗi rỗng rồi mới ném ngoại lệ.
+For every invalid request, verify **that both state and related data remain unchanged unintentionally**. For instance, `ship("")` must not save an empty string before throwing.
 
-### Trường hợp nên kiểm thử thêm
+### Additional Cases Worth Testing
 
-- Số tiền biên `0`, âm, lớn và rủi ro tràn số.
-- Mã vận đơn chỉ có dấu cách.
-- Nhận callback trùng, callback đến sai thứ tự và callback từ nguồn không được xác thực.
-- Hai request đồng thời chuyển cùng một đơn, nhất là khi có versioning.
-- Từ chối thao tác khi user không đúng vai trò, dù trạng thái đang cho phép.
-- Lưu state trong DB rồi tải lại: kết quả vẫn đúng; việc cache stale phải được xử lý.
-- Thay đổi từ phiên bản state machine cũ sang mới khi còn những đơn đang dở dang.
+- Boundary amounts `0`, negative and large values, and overflow risks.
+- Tracking numbers containing only whitespace.
+- Duplicate callbacks, out-of-order callbacks, and callbacks from unauthenticated sources.
+- Concurrent requests transitioning the same order, especially with versioning.
+- Reject operations by unauthorized users even when state otherwise permits the transition.
+- Save state to the DB and load it again; verify persisted correctness and handle stale caches.
+- Migrate from an earlier state machine version while orders are still in progress.
 
-Kiểm thử theo cạnh có thể kết hợp **state transition coverage** (đã đi qua bao nhiêu cạnh) và **negative transition coverage** (đã kiểm tra bao nhiêu thao tác không được phép). Không nhất thiết thử mọi chuỗi vô hạn; có thể ưu tiên các cạnh và ranh giới nghiệp vụ có rủi ro cao.
+Edge-oriented testing can measure **state transition coverage** (edges exercised) and **negative transition coverage** (forbidden operations tested). You need not test infinitely many sequences; prioritize high-risk business edges and boundaries.
 
-## 12. Khi trạng thái phình to: tránh kết hợp mọi chiều vào một enum
+## 12. Avoiding State Explosion: Separate Independent Dimensions
 
-Một đơn hàng có thể chứa **hai chiều trạng thái tương đối độc lập**:
+An order may have **two relatively independent state dimensions**:
 
-- Thanh toán: `UNPAID`, `PAID`, `REFUND_PENDING`, `REFUNDED`.
-- Thực hiện đơn: `NOT_STARTED`, `PACKING`, `SHIPPED`, `DELIVERED`.
+- Payment: `UNPAID`, `PAID`, `REFUND_PENDING`, `REFUNDED`.
+- Fulfillment: `NOT_STARTED`, `PACKING`, `SHIPPED`, `DELIVERED`.
 
-Nếu tạo enum `PAID_PACKING`, `PAID_SHIPPED`, `REFUNDED_PACKING`, ... số tổ hợp có thể tăng rất nhanh.
+If you define `PAID_PACKING`, `PAID_SHIPPED`, `REFUNDED_PACKING`, and so on as enum members, combinations can grow rapidly.
 
-Có thể biểu diễn bằng hai state machine hoặc các vùng trực giao (*orthogonal regions*):
+Instead, model two state machines or orthogonal regions (*orthogonal regions*):
 
 ```mermaid
 flowchart LR
@@ -4784,37 +4784,37 @@ flowchart LR
     end
 ```
 
-Đây là **hai đồ thị minh họa các chiều trạng thái** trong flowchart, không phải ký pháp UML orthogonal state machine đầy đủ. Khi tách, vẫn cần **ràng buộc liên chiều**: không được bắt đầu đóng gói nếu chưa thanh toán; không tự động hoàn tiền nếu hàng đã giao, v.v.
+These are **two graphs illustrating state dimensions** using flowcharts, not complete UML orthogonal-region notation. Separating dimensions still requires **cross-state constraints**: do not begin packing before payment or automatically refund after delivery, for example.
 
-Chọn một enum phẳng nếu vòng đời thực sự tuyến tính và dễ đọc; cân nhắc tách nhiều state machine khi những chiều trạng thái tiến triển riêng và tạo quá nhiều tổ hợp.
+Use a flat enum when the lifecycle is genuinely linear and easy to read; consider multiple state machines when state dimensions progress independently and create too many combinations.
 
-## 13. Những lỗi thiết kế thường gặp
+## 13. Common Design Mistakes
 
-| Lỗi | Hậu quả | Hướng xử lý |
+| Mistake | Consequence | Recommended response |
 |---|---|---|
-| Chỉ có enum và setter status công khai | Bất kỳ caller nào cũng chuyển sai trạng thái | Dùng hành vi có tên và bảng/quy tắc chuyển |
-| Không đọc bội số nhánh từ trạng thái nguồn | Dễ bỏ sót đường hủy hoặc đường hồi phục | Vẽ rõ cạnh nguồn–event–đích |
-| Guard đặt sau khi đã sửa state | Thất bại vẫn để lại thay đổi dở dang | Kiểm tra trước và cập nhật trong transaction phù hợp |
-| Mọi event đều được âm thầm bỏ qua | Caller tưởng thao tác thành công nhưng không có thay đổi | Trả kết quả rõ ràng hoặc lỗi nghiệp vụ; idempotency có chủ đích |
-| Guard thực hiện network I/O có side effect | Khó lặp lại phép kiểm tra, khó rollback | Tách xác minh dữ liệu, effect và orchestration |
-| Kết thúc state machine đồng nghĩa xóa object | Nhầm lẫn vòng đời trạng thái và vòng đời lưu trữ | Xác định retention/archiving độc lập |
-| Gộp thanh toán và giao hàng thành nhiều trạng thái tổ hợp | State explosion, khó bảo trì | Tách chiều khi cần và định nghĩa cross-state constraints |
-| Chỉ kiểm thử happy path | Lỗi ở cạnh cấm, retry, guard thất bại | Dùng transition matrix và negative tests |
-| Nghĩ sơ đồ tự bảo vệ DB trước concurrent update | Race condition, lost update | Lock/version/conditional update/transaction |
-| Thêm trạng thái mới mà không di chuyển dữ liệu cũ | Dữ liệu tồn tại ở state không còn hợp lệ | Kế hoạch migration và backward compatibility |
+| Only an enum and a public status setter | Any caller can perform invalid transitions | Use named behavior and transition rules/tables |
+| Ignoring branches from the source state | Cancellation/recovery paths may be missed | Draw explicit source–event–target edges |
+| Evaluating guards after state changes | Failure leaves partially modified state | Check first and update within appropriate transactions |
+| Silently ignoring every event | Caller assumes success although nothing changed | Return a clear result/error; design idempotency deliberately |
+| Performing side-effecting network I/O inside guards | Checks are hard to repeat or roll back | Separate data verification, effects, and orchestration |
+| Treating final state as object deletion | Confuses state lifecycle with storage lifecycle | Define retention/archival independently |
+| Combining payment and delivery into many compound states | State explosion and maintainability problems | Separate dimensions where useful and define cross-state constraints |
+| Testing only the happy path | Forbidden edges, retries, and failed guards remain untested | Use transition matrices and negative tests |
+| Assuming diagrams protect DB from concurrent updates | Race conditions and lost updates | Locks, versions, conditional updates, and transactions |
+| Adding states without migrating older data | Persisted data may contain no-longer-valid states | Plan migration and backward compatibility |
 
-## 14. Bài tập mô hình hóa một phiếu hỗ trợ
+## 14. Exercise: Modeling a Helpdesk Ticket
 
-Một hệ thống helpdesk có yêu cầu:
+A helpdesk system has these requirements:
 
-- Phiếu mới ở `OPEN`.
-- Nhân viên nhận phiếu: `IN_PROGRESS`.
-- Nhân viên giải quyết xong: `RESOLVED`.
-- Người dùng xác nhận: `CLOSED`.
-- Nếu chưa hài lòng, người dùng mở lại từ `RESOLVED` về `IN_PROGRESS`.
-- Không được đóng phiếu chưa giải quyết.
+- A new ticket starts in `OPEN`.
+- A support agent accepts a ticket: `IN_PROGRESS`.
+- The agent resolves it: `RESOLVED`.
+- The user confirms resolution: `CLOSED`.
+- If dissatisfied, the user reopens it from `RESOLVED` to `IN_PROGRESS`.
+- Unresolved tickets cannot be closed.
 
-Hãy tự vẽ sơ đồ rồi so với mô hình sau:
+Draw your own diagram and compare it with this model:
 
 ```mermaid
 stateDiagram-v2
@@ -4826,56 +4826,56 @@ stateDiagram-v2
     CLOSED --> [*]
 ```
 
-Câu hỏi tự kiểm tra:
+Self-check questions:
 
-1. **Tại sao `OPEN → CLOSED` không có?** Vì nghiệp vụ đòi phiếu phải được giải quyết trước.
-2. **Có nên cho `CLOSED → IN_PROGRESS`?** Chỉ khi nghiệp vụ cho phép mở lại phiếu đã đóng; nếu có, phải thêm event và kiểm tra quyền/thời hạn.
-3. **Guard nào có thể cần ở `RESOLVE`?** Nhân viên đã được phân công, nội dung xử lý không rỗng, quyền phù hợp.
-4. **Action nào gắn với `CONFIRM`?** Ghi thời điểm xác nhận và có thể phát domain event để gửi thông báo.
-5. **Nếu người dùng nhấn xác nhận hai lần?** Cần chính sách idempotency và cách phản hồi rõ ràng.
-6. **Nếu một nhân viên đóng phiếu trong khi người khác mở lại?** Cần transaction/version để bảo đảm chỉ một trạng thái cuối hợp lệ được ghi.
-7. **Thêm `WAITING_CUSTOMER` có ảnh hưởng gì?** Phải định nghĩa những event vào/ra mới và xem lại bộ kiểm thử, không chỉ sửa enum.
+1. **Why is there no `OPEN → CLOSED` transition?** The business requires resolution before closure.
+2. **Should `CLOSED → IN_PROGRESS` be allowed?** Only if reopening closed tickets is permitted; define an event and authorization/deadline checks.
+3. **Which guards might `RESOLVE` need?** An assigned agent, nonblank resolution details, and adequate permissions.
+4. **What action belongs to `CONFIRM`?** Record confirmation time and possibly publish a domain event for notifications.
+5. **What if the user confirms twice?** Define idempotency and an explicit response policy.
+6. **What if one agent closes a ticket while another reopens it?** Use transactions/version checks to persist a single valid final state.
+7. **How would adding `WAITING_CUSTOMER` affect the model?** Define new incoming/outgoing events and update tests, not just the enum.
 
-## 15. Danh sách kiểm tra khi hoàn thiện state machine
+## 15. State Machine Completion Checklist
 
-- Mỗi trạng thái có **tên phản ánh ý nghĩa nghiệp vụ** và điều kiện hợp lệ cụ thể.
-- Có **trạng thái bắt đầu**; các trạng thái kết thúc được xác định khi cần.
-- Mỗi event có **nguồn và đích hợp lệ**, guard rõ ràng, effect được phân biệt với kiểm tra.
-- Trường hợp không có transition được xử lý **tường minh**.
-- Không có setter/truy cập dữ liệu cho phép bỏ qua bất biến.
-- Test có **happy path, guard thất bại và cạnh cấm**, kiểm tra state không đổi sau lỗi.
-- Xác thực/quyền người gọi được kiểm tra ở ranh giới phù hợp.
-- Nếu dùng DB hoặc nhiều worker, có **transaction, concurrency control và idempotency**.
-- Các side effect ngoài DB được xử lý theo chính sách retry/after-commit/outbox.
-- Việc thêm trạng thái/event có kế hoạch cho dữ liệu cũ và callback còn đang đến.
+- Each state has **a business-meaningful name** and explicit validity conditions.
+- There is **an initial state**; final states are defined where needed.
+- Each event has **valid source and target states**, clear guards, and effects distinguished from validation.
+- Missing transitions are handled **explicitly**.
+- No setters or exposed data permit bypassing invariants.
+- Tests cover **successful flows, failed guards, and forbidden transitions**, confirming state remains unchanged on failure.
+- Caller authentication and authorization are enforced at suitable boundaries.
+- DB or multi-worker execution uses **transactions, concurrency control, and idempotency**.
+- External side effects follow appropriate retry, after-commit, or outbox policies.
+- Adding states/events includes a plan for old data and callbacks still in flight.
 
-**Điểm cốt lõi:** trạng thái chỉ nói “đối tượng đang ở đâu”; **transition + event + guard** mới xác định “khi nào được đi sang đâu”, còn **effect và transaction** quyết định “thay đổi nào được ghi nhận thành công”. Mã Java nên bảo vệ mô hình này bằng hành vi có tên, chặn cạnh không tồn tại và kiểm chứng cả trường hợp hợp lệ lẫn bất hợp lệ.
+**Core takeaway:** state indicates “where the object is”; **transition + event + guard** determines “when it may move where”; **effect and transaction** determine “which changes commit successfully.” Java code should enforce the model with named behaviors, reject missing edges, and test valid and invalid cases.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="modeling-009">Đối chiếu mô hình với mã và tình huống thực tế</a>
+## <a id="modeling-009">Validating models against code and real scenarios</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đối chiếu mô hình với mã và tình huống thực tế trong OOP Java
+# Validating OOP Models Against Java Code and Real Scenarios
 
-> **Mục tiêu:** Biết kiểm tra một mô hình hướng đối tượng có diễn tả đúng tình huống nghiệp vụ, được hiện thực đúng bằng Java và tiếp tục đúng khi hệ thống vận hành hay không. Bài học dùng tình huống **mượn và trả bản sách tại thư viện** để thực hành đối chiếu hai chiều giữa yêu cầu, sơ đồ, mã nguồn, kiểm thử và dữ liệu thực tế.
+> **Goal:** Learn to verify that an object-oriented model accurately represents business situations, is implemented correctly in Java, and remains correct during system operation. This lesson uses **borrowing and returning physical library book copies** to practice two-way traceability among requirements, diagrams, source code, tests, and real data.
 
-## 1. Ba góc nhìn cần khớp nhau
+## 1. Three Perspectives That Must Agree
 
-Một mô hình đẹp chưa chắc đúng. Sơ đồ có thể ghi “mỗi bản sách chỉ có một lượt mượn đang hoạt động” nhưng chương trình vẫn cho hai người mượn cùng bản sách. Ngược lại, mã có thể chạy tốt trên một dữ liệu mẫu nhưng không thể hiện chính sách trả muộn, hoàn trả hay giới hạn lượt mượn.
+An elegant model is not necessarily correct. A diagram may say “one active loan per copy,” while code still lets two people borrow the same copy. Conversely, code may pass one sample dataset yet omit late-return, return, or borrowing-limit policies.
 
-Khi đối chiếu, cần nhìn **ba nguồn chứng cứ**:
+Validation needs **three sources of evidence**:
 
-1. **Tình huống thực tế và quy tắc nghiệp vụ:** Ai thực hiện việc gì? Điều kiện nào phải đúng? Điều gì xảy ra khi không hợp lệ, khi làm lại thao tác hoặc khi hai người thao tác đồng thời?
-2. **Mô hình thiết kế:** Những khái niệm nào có danh tính và trạng thái? Quan hệ giữa chúng có bội số, vòng đời, quyền sở hữu và trách nhiệm đúng không? Ràng buộc nằm ở đâu?
-3. **Mã và hành vi chạy:** Kiểu dữ liệu, API, mức truy cập, lệnh thay đổi trạng thái, transaction và test có thực thi đúng điều mô hình hứa hẹn không?
+1. **Real scenarios and business rules:** Who performs which action? Which conditions must hold? What happens for invalid requests, repeated operations, or simultaneous users?
+2. **Design model:** Which concepts have identity and state? Do relationships accurately represent multiplicity, lifecycle, ownership, and responsibilities? Where are invariants enforced?
+3. **Code and runtime behavior:** Do types, APIs, access levels, state changes, transactions, and tests enforce the model's promises?
 
 ~~~mermaid
 flowchart TD
@@ -4885,76 +4885,76 @@ flowchart TD
     T -. lỗi hoặc trường hợp chưa rõ .-> R
 ~~~
 
-**Đối chiếu không chỉ một chiều “UML → code”.** Khi kiểm tra một chương trình đang tồn tại, ta có thể đi ngược từ code/test về mô hình, rồi hỏi người phụ trách nghiệp vụ liệu hành vi đang chạy có thật sự được mong muốn không. Nếu khác nhau, **không tự mặc định** sơ đồ đúng hoặc code đúng: tìm quyết định nghiệp vụ và cập nhật các phần tương ứng.
+**Validation is not just one-way from UML to code.** When reviewing existing software, work backward from code and tests to the model, then ask the domain owner whether observed behavior is intended. When they differ, **do not assume** the diagram or code is automatically right: find the domain decision and update the relevant artifacts.
 
-## 2. Bắt đầu từ tình huống quan sát được
+## 2. Start with Observable Scenarios
 
-Giả sử thư viện đưa ra yêu cầu ban đầu:
+Suppose the library's original requirement is:
 
-> “Độc giả đang hoạt động được mượn bản sách còn sẵn. Khi trả sách, bản sách có thể cho mượn lại.”
+> “Active members can borrow available book copies. Returning a copy makes it available for borrowing again.”
 
-Từ câu này, cần chủ động hỏi các trường hợp biên:
+This raises important edge-case questions:
 
-| Câu hỏi | Quyết định minh họa cho bài |
+| Question | Assumption used in this lesson |
 |---|---|
-| Mượn một đầu sách hay một bản vật lý? | Mượn **một BookCopy** có mã bản riêng |
-| Người dùng bị khóa tài khoản? | Không được mượn |
-| Tối đa bao nhiêu bản đang mượn? | **3 bản** mỗi độc giả |
-| Mỗi bản đang được mượn bởi bao nhiêu người? | Tối đa **1 lượt mượn đang hoạt động** |
-| Thời hạn mượn? | **14 ngày**, tính theo ngày hiện hành |
-| Trả một phiếu đã trả rồi? | Báo lỗi, không tạo thêm thao tác trả |
-| Khi trả sách có xóa lịch sử mượn? | Không; lưu ngày trả để truy vết |
-| Hai độc giả tranh bản cuối cùng? | Tối đa một yêu cầu thành công |
-| Có cho gia hạn, giữ chỗ, xử lý phạt? | Chưa thuộc phạm vi minh họa |
+| Are loans for a title or a physical copy? | Borrow **one BookCopy** with its own unique copy ID |
+| What if the account is suspended? | Borrowing is disallowed |
+| How many active loans per member? | At most **3 copies** per member |
+| How many people can borrow one copy? | At most **1 active loan at a time** |
+| Loan duration? | **14 days** measured by calendar date |
+| Returning an already returned loan? | Report an error; do not record another return |
+| Does returning erase loan history? | No; retain the return date for traceability |
+| Two members competing for the final available copy? | At most one request succeeds |
+| Renewals, reservations, or fines? | Outside this example's scope |
 
-Các quyết định trên là **giả định của ví dụ**, không phải quy tắc thư viện phổ quát. Trong dự án thật phải ghi người phê duyệt, thời điểm hiệu lực, ngoại lệ và những câu hỏi còn mở.
+These are **illustrative assumptions**, not universal library rules. Real projects must record policy approvers, effective dates, exceptions, and unresolved questions.
 
-### Chuyển thành use case
+### Convert Them into Use Cases
 
-**UC-BORROW: Mượn một bản sách**
+**UC-BORROW: Borrow a Book Copy**
 
-- **Actor chính:** Độc giả (qua nhân viên thủ thư hoặc ứng dụng).
-- **Trigger:** Độc giả yêu cầu mượn bản có `copyId`.
-- **Tiền điều kiện:** Hệ thống nhận diện được độc giả và bản sách.
-- **Luồng thành công:** Kiểm tra tài khoản → giới hạn lượt mượn → bản còn sẵn → tạo phiếu mượn → đánh dấu bản đang được mượn → trả mã phiếu và hạn trả.
-- **Luồng thay thế:** Tài khoản bị khóa; bản không tồn tại; độc giả đủ 3 lượt; bản đang có phiếu mượn còn hiệu lực; lỗi lưu dữ liệu.
-- **Hậu điều kiện thành công:** Một phiếu mượn mới có hiệu lực và bản sách không thể bị mượn lần thứ hai cùng lúc.
-- **Bảo đảm khi thất bại:** Không tạo nửa phiếu, không vượt giới hạn.
+- **Primary actor:** Member (through a librarian or application).
+- **Trigger:** Member requests a copy identified by `copyId`.
+- **Preconditions:** The system can identify both member and copy.
+- **Success flow:** Verify account → check active-loan limit → check copy availability → create loan → mark copy borrowed → return loan ID and due date.
+- **Alternative flows:** Suspended account; missing copy; member already has 3 active loans; copy already has an active loan; persistence failure.
+- **Success postcondition:** Exactly one new active loan exists, and the copy cannot be borrowed a second time concurrently.
+- **Failure guarantee:** No partial loan record and no limit violation.
 
-**UC-RETURN: Trả bản sách**
+**UC-RETURN: Return a Book Copy**
 
-- **Trigger:** Thủ thư nhận bản sách và mã phiếu.
-- **Luồng thành công:** Tìm phiếu đang hoạt động → ghi ngày trả → bản có thể mượn tiếp.
-- **Luồng thay thế:** Không tìm thấy phiếu hoặc phiếu đã trả → báo lỗi, không làm mất lịch sử.
-- **Hậu điều kiện:** Phiếu cũ vẫn được giữ với `returnedOn`; nó không còn được tính là lượt mượn đang hoạt động.
+- **Trigger:** Librarian receives the copy and loan identifier.
+- **Success flow:** Find active loan → record return date → make copy available again.
+- **Alternative flows:** Loan not found or already returned → report an error without deleting history.
+- **Postcondition:** The previous loan remains stored with `returnedOn` and no longer counts as active.
 
-Một use case tốt diễn tả **kết quả và lỗi**, không trói vào “nhấn nút xanh” hay một framework.
+A good use case describes **outcomes and failures**, not green-button clicks or framework specifics.
 
-## 3. Chuyển các quyết định thành quy tắc có ID
+## 3. Turn Decisions into Identified Rules
 
-| ID | Business rule | Dữ liệu liên quan | Ví dụ cần kiểm tra |
+| ID | Business rule | Relevant data | Example to verify |
 |---|---|---|---|
-| **BR-01** | Chỉ `Member.active == true` được mượn | Member | Member bị khóa bị từ chối |
-| **BR-02** | Mỗi Member có tối đa 3 Loan đang hoạt động | Member, Loan | Mượn bản thứ tư bị từ chối |
-| **BR-03** | Một BookCopy có tối đa 1 Loan đang hoạt động tại một thời điểm | BookCopy, Loan | Hai người tranh bản cuối |
-| **BR-04** | Ngày hẹn trả = ngày mượn + 14 ngày | Loan, ngày nghiệp vụ | Ngày 15/10 → hạn 29/10 |
-| **BR-05** | Chỉ phiếu chưa trả mới được thực hiện thao tác trả | Loan | Trả phiếu hai lần bị từ chối |
-| **BR-06** | Trả sách không xóa lịch sử Loan | Loan | Phiếu cũ vẫn truy vấn được |
-| **BR-07** | Khi thao tác mượn thất bại, không được tạo dữ liệu mượn một phần | Loan, persistence | Không có nửa phiếu |
+| **BR-01** | Only `Member.active == true` may borrow | Member | Suspended member is rejected |
+| **BR-02** | Each Member may have at most 3 active Loans | Member, Loan | Fourth copy is rejected |
+| **BR-03** | A BookCopy may have at most 1 active Loan at any time | BookCopy, Loan | Two members competing for the last copy |
+| **BR-04** | Due date = borrowing date + 14 days | Loan, business date | Borrowed 15/10 → due 29/10 |
+| **BR-05** | Only an unreturned loan may be returned | Loan | Second return is rejected |
+| **BR-06** | Returns do not erase Loan history | Loan | Previous loan remains queryable |
+| **BR-07** | Failed borrowing must not create partial records | Loan, persistence | No half-completed loan |
  
-Đầu vào không tồn tại, ID rỗng, dữ liệu sai dạng và lỗi kết nối cũng cần hợp đồng rõ; đây có thể là quy tắc validation kỹ thuật hoặc một business rule riêng tùy phạm vi.
+Missing inputs, blank IDs, malformed data, and connection failures also require explicit contracts; depending on scope they may be technical validation requirements or separate business rules.
 
-**Không coi danh sách quy tắc là chỉ dẫn duy nhất để code.** Ví dụ BR-03 cần chốt thêm: “phiếu mượn đang hoạt động” nghĩa là `returnedOn == null` hay có trạng thái quá hạn riêng? Trong ví dụ này, một phiếu quá hạn nhưng **chưa trả** vẫn chiếm bản sách.
+**Do not treat the rule list as the sole coding instruction.** BR-03 still needs a decision: does “active loan” mean `returnedOn == null`, or is overdue a distinct state? In this example, an overdue but **unreturned** loan still occupies the copy.
 
-## 4. Dựng mô hình khái niệm: phân biệt đầu sách, bản sách và phiếu mượn
+## 4. Build the Conceptual Model: Titles, Copies, and Loans
 
-Ba đối tượng sau không thể gộp tùy tiện:
+These three concepts must not be merged indiscriminately:
 
-- **BookTitle:** mô tả đầu sách/tác phẩm hoặc ấn bản; nhiều bản vật lý có thể cùng đầu sách.
-- **BookCopy:** một bản cụ thể, có `copyId` riêng; đối tượng bị chiếm dụng khi được mượn.
-- **Loan:** một lần mượn cụ thể của một Member đối với một BookCopy, với ngày mượn, hạn trả và ngày hoàn trả.
+- **BookTitle:** Describes a work/title or edition; several physical copies may share one title.
+- **BookCopy:** One physical copy with its own `copyId`; this is the resource occupied during borrowing.
+- **Loan:** One member's specific borrowing event for one copy, including borrowed date, due date, and returned date.
 
-Sơ đồ khái niệm:
+Conceptual diagram:
 
 ~~~mermaid
 classDiagram
@@ -4992,27 +4992,27 @@ classDiagram
     Library --> Loan : quản lý dữ liệu
 ~~~
 
-**Lưu ý bội số rất quan trọng:** Một `BookCopy` có thể có **nhiều Loan trong lịch sử**, nhưng **tối đa một Loan còn hoạt động**. Multiplicity `0..*` trên toàn bộ lịch sử **không** tự biểu diễn được điều kiện “tối đa một active”; phải ghi constraint bổ sung và thực thi bằng code + lưu trữ. Đây là ví dụ điển hình về việc **đối chiếu mô hình với tình huống thực**: vẽ một đường liên kết chưa đủ.
+**Multiplicity matters:** A `BookCopy` may have **many historical Loans**, but **at most one active Loan**. A historical `0..*` multiplicity **does not by itself represent** the active-loan constraint; document it separately and enforce it in code plus storage. This is a clear example of **checking the model against real scenarios**: one association line is insufficient.
 
-Đừng vội vẽ composition giữa `Member` và `Loan`: nếu xóa tài khoản thành viên, chính sách lưu lịch sử có thể yêu cầu giữ phiếu mượn. Quan hệ sở hữu/vòng đời phải được quyết định từ yêu cầu, không suy diễn từ việc có field tham chiếu.
+Do not automatically model composition between `Member` and `Loan`: deletion of member accounts may need to preserve historical loans under retention policies. Decide ownership and lifecycle from requirements rather than from the existence of reference fields.
 
-### Bảng ánh xạ mô hình sang Java
+### Mapping the Model to Java
 
-| Thành phần mô hình | Cách triển khai minh họa | Cần đối chiếu |
+| Model component | Sample implementation | What to verify |
 |---|---|---|
-| Member có identity và active | `record Member(String id, boolean active)` | ID khác rỗng; active có đúng nghĩa miền không |
-| Bản vật lý có identity | `record BookCopy(String id, String title)` | Không dùng title làm khóa duy nhất |
-| Phiếu mượn có trạng thái | `record Loan(..., returnedOn)` | Còn hoạt động khi `returnedOn == null` |
-| Giới hạn 3 lượt | `Library.borrow()` đếm phiếu active | Không đếm toàn bộ lịch sử |
-| Một bản đang mượn | `Library.borrow()` kiểm tra active loan cùng copy | Atomic khi có cạnh tranh |
-| Thao tác trả | `Library.returnLoan()` thay Loan bằng phiên bản có ngày trả | Không xóa bản ghi lịch sử |
-| Hạn trả | `LocalDate.now(clock).plusDays(14)` | Clock/timezone, chính sách ngày nghỉ |
+| Member has identity and active status | `record Member(String id, boolean active)` | Nonblank ID; does active reflect the domain meaning? |
+| Physical copy has identity | `record BookCopy(String id, String title)` | Title is not used as a unique identifier |
+| Loan has state | `record Loan(..., returnedOn)` | Active means `returnedOn == null` |
+| Maximum 3 active loans | `Library.borrow()` counts active loans | Do not count all historical loans |
+| Copy is currently borrowed | `Library.borrow()` checks active loan for the same copy | Atomic under contention |
+| Return operation | `Library.returnLoan()` replaces Loan with a version containing return date | Preserve the historical record |
+| Due date | `LocalDate.now(clock).plusDays(14)` | Clock/time zone, holiday policy |
 
-## 5. Java 17: một mô hình nhỏ có thể chạy và kiểm chứng
+## 5. Java 17: A Small Runnable, Verifiable Model
 
-Ví dụ dùng **một JVM và trạng thái trong bộ nhớ** để tập trung vào việc mô hình thực thi đúng rule. Các public API được giản lược; trên môi trường thật sẽ có repository, transaction, authentication và logging phù hợp.
+The example uses **one JVM and in-memory state** to focus on whether the model enforces its rules. Public APIs are simplified; production needs appropriate repositories, transactions, authentication, and logging.
 
-Tạo tệp **`LibraryModelDemo.java`**:
+Create **`LibraryModelDemo.java`**:
 
 ~~~java
 import java.time.Clock;
@@ -5200,14 +5200,14 @@ public class LibraryModelDemo {
 }
 ~~~
 
-Biên dịch và chạy (JDK 17+):
+Compile and run (JDK 17+):
 
 ~~~bash
 javac LibraryModelDemo.java
 java LibraryModelDemo
 ~~~
 
-Kết quả mong đợi:
+Expected output:
 
 ~~~text
 2026-10-29
@@ -5217,21 +5217,21 @@ true
 false
 ~~~
 
-### Tại sao các quyết định Java này bám mô hình?
+### Why Do These Java Choices Reflect the Model?
 
-- `Member` và `BookCopy` có danh tính riêng: mã **bản sách** khác tên đầu sách. Nếu chỉ dùng `title` làm khóa, một đầu sách có nhiều bản sẽ không được mô hình hóa đúng.
-- `Loan` giữ cả `borrowedOn`, `dueOn` và `returnedOn` để biết phiếu nào còn hiệu lực và giữ được lịch sử.
-- `Loan.returnOn()` trả **giá trị mới** thay cho sửa record; record Java là kiểu bất biến nông nếu các thành phần bất biến, và ở đây các thành phần là `String`/`LocalDate`.
-- `Library.borrow()` kiểm tra BR-01, BR-02, BR-03 rồi ghi; không chỉ kiểm tra trong controller. Query `isAvailable()` không tự thay đổi trạng thái.
-- `Clock` được truyền vào để test ngày tháng không phụ thuộc giờ máy. Với nghiệp vụ nhiều khu vực, phải xác định timezone của thư viện và quy tắc thời hạn trước khi dùng `LocalDate.now(clock)`.
-- `synchronized` bảo đảm toàn bộ thao tác trên **cùng instance Library trong một JVM** không xen ngang giữa kiểm tra và ghi. Nó không đồng bộ nhiều tiến trình hoặc nhiều máy.
-- Trong phương thức `borrow`, Java cho phép gọi đồng bộ `activeLoanCount` và `isAvailable` từ một method đang giữ cùng monitor: `synchronized` là khóa tái nhập (*reentrant*).
+- `Member` and `BookCopy` have independent identities: a **physical copy** ID is different from a book title. Using only `title` as the key would fail to model multiple copies of the same title.
+- `Loan` retains `borrowedOn`, `dueOn`, and `returnedOn` to distinguish active loans and preserve history.
+- `Loan.returnOn()` returns a **new value** instead of mutating a record. Java records are shallowly immutable when their components are immutable; here the components are `String` and `LocalDate`.
+- `Library.borrow()` checks BR-01, BR-02, and BR-03 before recording data rather than relying only on controller checks. The `isAvailable()` query does not mutate state.
+- An injected `Clock` makes date tests independent of system time. For libraries spanning regions, specify the appropriate time zone and due-date policy before using `LocalDate.now(clock)`.
+- `synchronized` keeps operations on **the same Library instance in one JVM** from interleaving between validation and updates. It does not coordinate separate processes or servers.
+- Inside `borrow`, Java permits synchronized calls to `activeLoanCount` and `isAvailable` while holding the same monitor because `synchronized` uses a *reentrant* lock.
 
-Đây là **một cách hiện thực minh họa**, không phải kết luận mô hình phải có đúng một lớp `Library` ôm ba map. Khi cần lưu trữ thật, các map và việc phát sinh ID sẽ chuyển tới các thành phần tương ứng, nhưng các invariant cần vẫn được bảo vệ ở ranh giới giao dịch.
+This is **one illustrative implementation**, not proof that the model requires one `Library` class containing three maps. Real persistence can move maps and ID generation into appropriate collaborators while keeping invariants protected at the transaction boundary.
 
-## 6. Kiểm chứng chiều ngược: từ mã suy ra mô hình có đang đúng?
+## 6. Reverse Validation: Does the Code Still Match the Model?
 
-Khi review hoặc bảo trì dự án, đi từ thực thể code về yêu cầu, theo chuỗi:
+During reviews or maintenance, work backward from code entities to requirements:
 
 ~~~mermaid
 flowchart TD
@@ -5245,26 +5245,26 @@ flowchart TD
     G --> D
 ~~~
 
-Ví dụ sau là các **mismatch** thường gặp:
+Common **mismatches** include:
 
-| Mô hình/yêu cầu nói | Mã lại làm | Vì sao lệch | Hướng sửa |
+| Model / requirement says | Code does | Why it diverges | Possible correction |
 |---|---|---|---|
-| Một bản sách chỉ có 1 loan active | `borrow()` chỉ kiểm tra `copy != null` | Không kiểm tra phiếu active | Kiểm tra tại lúc ghi và dùng DB constraint/lock khi cần |
-| Mỗi độc giả mượn tối đa 3 bản | Đếm tổng số `Loan` trong lịch sử | Người đã trả 3 bản bị chặn vĩnh viễn | Chỉ đếm `returnedOn == null` |
-| Trả sách giữ lịch sử | `loans.remove(loanId)` | Mất dấu vết nghiệp vụ | Cập nhật trạng thái/ngày trả |
-| Hạn trả 14 ngày | `LocalDate.now()` ở nhiều nơi | Test không ổn định, timezone mơ hồ | Xác định clock/date policy tại một ranh giới |
-| Đối tượng Loan không sửa tùy tiện | `public setReturnedOn` không validation | Có thể ghi ngày trả trước ngày mượn | Command `returnOn` kiểm tra invariant |
-| Một bản vật lý có mã riêng | Dùng ISBN làm khóa `BookCopy` | Không quản lý được hai bản cùng ISBN | Thêm copy ID riêng |
-| Không vượt 1 loan active trên nhiều node | Dùng `synchronized` trên mỗi node | Lock không chia sẻ qua tiến trình | Transaction + constraint/locking ở DB |
-| Query không giữ chỗ | Getter gọi ngầm `borrow` | Hiển thị làm thay đổi dữ liệu | Tách query và command rõ ràng |
+| Only 1 active loan per copy | `borrow()` checks only `copy != null` | Fails to check active loans | Validate at write time and use DB constraints/locks as needed |
+| At most 3 copies per member | Counts every historical `Loan` | Someone who returned 3 copies is blocked forever | Count only `returnedOn == null` |
+| Returns preserve history | Calls `loans.remove(loanId)` | Erases domain history | Update return date/state instead |
+| Due date after 14 days | Calls `LocalDate.now()` in many places | Nonrepeatable tests, ambiguous time zone | Define one clock/date-policy boundary |
+| Loan state cannot be changed arbitrarily | Exposes `public setReturnedOn` without validation | Could record a return before the borrow date | Validate invariants with `returnOn` command |
+| Each physical copy has a unique code | Uses ISBN as the `BookCopy` key | Cannot distinguish copies sharing an ISBN | Add independent copy IDs |
+| At most 1 active loan per copy across nodes | Uses per-node `synchronized` | Locks do not cross process boundaries | Database transaction plus constraint/locking |
+| Availability query does not reserve copies | Getter secretly invokes `borrow` | Display operations mutate data | Distinguish queries from commands |
 
-**Nguyên tắc review:** Không sửa chỉ để đường UML trông giống Java. Nếu sản phẩm đã đổi chính sách được phê duyệt, mô hình cũ có thể đã lỗi thời. Lưu quyết định thay đổi và cập nhật sơ đồ/luật/test cùng nhau.
+**Review principle:** Do not change code merely to make UML resemble Java. If the product has adopted an approved new policy, the old model may be outdated. Record decisions and update diagrams, rules, and tests together.
 
-## 7. Kiểm thử truy vết được từng quy tắc
+## 7. Tests Traceable to Individual Rules
 
-Một test có ý nghĩa phải trả lời “điều gì đúng hay sai theo BR-xx?” chứ không chỉ xác nhận class có field `loans`.
+A useful test answers “what does BR-xx require?” rather than simply asserting a class has a `loans` field.
 
-**Tệp `LibraryModelTest.java`**, đặt cùng package với file `LibraryModelDemo.java`, dùng **JUnit Jupiter 5**:
+**File `LibraryModelTest.java`**, in the same package as `LibraryModelDemo.java`, using **JUnit Jupiter 5**:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -5354,13 +5354,13 @@ class LibraryModelTest {
 }
 ~~~
 
-Bộ test này có thể chạy khi dự án cấu hình JUnit Jupiter 5 (ví dụ qua Maven/Gradle); lệnh `javac` đơn thuần chỉ biên dịch ví dụ `LibraryModelDemo.java`, không tự cung cấp thư viện JUnit.
+This test suite can run when the project configures JUnit Jupiter 5 (for example, through Maven/Gradle); plain `javac` compiles `LibraryModelDemo.java` but does not supply JUnit libraries automatically.
 
-**Điểm còn thiếu:** Các test trên chứng minh hành vi tuần tự trong bộ nhớ. Chúng chưa chứng minh tính đúng đắn khi dữ liệu lưu ở DB hoặc nhiều node; test tích hợp phải kiểm tra ranh giới transaction, unique constraint, rollback và tranh chấp thật ở tầng lưu trữ.
+**Remaining gap:** These tests verify sequential in-memory behavior, not correctness with a database or multiple nodes. Integration tests must verify transaction boundaries, unique constraints, rollback, and real contention at the persistence layer.
 
-## 8. Kiểm tra một tình huống đồng thời: lời hứa của UML có được giữ?
+## 8. Concurrency Check: Does the UML Promise Hold?
 
-Trong sơ đồ, một BookCopy có thể có nhiều Loan trong **lịch sử** nhưng tối đa một Loan **đang hoạt động**. Nếu hai độc giả gửi yêu cầu gần như cùng lúc:
+The diagram permits multiple **historical** Loans for one BookCopy but at most one **active** Loan. If two members request the same copy almost simultaneously:
 
 ~~~mermaid
 sequenceDiagram
@@ -5374,9 +5374,9 @@ sequenceDiagram
     L-->>B: Từ chối, copy đã được mượn
 ~~~
 
-Thứ tự A trước B chỉ là **một** lịch thực thi minh họa. Nếu B giành lock trước, B có thể thành công. Bất biến cần bảo vệ là **không đồng thời có hai phiếu active** cho cùng copy, chứ không phải “A luôn thắng”.
+A-before-B is merely **one illustrative interleaving**. If B gets the lock first, B may succeed. The invariant is **never two simultaneous active loans** on the same copy, not “A must always win.”
 
-### Test cạnh tranh cùng một JVM
+### Contention Test Within One JVM
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -5425,11 +5425,11 @@ class LibraryConcurrencyTest {
 }
 ~~~
 
-**Tại sao test này có ý nghĩa?** Nó thử đúng một tình huống có thể làm sai mô hình: hai luồng tranh cùng một bản sách. Nhưng nó vẫn **không** xác nhận hệ thống nhiều node. Đặc biệt, test cạnh tranh có thể không lặp lại mọi lịch thực thi; cần cơ chế đồng bộ được chứng minh bằng ranh giới transaction và các phép kiểm tra tích hợp phù hợp.
+**Why is this test useful?** It directly exercises a scenario that could violate the model: two threads competing for one copy. Still, it **does not validate multi-node behavior**, and a contention test cannot explore every possible schedule. Concurrency correctness requires enforced transaction boundaries and appropriate integration verification.
 
-### Khi dùng database
+### Using a Database
 
-Để BR-03 tiếp tục đúng trong hệ thống phân tán, cần ngăn hai transaction cùng tạo Loan active cho một BookCopy. Một lựa chọn với **PostgreSQL**, nếu lưu `returned_on` là `NULL` khi chưa trả:
+To preserve BR-03 in a distributed system, two transactions must not create active Loans for one BookCopy. With **PostgreSQL**, if `returned_on` is stored as `NULL` until return, one option is:
 
 ~~~sql
 CREATE UNIQUE INDEX uq_active_loan_copy
@@ -5437,94 +5437,94 @@ ON loan(copy_id)
 WHERE returned_on IS NULL;
 ~~~
 
-Chỉ số này đảm bảo tối đa một hàng active theo `copy_id` tại tầng DB, ngay cả khi hai node cùng ghi. Nhưng **BR-02 tối đa 3 loan active mỗi Member** không được bảo vệ chỉ bởi index trên copy: cần transaction với khóa phù hợp theo member, một cơ chế reservation counter atomic, hoặc thiết kế concurrency khác được kiểm chứng.
+This index ensures at most one active row per `copy_id` at the database level, even with concurrent writes from separate nodes. But the **BR-02 limit of 3 active loans per Member** is not enforced by the copy index: use a transaction with suitable member locking, an atomic reservation counter, or another verified concurrency design.
 
-Quy trình production thường có transaction, xử lý lỗi unique constraint thành lỗi nghiệp vụ rõ ràng, và chính sách retry/idempotency nếu client gửi lại cùng ý định mượn do mất kết nối. Dùng constraint hỗ trợ domain invariant không làm domain model trở nên vô ích: một bên thể hiện chính sách, một bên bảo vệ tính nhất quán ở ranh giới dữ liệu.
+Production typically needs transactions, translation of unique-constraint violations into clear business errors, and retry/idempotency policies for clients resubmitting borrowing requests after network loss. Database constraints support domain invariants rather than making domain models unnecessary: one expresses the policy, the other protects consistency at the persistence boundary.
 
-## 9. So sánh cấu trúc tĩnh và luồng chạy động
+## 9. Compare Static Structure with Dynamic Execution
 
-Sơ đồ lớp mô tả **ai liên quan với ai**. Luồng chạy mô tả **thao tác nào xảy ra và theo thứ tự nào**. Cần cả hai khi kiểm tra một use case có nhiều bước.
+Class diagrams show **who relates to whom**. Runtime flows show **which actions occur and in what order**. Both matter when validating multi-step use cases.
 
-| Thắc mắc | Bằng chứng nên xem |
+| Question | Evidence to inspect |
 |---|---|
-| Loan có thuộc về đúng một member và copy không? | Class diagram, kiểu dữ liệu, foreign keys |
-| Return phải giữ lịch sử không? | Business rule, `returnLoan()`, test lịch sử |
-| Loan đang active được xác định thế nào? | Định nghĩa trạng thái, query, test |
-| Có thể có hai active loan cùng copy không? | Concurrency/transaction/unique constraint |
-| Mượn khi tài khoản inactive có bị từ chối? | Use case, command validation, test |
-| Hạn trả 14 ngày tính ở timezone nào? | Quy tắc nghiệp vụ, Clock, test ngày |
-| Nếu DB ghi thất bại, có nửa dữ liệu không? | Transaction boundary, integration test |
-| Mã đã thay đổi so với sơ đồ chưa? | Code review, diff, sơ đồ phiên bản hiện tại |
+| Does each Loan belong to exactly one member and copy? | Class diagram, data types, foreign keys |
+| Must return preserve history? | Business rule, `returnLoan()`, history tests |
+| How is an active Loan defined? | State definition, queries, tests |
+| Could two active Loans refer to one copy? | Concurrency/transaction/unique constraint |
+| Is borrowing rejected for an inactive account? | Use case, command validation, test |
+| Which time zone applies to the 14-day due date? | Business rule, Clock, date tests |
+| Does a failed DB write leave partial data? | Transaction boundary, integration tests |
+| Has code diverged from the diagram? | Code review, diff, current diagram version |
 
-Một mô hình **không cần** chứa toàn bộ chi tiết của code, nhưng những quyết định có ảnh hưởng đến nghiệp vụ phải khớp. Ví dụ cấu trúc `HashMap` trong demo là chi tiết triển khai; yêu cầu “mỗi copy có tối đa một active loan” mới là hợp đồng đáng lưu trong mô hình.
+A model **need not contain** every implementation detail, but domain-impacting decisions must align. For example, `HashMap` in the demo is an implementation choice; “at most one active Loan per copy” is the contract worth preserving in the model.
 
-## 10. Phát hiện chênh lệch từ tình huống thực tế
+## 10. Detecting Gaps from Real Operational Scenarios
 
-Giả sử trong vận hành xuất hiện các phản hồi:
+Suppose users report these production incidents:
 
-- “Độc giả đổi thẻ, hệ thống coi họ là người mới và cho mượn quá giới hạn.”
-- “Bản sách đã được trả nhưng vẫn báo đang mượn.”
-- “Nhân viên nhập sai ngày trả và lịch sử có ngày trước ngày mượn.”
-- “Thư viện có ba chi nhánh, hai máy vẫn cho mượn cùng bản sách cuối.”
+- “A member changed library cards and the system treated them as a new member, allowing borrowing beyond the limit.”
+- “A returned copy is still reported as on loan.”
+- “A staff member entered the wrong return date, making history show a return before borrowing.”
+- “A library has three branches, and two terminals still lend the same last available copy.”
 
-Cách xử lý không nên bắt đầu bằng một dòng `if` ngẫu nhiên. Trước tiên xác định **mô hình nào đang sai hoặc thiếu**:
+Do not start with a random `if`. First determine **which part of the model is missing or wrong**:
 
-| Sự cố | Câu hỏi mô hình | Bổ sung cần cân nhắc |
+| Incident | Modeling question | Possible improvement |
 |---|---|---|
-| Đổi thẻ tạo “người mới” | Identity của Member là người hay thẻ thư viện? | Member ID ổn định, LibraryCard như thực thể/giá trị khác |
-| Đã trả vẫn báo đang mượn | Return là trạng thái Loan hay thuộc tính tạm của BookCopy? | Định nghĩa nguồn sự thật, đồng bộ chỉ mục |
-| Ngày trả sai | Ai xác thực ngày trả? Có cho điều chỉnh có audit? | Lệnh sửa có phân quyền và lưu lịch sử sửa |
-| Hai chi nhánh cùng mượn | Boundary giao dịch thực ở đâu? | DB constraint/lock, quy trình phân tán |
-| Lượt mượn cũ bị xóa | Có chính sách lưu lịch sử/audit không? | Entity Loan có vòng đời và retention rõ |
+| Card replacement creates a “new member” | Does Member identity represent a person or a library card? | Stable Member ID and separate LibraryCard entity/value |
+| Returned copy still appears borrowed | Is return a Loan state or temporary BookCopy attribute? | Define source of truth and synchronize indexes |
+| Incorrect return date | Who validates dates? Are audited corrections permitted? | Authorized correction command and change history |
+| Same copy borrowed at two branches | Where is the real transaction boundary? | DB constraint/lock and distributed workflow |
+| Old loan record deleted | What retention/audit policy applies? | Loan lifecycle and retention rules |
 
-**Đừng nhầm lỗi hiển thị với lỗi domain.** Số sách “còn sẵn” hiển thị chậm có thể là query cache, trong khi bản ghi mượn đã đúng. Hãy kiểm tra hệ thống nguồn sự thật và thời điểm quan sát trước khi sửa model.
+**Do not confuse a display issue with a domain error.** An outdated “available copies” count might come from a query cache even when loan data is correct. Check the source of truth and observation timing before changing the model.
 
-## 11. Làm sao biết một sơ đồ lớp đã khớp Java?
+## 11. How Can You Tell a Class Diagram Matches Java?
 
-Một vòng review ngắn gọn, có thể lặp trong code review:
+A concise review cycle, repeatable during code review:
 
-1. **Đối chiếu danh tính:** Mỗi entity có ID đúng nghĩa chưa? `BookTitle` khác `BookCopy`; dùng title/ISBN thay mã bản sẽ gây sai trong tình huống nhiều bản.
-2. **Đối chiếu thuộc tính:** `borrowedOn`, `dueOn`, `returnedOn` và `active` có đúng kiểu và trạng thái không? Cho phép `null` có chủ đích hay vô tình?
-3. **Đối chiếu API:** Phương thức đặt ở đúng chủ thể? `borrow` là command; `isAvailable` là query; có setter nào cho phép bypass invariant không?
-4. **Đối chiếu quan hệ:** Một Loan gắn một Member/copy; một Member/copy có nhiều Loan theo lịch sử. Multiplicity có nêu rõ “active” hay “history”?
-5. **Đối chiếu vòng đời:** Xóa/thay đổi entity nào ảnh hưởng phiếu mượn? Nếu có quy tắc lưu lịch sử, không dùng cascade delete tùy tiện.
-6. **Đối chiếu hợp đồng lỗi:** Bản không tồn tại, thành viên bị khóa, đã hết hạn mức, bản hết chỗ, phiếu đã trả, lỗi DB — phải có kết quả xác định.
-7. **Đối chiếu cạnh tranh:** Các kiểm tra trước command có được giữ nguyên tử đến khi commit hay không?
-8. **Đối chiếu test:** Mỗi quy tắc có ít nhất một test hành vi có khả năng thất bại khi code vi phạm không? Có cần integration/contract test?
-9. **Đối chiếu tài liệu triển khai:** Nếu đã chuyển từ map sang DB, sơ đồ mức domain có thể giữ nguyên nhưng sơ đồ component/persistence phải cập nhật.
-10. **Đối chiếu stakeholder:** Có thay đổi chính sách được duyệt khiến sơ đồ và test cũ không còn đúng không?
+1. **Verify identity:** Does every entity have a meaningful ID? `BookTitle` differs from `BookCopy`; using a title/ISBN instead of a copy ID fails for multiple physical copies.
+2. **Verify attributes:** Are `borrowedOn`, `dueOn`, `returnedOn`, and `active` correctly typed and modeled? Is `null` allowed intentionally or by accident?
+3. **Verify APIs:** Are methods owned by the right objects? `borrow` is a command and `isAvailable` is a query; can any setter bypass an invariant?
+4. **Verify relationships:** One Loan refers to one Member/copy; each Member/copy may have many historical Loans. Do multiplicities distinguish active versus historical?
+5. **Verify lifecycle:** How do entity deletion or changes affect loans? Avoid arbitrary cascade deletion when history must be retained.
+6. **Verify error contracts:** Missing copy, suspended member, quota reached, unavailable copy, returned loan, DB failure—each needs a defined outcome.
+7. **Verify concurrency:** Are pre-command checks preserved atomically through commit?
+8. **Verify tests:** Does each rule have at least one behavioral test that fails if code violates it? Are integration/contract tests needed?
+9. **Verify implementation documentation:** Moving from maps to a DB might leave a domain diagram valid while requiring updated component/persistence diagrams.
+10. **Verify stakeholder decisions:** Has an approved policy change invalidated an older diagram or test?
 
-Khi phát hiện chênh lệch, ghi ngắn gọn: **hành vi mong đợi → hành vi thực tế → bằng chứng → quyết định sửa → test xác nhận**. Điều này giúp tránh tranh luận cảm tính về sơ đồ “đẹp” hay tên class “chuẩn”.
+For each discrepancy, record **expected behavior → observed behavior → evidence → resolution decision → confirming test**. This replaces subjective debate about attractive diagrams or “standard” class names.
 
-## 12. Ma trận truy vết từ yêu cầu đến test
+## 12. Requirements-to-Test Traceability Matrix
 
-| ID | Tình huống | Mô hình/chủ thể | Java API / cơ chế | Bằng chứng kiểm thử |
+| ID | Scenario | Model / owner | Java API / mechanism | Test evidence |
 |---|---|---|---|---|
-| UC-BORROW | Độc giả mượn bản còn sẵn | Member, BookCopy, Loan | `Library.borrow` | `borrowCreatesActiveLoanWithCorrectDueDate` |
-| BR-01 | Tài khoản bị khóa | Member | Kiểm tra `active` trong command | `inactiveMemberCannotBorrow` |
-| BR-02 | Đủ 3 bản active | Loan theo Member | `activeLoanCount` + kiểm tra giới hạn | `fourthActiveLoanIsRejected` |
-| BR-03 | Một bản không có hai loan active | BookCopy – Loan | `isAvailable` + lock/DB constraint | `sameCopyCannotBeBorrowedTwice`; concurrency test |
-| BR-04 | Hạn trả sau 14 ngày | Loan | `Clock` và `plusDays(14)` | Test ngày cụ thể |
-| BR-05 | Không trả lại phiếu đã trả | Loan | `Loan.returnOn` | `returningKeepsHistoryAndMakesCopyAvailable` |
-| BR-06 | Lưu phiếu lịch sử | Loan | Update `returnedOn`, không remove | Truy vấn phiếu sau khi trả |
-| BR-07 | Không ghi dang dở | Lưu trữ phiếu mượn | Trong RAM một lock; production cần transaction | Integration test rollback/atomicity |
+| UC-BORROW | Member borrows an available copy | Member, BookCopy, Loan | `Library.borrow` | `borrowCreatesActiveLoanWithCorrectDueDate` |
+| BR-01 | Account suspended | Member | Check `active` in the command | `inactiveMemberCannotBorrow` |
+| BR-02 | Already has 3 active copies | Loans for Member | `activeLoanCount` plus limit validation | `fourthActiveLoanIsRejected` |
+| BR-03 | One copy has no two active loans | BookCopy – Loan | `isAvailable` plus lock/DB constraint | `sameCopyCannotBeBorrowedTwice`; concurrency test |
+| BR-04 | Due date after 14 days | Loan | `Clock` and `plusDays(14)` | Specific date-based test |
+| BR-05 | Cannot return an already returned loan | Loan | `Loan.returnOn` | `returningKeepsHistoryAndMakesCopyAvailable` |
+| BR-06 | Retain loan history | Loan | Update `returnedOn`, do not remove | Query loan after returning |
+| BR-07 | Do not persist partial updates | Loan persistence | One in-memory lock; production requires transaction | Rollback/atomicity integration test |
 
-Một quy tắc có thể có nhiều tầng bảo vệ: **domain validation** để diễn đạt và báo lỗi phù hợp; **database constraint** để chặn vi phạm khi nhiều tiến trình cùng ghi. Cùng bảo vệ một invariant không phải lúc nào cũng là sao chép vô ích.
+One rule may have several enforcement layers: **domain validation** expresses policy and meaningful errors, while **database constraints** prevent violations from concurrent writers. Protecting the same invariant in both places is not necessarily wasteful duplication.
 
-**Đọc ma trận theo chiều ngược:** Nếu một method public có side effect nhưng không truy vết được tới use case/điều kiện nào, cần kiểm tra nó có tạo hành vi ngoài yêu cầu hay không. Nếu một BR không có API hoặc test nào chứng minh, đó là khoảng trống kiểm chứng.
+**Read the matrix backward:** A side-effecting public method without a traceable use case or policy deserves review for unintended behavior. A business rule lacking a proving API or test exposes a verification gap.
 
-## 13. Đối chiếu thay đổi sau khi sản phẩm đã chạy
+## 13. Validate Changes After Production Deployment
 
-Mô hình là **tài liệu sống**. Ví dụ thư viện quyết định từ học kỳ mới cho phép giáo viên mượn 6 bản thay vì 3 bản:
+Models are **living documentation**. Suppose the library decides that next term teachers may borrow 6 copies instead of 3:
 
-1. Ghi rõ chính sách mới: ai được hưởng, thời gian áp dụng, trường hợp đã mượn trước đó.
-2. Cập nhật BR-02 thành quy tắc theo **vai trò hoặc chính sách**; tránh thay số 3 bằng số 6 cho mọi Member.
-3. Thảo luận nơi quản lý policy: một `BorrowingPolicy` có thể phù hợp nếu nhiều vai trò, ngày hiệu lực và điều kiện ngoại lệ; khi luật vẫn đơn giản, constant trong domain có thể đủ.
-4. Cập nhật mô hình, Java API và test; kiểm tra hợp đồng tương thích cho caller.
-5. Xem lại schema/configuration nếu thay đổi đòi thêm thông tin vai trò và version.
-6. Triển khai và quan sát thực tế có vi phạm trong dữ liệu cũ hay không.
+1. Record the new policy: who qualifies, effective dates, and treatment of existing loans.
+2. Revise BR-02 into a **role- or policy-based rule**; do not replace 3 with 6 for every Member.
+3. Decide where policy belongs: `BorrowingPolicy` may be suitable for multiple roles, effective dates, and exceptions; a domain constant may suffice while the rule remains simple.
+4. Update the model, Java APIs, and tests; check compatibility for callers.
+5. Revisit schema/configuration if role information or versioning is needed.
+6. Deploy and observe whether older data now violates any constraints.
 
-Có thể biểu diễn thay đổi bằng policy:
+The change could be represented by a policy:
 
 ~~~java
 interface BorrowingPolicy {
@@ -5532,46 +5532,46 @@ interface BorrowingPolicy {
 }
 ~~~
 
-Đây là **đề xuất mở rộng**, không phải phần có sẵn trong demo. Nếu thêm interface chỉ để che một hằng số không bao giờ biến đổi, thiết kế có thể phức tạp hơn cần thiết. Trích xuất trách nhiệm khi nó có lý do thay đổi rõ.
+This is **a proposed extension**, not existing functionality in the demo. Creating an interface just to hide a constant that never varies may introduce needless complexity. Extract responsibilities when they have a clear reason to change.
 
-## 14. Những cạm bẫy thường gặp
+## 14. Common Pitfalls
 
-| Sai lầm | Tại sao có hại | Cách sửa |
+| Mistake | Why it is harmful | Corrective action |
 |---|---|---|
-| “Sơ đồ có đường nối nên mọi rule đã được bảo đảm” | Association không tự giới hạn số loan active | Ghi constraint và bảo vệ lúc ghi |
-| “Code chạy demo là đủ” | Happy path không bao phủ lỗi và cạnh tranh | Test phản ví dụ và boundary |
-| “Hễ có class trong UML phải có file cùng tên” | Mô hình khái niệm có thể khác cấu trúc triển khai | Chọn mức trừu tượng, nêu mapping |
-| “Field `final` làm object bất biến” | Tham chiếu final vẫn có thể trỏ collection mutable | Đóng gói, snapshot, constructor validation |
-| “`synchronized` giải quyết mọi tranh chấp” | Lock chỉ có hiệu lực tại một đối tượng/JVM | Ràng buộc transaction ở tầng lưu trữ dùng chung |
-| “Loan lịch sử là thuộc sở hữu của Member nên được xóa theo Member” | Chính sách audit/retention có thể khác | Xác định vòng đời từ nghiệp vụ |
-| “Chỉ sửa code, không sửa tài liệu/test” | Model drift, lỗi quay lại trong lần sau | Duy trì traceability trong thay đổi |
-| “Chỉ sửa sơ đồ cho trông giống code” | Có thể hợp thức hóa một bug đang chạy | Kiểm chứng lại với yêu cầu được duyệt |
-| “Dữ liệu thật khác mô hình thì bỏ qua” | Bug có thể đã xuất hiện trong DB | Kiểm tra migration, backfill, integrity |
+| “The diagram has an association, so all rules are guaranteed” | Associations do not cap active loans | Document and enforce constraints during writes |
+| “The demo runs, so the model is proven” | Happy paths omit failures and contention | Test counterexamples and boundaries |
+| “Every UML class needs a same-named source file” | Conceptual models can differ from implementation structure | Choose an abstraction level and document mappings |
+| “A `final` field makes its object immutable” | A final reference can still point to a mutable collection | Encapsulation, snapshots, constructor validation |
+| “`synchronized` resolves all concurrency” | A lock applies only to one object/JVM | Enforce transactions at the shared persistence layer |
+| “Historical loans belong to Member, so delete them with Member” | Auditing/retention may require another lifecycle | Derive lifecycles from domain policy |
+| “Only update code, not documentation/tests” | Model drift and recurring regressions | Maintain traceability during changes |
+| “Update diagrams only to resemble code” | May legitimize an existing bug | Validate against approved requirements |
+| “Ignore production data that differs from the model” | Bugs may already exist in stored records | Investigate migrations, backfills, and integrity |
 
-## 15. Bài tập: đối chiếu đơn đặt hàng thực tế
+## 15. Exercise: Validate a Real Order Model
 
-Một nhóm phát triển có sơ đồ `Customer "1" -- "0..*" Order` và `Order "1" *-- "1..*" OrderLine`. Nhưng khi chạy:
+A team has diagrams `Customer "1" -- "0..*" Order` and `Order "1" *-- "1..*" OrderLine`. But the running application behaves as follows:
 
-- API tạo `Order` không cần `OrderLine`, để ở trạng thái `DRAFT`.
-- `confirm()` từ chối khi danh sách dòng rỗng.
-- `OrderLine` có `productId` và giá chốt lúc mua.
-- Một Product được nhiều OrderLine tham chiếu.
+- The API creates an `Order` with no `OrderLine` in `DRAFT` state.
+- `confirm()` rejects orders with no lines.
+- `OrderLine` stores `productId` and the unit price captured at purchase time.
+- A single Product may be referenced by many OrderLines.
 
-Hãy thực hiện:
+Complete these tasks:
 
-1. Kiểm tra multiplicity `1..*` của `OrderLine` có sai với trạng thái draft không. Đề xuất sơ đồ với `0..*` và constraint **confirmed order must contain >=1 line**.
-2. Phân biệt Product độc lập với OrderLine thuộc đơn. Chọn association hay composition và nêu lý do từ vòng đời.
-3. Liệt kê ít nhất bốn use case hoặc phản ví dụ: thêm dòng, xác nhận đơn rỗng, sửa đơn đã xác nhận, thay giá catalog sau khi chốt đơn.
-4. Viết test đảm bảo `total` của đơn đã chốt không vô tình đổi theo giá catalog hiện tại.
-5. Với nhiều yêu cầu xác nhận cùng lúc, đề xuất cách bảo vệ trạng thái chuyển đổi và tính nhất quán trong database.
-6. Viết một ma trận traceability gồm ID quy tắc, nơi bảo vệ, test và bằng chứng chạy.
+1. Check whether multiplicity `1..*` for `OrderLine` contradicts draft orders. Propose `0..*` with a **confirmed order must contain >=1 line** constraint.
+2. Distinguish independent Products from order-owned OrderLines. Choose association or composition and justify it using lifecycles.
+3. List at least four use cases or counterexamples: adding a line, confirming an empty order, modifying a confirmed order, and changing catalog prices after checkout.
+4. Write a test ensuring an order's captured `total` does not change unexpectedly when current catalog prices change.
+5. For concurrent confirmations, propose protection for state transitions and database consistency.
+6. Build a traceability matrix of rule IDs, enforcement points, tests, and execution evidence.
 
-**Tiêu chí đạt:** Người đọc xác định được **chênh lệch mô hình nào là có chủ đích theo trạng thái**, chênh lệch nào là bug, và một cách kiểm chứng cụ thể cho mỗi quyết định.
+**Success criteria:** Readers can distinguish **state-dependent intentional model differences** from actual bugs and describe a concrete verification method for every decision.
 
 ---
 
-**Ghi nhớ:** Đối chiếu mô hình với mã và tình huống thực tế là một vòng kiểm chứng **hai chiều**: lấy use case/rule để hỏi mô hình và code có đúng không, dùng test/dữ liệu vận hành để phát hiện giả định thiếu, rồi cập nhật những phần phải thay đổi. Giá trị của mô hình nằm ở **hành vi và invariant kiểm chứng được**, không ở việc sơ đồ chứa thật nhiều hộp và mũi tên.
+**Remember:** Comparing a model with code and real situations is a **two-way** verification cycle: use cases/rules challenge the design and implementation; tests and operational data reveal missing assumptions; then update the affected artifacts. A model's value lies in **verifiable behavior and invariants**, not in diagram box and arrow counts.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

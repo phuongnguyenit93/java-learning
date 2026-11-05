@@ -1,65 +1,65 @@
 <a id="back-to-top"></a>
 
-# Thực hành
+# Practice
 
 ## Menu
-- [Bài tập lớp và đối tượng qua tài khoản ngân hàng](#practice-001)
-- [Bài tập đóng gói quy tắc của đơn hàng](#practice-002)
-- [Bài tập giao diện và đa hình thanh toán](#practice-003)
-- [Bài tập chọn kế thừa hay kết hợp](#practice-004)
-- [Bài tập đối tượng giá trị và so sánh bằng](#practice-005)
-- [Bài tập nhận diện lỗi thiết kế](#practice-006)
-- [Bài tập tái cấu trúc đoạn mã thủ tục thành mô hình đối tượng](#practice-007)
-- [Dự án tổng hợp: phân tích yêu cầu và tình huống sử dụng](#practice-008)
-- [Dự án tổng hợp: thiết kế lớp và quan hệ](#practice-009)
-- [Dự án tổng hợp: hiện thực và kiểm thử hành vi](#practice-010)
-- [Dự án tổng hợp: thay đổi yêu cầu và đánh giá thiết kế](#practice-011)
+- [Classes and objects: a bank account exercise](#practice-001)
+- [Encapsulating order business rules](#practice-002)
+- [Payment interfaces and polymorphism](#practice-003)
+- [Choosing inheritance or composition](#practice-004)
+- [Value objects and equality](#practice-005)
+- [Identifying design flaws](#practice-006)
+- [Refactoring procedural code into an object model](#practice-007)
+- [Capstone project: requirements analysis and use cases](#practice-008)
+- [Capstone project: class and relationship design](#practice-009)
+- [Capstone project: implementation and behavioral testing](#practice-010)
+- [Capstone project: changing requirements and evaluating design](#practice-011)
 
-## <a id="practice-001">Bài tập lớp và đối tượng qua tài khoản ngân hàng</a>
+## <a id="practice-001">Classes and objects: a bank account exercise</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Bài tập lớp và đối tượng qua tài khoản ngân hàng — Java OOP
+# Classes and objects: a bank account exercise — Java OOP
 
-## 1. Mục tiêu thực hành
+## 1. Learning objectives
 
-Bài tập mô phỏng một tài khoản ngân hàng đơn giản để luyện cách biến yêu cầu nghiệp vụ thành **lớp (class)**, **đối tượng (object)**, **thuộc tính**, **phương thức**, **constructor** và **đóng gói dữ liệu (encapsulation)** trong Java.
+This exercise simulates a simple bank account to practice turning business requirements into Java **classes**, **objects**, **fields**, **methods**, **constructors**, and **data encapsulation**.
 
-Sau khi hoàn thành, bạn có thể:
-- Mô tả một tài khoản bằng lớp BankAccount và tạo nhiều đối tượng độc lập bằng từ khóa new.
-- Dùng các trường private để bảo vệ số dư, final cho thông tin không đổi sau khi khởi tạo.
-- Viết constructor kiểm tra trạng thái đầu vào; cung cấp phương thức nạp, rút, chuyển tiền.
-- Phân biệt biến tham chiếu, đối tượng thực tế, trạng thái và hành vi.
-- Kiểm tra điều kiện biên, giao dịch bị từ chối và nguy cơ tràn số.
-- Viết unit test để chứng minh quy tắc mà không cần kết nối ngân hàng thật.
+After completing the exercise, you will be able to:
+- Represent an account with the BankAccount class and create multiple independent objects using the new keyword.
+- Use private fields to protect balances and final for information that must not change after initialization.
+- Write a constructor that validates the initial state and provide deposit, withdrawal, and transfer methods.
+- Distinguish reference variables, actual objects, state, and behavior.
+- Check boundary conditions, rejected transactions, and integer overflow risks.
+- Write unit tests to verify business rules without connecting to a real bank.
 
-Đây là chương trình **mô phỏng phục vụ học OOP**, không phải hệ thống ngân hàng thực. Dữ liệu chỉ ở bộ nhớ, không có đăng nhập, phân quyền, cơ sở dữ liệu, ghi sổ kế toán hay giao dịch phân tán.
+This is an **educational OOP simulation**, not a real banking system. All data is held in memory; there is no authentication, authorization, database, accounting ledger, or distributed transaction support.
 
-## 2. Từ yêu cầu sang lớp và đối tượng
+## 2. From requirements to classes and objects
 
-Giả sử cần quản lý hai tài khoản:
+Suppose we need to manage two accounts:
 
-- Tài khoản A: mã TK001, chủ sở hữu An, số dư ban đầu 1.000.000 VND.
-- Tài khoản B: mã TK002, chủ sở hữu Bình, số dư ban đầu 200.000 VND.
-- Cho phép nạp tiền, rút tiền và chuyển tiền từ A sang B.
-- Không cho số dư âm, không cho nạp/rút/chuyển số tiền bằng 0 hoặc âm.
-- Phép toán làm số dư vượt miền long phải báo lỗi, không để tràn số âm thầm.
+- Account A: account number TK001, owner An, initial balance 1.000.000 VND.
+- Account B: account number TK002, owner Bình, initial balance 200.000 VND.
+- Allow deposits, withdrawals, and transfers from A to B.
+- Disallow negative balances and 0 or negative deposit, withdrawal, or transfer amounts.
+- Report errors when an operation exceeds the long range; do not allow silent overflow.
 
-Các khái niệm:
+The OOP concepts involved:
 
-| Khái niệm OOP | Áp dụng trong ví dụ | Ý nghĩa |
+| OOP concept | Application in this example | Meaning |
 | --- | --- | --- |
-| Class | BankAccount | Bản thiết kế chung cho một tài khoản |
-| Object | accountA, accountB | Hai tài khoản cụ thể với trạng thái riêng |
-| Field | accountNumber, ownerName, balanceVnd | Dữ liệu của mỗi đối tượng |
-| Constructor | BankAccount(number, owner, initialBalance) | Khởi tạo đối tượng với trạng thái hợp lệ |
-| Method | deposit, withdraw, transferTo | Hành vi được phép thao tác với số dư |
-| Encapsulation | private balanceVnd và các phương thức public | Không cho mã bên ngoài gán số dư tùy ý |
-| Reference | Biến accountA kiểu BankAccount | Tham chiếu đến đối tượng trong bộ nhớ |
-| final field | accountNumber, ownerName | Không gán lại được từ sau constructor |
+| Class | BankAccount | Shared blueprint for an account |
+| Object | accountA, accountB | Two concrete accounts, each with its own state |
+| Field | accountNumber, ownerName, balanceVnd | Data belonging to each object |
+| Constructor | BankAccount(number, owner, initialBalance) | Initializes an object in a valid state |
+| Method | deposit, withdraw, transferTo | Permitted operations on the balance |
+| Encapsulation | private balanceVnd and public methods | Prevents external code from assigning arbitrary balances |
+| Reference | accountA variable of type BankAccount | Refers to an object in memory |
+| final field | accountNumber, ownerName | Cannot be reassigned after the constructor |
 
-Mô hình lớp:
+Class model:
 
 ~~~mermaid
 classDiagram
@@ -82,23 +82,23 @@ classDiagram
     BankAccount --> BankAccount : transferTo(receiver)
 ~~~
 
-Điểm quan trọng: **accountA và accountB được tạo từ cùng lớp BankAccount nhưng là hai đối tượng riêng**. Khi accountA.deposit(...), số dư của accountB không tự thay đổi.
+Key point: **accountA and accountB are created from the same BankAccount class but are separate objects**. Calling accountA.deposit(...) does not automatically change accountB's balance.
 
-## 3. Xác định hợp đồng cho từng thao tác
+## 3. Defining the contract for each operation
 
-Ta dùng kiểu **long** để lưu số tiền nguyên theo VND, tránh dùng float/double cho ví dụ tính tiền nguyên. Nếu làm việc với tiền có phần thập phân hoặc nhiều loại tiền tệ, nên cân nhắc BigDecimal cùng mã đơn vị tiền; không dùng double để mô hình hóa số tiền chính xác.
+We use **long** to store whole VND amounts, avoiding float/double in this integer-money example. For fractional amounts or multiple currencies, consider BigDecimal together with a currency code; do not use double to represent exact monetary amounts.
 
-| Thao tác | Điều kiện hợp lệ | Kết quả | Trường hợp sai |
+| Operation | Valid conditions | Result | Invalid case |
 | --- | --- | --- | --- |
-| Tạo tài khoản | Mã và tên không trống, số dư đầu >= 0 | Đối tượng được tạo | IllegalArgumentException |
-| deposit(amount) | amount > 0; tổng không tràn long | balance tăng amount | IllegalArgumentException hoặc ArithmeticException |
-| withdraw(amount) | amount > 0 và amount <= balance | balance giảm amount | IllegalArgumentException hoặc IllegalStateException |
-| transferTo(receiver, amount) | receiver khác null và không phải chính tài khoản; amount > 0; đủ tiền; người nhận không tràn | Bên gửi giảm, bên nhận tăng cùng amount | NullPointerException, IllegalArgumentException, IllegalStateException hoặc ArithmeticException |
-| getBalanceVnd() | Không cần điều kiện | Trả số dư hiện tại | Không thay đổi trạng thái |
+| Create account | Number and name are nonblank; initial balance >= 0 | Object is created | IllegalArgumentException |
+| deposit(amount) | amount > 0; addition does not overflow long | balance increases by amount | IllegalArgumentException or ArithmeticException |
+| withdraw(amount) | amount > 0 and amount <= balance | balance decreases by amount | IllegalArgumentException or IllegalStateException |
+| transferTo(receiver, amount) | receiver is non-null and different from this account; amount > 0; sufficient funds; receiver balance does not overflow | Sender decreases and receiver increases by the same amount | NullPointerException, IllegalArgumentException, IllegalStateException, or ArithmeticException |
+| getBalanceVnd() | No precondition | Returns current balance | Does not change state |
 
-Quy ước của bài: thao tác không hợp lệ **ném exception và không thay đổi số dư**; phương thức giao dịch hợp lệ hoàn tất bình thường. Các điều kiện được kiểm tra trước khi sửa trạng thái.
+Exercise convention: an invalid operation **throws an exception without changing balances**; a valid transaction method completes normally. Every precondition is checked before mutating state.
 
-Quy trình chuyển tiền trong một luồng:
+Single-threaded transfer flow:
 
 ~~~mermaid
 flowchart TD
@@ -113,11 +113,11 @@ flowchart TD
     G --> H["Hoàn tất"]
 ~~~
 
-**Giới hạn có chủ đích:** phép chuyển tiền ở đây là thao tác đồng bộ trên hai đối tượng cùng tiến trình, giả định một luồng truy cập. Nó **không bảo đảm an toàn khi nhiều luồng thực hiện đồng thời** và không có giao dịch cơ sở dữ liệu; không được dùng logic này thay cơ chế giao dịch tài chính thực.
+**Intentional limitation:** transfers here are synchronous operations on two objects in the same process, assuming single-threaded access. This design **does not guarantee thread safety under concurrent execution** and has no database transaction; do not use this logic in place of real financial transaction mechanisms.
 
-## 4. Viết chương trình hoàn chỉnh
+## 4. Building the complete program
 
-Cấu trúc dự án Java 17 + Maven:
+Java 17 + Maven project structure:
 
 ~~~text
 bank-account-oop/
@@ -130,9 +130,9 @@ bank-account-oop/
         └── BankAccountTest.java
 ~~~
 
-### 4.1. Cấu hình Maven
+### 4.1. Maven configuration
 
-Tạo tệp pom.xml:
+Create the pom.xml file:
 
 ~~~xml
 <project xmlns="http://maven.apache.org/POM/4.0.0">
@@ -167,9 +167,9 @@ Tạo tệp pom.xml:
 </project>
 ~~~
 
-### 4.2. Lớp BankAccount
+### 4.2. The BankAccount class
 
-Tạo tệp src/main/java/vn/example/BankAccount.java:
+Create src/main/java/vn/example/BankAccount.java:
 
 ~~~java
 package vn.example;
@@ -273,22 +273,22 @@ public final class BankAccount {
 }
 ~~~
 
-**Đọc và giải thích từng thành phần quan trọng:**
+**Explanation of the important parts:**
 
-- **private final String accountNumber, ownerName:** mã và tên gắn với tài khoản không được gán lại sau khi khởi tạo. final ở đây không bảo đảm tính duy nhất toàn hệ thống; ứng dụng thực cần nơi quản lý mã tài khoản.
-- **private long balanceVnd:** trạng thái có thể thay đổi, nhưng lớp khác không thể gán trực tiếp một số âm hoặc một số bất kỳ.
-- **constructor:** kiểm tra tất cả dữ liệu khởi tạo trước khi đối tượng được dùng.
-- **getBalanceVnd:** cho phép đọc số dư nhưng không cung cấp phương thức setBalanceVnd tùy ý.
-- **deposit:** gọi Math.addExact để lỗi tràn số được phát hiện trước khi cập nhật.
-- **withdraw:** kiểm tra số tiền dương và đủ số dư trước khi trừ.
-- **transferTo:** nhận một **đối tượng BankAccount khác**. Vì đang ở trong mã nguồn của cùng lớp, Java cho phép truy cập trường private balanceVnd của một instance BankAccount khác.
-- **receiver == this:** so sánh danh tính đối tượng. Hai tham chiếu có thể cùng trỏ đến một đối tượng; kiểm tra này ngăn tài khoản tự chuyển cho chính mình.
+- **private final String accountNumber, ownerName:** the account number and owner name cannot be reassigned after initialization. Here, final does not guarantee system-wide uniqueness; a real application needs account-number management.
+- **private long balanceVnd:** mutable state, but other classes cannot directly assign a negative or arbitrary balance.
+- **constructor:** validates all initial values before the object is used.
+- **getBalanceVnd:** allows balance reads without exposing an arbitrary setBalanceVnd method.
+- **deposit:** calls Math.addExact to detect overflow before updating the balance.
+- **withdraw:** checks that the amount is positive and the balance is sufficient before subtracting.
+- **transferTo:** accepts **another BankAccount object**. Because the code is inside the same class, Java permits access to the private balanceVnd field of another BankAccount instance.
+- **receiver == this:** compares object identity. Two references can point to the same object; this prevents transfers from an account to itself.
 
-Lưu ý: two objects cùng accountNumber vẫn có thể được tạo ra trong phiên bản này vì constructor chỉ xác thực định dạng không trống. Đó là giới hạn của mô hình học tập, cần repository/service quản lý danh tính và ràng buộc duy nhất trong hệ thống thực.
+Note: this version can create two objects with the same accountNumber because the constructor only checks that the value is nonblank. This is a limitation of the learning model; a real system requires a repository/service to manage identity and enforce uniqueness.
 
-### 4.3. Lớp thực thi và tạo hai đối tượng
+### 4.3. Running the program and creating two objects
 
-Tạo tệp src/main/java/vn/example/BankDemo.java:
+Create src/main/java/vn/example/BankDemo.java:
 
 ~~~java
 package vn.example;
@@ -318,19 +318,19 @@ public final class BankDemo {
 }
 ~~~
 
-Cách đọc biểu thức:
+How to interpret the expression:
 
 ~~~java
 BankAccount accountA = new BankAccount("TK001", "An", 1_000_000L);
 ~~~
 
-- **BankAccount** bên trái là kiểu biến tham chiếu.
-- **accountA** là tên biến, không phải toàn bộ đối tượng.
-- **new BankAccount(...)** tạo một đối tượng BankAccount và gọi constructor.
-- Dấu chấm trong **accountA.deposit(...)** dùng để gửi yêu cầu hành vi cho đối tượng mà biến đang tham chiếu.
-- Hai đối tượng có số dư riêng; phép chuyển tiền cho thấy chúng có thể tương tác thông qua phương thức.
+- **BankAccount** on the left is the reference variable's type.
+- **accountA** is the variable name, not the entire object.
+- **new BankAccount(...)** creates a BankAccount object and invokes its constructor.
+- The dot in **accountA.deposit(...)** invokes behavior on the object referenced by the variable.
+- Each object has its own balance; the transfer demonstrates how objects interact through methods.
 
-Chạy trong thư mục có pom.xml:
+Run from the directory containing pom.xml:
 
 ~~~bash
 mvn test
@@ -338,29 +338,29 @@ mvn -q -DskipTests package
 java -cp target/classes vn.example.BankDemo
 ~~~
 
-Kết quả dự kiến:
+Expected output:
 
 ~~~text
 TK001 - An: 850000 VND
 TK002 - Binh: 500000 VND
 ~~~
 
-Kiểm tra bằng tay:
+Manual verification:
 
-| Bước | Tài khoản A (VND) | Tài khoản B (VND) |
+| Step | Account A (VND) | Account B (VND) |
 | --- | ---: | ---: |
-| Ban đầu | 1.000.000 | 200.000 |
-| A nạp 200.000 | 1.200.000 | 200.000 |
-| A rút 50.000 | 1.150.000 | 200.000 |
-| A chuyển B 300.000 | **850.000** | **500.000** |
+| Initial | 1.000.000 | 200.000 |
+| A deposits 200.000 | 1.200.000 | 200.000 |
+| A withdraws 50.000 | 1.150.000 | 200.000 |
+| A transfers 300.000 to B | **850.000** | **500.000** |
 
-Trong lần chuyển tiền, tổng số dư hai tài khoản trước và sau chuyển bằng nhau: 1.350.000 VND. Chuyển tiền không tạo thêm tiền hoặc làm mất tiền **khi thao tác hợp lệ hoàn tất trong mô hình đơn luồng này**.
+During the transfer, the combined balances before and after remain 1.350.000 VND. A transfer neither creates nor loses money **when the valid operation completes in this single-threaded model**.
 
-## 5. Kiểm thử hành vi và bất biến bằng JUnit 5
+## 5. Testing behavior and invariants with JUnit 5
 
-Không chỉ chạy main một lần: mã hướng đối tượng tốt phải được kiểm tra với nhiều trạng thái, đặc biệt thao tác bị từ chối.
+Running main once is not enough: good object-oriented code must be tested in multiple states, especially when operations are rejected.
 
-Tạo tệp src/test/java/vn/example/BankAccountTest.java:
+Create src/test/java/vn/example/BankAccountTest.java:
 
 ~~~java
 package vn.example;
@@ -497,11 +497,11 @@ class BankAccountTest {
 }
 ~~~
 
-Có **10 phương thức @Test**. Khi chạy mvn test, kỳ vọng 10 test chạy thành công trên đúng các tệp đã nêu, với 0 failures và 0 errors.
+There are **10 @Test methods**. Running mvn test should successfully execute all 10 tests in the specified files, with 0 failures and 0 errors.
 
-### Vì sao phải kiểm tra cả trạng thái sau khi thất bại?
+### Why check the state after a failure?
 
-Một triển khai sai có thể làm:
+An incorrect implementation might do this:
 
 ~~~java
 // Ví dụ cố tình SAI, không dùng thay phương thức transferTo thật:
@@ -509,17 +509,17 @@ balanceVnd -= amountVnd;
 receiver.deposit(amountVnd);
 ~~~
 
-Nếu receiver.deposit(...) thất bại vì tràn long, bên gửi đã bị trừ trước đó. Kết quả là một nửa giao dịch được thực hiện. Mã đúng **tính trước số dư mới của người nhận, rồi mới thay đổi cả hai số dư** trong một luồng.
+If receiver.deposit(...) fails because of long overflow, the sender has already been debited. The transaction is then only partially applied. The correct code **computes the receiver's new balance first, then updates both balances** in one thread.
 
-Bộ test overflowFailsWithoutChangingBalances bảo vệ chính bất biến này. Tuy nhiên, thao tác gồm hai phép gán vẫn chưa atomic trước truy cập đồng thời hoặc lỗi tiến trình; muốn giải quyết phải dùng đồng bộ hóa/transaction và thiết kế sổ cái phù hợp.
+The overflowFailsWithoutChangingBalances test protects this invariant. However, two assignments are still not atomic under concurrent access or process failure; proper synchronization/transactions and ledger design are required to address those cases.
 
-## 6. Câu hỏi tư duy OOP qua bài thực hành
+## 6. OOP reasoning questions based on the exercise
 
-**Lớp khác có thể gán account.balanceVnd = -5 không?** Không, vì trường private. Lớp khác phải sử dụng API public, nơi BankAccount kiểm tra các bất biến. Getter đọc số dư không trao quyền sửa trực tiếp.
+**Can another class assign account.balanceVnd = -5?** No, because the field is private. Other classes must use the public API, where BankAccount enforces its invariants. A balance getter does not grant direct write access.
 
-**Tại sao không dùng static cho balanceVnd?** static tạo một trường chung ở cấp lớp, khiến các đối tượng có thể dùng chung số dư. Ở đây mỗi BankAccount có trạng thái riêng, nên balanceVnd là trường instance.
+**Why not declare balanceVnd static?** static would create a class-level field potentially shared by all objects. Each BankAccount needs its own state, so balanceVnd is an instance field.
 
-**Hai biến có thể trỏ cùng đối tượng không?** Có:
+**Can two variables reference the same object?** Yes:
 
 ~~~java
 BankAccount first = new BankAccount("A", "An", 100L);
@@ -528,83 +528,83 @@ alias.deposit(50L);
 System.out.println(first.getBalanceVnd()); // 150
 ~~~
 
-Phép gán alias = first sao chép **tham chiếu**, không tạo đối tượng mới. Vì vậy cả hai biến cùng quan sát một số dư 150 VND.
+Assigning alias = first copies the **reference**; it does not create a new object. Both variables therefore observe the same balance of 150 VND.
 
-**Vì sao không tạo setBalanceVnd?** Một setter tự do có thể bỏ qua kiểm tra nguồn tiền. Phương thức deposit, withdraw, transferTo biểu đạt ý nghĩa hành vi và kiểm soát các điều kiện trước khi cập nhật trạng thái.
+**Why not provide setBalanceVnd?** An unrestricted setter could bypass validation of the source of funds. deposit, withdraw, and transferTo express business operations and enforce preconditions before updating state.
 
-**Vì sao transferTo có thể thay đổi balanceVnd của receiver dù là private?** Quyền private trong Java áp dụng ở cấp lớp. Mã bên trong lớp BankAccount có thể truy cập trường private của bất kỳ instance BankAccount nào. Mã trong BankDemo vẫn không thể làm vậy.
+**How can transferTo modify receiver.balanceVnd if the field is private?** In Java, private access is scoped to the class. Code inside BankAccount can access the private fields of any BankAccount instance. Code in BankDemo cannot.
 
-**Nạp/rút và chuyển tiền có cùng độ an toàn không?** Không. Nạp và rút thay trạng thái một đối tượng; chuyển tiền cần cập nhật hai đối tượng liên quan. Trong hệ thống đa luồng/phân tán, cần xử lý tranh chấp và trạng thái giao dịch bền vững.
+**Are deposits/withdrawals and transfers equally safe?** No. Deposits and withdrawals change one object's state; transfers update two related objects. A multithreaded or distributed system must handle contention and durable transaction state.
 
-## 7. Nhận diện lỗi phổ biến
+## 7. Identifying common mistakes
 
-| Lỗi | Nguyên nhân | Hướng sửa |
+| Mistake | Cause | Fix |
 | --- | --- | --- |
-| Đặt balanceVnd là public | Mã ngoài có thể phá bất biến | Dùng private, expose hành vi nghiệp vụ |
-| Dùng static balanceVnd | Mọi đối tượng có chung số dư | Sử dụng instance field |
-| Rút tiền rồi mới kiểm tra đủ tiền | Có thể âm số dư hoặc trạng thái sai | Kiểm tra trước khi trừ |
-| Không kiểm tra amount <= 0 | Cho phép rút số âm gây cộng tiền | Kiểm tra số tiền dương ở mọi thao tác |
-| Dùng double cho tiền | Có thể sai số nhị phân | Dùng long theo đơn vị nhỏ nhất hoặc BigDecimal |
-| Không kiểm tra tràn số | long có thể wrap không cảnh báo | Math.addExact và kiểm thử giới hạn |
-| Chuyển tiền cập nhật nguồn trước khi kiểm tra đích | Exception khiến trạng thái một phần | Tính/validate toàn bộ trước khi mutate |
-| So sánh String bằng == | So sánh tham chiếu thay vì nội dung | Dùng equals khi kiểm tra giá trị String |
-| Chỉ thử happy path | Lỗi phát sinh ở nhánh âm/tràn/thiếu tiền | Test bất biến và nhánh thất bại |
-| Kết luận mô phỏng là hệ thống ngân hàng thật | Thiếu transaction, đồng thời, xác thực và audit | Bổ sung kiến trúc chuyên dụng khi triển khai thật |
+| Declaring balanceVnd public | External code can break invariants | Use private fields and expose business operations |
+| Declaring static balanceVnd | All objects share one balance | Use an instance field |
+| Withdrawing before checking sufficient funds | Can produce a negative balance or invalid state | Validate before subtracting |
+| Failing to reject amount <= 0 | Negative withdrawals can add money | Enforce a positive amount in every operation |
+| Using double for money | Binary rounding errors are possible | Use long in the smallest currency unit or BigDecimal |
+| Failing to check overflow | long may wrap silently | Use Math.addExact and boundary tests |
+| Debiting sender before validating receiver | An exception can leave a partial update | Compute and validate all results before mutation |
+| Comparing String with == | Compares references instead of content | Use equals for String value comparisons |
+| Testing only the happy path | Negative, overflow, and insufficient-funds cases expose defects | Test invariants and failure paths |
+| Treating the simulation as a real bank system | Lacks transactions, concurrency controls, authentication, and auditing | Add dedicated production architecture |
 
-## 8. Bài tập tự mở rộng
+## 8. Extension exercises
 
-### Bài A — In thông tin tài khoản
+### Exercise A — Print account information
 
-Viết phương thức summary() trả một String gồm số tài khoản, tên và số dư. Không cho caller sửa số dư thông qua kết quả trả về. Gọi từ BankDemo để thấy hai đối tượng có thông tin độc lập.
+Implement summary() to return a String containing the account number, owner name, and balance. Do not let callers modify the balance through the result. Call it from BankDemo to observe the two objects' independent information.
 
-### Bài B — Lịch sử giao dịch
+### Exercise B — Transaction history
 
-Thêm một kiểu Transaction mô tả loại giao dịch, số tiền và thời điểm. Cân nhắc lưu danh sách giao dịch chỉ đọc với List.copyOf(...), và dùng Clock được tiêm vào constructor nếu muốn test thời gian một cách xác định. Quy định rõ có ghi nhận giao dịch bị từ chối hay không.
+Add a Transaction type containing the transaction kind, amount, and timestamp. Consider exposing a read-only transaction list with List.copyOf(...) and injecting Clock into the constructor for deterministic time tests. Decide explicitly whether rejected transactions are recorded.
 
-### Bài C — Hai loại tài khoản
+### Exercise C — Two account types
 
-Thêm SavingsAccount có tính lãi hoặc CheckingAccount có quy tắc rút khác. Cân nhắc dùng kế thừa chỉ khi tồn tại quan hệ is-a thực sự đúng hợp đồng; với chính sách tính phí/lãi thay đổi, có thể dùng composition qua interface InterestPolicy/FeePolicy. Không mở rộng BankAccount chỉ để kế thừa các trường private.
+Add SavingsAccount with interest or CheckingAccount with different withdrawal rules. Use inheritance only when there is a genuine is-a relationship that satisfies the contract; for changing interest/fee policies, consider composition via InterestPolicy/FeePolicy interfaces. Do not extend BankAccount merely to inherit its private fields.
 
-### Bài D — Bài toán chuyển tiền nâng cao
+### Exercise D — Advanced transfers
 
-Giả lập nhiều yêu cầu chuyển đồng thời giữa hai tài khoản, phân tích tại sao việc kiểm tra số dư rồi cập nhật có thể sinh race condition. Đề xuất sử dụng locking theo thứ tự khóa ổn định hoặc database transaction; viết test concurrency riêng khi đã thiết kế đúng môi trường.
+Simulate concurrent transfer requests between two accounts and analyze why checking a balance before updating it can introduce race conditions. Propose a stable lock-acquisition order or database transactions; write dedicated concurrency tests once the environment has been designed correctly.
 
-### Bài E — Tách trách nhiệm
+### Exercise E — Separating responsibilities
 
-Khi ứng dụng cần tìm tài khoản bằng số tài khoản và bảo đảm mã duy nhất, có nên đưa một danh sách static toàn cục vào BankAccount? Hãy đề xuất AccountRepository/BankService để quản lý kho tài khoản, rồi giải thích vì sao BankAccount vẫn nên tập trung vào bất biến và hành vi của chính tài khoản.
+If the application must find accounts by number and guarantee unique account numbers, should BankAccount contain a global static list? Propose AccountRepository/BankService for account storage and explain why BankAccount should stay focused on its own invariants and behavior.
 
-## 9. Checklist tự đánh giá
+## 9. Self-assessment checklist
 
-- [ ] Tạo được ít nhất hai object BankAccount độc lập bằng new.
-- [ ] Trình bày được đâu là class, object, instance field, constructor và method.
-- [ ] Giải thích được sự khác nhau giữa first và alias cùng trỏ một object.
-- [ ] Số dư không thể bị sửa tùy ý từ bên ngoài lớp.
-- [ ] Nạp/rút/chuyển tiền đúng số học và từ chối số tiền không hợp lệ.
-- [ ] Khi giao dịch thất bại, các số dư liên quan giữ nguyên trong mô hình đơn luồng.
-- [ ] Code được tổ chức thành các tệp Java hợp lệ, chạy được BankDemo và bộ test JUnit.
-- [ ] Hiểu các giới hạn về đồng thời, tính bền vững và kiểm toán của mô hình.
+- [ ] Create at least two independent BankAccount objects using new.
+- [ ] Identify the class, object, instance field, constructor, and method.
+- [ ] Explain how first and alias can reference the same object.
+- [ ] Prevent arbitrary balance changes from outside the class.
+- [ ] Perform deposit/withdrawal/transfer arithmetic correctly and reject invalid amounts.
+- [ ] Preserve all affected balances when a transaction fails in this single-threaded model.
+- [ ] Organize the code into valid Java files and run BankDemo and the JUnit tests.
+- [ ] Understand the model's limitations regarding concurrency, durability, and auditing.
 
-**Kết quả mong đợi:** Bạn đã tạo một lớp mô tả đúng trách nhiệm của tài khoản, khởi tạo và tương tác giữa các đối tượng, kiểm soát dữ liệu bằng encapsulation, và dùng kiểm thử xác minh bất biến thay vì chỉ quan sát kết quả của một lần chạy main.
+**Expected outcome:** You have built a class with appropriate account responsibilities, initialized and coordinated objects, controlled data through encapsulation, and verified invariants with tests instead of observing only a single run of main.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="practice-002">Bài tập đóng gói quy tắc của đơn hàng</a>
+## <a id="practice-002">Encapsulating order business rules</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Bài tập: Đóng gói quy tắc của đơn hàng bằng Java OOP
+# Exercise: Encapsulating order business rules with Java OOP
 
-> **Bối cảnh:** Thực hành thiết kế một đối tượng `Order` (đơn hàng) có trách nhiệm tự bảo vệ trạng thái và các quy tắc nghiệp vụ. Mục tiêu không chỉ là giấu field bằng `private`, mà còn ngăn mọi đường sửa dữ liệu có thể tạo một đơn hàng sai.
+> **Context:** Practice designing an `Order` object that is responsible for protecting its own state and business rules. The goal goes beyond hiding fields with `private`: every data modification path that could produce an invalid order must be prevented.
 
-## 1. Tình huống
+## 1. Scenario
 
-Bạn tham gia xây dựng phần giỏ hàng/đặt hàng cho một cửa hàng trực tuyến. Thiết kế ban đầu có thể trông như sau:
+You are building a shopping-cart/checkout component for an online store. The initial design might look like this:
 
 ~~~java
 import java.util.ArrayList;
@@ -622,7 +622,7 @@ class OrderLineBad {
 }
 ~~~
 
-Mã khác có thể làm tất cả những việc sau:
+Other code can perform all of the following:
 
 ~~~java
 OrderBad order = new OrderBad();
@@ -632,42 +632,42 @@ order.lines.get(0).quantity = -5;
 order.lines.clear();                 // xóa sau khi đã đặt hàng
 ~~~
 
-Các lỗi này xảy ra vì **người sử dụng đối tượng có toàn quyền sửa trạng thái**, nên không ai bảo đảm bất biến nghiệp vụ. Việc đổi `public List` thành `private List` nhưng vẫn trả thẳng danh sách gốc từ getter cũng không giải quyết vấn đề.
+These defects occur because **users of the object have unrestricted control over its state**, so no one enforces business invariants. Changing `public List` to `private List` while returning the original list directly from a getter does not solve the problem either.
 
-**Nhiệm vụ:** thiết kế lại `Order` thành một *aggregate* đơn giản: `Order` sở hữu các dòng hàng, kiểm soát cập nhật, tự tính tổng tiền và quản lý vòng đời đơn hàng. Client chỉ gọi những hành vi được phép.
+**Task:** Redesign `Order` as a simple *aggregate*: `Order` owns its order lines, controls updates, calculates totals, and manages its lifecycle. Clients can only invoke permitted operations.
 
-## 2. Đặc tả bắt buộc trước khi viết code
+## 2. Required specification before coding
 
-### Dữ liệu và quy tắc
+### Data and rules
 
-Mỗi đơn hàng có một mã `orderId`, một trạng thái và tập các dòng hàng. Mỗi dòng hàng gồm mã sản phẩm `sku`, đơn giá `unitPriceCents` và số lượng `quantity`.
+Each order has an `orderId`, a status, and a set of order lines. Each line contains a product identifier `sku`, a unit price `unitPriceCents`, and a `quantity`.
 
-| Quy tắc | Hợp đồng cụ thể |
+| Rule | Specific contract |
 |---|---|
-| Mã đơn hàng | Không `null`, không rỗng hoặc chỉ khoảng trắng; chuẩn hóa bằng `trim()` |
-| Mã SKU | Không `null`/rỗng; sau `trim()` và chuyển chữ hoa, chỉ chấp nhận `A-Z`, `0-9`, dấu `-` |
-| Trùng SKU | Mỗi SKU chuẩn hóa xuất hiện tối đa một dòng; `setLine` thay thế dòng đã có |
-| Đơn giá | Đơn vị là **cent**, trong khoảng `1..1_000_000` |
-| Số lượng | Mỗi dòng có `quantity` trong `1..100` |
-| Tổng tiền hàng | `subtotal = Σ(unitPriceCents × quantity)`, không vượt `10_000_000` cent |
-| Sửa số lượng | `changeQuantity(sku, 0)` xóa dòng; giá trị âm hoặc trên 100 là lỗi |
-| Xóa SKU | `removeLine(sku)` trả `true` nếu có dòng được xóa; `false` nếu không tồn tại |
-| Phí vận chuyển | Đơn rỗng: 0; đơn có `subtotal >= 100_000`: 0; còn lại: `15_000` cent |
-| Giảm giá | Khi `subtotal >= 200_000`, giảm `5%` theo phép chia nguyên `subtotal / 20`; còn lại 0 |
-| Phải trả | `payable = subtotal - discount + shipping` |
-| Ngoại lệ | Đầu vào sai: `IllegalArgumentException`; SKU chưa tồn tại khi đổi số lượng: `NoSuchElementException`; trạng thái không cho phép thao tác: `IllegalStateException` |
-| Hiệu ứng khi lỗi | Khi một thao tác bị từ chối, đơn hàng vẫn giữ trạng thái trước thao tác |
+| Order ID | Must not be `null`, empty, or whitespace-only; normalize with `trim()` |
+| SKU | Must not be `null`/empty; after `trim()` and uppercasing, accept only `A-Z`, `0-9`, and `-` |
+| Duplicate SKU | Each normalized SKU occurs in at most one line; `setLine` replaces an existing line |
+| Unit price | Measured in **cents**, within `1..1_000_000` |
+| Quantity | Each line has `quantity` within `1..100` |
+| Subtotal | `subtotal = Σ(unitPriceCents × quantity)`, not exceeding `10_000_000` cents |
+| Quantity update | `changeQuantity(sku, 0)` removes a line; negative values or values over 100 are invalid |
+| Remove SKU | `removeLine(sku)` returns `true` if a line was removed; `false` if absent |
+| Shipping fee | Empty order: 0; `subtotal >= 100_000`: 0; otherwise: `15_000` cents |
+| Discount | If `subtotal >= 200_000`, give `5%` using integer division `subtotal / 20`; otherwise 0 |
+| Amount payable | `payable = subtotal - discount + shipping` |
+| Exceptions | Invalid input: `IllegalArgumentException`; unknown SKU during quantity update: `NoSuchElementException`; operation prohibited by status: `IllegalStateException` |
+| Failure effects | A rejected operation leaves the order in its previous state |
 
-Quy tắc chính sách giá trên chỉ là giả định cho bài thực hành. Trong hệ thống thật, cần thống nhất rõ chính sách tiền, thuế, chiết khấu và làm tròn với bên nghiệp vụ.
+The pricing policies above are assumptions for this exercise. In a real system, monetary, tax, discount, and rounding policies must be explicitly agreed with business stakeholders.
 
-### Vòng đời của đơn hàng
+### Order lifecycle
 
-- **DRAFT:** thêm/thay thế dòng hàng, đổi số lượng và xóa dòng được phép.
-- **PLACED:** đơn đã đặt; không được sửa dòng hàng hoặc đặt lại.
-- **CANCELLED:** trạng thái kết thúc; không được thêm/sửa/xóa hoặc đặt hàng.
-- `place()` chỉ đi từ `DRAFT` sang `PLACED` khi đơn có ít nhất một dòng.
-- `cancel()` cho phép từ `DRAFT` hoặc `PLACED` sang `CANCELLED`; gọi lần hai bị từ chối.
-- Việc hủy ở đây chỉ thay đổi trạng thái của ví dụ trong bộ nhớ; **không tự xử lý hoàn tiền hay gửi thông báo**.
+- **DRAFT:** adding/replacing lines, changing quantities, and removing lines are allowed.
+- **PLACED:** the order has been placed; changing lines or placing it again is forbidden.
+- **CANCELLED:** a terminal state; adding, changing, removing, or placing items is forbidden.
+- `place()` transitions only from `DRAFT` to `PLACED`, and only when the order has at least one line.
+- `cancel()` allows transitions from `DRAFT` or `PLACED` to `CANCELLED`; a second call is rejected.
+- Cancellation here changes only the state of the in-memory example; it **does not automatically issue refunds or notifications**.
 
 ~~~mermaid
 stateDiagram-v2
@@ -679,7 +679,7 @@ stateDiagram-v2
     CANCELLED --> [*]
 ~~~
 
-### API mong muốn
+### Expected API
 
 ~~~java
 Order order = new Order("ORD-001");
@@ -693,33 +693,33 @@ OrderSummary result = order.summary();     // do Order tự tính
 order.place();                             // khóa các thao tác chỉnh dòng
 ~~~
 
-API này cung cấp **hành động có ý nghĩa**, thay vì `setStatus("PLACED")`, `setSubtotal(...)` hoặc `getMutableLines()`. Điều đó giúp đặt quy tắc đúng nơi chịu trách nhiệm.
+This API exposes **meaningful actions**, rather than `setStatus("PLACED")`, `setSubtotal(...)`, or `getMutableLines()`. This keeps each rule in the object responsible for enforcing it.
 
-## 3. Gợi ý tự làm trước khi xem lời giải
+## 3. Hints before viewing the solution
 
-Thử tự triển khai theo các điểm sau:
+Try implementing the following steps yourself:
 
-1. Tạo `enum OrderStatus { DRAFT, PLACED, CANCELLED }` để loại bỏ các chuỗi trạng thái tùy tiện.
-2. Sử dụng `record OrderLine(...)` để mỗi dòng hàng không có setter và kiểm tra dữ liệu ngay khi khởi tạo.
-3. Giữ các field của `Order` là `private`; dùng `Map<String, OrderLine>` để quản lý một dòng trên mỗi SKU.
-4. Đưa nghiệp vụ vào các method `setLine`, `changeQuantity`, `removeLine`, `place`, `cancel`, `summary`.
-5. Tính giá trị **dự kiến** của một lần sửa trước khi cập nhật vào đơn. Nếu vượt giới hạn tổng tiền, báo lỗi mà không để lại dữ liệu nửa chừng.
-6. Trả `List.copyOf(lines.values())` làm snapshot; vì `OrderLine` chứa các component immutable, người gọi không thể sửa cấu trúc hoặc phần tử để tác động giỏ hàng.
-7. Tạo test cho giá trị biên và các thao tác bị cấm sau `place()`.
+1. Define `enum OrderStatus { DRAFT, PLACED, CANCELLED }` to eliminate arbitrary status strings.
+2. Use `record OrderLine(...)` so each order line has no setter and validates its data at construction.
+3. Keep `Order` fields `private`; use `Map<String, OrderLine>` to maintain one line per SKU.
+4. Put business logic in `setLine`, `changeQuantity`, `removeLine`, `place`, `cancel`, and `summary` methods.
+5. Calculate the **proposed** result of a change before applying it. If it would exceed the subtotal limit, report an error without leaving partially updated data.
+6. Return `List.copyOf(lines.values())` as a snapshot; because `OrderLine` has immutable components, callers cannot alter its structure or elements to change the cart.
+7. Add tests for boundary values and operations forbidden after `place()`.
 
-Một cách chia trách nhiệm hợp lý:
+A reasonable allocation of responsibilities:
 
-| Thành phần | Chịu trách nhiệm | Không nên làm |
+| Component | Responsibility | Should not do |
 |---|---|---|
-| `Order` | Kiểm soát trạng thái, các dòng hàng, bất biến và quy tắc tiền của đơn | Trả Map nội bộ, cho caller gán tổng tiền |
-| `OrderLine` | Biểu diễn một dòng hàng hợp lệ, bất biến | Có setter thay số lượng hoặc đơn giá |
-| `OrderStatus` | Tập trạng thái hợp lệ | Dùng chuỗi tùy ý để chứa trạng thái |
-| `OrderSummary` | Kết quả tính tiền bất biến | Là nơi lưu tổng tiền có thể được sửa tự do |
-| Client/UI/API | Gọi hành vi, hiển thị snapshot | Tính lại quy tắc kinh doanh rồi tự sửa field |
+| `Order` | Control order status, lines, invariants, and money rules | Return the internal Map or let callers assign totals |
+| `OrderLine` | Represent a valid immutable order line | Expose a setter for quantity or unit price |
+| `OrderStatus` | Define the allowed statuses | Represent status with arbitrary strings |
+| `OrderSummary` | Provide an immutable calculation result | Store a freely mutable total |
+| Client/UI/API | Invoke behaviors and display snapshots | Recompute business rules and directly modify fields |
 
-## 4. Lời giải tham khảo Java 17 — chạy độc lập
+## 4. Standalone Java 17 reference solution
 
-Tạo tệp **`OrderExercise.java`**. Đoạn mã dưới đây sử dụng duy nhất Java Standard Library và có phương thức `main` để tự kiểm tra nghiệp vụ.
+Create **`OrderExercise.java`**. The code below uses only the Java Standard Library and includes a `main` method to check its business behavior.
 
 ~~~java
 import java.util.LinkedHashMap;
@@ -1024,14 +1024,14 @@ public class OrderExercise {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac OrderExercise.java
 java OrderExercise
 ~~~
 
-Kết quả kỳ vọng:
+Expected output:
 
 ~~~text
 PASS: SKU and business-rule validation
@@ -1040,13 +1040,13 @@ PASS: pricing thresholds and unchanged state on error
 PASS: order lifecycle
 ~~~
 
-**Giải thích thiết kế:** `Order` không có `setStatus` hay `setTotal`. Mã gọi `place()` hoặc `cancel()` theo quy tắc chuyển trạng thái; `summary()` luôn tính từ các dòng hiện hành. Phương thức `setLine()` tạo map ứng viên và kiểm tra giới hạn **trước** khi cập nhật map thật. Nhờ vậy, một thao tác vượt giới hạn tổng tiền không bỏ lại dòng hàng sai.
+**Design explanation:** `Order` has neither `setStatus` nor `setTotal`. Calling code invokes `place()` or `cancel()` according to state-transition rules; `summary()` always calculates from the current lines. The `setLine()` method builds a candidate map and validates limits **before** updating the actual map. Consequently, an operation exceeding the subtotal limit leaves no invalid line behind.
 
-Mã ví dụ dùng `LinkedHashMap` để thuận tiện theo dõi dữ liệu, nhưng client không phụ thuộc trực tiếp loại map này. `OrderLine` là record chỉ chứa `String` và primitive nên snapshot không lộ mutable element; nếu record chứa `Date`, `List` hoặc mảng, chỉ dùng `record` thôi chưa bảo đảm bất biến sâu.
+The example uses `LinkedHashMap` to make data easier to inspect, but clients do not depend directly on this map type. `OrderLine` is a record containing only `String` and primitive values, so snapshots expose no mutable elements; if a record contained `Date`, `List`, or an array, using `record` alone would not guarantee deep immutability.
 
-## 5. Các nguyên tắc OOP được thực hành
+## 5. OOP principles practiced
 
-### Encapsulation: chủ thể sở hữu trạng thái
+### Encapsulation: owning the state
 
 ~~~mermaid
 classDiagram
@@ -1086,28 +1086,28 @@ classDiagram
     Order --> OrderSummary : tạo bản đọc
 ~~~
 
-Trong phạm vi bài tập, **`Order` là nơi duy nhất được cập nhật collection và trạng thái**. Client gọi API của `Order`, không chỉnh `Map` hay enum field trực tiếp.
+In this exercise, **`Order` is the only component allowed to update its collection and status**. Clients invoke the `Order` API instead of modifying a `Map` or enum field directly.
 
-### Invariant: kiểm tra ở mọi đường thay đổi
+### Invariants: validate every mutation path
 
-Không đủ nếu constructor kiểm tra đơn giá và số lượng nhưng một setter khác vẫn cho sửa chúng. Các quy tắc cần giữ đúng qua **mọi public mutation**, bao gồm:
+Validating unit prices and quantities in the constructor is insufficient if another setter can still alter them. Rules must hold for **every public mutation**, including:
 
-- Thêm/thay thế một dòng.
-- Đổi số lượng, nhất là `0` hoặc giá trị âm.
-- Xóa dòng và xác nhận/đặt hàng.
-- Thao tác thất bại do trạng thái hoặc giới hạn tổng tiền.
+- Adding or replacing a line.
+- Changing quantity, especially to `0` or a negative value.
+- Removing lines and confirming/placing an order.
+- Operations rejected because of status or subtotal limits.
 
-### Information hiding: giấu quyết định lưu trữ
+### Information hiding: concealing storage choices
 
-Sử dụng `Map<String,OrderLine>` là một quyết định nội bộ; về sau có thể đổi sang một cấu trúc khác mà các thao tác nghiệp vụ công khai vẫn giữ nguyên. `Order.lines()` trả snapshot để UI hiển thị, không cho UI quản lý cách các dòng được lưu.
+Using `Map<String,OrderLine>` is an internal decision; it can later be replaced with another structure while preserving the public business operations. `Order.lines()` returns a snapshot for UI display without letting the UI manage how lines are stored.
 
-### Cohesion: logic nào thuộc trách nhiệm của Order?
+### Cohesion: what logic belongs to Order?
 
-Ví dụ này đưa **tổng tiền, trạng thái và quy tắc dòng hàng** vào `Order` vì chúng phụ thuộc trực tiếp đến một đơn. Nhưng `Order` không cần tự mở kết nối database, tự gửi email hay thực hiện yêu cầu thanh toán tới cổng ngoài. Các công việc có side effect này nên được điều phối ở tầng ứng dụng bằng service/port phù hợp.
+This example puts **totals, status, and order-line rules** inside `Order` because they directly concern an order. But `Order` need not open database connections, send emails, or call external payment gateways. These side effects should be coordinated by the application layer using appropriate services/ports.
 
-## 6. Vì sao không nên dùng setter hoặc getter collection trực tiếp?
+## 6. Why avoid unrestricted setters or direct collection getters?
 
-Một phương án thường gặp:
+A common design looks like this:
 
 ~~~java
 class Order {
@@ -1127,41 +1127,41 @@ class Order {
 }
 ~~~
 
-Nó có thể tạo trạng thái trái hợp đồng như `status="PLACED"` với danh sách rỗng, tổng tiền không bằng tổng dòng hoặc dòng hàng thay đổi mà `totalCents` không được cập nhật. Để tránh:
+It could produce contract violations such as `status="PLACED"` with no items, a total that does not match the lines, or changed lines without updating `totalCents`. To prevent this:
 
-- Cho phép **đặt hàng** bằng `place()`, không qua gán trạng thái tùy ý.
-- Cho phép **đổi số lượng** bằng `changeQuantity()` để xử lý riêng trường hợp `0`.
-- Cho phép **đọc tổng** qua `summary()`, không qua field tổng tiền mà client có thể gán.
-- Cho phép **xem dòng hàng** qua snapshot chứa immutable value object, không trả tham chiếu mutable nội bộ.
+- Allow **placing orders** through `place()`, rather than assigning arbitrary statuses.
+- Allow **quantity changes** through `changeQuantity()` to handle `0` explicitly.
+- Allow **reading totals** through `summary()`, rather than a total field assignable by clients.
+- Allow **viewing order lines** through snapshots of immutable value objects, rather than returning internal mutable references.
 
-Không có nghĩa mọi đối tượng đều phải tránh setter. DTO hoặc dữ liệu truyền qua API có thể dùng JavaBean/setter. Bài tập này nhắm tới **đối tượng miền có quy tắc cần được bảo vệ**.
+This does not mean all objects must avoid setters. DTOs and data transferred through APIs can use JavaBeans/setters. This exercise focuses on **domain objects with rules that must be enforced**.
 
-## 7. Ma trận kiểm thử nghiệm thu
+## 7. Acceptance test matrix
 
-| Mã | Hành động | Kết quả đúng |
+| ID | Action | Expected result |
 |---|---|---|
-| TC01 | Tạo đơn mới | Trạng thái DRAFT, 0 dòng, tổng 0 |
-| TC02 | Thêm `" book "` rồi `"BOOK"` | Chỉ một SKU chuẩn hóa; lần sau thay dòng trước |
-| TC03 | Giá bằng 0, số âm, hơn 1.000.000 | Ném `IllegalArgumentException` |
-| TC04 | Số lượng 0 tại `setLine`, số lượng 101 | Ném `IllegalArgumentException` |
-| TC05 | `changeQuantity("BOOK", 0)` | Xóa BOOK nếu có; không giữ dòng quantity 0 |
-| TC06 | Đổi số lượng SKU chưa tồn tại | Ném `NoSuchElementException` |
-| TC07 | Tổng sau cập nhật vượt 10.000.000 | Từ chối; tổng và dòng cũ không đổi |
-| TC08 | Lấy `lines()` rồi `clear()` | Bị từ chối bằng `UnsupportedOperationException` |
-| TC09 | Lấy snapshot A rồi cập nhật đơn | A vẫn chứa dữ liệu cũ, snapshot B có dữ liệu mới |
-| TC10 | Tổng 99.999 cent | Phí ship 15.000 |
-| TC11 | Tổng đúng 100.000 cent | Miễn phí ship |
-| TC12 | Tổng đúng 200.000 cent | Giảm 10.000 cent |
-| TC13 | `place()` khi đơn rỗng | Ném `IllegalStateException`; vẫn DRAFT |
-| TC14 | `place()` với đơn có dòng | Thành PLACED; cấm sửa dòng |
-| TC15 | `cancel()`, rồi cố sửa/đặt/hủy lại | Ném `IllegalStateException` |
-| TC16 | Mọi đầu vào không hợp lệ | Không để lại state thay đổi một phần |
+| TC01 | Create a new order | DRAFT status, 0 lines, total 0 |
+| TC02 | Add `" book "` then `"BOOK"` | A single normalized SKU remains; the second call replaces the first line |
+| TC03 | Price 0, negative, or above 1.000.000 | Throw `IllegalArgumentException` |
+| TC04 | Quantity 0 in `setLine`, or quantity 101 | Throw `IllegalArgumentException` |
+| TC05 | `changeQuantity("BOOK", 0)` | Remove BOOK if present; leave no line with quantity 0 |
+| TC06 | Change quantity for an unknown SKU | Throw `NoSuchElementException` |
+| TC07 | Updated subtotal exceeds 10.000.000 | Reject; preserve previous total and lines |
+| TC08 | Get `lines()` and then call `clear()` | Reject with `UnsupportedOperationException` |
+| TC09 | Obtain snapshot A, then update order | A retains old data, while snapshot B contains new data |
+| TC10 | Subtotal 99.999 cents | Shipping fee 15.000 |
+| TC11 | Subtotal exactly 100.000 cents | Free shipping |
+| TC12 | Subtotal exactly 200.000 cents | Discount 10.000 cents |
+| TC13 | Call `place()` on an empty order | Throw `IllegalStateException`; remain DRAFT |
+| TC14 | Call `place()` with nonempty order | Transition to PLACED; prohibit line changes |
+| TC15 | Call `cancel()`, then try to change/place/cancel again | Throw `IllegalStateException` |
+| TC16 | Any invalid input | No partial state changes |
 
-Bạn có thể viết các test đó trước khi xem lời giải rồi dùng chúng làm tiêu chí tự chấm. Nếu thay đổi cách lưu collection, các test hành vi vẫn phải đúng.
+You can write these tests before viewing the solution and use them for self-assessment. Even if the collection's storage representation changes, its behavioral tests must continue to pass.
 
-### Một số kiểm thử JUnit 5
+### Selected JUnit 5 tests
 
-Với dự án đã có `JUnit Jupiter`, đặt tệp `OrderExerciseTest.java` **cùng package** với `OrderExercise`:
+For a project already using `JUnit Jupiter`, place `OrderExerciseTest.java` **in the same package** as `OrderExercise`:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1222,103 +1222,103 @@ class OrderExerciseTest {
 }
 ~~~
 
-Trong ứng dụng thực tế, hãy tổ chức các type thành class/record ở các tệp phù hợp, chọn `public`/package-private theo ranh giới API; phần code trên chọn nested types để ví dụ có thể chạy bằng một tệp.
+In a real application, organize types as classes/records in appropriate files, choosing `public` or package-private according to API boundaries; the code above uses nested types so the example can run from one file.
 
-## 8. Thảo luận: các quyết định thiết kế và giới hạn của lời giải
+## 8. Discussion: design decisions and solution limitations
 
-**Vì sao dùng Map?** SKU là khóa duy nhất; map giúp biểu diễn trực tiếp bất biến không trùng SKU. Nhưng map không được trả trực tiếp; client không cần biết cấu trúc lưu trữ. `LinkedHashMap` giữ thứ tự chèn để dễ quan sát, nhưng nếu thứ tự giao diện là **hợp đồng**, cần viết rõ và kiểm thử riêng.
+**Why a Map?** Each SKU is a unique key, and a map directly represents the no-duplicate-SKU invariant. But the map must not be returned directly; clients need not know the storage structure. `LinkedHashMap` preserves insertion order for inspection, but if UI ordering is part of the **contract**, it must be documented and independently tested.
 
-**Vì sao dùng cent và long?** Tránh biểu diễn tiền bằng `double` dễ có lỗi sai số nhị phân. Với tiền tệ có nhiều quy tắc precision/rounding, có thể dùng `BigDecimal` với scale, currency, rounding mode được đặc tả. `long` theo đơn vị nhỏ nhất chỉ phù hợp nếu hệ thống định nghĩa thống nhất đơn vị và giới hạn.
+**Why cents and long?** They avoid the binary precision pitfalls of representing money with `double`. Currencies with more complex precision/rounding rules may require `BigDecimal` with specified scale, currency, and rounding mode. `long` in the smallest unit is suitable only if the system consistently defines units and limits.
 
-**Vì sao dùng record?** `OrderLine` và `OrderSummary` là những giá trị bất biến, không có danh tính độc lập trong ví dụ. Bản thân record **không tự bảo đảm deep immutability** nếu các component chứa mutable object; ở đây chúng dùng `String` và primitive nên an toàn theo ranh giới đã chọn.
+**Why records?** `OrderLine` and `OrderSummary` are immutable values without separate identities in this example. A record **does not automatically guarantee deep immutability** if its components contain mutable objects; here they use `String` and primitives, which are safe across the chosen boundary.
 
-**Vì sao kiểm tra tổng trước khi commit?** Nếu thêm dòng rồi mới tính tổng và phát hiện vượt giới hạn, map thật có thể chứa dữ liệu sai. Dựng candidate trước và kiểm tra trên candidate giúp thao tác thất bại không gây thay đổi một phần.
+**Why validate the subtotal before committing?** Adding a line before calculating the subtotal could leave invalid data in the actual map when the limit is exceeded. Constructing and validating a candidate first ensures failed operations do not cause partial changes.
 
-**Vì sao không đặt cờ `isPlaced` public?** Vì client có thể tự đánh dấu đã đặt mà không kiểm tra điều kiện đơn không rỗng. Enum trạng thái cùng các method chuyển trạng thái giúp biểu đạt quy tắc một cách tập trung.
+**Why no public `isPlaced` flag?** A client could mark an empty order as placed without enforcing the nonempty-order condition. A status enum and transition methods express the rule in one place.
 
-**Vì sao không kết nối database trong Order?** Quy tắc miền và side effect hạ tầng có mức trách nhiệm khác nhau. Một application service có thể tải `Order` từ repository, gọi `order.place()` rồi lưu lại trong transaction, trong khi `Order` chỉ chịu trách nhiệm tính hợp lệ của thao tác.
+**Why no database connection inside Order?** Domain rules and infrastructure side effects belong to different responsibilities. An application service can load `Order` from a repository, call `order.place()`, and save it within a transaction, while `Order` is responsible only for validating its operation.
 
-### Giới hạn cần bổ sung khi đưa vào production
+### Limitations to address in production
 
-- **Đồng thời:** `LinkedHashMap` và `Order` hiện không thread-safe. Nếu nhiều request có thể chỉnh cùng đơn, sử dụng transaction, optimistic locking/version và chiến lược xử lý xung đột. Snapshot đọc an toàn không tự khiến cập nhật đồng thời trở nên an toàn.
-- **Phí vận chuyển và chiết khấu:** Giá trị có thể phụ thuộc mã giảm giá, địa chỉ, phí từ bên giao hàng, ngày khuyến mãi; không nên nhét mọi phụ thuộc hạ tầng vào entity. Có thể đưa chính sách được cung cấp từ ngoài vào thao tác domain khi yêu cầu phát triển.
-- **Tồn kho và thanh toán:** `place()` trong bài tập chỉ đổi trạng thái. Trừ kho, gọi payment gateway, gửi email và phát sự kiện phải được điều phối có kiểm soát; không kết luận tất cả những việc đó đã được hoàn tất sau `place()`.
-- **Tính lịch sử:** Hệ thống thật có thể cần chốt snapshot tên sản phẩm/đơn giá tại thời điểm đặt, lịch sử chuyển trạng thái và tính tiền theo chính sách được phiên bản hóa.
-- **Hủy sau thanh toán:** Bài tập cho phép `PLACED → CANCELLED` nhưng chưa có điều kiện thời gian giao hàng hay hoàn tiền. Khi nghiệp vụ thực tế có các trạng thái `PAID`, `SHIPPED`, cần thiết kế state machine và luật hủy chính xác.
-- **API compatibility:** Khi thay entity kiểu anemic với getter/setter công khai bằng aggregate, mã bên ngoài có thể không biên dịch; cần cập nhật client, DTO mapping và các ràng buộc ORM/JPA tương ứng.
+- **Concurrency:** `LinkedHashMap` and `Order` are not currently thread-safe. If multiple requests can update one order, use transactions, optimistic locking/versioning, and a conflict-handling strategy. Safe read snapshots do not automatically make concurrent updates safe.
+- **Shipping and discounts:** Values may depend on coupons, addresses, carrier charges, and promotion dates; do not embed every infrastructure dependency in an entity. As requirements evolve, supply an external pricing policy to domain operations when appropriate.
+- **Inventory and payments:** `place()` only changes status in this exercise. Stock deduction, payment gateway calls, emails, and event publication need controlled orchestration; do not assume those tasks finish when `place()` returns.
+- **Historical accuracy:** A production system may need snapshots of product names/unit prices at placement time, a transition history, and versioned pricing policies.
+- **Cancellation after payment:** This exercise allows `PLACED → CANCELLED` but does not address delivery deadlines or refunds. Real business rules involving `PAID` or `SHIPPED` require a precise state machine and cancellation policy.
+- **API compatibility:** Replacing an anemic entity with public getters/setters by an aggregate can break client compilation; update clients, DTO mappings, and applicable ORM/JPA constraints.
 
-## 9. Bài tập mở rộng theo mức độ
+## 9. Progressive extension exercises
 
-**Mức 1 — Đóng gói chắc chắn:** Viết thêm các ca test về SKU rỗng, ký tự không hợp lệ, số lượng 101, thay dòng trùng SKU và `removeLine` không tồn tại. Chứng minh rằng mỗi lần lỗi không thay đổi `OrderSummary`, `lineCount` và `status`.
+**Level 1 — Strong encapsulation:** Add tests for blank SKUs, invalid characters, quantity 101, replacing duplicate SKUs, and removing nonexistent items with `removeLine`. Show that each failure preserves `OrderSummary`, `lineCount`, and `status`.
 
-**Mức 2 — Bảo vệ quy tắc tiền:** Thử tổng tiền sát `10_000_000`; thay một dòng sao cho vượt giới hạn, xác nhận thao tác bị từ chối nhưng dòng cũ còn nguyên. Điều chỉnh giả định giới hạn và kiểm thử lại các ranh giới miễn phí ship/giảm giá.
+**Level 2 — Protecting monetary rules:** Try a subtotal near `10_000_000`; replace a line so the limit is exceeded, then confirm rejection preserves the original line. Adjust the limit assumption and retest the free-shipping and discount thresholds.
 
-**Mức 3 — Chính sách có biến thể:** Thêm khách VIP được miễn phí giao hàng. Cân nhắc nên lưu `CustomerType` trong `Order` hay truyền một chính sách giá có hợp đồng rõ. Nêu lý do chọn cách thiết kế dựa trên yêu cầu thật, tránh sinh interface chỉ để tăng số lớp.
+**Level 3 — Alternative policies:** Add free shipping for VIP customers. Consider whether to store `CustomerType` in `Order` or pass in a clearly contracted pricing policy. Justify the design using actual requirements and avoid adding interfaces solely to increase the class count.
 
-**Mức 4 — Bảo vệ trạng thái:** Bổ sung `PAID` hoặc `SHIPPED` và quy tắc chuyển trạng thái tương ứng. Viết bảng chuyển trạng thái trước, sau đó code và test mọi chuyển trạng thái bị cấm.
+**Level 4 — Protecting state:** Add `PAID` or `SHIPPED` and their corresponding transition rules. Write the state-transition table first, then implement and test every prohibited transition.
 
-**Mức 5 — Ứng dụng thực tế:** Viết `PlaceOrderUseCase` để lấy đơn từ repository, gọi `order.place()` rồi lưu. Dùng fake repository trong unit test; viết integration test để xác nhận transaction/optimistic locking khi hai yêu cầu cùng sửa một đơn.
+**Level 5 — Production application:** Implement `PlaceOrderUseCase` to load an order from a repository, call `order.place()`, and save it. Use a fake repository in unit tests; write an integration test for transactions/optimistic locking when two requests concurrently modify an order.
 
-### Rubric tự đánh giá (10 điểm)
+### Self-assessment rubric (10 points)
 
-| Tiêu chí | Điểm |
+| Criterion | Points |
 |---|---:|
-| Trạng thái và dòng hàng được giấu, client không sửa trực tiếp | 2 |
-| Input validation, SKU duy nhất, giới hạn số lượng và đơn giá | 2 |
-| Quy tắc subtotal/discount/shipping/payable chính xác tại biên | 2 |
-| Chuyển trạng thái DRAFT/PLACED/CANCELLED đúng | 2 |
-| Test chống representation exposure và thao tác thất bại không làm hỏng state | 2 |
+| Status and lines are hidden; clients cannot change them directly | 2 |
+| Input validation, unique SKUs, quantity and unit-price limits | 2 |
+| Correct subtotal/discount/shipping/payable rules at boundaries | 2 |
+| Correct DRAFT/PLACED/CANCELLED transitions | 2 |
+| Tests against representation exposure and failed operations corrupting state | 2 |
 
-**Hoàn thành bài tập** khi tất cả test nghiệm thu phù hợp đặc tả đều PASS và một client chỉ dùng API công khai không thể tự ý tạo dòng hàng âm, vượt giới hạn, thay đổi đơn đã đặt hoặc sửa cấu trúc nội bộ để bỏ qua quy tắc. Đó là ý nghĩa thực hành của việc **đóng gói quy tắc của đơn hàng** trong OOP.
+**The exercise is complete** when every specified acceptance test passes and clients using only the public API cannot invent negative lines, exceed limits, modify placed orders, or bypass rules by altering internal collections. This demonstrates what **encapsulating order business rules** means in OOP.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="practice-003">Bài tập giao diện và đa hình thanh toán</a>
+## <a id="practice-003">Payment interfaces and polymorphism</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Bài tập giao diện và đa hình thanh toán trong Java OOP
+# Payment interfaces and polymorphism in Java OOP
 
-## Mục tiêu
+## Objectives
 
-Xây dựng chức năng thanh toán cho cửa hàng với ba lựa chọn: **thẻ**, **chuyển khoản** và **ví điện tử**. Mỗi cách có quy tắc riêng nhưng bộ xử lý đơn hàng không cần biết chi tiết của từng loại.
+Build a store payment feature with three options: **card**, **bank transfer**, and **e-wallet**. Each method has its own rules, while the order processor need not know the details of each type.
 
-Qua bài này, bạn luyện tập được:
+This exercise covers:
 
-- **Interface:** định nghĩa hợp đồng chung PaymentMethod.
-- **Đa hình lúc chạy:** gọi cùng phương thức pay trên những đối tượng có kiểu thực tế khác nhau.
-- **Đóng gói:** trạng thái của thẻ, ngân hàng, ví được quản lý bên trong từng lớp.
-- **Composition và constructor injection:** PaymentProcessor nhận một PaymentMethod từ bên ngoài.
-- **Kiểm thử:** xác minh phí, số tiền thanh toán, giao dịch bị từ chối và trạng thái số dư.
+- **Interface:** define a shared PaymentMethod contract.
+- **Runtime polymorphism:** invoke the same pay method on objects with different runtime types.
+- **Encapsulation:** keep card, bank, and wallet state inside their respective classes.
+- **Composition and constructor injection:** supply PaymentProcessor with a PaymentMethod from outside.
+- **Testing:** verify fees, payment amounts, rejected transactions, and balance state.
 
-Đây là **bài mô phỏng** hoàn toàn trong bộ nhớ, không thực hiện giao dịch tài chính thật, không dùng thông tin thẻ thật và không kết nối ngân hàng.
+This is an entirely in-memory **simulation**. It neither performs actual financial transactions nor uses real card information or bank connections.
 
-## 1. Yêu cầu bài tập
+## 1. Exercise requirements
 
-Mỗi giao dịch có mã đơn hàng không rỗng và số tiền nguyên dương, tính bằng VND. Các mức phí chỉ là quy ước của bài tập.
+Each transaction has a nonblank order ID and a positive whole-number amount in VND. The fee schedules are exercise assumptions only.
 
-| Phương thức | Điều kiện thành công | Phí | Tình huống từ chối |
+| Method | Success condition | Fee | Decline condition |
 |---|---|---|---|
-| CardPayment | Thẻ hoạt động, tiền không vượt hạn mức mỗi giao dịch | 2% số tiền, làm tròn xuống VND | Thẻ khóa hoặc vượt hạn mức |
-| BankTransferPayment | Tiền không vượt hạn mức mỗi giao dịch | 5.000 VND | Vượt hạn mức |
-| EWalletPayment | Số dư ví ít nhất bằng tiền đơn hàng | 0 VND | Ví thiếu tiền |
+| CardPayment | Card active; amount within per-transaction limit | 2% of amount, rounded down to VND | Card blocked or limit exceeded |
+| BankTransferPayment | Amount within per-transaction limit | 5.000 VND | Limit exceeded |
+| EWalletPayment | Wallet balance at least equals order amount | 0 VND | Insufficient wallet funds |
 
-Một PaymentResult gồm mã đơn hàng, tên phương thức, trạng thái SUCCESS/DECLINED, số tiền gốc, phí, số tiền đã trả và thông báo.
+A PaymentResult includes the order ID, method name, SUCCESS/DECLINED status, original amount, fee, amount paid, and message.
 
-**Bất biến cần bảo vệ:**
+**Invariants to preserve:**
 
-1. Giao dịch bị từ chối không được ghi nhận là thành công; phí và tổng đã trả bằng 0.
-2. Ví chỉ giảm số dư khi thanh toán thành công, đúng số tiền đã trả.
-3. Dữ liệu đầu vào sai được phát hiện trước khi thực hiện hành vi thanh toán.
-4. PaymentProcessor không dùng if, switch, instanceof để phân biệt ba lớp thanh toán.
+1. A declined transaction must never be recorded as successful; its fee and total paid are 0.
+2. A wallet balance decreases only after a successful payment, by exactly the paid amount.
+3. Invalid input data must be detected before any payment behavior executes.
+4. PaymentProcessor must not distinguish the three payment classes with if, switch, or instanceof.
 
-## 2. Phân rã đối tượng
+## 2. Decomposing the object model
 
 ~~~mermaid
 classDiagram
@@ -1352,11 +1352,11 @@ classDiagram
     PaymentProcessor --> PaymentMethod
 ~~~
 
-**PaymentMethod** mô tả hành vi chung, không buộc các lớp triển khai phải có những field giống nhau. PaymentProcessor điều phối lời gọi; mỗi implementation tự quyết định điều kiện phê duyệt, tính phí và thay đổi trạng thái.
+**PaymentMethod** specifies shared behavior without requiring implementations to have identical fields. PaymentProcessor coordinates calls; each implementation determines its own approval rules, fees, and state changes.
 
-## 3. Lời giải Java 11 hoàn chỉnh
+## 3. Complete Java 11 solution
 
-Tạo file **PaymentPolymorphismDemo.java**. Chương trình tự chạy bằng JDK 11 trở lên, không cần Spring, Maven hay thư viện bên ngoài.
+Create **PaymentPolymorphismDemo.java**. The program runs with JDK 11 or later, without Spring, Maven, or external libraries.
 
 ~~~java
 import java.util.List;
@@ -1632,14 +1632,14 @@ public class PaymentPolymorphismDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac PaymentPolymorphismDemo.java
 java PaymentPolymorphismDemo
 ~~~
 
-Đầu ra khi mọi điều kiện đạt:
+Output when all conditions are met:
 
 ~~~text
 ORD-101 | CARD | SUCCESS | fee=4000 | paid=204000 | Approved
@@ -1648,11 +1648,11 @@ ORD-101 | E_WALLET | SUCCESS | fee=0 | paid=200000 | Approved
 All payment polymorphism tests: PASS
 ~~~
 
-Bộ test sử dụng AssertionError trực tiếp nên không phụ thuộc tùy chọn bật Java assert. Trong dự án thực tế, có thể chuyển các ca kiểm thử sang JUnit 5.
+The tests directly throw AssertionError, so they do not depend on enabling Java assertions. In a real project, these test cases can be migrated to JUnit 5.
 
-## 4. Giải thích cơ chế đa hình
+## 4. How polymorphism works
 
-Xét hai đoạn:
+Consider these two snippets:
 
 ~~~java
 PaymentMethod method = new CardPayment(true, 500_000L);
@@ -1664,15 +1664,15 @@ PaymentResult b = new PaymentProcessor(method)
         .process(new PaymentRequest("B", 100_000L));
 ~~~
 
-Kiểu **khai báo** của biến method là PaymentMethod. Nhưng đối tượng mà nó trỏ tới là CardPayment hoặc EWalletPayment. Khi PaymentProcessor gọi method.pay(request), JVM thực thi phiên bản đã override trong lớp của đối tượng thực tế. Đó là **runtime polymorphism**.
+The variable method has the **declared** type PaymentMethod, but its referenced object is a CardPayment or EWalletPayment. When PaymentProcessor invokes method.pay(request), the JVM dispatches to the overridden implementation belonging to the runtime object. This is **runtime polymorphism**.
 
-Không phải mọi implementation đều cần giống nhau bên trong. Thẻ kiểm tra active/limit, chuyển khoản kiểm tra limit, ví kiểm tra và thay đổi balance. Interface chỉ yêu cầu **một hợp đồng hành vi chung**, không ép chúng dùng chung field hoặc công thức.
+Implementations need not be internally identical. Cards check active status and limits, transfers check limits, and wallets check and change balances. The interface requires only **a common behavioral contract**, not shared fields or formulas.
 
-Constructor injection làm PaymentProcessor phụ thuộc vào hợp đồng. Khi bổ sung một phương thức thanh toán mới, logic process không phải thay đổi.
+Constructor injection makes PaymentProcessor depend on the contract. Adding a new payment method does not require changing the process logic.
 
-## 5. Kiến trúc trước và sau
+## 5. Architecture before and after
 
-Trước khi áp dụng đa hình, người mới học dễ viết một phương thức chứa toàn bộ nhánh:
+Before applying polymorphism, beginners often put every branch in one method:
 
 ~~~java
 // Minh họa anti-pattern, không phải đoạn chạy độc lập:
@@ -1685,7 +1685,7 @@ if (type.equals("CARD")) {
 }
 ~~~
 
-Nếu code xử lý hoàn tiền hoặc lịch sử giao dịch cũng lặp lại các nhánh, việc bổ sung loại mới càng dễ bỏ sót. Sau khi tách, PaymentProcessor chỉ gọi:
+If refund or transaction-history code also repeats these branches, adding another method becomes even easier to overlook. After extraction, PaymentProcessor only calls:
 
 ~~~java
 PaymentResult process(PaymentRequest request) {
@@ -1705,119 +1705,119 @@ sequenceDiagram
     Processor-->>Caller: PaymentResult
 ~~~
 
-Hệ thống vẫn có thể dùng factory hoặc registry để chuyển lựa chọn từ API (chẳng hạn mã CARD) thành đối tượng cụ thể. Bước **chọn implementation ở ranh giới tạo đối tượng** khác với việc nhét các nhánh tính phí và thay đổi trạng thái vào mọi nơi gọi thanh toán.
+The system can still use a factory or registry to convert an API choice (such as a CARD code) into a concrete object. **Selecting an implementation at object-creation boundaries** differs from embedding fee and state-change branches throughout payment call sites.
 
-## 6. Các test tối thiểu và mở rộng
+## 6. Minimum and extended tests
 
-| Trường hợp | Kỳ vọng |
+| Scenario | Expected result |
 |---|---|
-| Thẻ active, hạn mức 500.000, đơn 200.000 | SUCCESS, phí 4.000, tổng 204.000 |
-| Thẻ inactive | DECLINED, không ghi nhận tiền đã trả |
-| Thẻ vượt hạn mức | DECLINED |
-| Ngân hàng hạn mức 1.000.000, đơn 200.000 | SUCCESS, phí 5.000 |
-| Ngân hàng hạn mức 100.000, đơn 200.000 | DECLINED |
-| Ví 250.000 trả 200.000 | SUCCESS, còn 50.000 |
-| Ví còn 50.000 trả thêm 60.000 | DECLINED, vẫn còn 50.000 |
-| Mã đơn hàng rỗng, amount bằng 0 hoặc âm | IllegalArgumentException |
-| Thẻ trả 199 VND | Phí là 3 VND (2% làm tròn xuống) |
-| Giao dịch vượt miền long khi cộng phí | Phát sinh ArithmeticException, không báo thành công |
+| Active card, limit 500.000, order 200.000 | SUCCESS, fee 4.000, total 204.000 |
+| Inactive card | DECLINED, no recorded payment |
+| Card exceeds limit | DECLINED |
+| Bank limit 1.000.000, 200.000 order | SUCCESS, 5.000 fee |
+| Bank limit 100.000, 200.000 order | DECLINED |
+| Wallet with 250.000 pays 200.000 | SUCCESS, 50.000 remaining |
+| Wallet with 50.000 attempts another 60.000 payment | DECLINED, balance remains 50.000 |
+| Blank order ID, amount 0 or negative | IllegalArgumentException |
+| Card payment of 199 VND | Fee is 3 VND (2% rounded down) |
+| Adding a fee causes long overflow | ArithmeticException is raised; no success reported |
 
-Chương trình mẫu chạy những ca chính; hai ca cuối là bài tập tăng cường. Math.addExact và công thức cardFee đã chuẩn bị để bạn kiểm tra tràn số và làm tròn một cách tường minh.
+The sample program runs the main cases; the last two are additional exercises. Math.addExact and the cardFee formula already support explicit overflow and rounding tests.
 
-## 7. Bài tập thực hành
+## 7. Hands-on exercises
 
-**Phần A — Tự cài đặt:** Chỉ dựa trên đề bài và sơ đồ, hãy tự viết PaymentMethod, ba implementation, PaymentProcessor và PaymentResult. So sánh hành vi với phần lời giải.
+**Part A — Implement it yourself:** Using only the requirements and diagram, implement PaymentMethod, the three implementations, PaymentProcessor, and PaymentResult. Compare behavior with the reference solution.
 
-**Phần B — Thêm QRPayment:** Giả định QR tính phí 1% và giới hạn 2.000.000 VND mỗi lần. Tạo lớp triển khai PaymentMethod, đưa nó vào danh sách và bổ sung test; không sửa code PaymentProcessor.
+**Part B — Add QRPayment:** Assume a QR fee of 1% and a per-payment limit of 2.000.000 VND. Implement PaymentMethod, add it to the list, and write tests without changing PaymentProcessor code.
 
-**Phần C — Chính sách phí:** Nếu cùng một loại thanh toán có biểu phí khác nhau theo chương trình khuyến mãi, thử đưa FeePolicy thành một collaborator. Giải thích khi nào nên tách trách nhiệm này khỏi PaymentMethod.
+**Part C — Fee policies:** If one payment type uses different rates for promotions, try introducing FeePolicy as a collaborator. Explain when this responsibility should be separated from PaymentMethod.
 
-**Phần D — Bảo vệ trạng thái:** Với ví có số dư 100.000 VND, thử thanh toán 100.000 rồi thử thêm 1 VND. Giao dịch đầu thành công, giao dịch sau bị từ chối, số dư cuối bằng 0.
+**Part D — Protect state:** Start with a wallet balance of 100.000 VND, pay 100.000 and then attempt another 1 VND. The first succeeds, the second is declined, and the ending balance is 0.
 
-**Phần E — Kiểm tra lỗi:** Bổ sung ca thẻ hạn mức bằng đúng số tiền; tên ngân hàng rỗng; số dư khởi tạo âm; thẻ có giới hạn âm; dữ liệu PaymentRequest null.
+**Part E — Validate errors:** Add test cases for a card limit equal to the amount, an empty bank name, a negative initial balance, a negative card limit, and a null PaymentRequest.
 
-## 8. Những lỗi thiết kế cần tránh
+## 8. Design mistakes to avoid
 
-- **Dùng instanceof trong processor:** làm mất lợi ích đa hình vì processor lại phụ thuộc từng lớp cụ thể.
-- **Nhét switch vào một lớp tiện ích:** chỉ di chuyển điều kiện, chưa phân phối trách nhiệm cho các đối tượng.
-- **Trừ ví trước khi biết thanh toán thành công:** có nguy cơ thay đổi trạng thái sai khi từ chối hoặc phát sinh ngoại lệ.
-- **Dùng double cho tiền:** tránh sai số dấu phẩy động. Bài này dùng long VND nguyên và Math.addExact; với đơn vị có phần thập phân hãy cân nhắc BigDecimal.
-- **Chỉ trả boolean:** không đủ giải thích trạng thái, phí và lý do thất bại nếu ứng dụng cần những thông tin đó.
-- **Cho rằng interface tự bảo đảm an toàn thanh toán:** thiết kế này chưa có database transaction, idempotency, bảo mật dữ liệu nhạy cảm, đối soát hoặc xử lý webhook. Đó là những mối quan tâm riêng trong hệ thống thật.
-- **Tạo interface cho mọi class:** chỉ trừu tượng hóa khi có hợp đồng chung có ý nghĩa. PaymentRequest/PaymentResult là đối tượng dữ liệu, không cần nhiều implementation chỉ để chứng minh đa hình.
+- **Using instanceof in the processor:** forfeits polymorphism because the processor depends on concrete classes again.
+- **Moving switch into a utility class:** merely relocates conditions without assigning responsibilities to objects.
+- **Debiting a wallet before payment success:** risks incorrect state changes when a payment is declined or an exception occurs.
+- **Using double for money:** avoid floating-point rounding errors. This exercise uses whole VND with long and Math.addExact; consider BigDecimal for fractional units.
+- **Returning only a boolean:** cannot explain status, fees, and failure reasons when applications need those details.
+- **Assuming an interface guarantees payment safety:** this design lacks database transactions, idempotency, sensitive-data security, reconciliation, and webhook processing. Real systems address these concerns separately.
+- **Creating an interface for every class:** abstract only where there is a meaningful shared contract. PaymentRequest/PaymentResult are data objects and need no multiple implementations simply to demonstrate polymorphism.
 
-## 9. Tự đánh giá
+## 9. Self-assessment
 
-1. Vì sao cùng một biến PaymentMethod có thể gọi những thuật toán trả phí khác nhau?
-2. Tại sao CardPayment có field active nhưng BankTransferPayment không cần field này?
-3. Nếu phương thức mới được thêm vào, class nào cần tạo và class nào có thể giữ nguyên?
-4. Vì sao một giao dịch ví bị từ chối phải giữ nguyên số dư?
-5. Một switch ở bước ánh xạ chuỗi nhập vào thành PaymentMethod có nhất thiết phải xóa không?
-6. Sự khác nhau giữa interface, kế thừa lớp và sử dụng composition trong ví dụ này là gì?
+1. Why can one PaymentMethod variable invoke different payment algorithms?
+2. Why does CardPayment have an active field while BankTransferPayment does not need it?
+3. When a new method is added, which class must be created, and which can remain unchanged?
+4. Why must a declined wallet payment preserve its balance?
+5. Must a switch that maps an input string to PaymentMethod necessarily be removed?
+6. What distinguishes an interface, class inheritance, and composition in this example?
 
-Khi hoàn thành, bạn phải giải thích được **interface là hợp đồng**, **đa hình là cơ chế chọn hành vi theo đối tượng thực tế**, còn **composition** cho phép PaymentProcessor sử dụng các hành vi ấy mà không gắn với implementation cụ thể.
+After completing the exercise, you should be able to explain that **an interface defines a contract**, **polymorphism selects behavior based on the runtime object**, and **composition** lets PaymentProcessor use that behavior without coupling to a concrete implementation.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="practice-004">Bài tập chọn kế thừa hay kết hợp</a>
+## <a id="practice-004">Choosing inheritance or composition</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Bài tập: Chọn kế thừa hay kết hợp trong Java OOP
+# Exercise: Choosing inheritance or composition in Java OOP
 
-## Mục tiêu
+## Objectives
 
-Khi thiết kế hướng đối tượng, hai cách rất phổ biến để các lớp phối hợp và tái sử dụng hành vi là **kế thừa (inheritance)** và **kết hợp (composition)**. Bài thực hành này yêu cầu bạn lựa chọn dựa trên bản chất quan hệ nghiệp vụ, sau đó chứng minh lựa chọn bằng chương trình Java và kiểm thử.
+Two common ways for object-oriented classes to collaborate and reuse behavior are **inheritance** and **composition**. This exercise asks you to choose based on the actual business relationship and then justify your choice with runnable Java code and tests.
 
-Hoàn thành bài học, bạn cần:
-- Phân biệt quan hệ **is-a** (là một loại của) và **has-a/uses-a** (có hoặc sử dụng một thành phần).
-- Biết khi nào một lớp con có thể **thay thế** lớp cha mà không phá hợp đồng hành vi.
-- Dùng interface và constructor injection để lắp ghép các thành phần có thể thay thế.
-- Nhận diện kế thừa chỉ để mượn code, phân cấp lớp phình to và sự phụ thuộc quá chặt vào lớp cha.
-- Đưa ra lời giải thiết kế, viết Java chạy được và kiểm thử cả hợp đồng chung lẫn khả năng thay thế thành phần.
+After completing this lesson, you should:
+- Distinguish an **is-a** relationship (one type of another) from a **has-a/uses-a** relationship (owning or using a component).
+- Understand when a subclass can **substitute for** its parent without breaking its behavioral contract.
+- Use interfaces and constructor injection to assemble interchangeable components.
+- Recognize inheritance used only for code reuse, oversized class hierarchies, and excessive coupling to a superclass.
+- Propose a design, write runnable Java, and test both shared contracts and component interchangeability.
 
-**Điểm cần nhớ:** Không có công thức "luôn dùng composition" hoặc "cứ có điểm chung thì dùng extends". Hãy dựa trên trách nhiệm, hợp đồng public, mức phụ thuộc và khả năng thay đổi của hệ thống.
+**Key point:** There is no universal rule to "always use composition" or "use extends whenever code is shared". Decide based on responsibilities, public contracts, coupling, and how the system may evolve.
 
-## 1. Phân biệt bản chất hai lựa chọn
+## 1. Understanding the two approaches
 
-Kế thừa một lớp trong Java dùng cú pháp **extends**. Lớp con nhận hành vi có thể kế thừa từ lớp cha, có thể định nghĩa thêm hoặc ghi đè phương thức được phép override.
+Java class inheritance uses the **extends** keyword. A subclass inherits eligible behavior from its superclass and can add or override permitted methods.
 
-Kết hợp là việc một đối tượng **giữ tham chiếu tới đối tượng khác** và gọi các phương thức của đối tượng đó để thực hiện công việc. Tham chiếu có thể mang kiểu interface, nhờ vậy implementation cụ thể có thể thay đổi mà lớp sử dụng không cần biết chi tiết.
+Composition means an object **holds a reference to another object** and invokes its methods to do work. That reference can have an interface type, allowing the concrete implementation to change without the consuming class knowing its details.
 
-| Câu hỏi thiết kế | Kế thừa | Kết hợp |
+| Design question | Inheritance | Composition |
 | --- | --- | --- |
-| Quan hệ mô hình | A **là một loại B** | A **có/dùng một B** |
-| Biểu hiện trong Java | class A extends B | private final B b; |
-| Mục tiêu thường gặp | Chuyên biệt hóa một hợp đồng chung ổn định | Ghép các năng lực hoặc cộng tác viên |
-| Đổi cách thực hiện | Thay bằng một lớp con khác, phải theo hợp đồng lớp cha | Tiêm một implementation khác |
-| Ràng buộc | Dễ phụ thuộc vào thiết kế của lớp cha | Có thể giảm coupling nếu dựa vào interface nhỏ |
-| Kiểm thử | Chạy hợp đồng chung trên mọi lớp con | Thay collaborator bằng fake hoặc stub |
-| Rủi ro | Lớp con làm yếu hợp đồng, kéo theo API không phù hợp | Quá nhiều lớp ủy quyền hoặc abstraction không cần thiết |
+| Model relationship | A **is a type of B** | A **has/uses a B** |
+| Java representation | class A extends B | private final B b; |
+| Common purpose | Specialize a stable shared contract | Assemble capabilities or collaborators |
+| Changing implementation | Substitute another subclass that follows the superclass contract | Inject a different implementation |
+| Coupling | Can tightly couple subclasses to superclass design | Can reduce coupling through a small interface |
+| Testing | Apply shared contract tests to every subclass | Replace a collaborator with a fake or stub |
+| Risk | Subclass weakens the contract or inherits inappropriate APIs | Excessive delegation classes or needless abstractions |
 
-**Interface không phải composition.** Khi một lớp viết implements ReportFormatter, nó công bố rằng đối tượng đó thỏa hợp đồng ReportFormatter. Composition xuất hiện khi ReportPublisher **chứa** một trường kiểu ReportFormatter và **ủy quyền** tác vụ định dạng cho trường ấy. Hai kỹ thuật thường được dùng cùng nhau.
+**An interface is not composition.** When a class implements ReportFormatter, it declares that its objects satisfy the ReportFormatter contract. Composition appears when ReportPublisher **contains** a ReportFormatter field and **delegates** formatting to it. The two techniques often work together.
 
-## 2. Bài tập phân loại trước khi xem đáp án
+## 2. Classification exercise before the answers
 
-Với từng tình huống sau, hãy chọn **K (kế thừa), H (kết hợp)** hoặc **C (cần làm rõ thêm)**, rồi trả lời vì sao. Bạn nên thử tự làm trước khi đọc lời giải.
+For each scenario, choose **K (inheritance), H (composition)**, or **C (needs clarification)** and explain why. Try answering before reading the solution.
 
-| Tình huống | Câu hỏi cần giải thích |
+| Scenario | Question to explain |
 | --- | --- |
-| A. Circle và Rectangle đều là Shape, mỗi loại có công thức area() khác nhau | Có hợp đồng Shape chung mà tất cả lớp con tuân thủ được không? |
-| B. ReportPublisher cần xuất dữ liệu thành CSV, văn bản hoặc JSON | ReportPublisher có thật sự là một CSV formatter không? |
-| C. Car có Engine và có thể dùng loại động cơ khác | Một chiếc ô tô có phải là một loại động cơ không? |
-| D. SavingsAccount kế thừa BankAccount nhưng cấm hầu hết hành vi rút tiền vốn được lớp cha cho phép | Lớp con có còn thay được lớp cha không? |
-| E. Một AlertService cần gửi qua EmailSender hoặc SmsSender | Hành vi gửi có thể cấu hình độc lập với quy tắc cảnh báo không? |
-| F. Một framework cung cấp AbstractTask với hợp đồng execute() rõ ràng và các hook được thiết kế cho việc mở rộng | Lớp con được framework kỳ vọng tuân thủ điều gì? |
+| A. Circle and Rectangle are both Shapes, but have different area() formulas | Can every subclass satisfy a shared Shape contract? |
+| B. ReportPublisher exports data as CSV, text, or JSON | Is ReportPublisher actually a type of CSV formatter? |
+| C. Car has an Engine and may use different engine types | Is a car a kind of engine? |
+| D. SavingsAccount extends BankAccount but prohibits most withdrawals that its parent permits | Can the subclass still substitute for the parent? |
+| E. AlertService must send through EmailSender or SmsSender | Can delivery behavior be configured independently of alert rules? |
+| F. A framework offers AbstractTask with a clear execute() contract and hooks designed for extension | What expectations must framework subclasses satisfy? |
 
-Trong phần mã, ta giải hai tình huống A và B thành một dự án chạy được. Những trường hợp còn lại được phân tích ở phần lời giải và bài tập mở rộng.
+The code exercise combines cases A and B into a runnable project. The remaining cases are examined in the solutions and extensions.
 
-### Sơ đồ quyết định
+### Decision diagram
 
 ~~~mermaid
 flowchart TD
@@ -1834,13 +1834,13 @@ flowchart TD
     E --> I
 ~~~
 
-Đây là câu hỏi gợi ý, không phải thuật toán đưa ra đáp án tuyệt đối. Ví dụ, dù có quan hệ is-a, một interface cùng các implementation độc lập có thể gọn hơn một abstract class mang nhiều state.
+These are guiding questions, not an algorithm with absolute answers. Even for an is-a relationship, an interface with independent implementations may be simpler than an abstract class with substantial state.
 
-## 3. Bài A — Mô hình các hình học bằng kế thừa
+## 3. Exercise A — Model shapes with inheritance
 
-**Yêu cầu:** Xây dựng một loại Shape có hợp đồng tính diện tích; Circle và Rectangle là các loại Shape cụ thể. Chương trình nhận một danh sách Shape mà không cần dùng if/else theo từng lớp để tính diện tích.
+**Requirements:** Define a Shape type with an area-calculation contract; Circle and Rectangle are concrete Shape types. The program should calculate areas for a list of Shapes without class-specific if/else branches.
 
-Ta chọn **abstract class Shape** vì các hình đều có hợp đồng area(), cùng có tên hiển thị và cùng được dùng như Shape. Hai lớp con phải trả diện tích không âm cho kích thước đã được kiểm tra.
+Choose an **abstract class Shape** because all shapes share an area() contract and display name and are used as Shapes. Both subclasses must return nonnegative areas for validated dimensions.
 
 ~~~mermaid
 classDiagram
@@ -1887,7 +1887,7 @@ public abstract class Shape {
 }
 ~~~
 
-Shape thiết lập một phần trạng thái dùng chung (name), bảo đảm tên không trống và quy định thao tác area(). Nếu các lớp không cần chia sẻ state hay implementation, dùng interface Shape với area() cũng là một phương án hợp lệ.
+Shape establishes shared state (name), requires a nonblank name, and defines the area() operation. If the classes need no shared state or implementation, an interface Shape with area() would also be valid.
 
 ### 3.2. Circle.java
 
@@ -1948,15 +1948,15 @@ public final class Rectangle extends Shape {
 }
 ~~~
 
-**Vì sao kế thừa hợp lý ở đây?** Đối tượng Circle hay Rectangle được sử dụng ở bất kỳ vị trí nào cần Shape.area(), không buộc caller quan tâm công thức bên trong. Cả hai đều áp dụng cùng ý nghĩa của area(): diện tích hình. Điều này thể hiện **đa hình** và khả năng thay thế theo hợp đồng.
+**Why is inheritance appropriate here?** A Circle or Rectangle can be used wherever Shape.area() is expected, without making the caller know the underlying formula. Both use area() with the same meaning: geometric area. This demonstrates **polymorphism** and contract-based substitutability.
 
-Với giá trị double rất lớn, phép nhân có thể trả Infinity dù các kích thước đầu vào hữu hạn. Bài tập chưa cam kết diện tích luôn hữu hạn; nếu hệ thống yêu cầu điều đó, phải bổ sung quy tắc kiểm soát tràn/sai số và test tương ứng.
+For very large double values, multiplication may return Infinity even when the input dimensions are finite. This exercise does not guarantee finite areas; if the system requires them, add overflow/precision rules and corresponding tests.
 
-## 4. Bài B — Xuất báo cáo bằng kết hợp
+## 4. Exercise B — Export reports through composition
 
-**Yêu cầu:** ReportPublisher nhận một báo cáo doanh thu, định dạng theo CSV hoặc văn bản rồi lưu nội dung qua một kênh xuất. Sau này có thể thêm JSON formatter và thay phương thức lưu sang file/database mà không thay đổi nghiệp vụ điều phối.
+**Requirements:** ReportPublisher receives a sales report, formats it as CSV or text, and stores the result through an output channel. Later it should support JSON formatting and file/database storage without changing orchestration logic.
 
-Thiết kế **không phù hợp**:
+An **inappropriate** design:
 
 ~~~java
 // Mã gợi ý về mùi thiết kế; KHÔNG đưa vào dự án chạy bên dưới.
@@ -1969,9 +1969,9 @@ class ReportPublisher extends CsvExporter {
 }
 ~~~
 
-Một report publisher **không phải** là một loại CSV exporter. Khi hệ thống cần định dạng khác, mô hình kế thừa này ép thay đổi quan hệ lớp hoặc thêm nhánh điều kiện.
+A report publisher **is not** a kind of CSV exporter. When another format is needed, this inheritance model forces changes to the class relationship or additional conditional branches.
 
-Thiết kế **hợp lý hơn**: ReportPublisher có một ReportFormatter và một ReportSink.
+A **better-fitting** design: ReportPublisher has a ReportFormatter and a ReportSink.
 
 ~~~mermaid
 classDiagram
@@ -2026,7 +2026,7 @@ public record SalesSummary(String period, long revenueVnd) {
 }
 ~~~
 
-SalesSummary là một record bất biến giúp dễ truyền dữ liệu đầu vào. Quy tắc hợp lệ của kỳ báo cáo nằm ngay tại lớp mô hình, tránh việc formatter phải đoán dữ liệu đã đúng hay chưa.
+SalesSummary is an immutable record that makes input data easy to pass. Its report-period validation belongs in the model class so formatters need not guess whether the input is valid.
 
 ### 4.2. ReportFormatter.java
 
@@ -2052,7 +2052,7 @@ public final class CsvFormatter implements ReportFormatter {
 }
 ~~~
 
-Dữ liệu period chỉ chứa chữ số và dấu gạch nối, revenueVnd chỉ chứa chữ số nên ví dụ không cần escape dấu phẩy. Một CSV formatter tổng quát phải xử lý dấu phẩy, dấu nháy kép và xuống dòng đúng chuẩn.
+The period data contains only digits and hyphens, and revenueVnd contains only digits, so this example does not need comma escaping. A general CSV formatter must correctly handle commas, quotation marks, and line breaks.
 
 ### 4.4. TextFormatter.java
 
@@ -2068,7 +2068,7 @@ public final class TextFormatter implements ReportFormatter {
 }
 ~~~
 
-CsvFormatter và TextFormatter cùng **implements ReportFormatter** để thay thế được cho nhau. Chúng không cần kế thừa một formatter cụ thể.
+CsvFormatter and TextFormatter both **implement ReportFormatter** so they are interchangeable. Neither needs to inherit from a concrete formatter.
 
 ### 4.5. ReportSink.java
 
@@ -2106,17 +2106,17 @@ public final class ReportPublisher {
 }
 ~~~
 
-ReportPublisher quyết định **trình tự công việc**: định dạng trước, lưu sau. Nó không chứa công thức CSV, không tự mở file và không tạo formatter bằng new. Những khả năng này được cung cấp từ ngoài thông qua constructor.
+ReportPublisher determines the **workflow order**: format first, then store. It does not contain CSV formulas, open files itself, or instantiate a formatter with new. Those capabilities are supplied externally through its constructor.
 
-Nhờ vậy:
-- Muốn thêm JSON thì tạo JsonFormatter implements ReportFormatter.
-- Muốn lưu ra cơ sở dữ liệu thì tạo DatabaseReportSink implements ReportSink.
-- Muốn kiểm thử mà không ghi ra hệ thống thật thì cung cấp một sink ghi nhận dữ liệu trong bộ nhớ.
-- Không phải sửa ReportPublisher mỗi lần thêm format hay sink mới, miễn các collaborator tuân thủ hợp đồng đã định.
+As a result:
+- To add JSON, create JsonFormatter implements ReportFormatter.
+- To store in a database, create DatabaseReportSink implements ReportSink.
+- To test without writing to a real system, provide a sink that records data in memory.
+- ReportPublisher needs no modification for each new format or sink, as long as collaborators satisfy the defined contracts.
 
-## 5. Ghép hai bài vào một chương trình Java chạy được
+## 5. Combining both exercises into a runnable Java program
 
-Cấu trúc dự án:
+Project structure:
 
 ~~~text
 oop-inheritance-or-composition/
@@ -2137,7 +2137,7 @@ oop-inheritance-or-composition/
         └── DesignChoiceTest.java
 ~~~
 
-Tạo pom.xml cho Java 17 + JUnit Jupiter:
+Create pom.xml for Java 17 + JUnit Jupiter:
 
 ~~~xml
 <project xmlns="http://maven.apache.org/POM/4.0.0">
@@ -2204,9 +2204,9 @@ public final class Main {
 }
 ~~~
 
-Khi chạy Main, chương trình cộng diện tích của Circle và Rectangle qua cùng kiểu Shape, sau đó xuất cùng một báo cáo theo hai định dạng. Các lớp nghiệp vụ không phải sửa khi composition root đổi lựa chọn formatter.
+Running Main adds the areas of Circle and Rectangle through the shared Shape type, then exports the same report in two formats. Business classes do not need to change when the composition root selects another formatter.
 
-Chạy từ thư mục gốc dự án:
+Run from the project root:
 
 ~~~bash
 mvn test
@@ -2214,7 +2214,7 @@ mvn -q -DskipTests package
 java -cp target/classes vn.example.Main
 ~~~
 
-Kết quả ví dụ:
+Example output:
 
 ~~~text
 Tong dien tich = 24.566370614359172
@@ -2222,9 +2222,9 @@ Tong dien tich = 24.566370614359172
 Thang 2026-10: 1500000 VND
 ~~~
 
-Với số thực double, phần hiển thị có thể có sai biệt chữ số cuối theo môi trường tính toán hoặc thay đổi cách định dạng; trong test nên so sánh với sai số chấp nhận được.
+With double values, displayed trailing digits may vary with the calculation environment or formatting choices; tests should compare using an acceptable tolerance.
 
-## 6. Kiểm thử để kiểm chứng lựa chọn thiết kế
+## 6. Tests that validate design choices
 
 **src/test/java/vn/example/DesignChoiceTest.java**
 
@@ -2339,140 +2339,140 @@ class DesignChoiceTest {
 }
 ~~~
 
-Có **7 phương thức @Test** trong bộ test trên. Khi mã được chép đúng cấu trúc tệp và có JDK 17 + Maven, dự kiến các test chạy thành công với 0 failures và 0 errors.
+The test suite above contains **7 @Test methods**. With correctly placed files and JDK 17 + Maven, all tests should pass with 0 failures and 0 errors.
 
-Các phép assert thể hiện hai khía cạnh:
+The assertions verify two aspects:
 
-| Kiểm thử | Quyết định OOP đang được bảo vệ |
+| Test | OOP decision being protected |
 | --- | --- |
-| circleAndRectangleWorkThroughShapeContract | Các lớp con thay thế được kiểu Shape và tuân thủ ý nghĩa chung của area() |
-| shapeDimensionsMustBePositiveAndFinite | Lớp con tự bảo vệ bất biến riêng |
-| publisherCanReplaceFormatterWithoutSubclassing | ReportPublisher sử dụng nhiều implementation cùng interface |
-| publisherAllowsNewFormatterWithoutChangingItsCode | Bổ sung formatter mới mà không cần sửa lớp điều phối |
-| nullReportDoesNotCallCollaborators | Không gọi phụ thuộc khi input không hợp lệ |
-| publisherDoesNotSwallowStorageFailure | Kết quả lỗi từ phụ thuộc không bị che giấu |
-| constructorsValidateTheirContracts | Đối tượng được tạo ở trạng thái hợp lệ |
+| circleAndRectangleWorkThroughShapeContract | Subclasses can substitute for Shape and honor the shared meaning of area() |
+| shapeDimensionsMustBePositiveAndFinite | Each subclass protects its own invariants |
+| publisherCanReplaceFormatterWithoutSubclassing | ReportPublisher uses different implementations of one interface |
+| publisherAllowsNewFormatterWithoutChangingItsCode | A new formatter does not require changes to the orchestrator |
+| nullReportDoesNotCallCollaborators | Invalid input does not trigger collaborator calls |
+| publisherDoesNotSwallowStorageFailure | Collaborator failures are not suppressed |
+| constructorsValidateTheirContracts | Objects start in valid states |
 
-Test cho thấy một lớp con thỏa một số ca của hợp đồng; không thể từ vài test kết luận mọi lớp con luôn thay thế được nhau trong tất cả tình huống. Khi thiết kế hierarchy lớn, cần viết thêm contract test dùng chung cho các lớp con và xác định rõ mọi điều kiện tiền/hậu.
+Tests show that a subclass meets selected contract cases; a few passing tests cannot prove every subclass is interchangeable in every situation. Large hierarchies need shared contract tests across subclasses and clearly specified preconditions/postconditions.
 
-## 7. Lời giải cho các tình huống ở đầu bài
+## 7. Solutions to the opening scenarios
 
-| Tình huống | Lựa chọn gợi ý | Lập luận |
+| Scenario | Suggested choice | Reasoning |
 | --- | --- | --- |
-| A. Circle / Rectangle / Shape | **K** (hoặc interface chung) | Cả hai thực sự là Shape và thực hiện hợp đồng diện tích chung |
-| B. ReportPublisher và các formatter | **H** | Publisher sử dụng khả năng định dạng, không phải một formatter |
-| C. Car và Engine | **H** | Car có engine; thay loại động cơ không biến car thành subclass của engine |
-| D. SavingsAccount cấm rút trái hợp đồng BankAccount | **C: xem lại mô hình** | Lớp con có thể vi phạm nguyên tắc thay thế Liskov; cần điều chỉnh contract hoặc tách chính sách |
-| E. AlertService gửi email/SMS | **H** | Tách nghiệp vụ cảnh báo khỏi phương tiện gửi; có thể tiêm interface MessageSender |
-| F. AbstractTask và các task tuân thủ hook framework | **K khi hợp đồng rõ** | Abstract base class được thiết kế để subclass chuyên biệt hóa trong khuôn khổ đã định |
+| A. Circle / Rectangle / Shape | **K** (or shared interface) | Both truly are Shapes and fulfill the shared area contract |
+| B. ReportPublisher and formatters | **H** | The publisher uses formatting capability; it is not a formatter |
+| C. Car and Engine | **H** | A Car has an engine; changing engine types does not make the car an engine subclass |
+| D. SavingsAccount restricts withdrawals against BankAccount's contract | **C: reconsider the model** | The subclass may violate Liskov substitution; revise the contract or extract a policy |
+| E. AlertService sends email/SMS | **H** | Separate alert rules from delivery channels; inject a MessageSender interface |
+| F. AbstractTask and tasks honoring framework hooks | **K when the contract is clear** | The abstract base class is designed for constrained subclass specialization |
 
-### Trường hợp D: đừng lạm dụng "is-a"
+### Case D: do not overuse "is-a"
 
-Một SavingsAccount ngoài đời có thể được gọi là một loại tài khoản ngân hàng, nhưng tên gọi **không đủ** để quyết định dùng kế thừa trong code. Nếu BankAccount cam kết rút một số tiền hợp lệ trong phạm vi số dư còn lại, mà SavingsAccount lại luôn ném UnsupportedOperationException, mã đang dựa vào hợp đồng lớp cha có thể bị phá.
+A real-world SavingsAccount may be called a type of bank account, but the name **does not suffice** to justify inheritance in code. If BankAccount promises to withdraw any valid amount within the remaining balance, but SavingsAccount always throws UnsupportedOperationException, callers relying on the superclass contract may break.
 
-Một số hướng thiết kế:
-- Thu hẹp hợp đồng chung thành Account chỉ bảo đảm những hành vi mọi loại tài khoản đều thực sự hỗ trợ.
-- Dùng các interface thể hiện năng lực như Withdrawable, nếu người dùng cần biết liệu một tài khoản có thể rút.
-- Đưa chính sách rút tiền vào một WithdrawPolicy được **kết hợp** trong tài khoản, nếu sự khác biệt là quy tắc có thể thay đổi mà không làm mất hợp đồng chung.
-- Với hierarchy hiện hữu, rà soát các method override xem có làm chặt hơn tiền điều kiện hoặc làm yếu hậu điều kiện của lớp cha không.
+Possible design directions:
+- Narrow the common contract to an Account that guarantees only behaviors every account type genuinely supports.
+- Use capability interfaces such as Withdrawable when callers need to know whether an account supports withdrawals.
+- Compose a WithdrawPolicy **inside** the account when the difference is a changeable rule that should not weaken the common contract.
+- For an existing hierarchy, review overridden methods for strengthened preconditions or weakened postconditions compared with the superclass.
 
-Chọn phương án cụ thể còn phụ thuộc yêu cầu nghiệp vụ. Không nên tự động giải bằng cách thêm nhiều lớp con hơn.
+The best option depends on business requirements. Adding more subclasses is not an automatic solution.
 
-## 8. Tình huống lỗi thiết kế hay gặp
+## 8. Common design pitfalls
 
-### Chỉ kế thừa để tiết kiệm vài dòng code
+### Inheriting only to save a few lines
 
-Ví dụ một lớp gửi hóa đơn kế thừa HttpClient chỉ để dùng post(). Quan hệ nghiệp vụ không đúng, đồng thời cả API kỹ thuật của HttpClient bị đưa vào lớp gửi hóa đơn. Kết hợp một HttpTransport interface sẽ thể hiện sự phụ thuộc tốt hơn.
+Suppose an invoice sender extends HttpClient only to call post(). The business relationship is incorrect, and the sender also exposes the technical API of HttpClient. Composing an HttpTransport interface better expresses the dependency.
 
-### Quá nhiều tổ hợp lớp con
+### Too many subclass combinations
 
-Nếu một hệ thống có 3 loại báo cáo, 4 định dạng và 2 cách lưu, mô hình một subclass cho mỗi tổ hợp có thể dẫn tới 3 × 4 × 2 = **24 lớp** chỉ để ghép tính năng. Khi các yếu tố thực sự độc lập, cấu hình ReportType, ReportFormatter và ReportSink bằng kết hợp giúp tránh tổ hợp kế thừa.
+If a system has 3 report types, 4 formats, and 2 storage methods, one subclass per combination could yield 3 × 4 × 2 = **24 classes** just to combine features. When these dimensions are genuinely independent, composing ReportType, ReportFormatter, and ReportSink avoids combinatorial inheritance.
 
-### Kế thừa nhưng lớp con phá bất biến lớp cha
+### Inheritance that breaks superclass invariants
 
-Trong mô hình Rectangle có setter đổi width và height độc lập, Square extends Rectangle có thể phải sửa cả hai khi một setter được gọi. Nếu caller kỳ vọng setWidth không đổi height, Square không còn phù hợp với hợp đồng MutableRectangle. Lựa chọn tốt là mô hình bất biến hoặc hợp đồng Shape chung không có những setter mâu thuẫn.
+In a Rectangle model with independent width and height setters, Square extends Rectangle may need to change both dimensions when one setter is invoked. If callers expect setWidth not to change height, Square no longer fulfills the MutableRectangle contract. Prefer immutable modeling or a common Shape contract without conflicting setters.
 
-### Composition nhưng quá nhiều abstraction
+### Composition with too many abstractions
 
-Một phép tính tổng thuần túy có thể chỉ cần phương thức trong lớp sở hữu dữ liệu. Không cần trích interface, factory và delegate chỉ để thực hiện phép cộng đơn giản. Composition có ích khi có trách nhiệm độc lập, sự thay thế có giá trị hoặc ranh giới với hệ thống bên ngoài.
+A straightforward total calculation may only need a method in the data-owning class. Extracting an interface, factory, and delegate merely to perform simple addition is unnecessary. Composition helps when responsibilities are independent, interchangeability is valuable, or external-system boundaries exist.
 
-### Nhầm đa hình với kế thừa lớp
+### Confusing polymorphism with class inheritance
 
-Trong Java, đa hình có thể thể hiện qua **abstract class** hoặc **interface**. ReportFormatter là interface cho nhiều implementation; việc ReportPublisher dùng ReportFormatter qua một field mới tạo ra quan hệ composition. Bạn không cần extends một concrete formatter để có đa hình.
+In Java, polymorphism can work through an **abstract class** or an **interface**. ReportFormatter is an interface with multiple implementations; composition arises because ReportPublisher holds ReportFormatter in a field. You do not need to extend a concrete formatter to achieve polymorphism.
 
-## 9. Bài tập nâng cao
+## 9. Advanced exercises
 
-### Bài 1 — Thay các định dạng mà không đổi code điều phối
+### Exercise 1 — Change formats without altering orchestration
 
-Viết JsonFormatter implements ReportFormatter để xuất nội dung:
+Implement JsonFormatter implements ReportFormatter to produce:
 
 ~~~json
 {"period":"2026-10","revenueVnd":1500000}
 ~~~
 
-Với chuỗi period bị giới hạn dạng YYYY-MM và số tiền là long không âm, ví dụ có thể tạo JSON tương đối đơn giản. Trong hệ thống thật, hãy dùng thư viện JSON để escape dữ liệu và kiểm tra tính hợp lệ. Thêm test kiểm chứng chuỗi JSON và bảo đảm không sửa ReportPublisher.
+With period restricted to YYYY-MM and a nonnegative long amount, this example can construct fairly simple JSON. In real systems, use a JSON library for escaping and validation. Add a test for the JSON text and ensure ReportPublisher remains unchanged.
 
-### Bài 2 — Thêm một sink khác
+### Exercise 2 — Add another sink
 
-Viết InMemoryReportSink lưu danh sách String đã nhận. Truyền nó vào ReportPublisher và kiểm tra lần lượt hai báo cáo. Giải thích vì sao sink là collaborator phù hợp để thay thế, không phải lớp cha của publisher.
+Implement InMemoryReportSink to store received Strings in a list. Inject it into ReportPublisher and check two consecutive reports. Explain why the sink is an interchangeable collaborator, not the publisher's superclass.
 
-### Bài 3 — Phát hiện vi phạm hợp đồng
+### Exercise 3 — Detect contract violations
 
-Thiết kế MutableRectangle với setWidth, setHeight và giả định hai kích thước thay đổi độc lập. Thử viết Square extends MutableRectangle, rồi xây một test dùng tham chiếu kiểu MutableRectangle. Xác định kỳ vọng nào bị phá và đề xuất thay đổi mô hình.
+Design MutableRectangle with setWidth and setHeight, assuming the dimensions change independently. Try Square extends MutableRectangle and write a test against a MutableRectangle reference. Identify which expectation fails and propose a better model.
 
-### Bài 4 — Kết hợp các chính sách
+### Exercise 4 — Compose policies
 
-Một ứng dụng tính phí vận chuyển theo phương thức Standard, Express và International. Hãy quyết định nên:
-- Tạo Shipment là base class cùng ba subclass; hay
-- Để Shipment có ShippingPolicy, chọn chính sách qua constructor.
+An application calculates shipping charges using Standard, Express, and International methods. Decide whether to:
+- Make Shipment a base class with three subclasses; or
+- Give Shipment a ShippingPolicy selected through the constructor.
 
-Nêu ít nhất hai yêu cầu nghiệp vụ khiến lựa chọn của bạn hợp lý. Ví dụ nếu một kiện hàng có thể đổi phương thức giao trong quá trình xử lý, chính sách là thành phần có thể thay đổi độc lập; nếu đó là các loại đối tượng có vòng đời và bất biến hoàn toàn khác, cần cân nhắc ranh giới các lớp.
+State at least two business requirements that support your choice. For example, if a parcel can change shipping method during processing, the policy is independently replaceable; if these are distinct object types with entirely different lifecycles and invariants, reconsider the class boundaries.
 
-### Bài 5 — Tự chấm lựa chọn
+### Exercise 5 — Assess your choice
 
-Với từng phương án mà bạn đã chọn, hãy viết ngắn:
-1. Quan hệ chính xác giữa hai đối tượng là is-a hay has-a?
-2. Có thể sử dụng A tại nơi kỳ vọng B mà không phá hợp đồng không?
-3. Một yêu cầu mới sẽ buộc sửa những lớp nào?
-4. Làm sao kiểm thử một implementation khác?
-5. Điều gì trở nên phức tạp hơn khi dùng phương án đã chọn?
+For each option you selected, briefly explain:
+1. Is the precise relationship between the objects is-a or has-a?
+2. Can A be used where B is expected without violating the contract?
+3. Which classes would a new requirement force you to change?
+4. How would you test a different implementation?
+5. What becomes more complicated with your chosen approach?
 
-## 10. Tiêu chí hoàn thành
+## 10. Completion criteria
 
-- [ ] Phân loại được 6 tình huống và giải thích từng quyết định.
-- [ ] Có chương trình Java minh họa một trường hợp kế thừa **đúng ngữ nghĩa**, một trường hợp kết hợp **đúng trách nhiệm**.
-- [ ] Chạy được chương trình với hai Shape khác nhau mà không rẽ nhánh theo kiểu cụ thể.
-- [ ] Thay CsvFormatter bằng TextFormatter hoặc formatter mới mà không sửa ReportPublisher.
-- [ ] Hiểu khác biệt giữa extends, implements và việc giữ tham chiếu tới collaborator.
-- [ ] Có test cho hợp đồng, lỗi đầu vào và khả năng thay thành phần.
-- [ ] Nhận ra trường hợp Liskov Substitution Principle bị ảnh hưởng bởi subclass hạn chế hành vi của lớp cha.
-- [ ] Không lựa chọn inheritance chỉ vì muốn dùng lại một phương thức.
+- [ ] Classify 6 scenarios and justify each decision.
+- [ ] Write a Java program demonstrating semantically **correct inheritance** and responsibility-aligned **composition**.
+- [ ] Run a program with two different Shapes without branching on concrete types.
+- [ ] Replace CsvFormatter with TextFormatter or a new formatter without modifying ReportPublisher.
+- [ ] Explain extends, implements, and holding references to collaborators.
+- [ ] Test contracts, invalid input, and component interchangeability.
+- [ ] Recognize when Liskov Substitution Principle is violated by a subclass that restricts superclass behavior.
+- [ ] Avoid choosing inheritance solely to reuse one method.
 
-**Kết quả kỳ vọng:** Bạn có thể giải thích vì sao Shape được chuyên biệt hóa thành Circle/Rectangle, trong khi ReportPublisher sử dụng ReportFormatter/ReportSink như các thành phần độc lập. Chọn đúng quan hệ giúp code phản ánh nghiệp vụ, giữ hợp đồng rõ ràng và giảm chi phí sửa đổi về sau.
+**Expected result:** You can explain why Shape specializes into Circle/Rectangle while ReportPublisher uses ReportFormatter/ReportSink as independent components. Choosing the right relationship makes code reflect business requirements, clarifies contracts, and reduces future change costs.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="practice-005">Bài tập đối tượng giá trị và so sánh bằng</a>
+## <a id="practice-005">Value objects and equality</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Bài tập đối tượng giá trị và so sánh bằng trong Java OOP
+# Value objects and equality in Java OOP
 
-> **Mục tiêu thực hành:** Thiết kế *value object* có dữ liệu hợp lệ ngay từ khi khởi tạo, bất biến trong suốt vòng đời, so sánh theo **giá trị** và hoạt động đúng làm khóa trong `HashMap`, phần tử `HashSet` hoặc `TreeSet`.
+> **Learning goal:** Design *value objects* that validate their data at construction, remain immutable throughout their lifetimes, compare by **value**, and work correctly as `HashMap` keys and `HashSet` or `TreeSet` elements.
 
-Giả sử cửa hàng cần định danh một sản phẩm bằng SKU và biểu diễn đơn giá bằng một số tiền có đơn vị tiền tệ. Hai biến chứa cùng SKU chuẩn hóa hoặc cùng số tiền và đơn vị tiền tệ phải được coi là **bằng nhau về ý nghĩa**, dù được tạo ở những thời điểm khác nhau.
+Suppose a store identifies products by SKU and represents unit prices as amounts with currencies. Two variables containing the same normalized SKU or the same amount and currency should be **semantically equal**, even if their objects were created at different times.
 
-Đây là bài tập kết hợp thiết kế đối tượng giá trị với kiểm thử các hợp đồng `equals`, `hashCode` và `compareTo`; nó không chỉ yêu cầu thêm hai phương thức so sánh vào một class.
+This exercise combines value-object design with testing the `equals`, `hashCode`, and `compareTo` contracts; it goes beyond merely adding comparison methods to a class.
 
-## 1. Phân biệt identity và value equality
+## 1. Distinguishing identity and value equality
 
-Một *entity* (ví dụ `Order` trong nghiệp vụ) thường có **danh tính riêng**: hai đơn hàng có tổng tiền bằng nhau vẫn có thể là hai đơn khác nhau. Một *value object* (ví dụ mã SKU chuẩn hóa hoặc số tiền) được nhận diện chủ yếu bằng **tập thuộc tính tạo ra ý nghĩa của nó**.
+An *entity* (such as a domain `Order`) usually has its **own identity**: two orders with identical totals may still be different orders. A *value object* (such as a normalized SKU or monetary amount) is identified mainly by **the attributes that determine its meaning**.
 
 ~~~java
 String sku1 = new String("BOOK-1");
@@ -2482,74 +2482,74 @@ System.out.println(sku1 == sku2);      // false: hai tham chiếu khác nhau
 System.out.println(sku1.equals(sku2)); // true: cùng nội dung
 ~~~
 
-Với các class tự định nghĩa:
+For user-defined classes:
 
-- `==` kiểm tra cùng tham chiếu khi toán hạng là object.
-- `Object.equals` mặc định chỉ trả `true` khi hai biến trỏ tới cùng object.
-- Có thể override `equals`/`hashCode` trong class thường, hoặc dùng `record` để Java sinh hành vi so sánh theo component.
-- `record` chỉ sinh so sánh theo giá trị của **các component**; nếu component chứa mảng hoặc object mutable, tính bất biến sâu và ngữ nghĩa so sánh chưa tự được giải quyết.
+- `==` checks whether operands reference the same object.
+- By default, `Object.equals` returns `true` only when both variables reference the same object.
+- Regular classes can override `equals`/`hashCode`; alternatively, a `record` generates component-based equality.
+- A `record` compares **its components** by value; if a component contains an array or mutable object, deep immutability and equality semantics still need explicit handling.
 
-| Khái niệm | Entity | Value object |
+| Concept | Entity | Value object |
 |---|---|---|
-| Điều quyết định “cùng một” | Định danh nghiệp vụ, ví dụ `orderId` | Giá trị các thuộc tính mang ý nghĩa |
-| Ví dụ | Đơn hàng, tài khoản người dùng | SKU, Money, khoảng thời gian |
-| Tính bất biến | Có thể thay đổi trạng thái theo nghiệp vụ | Nên bất biến để dễ chia sẻ và so sánh |
-| Kết quả khi hai object có dữ liệu hiển thị giống nhau | Không nhất thiết là cùng entity | Bằng nhau nếu tất cả thành phần có ý nghĩa bằng nhau |
-| Sử dụng trong collection dựa trên hash | Theo identity được thiết kế ổn định | Thích hợp nếu `equals` và `hashCode` nhất quán |
+| Meaning of "the same" | Business identity, such as `orderId` | Values of semantically significant attributes |
+| Example | Order, user account | SKU, Money, date range |
+| Immutability | Business state may change | Prefer immutability for sharing and comparison |
+| Two objects with identical displayed data | May still represent distinct entities | Equal if all meaningful components are equal |
+| Use in hash-based collections | Based on stable, intentionally designed identity | Suitable when `equals` and `hashCode` are consistent |
 
-**Lưu ý:** Không gán `equals` của entity đơn thuần theo mọi field thay đổi được. Nếu entity được dùng làm khóa mà các field tham gia hash biến đổi, việc tra cứu có thể hỏng.
+**Note:** Do not define entity `equals` solely in terms of all mutable fields. Changing hashed fields while an entity is used as a key can break lookups.
 
-## 2. Đề bài và hợp đồng nghiệm thu
+## 2. Requirements and acceptance contract
 
-Hãy xây hai value object:
+Build two value objects:
 
-### A. `Sku` — mã sản phẩm
+### A. `Sku` — Product identifier
 
-- Nhận chuỗi từ bên ngoài, `trim()` khoảng trắng ở đầu/cuối và chuyển thành chữ hoa bằng `Locale.ROOT`.
-- Sau chuẩn hóa, độ dài **3–20 ký tự**, ký tự đầu/cuối là chữ cái Latin in hoa hoặc chữ số; giữa chuỗi cho phép `A-Z`, `0-9` và dấu `-`.
-- Với null hoặc chuỗi không hợp lệ, ném `IllegalArgumentException`.
-- `new Sku(" ab-01 ")` phải bằng `new Sku("AB-01")` và có cùng hash.
-- Không có setter; cùng một SKU luôn giữ cùng mã sau khi tạo.
+- Accept external text, `trim()` leading/trailing whitespace, and uppercase with `Locale.ROOT`.
+- After normalization, require **3–20 characters**, with an uppercase Latin letter or digit at each end; allow `A-Z`, `0-9`, and `-` in between.
+- Throw `IllegalArgumentException` for null or invalid strings.
+- `new Sku(" ab-01 ")` must equal `new Sku("AB-01")` and have the same hash.
+- No setters; the SKU value must remain fixed after construction.
 
-### B. `Money` — số tiền
+### B. `Money` — Monetary amount
 
-Đơn giản hóa nghiệp vụ bài tập: chỉ hỗ trợ **USD** và **EUR**, cả hai có **2 chữ số thập phân** trong hệ thống này. Không thực hiện chuyển đổi tỷ giá.
+For simplicity, the exercise supports only **USD** and **EUR**, both with **2 decimal places** in this system. No exchange-rate conversion is performed.
 
-- Chứa `Currency` là enum `USD` hoặc `EUR` và `BigDecimal amount`.
-- Không chấp nhận `null`; số tiền phải **không âm**.
-- Chuẩn hóa `BigDecimal` về **scale = 2** bằng `setScale(2, RoundingMode.UNNECESSARY)`. Cho phép bỏ chữ số 0 dư, không âm thầm làm tròn giá trị có chữ số thập phân thứ ba khác 0.
-- `USD 12.3` bằng `USD 12.30` và có cùng hash.
-- `USD 12.30` **không** bằng `EUR 12.30`: cùng con số nhưng khác tiền tệ.
-- Phép `add` chỉ được cộng hai số tiền cùng loại; trộn USD với EUR phải bị từ chối.
-- `compareTo` phải có thứ tự **nhất quán với equals**. Để sắp xếp kỹ thuật trong collection, so sánh **mã tiền tệ trước**, số tiền sau. Thứ tự này **không mang ý nghĩa quy đổi kinh tế**.
-- Thao tác so sánh nghiệp vụ `greaterThan` chỉ nhận cùng tiền tệ và ném lỗi nếu khác.
+- Store an enum `Currency` of `USD` or `EUR` and a `BigDecimal amount`.
+- Reject `null`; monetary amounts must be **nonnegative**.
+- Normalize `BigDecimal` to **scale = 2** with `setScale(2, RoundingMode.UNNECESSARY)`. Allow redundant trailing 0 digits but never silently round a third decimal place whose digit is not 0.
+- `USD 12.3` must equal `USD 12.30` and have the same hash.
+- `USD 12.30` must **not** equal `EUR 12.30`: the numbers match, but the currencies differ.
+- `add` may combine amounts only when both use the same currency; mixing USD and EUR must be rejected.
+- `compareTo` must impose an order **consistent with equals**. For technical sorting in collections, compare **currency codes first**, then amounts. This ordering **does not represent economic conversion**.
+- Business comparison method `greaterThan` accepts only the same currency and throws for different currencies.
 
-### C. `ProductKey` và `ProductTags`
+### C. `ProductKey` and `ProductTags`
 
-- `ProductKey(Sku, Money)` coi cặp SKU + đơn giá là một giá trị tổng hợp: hai object với cùng SKU, tiền tệ và số tiền được coi là bằng nhau.
-- `ProductTags` chứa danh sách `List<String>`, phải sao chép để đối tượng nhận đầu vào không bị thay đổi khi caller sửa danh sách cũ; cũng không được trả list có thể sửa.
-- Không cần ID ngẫu nhiên, thời điểm tạo hoặc bộ đếm để so sánh `ProductKey`; những giá trị đó sẽ làm hai “giá trị bằng nhau” trở thành khác nhau.
+- `ProductKey(Sku, Money)` treats SKU + unit price as a composite value: objects with the same SKU, currency, and amount are equal.
+- `ProductTags` holds a `List<String>` and must copy the input so later caller modifications cannot change its state; it must not return a mutable list either.
+- Comparison of `ProductKey` does not need random IDs, creation timestamps, or counters; those would make semantically equal values appear different.
 
-### Các ca nghiệm thu cốt lõi
+### Core acceptance cases
 
-| Mã | Ca kiểm thử | Kỳ vọng |
+| ID | Test case | Expected result |
 |---|---|---|
-| EQ01 | Hai `Sku` từ `" ab-01 "` và `"AB-01"` | `equals = true`, hash bằng nhau |
-| EQ02 | SKU khác nhau | `equals = false` |
-| EQ03 | `Money(USD, 12.3)` và `Money(USD, 12.30)` | Bằng nhau, hash bằng nhau, `compareTo = 0` |
-| EQ04 | `USD 12.30` và `EUR 12.30` | Khác nhau; `compareTo != 0` |
-| EQ05 | `HashSet` chứa hai SKU tương đương | Chỉ có 1 phần tử |
-| EQ06 | Dùng `Money` tương đương để `get` trong `HashMap` | Lấy được giá trị đã `put` |
-| EQ07 | `TreeSet` chứa các `Money` tương đương | Không sinh phần tử trùng |
-| EQ08 | Cộng USD với EUR | `IllegalArgumentException` |
-| EQ09 | Amount âm hoặc cần làm tròn, ví dụ `1.234` | Bị từ chối |
-| EQ10 | Sửa danh sách đầu vào sau khi tạo `ProductTags` | Không ảnh hưởng trạng thái trong value object |
-| EQ11 | Sửa danh sách được trả từ `ProductTags` | Bị từ chối |
-| EQ12 | `equals(null)` hoặc `equals` khác kiểu | `false` |
+| EQ01 | Two `Sku` values from `" ab-01 "` and `"AB-01"` | `equals = true`; identical hashes |
+| EQ02 | Different SKUs | `equals = false` |
+| EQ03 | `Money(USD, 12.3)` and `Money(USD, 12.30)` | Equal values, equal hashes, `compareTo = 0` |
+| EQ04 | `USD 12.30` and `EUR 12.30` | Different; `compareTo != 0` |
+| EQ05 | `HashSet` with two equivalent SKUs | Contains only 1 element |
+| EQ06 | Use an equivalent `Money` key for `get` in `HashMap` | Retrieve the value previously `put` |
+| EQ07 | `TreeSet` containing equivalent `Money` values | No duplicate element is created |
+| EQ08 | Add USD to EUR | `IllegalArgumentException` |
+| EQ09 | Negative amount or value requiring rounding, e.g. `1.234` | Rejected |
+| EQ10 | Mutate source list after creating `ProductTags` | Value-object state remains unchanged |
+| EQ11 | Mutate the list returned by `ProductTags` | Rejected |
+| EQ12 | `equals(null)` or `equals` with a different type | `false` |
 
-## 3. Bẫy thực tế: BigDecimal có hai định nghĩa “bằng”
+## 3. Real-world trap: BigDecimal has two meanings of equality
 
-`BigDecimal` dùng **giá trị số** cho `compareTo` nhưng dùng **cả giá trị và scale** cho `equals`:
+`BigDecimal` uses the **numeric value** for `compareTo` but **both value and scale** for `equals`:
 
 ~~~java
 BigDecimal a = new BigDecimal("12.3");
@@ -2559,15 +2559,15 @@ System.out.println(a.compareTo(b) == 0); // true
 System.out.println(a.equals(b));         // false
 ~~~
 
-Nếu viết `Money.equals` bằng `amount.compareTo(other.amount) == 0` nhưng lại viết `hashCode` bằng `amount.hashCode()`, bạn có nguy cơ tạo hai đối tượng **bằng nhau theo equals nhưng có hash khác nhau**. Điều đó vi phạm hợp đồng hash và có thể khiến `HashSet`/`HashMap` hoạt động trái mong đợi.
+If `Money.equals` uses `amount.compareTo(other.amount) == 0` while `hashCode` uses `amount.hashCode()`, two objects can become **equal by equals but have different hashes**. That violates the hash contract and can make `HashSet`/`HashMap` behave unexpectedly.
 
-Trong bài này, cả hai amount đều được chuẩn hóa bằng `setScale(2, UNNECESSARY)` ngay trong constructor. Sau đó record có thể sinh `equals` và `hashCode` chính xác vì component `BigDecimal` đã có scale cố định. Đây là một ví dụ của **canonical representation** (biểu diễn chuẩn tắc): đầu vào khác cú pháp nhưng cùng ý nghĩa được đưa về cùng biểu diễn.
+Here both amounts are normalized with `setScale(2, UNNECESSARY)` in the constructor. The record can then generate correct `equals` and `hashCode` because its `BigDecimal` component has a fixed scale. This is an example of a **canonical representation**: differently written inputs with the same meaning map to one representation.
 
-Không dùng `new BigDecimal(0.1)` nếu muốn biểu diễn số thập phân chính xác theo chuỗi nhập. Hãy sử dụng `new BigDecimal("0.1")` hoặc một phương thức tạo thích hợp như `BigDecimal.valueOf(0.1)`. Trong ví dụ, đầu vào tiền được lấy từ chuỗi.
+Avoid `new BigDecimal(0.1)` when an exact decimal representation of text input is required. Use `new BigDecimal("0.1")` or a suitable factory such as `BigDecimal.valueOf(0.1)`. In this example, monetary input comes from strings.
 
-## 4. Tự triển khai trước: khung bài tập
+## 4. Implement it first: starter code
 
-Trước khi xem lời giải, bạn có thể tự điền logic trong những kiểu sau:
+Before viewing the solution, try completing the logic in these types:
 
 ~~~java
 record Sku(String code) {
@@ -2597,17 +2597,17 @@ record Money(Currency currency, BigDecimal amount)
 }
 ~~~
 
-Đặt các câu hỏi trước khi viết:
+Questions to ask before coding:
 
-1. Có field nào sẽ bị đổi sau khi object đã được đưa vào `HashSet` hay làm key của `HashMap` không?
-2. Hai object có cùng nội dung nhưng khác thứ tự constructor/biểu diễn chữ thường/chữ hoa nên bằng hay khác?
-3. Phép so sánh thứ tự có yêu cầu tính `a.compareTo(b) == 0` đúng khi và chỉ khi `a.equals(b)` không?
-4. Nếu chứa `List`, `Date` hoặc mảng, chỉ khai báo `final` có đủ đảm bảo không có mutable alias không?
-5. Có phải các tiền tệ khác nhau được phép tính cộng hoặc so sánh giá trị kinh tế trực tiếp không?
+1. Will any field change after the object enters a `HashSet` or becomes a `HashMap` key?
+2. Should objects with identical contents but different constructor order or case representations be equal?
+3. Does ordering require `a.compareTo(b) == 0` if and only if `a.equals(b)`?
+4. If an object contains a `List`, `Date`, or array, does simply declaring it `final` prevent mutable aliases?
+5. Can different currencies be added or compared directly in economic terms?
 
-## 5. Lời giải Java 17 chạy độc lập
+## 5. Standalone Java 17 reference solution
 
-Tạo một tệp **`ValueObjectPractice.java`**, dán toàn bộ mã sau và chạy bằng JDK 17 trở lên, không cần thư viện ngoài:
+Create **`ValueObjectPractice.java`**, paste in all the code below, and run it with JDK 17 or later without external libraries:
 
 ~~~java
 import java.math.BigDecimal;
@@ -2813,14 +2813,14 @@ public class ValueObjectPractice {
 }
 ~~~
 
-Chạy trong thư mục chứa tệp:
+Run from the directory containing the file:
 
 ~~~bash
 javac ValueObjectPractice.java
 java ValueObjectPractice
 ~~~
 
-Đầu ra dự kiến:
+Expected output:
 
 ~~~text
 PASS: SKU equality and HashSet
@@ -2831,44 +2831,44 @@ PASS: immutable composite data and defensive copy
 PASS: BigDecimal equality pitfall demonstrated
 ~~~
 
-### Giải thích thiết kế
+### Design explanation
 
-**`Sku`:** Chuẩn hóa được thực hiện trong *compact constructor* của `record`. Việc gán lại tham số `code` cập nhật giá trị được lưu trong component record. Sau đó mỗi object có một biểu diễn chuẩn tắc.
+**`Sku`:** Normalization occurs in the `record`'s *compact constructor*. Reassigning the `code` parameter updates the value stored in the record component. Each object then has a canonical representation.
 
-**`Money`:** Vì mọi `amount` có `scale = 2`, record-generated `equals` và `hashCode` sẽ coi `12.3` và `12.30` tương đương sau chuẩn hóa. Đơn vị tiền tệ là một component nên cũng tham gia so sánh bằng.
+**`Money`:** Because every `amount` has `scale = 2`, record-generated `equals` and `hashCode` treat `12.3` and `12.30` as equivalent after normalization. Currency is also a component and therefore participates in equality.
 
-**`ProductKey`:** Một khóa tổng hợp kết hợp hai value object bất biến. Nó không dùng thời điểm tạo, địa chỉ bộ nhớ hay random ID; do đó phù hợp làm khóa khi các quy tắc tạo object không đổi.
+**`ProductKey`:** A composite key combining two immutable value objects. It uses neither creation time, memory address, nor a random ID; therefore, it is suitable as a key as long as object-construction rules remain stable.
 
-**`ProductTags`:** `List.copyOf` tạo danh sách không chỉnh sửa được và tách khỏi list nguồn mutable. Vì từng phần tử ở đây là `String` (immutable), không có đường sửa phần tử gián tiếp. Nếu phần tử là `StringBuilder` hoặc `Date` thì cần sao chép chính các phần tử, không chỉ sao chép list.
+**`ProductTags`:** `List.copyOf` creates an unmodifiable list detached from the mutable source list. Because every element is a `String` (immutable), callers cannot indirectly mutate its elements. If elements were `StringBuilder` or `Date`, they would also need copying, not just the list.
 
-**`compareTo`:** Thứ tự được định nghĩa là (tên currency, amount). Nó hợp lệ cho `TreeSet`/`TreeMap` vì hai `Money` chỉ có `compareTo == 0` khi cả currency và amount giống nhau sau chuẩn hóa. Không thể suy ra EUR 10 có sức mua thấp hay cao hơn USD 11 dựa trên thứ tự đó.
+**`compareTo`:** Ordering is defined as (currency name, amount). It works for `TreeSet`/`TreeMap` because two `Money` values satisfy `compareTo == 0` only when both currency and normalized amount match. This ordering cannot determine whether EUR 10 has more or less purchasing power than USD 11 in economic terms.
 
-## 6. Hợp đồng equals, hashCode và compareTo phải được kiểm tra như thế nào?
+## 6. How to test the equals, hashCode, and compareTo contracts
 
-### Hợp đồng `equals`
+### The `equals` contract
 
-Cho `a`, `b` và `c` là object không đổi trong suốt phép kiểm tra:
+Let `a`, `b`, and `c` be objects that do not change during the checks:
 
-| Tính chất | Điều kiện cần đúng |
+| Property | Required condition |
 |---|---|
-| Phản xạ (*reflexive*) | `a.equals(a) == true` |
-| Đối xứng (*symmetric*) | `a.equals(b) == b.equals(a)` |
-| Bắc cầu (*transitive*) | Nếu `a=b` và `b=c` theo equals thì `a=c` |
-| Nhất quán (*consistent*) | Gọi lặp không đổi kết quả khi dữ liệu không đổi |
-| So với null | `a.equals(null) == false` |
+| Reflexivity (*reflexive*) | `a.equals(a) == true` |
+| Symmetry (*symmetric*) | `a.equals(b) == b.equals(a)` |
+| Transitivity (*transitive*) | If `a=b` and `b=c` under equals, then `a=c` |
+| Consistency (*consistent*) | Repeated calls return the same result while data is unchanged |
+| Comparison with null | `a.equals(null) == false` |
 
-Khi `a.equals(b)` là `true`, **bắt buộc** `a.hashCode() == b.hashCode()`. Chiều ngược lại không bắt buộc: hai object khác nhau **có thể va chạm hash**.
+If `a.equals(b)` is `true`, then `a.hashCode() == b.hashCode()` is **required**. The reverse is not required: distinct objects **can have hash collisions**.
 
-### Hợp đồng `compareTo`
+### The `compareTo` contract
 
-Java `Comparable` cần thứ tự nhất quán để sắp xếp. Các tính chất cốt lõi:
+Java `Comparable` requires consistent ordering. Its key properties include:
 
-- Dấu của `a.compareTo(b)` ngược dấu của `b.compareTo(a)`.
-- Nếu `a > b` và `b > c` theo so sánh thì `a > c`.
-- Nếu `a.compareTo(b) == 0`, so sánh `a` và `b` với mọi phần tử khác phải có cùng dấu.
-- **Rất nên** nhất quán với equals khi dùng cùng kiểu trong `TreeSet` hoặc `TreeMap`: `compareTo == 0` phải tương ứng với `equals == true`. Nếu chủ động không nhất quán phải tài liệu hóa vì sorted collections sẽ dựa vào `compareTo` để phân biệt phần tử.
+- The sign of `a.compareTo(b)` is opposite to the sign of `b.compareTo(a)`.
+- If `a > b` and `b > c` under comparison, then `a > c`.
+- If `a.compareTo(b) == 0`, comparisons of `a` and `b` with any other value must have the same sign.
+- Consistency with equals is **strongly recommended** for `TreeSet` and `TreeMap`: `compareTo == 0` should correspond to `equals == true`. If intentionally inconsistent, document it, because sorted collections distinguish elements using `compareTo`.
 
-Trong Java, `HashSet` dựa vào `hashCode` và `equals`; `TreeSet` (khi dùng natural ordering) dựa vào `compareTo`. Vì vậy một `Money` có so sánh thiếu tiền tệ hoặc không chuẩn hóa scale có thể dẫn đến tập hợp có kết quả khác nhau.
+In Java, `HashSet` relies on `hashCode` and `equals`; `TreeSet` (with natural ordering) uses `compareTo`. A `Money` comparator that ignores currencies or fails to normalize scale may produce different set results.
 
 ~~~mermaid
 flowchart TD
@@ -2882,11 +2882,11 @@ flowchart TD
     G --> I["TreeSet/TreeMap nhận diện cùng phần tử"]
 ~~~
 
-Sơ đồ giả định `compareTo` được thiết kế nhất quán với `equals` như trong lời giải. Hash collision không phải lỗi, miễn `equals` vẫn phân biệt đúng.
+The diagram assumes `compareTo` is consistent with `equals`, as in the solution. Hash collisions are not defects provided `equals` still distinguishes values correctly.
 
-## 7. Tự viết equals/hashCode khi không dùng record
+## 7. Implementing equals/hashCode manually without records
 
-Trong dự án cũ hoặc class có mô hình riêng, có thể dùng một **final class** với field immutable và override thủ công:
+In older projects or classes with special designs, use a **final class** with immutable fields and manual overrides:
 
 ~~~java
 import java.util.Locale;
@@ -2929,9 +2929,9 @@ public final class ProductCode {
 }
 ~~~
 
-Hai instance `new ProductCode(" abc ")` và `new ProductCode("ABC")` bằng nhau và có cùng hash. Việc đặt class là `final` ở ví dụ này loại bỏ bài toán kế thừa có thể làm mất tính đối xứng của `equals` khi subclass bổ sung field mang ý nghĩa mới.
+Two instances, `new ProductCode(" abc ")` and `new ProductCode("ABC")`, are equal and have the same hash. Making the class `final` here eliminates subclass-related problems that could break the symmetry of `equals` when subclasses add new meaningful fields.
 
-Một lỗi thường gặp:
+A common mistake:
 
 ~~~java
 @Override
@@ -2942,11 +2942,11 @@ public boolean equals(Object obj) {
 }
 ~~~
 
-Không override `equals` mà quên `hashCode`; không sử dụng field mutable tham gia hash khi object còn được lưu làm key.
+Never override `equals` while forgetting `hashCode`; do not use mutable hashed fields while an object is stored as a key.
 
-## 8. Bẫy mutable value object và alias
+## 8. Mutable value-object and aliasing pitfalls
 
-### 8.1. Key thay đổi sau khi đưa vào HashMap
+### 8.1. A key changes after insertion into HashMap
 
 ~~~java
 class MutableKey {
@@ -2967,29 +2967,29 @@ class MutableKey {
 }
 ~~~
 
-Nếu bạn `put` một `MutableKey` vào `HashMap` rồi sửa `code`, hash của key có thể thay đổi. Tra cứu key sau đó có thể thất bại dù object vẫn tồn tại trong map. Không thể dựa vào kết quả cụ thể của một input may rủi; lỗi thiết kế là **dữ liệu dùng để so sánh/hash không ổn định trong khi lưu key**.
+If you `put` a `MutableKey` into a `HashMap` and then change its `code`, the key's hash can change. Subsequent lookups may fail even though the object remains in the map. Do not rely on a lucky result for a particular input; the design error is **unstable equality/hash data while the key is stored**.
 
-Cách sửa: giữ field `private final`, normalize ngay khi tạo và cung cấp **object mới** thay cho setter.
+Fix: keep fields `private final`, normalize during construction, and create a **new object** instead of using a setter.
 
-### 8.2. Record chứa mảng không tự thành deep value object
+### 8.2. A record containing an array is not automatically a deep value object
 
 ~~~java
 record ArrayKey(byte[] bytes) {}
 ~~~
 
-Mảng là mutable và `equals` của mảng là so sánh theo tham chiếu. Hai mảng khác nhau có cùng byte vẫn không được record coi là bằng nhau theo nội dung. Ngoài ra, caller có thể sửa mảng đầu vào sau khi truyền vào constructor.
+Arrays are mutable, and array `equals` compares references. Two different arrays containing identical bytes are not equal by contents under record-generated equality. Callers can also modify an input array after passing it to the constructor.
 
-Một hướng an toàn: biểu diễn bằng kiểu value object bất biến được thiết kế riêng, copy array khi vào/ra và override equals/hashCode với `Arrays.equals`/`Arrays.hashCode`; hoặc chọn cấu trúc immutable khác phù hợp. Không nên đưa thẳng array như một component rồi coi đó là deep immutable.
+A safer design is a purpose-built immutable value object that copies arrays on input/output and overrides equals/hashCode using `Arrays.equals`/`Arrays.hashCode`, or another suitable immutable structure. Do not expose a raw array as a record component and assume deep immutability.
 
-### 8.3. `Collections.unmodifiableList` và `List.copyOf` không tương đương
+### 8.3. `Collections.unmodifiableList` and `List.copyOf` are different
 
-- `Collections.unmodifiableList(original)` tạo một **view** không sửa được qua wrapper, nhưng vẫn phản ánh các thay đổi do chủ sở hữu `original` thực hiện.
-- `List.copyOf(original)` tạo một biểu diễn list bất biến theo API, dùng để giữ giá trị tại thời điểm nhận; nhưng nó **không deep-copy** từng element.
-- Cần quyết định rõ: bạn muốn **live read-only view** hay **snapshot bất biến**? Đối tượng giá trị thường ưu tiên snapshot khi collection đầu vào có thể thay đổi.
+- `Collections.unmodifiableList(original)` creates an unmodifiable **view** through a wrapper, but still reflects modifications made by the owner of `original`.
+- `List.copyOf(original)` creates an API-level immutable list representation that retains the values at receipt time, but **does not deep-copy** individual elements.
+- Decide explicitly whether you need a **live read-only view** or an **immutable snapshot**. Value objects usually favor snapshots when input collections can change.
 
-## 9. Bài tập nâng cao: viết property-based test thủ công
+## 9. Advanced exercise: write manual property-based tests
 
-Không cần thư viện, hãy sinh nhiều chuỗi số tiền có cùng giá trị nhưng khác scale, chẳng hạn `"12.3"` và `"12.30"`, rồi thử:
+Without a library, generate many numeric strings with the same amount but different scales, such as `"12.3"` and `"12.30"`, and try:
 
 ~~~java
 Money a = Money.of(Currency.USD, "12.3");
@@ -3001,9 +3001,9 @@ assert a.hashCode() == b.hashCode();
 assert a.compareTo(b) == 0;
 ~~~
 
-**Chú ý:** Java `assert` bị tắt mặc định nếu không chạy với `-ea`. Để test có hiệu lực trong CI, dùng JUnit Assertions hoặc hàm `check` như ví dụ hoàn chỉnh; nếu dùng các câu `assert` trên, chạy `java -ea ...`.
+**Note:** Java `assert` is disabled by default unless run with `-ea`. For effective CI tests, use JUnit Assertions or a `check` helper as in the complete example; if using `assert`, run `java -ea ...`.
 
-Có thể tự động duyệt cặp giá trị:
+You can also iterate automatically through pairs of values:
 
 ~~~java
 String[] inputs = {"0", "0.0", "0.00", "1.2", "1.20", "12.30"};
@@ -3021,89 +3021,89 @@ for (String x : inputs) {
 }
 ~~~
 
-Trong ví dụ này, `Money` và `Currency` là các nested types bên trong `ValueObjectPractice`; nếu đặt đoạn test ở file khác, sử dụng `ValueObjectPractice.Money` và `ValueObjectPractice.Currency` (cùng package) hoặc import chúng phù hợp.
+In this example, `Money` and `Currency` are nested types within `ValueObjectPractice`; in another test file, use `ValueObjectPractice.Money` and `ValueObjectPractice.Currency` (in the same package) or import them appropriately.
 
-Đối với dự án có JUnit 5, thay khối lặp bằng `@ParameterizedTest`/`@MethodSource` và mở rộng tập biên: `0`, `0.01`, `999999.99`, số âm, scale 3 phải làm tròn và currency khác. Khi thất bại, in rõ input để có thể tái lập.
+In a project with JUnit 5, replace the loop with `@ParameterizedTest`/`@MethodSource` and expand boundary cases: `0`, `0.01`, `999999.99`, negatives, scale 3 requiring rounding, and different currencies. On failure, print inputs for reproducibility.
 
-## 10. Bài tập mở rộng
+## 10. Extension exercises
 
-1. **Nâng cấp `Sku`:** thêm điều kiện SKU không được có `"--"` liên tiếp. Viết test cho `"AB--01"` và chứng minh các SKU đã hợp lệ vẫn so sánh bằng đúng.
-2. **Thêm phép trừ `Money.subtract`:** quyết định có cho phép âm không theo nghiệp vụ. Nếu không, phép trừ tạo số âm phải bị từ chối trước khi trả value object.
-3. **Tạo `Percentage`:** chấp nhận 0–100% với scale cố định, không dùng `double` để lưu tỷ lệ. Đảm bảo `5.0%` và `5.00%` tương đương theo hợp đồng.
-4. **Tạo `DateRange`:** hai ngày bắt đầu/kết thúc, bắt buộc `start <= end`, cung cấp `contains(LocalDate)`. Hai khoảng có cùng hai mốc phải bằng nhau và có cùng hash.
-5. **Tạo `EmailAddress`:** quyết định quy tắc chuẩn hóa trước khi viết equals. Đừng mặc định toàn bộ phần local của email không phân biệt hoa/thường nếu hệ thống chưa quy định như vậy.
-6. **Bỏ record để tự cài đặt class:** hiện thực `Money` bằng `final class` với `private final` fields, `equals`/`hashCode`/`compareTo` thủ công. Chạy lại cùng bộ test và so sánh độ dài/rủi ro bảo trì.
-7. **Kiểm thử collection:** thêm 50 cách viết amount tương đương nhau, đếm số phần tử `HashSet` và `TreeSet` sau chuẩn hóa. Không dùng chỉ số hash để suy đoán nội dung bằng nhau.
+1. **Enhance `Sku`:** Disallow consecutive `"--"` in an SKU. Test `"AB--01"` and confirm already valid SKUs still compare correctly.
+2. **Add `Money.subtract`:** Decide whether negatives are allowed under business rules. Otherwise, reject a subtraction that would produce a negative value before returning the value object.
+3. **Create `Percentage`:** Accept 0–100% with a fixed scale; do not use `double` for ratios. Ensure `5.0%` and `5.00%` are equivalent under the contract.
+4. **Create `DateRange`:** Store start/end dates, require `start <= end`, and provide `contains(LocalDate)`. Two ranges with identical endpoints must be equal and have equal hashes.
+5. **Create `EmailAddress`:** Define normalization rules before implementing equals. Do not assume the whole email local part is case-insensitive unless your system specifies that behavior.
+6. **Replace the record with a hand-written class:** Implement `Money` as a `final class` with `private final` fields and manual `equals`/`hashCode`/`compareTo`. Rerun the same tests and compare code size and maintenance risks.
+7. **Test collections:** Add 50 equivalent amount representations and count `HashSet` and `TreeSet` elements after normalization. Do not infer value equality from hash codes alone.
 
-### Rubric tự đánh giá — 10 điểm
+### Self-assessment rubric — 10 points
 
-| Tiêu chí | Điểm |
+| Criterion | Points |
 |---|---:|
-| Dữ liệu được chuẩn hóa, validate và bất biến sau khởi tạo | 2 |
-| Phân biệt đúng identity/value, cài đặt equals theo các component có ý nghĩa | 2 |
-| hashCode nhất quán, HashSet/HashMap không tạo bản sao khóa bằng nhau | 2 |
-| compareTo nhất quán với equals, TreeSet hoạt động đúng | 2 |
-| Bắt được các bẫy BigDecimal scale, mutable alias và currency khác nhau | 2 |
+| Data is normalized, validated, and immutable after construction | 2 |
+| Identity/value distinction is correct; equals uses meaningful components | 2 |
+| hashCode is consistent; HashSet/HashMap do not duplicate equal keys | 2 |
+| compareTo agrees with equals; TreeSet behaves correctly | 2 |
+| Correctly handles BigDecimal scale, mutable alias, and currency traps | 2 |
 
-**Tiêu chí hoàn thành:** Có thể tạo hai value object độc lập từ đầu vào khác cách viết nhưng cùng ý nghĩa và chứng minh chúng bằng nhau, có hash giống nhau, hành xử nhất quán trong hash/sorted collections, không bị thay đổi gián tiếp qua reference; đồng thời giải thích được vì sao entity và value object không nên có cùng chính sách so sánh một cách máy móc.
+**Completion criteria:** Create two distinct value objects from differently written but semantically equivalent inputs and prove they are equal, have the same hash, behave consistently in hash/sorted collections, and cannot be modified through aliases. Also explain why entities and value objects should not automatically share the same equality policy.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="practice-006">Bài tập nhận diện lỗi thiết kế</a>
+## <a id="practice-006">Identifying design flaws</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Bài tập nhận diện lỗi thiết kế trong Java OOP
+# Identifying design flaws in Java OOP
 
-## 1. Mục tiêu bài thực hành
+## 1. Exercise objectives
 
-Một chương trình có thể **biên dịch được, cho ra kết quả đúng với một vài đầu vào**, nhưng thiết kế vẫn khiến nó khó mở rộng, khó kiểm thử và dễ phát sinh lỗi khi yêu cầu thay đổi. Ngược lại, không phải đoạn mã dài hay có nhiều câu lệnh điều kiện đều là thiết kế kém.
+A program may **compile and produce correct results for a few inputs** while its design remains hard to extend, hard to test, and error-prone when requirements change. Conversely, lengthy code or many conditional statements do not automatically indicate poor design.
 
-Trong bài này, bạn sẽ đóng vai người review code: đọc một đoạn Java, xác định dấu hiệu bất ổn, giải thích hậu quả, phân loại mức độ ảnh hưởng, đề xuất chỉnh sửa phù hợp và viết kiểm thử để bảo vệ hành vi.
+In this exercise, act as a code reviewer: inspect Java, identify suspicious design choices, explain consequences, assess their impact, suggest appropriate improvements, and write tests to protect behavior.
 
-Kết quả cần đạt:
+Expected learning outcomes:
 
-- Phân biệt **lỗi hành vi (bug)**, **mùi mã (code smell)**, **vi phạm hợp đồng** và **lựa chọn thiết kế có thể chấp nhận được**.
-- Nhận diện những vấn đề OOP thường gặp: dữ liệu bị lộ, trách nhiệm quá nhiều, phụ thuộc trực tiếp implementation, lớp kế thừa sai quan hệ, mã trùng lặp, điều kiện phân nhánh theo loại đối tượng, trạng thái toàn cục và những phép toán tiền không an toàn.
-- Đưa ra bằng chứng cụ thể từ mã thay vì chỉ gắn nhãn “vi phạm SOLID”.
-- Tái cấu trúc một ví dụ thành các đối tượng có trách nhiệm rõ ràng.
-- Viết JUnit test chứng minh logic nghiệp vụ còn đúng sau refactor.
+- Distinguish **behavioral defects (bugs)**, **code smells**, **contract violations**, and **acceptable design trade-offs**.
+- Recognize common OOP problems: exposed data, too many responsibilities, direct coupling to implementations, incorrect inheritance relationships, duplicate logic, type-based conditionals, global state, and unsafe money arithmetic.
+- Cite concrete evidence from code instead of merely labeling something a "SOLID violation".
+- Refactor an example into objects with clear responsibilities.
+- Write JUnit tests proving that business logic still works after refactoring.
 
-**Nguyên tắc chấm bài:** Đừng dừng ở câu “đoạn này vi phạm SRP”. Hãy nêu **dòng nào**, **điều gì có thể sai**, **thay đổi nào sẽ làm mã dễ hỏng**, **cách cải thiện** và **test nào xác minh điều đó**.
+**Assessment principle:** Do not stop at "this violates SRP". Identify **which lines**, **what could fail**, **which changes make it fragile**, **how to improve it**, and **which tests verify the improvement**.
 
-## 2. Quy trình nhận diện lỗi thiết kế
+## 2. A process for identifying design flaws
 
-Khi xem một class, hãy hỏi lần lượt:
+When reviewing a class, ask these questions in order:
 
-1. **Nó có trách nhiệm gì?** Có bao nhiêu lý do độc lập khiến nó phải thay đổi?
-2. **Ai sở hữu trạng thái?** Có ai bên ngoài được sửa dữ liệu mà bỏ qua bất biến không?
-3. **Nó phụ thuộc vào gì?** Interface hay implementation cụ thể? Tự tạo HTTP client, repository, đồng hồ, file?
-4. **Quy tắc nằm ở đâu?** Đối tượng tự xử lý dữ liệu mình sở hữu, hay lớp khác lấy nhiều getter rồi tính thay?
-5. **Đa hình có được sử dụng đúng không?** Có chuỗi if/instanceof phân biệt loại đối tượng để tự quyết định hành vi?
-6. **Có sự phụ thuộc ẩn không?** Static mutable state, singleton toàn cục, thứ tự gọi phương thức, thời gian hệ thống?
-7. **Đâu là hành vi thực sự sai?** Tràn số, trạng thái không nhất quán, thiếu validation, lỗi trong nhánh thất bại?
-8. **Cách sửa có xứng đáng với độ phức tạp mới không?** Một lớp đơn giản không cần bốn interface chỉ để làm phép cộng.
+1. **What are its responsibilities?** How many independent reasons could force it to change?
+2. **Who owns the state?** Can outside code bypass invariants when modifying data?
+3. **What does it depend on?** Interfaces or concrete implementations? Does it create HTTP clients, repositories, clocks, or files itself?
+4. **Where are the rules?** Does an object manage its own data, or does another class read getters and compute on its behalf?
+5. **Is polymorphism used appropriately?** Is there a chain of if/instanceof checks selecting behaviors by object type?
+6. **Are there hidden dependencies?** Static mutable state, global singletons, call order, or system time?
+7. **What behavior is actually wrong?** Overflow, inconsistent state, missing validation, or failure-branch bugs?
+8. **Is the fix worth its complexity?** A simple class does not need four interfaces merely to add numbers.
 
-### Phân biệt mức độ
+### Distinguishing severity
 
-| Nhận định | Có nghĩa là gì? | Ví dụ |
+| Assessment | What it means | Example |
 | --- | --- | --- |
-| Bug đã xác định | Một trường hợp cụ thể tạo kết quả sai hợp đồng | Số tiền kiểu long tràn số thành giá trị âm |
-| Rủi ro thiết kế | Chưa chắc gây bug hôm nay nhưng thay đổi rất khó | Lớp nghiệp vụ tự new một adapter HTTP |
-| Code smell | Dấu hiệu cần điều tra, chưa phải kết luận tuyệt đối | Phương thức dài, nhiều switch, nhiều tham số |
-| Trade-off có chủ ý | Quyết định đơn giản với phạm vi và giới hạn rõ | Dùng một lớp nhỏ thay vì tạo hierarchy không cần thiết |
+| Confirmed bug | A specific case violates the contract | A long amount overflows into a negative value |
+| Design risk | May not cause bugs today but makes changes difficult | Business class directly instantiates an HTTP adapter |
+| Code smell | A reason to investigate, not a conclusive defect | Long method, many switches, numerous parameters |
+| Intentional trade-off | A simple choice with explicit scope and limits | A small class instead of an unnecessary hierarchy |
 
-Không có quy tắc “cứ hơn 20 dòng là sai” hoặc “cứ thấy if là phải thay bằng đa hình”. Phải dựa trên trách nhiệm, nhu cầu thay đổi và bằng chứng.
+There is no rule that "more than 20 lines is wrong" or "every if must become polymorphism". Evaluate responsibilities, change requirements, and evidence.
 
-## 3. Bài tập 1 — Đọc mã và tìm vấn đề
+## 3. Exercise 1 — Read the code and find problems
 
-Giả sử ứng dụng bán hàng có đoạn Java sau. Đây là **mã cố ý có vấn đề để phân tích**; chưa có đủ validation và cơ chế an toàn tài chính.
+Suppose a sales application contains the following Java. It is **deliberately flawed code for analysis**, lacking sufficient validation and financial safeguards.
 
 ~~~java
 import java.util.List;
@@ -3155,39 +3155,39 @@ final class CheckoutManager {
 }
 ~~~
 
-### Yêu cầu tự làm trước khi xem lời giải
+### Your task before viewing the solution
 
-Ghi ít nhất sáu nhận xét theo mẫu:
+Record at least six observations using this template:
 
-| Vị trí | Dấu hiệu quan sát được | Hậu quả hoặc tình huống hỏng | Đề xuất | Test chứng minh |
+| Location | Observable symptom | Consequence or failure scenario | Proposal | Proving test |
 | --- | --- | --- | --- | --- |
-| Ví dụ: new ConsoleGateway() | Phụ thuộc trực tiếp implementation | Unit test luôn gọi adapter demo; khó mô phỏng bị từ chối | Inject Gateway qua constructor | Fake Gateway trả false; xác minh không ghi nhận thanh toán |
+| Example: new ConsoleGateway() | Direct dependency on an implementation | Unit tests always invoke the demo adapter; difficult to simulate declines | Inject Gateway through the constructor | Fake Gateway returns false; verify no payment is recorded |
 
-Bạn cần trả lời:
+Answer the following questions:
 
-- Thông tin “đơn giá” và “số lượng” có đủ rõ ràng trong List<long[]> không? Điều gì xảy ra nếu phần tử chỉ có một số?
-- Phép nhân/cộng có kiểm tra tràn long không?
-- Nếu khách có hai đơn hàng khác nhau, phương thức có thể tái sử dụng quy tắc tính giá dễ dàng không?
-- Phần nào là **nghiệp vụ của đơn hàng**, phần nào là **điều phối thanh toán**, phần nào là **ghi nhận doanh số**?
-- Nếu hệ thống thêm một cổng thanh toán mới, có cần sửa CheckoutManager không?
-- Nếu hai test chạy song song, totalPaidVnd có là dữ liệu đáng tin cậy không?
-- Chương trình xử lý thế nào với items = null, phần tử null, số lượng âm, mã đơn trống?
-- Có nhất thiết phải thay mọi đoạn mã bằng design pattern không?
+- Are "unit price" and "quantity" sufficiently clear in List<long[]>? What happens if an element contains just one number?
+- Are long multiplications/additions checked for overflow?
+- If a customer has two different orders, can the method easily reuse pricing rules?
+- Which responsibility belongs to **order business logic**, which to **payment orchestration**, and which to **sales recording**?
+- If another payment gateway is added, must CheckoutManager change?
+- If two tests run in parallel, is totalPaidVnd reliable state?
+- How does the program handle items = null, null elements, negative quantities, or blank order IDs?
+- Must every code fragment be replaced with a design pattern?
 
-### Gợi ý đáp án có giải thích
+### Suggested answers with reasoning
 
-| Vấn đề | Bản chất | Vì sao đáng quan tâm | Hướng sửa |
+| Problem | Nature | Why it matters | Fix |
 | --- | --- | --- | --- |
-| List<long[]> và các chỉ số 0, 1 | Primitive Obsession / dữ liệu khó hiểu | Dễ đảo đơn giá–số lượng, thiếu bất biến của dòng hàng | Tạo OrderLine với tên trường và validation |
-| amount được tính trong CheckoutManager | Trách nhiệm lẫn lộn, có dấu hiệu Feature Envy | Dịch vụ thanh toán phải biết cách tính giá | Đưa phép tính dòng hàng vào OrderLine, tổng vào Order |
-| amount += item[0] * item[1] | **Bug tiềm ẩn có thể tái hiện** khi overflow | long trong Java mặc định tràn mà không báo lỗi | Math.multiplyExact và Math.addExact |
-| new ConsoleGateway() | Coupling với implementation | Test không thể điều khiển kết quả cổng thanh toán | Constructor injection với Gateway |
-| static long totalPaidVnd | Shared mutable state | Các instance và test ảnh hưởng nhau; cập nhật không đồng bộ | Tách repository/ledger có vòng đời và cơ chế nhất quán rõ |
-| Không kiểm tra đầu vào | Thiếu bảo vệ bất biến | Có thể NPE, ArrayIndexOutOfBoundsException hoặc giá trị sai | Constructor/value object validate |
-| Một phương thức vừa định giá, gọi cổng, thống kê | Nhiều lý do thay đổi (SRP) | Đổi chính sách giá cũng phải sửa luồng thanh toán | Tách Order, CheckoutService và SalesLedger |
-| Trả false cho amount <= 0 | Hợp đồng chưa rõ | Dữ liệu sai bị trộn với trường hợp thanh toán bị từ chối | Phân biệt validation exception và từ chối của gateway |
+| List<long[]> and indices 0, 1 | Primitive Obsession / opaque data | Easy to confuse price and quantity; order-line invariants missing | Create OrderLine with named fields and validation |
+| amount computed in CheckoutManager | Mixed responsibilities / possible Feature Envy | Payment service must know pricing internals | Move line calculations into OrderLine and totals into Order |
+| amount += item[0] * item[1] | **Reproducible potential bug** on overflow | Java long silently overflows by default | Math.multiplyExact and Math.addExact |
+| new ConsoleGateway() | Coupling to implementation | Tests cannot control gateway results | Constructor injection with Gateway |
+| static long totalPaidVnd | Shared mutable state | Instances and tests interfere; updates are unsynchronized | Separate repository/ledger with clear lifecycle and consistency controls |
+| Missing input validation | Invariants are unprotected | May cause NPE, ArrayIndexOutOfBoundsException, or incorrect values | Constructor/value-object validation |
+| One method calculates prices, calls gateway, and aggregates sales | Multiple reasons to change (SRP) | A price-policy change also modifies payment flow | Separate Order, CheckoutService, and SalesLedger |
+| Returning false for amount <= 0 | Unclear contract | Invalid data is conflated with declined payments | Distinguish validation exceptions from gateway declines |
 
-Vấn đề về overflow có thể minh họa độc lập:
+An overflow problem can be illustrated independently:
 
 ~~~java
 long wrong = Long.MAX_VALUE + 1;
@@ -3196,16 +3196,16 @@ System.out.println(wrong); // -9223372036854775808
 Math.addExact(Long.MAX_VALUE, 1); // ArithmeticException
 ~~~
 
-Lưu ý: **Không phải mọi mùi mã tự động là bug.** Ví dụ static có thể phù hợp với hằng số bất biến. Rủi ro ở đây là **static mutable** dùng để lưu trạng thái giao dịch. Cũng không nên khẳng định mọi class đặt tên Manager đều kém; phải xét nội dung.
+**Note: Not every code smell is a bug.** static can be appropriate for immutable constants. Here the risk is using **static mutable** state to store transactions. Likewise, a class named Manager is not necessarily poorly designed; inspect what it does.
 
-## 4. Bài tập 2 — Refactor theo trách nhiệm OOP
+## 4. Exercise 2 — Refactor by OOP responsibilities
 
-Đề xuất tách thành ba phần:
+Proposed separation:
 
-- **OrderLine / Order:** sở hữu dữ liệu và quy tắc tính tiền.
-- **PaymentGateway:** hợp đồng gửi yêu cầu thanh toán; có thể thay implementation khi kiểm thử.
-- **SalesLedger:** hợp đồng ghi nhận kết quả thanh toán đã được chấp nhận.
-- **CheckoutService:** điều phối, không tự duyệt đơn để tính tiền hoặc sở hữu tổng doanh số toàn cục.
+- **OrderLine / Order:** own data and money-calculation rules.
+- **PaymentGateway:** contract for submitting payment requests; implementations can be exchanged in tests.
+- **SalesLedger:** contract for recording accepted payments.
+- **CheckoutService:** orchestrate without calculating order totals manually or owning global sales state.
 
 ~~~mermaid
 classDiagram
@@ -3241,14 +3241,14 @@ classDiagram
     CheckoutService --> SalesLedger
 ~~~
 
-Quy tắc ví dụ:
-- Đơn có ít nhất một dòng hàng; đơn giá và số lượng phải dương; mã đơn và mã sản phẩm không trống.
-- Tổng tiền bằng tổng của đơn giá × số lượng.
-- Khách VIP giảm 10% trên tổng tiền; số tiền giảm được làm tròn xuống VND bằng chia số nguyên.
-- Cổng thanh toán trả true thì ghi nhận thanh toán; trả false thì không ghi.
-- Khi tính toán bị overflow phải dừng trước khi gửi yêu cầu thanh toán.
+Example rules:
+- An order contains at least one line; unit prices and quantities are positive; order and product IDs are nonblank.
+- The amount is the sum of unit price × quantity for each line.
+- VIP customers receive a 10% discount on totals, rounded down to VND using integer division.
+- Record payments when the gateway returns true; do not record when it returns false.
+- Overflow during calculation must stop execution before payment requests are submitted.
 
-### 4.1. Dự án chạy được với Java 17 + Maven + JUnit 5
+### 4.1. Runnable Java 17 + Maven + JUnit 5 project
 
 ~~~text
 design-review-lab/
@@ -3442,7 +3442,7 @@ public final class Demo {
 }
 ~~~
 
-Tại thư mục có pom.xml, chạy:
+From the directory containing pom.xml, run:
 
 ~~~bash
 mvn test
@@ -3450,7 +3450,7 @@ mvn -q -DskipTests package
 java -cp target/classes example.Demo
 ~~~
 
-Đầu ra dự kiến:
+Expected output:
 
 ~~~text
 Payable: 207000
@@ -3459,11 +3459,11 @@ Recorded DH-101: 207000
 Accepted: true
 ~~~
 
-Các interface ở đây giúp tách việc **định giá**, **gọi cổng thanh toán** và **ghi nhận**. Trong sản phẩm thật, sự cố xảy ra sau khi thu tiền nhưng trước khi ghi vào ledger đòi hỏi cơ chế giao dịch bền vững, đối soát/idempotency hoặc transactional outbox; chỉ tách lớp không thể tự đảm bảo tính nhất quán phân tán.
+These interfaces separate **pricing**, **gateway calls**, and **recording**. In production, failures after a charge succeeds but before the ledger is updated require durable transactions, reconciliation/idempotency, or a transactional outbox; separating classes alone cannot guarantee distributed consistency.
 
-## 5. Bài tập 3 — Viết test chứng minh cải thiện
+## 5. Exercise 3 — Write tests that demonstrate improvements
 
-Sau refactor, test nên xác minh **hành vi nhìn được từ phía caller** và **các tương tác có tác dụng phụ**. Không cần mock chính CheckoutService.
+After refactoring, tests should verify **caller-observable behavior** and **side-effecting interactions**. CheckoutService itself need not be mocked.
 
 **src/test/java/example/DesignReviewTest.java**
 
@@ -3586,27 +3586,27 @@ class DesignReviewTest {
 }
 ~~~
 
-Bộ ví dụ có **7 phương thức @Test**. Lệnh mvn test được kỳ vọng hoàn tất không có test thất bại khi sao chép đủ các tệp đã nêu.
+The example suite contains **7 @Test methods**. Running mvn test should complete with no failures when all listed files are copied correctly.
 
-### Các kiểm thử phản ánh mùi mã nào?
+### Which code smells do these tests address?
 
-| Test | Bằng chứng mang lại |
+| Test | Evidence provided |
 | --- | --- |
-| lineOwnsItsSubtotal | Phép tính dòng hàng nằm tại chính đối tượng chứa dữ liệu |
-| orderOwnsPriceAndVipRule | Quy tắc định giá không bị lặp trong CheckoutService |
-| approvedPaymentIsRecordedExactlyOnce | Hai dependency được gọi đúng dữ liệu khi thanh toán được chấp nhận |
-| rejectedPaymentMustNotBeRecorded | Có thể chủ động mô phỏng cổng thanh toán từ chối |
-| invalidDataIsRejectedAtConstruction | Trạng thái sai bị chặn ở ranh giới tạo đối tượng |
-| overflowIsReportedBeforeCallingGateway | Lỗi số học không tạo yêu cầu thanh toán sai |
-| inputListChangesCannotModifyOrder | Đối tượng không bị thay đổi gián tiếp qua List bên ngoài |
+| lineOwnsItsSubtotal | Each order-line calculation lives in the object owning the data |
+| orderOwnsPriceAndVipRule | Pricing logic is not duplicated in CheckoutService |
+| approvedPaymentIsRecordedExactlyOnce | Both dependencies receive correct data for an approved payment |
+| rejectedPaymentMustNotBeRecorded | Gateway declines can be deliberately simulated |
+| invalidDataIsRejectedAtConstruction | Invalid state is blocked when objects are created |
+| overflowIsReportedBeforeCallingGateway | Arithmetic errors never produce invalid payment requests |
+| inputListChangesCannotModifyOrder | External List changes cannot indirectly modify the object |
 
-**Đừng suy luận quá mức từ test:** Các test này kiểm tra quy tắc nghiệp vụ và tính điều phối trong bộ nhớ. Chúng chưa xác minh một adapter thanh toán HTTP hay ledger database thật, càng không đảm bảo xử lý đúng concurrent updates hoặc giao dịch phân tán.
+**Do not overinterpret tests:** These tests exercise business rules and in-memory orchestration. They do not verify real HTTP payment adapters or database ledgers, nor guarantee correct concurrent updates or distributed transactions.
 
-## 6. Bài tập 4 — Chọn giải pháp cho các đoạn mã ngắn
+## 6. Exercise 4 — Choose solutions for short code snippets
 
-Hãy tự ghi vấn đề, ảnh hưởng và cách sửa trước khi đọc gợi ý. Mỗi trường hợp có thể có nhiều cách hợp lý tùy yêu cầu.
+Identify the issue, impact, and fix before reading the hints. Depending on requirements, more than one solution may be reasonable.
 
-### Tình huống A — Đối tượng bị sửa trạng thái tùy ý
+### Scenario A — Objects with arbitrarily mutable state
 
 ~~~java
 class Customer {
@@ -3621,11 +3621,11 @@ class CustomerService {
 }
 ~~~
 
-**Câu hỏi:** Nếu yêu cầu kích hoạt chỉ được thực hiện khi email hợp lệ, ai phải đảm bảo bất biến? Việc để public field khiến code bên ngoài có thể bỏ qua kiểm tra như thế nào?
+**Question:** If activation requires a valid email, who enforces this invariant? How do public fields allow outside code to bypass validation?
 
-**Gợi ý:** Chuyển field về private, thêm constructor hoặc phương thức thiết lập email có validation, và cân nhắc customer.activate() nếu hành vi thực sự thuộc về Customer. Không bắt buộc dùng setter cho mọi field.
+**Hint:** Make fields private, add a validating constructor or email-setting method, and consider customer.activate() if the behavior genuinely belongs to Customer. Not every field needs a setter.
 
-### Tình huống B — Dùng kế thừa chỉ để tái sử dụng mã
+### Scenario B — Inheritance used only for code reuse
 
 ~~~java
 class EmailSender {
@@ -3639,11 +3639,11 @@ class OrderService extends EmailSender {
 }
 ~~~
 
-**Câu hỏi:** “OrderService là một loại EmailSender” có đúng không? Nếu chuyển từ email sang SMS, ai sẽ phải thay đổi?
+**Question:** Is "OrderService is a type of EmailSender" a valid relationship? Who must change if email delivery becomes SMS?
 
-**Gợi ý:** Dùng kết hợp qua MessageSender interface; OrderService nhận đối tượng gửi thông điệp qua constructor. Điều này không có nghĩa kế thừa luôn sai; sai ở quan hệ phân loại thiếu ý nghĩa.
+**Hint:** Compose a MessageSender interface; inject the message sender into OrderService through its constructor. Inheritance is not always wrong; the problem here is a meaningless classification relationship.
 
-### Tình huống C — Kiểu con phá hợp đồng của kiểu cha
+### Scenario C — A subtype violates its parent's contract
 
 ~~~java
 class Bird {
@@ -3657,11 +3657,11 @@ class Penguin extends Bird {
 }
 ~~~
 
-**Câu hỏi:** Một hàm nhận Bird và gọi fly() có thể dùng Penguin an toàn không?
+**Question:** Can a function accepting Bird and calling fly() safely receive Penguin?
 
-**Gợi ý:** Mô hình Bird chỉ chứa những hành vi chung thực sự; tách năng lực Flyable cho các loại có thể bay. Đây là tín hiệu của vi phạm Liskov Substitution Principle; sửa mô hình hợp đồng thay vì ép Penguin bay.
+**Hint:** Keep only genuinely common behaviors in Bird; extract Flyable for types that can fly. This indicates a Liskov Substitution Principle violation; fix the contract model instead of forcing Penguin to fly.
 
-### Tình huống D — Tách loại đối tượng bằng instanceof
+### Scenario D — Distinguishing object types with instanceof
 
 ~~~java
 interface Discount {}
@@ -3679,11 +3679,11 @@ long discountAmount(Discount d, long subtotal) {
 }
 ~~~
 
-**Câu hỏi:** Khi thêm loại giảm giá mới, phải sửa bao nhiêu nơi chứa instanceof? Có nên cho mỗi chiến lược tự tính?
+**Question:** When a discount type is added, how many instanceof branches must change? Should each strategy calculate its own discount?
 
-**Gợi ý:** Nếu từng loại có cùng một hành vi biến thiên, khai báo method trên interface: long discount(long subtotal), rồi triển khai tại các loại. Tuy nhiên, một switch đơn giản cho đầu vào đóng/ổn định không tự động là lỗi; đánh giá tần suất mở rộng và vị trí sở hữu quy tắc.
+**Hint:** If types share a varying behavior, declare an interface method: long discount(long subtotal), then implement it for each type. A simple switch over closed, stable inputs is not automatically a defect; assess extension frequency and who owns the rules.
 
-### Tình huống E — Phụ thuộc ngầm qua thứ tự lời gọi
+### Scenario E — Hidden dependency on call order
 
 ~~~java
 class ReportBuilder {
@@ -3697,11 +3697,11 @@ class ReportBuilder {
 }
 ~~~
 
-**Câu hỏi:** Điều gì xảy ra nếu caller gọi render() trước setTitle()? Thiết kế có đang cho phép trạng thái chưa hợp lệ không?
+**Question:** What happens if a caller invokes render() before setTitle()? Does the design permit an invalid interim state?
 
-**Gợi ý:** Yêu cầu title trong constructor, kiểm tra trước khi khởi tạo; hoặc xác định trạng thái “chưa thiết lập” và xử lý hợp lệ. Không phải mọi builder đều sai — builder có thể hữu ích cho đối tượng nhiều trường tùy chọn, miễn build() xác nhận bất biến.
+**Hint:** Require title in the constructor and validate it before instantiation, or explicitly model and handle an "unset" state. Builders are not always wrong; they can help with many optional fields as long as build() validates invariants.
 
-### Tình huống F — Abstraction dư thừa
+### Scenario F — Unnecessary abstraction
 
 ~~~java
 interface AdditionStrategy {
@@ -3715,116 +3715,116 @@ class StandardAddition implements AdditionStrategy {
 }
 ~~~
 
-**Câu hỏi:** Khi nào interface này có giá trị? Nếu không có nhiều chiến lược cộng hoặc ranh giới thay thế cần thiết, có đáng tạo thêm abstraction không?
+**Question:** When does this interface add value? If there are no alternate addition strategies or meaningful substitution boundaries, is the abstraction justified?
 
-**Gợi ý:** Đơn giản hóa khi interface chỉ làm người đọc phải mở nhiều file mà không cung cấp lợi ích thực. “Nhiều abstraction” cũng là một dạng chi phí bảo trì.
+**Hint:** Simplify an interface that forces readers to open more files without delivering a tangible benefit. Excessive abstraction also increases maintenance costs.
 
-## 7. Bài tập 5 — Phân biệt refactor với thay đổi hành vi
+## 7. Exercise 5 — Distinguish refactoring from behavioral changes
 
-Một thay đổi **refactor** thường được kỳ vọng cải thiện cấu trúc trong khi giữ nguyên hành vi quan sát được theo hợp đồng hiện hành. Không nên âm thầm đổi luật nghiệp vụ dưới nhãn refactor.
+A **refactoring** change is generally expected to improve code structure while preserving behavior observable under the existing contract. Do not silently change business rules under the refactoring label.
 
-Xem ba thay đổi:
+Consider these changes:
 
-| Thay đổi | Refactor thuần túy? | Vì sao? |
+| Change | Pure refactor? | Why? |
 | --- | --- | --- |
-| Di chuyển phép tính dòng hàng sang OrderLine nhưng kết quả như cũ | Có, nếu không đổi dữ liệu, rounding và lỗi được công bố | Chỉ đổi nơi đặt trách nhiệm |
-| Đổi giảm VIP từ 10% sang 15% | Không | Đổi quy tắc nghiệp vụ |
-| Thay phép cộng thường bằng Math.addExact | Có thể là sửa lỗi/siết hợp đồng, không mặc nhiên giữ nguyên hành vi với overflow | Trước đây overflow trả số sai; nay ném exception |
-| Đổi trường public thành private và bỏ getter | Có thể là breaking change | Caller có thể không biên dịch |
-| Inject PaymentGateway qua constructor | Thường là refactor trong phạm vi nội bộ | Nhưng signature khởi tạo thay đổi; phải kiểm tra caller |
-| Đổi thứ tự xử lý các bước có tác dụng phụ | Cần xét hợp đồng | Có thể phá nghiệp vụ dù kết quả cuối giống nhau |
+| Move line-price calculations to OrderLine while retaining results | Yes, if data, rounding, and reported errors remain unchanged | Only responsibility placement changes |
+| Change VIP discount from 10% to 15% | No | Business rule changes |
+| Replace ordinary addition with Math.addExact | Possibly a bug fix/contract tightening; not necessarily behavior-preserving on overflow | Previously, overflow returned a wrong number; now it throws |
+| Make a public field private and remove its getter | Potential breaking change | Callers may no longer compile |
+| Inject PaymentGateway through the constructor | Usually an internal refactor | But construction signatures change, so callers must be checked |
+| Reorder side-effecting steps | Depends on the contract | May break business behavior even if final results look identical |
 
-Với ví dụ của bài, ta **vừa refactor cấu trúc vừa cải thiện validation và xử lý overflow**. Vì vậy phải mô tả rõ sự thay đổi hợp đồng: dữ liệu không hợp lệ giờ bị từ chối sớm, overflow ném lỗi. Không được tuyên bố toàn bộ hành vi trước/sau giống nhau với mọi đầu vào.
+In this example, we **both refactor the structure and improve validation and overflow handling**. Therefore, explicitly describe the contract changes: invalid input is now rejected earlier, and overflow throws. Do not claim all before/after behavior is identical for every input.
 
-Các test quan trọng trước khi sửa có thể gồm:
-- Khách thường và khách VIP với giá trị tiền hợp lệ.
-- Cổng thanh toán chấp nhận hoặc từ chối.
-- Số tiền ghi nhận bằng số tiền đã gửi tới cổng.
-- Lỗi về dữ liệu đầu vào và số học, khi đã thống nhất kết quả mong muốn.
-- Cả hai trường hợp có và không có tác dụng phụ.
+Important tests to write before editing might include:
+- Regular and VIP customers with valid monetary values.
+- Accepted and declined gateway responses.
+- Recorded payment amounts equal the amounts submitted to the gateway.
+- Input-validation and arithmetic errors after agreeing on the desired behavior.
+- Both cases with and without side effects.
 
-## 8. Bài tập 6 — Review yêu cầu mới trước khi viết code
+## 8. Exercise 6 — Review new requirements before coding
 
-Người quản lý muốn thêm ba tính năng:
-1. Áp dụng mã khuyến mãi theo chiến dịch.
-2. Đổi cổng thanh toán theo môi trường thử nghiệm và production.
-3. Ghi lịch sử thành công/thất bại của các giao dịch.
+Management requests three new features:
+1. Apply campaign promotion codes.
+2. Switch payment gateways between test and production environments.
+3. Record successful and failed transaction history.
 
-**Nhiệm vụ:** Với thiết kế trước và sau khi refactor, hãy đề xuất nơi thay đổi. Đánh dấu những lớp hiện tại có nguy cơ trở thành **God Object** nếu đưa toàn bộ tính năng vào một nơi.
+**Task:** For both the pre-refactor and post-refactor designs, propose where to make changes. Mark any existing class at risk of becoming a **God Object** if all new features are placed together.
 
-Một phương án:
+One possible allocation:
 
-| Yêu cầu | Lớp hoặc thành phần phù hợp | Vì sao? |
+| Requirement | Suitable class or component | Why? |
 | --- | --- | --- |
-| Khuyến mãi có chính sách độc lập, nhiều biến thể | DiscountPolicy/PricingService chuyên trách | Quy tắc thay đổi khác vòng đời Order |
-| Cổng thanh toán theo môi trường | Composition root và các PaymentGateway adapter | CheckoutService không chọn implementation |
-| Lịch sử giao dịch | TransactionRepository/PaymentRecorder | Trách nhiệm lưu trữ và truy xuất tách khỏi tính giá |
-| Kiểm tra tính hợp lệ của từng dòng hàng | OrderLine | Bất biến gắn với chính dòng hàng |
-| Kiểm soát thứ tự các bước thanh toán | CheckoutService hoặc application service | Đây là trách nhiệm điều phối use case |
+| Independent promotional policy with multiple variations | Dedicated DiscountPolicy/PricingService | Rules change on a different schedule from Order's lifecycle |
+| Environment-specific payment gateway | Composition root and PaymentGateway adapters | CheckoutService does not select implementations |
+| Transaction history | TransactionRepository/PaymentRecorder | Storage and retrieval responsibilities stay separate from pricing |
+| Validating each order line | OrderLine | Invariants belong to each line |
+| Enforcing payment step order | CheckoutService or application service | This is use-case orchestration |
 
-Nếu một chức năng cần dữ liệu từ nhiều aggregate hoặc cần gọi dịch vụ ngoài, không nên ép hết vào entity chỉ để “đúng OOP”. Vị trí đúng là nơi có trách nhiệm và ranh giới thay đổi hợp lý.
+If a feature needs data from multiple aggregates or calls external services, do not force it into an entity simply to "follow OOP". Put it where responsibilities and change boundaries make sense.
 
-## 9. Thang đánh giá bài làm
+## 9. Assessment rubric
 
-Đánh giá chất lượng review theo năm tiêu chí, mỗi tiêu chí từ 0 đến 2 điểm:
+Assess review quality using five criteria, each worth 0 to 2 points:
 
-| Tiêu chí | 0 điểm | 1 điểm | 2 điểm |
+| Criterion | 0 points | 1 point | 2 points |
 | --- | --- | --- | --- |
-| Nhận diện | Chỉ bình luận chung chung | Nêu vấn đề nhưng thiếu vị trí | Chỉ đúng vùng mã và dấu hiệu cụ thể |
-| Hậu quả | Không có tình huống minh họa | Nêu rủi ro mơ hồ | Nêu được input, thay đổi hoặc caller gây lỗi |
-| Giải pháp | Đề xuất mẫu thiết kế tùy tiện | Đúng hướng nhưng thêm phụ thuộc không cần thiết | Giải pháp rõ trách nhiệm, cân bằng độ phức tạp |
-| Kiểm thử | Không có test | Chỉ happy path | Có happy path, biên, lỗi và bất biến |
-| Đánh giá thay đổi | Tuyên bố mọi thay đổi đều là refactor | Nhìn thấy vài khác biệt | Phân biệt tương thích API, bug fix và đổi nghiệp vụ |
+| Issue identification | Only vague comments | Identifies issue but not location | Pinpoints the code region and concrete symptom |
+| Consequences | No example scenario | Vague risk | Gives failing input, change, or caller |
+| Solution | Arbitrarily suggests design patterns | Right direction with unnecessary dependencies | Clear responsibility and balanced complexity |
+| Testing | No tests | Happy path only | Includes happy path, boundaries, errors, and invariants |
+| Change assessment | Calls every change refactoring | Recognizes some differences | Distinguishes API compatibility, bug fixes, and business changes |
 
-Tổng tối đa **10 điểm**. Điểm cao không phụ thuộc vào số lượng design pattern bạn sử dụng; mã đơn giản và giải thích rõ thường tốt hơn việc thêm lớp chỉ cho “đủ SOLID”.
+Maximum score: **10 points**. High scores do not depend on the number of patterns used; simple code with clear reasoning usually outperforms adding classes merely to "satisfy SOLID".
 
-### Checklist trước khi kết thúc review
+### Checklist before completing the review
 
-- [ ] Tách được lỗi có thể chứng minh khỏi mùi mã cần cân nhắc.
-- [ ] Với mỗi nhận xét, chỉ ra được bằng chứng trong Java code.
-- [ ] Xác định đúng chủ sở hữu dữ liệu và quy tắc nghiệp vụ.
-- [ ] Không tự động dùng kế thừa hoặc interface khi không cần.
-- [ ] Có test bảo vệ nhánh thành công, từ chối và lỗi/biên.
-- [ ] Không che giấu thay đổi hành vi dưới tên gọi refactor.
-- [ ] Có cách kiểm tra tác động tới caller và hệ thống bên ngoài.
-- [ ] Đánh giá được cái giá của lớp/interface mới trước khi quyết định tách.
+- [ ] Distinguish demonstrable bugs from code smells requiring judgment.
+- [ ] Cite evidence in Java for every observation.
+- [ ] Identify the correct owners of data and business rules.
+- [ ] Avoid inheritance or interfaces when unnecessary.
+- [ ] Test successful, declined, and error/boundary paths.
+- [ ] Do not hide behavioral changes under the refactoring label.
+- [ ] Assess impacts on callers and external systems.
+- [ ] Weigh the cost of new classes/interfaces before extracting them.
 
-**Kết quả học tập:** Khi gặp một class “chạy được nhưng khó sửa”, bạn có thể biến cảm giác khó chịu thành nhận xét kỹ thuật có bằng chứng, đề xuất thay đổi với phạm vi rõ ràng và dùng kiểm thử để đánh giá kết quả — đó là kỹ năng cốt lõi của việc nhận diện lỗi thiết kế OOP.
+**Learning outcome:** When you encounter a class that "works but is hard to maintain", you can turn that concern into evidence-backed technical findings, propose scoped improvements, and use tests to evaluate them. These are core OOP design-review skills.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="practice-007">Bài tập tái cấu trúc đoạn mã thủ tục thành mô hình đối tượng</a>
+## <a id="practice-007">Refactoring procedural code into an object model</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Bài tập thực hành: Tái cấu trúc mã thủ tục thành mô hình đối tượng (Java)
+# Hands-on exercise: Refactoring procedural code into an object model (Java)
 
-**Chủ đề:** OOP → Thực hành → Bài tập tái cấu trúc đoạn mã thủ tục thành mô hình đối tượng  
-**Mức độ:** Trung cấp | **Yêu cầu:** Java 17 trở lên, JDK, terminal; không cần thư viện ngoài.
+**Topic:** OOP → Practice → Refactoring procedural code into an object model  
+**Level:** Intermediate | **Requirements:** Java 17 or later, JDK, terminal; no external libraries.
 
-## 1. Bối cảnh và yêu cầu
+## 1. Context and requirements
 
-Một ứng dụng bán hàng có hàm tính tiền đơn hàng. Phiên bản ban đầu dồn dữ liệu, kiểm tra loại khách hàng, tính giảm giá và phí giao hàng vào cùng một hàm thủ tục. Khi chính sách đổi hoặc cần tái sử dụng từng quy tắc, hàm khó kiểm thử và dễ phát sinh lỗi.
+A sales application calculates order totals in a function. Its initial procedural version combines input data, customer-type checks, discounts, and shipping fees in one function. Changes to policies or reuse of individual rules make the function difficult to test and error-prone.
 
-**Luật nghiệp vụ cần giữ nguyên đối với dữ liệu hợp lệ:**
+**Business rules to preserve for valid input:**
 
-1. Tạm tính = đơn giá × số lượng; mọi khoản tiền được biểu diễn bằng số nguyên VND.
-2. Khách VIP được giảm **10% tạm tính**, phần lẻ VND bị bỏ (chia nguyên); khách REGULAR không giảm.
-3. Sau khi giảm giá, nếu số tiền đạt **1.000.000 VND trở lên**, miễn phí giao hàng.
-4. Nếu chưa đủ ngưỡng miễn phí: giao NORMAL = 20.000 VND, EXPRESS = 50.000 VND.
-5. Tổng thanh toán = tạm tính − giảm giá + phí giao hàng.
+1. Subtotal = unit price × quantity; all monetary amounts are whole-number VND.
+2. VIP customers receive a **10% subtotal discount**, rounded down to whole VND using integer division; REGULAR customers have no discount.
+3. Shipping is free when the post-discount amount is **1.000.000 VND or more**.
+4. Below the free-shipping threshold: NORMAL = 20.000 VND, EXPRESS = 50.000 VND.
+5. Total payable = subtotal − discount + shipping fee.
 
-**Kết quả mong đợi:** Tổ chức lại mô hình thành các đối tượng có trách nhiệm rõ ràng, giấu trạng thái nội bộ, thay chuỗi phân loại bằng kiểu an toàn, tách chính sách chiết khấu khỏi luồng thanh toán và chứng minh các kết quả tính tiền không đổi.
+**Expected outcome:** Reorganize the model into objects with clear responsibilities, hide internal state, replace classification strings with type-safe values, separate discount policies from checkout flow, and prove that calculated totals remain unchanged.
 
-## 2. Đoạn mã thủ tục xuất phát
+## 2. Starting procedural implementation
 
-Giả sử mọi đầu vào đang hợp lệ và đây là logic ban đầu cần bảo toàn:
+Assume all inputs are valid and the following initial logic must be preserved:
 
 ~~~java
 public static long calculateTotal(
@@ -3851,40 +3851,40 @@ public static long calculateTotal(
 }
 ~~~
 
-**Nhận xét về thiết kế, không chỉ về cú pháp:**
+**Design observations beyond syntax:**
 
-- Hàm vừa nhận dữ liệu, vừa hiểu loại khách, vừa định giá, vừa chọn phí giao hàng; nhiều lý do có thể khiến nó thay đổi.
-- Giá trị chuỗi dễ bị nhập sai: ví dụ "vip" sẽ bị xử lý như REGULAR; "EXPREES" sẽ bị xử lý như NORMAL mà không báo lỗi.
-- Chính sách giảm giá bị gắn cứng vào hàm, nên thêm loại khách hàng sẽ phải sửa logic điều phối.
-- Kết quả chỉ là một số tổng; màn hình hóa đơn không biết phần tiền giảm hoặc phí giao hàng riêng.
-- Chưa có ranh giới rõ ràng cho dữ liệu không hợp lệ (đơn giá âm, số lượng bằng 0).
+- One function handles input, customer types, pricing, and shipping decisions; many independent reasons could cause it to change.
+- String values are easy to mistype: for example, "vip" is treated as REGULAR and "EXPREES" as NORMAL without an error.
+- Discount policy is hardcoded into the function, so a new customer type requires changes to orchestration.
+- The result contains only a total; an invoice view cannot show discounts or shipping fees separately.
+- There is no clear boundary for invalid data (negative unit prices, quantity 0).
 
-**Lưu ý:** Bài này cải thiện thiết kế và bổ sung kiểm tra hợp lệ. Việc từ chối đầu vào sai là thay đổi hành vi có chủ đích; chỉ kết quả cho đầu vào hợp lệ được yêu cầu giữ nguyên.
+**Note:** This exercise improves design and adds validation. Rejecting invalid inputs intentionally changes behavior; only results for valid inputs are required to remain unchanged.
 
-## 3. Nhiệm vụ tự thực hiện
+## 3. Implementation tasks
 
-Làm từng bước trước khi xem lời giải:
+Work through these steps before viewing the solution:
 
-1. **Đóng gói dữ liệu:** tạo lớp Order giữ đơn giá, số lượng, loại khách, hình thức giao; không cho sửa tùy tiện sau khi tạo. Đưa việc tính tạm tính vào Order.
-2. **Thay magic string:** dùng enum CustomerType { REGULAR, VIP } và ShippingMode { NORMAL, EXPRESS }.
-3. **Tách chính sách:** khai báo DiscountPolicy và hai triển khai NoDiscount, VipDiscount. Mỗi chính sách chỉ trả về tiền giảm, không tự tính phí giao.
-4. **Tách dịch vụ:** ShippingPolicy tính phí giao; CheckoutService phối hợp các đối tượng và trả về Receipt chứa từng khoản.
-5. **Kiểm thử hồi quy:** so sánh kết quả của các ca REGULAR/VIP, NORMAL/EXPRESS, có/không miễn phí giao và ca sát ngưỡng 1.000.000 VND.
-6. **Kiểm soát lỗi:** từ chối đơn giá âm, số lượng không dương, đối tượng bắt buộc bị null; không cho chính sách trả mức giảm âm hoặc vượt tạm tính.
+1. **Encapsulate data:** create an Order class that holds unit price, quantity, customer type, and shipping mode; disallow arbitrary modification after construction. Move subtotal calculation into Order.
+2. **Replace magic strings:** use enum CustomerType { REGULAR, VIP } and ShippingMode { NORMAL, EXPRESS }.
+3. **Extract policy:** define DiscountPolicy and two implementations, NoDiscount and VipDiscount. Each policy returns only the discount, without calculating shipping fees.
+4. **Extract service:** ShippingPolicy calculates shipping from the discounted amount and shipping mode; CheckoutService coordinates objects and returns a Receipt with each amount.
+5. **Regression tests:** compare REGULAR/VIP, NORMAL/EXPRESS, free/non-free shipping, and cases near the 1.000.000 VND threshold.
+6. **Validate errors:** reject negative prices, nonpositive quantities, and null required objects; reject discount policies returning negative values or values greater than subtotal.
 
-Đừng tạo đối tượng chỉ để thay tên hàm. Hãy tự trả lời: mỗi đối tượng sở hữu dữ liệu/quy tắc gì, ai được quyền thay đổi nó và test nào xác nhận đúng trách nhiệm đó?
+Do not introduce objects merely to rename functions. Ask what data/rules each object owns, who can modify them, and which tests confirm that responsibility.
 
-## 4. Phân chia trách nhiệm theo OOP
+## 4. Assigning OOP responsibilities
 
-| Thành phần | Trách nhiệm duy nhất nổi bật | Điều cần tránh |
+| Component | Primary responsibility | Avoid |
 |---|---|---|
-| Order | Nắm giữ dữ liệu đơn hàng hợp lệ, tính tạm tính | Biết cách tính giảm giá hoặc in hóa đơn |
-| CustomerType, ShippingMode | Biểu diễn các lựa chọn nghiệp vụ hợp lệ | Truyền chuỗi tùy ý khắp hệ thống |
-| DiscountPolicy | Hợp đồng tính tiền giảm trên tạm tính | Phụ thuộc trực tiếp vào giao hàng |
-| NoDiscount, VipDiscount | Hiện thực hai quy tắc chiết khấu | Chèn if-else phân loại khách vào chính từng chính sách |
-| ShippingPolicy | Tính phí từ số tiền sau giảm và hình thức giao | Tính lại tạm tính hoặc chiết khấu |
-| CheckoutService | Điều phối, bảo vệ bất biến và tạo Receipt | Chứa chi tiết mọi chính sách |
-| Receipt | Kết quả tính tiền có thể quan sát và kiểm thử | Âm thầm sửa số tiền trong lúc hiển thị |
+| Order | Hold valid order data and calculate subtotal | Calculating discounts or printing invoices |
+| CustomerType, ShippingMode | Represent valid business choices | Passing arbitrary strings throughout the system |
+| DiscountPolicy | Contract for calculating discounts from subtotal | Depending directly on shipping |
+| NoDiscount, VipDiscount | Implement two discount rules | Reintroducing customer-type if-else branches inside each policy |
+| ShippingPolicy | Calculate fees from post-discount amounts and shipping mode | Recalculating subtotal or discounts |
+| CheckoutService | Orchestrate, enforce invariants, and create Receipt | Containing every policy implementation |
+| Receipt | Observable and testable calculation result | Silently changing amounts during display |
 
 ~~~mermaid
 classDiagram
@@ -3916,11 +3916,11 @@ classDiagram
     CheckoutService --> Receipt
 ~~~
 
-**Ý đồ thiết kế:** Order bảo vệ trạng thái và cung cấp hành vi gắn với dữ liệu; DiscountPolicy dùng **đa hình** để chọn thuật toán tính giảm giá; CheckoutService dùng **composition** để phối hợp. ShippingPolicy hiện mới có một cách tính nên chưa cần tạo interface riêng.
+**Design intent:** Order protects its state and provides data-related behavior; DiscountPolicy uses **polymorphism** to choose discount algorithms; CheckoutService uses **composition** to coordinate them. ShippingPolicy currently has only one calculation approach, so no separate interface is needed.
 
-## 5. Lời giải tham khảo hoàn chỉnh, chạy độc lập
+## 5. Complete standalone reference solution
 
-Tạo một tệp **RefactorCheckout.java** và dán toàn bộ mã dưới đây. Các lớp lồng nhau chỉ giúp ví dụ nằm trong một tệp để chạy nhanh; trong dự án thực tế có thể tách thành các tệp cùng package.
+Create a **RefactorCheckout.java** file and paste in all the code below. Nested classes keep this demonstration in one runnable file; in a real project they can be split into files within the same package.
 
 ~~~java
 import java.util.Map;
@@ -4108,25 +4108,25 @@ public class RefactorCheckout {
 }
 ~~~
 
-Chạy bằng:
+Run with:
 
 ~~~bash
 javac RefactorCheckout.java
 java RefactorCheckout
 ~~~
 
-Kết quả mẫu:
+Sample output:
 
 ~~~text
 Receipt[subtotalVnd=400000, discountVnd=40000, shippingVnd=50000, totalVnd=410000]
 PASS: 5 business cases + 2 invalid inputs
 ~~~
 
-Trong chương trình thực tế, mỗi loại chính sách có thể nằm ở một lớp riêng. Map cấu hình chính sách được đưa vào qua constructor, nên CheckoutService không phải biết triển khai cụ thể nào tương ứng với từng loại khách. Nếu sau này thêm loại khách hàng, đăng ký chính sách mới tại điểm cấu hình sau khi cập nhật enum; không cần sửa thuật toán checkout.
+In a production program, policies can live in separate classes. A configuration map is supplied through the constructor, so CheckoutService need not know the concrete implementation for each customer type. If another customer type is introduced, register its policy at the configuration point after updating the enum; the checkout algorithm needs no modification.
 
-## 6. Bộ ca kiểm thử bắt buộc
+## 6. Required test cases
 
-| Khách | Đơn giá × SL | Giao | Giảm giá | Phí giao | Tổng kỳ vọng |
+| Customer | Unit price × Qty | Shipping | Discount | Shipping fee | Expected total |
 |---|---:|---|---:|---:|---:|
 | REGULAR | 400.000 × 1 | NORMAL | 0 | 20.000 | **420.000** |
 | VIP | 400.000 × 1 | EXPRESS | 40.000 | 50.000 | **410.000** |
@@ -4134,11 +4134,11 @@ Trong chương trình thực tế, mỗi loại chính sách có thể nằm ở
 | VIP | 1.100.000 × 1 | NORMAL | 110.000 | 20.000 | **1.010.000** |
 | REGULAR | 1.000.000 × 1 | NORMAL | 0 | 0 | **1.000.000** |
 
-Làm thêm bảng đối chiếu kết quả **trước/sau refactor** cho từng đầu vào hợp lệ. Hai bên phải có cùng tổng. Test sát ngưỡng miễn phí đặc biệt quan trọng: nếu vô tình xét tạm tính 1.100.000 trước giảm, ca VIP ở hàng thứ tư sẽ miễn phí sai.
+Add a comparison table of **before/after refactoring results** for every valid input; totals must match. Testing the free-shipping threshold is especially important: if subtotal 1.100.000 is mistakenly checked before the discount, the VIP case in the fourth row incorrectly receives free shipping.
 
-**Kiểm thử lỗi nên có:** null CustomerType/ShippingMode, số lượng 0 hoặc âm, giá âm, thiếu DiscountPolicy cho một loại khách, chính sách trả giá trị âm hoặc lớn hơn tạm tính, và phép nhân/cộng vượt giới hạn long. Đoạn mẫu dùng Math.multiplyExact/Math.addExact để báo ArithmeticException khi tràn số thay vì âm thầm trả kết quả sai. Không cần dùng double cho tiền VND; nếu xử lý tiền có phần thập phân hoặc nhiều đơn vị tiền tệ, cân nhắc BigDecimal kèm quy tắc làm tròn rõ ràng.
+**Include error tests for:** null CustomerType/ShippingMode, quantity 0 or negative, negative price, missing DiscountPolicy for a customer type, discount policies returning negative or above-subtotal values, and long multiplication/addition overflow. The example uses Math.multiplyExact/Math.addExact to throw ArithmeticException instead of silently returning an incorrect result. Avoid double for whole VND amounts; consider BigDecimal with explicit rounding rules for fractional or multicurrency payments.
 
-## 7. Cách refactor an toàn trên codebase thật
+## 7. Refactoring safely in a real codebase
 
 ~~~mermaid
 flowchart TD
@@ -4154,150 +4154,150 @@ flowchart TD
     H -- Có --> J[Xóa đường xử lý cũ, giữ test]
 ~~~
 
-Đề xuất mỗi lần chỉ thực hiện một thay đổi có thể kiểm chứng: **Extract Class → Encapsulate Field → Extract Method → Introduce Strategy → Move Method**. Chạy test sau từng bước. Nếu hệ thống cũ cho phép giá âm hoặc tên loại khách tùy ý, ghi rõ quyết định siết validation thành thay đổi nghiệp vụ riêng và bổ sung test cho nó; không nhầm lỗi do refactor với hành vi mới.
+Make one verifiable change at a time: **Extract Class → Encapsulate Field → Extract Method → Introduce Strategy → Move Method**. Run tests after each step. If legacy code accepts negative prices or arbitrary customer strings, document tighter validation as a separate business-rule change and test it explicitly; do not confuse refactoring regressions with intended behavior changes.
 
-### Dấu hiệu đã làm tốt
+### Signs of a successful refactor
 
-- Mỗi lớp có mục đích giải thích được trong một câu; các trường của Order là private final.
-- Thêm một cách tính chiết khấu mới chủ yếu là thêm triển khai DiscountPolicy và đăng ký nó tại điểm cấu hình.
-- Không có nhánh so sánh "VIP" hoặc "EXPRESS" rải rác trong CheckoutService.
-- Đơn giá, số lượng và kiểu giao không bị người gọi chỉnh sửa trực tiếp sau khi tạo Order.
-- Receipt cung cấp đầy đủ tạm tính, giảm, giao và tổng để xuất hóa đơn và kiểm thử.
-- Test kiểm tra các kết quả nghiệp vụ, không chỉ kiểm tra tên lớp hoặc getter.
+- Each class has a purpose explainable in one sentence; Order fields are private final.
+- Adding a discount formula mainly involves implementing DiscountPolicy and registering it in configuration.
+- Comparisons against "VIP" or "EXPRESS" are not scattered through CheckoutService.
+- Callers cannot directly modify unit price, quantity, or shipping mode after constructing Order.
+- Receipt exposes subtotal, discount, shipping fee, and total for invoices and tests.
+- Tests verify business results, not just class names or getters.
 
-### Những lỗi thiết kế dễ gặp
+### Common design mistakes
 
-- **God object:** chuyển nguyên hàm cũ vào Order rồi cho Order làm cả giảm giá, phí giao, in hóa đơn.
-- **Anemic model cực đoan:** Order chỉ còn getter/setter công khai, toàn bộ hành vi liên quan dữ liệu lại nằm ở tiện ích static.
-- **Đa hình hình thức:** tạo interface cho mọi lớp dù chỉ có một quy tắc ổn định; hãy thêm trừu tượng tại nơi có biến thể thật.
-- **Dùng double cho tiền:** dễ có sai số biểu diễn số thực; bài này dùng long VND.
-- **Chỉ kiểm thử happy path:** bỏ sót ngưỡng giao hàng và đầu vào không hợp lệ.
-- **Đổi hành vi ngoài ý muốn:** tính ngưỡng trên tạm tính thay vì số tiền sau giảm, hoặc làm tròn 10% khác phiên bản cũ.
+- **God object:** move the entire old function into Order and make it handle discounts, shipping, and invoice printing.
+- **Extreme anemic model:** leave Order with only public getters/setters and move all data-related behavior into static utilities.
+- **Superficial polymorphism:** create interfaces for every class even when only one stable policy exists; introduce abstractions at actual variation points.
+- **Using double for money:** floating-point representation may be inaccurate; this exercise uses long VND.
+- **Testing only the happy path:** overlook shipping thresholds and invalid inputs.
+- **Unintended behavior changes:** apply the threshold to subtotal instead of post-discount amount, or round the 10% differently from the original.
 
-## 8. Bài tập mở rộng và tiêu chí nộp bài
+## 8. Extensions and submission criteria
 
-**Bài A — Bronze:** Bỏ chuỗi loại khách/giao hàng; tách Order, CheckoutService và Receipt; giữ nguyên 5 kết quả trong bảng.
+**Exercise A — Bronze:** Replace customer/shipping type strings; extract Order, CheckoutService, and Receipt; retain all 5 table results.
 
-**Bài B — Silver:** Hoàn thiện DiscountPolicy, cho phép test CheckoutService với một chính sách giả trả tiền giảm tùy ý; kiểm tra chính sách trả tiền giảm sai.
+**Exercise B — Silver:** Complete DiscountPolicy, test CheckoutService with a fake policy returning an arbitrary discount, and reject invalid discount values.
 
-**Bài C — Gold:** Thêm chính sách chiết khấu PREMIUM = 15% vào enum và cấu hình, không sửa phương thức CheckoutService.checkout. Viết test khẳng định giá sau giảm được dùng để xét miễn phí giao. Nếu thay đổi quy tắc làm tròn, mô tả rõ thay đổi và test giá trị lẻ.
+**Exercise C — Gold:** Add a PREMIUM = 15% discount policy to the enum and configuration without changing CheckoutService.checkout. Test that free shipping is checked using the post-discount price. Document and test any changes to rounding rules for fractional results.
 
-**Nộp:** mã chạy được trên Java 17+, bảng các ca kiểm thử trước/sau có cùng kết quả, sơ đồ lớp hoặc bảng trách nhiệm và giải thích ngắn về encapsulation, composition, polymorphism. Hoàn thành khi mã cũ được thay thế an toàn, không còn logic trùng lặp và mọi ca hồi quy đều PASS.
+**Submission:** Runnable Java 17+ code, a before/after test-case table with matching results, a class diagram or responsibility table, and a brief explanation of encapsulation, composition, and polymorphism. The exercise is complete once the legacy logic is safely replaced, duplication is removed, and all regression cases pass.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="practice-008">Dự án tổng hợp: phân tích yêu cầu và tình huống sử dụng</a>
+## <a id="practice-008">Capstone project: requirements analysis and use cases</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Dự án tổng hợp: Phân tích yêu cầu và tình huống sử dụng (Java OOP)
+# Capstone project: Requirements analysis and use cases (Java OOP)
 
-> **Bối cảnh:** Đây là bước khởi đầu của một dự án hướng đối tượng. Trước khi tạo class hoặc viết Java, nhóm cần thống nhất **ai dùng hệ thống, cần làm gì, vì sao, khi nào thành công và những trường hợp nào phải từ chối**. Bài thực hành sử dụng hệ thống quản lý mượn sách thư viện làm ví dụ xuyên suốt. Các quy tắc cụ thể dưới đây là **giả định của bài tập**; khi làm dự án thật, phải xác nhận với người có quyền quyết định nghiệp vụ.
+> **Context:** This is the starting point of an object-oriented project. Before defining classes or writing Java, the team must agree on **who uses the system, what they need, why, what constitutes success, and which cases must be rejected**. The exercise uses library lending management as a running example. The specific rules below are **exercise assumptions**; in a real project, confirm them with authorized business decision-makers.
 
-## 1. Kết quả cần đạt
+## 1. Learning outcomes
 
-Sau bài này, bạn có thể:
+After this exercise, you can:
 
-1. Chuyển một mô tả mơ hồ thành **phạm vi dự án**, danh sách bên liên quan, yêu cầu chức năng và phi chức năng.
-2. Phân biệt **nhu cầu của người dùng**, **quy tắc nghiệp vụ**, **use case**, **tiêu chí nghiệm thu** và **thiết kế class**.
-3. Viết đặc tả use case gồm tác nhân, kích hoạt, tiền điều kiện, luồng chính, luồng ngoại lệ, hậu điều kiện.
-4. Phát hiện yêu cầu còn thiếu hoặc mâu thuẫn bằng cách đặt câu hỏi và khảo sát các tình huống biên.
-5. Từ yêu cầu suy ra mô hình đối tượng Java sơ bộ, kiểm tra tính nhất quán và lập danh sách test trước khi lập trình.
+1. Turn a vague description into **project scope**, a stakeholder list, and functional and nonfunctional requirements.
+2. Distinguish **user needs**, **business rules**, **use cases**, **acceptance criteria**, and **class design**.
+3. Specify use cases with actors, triggers, preconditions, main flows, exception flows, and postconditions.
+4. Identify missing or contradictory requirements by asking questions and exploring boundary scenarios.
+5. Derive a preliminary Java object model, check consistency, and list tests before implementation.
 
-**Đầu ra mong đợi:** tài liệu phạm vi, bảng yêu cầu có mã định danh, danh sách quy tắc nghiệp vụ, sơ đồ use case, ít nhất hai đặc tả use case chi tiết, mô hình miền sơ bộ, bảng truy vết yêu cầu–kiểm thử và các vấn đề cần xác nhận.
+**Expected deliverables:** a scope statement, identified requirements table, business-rule list, use-case diagram, at least two detailed use-case specifications, preliminary domain model, requirements-to-tests traceability matrix, and open questions needing confirmation.
 
-## 2. Bài toán và phạm vi
+## 2. Problem and scope
 
-Thư viện của một trung tâm đào tạo đang ghi sổ giấy. Nhân viên khó biết một **bản sách cụ thể** còn cho mượn được hay không, người nào đang mượn và khi nào phải trả. Trung tâm muốn có một ứng dụng Java cơ bản để giảm việc ghi trùng và kiểm tra quy định mượn/trả thống nhất.
+A training center library currently uses paper records. Staff struggle to tell whether a **specific book copy** can be borrowed, who currently has it, and when it is due. The center wants a basic Java application to prevent duplicate records and enforce lending/return rules consistently.
 
-**Mục tiêu nghiệp vụ:** nhân viên có thể tra cứu bản sách; ghi nhận mượn và trả chính xác; xem danh sách khoản mượn còn hiệu lực. Mỗi giao dịch phải có kết quả rõ ràng và không làm mất lịch sử.
+**Business objectives:** staff can look up copies, record loans and returns accurately, and view active loans. Each transaction must have an unambiguous outcome and preserve history.
 
-**Trong phạm vi phiên bản đầu tiên (MVP):**
+**In scope for the first version (MVP):**
 
-- Tra cứu đầu sách, các bản sách và trạng thái sẵn có.
-- Tra cứu thành viên đã đăng ký; kiểm tra trạng thái tài khoản.
-- Tạo lượt mượn cho một bản sách; tính ngày hẹn trả.
-- Trả sách; cập nhật trạng thái bản sách và đóng lượt mượn.
-- Xem danh sách lượt mượn đang hoạt động của thành viên.
+- Search book titles, their copies, and availability status.
+- Look up registered members and check account status.
+- Create a loan for a book copy and calculate its due date.
+- Return a book, update copy status, and close the loan.
+- List a member's currently active loans.
 
-**Ngoài phạm vi phiên bản đầu:** thanh toán phí trễ, đặt chỗ, gửi email/SMS, nhập sách hàng loạt, đăng ký tài khoản trực tuyến, quản lý nhiều chi nhánh. Những mục này có thể được đưa vào backlog sau khi xác nhận nhu cầu.
+**Out of scope for the first version:** late-fee payments, reservations, email/SMS, bulk book import, online registration, and multiple branches. These can enter the backlog after needs are confirmed.
 
-**Dữ liệu mẫu:** có hai đầu sách “Java căn bản” và “OOP thực hành”; đầu sách đầu tiên có hai bản riêng biệt mang mã BS-001 và BS-002. Thành viên TV-001 đang hoạt động, TV-002 bị khóa. Tách *đầu sách* khỏi *bản sách* ngay từ bước phân tích để tránh nhầm lẫn: một đầu sách có thể có nhiều bản với trạng thái mượn khác nhau.
+**Sample data:** two titles, “Java căn bản” and “OOP thực hành”; the first title has two distinct copies, BS-001 and BS-002. Member TV-001 is active, while TV-002 is blocked. Distinguish a *book title* from a *book copy* during analysis: one title may have multiple copies with different loan statuses.
 
-## 3. Xác định bên liên quan và khai thác yêu cầu
+## 3. Identifying stakeholders and eliciting requirements
 
-| Bên liên quan | Mục tiêu hoặc mối quan tâm | Câu hỏi nên phỏng vấn |
+| Stakeholder | Goal or concern | Interview questions |
 |---|---|---|
-| Nhân viên thư viện (tác nhân chính) | Xử lý mượn/trả nhanh, biết vì sao giao dịch bị từ chối | Ai được tạo giao dịch? Khi mất mạng phải xử lý thế nào? |
-| Thành viên (người hưởng lợi) | Biết sách có sẵn, hạn trả, lịch sử mượn | Được mượn tối đa bao nhiêu? Nếu trả trễ thì sao? |
-| Quản lý thư viện | Bảo toàn dữ liệu, thống kê tình trạng mượn | Quy định nào được ưu tiên? Ai được phép thay đổi chính sách? |
-| Người phát triển/kiểm thử | Có điều kiện rõ ràng để xây dựng và kiểm chứng | “Còn sách”, “quá hạn”, “trả thành công” nghĩa chính xác là gì? |
-| Hệ thống lưu trữ/đồng hồ | Cung cấp trạng thái và ngày hiện tại | Ngày được tính theo múi giờ nào? Cần chống ghi trùng ra sao? |
+| Library staff (primary actor) | Process loans/returns quickly and explain rejections | Who can create transactions? What happens during a network outage? |
+| Member (beneficiary) | Know availability, due dates, and loan history | How many books may be borrowed? What happens with late returns? |
+| Library manager | Preserve data and monitor lending activity | Which policies take priority? Who may change them? |
+| Developer/tester | Get explicit implementation and verification criteria | What exactly do "available", "overdue", and "successful return" mean? |
+| Storage system/clock | Supply current state and date | Which timezone applies to dates? How is duplicate recording prevented? |
 
-Đừng hỏi chung chung “Anh/chị muốn chức năng gì?”. Hãy đề nghị nhân viên mô tả một giao dịch thực tế, trường hợp bị từ chối, cách sửa sai và chứng từ cần giữ. Quan sát quy trình hiện tại, kiểm tra biểu mẫu, rồi **ghi lại giả định chưa được xác nhận**. Kết quả phỏng vấn phải trở thành yêu cầu có thể kiểm tra, thay vì những tính từ mơ hồ như “nhanh”, “dễ dùng”, “ổn định”.
+Do not ask only "What features do you want?" Ask staff to walk through a real transaction, a rejection, error correction, and records that must be retained. Observe the current process and forms, then **record unconfirmed assumptions**. Interviews should yield testable requirements instead of vague adjectives such as "fast", "easy", or "reliable".
 
-Ví dụ làm rõ yêu cầu: “Một người chỉ được mượn 3 cuốn” còn mơ hồ. Cần hỏi đó là **3 bản sách đang mượn cùng lúc** hay 3 lượt trong tháng; đúng 3 có được mượn cuốn thứ tư không; sách quá hạn có bị khóa mượn tiếp không. Trong ví dụ này, chọn tối đa 3 lượt **đang mở**, lượt thứ tư bị từ chối.
+For example, "A person may borrow only 3 books" is ambiguous. Does it mean **3 copies on loan concurrently** or 3 loans per month? If someone has exactly 3 loans, may they borrow a fourth copy? Are further loans blocked if one is overdue? This exercise chooses at most 3 **open loans**; the fourth is rejected.
 
-## 4. Đặc tả yêu cầu có thể kiểm chứng
+## 4. Testable requirements specification
 
-### 4.1. Yêu cầu chức năng (Functional Requirements)
+### 4.1. Functional requirements
 
-| ID | Yêu cầu | Điều kiện nghiệm thu cốt lõi | Ưu tiên |
+| ID | Requirement | Core acceptance condition | Priority |
 |---|---|---|---|
-| FR-01 | Tra cứu đầu sách và bản sách | Hiện đúng mã bản sách và trạng thái sẵn có | Must |
-| FR-02 | Tra cứu thành viên | Tìm được thành viên theo mã, biết hoạt động/khóa | Must |
-| FR-03 | Ghi nhận mượn một bản sách | Thỏa quy tắc thì tạo đúng một lượt mượn, đặt bản sách thành đang mượn | Must |
-| FR-04 | Từ chối lượt mượn không hợp lệ | Trả lý do cụ thể; không thay đổi trạng thái hay tạo lượt mượn | Must |
-| FR-05 | Ghi nhận trả sách | Đóng đúng lượt mượn, đặt bản sách thành sẵn có | Must |
-| FR-06 | Xem lượt mượn đang mở | Hiển thị thành viên, mã bản sách, ngày mượn, hạn trả | Must |
-| FR-07 | Xem lịch sử mượn/trả | Các giao dịch đã trả vẫn tra cứu được | Should |
-| FR-08 | Báo cáo sách quá hạn | Lọc các lượt chưa trả có ngày hiện tại sau hạn trả | Could |
+| FR-01 | Search book titles and copies | Display correct copy IDs and availability | Must |
+| FR-02 | Search members | Find members by ID and show active/blocked status | Must |
+| FR-03 | Record a book-copy loan | If rules pass, create exactly one loan and mark the copy on loan | Must |
+| FR-04 | Reject invalid loan requests | Explain the reason; do not change state or create a loan | Must |
+| FR-05 | Record book returns | Close the correct loan and mark the copy available | Must |
+| FR-06 | List open loans | Display member, copy ID, borrow date, and due date | Must |
+| FR-07 | View loan/return history | Returned transactions remain searchable | Should |
+| FR-08 | Report overdue books | Filter unreturned loans where current date exceeds the due date | Could |
 
-“Must / Should / Could” là thứ tự ưu tiên cho phạm vi thực hiện, **không phải** thứ tự gọi hàm Java. Mỗi yêu cầu nên có mã ổn định, người xác nhận và tiêu chí nghiệm thu đi kèm.
+“Must / Should / Could” prioritizes implementation scope; it is **not** the order in which Java functions are invoked. Each requirement needs a stable ID, approver, and acceptance criteria.
 
-### 4.2. Quy tắc nghiệp vụ (Business Rules)
+### 4.2. Business rules
 
-| ID | Quy tắc áp dụng cho bài tập | Ví dụ ranh giới |
+| ID | Rule used in this exercise | Boundary example |
 |---|---|---|
-| BR-01 | Chỉ thành viên đang hoạt động mới được mượn | TV-002 bị khóa → từ chối |
-| BR-02 | Mỗi thành viên có tối đa 3 lượt mượn chưa trả tại một thời điểm | Có đúng 3 → từ chối lượt thứ tư |
-| BR-03 | Chỉ bản sách trạng thái AVAILABLE mới được mượn | BS-001 đang được mượn → từ chối, dù BS-002 có thể còn |
-| BR-04 | Không cho mượn mới nếu thành viên có ít nhất một lượt quá hạn | Hạn trả hôm qua, chưa trả → từ chối |
-| BR-05 | Hạn trả = ngày mượn + 14 ngày theo lịch | Mượn ngày 01/03 → hạn 15/03 |
-| BR-06 | Mỗi lượt mượn chỉ được trả thành công một lần | Nhấn trả lần hai → từ chối, không ghi trùng |
-| BR-07 | Ngày trả không được trước ngày mượn | Ngày trả 05/03, ngày mượn 06/03 → lỗi |
-| BR-08 | Quá hạn khi chưa trả và **ngày hiện tại > ngày hẹn trả** | Đúng ngày hẹn trả thì chưa quá hạn |
+| BR-01 | Only active members may borrow | Blocked TV-002 → reject |
+| BR-02 | Each member may have at most 3 unreturned loans at once | Exactly 3 → reject the fourth |
+| BR-03 | Only a copy with AVAILABLE status can be borrowed | BS-001 on loan → reject, even if BS-002 remains available |
+| BR-04 | Reject new loans if a member has at least one overdue loan | Due yesterday, not yet returned → reject |
+| BR-05 | Due date = borrow date + 14 calendar days | Borrow on 01/03 → due 15/03 |
+| BR-06 | Each loan may be successfully returned only once | Second return attempt → reject, do not duplicate |
+| BR-07 | Return date must not precede borrow date | Return 05/03, borrowed 06/03 → error |
+| BR-08 | Overdue means not returned and **current date > due date** | Not overdue on the due date itself |
 
-Các chính sách này cần xác nhận trước khi chuyển thành cấu hình cố định. Đừng tự ý quy định tiền phạt, ngày nghỉ, hoặc gia hạn khi người dùng chưa đưa ra yêu cầu.
+Confirm these policies before fixing them in configuration. Do not invent fines, holidays, or renewal rules without user requirements.
 
-### 4.3. Yêu cầu phi chức năng (Non-functional Requirements)
+### 4.3. Nonfunctional requirements
 
-| ID | Thuộc tính chất lượng | Cách kiểm chứng đề xuất |
+| ID | Quality attribute | Suggested verification |
 |---|---|---|
-| NFR-01 | Toàn vẹn dữ liệu | Hai yêu cầu mượn đồng thời cùng một bản sách không thể đều thành công |
-| NFR-02 | Tính nhất quán | Giao dịch thất bại không để bản sách ở trạng thái đang mượn mà thiếu lượt mượn |
-| NFR-03 | Khả năng sử dụng | Lỗi hiển thị rõ mã thành viên/bản sách liên quan và lý do từ chối |
-| NFR-04 | Khả năng kiểm thử | Logic chính sách tách khỏi giao diện; ngày hiện tại được truyền vào/qua Clock |
-| NFR-05 | Tính bảo trì | Có thể đổi giới hạn mượn hoặc thời hạn mượn mà không sửa nhiều nơi |
+| NFR-01 | Data integrity | Two concurrent requests for the same copy cannot both succeed |
+| NFR-02 | Consistency | Failed transactions must not leave a copy marked on loan without a loan record |
+| NFR-03 | Usability | Errors clearly show relevant member/copy IDs and rejection reasons |
+| NFR-04 | Testability | Policy logic is separate from UI; current date is passed in or supplied through Clock |
+| NFR-05 | Maintainability | Change loan limits or duration without editing many locations |
 
-**Lưu ý:** số mili giây đáp ứng, số người dùng đồng thời, cơ chế đăng nhập và thời gian lưu lịch sử phải do bên liên quan xác nhận, không nên tự đặt con số để tạo vẻ “đầy đủ”.
+**Note:** Response-time milliseconds, concurrent-user counts, authentication mechanisms, and history-retention periods need stakeholder confirmation; do not invent figures to appear "complete".
 
-## 5. Nhận diện tác nhân và tình huống sử dụng
+## 5. Identifying actors and use cases
 
-**Actor (tác nhân)** là vai trò tương tác với hệ thống, không nhất thiết tương đương một class Java. Trong MVP, **Nhân viên thư viện** là tác nhân chính thao tác giao dịch thay cho thành viên; **Thành viên** là người có dữ liệu được xử lý và người hưởng lợi. Nếu sau này có cổng tự phục vụ, Thành viên mới trở thành tác nhân trực tiếp.
+An **actor** is a role interacting with the system, not necessarily a Java class. In the MVP, **Library staff** is the primary actor carrying out transactions for members; **Members** are beneficiaries whose data is handled. Members become direct actors only if a self-service portal is added.
 
-| Mã | Use case | Tác nhân chính | Kết quả mong muốn |
+| ID | Use case | Primary actor | Desired result |
 |---|---|---|---|
-| UC-01 | Tra cứu bản sách | Nhân viên | Biết bản nào hiện có thể cho mượn |
-| UC-02 | Cho thành viên mượn sách | Nhân viên | Một lượt mượn được tạo hợp lệ |
-| UC-03 | Nhận trả sách | Nhân viên | Đúng lượt mượn được đóng |
-| UC-04 | Xem các lượt mượn còn mở | Nhân viên | Có danh sách và hạn trả chính xác |
+| UC-01 | Search book copies | Staff | Know which copies are currently lendable |
+| UC-02 | Lend a book to a member | Staff | Create one valid loan |
+| UC-03 | Accept a book return | Staff | Close the correct loan |
+| UC-04 | View open loans | Staff | Obtain an accurate list and due dates |
 
 ~~~mermaid
 flowchart LR
@@ -4314,40 +4314,40 @@ flowchart LR
     NV --> UC4
 ~~~
 
-Sơ đồ thể hiện **mục tiêu người dùng và ranh giới hệ thống**, chưa phải sơ đồ các lớp, cũng không quy định màn hình hay API. Nên đặt tên use case theo **động từ + đối tượng**, tránh tên kỹ thuật như “gọi BorrowService” hoặc “ghi bảng loans”.
+The diagram describes **user goals and the system boundary**, not a class diagram or UI/API design. Name use cases using **verb + object**, avoiding technical names such as "call BorrowService" or "write to loans table".
 
-## 6. Đặc tả chi tiết UC-02 — Cho mượn bản sách
+## 6. Detailed UC-02 specification — Lending a book copy
 
-| Thuộc tính | Nội dung |
+| Attribute | Description |
 |---|---|
-| ID / Tên | UC-02 — Cho thành viên mượn một bản sách |
-| Tác nhân chính | Nhân viên thư viện |
-| Kích hoạt | Thành viên yêu cầu mượn một bản có mã xác định |
-| Đầu vào | memberId, copyId, ngày giao dịch |
-| Tiền điều kiện | Nhân viên có quyền thao tác; mã thành viên và mã bản sách tồn tại |
-| Hậu điều kiện thành công | Tạo một Loan đang mở; bản sách chuyển sang ON_LOAN; lưu hạn trả |
-| Hậu điều kiện thất bại | Không tạo Loan; trạng thái bản sách và các lượt mượn không đổi |
-| Quy tắc liên quan | BR-01 đến BR-05; NFR-01, NFR-02 |
+| ID / Name | UC-02 — Lend one book copy to a member |
+| Primary actor | Library staff |
+| Trigger | A member requests a copy identified by its ID |
+| Input | memberId, copyId, transaction date |
+| Preconditions | Staff member is authorized; member ID and copy ID exist |
+| Success postconditions | Create an open Loan, mark copy ON_LOAN, and save due date |
+| Failure postconditions | No Loan is created; copy and loan states remain unchanged |
+| Related rules | BR-01 through BR-05; NFR-01, NFR-02 |
 
-**Luồng thành công:**
+**Success flow:**
 
-1. Nhân viên nhập mã thành viên và quét mã bản sách.
-2. Hệ thống tìm thành viên và bản sách; cho xem thông tin để xác nhận.
-3. Hệ thống kiểm tra thành viên đang hoạt động, số lượt mượn đang mở, lượt quá hạn và trạng thái của **đúng bản sách đó**.
-4. Hệ thống tính ngày hẹn trả bằng ngày giao dịch cộng 14 ngày.
-5. Hệ thống lưu lượt mượn, cập nhật trạng thái bản sách như **một giao dịch nhất quán**.
-6. Hệ thống trả kết quả gồm mã lượt mượn, mã bản sách và ngày hẹn trả.
+1. Staff enter member ID and scan the book copy ID.
+2. System finds the member and copy and displays details for confirmation.
+3. System checks active membership, number of open loans, overdue loans, and the status of **that exact copy**.
+4. System calculates the due date by adding 14 days to the transaction date.
+5. System saves the Loan and updates copy status as **one consistent transaction**.
+6. System returns loan ID, copy ID, and due date.
 
-**Luồng thay thế và lỗi:**
+**Alternative and error flows:**
 
-- **A1 – Thành viên không tồn tại:** thông báo “Không tìm thấy thành viên”; không tạo dữ liệu.
-- **A2 – Bản sách không tồn tại:** thông báo “Không tìm thấy bản sách”; không tạo dữ liệu.
-- **A3 – Thành viên bị khóa (BR-01):** từ chối mượn.
-- **A4 – Đã đủ 3 lượt đang mở (BR-02):** từ chối mượn.
-- **A5 – Có lượt quá hạn (BR-04):** từ chối mượn, gợi ý xử lý khoản quá hạn.
-- **A6 – Bản sách đang được mượn (BR-03):** từ chối; có thể tìm bản khác cùng đầu sách.
-- **A7 – Hai nhân viên cùng mượn một bản:** chỉ một giao dịch được ghi thành công; giao dịch còn lại nhận lỗi xung đột.
-- **A8 – Lỗi lưu trữ:** toàn bộ thay đổi phải được hủy; không để Loan và BookCopy lệch trạng thái.
+- **A1 – Member not found:** show "Member not found"; create no records.
+- **A2 – Copy not found:** show "Book copy not found"; create no records.
+- **A3 – Member blocked (BR-01):** reject loan.
+- **A4 – Already has 3 open loans (BR-02):** reject loan.
+- **A5 – Overdue loan exists (BR-04):** reject and suggest resolving the overdue loan.
+- **A6 – Copy currently on loan (BR-03):** reject; another copy of the same title may be available.
+- **A7 – Two staff members lend one copy concurrently:** exactly one transaction succeeds; the other receives a conflict error.
+- **A8 – Storage failure:** roll back all changes; Loan and BookCopy must not be left inconsistent.
 
 ~~~mermaid
 sequenceDiagram
@@ -4369,36 +4369,36 @@ sequenceDiagram
     UI-->>NV: Hiển thị kết quả
 ~~~
 
-**Điểm dễ sai:** nếu hệ thống đọc “AVAILABLE”, rồi hai luồng cùng ghi Loan mà không có kiểm soát đồng thời, một bản sách có thể bị cho mượn hai lần. Yêu cầu NFR-01 phải được giải quyết bằng transaction cùng ràng buộc dữ liệu/khóa hoặc cập nhật có điều kiện khi triển khai kho lưu trữ thật; kiểm tra bằng câu lệnh if trong RAM là chưa đủ.
+**Common pitfall:** If two threads both read AVAILABLE and then write Loan records without concurrency control, the same copy can be loaned twice. Implement NFR-01 with transactions plus storage constraints/locking or conditional updates against a real database; an if statement in RAM is insufficient.
 
-## 7. Đặc tả chi tiết UC-03 — Nhận trả sách
+## 7. Detailed UC-03 specification — Returning a book
 
-| Thuộc tính | Nội dung |
+| Attribute | Description |
 |---|---|
-| ID / Tên | UC-03 — Trả một lượt mượn |
-| Tác nhân chính | Nhân viên thư viện |
-| Đầu vào | loanId, ngày trả |
-| Tiền điều kiện | Loan tồn tại, đang mở; ngày trả không trước ngày mượn |
-| Hậu điều kiện thành công | Loan có returnedAt, bản sách AVAILABLE, lịch sử vẫn được giữ |
-| Hậu điều kiện thất bại | Không thay đổi Loan hoặc BookCopy |
-| Quy tắc liên quan | BR-06, BR-07; NFR-02 |
+| ID / Name | UC-03 — Return one loan |
+| Primary actor | Library staff |
+| Input | loanId, return date |
+| Preconditions | Loan exists and is open; return date is not before borrow date |
+| Success postconditions | Loan has returnedAt, copy is AVAILABLE, and history is preserved |
+| Failure postconditions | Neither Loan nor BookCopy changes |
+| Related rules | BR-06, BR-07; NFR-02 |
 
-**Luồng chính:** (1) nhân viên xác định đúng lượt mượn đang mở; (2) hệ thống kiểm tra ngày trả và trạng thái; (3) hệ thống ghi ngày trả, chuyển bản sách về sẵn có trong cùng một giao dịch; (4) trả biên nhận thành công.
+**Main flow:** (1) Staff identify the correct open loan; (2) system validates return date and state; (3) system records the return date and makes the copy available in one transaction; (4) system returns a success receipt.
 
-**Ngoại lệ:** mã lượt mượn không tồn tại; lượt đã trả; ngày trả trước ngày mượn; lỗi lưu trữ. Với lượt quá hạn, **vẫn cho trả** trong MVP; việc thu phí là ngoài phạm vi nên không chặn thao tác trả.
+**Exceptions:** unknown loan ID; already returned; return date before borrow date; storage failure. In the MVP, **overdue copies can still be returned**; fee collection is out of scope and must not block returns.
 
-## 8. Từ ngôn ngữ nghiệp vụ đến mô hình đối tượng
+## 8. From business language to an object model
 
-Tách **danh từ miền** (Member, BookTitle, BookCopy, Loan) khỏi **hành vi phối hợp** (BorrowingService) và **hạ tầng** (LoanRepository, MemberRepository, CopyRepository). Một bản sách là đối tượng riêng; Loan đại diện cho một giao dịch cụ thể, không nên gắn ngày mượn trực tiếp lên BookTitle vì đầu sách có nhiều bản.
+Separate **domain nouns** (Member, BookTitle, BookCopy, Loan) from **coordinating behavior** (BorrowingService) and **infrastructure** (LoanRepository, MemberRepository, CopyRepository). A book copy is a distinct object; Loan represents one transaction. Do not store borrow dates directly on BookTitle because a title has multiple copies.
 
-| Khái niệm | Thuộc tính trọng yếu | Trách nhiệm gợi ý |
+| Concept | Key attributes | Suggested responsibility |
 |---|---|---|
-| Member | id, active | Xác định thành viên và trạng thái tài khoản |
-| BookTitle | isbn, title | Mô tả tác phẩm/đầu sách |
-| BookCopy | id, bookTitle, status | Đại diện một bản vật lý, kiểm soát trạng thái |
-| Loan | id, member, copy, borrowedOn, dueOn, returnedOn | Ghi vòng đời một lượt mượn |
-| BorrowingPolicy | maxActiveLoans, loanDays | Cung cấp/chứng thực chính sách mượn |
-| BorrowingService | repositories, policy, Clock | Thực thi UC-02 và UC-03, phối hợp lưu trữ |
+| Member | id, active | Identify a member and account status |
+| BookTitle | isbn, title | Describe a work/book title |
+| BookCopy | id, bookTitle, status | Represent a physical copy and control its status |
+| Loan | id, member, copy, borrowedOn, dueOn, returnedOn | Record a loan's lifecycle |
+| BorrowingPolicy | maxActiveLoans, loanDays | Provide/enforce lending policy |
+| BorrowingService | repositories, policy, Clock | Execute UC-02 and UC-03, coordinating persistence |
 
 ~~~mermaid
 classDiagram
@@ -4430,13 +4430,13 @@ classDiagram
     BorrowingService ..> Loan : xử_lý
 ~~~
 
-**Phân biệt use case với class:** UC-02 là một **mục tiêu nghiệp vụ có nhiều bước**; nó có thể cần tương tác giữa Member, BookCopy, Loan, Policy và Repository. Không nên tạo một class cho mỗi dòng bước đi, hoặc xem mọi danh từ trong mô tả là entity bắt buộc.
+**Use cases versus classes:** UC-02 is a **multi-step business goal**; it may require interactions among Member, BookCopy, Loan, Policy, and Repository. Do not make a class for every step or treat every noun in the description as a mandatory entity.
 
-Thiết kế OOP sơ bộ có thể thay đổi khi xác thực yêu cầu. Chỉ khai báo thuộc tính thực sự cần cho hành vi; dùng **encapsulation** để tránh mã ngoài tự thay đổi trạng thái; phân chia trách nhiệm theo **single responsibility**; truy cập dữ liệu qua interface nếu ứng dụng cần thay được loại lưu trữ.
+The preliminary OOP design may change as requirements are validated. Declare only attributes needed for behavior; use **encapsulation** to prevent external state tampering; assign responsibilities by **single responsibility**; access data through interfaces when storage types need to be interchangeable.
 
-## 9. Mẫu Java 17 minh họa cách mã hóa quy tắc
+## 9. Java 17 example of encoding business rules
 
-Đây là **mô phỏng trong bộ nhớ** để thấy mối quan hệ giữa yêu cầu và kiểm tra nghiệp vụ. Nó chưa có xác thực nhân viên, cơ sở dữ liệu, transaction hoặc an toàn đồng thời. Lưu thành **LibraryDemo.java** và chạy bằng Java 17+.
+This **in-memory simulation** illustrates the connection between requirements and business validation. It lacks staff authentication, a database, transactions, and concurrency safety. Save it as **LibraryDemo.java** and run with Java 17+.
 
 ~~~java
 import java.time.LocalDate;
@@ -4575,26 +4575,26 @@ public class LibraryDemo {
 }
 ~~~
 
-**Tại sao mã ví dụ chưa phải sản phẩm hoàn chỉnh?** Nó so sánh Member bằng tham chiếu đối tượng vì dùng đúng instance trong bộ nhớ; dữ liệu thực cần so sánh bằng **id định danh ổn định**. Kho Loan trong RAM không bền sau khi tắt ứng dụng; cập nhật Loan rồi BookCopy có thể sai lệch nếu lỗi xảy ra giữa chừng. Khi triển khai thật, nên giao việc lưu cho repository, gói thay đổi vào transaction và đảm bảo chỉ một tác nhân đặt được bản sách từ AVAILABLE sang ON_LOAN. Các rủi ro này đã được đặt thành NFR ngay từ lúc phân tích.
+**Why is the example not production-ready?** It compares Member objects by reference because it uses the same in-memory instances; real data requires stable **identity IDs**. The RAM Loan store does not survive application restarts; updates to Loan and BookCopy can diverge on an intervening failure. Production code should delegate persistence to repositories, wrap state changes in transactions, and ensure only one actor can move a copy from AVAILABLE to ON_LOAN. These risks were specified as NFRs during requirements analysis.
 
-## 10. Tình huống nghiệm thu và kiểm thử
+## 10. Acceptance scenarios and tests
 
-Dưới đây là **đặc tả test từ nghiệp vụ**, có thể dùng cho JUnit sau này. Để test ổn định, truyền ngày kiểm thử cố định hoặc dùng Clock được tiêm vào, không phụ thuộc LocalDate.now() trực tiếp.
+The following are **business-level test specifications** suitable for later JUnit tests. For deterministic tests, pass a fixed test date or inject Clock rather than calling LocalDate.now() directly.
 
-| Test ID | Yêu cầu liên quan | Given (ban đầu) | When (hành động) | Then (kỳ vọng) |
+| Test ID | Related requirements | Given (initial state) | When (action) | Then (expected) |
 |---|---|---|---|---|
-| T-01 | FR-03, BR-05 | TV-001 hoạt động, BS-001 AVAILABLE, không nợ sách | Mượn ngày 01/03/2026 | Loan mở, hạn 15/03/2026, bản ON_LOAN |
-| T-02 | FR-04, BR-01 | Thành viên bị khóa | Mượn BS-001 | MEMBER_INACTIVE, không tạo Loan |
-| T-03 | FR-04, BR-02 | Thành viên đã có đúng 3 Loan mở | Mượn thêm bản thứ tư | LIMIT_REACHED, mọi dữ liệu cũ giữ nguyên |
-| T-04 | FR-04, BR-03 | BS-001 ON_LOAN | Mượn BS-001 lần nữa | COPY_UNAVAILABLE, không tạo Loan |
-| T-05 | FR-04, BR-04, BR-08 | Có Loan mở hạn 14/03 | Mượn ngày 15/03 | OVERDUE_LOAN |
-| T-06 | FR-03, BR-08 | Có Loan mở hạn 15/03, không có nợ khác | Mượn ngày 15/03 nếu chưa đạt giới hạn | Không bị chặn vì quá hạn |
-| T-07 | FR-05, BR-06 | Loan đang mở | Trả ngày hợp lệ hai lần | Lần đầu thành công; lần sau LOAN_ALREADY_RETURNED |
-| T-08 | FR-05, BR-07 | Loan mượn ngày 06/03 | Trả ngày 05/03 | RETURN_BEFORE_BORROW, Loan vẫn mở |
-| T-09 | NFR-01 | Một bản AVAILABLE, hai yêu cầu đồng thời | Cùng mượn một copyId | Chính xác một Loan được ghi |
-| T-10 | NFR-02 | Kho lưu xảy ra lỗi giữa quá trình mượn | Giao dịch thất bại | Không ghi Loan dở dang hay đổi trạng thái bản sách |
+| T-01 | FR-03, BR-05 | TV-001 active, BS-001 AVAILABLE, no overdue loans | Borrow on 01/03/2026 | Open Loan, due 15/03/2026, copy ON_LOAN |
+| T-02 | FR-04, BR-01 | Member blocked | Borrow BS-001 | MEMBER_INACTIVE, no Loan created |
+| T-03 | FR-04, BR-02 | Member already has exactly 3 open Loans | Borrow a fourth copy | LIMIT_REACHED, prior data unchanged |
+| T-04 | FR-04, BR-03 | BS-001 ON_LOAN | Borrow BS-001 again | COPY_UNAVAILABLE, no Loan created |
+| T-05 | FR-04, BR-04, BR-08 | Open Loan due 14/03 | Borrow on 15/03 | OVERDUE_LOAN |
+| T-06 | FR-03, BR-08 | Open Loan due 15/03, with no other overdue loan | Borrow on 15/03 if below limit | Not blocked for overdue status |
+| T-07 | FR-05, BR-06 | Open Loan | Return twice on valid dates | First succeeds; second LOAN_ALREADY_RETURNED |
+| T-08 | FR-05, BR-07 | Loan borrowed on 06/03 | Return on 05/03 | RETURN_BEFORE_BORROW, Loan stays open |
+| T-09 | NFR-01 | One AVAILABLE copy, two concurrent requests | Both try to borrow the same copyId | Exactly one Loan is recorded |
+| T-10 | NFR-02 | Storage fails during borrowing | Transaction fails | No partial Loan or copy-state change |
 
-Một kịch bản viết theo cú pháp gần với **Gherkin**:
+One scenario expressed in a **Gherkin-like** syntax:
 
 ~~~gherkin
 Feature: Cho mượn bản sách
@@ -4608,112 +4608,112 @@ Feature: Cho mượn bản sách
     And bản sách "BS-004" vẫn sẵn có
 ~~~
 
-Một test tốt kiểm tra **cả kết quả lẫn bất biến dữ liệu khi thất bại**. Đừng chỉ assert có exception: nếu hàm ném lỗi sau khi đã đổi trạng thái sách thì nghiệp vụ vẫn sai.
+A good test checks **both outcomes and data invariants after failure**. Do not merely assert that an exception is thrown: if the function changes a copy's state before throwing, the business operation is still wrong.
 
-## 11. Truy vết yêu cầu → use case → lớp → kiểm thử
+## 11. Traceability: requirement → use case → class → test
 
-| Quy tắc/yêu cầu | Use case | Nơi dự kiến xử lý trong OOP | Test |
+| Requirement/rule | Use case | Expected OOP owner | Test |
 |---|---|---|---|
-| FR-01 | UC-01 | BookTitle, BookCopy, CatalogService | Test tra cứu theo copyId |
+| FR-01 | UC-01 | BookTitle, BookCopy, CatalogService | Copy lookup by copyId |
 | FR-03, BR-01, BR-02 | UC-02 | BorrowingService, Member, BorrowingPolicy | T-01, T-02, T-03 |
 | FR-04, BR-03, BR-04 | UC-02 | BookCopy, Loan, BorrowingService | T-04, T-05, T-06 |
 | FR-03, BR-05 | UC-02 | Loan, BorrowingPolicy | T-01 |
 | FR-05, BR-06, BR-07 | UC-03 | Loan, BookCopy, BorrowingService | T-07, T-08 |
-| NFR-01, NFR-02 | UC-02 / UC-03 | Repository, transaction, ràng buộc lưu trữ | T-09, T-10 |
+| NFR-01, NFR-02 | UC-02 / UC-03 | Repository, transactions, storage constraints | T-09, T-10 |
 
-Bảng truy vết giúp trả lời ba câu hỏi quan trọng: **Yêu cầu này được thực hiện ở đâu? Được kiểm tra bằng gì? Nếu đổi quy tắc, những thành phần nào bị ảnh hưởng?** Chẳng hạn, nếu giới hạn từ 3 lên 5, sửa chính sách và cập nhật T-03; không sửa hàng loạt class giao diện.
+The traceability table answers three questions: **Where is this requirement implemented? How is it tested? Which components change if the rule changes?** For example, if the limit changes from 3 to 5, update the policy and T-03 without changing every UI class.
 
-## 12. Quy trình thực hành theo nhóm
+## 12. Team exercise workflow
 
-1. **Thu thập:** mỗi người phỏng vấn một vai trò; tổng hợp 5–10 tình huống mượn/trả thực tế, gồm trường hợp thất bại.
-2. **Đặt phạm vi:** chốt MVP, ngoài phạm vi và giả định. Gắn mã FR, NFR, BR. Mỗi câu phải có tiêu chí kiểm chứng.
-3. **Đặc tả:** vẽ sơ đồ use case và mô tả đầy đủ UC-02, UC-03. Kiểm tra tiền điều kiện, luồng ngoại lệ, hậu điều kiện.
-4. **Phân tích đối tượng:** liệt kê entity, value object, service và kho dữ liệu; vẽ class diagram sơ bộ; gán trách nhiệm theo các quy tắc nghiệp vụ.
-5. **Kiểm thử trước thiết kế chi tiết:** viết bảng Given–When–Then với ranh giới, dữ liệu sai, lặp giao dịch, đồng thời và lỗi lưu trữ.
-6. **Review cùng bên liên quan:** trình bày ví dụ thực tế, xin xác nhận quy tắc và các quyết định còn mở; chỉ sau đó mới chia task triển khai.
+1. **Elicit:** each person interviews one role; collect 5–10 realistic lending/return scenarios, including failures.
+2. **Define scope:** agree on MVP, exclusions, and assumptions. Assign FR, NFR, and BR IDs. Every statement needs testable criteria.
+3. **Specify:** draw the use-case diagram and fully describe UC-02, UC-03. Check preconditions, error flows, and postconditions.
+4. **Analyze objects:** list entities, value objects, services, and repositories; sketch a class diagram; assign responsibilities using business rules.
+5. **Design tests before implementation:** write Given–When–Then scenarios for boundaries, invalid data, repeated transactions, concurrency, and storage failures.
+6. **Review with stakeholders:** present concrete examples, get approval for policies and open decisions, and only then distribute implementation tasks.
 
-**Checklist trước khi chuyển sang lập trình:**
+**Checklist before implementation:**
 
-- [ ] Mỗi yêu cầu chức năng có mã ID, tác nhân, đầu vào và kết quả quan sát được.
-- [ ] “Đầu sách” và “bản sách” được phân biệt; mỗi Loan gắn đúng một bản sách.
-- [ ] Giới hạn 3, hạn 14 ngày, định nghĩa quá hạn và trạng thái bị khóa đã được xác nhận.
-- [ ] UC-02/UC-03 có cả luồng thành công, lỗi và hậu điều kiện không làm hỏng dữ liệu.
-- [ ] Các trường hợp đúng giới hạn, vượt giới hạn và trả hai lần đều có test.
-- [ ] Yêu cầu về lưu trữ, transaction và truy cập đồng thời đã được ghi rõ.
-- [ ] Có bảng truy vết từ yêu cầu đến use case, thành phần dự kiến và kiểm thử.
-- [ ] Không còn yêu cầu quan trọng chỉ mô tả bằng từ mơ hồ như “nhanh”, “tốt”, “an toàn”.
+- [ ] Each functional requirement has an ID, actor, input, and observable result.
+- [ ] Book titles and physical copies are distinguished; every Loan references the correct copy.
+- [ ] The limit of 3, duration of 14 days, overdue definition, and blocked status are confirmed.
+- [ ] UC-02/UC-03 describe successful/error flows and postconditions that preserve data.
+- [ ] Tests cover exact limits, exceeded limits, and duplicate returns.
+- [ ] Persistence, transactions, and concurrent-access requirements are explicitly recorded.
+- [ ] A traceability table links requirements to use cases, intended components, and tests.
+- [ ] No critical requirement is described only with vague words such as "fast", "good", or "safe".
 
-## 13. Bài tập mở rộng và tự đánh giá
+## 13. Extension exercises and self-assessment
 
-**Bài A — Phân tích thay đổi:** quản lý cho phép mỗi thành viên mượn tối đa **5 bản**, nhưng tài liệu tham khảo chỉ mượn **7 ngày**. Hãy xác định các FR/BR, use case, lớp và test cần cập nhật. Thảo luận liệu thời hạn mượn nên là thuộc tính cố định của Loan hay do Policy tính khi tạo Loan (gợi ý: lưu **dueOn đã chốt** trong Loan để thay đổi chính sách về sau không tự thay đổi hạn trả của giao dịch cũ).
+**Exercise A — Analyze a change:** Management raises the member limit to **5 copies**, while reference materials may be borrowed for only **7 days**. Identify FRs/BRs, use cases, classes, and tests that need updating. Discuss whether loan duration belongs as a fixed Loan attribute or should be calculated by Policy at creation (hint: store the **finalized dueOn** in Loan so future policy changes do not retroactively alter old loans).
 
-**Bài B — Làm rõ yêu cầu:** khi quá hạn, thành viên có được trả sách trực tiếp không? Khi trả vào đúng ngày hạn thì hệ thống báo quá hạn hay chưa? Nếu sách bị mất, hệ thống có cho “trả” không? Viết câu hỏi phỏng vấn thay vì tự suy diễn.
+**Exercise B — Clarify requirements:** Can overdue members return books directly? Is a return on the due date considered late? Can a lost book be "returned"? Write interview questions rather than inventing answers.
 
-**Bài C — Phát hiện lỗi thiết kế:** có đề xuất đặt biến boolean borrowed vào BookTitle và tạo Loan mà không gắn copyId. Hãy nêu ít nhất ba tình huống khiến mô hình này thất bại, rồi chỉnh lại sơ đồ miền.
+**Exercise C — Find a design flaw:** Someone suggests putting a boolean borrowed flag on BookTitle and creating Loans without copyId. Describe at least three failure scenarios for this model, then correct the domain diagram.
 
-**Tiêu chí tự đánh giá:** người khác có thể đọc README, dựng lại đúng luồng nghiệp vụ, viết test mà không phải đoán ý; mỗi quy tắc có trường hợp biên; mô hình lớp phục vụ yêu cầu thực tế thay vì được tạo tùy tiện; những quyết định chưa được xác nhận được nêu minh bạch.
+**Self-assessment criteria:** Another reader can use the README to reconstruct the business flow and write tests without guessing; every rule has boundary cases; the class model addresses actual requirements rather than arbitrary structure; and unconfirmed decisions are stated clearly.
 
 ---
 
-**Ghi nhớ:** phân tích yêu cầu trả lời **“hệ thống phải làm gì và thế nào là đúng”**; tình huống sử dụng trả lời **“ai tương tác, tương tác khi nào và những nhánh nào có thể xảy ra”**; thiết kế hướng đối tượng mới trả lời **“đối tượng nào giữ dữ liệu và chịu trách nhiệm thực hiện hành vi đó”**. Đi từ yêu cầu có thể kiểm thử đến use case rõ ràng sẽ giúp dự án Java OOP tránh được sai lệch nghiệp vụ ngay từ đầu.
+**Remember:** requirements analysis asks **"what must the system do, and what is correct?"**; use cases ask **"who interacts, when, and along which possible flows?"**; only then does object-oriented design ask **"which objects own the data and perform the behavior?"**. Moving from testable requirements to clear use cases helps Java OOP projects avoid early business-rule misunderstandings.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="practice-009">Dự án tổng hợp: thiết kế lớp và quan hệ</a>
+## <a id="practice-009">Capstone project: class and relationship design</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Dự án tổng hợp OOP: Thiết kế lớp và quan hệ trong hệ thống mượn trả sách
+# OOP capstone: Designing classes and relationships in a library lending system
 
-> **Mục tiêu:** Từ một yêu cầu nghiệp vụ bằng ngôn ngữ tự nhiên, xác định đúng đối tượng, trách nhiệm, thuộc tính, hành vi và quan hệ giữa các lớp; hiện thực một phiên bản chạy được bằng Java 17; tự kiểm tra các bất biến và giải thích vì sao chọn quan hệ đó. Dự án tập trung vào **thiết kế lớp và quan hệ**, không tập trung vào giao diện hay cơ sở dữ liệu.
+> **Goal:** Starting from natural-language business requirements, identify suitable objects, responsibilities, attributes, behaviors, and class relationships; implement a runnable Java 17 version; verify invariants and justify the chosen relationships. The project focuses on **class and relationship design**, rather than UI or database implementation.
 
-## 1. Bối cảnh và yêu cầu
+## 1. Context and requirements
 
-Một thư viện nhỏ quản lý **đầu sách**, **bản sách vật lý**, **độc giả** và **phiếu mượn**.
+A small library manages **book titles**, **physical copies**, **members**, and **loan records**.
 
-- Mỗi đầu sách có ISBN và tên sách. Một đầu sách có thể có nhiều bản sách riêng biệt. Chẳng hạn, ba cuốn cùng tựa đề có chung ISBN nhưng có ba mã bản sách khác nhau.
-- Mỗi độc giả được nhận diện bằng mã duy nhất.
-- Chỉ được mượn bản sách AVAILABLE bởi độc giả đã đăng ký và đang hoạt động; thành viên có lượt quá hạn chưa trả không được mượn mới.
-- Khi mượn, hệ thống tạo phiếu mượn ghi độc giả, bản sách, ngày mượn và hạn trả. Một bản sách không được thuộc hai phiếu mượn **đang hoạt động** cùng lúc.
-- Mỗi độc giả được có tối đa ba phiếu đang hoạt động; phải từ chối phiếu thứ tư. Thời hạn mượn mặc định 14 ngày và một lượt quá hạn chỉ được tính khi còn mở và ngày hiện tại sau hạn trả. Con số này thuộc về chính sách, có thể thay đổi.
-- Trả sách bằng mã phiếu: phải là phiếu đang hoạt động; ngày trả không thể trước ngày mượn; sau khi trả, bản sách lại sẵn sàng.
-- Hệ thống từ chối mã trùng, mã không tồn tại và thao tác không hợp lệ bằng ngoại lệ rõ nghĩa.
+- Each title has an ISBN and title name. One title may have multiple distinct copies. For example, three books with the same title share an ISBN but have three different copy IDs.
+- Each member is identified by a unique ID.
+- Only AVAILABLE copies may be loaned to registered, active members; members with overdue open loans cannot borrow more.
+- Borrowing creates a loan record with the member, copy, borrow date, and due date. A copy may not belong to two **active** loans at once.
+- Each member may have at most three active loans; the fourth must be rejected. The default loan period is 14 days, and an open loan becomes overdue only after its due date. These policy values may change.
+- Returns use the loan ID: the loan must be active, the return date must not precede borrowing, and the copy becomes available afterward.
+- Reject duplicate IDs, missing IDs, and invalid operations with meaningful exceptions.
 
-**Ngoài phạm vi phiên bản đầu:** đăng nhập, đặt trước, tiền phạt, lưu dữ liệu lâu dài, giao diện đồ họa và nhiều người dùng ghi dữ liệu đồng thời. Việc chủ động giới hạn phạm vi giúp các quan hệ OOP dễ kiểm chứng.
+**Out of scope for the first version:** login, reservations, fines, durable storage, graphical UI, and concurrent data writes. Explicit scope limits make the OOP relationships easier to verify.
 
-### Tách danh từ và động từ
+### Extracting nouns and verbs
 
-| Cụm trong yêu cầu | Mô hình đề xuất | Lý do |
+| Requirement phrase | Proposed model | Rationale |
 |---|---|---|
-| Đầu sách | `Book` | Thông tin mô tả sách; nhiều bản có thể dùng chung |
-| Bản sách | `BookCopy` | Có mã riêng và trạng thái sẵn sàng/đang mượn |
-| Độc giả | `Member` | Có định danh và tên |
-| Phiếu mượn | `Loan` | Ghi nhận một lần mượn cụ thể |
-| Quy định hạn trả và số lượng | `LoanPolicy` | Quy tắc có thể thay đổi độc lập với nghiệp vụ |
-| Đăng ký, mượn, trả, tra cứu | `LibraryService` | Điều phối nhiều đối tượng để hoàn thành ca sử dụng |
+| Book title | `Book` | Shared descriptive information across copies |
+| Book copy | `BookCopy` | Own identifier and availability/loan status |
+| Member | `Member` | Has an ID and name |
+| Loan record | `Loan` | Records one specific lending event |
+| Due-date and quantity rules | `LoanPolicy` | Rules that can vary independently of business flow |
+| Register, borrow, return, search | `LibraryService` | Coordinates multiple objects to complete use cases |
 
-Không nên máy móc biến mọi danh từ thành lớp. Ví dụ, “ngày trả” là dữ liệu kiểu `LocalDate`; “đang mượn” là trạng thái; “cho mượn” là hành vi liên quan đến nhiều đối tượng.
+Do not mechanically turn every noun into a class. A "return date" is `LocalDate` data; "on loan" is a state; "lend" is behavior involving multiple objects.
 
-## 2. Thiết kế trách nhiệm trước khi viết mã
+## 2. Assign responsibilities before writing code
 
-| Lớp/giao diện | Chịu trách nhiệm | Không nên chịu trách nhiệm |
+| Class/interface | Responsibility | Should not be responsible for |
 |---|---|---|
-| `Book` | Giữ ISBN và tiêu đề hợp lệ | Ghi nhận ai đang mượn từng cuốn |
-| `BookCopy` | Giữ mã bản sách và trạng thái được mượn | Tự tìm độc giả hoặc quyết định giới hạn mượn |
-| `Member` | Giữ thông tin định danh và cờ hoạt động của độc giả | Quản lý toàn bộ kho sách |
-| `Loan` | Giữ lịch sử của **một** lượt mượn, bảo vệ quy tắc trả một lần | Tự quản lý danh sách tất cả độc giả |
-| `LoanPolicy` | Xác định thời hạn và giới hạn số phiếu hoạt động | Đọc/ghi kho dữ liệu |
-| `StandardLoanPolicy` | Hiện thực một chính sách cụ thể | Điều phối quy trình mượn trả |
-| `LibraryService` | Tra cứu đối tượng, kiểm tra quy tắc liên đối tượng, tạo/đóng phiếu | Chứa chi tiết định dạng màn hình, SQL hay HTTP |
+| `Book` | Hold valid ISBN and title | Tracking who borrowed each copy |
+| `BookCopy` | Hold copy ID and borrowing status | Finding members or deciding borrowing limits |
+| `Member` | Hold member identity and active-status flag | Managing the entire book inventory |
+| `Loan` | Maintain the history of **one** loan and enforce one-time return | Managing all members |
+| `LoanPolicy` | Define loan duration and active-loan limits | Reading/writing storage |
+| `StandardLoanPolicy` | Implement a concrete policy | Orchestrating the lending workflow |
+| `LibraryService` | Find objects, check cross-object rules, and create/close loans | UI formatting, SQL, or HTTP details |
 
-Câu hỏi kiểm tra **Single Responsibility**: “Nếu quy định hạn mượn thay đổi từ 14 lên 21 ngày, lớp nào phải sửa?” Câu trả lời tốt là thay cấu hình hoặc hiện thực `LoanPolicy`, không phải sửa `Book`, `Member` hay `Loan`.
+**Single Responsibility** check: "If loan duration changes from 14 to 21 days, which class must change?" Ideally, adjust configuration or the `LoanPolicy` implementation, not `Book`, `Member`, or `Loan`.
 
-### Sơ đồ quan hệ (UML)
+### Relationship diagram (UML)
 
 ```mermaid
 classDiagram
@@ -4767,17 +4767,17 @@ classDiagram
     LoanPolicy <|.. StandardLoanPolicy : hiện thực
 ```
 
-Đọc đúng ý nghĩa ký hiệu:
+Interpret the notation carefully:
 
-- **Association (`-->`):** `Loan` tham chiếu `Member` và `BookCopy`. Hai đối tượng được tham chiếu vẫn có ý nghĩa riêng, không được tạo lại chỉ để lập phiếu.
-- **Aggregation (`o--`):** `LibraryService` giữ danh sách độc giả và bản sách được đăng ký từ bên ngoài; các đối tượng này có thể được tạo độc lập với service.
-- **Composition (`*--`):** trong thiết kế minh họa, service tạo và quản lý vòng đời phiếu `Loan` thuộc kho lịch sử của nó. Đây là **quan hệ sở hữu về mặt mô hình**; Java không tự hủy đối tượng theo UML và chương trình thực tế có thể cần kho lưu phiếu độc lập.
-- **Realization (`<|..`):** `StandardLoanPolicy` *implements* `LoanPolicy`. Service phụ thuộc vào hợp đồng giao diện, nên có thể đổi chính sách mà không đổi quy trình.
-- **Multiplicity:** `"*"` nghĩa là nhiều, `"1"` là một. Một đầu sách có nhiều bản; một phiếu gắn đúng một độc giả và đúng một bản sách.
+- **Association (`-->`):** `Loan` references `Member` and `BookCopy`. Referenced objects retain independent meaning and need not be recreated for each loan.
+- **Aggregation (`o--`):** `LibraryService` holds a collection of members and copies registered externally; those objects can exist independently of the service.
+- **Composition (`*--`):** in this illustrative design, the service creates and manages the lifecycle of `Loan` records in its history store. This represents **conceptual model ownership**; Java does not automatically destroy objects according to UML, and real systems may need a separate loan repository.
+- **Realization (`<|..`):** `StandardLoanPolicy` *implements* `LoanPolicy`. The service depends on the interface contract, allowing policies to be replaced without changing the workflow.
+- **Multiplicity:** `"*"` means many, and `"1"` means one. A title has multiple copies; a loan references exactly one member and one copy.
 
-**Không dùng `extends` chỉ vì hai lớp cùng có thuộc tính.** Chỉ dùng kế thừa khi quan hệ “là một loại của” thực sự đúng và việc thay thế đối tượng vẫn bảo toàn hợp đồng (Liskov Substitution). Với `Book` và `BookCopy`, một bản sách *thuộc* một đầu sách, chứ không phải một kiểu con của đầu sách; dùng tham chiếu phù hợp hơn kế thừa.
+**Do not use `extends` just because two classes share fields.** Inherit only when a genuine "is a type of" relationship holds and substitutability preserves the contract (Liskov Substitution). With `Book` and `BookCopy`, a copy *belongs to* its title; it is not a subtype of the title. A reference is more appropriate than inheritance.
 
-## 3. Luồng tương tác
+## 3. Interaction flow
 
 ```mermaid
 sequenceDiagram
@@ -4805,20 +4805,20 @@ sequenceDiagram
     S-->>Reader: Trả thành công
 ```
 
-**Bất biến cần bảo vệ:**
+**Invariants to enforce:**
 
-1. Mã bản sách và mã độc giả trong cùng service là duy nhất; thành viên bị khóa không được mượn.
-2. Mọi phiếu tham chiếu tới một độc giả và một bản sách đã đăng ký.
-3. `Loan.borrowedOn < Loan.dueOn`; ngày trả không sớm hơn ngày mượn.
-4. Mỗi bản sách tối đa một phiếu đang hoạt động tại một thời điểm.
-5. Số phiếu hoạt động của mỗi độc giả không vượt `LoanPolicy.maxActiveLoans()`; thành viên có một phiếu mở quá hạn bị chặn mượn tiếp.
-6. Phiếu đã trả không thể trả thêm lần nữa.
+1. Member and copy IDs are unique within a service; blocked members may not borrow.
+2. Every loan refers to a registered member and book copy.
+3. `Loan.borrowedOn < Loan.dueOn`; return date cannot precede borrow date.
+4. A book copy has at most one active loan at a time.
+5. Each member's active loans never exceed `LoanPolicy.maxActiveLoans()`; an overdue open loan prevents further borrowing.
+6. Returned loans cannot be returned again.
 
-Các bất biến 1, 2, 4, 5 đòi hỏi nhìn qua **nhiều đối tượng**, vì vậy service chịu trách nhiệm kiểm tra. Các bất biến nội tại của một phiếu nằm trong `Loan`. Trạng thái có thể mượn/trả nằm trong `BookCopy` và bị bảo vệ bằng phương thức, không để trường `borrowed` công khai.
+Invariants 1, 2, 4, and 5 require examining **multiple objects**, so the service enforces them. Invariants internal to a loan belong in `Loan`. Borrowing/return state belongs in `BookCopy` and is guarded by methods rather than an exposed `borrowed` field.
 
-## 4. Cài đặt Java 17 chạy được
+## 4. Runnable Java 17 implementation
 
-Tạo **một file `LibraryDemo.java`**. Các kiểu khác ngoài lớp `public` là package-private để ví dụ chạy trong một file duy nhất; ở dự án thật hãy tách từng kiểu sang file riêng và tổ chức theo package.
+Create **one `LibraryDemo.java` file**. Types other than the `public` class are package-private to keep the example in one file; real projects should place types in separate package-organized files.
 
 ```java
 import java.time.LocalDate;
@@ -5058,25 +5058,25 @@ final class LibraryService {
 }
 ```
 
-Trong mã này:
+In this code:
 
-- `Book` chính là *đầu sách* (`BookTitle` trong bài phân tích yêu cầu); `BookCopy` vẫn là từng bản vật lý riêng, không dùng ISBN làm mã bản.
-- `Book` và `Member` là `record` bất biến, phù hợp cho thông tin định danh/mô tả. Java sinh accessors, `equals`, `hashCode` và `toString` theo giá trị.
-- `BookCopy` và `Loan` là đối tượng có **trạng thái theo thời gian**. Hai bản sách cùng ISBN vẫn là hai thực thể riêng, nhờ mã `copy.id()`.
-- Các trường dữ liệu đặt `private`, các phụ thuộc thiết yếu dùng `final`, quy tắc được kiểm tra ngay khi tạo hoặc thay đổi trạng thái: đó là **encapsulation**, không chỉ là viết getter/setter.
-- `LibraryService` nhận `LoanPolicy` qua constructor (**dependency injection**); gọi qua giao diện (**polymorphism**). Không cần cây kế thừa phức tạp.
-- `HashMap` dùng để tìm theo mã, `UUID` tạo mã phiếu minh họa; trong hệ thống thực cần quy tắc định danh, lưu trữ và giao dịch rõ ràng.
+- `Book` represents a *book title* (`BookTitle` in the requirements-analysis exercise); `BookCopy` remains a distinct physical copy and does not use ISBN as a copy ID.
+- `Book` and `Member` are immutable `record` types, appropriate for identity/descriptive information. Java generates value-based accessors, `equals`, `hashCode`, and `toString`.
+- `BookCopy` and `Loan` have **state that evolves over time**. Copies sharing an ISBN remain distinct entities through `copy.id()`.
+- Fields use `private`, essential dependencies use `final`, and rules are checked at construction or state changes. This is **encapsulation**, beyond merely writing getters/setters.
+- `LibraryService` receives `LoanPolicy` through its constructor (**dependency injection**) and calls through the interface (**polymorphism**). No complex inheritance tree is needed.
+- `HashMap` supports lookup by ID, and `UUID` provides illustrative loan IDs; production requires explicit identity, persistence, and transaction rules.
 
-### Biên dịch và chạy
+### Compile and run
 
-Yêu cầu **JDK 17 trở lên** vì có `record` và `String.isBlank()`.
+Requires **JDK 17 or later** because the code uses `record` and `String.isBlank()`.
 
 ```bash
 javac -encoding UTF-8 LibraryDemo.java
 java LibraryDemo
 ```
 
-Đầu ra mong đợi:
+Expected output:
 
 ```text
 Hạn trả: 2026-10-29
@@ -5086,32 +5086,32 @@ Chặn mượn trùng bản sách
 Phiếu còn hoạt động: false
 ```
 
-Ví dụ dùng ngày cố định để việc kiểm tra có thể lặp lại. `2026-10-15.plusDays(14)` là `2026-10-29`. Hạn trả không tự động đóng phiếu; người đọc vẫn được trả muộn vì phiên bản này chưa triển khai xử phạt.
+Fixed dates make the example repeatable. `2026-10-15.plusDays(14)` gives `2026-10-29`. The due date does not automatically close a loan; late returns remain allowed because this version has no penalty handling.
 
-## 5. Kiểm thử hành vi và quan hệ
+## 5. Testing behavior and relationships
 
-Hãy chạy từng ca sau bằng một đối tượng `LibraryService` mới hoặc làm sạch trạng thái giữa các ca. Việc lặp lại trong cùng một kho đang có phiếu sẽ làm thay đổi tiền điều kiện.
+Run each scenario with a fresh `LibraryService` or reset state between cases. Reusing a store with existing loans changes test preconditions.
 
-| Ca kiểm thử | Thao tác | Kết quả đúng |
+| Test case | Action | Expected result |
 |---|---|---|
-| Luồng chuẩn | Đăng ký độc giả, thêm bản sách, mượn và trả | Ngày hạn trả chính xác; trạng thái từ `false → true → false` |
-| Mã độc giả trùng | `register` hai `Member` cùng mã | `IllegalArgumentException` |
-| Mã bản sách trùng | `addCopy` hai bản cùng mã | `IllegalArgumentException` |
-| Mã không tồn tại | `borrow("unknown", "COPY-001", date)` | `IllegalArgumentException` |
-| Bản sách đang được mượn | Mượn cùng `copyId` lần hai khi chưa trả | `IllegalStateException` |
-| Đạt giới hạn | Độc giả đã mượn ba bản, thử mượn bản thứ tư | `IllegalStateException` |
-| Trả hai lần | Gọi `returnCopy` lần hai với cùng `loanId` | `IllegalStateException` |
-| Thành viên bị khóa | `Member(..., false)` mượn bản sẵn có | `IllegalStateException`; không tạo phiếu |
-| Có phiếu quá hạn | Phiếu mở hạn hôm qua, mượn bản khác hôm nay | `IllegalStateException`; không đổi dữ liệu |
-| Đúng ngày đến hạn | Phiếu mở hạn hôm nay, mượn tiếp khi chưa đủ 3 | Không bị chặn do quá hạn |
-| Ngày trả sai | Trả trước ngày mượn | `IllegalArgumentException`; phiếu vẫn đang hoạt động |
-| Hạn trả tùy biến | Khởi tạo `StandardLoanPolicy(21, 5)` | Hạn trả cộng 21 ngày; giới hạn 5 phiếu |
+| Normal flow | Register member, add copy, borrow and return | Correct due date; state changes `false → true → false` |
+| Duplicate member ID | Call `register` with two `Member` objects sharing an ID | `IllegalArgumentException` |
+| Duplicate copy ID | Call `addCopy` with two copies sharing an ID | `IllegalArgumentException` |
+| Unknown ID | `borrow("unknown", "COPY-001", date)` | `IllegalArgumentException` |
+| Copy on loan | Borrow the same `copyId` again before return | `IllegalStateException` |
+| Loan limit reached | Member has three copies on loan; attempts a fourth | `IllegalStateException` |
+| Return twice | Call `returnCopy` again with the same `loanId` | `IllegalStateException` |
+| Blocked member | `Member(..., false)` borrows an available copy | `IllegalStateException`; no Loan created |
+| Overdue open loan | Open loan due yesterday; member borrows another copy today | `IllegalStateException`; no data changes |
+| Exactly on due date | Open loan due today, attempt another loan while below the limit of 3 | Not blocked as overdue |
+| Invalid return date | Return before borrowed date | `IllegalArgumentException`; loan remains active |
+| Custom loan terms | Construct `StandardLoanPolicy(21, 5)` | Due date + 21 days; limit 5 loans |
 
-Một kiểm thử quan trọng là **trạng thái sau ngoại lệ**: khi mượn trùng, không được sinh phiếu mới và bản sách vẫn đang được mượn bởi phiếu ban đầu; khi ngày trả sai, `Loan` phải còn hoạt động và `BookCopy` phải còn ở trạng thái đang mượn. Đừng chỉ kiểm tra loại ngoại lệ mà bỏ qua các hậu điều kiện này.
+A crucial test is **state after exceptions**: an attempted duplicate loan must not create another record, and the copy must still be held by its original loan; an invalid return date must leave `Loan` active and `BookCopy` on loan. Check postconditions, not just exception types.
 
-### Ví dụ kiểm tra nhanh không cần thư viện test
+### Quick self-check example without a test library
 
-Thêm phương thức sau vào lớp `LibraryDemo`, rồi gọi `selfCheck()` cuối `main` nếu muốn thực hành. Mỗi lần tự tạo dữ liệu mới để tránh phụ thuộc lần chạy trước.
+Add the following method to `LibraryDemo`, then call `selfCheck()` at the end of `main` if desired. Recreate input data each time to avoid dependencies on previous runs.
 
 ```java
 private static void selfCheck() {
@@ -5143,69 +5143,69 @@ private static void selfCheck() {
 }
 ```
 
-Lưu ý phương thức trên **phải được đặt bên trong** cặp ngoặc của lớp `public class LibraryDemo` nếu thêm vào file mẫu. Các ví dụ mệnh đề `if` kiểm tra trạng thái trực tiếp; khi dự án lớn hơn, chuyển sang JUnit để có `assertThrows`, `assertEquals` và các bộ kiểm thử độc lập.
+The method above **must be placed inside** the braces of `public class LibraryDemo` when added to the sample file. Its `if` statements check state directly; larger projects can use JUnit with `assertThrows`, `assertEquals`, and independent test suites.
 
-## 6. Nhìn lại quyết định thiết kế
+## 6. Reviewing design choices
 
-**Vì sao phân biệt `Book` và `BookCopy`?** Nếu chỉ có một lớp `Book` với thuộc tính `borrowed`, thư viện có hai cuốn cùng ISBN sẽ không biết cuốn nào đang được mượn. Tách thông tin đầu sách khỏi bản sách giúp mô hình giữ đúng thực tế và tránh dữ liệu lặp.
+**Why separate `Book` and `BookCopy`?** With just a `Book` containing a `borrowed` field, a library with two copies sharing an ISBN cannot identify which is borrowed. Separating title data from physical copies reflects reality and avoids duplicated information.
 
-**Vì sao `Loan` là một lớp thay vì lưu `memberId` trên `BookCopy`?** Mỗi bản sách có thể được mượn nhiều lần theo thời gian. Phiếu mượn ghi nhận sự kiện cùng ngày mượn, hạn trả và ngày trả, nên không làm mất lịch sử khi độc giả trả sách.
+**Why model `Loan` as a class instead of storing `memberId` on `BookCopy`?** Each copy can be borrowed many times. Loans record lending events, borrow/due/return dates, and preserve history after books are returned.
 
-**Vì sao không để `Member.borrow(BookCopy)` tự sửa mọi dữ liệu?** Mượn phải đồng thời tra cứu đăng ký, kiểm tra giới hạn, kiểm tra trạng thái bản sách và tạo phiếu. Nếu rải việc này vào `Member` hoặc `BookCopy`, chúng sẽ phụ thuộc vào kho dữ liệu và chính sách toàn hệ thống. `LibraryService` giữ vai trò điều phối; các thực thể vẫn tự bảo vệ trạng thái riêng.
+**Why not let `Member.borrow(BookCopy)` modify all the data?** Borrowing requires registration lookup, loan-limit checks, copy status checks, and loan creation. Putting everything into `Member` or `BookCopy` would couple those classes to repositories and global policies. `LibraryService` coordinates while entities enforce their own state.
 
-**Khi nào thêm lớp mới?** Khi có trách nhiệm độc lập và lý do thay đổi rõ ràng. Chẳng hạn, lưu dữ liệu thật → tách `MemberRepository`, `CopyRepository`, `LoanRepository`; gửi nhắc hạn → `ReminderService`; nhiều nhóm độc giả → các hiện thực `LoanPolicy`. Không tạo interface/repository trống từ đầu chỉ để tăng số lớp.
+**When should a new class be added?** When responsibility and reasons for change are independent. For example: real persistence → extract `MemberRepository`, `CopyRepository`, and `LoanRepository`; due-date notifications → `ReminderService`; multiple member groups → different `LoanPolicy` implementations. Do not introduce empty interfaces/repositories merely to inflate the class count.
 
-### Những giới hạn cần giải quyết khi triển khai thực tế
+### Limitations to address in production
 
-- **Đồng thời và tính nguyên tử:** nếu hai yêu cầu `borrow` chạy song song, kiểm tra “đang rảnh” rồi cập nhật có thể xảy ra đua dữ liệu. Bản minh họa giả định một luồng. Ứng dụng thật cần giao dịch, khóa phù hợp hoặc ràng buộc tại cơ sở dữ liệu; thao tác đóng phiếu và mở bản sách cũng phải nguyên tử.
-- **Nguồn sự thật của trạng thái:** `BookCopy.borrowed` và `Loan.returnedOn` cùng biểu diễn một phần tình trạng mượn. Cần bảo đảm cập nhật nhất quán hoặc tính trạng thái bản sách từ phiếu hoạt động ở thiết kế lưu trữ khác.
-- **Lưu trữ:** `HashMap` mất dữ liệu khi chương trình dừng. Đổi sang repository nhưng giữ các bất biến ở tầng nghiệp vụ.
-- **Ranh giới quyền truy cập:** các phương thức thay đổi trạng thái ở đây là package-private để gói bài học trong một file. Trong ứng dụng thật, bố trí package/aggregate và API sao cho mã ngoài không tùy ý gọi `copy.borrow()` hay `loan.close()`, vượt qua service.
-- **Dữ liệu:** kiểm tra ISBN thực tế, chuẩn hóa mã, xử lý timezone nếu ghi thời điểm, log/audit, tiền phạt và chính sách trả muộn sẽ cần mô hình bổ sung.
+- **Concurrency and atomicity:** with parallel `borrow` requests, checking availability and then updating it can race. The demo assumes one thread. Production needs transactions, suitable locks, or database constraints; closing a loan and freeing a copy must also be atomic.
+- **Source of truth for status:** `BookCopy.borrowed` and `Loan.returnedOn` both describe loan state. Keep updates consistent or derive copy status from active loans in a different persistence design.
+- **Persistence:** `HashMap` loses data when the program stops. Use repositories without dropping business-layer invariants.
+- **Access boundaries:** state-changing methods are package-private to keep this lesson in one file. Real applications should organize packages/aggregates and APIs so external callers cannot invoke `copy.borrow()` or `loan.close()` to bypass the service.
+- **Data:** proper ISBN validation, identifier normalization, timezone handling for timestamps, logs/audits, fines, and late-return policies require additional modeling.
 
-## 7. Bài tập mở rộng có tiêu chí rõ ràng
+## 7. Extensions with explicit criteria
 
-1. **Thêm gia hạn:** `extendLoan(loanId, days)`; không được gia hạn phiếu đã trả, không được nhập ngày âm; quyết định lớp giữ quyền thay đổi hạn trả. Cập nhật UML và kiểm thử.
-2. **Đặt trước bản sách:** thêm `Reservation` chỉ khi bạn xác định được vòng đời, ai tạo/hủy và trường hợp mượn trùng. Giải thích vì sao reservation khác loan.
-3. **Đổi chính sách mà không đổi service:** viết `ShortTermPolicy` trả hạn sau 7 ngày và tối đa 1 phiếu; dùng cùng `LibraryService` để chứng minh đa hình.
-4. **Tách lớp ra nhiều file/package:** thực hành `public`/package-private và tránh để client thay đổi trạng thái mượn trả ngoài quy trình.
-5. **Vẽ lại sơ đồ sau mở rộng:** với mỗi đường quan hệ, ghi rõ “giữ tham chiếu”, “sở hữu vòng đời”, “thực hiện hợp đồng” hoặc “kế thừa thật sự”; sửa sơ đồ nếu mã thực tế không chứng minh được đường đó.
+1. **Add renewals:** `extendLoan(loanId, days)`; forbid extending returned loans or supplying negative days; decide which class owns due-date updates. Update UML and tests.
+2. **Reserve copies:** add `Reservation` only after defining its lifecycle, who creates/cancels it, and duplicate-borrowing cases. Explain how reservations differ from loans.
+3. **Change policy without changing service:** implement `ShortTermPolicy` with a due date 7 days later and a maximum of 1 loan; use the same `LibraryService` to demonstrate polymorphism.
+4. **Split types into separate files/packages:** practice `public`/package-private and prevent clients from changing loan states outside the workflow.
+5. **Revise the diagram after extensions:** for each relationship edge, specify "holds a reference", "owns lifecycle", "implements contract", or "genuine inheritance"; update the diagram if the code does not support the edge.
 
-**Tiêu chí hoàn thành:** giải thích được vì sao tồn tại từng lớp, mô tả đúng quan hệ và số lượng trong UML, chỉ ra nơi bảo vệ từng bất biến, biên dịch chạy ví dụ Java 17, và kiểm tra được cả trường hợp thành công lẫn thất bại mà trạng thái vẫn nhất quán.
+**Completion criteria:** Justify every class, describe UML relationships and multiplicities, identify where each invariant is enforced, compile and run the example using Java 17, and verify both successful and failed operations preserve consistent state.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="practice-010">Dự án tổng hợp: hiện thực và kiểm thử hành vi</a>
+## <a id="practice-010">Capstone project: implementation and behavioral testing</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Dự án tổng hợp: Hiện thực và kiểm thử hành vi mượn/trả sách (Java 17)
+# Capstone project: Implementing and testing book lending/return behavior (Java 17)
 
-> **Vị trí trong chuỗi thực hành:** Tiếp nối bài phân tích yêu cầu (FR-01…FR-08, BR-01…BR-08) và bài thiết kế lớp–quan hệ. Bài này chuyển thiết kế `Book` (đầu sách), `BookCopy` (bản vật lý), `Member`, `Loan` và `BorrowingService` thành mã chạy được cùng kiểm thử hành vi. **Quy tắc giữ nguyên:** thành viên đang hoạt động, tối đa **3 phiếu mở**, không có phiếu quá hạn chưa trả; bản sách phải AVAILABLE, hạn trả **14 ngày**. Phiên bản này vẫn là ứng dụng in-memory, chưa có database.
+> **Place in the exercise series:** Continues requirements analysis (FR-01…FR-08, BR-01…BR-08) and class/relationship design. This lesson turns `Book` (title), `BookCopy` (physical copy), `Member`, `Loan`, and `BorrowingService` into runnable code with behavioral tests. **Rules retained:** members must be active, have at most **3 open loans** and no overdue outstanding loan; copies must be AVAILABLE, with a **14-day** loan term. This is still an in-memory application without a database.
 
-## 1. Hợp đồng cần hiện thực
+## 1. Contract to implement
 
-| ID | Given/When | Then – kết quả bắt buộc |
+| ID | Given/When | Then — required result |
 |---|---|---|
-| BR-01 | Thành viên bị khóa yêu cầu mượn | Từ chối; không tạo Loan |
-| BR-02 | Thành viên đã có 3 Loan mở, muốn mượn thêm | Từ chối phiếu thứ tư |
-| BR-03 | Bản sách `BS-001` đã ON_LOAN | Không tạo Loan mới cho **BS-001**, dù bản `BS-002` cùng đầu sách còn sẵn |
-| BR-04 | Có Loan mở với `today > dueOn` | Chặn mượn mới; đúng ngày hạn chưa là quá hạn |
-| BR-05 | Mượn 01/03/2026 | `dueOn = 15/03/2026` |
-| BR-06 | Trả một Loan hai lần | Lần hai bị từ chối, không ghi ngày trả mới |
-| BR-07 | Trả ngày trước `borrowedOn` | Từ chối, Loan và BookCopy không đổi |
-| BR-08 | Loan còn mở, `today == dueOn` | Chưa quá hạn; `today > dueOn` mới quá hạn |
-| NFR-01/02 | Hai tác vụ cùng mượn một bản hoặc một thao tác lưu trữ lỗi | Chỉ một lượt thành công và không có trạng thái nửa chừng theo phạm vi bảo đảm của hệ thống |
+| BR-01 | Blocked member requests a loan | Reject; do not create Loan |
+| BR-02 | Member already has 3 open Loans and attempts another | Reject the fourth loan |
+| BR-03 | Copy `BS-001` is already ON_LOAN | Do not create a Loan for **BS-001**, even if `BS-002` of the same title is available |
+| BR-04 | An open Loan has `today > dueOn` | Block new loans; a loan due today is not overdue |
+| BR-05 | Borrow on 01/03/2026 | `dueOn = 15/03/2026` |
+| BR-06 | Return a Loan twice | Reject the second attempt; do not overwrite return date |
+| BR-07 | Return date precedes `borrowedOn` | Reject; Loan and BookCopy unchanged |
+| BR-08 | Open Loan with `today == dueOn` | Not overdue; overdue only when `today > dueOn` |
+| NFR-01/02 | Two tasks borrow one copy concurrently, or storage fails mid-operation | Exactly one loan succeeds and no partial state remains within system guarantees |
 
-`Book` ở ví dụ chính là đầu sách (`BookTitle` trong tài liệu yêu cầu). **Mượn theo `copyId`, tuyệt đối không dùng ISBN làm khóa mượn**, vì một đầu sách có thể có nhiều bản. `BorrowingPolicy` có vai trò cung cấp giới hạn và số ngày mượn; `Clock` được tiêm để test ngày chính xác.
+`Book` represents a title (`BookTitle` in requirements). **Always lend by `copyId`, never by ISBN**, because a title can have multiple copies. `BorrowingPolicy` provides limits and loan duration; `Clock` is injected for deterministic date tests.
 
-### Luồng hành vi cần bảo vệ
+### Behavior flow to protect
 
 ~~~mermaid
 sequenceDiagram
@@ -5228,9 +5228,9 @@ sequenceDiagram
     end
 ~~~
 
-## 2. Cấu trúc bài chạy độc lập
+## 2. Standalone exercise structure
 
-Dùng Java 17 và Maven, tạo:
+Create a Java 17 + Maven project:
 
 ~~~text
 library-practice/
@@ -5274,9 +5274,9 @@ library-practice/
 </project>
 ~~~
 
-Để dễ chép và chạy, các kiểu được khai báo **nested** trong một lớp công khai duy nhất. Khi dự án lớn hơn, tách chúng thành các file riêng theo cùng hợp đồng.
+For easy copying and execution, types are declared **nested** in one public class. In larger projects, split them into separate files while keeping the same contracts.
 
-## 3. Code Java đầy đủ – `LibraryPractice.java`
+## 3. Complete Java code — `LibraryPractice.java`
 
 ~~~java
 package vn.example.library;
@@ -5550,14 +5550,14 @@ public final class LibraryPractice {
 }
 ~~~
 
-Biên dịch file chính (không cần JUnit):
+Compile the main file (without JUnit):
 
 ~~~bash
 javac -encoding UTF-8 -d out src/main/java/vn/example/library/LibraryPractice.java
 java -cp out vn.example.library.LibraryPractice
 ~~~
 
-Kết quả dự kiến:
+Expected output:
 
 ~~~text
 Hạn trả: 2026-03-15
@@ -5567,11 +5567,11 @@ BS-002: AVAILABLE
 BS-001: AVAILABLE
 ~~~
 
-Điểm cần quan sát: `BS-001` và `BS-002` cùng một ISBN nhưng có trạng thái độc lập. Trong `borrow`, ngày trả được chốt ngay khi tạo Loan. `BorrowingService` điều phối ràng buộc giữa Member, Loan, BookCopy; `Loan` và `BookCopy` tự kiểm tra điều kiện nội tại. Caller không có setter công khai thay ngày/ trạng thái.
+Observe that `BS-001` and `BS-002` share an ISBN but retain independent states. In `borrow`, the due date is fixed when the Loan is created. `BorrowingService` coordinates constraints across Member, Loan, and BookCopy; `Loan` and `BookCopy` enforce their own internal conditions. Callers have no public setters for dates or status.
 
-## 4. Kiểm thử nghiệm thu – `LibraryPracticeTest.java`
+## 4. Acceptance testing — `LibraryPracticeTest.java`
 
-Dùng **JUnit Jupiter 5** cùng package, tạo `src/test/java/vn/example/library/LibraryPracticeTest.java`.
+Use **JUnit Jupiter 5** in the same package; create `src/test/java/vn/example/library/LibraryPracticeTest.java`.
 
 ~~~java
 package vn.example.library;
@@ -5698,35 +5698,35 @@ class LibraryPracticeTest {
 }
 ~~~
 
-Test `invalidReturnPreservesStateAndSecondReturnFails` chủ động lùi đồng hồ trên **chính service đang giữ Loan**, xác nhận lỗi không thay đổi Loan/BookCopy, sau đó khôi phục ngày hợp lệ và thử trả hai lần.
+Test `invalidReturnPreservesStateAndSecondReturnFails` deliberately moves the clock backward on **the same service holding the Loan**, confirms the error preserves Loan/BookCopy state, restores a valid date, and attempts to return twice.
 
-Chạy toàn bộ với:
+Run the complete suite with:
 
 ~~~bash
 mvn clean test
 ~~~
 
-Điều kiện PASS: exit code 0, mọi JUnit test xanh, 0 failures/0 errors. Có 6 test cốt lõi trong ví dụ; bổ sung test ngày trả sai và giao dịch đồng thời để bao phủ thêm NFR.
+PASS conditions: exit code 0, all JUnit tests green, 0 failures/0 errors. The example contains 6 core tests; add invalid-return-date and concurrency tests for broader NFR coverage.
 
-## 5. Vì sao thiết kế có giới hạn?
+## 5. Why does the design have limitations?
 
-- **Một JVM / một service instance:** `synchronized` trên `BorrowingService` khiến hai request dùng đúng cùng instance không thể cùng vượt qua check-then-act tại một thời điểm. Nó **không bảo vệ** hai instance hoặc hai JVM có kho lưu khác nhau.
-- **Chưa có database transaction:** trong demo, thay đổi `BookCopy` và lưu `Loan` là hai bước trên object ở RAM. Một lỗi nghiêm trọng giữa hai bước hoặc việc lưu vào DB thật đòi hỏi transaction/rollback và constraint thích hợp; tên method `borrow` không tạo atomicity phân tán.
-- **Mã Loan tuần tự:** `nextNumber` chỉ duy nhất trong phạm vi một service; không dùng nó như mã toàn cục khi có nhiều tiến trình. Repository/DB cần khóa duy nhất và ID generator phù hợp.
-- **Chưa có role cho nhân viên:** yêu cầu phân quyền thao tác mượn/trả thuộc boundary ứng dụng; không nên coi `Member.active` là phân quyền của người gọi.
-- **Snapshot trạng thái BookCopy:** `Loan` và `BookCopy` cùng biểu diễn một phần vòng đời; nếu triển khai database, cần cập nhật trong một transaction hoặc chọn mô hình trạng thái suy ra từ Loan mở để tránh lệch.
-- **Lỗi ngày giờ:** `Clock` giúp cố định thời điểm; hệ thống nhiều múi giờ phải thống nhất `ZoneId` và thời điểm chốt ngày giao dịch.
-- **Giới hạn cố ý về hệ thống thực:** chưa có trả sách mất/hỏng, phạt quá hạn, email, đặt chỗ hoặc nhiều chi nhánh; không mở interface cho từng hành vi chỉ vì dự đoán tương lai.
+- **One JVM / one service instance:** `synchronized` on `BorrowingService` prevents two requests to the same instance from both passing check-then-act simultaneously. It **does not protect** different instances or JVMs with separate stores.
+- **No database transaction:** in the demo, updating `BookCopy` and storing a `Loan` are two steps on RAM objects. A serious failure between them, or real database persistence, requires appropriate transactions/rollback and constraints; naming a method `borrow` does not provide distributed atomicity.
+- **Sequential Loan IDs:** `nextNumber` is unique only within one service; do not use it as a global ID across processes. Repositories/databases need unique constraints and a suitable ID generator.
+- **No staff roles:** borrowing/return authorization belongs at the application boundary; do not mistake `Member.active` for caller authorization.
+- **BookCopy status snapshot:** `Loan` and `BookCopy` each represent part of the lending lifecycle; in a database, update them in one transaction or derive copy status from open Loans to avoid inconsistency.
+- **Date/time problems:** `Clock` fixes the current time for tests; systems spanning timezones must standardize `ZoneId` and when transaction dates are finalized.
+- **Intentional real-system limits:** lost/damaged returns, overdue fines, emails, reservations, and multiple branches are excluded; do not add interfaces for hypothetical future behaviors.
 
-## 6. Mở rộng kiểm thử và bàn giao
+## 6. Additional tests and handoff
 
-Đường lỗi ngày trả trước ngày mượn đã nằm trong `invalidReturnPreservesStateAndSecondReturnFails`. Hãy bổ sung ca trả quá hạn, mã phiếu không tồn tại, mượn lại sau trả, và hai bản cùng ISBN cùng được mượn bởi hai thành viên khác nhau.
+The invalid return-date path is covered by `invalidReturnPreservesStateAndSecondReturnFails`. Add tests for overdue returns, unknown loan IDs, borrowing again after a return, and borrowing two copies with the same ISBN by different members.
 
-Đối với concurrency cùng một `BorrowingService`, tạo hai task cùng gọi `borrow` trên một `BookCopy` đang AVAILABLE; kiểm tra **chỉ một** thành công và một bị từ chối. Khi thay backend bằng DB hoặc phân tán, chuyển test sang integration test xác nhận unique constraint/index cho Loan mở của mỗi `copyId`, transaction và xử lý xung đột đúng hợp đồng.
+For concurrency within one `BorrowingService`, launch two tasks calling `borrow` on the same AVAILABLE `BookCopy`; assert **exactly one** succeeds and one is rejected. When migrating to a database or distributed backend, use integration tests for unique constraints/indexes on active Loans per `copyId`, transactions, and contract-compliant conflict handling.
 
-### Bảng truy vết nghiệm thu
+### Acceptance traceability table
 
-| Yêu cầu | Đối tượng/method | Test |
+| Requirement | Object/method | Test |
 |---|---|---|
 | BR-01, FR-04 | `Member.active`, `BorrowingService.borrow` | `inactiveMemberAndBorrowedCopyAreRejected` |
 | BR-02, FR-04 | `BorrowingService.activeCount` | `fourthOpenLoanIsRejected` |
@@ -5735,49 +5735,49 @@ mvn clean test
 | BR-05 | `Loan.dueOn` | `createsLoanForExactlyOneBookCopy` |
 | BR-06 | `Loan.close`, service return | `invalidReturnPreservesStateAndSecondReturnFails` |
 | BR-07 | `Loan.close` | `invalidReturnPreservesStateAndSecondReturnFails` |
-| NFR-01/02 | Lock/transaction tại kho | Integration test khi có DB; stress test cùng service |
+| NFR-01/02 | Lock/transaction at the store | Integration test with DB; stress test on one service |
 
-**Tiêu chí hoàn thành:** `mvn clean test` chạy thành công; tạo được hai bản cùng ISBN với trạng thái độc lập; giới hạn 3, hạn 14 ngày, quy tắc khóa/quá hạn/trả được kiểm thử; mã không cho caller ghi trực tiếp Loan/BookCopy; và người học phân biệt rõ bảo đảm trong RAM một JVM với transaction dữ liệu lâu bền.
+**Completion criteria:** `mvn clean test` passes; two copies with the same ISBN retain independent status; the loan limit of 3, a term of 14 days, and rules for blocked/overdue/returned cases are tested; callers cannot directly alter Loan/BookCopy; and learners understand the difference between one-JVM in-memory guarantees and durable database transactions.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="practice-011">Dự án tổng hợp: thay đổi yêu cầu và đánh giá thiết kế</a>
+## <a id="practice-011">Capstone project: changing requirements and evaluating design</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Dự án tổng hợp: Thay đổi yêu cầu và đánh giá thiết kế hệ thống thư viện (Java OOP)
+# Capstone project: Changing requirements and evaluating library-system design (Java OOP)
 
-> **Tình huống nối tiếp:** Ở ba bước trước, bạn đã phân tích UC mượn/trả, thiết kế `Book` (đầu sách), `BookCopy` (bản vật lý), `Member` và `Loan`, rồi hiện thực và kiểm thử hệ thống. Hiện tại chỉ thành viên đang hoạt động được mượn, giới hạn **3 phiếu mở**, thời hạn **14 ngày**, không cho mượn nếu có phiếu quá hạn chưa trả. Đây là bài thực hành **thay đổi yêu cầu trên cùng hệ thống**, không chuyển sang bài toán kinh doanh khác.
+> **Continuing scenario:** In the previous three stages, you analyzed lending/return use cases, designed `Book` (title), `BookCopy` (physical copy), `Member`, and `Loan`, then implemented and tested the system. Currently only active members may borrow, with a limit of **3 open loans**, a **14-day** term, and no new borrowing while overdue loans remain open. This exercise introduces **changing requirements in the same system**, rather than switching business domains.
 
-## 1. Yêu cầu thay đổi từ quản lý thư viện
+## 1. Change requests from library management
 
-Giả sử quản lý xác nhận hai yêu cầu mới, có hiệu lực từ một ngày triển khai định trước:
+Assume management confirms two new requirements effective from a specified deployment date:
 
-- **CR-01:** Tăng hạn mức từ **3 lên 5 lượt mượn đang mở** cho mỗi thành viên đang hoạt động. Thành viên có khoản quá hạn chưa trả vẫn bị chặn mượn mới.
-- **CR-02:** Phân loại đầu sách thành **thông thường (NORMAL)** và **tham khảo (REFERENCE)**. Bản sách thuộc đầu sách tham khảo chỉ được mượn **7 ngày**; sách thông thường vẫn **14 ngày**.
-- **CR-03 – tính lịch sử:** hạn trả của **Loan đã tạo trước khi đổi chính sách phải giữ nguyên**. Chính sách chỉ tác động đến Loan mới, không tính lại `dueOn` mỗi lần tra cứu.
-- **CR-04 – dữ liệu và độ tin cậy:** cùng một bản sách không được có hai Loan mở; trả sách hai lần vẫn phải bị từ chối. Chính sách mới không làm mất quy tắc thành viên active, overdue và ngày trả hợp lệ.
+- **CR-01:** Raise the limit from **3 to 5 open loans** for each active member. Members with overdue unreturned loans are still blocked from new borrowing.
+- **CR-02:** Categorize titles as **normal (NORMAL)** or **reference (REFERENCE)**. Copies of reference titles may be borrowed for only **7 days**; normal titles retain **14 days**.
+- **CR-03 — Historical accuracy:** Due dates for **Loans created before the policy change must remain unchanged**. The new policy affects only new Loans; it must not recalculate `dueOn` on every lookup.
+- **CR-04 — Data and reliability:** One copy cannot have two open Loans; duplicate returns must still be rejected. The new policy preserves active-member, overdue-loan, and valid-return-date rules.
 
-Các quyết định này là giả định của bài tập. Với dự án thật phải xác nhận: “Tài liệu tham khảo có được đem ra khỏi thư viện không?”, “Chính sách mới có hồi tố không?”, “Ngày nào bắt đầu hiệu lực?”, “Tài liệu cũ chưa gán category thì xếp vào loại nào?”. Không được tự trả lời bằng code khi chưa có người chịu trách nhiệm phê duyệt.
+These decisions are assumptions for the exercise. Real projects must confirm: "May reference materials leave the library?" "Are new policies retroactive?" "What is the effective date?" "Which category applies to legacy titles with no category?" Do not answer unapproved business questions in code.
 
-### Tác động tới yêu cầu hiện hữu
+### Impact on existing requirements
 
-| Mã | Trước | Sau khi đổi | Phạm vi tác động |
+| ID | Before | After change | Affected areas |
 |---|---|---|---|
-| BR-02 / CR-01 | Tối đa 3 Loan mở | Tối đa 5 Loan mở | Policy, test đúng 5/vượt 5 |
-| BR-05 / CR-02 | Tất cả bản: 14 ngày | NORMAL: 14; REFERENCE: 7 | Book category, policy, test hạn |
-| BR-05 / CR-03 | `dueOn` lưu trong Loan | Vẫn lưu, **không hồi tố** | Loan, dữ liệu lịch sử |
-| BR-01,03,04,06,07,08 | Active, available, overdue, trả một lần và đúng ngày | **Giữ nguyên** | Regression tests |
-| NFR-01/02 | Cần cập nhật nhất quán nhiều object | Không được nới lỏng | Transaction/locking khi dùng DB |
+| BR-02 / CR-01 | At most 3 open Loans | At most 5 open Loans | Policy, tests at 5 and above 5 |
+| BR-05 / CR-02 | All copies: 14 days | NORMAL: 14; REFERENCE: 7 | Book category, policy, due-date tests |
+| BR-05 / CR-03 | `dueOn` stored in Loan | Still stored, **not retroactive** | Loan, historical data |
+| BR-01,03,04,06,07,08 | Active, available, overdue, one-time returns, and valid dates | **Unchanged** | Regression tests |
+| NFR-01/02 | Requires consistent multi-object updates | Must not be weakened | Transactions/locking with DB |
 
-## 2. Phân tích trách nhiệm trước khi sửa
+## 2. Analyze responsibilities before editing
 
-**Điểm thay đổi tự nhiên** là `BorrowingPolicy`: trong bản trước, `terms()` không nhận thông tin bản sách, vì mọi sách có thời hạn như nhau. Nay chính sách phải biết **loại đầu sách**. Ta sửa hợp đồng một cách có chủ đích thành `termsFor(Member, BookCopy)` và truyền thông tin **tối thiểu** mà policy cần.
+The **natural change point** is `BorrowingPolicy`: previously `terms()` needed no book-copy details because all loans had equal durations. Now policies must account for **book category**. Intentionally update the contract to `termsFor(Member, BookCopy)` and pass only the **minimum information** the policy needs.
 
 ~~~mermaid
 classDiagram
@@ -5823,13 +5823,13 @@ classDiagram
     BorrowingService --> Loan
 ~~~
 
-**Không sửa `Loan.dueOn()` thành phép gọi policy tại thời điểm đọc.** Nếu làm vậy, một Loan mượn trước thay đổi từ 14 ngày có thể “bỗng dưng” đổi hạn còn 7 ngày. `dueOn` là snapshot giao kèo đã chốt lúc mượn. Cập nhật hợp đồng policy có thể làm caller/implementation cũ phải biên dịch lại: đây là một thay đổi API cần được nhận diện, kiểm thử và triển khai có kế hoạch.
+**Do not replace `Loan.dueOn()` with a policy lookup at read time.** Otherwise a Loan originally due in 14 days could "suddenly" have only 7 days after a policy change. `dueOn` is a snapshot of terms fixed when borrowing. Updating the policy interface may force old callers/implementations to recompile; this API change requires explicit identification, tests, and a deployment plan.
 
-Ta cũng không cần `ReferenceLoanService`, `NormalLoanService` và hai kho Loan riêng. Bản sách vẫn là cùng một loại entity, chỉ **chính sách thời hạn** thay đổi theo category; composition phù hợp hơn một cây subclass được tạo chỉ vì 7 hay 14 ngày.
+There is no need for `ReferenceLoanService`, `NormalLoanService`, or two separate Loan stores. Copies remain the same entity type; only the **loan-duration policy** varies by category. Composition is more appropriate than introducing a subclass tree solely for 7- or 14-day terms.
 
-## 3. Code Java 17 hoàn chỉnh: chính sách cũ và mới trên cùng dữ liệu
+## 3. Complete Java 17 code: legacy and revised policies over shared data
 
-Tạo file **`LibraryChangeDemo.java`**, không cần thư viện thứ ba. Đoạn demo bảo toàn BR chính của dự án trong cùng một tiến trình, tập trung vào việc thay policy và giữ lịch sử.
+Create **`LibraryChangeDemo.java`** with no third-party libraries. The demo preserves the project's core BRs within one process, focusing on policy substitution and historical preservation.
 
 ~~~java
 import java.time.Clock;
@@ -6086,14 +6086,14 @@ public class LibraryChangeDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac --release 17 LibraryChangeDemo.java
 java LibraryChangeDemo
 ~~~
 
-Kết quả kỳ vọng:
+Expected output:
 
 ~~~text
 Old due: 2026-03-15
@@ -6103,80 +6103,80 @@ Active loans: 5
 PASS: change + backward compatibility
 ~~~
 
-**Vì sao ví dụ này khác bước hiện thực trước?** Bài trước dạy cách giữ bất biến và viết test cho từng use case. Bài này đưa **hai chính sách có thời điểm hiệu lực khác nhau** vào cùng một kho Loan và quan sát giới hạn thay đổi: `dueOn` của Loan cũ không đổi, trong khi Loan mới nhận chính sách mới. Để tập trung vào tác động yêu cầu, ví dụ này **suy ra tính sẵn có của BookCopy từ các Loan đang mở**, thay vì đồng thời lưu cả cờ trạng thái trên BookCopy. Đây là một lựa chọn mô hình để tránh hai nguồn sự thật trong RAM; lúc đưa vào DB, tính hiệu năng và transaction phải được đánh giá lại.
+**How does this example differ from the previous implementation stage?** The previous lesson showed how to enforce invariants and test individual use cases. This one applies **two policies with different effective periods** to the same Loan store and examines the impact of changing requirements: existing Loans retain their `dueOn`, while new Loans use the revised policy. To focus on the requirement change, this example **derives BookCopy availability from open Loans** instead of also storing a status flag on BookCopy. This modeling choice avoids two sources of truth in RAM; performance and transactional guarantees must be reassessed for a database implementation.
 
-## 4. Ma trận nghiệm thu trước/sau
+## 4. Before-and-after acceptance matrix
 
-| Test | Chính sách/điều kiện | Kỳ vọng |
+| Test | Policy/condition | Expected result |
 |---|---|---|
-| CH-01 | Trước thay đổi, NORMAL mượn 01/03 | Hạn 15/03 (14 ngày) |
-| CH-02 | Sau thay đổi, REFERENCE mượn 01/03 | Hạn 08/03 (7 ngày) |
-| CH-03 | Sau thay đổi, NORMAL mượn 01/03 | Hạn 15/03 |
-| CH-04 | Một Loan cũ, đã áp chính sách mới | `dueOn` giữ nguyên |
-| CH-05 | Thành viên có đúng 5 Loan mở, mượn bản thứ 6 | `LIMIT_REACHED`, không tạo Loan |
-| CH-06 | Thành viên bị khóa | Từ chối, không thay đổi dữ liệu |
-| CH-07 | Thành viên có Loan mở hạn hôm qua | Từ chối mượn do quá hạn |
-| CH-08 | Trả Loan một lần rồi thử trả tiếp | Lần sau bị từ chối |
-| CH-09 | Trả trước `borrowedOn` | Bị từ chối; Loan vẫn mở |
-| CH-10 | Hai bản cùng ISBN, mỗi bản có mã riêng | Mượn độc lập; không nhầm book với copy |
+| CH-01 | Before change, NORMAL loan on 01/03 | Due 15/03 (14 days) |
+| CH-02 | After change, REFERENCE loan on 01/03 | Due 08/03 (7 days) |
+| CH-03 | After change, NORMAL loan on 01/03 | Due 15/03 |
+| CH-04 | Existing Loan after new policy takes effect | `dueOn` remains unchanged |
+| CH-05 | Member has exactly 5 open Loans and requests copy number 6 | `LIMIT_REACHED`, no Loan created |
+| CH-06 | Blocked member | Reject without changing data |
+| CH-07 | Member has an open Loan due yesterday | Reject new borrowing because of overdue status |
+| CH-08 | Return a Loan and attempt to return it again | Reject the second attempt |
+| CH-09 | Return before `borrowedOn` | Reject; Loan remains open |
+| CH-10 | Two copies share an ISBN but have separate IDs | Allow independent loans; do not confuse titles with copies |
 
-Các kiểm thử CH-01 đến CH-05 đã được thể hiện trong `main`; các ca CH-06 đến CH-10 là phần bài tập bắt buộc để nghiệm thu hoàn chỉnh. Với JUnit 5, đưa mỗi ca vào một `@Test`, tạo service/kho mới cho mỗi test để tránh phụ thuộc thứ tự. Dùng `Clock.fixed` hoặc một test clock thay đổi được cho ranh giới ngày và trả sách.
+Tests CH-01 through CH-05 are illustrated in `main`; CH-06 through CH-10 are required exercises for full acceptance coverage. With JUnit 5, write each case as an `@Test` and create a new service/store per test to avoid order dependencies. Use `Clock.fixed` or a mutable test clock to exercise date boundaries and returns.
 
-### Kiểm thử quan hệ qua chính sách mới
+### Testing object relationships under the revised policy
 
-Một `BorrowingPolicy` tốt nhận đúng dữ liệu nó cần, không đọc một singleton chứa `currentBook`. Có thể thay `RevisedPolicy` bằng fake trả `LoanTerms(1, 2)` để thử service chặn lượt thứ hai và tính hạn 2 ngày. Đây là **đa hình có lý do thực tế**, vì có hai chính sách đã được xác nhận chứ không phải một interface tạo ra chỉ để có interface.
+A well-designed `BorrowingPolicy` receives only the data it needs instead of reading a singleton containing `currentBook`. You can replace `RevisedPolicy` with a fake returning `LoanTerms(1, 2)` to verify that the service rejects the second loan and assigns a 2-day term. This is **polymorphism backed by an actual requirement**, since two policies have been confirmed rather than introducing an interface solely for its own sake.
 
-Đừng quên rằng `changePolicy` trong demo là một thao tác được công bố cho người gọi trong RAM. Trong sản phẩm, **thay chính sách phải là hành động quản trị có phân quyền, được audit và gắn thời điểm hiệu lực**; không để bất kỳ HTTP client nào tùy ý đổi nó.
+Remember that `changePolicy` in the demo is exposed to in-memory callers. In production, **policy changes must be authorized, audited administrative actions with effective dates**; arbitrary HTTP clients must not be allowed to change policies.
 
-## 5. Chấm thiết kế bằng bằng chứng, không bằng số class
+## 5. Evaluate design using evidence, not class counts
 
-Chọn 5 tiêu chí, mỗi tiêu chí 0–2 điểm và nêu bằng chứng kiểm chứng được:
+Choose 5 criteria, score each from 0–2 points, and cite verifiable evidence:
 
-| Tiêu chí | Cần chứng minh | Bằng chứng trong ví dụ |
+| Criterion | What to demonstrate | Evidence in this example |
 |---|---|---|
-| **Đúng nghiệp vụ** | NFR/BR/CR được giữ; dữ liệu cũ không bị đổi | CH-01 đến CH-10, `Loan.dueOn` cố định |
-| **Tính kết dính (cohesion)** | Loan giữ vòng đời, policy giữ quy tắc, service điều phối | `Loan.returnOn`, `RevisedPolicy.termsFor` |
-| **Mức phụ thuộc (coupling/DIP)** | Service không biết cụ thể `LegacyPolicy`/`RevisedPolicy` | `BorrowingPolicy` được inject/đổi |
-| **Khả năng kiểm thử** | Không cần thời gian thực, DB hay UI để tính ngày | `Clock.fixed`, Map in-memory |
-| **Độ đơn giản (KISS/YAGNI)** | Không thêm factory/registry/class theo tên gọi mà không cần | Một interface policy, hai implementation |
+| **Business correctness** | NFR/BR/CR rules remain valid and historical data is preserved | CH-01 through CH-10, with fixed `Loan.dueOn` |
+| **Cohesion** | Loan owns its lifecycle, policy owns rules, service orchestrates | `Loan.returnOn`, `RevisedPolicy.termsFor` |
+| **Dependency level (coupling/DIP)** | Service does not depend on concrete `LegacyPolicy`/`RevisedPolicy` | `BorrowingPolicy` can be injected/replaced |
+| **Testability** | Dates can be computed without real time, a DB, or UI | `Clock.fixed`, in-memory Map |
+| **Simplicity (KISS/YAGNI)** | No needless factory/registry/classes introduced by name alone | One policy interface, two implementations |
 
-Chấm **0** khi không đáp ứng hoặc không có bằng chứng; **1** khi có nhưng còn hạn chế cụ thể; **2** khi đạt với mã/test phù hợp. Điểm tối đa 10. Trong báo cáo nộp, ghi điểm và dẫn tên test, class hoặc thay đổi cụ thể; đừng tự cho điểm tối đa chỉ vì chương trình chạy một lần.
+Assign **0** when requirements are unmet or evidence is absent; **1** when partly satisfied with specific limitations; **2** when supported by suitable code/tests. Maximum score is 10. In your submission, include scores and specific tests, classes, or changes as evidence; do not award full marks solely because the program runs once.
 
-### Hai phương án cần phản biện
+### Two approaches to critique
 
-**Phương án A — rải `if (kind == REFERENCE)` vào mỗi nơi tạo Loan.** Ít lớp hơn, nhưng khi cần thay ngày hạn hoặc loại độc giả, những vị trí lặp quy tắc phải được sửa cùng nhau; trường hợp rải nhiều nơi là chi phí thật.
+**Option A — Scatter `if (kind == REFERENCE)` across every Loan creation site.** This uses fewer classes, but changing loan periods or member categories would require updating repeated rules in multiple places, creating real maintenance costs.
 
-**Phương án B — dùng `BorrowingPolicy`.** Tăng một hợp đồng nhưng gom quyết định theo category vào một nơi, có thể test riêng, thay vào service mà không đổi luồng mượn. Đây là lựa chọn hợp lý khi đã có thay đổi thực tế; tuy nhiên nếu mã chỉ có đúng một call site và hai nhánh cố định, một hàm thuần có test cũng có thể đủ. Hãy nêu **vì sao lựa chọn đáng giá trong dự án cụ thể**.
+**Option B — Use `BorrowingPolicy`.** This adds a contract but centralizes category-based decisions, supports focused tests, and can be replaced in the service without altering the lending flow. It is justified by the actual requirement change; however, with just one call site and two fixed branches, a tested pure function may also suffice. Explain **why your choice is valuable in this particular project**.
 
-Một lưu ý tương thích: thay chữ ký `terms()` thành `termsFor(member,copy)` **không phải** refactor giữ nguyên source compatibility. Cần cập nhật implementer, caller, test và tài liệu; khi phát hành thư viện công khai có thể phải cung cấp adapter/migration. Hợp đồng nghiệp vụ cũ vẫn được giữ bởi `LegacyPolicy`, nhưng bề mặt API đã thay đổi có chủ đích.
+A compatibility consideration: changing the signature from `terms()` to `termsFor(member,copy)` **does not preserve source compatibility**. Update implementers, callers, tests, and documentation; a public library may also need an adapter or migration. `LegacyPolicy` continues to support the old business contract, while the public API intentionally changes.
 
-## 6. Lần thay đổi thứ hai và bài tập bàn giao
+## 6. Second change request and handoff exercise
 
-Quản lý hỏi tiếp: **“Sách tham khảo không được gia hạn, sách thường có thể gia hạn một lần tối đa 7 ngày.”**
+Management then asks: **“Reference books cannot be renewed; normal books may be renewed once for at most 7 days.”**
 
-**Việc cần làm:**
+**Tasks:**
 
-1. Làm rõ trường hợp đang quá hạn, sách bị đặt trước, giới hạn ngày tối đa và thời điểm chốt hạn mới. Không mở phương thức `setDueOn` công khai.
-2. Thiết kế `extendLoan(loanId, days)` theo nghiệp vụ; nếu một Loan chỉ được gia hạn một lần, phải lưu việc đã gia hạn (`extensionCount`) hoặc lịch sử gia hạn có thể kiểm chứng.
-3. `Loan` tự bảo vệ trạng thái “đang mở”, ngày hạn mới phải sau hạn cũ, và số lần gia hạn; một policy quyết định có được gia hạn theo loại sách hay không.
-4. Viết bảng test: NORMAL gia hạn 7 ngày được; gia hạn 8 ngày bị từ chối; gia hạn hai lần bị từ chối; REFERENCE bị từ chối; Loan đã trả không được gia hạn; đường lỗi không đổi hạn cũ.
-5. Truy vết thay đổi tới yêu cầu, UML, test và lớp chịu trách nhiệm; giải thích có cần thêm một interface khác hay chỉ mở rộng policy hiện tại.
+1. Clarify currently overdue loans, reserved books, maximum extension duration, and when the new due date is finalized. Do not expose a public `setDueOn` method.
+2. Design `extendLoan(loanId, days)` according to business rules; if a Loan can be extended only once, record whether it was extended (`extensionCount`) or maintain an auditable renewal history.
+3. `Loan` must protect its own "open" state, require new due dates after existing ones, and enforce the renewal count; a policy decides whether a book category is eligible for renewal.
+4. Write test cases: NORMAL may extend 7 days; an 8-day extension is rejected; a second extension is rejected; REFERENCE is rejected; returned Loans cannot be extended; failed requests preserve the original due date.
+5. Trace changes to requirements, UML, tests, and responsible classes; explain whether another interface is necessary or the current policy should be extended.
 
-**Nộp bài:** code Java, kết quả test, bảng so sánh thay đổi, sơ đồ lớp và đánh giá 5 trục có bằng chứng. Đối với codebase đã có database, bổ sung migration dữ liệu `kind`, version/effective date của policy và kiểm thử transaction. Khi ràng buộc vượt một Loan (ví dụ mượn bản đã có người khác giữ), tính nguyên tử phải được bảo vệ ở nơi sở hữu giao dịch.
+**Deliverables:** Java code, test results, a change-comparison table, a class diagram, and evidence-based evaluation across 5 dimensions. For codebases with databases, also include a migration for `kind`, policy version/effective date, and transaction tests. When constraints span more than one Loan (for example, borrowing a copy already held by someone else), enforce atomicity at the transaction-owning boundary.
 
-### Checklist nghiệm thu cuối chương
+### Final acceptance checklist
 
-- [ ] Cấu trúc học tập đi từ yêu cầu → class/quan hệ → hiện thực/test → thay đổi yêu cầu trên **cùng miền thư viện**.
-- [ ] Giới hạn 3/14 ban đầu và 5/7–14 mới được phân biệt rõ theo thời điểm hiệu lực.
-- [ ] Loan đã tạo không bị tính lại hạn do policy mới.
-- [ ] Mượn theo `copyId`, một đầu sách có nhiều bản độc lập.
-- [ ] Có ca kiểm thử giới hạn, overdue, inactive, trả hai lần và trả ngày sai.
-- [ ] Lý giải được khi nào interface policy giúp giảm số nơi sửa, khi nào là thiết kế thừa.
-- [ ] Biết phần nào chạy trong một JVM và phần nào đòi transaction/unique constraint khi dùng nhiều node.
-- [ ] Đánh giá thiết kế từ bằng chứng và trade-off, không chỉ tên SOLID.
+- [ ] Follow the learning sequence from requirements → classes/relationships → implementation/tests → changed requirements in **the same library domain**.
+- [ ] Distinguish original limits of 3/14 from revised limits of 5/7–14 by effective date.
+- [ ] Existing Loans do not have due dates recalculated by the new policy.
+- [ ] Borrow by `copyId`, with multiple independent copies per title.
+- [ ] Test limits, overdue, inactive members, duplicate returns, and invalid return dates.
+- [ ] Explain when a policy interface reduces change locations and when it is unnecessary design.
+- [ ] Distinguish one-JVM guarantees from transactions/unique constraints required across nodes.
+- [ ] Evaluate design from evidence and trade-offs, not just SOLID terminology.
 
-**Kết quả học tập:** Thay đổi yêu cầu không chỉ là thay con số 3 thành 5. Nó buộc bạn xác định dữ liệu nào thuộc giao dịch lịch sử, dữ liệu nào là chính sách có hiệu lực tại thời điểm mới, ai chịu trách nhiệm tính hạn, và phải kiểm thử cả behavior cũ lẫn mới. Đó là cách đánh giá chất lượng của một mô hình OOP sau khi nó gặp thay đổi thật.
+**Learning outcome:** A requirement change is more than replacing 3 with 5. It requires identifying historical transaction data, newly effective policies, responsibility for calculating due dates, and tests covering both old and new behavior. This is how an OOP model's quality is evaluated when real requirements evolve.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

@@ -1,82 +1,82 @@
 version: 1
 type: LEARNING_ROADMAP
-title: KẾ THỪA — LIÊN KẾT BÀI HỌC
-roadmapHeading: Mạch liên kết bài học
+title: INHERITANCE — LESSON CONNECTIONS
+roadmapHeading: How the Lessons Connect
 roadmap:
 - id: inheritance-001
   order: 1
-  title: Lớp cha, lớp con và quan hệ kế thừa
-  description: Nắm bản chất quan hệ is-a, phân định superclass/subclass và hợp đồng chung; nhận diện đa hình qua bài toán nhân viên.
+  title: Superclasses, Subclasses, and Inheritance Relationships
+  description: Understand the nature of the is-a relationship, distinguish superclass and subclass responsibilities and their shared contract, and recognize polymorphism through an employee scenario.
   transition:
     to: inheritance-002
-    description: '**Từ nhận diện loại đối tượng → phân tích dữ liệu và phương thức hiện diện trong chính object lớp con.**'
+    description: '**From identifying object types → examining the data and methods present in the subclass object itself.**'
 - id: inheritance-002
   order: 2
-  title: Kế thừa trạng thái và hành vi
-  description: Xác định trạng thái và hành vi nằm ở cha/con; phân biệt kế thừa, bổ sung, override và field hiding.
+  title: Inheriting State and Behavior
+  description: Identify state and behavior defined in superclasses and subclasses; distinguish inheritance, additions, overriding, and field hiding.
   transition:
     to: inheritance-003
-    description: '**Từ hiểu thành phần kế thừa → thực hành bổ sung hành vi theo biến thể cụ thể.**'
+    description: '**From understanding inherited members → practicing behavior extensions for specific variants.**'
 - id: inheritance-003
   order: 3
-  title: Mở rộng hành vi của lớp cha
-  description: Vận dụng override kết hợp super và Template Method để thêm chức năng mà vẫn giữ quy trình chung.
+  title: Extending Superclass Behavior
+  description: Use overriding together with super and Template Method to add functionality while preserving the shared process.
   transition:
     to: inheritance-004
-    description: '**Từ cách mở rộng hành vi → kiểm tra chặt quy tắc override, super và dispatch.**'
+    description: '**From extending behavior → carefully checking the rules for overriding, super, and dispatch.**'
 - id: inheritance-004
   order: 4
-  title: Ghi đè phương thức và gọi hành vi lớp cha
-  description: Đọc chính xác dynamic dispatch, quy tắc @Override, super.method() và ranh giới hợp đồng của phương thức.
+  title: Method Overriding and Invoking Superclass Behavior
+  description: Interpret dynamic dispatch, @Override rules, super.method(), and the boundaries of method contracts accurately.
   transition:
     to: inheritance-005
-    description: '**Từ override hợp lệ → xác định thành viên nào có thể được nhìn thấy và gọi từ từng package.**'
+    description: '**From valid overrides → determining which members are visible and callable from each package.**'
 - id: inheritance-005
   order: 5
-  title: Khả năng truy cập thành viên được kế thừa
-  description: Phán đoán khả năng truy cập public/protected/package-private/private, nhất là subclass nằm khác package.
+  title: Access to Inherited Members
+  description: Determine accessibility under public/protected/package-private/private, especially for subclasses in different packages.
   transition:
     to: inheritance-006
-    description: '**Từ quyền truy cập member → theo dõi trình tự khởi tạo trước khi các hành vi ấy được dùng.**'
+    description: '**From member access rules → tracing the initialization sequence before those behaviors are used.**'
 - id: inheritance-006
   order: 6
-  title: Khởi tạo lớp con và chuỗi khởi tạo lớp cha
-  description: Truy vết static/instance initialization và constructor chaining, tránh gọi override trên trạng thái chưa hoàn chỉnh.
+  title: Subclass Initialization and Superclass Constructor Chaining
+  description: Trace static/instance initialization and constructor chaining; avoid invoking overridden methods on incomplete state.
   transition:
     to: inheritance-007
-    description: '**Từ nguy cơ khi khởi tạo → quyết định phần nào phải khóa để bảo toàn quy tắc của superclass.**'
+    description: '**From initialization risks → deciding which parts must be locked down to preserve superclass rules.**'
 - id: inheritance-007
   order: 7
-  title: Thành viên không thể ghi đè và lớp không thể kế thừa
-  description: Kiểm soát điểm mở rộng bằng final class/final method, cân nhắc sealed và các điểm hook hợp lệ.
+  title: Non-Overridable Members and Non-Inheritable Classes
+  description: Control extension points with final classes and final methods, considering sealed classes and valid hooks.
   transition:
     to: inheritance-008
-    description: '**Từ khóa điểm mở rộng trên một class → tìm cách kết hợp nhiều hợp đồng qua interface trong giới hạn Java.**'
+    description: '**From restricting extension points in a class → combining multiple contracts through interfaces within Java’s constraints.**'
 - id: inheritance-008
   order: 8
-  title: Kế thừa đơn, kế thừa đa và xung đột hành vi
-  description: Kết hợp nhiều interface trong giới hạn một superclass, giải quyết va chạm default method bằng luật ưu tiên Java.
+  title: Single Inheritance, Multiple Inheritance, and Behavior Conflicts
+  description: Combine multiple interfaces with a single superclass, resolving default-method conflicts using Java's precedence rules.
   transition:
     to: inheritance-009
-    description: '**Từ default method và xung đột Java → xem khả năng chia sẻ hành vi cho các lớp khác nhánh và so sánh với trait.**'
+    description: '**From Java default methods and conflicts → exploring behavior sharing across unrelated class branches and comparing it with traits.**'
 - id: inheritance-009
   order: 9
-  title: Mixin, trait và tái sử dụng hành vi tùy ngôn ngữ
-  description: Mở rộng tái sử dụng hành vi qua interface default method, phân biệt mixin/trait giữa các ngôn ngữ và composition.
+  title: Mixins, Traits, and Language-Specific Behavior Reuse
+  description: Extend behavior reuse through interface default methods; distinguish mixins and traits across languages from composition.
   transition:
     to: inheritance-010
-    description: '**Từ các kỹ thuật tái sử dụng → đánh giá chi phí dài hạn của cây kế thừa nhiều tầng.**'
+    description: '**From reuse techniques → evaluating the long-term costs of deep inheritance hierarchies.**'
 - id: inheritance-010
   order: 10
-  title: Giới hạn và chi phí của cây kế thừa sâu
-  description: Nhận diện fragile base class, chi phí kiểm thử của cây sâu và lựa chọn giữ nguyên hợp đồng khi tái cấu trúc.
+  title: Limits and Costs of Deep Inheritance Hierarchies
+  description: Identify fragile base classes and the testing costs of deep hierarchies; choose refactorings that preserve existing contracts.
   transition: null
 comparisonMarkdown: |-
-  ## 2. Bảng đối chiếu các bài học
+  ## 2. Lesson Comparison Table
 
-  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | Criterion | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 | Lesson 6 | Lesson 7 | Lesson 8 | Lesson 9 | Lesson 10 |
   | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-  | Tên | Lớp cha, lớp con và quan hệ kế thừa | Kế thừa trạng thái và hành vi | Mở rộng hành vi của lớp cha | Ghi đè phương thức và gọi hành vi lớp cha | Khả năng truy cập thành viên được kế thừa | Khởi tạo lớp con và chuỗi khởi tạo lớp cha | Thành viên không thể ghi đè và lớp không thể kế thừa | Kế thừa đơn, kế thừa đa và xung đột hành vi | Mixin, trait và tái sử dụng hành vi tùy ngôn ngữ | Giới hạn và chi phí của cây kế thừa sâu |
-  | Vấn đề cần hiểu | Kiểu con có thực sự là kiểu cha? | State và behavior của cha tồn tại/sử dụng thế nào? | Mở rộng chức năng mà giữ bước chung ra sao? | Override và super quyết định phương thức chạy thế nào? | Ai được truy cập member nào ở package nào? | new Child chạy các bước khởi tạo theo thứ tự nào? | Khi nào cấm extends hoặc override? | Ghép interface và giải quyết default conflict thế nào? | Lớp không cùng cha chia sẻ hành vi bằng cơ chế nào? | Cây lớp sâu gây rủi ro gì và giảm sâu thế nào? |
-  | Giá trị đối với OOP/module | Thiết lập quan hệ subtype có hợp đồng rõ. | Giữ dữ liệu chung và invariant trong superclass. | Xây điểm mở rộng cho biến thể nghiệp vụ. | Bảo đảm dispatch và xử lý super đúng. | Thiết kế API phù hợp phạm vi truy cập. | Khởi tạo subclass nhất quán và an toàn. | Cố định invariant, quy trình và phạm vi subtype. | Dùng nhiều capability mà không đa kế thừa state. | Tái sử dụng behavior ngang cây lớp khi phù hợp. | Giảm coupling và rủi ro hồi quy ở thiết kế lớn. |
-  | Tư duy hình thành | Kiểm tra is-a và khả năng thay thế. | Phân biệt hiện diện state với quyền nhìn thấy nó. | Chuyên biệt hóa có kiểm soát. | Theo dõi lời gọi runtime và cam kết contract. | Suy từ modifier, package, kiểu qualifier. | Truy vết vòng đời và trạng thái chưa sẵn sàng. | Chọn phần mở/phần khóa có chủ đích. | Giải va chạm hợp đồng trước khi ghép. | Tách capability khỏi quan hệ họ hàng lớp. | Đánh giá chi phí thay đổi trên toàn phân cấp. |
+  | Name | Superclasses, Subclasses, and Inheritance Relationships | Inheriting State and Behavior | Extending Superclass Behavior | Method Overriding and Invoking Superclass Behavior | Access to Inherited Members | Subclass Initialization and Superclass Constructor Chaining | Non-Overridable Members and Non-Inheritable Classes | Single Inheritance, Multiple Inheritance, and Behavior Conflicts | Mixins, Traits, and Language-Specific Behavior Reuse | Limits and Costs of Deep Inheritance Hierarchies |
+  | Questions to Understand | Is the subtype really a kind of the supertype? | How does superclass state and behavior exist and get used? | How can functionality be extended while retaining common steps? | How do overrides and super determine which method executes? | Who can access which members from which packages? | In what order does new Child perform initialization? | When should extends or overriding be prohibited? | How are interfaces combined and default-method conflicts resolved? | How can classes without a common superclass share behavior? | What risks do deep hierarchies introduce, and how can their depth be reduced? |
+  | Value for OOP/the Module | Establish a subtype relationship with a clear contract. | Keep shared data and invariants in the superclass. | Create extension points for business-specific variants. | Ensure correct dispatch and use of super. | Design APIs with appropriate access boundaries. | Initialize subclasses consistently and safely. | Preserve invariants, processes, and subtype boundaries. | Combine multiple capabilities without multiple inheritance of state. | Reuse behavior across class hierarchies when appropriate. | Reduce coupling and regression risks in larger designs. |
+  | Mental Model Developed | Check the is-a relationship and substitutability. | Distinguish the presence of state from permission to access it. | Specialize behavior in a controlled way. | Trace runtime calls and contractual commitments. | Reason from modifiers, packages, and qualifier types. | Trace lifecycles and not-yet-ready state. | Deliberately choose what to leave open and what to lock down. | Resolve contract conflicts before combining them. | Separate capabilities from class lineage. | Assess change costs across the entire hierarchy. |

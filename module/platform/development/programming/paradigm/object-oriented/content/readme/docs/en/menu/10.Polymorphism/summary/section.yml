@@ -1,82 +1,82 @@
 version: 1
 type: LEARNING_ROADMAP
-title: ĐA HÌNH — LIÊN KẾT BÀI HỌC
-roadmapHeading: Mạch liên kết bài học
+title: POLYMORPHISM — LESSON CONNECTIONS
+roadmapHeading: How the Lessons Connect
 roadmap:
 - id: polymorphism-001
   order: 1
-  title: Đa hình và nhiều cách thực hiện cùng một thao tác
-  description: Nhận diện một lời gọi ShippingPolicy.quote(Parcel) nhưng Economy, Standard, Express có công thức và thời gian báo giá riêng.
+  title: Polymorphism and Multiple Implementations of the Same Operation
+  description: Recognize how a single call to ShippingPolicy.quote(Parcel) produces different pricing formulas and estimated delivery times for Economy, Standard, and Express.
   transition:
     to: polymorphism-002
-    description: '**Từ hiện tượng một lời gọi nhiều hành vi → xác định quan hệ subtype cho phép gọi chung**'
+    description: '**From one call producing multiple behaviors → identifying the subtype relationships that enable a shared call**'
 - id: polymorphism-002
   order: 2
-  title: Đa hình kiểu con qua giao diện hoặc lớp cha
-  description: So sánh implements interface với extends superclass; upcast và final Report.preview gọi hook content của lớp con.
+  title: Subtype Polymorphism Through Interfaces or Superclasses
+  description: Compare implements interface with extends superclass; examine upcasting and how final Report.preview invokes a subclass's content hook.
   transition:
     to: polymorphism-003
-    description: '**Từ subtype → tìm hiểu cách compiler và runtime quyết định phương thức**'
+    description: '**From subtypes → exploring how the compiler and runtime select methods**'
 - id: polymorphism-003
   order: 3
-  title: Phân giải phương thức tĩnh và phân giải động
-  description: Compiler chọn overload dựa vào kiểu tĩnh receiver/đối số, JVM chọn implementation override theo object thực.
+  title: Static Method Resolution and Dynamic Dispatch
+  description: The compiler selects overloads using the static types of the receiver and arguments; the JVM selects overridden implementations based on the actual object.
   transition:
     to: polymorphism-004
-    description: '**Từ quy tắc chọn method → thực hành override đúng điều kiện và giới hạn**'
+    description: '**From method-selection rules → practicing overrides that respect their requirements and constraints**'
 - id: polymorphism-004
   order: 4
-  title: Ghi đè và lựa chọn phương thức khi chạy
-  description: DeliveryPlan.quote final bảo vệ quy trình, còn distanceFee overridable tạo khác biệt; gọi super có mục đích.
+  title: Overriding and Runtime Method Selection
+  description: The final DeliveryPlan.quote protects the overall process, while overridable distanceFee enables variation; invoke super deliberately.
   transition:
     to: polymorphism-005
-    description: '**Từ override → phân biệt overload cùng tên khác tham số**'
+    description: '**From overriding → distinguishing overloads with the same name but different parameters**'
 - id: polymorphism-005
   order: 5
-  title: Phân biệt ghi đè với nạp chồng
-  description: Giải quyết cùng lúc overload và override trong DispatchDemo với cast, null và conversion.
+  title: Distinguishing Overriding from Overloading
+  description: Resolve the interaction between overloading and overriding in DispatchDemo with casts, null, and conversions.
   transition:
     to: polymorphism-006
-    description: '**Từ hai cơ chế method cùng tên → tránh nhầm với hiding các thành viên khác**'
+    description: '**From two mechanisms involving same-named methods → avoiding confusion with the hiding of other members**'
 - id: polymorphism-006
   order: 6
-  title: Phân biệt che khuất thành viên với ghi đè
-  description: Field và static method cùng tên được chọn theo kiểu tĩnh, khác với instance describe dispatch động.
+  title: Distinguishing Member Hiding from Overriding
+  description: Same-named fields and static methods are resolved by static type, unlike dynamically dispatched instance describe methods.
   transition:
     to: polymorphism-007
-    description: '**Từ field/static hiding → tổng hợp giới hạn đa hình cho mọi loại member**'
+    description: '**From field/static hiding → consolidating the limits of polymorphism across member types**'
 - id: polymorphism-007
   order: 7
-  title: Phạm vi đa hình của phương thức và thuộc tính
-  description: Phân loại field/static/private/final/getter/abstract/default, chọn API qua method thay vì public field trùng tên.
+  title: The Scope of Polymorphism for Methods and Fields
+  description: Classify fields, static/private/final members, getters, abstract methods, and default methods; prefer method-based APIs over same-named public fields.
   transition:
     to: polymorphism-008
-    description: '**Từ ranh giới member của Java → mở góc nhìn trừu tượng hóa theo khả năng**'
+    description: '**From Java member boundaries → broadening the view toward capability-based abstractions**'
 - id: polymorphism-008
   order: 8
-  title: Duck typing và đa hình theo khả năng
-  description: Phân biệt Java nominal typing với duck typing; dùng capability interface và adapter/method reference.
+  title: Duck Typing and Capability-Based Polymorphism
+  description: Distinguish Java's nominal typing from duck typing; use capability interfaces and adapters/method references.
   transition:
     to: polymorphism-009
-    description: '**Từ khai báo đúng khả năng → tổ chức code nghiệp vụ để giảm kiểm tra loại lặp lại**'
+    description: '**From declaring capabilities accurately → organizing business code to reduce repeated type checks**'
 - id: polymorphism-009
   order: 9
-  title: Đa hình thay cho điều kiện kiểm tra từng loại
-  description: Đưa thuật toán vào ShippingPolicy, giữ factory/switch chọn implementation ở ranh giới; kiểm thử bảo toàn hành vi.
+  title: Replacing Type Checks with Polymorphism
+  description: Move algorithms into ShippingPolicy, keep factory/switch implementation selection at the boundary, and test that behavior is preserved.
   transition:
     to: polymorphism-010
-    description: '**Từ refactor strategy → vận dụng cho nhiều phương thức thanh toán và trạng thái**'
+    description: '**From strategy refactoring → applying it to multiple payment methods and states**'
 - id: polymorphism-010
   order: 10
-  title: Ví dụ nhiều phương thức thanh toán
-  description: CheckoutService dùng một PaymentMethod.pay cho thẻ, ví, chuyển khoản; phân biệt PAID/DECLINED/PENDING và kiểm thử với fake.
+  title: Example of Multiple Payment Methods
+  description: CheckoutService uses one PaymentMethod.pay operation for cards, wallets, and bank transfers; distinguish PAID/DECLINED/PENDING and test with a fake.
   transition: null
 comparisonMarkdown: |-
-  ## 2. Bảng đối chiếu các bài học
+  ## 2. Lesson Comparison Table
 
-  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | Criterion | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 | Lesson 6 | Lesson 7 | Lesson 8 | Lesson 9 | Lesson 10 |
   | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-  | Tên | Đa hình và nhiều cách thực hiện cùng một thao tác | Đa hình kiểu con qua giao diện hoặc lớp cha | Phân giải phương thức tĩnh và phân giải động | Ghi đè và lựa chọn phương thức khi chạy | Phân biệt ghi đè với nạp chồng | Phân biệt che khuất thành viên với ghi đè | Phạm vi đa hình của phương thức và thuộc tính | Duck typing và đa hình theo khả năng | Đa hình thay cho điều kiện kiểm tra từng loại | Ví dụ nhiều phương thức thanh toán |
-  | Vấn đề cần hiểu | Một lời gọi hoạt động khác nhau vì sao? | Subtype qua interface hoặc superclass là gì? | Compiler và JVM quyết định ở bước nào? | Làm sao override đúng và an toàn? | Cùng tên khi nào overload hay override? | Field/static cùng tên có override không? | Member nào thực sự được dynamic dispatch? | Cần hợp đồng kiểu hay chỉ method giống tên? | Khi nào đổi if/instanceof thành strategy? | Một pay có thể có trạng thái nào? |
-  | Giá trị đối với OOP/module | Client không lặp công thức | Dùng subtype theo API chung | Debug lời gọi chính xác | Mở rộng hook và giữ invariant | Tránh gọi nhầm chữ ký | Tránh field/static lookup gây lỗi | Ưu tiên method cho hành vi biến thiên | Tích hợp theo năng lực qua adapter | Giảm coupling khi thêm loại mới | Thanh toán mô phỏng dễ mở rộng/test |
-  | Tư duy hình thành | Hành vi đi theo runtime object | Một kiểu chung nhiều class | Chọn signature rồi chọn implementation | Giữ quy trình và mở hook | Tách tham số khỏi implementation | Phân biệt hiding với overriding | Định nghĩa rõ phạm vi polymorphism | Thiết kế từ capability | Chọn đối tượng một nơi, gọi contract mọi nơi | Phân biệt kết quả và giới hạn an toàn |
+  | Name | Polymorphism and Multiple Implementations of the Same Operation | Subtype Polymorphism Through Interfaces or Superclasses | Static Method Resolution and Dynamic Dispatch | Overriding and Runtime Method Selection | Distinguishing Overriding from Overloading | Distinguishing Member Hiding from Overriding | The Scope of Polymorphism for Methods and Fields | Duck Typing and Capability-Based Polymorphism | Replacing Type Checks with Polymorphism | Example of Multiple Payment Methods |
+  | Questions to Understand | Why can one call produce different behavior? | What is a subtype through an interface or superclass? | At which stage do the compiler and JVM make their decisions? | How do you override correctly and safely? | When are same-named methods overloads versus overrides? | Do same-named fields/static methods override? | Which members actually use dynamic dispatch? | Is a type contract required, or are same-named methods enough? | When should if/instanceof checks become a strategy? | What states can a pay operation return? |
+  | Value for OOP/the Module | Clients avoid duplicating pricing formulas | Use subtypes through a common API | Debug method calls accurately | Extend hooks while preserving invariants | Avoid calling the wrong signature | Avoid errors from field/static lookup | Prefer methods for variable behavior | Integrate by capability through adapters | Reduce coupling when adding new types | Make simulated payments easy to extend and test |
+  | Mental Model Developed | Behavior follows the runtime object | One common type, many classes | Select the signature, then the implementation | Preserve the process while extending hooks | Separate parameter selection from implementation selection | Distinguish hiding from overriding | Define the scope of polymorphism clearly | Design around capabilities | Select an object in one place, invoke its contract everywhere | Distinguish outcomes and safety limitations |

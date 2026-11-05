@@ -41,6 +41,14 @@
             }
         },
         {
+            "extension": "GenerateModuleExcelExtension",
+            "name": "generateModuleExcel",
+            "path": "gradle-runtime/src/main/groovy/com/example/learning/task/sheets/extension/GenerateModuleExcelExtension.groovy",
+            "fields": {
+                "languageList": "List<String>"
+            }
+        },
+        {
             "extension": "ImportExcelFromModuleSheetExtension",
             "name": "importExcelFromModuleSheet",
             "path": "gradle-runtime/src/main/groovy/com/example/learning/task/sheets/extension/ImportExcelFromModuleSheetExtension.groovy",

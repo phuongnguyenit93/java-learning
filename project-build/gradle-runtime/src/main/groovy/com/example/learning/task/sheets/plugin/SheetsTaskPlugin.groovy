@@ -1,6 +1,7 @@
 package com.example.learning.task.sheets.plugin
 
 import com.example.learning.task.sheets.extension.GenerateModuleContentFromSheetByLocationExtension
+import com.example.learning.task.sheets.extension.GenerateModuleExcelExtension
 import com.example.learning.task.sheets.export.plugin.ModuleSheetExcelExportPlugin
 import com.example.learning.task.sheets.importexcel.plugin.ModuleSheetExcelImportPlugin
 import com.example.learning.task.sheets.task.GenerateModuleContentFromSheetByLocationTask
@@ -8,8 +9,11 @@ import com.example.learning.task.sheets.task.FillIntroductionTask
 import com.example.learning.task.sheets.task.SyncModuleContentToExcelTask
 import com.example.learning.task.sheets.task.CloneModuleViToEnTask
 import com.example.learning.task.sheets.task.ModuleTranslationAuditTask
+import com.example.learning.task.sheets.task.ModuleTranslationProgressTask
 import com.example.learning.task.sheets.task.ModuleEnSheetPublishTask
 import com.example.learning.task.sheets.task.PublishOptionalVideoEnTask
+import com.example.learning.task.sheets.task.GenerateModuleExcelTask
+import com.example.learning.task.sheets.task.DeleteModuleOnlineSheetTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -29,6 +33,28 @@ class SheetsTaskPlugin
 
         project.pluginManager.apply(ModuleSheetExcelExportPlugin)
         project.pluginManager.apply(ModuleSheetExcelImportPlugin)
+
+        GenerateModuleExcelExtension excel =
+                project.extensions.create('generateModuleExcel', GenerateModuleExcelExtension)
+        excel.languageList.convention([])
+        project.tasks.register('generateModuleExcel', GenerateModuleExcelTask) { task ->
+            task.group = 'sheets'
+            task.description = 'STEP 12: canonical module VI/EN to offline XLSX using Apache POI.'
+            task.languageList.set(excel.languageList)
+            task.mode.convention(project.providers.gradleProperty('excelMode')
+                    .orElse('DRY_RUN'))
+        }
+
+        project.tasks.register('deleteModuleOnlineSheet', DeleteModuleOnlineSheetTask) { task ->
+            task.group = 'sheets'
+            task.description = 'STEP_FINAL Prime-only: delete the verified module Google Sheet tab after STEP 12 and final QA.'
+            task.fileUrl.convention(project.providers.gradleProperty('fileUrl')
+                    .orElse(project.providers.gradleProperty('fileURL')).orElse(''))
+            task.sheetId.convention(project.providers.gradleProperty('sheetID')
+                    .orElse(project.providers.gradleProperty('sheetId')).orElse(''))
+            task.mode.convention(project.providers.gradleProperty('sheetMode')
+                    .orElse('DRY_RUN'))
+        }
 
         project.tasks.register('cloneModuleViToEn', CloneModuleViToEnTask) { task ->
             task.group = 'sheets'
@@ -54,6 +80,23 @@ class SheetsTaskPlugin
                 task.workerCount.convention(project.providers.gradleProperty('translationWorkerCount')
                         .orElse(''))
             }
+        }
+
+        project.tasks.register('trackModuleTranslation', ModuleTranslationProgressTask) { task ->
+            task.group = 'sheets'
+            task.description = 'STEP 11 Prime-only recovery journal: INIT/SHOW/ASSIGN/REPORT/' +
+                    'QA_PASS/REVIEW/BLOCKER/REQUEUE/COMPLETE.'
+            task.runId.convention(project.providers.gradleProperty('translationRunId').orElse(''))
+            task.action.convention(project.providers.gradleProperty('translationProgressAction')
+                    .orElse('SHOW'))
+            task.jobId.convention(project.providers.gradleProperty('translationProgressJobId')
+                    .orElse(''))
+            task.workerId.convention(project.providers.gradleProperty('translationProgressWorkerId')
+                    .orElse(''))
+            task.note.convention(project.providers.gradleProperty('translationProgressNote')
+                    .orElse(''))
+            task.revision.convention(project.providers.gradleProperty('translationProgressRevision')
+                    .orElse(''))
         }
 
         // STEP 15: deterministic module EN publishing; the template is cloned

@@ -1,82 +1,82 @@
 version: 1
 type: LEARNING_ROADMAP
-title: LỖI THIẾT KẾ — LIÊN KẾT BÀI HỌC
-roadmapHeading: Mạch liên kết bài học
+title: DESIGN PITFALLS — LESSON CONNECTIONS
+roadmapHeading: Learning Path Through the Lessons
 roadmap:
 - id: design-pitfalls-001
   order: 1
-  title: Lớp ôm quá nhiều trách nhiệm
-  description: Nhận diện God Class qua lý do thay đổi, cohesion/coupling; tách use case điều phối khỏi tính giá, lưu trữ và thông báo theo trách nhiệm.
+  title: Classes with Too Many Responsibilities
+  description: Identify a God Class through reasons for change and cohesion/coupling; separate use-case orchestration from pricing, persistence, and notification responsibilities.
   transition:
     to: design-pitfalls-002
-    description: '**Từ trách nhiệm của lớp → trách nhiệm bảo vệ dữ liệu và các quy tắc bất biến bên trong lớp.**'
+    description: '**From class responsibilities → the responsibility to protect data and invariants within the class.**'
 - id: design-pitfalls-002
   order: 2
-  title: Trạng thái công khai và mất điều kiện bất biến
-  description: Bảo vệ invariant qua API nghiệp vụ, chặn alias mutable và kiểm thử atomic updates, kể cả khi nhiều thread truy cập.
+  title: Exposed State and Broken Invariants
+  description: Protect invariants through business APIs, prevent mutable aliases from bypassing controls, and test atomic updates, including concurrent access by multiple threads.
   transition:
     to: design-pitfalls-003
-    description: '**Từ encapsulation bảo vệ trạng thái → API nghiệp vụ thay thế lối sửa từng field qua setter.**'
+    description: '**From encapsulation that protects state → business APIs that replace field-by-field updates through setters.**'
 - id: design-pitfalls-003
   order: 3
-  title: Getter, setter tràn lan nhưng thiếu hành vi
-  description: Chuyển từ getter/setter mở sang hành vi confirm/ship/cancel giữ vòng đời Order, phân biệt với DTO và transaction script hợp lý.
+  title: Excessive Getters and Setters Without Behavior
+  description: Replace unrestricted getters/setters with confirm/ship/cancel behaviors that protect the Order lifecycle, while recognizing legitimate DTOs and transaction scripts.
   transition:
     to: design-pitfalls-004
-    description: '**Góc nhìn bổ sung: từ API domain quá mở → quan hệ kế thừa làm lộ API không thuộc trách nhiệm.**'
+    description: '**Another perspective: from overly permissive domain APIs → inheritance exposing APIs outside an object’s responsibilities.**'
 - id: design-pitfalls-004
   order: 4
-  title: Kế thừa chỉ để dùng lại vài phương thức
-  description: Tránh extends chỉ mượn method khiến Inventory vô tình lộ Map API; giữ Map private và ủy quyền thao tác an toàn.
+  title: Inheritance Used Only to Reuse a Few Methods
+  description: Avoid extending a class merely to borrow methods, which can inadvertently expose the Map API through Inventory; keep Map private and delegate safe operations.
   transition:
     to: design-pitfalls-005
-    description: '**Từ đánh giá hợp đồng subtype → tránh gọi theo kiểu cụ thể khắp nơi bằng đa hình.**'
+    description: '**From evaluating subtype contracts → use polymorphism instead of calls scattered across concrete types.**'
 - id: design-pitfalls-005
   order: 5
-  title: Lạm dụng ép kiểu và kiểm tra kiểu
-  description: Thay branching lặp theo instanceof/cast bằng đa hình ShippingPolicy; dành kiểm tra type cho boundary/capability phù hợp.
+  title: Overusing Casts and Type Checks
+  description: Replace repeated instanceof/cast branching with ShippingPolicy polymorphism; reserve type checks for appropriate boundaries and capability checks.
   transition:
     to: design-pitfalls-006
-    description: '**Từ dùng đa hình đúng → thiết kế interface đủ hẹp để các implementation thực hiện trọn lời hứa.**'
+    description: '**From using polymorphism correctly → design interfaces narrow enough for implementations to fulfill every promise.**'
 - id: design-pitfalls-006
   order: 6
-  title: Giao diện quá lớn hoặc quá nhiều lớp trừu tượng
-  description: Áp dụng ISP theo nhu cầu DocumentReader/Writer, loại method không hỗ trợ và rút những tầng forwarding không mang giá trị.
+  title: Oversized Interfaces or Too Many Abstraction Layers
+  description: Apply ISP according to DocumentReader/Writer needs, remove unsupported methods, and eliminate forwarding layers that add no value.
   transition:
     to: design-pitfalls-007
-    description: '**Từ ranh giới interface → ranh giới hướng phụ thuộc và cách trao đổi dữ liệu giữa đối tượng.**'
+    description: '**From interface boundaries → dependency direction and data exchange boundaries between objects.**'
 - id: design-pitfalls-007
   order: 7
-  title: Phụ thuộc vòng và truy cập sâu vào đối tượng
-  description: Phá vòng OrderService–ShippingService, truyền request dữ liệu hẹp và giảm deep navigation theo Law of Demeter.
+  title: Circular Dependencies and Deep Object Navigation
+  description: Break OrderService–ShippingService cycles, pass narrowly scoped request data, and reduce deep navigation following the Law of Demeter.
   transition:
     to: design-pitfalls-008
-    description: '**Từ cấu trúc phụ thuộc → kiểm soát chia sẻ trạng thái và điều phối thay đổi an toàn.**'
+    description: '**From dependency structures → control shared state and coordinate safe changes.**'
 - id: design-pitfalls-008
   order: 8
-  title: Trạng thái dùng chung khó kiểm soát
-  description: Đặt owner cho shared mutable state, phòng race conditions và chọn atomic, lock hay transaction theo phạm vi.
+  title: Hard-to-Control Shared State
+  description: Assign ownership of shared mutable state, prevent race conditions, and choose atomic operations, locks, or transactions according to scope.
   transition:
     to: design-pitfalls-009
-    description: '**Từ shared mutable state → tình huống đặc biệt khi thay field ảnh hưởng equality/hash của key.**'
+    description: '**From shared mutable state → the special case where changing fields affects a key’s equality/hash.**'
 - id: design-pitfalls-009
   order: 9
-  title: Đối tượng có thể thay đổi làm sai phép so sánh hoặc mã băm
-  description: Giữ equals/hashCode/comparator ổn định cho key/Set element; tách CustomerId khỏi hồ sơ mutable và kiểm tra record/ORM.
+  title: Mutable Objects Breaking Equality or Hashing
+  description: Keep equals/hashCode/comparator behavior stable for keys and Set elements; separate CustomerId from mutable profiles and examine records/ORM mappings.
   transition:
     to: design-pitfalls-010
-    description: '**Góc nhìn tổng hợp: từ các lỗi cụ thể → cân nhắc lúc nào nên dùng pattern hoặc trừu tượng hóa.**'
+    description: '**A broader perspective: from specific pitfalls → decide when patterns or abstractions are warranted.**'
 - id: design-pitfalls-010
   order: 10
-  title: Lạm dụng mẫu thiết kế và trừu tượng hóa quá sớm
-  description: Nhìn bằng chứng biến thiên trước khi đưa Strategy/Factory vào thiết kế; dùng regression tests để tiến hóa từ chính sách đơn.
+  title: Overusing Design Patterns and Premature Abstraction
+  description: Look for evidence of variation before introducing Strategy/Factory; use regression tests to evolve from a single policy.
   transition: null
 comparisonMarkdown: |-
-  ## 2. Bảng đối chiếu các bài học
+  ## 2. Lesson Comparison Table
 
-  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | Criterion | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 | Lesson 6 | Lesson 7 | Lesson 8 | Lesson 9 | Lesson 10 |
   | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-  | Tên | Lớp ôm quá nhiều trách nhiệm | Trạng thái công khai và mất điều kiện bất biến | Getter, setter tràn lan nhưng thiếu hành vi | Kế thừa chỉ để dùng lại vài phương thức | Lạm dụng ép kiểu và kiểm tra kiểu | Giao diện quá lớn hoặc quá nhiều lớp trừu tượng | Phụ thuộc vòng và truy cập sâu vào đối tượng | Trạng thái dùng chung khó kiểm soát | Đối tượng có thể thay đổi làm sai phép so sánh hoặc mã băm | Lạm dụng mẫu thiết kế và trừu tượng hóa quá sớm |
-  | Vấn đề cần hiểu | Lớp nào ôm nhiều lý do thay đổi? | Ai kiểm soát invariant và alias? | Ai sở hữu quy tắc chuyển trạng thái? | Subtype có đúng hợp đồng cha? | Type branching thay thế bằng hành vi chung ra sao? | Contract nào client thật sự cần? | Có cycle hoặc knowledge về object graph quá sâu? | Ai sửa shared state và bằng cơ chế gì? | Key mutable ảnh hưởng lookup/sort thế nào? | Pattern tạo giá trị từ khi nào? |
-  | Giá trị đối với OOP/module | Tách module theo trách nhiệm kiểm chứng được. | Dữ liệu hợp lệ qua mọi thao tác và thất bại. | API domain khó bị lạm dụng. | Bảo toàn LSP và bỏ các method kế thừa không mong muốn. | Mở rộng implementation không sửa caller. | Giảm API coupling và implementation stub. | Giữ phụ thuộc một chiều và giảm ripple. | Tránh race, rò request và mất cập nhật. | Giữ Map/Set/cache hoạt động đúng. | Giảm chi phí thay đổi và lớp trung gian vô ích. |
-  | Tư duy hình thành | Xét cohesion theo lý do thay đổi. | Nêu invariant rồi tìm mọi đường mutation. | Tell object làm đúng hành vi. | Chọn is-a theo nghĩa, không theo code reuse. | Hỏi hành vi nào thuộc subtype. | Thiết kế theo client capability. | Vẽ dependency và ownership graph. | Tách visibility, atomicity và transaction. | Giữ định danh ổn định giữa các mutation. | Đòi bằng chứng trước khi trích abstraction. |
+  | Name | Classes with Too Many Responsibilities | Exposed State and Broken Invariants | Excessive Getters and Setters Without Behavior | Inheritance Used Only to Reuse a Few Methods | Overusing Casts and Type Checks | Oversized Interfaces or Too Many Abstraction Layers | Circular Dependencies and Deep Object Navigation | Hard-to-Control Shared State | Mutable Objects Breaking Equality or Hashing | Overusing Design Patterns and Premature Abstraction |
+  | Key question | Which classes have too many reasons to change? | Who controls invariants and aliases? | Who owns the state-transition rules? | Does the subtype honor the parent contract? | How can shared behavior replace type branching? | Which contract does a client actually need? | Are there cycles or excessive knowledge of the object graph? | Who modifies shared state, and through what mechanism? | How do mutable keys affect lookup and sorting? | When do patterns start adding value? |
+  | Value for OOP/the module | Separate modules along verifiable responsibilities. | Keep data valid through all operations and failures. | Make domain APIs harder to misuse. | Preserve LSP and eliminate unwanted inherited methods. | Extend implementations without modifying callers. | Reduce API coupling and stub implementations. | Keep dependencies unidirectional and reduce ripple effects. | Avoid races, cross-request leaks, and lost updates. | Keep Map/Set/cache behavior correct. | Reduce change costs and unnecessary intermediary classes. |
+  | Mental model developed | Evaluate cohesion through reasons for change. | State invariants, then trace every mutation path. | Tell an object to perform the right behavior. | Choose is-a by meaning, not code reuse. | Ask which behavior belongs to each subtype. | Design around client capabilities. | Draw dependency and ownership graphs. | Separate visibility, atomicity, and transactions. | Keep identities stable across mutations. | Demand evidence before extracting an abstraction. |

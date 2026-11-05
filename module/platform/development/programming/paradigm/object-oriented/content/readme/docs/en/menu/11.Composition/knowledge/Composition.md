@@ -1,39 +1,39 @@
 <a id="back-to-top"></a>
 
-# Kết hợp
+# Composition
 
 ## Menu
-- [Ghép đối tượng để xây dựng hành vi](#composition-001)
-- [Quan hệ “có một” và quan hệ “là một”](#composition-002)
-- [Ủy quyền công việc cho đối tượng khác](#composition-003)
-- [Tái sử dụng bằng kết hợp và bằng kế thừa](#composition-004)
-- [Thay đổi đối tượng cộng tác khi chạy](#composition-005)
-- [Tiêm phụ thuộc qua hàm khởi tạo hoặc phương thức](#composition-006)
-- [Quyền sở hữu và vòng đời đối tượng được chứa](#composition-007)
-- [Chuyển thiết kế kế thừa sang kết hợp](#composition-008)
+- [Composing Objects to Build Behavior](#composition-001)
+- [Has-a and Is-a Relationships](#composition-002)
+- [Delegating Work to Other Objects](#composition-003)
+- [Reusing Behavior Through Composition and Inheritance](#composition-004)
+- [Changing Collaborating Objects at Runtime](#composition-005)
+- [Dependency Injection Through Constructors or Methods](#composition-006)
+- [Ownership and Lifecycle of Contained Objects](#composition-007)
+- [Refactoring from Inheritance to Composition](#composition-008)
 
-## <a id="composition-001">Ghép đối tượng để xây dựng hành vi</a>
+## <a id="composition-001">Composing Objects to Build Behavior</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Ghép đối tượng để xây dựng hành vi trong Java OOP
+# Composing Objects to Build Behavior in Java OOP
 
-Một đối tượng không nhất thiết phải tự viết mọi chức năng mà nó cung cấp. Trong OOP, ta có thể **ghép nhiều đối tượng nhỏ, mỗi đối tượng có trách nhiệm riêng**, để tạo thành một hành vi lớn hơn. Cách tổ chức này thường gọi là **object composition** (kết hợp/ghép đối tượng), và khi đối tượng A chuyển một phần công việc cho đối tượng B thì đó là **delegation** (ủy quyền).
+An object does not need to implement every capability it provides on its own. In OOP, we can **combine several small objects, each with a distinct responsibility**, to produce more complex behavior. This approach is called **object composition**; when object A hands part of its work to object B, that is **delegation**.
 
-Ví dụ, chức năng “thông báo đơn hàng đã thanh toán” có thể hình thành từ ba phần:
+For example, the feature "notify a customer that an order has been paid" can consist of three parts:
 
-1. Một đối tượng **định dạng nội dung** thông báo.
-2. Một đối tượng **gửi** thông báo qua kênh được chọn.
-3. Một đối tượng **điều phối** hai bước trên theo đúng thứ tự.
+1. An object that **formats the notification content**.
+2. An object that **sends** the notification through the selected channel.
+3. An object that **coordinates** those two steps in the correct order.
 
-Mỗi phần làm một việc rõ ràng. Khi muốn đổi từ email sang SMS, hoặc đổi nội dung dài thành nội dung ngắn, ta **thay đối tượng thành phần** thay vì sửa toàn bộ lớp điều phối.
+Each part has a clear job. To switch from email to SMS, or from a detailed message to a short one, we **replace a component object** instead of rewriting the entire coordinating class.
 
-> Mục tiêu của bài: hiểu cách tạo hành vi bằng quan hệ “**có/sử dụng một đối tượng khác**” (*has-a / uses-a*), cách giao tiếp qua interface, cách chuyển trách nhiệm giữa các đối tượng và khi nào composition tốt hơn kế thừa (*inheritance*).
+> **Lesson objective:** Understand how to build behavior through **having or using another object** (*has-a / uses-a*) relationships, how objects communicate through interfaces, how they delegate responsibilities, and when composition is preferable to *inheritance*.
 
-## 1. Một lớp làm hết mọi việc có vấn đề gì?
+## 1. What Is Wrong with a Class That Does Everything?
 
-Xét thiết kế ban đầu:
+Consider this initial design:
 
 ```java
 class OrderNotification {
@@ -57,22 +57,22 @@ class OrderNotification {
 }
 ```
 
-Với ví dụ vài dòng, mã vẫn hoạt động. Nhưng nếu cần thêm Push Notification, đổi định dạng theo kênh, ghi nhật ký hay thử lại khi gửi thất bại, lớp này sẽ dần nhận quá nhiều trách nhiệm. Một thay đổi trong phần gửi email cũng có thể ảnh hưởng đến logic tạo nội dung SMS.
+This short example works. But adding push notifications, channel-specific formatting, logging, or retries after a failed send would gradually burden the class with too many responsibilities. A change to email delivery could also affect the logic that builds SMS content.
 
-Thay vì một phương thức biết hết mọi chi tiết, ta tách thành các vai trò:
+Instead of having one method know every detail, we separate the following roles:
 
-| Vai trò | Trách nhiệm | Không cần biết |
+| Role | Responsibility | Does not need to know |
 | --- | --- | --- |
-| `MessageFormatter` | Biến dữ liệu đơn hàng thành chuỗi nội dung | Gửi qua kênh nào |
-| `Transport` | Nhận người nhận và nội dung để thực hiện thao tác gửi | Nội dung được tạo từ quy tắc đơn hàng nào |
-| `OrderNotifier` | Kiểm tra yêu cầu, gọi formatter rồi chuyển kết quả cho transport | Chi tiết định dạng và kỹ thuật gửi |
-| `AuditedTransport` (tùy chọn) | Bọc một transport để thêm bước log sau khi gửi | Cách transport thực hiện gửi |
+| `MessageFormatter` | Converts order data into message content | Which channel sends it |
+| `Transport` | Receives a recipient and content and performs delivery | Which order rules produced the content |
+| `OrderNotifier` | Validates the request, invokes the formatter, and passes the result to the transport | Formatting details and delivery mechanics |
+| `AuditedTransport` (optional) | Wraps a transport to add a logging step after sending | How the underlying transport sends |
 
-Như vậy, hành vi hoàn chỉnh không nằm trong một lớp khổng lồ mà hình thành từ **sự phối hợp có chủ đích giữa các đối tượng**.
+The complete behavior therefore comes from **deliberate collaboration among objects**, rather than from one enormous class.
 
-## 2. Thiết kế quan hệ giữa các đối tượng
+## 2. Designing Relationships Between Objects
 
-Ta bắt đầu từ hai interface nhỏ:
+We start with two small interfaces:
 
 ```java
 interface MessageFormatter {
@@ -84,14 +84,14 @@ interface Transport {
 }
 ```
 
-Sau đó, `OrderNotifier` có hai field:
+Next, `OrderNotifier` has two fields:
 
 ```java
 private final MessageFormatter formatter;
 private final Transport transport;
 ```
 
-Đây là ví dụ điển hình của **“has-a”**: một `OrderNotifier` **có** (giữ tham chiếu tới) formatter và transport để nhờ chúng làm việc. Nó không cần `extends EmailTransport` hoặc `extends PlainFormatter`.
+This is a typical **has-a** relationship: an `OrderNotifier` **has** (holds references to) a formatter and a transport and asks them to perform work. It does not need `extends EmailTransport` or `extends PlainFormatter`.
 
 ```mermaid
 classDiagram
@@ -125,13 +125,13 @@ classDiagram
     AuditedTransport --> Transport : delegates
 ```
 
-**Đọc sơ đồ:** mũi tên realization nét đứt từ một lớp về interface biểu thị `implements`; quan hệ `uses` biểu thị một đối tượng giữ và dùng tham chiếu tới đối tượng khác.
+**Reading the diagram:** A dashed realization arrow from a class to an interface represents `implements`; a `uses` relationship means one object holds and uses a reference to another.
 
-Trong UML, hình thoi đen (composition theo nghĩa quan hệ *whole–part* sở hữu vòng đời) còn mang ý nghĩa sở hữu mạnh hơn. Ví dụ bên dưới nhận dependency từ nơi tạo ứng dụng, nên ta dùng quan hệ tham chiếu/ủy quyền thay vì khẳng định `OrderNotifier` độc quyền sở hữu vòng đời của các thành phần. Trong thực tế lập trình, “composition over inheritance” thường nói rộng hơn về kỹ thuật **ghép hành vi qua đối tượng** như thiết kế này.
+In UML, a filled diamond (composition in the *whole–part* lifecycle-ownership sense) implies stronger ownership. The example below receives dependencies from the application's assembly code, so we use reference/delegation relationships rather than claiming that `OrderNotifier` exclusively owns its components' lifecycles. In everyday programming, "composition over inheritance" often refers more broadly to **assembling behavior from objects**, as in this design.
 
-## 3. Ví dụ Java hoàn chỉnh: tạo một hành vi từ nhiều đối tượng
+## 3. Complete Java Example: Building Behavior from Multiple Objects
 
-Tạo tệp **`CompositionDemo.java`**. Ví dụ không dùng framework và tương thích Java 11+.
+Create a file named **`CompositionDemo.java`**. The example uses no framework and is compatible with Java 11+.
 
 ```java
 import java.util.Objects;
@@ -264,14 +264,14 @@ public class CompositionDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac CompositionDemo.java
 java CompositionDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 [EMAIL -> an@example.test] Đơn ORD100 đã thanh toán: 150000 VND
@@ -280,21 +280,21 @@ Kết quả:
 Từ chối: Tổng tiền không được âm
 ```
 
-Từ một `OrderNotifier` duy nhất, ta tạo hai tổ hợp hành vi:
+From a single `OrderNotifier` class, we create two behavior configurations:
 
-| Cấu hình | Formatter | Transport | Hành vi quan sát |
+| Configuration | Formatter | Transport | Observed behavior |
 | --- | --- | --- | --- |
-| Email có ghi log | `PlainFormatter` | `AuditedTransport(ConsoleEmailTransport)` | Tạo nội dung dài, “gửi” qua console email rồi in log |
-| SMS ngắn | `CompactFormatter` | `ConsoleSmsTransport` | Tạo nội dung ngắn rồi “gửi” qua console SMS |
-| Lời gọi tổng tiền âm | Bất kỳ | Bất kỳ | Bị từ chối trước khi gọi formatter và transport |
+| Email with audit logging | `PlainFormatter` | `AuditedTransport(ConsoleEmailTransport)` | Produces detailed content, "sends" it through console email, then logs the action |
+| Short SMS | `CompactFormatter` | `ConsoleSmsTransport` | Produces short content, then "sends" it through console SMS |
+| Call with a negative total | Any | Any | Rejected before the formatter or transport is invoked |
 
-**Không cần sửa `OrderNotifier`** khi muốn đổi từ tổ hợp A sang B. Khác biệt nằm ở **các đối tượng thành phần được đưa vào constructor**.
+**No change to `OrderNotifier` is needed** to switch from configuration A to B. The difference lies in **the component objects passed to its constructor**.
 
-Đây là tính linh hoạt cốt lõi của composition: từ vài đối tượng nhỏ, ta có thể tổ hợp thành nhiều hành vi tùy nhu cầu.
+This is composition's core flexibility: a few small objects can be combined into many behaviors to meet different needs.
 
-## 4. Ủy quyền (delegation): ai thực sự làm công việc?
+## 4. Delegation: Who Actually Performs the Work?
 
-Xem phương thức điều phối:
+Consider the coordinating method:
 
 ```java
 void notifyPaid(String recipient, String orderId, long totalVnd) {
@@ -311,14 +311,14 @@ void notifyPaid(String recipient, String orderId, long totalVnd) {
 }
 ```
 
-`OrderNotifier` chịu trách nhiệm **điều phối**, nhưng:
+`OrderNotifier` is responsible for **coordination**, but:
 
-- Nó **ủy quyền** phần tạo chuỗi cho `formatter`.
-- Nó **ủy quyền** phần gửi cho `transport`.
-- Nó chỉ tự kiểm tra những điều kiện đầu vào cơ bản thuộc lời gọi nghiệp vụ.
-- Nó không cần biết formatter kết hợp chuỗi ra sao hoặc transport gửi bằng giao thức nào.
+- It **delegates** content creation to `formatter`.
+- It **delegates** delivery to `transport`.
+- It directly validates only the basic inputs required by the business operation.
+- It need not know how the formatter builds strings or which protocol the transport uses.
 
-Luồng gọi:
+Call sequence:
 
 ```mermaid
 sequenceDiagram
@@ -335,20 +335,20 @@ sequenceDiagram
     Notifier-->>Client: return
 ```
 
-Điều phối và ủy quyền giúp **phân chia trách nhiệm**, không có nghĩa chương trình đột nhiên trở thành bất đồng bộ. Các lời gọi trong ví dụ là đồng bộ và chạy lần lượt trên cùng luồng.
+Coordination and delegation help **divide responsibilities**; they do not automatically make the program asynchronous. Calls in this example are synchronous and execute sequentially on the same thread.
 
-Trong ứng dụng thực, `Transport.send` có thể gây lỗi mạng, timeout hoặc có kết quả xử lý bất đồng bộ. Khi đó cần quy định hợp đồng cụ thể: liệu method chỉ nhận yêu cầu hay đã giao thành công, lỗi được báo thế nào, có retry/idempotency hay không. Ví dụ console chỉ mô phỏng hành vi gửi để tập trung vào thiết kế OOP.
+In a real application, `Transport.send` may encounter network errors, timeouts, or asynchronous processing results. Its contract must then specify whether the method merely accepts a request or confirms successful delivery, how errors are reported, and whether retries and idempotency are supported. The console example only simulates sending so we can focus on OOP design.
 
-## 5. Constructor injection: ghép ở nơi tạo đối tượng
+## 5. Constructor Injection: Assembling Components Where Objects Are Created
 
-Tại sao `OrderNotifier` nhận hai dependency trong constructor thay vì tự viết:
+Why does `OrderNotifier` receive two dependencies through its constructor instead of creating them itself?
 
 ```java
 // Cách gắn chặt vào chi tiết implementation:
 private final Transport transport = new ConsoleEmailTransport();
 ```
 
-Nếu làm vậy, mỗi đối tượng `OrderNotifier` tự chọn một loại vận chuyển cụ thể. Thay kênh gửi có thể đòi sửa class điều phối, hoặc tạo thêm nhánh điều kiện ở bên trong.
+If it creates its own dependencies, each `OrderNotifier` chooses a specific transport. Changing the delivery channel could require editing the coordinating class or adding conditional branches within it.
 
 Constructor injection:
 
@@ -359,21 +359,21 @@ OrderNotifier(MessageFormatter formatter, Transport transport) {
 }
 ```
 
-giúp:
+offers these benefits:
 
-1. **Tách việc lắp ráp khỏi việc thực thi:** `main` hoặc composition root quyết định dùng thành phần nào; `OrderNotifier` chỉ sử dụng.
-2. **Tạo đối tượng ở trạng thái hợp lệ:** constructor từ chối dependency `null` ngay lúc tạo.
-3. **Dễ thay thế khi kiểm thử:** truyền một transport giả (fake) để quan sát lời gọi, không cần gửi thật.
-4. **Giảm phụ thuộc:** `OrderNotifier` chỉ biết hai interface nhỏ.
-5. **Làm rõ nhu cầu bắt buộc:** một notifier không thể chạy đúng nếu thiếu formatter hay transport.
+1. **Separates assembly from execution:** `main` or a composition root decides which components to use; `OrderNotifier` only uses them.
+2. **Creates valid objects:** The constructor rejects `null` dependencies immediately.
+3. **Simplifies test substitution:** A fake transport can be injected to observe calls without real delivery.
+4. **Reduces coupling:** `OrderNotifier` depends only on two small interfaces.
+5. **Makes required dependencies explicit:** A notifier cannot operate correctly without a formatter and a transport.
 
-`final` trên các field nghĩa là không gán lại tham chiếu sau constructor. Nó **không làm các đối tượng được tham chiếu trở nên bất biến**. Đối với các dependency có trạng thái mutable hoặc được chia sẻ nhiều nơi, cần xem thêm ràng buộc về sở hữu và đồng thời.
+Using `final` on fields means their references cannot be reassigned after construction. It **does not make the referenced objects immutable**. For mutable or shared dependencies, ownership and concurrency constraints still matter.
 
-Không cần Spring hay bất kỳ DI framework nào để viết constructor injection. Framework chỉ có thể tự động hóa việc tạo và nối các đối tượng.
+Constructor injection does not require Spring or any other DI framework. A framework can simply automate object creation and wiring.
 
-## 6. Thay thành phần để mở rộng hành vi
+## 6. Extending Behavior by Replacing Components
 
-Giả sử hệ thống có thêm yêu cầu **thêm mã chiến dịch** vào nội dung. Ta có thể tạo formatter mới thực hiện cùng hợp đồng:
+Suppose the system gains a requirement to **append a campaign code** to messages. We can create a new formatter that fulfills the same contract:
 
 ```java
 final class CampaignFormatter
@@ -398,9 +398,9 @@ final class CampaignFormatter
 }
 ```
 
-Ở đây một formatter **giữ formatter khác** để bổ sung chức năng. Đây cũng là composition; nó gần với mẫu **Decorator** vì đối tượng bọc vẫn triển khai cùng interface với đối tượng bên trong.
+Here, one formatter **holds another formatter** to extend its behavior. This is also composition and resembles the **Decorator** pattern because the wrapper implements the same interface as the wrapped object.
 
-Ví dụ sử dụng trong cùng package:
+Example usage in the same package:
 
 ```java
 CompositionDemo.MessageFormatter format =
@@ -414,44 +414,44 @@ CompositionDemo.OrderNotifier notifier =
 notifier.notifyPaid("an@example.test", "ORD103", 300_000);
 ```
 
-Kết quả:
+Output:
 
 ```text
 [EMAIL -> an@example.test] Đơn ORD103 đã thanh toán: 300000 VND | Campaign: SALE
 ```
 
-Trong trường hợp thêm nhiều lớp bọc, nên cân nhắc thứ tự áp dụng chúng. Chẳng hạn “chuẩn hóa đầu vào trước khi định dạng” khác với “định dạng rồi lọc nội dung”. Composition tạo sự linh hoạt, nhưng vẫn phải **thiết kế hợp đồng và thứ tự phối hợp** một cách rõ ràng.
+When adding multiple wrappers, consider the order in which they run. For example, "normalize input before formatting" differs from "format first, then filter content." Composition provides flexibility, but the **contract and order of collaboration** must still be designed explicitly.
 
-> Đoạn `CampaignFormatter` là phần mở rộng minh họa, đặt cạnh các lớp của ví dụ chính trong cùng package. Ví dụ thực tế có thể tổ chức mỗi lớp vào một tệp riêng và công bố mức truy cập phù hợp.
+> `CampaignFormatter` is an illustrative extension placed alongside the main example's classes in the same package. A real project can put each class in its own file with appropriate access modifiers.
 
-## 7. Strategy và Decorator: hai cách ghép hành vi quen thuộc
+## 7. Strategy and Decorator: Two Familiar Ways to Compose Behavior
 
-Hai cấu hình trong chương trình chính thể hiện hai ý tưởng rất phổ biến:
+The two configurations in the main program demonstrate two common ideas:
 
-**Strategy:** `MessageFormatter` có nhiều implementation như `PlainFormatter` và `CompactFormatter`. `OrderNotifier` chọn hành vi qua đối tượng được cung cấp; không phải tự chứa `if/else` cho mọi cách định dạng.
+**Strategy:** `MessageFormatter` has multiple implementations, such as `PlainFormatter` and `CompactFormatter`. `OrderNotifier` receives the desired behavior through a supplied object instead of containing an `if/else` for every formatting option.
 
-**Decorator:** `AuditedTransport` cũng `implements Transport` và chứa một `Transport` khác. Nó làm thêm việc trước hoặc sau khi ủy quyền, trong khi bên dùng vẫn coi nó là `Transport`.
+**Decorator:** `AuditedTransport` also `implements Transport` and contains another `Transport`. It performs additional work before or after delegation while remaining usable as a `Transport`.
 
 ```java
 Transport transport =
         new AuditedTransport(new ConsoleEmailTransport());
 ```
 
-Ý nghĩa:
+What this means:
 
-- `ConsoleEmailTransport` thực hiện thao tác nền.
-- `AuditedTransport` bọc hành vi nền và ghi log sau khi lời gọi `delegate.send(...)` hoàn tất bình thường.
-- `OrderNotifier` không biết transport hiện tại có được bọc hay không.
+- `ConsoleEmailTransport` performs the underlying operation.
+- `AuditedTransport` wraps that operation and logs it after `delegate.send(...)` returns normally.
+- `OrderNotifier` does not know whether the current transport is wrapped.
 
-Cần tránh suy luận quá mức: câu log `[AUDIT]` trong ví dụ chỉ cho biết lời gọi console không báo lỗi. Nó **không phải nhật ký giao dịch được lưu bền vững** và không chứng minh email/SMS đã đến thiết bị của người nhận. Một audit thật cần quy định lưu trữ, bảo đảm chống mất/đúp, và xử lý thất bại của bản ghi.
+Avoid overinterpreting the output: the `[AUDIT]` line only indicates that the console call did not report an error. It is **not a durably stored transaction audit record**, nor does it prove that an email or SMS reached the recipient's device. Real auditing requires defined storage, safeguards against missing or duplicate records, and failure handling.
 
-Không phải mọi thiết kế composition đều phải biến thành “mẫu thiết kế” phức tạp. Nếu chỉ cần một helper rõ nghĩa, một field và một lời gọi ủy quyền có thể đã đủ.
+Not every composition design needs a complex design pattern. If a straightforward helper is sufficient, one field and one delegated call may be all that is needed.
 
-## 8. Composition khác inheritance thế nào?
+## 8. How Does Composition Differ from Inheritance?
 
-Có thể đặt cạnh hai hướng thiết kế:
+Compare these two approaches:
 
-**Hướng kế thừa:**
+**Inheritance approach:**
 
 ```java
 class EmailSender {
@@ -468,9 +468,9 @@ class OrderNotifierByInheritance extends EmailSender {
 }
 ```
 
-`OrderNotifierByInheritance extends EmailSender` làm chương trình hình thành quan hệ “notifier **là một loại** email sender”. Về mặt nghiệp vụ, điều đó thường không đúng: notifier **sử dụng** sender chứ không **là** sender.
+`OrderNotifierByInheritance extends EmailSender` establishes a relationship in which a notifier **is a type of** email sender. From a business perspective, that is usually incorrect: a notifier **uses** a sender; it **is not** a sender.
 
-**Hướng composition:**
+**Composition approach:**
 
 ```java
 class OrderNotifierByComposition {
@@ -486,23 +486,23 @@ class OrderNotifierByComposition {
 }
 ```
 
-Hướng thứ hai thể hiện đúng “notifier **có/sử dụng** sender”. Nếu tiếp tục thay field bằng interface `Transport`, ta còn có thể chuyển từ email sang SMS mà không làm đổi lớp notifier.
+The second approach accurately represents a notifier that **has/uses** a sender. By changing the field to the `Transport` interface, we can also switch from email to SMS without modifying the notifier class.
 
-| Tiêu chí | Kế thừa (inheritance) | Ghép đối tượng (composition) |
+| Criterion | Inheritance | Object composition |
 | --- | --- | --- |
-| Quan hệ chính | `is-a`: kiểu con là một trường hợp của kiểu cha | `has-a / uses-a`: đối tượng giữ và dùng đối tượng khác |
-| Tái sử dụng | Kế thừa implementation và/hoặc hợp đồng của superclass | Gọi/ủy quyền qua đối tượng thành phần |
-| Liên kết với chi tiết | Lớp con có thể phụ thuộc vào protected API, trình tự và bất biến cha | Có thể che giấu chi tiết qua interface nhỏ |
-| Thay hành vi | Override trong những điểm mở rộng được phép | Thay dependency hoặc tổ hợp decorator/strategy |
-| Thay khi runtime | Kiểu thực tế của object đã tạo không tự đổi | Có thể tạo tổ hợp mới hoặc có cơ chế cập nhật dependency được thiết kế rõ |
-| Rủi ro | Kế thừa chỉ để mượn code, phá quan hệ kiểu con | Quá nhiều lớp trung gian, cấu hình phức tạp |
-| Phù hợp khi | Có quan hệ subtype thực sự và hợp đồng của cha được giữ | Cần cộng tác hoặc tái sử dụng mà không muốn ràng buộc vào superclass |
+| Primary relationship | `is-a`: a subtype is a kind of its supertype | `has-a / uses-a`: an object holds and uses another object |
+| Reuse | Inherits implementation and/or the superclass contract | Calls/delegates to a component object |
+| Coupling to details | A subclass may depend on protected APIs, execution order, and superclass invariants | Details can be hidden behind a small interface |
+| Changing behavior | Overrides at permitted extension points | Replaces dependencies or combines decorators/strategies |
+| Runtime changes | An existing object's concrete type does not change on its own | A new configuration can be created, or a deliberately designed mechanism can update a dependency |
+| Risks | Inheriting merely to borrow code and violating subtype relationships | Too many intermediary classes and complex configuration |
+| Appropriate when | A genuine subtype relationship exists and preserves the superclass contract | Collaboration or reuse is needed without coupling to a superclass |
 
-Câu “**favor composition over inheritance**” là một **nguyên tắc cân nhắc**, không phải lệnh cấm `extends`. Nếu `ElectricCar` thật sự là một kiểu `Vehicle` với hợp đồng phù hợp, kế thừa vẫn có thể hợp lý. Nếu một đối tượng chỉ “cần dùng chức năng” của đối tượng khác thì composition thường mô tả rõ hơn.
+The principle "**favor composition over inheritance**" is a **design guideline**, not a ban on `extends`. If `ElectricCar` truly is a kind of `Vehicle` and satisfies its contract, inheritance can still make sense. If an object merely needs another object's functionality, composition usually expresses that relationship more clearly.
 
-## 9. Ghép đối tượng không đồng nghĩa độc quyền sở hữu
+## 9. Composition Does Not Imply Exclusive Ownership
 
-Đây là một khác biệt tinh tế nhưng quan trọng.
+This is a subtle but important distinction.
 
 ```java
 Transport shared = new ConsoleEmailTransport();
@@ -513,24 +513,24 @@ OrderNotifier second =
         new OrderNotifier(new CompactFormatter(), shared);
 ```
 
-`first` và `second` **cùng giữ tham chiếu** tới `shared`. Cả hai có thể dùng nó. Java không tự nhân bản transport, không tự đóng transport khi một notifier hết sử dụng và không đảm bảo mỗi notifier sở hữu độc quyền dependency.
+`first` and `second` **both hold references** to `shared`, so both can use it. Java does not automatically clone the transport, close it when one notifier stops using it, or guarantee that each notifier exclusively owns its dependency.
 
-Khi thành phần chứa trạng thái như cache, kết nối I/O hay hàng đợi:
+When components contain state, such as caches, I/O connections, or queues:
 
-- Xác định **ai tạo, ai đóng, ai được sửa** dependency.
-- Quy định có cho phép dùng chung instance không.
-- Nếu dùng chung giữa nhiều luồng, xem xét thread-safety.
-- Nếu cần snapshot độc lập của dữ liệu mutable, dùng sao chép phòng vệ hoặc value object phù hợp.
+- Determine **who creates, closes, and may modify** the dependency.
+- Specify whether instances may be shared.
+- Consider thread safety when sharing between threads.
+- Use defensive copies or suitable value objects if independent snapshots of mutable data are needed.
 
-Không phải cứ có `private final Transport transport` là một quan hệ composition sở hữu mạnh trong UML, cũng không có nghĩa dependency bất biến. **Field `final` chỉ giữ nguyên tham chiếu**; trạng thái bên trong đối tượng đích vẫn có thể thay đổi.
+Having a `private final Transport transport` field does not necessarily represent strong-ownership composition in UML or make the dependency immutable. **A `final` field only fixes the reference**; the referenced object's internal state may still change.
 
-Khi một thành phần sở hữu vòng đời mạnh của đối tượng con, nên thể hiện rõ trong API và quy tắc đóng tài nguyên. Ví dụ một service tự tạo một bộ đệm nội bộ, không trao đối tượng đó ra ngoài, và chủ động giải phóng khi service đóng. Trong trường hợp như vậy, mô hình “whole–part” chặt hơn có thể phù hợp.
+When a component strongly owns a child object's lifecycle, make that ownership explicit in its API and resource-cleanup rules. For example, a service might create a private buffer, never expose it externally, and release it when the service closes. A tighter *whole–part* model can be appropriate in that case.
 
-## 10. Kiểm thử tổ hợp mà không gửi thông báo thật
+## 10. Testing a Composition Without Sending Real Notifications
 
-Một lợi ích thực tế của composition là thay đối tượng gửi thật bằng **test double** để quan sát hành vi của lớp điều phối.
+A practical benefit of composition is replacing a real sender with a **test double** to observe how the coordinating class behaves.
 
-Tạo tệp **`CompositionTest.java`** cùng thư mục với `CompositionDemo.java`:
+Create **`CompositionTest.java`** in the same directory as `CompositionDemo.java`:
 
 ```java
 public class CompositionTest {
@@ -589,116 +589,116 @@ public class CompositionTest {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac CompositionDemo.java CompositionTest.java
 java CompositionTest
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 PASS: composition và delegation
 ```
 
-Bài kiểm tra này không phụ thuộc email/SMS thật. Nó chứng minh:
+This test does not rely on actual email or SMS services. It demonstrates that:
 
-1. `OrderNotifier` gọi đúng dependency đã tiêm vào.
-2. Kết quả formatter được chuyển nguyên văn cho transport.
-3. Input sai được chặn trước khi gây hiệu ứng gửi.
-4. Ta có thể kiểm thử **hành vi của một đối tượng** mà không phải khởi động toàn bộ hạ tầng ngoài.
+1. `OrderNotifier` invokes the correct injected dependency.
+2. The formatter's result is passed unchanged to the transport.
+3. Invalid inputs are rejected before any delivery side effect occurs.
+4. We can test **an object's behavior** without starting the entire external infrastructure.
 
-Trong ứng dụng có JUnit, `RecordingTransport` có thể được giữ làm fake hoặc thay bằng mock tùy mục tiêu. Không phải phép kiểm thử nào cũng cần mock framework.
+In a JUnit application, `RecordingTransport` can remain a fake or be replaced with a mock, depending on the test's objective. Not every test needs a mocking framework.
 
-### Kiểm tra trường hợp dependency thất bại
+### Testing Dependency Failures
 
-Giả sử `Transport.send(...)` ném ngoại lệ trong lúc gửi. Với hiện thực `OrderNotifier` đang dùng, ngoại lệ được truyền ra cho caller; không có xử lý retry, rollback hay đảm bảo giao dịch nào được ngầm tạo ra.
+Suppose `Transport.send(...)` throws an exception while sending. With this `OrderNotifier` implementation, the exception propagates to the caller; no retry, rollback, or transaction guarantee is implicitly added.
 
-Nếu hệ thống cần “gửi chính xác một lần” hay “ít nhất một lần”, phải thiết kế thêm cơ chế xử lý idempotency, hàng đợi, lưu trạng thái yêu cầu và lỗi hạ tầng. **Ghép đối tượng chỉ tổ chức trách nhiệm**, không tự bảo đảm tính tin cậy phân tán.
+If the system needs "exactly once" or "at least once" delivery, additional mechanisms are needed for idempotency, queues, request-state persistence, and infrastructure failures. **Composition only organizes responsibilities**; it does not guarantee reliability in a distributed system.
 
-## 11. Những sai lầm dễ gặp
+## 11. Common Mistakes
 
-| Sai lầm | Vì sao có vấn đề? | Hướng sửa |
+| Mistake | Why it is a problem | How to fix it |
 | --- | --- | --- |
-| Kế thừa `EmailSender` chỉ để mượn hàm gửi | Tạo quan hệ `is-a` sai nghĩa | Chứa một `Transport` và ủy quyền |
-| Một `OrderNotifier` dùng `if`/`switch` cho mọi kênh và định dạng | Mỗi biến thể mới buộc sửa class điều phối | Tách implementation sau interface phù hợp |
-| Dùng `new ConsoleEmailTransport()` bên trong service | Khó thay kênh và kiểm thử | Lắp dependency ở constructor/composition root |
-| Trả tham chiếu mutable nội bộ một cách vô ý | Caller có thể thay đổi trạng thái ngoài kiểm soát | Xác định ownership, copy hoặc API giới hạn |
-| Cho rằng `final` làm dependency bất biến | `final` chỉ cấm gán lại field | Kiểm tra mutability của đối tượng được tham chiếu |
-| Chia ra hàng chục interface cho vài dòng logic | Khó đọc và khó bảo trì | Chỉ tách khi có trách nhiệm hoặc khả năng thay thế rõ |
-| Decorator thay đổi ngữ nghĩa lỗi mà client không biết | Làm hợp đồng trở nên khó dự đoán | Ghi rõ và giữ hành vi lỗi đã công bố |
-| Xem log console là audit giao dịch thực | Không có lưu bền vững hay đối soát | Thiết kế audit riêng khi nghiệp vụ đòi hỏi |
-| Giả định mọi đối tượng ghép đều có vòng đời chung | Dependency có thể được dùng chung hoặc sở hữu bên ngoài | Quy định ai tạo, ai giữ và ai giải phóng |
+| Inheriting from `EmailSender` just to reuse a send method | Introduces an incorrect `is-a` relationship | Hold a `Transport` and delegate to it |
+| Using one `OrderNotifier` with `if`/`switch` for every channel and format | Each new variant requires changing the coordinating class | Move implementations behind suitable interfaces |
+| Calling `new ConsoleEmailTransport()` inside a service | Makes channel switching and testing difficult | Assemble dependencies in a constructor/composition root |
+| Accidentally exposing an internal mutable reference | Callers can alter state without control | Define ownership, return a copy, or restrict the API |
+| Assuming `final` makes dependencies immutable | `final` only prevents field reassignment | Check whether the referenced object is mutable |
+| Creating dozens of interfaces for a few lines of logic | Makes code harder to read and maintain | Split only when responsibilities or substitution needs are clear |
+| Changing error semantics in a decorator without telling clients | Makes the contract unpredictable | Document and preserve the published error behavior |
+| Treating console logs as real transaction audits | Provides neither durable storage nor reconciliation | Design auditing separately when the business requires it |
+| Assuming every combined object shares one lifecycle | Dependencies may be shared or externally owned | Define who creates, holds, and releases each object |
 
-## 12. Bài tập áp dụng
+## 12. Practice Exercises
 
-**Bài tập A — đổi cách định dạng mà không sửa notifier.** Viết `UppercaseFormatter implements MessageFormatter`, dùng một formatter khác ở bên trong rồi chuyển kết quả sang chữ hoa bằng `toUpperCase(Locale.ROOT)`. Hãy dùng nó với `ConsoleSmsTransport` và giải thích đây là cách bổ sung hành vi bằng composition/decorator.
+**Exercise A — change formatting without editing the notifier.** Write `UppercaseFormatter implements MessageFormatter`, have it use another formatter internally, and convert the result to uppercase with `toUpperCase(Locale.ROOT)`. Use it with `ConsoleSmsTransport` and explain how composition/decorator adds behavior.
 
-**Bài tập B — thay kênh gửi.** Viết `ConsolePushTransport implements Transport` sao cho in `[PUSH -> recipient] content`. Ghép nó với `PlainFormatter`. Trong `OrderNotifier` có cần sửa dòng nào không? **Không**, miễn transport giữ đúng hợp đồng `send`.
+**Exercise B — switch delivery channels.** Write `ConsolePushTransport implements Transport` that prints `[PUSH -> recipient] content`. Combine it with `PlainFormatter`. Must any line in `OrderNotifier` change? **No**, provided the transport honors the `send` contract.
 
-**Bài tập C — thứ tự hành vi.** Viết một `PrefixFormatter` và một `SuffixFormatter` đều bọc `MessageFormatter`. So sánh kết quả của hai tổ hợp `Prefix(Suffix(base))` và `Suffix(Prefix(base))`, rồi phân tích khi nào thứ tự decorator có tác động.
+**Exercise C — behavior ordering.** Write a `PrefixFormatter` and a `SuffixFormatter` that each wrap `MessageFormatter`. Compare the outputs of `Prefix(Suffix(base))` and `Suffix(Prefix(base))`, then analyze when decorator order makes a difference.
 
-**Bài tập D — kiểm tra lỗi.** Tạo `FailingTransport` luôn ném `IllegalStateException`. Dùng `RecordingTransport` hoặc test khác để xác minh lớp notifier **không che giấu ngoại lệ** trong ví dụ, và thảo luận hợp đồng retry nếu muốn tự khôi phục.
+**Exercise D — test failures.** Create a `FailingTransport` that always throws `IllegalStateException`. Use `RecordingTransport` or another test to verify that the example's notifier **does not suppress exceptions**, and discuss the retry contract if recovery is required.
 
-**Bài tập E — thiết kế cửa hàng.** Phác thảo `CheckoutService` gồm `DiscountPolicy`, `ShippingFeePolicy` và `PaymentGateway`. Xác định dữ liệu vào, kết quả, thứ tự gọi và bất biến tiền tệ. Thảo luận vì sao không nên xây chuỗi kế thừa như `CheckoutService extends PaymentGateway` chỉ để dùng lại phương thức thanh toán.
+**Exercise E — design a checkout service.** Sketch a `CheckoutService` with `DiscountPolicy`, `ShippingFeePolicy`, and `PaymentGateway`. Specify its inputs, result, call order, and monetary invariants. Discuss why a hierarchy such as `CheckoutService extends PaymentGateway` should not be used merely to reuse a payment method.
 
-## Kết luận
+## Conclusion
 
-**Ghép đối tượng để xây dựng hành vi** là cách để một đối tượng cấp cao làm việc thông qua các đối tượng thành phần có trách nhiệm rõ ràng. Các thành phần có thể được nối qua constructor, trao đổi qua interface và ủy quyền cho nhau, từ đó hình thành nhiều tổ hợp hành vi mà không cần đặt tất cả logic vào một lớp hoặc lạm dụng kế thừa.
+**Composing objects to build behavior** lets a higher-level object work through components with clearly defined responsibilities. Components can be wired through constructors, interact through interfaces, and delegate to one another, producing different behavior combinations without putting all logic in one class or overusing inheritance.
 
-Khi thiết kế, hãy xác định **mỗi thành phần làm gì**, **hợp đồng nào kết nối chúng**, **thứ tự phối hợp ra sao**, và **ai sở hữu vòng đời/trạng thái**. Một cấu trúc composition tốt không chỉ giảm phụ thuộc mà còn giúp thay thế và kiểm thử hành vi ở từng ranh giới.
+When designing a composition, define **what each component does**, **which contracts connect them**, **the order in which they collaborate**, and **who owns their lifecycles and state**. A good composition reduces coupling and makes behavior easier to replace and test at each boundary.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="composition-002">Quan hệ “có một” và quan hệ “là một”</a>
+## <a id="composition-002">Has-a and Is-a Relationships</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Quan hệ “có một” (has-a) và quan hệ “là một” (is-a) trong Java OOP
+# Has-a and Is-a Relationships in Java OOP
 
-Khi thiết kế các lớp, một trong những quyết định quan trọng nhất là **nối chúng với nhau bằng quan hệ nào**. Hai quan hệ dễ gặp là:
+When designing classes, one of the most important decisions is **which relationships should connect them**. Two common relationships are:
 
-- **Is-a — “là một”:** một đối tượng thuộc một kiểu tổng quát hơn. Ví dụ: *ô tô là một loại phương tiện*. Trong Java, quan hệ kiểu con thường được biểu diễn bằng `extends` hoặc `implements`.
-- **Has-a — “có một”:** một đối tượng giữ hoặc sử dụng một đối tượng khác như một phần cấu trúc hay khả năng của nó. Ví dụ: *ô tô có một hệ thống truyền động*. Trong Java, điều này thường được thể hiện bằng **field tham chiếu**, kết hợp đối tượng (*composition*) hoặc các hình thức association/aggregation phù hợp.
+- **Is-a:** An object belongs to a more general type. For example, *a car is a kind of vehicle*. In Java, subtype relationships are usually expressed with `extends` or `implements`.
+- **Has-a:** An object holds or uses another object as part of its structure or capabilities. For example, *a car has a powertrain*. In Java, this is commonly expressed through **reference fields**, object *composition*, or appropriate forms of association/aggregation.
 
-Hai quan hệ không loại trừ nhau: **`Car` có thể `extends Vehicle` và đồng thời chứa một `PowerSource`**.
+These relationships are not mutually exclusive: **the `Car` declaration can use `extends Vehicle` while also containing a `PowerSource`**.
 
-Điều quan trọng không phải chọn cú pháp nào ngắn hơn, mà là biểu diễn đúng **ý nghĩa nghiệp vụ, quyền sở hữu trạng thái, khả năng thay thế và vòng đời**.
+The goal is not to choose the shortest syntax but to represent **business meaning, state ownership, substitutability, and lifecycles** accurately.
 
-## 1. So sánh trực tiếp is-a và has-a
+## 1. Direct Comparison of Is-a and Has-a
 
-| Câu hỏi | Is-a — “là một” | Has-a — “có một” |
+| Question | Is-a | Has-a |
 |---|---|---|
-| Bản chất | Phân loại, chuyên biệt hóa hoặc thực hiện hợp đồng kiểu | Liên kết, chứa hoặc sử dụng thành phần |
-| Cách diễn đạt | “Mỗi `Car` đều là một `Vehicle`” | “Mỗi `Car` có/được cấp một `PowerSource`” |
-| Cơ chế Java phổ biến | `extends`, `implements` | Field, constructor injection, tạo thành phần nội bộ |
-| Mục tiêu | Sử dụng đối tượng lớp con ở vị trí yêu cầu kiểu cha/hợp đồng | Tạo hành vi từ việc phối hợp các đối tượng có trách nhiệm riêng |
-| Đối tượng runtime | Một instance của lớp con có phần trạng thái lớp cha | Các thành phần là những đối tượng riêng có tham chiếu liên kết |
-| Tái sử dụng | Kế thừa hành vi hợp lệ hoặc cung cấp cùng API | Ủy quyền (*delegation*) cho thành phần |
-| Mức gắn kết | Lớp con phụ thuộc chặt hơn vào hợp đồng lớp cha | Có thể thay thế thành phần qua interface |
-| Sai lầm thường gặp | Kế thừa chỉ để “mượn” một hàm tiện ích | Hiểu rằng cứ có field tham chiếu là sở hữu độc quyền thành phần |
+| Nature | Classification, specialization, or fulfilling a type contract | Linking to, containing, or using a component |
+| Description | "Every `Car` is a `Vehicle`" | "Every `Car` has/is given a `PowerSource`" |
+| Common Java mechanism | `extends`, `implements` | Fields, constructor injection, internally created components |
+| Goal | Use a subtype where a supertype/contract is required | Build behavior by coordinating objects with separate responsibilities |
+| Runtime objects | A subclass instance includes the superclass portion of its state | Components are separate objects connected by references |
+| Reuse | Inherit valid behavior or provide the same API | Delegate to components |
+| Coupling | Subclasses depend more tightly on the superclass contract | Components can be substituted through interfaces |
+| Common mistake | Inheriting merely to "borrow" a utility method | Assuming every reference field implies exclusive ownership |
 
-**Quy tắc kiểm tra nhanh:**
+**Quick decision rules:**
 
-- Nếu câu **“X là một loại Y”** đúng trong ngữ nghĩa nghiệp vụ **và X có thể được sử dụng thay Y mà không vi phạm hợp đồng**, cân nhắc is-a.
-- Nếu câu **“X sử dụng/giữ một Y để làm công việc của X”** đúng, cân nhắc has-a.
-- Nếu chỉ thấy hai lớp có vài dòng code giống nhau, điều đó **chưa đủ** để kết luận chúng cần quan hệ is-a.
+- If **"X is a kind of Y"** is true in the business domain **and X can substitute for Y without violating its contract**, consider is-a.
+- If **"X uses/holds a Y to perform X's work"** is true, consider has-a.
+- A few similar lines of code in two classes are **not sufficient** to justify an is-a relationship.
 
-## 2. Ví dụ Java hoàn chỉnh: ô tô vừa “là một” vừa “có một”
+## 2. Complete Java Example: A Car Both Is-a and Has-a
 
-Chúng ta xây dựng một mô hình nhỏ:
+We will build a small model:
 
-- Mọi phương tiện đều có mã định danh và hành vi `move()`.
-- `Car` và `Bicycle` là các loại `Vehicle`.
-- `Car` có một thành phần `PowerSource`; loại nguồn động lực được truyền vào khi tạo ô tô.
-- `Bicycle` không cần `PowerSource` trong mô hình này.
+- Every vehicle has an identifier and a `move()` behavior.
+- `Car` and `Bicycle` are kinds of `Vehicle`.
+- `Car` has a `PowerSource` component; the type of power source is supplied when the car is created.
+- `Bicycle` does not need a `PowerSource` in this model.
 
 File `RelationsDemo.java` (Java 11+):
 
@@ -794,14 +794,14 @@ public class RelationsDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac RelationsDemo.java
 java RelationsDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Car CAR-01: mô-tơ điện đã sẵn sàng -> di chuyển
@@ -809,7 +809,7 @@ Car CAR-02: động cơ xăng đã khởi động -> di chuyển
 Bicycle BIKE-01: đạp bằng sức người
 ```
 
-### Chỉ ra hai quan hệ trong cùng chương trình
+### Identifying Both Relationships in the Same Program
 
 **Is-a:**
 
@@ -818,14 +818,14 @@ static final class Car extends Vehicle { ... }
 static final class Bicycle extends Vehicle { ... }
 ```
 
-Một biến khai báo kiểu `Vehicle` có thể tham chiếu đến `Car` hoặc `Bicycle`:
+A variable declared as `Vehicle` can refer to either a `Car` or a `Bicycle`:
 
 ```java
 Vehicle vehicle = new Car("CAR-03", new ElectricMotor());
 System.out.println(vehicle.move());
 ```
 
-`Vehicle` quy định rằng phương tiện có hành vi `move()`. Java chọn implementation `Car.move()` theo kiểu thực tế của đối tượng. Đây là **đa hình** dựa trên quan hệ is-a.
+`Vehicle` specifies that vehicles have a `move()` behavior. Java selects the `Car.move()` implementation based on the actual object type. This is **polymorphism** through an is-a relationship.
 
 **Has-a:**
 
@@ -833,11 +833,11 @@ System.out.println(vehicle.move());
 private final PowerSource powerSource;
 ```
 
-`Car` **giữ một thành phần** đáp ứng hợp đồng `PowerSource`. Khi di chuyển, `Car` gọi `powerSource.activate()`, tức **ủy quyền** công việc cho một đối tượng khác.
+`Car` **holds a component** that fulfills the `PowerSource` contract. When moving, `Car` calls `powerSource.activate()`, **delegating** work to another object.
 
-Thay `ElectricMotor` bằng `PetrolEngine` không yêu cầu `Car` thay superclass hoặc sao chép thuật toán khởi động của từng loại động cơ. `Car` cũng không phải một `PowerSource`: ô tô **sử dụng** nguồn động lực, chứ bản thân nó không phải một loại động cơ trong mô hình này.
+Replacing `ElectricMotor` with `PetrolEngine` does not require `Car` to change its superclass or copy each engine's startup algorithm. Nor is `Car` itself a `PowerSource`: the car **uses** a power source; it is not a type of engine in this model.
 
-### Sơ đồ quan hệ
+### Relationship Diagram
 
 ```mermaid
 classDiagram
@@ -872,19 +872,19 @@ classDiagram
     PowerSource <|.. PetrolEngine
 ```
 
-Trong sơ đồ:
+In the diagram:
 
-- Mũi tên kế thừa `Vehicle <|-- Car` cho thấy **Car là một Vehicle**.
-- Đường `Car --> PowerSource` cho thấy **Car giữ và sử dụng PowerSource**.
-- Các đường từ `ElectricMotor`, `PetrolEngine` đến `PowerSource` cho thấy **mỗi loại động cơ thực hiện hợp đồng PowerSource**.
+- The inheritance arrow `Vehicle <|-- Car` indicates that **Car is a Vehicle**.
+- The line `Car --> PowerSource` indicates that **Car holds and uses PowerSource**.
+- The lines from `ElectricMotor` and `PetrolEngine` to `PowerSource` show that **each engine type implements the PowerSource contract**.
 
-Sơ đồ cố ý dùng một **association có hướng** giữa `Car` và `PowerSource`, chưa khẳng định Car sở hữu độc quyền toàn bộ vòng đời nguồn động lực. Chúng ta sẽ phân biệt điều đó ở phần sau.
+The diagram deliberately uses a **directed association** between `Car` and `PowerSource`, without asserting that the car exclusively owns the power source's entire lifecycle. We will distinguish these cases later.
 
-## 3. Is-a phải đúng cả về hợp đồng, không chỉ đúng tên gọi
+## 3. Is-a Must Match the Contract, Not Just the Name
 
-Viết `extends` khiến Java chấp nhận quan hệ kiểu con về mặt cú pháp (nếu lớp cha có thể được kế thừa), nhưng **không tự chứng minh mô hình nghiệp vụ đúng**.
+Writing `extends` makes Java accept a subtype relationship syntactically (if the superclass permits inheritance), but **does not prove that the domain model is correct**.
 
-Ví dụ thiết kế sai:
+Example of a flawed design:
 
 ```java
 class Engine {
@@ -897,9 +897,9 @@ class Engine {
 // class Car extends Engine { ... }
 ```
 
-Ô tô cần động cơ không có nghĩa **ô tô là một động cơ**. Nếu kế thừa như vậy chỉ để gọi `ignite()`, `Car` sẽ thừa hưởng API của `Engine` như thể người dùng có thể thay một động cơ bằng cả ô tô. Đó là một quan hệ phân loại sai.
+A car needing an engine does not mean **a car is an engine**. Inheriting solely to call `ignite()` makes `Car` expose the `Engine` API as though callers could substitute an entire car for an engine. That is an invalid classification.
 
-Tương tự:
+Similarly:
 
 ```java
 // Các quan hệ thường không phản ánh đúng nghiệp vụ:
@@ -908,7 +908,7 @@ Tương tự:
 // class House extends Door { ... }
 ```
 
-Trong các ví dụ đó, có thể diễn đạt hợp lý hơn bằng field:
+In these examples, fields express the relationships more accurately:
 
 ```java
 class Order {
@@ -921,11 +921,11 @@ class Order {
 }
 ```
 
-Một đơn hàng **thuộc về/có liên kết tới một khách hàng**; nó không **là một khách hàng**.
+An order **belongs to/is associated with a customer**; it **is not a customer**.
 
-### Kiểm tra bằng khả năng thay thế
+### Testing Substitutability
 
-Giả sử code xử lý bất kỳ `Vehicle` nào:
+Suppose some code handles any `Vehicle`:
 
 ```java
 static void startTrip(Vehicle vehicle) {
@@ -933,39 +933,39 @@ static void startTrip(Vehicle vehicle) {
 }
 ```
 
-Cả `Car` và `Bicycle` đều thực hiện `move()` theo hợp đồng đã xác định, nên thay thế được ở đây:
+Both `Car` and `Bicycle` implement `move()` according to the defined contract, so they can substitute for one another here:
 
 ```java
 startTrip(new Car("CAR-04", new ElectricMotor()));
 startTrip(new Bicycle("BIKE-02"));
 ```
 
-Đó là ý tưởng của **Liskov Substitution Principle**: nơi cần kiểu cha có thể làm việc với kiểu con mà không bị phá các kỳ vọng quan trọng về đầu vào, đầu ra và bất biến.
+This is the idea behind the **Liskov Substitution Principle**: code expecting a supertype should be able to work with a subtype without violating important expectations about inputs, outputs, or invariants.
 
-Ví dụ nếu `Vehicle.move()` cam kết trả chuỗi mô tả không rỗng cho phương tiện sẵn sàng, subclass không nên bất ngờ trả `null` chỉ vì thuật toán bên trong khác. Việc **đúng cú pháp kế thừa** chưa đủ; quan hệ kiểu con còn phải tôn trọng hợp đồng hành vi.
+For example, if `Vehicle.move()` promises a nonempty description for a ready vehicle, a subclass should not unexpectedly return `null` merely because its internal algorithm differs. **Syntactically valid inheritance** is not enough; subtypes must respect behavioral contracts.
 
-## 4. Has-a không chỉ có một hình thức
+## 4. Has-a Takes Several Forms
 
-Trong giao tiếp hằng ngày, has-a mô tả chung việc một đối tượng **có hoặc sử dụng** một đối tượng khác. Trong UML/OOP, thường phân biệt thêm:
+In everyday language, has-a broadly describes an object **having or using** another. UML and OOP often make finer distinctions:
 
-| Quan hệ | Ý nghĩa thiết kế | Ví dụ | Cách biểu diễn |
+| Relationship | Design meaning | Example | Representation |
 |---|---|---|---|
-| **Association** (liên kết) | Một đối tượng biết hoặc tương tác với đối tượng khác | `Order` liên kết `Customer` | Field/tham số hoặc quan hệ qua ID, tùy mô hình |
-| **Aggregation** (kết tập, quan hệ toàn thể–bộ phận lỏng) | Thành phần có thể tồn tại độc lập hoặc được chia sẻ | `Team` có nhiều `Player` | Thường lưu tham chiếu/collection, UML hình thoi rỗng khi dùng |
-| **Composition** (hợp thành, sở hữu mạnh) | Thành phần được mô hình coi là thuộc toàn thể và phụ thuộc vòng đời/sở hữu của toàn thể | `Order` sở hữu các `OrderLine` trong một thiết kế cụ thể | API ngăn chia sẻ tùy tiện; UML hình thoi đặc khi cam kết sở hữu |
-| **Dependency** (phụ thuộc sử dụng) | Chỉ cần thành phần để thực hiện một công việc, không nhất thiết lưu lâu | Phương thức nhận `Formatter` làm tham số | Tham số, biến cục bộ; UML đường phụ thuộc |
+| **Association** | One object knows or interacts with another | `Order` is associated with `Customer` | Fields/parameters or ID-based relations, depending on the model |
+| **Aggregation** (loose whole–part relationship) | Components may exist independently or be shared | `Team` has many `Player` objects | Usually stored references/collections; a hollow UML diamond when appropriate |
+| **Composition** (strong ownership) | A part is modeled as belonging to a whole and depends on the whole's ownership/lifecycle | `Order` owns `OrderLine` objects in a particular design | APIs prevent arbitrary sharing; a filled UML diamond when ownership is guaranteed |
+| **Dependency** (uses relationship) | A component is only needed to perform an operation and need not be stored long term | A method accepts `Formatter` as a parameter | Parameters or local variables; UML dependency line |
 
-Không phải mọi field tham chiếu đều là **composition theo nghĩa sở hữu mạnh**. Ví dụ `Car` nhận một `PowerSource` từ bên ngoài: thành phần này có thể được một phần khác của chương trình giữ tham chiếu và quản lý. Vậy nên không thể suy ra “Car độc quyền sở hữu motor” chỉ từ:
+Not every reference field represents **composition in the strong-ownership sense**. For example, `Car` receives a `PowerSource` from outside: another part of the program may also hold a reference to and manage it. Thus we cannot infer that "Car exclusively owns the motor" merely from:
 
 ```java
 private final PowerSource powerSource;
 ```
 
-Từ khóa `final` chỉ ngăn gán lại **field tham chiếu** sau khi hoàn tất khởi tạo hợp lệ; nó không ngăn bên ngoài giữ cùng đối tượng, không làm đối tượng thành phần bất biến, và không tự động quy định quyền sở hữu.
+The `final` keyword only prevents reassignment of **the reference field** after valid initialization. It does not prevent outside references to the same object, make the component immutable, or establish ownership automatically.
 
-### Association so với composition: ví dụ đơn hàng
+### Association Versus Composition: An Order Example
 
-Một thiết kế có thể quyết định rằng **đơn hàng sở hữu các dòng hàng được chốt tại thời điểm đặt**. Khi đó, các dòng hàng là snapshot dữ liệu được quản lý bởi đơn hàng; không có API cho phép caller thay đổi chúng độc lập.
+A design may specify that **an order owns the line items finalized when it is placed**. Those items are then data snapshots managed by the order, with no API that lets callers modify them independently.
 
 File `OrderCompositionDemo.java` (Java 17+):
 
@@ -1036,33 +1036,33 @@ public class OrderCompositionDemo {
 }
 ```
 
-Trong mô hình này:
+In this model:
 
-- `Order` **có nhiều** `OrderLine`, không phải “Order là một OrderLine”.
-- `List.copyOf(...)` tạo hoặc tái sử dụng danh sách không thể sửa qua API `List`, và từ chối các phần tử `null`.
-- `OrderLine` là `record` chỉ chứa `String` và primitive; dữ liệu của nó bất biến theo thiết kế ví dụ. Vì vậy chia sẻ tham chiếu tới từng record không làm caller sửa được nội dung dòng hàng.
-- `Order` không trả ra collection có thể sửa và không có setter cho danh sách dòng hàng.
+- `Order` **has many** `OrderLine` objects; an order is not a line item.
+- `List.copyOf(...)` creates or reuses a list that cannot be modified through the `List` API and rejects `null` elements.
+- `OrderLine` is a `record` containing only `String` and primitives; its data is immutable in this example. Sharing references to individual records therefore does not let callers change line-item content.
+- `Order` does not expose a mutable collection or provide a setter for its line items.
 
-Đây là **cách thiết kế diễn đạt quyền kiểm soát dữ liệu của Order**, phù hợp ý tưởng composition ở tầng domain. Dù vậy, bản thân Java không có cơ chế “xóa ngay mọi `OrderLine` khi Order bị giải phóng”, và các record bất biến có thể được chia sẻ an toàn. **Quan hệ sở hữu trong mô hình không đồng nghĩa vòng đời bộ nhớ phải được quản lý như C++**.
+This **expresses the Order's control over its data** and fits the idea of composition at the domain level. However, Java has no mechanism to "immediately delete every `OrderLine` when an Order is released," and immutable records can safely be shared. **Domain-model ownership does not imply C++-style memory-lifecycle management**.
 
-Nếu `OrderLine` là class mutable, chỉ `List.copyOf` **không đủ** để cô lập trạng thái từng phần tử: cần defensive copy sâu hơn, một immutable value object khác hoặc API giới hạn thay đổi.
+If `OrderLine` were a mutable class, `List.copyOf` alone would **not be enough** to isolate each element's state: deeper defensive copying, a different immutable value object, or an API restricting changes would be needed.
 
-## 5. Vòng đời đối tượng và quyền sở hữu: đừng suy luận từ garbage collector
+## 5. Object Lifecycles and Ownership: Do Not Infer Them from Garbage Collection
 
-Xét:
+Consider:
 
 ```java
 Engine engine = new Engine();
 Car car = new Car(engine);
 ```
 
-Với các lớp `Engine` và `Car` tương thích, cả biến `engine` lẫn field `car.engine` có thể tham chiếu **cùng một đối tượng**.
+With compatible `Engine` and `Car` classes, both the `engine` variable and the `car.engine` field may reference **the same object**.
 
-Nếu biến `car` không còn được sử dụng, không thể kết luận `engine` biến mất ngay. Đối tượng thành phần vẫn còn tham chiếu riêng và việc thu hồi bộ nhớ do garbage collector quyết định.
+If the `car` variable is no longer used, we cannot conclude that `engine` immediately disappears. The component may still have other references, and the garbage collector determines when memory is reclaimed.
 
-Ở chiều ngược lại, nếu đối tượng thành phần đại diện tài nguyên như socket, file handle hoặc database connection, ta phải có **hợp đồng đóng tài nguyên** rõ ràng; không nên mặc định chỉ cần “cha mất thì con tự được đóng”.
+Conversely, if a component represents a resource such as a socket, file handle, or database connection, it needs an explicit **resource-closing contract**. Do not assume that "when the parent disappears, the child automatically closes."
 
-Một lớp sở hữu tài nguyên có thể triển khai `AutoCloseable` và đóng thành phần theo hợp đồng riêng:
+A resource-owning class can implement `AutoCloseable` and close its components according to its contract:
 
 ```java
 interface Connection extends AutoCloseable {
@@ -1091,13 +1091,13 @@ final class Client implements AutoCloseable {
 }
 ```
 
-**Lưu ý quan trọng:** `Client.close()` như trên ngụ ý `Client` **được quyền sở hữu và đóng** connection. Nếu connection được chia sẻ hoặc caller tự quản lý, tự động đóng trong `Client.close()` có thể gây lỗi. Cần quyết định và ghi rõ ai có trách nhiệm đóng; quyền sở hữu không tự suy ra từ việc có field tham chiếu.
+**Important:** The `Client.close()` method above implies that `Client` **owns and is authorized to close** the connection. If the connection is shared or managed by the caller, automatically closing it in `Client.close()` can cause failures. Decide and document who is responsible for closing resources; ownership cannot be inferred from a reference field alone.
 
-## 6. Composition và delegation: tái sử dụng mà không cần extends
+## 6. Composition and Delegation: Reuse Without Extends
 
-Kế thừa cho phép subclass dùng và override phương thức được kế thừa. Composition cho phép đối tượng **gọi một thành phần khác thực hiện một phần công việc**.
+Inheritance lets a subclass use and override inherited methods. Composition lets an object **call another component to perform part of its work**.
 
-Ví dụ `Car.move()` đã gọi `powerSource.activate()`. Đây là delegation:
+In the example, `Car.move()` calls `powerSource.activate()`. This is delegation:
 
 ```java
 final class Car extends Vehicle {
@@ -1112,14 +1112,14 @@ final class Car extends Vehicle {
 }
 ```
 
-Sự phối hợp này đem lại các lợi ích:
+This collaboration provides several benefits:
 
-- **Thay implementation độc lập:** `ElectricMotor` hoặc `PetrolEngine` có thể thỏa mãn cùng hợp đồng `PowerSource`.
-- **Kiểm thử dễ hơn:** có thể cung cấp implementation giả để kiểm tra `Car` gọi đúng thành phần.
-- **Trách nhiệm gọn hơn:** `Car` mô tả cách xe di chuyển, còn `PowerSource` mô tả cách kích hoạt nguồn động lực.
-- **Không chiếm superclass:** `Car` vẫn có thể `extends Vehicle` trong khi dùng nhiều thành phần khác.
+- **Independent implementation substitution:** `ElectricMotor` or `PetrolEngine` can fulfill the same `PowerSource` contract.
+- **Easier testing:** A fake implementation can verify that `Car` calls the intended component.
+- **Narrower responsibilities:** `Car` describes how the car moves, while `PowerSource` describes how its power source is activated.
+- **No superclass slot consumed:** `Car` can still `extends Vehicle` while using many other components.
 
-Ví dụ một test double đơn giản:
+Example of a simple test double:
 
 ```java
 PowerSource fake = () -> "nguồn giả lập sẵn sàng";
@@ -1129,17 +1129,17 @@ System.out.println(testCar.move());
 // Car TEST-01: nguồn giả lập sẵn sàng -> di chuyển
 ```
 
-`PowerSource` là functional interface trong ví dụ, vì chỉ có một abstract method `activate()`. Cách truyền lambda này kiểm tra sự **hợp tác giữa các đối tượng**, không cần tạo superclass riêng chỉ phục vụ test.
+`PowerSource` is a functional interface in this example because it has only one abstract method, `activate()`. Injecting a lambda tests **collaboration between objects** without requiring a dedicated superclass solely for testing.
 
-### “Ưu tiên composition hơn inheritance” có nghĩa gì?
+### What Does "Favor Composition over Inheritance" Mean?
 
-Đây là một lời khuyên **theo ngữ cảnh**, không phải quy tắc cấm kế thừa. Khi mục tiêu chủ yếu là tái sử dụng hành vi hoặc lựa chọn thuật toán, composition thường giảm ràng buộc hơn. Khi có quan hệ is-a đúng nghĩa và cần tính thay thế qua superclass hoặc interface, kế thừa/quan hệ kiểu con vẫn phù hợp.
+This is **context-dependent advice**, not a rule against inheritance. When the primary goal is reusing behavior or selecting algorithms, composition usually reduces coupling. When a genuine is-a relationship exists and substitutability through a superclass or interface is required, inheritance/subtyping remains appropriate.
 
-Không nên chuyển mọi quan hệ is-a thành field “để không dùng extends”, cũng không nên biến mọi has-a thành extends chỉ để được gọi phương thức.
+Do not turn every is-a relationship into a field simply "to avoid extends," and do not turn every has-a relationship into inheritance just to call a method.
 
-## 7. Interface có phải quan hệ “là một” không?
+## 7. Does an Interface Represent an Is-a Relationship?
 
-Về hệ thống kiểu của Java, nếu:
+In Java's type system, if:
 
 ```java
 interface Payable {
@@ -1154,25 +1154,25 @@ class Invoice implements Payable {
 }
 ```
 
-thì một đối tượng `Invoice` có thể dùng ở nơi cần `Payable`:
+then an `Invoice` object can be used wherever a `Payable` is required:
 
 ```java
 Payable item = new Invoice();
 System.out.println(item.amountDueVnd()); // 150000
 ```
 
-`Invoice` là **subtype của `Payable`** về mặt kiểu và hợp đồng. Nhưng khi diễn đạt tự nhiên, nên nói “Invoice **có khả năng được thanh toán**” hoặc “Invoice **thực hiện hợp đồng Payable**”, thay vì ép một phát biểu phân loại thế giới thực như “hóa đơn là một vật thanh toán” nếu cách nói đó không có ý nghĩa.
+`Invoice` is a **subtype of `Payable`** in terms of type and contract. But in natural language, "Invoice **can be paid**" or "Invoice **fulfills the Payable contract**" is clearer than forcing an awkward real-world classification such as "an invoice is a payable thing."
 
-Vì vậy cần phân biệt:
+We should therefore distinguish:
 
-- **Is-a trong phân loại domain**: `Car extends Vehicle`.
-- **Subtyping theo khả năng/hợp đồng**: `Invoice implements Payable`.
+- **Is-a as domain classification**: `Car extends Vehicle`.
+- **Capability/contract-based subtyping**: `Invoice implements Payable`.
 
-Cả hai cho phép đa hình về kiểu, nhưng ngữ nghĩa thiết kế khác nhau. Khi nhiều loại đối tượng khác họ chia sẻ một khả năng, interface thường diễn đạt tốt hơn một superclass chứa trạng thái chung gượng ép.
+Both support type-based polymorphism, but they express different design meanings. When unrelated kinds of objects share a capability, an interface often expresses that better than a superclass with forced shared state.
 
-## 8. Khi nào một đối tượng nên “có nhiều” thành phần?
+## 8. When Should an Object Have Multiple Components?
 
-Một tổ chức có thể có nhiều nhân viên, một đơn hàng có nhiều dòng hàng, một playlist có nhiều bài hát. Has-a không giới hạn ở đúng một đối tượng:
+An organization can have many employees, an order can have many line items, and a playlist can have many songs. Has-a is not limited to exactly one object:
 
 ```java
 class Playlist {
@@ -1184,38 +1184,38 @@ class Playlist {
 }
 ```
 
-Quan hệ “có nhiều” được thể hiện bằng collection. Nhưng **collection không đủ xác định ý nghĩa sở hữu**:
+One-to-many relationships are represented with collections. But **a collection alone does not establish ownership semantics**:
 
-- Playlist có thể chỉ **liên kết** tới những bài hát tồn tại độc lập.
-- Order có thể **sở hữu snapshot** các dòng hàng theo thời điểm đặt đơn.
-- Team có thể giữ danh sách người chơi nhưng người chơi vẫn có thể chuyển đội.
-- Một đối tượng có thể dùng một service chung được inject và không sở hữu service đó.
+- A playlist may merely **reference** songs that exist independently.
+- An order may **own a snapshot** of its line items when it is placed.
+- A team may hold a player list even though players can transfer to another team.
+- An object may use an injected shared service without owning it.
 
-Khi cần tài liệu hóa quan hệ, nên ghi thêm:
+When documenting relationships, also specify:
 
-1. **Multiplicity:** một hay nhiều? Có bắt buộc phải có ít nhất một phần tử không?
-2. **Ownership:** ai tạo, ai cập nhật, ai giải phóng tài nguyên?
-3. **Mutability:** thành phần có thể đổi trạng thái và được chia sẻ không?
-4. **Lifecycle:** thành phần có tồn tại độc lập với đối tượng chứa không?
-5. **Direction:** bên nào cần biết bên nào? Có thực sự cần liên kết hai chiều không?
+1. **Multiplicity:** One or many? Is at least one element required?
+2. **Ownership:** Who creates, updates, and releases the resource?
+3. **Mutability:** Can the component change state, and can it be shared?
+4. **Lifecycle:** Can the component exist independently of its container?
+5. **Direction:** Which side needs to know about the other? Is a bidirectional relationship really necessary?
 
-## 9. Sai lầm phổ biến khi chọn quan hệ
+## 9. Common Relationship-Selection Mistakes
 
-| Thiết kế | Vấn đề | Cách suy nghĩ lại |
+| Design | Problem | Better approach |
 |---|---|---|
-| `Car extends Engine` | Ô tô không phải là động cơ | `Car` có/sử dụng `Engine` |
-| `Order extends Customer` | Đơn hàng không phải một khách hàng | `Order` liên kết `Customer` |
-| `PaymentService extends DatabaseClient` chỉ để gọi `save()` | Lẫn trách nhiệm nghiệp vụ với hạ tầng | Service chứa hoặc được inject repository |
-| Mọi class dùng chung utility đều `extends BaseUtil` | Dùng kế thừa thay vì tái sử dụng chức năng | Utility, composition hoặc interface phù hợp |
-| `Team` giữ `List<Player>` rồi kết luận sở hữu độc quyền `Player` | Field tham chiếu không chứng minh ownership | Xác định quy tắc chia sẻ và vòng đời |
-| Field `private final Engine` nên nghĩ Engine bất biến | `final` chỉ cố định tham chiếu field | Xem tính mutable của Engine và đường truy cập ngoài |
-| Kết luận component bị hủy ngay khi container không còn tham chiếu | Java không có destructor sở hữu bộ nhớ như vậy | Phân biệt domain lifecycle, GC và quản lý tài nguyên |
-| Subclass vi phạm hợp đồng superclass | Có cú pháp is-a nhưng không thay thế an toàn | Thiết kế lại hierarchy hoặc dùng composition |
-| Cứ có hai lớp liên hệ là phải dùng extends | Quan hệ liên kết không nhất thiết là phân loại | Hỏi “là một” hay “có/sử dụng một” |
+| `Car extends Engine` | A car is not an engine | `Car` has/uses an `Engine` |
+| `Order extends Customer` | An order is not a customer | `Order` is associated with `Customer` |
+| `PaymentService extends DatabaseClient` merely to call `save()` | Confuses business responsibilities with infrastructure | Give the service a repository field or inject one |
+| Every class using a utility `extends BaseUtil` | Uses inheritance to reuse functionality | Use utilities, composition, or suitable interfaces |
+| `Team` holds `List<Player>` and claims exclusive ownership of `Player` | Reference fields do not establish ownership | Define sharing and lifecycle rules |
+| Assuming `private final Engine` makes Engine immutable | `final` fixes only the field reference | Examine Engine's mutability and external access paths |
+| Assuming a component is destroyed when its container loses its reference | Java has no such ownership-based memory destructor | Distinguish domain lifecycle, GC, and resource management |
+| A subclass violates the superclass contract | Syntactically valid is-a without safe substitution | Redesign the hierarchy or use composition |
+| Using extends whenever two classes are related | Association need not mean classification | Ask whether it is an "is-a" or "has-a/uses-a" relationship |
 
-### Một bài kiểm tra “is-a” bằng hành vi
+### A Behavioral Test for Is-a
 
-Nếu hệ thống yêu cầu:
+If the system requires:
 
 ```java
 void moveAnyVehicle(Vehicle vehicle) {
@@ -1223,9 +1223,9 @@ void moveAnyVehicle(Vehicle vehicle) {
 }
 ```
 
-liệu một đối tượng `Car` có thể được truyền vào mà vẫn đáp ứng cam kết của `Vehicle.move()`? Nếu có, quan hệ is-a đang có ý nghĩa.
+can a `Car` object be passed in while still honoring the `Vehicle.move()` contract? If so, the is-a relationship is meaningful.
 
-Ngược lại, nếu hệ thống yêu cầu:
+Conversely, if the system requires:
 
 ```java
 void activateSource(PowerSource source) {
@@ -1233,9 +1233,9 @@ void activateSource(PowerSource source) {
 }
 ```
 
-truyền một `Car` vào không hợp lý trừ khi `Car` **thật sự tự cung cấp hợp đồng `PowerSource`**, điều khác với việc nó **giữ một `PowerSource`** trong field. Việc sử dụng một thành phần **không tự làm lớp chứa trở thành subtype của thành phần**.
+passing a `Car` makes no sense unless `Car` **itself fulfills the `PowerSource` contract**, which is different from **holding a `PowerSource`** in a field. Using a component **does not make the containing class a subtype of that component**.
 
-## 10. Cách lựa chọn trong thiết kế thực tế
+## 10. Making the Choice in Real Designs
 
 ```mermaid
 flowchart TD
@@ -1251,33 +1251,33 @@ flowchart TD
     H --> I
 ```
 
-Một bộ câu hỏi ngắn khi review code:
+A short set of code-review questions:
 
-- **Nếu bỏ quan hệ `extends`, đối tượng có mất ý nghĩa phân loại cần thiết không?** Nếu không, có thể kế thừa chỉ để dùng lại code.
-- **Lớp A cần thay thành phần B bằng implementation khác không?** Nếu có, field kiểu interface và constructor injection có thể có ích.
-- **Ai bảo đảm component hợp lệ?** Constructor lớp chứa nên kiểm tra tham chiếu bắt buộc; component tự bảo vệ invariant của mình.
-- **Nếu component được chia sẻ, việc thay đổi nó ảnh hưởng những đối tượng nào?** Xác định chính sách chia sẻ, defensive copy hay bất biến.
-- **Nếu component nắm tài nguyên, ai đóng?** Nêu hợp đồng sở hữu; cân nhắc `AutoCloseable` khi thích hợp.
-- **Nếu lớp con thay thế lớp cha, có hành vi nào bất ngờ sai không?** Kiểm tra contract/LSP thay vì chỉ dựa vào cú pháp `extends`.
+- **Would removing `extends` lose an essential classification?** If not, inheritance may be used only for code reuse.
+- **Does class A need to swap component B for another implementation?** If so, an interface-typed field and constructor injection may help.
+- **Who ensures a component is valid?** The containing class's constructor should check required references; the component should protect its own invariants.
+- **If a component is shared, which objects are affected by changes to it?** Define sharing, defensive-copy, or immutability policies.
+- **If the component owns a resource, who closes it?** Document the ownership contract; consider `AutoCloseable` when appropriate.
+- **When a subclass replaces a superclass, can any behavior unexpectedly break?** Check the contract/LSP instead of relying only on `extends` syntax.
 
-## 11. Bài tập kiểm tra
+## 11. Review Exercises
 
-### Bài 1 — Chọn is-a hay has-a
+### Exercise 1 — Choose Is-a or Has-a
 
-Hãy phân loại các quan hệ sau:
+Classify the following relationships:
 
-| Quan hệ | Gợi ý đáp án |
+| Relationship | Suggested answer |
 |---|---|
-| `Dog` và `Animal` | Is-a, nếu `Dog` đáp ứng hợp đồng `Animal` |
-| `Library` và `Book` | Has-a (thư viện có sách); sách không phải một thư viện |
-| `Invoice` và `Customer` | Has-a/association (hóa đơn liên quan khách hàng) |
-| `Teacher` và `Employee` | Có thể is-a, tùy mô hình nghiệp vụ |
-| `MusicPlayer` và `AudioDecoder` | Has-a/uses-a: trình phát dùng bộ giải mã |
-| `CreditCardPayment` và `PaymentMethod` | Kiểu con qua `implements` nếu `PaymentMethod` là interface hợp đồng |
+| `Dog` and `Animal` | Is-a if `Dog` fulfills the `Animal` contract |
+| `Library` and `Book` | Has-a (a library contains books); a book is not a library |
+| `Invoice` and `Customer` | Has-a/association (an invoice is related to a customer) |
+| `Teacher` and `Employee` | Possibly is-a, depending on the business model |
+| `MusicPlayer` and `AudioDecoder` | Has-a/uses-a: the player uses a decoder |
+| `CreditCardPayment` and `PaymentMethod` | Subtyping through `implements` if `PaymentMethod` is a contract interface |
 
-Không có đáp án chỉ từ tên lớp cho mọi hệ thống: hãy nêu giả định nghiệp vụ và trách nhiệm tương ứng.
+Class names alone cannot determine the answer in every system: state the business assumptions and corresponding responsibilities.
 
-### Bài 2 — Có biên dịch không?
+### Exercise 2 — Will It Compile?
 
 ```java
 interface Engine {
@@ -1301,21 +1301,21 @@ Car car = new Car(new PetrolEngine());
 // Engine engine = car; // Có hợp lệ không?
 ```
 
-**Đáp án:** Không. `Car` **có một** `Engine` nhưng không phải subtype của `Engine`. Muốn dùng động cơ, `Car` phải cung cấp hành vi ủy quyền phù hợp hoặc caller sử dụng engine trực tiếp theo thiết kế đã định.
+**Answer:** No. `Car` **has an** `Engine` but is not a subtype of `Engine`. To use the engine, `Car` must expose suitable delegated behavior, or the caller must use the engine directly as the design specifies.
 
-### Bài 3 — Một hay hai đối tượng?
+### Exercise 3 — One Object or Two?
 
 ```java
 Vehicle vehicle = new Car("CAR-05", new ElectricMotor());
 ```
 
-Theo ví dụ `RelationsDemo`, đoạn này có những object nào?
+In the `RelationsDemo` example, what objects does this code involve?
 
-**Đáp án:** Có một đối tượng runtime `Car`, và một đối tượng `ElectricMotor` riêng được truyền vào. Phần trạng thái `Vehicle` thuộc **chính đối tượng Car**, không phải một instance `Vehicle` thứ hai được tạo riêng. Biến `vehicle` chỉ chứa tham chiếu có kiểu khai báo `Vehicle`.
+**Answer:** There is one runtime `Car` object and a separate `ElectricMotor` object passed into it. The `Vehicle` state belongs to **the Car object itself**; a second independent `Vehicle` instance is not created. The `vehicle` variable merely holds a reference declared as type `Vehicle`.
 
-### Bài 4 — Refactor thiết kế sai
+### Exercise 4 — Refactor a Flawed Design
 
-Ban đầu có:
+Initially:
 
 ```java
 class DatabaseClient {
@@ -1329,7 +1329,7 @@ class UserService extends DatabaseClient {
 }
 ```
 
-Hãy sửa theo has-a:
+Refactor it using has-a:
 
 ```java
 import java.util.Objects;
@@ -1350,44 +1350,44 @@ class UserService {
 }
 ```
 
-Bản sửa phản ánh `UserService` **sử dụng** `DatabaseClient` thay vì **là một loại database client**. Nếu nhiều cách lưu trữ cần hoán đổi hoặc giả lập để test, có thể thay `DatabaseClient` bằng một interface như `UserRepository`. Chỉ thêm interface khi nó đem lại giá trị thiết kế thật sự.
+The revised design shows `UserService` **using** `DatabaseClient` instead of **being a type of database client**. If multiple storage implementations must be swapped or faked in tests, `DatabaseClient` can be replaced by an interface such as `UserRepository`. Add an interface only when it provides real design value.
 
 ---
 
-## Ghi nhớ
+## Key Takeaways
 
-- **Is-a:** đối tượng thuộc kiểu con và có thể dùng thay kiểu cha/hợp đồng theo quy tắc substitutability; trong Java thường dùng `extends` hoặc `implements`.
-- **Has-a:** một đối tượng **giữ, sở hữu hoặc sử dụng** thành phần khác; thường biểu diễn qua field và delegation.
-- Một đối tượng có thể **đồng thời is-a với một kiểu và has-a với những thành phần khác**.
-- **Has-a không tự chứng minh sở hữu độc quyền hoặc vòng đời phụ thuộc**; cần xem association, aggregation, composition, khả năng chia sẻ và quản lý tài nguyên.
-- Dùng kế thừa vì **quan hệ phân loại hợp lệ**, dùng composition vì **nhu cầu kết hợp hành vi/trạng thái**. Đừng dùng `extends` chỉ để tránh viết field.
+- **Is-a:** An object is a subtype that can substitute for a supertype/contract according to substitutability rules; Java commonly uses `extends` or `implements`.
+- **Has-a:** An object **holds, owns, or uses** another component, commonly through fields and delegation.
+- An object can **simultaneously be an instance of one type and have other components**.
+- **Has-a alone does not establish exclusive ownership or a dependent lifecycle**; consider association, aggregation, composition, sharing, and resource management.
+- Choose inheritance for **valid classification relationships** and composition for **the need to combine behavior/state**. Do not use `extends` simply to avoid writing a field.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="composition-003">Ủy quyền công việc cho đối tượng khác</a>
+## <a id="composition-003">Delegating Work to Other Objects</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Ủy quyền công việc cho đối tượng khác trong Java OOP
+# Delegating Work to Other Objects in Java OOP
 
-Khi một đối tượng nhận một yêu cầu, nó có thể **giữ trách nhiệm với quy trình**, nhưng nhờ đối tượng khác thực hiện những bước chuyên môn. Đó là **delegation (ủy quyền)**. Java không có từ khóa riêng cho delegation: kỹ thuật này được thể hiện bằng **lời gọi phương thức tới collaborator**.
+When an object receives a request, it can **retain responsibility for the workflow** while asking other objects to perform specialized steps. That is **delegation**. Java has no dedicated keyword for delegation: this technique is implemented through **method calls to collaborators**.
 
-Ví dụ, một bộ điều phối yêu cầu hỗ trợ kỹ thuật nhận phiếu từ khách hàng. Nó không nhất thiết phải tự phân loại mức độ và tự lưu phiếu vào hàng chờ:
+For example, a support-request coordinator receives tickets from customers. It does not necessarily need to classify their severity or store them in queues itself:
 
-- `TicketRouter` kiểm tra đầu vào, quyết định **thứ tự xử lý** và trả kết quả cuối.
-- `TicketClassifier` phân loại phiếu theo một bộ quy tắc.
-- `AssignmentPort` ghi nhận phiếu vào hàng đợi đã chọn.
-- Client chỉ cần gọi `router.route(ticket)` và nhận một `Assignment`.
+- `TicketRouter` validates input, determines **the processing order**, and returns the final result.
+- `TicketClassifier` classifies tickets according to a set of rules.
+- `AssignmentPort` records tickets in the selected queue.
+- The client only needs to call `router.route(ticket)` and receive an `Assignment`.
 
-Bài này đi sâu vào **ai giao việc cho ai, dữ liệu đi qua những ranh giới nào, ai chịu trách nhiệm về thành công/thất bại**, để tách delegation khỏi khái niệm ghép đối tượng nói chung.
+This lesson examines **who delegates to whom, which boundaries data crosses, and who is accountable for success or failure**, distinguishing delegation from object composition in general.
 
-## 1. Đọc đúng một luồng ủy quyền
+## 1. Understanding a Delegation Flow
 
 ~~~mermaid
 sequenceDiagram
@@ -1404,22 +1404,22 @@ sequenceDiagram
     R-->>Caller: Assignment
 ~~~
 
-Trong sơ đồ, `TicketRouter` là **delegator** vì nó nhận trách nhiệm điều phối từ caller. `TicketClassifier` và `AssignmentPort` là **delegates** đối với các bước được giao. Một collaborator có thể tiếp tục ủy quyền cho đối tượng khác ở bên trong; “delegator/delegate” là **vai trò theo lời gọi**, không phải một loại class trong Java.
+In the diagram, `TicketRouter` is the **delegator** because it accepts responsibility for coordination from the caller. `TicketClassifier` and `AssignmentPort` are **delegates** for their assigned steps. A collaborator may delegate further internally; "delegator" and "delegate" describe **roles in a call**, not special Java class types.
 
-Ba ranh giới cần nhận diện:
+The boundaries to identify are:
 
-| Bước | Ai chịu trách nhiệm? | Điều phải giữ rõ |
+| Step | Responsible object | What must be explicit |
 | --- | --- | --- |
-| Nhận yêu cầu | `TicketRouter` | Input hợp lệ và trình tự xử lý |
-| Xác định hàng đợi | `TicketClassifier` | Quy tắc phân loại và mã `Queue` |
-| Ghi nhận phân công | `AssignmentPort` | Kết quả phân công, lỗi, ý nghĩa “đã nhận” |
-| Trả kết quả cho client | `TicketRouter` | Không tự bịa kết quả nếu delegate thất bại |
+| Receive request | `TicketRouter` | Input validity and processing order |
+| Determine queue | `TicketClassifier` | Classification rules and `Queue` code |
+| Record assignment | `AssignmentPort` | Assignment result, errors, and what "accepted" means |
+| Return result to client | `TicketRouter` | Never invent a result if a delegate fails |
 
-**Ủy quyền không đồng nghĩa từ bỏ trách nhiệm.** Router vẫn chịu trách nhiệm gọi đúng bước, xử lý hoặc lan truyền lỗi phù hợp và không phát ra kết quả giả. Nó chỉ không ôm thuật toán phân loại hay cơ chế lưu hàng chờ.
+**Delegation does not mean abandoning responsibility.** The router is still accountable for calling the right steps, handling or propagating errors appropriately, and avoiding fabricated results. It simply does not own the classification algorithm or queue-storage mechanism.
 
-## 2. Chương trình độc lập: thay delegate nhưng giữ router
+## 2. Standalone Program: Replace Delegates Without Changing the Router
 
-Lưu thành `TicketDelegationDemo.java` (Java 17 trở lên). Đây là mô hình hàng chờ **trong bộ nhớ**; không sử dụng cơ sở dữ liệu hay dịch vụ từ xa.
+Save as `TicketDelegationDemo.java` (Java 17 or later). This example models an **in-memory** queue and uses no database or remote service.
 
 ~~~java
 import java.util.ArrayList;
@@ -1546,14 +1546,14 @@ public class TicketDelegationDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac TicketDelegationDemo.java
 java TicketDelegationDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Assignment[ticketId=T-17, queue=STANDARD]
@@ -1561,38 +1561,38 @@ Assignment[ticketId=T-18, queue=BILLING]
 Số phân công: 2
 ~~~
 
-**Diễn biến cụ thể:**
+**Step-by-step behavior:**
 
-1. `bySeverity` nhận phiếu `T-17` mức 2. Nó **giao việc phân loại** cho `SeverityClassifier`; kết quả `STANDARD` được đưa vào `MemoryAssignmentPort`.
-2. `byTopic` nhận phiếu `T-18` mức 5, nhưng dùng một bộ phân loại **theo chủ đề**. Chuỗi “Thanh toán lỗi” khớp từ khóa, nên trả `BILLING`. Đây không phải lỗi: hợp đồng cho phép các chiến lược phân loại có chính sách riêng.
-3. Hai router cùng sử dụng **một instance** `sharedPort` do nơi tạo ứng dụng cung cấp. Vì thế lịch sử trong bộ nhớ có đúng hai bản ghi.
-4. Không có đối tượng nào gửi email hoặc tạo ticket thật. `Assignment` chỉ xác nhận **adapter bộ nhớ trong ví dụ đã ghi nhận yêu cầu**, không đại diện một SLA xử lý hỗ trợ thực tế.
+1. `bySeverity` receives ticket `T-17` with severity 2. It **delegates classification** to `SeverityClassifier`; the `STANDARD` result is passed to `MemoryAssignmentPort`.
+2. `byTopic` receives ticket `T-18` with severity 5 but uses a **topic-based** classifier. The text "Thanh toán lỗi" matches its keyword, producing `BILLING`. This is not a bug: the contract permits different classification strategies to use their own policies.
+3. Both routers use **the same instance** of `sharedPort`, supplied by the application's assembly code. Therefore, the in-memory history contains exactly two records.
+4. No object actually sends email or creates a real support ticket. `Assignment` only confirms that **the example's in-memory adapter recorded the request**; it does not represent a real support-service SLA.
 
-Lưu ý: `BillingKeywordClassifier` cố ý không xem `severity`. Nếu yêu cầu thực tế nói “mọi phiếu mức 5 bắt buộc vào URGENT”, đây sẽ là một **quy tắc chung cần công bố trong hợp đồng** và mọi implementation phải tuân thủ hoặc cần thêm tầng ưu tiên. Không được suy ra quy tắc ấy từ tên trường mà chưa có đặc tả.
+Note: `BillingKeywordClassifier` deliberately ignores `severity`. If a real requirement says "every severity-5 ticket must go to URGENT," that must be **a shared rule published in the contract** and honored by every implementation, or enforced by an additional priority layer. Do not infer such a rule from the field name without a specification.
 
-## 3. Đối tượng được ghép và lời gọi được ủy quyền là hai câu hỏi khác nhau
+## 3. Composed Objects and Delegated Calls Answer Different Questions
 
 ~~~java
 private final TicketClassifier classifier;
 private final AssignmentPort assignments;
 ~~~
 
-Hai field cho thấy router **giữ tham chiếu** tới hai collaborator. Đó là cấu trúc liên kết/ghép đối tượng (*has-a / uses-a*). Delegation thực sự chỉ diễn ra khi router gọi:
+The two fields show that the router **holds references** to two collaborators. That is an association/object-composition structure (*has-a / uses-a*). Actual delegation happens only when the router calls:
 
 ~~~java
 Queue queue = classifier.classify(ticket);
 Assignment result = assignments.assign(ticket.id(), queue);
 ~~~
 
-| Khái niệm | Câu hỏi chính | Quan sát trong ví dụ |
+| Concept | Key question | What the example shows |
 | --- | --- | --- |
-| Composition / association | Router sử dụng những object nào? | Hai field nhận từ constructor |
-| Delegation | Phần nào chuyển cho object khác? | Phân loại và phân công |
-| Polymorphism | Cùng lời gọi chạy cách thực hiện nào? | Classifier theo mức hay từ khóa |
-| Dependency injection | Ai cung cấp collaborator? | `main` tạo và truyền qua constructor |
-| Encapsulation | Ai được sửa lịch sử phân công? | `MemoryAssignmentPort` giữ danh sách private |
+| Composition / association | Which objects does the router use? | Two fields populated through the constructor |
+| Delegation | Which work is handed to another object? | Classification and assignment |
+| Polymorphism | Which implementation handles the same call? | Severity-based or keyword-based classifier |
+| Dependency injection | Who supplies the collaborators? | `main` creates them and passes them to the constructor |
+| Encapsulation | Who may modify the assignment history? | `MemoryAssignmentPort` keeps the list private |
 
-Một trường tham chiếu có thể chỉ phục vụ tra cứu hoặc quan sát mà không ủy quyền công việc thuộc API công khai; không nên gọi mọi field là một “pattern delegation”. Ngược lại, phương thức cũng có thể **nhận delegate như một tham số tại lúc gọi**, không cần lưu thành field.
+A reference field may be used only for lookup or observation, without delegating any work from the public API. Do not label every field a "delegation pattern." Conversely, a method can **receive a delegate as a call-time argument** without storing it in a field.
 
 ~~~java
 static Queue classifyOnce(
@@ -1603,21 +1603,21 @@ static Queue classifyOnce(
 }
 ~~~
 
-Đoạn này là method bổ sung minh họa: đặt trong `TicketDelegationDemo` sẽ dùng được các kiểu của ví dụ. Nó cho thấy ủy quyền **không bắt buộc constructor injection**, dù constructor injection phù hợp khi router cần hai collaborator trong suốt vòng đời.
+This is an additional illustrative method: placing it inside `TicketDelegationDemo` makes the example's types available. It shows that delegation **does not require constructor injection**, although constructor injection fits a router that needs both collaborators throughout its lifetime.
 
-## 4. Hợp đồng delegate là điều router dựa vào
+## 4. The Router Relies on Delegate Contracts
 
-Java chỉ kiểm tra chữ ký `classify(Ticket)` và `assign(String, Queue)`; không tự xác nhận hành vi của từng implementation.
+Java checks the signatures of `classify(Ticket)` and `assign(String, Queue)`; it does not verify the behavior of each implementation.
 
-| Hợp đồng cần ghi rõ | Ý nghĩa với router |
+| Required contract | Implication for the router |
 | --- | --- |
-| `TicketClassifier` trả `Queue` không null với ticket hợp lệ | Có thể chuyển kết quả sang adapter |
-| Phương thức phân loại không tự ghi/chỉnh ticket | Dễ test, không tạo side effect ngầm |
-| `AssignmentPort` trả `Assignment` có ticketId/queue đúng hoặc báo lỗi | Caller biết phiếu được xử lý bởi adapter nào |
-| Lỗi không được đổi thành “đã phân công” giả | Giữ đúng kết quả nghiệp vụ |
-| Độ bền/timeout/thread safety | Phải xác định theo implementation và nhu cầu thực |
+| `TicketClassifier` returns a non-null `Queue` for a valid ticket | Its result can be passed to the adapter |
+| Classification does not record or modify tickets itself | Easier testing and no hidden side effects |
+| `AssignmentPort` returns an `Assignment` with the correct ticketId/queue, or reports an error | Callers know which adapter processed the ticket |
+| Errors must not become fake "assigned" results | Preserves accurate business outcomes |
+| Durability/timeouts/thread safety | Must be defined for each implementation and real-world requirement |
 
-Ví dụ `TicketClassifier` bị lỗi:
+Example of a faulty `TicketClassifier`:
 
 ~~~java
 static final class BrokenClassifier implements TicketClassifier {
@@ -1628,13 +1628,13 @@ static final class BrokenClassifier implements TicketClassifier {
 }
 ~~~
 
-Lớp này **biên dịch** nhưng vi phạm cam kết non-null. `TicketRouter` từ chối kết quả ấy với `NullPointerException` có thông điệp rõ. Tuy nhiên, kiểm tra ở router không thay thế được contract tests cho mọi classifier.
+This class **compiles** but violates the non-null guarantee. `TicketRouter` rejects its result with a `NullPointerException` containing a clear message. However, a check in the router is not a substitute for contract tests of every classifier.
 
-**Điều kiện lỗi theo thứ tự:** nếu constructor `Ticket` từ chối input thì chưa có lời gọi tới router. Nếu classifier ném lỗi, adapter chưa được gọi. Nếu adapter lỗi **sau khi ghi một phần**, router không tự rollback bộ nhớ, file hay giao dịch bên ngoài. Hợp đồng cần nói rõ failure semantics của adapter thật.
+**Failure order:** If the `Ticket` constructor rejects input, the router is never invoked. If the classifier throws, the adapter is not called. If the adapter fails **after partially writing**, the router does not automatically roll back memory, files, or external transactions. The real adapter's contract must define its failure semantics.
 
-## 5. Delegation và forwarding: khi nào một tầng trung gian có giá trị?
+## 5. Delegation Versus Forwarding: When Does an Intermediate Layer Add Value?
 
-Xét kiểu chuyển tiếp thuần túy:
+Consider pure forwarding:
 
 ~~~java
 class BareRouter {
@@ -1650,32 +1650,32 @@ class BareRouter {
 }
 ~~~
 
-Nếu `BareRouter` không thêm hợp đồng, validation, kiểm soát quyền hoặc cách ly phụ thuộc, lớp này có thể chỉ làm luồng code dài thêm. Không phải cứ gọi phương thức đối tượng khác là phải tạo một lớp mới.
+If `BareRouter` adds no contract, validation, access control, or dependency isolation, it may only lengthen the call chain. Calling another object's method does not always justify creating a new class.
 
-`TicketRouter` chính trong bài có lý do tồn tại: nó **điều phối hai khả năng chuyên biệt**, buộc thứ tự “phân loại trước → ghi nhận sau” và công bố một API `route(Ticket)` mà caller không phải tự gọi từng thành phần.
+The main `TicketRouter` has a reason to exist: it **coordinates two specialized capabilities**, enforces "classify first → record second," and exposes a `route(Ticket)` API so callers do not have to invoke each component themselves.
 
-Một tầng ủy quyền thường hữu ích khi nó:
+A delegation layer is often useful when it:
 
-- Định nghĩa **trách nhiệm nghiệp vụ** rõ ràng với caller.
-- Gom validation hoặc orchestration ở đúng ranh giới.
-- Giấu chi tiết hạ tầng mà caller không cần hiểu.
-- Cho phép **thay implementation** mà không sửa logic điều phối.
-- Giúp kiểm thử riêng một ranh giới thay vì khởi động cả hệ thống.
+- Defines a clear **business responsibility** for the caller.
+- Centralizes validation or orchestration at the appropriate boundary.
+- Hides infrastructure details the caller does not need.
+- Allows **implementation substitution** without changing coordination logic.
+- Makes it possible to test one boundary without starting the entire system.
 
-Ngược lại, nhiều lớp mỗi lớp chỉ gọi tiếp một method y hệt có thể trở thành **pass-through layers** không cần thiết. Hãy kiểm tra giá trị của từng tầng trước khi thêm.
+On the other hand, multiple classes that each forward the same method call can become unnecessary **pass-through layers**. Evaluate the benefit of each layer before adding it.
 
-## 6. Đổi delegate không nhất thiết phải dùng inheritance
+## 6. Changing Delegates Does Not Require Inheritance
 
-Nếu router tự kế thừa bộ phân loại chỉ để dùng thuật toán của nó:
+If the router inherits from the classifier merely to reuse its algorithm:
 
 ~~~java
 // Thiết kế sai ý nghĩa trách nhiệm:
 // class TicketRouter extends SeverityClassifier { ... }
 ~~~
 
-ta đang nói “router là một loại bộ phân loại”. Nhưng router **sử dụng một bộ phân loại**, còn trách nhiệm của router là điều phối. Quan hệ này hợp với **has-a / uses-a**.
+we are claiming that "the router is a kind of classifier." But the router **uses a classifier** and is responsible for coordination. This relationship is better modeled as **has-a / uses-a**.
 
-Trong ví dụ thực, `SeverityClassifier` được đánh dấu `final` nên không thể kế thừa ngay cả ở mức cú pháp. Dòng trên cố ý được comment để chỉ ra mô hình sai, không phải mã hợp lệ của demo.
+In the actual example, `SeverityClassifier` is marked `final` and cannot be subclassed even syntactically. The line above is deliberately commented out to illustrate an incorrect model; it is not valid demo code.
 
 ~~~mermaid
 classDiagram
@@ -1702,21 +1702,21 @@ classDiagram
     AssignmentPort <|.. MemoryAssignmentPort
 ~~~
 
-**Kế thừa vẫn phù hợp** khi lớp con thật sự là một subtype của lớp cha và giữ đúng hợp đồng. Delegation chỉ là một kỹ thuật thay thế khi ta cần dùng **khả năng** mà không có quan hệ is-a thật. Bài so sánh tái sử dụng giữa kế thừa và kết hợp có thể phân tích sâu thêm trường hợp nhiều chiều biến thiên độc lập.
+**Inheritance remains appropriate** when a subclass truly is a subtype and honors its superclass contract. Delegation is an alternative when we need another object's **capability** without a genuine is-a relationship. The comparison between inheritance and composition can examine designs with several independent dimensions of variation in more detail.
 
-## 7. Phân biệt delegation với những pattern liên quan
+## 7. Distinguishing Delegation from Related Patterns
 
-Delegation là cơ chế nền của nhiều mẫu thiết kế, nhưng mục đích của từng mẫu khác nhau:
+Delegation is a building block of many design patterns, but each pattern serves a different purpose:
 
-| Kỹ thuật/mẫu | Mục đích chính | Cách áp dụng trong miền ticket |
+| Technique/pattern | Main purpose | Application in the ticket domain |
 | --- | --- | --- |
-| **Strategy** | Chọn thuật toán có thể thay thế | `SeverityClassifier` hoặc `BillingKeywordClassifier` |
-| **Adapter** | Chuyển hợp đồng ứng dụng sang API công nghệ khác | `AssignmentPort` → một SDK quản lý công việc |
-| **Decorator** | Bọc object cùng interface để thêm hành vi | Ghi log trước/sau `assign` |
-| **Proxy** | Kiểm soát truy cập, lazy loading, remote invocation | Chặn phân công nếu caller thiếu quyền |
-| **Facade** | Cho client một API gọn cho nhiều thành phần | `TicketRouter.route` điều phối các bước |
+| **Strategy** | Select a replaceable algorithm | `SeverityClassifier` or `BillingKeywordClassifier` |
+| **Adapter** | Bridge an application contract to another technology's API | `AssignmentPort` → a task-management SDK |
+| **Decorator** | Wrap an object with the same interface to add behavior | Log before/after `assign` |
+| **Proxy** | Control access, lazy loading, or remote invocation | Reject assignments when the caller lacks permission |
+| **Facade** | Provide clients a simple API across several components | `TicketRouter.route` coordinates the steps |
 
-Ví dụ decorator, đặt thành lớp lồng trong `TicketDelegationDemo`:
+Decorator example, implemented as a nested class in `TicketDelegationDemo`:
 
 ~~~java
 static final class LoggingAssignmentPort implements AssignmentPort {
@@ -1736,11 +1736,11 @@ static final class LoggingAssignmentPort implements AssignmentPort {
 }
 ~~~
 
-Decorator này **không hứa** rằng dữ liệu đã tồn tại bền vững chỉ vì delegate trả về. Nó cũng không tự quản lý transaction. Tránh tự động dùng tên pattern khi chỉ cần một field và một lời gọi đơn giản.
+This decorator **does not guarantee** durable persistence just because its delegate returns. It also does not manage transactions automatically. Avoid applying a pattern label automatically when one field and a simple call are sufficient.
 
-## 8. Kiểm thử đúng sự cộng tác và đường lỗi
+## 8. Testing Collaboration and Failure Paths
 
-Có thể thêm một fake ghi nhận lời gọi làm lớp lồng trong demo:
+We can add a fake that records calls as a nested class in the demo:
 
 ~~~java
 static final class RecordingAssignments implements AssignmentPort {
@@ -1758,7 +1758,7 @@ static final class RecordingAssignments implements AssignmentPort {
 }
 ~~~
 
-Rồi thêm đoạn sau vào `main` của demo:
+Then add the following to the demo's `main`:
 
 ~~~java
 RecordingAssignments recorder = new RecordingAssignments();
@@ -1772,87 +1772,87 @@ if (recorder.calls != 1 || recorder.lastQueue != Queue.URGENT
 }
 ~~~
 
-Test này xác nhận router chuyển đúng mã và hàng đợi, gọi adapter **một lần**, trả lại kết quả từ adapter. Bên cạnh test delegator, cần:
+This test confirms that the router forwards the correct ID and queue, calls the adapter **exactly once**, and returns the adapter's result. In addition to testing the delegator, we need:
 
-- **Test classifier:** kiểm tra từng chiến lược với mức độ/từ khóa đầu vào xác định.
-- **Contract test:** xác minh mọi implementation trả non-null và đúng kết quả được phép, không tự sửa ticket.
-- **Integration test:** adapter HTTP/database thật có ghi đúng, báo lỗi chính xác, đóng tài nguyên đúng không.
-- **Failure test:** classifier lỗi thì adapter không được gọi; adapter lỗi thì router không được trả thành công giả.
+- **Classifier tests:** Check each strategy against known severity levels/keywords.
+- **Contract tests:** Verify that every implementation returns non-null permitted results without modifying the ticket.
+- **Integration tests:** Check that real HTTP/database adapters write correctly, report errors accurately, and close resources properly.
+- **Failure tests:** An adapter must not be called when classification fails; the router must not return false success when the adapter fails.
 
-Không cần mock framework cho những thử nghiệm ngắn này. Fake hỗ trợ cô lập ranh giới, nhưng không chứng minh hệ thống bên ngoài thực sự vận hành đúng.
+These short tests do not require a mocking framework. Fakes help isolate boundaries but do not prove that external systems work correctly.
 
-## 9. Vòng đời, đồng thời và kết quả giao việc
+## 9. Lifecycles, Concurrency, and Delegated Outcomes
 
-Cả hai router trong `main` đều giữ `sharedPort`. Việc cùng giữ tham chiếu không trao **quyền sở hữu độc quyền** cho router nào. Nếu port có socket/database client, bên tạo nó thường cần quản lý vòng đời, hoặc phải có hợp đồng chuyển giao quyền sở hữu rõ.
+Both routers in `main` reference `sharedPort`. Holding a shared reference does not grant **exclusive ownership** to either router. If the port holds a socket or database client, its creator will usually manage its lifecycle unless an explicit ownership-transfer contract says otherwise.
 
-`MemoryAssignmentPort` sử dụng `ArrayList` và **không thread-safe**. Hai request song song gọi `assign` trên cùng port có thể gây race condition. Field `final` trong router chỉ cố định tham chiếu, không làm danh sách mutable của port trở nên an toàn.
+`MemoryAssignmentPort` uses `ArrayList` and is **not thread-safe**. Two concurrent requests calling `assign` on the same port can cause a race condition. A `final` field in the router only fixes the reference; it does not make the port's mutable list safe for concurrent use.
 
-Đối với adapter thực, cũng cần tách:
+For a real adapter, also distinguish:
 
-1. **Đã chấp nhận yêu cầu** hay **đã ghi bền vững**?
-2. Đã gọi xong API hay **đã phân công thực tế** cho người phụ trách?
-3. Khi thất bại và retry, có nguy cơ **phân công trùng** không?
-4. Khi classifier và port đọc dữ liệu khác thời điểm, có cần **phiên bản quy tắc** hay transaction?
-5. Khi thay delegate, request cũ còn sử dụng port/classifier cũ hay đã được chuyển sang mới?
+1. Was the request **accepted**, or was it **durably recorded**?
+2. Did the API call merely finish, or was the ticket **actually assigned** to someone?
+3. Could failure and retry produce **duplicate assignments**?
+4. If the classifier and port read data at different times, do they require **versioned rules** or a transaction?
+5. After a delegate changes, do existing requests still use the old port/classifier or switch to the new one?
 
-Nếu hệ thống yêu cầu idempotency, auditing hoặc transaction, chúng phải được thiết kế và kiểm thử riêng. Delegation **chỉ tổ chức trách nhiệm và đường gọi**; nó không tự tạo những bảo đảm vận hành này.
+If the system requires idempotency, auditing, or transactions, those mechanisms must be designed and tested separately. Delegation **only organizes responsibilities and call paths**; it does not create these operational guarantees.
 
-## 10. Bài tập tự kiểm tra
+## 10. Self-Check Exercises
 
-**1. Ai là delegator?** Trong `TicketRouter.route`, thành phần nào thực hiện phân loại, thành phần nào ghi nhận?
+**1. Who is the delegator?** In `TicketRouter.route`, which component classifies and which records assignments?
 
-**Đáp án:** Router là delegator. `TicketClassifier` phân loại; `AssignmentPort` ghi nhận. Router vẫn kiểm soát thứ tự và trả kết quả.
+**Answer:** The router is the delegator. `TicketClassifier` classifies; `AssignmentPort` records assignments. The router still controls the order and returns the result.
 
-**2. Hai router dùng chung một `MemoryAssignmentPort` có hai lịch sử hay một?**
+**2. If two routers share one `MemoryAssignmentPort`, are there two histories or one?**
 
-**Đáp án:** Một lịch sử trong cùng instance. Cấp hai port khác nhau nếu cần tách trạng thái, hoặc định nghĩa cơ chế chia sẻ an toàn nếu muốn dùng chung đồng thời.
+**Answer:** One history in the shared instance. Provide two separate ports to isolate state, or define a safe sharing mechanism for concurrent use.
 
-**3. Nếu classifier trả `null`, router có được tiếp tục gọi `assign` không?**
+**3. If the classifier returns `null`, can the router proceed to `assign`?**
 
-**Đáp án:** Không theo chương trình minh họa. `Objects.requireNonNull` dừng trước bước gửi, nên không có phân công mới.
+**Answer:** Not in this example. `Objects.requireNonNull` stops execution before assignment, so no new assignment occurs.
 
-**4. Nếu thay `SeverityClassifier` bằng `BillingKeywordClassifier`, vì sao không cần sửa `TicketRouter`?**
+**4. Why does replacing `SeverityClassifier` with `BillingKeywordClassifier` require no change to `TicketRouter`?**
 
-**Đáp án:** Router chỉ phụ thuộc vào `TicketClassifier.classify`. Đây là đa hình theo hợp đồng, được cấp qua constructor.
+**Answer:** The router only depends on `TicketClassifier.classify`. The chosen implementation is supplied through constructor-based polymorphism.
 
-**5. Có thể ủy quyền mà không có field tham chiếu không?**
+**5. Can delegation work without a reference field?**
 
-**Đáp án:** Có. Nhận một classifier bằng tham số của phương thức rồi gọi nó cũng là delegation nếu đang chuyển phần việc chuyên môn.
+**Answer:** Yes. Accepting a classifier as a method parameter and invoking it is delegation when specialized work is being handed off.
 
-**6. Nếu `AssignmentPort.assign` lưu dữ liệu một phần rồi ném lỗi, router có tự rollback không?**
+**6. If `AssignmentPort.assign` partially persists data and then throws, does the router roll back automatically?**
 
-**Đáp án:** Không. Lỗi và side effect phải được thiết kế ở adapter hoặc ranh giới transaction; tránh trả kết quả thành công giả.
+**Answer:** No. Failures and side effects must be handled at the adapter or transaction boundary; avoid returning false success.
 
-**7. Delegation luôn làm thiết kế tốt hơn?**
+**7. Does delegation always improve a design?**
 
-**Đáp án:** Không. Một tầng wrapper không thêm ranh giới, kiểm tra hay trách nhiệm có thể chỉ làm code khó đọc. Tạo delegate khi có sự phân công vai trò thật.
+**Answer:** No. A wrapper layer that adds no meaningful boundary, validation, or responsibility may only make code harder to read. Introduce a delegate when there is a genuine division of work.
 
-**Ghi nhớ:** Ủy quyền là quyết định **chuyển đúng một phần công việc tới đối tượng biết làm công việc đó**. Đối tượng điều phối giữ trách nhiệm đối với luồng và kết quả, collaborator thực hiện bước chuyên môn. Thiết kế tốt cần hợp đồng rõ, kết quả có nghĩa, đường lỗi và vòng đời được kiểm soát; không chỉ đơn giản gọi thêm một method trên field.
+**Key takeaway:** Delegation means **assigning the right portion of work to an object equipped to perform it**. The coordinating object remains responsible for the flow and outcome; collaborators carry out specialized steps. A sound design needs clear contracts, meaningful results, controlled failure paths, and managed lifecycles—not merely another method call on a field.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="composition-004">Tái sử dụng bằng kết hợp và bằng kế thừa</a>
+## <a id="composition-004">Reusing Behavior Through Composition and Inheritance</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tái sử dụng bằng kết hợp và bằng kế thừa trong Java OOP
+# Reusing Behavior Through Composition and Inheritance in Java OOP
 
-Trong một ứng dụng Java, nhiều chức năng có thể dùng chung mã nguồn: cùng định dạng báo cáo, gửi thông báo, kiểm tra dữ liệu, ghi log hoặc lưu kết quả. Có hai hướng OOP thường gặp để tái sử dụng:
+In a Java application, many features can share code for formatting reports, sending notifications, validating data, logging, or storing results. Two common OOP approaches to reuse are:
 
-- **Kế thừa (inheritance):** tạo một *lớp con* dựa trên *lớp cha*, dùng lại phần hành vi/trạng thái được kế thừa và có thể ghi đè những điểm được phép mở rộng. Quan hệ cần có ý nghĩa **is-a**: “đối tượng con là một loại đối tượng cha”.
-- **Kết hợp (composition):** một đối tượng **có hoặc sử dụng** các đối tượng khác để làm việc và **ủy quyền (delegation)** một phần hành vi cho chúng. Quan hệ thường được diễn đạt **has-a / uses-a**. Tái sử dụng đến từ việc lắp ghép những thành phần có trách nhiệm rõ ràng, không bắt buộc các thành phần cùng cây kế thừa.
+- **Inheritance:** Create a *subclass* based on a *superclass*, reuse inherited behavior/state, and potentially override designed extension points. The relationship must represent a meaningful **is-a**: "the child object is a kind of parent object."
+- **Composition:** An object **has or uses** other objects to perform work and **delegates** part of its behavior to them. The relationship is often described as **has-a / uses-a**. Reuse comes from assembling components with clear responsibilities, without requiring them to share an inheritance hierarchy.
 
-Câu hỏi quan trọng không phải “cách nào ít dòng code hơn”, mà là: **quan hệ giữa các đối tượng có đúng về mặt nghiệp vụ không, phần nào cần thay đổi độc lập, và code sử dụng sẽ chịu ảnh hưởng gì khi yêu cầu phát triển?**
+The important question is not "which approach uses fewer lines of code?" but **whether the relationships make sense in the business domain, which parts must vary independently, and how evolving requirements will affect callers**.
 
-## 1. Nhìn từ ví dụ đời thường: is-a và has-a
+## 1. Everyday Example: Is-a and Has-a
 
-Một `ElectricCar` là một loại `Car`. Nếu tất cả những hành vi mà `Car` cam kết đều có nghĩa với `ElectricCar`, quan hệ kế thừa có thể phù hợp:
+An `ElectricCar` is a kind of `Car`. If all behavior promised by `Car` remains meaningful for `ElectricCar`, inheritance may fit:
 
 ~~~java
 class Car {
@@ -1868,9 +1868,9 @@ class ElectricCar extends Car {
 }
 ~~~
 
-Nhưng một chiếc xe **có pin**; xe **không phải là pin**. Viết `class ElectricCar extends Battery` chỉ để dùng phương thức `charge` là sai về mô hình.
+However, a car **has a battery**; it **is not a battery**. Writing `class ElectricCar extends Battery` just to reuse `charge` would misrepresent the model.
 
-Cách kết hợp đúng hơn:
+A more accurate composition:
 
 ~~~java
 class Battery {
@@ -1892,33 +1892,33 @@ class ElectricCar {
 }
 ~~~
 
-Ở đây `ElectricCar` có một `Battery`. Việc dùng `battery.charge()` là **delegation**, một kỹ thuật rất phổ biến khi tái sử dụng bằng kết hợp.
+Here, `ElectricCar` has a `Battery`. Calling `battery.charge()` is **delegation**, a common technique for reuse through composition.
 
-| Câu hỏi | Kế thừa | Kết hợp |
+| Question | Inheritance | Composition |
 | --- | --- | --- |
-| Quan hệ cốt lõi | “A **là một loại** B” | “A **có/dùng** B” |
-| Java thường viết | `class A extends B` | Field tham chiếu `B b`, gọi `b.doWork()` |
-| Nguồn hành vi được dùng lại | Phương thức/trạng thái được kế thừa | Phương thức của đối tượng cộng tác |
-| Có cần chung superclass? | Có quan hệ lớp cha–lớp con | Không |
-| Thay đổi hành vi | Override các điểm mở rộng đã thiết kế | Thay đối tượng cộng tác hoặc cấu hình |
-| Mức độ ràng buộc | Lớp con gắn với hợp đồng và một phần chi tiết lớp cha | Bên sử dụng có thể chỉ phụ thuộc interface của thành phần |
-| Rủi ro điển hình | Quan hệ is-a giả tạo, lớp cha dễ ảnh hưởng lớp con | Quá nhiều đối tượng trung gian hoặc ủy quyền vô nghĩa |
+| Core relationship | "A **is a kind of** B" | "A **has/uses** B" |
+| Typical Java code | `class A extends B` | Reference field `B b`, call `b.doWork()` |
+| Source of reused behavior | Inherited methods/state | Methods of collaborating objects |
+| Shared superclass required? | A parent–child class relationship | No |
+| Changing behavior | Override designed extension points | Replace collaborators or configuration |
+| Degree of coupling | A subclass depends on the superclass contract and some implementation details | The caller may depend only on component interfaces |
+| Typical risks | Artificial is-a relationships and superclass changes affecting subclasses | Too many intermediary objects or meaningless delegation |
 
-**Lưu ý thuật ngữ:** trong lập trình, “ưu tiên composition” đôi khi được dùng rộng để chỉ *thiết kế ghép các đối tượng qua field và delegation*. Trong UML chặt chẽ, **composition** với hình thoi đặc còn thể hiện quan hệ sở hữu vòng đời mạnh (*whole–part*). Một dependency được **truyền từ ngoài vào constructor** có thể là association/aggregation thay vì composition sở hữu vòng đời theo nghĩa UML. Bài này sử dụng “kết hợp” theo nghĩa thiết kế OOP rộng, và sẽ không gán hình thoi đặc cho mọi tham chiếu đối tượng.
+**Terminology note:** In programming, "favor composition" is sometimes used broadly for *assembling objects through fields and delegation*. In strict UML, **composition** with a filled diamond also expresses strong *whole–part* lifecycle ownership. A dependency **injected from outside through a constructor** may be an association/aggregation rather than lifecycle-owning UML composition. This lesson uses "composition" in the broader OOP design sense and will not assign a filled diamond to every object reference.
 
-## 2. Tình huống: xuất và phân phối báo cáo
+## 2. Scenario: Generating and Distributing Reports
 
-Giả sử hệ thống cần:
+Suppose a system needs to:
 
-1. Tạo nội dung báo cáo doanh thu.
-2. Định dạng báo cáo thành **văn bản thuần** hoặc **Markdown**.
-3. Xuất báo cáo ra **console** hoặc **kho lưu trữ trong bộ nhớ**.
+1. Generate sales-report content.
+2. Format the report as **plain text** or **Markdown**.
+3. Output the report to the **console** or an **in-memory archive**.
 
-Có hai cách tái sử dụng hợp lý nhưng giải quyết các mức độ thay đổi khác nhau.
+Two reasonable reuse approaches address different kinds of change.
 
-### Cách A: kế thừa để chia sẻ khung tạo báo cáo
+### Approach A: Inheritance to Share a Report Template
 
-Một `AbstractReport` chứa tiêu đề và khung `render()`. Từng lớp báo cáo cụ thể chỉ viết phần thân:
+An `AbstractReport` contains the title and the `render()` template. Each concrete report class provides only the body:
 
 ~~~java
 abstract class AbstractReport {
@@ -1947,18 +1947,18 @@ class SalesReport extends AbstractReport {
 }
 ~~~
 
-`SalesReport extends AbstractReport` hợp lý vì **báo cáo bán hàng là một loại báo cáo**. Phần khung kết xuất được tái sử dụng. `render()` là `final` để lớp con không tự bỏ qua khung chung; điểm mở rộng có chủ đích là `buildBody()`.
+`SalesReport extends AbstractReport` makes sense because **a sales report is a kind of report**. The rendering template is reused. `render()` is `final` so subclasses cannot bypass the shared template; `buildBody()` is the intended extension point.
 
-Hạn chế xuất hiện nếu mỗi lớp con lại phải quyết định **cả loại nội dung, cách định dạng và kênh xuất**. Một cây lớp `SalesMarkdownConsoleReport`, `SalesPlainTextConsoleReport`, `SalesMarkdownArchiveReport`... dễ phình to khi những lựa chọn này thay đổi độc lập.
+Problems arise when each subclass must determine **the content type, format, and output destination**. A hierarchy containing `SalesMarkdownConsoleReport`, `SalesPlainTextConsoleReport`, `SalesMarkdownArchiveReport`, and so on can grow rapidly when these options vary independently.
 
-### Cách B: kết hợp để lắp ghép những trách nhiệm độc lập
+### Approach B: Composition to Assemble Independent Responsibilities
 
-Tách ba vai trò:
+Separate these roles:
 
-- `ReportData`: dữ liệu báo cáo cần trình bày.
-- `Formatter`: biến báo cáo thành chuỗi hiển thị.
-- `Destination`: nhận chuỗi và đưa tới nơi cần xuất.
-- `ReportPublisher`: **sở hữu quy trình phối hợp**, gọi các thành phần đúng thứ tự.
+- `ReportData`: The report data to present.
+- `Formatter`: Converts the report into a displayable string.
+- `Destination`: Receives the string and delivers it to the output target.
+- `ReportPublisher`: **Owns the coordination workflow** and calls components in the correct order.
 
 ~~~mermaid
 flowchart LR
@@ -1967,11 +1967,11 @@ flowchart LR
     P --> D["Destination\nConsole hoặc Archive"]
 ~~~
 
-`ReportPublisher` không phải **một loại** formatter, cũng không phải **một loại** destination. Nó **sử dụng** cả hai để hoàn thành mục tiêu. Đây là ví dụ tự nhiên của kết hợp.
+`ReportPublisher` is **neither a kind of** formatter **nor a kind of** destination. It **uses** both to achieve its goal. This is a natural example of composition.
 
-## 3. Mã Java hoàn chỉnh: so sánh hai cách trong cùng chương trình
+## 3. Complete Java Code: Comparing Both Approaches in One Program
 
-Lưu thành **`ReuseComparisonDemo.java`**, chạy với Java **11 trở lên**, không cần thư viện bên ngoài.
+Save as **`ReuseComparisonDemo.java`** and run with **Java 11 or later**; no external libraries are needed.
 
 ~~~java
 import java.math.BigDecimal;
@@ -2143,14 +2143,14 @@ public class ReuseComparisonDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac ReuseComparisonDemo.java
 java ReuseComparisonDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 KẾ THỪA:
@@ -2166,20 +2166,20 @@ Doanh thu tháng
 Tổng doanh thu: 1500000 VND
 ~~~
 
-Trong ví dụ này, `MemoryArchive` **chỉ lưu trong RAM**; không phải lưu trữ bền vững. `ConsoleDestination` chỉ in ra console; chưa gửi mạng hay tạo file. Chúng đủ để làm rõ **phần mã nào được dùng lại** mà không đưa vào các phụ thuộc ngoài bài học.
+In this example, `MemoryArchive` **stores data only in RAM**, not durably. `ConsoleDestination` only prints to the console; it does not send data over a network or create files. These implementations clarify **which code is reused** without adding unrelated dependencies.
 
-### Chính xác thì mã được tái sử dụng ở đâu?
+### Exactly Where Is Code Reused?
 
-**Phương án kế thừa:**
+**Inheritance approach:**
 
 ~~~java
 AbstractReport report = new SalesReport(...);
 String output = report.render();
 ~~~
 
-`SalesReport` **kế thừa** implementation `render()` từ `AbstractReport`. Nó chỉ override `buildBody()`, và lời gọi từ `render()` được dispatch tới subclass đang chạy.
+`SalesReport` **inherits** the `render()` implementation from `AbstractReport`. It only overrides `buildBody()`, and the call from `render()` dispatches to the actual subclass implementation.
 
-**Phương án kết hợp:**
+**Composition approach:**
 
 ~~~java
 ReportPublisher publisher =
@@ -2188,9 +2188,9 @@ ReportPublisher publisher =
 publisher.publish(reportData);
 ~~~
 
-`ReportPublisher` **không kế thừa** `MarkdownFormatter` hoặc `ConsoleDestination`. Nó giữ **tham chiếu** tới các đối tượng cộng tác. Code trong `publish()` được tái sử dụng cho mọi cặp formatter/destination tuân thủ hai interface.
+`ReportPublisher` **does not inherit from** `MarkdownFormatter` or `ConsoleDestination`. It holds **references** to collaborating objects. The code in `publish()` is reused for any formatter/destination pair satisfying the two interfaces.
 
-Đổi mục tiêu sử dụng mà không sửa `ReportPublisher`:
+Switch the use case without changing `ReportPublisher`:
 
 ~~~java
 new ReportPublisher(
@@ -2200,11 +2200,11 @@ new ReportPublisher(
         new MarkdownFormatter(), new MemoryArchive());
 ~~~
 
-`ReportPublisher` chạy cùng thuật toán “định dạng rồi xuất”, còn những phần phụ trách chi tiết có thể được thay độc lập.
+`ReportPublisher` executes the same "format, then deliver" algorithm while the components responsible for details can be replaced independently.
 
-## 4. Sơ đồ UML: nhìn rõ loại quan hệ
+## 4. UML Diagrams: Making Relationship Types Clear
 
-### Kế thừa: quan hệ giữa các kiểu
+### Inheritance: Relationships Between Types
 
 ~~~mermaid
 classDiagram
@@ -2221,9 +2221,9 @@ classDiagram
     AbstractReport <|-- SalesReport
 ~~~
 
-Tam giác rỗng hướng tới lớp cha biểu thị **`extends`**. Lớp con trở thành một kiểu con của lớp cha; `AbstractReport report = new SalesReport(...)` là phép gán an toàn.
+A hollow triangle pointing toward the superclass represents **`extends`**. The subclass becomes a subtype; `AbstractReport report = new SalesReport(...)` is a valid assignment.
 
-### Kết hợp: quan hệ sử dụng các đối tượng cộng tác
+### Composition: Relationships with Collaborating Objects
 
 ~~~mermaid
 classDiagram
@@ -2252,66 +2252,66 @@ classDiagram
     Destination <|.. MemoryArchive
 ~~~
 
-`ReportPublisher` không phải subtype của `Formatter` hoặc `Destination`. Vì các đối tượng được **truyền vào từ bên ngoài** và có thể được chia sẻ, sơ đồ dùng quan hệ tham chiếu/dependency, **không tự giả định** vòng đời thành phần hoàn toàn thuộc về `ReportPublisher`.
+`ReportPublisher` is not a subtype of `Formatter` or `Destination`. Because these objects are **supplied externally** and may be shared, the diagram uses reference/dependency relationships and **does not assume** their entire lifecycles belong to `ReportPublisher`.
 
-Nếu `ReportPublisher` thật sự tạo và sở hữu một thành phần riêng, quản lý vòng đời của nó theo quy tắc “whole–part”, có thể cân nhắc dùng quan hệ composition mạnh hơn ở mức mô hình UML. Việc một class có field tham chiếu **chưa đủ** để kết luận quan hệ vòng đời đó.
+If `ReportPublisher` actually creates and owns a dedicated component and manages its lifecycle according to *whole–part* rules, stronger UML composition may be appropriate. A class having a reference field **is not enough** to establish that lifecycle relationship.
 
-## 5. Khác biệt quan trọng: dùng lại implementation hay lắp ghép hành vi
+## 5. Key Difference: Reusing Implementations or Assembling Behavior
 
-**Kế thừa để dùng lại implementation** có lợi khi các loại đối tượng thực sự cùng bản chất và chia sẻ được một cách triển khai ổn định.
+**Inheritance for implementation reuse** is valuable when object types genuinely share a nature and a stable implementation.
 
-Trong ví dụ, mọi `AbstractReport` đều có tiêu đề và hành vi `render()`. Nếu cần thêm kiểm tra chung ở `render()`, lớp cha có thể thay đổi một chỗ cho các subclass.
+In the example, every `AbstractReport` has a title and `render()` behavior. If shared validation must be added to `render()`, the superclass can change once for all subclasses.
 
-Nhưng sự phụ thuộc cũng sâu hơn:
+But the coupling is also deeper:
 
-- Subclass phải tuân theo cấu trúc và hợp đồng của superclass.
-- Khi lớp cha thay đổi protected API hoặc giả định nội bộ, các lớp con có thể bị ảnh hưởng.
-- Java không cho một class `extends` nhiều class trực tiếp, nên không thể kế thừa độc lập nhiều “nhánh chức năng” qua nhiều superclass.
-- Việc subclass override một hook có thể phá invariant hoặc tiền/hậu điều kiện mà superclass kỳ vọng.
+- Subclasses must follow the superclass's structure and contract.
+- Changes to the superclass's protected API or internal assumptions may affect subclasses.
+- Java does not allow a class to `extends` multiple classes directly, so separate functionality cannot be inherited independently from multiple superclasses.
+- A subclass overriding a hook may violate invariants or preconditions/postconditions expected by the superclass.
 
-**Kết hợp để dùng lại hành vi** phù hợp khi các khả năng có thể thay độc lập.
+**Composition for behavior reuse** is suitable when capabilities can vary independently.
 
-Ví dụ, phần định dạng và nơi lưu trữ **không phải cùng một loại** và thay đổi ở hai chiều khác nhau:
+For example, formatting and storage **are not the same kind of thing** and vary along two distinct dimensions:
 
 | | ConsoleDestination | MemoryArchive |
 | --- | --- | --- |
-| PlainTextFormatter | Văn bản thuần ra console | Văn bản thuần vào archive |
-| MarkdownFormatter | Markdown ra console | Markdown vào archive |
+| PlainTextFormatter | Plain text to console | Plain text to archive |
+| MarkdownFormatter | Markdown to console | Markdown to archive |
 
-Ta chỉ cần **hai formatter, hai destination và một publisher** để lắp bốn kết hợp. Nếu ép “format + destination” vào mỗi subclass cụ thể, số biến thể lớp có thể tăng nhanh khi bổ sung lựa chọn mới.
+We need only **two formatters, two destinations, and one publisher** for four combinations. If every concrete subclass combines a format and destination, the number of classes can grow rapidly as options are added.
 
-Tuy nhiên, **không phải cứ kết hợp là ít lớp hơn**. Nó có thể tạo nhiều interface/adapter và các lời gọi ủy quyền. Lợi ích là tách đúng **những chiều thay đổi độc lập** để tránh gắn chúng vào một cây kế thừa cứng nhắc.
+However, **composition does not always use fewer classes**. It may introduce interfaces, adapters, and delegated calls. Its benefit is separating **independent dimensions of change** instead of tying them to a rigid inheritance hierarchy.
 
-## 6. “Composition over inheritance” có phải lúc nào cũng đúng?
+## 6. Is "Composition over Inheritance" Always Right?
 
-Câu “**ưu tiên kết hợp hơn kế thừa**” là một **nguyên tắc định hướng thiết kế**, không phải lệnh cấm `extends`.
+The advice "**favor composition over inheritance**" is a **design guideline**, not a ban on `extends`.
 
-Nên cân nhắc **kế thừa** khi:
+Consider **inheritance** when:
 
-- Quan hệ *is-a* thực sự đúng: `SalesReport` là một `AbstractReport`.
-- Lớp cha cung cấp một hợp đồng nhất quán và các điểm mở rộng được thiết kế rõ.
-- Có phần hành vi/trạng thái chung **ổn định** và được chuyên biệt hóa hợp lệ.
-- Một object lớp con có thể **thay thế** object lớp cha trong mọi tình huống phù hợp mà không gây ngạc nhiên về hành vi.
+- There is a genuine *is-a* relationship: `SalesReport` is an `AbstractReport`.
+- The superclass provides a consistent contract with well-defined extension points.
+- Shared behavior/state is **stable** and can be specialized without violating the contract.
+- A subclass object can **substitute for** a superclass object in every relevant situation without surprising behavior.
 
-Nên cân nhắc **kết hợp** khi:
+Consider **composition** when:
 
-- Các khả năng cần phối hợp nhưng không phải “một loại của nhau”.
-- Có nhiều chiều thay đổi độc lập: định dạng, nguồn dữ liệu, nơi xuất, cách retry.
-- Cần dễ thay thành phần, dễ test bằng fake, dễ inject phụ thuộc.
-- Muốn tránh subclass phải biết quá nhiều chi tiết protected/internal của superclass.
-- Một nhu cầu chỉ là **dùng chức năng** từ đối tượng khác, không có quan hệ is-a hợp lý.
+- Capabilities must cooperate but are not kinds of one another.
+- Several independent dimensions vary: formatting, data source, output destination, retry policy.
+- Components need to be replaceable, easily tested with fakes, or injected.
+- Subclasses should not depend on too many protected/internal superclass details.
+- The requirement is merely to **use another object's functionality**, without a meaningful is-a relationship.
 
-Một câu tự kiểm tra rất hiệu quả:
+A useful self-check question:
 
-> **“Nếu xóa mọi dòng code trùng nhau, liệu A vẫn thực sự là một loại B không?”**
+> **"If we removed every duplicated line of code, would A still truly be a kind of B?"**
 
-Nếu câu trả lời là không, chỉ có ý định tái sử dụng vài phương thức, **kết hợp/ủy quyền** thường phù hợp hơn kế thừa.
+If the answer is no and the goal is simply to reuse a few methods, **composition/delegation** is usually a better fit than inheritance.
 
-## 7. Quan hệ is-a và nguyên tắc thay thế Liskov
+## 7. Is-a Relationships and the Liskov Substitution Principle
 
-Một lớp con không được phép chỉ “trông giống” lớp cha về mặt cú pháp. Nó phải giữ những cam kết mà phần mã sử dụng lớp cha dựa vào.
+A subclass must do more than syntactically "look like" its superclass. It must honor the promises on which superclass clients depend.
 
-Ví dụ thiết kế có vấn đề:
+Example of a problematic design:
 
 ~~~java
 class Bird {
@@ -2328,9 +2328,9 @@ class Penguin extends Bird {
 }
 ~~~
 
-Một hàm nhận `Bird` và tin rằng `fly()` thực hiện được sẽ gặp lỗi với `Penguin`. Quan hệ danh từ “chim cánh cụt là chim” đúng, nhưng **hợp đồng lớp Bird ở đây sai với các loại chim không bay**.
+A function accepting `Bird` and expecting `fly()` to work fails when given a `Penguin`. The category "a penguin is a bird" is valid, but **this Bird class contract is wrong for flightless birds**.
 
-Thiết kế tốt hơn:
+A better design:
 
 ~~~java
 interface Flyable {
@@ -2361,20 +2361,20 @@ class Penguin extends Bird {
 }
 ~~~
 
-Tách **bản chất chung** và **năng lực tùy chọn** giúp tránh biến một phương thức thành lỗi runtime trong subtype. Đây là tinh thần của **Liskov Substitution Principle (LSP)**: code dùng lớp cha không bị phá vỡ kỳ vọng hợp lệ khi nhận đối tượng lớp con.
+Separating **shared identity** from **optional capabilities** avoids turning a method into a runtime error in a subtype. This reflects the **Liskov Substitution Principle (LSP)**: code that uses a superclass should not have valid expectations broken by a subclass.
 
-Đối với thiết kế kết hợp, LSP cũng có ý nghĩa: một `Destination` thay thế khác phải đáp ứng hợp đồng `deliver(...)` đã được client kỳ vọng, chẳng hạn không tự ý sửa báo cáo hay nói thành công khi chưa thực hiện nếu hợp đồng cấm.
+LSP also matters in composition: a replacement `Destination` must honor the `deliver(...)` contract expected by clients, such as not arbitrarily changing reports or claiming success prematurely if the contract forbids it.
 
-## 8. Đổi hành vi tại lúc chạy bằng kết hợp
+## 8. Changing Behavior at Runtime with Composition
 
-Ví dụ ban đầu dùng **constructor injection**: `ReportPublisher` nhận phụ thuộc từ bên ngoài:
+The original example uses **constructor injection**: `ReportPublisher` receives dependencies from outside:
 
 ~~~java
 ReportPublisher publisher =
         new ReportPublisher(formatter, destination);
 ~~~
 
-Việc khởi tạo các instance khác nhau giúp chọn tổ hợp tại runtime:
+Creating different instances lets us select configurations at runtime:
 
 ~~~java
 Formatter formatter =
@@ -2387,34 +2387,34 @@ ReportPublisher publisher =
         new ReportPublisher(formatter, destination);
 ~~~
 
-Ở đây các biến `useMarkdown` và `keepArchive` chỉ là cấu hình lựa chọn. Thuật toán **`ReportPublisher.publish` không thay đổi**.
+Here, `useMarkdown` and `keepArchive` are configuration choices. The **`ReportPublisher.publish` algorithm remains unchanged**.
 
-Một cách khác là dùng setter để thay strategy của một publisher đang tồn tại, nhưng phải cân nhắc đồng thời, vòng đời và invariant. Với ví dụ, field `final` và constructor injection giúp mỗi `ReportPublisher` có bộ phụ thuộc rõ ràng, **không bị thay tham chiếu sau khởi tạo**.
+Another option is a setter that replaces the strategy on an existing publisher, but concurrency, lifecycle, and invariant concerns must be considered. Here, `final` fields and constructor injection give each `ReportPublisher` a clearly defined set of dependencies **whose references cannot be replaced after construction**.
 
-**Quan trọng:** `final Formatter formatter` chỉ ngăn gán lại field, không bảo đảm object formatter tự bất biến hoặc thread-safe. Nếu các thành phần giữ trạng thái mutable và được chia sẻ giữa nhiều thread, cần thiết kế đồng bộ/thực thi phù hợp.
+**Important:** `final Formatter formatter` prevents only field reassignment; it does not guarantee that the formatter object is immutable or thread-safe. If components hold mutable state and are shared across threads, appropriate synchronization/execution design is required.
 
-### Kết hợp và dependency inversion
+### Composition and Dependency Inversion
 
-`ReportPublisher` phụ thuộc vào **`Formatter` và `Destination` là abstraction**, chứ không phụ thuộc trực tiếp `MarkdownFormatter` hoặc `MemoryArchive`. Đây là một cách áp dụng Dependency Inversion: logic cấp cao không gắn với một cách triển khai cụ thể.
+`ReportPublisher` depends on the **`Formatter` and `Destination` abstractions** rather than directly on `MarkdownFormatter` or `MemoryArchive`. This applies Dependency Inversion: higher-level logic is not tied to a specific implementation.
 
-Tuy nhiên, **composition không bắt buộc phải có interface**. Nếu một thành phần chỉ có một cách dùng và không cần thay thế, field kiểu class cụ thể cũng có thể là thiết kế hợp lý. Không nên sinh hàng loạt interface khi chúng chưa giải quyết một yêu cầu rõ ràng.
+However, **composition does not require interfaces**. If a component has only one use and does not need substitution, a concrete class field may be reasonable. Avoid creating many interfaces before they solve a clear requirement.
 
-## 9. Tái sử dụng qua kết hợp và Strategy/Decorator
+## 9. Reuse Through Composition, Strategy, and Decorator
 
-Hai mô hình hay gặp khi kết hợp đối tượng:
+Two patterns commonly used with object composition:
 
-### Strategy: thay thuật toán
+### Strategy: Switching Algorithms
 
-Ví dụ `Formatter` ở trên là một **hợp đồng chiến lược**. `PlainTextFormatter` và `MarkdownFormatter` là các thuật toán định dạng khác nhau. `ReportPublisher` có thể sử dụng bất kỳ implementation phù hợp nào.
+The `Formatter` interface above defines a **strategy contract**. `PlainTextFormatter` and `MarkdownFormatter` are different formatting algorithms. `ReportPublisher` can use either compatible implementation.
 
 ~~~java
 Formatter formatter = new MarkdownFormatter();
 String content = formatter.format(reportData);
 ~~~
 
-### Decorator: bọc thêm hành vi
+### Decorator: Wrapping Additional Behavior
 
-Giả sử mọi destination đều cần ghi log trước khi xuất. Thay vì kế thừa từng destination, có thể **bọc** một destination:
+Suppose every destination must log before delivery. Instead of subclassing each destination, we can **wrap** one:
 
 ~~~java
 class LoggingDestination implements Destination {
@@ -2439,15 +2439,15 @@ Destination wrapped =
 new ReportPublisher(new MarkdownFormatter(), wrapped).publish(reportData);
 ~~~
 
-`LoggingDestination` **implements cùng interface** nhưng tái sử dụng hành vi bằng cách **ủy quyền** cho `target`. Nó có thể được lắp quanh một destination khác, không cần các lớp con kiểu `LoggedConsoleDestination`, `LoggedMemoryArchive`, v.v.
+`LoggingDestination` **implements the same interface** but reuses behavior by **delegating** to `target`. It can wrap another destination without subclasses such as `LoggedConsoleDestination`, `LoggedMemoryArchive`, and so on.
 
-**Lưu ý:** đoạn bọc log chạy trước bước `deliver`, nhưng không chứng minh bước xuất chắc chắn thành công. Đối với yêu cầu audit thực tế, phải xác định rõ thời điểm log, lỗi và nghĩa vụ lưu vết.
+**Note:** The logging wrapper runs before `deliver`, but this does not prove delivery succeeded. For real audit requirements, define logging timing, failures, and record-keeping obligations explicitly.
 
-## 10. Kiểm thử khi tái sử dụng bằng kết hợp
+## 10. Testing Reuse Through Composition
 
-Một điểm mạnh của kết hợp là **có thể thay đối tượng phụ thuộc bằng fake**. Ta kiểm tra riêng `ReportPublisher` mà không ghi file hay gọi hệ thống ngoài.
+One strength of composition is **the ability to replace a dependency with a fake**. We can test `ReportPublisher` in isolation without writing files or calling external systems.
 
-Ví dụ JUnit 5 (cần dependency JUnit Jupiter; file demo chính không cần JUnit):
+JUnit 5 example (requires the JUnit Jupiter dependency; the main demo does not require JUnit):
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -2489,15 +2489,15 @@ class ReportPublisherTest {
 }
 ~~~
 
-`Formatter` và `Destination` đều là **functional interface** (một phương thức trừu tượng), nên có thể dùng lambda làm fake; đây là lợi ích của cách phụ thuộc vào abstraction.
+`Formatter` and `Destination` are both **functional interfaces** (one abstract method each), so lambdas can act as fakes. This is an advantage of depending on abstractions.
 
-Khi dùng kế thừa, vẫn hoàn toàn có thể test được subclass, nhưng nhiều hành vi kiểm thử có thể phụ thuộc vào quy trình được kế thừa hoặc các protected hook. Nếu lớp cha có trạng thái phức tạp, việc dựng fixture và kiểm chứng hiệu ứng phụ đôi khi khó hơn so với lắp ráp những thành phần nhỏ độc lập.
+Subclasses can certainly be tested when using inheritance, but tests may depend on inherited workflows or protected hooks. If the superclass holds complex state, setting up fixtures and verifying side effects can be harder than assembling small independent components.
 
-## 11. Chú ý về vòng đời, trạng thái và ngoại lệ
+## 11. Lifecycles, State, and Exceptions
 
-Tái sử dụng mã nguồn **không tự bảo đảm** cập nhật trạng thái đúng hoặc xử lý lỗi đúng.
+Code reuse **does not automatically guarantee** correct state updates or error handling.
 
-### Thành phần mutable có thể được chia sẻ
+### Mutable Components Can Be Shared
 
 ~~~java
 MemoryArchive shared = new MemoryArchive();
@@ -2509,36 +2509,36 @@ ReportPublisher b = new ReportPublisher(
         new PlainTextFormatter(), shared);
 ~~~
 
-Hai publisher **cùng tham chiếu một `MemoryArchive`**. Khi mỗi bên `publish`, cả hai báo cáo đi vào **cùng danh sách `stored`** của archive. Nếu muốn kho riêng, hãy truyền hai instance `MemoryArchive` khác nhau.
+Both publishers **reference the same `MemoryArchive`**. When each calls `publish`, both reports go into **the same `stored` list** in the archive. To maintain separate archives, supply two distinct `MemoryArchive` instances.
 
-### Ngoại lệ không tự hoàn tác
+### Exceptions Do Not Roll Back Changes Automatically
 
-Trong `ReportPublisher.publish`, formatter chạy trước destination:
+In `ReportPublisher.publish`, the formatter runs before the destination:
 
 ~~~java
 String text = formatter.format(report);
 destination.deliver(text);
 ~~~
 
-Nếu formatter ném ngoại lệ, destination không được gọi. Nếu destination ghi một phần rồi ném ngoại lệ, không có gì trong composition tự động rollback thao tác đã ghi. Với file, database, queue hay mạng cần quy tắc transaction/retry/idempotency phù hợp.
+If the formatter throws, the destination is not called. If the destination writes partially and then throws, composition does not automatically roll back the write. Files, databases, queues, and networks require appropriate transaction, retry, and idempotency rules.
 
-### An toàn luồng không đến từ `final` hoặc `private`
+### Thread Safety Does Not Come from `final` or `private`
 
-`MemoryArchive` sử dụng `ArrayList`, **không thread-safe** khi bị nhiều thread cập nhật đồng thời. `ReportPublisher` giữ hai field `final` nhưng điều đó không làm các thành phần mutable mà chúng tham chiếu tự an toàn luồng. Hệ thống đa luồng cần đồng bộ hoặc chuyển sang cấu trúc/kiến trúc phù hợp.
+`MemoryArchive` uses `ArrayList`, which is **not thread-safe** when concurrently updated by multiple threads. `ReportPublisher` holds two `final` fields, but that does not make the referenced mutable components thread-safe. Multithreaded systems need synchronization or an appropriate data structure/architecture.
 
-Những vấn đề này có thể xuất hiện cả với kế thừa lẫn kết hợp; đừng nhầm quyết định tái sử dụng code với bảo đảm về vòng đời, dữ liệu và concurrency.
+These issues can arise with either inheritance or composition; do not confuse a code-reuse decision with guarantees about lifecycles, data, or concurrency.
 
-## 12. Khi kế thừa vẫn tốt hơn nhiều lớp ủy quyền
+## 12. When Inheritance Is Better Than Many Delegation Layers
 
-Dùng kết hợp “mọi nơi, mọi lúc” có thể tạo một hệ thống quá phức tạp: mỗi thao tác phải đi qua vài lớp wrapper không thêm ý nghĩa, mỗi hợp đồng chỉ có một implementation và không có chiều thay đổi độc lập.
+Using composition "everywhere, all the time" can produce an overly complex system: operations pass through several meaningless wrappers, every contract has just one implementation, and nothing varies independently.
 
-Trong ví dụ kế thừa, `SalesReport` thực sự là một báo cáo và chia sẻ khung `render()` ổn định với các report khác. Nếu yêu cầu chỉ có **chuyên biệt hóa phần thân báo cáo**, không có formatter/destination thay đổi độc lập, `AbstractReport` là một abstraction có thể rất hợp lý.
+In the inheritance example, `SalesReport` truly is a report and shares a stable `render()` template with other reports. If the only requirement is **specializing the report body**, with no independently varying formatter/destination, `AbstractReport` may be an excellent abstraction.
 
-Ngược lại, nếu ngày mai cần xuất nội dung **của mọi loại báo cáo** qua PDF, email, console hoặc lưu kho, gắn logic xuất vào từng subclass khiến sự mở rộng khó hơn. Tách `Formatter` và `Destination` là hợp lý khi chúng thành các chiều biến thể riêng.
+Conversely, if tomorrow the system must output **every type of report** as PDF, email, console output, or archived content, embedding output logic in each subclass makes extension harder. Separating `Formatter` and `Destination` makes sense once they become independent dimensions of variation.
 
-Có thể **kết hợp cả hai cách**: một `SalesReport extends AbstractReport` để sinh nội dung, rồi đưa nội dung đó tới một `ReportPublisher` được lắp ghép formatter và destination. “Ưu tiên composition” không phải chọn một và vứt bỏ hoàn toàn cách còn lại.
+You can **combine both approaches**: use `SalesReport extends AbstractReport` to generate content, then pass it to a `ReportPublisher` assembled with a formatter and destination. "Favor composition" does not mean choosing one approach and discarding the other entirely.
 
-## 13. Quy trình lựa chọn trong dự án
+## 13. Choosing an Approach in a Project
 
 ~~~mermaid
 flowchart TD
@@ -2552,99 +2552,99 @@ flowchart TD
     C --> H["Định nghĩa interface khi hữu ích,<br/>inject và test thành phần"]
 ~~~
 
-Các câu hỏi thực hành:
+Practical questions:
 
-1. **Is-a hay has-a?** “Bộ xuất báo cáo có một formatter” tự nhiên hơn “bộ xuất báo cáo là một formatter”.
-2. **Phần nào có lý do thay đổi riêng?** Formatter có thể thay độc lập với destination.
-3. **Code sử dụng cần biết bao nhiêu?** `ReportPublisher` chỉ cần `Formatter` và `Destination`.
-4. **Có ràng buộc vòng đời không?** Thành phần được tạo sở hữu riêng hay truyền vào để có thể chia sẻ?
-5. **Có cần thay thế hoặc fake khi test?** Đưa hành vi thay đổi vào interface khi việc này đem lại giá trị.
-6. **Có phá hợp đồng của lớp cha không?** Subclass có phải override rồi ném `UnsupportedOperationException` cho thao tác lẽ ra hợp lệ?
-7. **Chi phí cấu trúc có đáng không?** Một lớp đơn giản không cần bị phân rã thành mười interface nếu không có nhu cầu thật.
+1. **Is-a or has-a?** "A report publisher has a formatter" is more natural than "a report publisher is a formatter."
+2. **Which parts have independent reasons to change?** A formatter can vary independently of a destination.
+3. **How much must callers know?** `ReportPublisher` only needs `Formatter` and `Destination`.
+4. **Are there lifecycle constraints?** Are components privately owned or injected so they can be shared?
+5. **Is substitution or faking needed for tests?** Put variable behavior behind an interface when that provides value.
+6. **Would this violate the superclass contract?** Must the subclass override a normally valid operation to throw `UnsupportedOperationException`?
+7. **Is the structural overhead justified?** A simple class need not become ten interfaces without a real need.
 
-## 14. Lỗi phổ biến
+## 14. Common Mistakes
 
-| Lỗi | Biểu hiện | Hướng xử lý |
+| Mistake | Symptom | Remedy |
 | --- | --- | --- |
-| Kế thừa chỉ để lấy lại vài phương thức | `Car extends Engine` | Đặt `Engine` làm thành phần rồi delegation |
-| Subclass phá cam kết của superclass | Override thao tác bằng lỗi “không hỗ trợ” | Xem lại quan hệ is-a, tách năng lực thành interface |
-| Dùng subclass cho từng cặp lựa chọn | `CsvEmail`, `CsvFile`, `PdfEmail`... | Tách `Formatter` và `Destination` |
-| Kết hợp nhưng phụ thuộc quá cứng | `new EmailClient()` nằm sâu trong `ReportPublisher` | Cân nhắc constructor injection theo vai trò |
-| Mọi lớp đều được bọc qua interface không cần thiết | Nhiều wrapper không thêm hành vi/khả năng thay thế | Giữ thiết kế tối giản có cơ sở |
-| Nhầm có field với sở hữu vòng đời UML | Tự vẽ hình thoi đặc cho dependency được inject | Phân biệt association/aggregation với composition chặt |
-| Đổi component rồi nghĩ toàn bộ trạng thái độc lập | Hai publisher dùng chung một archive | Xác định rõ chia sẻ hay sở hữu instance |
-| Nghĩ composition tự bảo đảm atomic/thread-safe | List mutable bị ghi song song | Thiết kế transaction/đồng bộ riêng |
-| Nhầm hợp đồng kiểu với hợp đồng nghiệp vụ | Hai strategy cùng interface nhưng một bên trả kết quả sai | Viết contract test và điều kiện hậu hợp lệ |
+| Inheriting just to reuse a few methods | `Car extends Engine` | Make `Engine` a component and delegate |
+| A subclass violates its superclass promises | Overrides an operation to throw "unsupported" | Reconsider is-a; move optional capabilities into interfaces |
+| Making subclasses for every option pair | `CsvEmail`, `CsvFile`, `PdfEmail`, etc. | Separate `Formatter` and `Destination` |
+| Composition with overly rigid dependencies | `new EmailClient()` buried inside `ReportPublisher` | Consider role-based constructor injection |
+| Wrapping every class in unnecessary interfaces | Many wrappers with no added behavior or substitution | Keep the design appropriately simple |
+| Confusing a field with UML lifecycle ownership | Drawing filled diamonds for injected dependencies | Distinguish association/aggregation from strict composition |
+| Replacing a component while assuming isolated state | Two publishers share one archive | Define whether an instance is shared or privately owned |
+| Assuming composition guarantees atomicity/thread safety | A mutable list is updated concurrently | Design transactions/synchronization separately |
+| Confusing type contracts with business contracts | Two strategies share an interface but one returns incorrect results | Write contract tests and valid postconditions |
 
-## 15. Bài tập tự kiểm tra
+## 15. Self-Check Exercises
 
-**Câu 1.** `class PaymentService extends EmailClient` chỉ để gọi `sendMail()` có hợp lý không?
+**Question 1.** Does `class PaymentService extends EmailClient` make sense merely to call `sendMail()`?
 
-**Đáp án:** Thường không. `PaymentService` **sử dụng** chức năng gửi email, không phải **một loại EmailClient**. Nên nhận một đối tượng phụ thuộc qua constructor hoặc composition thích hợp.
+**Answer:** Usually not. `PaymentService` **uses** email-sending functionality; it **is not a kind of EmailClient**. It should receive a suitable dependency through its constructor or another composition approach.
 
-**Câu 2.** Một `ReportPublisher` đang dùng `MarkdownFormatter`. Làm sao đổi sang `PlainTextFormatter` mà không sửa nội dung `publish`?
+**Question 2.** A `ReportPublisher` currently uses `MarkdownFormatter`. How can it switch to `PlainTextFormatter` without changing `publish`?
 
-**Đáp án:** Tạo/cấu hình `ReportPublisher` với `new PlainTextFormatter()` qua constructor. `publish` vẫn gọi `formatter.format(report)` theo interface.
+**Answer:** Create/configure `ReportPublisher` with `new PlainTextFormatter()` through the constructor. `publish` still calls `formatter.format(report)` through the interface.
 
-**Câu 3.** `SalesReport extends AbstractReport` có lợi gì?
+**Question 3.** What is the benefit of `SalesReport extends AbstractReport`?
 
-**Đáp án:** `SalesReport` dùng lại việc kiểm tra tiêu đề và khung `render()` của lớp cha; nó chỉ cung cấp `buildBody()`. Điều kiện là quan hệ loại báo cáo và hợp đồng của lớp cha có ý nghĩa.
+**Answer:** `SalesReport` reuses the superclass's title validation and `render()` template; it only provides `buildBody()`. This is appropriate if the report subtype relationship and superclass contract are meaningful.
 
-**Câu 4.** Nếu hai publisher nhận cùng `MemoryArchive`, có bao nhiêu kho lưu trữ được tạo?
+**Question 4.** If two publishers receive the same `MemoryArchive`, how many archives are created?
 
-**Đáp án:** Một `MemoryArchive` được tạo từ lệnh `new` tương ứng rồi được chia sẻ qua hai field tham chiếu; kết hợp không tự sao chép đối tượng. Mỗi publisher có đối tượng riêng nhưng cùng dùng chung archive.
+**Answer:** One `MemoryArchive` is created by the corresponding `new` operation and shared through two reference fields; composition does not clone objects automatically. Each publisher is a separate object, but both share the archive.
 
-**Câu 5.** Vì sao không nên tạo `SalesMarkdownConsoleReport`, `SalesPlainTextArchiveReport` cho mọi tổ hợp?
+**Question 5.** Why avoid creating `SalesMarkdownConsoleReport` and `SalesPlainTextArchiveReport` for every combination?
 
-**Đáp án:** Nội dung báo cáo, định dạng và nơi xuất là các chiều thay đổi độc lập. Kế thừa cho mọi tổ hợp tạo nhiều lớp phụ thuộc lẫn nhau; lắp ghép formatter/destination giúp tái sử dụng độc lập.
+**Answer:** Report content, formatting, and destination are independent dimensions of variation. Inheritance for every combination creates many interdependent classes; assembling formatters and destinations enables independent reuse.
 
-**Câu 6.** `ReportPublisher` giữ field `final Destination destination`. `MemoryArchive` có thread-safe hoặc immutable ngay không?
+**Question 6.** `ReportPublisher` holds a `final Destination destination` field. Does that immediately make `MemoryArchive` thread-safe or immutable?
 
-**Đáp án:** Không. `final` ngăn gán lại tham chiếu của field, không khóa trạng thái bên trong đối tượng `Destination`. Phải thiết kế synchronization/immutable/concurrency riêng khi cần.
+**Answer:** No. `final` prevents reassignment of the field reference; it does not lock the `Destination` object's internal state. Synchronization, immutability, or concurrency controls must be designed separately when needed.
 
-**Câu 7.** Có nên dùng interface cho một lớp duy nhất không bao giờ thay đổi?
+**Question 7.** Should an interface be used for a single class that never changes?
 
-**Đáp án:** Không bắt buộc. Interface hữu ích khi làm rõ hợp đồng độc lập, dễ fake/test hoặc muốn thay implementation. Nếu không có những nhu cầu đó, kiểu class cụ thể có thể đơn giản hơn.
+**Answer:** Not necessarily. Interfaces help define independent contracts, facilitate test fakes, or support implementation substitution. Without these needs, a concrete class can be simpler.
 
-**Câu 8.** Một lớp con được tạo ra để kế thừa mã tiện ích nhưng hoàn toàn không đáp ứng được các kỳ vọng về hành vi của lớp cha. Điều gì sai?
+**Question 8.** A subclass inherits utility code but cannot meet its superclass's behavioral expectations. What went wrong?
 
-**Đáp án:** Quan hệ *is-a* và nguyên tắc thay thế có thể bị vi phạm. Cần xem lại mô hình; thường phù hợp hơn khi sử dụng một đối tượng helper/collaborator bằng kết hợp.
+**Answer:** The *is-a* relationship and substitutability principle may be violated. Reconsider the model; composition with a helper/collaborator is often more appropriate.
 
-## Kết luận
+## Conclusion
 
-**Kế thừa** tái sử dụng theo quan hệ “một loại của”: subclass nhận phần chung của superclass và chỉ chuyên biệt hóa những điểm hợp lệ. **Kết hợp** tái sử dụng theo quan hệ “có hoặc dùng”: đối tượng phối hợp những thành phần có trách nhiệm riêng rồi ủy quyền công việc cho chúng.
+**Inheritance** supports reuse through "is a kind of": a subclass receives common superclass behavior and specializes valid extension points. **Composition** supports reuse through "has or uses": an object coordinates components with separate responsibilities and delegates work to them.
 
-Không có công thức “mọi nơi dùng composition” hoặc “mọi nơi dùng inheritance”. Chọn **kế thừa khi quan hệ is-a và hợp đồng cha thật sự vững**, chọn **kết hợp khi các khả năng cần lắp ghép hoặc thay đổi độc lập**. Một thiết kế Java tốt thường sử dụng cả hai đúng vị trí để tránh cây kế thừa gượng ép và giữ code dễ kiểm thử, dễ phát triển.
+There is no formula requiring composition everywhere or inheritance everywhere. Choose **inheritance when the is-a relationship and superclass contract are sound**, and **composition when capabilities must be assembled or varied independently**. Good Java designs often use both appropriately to avoid forced inheritance hierarchies and keep code testable and extensible.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="composition-005">Thay đổi đối tượng cộng tác khi chạy</a>
+## <a id="composition-005">Changing Collaborating Objects at Runtime</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thay đổi đối tượng cộng tác khi chạy trong Java
+# Changing Collaborating Objects at Runtime in Java
 
-Trong **kết hợp (composition)**, một đối tượng thực hiện công việc bằng cách giữ tham chiếu đến những đối tượng khác — gọi là **đối tượng cộng tác** (*collaborator/dependency*) — rồi ủy quyền một phần hành vi cho chúng.
+With **composition**, an object performs work by holding references to other objects, called **collaborators** (*collaborator/dependency*), and delegating part of its behavior to them.
 
-Ví dụ, một dịch vụ tính tiền có thể dùng một đối tượng `DiscountPolicy` để quyết định mức giảm giá. Nếu hợp đồng được thiết kế tốt, ta có thể **thay chính sách giảm giá trong khi chương trình đang chạy**, mà không phải tạo lại dịch vụ tính tiền hoặc viết lại logic của dịch vụ.
+For example, a checkout service can use a `DiscountPolicy` object to determine discounts. With a well-designed contract, we can **change the discount policy while the program is running** without recreating the checkout service or rewriting its logic.
 
 ```java
 checkout.setDiscountPolicy(new PercentageDiscount("VIP10", 10));
 ```
 
-Đây là một lợi ích quan trọng của composition: thay đổi **cách một đối tượng được hỗ trợ thực hiện công việc** bằng cách thay collaborator, thay vì cố định mọi biến thể trong một cây lớp kế thừa.
+This is a major benefit of composition: we can change **how an object receives help performing its work** by replacing a collaborator instead of hardwiring every variant into an inheritance hierarchy.
 
-> “Thay đổi khi chạy” ở bài này là thay **tham chiếu đến một đối tượng có cùng hợp đồng**, không phải sửa mã nguồn Java hoặc tự động nạp plugin mới. Những vấn đề về đa luồng, tài nguyên và quyền sở hữu cần được xử lý riêng nếu có.
+> In this lesson, "changing at runtime" means replacing **a reference to an object that fulfills the same contract**. It does not mean editing Java source code or automatically loading new plugins. Concurrency, resource management, and ownership must be handled separately where relevant.
 
-## 1. Đối tượng cộng tác là gì?
+## 1. What Is a Collaborating Object?
 
-Xét một dịch vụ nhận chính sách tính phí:
+Consider a service that accepts a fee policy:
 
 ```java
 interface FeePolicy {
@@ -2664,14 +2664,14 @@ final class OrderService {
 }
 ```
 
-Ở đây:
+Here:
 
-- `OrderService` là **đối tượng chủ**, chịu trách nhiệm điều phối tính tiền.
-- `FeePolicy` là **hợp đồng của collaborator**.
-- Một đối tượng triển khai `FeePolicy` thực hiện phép tính cụ thể.
-- Trường `feePolicy` lưu **tham chiếu** đến collaborator, không cần biết lớp cụ thể.
+- `OrderService` is the **owning/coordinating object**, responsible for coordinating the fee calculation.
+- `FeePolicy` is the **collaborator contract**.
+- An object implementing `FeePolicy` performs the specific calculation.
+- The `feePolicy` field stores a **reference** to the collaborator without knowing its concrete class.
 
-Nếu tham chiếu này được phép thay đổi qua một API có kiểm soát, hành vi của `OrderService` ở các lần gọi về sau cũng có thể thay đổi.
+If a controlled API permits replacing that reference, `OrderService` can behave differently on subsequent calls.
 
 ```mermaid
 flowchart LR
@@ -2681,19 +2681,19 @@ flowchart LR
     P -. "thời điểm 3" .-> S["PercentageDiscount PROMO25"]
 ```
 
-Sơ đồ thể hiện **cùng một `CheckoutService`** lần lượt giữ tham chiếu đến các đối tượng chính sách khác nhau. Không phải ba chính sách cùng thực hiện một đơn hàng; mỗi lần xử lý sẽ chọn collaborator hiện hành theo thiết kế.
+The diagram shows **the same `CheckoutService`** referencing different policy objects over time. It does not show three policies processing one order simultaneously; each operation uses the current collaborator according to the design.
 
-## 2. Ví dụ Java hoàn chỉnh: đổi chính sách giảm giá lúc chạy
+## 2. Complete Java Example: Switching Discount Policies at Runtime
 
-Mục tiêu nghiệp vụ:
+Business requirements:
 
-1. Ban đầu thanh toán không giảm giá.
-2. Khi bật chương trình VIP, dịch vụ sử dụng mức giảm 10%.
-3. Khi chuyển sang khuyến mãi, dịch vụ sử dụng mức giảm 25%.
-4. Có thể quay về chính sách không giảm giá.
-5. Dịch vụ thanh toán **vẫn là một đối tượng**, chỉ collaborator được thay.
+1. Initially, checkout applies no discount.
+2. When the VIP program is enabled, the service uses a 10% discount.
+3. When switching to a promotion, the service uses a 25% discount.
+4. The no-discount policy can be restored.
+5. The checkout service **remains the same object**; only its collaborator changes.
 
-Lưu toàn bộ mã sau trong **`Main.java`** và chạy bằng Java 17 hoặc Java 21.
+Save all the following code in **`Main.java`** and run it with Java 17 or Java 21.
 
 ```java
 import java.util.Objects;
@@ -2833,14 +2833,14 @@ public class Main {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 NONE: 100000 VND
@@ -2850,57 +2850,57 @@ NONE: 100000 VND
 Biên lai VIP cũ: 90000 VND
 ```
 
-**Phân tích kết quả:**
+**Analyzing the result:**
 
-- `CheckoutService` chỉ được tạo **một lần**.
-- `setDiscountPolicy(...)` thay đối tượng được lưu trong trường `discountPolicy`, không thay `Order` hoặc chính `CheckoutService`.
-- Mỗi `DiscountPolicy` có cùng phương thức `discount(long)` nhưng quy tắc khác nhau. Lời gọi `selected.discount(subtotal)` sử dụng **đa hình** để chạy implementation của đối tượng hiện tại.
-- `vipReceipt` lưu kết quả đã tính. Chuyển policy sang `PROMO25` không tính lại hoặc sửa biên lai cũ.
-- `selected` là biến cục bộ giữ collaborator đã chọn trong một lần gọi. Điều này giúp `code()` và `discount()` sử dụng **cùng một đối tượng chính sách**, thay vì đọc lại trường nhiều lần.
-- Hai implementation mẫu không giữ trạng thái thay đổi khi tính tiền, nên có thể tái sử dụng chúng mà không cần quản lý bộ đếm hay session riêng.
+- `CheckoutService` is created **only once**.
+- `setDiscountPolicy(...)` replaces the object referenced by the `discountPolicy` field; it does not replace the `Order` or the `CheckoutService` itself.
+- Every `DiscountPolicy` has the same `discount(long)` method but applies different rules. The call `selected.discount(subtotal)` uses **polymorphism** to execute the current object's implementation.
+- `vipReceipt` stores the computed result. Switching to `PROMO25` does not recalculate or modify the earlier receipt.
+- `selected` is a local variable holding the collaborator chosen for one call. This makes `code()` and `discount()` use **the same policy object** instead of rereading the field multiple times.
+- Neither example implementation changes internal state during checkout, so both can be reused without separate counters or sessions.
 
-Đây là ví dụ tiền tệ dùng số nguyên VND để dễ quan sát. Hệ thống tài chính thực cần thống nhất đơn vị tiền, làm tròn, thuế và giới hạn số học; `Math.multiplyExact` sẽ báo lỗi nếu phép nhân bị tràn `long`.
+This monetary example uses integer VND amounts for clarity. Real financial systems need consistent currency units, rounding, taxes, and numeric bounds; `Math.multiplyExact` throws if multiplication overflows a `long`.
 
-## 3. Vì sao composition cho phép thay collaborator?
+## 3. Why Does Composition Allow Collaborator Replacement?
 
-Điểm then chốt là trường giữ kiểu **hợp đồng chung**, không cố định một lớp cụ thể:
+The key is a field typed to a **shared contract**, rather than a fixed concrete class:
 
 ```java
 private DiscountPolicy discountPolicy;
 ```
 
-Nếu viết:
+If we write:
 
 ```java
 private PercentageDiscount discountPolicy;
 ```
 
-ta sẽ không thể gán `new NoDiscount()` vào trường đó, vì `NoDiscount` không phải subtype của `PercentageDiscount`.
+we cannot assign `new NoDiscount()` to that field because `NoDiscount` is not a subtype of `PercentageDiscount`.
 
-Nếu viết:
+If we write:
 
 ```java
 // Mã giả về hướng kế thừa trong một thiết kế khác:
 // class VipCheckoutService extends BaseCheckoutService { ... }
 ```
 
-Đây là **mô tả ý tưởng**, không phải đoạn có thể chạy riêng. Trong ví dụ chính, `CheckoutService` được khai báo `final`, nên Java **không cho phép extends CheckoutService**.
+This is **a conceptual illustration**, not a standalone runnable snippet. In the main example, `CheckoutService` is declared `final`, so Java **does not allow extending CheckoutService**.
 
-để biểu thị mọi biến thể chính sách bằng một lớp con của dịch vụ, việc chuyển chính sách có thể buộc tạo **dịch vụ mới** hoặc thêm nhánh trong mỗi subclass. Ví dụ trên không sử dụng kế thừa để chọn giảm giá; `CheckoutService` **có một** `DiscountPolicy`, thay vì `CheckoutService` **là một** loại chính sách.
+If every policy variant is represented by a service subclass, switching policies may require creating **a new service** or adding branches in each subclass. The example instead uses composition to select discounts: `CheckoutService` **has a** `DiscountPolicy`; `CheckoutService` **is not a** kind of policy.
 
-| Cách thiết kế | Chỗ biểu diễn biến thể | Thay chính sách khi chạy |
+| Design approach | Where variants are represented | Runtime policy replacement |
 | --- | --- | --- |
-| `if/else` bên trong `CheckoutService` | Các nhánh điều kiện và mã loại | Phải đổi mã/trạng thái rồi phân nhánh |
-| Các lớp con `VipCheckoutService`, `PromoCheckoutService` | Quan hệ kế thừa dịch vụ | Thường phải đổi đối tượng dịch vụ hoặc thiết kế thêm |
-| Composition với `DiscountPolicy` | Các object thực hiện interface | Thay tham chiếu collaborator có kiểm soát |
-| Composition với field `final DiscountPolicy` | Các object thực hiện interface | Chọn một lần khi tạo; không đổi bằng setter |
-| Composition + registry/factory | Chọn implementation theo cấu hình | Có thể chọn policy mới qua một ranh giới lựa chọn |
+| `if/else` inside `CheckoutService` | Conditional branches and type codes | Requires changing code/state and branching accordingly |
+| Subclasses `VipCheckoutService`, `PromoCheckoutService` | Service inheritance | Usually requires replacing the service object or more design work |
+| Composition with `DiscountPolicy` | Objects implementing the interface | Replace the collaborator reference through a controlled API |
+| Composition with a `final DiscountPolicy` field | Objects implementing the interface | Chosen at construction; cannot be changed with a setter |
+| Composition + registry/factory | Configuration-based implementation selection | A new policy can be selected at a designated boundary |
 
-**Composition không tự động mang nghĩa “thay được mọi lúc”.** Điều đó phụ thuộc vào việc trường tham chiếu có thể thay đổi hay không và lớp có cung cấp thao tác thay thế đúng hợp đồng hay không.
+**Composition does not automatically mean "replaceable at any time."** It depends on whether the reference field can change and whether the class exposes a replacement operation consistent with its contract.
 
-## 4. Có ba lựa chọn thường gặp về vòng đời collaborator
+## 4. Three Common Collaborator Lifecycle Choices
 
-### 4.1. Chọn khi khởi tạo, giữ cố định
+### 4.1. Select at Construction and Keep Fixed
 
 ```java
 final class FixedCheckoutService {
@@ -2922,21 +2922,21 @@ final class FixedCheckoutService {
 }
 ```
 
-Đây là cách thường dùng với **constructor injection**. Nó đơn giản, trường không bị gán lại và phụ thuộc của service ổn định. Trong ví dụ rút gọn, `FixedCheckoutService` chưa kiểm tra khoảng `reduction`; nếu dùng thực tế phải bổ sung validation như `CheckoutService`.
+This is the usual approach with **constructor injection**. It is simple: the field is never reassigned, and the service's dependency stays stable. In this shortened example, `FixedCheckoutService` does not yet validate the `reduction` range; production code would need validation like `CheckoutService`.
 
-### 4.2. Thay bằng setter hoặc phương thức nghiệp vụ
+### 4.2. Replace Through a Setter or Business Method
 
 ```java
 checkout.setDiscountPolicy(new PercentageDiscount("VIP10", 10));
 ```
 
-Có ích khi đối tượng chủ là một thành phần sống lâu, trong khi khả năng cộng tác cần đổi theo phiên làm việc, trạng thái vận hành hoặc cấu hình.
+This is useful when the owning/coordinating object is long-lived but a collaborator must change with sessions, operating conditions, or configuration.
 
-Nhược điểm: số lượng trạng thái có thể thay đổi của service tăng lên; người sử dụng phải hiểu **ai có quyền thay và thay vào lúc nào**. Nếu việc thay collaborator không thực sự cần thiết, giữ phụ thuộc `final` thường dễ hiểu hơn.
+The drawback is that the service gains more mutable state; callers must understand **who may replace the collaborator and when**. If replacement is unnecessary, keeping the dependency `final` is usually easier to reason about.
 
-### 4.3. Chọn collaborator riêng cho từng lời gọi
+### 4.3. Select a Collaborator for Each Call
 
-Nếu chính sách khác nhau theo **mỗi đơn hàng**, không nhất thiết giữ policy trong một trường thay đổi của singleton service. Có thể truyền trực tiếp:
+If policies differ **for each order**, there is no need to store them in a mutable field on a singleton service. Instead, pass one directly:
 
 ```java
 final class PerRequestCheckout {
@@ -2956,59 +2956,59 @@ final class PerRequestCheckout {
 }
 ```
 
-Như vậy không có trường policy mutable chia sẻ giữa các request. Cách chọn per-request thường đặc biệt hợp lý trong ứng dụng web, nơi nhiều người dùng có thể cần chính sách khác nhau **đồng thời**.
+This avoids sharing a mutable policy field across requests. Per-request selection is especially useful in web applications where many users may need different policies **concurrently**.
 
-| Yêu cầu | Cách tổ chức phù hợp |
+| Requirement | Suitable organization |
 | --- | --- |
-| Policy chỉ chọn khi tạo service | Constructor injection + trường `final` |
-| Policy thay theo thao tác quản trị, ảnh hưởng đến các lần gọi mới | API `set/replacePolicy` có kiểm soát |
-| Mỗi request có policy riêng | Truyền policy qua tham số, hoặc resolve bằng thành phần request-scoped |
-| Policy chọn theo mã cấu hình | Factory/registry ánh xạ mã sang implementation |
-| Policy có tài nguyên cần đóng | Quản lý quyền sở hữu và vòng đời rõ ràng trước khi thay |
+| Policy selected only when the service is created | Constructor injection + `final` field |
+| Administrative policy updates affect new calls | Controlled `set/replacePolicy` API |
+| Every request has its own policy | Pass a policy parameter or resolve one through a request-scoped component |
+| Policy selected from a configuration code | Factory/registry mapping codes to implementations |
+| Policy owns resources that need closing | Define ownership and lifecycle management before replacing it |
 
-## 5. Thay đối tượng khác với sửa trạng thái đối tượng hiện tại
+## 5. Replacing an Object Versus Mutating Its State
 
-Hai câu lệnh dưới đây có ý nghĩa khác nhau:
+These two operations have different meanings:
 
 ```java
 DiscountPolicy selected = new PercentageDiscount("VIP10", 10);
 checkout.setDiscountPolicy(selected);
 ```
 
-Ở đây `CheckoutService` giữ **tham chiếu mới**.
+Here, `CheckoutService` holds **a new reference**.
 
-Ngược lại, nếu collaborator là một đối tượng mutable:
+By contrast, if the collaborator is mutable:
 
 ```java
 // Ví dụ khái niệm:
 // mutablePolicy.setPercent(10);
 ```
 
-thì ta vẫn có **cùng một collaborator**, chỉ nội dung bên trong nó đổi. Mọi đối tượng khác đang giữ tham chiếu tới `mutablePolicy` cũng có thể quan sát thay đổi đó.
+we still have **the same collaborator**, but its internal state changes. Every other object referencing `mutablePolicy` may also observe that change.
 
-Sự khác biệt quan trọng trong hệ thống nhiều thành phần:
+This distinction matters in systems with multiple components:
 
-- **Thay tham chiếu:** service chuyển từ policy A sang policy B; các thành phần khác còn giữ A không tự động chuyển sang B.
-- **Sửa trạng thái policy A:** mọi người dùng chung A có thể bị ảnh hưởng.
-- **Thay service:** một `new CheckoutService(...)` mới tạo thêm đối tượng chủ, khác với hai trường hợp trên.
+- **Replacing the reference:** The service switches from policy A to B; other components still holding A do not automatically switch to B.
+- **Mutating policy A:** Everyone sharing A may be affected.
+- **Replacing the service:** A `new CheckoutService(...)` creates another coordinating object, which is different from the two cases above.
 
-Một policy bất biến như `PercentageDiscount` trong ví dụ có lợi thế: sau khi tạo, `percent` và `code` không thay đổi. Đổi chính sách bằng cách **tạo object mới rồi thay tham chiếu** thường dễ suy luận hơn là sửa nhiều thuộc tính của một collaborator đang được chia sẻ.
+An immutable policy such as `PercentageDiscount` has an advantage: after construction, `percent` and `code` do not change. Switching policies by **creating a new object and replacing the reference** is often easier to reason about than mutating many fields on a shared collaborator.
 
-## 6. Thay collaborator khi chương trình đang chạy: yếu tố đa luồng
+## 6. Runtime Collaborator Replacement: Concurrency Considerations
 
-Ví dụ `CheckoutService` đầu bài chủ yếu minh họa cách dùng tuần tự. Trong ứng dụng chạy đồng thời, một luồng có thể gọi `checkout()` trong khi luồng khác gọi `setDiscountPolicy()`.
+The initial `CheckoutService` example mainly demonstrates sequential use. In a concurrent application, one thread might call `checkout()` while another calls `setDiscountPolicy()`.
 
-Trường mutable thông thường:
+An ordinary mutable field:
 
 ```java
 private DiscountPolicy discountPolicy;
 ```
 
-**không tự tạo ra sự bảo đảm về khả năng nhìn thấy thay đổi giữa các luồng (visibility)**. Để công bố collaborator mới đúng cách, có thể dùng `volatile`, `synchronized` hoặc `AtomicReference` tùy nhu cầu.
+**does not guarantee visibility of updates across threads**. Depending on requirements, `volatile`, `synchronized`, or `AtomicReference` can publish a new collaborator safely.
 
-### Một cách an toàn cho thao tác thay tham chiếu: `AtomicReference`
+### A Safe Way to Replace References: `AtomicReference`
 
-Ví dụ độc lập dưới đây chỉ tập trung vào cơ chế chọn policy hiện tại; các kiểu `Order`, `Receipt`, `DiscountPolicy`, `NoDiscount` và `PercentageDiscount` được dùng lại từ ví dụ chính:
+The following standalone illustration focuses on selecting the current policy; it reuses the `Order`, `Receipt`, `DiscountPolicy`, `NoDiscount`, and `PercentageDiscount` types from the main example:
 
 ```java
 import java.util.Objects;
@@ -3045,50 +3045,50 @@ final class ConcurrentCheckoutService {
 }
 ```
 
-Điều được bảo đảm ở đây:
+The guarantees here are:
 
-1. `current.set(next)` cập nhật **tham chiếu** một cách nguyên tử và có ngữ nghĩa visibility của `AtomicReference`.
-2. `current.get()` lấy **một** collaborator cụ thể cho toàn bộ lần tính tiền.
-3. Một lời gọi bắt đầu ngay trước hoặc đang trùng với thao tác thay có thể tiếp tục dùng **policy cũ** mà nó đã lấy. Những lời gọi bắt đầu sau khi `replacePolicy()` hoàn tất sẽ đọc policy mới nếu không có cập nhật khác.
-4. `AtomicReference` **không tự làm trạng thái bên trong collaborator thread-safe**. Nếu policy tự sửa collection/counter trong `discount()`, phần đó cần cơ chế đồng bộ riêng.
-5. `AtomicReference` cũng không làm nhiều tác động nghiệp vụ (tính phí, ghi database, phát sự kiện) trở thành một giao dịch nguyên tử.
+1. `current.set(next)` updates the **reference** atomically with `AtomicReference` visibility semantics.
+2. `current.get()` obtains **one** specific collaborator for the entire checkout calculation.
+3. A call starting just before or during replacement may continue using **the old policy** it already obtained. Calls starting after `replacePolicy()` completes will read the new policy if no other update occurs.
+4. `AtomicReference` **does not make a collaborator's internal state thread-safe**. If a policy modifies collections/counters inside `discount()`, that work requires separate synchronization.
+5. `AtomicReference` also does not turn multiple business effects (calculating fees, writing to a database, publishing events) into one atomic transaction.
 
-Một lựa chọn ngắn hơn trong trường hợp chỉ cần đọc/ghi toàn bộ tham chiếu là:
+A simpler option when only whole-reference reads and writes are needed is:
 
 ```java
 private volatile DiscountPolicy currentPolicy;
 ```
 
-`volatile` có thể đủ cho visibility và tính nguyên tử của phép đọc/ghi một tham chiếu. `AtomicReference` hữu ích thêm khi cần `compareAndSet`, `getAndSet` hoặc một số thao tác thay đổi có điều kiện.
+`volatile` may suffice for visibility and atomic reference reads/writes. `AtomicReference` also supports `compareAndSet`, `getAndSet`, and other conditional updates.
 
-**Phạm vi nhất quán cần được nói rõ:** “thay cấu hình xong thì mọi request đang chạy phải lập tức dùng chính sách mới” là yêu cầu **khác** với “request mới dùng chính sách mới, request đang chạy hoàn tất với snapshot cũ”. Mẫu `AtomicReference` ở trên hỗ trợ mô hình snapshot per-call, không hủy các request đã bắt đầu.
+**Consistency scope must be explicit:** "After configuration changes, every in-progress request must immediately use the new policy" is **different** from "new requests use the new policy while in-progress requests finish with their old snapshot." The `AtomicReference` example supports per-call snapshots; it does not cancel already-started requests.
 
-## 7. Quyền sở hữu và vòng đời của collaborator
+## 7. Collaborator Ownership and Lifecycle
 
-Không phải collaborator nào cũng là đối tượng bất biến không tài nguyên. Một số collaborator nắm giữ:
+Not every collaborator is an immutable object without resources. Some hold:
 
-- Socket hoặc connection.
-- Executor, worker thread hoặc bộ nhớ ngoài heap.
-- Session hoặc client cần đóng sau khi dùng.
-- Bộ nhớ cache phải làm ấm trước khi chuyển.
-- Trạng thái cần đồng bộ hoặc flush.
+- Sockets or connections.
+- Executors, worker threads, or off-heap memory.
+- Sessions or clients that must be closed after use.
+- Caches that need warming before a switch.
+- State that must be synchronized or flushed.
 
-Ví dụ, nếu một `Gateway` có `close()`, việc thay:
+For example, if a `Gateway` has a `close()` method, replacing it with:
 
 ```java
 gateway = newGateway;
 oldGateway.close();
 ```
 
-**có thể nguy hiểm** khi một request cũ vẫn đang dùng `oldGateway`. Việc thay tham chiếu không có nghĩa tất cả cuộc gọi đang diễn ra đã kết thúc.
+**can be dangerous** if an in-progress request still uses `oldGateway`. Replacing the reference does not mean all existing calls have finished.
 
-Để thay một cộng tác viên có tài nguyên, cần xác định:
+Before replacing a resource-owning collaborator, determine:
 
-1. **Ai sở hữu?** Service, DI container hay thành phần ngoài? Thành phần không sở hữu thường không được tự ý đóng.
-2. **Khi nào sẵn sàng?** Có cần khởi tạo và kiểm tra kết nối mới trước khi công bố không?
-3. **Khi nào được đóng đối tượng cũ?** Có cần đếm request đang dùng, cơ chế drain, timeout hoặc một giai đoạn chuyển tiếp không?
-4. **Nếu khởi tạo mới thất bại?** Có giữ policy/adapter cũ tiếp tục phục vụ không?
-5. **Nếu đổi thất bại giữa chừng?** Có cách rollback và báo cáo lỗi rõ ràng không?
+1. **Who owns it?** The service, DI container, or another component? A non-owner should generally not close it unilaterally.
+2. **When is it ready?** Must the new connection be initialized and checked before publication?
+3. **When can the old object close?** Are in-flight request counts, draining, timeouts, or transition periods needed?
+4. **What if initialization fails?** Should the old policy/adapter continue serving requests?
+5. **What if switching fails partway through?** Is there a clear rollback and error-reporting path?
 
 ```mermaid
 flowchart LR
@@ -3100,21 +3100,21 @@ flowchart LR
     D --> X["Đóng collaborator cũ nếu ta sở hữu"]
 ```
 
-Sơ đồ này thể hiện **quy trình quản trị vòng đời cần thiết**, không phải tất cả các bước đã được triển khai bởi setter hoặc `AtomicReference.set()`. Với một `DiscountPolicy` thuần tính toán, không có tài nguyên, việc thay thường đơn giản hơn nhiều.
+This diagram illustrates **the required lifecycle-management process**; a setter or `AtomicReference.set()` does not implement every step automatically. Replacing a stateless, computation-only `DiscountPolicy` is usually much simpler.
 
-## 8. Một policy mới phải tuân thủ hợp đồng cũ
+## 8. A New Policy Must Honor the Existing Contract
 
-Khi collaborator có thể thay thế, mọi implementation cần thực hiện cùng **ngữ nghĩa hợp đồng**, không chỉ cùng chữ ký.
+When collaborators are replaceable, every implementation must honor the same **contract semantics**, not merely share method signatures.
 
-Trong ví dụ, `DiscountPolicy.discount(subtotalVnd)` phải:
+In the example, `DiscountPolicy.discount(subtotalVnd)` must:
 
-- Nhận tiền hàng theo **VND nguyên**.
-- Trả mức giảm trong khoảng từ `0` đến `subtotalVnd`.
-- Không tùy ý đổi đơn vị sang phần trăm hoặc một loại tiền khác.
-- Có chính sách rõ ràng với dữ liệu không hợp lệ.
-- Nếu được dùng đồng thời, triển khai phải tương thích với cơ chế đồng thời đã công bố.
+- Accept the subtotal as **integer VND**.
+- Return a discount between `0` and `subtotalVnd`.
+- Not arbitrarily switch units to percentages or another currency.
+- Define clear behavior for invalid input.
+- Be compatible with the documented concurrency model if used concurrently.
 
-Một implementation như:
+An implementation such as:
 
 ```java
 final class BrokenDiscount implements DiscountPolicy {
@@ -3130,13 +3130,13 @@ final class BrokenDiscount implements DiscountPolicy {
 }
 ```
 
-**vẫn biên dịch**, nhưng `CheckoutService` sẽ ném `IllegalStateException` vì kết quả vi phạm hợp đồng. Interface giúp thay thế ở mức **kiểu dữ liệu**, còn **Liskov Substitution Principle** nhắc rằng triển khai mới phải giữ hành vi người dùng dựa vào.
+**still compiles**, but `CheckoutService` throws `IllegalStateException` because the result violates the contract. Interfaces enable substitution at the **type level**, while the **Liskov Substitution Principle** requires new implementations to preserve behavior on which clients rely.
 
-Điều này càng quan trọng trong hot swap: một triển khai không tương thích có thể khiến các request sau chuyển đổi thất bại dù thay tham chiếu thành công.
+This matters especially for hot swapping: an incompatible implementation can cause subsequent requests to fail even if the reference switch succeeds.
 
-## 9. Chọn collaborator từ factory hoặc registry
+## 9. Selecting Collaborators from a Factory or Registry
 
-Trong hệ thống thật, người quản trị hoặc request thường gửi mã chính sách dưới dạng `String`, ví dụ `"VIP10"`. Một ranh giới lựa chọn có thể sử dụng registry:
+In real systems, administrators or requests often supply policy codes as `String` values, such as `"VIP10"`. A selection boundary can use a registry:
 
 ```java
 import java.util.Map;
@@ -3159,40 +3159,40 @@ final class DiscountCatalog {
 }
 ```
 
-Sau đó:
+Then:
 
 ```java
 DiscountCatalog catalog = new DiscountCatalog();
 checkout.setDiscountPolicy(catalog.findRequired("PROMO25"));
 ```
 
-Đoạn trên giả định `checkout` là đối tượng `CheckoutService` đã tạo trong ví dụ. Registry tách **việc tìm đúng loại** khỏi **việc dùng collaborator**. `CheckoutService` không cần biết `"VIP10"` đại diện cho lớp nào.
+The snippet assumes `checkout` is the `CheckoutService` object created in the example. A registry separates **finding the correct implementation** from **using the collaborator**. `CheckoutService` need not know which class `"VIP10"` represents.
 
-Có thể thay `Map` bằng `switch`, dependency injection hoặc factory khác tùy quy mô. Nếu một policy là đối tượng stateful thuộc riêng từng request, registry có thể lưu **factory tạo mới** thay vì dùng chung một đối tượng policy.
+Depending on scale, `Map` can be replaced by `switch`, dependency injection, or another factory. If a policy is stateful and request-specific, the registry can hold **factories that create instances** rather than sharing one policy object.
 
-**Không cho phép đầu vào không tin cậy lựa chọn tùy ý một class theo tên rồi tạo bằng reflection** nếu không có cơ chế giới hạn và xác thực rõ. Registry tường minh chỉ cho phép các implementation đã được phê duyệt.
+**Do not let untrusted input choose arbitrary classes by name and instantiate them through reflection** without explicit restrictions and validation. An explicit registry permits only approved implementations.
 
-## 10. Khi nào thay collaborator tốt hơn kế thừa hoặc điều kiện?
+## 10. When Is Collaborator Replacement Better Than Inheritance or Conditionals?
 
-| Nhu cầu | Giải pháp cân nhắc | Lý do |
+| Requirement | Approach to consider | Reason |
 | --- | --- | --- |
-| Đổi công thức giảm giá mà giữ dịch vụ tính tiền | Composition + `DiscountPolicy` | Hành vi có thể thay độc lập |
-| Một quy trình cố định với vài bước con được mở rộng | Template Method / kế thừa có kiểm soát | Hợp đồng kế thừa có thể phù hợp |
-| Hai trường hợp cố định khác nhau đúng một điều kiện nhỏ | `if` hoặc `switch` rõ ràng | Tránh tạo hệ thống class không cần thiết |
-| Nhiều request cần nhiều policy cùng lúc | Chọn collaborator theo mỗi lời gọi | Tránh trạng thái chia sẻ có thể xung đột |
-| Cấu hình chung đổi tại runtime | Setter/replace API với `volatile` hoặc `AtomicReference` khi đa luồng | Công bố phiên bản mới cho các lời gọi tiếp theo |
-| Collaborator có state và tài nguyên riêng | Composition + quản lý lifecycle rõ | Tránh đóng đối tượng khi còn được dùng |
-| Muốn ghép nhiều hành vi phụ trợ như retry, cache, logging | Decorator/delegation | Kết hợp linh hoạt các lớp wrapper |
+| Change the discount formula but keep the checkout service | Composition + `DiscountPolicy` | Behavior can vary independently |
+| A fixed workflow with a few extensible steps | Template Method / controlled inheritance | An inheritance contract may fit |
+| Two fixed cases differ by one small condition | A clear `if` or `switch` | Avoids an unnecessary class hierarchy |
+| Many concurrent requests need different policies | Select collaborators per call | Avoids conflicting shared mutable state |
+| Shared configuration changes at runtime | Setter/replace API with `volatile` or `AtomicReference` for concurrency | Publishes new configuration for subsequent calls |
+| Collaborators have their own state and resources | Composition + explicit lifecycle management | Avoids closing objects while in use |
+| Combine auxiliary behaviors such as retry, caching, logging | Decorator/delegation | Allows flexible wrapper combinations |
 
-Thay collaborator ở runtime thường là một biến thể của **Strategy Pattern**: thuật toán được đóng gói trong một interface, các chiến lược có thể thay thế nhau. Composition là cấu trúc giúp đối tượng chủ giữ một collaborator; Strategy mô tả cách dùng cấu trúc đó để thay **thuật toán/hành vi**.
+Runtime collaborator replacement is often a variation of the **Strategy Pattern**: algorithms are encapsulated behind an interface, and strategies can be interchanged. Composition is the structure through which an object holds a collaborator; Strategy describes using that structure to replace an **algorithm or behavior**.
 
-Không phải mọi collaborator đều là Strategy. Một repository, clock, event publisher hoặc HTTP client cũng có thể được thay theo nhu cầu kiểm thử hay cấu hình, dù chức năng của nó không được gọi là “chiến lược”.
+Not every collaborator is a Strategy. A repository, clock, event publisher, or HTTP client may also be swapped for testing or configuration, even if its role is not described as a "strategy."
 
-## 11. Kiểm thử chuyển đổi collaborator
+## 11. Testing Collaborator Replacement
 
-Cần kiểm tra cả **hành vi trước/sau khi đổi** và việc các đối tượng cũ không bị sửa ngoài dự kiến.
+Test both **behavior before and after replacement** and whether existing objects remain unchanged as expected.
 
-Ví dụ phép kiểm thử thuần Java, đặt trong một phương thức khi các lớp ở ví dụ chính đã tồn tại:
+Example of a plain Java test, placed in a method where the classes from the main example are available:
 
 ```java
 CheckoutService service = new CheckoutService(new NoDiscount());
@@ -3214,79 +3214,79 @@ if (!"NONE".equals(before.policyCode())) {
 }
 ```
 
-Một số ca khác đáng kiểm thử:
+Other useful test cases:
 
-- `setDiscountPolicy(null)` phải từ chối để tránh trạng thái service không có policy.
-- Policy mới trả giảm giá âm hoặc lớn hơn subtotal phải bị phát hiện.
-- Đổi chính sách từ A sang B rồi về A phải cho kết quả đúng theo từng lần gọi.
-- Trong hệ thống đa luồng, mỗi request phải quan sát một collaborator nhất quán theo hợp đồng snapshot đã chọn.
-- Khi collaborator có tài nguyên, việc đổi không được đóng tài nguyên đang còn request sử dụng.
-- Nếu policy mới khởi tạo thất bại, không được công bố một đối tượng chưa sẵn sàng.
+- `setDiscountPolicy(null)` must be rejected so the service does not end up without a policy.
+- A new policy returning a negative discount or more than the subtotal must be detected.
+- Switching from A to B and back to A must produce correct results on each call.
+- In a multithreaded system, each request must see a consistent collaborator under the chosen snapshot contract.
+- When collaborators hold resources, replacement must not close resources still used by active requests.
+- If a new policy fails to initialize, an unready object must not be published.
 
-Với JUnit, các test có thể viết bằng `assertEquals`, `assertThrows` và fake implementations của `DiscountPolicy`. Những test quan trọng nhất không phải chỉ kiểm tra setter được gọi, mà là **hành vi nghiệp vụ sau khi chọn collaborator mới**.
+JUnit tests can use `assertEquals`, `assertThrows`, and fake `DiscountPolicy` implementations. The most valuable tests verify **business behavior after selecting a new collaborator**, not merely whether the setter was called.
 
-## 12. Lỗi thường gặp
+## 12. Common Mistakes
 
-| Sai lầm | Hệ quả | Cách khắc phục |
+| Mistake | Consequence | Remedy |
 | --- | --- | --- |
-| Trường collaborator có kiểu lớp cụ thể thay vì interface cần thiết | Không thay được implementation không cùng nhánh | Dùng hợp đồng có ý nghĩa |
-| Setter cho phép `null` | Request tiếp theo có thể ném `NullPointerException` | `Objects.requireNonNull` hoặc chính sách vắng mặt rõ ràng |
-| Cứ mỗi request lại đổi một field của singleton chung | Request người này có thể dùng policy người khác | Truyền policy per-request |
-| Đọc collaborator nhiều lần trong một thao tác | Giữa chừng policy thay, kết quả có thể dùng nhiều phiên bản | Chụp một tham chiếu cục bộ cho mỗi thao tác |
-| Nghĩ thay tham chiếu thường là thread-safe hoàn toàn | Không bảo đảm visibility hoặc trạng thái bên trong | Dùng đúng đồng bộ/atomic publication và policy an toàn |
-| Đóng collaborator cũ ngay khi thay | Request đang chạy dùng tài nguyên đã đóng | Quản lý in-flight operations và ownership |
-| Một implementation mới đổi đơn vị hoặc trả giá trị sai | Phá hợp đồng thay thế | Contract test và validation |
-| Mọi collaborator đều được tạo thành Strategy dù không cần đổi | Tăng lớp/độ phức tạp vô ích | Dùng trường `final` nếu phụ thuộc cố định |
-| Dùng reflection theo tên lớp do client gửi | Rủi ro cấu hình và bảo mật | Danh mục implementation được phép |
-| Cho rằng setter cập nhật cả kết quả đã tạo trước đó | Nhầm ranh giới giữa trạng thái hiện tại và lịch sử | Lưu kết quả/phiên bản phù hợp trong biên lai |
+| Typing a collaborator field to a concrete class instead of a needed interface | Cannot substitute unrelated implementations | Use a meaningful shared contract |
+| Setter allows `null` | The next request may throw `NullPointerException` | Use `Objects.requireNonNull` or an explicit absence policy |
+| Changing a shared singleton field for every request | One user's request can use another user's policy | Pass policies per request |
+| Reading the collaborator repeatedly during an operation | Mid-call replacement can mix policy versions | Capture one local reference per operation |
+| Assuming an ordinary reference swap is fully thread-safe | No guaranteed visibility or internal-state safety | Use correct synchronization/atomic publication and safe policies |
+| Closing the old collaborator immediately after replacement | In-progress requests use a closed resource | Manage in-flight operations and ownership |
+| New implementation changes units or returns invalid values | Violates substitutability | Contract tests and validation |
+| Making every collaborator a Strategy without a replacement need | Unnecessary classes and complexity | Use a `final` field for fixed dependencies |
+| Using reflection with a client-supplied class name | Configuration and security risks | Maintain an allowlist of implementations |
+| Assuming a setter updates previously created results | Confuses current state with history | Store suitable values/versions in receipts |
 
-## 13. Câu hỏi tự kiểm tra
+## 13. Self-Check Questions
 
-**Câu 1.** Sau khi gọi `checkout.setDiscountPolicy(new NoDiscount())`, đối tượng `CheckoutService` có được tạo lại không?
+**Question 1.** After calling `checkout.setDiscountPolicy(new NoDiscount())`, is the `CheckoutService` object recreated?
 
-**Trả lời:** Không. Chỉ tham chiếu collaborator bên trong service thay đổi. Đối tượng chủ vẫn là cùng một object.
+**Answer:** No. Only the internal collaborator reference changes. The coordinating object remains the same.
 
-**Câu 2.** Vì sao biến `DiscountPolicy selected = discountPolicy;` được đặt ở đầu `checkout()`?
+**Question 2.** Why is `DiscountPolicy selected = discountPolicy;` assigned at the start of `checkout()`?
 
-**Trả lời:** Để `discount()` và `code()` cùng sử dụng **một** policy đã chọn. Việc thay field ở thời điểm khác không khiến chính lần gọi ấy vô tình dùng hai collaborator khác nhau.
+**Answer:** So `discount()` and `code()` use **one** selected policy. Changing the field at another moment will not accidentally make that call use two different collaborators.
 
-**Câu 3.** Khi một singleton `CheckoutService` phục vụ nhiều người dùng với mức giảm riêng, có nên gọi `setDiscountPolicy(...)` cho từng request không?
+**Question 3.** When a singleton `CheckoutService` serves users with individual discounts, should it call `setDiscountPolicy(...)` for every request?
 
-**Trả lời:** Thường không nên; các request có thể ghi đè policy của nhau. Chọn policy theo tham số request hoặc dùng phạm vi dữ liệu phù hợp.
+**Answer:** Usually not; requests may overwrite one another's policies. Select policies through request parameters or an appropriate data scope.
 
-**Câu 4.** `AtomicReference<DiscountPolicy>` có khiến mọi phương thức trong `DiscountPolicy` trở thành thread-safe không?
+**Question 4.** Does `AtomicReference<DiscountPolicy>` make every method in `DiscountPolicy` thread-safe?
 
-**Trả lời:** Không. Nó bảo đảm thao tác trên **tham chiếu** theo hợp đồng atomic/visibility; logic và trạng thái của đối tượng policy vẫn phải được thiết kế an toàn riêng.
+**Answer:** No. It guarantees atomicity/visibility for **the reference**; the policy object's logic and state still require their own thread-safety design.
 
-**Câu 5.** Nếu một HTTP client cũ đang xử lý request, có nên gọi `close()` cho nó ngay sau khi chuyển field sang client mới?
+**Question 5.** If an old HTTP client is still processing requests, should `close()` be called immediately after switching to a new client?
 
-**Trả lời:** Không thể mặc định như vậy. Cần biết ai sở hữu client và khi nào các request đang dùng nó kết thúc. Có thể cần cơ chế drain hoặc quản lý vòng đời riêng.
+**Answer:** Not by default. Determine who owns the client and when its active requests finish. Draining or a separate lifecycle-management mechanism may be necessary.
 
-**Câu 6.** Có phải composition luôn phải hỗ trợ thay collaborator runtime?
+**Question 6.** Must composition always support runtime collaborator replacement?
 
-**Trả lời:** Không. Composition với collaborator `final` cố định suốt vòng đời vẫn là thiết kế hợp lệ, thường đơn giản hơn khi không có nhu cầu chuyển đổi.
+**Answer:** No. Composition with a `final` collaborator fixed for its entire lifecycle is valid and usually simpler when replacement is unnecessary.
 
-**Ghi nhớ:** Composition cho phép đối tượng chủ **ủy quyền** cho collaborator qua một hợp đồng rõ ràng. Nếu nghiệp vụ cần, đối tượng chủ có thể **thay collaborator lúc chạy** để thay hành vi mà không phải thay chính nó. Thiết kế tốt còn phải xác định rõ *phạm vi áp dụng của lần thay*, *tính nhất quán giữa các luồng*, *hợp đồng của các implementation* và *vòng đời tài nguyên* — không chỉ thêm một setter.
+**Key takeaway:** Composition lets a coordinating object **delegate** to collaborators through clear contracts. When business needs require it, the object can **replace collaborators at runtime** to change its behavior without replacing itself. A sound design must also define *which calls a replacement affects*, *cross-thread consistency*, *implementation contracts*, and *resource lifecycles*—not merely add a setter.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="composition-006">Tiêm phụ thuộc qua hàm khởi tạo hoặc phương thức</a>
+## <a id="composition-006">Dependency Injection Through Constructors or Methods</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tiêm phụ thuộc qua hàm khởi tạo hoặc phương thức trong Java
+# Dependency Injection Through Constructors or Methods in Java
 
-> **OOP → Kết hợp (Composition).** Một đối tượng thường cần sử dụng đối tượng khác để hoàn thành công việc: dịch vụ đặt hàng cần bộ gửi thông báo; bộ xuất báo cáo cần trình định dạng; mã nghiệp vụ cần nơi lưu dữ liệu. **Dependency Injection (DI) — tiêm phụ thuộc** là cách *cung cấp* những đối tượng cộng tác từ bên ngoài, thay vì để lớp sử dụng tự tạo cứng chúng. Hai cách thực hiện trực tiếp trong Java là **constructor injection** (truyền qua hàm khởi tạo) và **method injection** (truyền qua tham số phương thức).
+> **OOP → Composition.** An object often needs other objects to do its job: an order service needs a notification sender, a report exporter needs a formatter, and business logic needs data storage. **Dependency Injection (DI)** means *supplying* these collaborators from outside instead of having the consuming class create fixed implementations itself. Two direct Java techniques are **constructor injection** (passing dependencies through constructors) and **method injection** (passing dependencies as method parameters).
 
-## 1. Vì sao cần tiêm phụ thuộc?
+## 1. Why Use Dependency Injection?
 
-Giả sử một lớp thông báo đơn hàng tự tạo bộ gửi email:
+Suppose an order-notification class creates its own email sender:
 
 ```java
 class OrderNotifier {
@@ -3298,9 +3298,9 @@ class OrderNotifier {
 }
 ```
 
-`EmailSender` ở đây là tên một lớp giả định. Cách viết này khiến `OrderNotifier` phải biết **chính xác implementation** và cách khởi tạo nó. Nếu muốn gửi SMS, thay nhà cung cấp email, hoặc kiểm thử mà không gửi thông báo thật, ta phải sửa hoặc tìm cách thay phần phụ thuộc bên trong.
+`EmailSender` is a hypothetical class name here. This approach forces `OrderNotifier` to know **the exact implementation** and how to instantiate it. Switching to SMS, changing email providers, or testing without sending real notifications would require modifying or somehow replacing that internal dependency.
 
-Tách hợp đồng gửi thông báo:
+Extract a notification-sending contract:
 
 ```java
 interface NotificationSender {
@@ -3308,7 +3308,7 @@ interface NotificationSender {
 }
 ```
 
-Rồi cho lớp thông báo **nhận** một `NotificationSender`:
+Then have the notification class **receive** a `NotificationSender`:
 
 ```java
 class OrderNotifier {
@@ -3320,20 +3320,20 @@ class OrderNotifier {
 }
 ```
 
-Đối tượng `OrderNotifier` **có một** bộ gửi thông báo (*has-a*), nhưng không tự quyết định phải dùng bộ gửi email hay SMS. Đây là kết hợp (composition) thông qua một hợp đồng và là ví dụ đơn giản của DI.
+`OrderNotifier` **has a** notification sender (*has-a*), but it does not decide whether to use email or SMS. This is composition through a contract and a straightforward example of DI.
 
-| Không tiêm phụ thuộc | Có tiêm phụ thuộc |
+| Without dependency injection | With dependency injection |
 |---|---|
-| Lớp tự `new EmailSender()` trong logic của mình | Mã bên ngoài tạo sender rồi chuyển vào lớp |
-| Logic nghiệp vụ gắn với một implementation cụ thể | Logic nghiệp vụ phụ thuộc vào hợp đồng `NotificationSender` |
-| Khó thay sender trong test | Có thể truyền `RecordingSender` giả lập |
-| Thay công nghệ có thể buộc sửa lớp nghiệp vụ | Có thể thay implementation tại điểm khởi tạo ứng dụng |
+| The class calls `new EmailSender()` within its logic | External code creates a sender and passes it in |
+| Business logic is tied to one concrete implementation | Business logic depends on the `NotificationSender` contract |
+| Replacing the sender during tests is difficult | A fake `RecordingSender` can be injected |
+| Changing technology may require editing the business class | Implementations can be swapped at application assembly |
 
-**Lưu ý:** DI không đồng nghĩa bắt buộc có Spring hay một DI container. Constructor và tham số phương thức của Java thuần đã đủ để thực hiện DI.
+**Note:** DI does not require Spring or a DI container. Plain Java constructors and method parameters are sufficient.
 
-## 2. Constructor injection: phụ thuộc cần trong cả vòng đời đối tượng
+## 2. Constructor Injection: Dependencies Needed Throughout an Object's Lifecycle
 
-**Constructor injection** phù hợp khi một dependency là **bắt buộc** và sẽ được nhiều phương thức của một đối tượng sử dụng.
+**Constructor injection** is suitable when a dependency is **required** and will be used by multiple methods throughout an object's lifetime.
 
 ```java
 final class OrderNotifier {
@@ -3352,19 +3352,19 @@ final class OrderNotifier {
 }
 ```
 
-Tại nơi khởi tạo:
+At the construction site:
 
 ```java
 NotificationSender sender = new ConsoleEmailSender();
 OrderNotifier notifier = new OrderNotifier(sender);
 ```
 
-Điều đáng chú ý:
+Key observations:
 
-1. `sender` được yêu cầu **ngay lúc tạo** `OrderNotifier`. Nếu truyền `null`, constructor từ chối trước khi trả một object hợp lệ.
-2. Trường `private final` ngăn gán lại tham chiếu sender sau khi tạo. Nó **không làm đối tượng sender bên trong trở thành bất biến hoặc thread-safe**.
-3. Các phương thức nghiệp vụ chỉ gọi hợp đồng `NotificationSender`; chúng không cần biết lớp thực tế.
-4. Bên ngoài quyết định **cấu hình và vòng đời** dependency. Không nên tự ý đóng một dependency do caller sở hữu khi hợp đồng không cho phép.
+1. `sender` is required **when `OrderNotifier` is created**. If `null` is passed, the constructor rejects it before producing a valid object.
+2. A `private final` field prevents reassignment of the sender reference after construction. It **does not make the sender object immutable or thread-safe**.
+3. Business methods call only the `NotificationSender` contract; they do not need to know the concrete class.
+4. External code determines the dependency's **configuration and lifecycle**. Do not unilaterally close a caller-owned dependency unless the contract permits it.
 
 ```mermaid
 classDiagram
@@ -3388,13 +3388,13 @@ classDiagram
     OrderNotifier --> NotificationSender : dùng qua trường final
 ```
 
-Mũi tên `OrderNotifier → NotificationSender` cho thấy **phụ thuộc ở mã nguồn trỏ tới abstraction**. Hai lớp sender triển khai chi tiết và có thể thay cho nhau miễn là chúng tuân thủ cùng hợp đồng.
+The `OrderNotifier → NotificationSender` arrow shows that **the source-code dependency points to an abstraction**. The two sender classes provide implementations and can substitute for each other as long as they honor the same contract.
 
-## 3. Method injection: phụ thuộc được chọn theo từng lời gọi
+## 3. Method Injection: Dependencies Chosen Per Call
 
-**Method injection qua tham số** phù hợp khi hành vi phụ thuộc vào **ngữ cảnh của lần gọi** và không cần được giữ lâu trong một trường.
+**Method-parameter injection** is appropriate when behavior depends on **the context of each call** and the dependency need not be stored in a field.
 
-Ví dụ, một tác vụ gửi cảnh báo có thể chọn kênh gửi khác nhau theo từng yêu cầu:
+For example, an alert-sending operation may select a different channel for each request:
 
 ```java
 final class AlertService {
@@ -3409,7 +3409,7 @@ final class AlertService {
 }
 ```
 
-Cách sử dụng:
+Usage:
 
 ```java
 AlertService alerts = new AlertService();
@@ -3427,9 +3427,9 @@ alerts.sendAlert(
 );
 ```
 
-Trong cách này, `AlertService` không cần trường `NotificationSender`. Mỗi lời gọi truyền dependency được chọn lúc đó. Đây là **tiêm dependency bằng tham số phương thức**; nó không đồng nghĩa với cơ chế `@Lookup` method injection chuyên biệt của Spring.
+With this approach, `AlertService` does not need a `NotificationSender` field. Every call supplies the dependency selected at that moment. This is **dependency injection through method parameters**; it is distinct from Spring's specialized `@Lookup` method-injection mechanism.
 
-**Khác biệt về vòng đời:**
+**Lifecycle differences:**
 
 ```mermaid
 flowchart TD
@@ -3442,13 +3442,13 @@ flowchart TD
     F --> G
 ```
 
-Nếu lần nào cũng truyền cùng một sender qua hàng chục phương thức chỉ để có thể gọi nó, constructor injection thường gọn hơn. Ngược lại, nếu một dịch vụ gửi được nhiều kênh độc lập theo yêu cầu, lưu cố định một sender có thể làm API kém linh hoạt.
+If the same sender must be passed through dozens of methods just to invoke it, constructor injection is usually more concise. Conversely, if a service selects independent sending channels for each request, storing one fixed sender may make the API less flexible.
 
-## 4. Ví dụ Java hoàn chỉnh: dùng cả hai cách injection
+## 4. Complete Java Example: Using Both Injection Approaches
 
-Đoạn sau chạy độc lập với **Java 17+**, không cần Spring hay dịch vụ email/SMS thật. Các sender chỉ in ra console để minh họa đa hình và đường truyền dependency.
+The following example runs independently on **Java 17+** without Spring or real email/SMS services. The senders only print to the console to illustrate polymorphism and dependency flow.
 
-Lưu thành `DependencyInjectionDemo.java`:
+Save as `DependencyInjectionDemo.java`:
 
 ```java
 import java.util.Objects;
@@ -3587,14 +3587,14 @@ public class DependencyInjectionDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac DependencyInjectionDemo.java
 java DependencyInjectionDemo
 ```
 
-Đầu ra mong đợi:
+Expected output:
 
 ```text
 [EMAIL] an@example.test <- Đơn hàng ORD-101 đã thanh toán
@@ -3604,9 +3604,9 @@ SMS accepted: true
 Fake calls: 1
 ```
 
-Đây là **mô phỏng tại console**. `accepted=true` trong ví dụ chỉ có nghĩa implementation mô phỏng đã chấp nhận lời gọi; không chứng minh email/SMS thật đã được gửi hay người nhận đã đọc. Với dịch vụ thực, hợp đồng cần phân biệt đã gửi, đang chờ, bị từ chối và lỗi kết nối nếu những trạng thái đó quan trọng.
+This is **a console simulation**. `accepted=true` in the example only means the simulated implementation accepted the call; it does not prove a real email/SMS was sent or read. For real services, the contract should distinguish sent, pending, rejected, and connection-error states whenever they matter.
 
-### Theo dõi một lần gọi
+### Tracing One Call
 
 ```mermaid
 sequenceDiagram
@@ -3621,22 +3621,22 @@ sequenceDiagram
     N-->>Main: DeliveryResult
 ```
 
-`OrderNotifier` không khởi tạo `ConsoleEmailSender`; điều đó được làm ở phía `main`. Do vậy, có thể truyền `RecordingSender` để kiểm thử mà không phải thay code của `OrderNotifier`.
+`OrderNotifier` does not instantiate `ConsoleEmailSender`; `main` does that. Therefore, we can inject `RecordingSender` for testing without modifying `OrderNotifier` code.
 
-## 5. So sánh constructor, method và setter injection
+## 5. Comparing Constructor, Method, and Setter Injection
 
-Đôi khi tài liệu sử dụng từ **method injection** để chỉ **setter injection** (tiêm qua phương thức setter), nhưng cũng có tài liệu nói riêng về **method parameter injection** (truyền dependency trực tiếp cho một thao tác). Nên nêu rõ đang dùng dạng nào.
+Some documentation uses **method injection** to mean **setter injection** (injecting through a setter method), while other sources distinguish **method parameter injection** (passing a dependency directly to an operation). Specify which form you mean.
 
-| Tiêu chí | Constructor injection | Method parameter injection | Setter injection |
+| Criterion | Constructor injection | Method parameter injection | Setter injection |
 |---|---|---|---|
-| Ví dụ | `new Service(repo)` | `service.run(repo)` | `service.setRepo(repo)` |
-| Dependency được nhận khi nào? | Khi khởi tạo đối tượng | Mỗi lần gọi một phương thức | Khi setter được gọi |
-| Lưu thành field? | Thường có, có thể `final` | Thường không cần | Thường có, thường không `final` |
-| Phù hợp với | Dependency bắt buộc, ổn định | Dependency tùy từng yêu cầu/tác vụ | Cấu hình tùy chọn hoặc có khả năng thay đổi |
-| Nguy cơ | Constructor có quá nhiều tham số | Lặp tham số ở nhiều lời gọi | Đối tượng có thể chưa cấu hình hoặc bị đổi giữa chừng |
-| Dễ làm giả trong test | Có | Có | Có, nhưng phải kiểm soát thứ tự cấu hình |
+| Example | `new Service(repo)` | `service.run(repo)` | `service.setRepo(repo)` |
+| When is the dependency received? | During object construction | On each method call | When the setter is called |
+| Stored as a field? | Usually, optionally `final` | Usually unnecessary | Usually, typically not `final` |
+| Best suited for | Required, stable dependencies | Per-request/per-task dependencies | Optional or reconfigurable dependencies |
+| Risks | Too many constructor parameters | Repeating parameters across calls | An object may be unconfigured or changed mid-operation |
+| Easy to fake in tests? | Yes | Yes | Yes, but configuration order must be controlled |
 
-Setter injection có thể viết như sau:
+Setter injection can look like this:
 
 ```java
 final class ConfigurableNotifier {
@@ -3655,23 +3655,23 @@ final class ConfigurableNotifier {
 }
 ```
 
-Mẫu này có rủi ro: nếu gọi `notify()` trước `setSender()`, object chưa sẵn sàng. Nếu nhiều thread cùng gọi setter và notify, còn phải xem xét đồng bộ và quy tắc thay đổi cấu hình. Vì vậy, **ưu tiên constructor injection cho dependency bắt buộc**; dùng setter khi việc thay đổi hoặc không cấu hình dependency là một yêu cầu thực sự.
+This approach carries risks: if `notify()` is called before `setSender()`, the object is not ready. If multiple threads call the setter and notification method concurrently, synchronization and configuration-change rules also matter. Therefore, **prefer constructor injection for required dependencies**; use setters when replacement or an unconfigured state is a genuine requirement.
 
-## 6. Composition khác với kế thừa như thế nào ở đây?
+## 6. How Does Composition Differ from Inheritance Here?
 
-Trong ví dụ, quan hệ giữa notifier và sender là:
+In the example, the notifier/sender relationship is:
 
 ```text
 OrderNotifier có một NotificationSender.
 ```
 
-Không phải:
+Not:
 
 ```text
 OrderNotifier là một loại NotificationSender.
 ```
 
-`OrderNotifier` **sử dụng** sender để hoàn thành trách nhiệm riêng; nó không cần `extends ConsoleEmailSender` hay `extends ConsoleSmsSender`. Đây là composition: phối hợp các đối tượng có trách nhiệm độc lập.
+`OrderNotifier` **uses** a sender to fulfill its own responsibility. It does not need `extends ConsoleEmailSender` or `extends ConsoleSmsSender`. This is composition: collaborating objects perform independent responsibilities.
 
 ```java
 // Đúng hướng: sử dụng một thành phần thông qua hợp đồng.
@@ -3686,53 +3686,53 @@ class OrderNotifier {
 // class OrderNotifier extends ConsoleEmailSender { ... }
 ```
 
-Composition giúp thay đổi cách gửi thông báo mà không cần làm biến dạng cây kế thừa. Nó cũng thuận tiện khi mỗi đối tượng có vòng đời riêng: notifier có thể sống dài, sender có thể được chia sẻ hoặc có cơ chế đóng kết nối theo API.
+Composition allows notification delivery to change without distorting an inheritance hierarchy. It also suits objects with different lifecycles: a notifier may be long-lived while its sender is shared or has connection-closing rules defined by its API.
 
-**Quan trọng:** chỉ truyền dependency vào không tự làm cho chương trình có tính đúng đắn về concurrency hoặc vòng đời tài nguyên. Nếu sender dùng kết nối hoặc thread pool, cần quyết định ai tạo, ai sở hữu và ai đóng chúng.
+**Important:** Passing a dependency into an object does not guarantee correct concurrency or resource lifecycles. If a sender uses a connection or thread pool, decide who creates, owns, and closes those resources.
 
-## 7. Truyền interface thay vì gắn với implementation cụ thể
+## 7. Injecting Interfaces Instead of Tying Code to Concrete Implementations
 
-Hai constructor sau đều là một dạng nhận dependency từ bên ngoài:
+Both constructors below receive a dependency from outside:
 
 ```java
 OrderNotifier(ConsoleEmailSender sender) { /* ... */ }
 OrderNotifier(NotificationSender sender) { /* ... */ }
 ```
 
-Nhưng cách thứ hai mềm dẻo hơn vì nhận bất kỳ implementation nào tuân thủ `NotificationSender`.
+The second approach is more flexible because it accepts any implementation honoring `NotificationSender`.
 
-Khi lớp nghiệp vụ chỉ cần hành vi `send`, nó không nên yêu cầu những phương thức riêng của một nhà cung cấp cụ thể. Hợp đồng càng dựa vào nhu cầu thực của caller, mức kết dính càng thấp.
+When a business class only needs `send` behavior, it should not require provider-specific methods. The more closely a contract matches the caller's actual needs, the less coupling it introduces.
 
-Tuy nhiên, **không bắt buộc mỗi class đều cần một interface**. Nếu một thành phần chỉ có một cách triển khai ổn định và không có ranh giới thay thế hữu ích, tiêm một concrete class vẫn có thể hợp lý. Điều quan trọng là ai quyết định cách tạo dependency và dependency có bị gắn cứng trong logic nghiệp vụ không.
+However, **not every class needs an interface**. If a component has one stable implementation and no useful substitution boundary, injecting a concrete class may be reasonable. What matters is who decides how the dependency is created and whether it is hardwired into business logic.
 
-### Dependency Injection, Dependency Inversion và IoC
+### Dependency Injection, Dependency Inversion, and IoC
 
-Ba khái niệm liên quan nhưng không đồng nghĩa:
+These three related concepts are not interchangeable:
 
-- **Dependency Injection (DI):** cách cung cấp dependency từ bên ngoài qua constructor, phương thức hoặc setter.
-- **Dependency Inversion Principle (DIP):** nguyên tắc cho mã cấp cao và mã triển khai cùng phụ thuộc vào abstraction phù hợp, thay vì mã cấp cao lệ thuộc trực tiếp vào chi tiết cấp thấp.
-- **Inversion of Control (IoC):** ý tưởng đảo quyền điều khiển việc tạo/cấp phát hoặc tổ chức luồng điều khiển cho một thành phần bên ngoài; DI là một kỹ thuật thường dùng để áp dụng IoC.
+- **Dependency Injection (DI):** Supplies dependencies externally through constructors, methods, or setters.
+- **Dependency Inversion Principle (DIP):** Higher-level code and implementations both depend on appropriate abstractions rather than higher-level code directly depending on low-level details.
+- **Inversion of Control (IoC):** Moves control over object creation/provision or control-flow coordination to an external component; DI is a common technique for applying IoC.
 
-Không cần một container DI để có DI. Trong `main` của ví dụ, mã khởi tạo ứng dụng đang đóng vai trò **composition root** — nơi chọn và lắp ráp các implementation.
+DI does not require a DI container. In the example's `main`, the application initialization code acts as the **composition root**—the place where implementations are selected and assembled.
 
-## 8. Chọn cách injection theo yêu cầu thực tế
+## 8. Choosing Injection Approaches Based on Requirements
 
-Một số tình huống minh họa:
+Some illustrative situations:
 
-| Tình huống | Cách thường thích hợp | Lý do |
+| Situation | Typical approach | Reason |
 |---|---|---|
-| `OrderService` luôn cần `OrderRepository` để xử lý | Constructor injection | Bắt buộc, ổn định trong vòng đời service |
-| `CheckoutService` luôn dùng một `PaymentGateway` được cấu hình | Constructor injection | Thiếu gateway là không thể làm việc đúng |
-| Xuất một báo cáo với `Formatter` khác nhau từng lần | Method parameter injection | Formatter là chiến lược riêng của tác vụ |
-| Công cụ chạy thử cho chọn kênh gửi thông báo mỗi lần | Method parameter injection | Dependency thay theo đầu vào của lần gọi |
-| Một tính năng phụ có thể được cấu hình sau | Setter injection có kiểm soát | Không phải dependency bắt buộc từ lúc tạo |
-| Tập trung tạo và kết nối mọi service trong ứng dụng | Composition root hoặc DI container | Một nơi quản lý lắp ghép và vòng đời |
+| `OrderService` always needs `OrderRepository` to process requests | Constructor injection | Required and stable throughout the service lifecycle |
+| `CheckoutService` always uses a configured `PaymentGateway` | Constructor injection | The service cannot operate correctly without a gateway |
+| Export each report with a different `Formatter` | Method parameter injection | The formatter is a per-task strategy |
+| A testing utility selects a notification channel on each call | Method parameter injection | The dependency varies with the call input |
+| An optional feature can be configured later | Controlled setter injection | The dependency is not required from construction |
+| Centralize creation and connection of application services | Composition root or DI container | One place manages assembly and lifecycles |
 
-**Nguyên tắc quyết định nhanh:** nếu thiếu dependency khiến object **không hợp lệ hoặc không dùng được**, đưa nó vào constructor. Nếu dependency **chỉ cần cho một hành động cụ thể và thay theo hành động**, cân nhắc tham số phương thức. Nếu dependency thật sự **tùy chọn hoặc được cấu hình lại**, setter có thể phù hợp nhưng phải định nghĩa trạng thái trước/sau cấu hình.
+**Quick decision rule:** If a missing dependency makes an object **invalid or unusable**, put it in the constructor. If a dependency **is needed only for a specific operation and varies per operation**, consider a method parameter. If a dependency is truly **optional or reconfigurable**, a setter may fit, but define the object's state before and after configuration.
 
-## 9. Lỗi phổ biến
+## 9. Common Mistakes
 
-### Lỗi 1 — Cung cấp dependency rồi lại tự tạo mới bên trong
+### Mistake 1 — Accepting a Dependency but Creating Another Internally
 
 ```java
 class BadNotifier {
@@ -3749,9 +3749,9 @@ class BadNotifier {
 }
 ```
 
-Mặc dù constructor có tham số, class vẫn gắn cứng với email. Sửa bằng `this.sender.send(...)`.
+Although the constructor accepts a parameter, the class remains hardwired to email. Fix it by calling `this.sender.send(...)`.
 
-### Lỗi 2 — Để dependency bắt buộc có thể null
+### Mistake 2 — Allowing a Required Dependency to Be Null
 
 ```java
 class BadService {
@@ -3760,74 +3760,74 @@ class BadService {
 }
 ```
 
-Khi gọi phương thức sử dụng sender, dễ gặp `NullPointerException`. Nên dùng constructor với `Objects.requireNonNull` hoặc một thiết kế trạng thái có kiểm soát nếu dependency thực sự tùy chọn.
+Calling a method that uses the sender can then trigger `NullPointerException`. Prefer a constructor with `Objects.requireNonNull` or a controlled-state design if the dependency is genuinely optional.
 
-### Lỗi 3 — Constructor có quá nhiều dependency
+### Mistake 3 — Constructors with Too Many Dependencies
 
 ```java
 // Ví dụ minh họa dấu hiệu cần xem lại trách nhiệm:
 Service(A a, B b, C c, D d, E e, F f, G g) { /* ... */ }
 ```
 
-Không có một ngưỡng số tham số áp dụng cho mọi dự án. Nhưng nếu constructor có quá nhiều phụ thuộc không liên quan, có thể lớp đang làm quá nhiều việc. Hãy xem lại trách nhiệm, tách dịch vụ hợp lý thay vì tự động đóng tất cả vào một đối tượng `Dependencies` khó kiểm soát.
+There is no universal parameter-count limit. But if a constructor has many unrelated dependencies, the class may have too many responsibilities. Revisit its responsibilities and separate services appropriately instead of automatically packing everything into a hard-to-manage `Dependencies` object.
 
-### Lỗi 4 — Method injection khiến API truyền lan dependency
+### Mistake 4 — Method Injection Causes Dependencies to Spread Through APIs
 
-Nếu nhiều tầng gọi nhau đều nhận `NotificationSender` mà tầng trung gian không sử dụng nó ngoài việc truyền tiếp, có thể dependency đã được đặt sai phạm vi. Cân nhắc cho thành phần thật sự sử dụng nhận dependency qua constructor.
+If multiple calling layers all accept `NotificationSender` but intermediate layers only forward it, the dependency may have the wrong scope. Consider injecting it through the constructor of the component that actually uses it.
 
-### Lỗi 5 — Không phân biệt trách nhiệm sở hữu resource
+### Mistake 5 — Unclear Resource Ownership
 
-Một dependency được tiêm có thể sở hữu kết nối mạng, executor hoặc stream. Mã nhận dependency **không được tự ý đóng** tài nguyên do nơi khác quản lý nếu hợp đồng không quy định; nếu một thành phần được giao quyền sở hữu thì phải đóng tài nguyên vào đúng cuối vòng đời. DI không tự động thay thế chính sách quản lý tài nguyên.
+An injected dependency may own network connections, executors, or streams. Code receiving a dependency **must not unilaterally close** externally managed resources unless the contract specifies it; if ownership is transferred, resources must be closed at the proper lifecycle endpoint. DI does not replace resource-management policies.
 
-### Lỗi 6 — Nghĩ constructor injection tự tạo an toàn đa luồng
+### Mistake 6 — Assuming Constructor Injection Guarantees Thread Safety
 
-`private final NotificationSender sender` không làm cho `sender.send(...)` tự thread-safe. Nếu nhiều thread chia sẻ một sender có trạng thái mutable, implementation vẫn cần bảo đảm an toàn đa luồng hoặc được sử dụng trong phạm vi phù hợp.
+`private final NotificationSender sender` does not make `sender.send(...)` thread-safe. If multiple threads share a mutable sender, its implementation still needs thread-safety guarantees or an appropriate usage scope.
 
-## 10. Bài tập thực hành
+## 10. Practice Exercises
 
-**Bài 1 — Đổi implementation.** Thêm `ConsolePushSender implements NotificationSender` in `[PUSH]`. Tiêm nó vào `OrderNotifier` thay cho `ConsoleEmailSender` mà không sửa `OrderNotifier`. Quan sát đầu ra.
+**Exercise 1 — Switch implementations.** Add `ConsolePushSender implements NotificationSender` that prints `[PUSH]`. Inject it into `OrderNotifier` instead of `ConsoleEmailSender` without editing `OrderNotifier`. Observe the output.
 
-**Bài 2 — Chọn injection.** Một `ReportService` cần `DocumentRepository` trong mọi lời gọi và cần một `ReportFormatter` thay đổi theo từng báo cáo. Thiết kế constructor nhận repository, còn phương thức `export(formatter)` nhận formatter. Giải thích vì sao chọn hai phạm vi khác nhau.
+**Exercise 2 — Choose injection scopes.** A `ReportService` needs `DocumentRepository` on every call and a `ReportFormatter` that varies per report. Design a constructor accepting the repository and an `export(formatter)` method accepting the formatter. Explain the different scopes.
 
-**Bài 3 — Kiểm thử bằng fake.** Dùng `RecordingSender` để kiểm tra `OrderNotifier.notifyPaid` truyền đúng người nhận, mã đơn hàng và chỉ gọi `send` một lần. Sau đó truyền `RecordingSender` cho `AlertService.sendAlert` để kiểm tra method injection.
+**Exercise 3 — Test with a fake.** Use `RecordingSender` to verify that `OrderNotifier.notifyPaid` passes the correct recipient and order ID and invokes `send` only once. Then pass `RecordingSender` to `AlertService.sendAlert` to test method injection.
 
-**Bài 4 — Trạng thái chưa cấu hình.** Thử gọi `notify` của `ConfigurableNotifier` trước khi `setSender`. Giải thích vì sao việc tiêm qua setter có thể tạo ra trạng thái chưa hợp lệ; viết test cho tình huống này.
+**Exercise 4 — Unconfigured state.** Call `notify` on `ConfigurableNotifier` before `setSender`. Explain why setter injection can create an invalid/unready state and write a test for it.
 
-**Bài 5 — Sở hữu dependency.** Một `SmtpSender` có kết nối cần đóng. Khi `OrderNotifier` nhận sender từ composition root, ai nên đóng kết nối? Hãy đề xuất hợp đồng sở hữu rõ ràng thay vì tự đóng từ mọi class đang dùng sender.
+**Exercise 5 — Dependency ownership.** A `SmtpSender` holds a connection that needs closing. When `OrderNotifier` receives a sender from the composition root, who should close the connection? Propose an explicit ownership contract instead of having every class using the sender close it.
 
-**Ghi nhớ:** Với composition, một đối tượng **nhận và sử dụng** các đối tượng cộng tác thay vì tự tạo cứng chúng. **Constructor injection** phù hợp nhất cho dependency bắt buộc, ổn định; **method parameter injection** phù hợp với dependency thay đổi theo tác vụ; còn **setter injection** chỉ nên dùng khi cần thay đổi hoặc cấu hình sau và đã kiểm soát trạng thái chưa sẵn sàng. Điểm chung là mã nghiệp vụ chỉ biết hợp đồng cần dùng, nhờ đó dễ thay implementation và kiểm thử.
+**Key takeaway:** With composition, an object **receives and uses** collaborators instead of hardwiring their construction. **Constructor injection** works best for required, stable dependencies; **method parameter injection** suits per-task dependencies; and **setter injection** is appropriate only when later configuration or replacement is required and the unready state is managed. In each case, business logic only needs to know the required contract, making implementations easier to replace and test.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="composition-007">Quyền sở hữu và vòng đời đối tượng được chứa</a>
+## <a id="composition-007">Ownership and Lifecycle of Contained Objects</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Quyền sở hữu và vòng đời đối tượng được chứa trong Composition (Java)
+# Ownership and Lifecycle of Contained Objects in Java Composition
 
-> **Bối cảnh:** OOP → Kết hợp (Composition). Khi một đối tượng chứa các đối tượng khác, câu hỏi thiết kế quan trọng không chỉ là “có trường dữ liệu nào?”, mà còn là **ai kiểm soát việc tạo, sửa, chia sẻ và kết thúc sử dụng thành phần đó?**
+> **Context:** OOP → Composition. When an object contains other objects, the important design question is not just "what fields does it have?" but **who controls the creation, modification, sharing, and end of use of those components?**
 
-## 1. Mục tiêu học tập
+## 1. Learning Objectives
 
-Sau bài này, bạn có thể:
+After this lesson, you should be able to:
 
-- Phân biệt **quyền sở hữu ở mức thiết kế đối tượng**, **khả năng truy cập qua tham chiếu Java** và **quyền quản lý tài nguyên hệ thống**.
-- Xác định thành phần có được dùng chung giữa nhiều đối tượng hay phải nằm dưới sự quản lý của một đối tượng cha.
-- Thiết kế API giữ vững bất biến (invariant) khi đối tượng được chứa thay đổi.
-- Dùng `AutoCloseable` và `try-with-resources` để điều khiển vòng đời tài nguyên khi đối tượng cha sở hữu tài nguyên đó.
-- Tránh nhầm cơ chế garbage collection với việc đóng file, kết nối hoặc luồng công việc.
+- Distinguish **ownership in object design**, **access through Java references**, and **responsibility for system resources**.
+- Determine whether components may be shared among objects or must be managed by one parent object.
+- Design APIs that preserve invariants when contained objects change.
+- Use `AutoCloseable` and `try-with-resources` to control resource lifecycles when the containing object owns those resources.
+- Avoid confusing garbage collection with closing files, connections, or execution workflows.
 
-## 2. Quyền sở hữu nghĩa là gì?
+## 2. What Does Ownership Mean?
 
-Trong **composition**, một đối tượng tổng thể (*whole/owner*) quản lý các thành phần (*parts*) để thực hiện chức năng và bảo vệ trạng thái hợp lệ của tổng thể.
+In **composition**, a containing object (*whole/owner*) manages its components (*parts*) to provide functionality and preserve the whole's valid state.
 
-Ví dụ: `DonHang` quản lý các `DongHang`. Đơn hàng quyết định khi nào thêm dòng hàng, dòng nào được xóa, số lượng/đơn giá nào hợp lệ và cách tính tổng tiền. Người dùng `DonHang` không được tự ý sửa danh sách nội bộ để bỏ qua các quy tắc đó.
+For example, `DonHang` manages its `DongHang` objects. The order determines when line items are added or removed, which quantities and prices are valid, and how the total is calculated. Code using `DonHang` must not modify its internal list to bypass those rules.
 
 ```mermaid
 classDiagram
@@ -3847,43 +3847,43 @@ classDiagram
     DonHang "1" *-- "0..*" DongHang : quan ly
 ```
 
-Ký hiệu hình thoi tô đặc (`*--`) trong UML thể hiện **composition**: thành phần nằm trong ranh giới vòng đời và quyền quản lý của tổng thể, theo **mô hình nghiệp vụ**.
+The filled diamond symbol (`*--`) in UML represents **composition**: a component is within the whole's lifecycle and management boundary according to **the domain model**.
 
-Tuy nhiên, Java **không có từ khóa ownership**. Một trường `private DongHang dongHang;` chỉ lưu **tham chiếu**, chưa tự động đảm bảo cha là chủ sở hữu duy nhất. Quyền sở hữu phải được bảo vệ bằng cách thiết kế constructor, phương thức, phạm vi truy cập và quy ước sử dụng.
+However, Java **has no ownership keyword**. A `private DongHang dongHang;` field holds only **a reference** and does not automatically guarantee that the parent is the sole owner. Ownership must be enforced through constructor and method design, access control, and usage conventions.
 
-### Ba khái niệm dễ bị lẫn
+### Three Easily Confused Concepts
 
-| Khái niệm | Câu hỏi chính | Trong Java |
+| Concept | Key question | In Java |
 |---|---|---|
-| Sở hữu theo mô hình nghiệp vụ | Ai quyết định tạo, thay đổi, loại bỏ thành phần? | API, invariant, đóng gói; không được JVM áp đặt |
-| Tham chiếu đến đối tượng | Ai đang giữ đường truy cập đến cùng một đối tượng? | Nhiều biến có thể trỏ đến cùng instance; `private` và `final` không tự ngăn alias |
-| Sở hữu tài nguyên | Ai phải đóng file/socket/stream và khi nào? | Hợp đồng API, `AutoCloseable`, `try-with-resources` |
+| Domain-model ownership | Who decides to create, modify, or remove components? | APIs, invariants, encapsulation; not enforced by the JVM |
+| Object references | Who has access paths to the same object? | Many variables may point to one instance; `private` and `final` do not prevent aliasing |
+| Resource ownership | Who must close files/sockets/streams, and when? | API contracts, `AutoCloseable`, `try-with-resources` |
 
-Một đối tượng con có thể ngừng thuộc đơn hàng nhưng vẫn còn tham chiếu trong chương trình. Điều này **không** có nghĩa Java xóa ngay đối tượng khỏi bộ nhớ.
+A child object may cease to belong to an order while remaining referenced elsewhere in the program. This **does not** mean Java immediately removes it from memory.
 
-## 3. Quyết định quyền sở hữu trước khi viết code
+## 3. Decide Ownership Before Writing Code
 
-Với mỗi trường chứa một đối tượng khác, hãy trả lời:
+For each field containing another object, answer:
 
-1. **Ai tạo?** Cha tạo nội bộ, nhận dữ liệu để sao chép, hay nhận một instance từ bên ngoài?
-2. **Ai có thể sửa?** Mọi thay đổi đi qua API cha hay các lớp khác có thể sửa trực tiếp?
-3. **Có được chia sẻ?** Một thành phần có thể đồng thời phục vụ nhiều tổng thể không?
-4. **Khi nào kết thúc?** Khi cha bị loại bỏ khỏi nghiệp vụ, khi cha gọi `close()`, hay khi toàn ứng dụng dừng?
-5. **Ai dọn dẹp?** Chỉ rõ trách nhiệm với tài nguyên có giới hạn như kết nối, file và thread.
+1. **Who creates it?** Does the parent create it internally, receive data to copy, or accept an external instance?
+2. **Who may modify it?** Must all changes pass through the parent's API, or may other classes modify it directly?
+3. **Can it be shared?** Can a component serve multiple whole objects simultaneously?
+4. **When does its use end?** When the parent leaves the domain, calls `close()`, or the entire application stops?
+5. **Who cleans it up?** Define responsibility for limited resources such as connections, files, and threads.
 
-| Tình huống | Thiết kế thường phù hợp | Lưu ý |
+| Situation | Typical design | Consideration |
 |---|---|---|
-| `DonHang` và danh sách `DongHang` | Composition; cha kiểm soát thêm/xóa dòng | Chặn sửa danh sách qua getter |
-| `HoaDon` và giá trị `Money` bất biến | Có thể chia sẻ value object an toàn | Không bắt buộc tạo bản sao nếu thực sự bất biến |
-| `NhanVien` và `PhongBan` | Quan hệ liên kết/aggregation thường hợp lý hơn | Phòng ban vẫn tồn tại khi nhân viên rời đi |
-| `ExportJob` tự mở `BufferedWriter` | Job sở hữu writer và phải đóng | Đóng theo `try-with-resources` |
-| Service được container dependency injection cấp | Thường container quản lý vòng đời | Consumer không tự đóng dependency dùng chung |
+| `DonHang` and its `DongHang` list | Composition; the parent controls adding/removing lines | Prevent list modification through getters |
+| `HoaDon` and immutable `Money` values | Value objects may be shared safely | Copies are unnecessary if truly immutable |
+| `NhanVien` and `PhongBan` | Association/aggregation often fits better | The department remains after an employee leaves |
+| `ExportJob` opens its own `BufferedWriter` | The job owns the writer and must close it | Close using `try-with-resources` |
+| Service supplied by a dependency-injection container | The container usually manages its lifecycle | Consumers must not close shared dependencies themselves |
 
-**Quy tắc thực dụng:** quyền sở hữu càng mạnh thì thành phần càng nên được tạo/quản lý qua API của cha, thay vì cho bên ngoài thay thế hoặc sửa tùy ý.
+**Practical rule:** The stronger the ownership, the more the component should be created/managed through the parent's API rather than freely replaced or modified externally.
 
-## 4. Ví dụ hoàn chỉnh: đơn hàng quản lý dòng hàng
+## 4. Complete Example: An Order Manages Its Line Items
 
-Lưu thành `CompositionDemo.java`, chạy với **Java 17+**:
+Save as `CompositionDemo.java` and run with **Java 17+**:
 
 ```java
 import java.math.BigDecimal;
@@ -3961,14 +3961,14 @@ public class CompositionDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac CompositionDemo.java
 java CompositionDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 1
@@ -3977,20 +3977,20 @@ Kết quả:
 Khong the sua danh sach tu ben ngoai
 ```
 
-**Vì sao ví dụ này thực sự quản lý thành phần?**
+**How does this example actually manage its components?**
 
-- `Order` tạo từng `Line` sau khi kiểm tra dữ liệu. Mọi thao tác thêm dòng hàng đều đi qua `addLine(...)`.
-- Danh sách `lines` là `private`; `lines()` trả về một **snapshot bất biến ở mức danh sách**, nên gọi `clear()`, `add()` từ bên ngoài đều bị từ chối.
-- `Line` là `record` chứa các giá trị bất biến trong ví dụ. Vì vậy việc trả các `Line` trong snapshot không làm lộ trạng thái có thể thay đổi của đơn hàng.
-- `total()` luôn được tính từ dữ liệu mà `Order` đang kiểm soát.
+- `Order` creates each `Line` after validating its data. Every line-item addition goes through `addLine(...)`.
+- The `lines` list is `private`; `lines()` returns a **list-level immutable snapshot**, so external calls to `clear()` or `add()` are rejected.
+- `Line` is a `record` containing immutable values in this example. Exposing `Line` objects in the snapshot therefore does not leak mutable order state.
+- `total()` is always calculated from data under `Order`'s control.
 
-**Giới hạn cần hiểu:** `List.copyOf(...)` chỉ tạo bản sao *nông* của cấu trúc danh sách. Nếu phần tử là `MutableLine` có setter, người nhận snapshot vẫn có thể sửa phần tử đó. Lúc ấy phải dùng bản sao sâu phù hợp, DTO bất biến, hoặc chỉ cung cấp thao tác đọc cần thiết.
+**Important limitation:** `List.copyOf(...)` makes only a *shallow* copy of the list structure. If elements are `MutableLine` objects with setters, snapshot recipients can still mutate those elements. Use appropriate deep copies, immutable DTOs, or an API exposing only necessary read operations.
 
-Ngoài ra, `final List<Line>` chỉ ngăn **gán lại biến trường**, không ngăn `lines.add(...)`. Để bất biến được bảo vệ, phải thiết kế cả cấu trúc và các đường truy cập.
+Also, `final List<Line>` only prevents **reassigning the field**; it does not prevent `lines.add(...)`. Preserving invariants requires designing both the data structure and its access paths.
 
-## 5. Vòng đời đối tượng con diễn ra thế nào?
+## 5. How Does a Child Object's Lifecycle Work?
 
-Có thể phân biệt vòng đời **nghiệp vụ** và vòng đời **bộ nhớ** như sau:
+We can distinguish the **domain lifecycle** from the **memory lifecycle** as follows:
 
 ```mermaid
 flowchart TD
@@ -4004,20 +4004,20 @@ flowchart TD
     F -->|Không| H["Có thể đủ điều kiện được GC thu hồi"]
 ```
 
-Đối với đối tượng Java thông thường:
+For ordinary Java objects:
 
-- **Tạo:** khi gọi constructor hoặc factory, đối tượng được cấp phát và được liên kết vào tổng thể theo API.
-- **Sử dụng:** tổng thể quản lý quyền thay đổi; cần tránh alias đưa cho bên ngoài khả năng sửa trái phép.
-- **Ngừng thuộc tổng thể:** khi dòng hàng được xóa hoặc đơn hàng kết thúc nghiệp vụ, quan hệ composition chấm dứt theo quy tắc domain.
-- **Thu hồi bộ nhớ:** JVM có thể thu hồi đối tượng khi không còn reachable từ các GC root. **Không thể dự đoán thời điểm thu hồi**, và bản thân việc bỏ tham chiếu không gọi `close()`.
+- **Creation:** A constructor or factory allocates the object and links it to the whole according to the API.
+- **Use:** The whole manages modification rights; avoid aliases that let external code make unauthorized changes.
+- **End of membership:** When a line item is removed or an order's domain lifecycle ends, the composition relationship ends according to domain rules.
+- **Memory reclamation:** The JVM may collect the object when it is no longer reachable from GC roots. **The timing cannot be predicted**, and dropping a reference does not call `close()`.
 
-Nếu ai đó vẫn giữ một `Line` đã lấy ra từ snapshot, `Line` ấy vẫn tồn tại và có thể đọc được; nhưng nó không còn là thành phần hiện hành của `Order` nếu `Order` đã bỏ dòng đó. Đây là điểm khác biệt giữa **vòng đời trong mô hình** và **vòng đời của instance trên heap**.
+If someone retains a `Line` from a snapshot, that `Line` still exists and can be read; however, it is no longer a current component of `Order` if the `Order` has removed it. This distinguishes **the modeled lifecycle** from **the lifecycle of an instance on the heap**.
 
-## 6. Vòng đời tài nguyên: cha tạo thì cha đóng
+## 6. Resource Lifecycle: The Creator Owns Cleanup
 
-Một trường hợp sở hữu mạnh khác là đối tượng tự tạo tài nguyên hệ điều hành, ví dụ export CSV. Bộ nhớ Java có garbage collector, nhưng **file handle cần được đóng rõ ràng**.
+Another strong-ownership scenario is an object creating its own operating-system resource, such as one for CSV export. Java memory has a garbage collector, but **file handles must be closed explicitly**.
 
-Lưu thành `ExportDemo.java` (Java 17+):
+Save as `ExportDemo.java` (Java 17+):
 
 ```java
 import java.io.BufferedWriter;
@@ -4066,9 +4066,9 @@ public class ExportDemo {
 }
 ```
 
-`CsvExporter` sở hữu `BufferedWriter` vì nó **tự mở** writer. Từ khi được tạo thành công đến khi `close()` hoàn tất, exporter chịu trách nhiệm dọn dẹp. Cờ `closed` giúp tránh đóng lặp trong ví dụ tuần tự này; nó **không** biến lớp thành thread-safe. Với code đa luồng, cần một hợp đồng đồng bộ hóa riêng.
+`CsvExporter` owns `BufferedWriter` because it **opens the writer itself**. From successful creation until `close()` completes, the exporter is responsible for cleanup. The `closed` flag prevents repeated closing in this sequential example; it **does not** make the class thread-safe. Multithreaded code needs a separate synchronization contract.
 
-Nếu exporter **nhận `Writer` từ bên ngoài**, không nên tự đóng writer trừ khi API nói rõ quyền sở hữu đã được chuyển giao:
+If the exporter **receives a `Writer` externally**, it should not close the writer unless the API explicitly transfers ownership:
 
 ```java
 void renderPreview(java.io.Writer borrowedWriter) throws java.io.IOException {
@@ -4078,13 +4078,13 @@ void renderPreview(java.io.Writer borrowedWriter) throws java.io.IOException {
 }
 ```
 
-Điểm mấu chốt: **có tham chiếu đến tài nguyên không đồng nghĩa có quyền đóng nó**. Nếu hai đối tượng cùng đóng một kết nối hoặc stream dùng chung, một bên có thể làm hỏng hoạt động của bên kia.
+The key point is that **holding a resource reference does not imply permission to close it**. If two objects both close a shared connection or stream, one may disrupt the other's operation.
 
-> Với ứng dụng Spring, bean do container quản lý thường có vòng đời do container điều phối (ví dụ callback `@PreDestroy`). Thành phần nhận bean qua dependency injection cần tuân theo hợp đồng vòng đời của container; quan hệ tham chiếu field không tự trao quyền đóng bean đó.
+> In Spring applications, container-managed beans generally have lifecycles coordinated by the container (for example, a `@PreDestroy` callback). Components receiving beans through dependency injection must respect the container's lifecycle contract; a field reference alone does not grant permission to close the bean.
 
-## 7. Ba lỗi thường gặp và cách sửa
+## 7. Three Common Mistakes and Their Fixes
 
-### Lỗi 1 — Rò rỉ khả năng sửa trạng thái của cha
+### Mistake 1 — Exposing the Parent's Mutable State
 
 ```java
 // Nguy hiem: nguoi goi co the them/xoa phan tu khong qua kiem tra.
@@ -4093,25 +4093,25 @@ public List<Line> getLines() {
 }
 ```
 
-Nếu cấu trúc cần đọc mà không sửa, có thể trả `List.copyOf(lines)`. Nếu con là mutable, cần thêm chiến lược sao chép hoặc view DTO bất biến; bản sao nông chưa đủ.
+If callers need read-only access, return `List.copyOf(lines)`. If children are mutable, also use a copying strategy or immutable DTO view; a shallow copy is insufficient.
 
-### Lỗi 2 — Giữ alias mutable do caller cung cấp
+### Mistake 2 — Retaining a Caller-Supplied Mutable Alias
 
 ```java
 // Nguy hiem: caller van giu danh sach va co the sua truc tiep.
 this.lines = incomingLines;
 ```
 
-Cách sửa phụ thuộc hợp đồng:
+The fix depends on the contract:
 
 ```java
 // Khi Line la value object bat bien:
 this.lines = List.copyOf(incomingLines);
 ```
 
-Nếu muốn cấu trúc nội bộ thay đổi được, có thể dùng `new ArrayList<>(incomingLines)` nhưng vẫn phải xem xét khả năng thay đổi của từng phần tử. Sao chép không thay thế việc xác thực dữ liệu.
+If the internal structure must remain mutable, `new ArrayList<>(incomingLines)` can be used, but each element's mutability must still be considered. Copying does not replace data validation.
 
-### Lỗi 3 — Đồng nhất hết vòng đời với garbage collection
+### Mistake 3 — Equating All Lifecycles with Garbage Collection
 
 ```java
 writer = Files.newBufferedWriter(path);
@@ -4119,73 +4119,73 @@ writer = Files.newBufferedWriter(path);
 writer = null;
 ```
 
-Cách sửa: dùng `try-with-resources` tại phạm vi sở hữu tài nguyên. Không dựa vào `finalize()` (cơ chế lỗi thời, không bảo đảm thời điểm thực thi) để đóng file/socket/connection.
+Fix it by using `try-with-resources` within the resource-owning scope. Do not rely on `finalize()` (an obsolete mechanism with no guaranteed execution time) to close files, sockets, or connections.
 
-## 8. Checklist khi review thiết kế composition
+## 8. Composition Design Review Checklist
 
-| Câu hỏi kiểm tra | Dấu hiệu thiết kế tốt |
+| Review question | Sign of good design |
 |---|---|
-| Thành phần do ai tạo hoặc nhận? | Constructor/factory nói rõ ownership và điều kiện hợp lệ |
-| Getter có làm lộ nội bộ? | Không trao quyền sửa ngoài chủ đích |
-| Có alias mutable từ ngoài? | Sao chép, dùng immutable type hoặc định nghĩa chuyển giao quyền sở hữu |
-| Thành phần có chia sẻ với owner khác? | Chỉ chia sẻ khi vòng đời/hợp đồng cho phép |
-| Xóa component có làm sai invariant? | Thao tác qua phương thức domain và cập nhật trạng thái nhất quán |
-| Chứa `Closeable`/stream/socket? | Có đúng một trách nhiệm close rõ ràng; lỗi vẫn được dọn dẹp |
-| Có giả định GC sẽ gọi cleanup? | Không; GC chỉ liên quan đến quản lý bộ nhớ |
-| Có yêu cầu đa luồng? | Quy định thread confinement hoặc đồng bộ hóa riêng |
+| Who creates or receives components? | Constructor/factory documents ownership and validity conditions |
+| Does a getter expose internals? | It does not grant unintended modification rights |
+| Are there external mutable aliases? | Copy, use immutable types, or explicitly transfer ownership |
+| Can components be shared with another owner? | Share only when lifecycle/contracts allow it |
+| Can removing a component violate invariants? | Use domain methods and update state consistently |
+| Does it contain `Closeable` objects/streams/sockets? | Exactly one clear closing responsibility; cleanup also handles failures |
+| Is GC expected to trigger cleanup? | No; GC only concerns memory management |
+| Is concurrency required? | Define thread confinement or separate synchronization |
 
-## 9. Tự luyện tập
+## 9. Practice Exercises
 
-**Bài 1 — Thiết kế giỏ hàng:** xây dựng `ShoppingCart` chứa nhiều `CartItem`. Chỉ cho thêm qua `addItem(productId, quantity, price)`; không cho số lượng âm/0; cung cấp `items()` cho đọc và `total()` cho tính tiền. Hãy giải thích tại sao `CartItem` bất biến giúp bảo vệ quyền sở hữu.
+**Exercise 1 — Design a shopping cart:** Build a `ShoppingCart` containing multiple `CartItem` objects. Allow additions only through `addItem(productId, quantity, price)`; reject negative/zero quantities; provide `items()` for reading and `total()` for calculating the amount. Explain why immutable `CartItem` objects help preserve ownership boundaries.
 
-**Bài 2 — Phát hiện bug:** constructor nhận `List<MutableItem>`, lưu trực tiếp vào field, getter trả chính field đó. Chỉ ra **hai đường** bên ngoài có thể phá invariant. Đề xuất sửa cả cấu trúc danh sách lẫn phần tử.
+**Exercise 2 — Find the bug:** A constructor receives `List<MutableItem>`, stores it directly in a field, and returns that same field from a getter. Identify **two external paths** that can violate invariants. Propose fixes for both the list structure and its elements.
 
-**Bài 3 — Quyền đóng tài nguyên:** thiết kế hai constructor hoặc factory: `openOwned(Path)` tự tạo writer và `useBorrowed(Writer)` dùng writer do caller cung cấp. Hợp đồng của `close()` khác nhau thế nào? Trình bày rõ trường hợp chuyển giao ownership nếu muốn exporter đóng writer được truyền vào.
+**Exercise 3 — Resource-closing rights:** Design two constructors or factories: `openOwned(Path)` creates its own writer, and `useBorrowed(Writer)` uses a caller-supplied writer. How do their `close()` contracts differ? Clearly describe ownership transfer if the exporter is expected to close a supplied writer.
 
-### Kiến thức cần nhớ
+### Key Takeaways
 
-- **Composition là quyết định thiết kế về ranh giới và vòng đời nghiệp vụ.** Java không tự buộc đối tượng con chỉ có một tham chiếu hay tự hủy khi cha không còn dùng.
-- **Encapsulation bảo vệ ownership:** quản lý thay đổi qua owner, tránh lộ danh sách mutable và alias không kiểm soát.
-- **GC không thay thế cleanup:** tài nguyên do đối tượng sở hữu phải có chính sách đóng tường minh; `try-with-resources` là công cụ tiêu chuẩn khi dùng `AutoCloseable`.
+- **Composition is a design decision about boundaries and domain lifecycles.** Java does not require a child to have only one reference or destroy it automatically when the parent stops using it.
+- **Encapsulation protects ownership:** Route changes through the owner and avoid exposing mutable lists or uncontrolled aliases.
+- **GC does not replace cleanup:** Owned resources require explicit closing policies; `try-with-resources` is the standard mechanism with `AutoCloseable`.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="composition-008">Chuyển thiết kế kế thừa sang kết hợp</a>
+## <a id="composition-008">Refactoring from Inheritance to Composition</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Chuyển thiết kế kế thừa sang kết hợp trong Java
+# Refactoring from Inheritance to Composition in Java
 
-> **Mục tiêu:** Nhận biết khi `extends` đang được dùng chỉ để tái sử dụng mã, chuyển quan hệ kế thừa đó thành các đối tượng cộng tác qua trường dữ liệu và lời gọi phương thức (composition + delegation), đồng thời giữ đúng hành vi và kiểm soát ảnh hưởng tới mã đang sử dụng.
+> **Objective:** Recognize when `extends` is used merely for code reuse, replace that inheritance relationship with collaborators connected through fields and method calls (composition + delegation), preserve behavior, and manage the impact on existing callers.
 
-## 1. Vì sao cần chuyển?
+## 1. Why Refactor?
 
-**Kế thừa** nói rằng lớp con là một dạng hợp lệ của lớp cha (*is-a*). Với Java, `class Child extends Parent` nhận phương thức, trạng thái có thể truy cập và hợp đồng hành vi của `Parent`; các đối tượng `Child` cũng có thể được sử dụng ở vị trí cần `Parent`.
+**Inheritance** says that a subclass is a valid kind of its superclass (*is-a*). In Java, `class Child extends Parent` inherits methods, accessible state, and the behavioral contract of `Parent`; `Child` objects can also be used where `Parent` is required.
 
-**Kết hợp** nói rằng một đối tượng **sử dụng** đối tượng khác để hoàn thành công việc (*has-a / uses-a*). Thay vì `extends`, lớp nghiệp vụ giữ một tham chiếu đến thành phần cộng tác và **ủy quyền** cho thành phần đó xử lý phần việc phù hợp.
+**Composition** says that an object **uses** another object to accomplish its work (*has-a / uses-a*). Instead of using `extends`, the business class holds a reference to a collaborator and **delegates** the appropriate work to it.
 
-Ví dụ: `OrderService` **không phải là** một kho lưu đơn hàng; nó **sử dụng** `OrderRepository` để lưu đơn hàng. Cho `OrderService extends OrderStore` chỉ vì muốn dùng lại `save()` là dấu hiệu lệch mô hình.
+For example, `OrderService` **is not** an order store; it **uses** `OrderRepository` to persist orders. Defining `OrderService extends OrderStore` just to reuse `save()` indicates a modeling problem.
 
-Dấu hiệu nên xem xét chuyển đổi:
+Signs that refactoring may be worthwhile:
 
-- Lớp con gọi vài phương thức của lớp cha nhưng không thực sự mang ý nghĩa *is-a*.
-- Lớp con vô tình công khai các thao tác của lớp cha, như `deleteAll()` hay `resetConnection()`.
-- Một thay đổi trong lớp cha làm hỏng nhiều lớp con, dù các lớp con chỉ cần một phần chức năng.
-- Việc giả lập phụ thuộc khi kiểm thử buộc phải kế thừa, ghi đè hoặc tạo đối tượng hạ tầng thật.
-- Muốn thay thuật toán / cách lưu trữ / dịch vụ gửi thông báo tại thời điểm chạy nhưng phải tạo thêm nhiều lớp con.
-- Có nhu cầu ghi đè những phương thức với tiền điều kiện hoặc hậu điều kiện không còn phù hợp với hợp đồng lớp cha (rủi ro vi phạm **Liskov Substitution Principle – LSP**).
+- A subclass calls a few superclass methods but has no meaningful *is-a* relationship.
+- A subclass unintentionally exposes superclass operations such as `deleteAll()` or `resetConnection()`.
+- A superclass change breaks many subclasses even though they need only part of its functionality.
+- Faking dependencies in tests requires inheritance, overrides, or real infrastructure objects.
+- Switching algorithms, storage implementations, or notification services at runtime requires more and more subclasses.
+- Methods must be overridden with preconditions or postconditions that no longer match the superclass contract (risking violation of the **Liskov Substitution Principle – LSP**).
 
-**Không có quy tắc “mọi kế thừa đều xấu”.** Giữ kế thừa khi mối quan hệ phân loại thật sự đúng và lớp con duy trì đầy đủ hợp đồng của lớp cha. Chuyển đổi khi việc kế thừa chủ yếu nhằm vay mượn triển khai hoặc dẫn đến liên kết quá chặt.
+**There is no rule that "all inheritance is bad."** Keep inheritance when classification is genuinely valid and subclasses fully honor the superclass contract. Refactor when inheritance is mainly used to borrow implementation or creates excessive coupling.
 
-## 2. Trước khi chuyển: nghiệp vụ kế thừa lớp lưu trữ
+## 2. Before Refactoring: Business Logic Inherits from Storage
 
-Ví dụ sau dùng Java 17+, lưu trong bộ nhớ để tập trung vào thiết kế. Trên hệ thống thực, `OrderStore` có thể là một lớp truy cập JDBC, JPA hoặc API từ xa.
+The following Java 17+ example uses in-memory storage to focus on design. In a real system, `OrderStore` might access JDBC, JPA, or a remote API.
 
 ~~~java
 import java.util.HashMap;
@@ -4220,16 +4220,16 @@ class OrderService extends OrderStore {
 }
 ~~~
 
-Vấn đề không nằm ở cú pháp Java mà ở **hợp đồng công khai**: mọi nơi có `OrderService` đều gọi được `deleteAll()`, `find()` và `save()` dù đó là thao tác ở tầng lưu trữ. Thay đổi `OrderStore` có thể tác động trực tiếp đến `OrderService`. Nếu có nhiều `OrderService` với kiểu lưu trữ khác nhau, số lớp kế thừa tiếp tục tăng.
+The problem is not Java syntax but the **public contract**: any code holding an `OrderService` can call `deleteAll()`, `find()`, and `save()` even though those are storage-layer operations. Changes to `OrderStore` may directly affect `OrderService`. Supporting different storage types through `OrderService` subclasses can also multiply the inheritance classes.
 
-Cần phân biệt hai loại tương thích khi chuyển:
+Distinguish two kinds of compatibility during refactoring:
 
-1. **Hành vi nghiệp vụ:** gọi `place()` vẫn kiểm tra đơn hàng hợp lệ và lưu đúng một lần; dữ liệu đơn hàng vẫn được tìm thấy.
-2. **API và kiểu tĩnh:** mã cũ có thể đang truyền `OrderService` vào tham số kiểu `OrderStore` hoặc gọi trực tiếp `deleteAll()`. Bỏ `extends` làm các chỗ đó không còn biên dịch. Đây có thể là thay đổi mong muốn về thiết kế nhưng cần kiểm tra người gọi và chuẩn bị lộ trình chuyển đổi.
+1. **Business behavior:** `place()` must still validate the order and save it exactly once; order data must still be retrievable.
+2. **API and static typing:** Existing code may pass `OrderService` to an `OrderStore` parameter or call `deleteAll()` directly. Removing `extends` makes such code fail to compile. This may be an intentional design improvement, but callers must be identified and a migration path prepared.
 
-## 3. Sau khi chuyển: phụ thuộc vào hợp đồng nhỏ
+## 3. After Refactoring: Depend on a Small Contract
 
-Tách thành bốn vai trò độc lập: mô hình dữ liệu, cổng lưu trữ (`OrderRepository`), triển khai lưu trữ và dịch vụ nghiệp vụ.
+Separate four independent roles: data model, storage port (`OrderRepository`), storage implementation, and business service.
 
 **Order.java**
 
@@ -4312,9 +4312,9 @@ public class Main {
 }
 ~~~
 
-Tạo năm tệp trên cùng thư mục rồi chạy Java 17+: `javac Order.java OrderRepository.java InMemoryOrderRepository.java OrderService.java Main.java` rồi `java Main` (với terminal có Java SDK). Ví dụ sử dụng `totalCents` dạng số nguyên để tránh sai số tiền tệ do `double`.
+Create the five files in one directory and run Java 17+: `javac Order.java OrderRepository.java InMemoryOrderRepository.java OrderService.java Main.java` followed by `java Main` (in a terminal with the Java SDK). The example represents `totalCents` as an integer to avoid floating-point currency errors from `double`.
 
-**Kết quả thay đổi:** `OrderService` chỉ bộc lộ các thao tác nghiệp vụ cần thiết; lưu trữ thực tế có thể đổi sang JDBC/JPA bằng cách thay đối tượng triển khai `OrderRepository` mà không sửa thuật toán `place()`. `OrderService` là một lớp cộng tác với repository thay vì là lớp con của repository.
+**Result of the refactor:** `OrderService` exposes only the necessary business operations. Persistence can change to JDBC/JPA by replacing the `OrderRepository` implementation without modifying the `place()` algorithm. `OrderService` collaborates with a repository instead of subclassing one.
 
 ~~~mermaid
 classDiagram
@@ -4337,32 +4337,32 @@ classDiagram
     InMemoryOrderRepository ..|> OrderRepository : triển khai
 ~~~
 
-Trong sơ đồ, mũi tên từ `OrderService` sang `OrderRepository` biểu diễn phụ thuộc/ủy quyền. Với **constructor injection**, vòng đời repository có thể do bên ngoài quản lý và có thể được chia sẻ; không nhất thiết dùng hình thoi đen (*strong ownership composition* trong UML). Ý tưởng thiết kế ở đây là **kết hợp các đối tượng**, không phải khẳng định dịch vụ sở hữu độc quyền vòng đời của repository.
+In the diagram, the arrow from `OrderService` to `OrderRepository` represents dependency/delegation. With **constructor injection**, a repository's lifecycle may be externally managed, and it may be shared; a filled diamond (*strong ownership composition* in UML) is not necessarily appropriate. The design here is about **assembling objects**, not claiming that the service exclusively owns the repository's lifecycle.
 
-## 4. So sánh trực tiếp
+## 4. Direct Comparison
 
-| Tiêu chí | `OrderService extends OrderStore` | `OrderService` chứa `OrderRepository` |
+| Criterion | `OrderService extends OrderStore` | `OrderService` contains `OrderRepository` |
 |---|---|---|
-| Quan hệ mô hình | Ngầm tuyên bố dịch vụ **là** kho lưu trữ | Dịch vụ **dùng** kho lưu trữ |
-| Tái sử dụng chức năng | Qua phương thức kế thừa | Qua lời gọi `repository.save(...)` |
-| API công khai | Có thể thừa hưởng cả thao tác kỹ thuật | Chỉ công khai thao tác dịch vụ tự định nghĩa |
-| Thay triển khai lưu trữ | Dễ phụ thuộc vào cấu trúc lớp cha | Thay đối tượng triển khai giao diện |
-| Kiểm thử đơn vị | Dễ phụ thuộc lớp cha và trạng thái hạ tầng | Tiêm fake/stub/spy vào constructor |
-| Liên kết | Chặt với triển khai và quan hệ kiểu `extends` | Chặt với hợp đồng `OrderRepository` nhỏ |
-| Chi phí | Ít trường và lời gọi ủy quyền | Thêm một lớp trừu tượng và wiring phụ thuộc |
+| Modeled relationship | Implicitly claims the service **is** a storage component | The service **uses** storage |
+| Reuse mechanism | Through inherited methods | Through calls to `repository.save(...)` |
+| Public API | May inherit technical infrastructure operations | Exposes only explicitly defined service operations |
+| Changing storage implementation | Can depend heavily on superclass structure | Replace the interface implementation |
+| Unit testing | May depend on superclass behavior and infrastructure state | Inject a fake/stub/spy through the constructor |
+| Coupling | Tight to implementation and `extends` type relationship | Limited to the small `OrderRepository` contract |
+| Cost | Fewer fields and delegated calls | Adds an abstraction and dependency wiring |
 
-**Lưu ý:** `implements OrderRepository` ở lớp lưu trữ vẫn là đa hình qua giao diện Java. Nguyên tắc “ưu tiên kết hợp hơn kế thừa” chủ yếu nhắm tới **kế thừa triển khai không phù hợp**; không cấm dùng interface.
+**Note:** `implements OrderRepository` in the storage class still enables polymorphism through a Java interface. "Favor composition over inheritance" mainly addresses **inappropriate implementation inheritance**; it does not prohibit interfaces.
 
-## 5. Quy trình refactor an toàn trên mã đang chạy
+## 5. A Safe Refactoring Process for Running Code
 
-1. **Khoanh vùng quan hệ kế thừa:** xác định lớp con muốn đổi, các phương thức `super.method()`, phương thức `protected`, trường lớp cha, constructor và nơi dùng biến kiểu cha. Không suy luận chỉ từ tên lớp.
-2. **Chốt hợp đồng hành vi:** liệt kê đầu vào hợp lệ/không hợp lệ, ngoại lệ, thứ tự gọi, thao tác dữ liệu, giao dịch và kết quả. Chụp lại các ca kiểm thử có giá trị trước khi đổi cấu trúc.
-3. **Tách trách nhiệm:** chọn thành phần thực sự làm việc (repository, formatter, sender, policy…), tạo interface nhỏ khi cần thay thế triển khai hoặc dựng test double. Nếu chỉ có một cộng tác viên ổn định và không cần abstraction, giữ lớp cụ thể cũng hợp lý.
-4. **Tiêm thành phần:** thêm trường `private final`, cấp qua constructor; ưu tiên dependency injection hơn việc `new ConcreteRepository()` ngay trong dịch vụ.
-5. **Chuyển từng lời gọi:** đổi `save(order)` hoặc `super.save(order)` thành `repository.save(order)`; chỉ thêm phương thức ủy quyền trong dịch vụ khi thực sự là một phần API nghiệp vụ.
-6. **Di chuyển người gọi:** sửa nơi trước đây dựa vào việc dịch vụ có kiểu của repository hoặc sử dụng các phương thức kế thừa. Nếu API được người khác sử dụng, xác định chiến lược tương thích và phiên bản phát hành.
-7. **Bỏ `extends`:** sau khi không còn truy cập trạng thái/phương thức cha và đã xử lý các vị trí nhận kiểu cha, xóa quan hệ kế thừa cùng các override chỉ phục vụ cơ chế cũ.
-8. **Kiểm thử và rà soát:** chạy test đơn vị, tích hợp và kiểm tra các trường hợp dữ liệu thật; xem lại vòng đời, luồng song song, transaction, logging và chi phí tạo đối tượng.
+1. **Identify the inheritance relationship:** Find the subclass to refactor, calls to `super.method()`, `protected` methods, superclass fields, constructors, and places that use a supertype variable. Do not infer relationships from class names alone.
+2. **Define the behavioral contract:** List valid/invalid inputs, exceptions, call order, data operations, transactions, and outcomes. Capture valuable test cases before restructuring.
+3. **Separate responsibilities:** Choose the component that really performs each task (repository, formatter, sender, policy, etc.). Create small interfaces when implementations must be swappable or test doubles are needed. A stable concrete collaborator is reasonable if no abstraction is necessary.
+4. **Inject components:** Add a `private final` field and supply it through the constructor; prefer dependency injection over calling `new ConcreteRepository()` inside the service.
+5. **Migrate calls individually:** Replace `save(order)` or `super.save(order)` with `repository.save(order)`. Add forwarding methods to the service only when they genuinely belong to its business API.
+6. **Migrate callers:** Update code that relies on the service being a repository subtype or on inherited methods. For publicly consumed APIs, define a compatibility strategy and release-version plan.
+7. **Remove `extends`:** Once no superclass state or methods are accessed and all supertype call sites have been addressed, remove the inheritance relationship and overrides used only by the old design.
+8. **Test and review:** Run unit and integration tests, including real-data cases. Review lifecycles, concurrency, transactions, logging, and object-creation costs.
 
 ~~~mermaid
 flowchart TD
@@ -4377,11 +4377,11 @@ flowchart TD
     I --> G
 ~~~
 
-Ở dự án lớn, hai bước **di chuyển người gọi** và **gỡ kế thừa** có thể nằm ở nhiều commit hoặc nhiều phiên bản triển khai. Đừng tuyên bố thay đổi tương thích nếu chữ ký hoặc khả năng gán kiểu đã bị thay đổi.
+In large projects, **caller migration** and **inheritance removal** may span multiple commits or releases. Do not claim a change is compatible if method signatures or type assignability have changed.
 
-## 6. Kiểm thử đúng phần cần bảo toàn
+## 6. Testing the Behavior That Must Be Preserved
 
-Với composition, có thể dùng một đối tượng ghi nhận lời gọi thay cho cơ sở dữ liệu. Ví dụ dưới đây giả định các tệp `Order.java`, `OrderRepository.java`, `OrderService.java` đã tồn tại, sử dụng JUnit Jupiter 5.
+With composition, a call-recording object can stand in for a database. The following example assumes the `Order.java`, `OrderRepository.java`, and `OrderService.java` files already exist and uses JUnit Jupiter 5.
 
 **OrderServiceTest.java**
 
@@ -4441,47 +4441,47 @@ class OrderServiceTest {
 }
 ~~~
 
-Các test kiểm tra **kết quả nghiệp vụ và tương tác ở ranh giới**: đơn hợp lệ được lưu đúng một lần, đơn không hợp lệ không tác động repository, phụ thuộc bắt buộc được kiểm tra. Không cần viết test xác nhận rằng lớp có trường tên `repository` hoặc rằng mã nguồn chứa dòng `repository.save(...)`: đó là chi tiết triển khai.
+These tests verify **business outcomes and interactions at boundaries**: a valid order is saved exactly once, invalid orders do not affect the repository, and required dependencies are validated. There is no need to test whether the class has a field named `repository` or contains the source line `repository.save(...)`; those are implementation details.
 
-Bên cạnh các test trên, nên giữ một **integration test** dùng repository thật nếu thay đổi liên quan đến database: kiểm tra persistence, rollback, transaction boundary và việc đọc lại dữ liệu, bởi fake không chứng minh được các hành vi này.
+Alongside these tests, retain an **integration test** with a real repository if the change affects a database: verify persistence, rollback, transaction boundaries, and data reads, since a fake cannot prove those behaviors.
 
-## 7. Những rủi ro dễ bị bỏ sót
+## 7. Easily Overlooked Risks
 
-| Tình huống | Rủi ro khi bỏ `extends` | Cách xử lý |
+| Situation | Risk when removing `extends` | Mitigation |
 |---|---|---|
-| Caller gán `OrderService` cho `OrderStore` | Lỗi biên dịch do mất quan hệ subtype | Chuyển caller sang `OrderRepository` hoặc API nghiệp vụ phù hợp |
-| Caller gọi phương thức kế thừa | Thay đổi API công khai | Kiểm kê usages; quyết định chuyển, giữ façade có chủ đích hoặc thay đổi phiên bản |
-| Override `protected` hook / dùng `super` | Mất điểm mở rộng và thứ tự thực thi | Đưa hành vi thành policy/strategy hay callback có tên rõ |
-| Lớp cha giữ trạng thái `protected` | Trạng thái không còn ở cùng đối tượng | Xác định chủ sở hữu trạng thái và quy tắc đồng bộ; không nhân bản dữ liệu vô thức |
-| `new` repository ở từng lần gọi | Mất kiểm soát vòng đời, tốn tài nguyên | Tiêm một phụ thuộc đúng scope; đóng tài nguyên ở chủ sở hữu vòng đời |
-| Các lớp con được framework xử lý đặc biệt | Metadata/proxy/ORM mapping có thể đổi | Kiểm tra JPA inheritance, Spring AOP, serialize và lifecycle dự án cụ thể |
-| Dịch vụ bọc quanh thành phần nhưng công khai lại tất cả phương thức | Thiết kế vẫn rò rỉ API hạ tầng | Chỉ ủy quyền các thao tác phục vụ trách nhiệm của dịch vụ |
-| Repository dùng chung và có trạng thái thay đổi | Race condition nếu các luồng gọi đồng thời | Đảm bảo thread safety phù hợp; ví dụ trên dùng `ConcurrentHashMap` cho bộ nhớ |
-| Interface quá rộng hoặc một interface cho mọi lớp | Phát sinh boilerplate, abstraction giả | Đặt interface theo nhu cầu của client; chỉ tách khi đem lại khả năng thay thế hoặc ranh giới rõ |
+| A caller assigns `OrderService` to `OrderStore` | Compile error because the subtype relationship is gone | Migrate callers to `OrderRepository` or an appropriate business API |
+| A caller invokes inherited methods | Public API changes | Inventory usages; decide whether to migrate, retain an intentional façade, or version the API |
+| Overrides a `protected` hook or uses `super` | Extension points and execution order are lost | Express behavior as a named policy/strategy or callback |
+| A superclass owns `protected` state | State no longer resides in the same object | Define state ownership and synchronization; avoid unintentional duplication |
+| Calling `new` for a repository on every operation | Lifecycle control is lost, and resources are wasted | Inject a correctly scoped dependency; close resources at the lifecycle owner |
+| Frameworks treat subclasses specially | Metadata/proxy/ORM mappings may change | Check JPA inheritance, Spring AOP, serialization, and project-specific lifecycles |
+| A wrapper service re-exposes every component method | Infrastructure API still leaks through the design | Delegate only operations belonging to the service's responsibility |
+| A shared repository has mutable state | Concurrent calls may cause race conditions | Ensure appropriate thread safety; the example uses `ConcurrentHashMap` for in-memory storage |
+| Overly broad interfaces or one interface per class | Boilerplate and artificial abstractions | Design interfaces around client needs; extract them only for useful substitution or boundaries |
 
-Với mã giao dịch, cần đặc biệt kiểm tra chỗ đặt `@Transactional`: chuyển phương thức giữa các bean có thể thay đổi cách proxy của Spring bắt lời gọi. Với entity JPA, `extends` có thể đang mang ý nghĩa ánh xạ inheritance thật; không thay nó một cách máy móc khi chưa xác nhận schema và migration.
+In transactional code, pay particular attention to where `@Transactional` is applied: moving methods between beans can change how Spring proxies intercept calls. For JPA entities, `extends` may represent genuine inheritance mapping; do not remove it mechanically without checking the schema and migration requirements.
 
-## 8. Khi nào kết hợp không phải lựa chọn tốt nhất?
+## 8. When Is Composition Not the Best Choice?
 
-- **Quan hệ phân loại đúng và ổn định:** `Circle extends Shape` có thể phù hợp nếu `Shape` định nghĩa một hợp đồng hình học thực sự và mọi `Circle` tuân thủ hợp đồng đó.
-- **Framework yêu cầu lớp cơ sở:** một số adapter hay framework sử dụng template method và các hook cụ thể; trước khi bỏ kế thừa cần hiểu điểm mở rộng được hỗ trợ.
-- **Đối tượng chỉ bọc một hành vi nhỏ, không cần đa triển khai:** có thể dùng trực tiếp một dependency cụ thể; không cần ép tạo interface cho mọi lớp.
-- **Hành vi có thể biểu diễn tốt hơn bằng tham số/hàm:** với biến thể rất nhỏ, truyền `Function`/`Predicate` đôi khi gọn hơn cả tạo hierarchy hoặc Strategy riêng.
+- **Valid, stable classification:** `Circle extends Shape` may fit if `Shape` defines a genuine geometric contract that every `Circle` honors.
+- **A framework requires a base class:** Some adapters/frameworks use template methods and specific hooks; understand supported extension points before removing inheritance.
+- **An object only wraps a small behavior without needing multiple implementations:** A concrete dependency may be used directly; not every class needs an interface.
+- **Behavior is better expressed with function parameters:** For small variations, passing a `Function`/`Predicate` can be simpler than a hierarchy or separate Strategy.
 
-Câu hỏi quyết định: **“Mỗi đối tượng lớp con có thể thay thế một đối tượng lớp cha mà vẫn đúng mọi lời hứa của lớp cha không?”** Nếu không, và mục tiêu thật sự chỉ là sử dụng một chức năng, hãy ưu tiên kết hợp.
+The deciding question is: **"Can every subclass object replace a superclass object while honoring all the superclass's promises?"** If not, and the real goal is simply to use some functionality, prefer composition.
 
-## 9. Bài tập áp dụng
+## 9. Practice Exercise
 
-Một `ReportService extends CsvFormatter` đang gọi `format(report)` vì cần xuất CSV. Nay có thêm JSON và XML.
+A `ReportService extends CsvFormatter` currently calls `format(report)` to produce CSV. Now JSON and XML are also required.
 
-Hãy phác thảo cách chuyển sang `ReportService` chứa `ReportFormatter`, trong đó `ReportFormatter` có `String format(Report report)`. Triển khai `CsvReportFormatter` và `JsonReportFormatter` theo interface; cấp implementation qua constructor. Kiểm tra rằng `ReportService` không còn thừa hưởng bất kỳ phương thức cấu hình CSV nào, và test có thể tiêm formatter giả để kiểm tra nội dung trả về.
+Sketch a refactor in which `ReportService` contains a `ReportFormatter` collaborator. The `ReportFormatter` contract exposes `String format(Report report)`. Implement `CsvReportFormatter` and `JsonReportFormatter` through the interface, and supply the implementation via the constructor. Verify that `ReportService` no longer inherits any CSV configuration methods and that tests can inject a fake formatter to check returned content.
 
-**Điểm cần tự đánh giá:** Bạn đã loại bỏ mối quan hệ *is-a* giả chưa? Hợp đồng nghiệp vụ có còn rõ không? Có thể thay formatter mà không sửa `ReportService` không? Các caller trước đó phụ thuộc vào `CsvFormatter` đã được xử lý chưa?
+**Self-assessment:** Have you removed the artificial *is-a* relationship? Is the business contract still clear? Can formatters be replaced without editing `ReportService`? Have callers that previously depended on `CsvFormatter` been addressed?
 
 ---
 
-**Ghi nhớ:** Chuyển từ kế thừa sang kết hợp không chỉ là thay `extends` bằng một trường đối tượng. Phải **đặt đúng trách nhiệm, tách hợp đồng, ủy quyền minh bạch, xử lý caller và bảo toàn hành vi có kiểm chứng**.
+**Key takeaway:** Refactoring from inheritance to composition involves more than replacing `extends` with an object field. It requires **assigning responsibilities correctly, separating contracts, delegating transparently, migrating callers, and preserving behavior through verification**.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

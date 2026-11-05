@@ -1,30 +1,30 @@
 <a id="back-to-top"></a>
 
-# Vòng đời
+# Object Lifecycle
 
 ## Menu
-- [Tạo đối tượng và cấp phát tài nguyên](#lifecycle-001)
-- [Hàm khởi tạo và thiết lập trạng thái hợp lệ](#lifecycle-002)
-- [Khởi tạo mặc định, tham số và nhiều cách khởi tạo](#lifecycle-003)
-- [Thứ tự khởi tạo trong quan hệ kế thừa](#lifecycle-004)
-- [Hàm tạo tĩnh, Factory và Builder](#lifecycle-005)
-- [Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ](#lifecycle-006)
-- [Thu gom rác và quản lý bộ nhớ thủ công](#lifecycle-007)
-- [Đóng tài nguyên và giới hạn của hàm hủy](#lifecycle-008)
-- [Tránh để đối tượng chưa khởi tạo xong bị sử dụng](#lifecycle-009)
+- [Object creation and resource allocation](#lifecycle-001)
+- [Constructors and establishing valid state](#lifecycle-002)
+- [Default, parameterized, and alternative initialization approaches](#lifecycle-003)
+- [Initialization order in inheritance](#lifecycle-004)
+- [Static factory methods, Factory, and Builder](#lifecycle-005)
+- [Object lifetime, reachability, and memory reclamation](#lifecycle-006)
+- [Garbage collection and manual memory management](#lifecycle-007)
+- [Resource cleanup and the limits of finalizers](#lifecycle-008)
+- [Preventing the use of incompletely initialized objects](#lifecycle-009)
 
-## <a id="lifecycle-001">Tạo đối tượng và cấp phát tài nguyên</a>
+## <a id="lifecycle-001">Object creation and resource allocation</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tạo đối tượng và cấp phát tài nguyên trong Java
+# Object Creation and Resource Allocation in Java
 
-> **Chủ đề:** OOP → Vòng đời. Khi viết `new Customer(...)`, chương trình tạo một **đối tượng Java** và khởi tạo trạng thái của nó. Khi đối tượng làm việc với file, socket hay kết nối cơ sở dữ liệu, chương trình có thể còn phải **cấp phát tài nguyên bên ngoài bộ nhớ Java**. Hai loại tài nguyên có vòng đời và cách giải phóng khác nhau.
+> **Topic:** OOP → Object Lifecycle. When you write `new Customer(...)`, the program creates a **Java object** and initializes its state. If the object works with files, sockets, or database connections, the program may also need to **allocate resources outside Java memory**. These two types of resources have different lifecycles and cleanup mechanisms.
 
-## 1. Từ lớp đến đối tượng
+## 1. From Classes to Objects
 
-**Lớp (class)** mô tả dữ liệu và hành vi; **đối tượng (object/instance)** là một thực thể được tạo từ lớp đó.
+A **class** describes data and behavior; an **object (instance)** is an entity created from that class.
 
 ```java
 public class CustomerDemo {
@@ -70,14 +70,14 @@ public class CustomerDemo {
 }
 ```
 
-Ở dòng `Customer first = new Customer("C01", "An");`:
+In the statement `Customer first = new Customer("C01", "An");`:
 
-- `Customer` là **kiểu của biến tham chiếu**.
-- `first` là biến giữ **tham chiếu** tới đối tượng; nó không phải chính đối tượng.
-- `new Customer(...)` tạo một instance rồi thực hiện quá trình khởi tạo.
-- `"C01"` và `"An"` là các đối số được truyền vào constructor.
-- `alias = first` sao chép tham chiếu, **không tạo thêm đối tượng**.
-- `new Customer("C02", "Bình")` tạo một instance khác với trạng thái riêng.
+- `Customer` is the **type of the reference variable**.
+- `first` holds a **reference** to the object; it is not the object itself.
+- `new Customer(...)` creates an instance and performs initialization.
+- `"C01"` and `"An"` are arguments passed to the constructor.
+- `alias = first` copies the reference; it **does not create another object**.
+- `new Customer("C02", "Bình")` creates a separate instance with its own state.
 
 ```mermaid
 flowchart LR
@@ -86,7 +86,7 @@ flowchart LR
     S["Biến second"] --> B["Customer #2: C02 / Bình"]
 ```
 
-**Điểm mấu chốt:** khai báo một biến tham chiếu không tự tạo đối tượng:
+**Key point:** declaring a reference variable does not automatically create an object:
 
 ```java
 Customer a;              // Chỉ khai báo biến cục bộ; chưa được gán
@@ -94,11 +94,11 @@ Customer b = null;       // Có biến tham chiếu nhưng chưa trỏ tới Cus
 Customer c = new Customer("C03", "Chi"); // Mới tạo instance
 ```
 
-Không thể đọc `a` trước khi gán giá trị vì trình biên dịch Java yêu cầu biến cục bộ được khởi tạo trước khi sử dụng. Gọi `b.describe()` khi `b == null` sẽ ném `NullPointerException`.
+You cannot read `a` before assigning it because the Java compiler requires local variables to be initialized before use. Calling `b.describe()` when `b == null` throws a `NullPointerException`.
 
-## 2. Điều gì diễn ra khi gọi `new`?
+## 2. What Happens When You Call `new`?
 
-Có thể hình dung quy trình ở mức khái niệm như sau:
+At a conceptual level, you can think of the process as follows:
 
 ```mermaid
 flowchart TD
@@ -111,17 +111,17 @@ flowchart TD
     G --> H["Chương trình dùng đối tượng"]
 ```
 
-Sơ đồ tóm tắt ở cấp độ học OOP. Trên JVM, chi tiết nạp lớp, khởi tạo lớp, tối ưu hóa cấp phát và trình tự gọi constructor tuân theo những quy tắc cụ thể; **không được hiểu đây là các thao tác máy chạy tách biệt bắt buộc trong mọi lần gọi**.
+This diagram summarizes the process for learning OOP. On the JVM, class loading, class initialization, allocation optimizations, and constructor invocation follow specific rules; **do not interpret these as mandatory, distinct machine operations for every call**.
 
-Các điểm cần hiểu:
+Key points to understand:
 
-1. **Lớp và đối tượng khác nhau:** JVM quản lý thông tin lớp; mỗi lần `new` thông thường tạo một instance có các trường instance riêng.
-2. **Trạng thái mặc định:** trước khi các initializer và constructor thiết lập dữ liệu, trường instance nhận giá trị mặc định: số là `0`, `boolean` là `false`, tham chiếu là `null`. Điều này **không áp dụng cho biến cục bộ chưa gán**.
-3. **Constructor chạy khi tạo:** constructor dùng để bảo đảm đối tượng ở trạng thái hợp lệ, không có kiểu trả về, kể cả `void`.
-4. **Chạy khởi tạo theo quy tắc kế thừa:** constructor lớp con gọi constructor phù hợp của lớp cha; các bộ khởi tạo instance của mỗi lớp được thực thi theo thứ tự khai báo trước phần thân constructor của lớp đó, sau bước gọi superclass theo quy tắc ngôn ngữ.
-5. **Tham chiếu được trả về cho biểu thức `new`:** người gọi dùng tham chiếu này để gọi phương thức hoặc lưu vào cấu trúc dữ liệu.
+1. **Classes and objects are different:** the JVM manages class information; each ordinary use of `new` creates an instance with its own instance fields.
+2. **Default state:** before initializers and constructors assign data, instance fields receive default values: numeric types get `0`, `boolean` gets `false`, and references get `null`. This **does not apply to unassigned local variables**.
+3. **Constructors run during creation:** a constructor establishes valid object state and has no return type, not even `void`.
+4. **Initialization follows inheritance rules:** a subclass constructor invokes the appropriate superclass constructor; each class's instance initializers execute in declaration order before that class's constructor body, following the required superclass invocation.
+5. **The reference is returned by the `new` expression:** the caller uses it to invoke methods or store the object in a data structure.
 
-### Giá trị mặc định, field initializer và constructor
+### Default Values, Field Initializers, and Constructors
 
 ```java
 class Device {
@@ -137,11 +137,11 @@ class Device {
 }
 ```
 
-Sau `Device d = new Device("Printer");`, các giá trị quan sát được là `attempts == 0`, `active == true`, `label.equals("Printer")`, `priority == 5`. Tuy nhiên, **không nên dựa vào `null` mặc định để bỏ qua kiểm tra dữ liệu bắt buộc**; constructor nên thiết lập rõ các điều kiện hợp lệ.
+After `Device d = new Device("Printer");`, the observed values are `attempts == 0`, `active == true`, `label.equals("Printer")`, and `priority == 5`. However, **do not rely on default `null` values to skip validating required data**; constructors should explicitly establish valid state.
 
-## 3. Khởi tạo xong mới có một đối tượng dùng được
+## 3. An Object Is Usable Only After Initialization Completes
 
-Sau khi cấp phát và gán giá trị mặc định, Java thực hiện các bước khởi tạo theo quy tắc của lớp và kế thừa. **Constructor** không có kiểu trả về; nó thiết lập dữ liệu bắt buộc và có thể từ chối đầu vào sai bằng exception:
+After allocation and default-value assignment, Java performs initialization according to the class and inheritance rules. A **constructor** has no return type; it sets required data and can reject invalid input by throwing an exception:
 
 ~~~java
 class Order {
@@ -156,24 +156,24 @@ class Order {
 }
 ~~~
 
-`new Order("A01")` hoàn thành và trả tham chiếu; `new Order("")` ném exception, nên biểu thức không trả về đối tượng được khởi tạo thành công. Nếu constructor đã mở file hoặc cấp phát resource trước khi phát hiện lỗi, ứng dụng vẫn phải xử lý đóng tài nguyên đã sở hữu: lỗi constructor **không tự rollback side effect**.
+`new Order("A01")` completes and returns a reference; `new Order("")` throws an exception, so the expression does not return a successfully initialized object. If a constructor opened a file or allocated a resource before detecting the error, the application must still close any resources it owns: constructor failure **does not automatically roll back side effects**.
 
-Mỗi lối khởi tạo cần duy trì cùng một hợp đồng trạng thái. Cách kiểm tra invariant thuộc trọng tâm của bài *Hàm khởi tạo và thiết lập trạng thái hợp lệ*; overload và `this(...)` sẽ được học trong bài *Khởi tạo mặc định, tham số và nhiều cách khởi tạo*.
+Every initialization path must maintain the same state contract. Checking invariants is central to *Constructors and establishing valid state*; overloads and `this(...)` are covered in *Default, parameterized, and alternative initialization approaches*.
 
-## 4. Bộ nhớ được cấp phát ở đâu? Heap, stack và tối ưu của JVM
+## 4. Where Is Memory Allocated? Heap, Stack, and JVM Optimizations
 
-Tại mức mô hình Java:
+In the Java conceptual model:
 
-| Thành phần | Hiểu như thế nào? | Ví dụ |
+| Component | How to understand it | Example |
 |---|---|---|
-| Đối tượng/array | Có vùng lưu trữ trạng thái; JVM thường quản lý trong heap | `new Customer(...)`, `new int[10]` |
-| Biến tham chiếu cục bộ | Giữ một giá trị tham chiếu, không chứa toàn bộ object | `Customer c` trong `main` |
-| Trường instance | Thuộc từng instance | `this.name` |
-| Trường `static` | Thuộc lớp, được chia sẻ ở mức lớp | `static int createdCount` |
-| Call stack | Liên quan ngữ cảnh thực thi lời gọi, biến cục bộ, địa chỉ quay lại... | `main()` gọi `rename()` |
-| Tài nguyên ngoài JVM heap | File descriptor, socket, connection, native handle... | File đang mở, kết nối DB |
+| Object/array | Has storage for its state; the JVM typically manages it on the heap | `new Customer(...)`, `new int[10]` |
+| Local reference variable | Holds a reference value, not the entire object | `Customer c` in `main` |
+| Instance field | Belongs to an individual instance | `this.name` |
+| `static` field | Belongs to the class and is shared at class level | `static int createdCount` |
+| Call stack | Relates to method-call execution contexts, local variables, return addresses, and so on | `main()` calls `rename()` |
+| Resources outside the JVM heap | File descriptors, sockets, connections, native handles, and so on | Open files, DB connections |
 
-Thường nói “**object nằm trên heap, biến local nằm trên stack**” để dễ hình dung, nhưng đó **không phải cam kết bố trí vật lý tuyệt đối** của ngôn ngữ. JVM JIT có thể tối ưu escape analysis, scalar replacement và việc cấp phát; Java specification mô tả hành vi quan sát được thay vì bắt buộc một cách bố trí bộ nhớ cụ thể.
+People often say “**objects live on the heap, local variables live on the stack**” as a mental model, but this is **not an absolute physical memory-layout guarantee** of the language. The JVM's JIT compiler can optimize through escape analysis, scalar replacement, and allocation strategies; the Java specification defines observable behavior rather than mandating a particular physical memory layout.
 
 ```java
 Customer c = new Customer("C04", "Dũng");
@@ -182,24 +182,24 @@ c = null;           // Chỉ bỏ tham chiếu qua biến c
 // alsoC vẫn tham chiếu được Customer("C04", "Dũng")
 ```
 
-Gán `null` **không trực tiếp xóa đối tượng**. Chừng nào còn có đường tham chiếu đủ để JVM xác định đối tượng đang có thể được sử dụng, nó chưa đủ điều kiện thu hồi. Khi không còn đường tham chiếu tới nó từ các GC roots, đối tượng **có thể** được garbage collector thu hồi vào thời điểm do JVM lựa chọn.
+Assigning `null` **does not directly delete an object**. As long as the JVM can determine that an object might still be used through a sufficient reference path, it is not eligible for reclamation. Once no reference path from any GC root reaches it, the garbage collector **may** reclaim it at a time chosen by the JVM.
 
-## 5. Hai nghĩa khác nhau của “cấp phát tài nguyên”
+## 5. Two Meanings of “Resource Allocation”
 
-`new Customer(...)` tạo một Java object, còn `Files.newBufferedReader(path)` có thể vừa cung cấp object Java vừa mở **file descriptor** do hệ điều hành quản lý.
+`new Customer(...)` creates a Java object, while `Files.newBufferedReader(path)` can both provide a Java object and open an operating-system-managed **file descriptor**.
 
-| Loại | Ai hoàn trả? | Khi nào? |
+| Type | Who releases it? | When? |
 |---|---|---|
-| Bộ nhớ Java object không còn reachable | Garbage collector | JVM tự quyết định; không có mốc thu hồi tức thì |
-| File, socket, DB connection, native handle | Bên sở hữu theo hợp đồng API | Chủ động `close()` hoặc cơ chế quản lý riêng khi xong việc |
+| Memory of an unreachable Java object | Garbage collector | At the JVM's discretion; reclamation is not immediate |
+| File, socket, DB connection, native handle | The owner defined by the API contract | Explicitly call `close()` or use another appropriate management mechanism when finished |
 
-Gán `reader = null` không bảo đảm đã đóng file. `System.gc()` cũng không tạo ra hợp đồng đóng tài nguyên. Khi mở resource, bước thiết kế quan trọng là xác định **ai sở hữu nó và khi nào phải kết thúc sử dụng**. Bài *Đóng tài nguyên và giới hạn của hàm hủy* phân tích sâu thứ tự đóng, exception và ownership.
+Assigning `reader = null` does not guarantee the file is closed. Nor does `System.gc()` establish a resource-closing contract. When opening a resource, a critical design decision is **who owns it and when its use must end**. *Resource cleanup and the limits of finalizers* examines closing order, exceptions, and ownership in detail.
 
-## 6. Cách an toàn nhất với tài nguyên đóng được: try-with-resources
+## 6. The Safest Approach for Closeable Resources: try-with-resources
 
-Từ Java 7, cú pháp `try-with-resources` tự động gọi `close()` khi rời khỏi phạm vi `try`, kể cả khi xảy ra exception. Đối tượng trong ngoặc phải thực thi `AutoCloseable` (hoặc `Closeable`).
+Since Java 7, `try-with-resources` automatically invokes `close()` when execution leaves the `try` scope, even if an exception occurs. A resource declared in the parentheses must implement `AutoCloseable` (or `Closeable`).
 
-### Ví dụ chạy thực tế: đọc file
+### Runnable Example: Reading a File
 
 ```java
 import java.io.BufferedReader;
@@ -229,24 +229,24 @@ public class ReadFileDemo {
 }
 ```
 
-Để chạy, lưu thành `ReadFileDemo.java`:
+To run this example, save it as `ReadFileDemo.java`:
 
 ```bash
 javac ReadFileDemo.java
 java ReadFileDemo
 ```
 
-Ở ví dụ này:
+In this example:
 
-1. `Files.createTempFile(...)` **tạo một file thực trên hệ thống**.
-2. `Files.newBufferedReader(...)` mở tài nguyên đọc file.
-3. `try (reader)` trao cho khối `try` trách nhiệm đóng `reader`.
-4. Khi khối `try` kết thúc (thành công hoặc lỗi), `close()` được gọi.
-5. Khối `finally` xóa file tạm do chương trình chủ động tạo; **đóng stream và xóa file là hai thao tác khác nhau**.
+1. `Files.createTempFile(...)` **creates a real file on the file system**.
+2. `Files.newBufferedReader(...)` opens a file-reading resource.
+3. `try (reader)` gives the `try` block responsibility for closing `reader`.
+4. When the `try` block ends (successfully or exceptionally), `close()` is called.
+5. The `finally` block deletes the temporary file explicitly created by the program; **closing a stream and deleting a file are different operations**.
 
-Không nhầm `newBufferedReader` chỉ là “tạo object” đơn giản: nó còn có thể mở file và tiêu thụ tài nguyên hệ điều hành. Khi mở file thất bại, API có thể ném `IOException`, và chương trình phải xử lý hoặc khai báo ngoại lệ đó.
+Do not mistake `newBufferedReader` for simply “creating an object”: it can also open a file and consume operating-system resources. If opening fails, the API may throw `IOException`, which the program must handle or declare.
 
-### Điều gì xảy ra nếu lỗi phát sinh?
+### What Happens If an Error Occurs?
 
 ```java
 try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -254,11 +254,11 @@ try (BufferedReader reader = Files.newBufferedReader(path)) {
 }
 ```
 
-Dù có lỗi trong thân `try`, JVM vẫn gọi `reader.close()` theo cú pháp try-with-resources. Nếu cả thân `try` lẫn `close()` cùng ném ngoại lệ, ngoại lệ từ thân `try` được giữ làm **primary exception**, còn lỗi khi đóng thường được ghi thành **suppressed exception** (xem `Throwable.getSuppressed()`). Nếu có nhiều tài nguyên khai báo trong cùng `try`, chúng được đóng theo **thứ tự ngược** với thứ tự khai báo.
+Even if an error occurs inside the `try` body, Java still invokes `reader.close()` under try-with-resources semantics. If both the `try` body and `close()` throw exceptions, the exception from the `try` body remains the **primary exception**, while the closing exception is usually recorded as a **suppressed exception** (see `Throwable.getSuppressed()`). When multiple resources are declared in one `try`, they are closed in **reverse declaration order**.
 
-## 7. Khi tạo object đồng nghĩa bắt đầu một vòng đời cần đóng
+## 7. When Object Creation Starts a Lifecycle That Requires Closing
 
-Một lớp tự viết có thể dùng `AutoCloseable` để mô tả trách nhiệm đóng tài nguyên. Ví dụ minh họa không mở socket thật:
+A custom class can implement `AutoCloseable` to express responsibility for releasing resources. This illustration does not open a real socket:
 
 ~~~java
 final class DemoSession implements AutoCloseable {
@@ -280,25 +280,25 @@ try (DemoSession session = new DemoSession()) {
 // Resource được yêu cầu đóng khi thoát try; object Java có thể còn tồn tại.
 ~~~
 
-Trạng thái `closed` là **hợp đồng sử dụng resource**, không phải bằng chứng GC đã xóa object. `AutoCloseable` không bắt buộc mọi implementation phải an toàn khi đóng nhiều lần; lớp ví dụ chỉ đặt trạng thái đóng. Với tài nguyên thật cần xử lý lỗi `close()`, ngoại lệ bị suppressed, thứ tự đóng và chuyển giao ownership, xem bài *Đóng tài nguyên và giới hạn của hàm hủy*.
+The `closed` state represents a **resource-use contract**, not evidence that the GC deleted the object. `AutoCloseable` does not require every implementation to support repeated closing safely; the example class merely records its closed state. For real resources, see *Resource cleanup and the limits of finalizers* for handling `close()` failures, suppressed exceptions, closing order, and ownership transfers.
 
-## 8. Không phải lúc nào vị trí sử dụng cũng gọi `new`
+## 8. Callers Do Not Always Invoke `new` Directly
 
-Một **static factory**, một factory service hay framework có thể cung cấp object mà caller không thấy constructor trực tiếp:
+A **static factory**, factory service, or framework can supply an object without the caller invoking its constructor directly:
 
-| Cách lấy object | Ví dụ | Điều cần nhớ |
+| How an object is obtained | Example | Key consideration |
 |---|---|---|
-| Constructor | `new Customer("C01", "An")` | Thông thường tạo một instance mới |
-| Factory | `List.of("A")`, `Integer.valueOf(42)` | Có thể trả object đã tồn tại; không bảo đảm instance mới mỗi lần |
-| API mở tài nguyên | `Files.newBufferedReader(path)` | Có thể mở file, cần xử lý IOException và đóng đúng lúc |
-| Dependency injection | Constructor nhận `Repository` | Dependency được tạo/cung cấp ở nơi khác |
-| Deserialization/reflection | API hoặc framework tạo instance | Tuân thủ hợp đồng riêng, không suy luận y hệt mọi lời gọi `new` |
+| Constructor | `new Customer("C01", "An")` | Normally creates a new instance |
+| Factory | `List.of("A")`, `Integer.valueOf(42)` | May return an existing object; a new instance is not guaranteed on every call |
+| Resource-opening API | `Files.newBufferedReader(path)` | May open a file; handle IOException and close it at the right time |
+| Dependency injection | Constructor receives `Repository` | The dependency is created/supplied elsewhere |
+| Deserialization/reflection | An API or framework creates an instance | Follow its specific contract; do not assume it behaves exactly like every `new` call |
 
-Bài *Hàm tạo tĩnh, Factory và Builder* sẽ giúp lựa chọn cách tạo object có ý nghĩa, kiểm soát implementation và xử lý nhiều tham số. Bất kể cách tạo nào, **vòng đời bộ nhớ Java và vòng đời tài nguyên bên ngoài vẫn phải được xét riêng**.
+*Static factory methods, Factory, and Builder* explains how to choose meaningful object-creation APIs, control implementations, and manage multiple parameters. Regardless of how an object is created, **the lifecycle of Java memory and the lifecycle of external resources must still be considered separately**.
 
-## 9. Sau khi tạo, ai còn giữ object?
+## 9. Who Still Holds a Reference After Creation?
 
-Một object có thể đã hết giá trị nghiệp vụ nhưng vẫn reachable nếu registry, cache hay listener giữ tham chiếu:
+An object may no longer have business value but remain reachable because a registry, cache, or listener still holds a reference:
 
 ~~~java
 static final List<Runnable> listeners = new ArrayList<>();
@@ -312,26 +312,26 @@ static void unregister(Runnable listener) {
 }
 ~~~
 
-Ví dụ đặt trong lớp đã import `java.util.List` và `java.util.ArrayList`. Khi `listener` vẫn nằm trong danh sách sống lâu, nó và những object nó tham chiếu có thể còn được giữ lại. Đăng ký cần có chính sách hủy; cache cần giới hạn/TTL theo nhu cầu. Những con đường từ GC roots và bài toán retention được phân tích đầy đủ tại *Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ*.
+This example assumes a class that already imports `java.util.List` and `java.util.ArrayList`. While `listener` remains in the long-lived list, it and the objects it references may stay retained. Registrations need an unregistration policy, and caches need limits/TTL suited to their use. Reference paths from GC roots and retention issues are covered fully in *Object lifetime, reachability, and memory reclamation*.
 
-## 10. Phân biệt các thời điểm trong vòng đời
+## 10. Distinguishing Lifecycle Events
 
-| Sự kiện | Đối tượng Java | Tài nguyên ngoài JVM |
+| Event | Java object | Resource outside the JVM |
 |---|---|---|
-| `new`/factory trả thành công | Đối tượng có thể được sử dụng | Có thể đã mở, tùy API |
-| Sử dụng phương thức | Trạng thái có thể thay đổi | Có thể đọc/ghi dữ liệu |
-| `close()` | Đối tượng vẫn có thể tồn tại | Tài nguyên được yêu cầu hoàn trả |
-| Mất mọi đường tham chiếu reachable | Có thể được GC thu hồi | Không được dựa vào GC để đóng kịp thời |
-| GC chạy | Thu hồi bộ nhớ của các object đủ điều kiện | Không phải cơ chế quản lý tài nguyên có thời điểm xác định |
+| `new`/factory returns successfully | The object can be used | May already be open, depending on the API |
+| Method invocation | State may change | Data may be read or written |
+| `close()` | The object may still exist | A request is made to release the resource |
+| All reachable reference paths disappear | May be reclaimed by the GC | Do not rely on the GC for timely closing |
+| GC runs | Memory for eligible objects is reclaimed | Does not provide deterministic resource management |
 
-Ví dụ hay gây nhầm:
+A commonly confusing example:
 
 ```java
 BufferedReader reader = Files.newBufferedReader(path);
 reader = null; // Không bảo đảm file đã được đóng!
 ```
 
-Cách đúng khi chính đoạn mã mở và sở hữu reader:
+The correct approach when this code opens and owns the reader:
 
 ```java
 try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -339,65 +339,65 @@ try (BufferedReader reader = Files.newBufferedReader(path)) {
 }
 ```
 
-Nếu chương trình tạo liên tục object mà không còn tham chiếu, GC có thể thu hồi bộ nhớ của chúng. Nếu chương trình liên tục mở file mà không đóng, nó vẫn có thể hết file descriptors hoặc giới hạn tài nguyên hệ thống ngay cả khi heap chưa đầy.
+If a program continuously creates objects that become unreachable, the GC can reclaim their memory. If it continuously opens files without closing them, it can still exhaust file descriptors or system resource limits even when the heap is not full.
 
-## 11. Các lỗi thường gặp và cách sửa
+## 11. Common Mistakes and How to Fix Them
 
-| Lỗi | Vì sao nguy hiểm? | Cách xử lý |
+| Mistake | Why is it dangerous? | How to address it |
 |---|---|---|
-| Gọi phương thức qua tham chiếu `null` | `NullPointerException` | Khởi tạo đúng, kiểm tra null ở ranh giới API |
-| Cho rằng khai báo biến là đã tạo object | Biến local có thể chưa được gán | Dùng constructor/factory khi cần |
-| Cho rằng `alias = original` tạo bản sao | Cùng tham chiếu một instance | Tạo bản sao rõ ràng khi cần trạng thái độc lập |
-| Constructor mở resource rồi ném lỗi, không đóng | Rò rỉ tài nguyên | Dùng xử lý lỗi và `close` đúng ownership |
-| Dùng GC hoặc `System.gc()` để “đóng” file | Không có thời điểm đóng bảo đảm | Try-with-resources |
-| Quên `close()` với JDBC/file/socket | Tài nguyên hữu hạn bị giữ | Cấu trúc sở hữu và đóng rõ ràng |
-| Đóng tài nguyên do caller quản lý | Làm hỏng luồng làm việc bên gọi | Thống nhất ownership qua hợp đồng |
-| Lưu mọi object vào collection `static` | Object còn reachable không được GC | Giới hạn cache, unregister, xóa phần tử không dùng |
-| Dùng object đã đóng | Lỗi trạng thái/IO | Kiểm soát trạng thái `closed` và phạm vi sử dụng |
+| Calling a method through a `null` reference | `NullPointerException` | Initialize correctly and check for null at API boundaries |
+| Assuming that declaring a variable creates an object | A local variable may still be unassigned | Use a constructor/factory when needed |
+| Assuming that `alias = original` creates a copy | Both variables refer to the same instance | Explicitly create a copy when independent state is needed |
+| Opening a resource in a constructor, then throwing without closing it | Resource leak | Handle failures and call `close` according to ownership |
+| Using the GC or `System.gc()` to “close” a file | No guaranteed closing time | Use try-with-resources |
+| Forgetting `close()` for JDBC/file/socket resources | Finite resources remain held | Define clear ownership and closing rules |
+| Closing a caller-managed resource | Breaks the caller's workflow | Agree on ownership in the API contract |
+| Storing every object in a `static` collection | Reachable objects cannot be garbage-collected | Bound caches, unregister listeners, remove unused elements |
+| Using an already-closed object | State/IO errors | Enforce the `closed` state and valid usage scope |
 
-## 12. Tự thực hành
+## 12. Practice Exercises
 
-1. Viết lớp `Student` có `id`, `name`; dùng constructor từ chối `id` rỗng, tạo hai đối tượng, thêm biến alias rồi dự đoán kết quả `==`.
-2. Viết `Counter` với trường instance `count` và trường `static` đếm tổng số instance được tạo thành công. Hãy cân nhắc constructor có thể ném exception trước khi tăng biến đếm.
-3. Tạo tệp tạm bằng `Files.createTempFile`, ghi và đọc một dòng, sau đó bảo đảm stream được đóng và tệp được xóa ngay cả khi có lỗi.
-4. Viết lớp `FakeConnection implements AutoCloseable`: ghi log khi mở, thực thi một thao tác, và khi đóng; thử ném `RuntimeException` ở trong khối `try` để kiểm tra `close()` vẫn chạy.
-5. Một service lưu mọi đối tượng `Request` vào `static List<Request>` mà không xóa. Giải thích vì sao GC không thể tự thu hồi các object vẫn được list tham chiếu.
+1. Write a `Student` class with `id` and `name`; use its constructor to reject an empty `id`, create two objects, introduce an alias variable, and predict the result of `==`.
+2. Write `Counter` with an instance field `count` and a `static` field counting successfully created instances. Consider that its constructor might throw before incrementing the count.
+3. Create a temporary file with `Files.createTempFile`, write and read a line, then ensure the stream is closed and the file is deleted even if an error occurs.
+4. Write a `FakeConnection implements AutoCloseable` class that logs when it opens, performs an operation, and closes; throw a `RuntimeException` inside the `try` block to verify that `close()` still runs.
+5. A service stores every `Request` object in a `static List<Request>` without removing any. Explain why the GC cannot reclaim objects that remain referenced by the list.
 
-**Điểm cần nhớ:** Tạo một đối tượng Java nghĩa là xây dựng instance và khởi tạo trạng thái hợp lệ. Việc giải phóng **bộ nhớ đối tượng** do GC đảm trách theo khả năng truy cập, còn việc giải phóng **tài nguyên có vòng đời đóng/mở** phải theo hợp đồng sở hữu của API — thường thông qua `AutoCloseable` và `try-with-resources`. 
+**Remember:** Creating a Java object means constructing an instance and initializing it into a valid state. The GC reclaims **object memory** based on reachability, while releasing **resources with explicit open/close lifecycles** must follow API ownership contracts—usually through `AutoCloseable` and `try-with-resources`.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="lifecycle-002">Hàm khởi tạo và thiết lập trạng thái hợp lệ</a>
+## <a id="lifecycle-002">Constructors and establishing valid state</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Hàm khởi tạo và thiết lập trạng thái hợp lệ trong Java
+# Constructors and Establishing Valid State in Java
 
-Một đối tượng không chỉ cần **được tạo ra**; nó cần ở trong **trạng thái hợp lệ** trước khi mã bên ngoài bắt đầu sử dụng. Trong Java, **constructor (hàm khởi tạo)** là nơi quan trọng để kiểm tra dữ liệu đầu vào, gán các trường và bảo đảm những quy tắc mà đối tượng luôn phải tuân theo.
+An object must do more than simply **get created**; it must be in a **valid state** before outside code starts using it. In Java, the **constructor** is a key place to validate input, assign fields, and enforce the rules an object must always satisfy.
 
-Ví dụ, một lớp đăng ký khóa học chỉ hợp lệ khi mã khóa học có nội dung, sức chứa lớn hơn 0, số người đăng ký không vượt quá sức chứa và danh sách đăng ký không có phần tử trùng nhau. Nếu một trong những điều kiện này sai, constructor nên **từ chối tạo đối tượng dùng được** bằng ngoại lệ thích hợp.
+For example, a course enrollment is valid only when the course code is nonempty, capacity is greater than zero, enrollment does not exceed capacity, and the enrollment list has no duplicates. If any condition is violated, the constructor should **refuse to produce a usable object** by throwing an appropriate exception.
 
-## 1. Constructor nằm ở đâu trong vòng đời đối tượng?
+## 1. Where Does the Constructor Fit in an Object's Lifecycle?
 
-Xét lời gọi:
+Consider this invocation:
 
 ```java
 CourseEnrollment course = new CourseEnrollment("JAVA-01", 20);
 ```
 
-Ở mức khái niệm, quá trình là:
+Conceptually, the process is:
 
-1. Biểu thức `new` yêu cầu tạo một đối tượng thuộc lớp `CourseEnrollment`.
-2. Java cấp phát bộ nhớ, gán giá trị mặc định cho các trường rồi thực hiện quá trình khởi tạo theo thứ tự của ngôn ngữ (gồm constructor của lớp cha, các bước khởi tạo trường/khối khởi tạo và thân constructor).
-3. Constructor nhận tham số, xác thực các điều kiện và thiết lập trạng thái ban đầu.
-4. Nếu khởi tạo hoàn tất bình thường, biểu thức `new` trả về tham chiếu đến đối tượng cho bên gọi.
-5. Nếu constructor ném ngoại lệ, biểu thức tạo đối tượng **không hoàn thành bình thường**; bên gọi không nhận được tham chiếu kết quả từ biểu thức đó.
+1. The `new` expression requests creation of an object of class `CourseEnrollment`.
+2. Java allocates memory, assigns default field values, and performs initialization in the language-defined order (including superclass constructors, field/block initializers, and the constructor body).
+3. The constructor receives parameters, validates conditions, and establishes initial state.
+4. If initialization completes normally, the `new` expression returns a reference to the caller.
+5. If the constructor throws an exception, the creation expression **does not complete normally**; the caller does not receive a result reference from that expression.
 
 ```mermaid
 flowchart TD
@@ -410,15 +410,15 @@ flowchart TD
     G --> H["Không có kết quả khởi tạo thành công"]
 ```
 
-Sơ đồ diễn tả luồng kiểm tra của ví dụ; thứ tự chi tiết của những bước khởi tạo trường và lớp cha vẫn do Java quy định.
+The diagram illustrates the example's validation flow; Java still determines the detailed initialization order for fields and superclasses.
 
-**Constructor không phải phương thức thông thường.** Tên constructor phải trùng tên lớp, không có kiểu trả về (kể cả `void`) và được gọi trong quá trình tạo đối tượng. Nó có thể nhận tham số, kiểm tra điều kiện, gán trường và ném ngoại lệ.
+**A constructor is not an ordinary method.** Its name must match the class name, it has no return type (not even `void`), and it is invoked during object creation. It can accept parameters, check conditions, assign fields, and throw exceptions.
 
-## 2. Trạng thái hợp lệ và bất biến của lớp (class invariant)
+## 2. Valid State and Class Invariants
 
-**Invariant** là một tập điều kiện phải đúng ở các thời điểm đối tượng được công bố và sử dụng hợp lệ.
+An **invariant** is a set of conditions that must hold when an object is validly published and used.
 
-Ví dụ một lớp `BankAccount` có quy tắc số dư không âm:
+Consider a `BankAccount` class whose balance must never be negative:
 
 ```java
 class BankAccount {
@@ -444,22 +444,22 @@ class BankAccount {
 }
 ```
 
-Ở đây invariant là `balance >= 0`. Constructor bảo đảm nó đúng **sau khi tạo**, còn `withdraw()` phải tiếp tục duy trì nó **trong suốt quá trình sử dụng**.
+Here, the invariant is `balance >= 0`. The constructor ensures it holds **after creation**, and `withdraw()` must continue to preserve it **throughout use**.
 
-Nếu chỉ kiểm tra trong constructor nhưng lại có setter `setBalance(-100)` không kiểm tra, invariant vẫn có thể bị phá vỡ. Vì vậy:
+If only the constructor validates the balance, an unchecked `setBalance(-100)` setter could still break the invariant. Therefore:
 
-- Constructor phải đưa đối tượng vào trạng thái hợp lệ ban đầu.
-- Các phương thức có thể thay đổi trạng thái phải duy trì tính hợp lệ đó.
-- Trường nên được đóng gói bằng `private`; không mở khả năng gán tùy ý từ bên ngoài.
-- Không cần setter cho mọi trường. Chỉ cung cấp thao tác nghiệp vụ mà đối tượng thực sự cho phép.
+- The constructor must establish a valid initial state.
+- Methods that change state must preserve that validity.
+- Fields should be encapsulated with `private` to prevent arbitrary external assignments.
+- Not every field needs a setter. Expose only business operations the object actually permits.
 
-Một kiểm tra tốt thường gắn với **quy tắc miền nghiệp vụ**: số tiền không âm, khoảng thời gian bắt đầu trước kết thúc, mã định danh không trống, số lượng đặt hàng dương, hoặc danh sách thành viên không vượt sức chứa.
+Good validation is usually tied to **domain rules**: nonnegative amounts, start times before end times, nonempty identifiers, positive order quantities, or a membership list that stays within capacity.
 
-## 3. Ví dụ hoàn chỉnh: khởi tạo đăng ký khóa học hợp lệ
+## 3. Complete Example: Initializing Valid Course Enrollment
 
-Ví dụ dưới đây tạo một lớp **bất biến**: mọi trạng thái được kiểm tra trong constructor, các trường không gán lại và thao tác thêm người học tạo ra đối tượng mới thông qua constructor. Cách làm này giúp nhìn rõ việc **kiểm tra lại invariant** mỗi lần cần trạng thái mới.
+The example below builds an **immutable** class: the constructor validates all state, its fields are never reassigned, and adding a student produces a new object through the constructor. This makes it clear why you must **recheck the invariant** whenever new state is needed.
 
-Đặt toàn bộ mã sau vào file `Main.java`. Chạy bằng **Java 17 hoặc Java 21**.
+Put all the code below into `Main.java`. Run it with **Java 17 or Java 21**.
 
 ```java
 import java.util.ArrayList;
@@ -581,14 +581,14 @@ public class Main {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 [lan@example.com]
@@ -601,42 +601,42 @@ Mã khóa học không được trống
 Không thể sửa danh sách đã trả về
 ```
 
-**Đọc kết quả:**
+**Interpreting the output:**
 
-- Constructor đã chụp `List.copyOf(source)`, nên việc thêm phần tử vào `source` không làm thay đổi `first`.
-- `first.withStudent(...)` gọi lại constructor để tạo `second`. `first` vẫn có 1 người đăng ký, `second` có 2; chúng là hai đối tượng khác nhau.
-- Khi số người học lớn hơn sức chứa, trùng email hoặc mã khóa học rỗng, constructor ném `IllegalArgumentException`.
-- Danh sách do `getStudentEmails()` trả về không cho thêm/xóa, tránh phá vỡ trạng thái đã kiểm tra.
+- The constructor takes a snapshot with `List.copyOf(source)`, so adding an element to `source` does not change `first`.
+- `first.withStudent(...)` invokes the constructor again to create `second`. `first` still has one enrollment and `second` has two; they are different objects.
+- When enrollment exceeds capacity, an email is duplicated, or the course code is empty, the constructor throws `IllegalArgumentException`.
+- The list returned by `getStudentEmails()` does not allow additions or removals, so the validated state cannot be invalidated that way.
 
-Ví dụ kiểm tra email theo chuỗi chính xác và phân biệt chữ hoa/chữ thường; đây là quy tắc minh họa. Ứng dụng thực tế phải xác định chính sách chuẩn hóa và đối chiếu email riêng, đồng thời kiểm tra những ràng buộc nghiệp vụ khác khi cần.
+This example compares email strings exactly and case-sensitively; that is only an illustrative rule. Real applications must define their own email normalization and comparison policy and validate other domain constraints as necessary.
 
-## 4. Chọn thứ tự kiểm tra và gán trường
+## 4. Choosing the Order of Validation and Field Assignment
 
-Một constructor dễ kiểm tra thường đi theo thứ tự:
+An easy-to-review constructor often follows this order:
 
-1. Kiểm tra tham số `null` và giá trị đơn lẻ: `courseCode`, `capacity`.
-2. Chuẩn hóa hoặc tạo bản sao dữ liệu ngoài nếu cần.
-3. Kiểm tra ràng buộc giữa nhiều trường: số học viên không được vượt `capacity`.
-4. Gán các trường một lần, theo trạng thái đã được kiểm tra.
-5. Cho phép constructor hoàn tất khi mọi invariant đều đúng.
+1. Check `null` parameters and individual values: `courseCode`, `capacity`.
+2. Normalize or copy external data when necessary.
+3. Check cross-field constraints: enrollment must not exceed `capacity`.
+4. Assign fields once, using the already-validated state.
+5. Let the constructor finish only when all invariants hold.
 
-Cách này hạn chế việc đặt đối tượng vào trạng thái sai rồi mới phát hiện lỗi. Dù constructor ném ngoại lệ thì đối tượng chưa được công bố qua kết quả `new`; tuy nhiên, những **tác động bên ngoài** diễn ra trước khi ném lỗi (ghi file, gửi sự kiện, chuyển tiền, đăng ký listener...) **không được Java tự hoàn tác**. Vì vậy nên kiểm tra trước, tránh side effect không cần thiết trong constructor và tách các thao tác nghiệp vụ dài ra khỏi việc khởi tạo.
+This reduces the chance of putting an object into an invalid state before discovering an error. Even if a constructor throws, the object is not published through the result of `new`; however, **external effects** that happened before the exception (writing a file, sending an event, transferring money, registering a listener, etc.) **are not automatically undone by Java**. Validate first, avoid unnecessary constructor side effects, and keep lengthy business operations separate from initialization.
 
-| Loại kiểm tra | Ví dụ | Vị trí thích hợp |
+| Validation category | Example | Appropriate location |
 | --- | --- | --- |
-| Không được `null` | Danh sách đầu vào bắt buộc | Constructor, bằng `Objects.requireNonNull` |
-| Không rỗng | Mã khóa học, tên người học | Constructor, sau kiểm tra `null` |
-| Khoảng giá trị | `capacity > 0` | Constructor |
-| Ràng buộc giữa các trường | `students.size() <= capacity` | Constructor, sau khi có danh sách an toàn |
-| Tính duy nhất | Không trùng email | Constructor hoặc lớp giá trị chuyên trách |
-| Quy tắc khi cập nhật | Không rút vượt số dư | Phương thức thay đổi trạng thái |
-| Quy tắc có dữ liệu ngoài | Khóa học còn mở trong hệ thống | Thường ở dịch vụ/luồng nghiệp vụ, trước khi tạo đối tượng phù hợp |
+| Must not be `null` | Required input list | Constructor, using `Objects.requireNonNull` |
+| Must not be empty | Course code, student name | Constructor, after checking `null` |
+| Value range | `capacity > 0` | Constructor |
+| Cross-field constraint | `students.size() <= capacity` | Constructor, after obtaining a safe list |
+| Uniqueness | No duplicate emails | Constructor or a dedicated value type |
+| Update rule | Cannot withdraw more than the balance | State-changing method |
+| Rule involving external data | Whether the course remains open in the system | Usually a service/business workflow, before creating the appropriate object |
 
-Không phải mọi phép xác thực đều nên nằm trong constructor. Ví dụ, kiểm tra một mã coupon còn hiệu lực trong cơ sở dữ liệu phụ thuộc vào thời điểm, kết nối và giao dịch. Đó thường là trách nhiệm của một service hoặc factory phối hợp hạ tầng; constructor vẫn nên tự bảo vệ những bất biến **nội tại** của đối tượng.
+Not every validation belongs in a constructor. For example, checking whether a coupon is still valid in a database depends on timing, connections, and transactions. That is usually a service or factory's responsibility in coordination with infrastructure; the constructor should still defend the object's **intrinsic** invariants.
 
-## 5. Mọi lối gọi constructor phải bảo vệ cùng invariant
+## 5. Every Constructor Path Must Preserve the Same Invariant
 
-Khi cần hỗ trợ nhiều tập dữ liệu đầu vào, các overload nên **ủy quyền** về cùng một điểm xác thực. Trong Java 17/21, lời gọi `this(...)` được đặt đầu constructor:
+When supporting different input sets, overloads should **delegate** to one common validation point. In Java 17/21, a `this(...)` call must be the first constructor statement:
 
 ~~~java
 class RetryPolicy {
@@ -653,11 +653,11 @@ class RetryPolicy {
 }
 ~~~
 
-Hai lối gọi đều không thể tạo `RetryPolicy` có `attempts <= 0`. Đây là một ứng dụng của invariant trong constructor; bài *Khởi tạo mặc định, tham số và nhiều cách khởi tạo* sẽ phân biệt default/no-arg/parameterized constructors, lựa chọn overload và `this(...)`/`super(...)` kỹ hơn.
+Neither construction path can produce a `RetryPolicy` with `attempts <= 0`. This illustrates constructor invariants; *Default, parameterized, and alternative initialization approaches* explains default/no-arg/parameterized constructors, overload choices, and `this(...)`/`super(...)` in greater detail.
 
-## 6. `final`, đóng gói và defensive copy
+## 6. `final`, Encapsulation, and Defensive Copies
 
-Một lớp có trường `private final` giúp hạn chế việc thay đổi tham chiếu hoặc giá trị trường sau khi gán:
+A class with `private final` fields limits changes to its field values or references after assignment:
 
 ```java
 final class Schedule {
@@ -673,7 +673,7 @@ final class Schedule {
 }
 ```
 
-Dùng `final` trên trường **không tự làm cho đối tượng được tham chiếu bất biến**:
+Declaring a field `final` **does not automatically make the referenced object immutable**:
 
 ```java
 class UnsafeSchedule {
@@ -685,21 +685,21 @@ class UnsafeSchedule {
 }
 ```
 
-Với `UnsafeSchedule`, caller có thể sửa danh sách gốc và làm thay đổi trạng thái quan sát được của đối tượng. `Schedule` dùng `List.copyOf()` để giữ một danh sách không sửa được về cấu trúc và không bị ảnh hưởng bởi thao tác thêm/xóa trong danh sách đầu vào sau đó.
+With `UnsafeSchedule`, the caller can modify the original list and thereby change the object's observable state. `Schedule` uses `List.copyOf()` to hold a structurally unmodifiable list unaffected by subsequent additions or removals from the input list.
 
-**Giới hạn quan trọng:** `List.copyOf()` sao chép cấu trúc danh sách, **không sao chép sâu** mọi phần tử. Nếu danh sách chứa phần tử mutable như `StringBuilder`, `Date` hoặc đối tượng nghiệp vụ có setter, cần thêm biện pháp để bảo đảm bất biến sâu. Trong ví dụ `Schedule`, các phần tử `String` vốn bất biến, nên phù hợp.
+**Important limitation:** `List.copyOf()` copies the list structure; it **does not deep-copy** all elements. If a list contains mutable elements such as `StringBuilder`, `Date`, or a domain object with setters, additional measures are needed for deep immutability. In the `Schedule` example, the elements are immutable `String` objects, so the approach is suitable.
 
-Nguyên tắc thực hành:
+Practical guidelines:
 
-- Khai báo trường `private` để kiểm soát các đường cập nhật trạng thái.
-- Dùng `final` cho dữ liệu phải được gán một lần.
-- Sao chép dữ liệu mutable đầu vào nếu không muốn phụ thuộc vào thay đổi của caller.
-- Không trả tham chiếu có thể sửa trực tiếp vào cấu trúc nội bộ cần bảo vệ.
-- Chỉ cung cấp phương thức thay đổi trạng thái nếu đó là hành vi có ý nghĩa nghiệp vụ.
+- Declare fields `private` to control state-update paths.
+- Use `final` for data that should be assigned only once.
+- Copy mutable inputs if the object's state must be independent of future caller changes.
+- Do not expose directly modifiable references to protected internal structures.
+- Expose state-changing methods only when they represent meaningful business operations.
 
-## 7. Khởi tạo hợp lệ khác với “tạm thời rồi sửa sau”
+## 7. Valid Initialization Versus “Create Now, Fix Later”
 
-Hai phương án dưới đây khác nhau về cam kết của lớp:
+The following approaches make different guarantees about the class:
 
 ```java
 // Phương án dễ tạo trạng thái chưa hợp lệ:
@@ -713,7 +713,7 @@ class UnsafeUser {
 // Có thể tạo UnsafeUser mà email == null.
 ```
 
-So với:
+Compare that with:
 
 ```java
 final class User {
@@ -732,15 +732,15 @@ final class User {
 }
 ```
 
-Ở cách thứ hai, một đối tượng `User` được khởi tạo thành công **không ở trạng thái thiếu email**. Khi thiết kế API, điều này giúp bỏ nhiều câu `if (user.getEmail() == null)` rải rác ở nơi sử dụng.
+With the second approach, a successfully created `User` **does not start out missing an email**. This API design eliminates many scattered checks such as `if (user.getEmail() == null)` at call sites.
 
-Tuy nhiên, một hệ thống vẫn có thể cần các trạng thái nghiệp vụ khác nhau, ví dụ `DRAFT`, `PENDING`, `ACTIVE`. Các trạng thái này **không nhất thiết là trạng thái không hợp lệ**. Điều quan trọng là mô hình hóa rõ những trạng thái hợp lệ theo từng giai đoạn, và ngăn tổ hợp dữ liệu mâu thuẫn, ví dụ `ACTIVE` nhưng không có ngày kích hoạt khi chính sách yêu cầu phải có.
+A system may still need different business states, such as `DRAFT`, `PENDING`, and `ACTIVE`. These states **are not necessarily invalid**. The key is to model the valid states for each phase explicitly and prevent contradictory combinations, such as `ACTIVE` without an activation date when the policy requires one.
 
-Một số mô hình có thể dùng factory tĩnh như `User.registered(email)`, `Order.draft(...)` hoặc các loại dữ liệu riêng để diễn đạt trạng thái khởi tạo. Factory là công cụ thiết kế bổ sung; các constructor được gọi phía sau vẫn cần bảo đảm invariant theo quyền truy cập và hợp đồng lớp.
+Some designs use static factories such as `User.registered(email)`, `Order.draft(...)`, or separate types to express initialization states. A factory is an additional design tool; the constructors it invokes must still enforce invariants according to the class's access rules and contract.
 
-## 8. Constructor ném ngoại lệ thì sao?
+## 8. What Happens If a Constructor Throws?
 
-Ví dụ:
+For example:
 
 ```java
 class Seat {
@@ -760,32 +760,32 @@ Seat good = new Seat(5);   // Tạo thành công
 Seat bad = new Seat(-1);  // Ném IllegalArgumentException
 ```
 
-Ở dòng thứ hai, phép gán cho `bad` không hoàn tất. Nếu code bắt ngoại lệ thì có thể xử lý lỗi và tiếp tục luồng chương trình. Ngoại lệ không biến một đối tượng không hợp lệ thành giá trị `null`.
+On the second line, assignment to `bad` does not complete. If the code catches the exception, it can handle the error and continue execution. An exception does not turn an invalid object into a `null` value.
 
-Thường dùng:
+Common choices:
 
-| Ngoại lệ | Tình huống phổ biến |
+| Exception | Typical situation |
 | --- | --- |
-| `IllegalArgumentException` | Tham số không thỏa hợp đồng constructor (âm, trống, vượt ngưỡng) |
-| `NullPointerException` | Tham số bắt buộc khác `null`, thường dùng `Objects.requireNonNull` |
-| Ngoại lệ miền nghiệp vụ tùy chỉnh | Cần biểu diễn lỗi nghiệp vụ đặc thù, nhất quán trong API |
+| `IllegalArgumentException` | A parameter violates the constructor contract (negative, empty, or out of range) |
+| `NullPointerException` | A required parameter must not be `null`, commonly enforced with `Objects.requireNonNull` |
+| Custom domain exception | Represents a specific business error consistently across an API |
 
-Không nên dùng `assert` để thay cho kiểm tra dữ liệu constructor. Assertion có thể không được bật khi chạy ứng dụng; validation của hợp đồng lớp phải hoạt động độc lập với cấu hình `-ea`.
+Do not use `assert` instead of constructor input validation. Assertions may be disabled at runtime; class-contract validation must work independently of the `-ea` setting.
 
-Một constructor nên để lỗi **lộ rõ theo hợp đồng**, không nuốt ngoại lệ rồi khởi tạo đối tượng với giá trị mặc định tùy tiện, trừ khi giá trị mặc định đó đã được xác định là trạng thái hợp lệ.
+A constructor should expose failures **clearly according to its contract**. It should not swallow an exception and initialize an object with arbitrary defaults unless those defaults are defined as valid state.
 
-## 9. Không làm lộ một đối tượng chưa hoàn tất constructor
+## 9. Do Not Expose an Object Before Its Constructor Completes
 
-Kiểm tra invariant đúng vẫn có thể thất bại nếu mã bên ngoài sử dụng `this` quá sớm. Hai đường thường gặp:
+Even correct invariant validation can fail if external code uses `this` too early. Two common paths are:
 
-- **Constructor cha gọi phương thức được override:** Java có thể dispatch vào override của lớp con khi các field initializer của lớp con chưa chạy; kết quả là field còn mang giá trị mặc định `null`/`0`.
-- **Đăng ký listener hoặc start task trong constructor:** callback hoặc thread khác có thể đọc field trước khi chúng được thiết lập; nếu constructor ném lỗi sau khi đăng ký, tham chiếu tới đối tượng dở dang còn có thể bị giữ.
+- **A superclass constructor invokes an overridden method:** Java can dispatch to the subclass override before its field initializers have run, leaving fields at their default `null`/`0` values.
+- **Registering a listener or starting a task inside a constructor:** a callback or another thread may read fields before they are assigned; if the constructor later throws, a reference to the partially initialized object can remain retained.
 
-Vì vậy, dùng các helper khởi tạo không thể override, validate trước side effect, và đăng ký/công bố object **sau khi constructor hoàn tất** theo cơ chế đồng bộ phù hợp. Trình tự chính xác của lớp cha và lớp con nằm ở bài *Thứ tự khởi tạo trong quan hệ kế thừa*; nguyên nhân, ví dụ callback và safe publication ở bài *Tránh để đối tượng chưa khởi tạo xong bị sử dụng*.
+Therefore, use non-overridable initialization helpers, validate before side effects, and register/publish the object **after the constructor completes** through appropriate synchronization. The precise superclass/subclass order is covered in *Initialization order in inheritance*; causes, callback examples, and safe publication are covered in *Preventing the use of incompletely initialized objects*.
 
-## 10. Constructor của `record` cũng có thể bảo vệ invariant
+## 10. `record` Constructors Can Also Enforce Invariants
 
-Từ Java 16, `record` cho phép biểu diễn các đối tượng dữ liệu gọn hơn. Với **compact constructor**, có thể xác thực và chuẩn hóa tham số trước khi Java tự gán vào các trường thành phần:
+Since Java 16, `record` provides a concise way to represent data objects. A **compact constructor** can validate and normalize parameters before Java automatically assigns them to component fields:
 
 ```java
 import java.util.List;
@@ -803,26 +803,26 @@ record LessonBundle(String name, List<String> lessons) {
 }
 ```
 
-`name` và `lessons` được dùng làm tham số của constructor; trong compact constructor, việc gán `lessons = List.copyOf(lessons)` thay thế giá trị tham số bằng một danh sách đã bảo vệ. Sau thân constructor, Java tự gán các tham số đã xử lý vào trường tương ứng.
+`name` and `lessons` are constructor parameters; inside the compact constructor, `lessons = List.copyOf(lessons)` replaces the parameter value with a protected list. After the constructor body, Java automatically assigns the processed parameters to their corresponding fields.
 
-**Chú ý:** Trường của record là `final`, nhưng record không tự bất biến sâu. Nếu thành phần là đối tượng mutable, constructor vẫn cần kiểm soát việc chia sẻ tham chiếu và phần tử bên trong.
+**Note:** Record fields are `final`, but records are not inherently deeply immutable. If a component is mutable, the constructor must still control reference sharing and mutable elements.
 
-## 11. Checklist thiết kế constructor tốt
+## 11. Checklist for Designing Good Constructors
 
-| Câu hỏi đánh giá | Mong đợi |
+| Review question | Expected result |
 | --- | --- |
-| Điều kiện nào khiến đối tượng hợp lệ? | Có danh sách invariant rõ ràng |
-| Dữ liệu bắt buộc có được cung cấp khi tạo? | Không tạo đối tượng thiếu trường cần thiết |
-| Mọi đường constructor có cùng quy tắc? | Ưu tiên ủy quyền về điểm kiểm tra chung |
-| Tham số `null` hoặc sai khoảng có bị từ chối? | Lỗi rõ, nhất quán với hợp đồng |
-| Có chia sẻ collection/mảng mutable của caller không? | Defensive copy nếu muốn bảo vệ |
-| Getter có làm lộ trạng thái có thể sửa không? | Trả dữ liệu an toàn hoặc API được kiểm soát |
-| Có gọi override, xuất bản `this`, thực hiện I/O quá sớm không? | Tránh sử dụng đối tượng chưa sẵn sàng và side effect khó hoàn tác |
-| Phương thức thay đổi trạng thái có giữ invariant không? | Trạng thái hợp lệ từ đầu đến cuối |
+| What makes the object valid? | A clearly defined set of invariants |
+| Is required data provided at creation? | No objects missing essential fields |
+| Do all constructor paths follow the same rules? | Prefer delegation to shared validation |
+| Are `null` or out-of-range parameters rejected? | Clear, contract-consistent errors |
+| Does the object share callers' mutable collections/arrays? | Use defensive copies when protection is required |
+| Can a getter expose modifiable state? | Return safe data or a controlled API |
+| Does the constructor invoke overrides, publish `this`, or perform I/O too early? | Prevent use before the object is ready and hard-to-undo side effects |
+| Do state-changing methods preserve invariants? | Keep the state valid throughout the object's lifetime |
 
-## 12. Bài tập tự kiểm tra
+## 12. Self-Check Exercises
 
-**Bài 1:** Chuyện gì xảy ra?
+**Exercise 1:** What happens?
 
 ```java
 class Product {
@@ -838,47 +838,47 @@ class Product {
 // new Product(0);
 ```
 
-**Đáp án:** Khi bỏ dấu chú thích và gọi `new Product(0)`, constructor ném `IllegalArgumentException`, không trả về một đối tượng `Product` được khởi tạo thành công.
+**Answer:** If you uncomment and call `new Product(0)`, the constructor throws `IllegalArgumentException` and does not return a successfully initialized `Product` object.
 
-**Bài 2:** Trong `CourseEnrollment`, tại sao phải kiểm tra `copy.size() > capacity` trong constructor ba tham số ngay cả khi constructor hai tham số luôn truyền `List.of()`?
+**Exercise 2:** In `CourseEnrollment`, why must the three-parameter constructor check `copy.size() > capacity` even though the two-parameter constructor always passes `List.of()`?
 
-**Đáp án:** Vì bên gọi có thể dùng trực tiếp constructor ba tham số, và `withStudent()` cũng đi qua nó. Mọi đường tạo đối tượng cần bảo vệ cùng invariant.
+**Answer:** Callers can invoke the three-parameter constructor directly, and `withStudent()` also uses it. Every creation path must protect the same invariant.
 
-**Bài 3:** Nếu thay `this.studentEmails = copy;` thành `this.studentEmails = studentEmails;`, rủi ro gì?
+**Exercise 3:** What is the risk of replacing `this.studentEmails = copy;` with `this.studentEmails = studentEmails;`?
 
-**Đáp án:** Danh sách mutable do caller truyền vào vẫn có thể được sửa sau khi khởi tạo; số học viên có thể vượt sức chứa hoặc bị trùng dù constructor đã kiểm tra trước đó.
+**Answer:** The mutable list passed by the caller may be modified after initialization, causing enrollment to exceed capacity or contain duplicates even though the constructor already validated it.
 
-**Bài 4:** Vì sao `private final List<String> items` không tự bảo đảm invariant “danh sách không thay đổi”?
+**Exercise 4:** Why does `private final List<String> items` not by itself guarantee the invariant “the list never changes”?
 
-**Đáp án:** `final` chỉ chặn việc gán lại trường, không chặn `items.add(...)`. Cần kiểm soát đối tượng danh sách và các phần tử bên trong nếu chúng mutable.
+**Answer:** `final` only prevents reassigning the field; it does not prevent `items.add(...)`. You must control access to the list object and its elements if they are mutable.
 
-**Bài 5:** Constructor của lớp cha gọi phương thức có thể override thì rủi ro gì?
+**Exercise 5:** What is the risk when a superclass constructor invokes an overridable method?
 
-**Đáp án:** Phần override ở lớp con có thể chạy trước khi phần khởi tạo lớp con hoàn tất, đọc phải các giá trị mặc định như `null` hoặc `0`.
+**Answer:** A subclass override may execute before subclass initialization completes and read default values such as `null` or `0`.
 
-**Điểm cần nhớ:** Một constructor tốt xác lập **hợp đồng trạng thái của đối tượng tại thời điểm khởi tạo thành công**. Hãy định nghĩa invariant, kiểm tra đầu vào và quan hệ giữa các trường, bảo vệ dữ liệu mutable được truyền vào, rồi chỉ công bố đối tượng sau khi mọi bước khởi tạo hoàn tất. Những phương thức thay đổi trạng thái về sau phải tiếp tục duy trì hợp đồng đó.
+**Remember:** A good constructor establishes **the object's state contract at successful initialization**. Define invariants, validate inputs and cross-field relationships, protect mutable input data, and publish the object only after initialization finishes. Subsequent state-changing methods must continue to uphold that contract.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="lifecycle-003">Khởi tạo mặc định, tham số và nhiều cách khởi tạo</a>
+## <a id="lifecycle-003">Default, parameterized, and alternative initialization approaches</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Khởi tạo mặc định, tham số và nhiều cách khởi tạo đối tượng trong Java
+# Default, Parameterized, and Alternative Object Initialization in Java
 
-Một đối tượng chỉ thực sự có ý nghĩa khi trạng thái ban đầu của nó hợp lệ. Khi viết lớp `Student`, `BankAccount` hay `Order`, ta cần xác định dữ liệu nào bắt buộc phải có ngay lúc tạo, dữ liệu nào có giá trị mặc định và khi nào nên cung cấp nhiều cách tạo đối tượng.
+An object is useful only when its initial state is valid. When writing classes such as `Student`, `BankAccount`, or `Order`, you must decide which data is required at creation, which data can have defaults, and when multiple object-creation approaches make sense.
 
-Trong Java, công cụ trung tâm của bước này là **constructor (hàm tạo)**. Bên cạnh constructor, Java còn hỗ trợ khởi tạo trường, khối khởi tạo, static factory method và mô hình Builder. Mỗi lựa chọn giải quyết một nhu cầu khác nhau, không nên xem chúng như những cách viết thay thế hoàn toàn tương đương.
+In Java, the central mechanism is the **constructor**. Java also supports field initializers, initialization blocks, static factory methods, and the Builder pattern. Each addresses different needs, and they should not be treated as completely interchangeable ways to write the same thing.
 
-## 1. Constructor là gì?
+## 1. What Is a Constructor?
 
-Constructor được gọi khi khởi tạo một thể hiện lớp, thường thông qua biểu thức `new`:
+A constructor is invoked when initializing a class instance, usually through a `new` expression:
 
 ```java
 public class Student {
@@ -901,22 +901,22 @@ public class Student {
 }
 ```
 
-Trong ví dụ:
+In this example:
 
-1. `new Student("SV01", "An")` yêu cầu tạo một đối tượng `Student`.
-2. Constructor `Student(String id, String name)` nhận dữ liệu đầu vào.
-3. Các trường `id`, `name` được gán giá trị để đối tượng sẵn sàng sử dụng.
-4. Biểu thức `new` có kết quả là tham chiếu đến đối tượng; biến `student` nhận giá trị tham chiếu đó.
+1. `new Student("SV01", "An")` requests creation of a `Student` object.
+2. The `Student(String id, String name)` constructor receives the input data.
+3. The `id` and `name` fields are assigned so the object is ready for use.
+4. The `new` expression produces a reference to the object, and the `student` variable receives that reference.
 
-**Đặc điểm của constructor:**
+**Constructor characteristics:**
 
-- Tên constructor trùng với **tên lớp**.
-- Constructor **không khai báo kiểu trả về**, kể cả `void`.
-- Có thể nhận tham số, overload và mang modifier truy cập (`public`, `protected`, package-private hoặc `private`).
-- Không được khai báo `static`, `abstract`, `final`; constructor không được kế thừa hay ghi đè như phương thức.
-- Nếu một phương thức có tên giống tên lớp nhưng khai báo kiểu trả về, nó vẫn là **phương thức**, không phải constructor.
+- A constructor's name matches the **class name**.
+- A constructor **declares no return type**, not even `void`.
+- It can accept parameters, be overloaded, and have access modifiers (`public`, `protected`, package-private, or `private`).
+- It cannot be declared `static`, `abstract`, or `final`; constructors are neither inherited nor overridden like methods.
+- If a method has the same name as a class but declares a return type, it is still a **method**, not a constructor.
 
-Ví dụ cách viết **sai**:
+An example of **incorrect** syntax:
 
 ```java
 class Product {
@@ -925,19 +925,19 @@ class Product {
 }
 ```
 
-Constructor là nơi phù hợp để bảo đảm **bất biến của đối tượng (object invariants)**, chẳng hạn giá không âm, tên không rỗng và mã định danh hợp lệ.
+A constructor is a suitable place to enforce **object invariants**, such as nonnegative prices, nonempty names, and valid identifiers.
 
-## 2. Constructor mặc định khác constructor không tham số
+## 2. Default Constructors Versus No-Argument Constructors
 
-Hai khái niệm này thường bị gọi chung là “constructor mặc định”, nhưng khi học Java nên phân biệt rõ:
+These two concepts are often both called “default constructors,” but it is useful to distinguish them in Java:
 
-| Khái niệm | Nguồn gốc | Khi nào tồn tại? | Có thực hiện logic do ta viết? |
+| Concept | Origin | When does it exist? | Can it execute programmer-written logic? |
 |---|---|---|---|
-| **Default constructor** (constructor mặc định ngầm định) | Java compiler tự sinh | Chỉ khi lớp **không khai báo bất kỳ constructor nào** | Không có logic do lập trình viên tự viết; gọi `super()` |
-| **No-argument constructor** (constructor không tham số) | Do lập trình viên khai báo | Khi viết `ClassName() { ... }` | Có thể chứa logic khởi tạo, kiểm tra, gán giá trị |
-| **Parameterized constructor** (constructor có tham số) | Do lập trình viên khai báo | Khi viết constructor có ít nhất một tham số | Dùng dữ liệu đầu vào để tạo trạng thái theo yêu cầu |
+| **Default constructor** (implicitly provided) | Generated by the Java compiler | Only when the class **declares no constructors at all** | Contains no programmer-written logic; calls `super()` |
+| **No-argument constructor** | Declared by the programmer | When writing `ClassName() { ... }` | Can contain initialization, validation, and assignment logic |
+| **Parameterized constructor** | Declared by the programmer | When writing a constructor with at least one parameter | Uses inputs to establish the required state |
 
-### 2.1. Default constructor do trình biên dịch sinh
+### 2.1. Compiler-Generated Default Constructor
 
 ```java
 public class Book {
@@ -955,7 +955,7 @@ public class Book {
 }
 ```
 
-Vì `Book` không có constructor nào được khai báo, Java compiler cung cấp một constructor không tham số ngầm định. Trong lớp thông thường như trên, có thể hình dung gần tương đương:
+Because `Book` declares no constructors, the Java compiler supplies an implicit no-argument constructor. In an ordinary class like this, you can think of it as approximately equivalent to:
 
 ```java
 public Book() {
@@ -963,21 +963,21 @@ public Book() {
 }
 ```
 
-Điều này **không có nghĩa** mọi lớp đều mặc nhiên có `new ClassName()`; khi ta khai báo một constructor bất kỳ, compiler sẽ không tự bổ sung constructor không tham số nữa.
+This **does not mean** every class automatically supports `new ClassName()`; once you declare any constructor, the compiler no longer inserts a no-argument constructor.
 
-Các trường có giá trị mặc định theo kiểu khi một đối tượng được tạo (nếu không được gán bởi field initializer/constructor):
+Fields receive type-specific defaults when an object is created (unless a field initializer or constructor assigns them):
 
-| Kiểu trường | Giá trị mặc định |
+| Field type | Default value |
 |---|---|
-| `byte`, `short`, `int`, `long` | `0` (đúng kiểu) |
-| `float`, `double` | `0.0` (đúng kiểu) |
+| `byte`, `short`, `int`, `long` | `0` (of the appropriate type) |
+| `float`, `double` | `0.0` (of the appropriate type) |
 | `boolean` | `false` |
 | `char` | `'\u0000'` |
-| Kiểu tham chiếu như `String`, `List` | `null` |
+| Reference types such as `String`, `List` | `null` |
 
-Các **biến cục bộ** trong phương thức/constructor không có cơ chế “đọc giá trị mặc định” như trường: chúng phải được gán trước khi đọc.
+**Local variables** in methods and constructors do not have a readable default-value mechanism like fields; they must be assigned before being read.
 
-### 2.2. Constructor không tham số tự viết
+### 2.2. Explicit No-Argument Constructor
 
 ```java
 public class Counter {
@@ -998,9 +998,9 @@ public class Counter {
 }
 ```
 
-Ở đây `Counter()` **được viết tường minh** nên không phải constructor mặc định do compiler sinh. Constructor tự viết có thể đặt giá trị khác giá trị mặc định, gọi các phương thức hỗ trợ hoặc ủy quyền đến constructor khác.
+Here, `Counter()` is **explicitly written**, so it is not a compiler-generated default constructor. A programmer-written constructor can assign nondefault values, invoke helper methods, or delegate to another constructor.
 
-### 2.3. Có constructor có tham số thì không tự có no-arg
+### 2.3. Declaring a Parameterized Constructor Does Not Add a No-Arg Constructor
 
 ```java
 public class Device {
@@ -1015,9 +1015,9 @@ Device a = new Device("SN-001"); // Hợp lệ
 // Device b = new Device();        // LỖI BIÊN DỊCH
 ```
 
-Lý do: lớp đã khai báo `Device(String serial)`. Compiler sẽ **không** tự sinh `Device()`.
+Reason: the class already declares `Device(String serial)`. The compiler **will not** generate `Device()`.
 
-Nếu thực sự cần hai cách tạo, phải khai báo cả hai constructor:
+If both creation paths are needed, declare both constructors:
 
 ```java
 public class Device {
@@ -1033,15 +1033,15 @@ public class Device {
 }
 ```
 
-Trong ví dụ này, `Device()` là constructor không tham số do lập trình viên khai báo; nó ủy quyền tới constructor nhận `String`.
+Here, `Device()` is a programmer-declared no-argument constructor that delegates to the constructor accepting a `String`.
 
-**Lưu ý:** Một lớp cha không có constructor không tham số truy cập được cũng có thể khiến constructor ngầm định của lớp con gây lỗi biên dịch, vì việc khởi tạo lớp con phải gọi được constructor thích hợp của lớp cha.
+**Note:** If a superclass has no accessible no-argument constructor, the subclass's implicit constructor may fail to compile because subclass initialization must invoke an appropriate superclass constructor.
 
-## 3. Constructor có tham số: bảo đảm dữ liệu bắt buộc
+## 3. Parameterized Constructors: Enforcing Required Data
 
-Constructor có tham số phù hợp khi đối tượng **không nên tồn tại ở trạng thái thiếu thông tin**.
+A parameterized constructor is appropriate when an object **must not exist in a state with missing required data**.
 
-Ví dụ tài khoản ngân hàng có mã tài khoản bắt buộc và số dư ban đầu không được âm:
+For example, a bank account must have an account ID and a nonnegative initial balance:
 
 ```java
 import java.math.BigDecimal;
@@ -1078,9 +1078,9 @@ public class BankAccount {
 }
 ```
 
-Constructor xác nhận đầu vào hợp lệ **trước khi đối tượng được sử dụng bình thường**. Sử dụng `BigDecimal` thay vì `double` cho số tiền giúp tránh những lỗi thường gặp từ biểu diễn dấu phẩy động nhị phân; đây là lựa chọn thiết kế ví dụ, không phải quy tắc bắt buộc cho mọi loại dữ liệu.
+The constructor validates input **before the object is used normally**. Using `BigDecimal` instead of `double` for money helps avoid common binary floating-point representation errors; this is an example design choice, not a mandatory rule for every kind of data.
 
-Với thuộc tính bắt buộc, constructor có tham số thường rõ ràng hơn thiết kế tạo đối tượng trống rồi chờ chuỗi lời gọi setter:
+For required properties, a parameterized constructor is often clearer than creating an empty object and waiting for a sequence of setter calls:
 
 ```java
 // Dễ gây trạng thái tạm thời chưa hợp lệ nếu thiếu thao tác:
@@ -1089,13 +1089,13 @@ profile.setEmail("an@example.com");
 // Nếu quên setUserId(), đối tượng có thể vẫn thiếu dữ liệu bắt buộc.
 ```
 
-Khi không thực sự cần tạo thể hiện “chưa hoàn tất”, nên thiết kế constructor để nhận đủ dữ liệu bắt buộc.
+Unless an “incomplete” instance is genuinely needed, design the constructor to accept all required data.
 
-## 4. Constructor overloading: nhiều cách khởi tạo một lớp
+## 4. Constructor Overloading: Multiple Ways to Initialize a Class
 
-**Overloading** là khai báo nhiều constructor cùng tên lớp nhưng khác **danh sách tham số** (khác số lượng, kiểu hoặc thứ tự kiểu). Phạm vi truy cập có thể khác nhau, nhưng chỉ thay access modifier không làm thành hai overload.
+**Overloading** means declaring multiple constructors with the same class name but different **parameter lists** (different numbers, types, or type order). Access levels may differ, but changing only an access modifier does not create a separate overload.
 
-Ví dụ một đơn hàng có mã bắt buộc, phí vận chuyển và mức ưu đãi tùy chọn:
+For example, an order has a required code and optional shipping fees and discount:
 
 ```java
 public class Order {
@@ -1139,7 +1139,7 @@ public class Order {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 ORD-01 | shipping=0 | discount=0%
@@ -1147,11 +1147,11 @@ ORD-02 | shipping=25000 | discount=0%
 ORD-03 | shipping=25000 | discount=10%
 ```
 
-Thay vì lặp lại toàn bộ code kiểm tra ở ba constructor, các overload ngắn **ủy quyền** về constructor đầy đủ. Điều này giữ quy tắc hợp lệ ở một nơi.
+Instead of duplicating all validation logic across three constructors, the shorter overloads **delegate** to the full constructor. This keeps validity rules in one place.
 
-### Cách Java chọn overload
+### How Java Resolves Overloads
 
-Trình biên dịch chọn constructor phù hợp tại **thời điểm biên dịch**, dựa trên số lượng và kiểu đối số cũng như những chuyển đổi hợp lệ. Nếu có nhiều overload không phân định được, lời gọi sẽ **mơ hồ (ambiguous)**.
+At **compile time**, the compiler selects a matching constructor based on the argument count and types and valid conversions. If multiple overloads are equally applicable and cannot be distinguished, the call is **ambiguous**.
 
 ```java
 class Message {
@@ -1163,19 +1163,19 @@ class Message {
 new Message((String) null); // Chọn constructor String
 ```
 
-Vì vậy không nên tạo quá nhiều overload dễ nhầm lẫn, đặc biệt khi có các tham số cùng kiểu hoặc có thể nhận `null`.
+Avoid too many easily confused overloads, especially when parameters have the same type or can accept `null`.
 
-## 5. Constructor chaining với this() và super()
+## 5. Constructor Chaining with this() and super()
 
-Khi một constructor gọi một constructor khác, đó là **constructor chaining**.
+When one constructor invokes another, that is called **constructor chaining**.
 
-- `this(...)`: gọi một constructor **khác trong cùng lớp**.
-- `super(...)`: gọi constructor của **lớp cha**.
-- Trong mẫu tương thích rộng rãi, lệnh gọi constructor tường minh được đặt đầu thân constructor.
-- Không thể gọi cả `this(...)` và `super(...)` như hai lời gọi constructor trực tiếp trong cùng một constructor; constructor được `this(...)` gọi sẽ tiếp tục chuỗi đến lớp cha.
-- Không thể tạo vòng gọi `this(...)` (chẳng hạn A gọi B và B lại gọi A): compiler báo lỗi.
+- `this(...)`: invokes **another constructor in the same class**.
+- `super(...)`: invokes a constructor of the **superclass**.
+- In the broadly compatible pattern, an explicit constructor invocation appears at the start of the constructor body.
+- You cannot directly invoke both `this(...)` and `super(...)` in the same constructor; a constructor invoked through `this(...)` continues the chain to the superclass.
+- You cannot create a cycle of `this(...)` calls (for example, A calls B, and B calls A): the compiler reports an error.
 
-Sơ đồ luồng khởi tạo của `Order` ở phần trên:
+Initialization flow for the `Order` example above:
 
 ```mermaid
 flowchart TD
@@ -1187,7 +1187,7 @@ flowchart TD
     E --> G["Kiểm tra và gán trạng thái"]
 ```
 
-### Ví dụ lớp cha và lớp con
+### Superclass and Subclass Example
 
 File `InheritanceInitDemo.java`:
 
@@ -1228,7 +1228,7 @@ public class InheritanceInitDemo {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Person constructor: An
@@ -1236,13 +1236,13 @@ Employee constructor: Backend
 An - Backend
 ```
 
-Constructor lớp cha được thực hiện trước phần thân constructor lớp con. Nếu constructor của `Employee` bỏ `super(name)`, trình biên dịch sẽ cố gọi `super()` ngầm định (trong ví dụ này, không tồn tại), và mã sẽ lỗi biên dịch.
+The superclass constructor executes before the subclass constructor body. If the `Employee` constructor omits `super(name)`, the compiler attempts to insert an implicit `super()` call (which does not exist in this example), causing a compilation error.
 
-**Không gọi trực tiếp constructor như phương thức bình thường**, ví dụ `employee.Person("An")`. Các lời gọi `this(...)` / `super(...)` thuộc cú pháp constructor invocation, có quy tắc riêng.
+**Do not invoke constructors directly like ordinary methods**, such as `employee.Person("An")`. Calls to `this(...)` / `super(...)` use constructor-invocation syntax with its own rules.
 
-## 6. Constructor chaining trong kế thừa: điểm cần nhớ
+## 6. Constructor Chaining in Inheritance: Key Points
 
-Nếu `Child extends Parent`, constructor của `Child` cuối cùng phải đi qua một constructor hợp lệ của `Parent` (tường minh `super(...)` hoặc mặc định `super()` khi hợp lệ). Đây vẫn là **một đối tượng Child** có phần trạng thái do lớp cha khai báo; không tự tạo một instance `Parent` thứ hai.
+If `Child extends Parent`, every `Child` constructor must eventually invoke a valid `Parent` constructor (explicitly through `super(...)` or implicitly through `super()` when valid). This is still **one Child object** containing state declared by its superclass; it does not create a second `Parent` instance.
 
 ~~~java
 class Parent {
@@ -1257,11 +1257,11 @@ class Child extends Parent {
 // new Child() in "Parent", rồi "Child".
 ~~~
 
-Thứ tự khởi tạo chi tiết hơn còn liên quan **static initializer**, field initializer và instance block của từng lớp. Các bước chạy theo chiều cha → con; code gọi override trong constructor cha có thể quan sát field của lớp con đang mang giá trị mặc định. Bài *Thứ tự khởi tạo trong quan hệ kế thừa* có một chương trình trace hoàn chỉnh và phân biệt thời điểm khởi tạo class với instance.
+The detailed initialization order also involves **static initializers**, field initializers, and instance blocks at each class level. Execution proceeds from parent to child; code that invokes an override in a parent constructor may observe subclass fields at their default values. *Initialization order in inheritance* includes a complete tracing program and distinguishes class initialization from instance initialization.
 
-## 7. Khi overloaded constructor không còn dễ đọc
+## 7. When Overloaded Constructors Become Hard to Read
 
-Overload phù hợp khi chỉ có vài tập tham số dễ phân biệt. Nhưng các yêu cầu khác có thể cần **phương thức tạo có tên** hoặc **Builder**:
+Overloads work well for a few easily distinguished parameter sets. Other needs may call for **named creation methods** or a **Builder**:
 
 ~~~java
 record Subscription(String plan, int months) {
@@ -1278,28 +1278,28 @@ Subscription a = Subscription.trial();
 Subscription b = Subscription.paid(12);
 ~~~
 
-Đây là **static factory**: thay vì đưa boolean `isTrial` vào overload khiến lời gọi khó hiểu, tên `trial()` và `paid(...)` thể hiện mục đích. Static factory có thể trả đối tượng có sẵn; cách `trial()` ở ví dụ này tạo instance mới theo code của nó.
+This is a **static factory**: rather than adding a confusing boolean `isTrial` to an overload, the names `trial()` and `paid(...)` express intent. A static factory can return an existing object; in this example, the `trial()` implementation creates a new instance.
 
-Nếu cấu hình cần nhiều trường tùy chọn, Builder thu thập tham số có tên rồi mới hoàn tất đối tượng bằng `build()`, giúp tránh quá nhiều overload cùng kiểu. Ví dụ một API được thiết kế theo Builder có thể dùng `MailOptions.builder(sender, recipient).subject("Báo cáo").retryCount(2).build()`; cách triển khai Builder, factory chọn implementation và giới hạn của hai mô hình được trình bày đầy đủ ở bài *Hàm tạo tĩnh, Factory và Builder*.
+If a configuration has many optional fields, a Builder collects named parameters before completing the object with `build()`, avoiding numerous same-type overloads. A Builder-designed API might offer `MailOptions.builder(sender, recipient).subject("Báo cáo").retryCount(2).build()`; Builder implementation, factories that select implementations, and the limitations of both patterns are covered in *Static factory methods, Factory, and Builder*.
 
-Điểm chung của mọi lối tạo là phải **bảo vệ invariant** trước khi trả đối tượng sẵn sàng được sử dụng.
+Every creation path shares one requirement: **enforce invariants** before returning an object ready for use.
 
-## 8. So sánh các cách khởi tạo
+## 8. Comparing Initialization Approaches
 
-| Cách tạo | Phù hợp khi | Điểm cần lưu ý |
+| Creation approach | When it fits | Considerations |
 |---|---|---|
-| Constructor mặc định do compiler sinh | Lớp đơn giản không có constructor tự viết | Không tự kiểm tra dữ liệu; không còn được sinh khi khai báo constructor |
-| Constructor không tham số tự viết | Muốn trạng thái khởi tạo chuẩn mà không cần đối số | Phải bảo đảm trạng thái không thiếu dữ liệu bắt buộc |
-| Constructor có tham số | Cần dữ liệu bắt buộc và kiểm tra sớm | Nhiều tham số dễ gây gọi nhầm |
-| Overloaded constructors | Có vài tập tham số hợp lý | Nên dùng `this(...)` để tập trung kiểm tra và tránh lặp |
-| Static factory method | Muốn tên khởi tạo giàu ý nghĩa hoặc chính sách tạo linh hoạt | Không phải constructor và có thể trả về đối tượng khác/đã tồn tại |
-| Builder | Nhiều tham số tùy chọn, cần lời gọi dễ đọc | Tăng số dòng mã và thường tạo đối tượng Builder trung gian |
+| Compiler-generated default constructor | Simple classes without explicitly declared constructors | Does not validate data; is not generated once any constructor is declared |
+| Explicit no-argument constructor | A standard initial state needs no arguments | Must not leave required data missing |
+| Parameterized constructor | Required data and early validation matter | Many parameters can be confused |
+| Overloaded constructors | A few sensible parameter sets exist | Prefer `this(...)` to centralize validation and avoid duplication |
+| Static factory method | Meaningful creation names or flexible creation policies are needed | Is not a constructor and may return another/existing object |
+| Builder | Many optional parameters, with readable call sites | Adds code and usually creates an intermediate Builder object |
 
-**Nguyên tắc:** Hãy chọn cách đơn giản nhất giúp người dùng lớp tạo được một đối tượng hợp lệ. Tránh để đối tượng vừa tạo ở trạng thái thiếu thông tin nghiệp vụ quan trọng.
+**Principle:** Choose the simplest approach that lets users of the class create valid objects. Avoid creating objects that lack essential business data.
 
-## 9. Các lỗi thường gặp
+## 9. Common Mistakes
 
-### 9.1. Tưởng constructor có tham số sẽ giữ no-arg ngầm định
+### 9.1. Assuming a Parameterized Constructor Keeps the Implicit No-Arg Constructor
 
 ```java
 class Account {
@@ -1309,9 +1309,9 @@ class Account {
 // new Account(); // Lỗi: constructor Account() không tồn tại
 ```
 
-Cách xử lý: khai báo `Account()` tường minh **nếu** không tham số là một trạng thái khởi tạo hợp lệ; không nhất thiết phải thêm no-arg chỉ để tránh lỗi.
+Fix: explicitly declare `Account()` **if** a no-argument initialization state is valid; adding a no-arg constructor just to suppress an error is not always necessary.
 
-### 9.2. Vô tình gán tham số cho chính nó
+### 9.2. Accidentally Assigning a Parameter to Itself
 
 ```java
 class User {
@@ -1323,9 +1323,9 @@ class User {
 }
 ```
 
-Sửa bằng `this.name = name;` để phân biệt field với tham số.
+Fix it with `this.name = name;` to distinguish the field from the parameter.
 
-### 9.3. Không gán đủ field final
+### 9.3. Failing to Assign Every Final Field
 
 ```java
 class Receipt {
@@ -1338,9 +1338,9 @@ class Receipt {
 }
 ```
 
-Field `final` kiểu instance không có giá trị khởi tạo tại khai báo phải được **gán đúng một lần** trên mọi đường khởi tạo hợp lệ trước khi constructor hoàn thành. Có thể dùng constructor chaining để tránh lặp.
+A `final` instance field without a declaration initializer must be **assigned exactly once** on every valid initialization path before the constructor completes. Constructor chaining can help avoid duplication.
 
-### 9.4. Hai overload gây mơ hồ
+### 9.4. Ambiguous Overloads
 
 ```java
 class Job {
@@ -1351,19 +1351,19 @@ class Job {
 // new Job(null); // Mơ hồ, compiler không chọn được overload
 ```
 
-Nên tránh thiết kế nhiều overload kiểu tham chiếu không liên quan cùng số tham số nếu người dùng có thể truyền `null`; có thể dùng factory có tên hoặc ép kiểu rõ ràng khi phù hợp.
+Avoid designing same-arity overloads that accept unrelated reference types when callers might pass `null`; use named factories or explicit casts when appropriate.
 
-### 9.5. Constructor bị làm quá nhiều việc
+### 9.5. Making Constructors Do Too Much
 
-Constructor mở kết nối mạng, ghi cơ sở dữ liệu hoặc thực hiện tác vụ chậm thường khó kiểm soát lỗi và làm đối tượng khó kiểm thử. Với công việc khởi tạo tài nguyên phức tạp, cân nhắc factory/service chuyên trách, trả lỗi rõ ràng và quản lý vòng đời đóng tài nguyên. Constructor vẫn có thể ném exception; nhưng đối tượng không nên bị xuất ra ngoài khi chưa hoàn tất khởi tạo.
+Constructors that open network connections, write to databases, or perform slow tasks are often hard to troubleshoot and test. For complex resource initialization, consider a dedicated factory/service with clear failure reporting and resource cleanup. Constructors can throw exceptions, but objects should not escape before initialization completes.
 
-### 9.6. Nhầm constructor với setter hoặc phương thức reset
+### 9.6. Confusing Constructors with Setters or Reset Methods
 
-Constructor thiết lập trạng thái lúc tạo; setter cập nhật trạng thái **sau khi đối tượng đã tồn tại**. Gọi setter không thể “chạy lại constructor” của một đối tượng. Nếu cần tạo lại với trạng thái mới, hãy tạo đối tượng mới hoặc định nghĩa hành vi cập nhật riêng có kiểm tra.
+A constructor establishes state at creation; a setter updates state **after the object already exists**. Calling a setter cannot “rerun the constructor” on an object. To obtain a new state, create a new object or define a separately validated update operation.
 
-## 10. Tự kiểm tra
+## 10. Self-Check
 
-### Câu 1: Mã nào biên dịch được?
+### Question 1: Which Code Compiles?
 
 ```java
 class Ticket {
@@ -1374,9 +1374,9 @@ class Ticket {
 Ticket t2 = new Ticket(100);  // B
 ```
 
-**Đáp án:** Chỉ B. Việc khai báo `Ticket(int)` làm compiler không sinh `Ticket()` ngầm định.
+**Answer:** Only B. Declaring `Ticket(int)` prevents the compiler from generating an implicit `Ticket()`.
 
-### Câu 2: Kết quả constructor chaining?
+### Question 2: What Is the Result of Constructor Chaining?
 
 ```java
 public class ChainQuiz {
@@ -1395,16 +1395,16 @@ public class ChainQuiz {
 }
 ```
 
-**Đáp án:**
+**Answer:**
 
 ```text
 B5
 A
 ```
 
-Constructor `ChainQuiz()` ủy quyền đến `ChainQuiz(int)`, thực hiện xong constructor nhận `int` mới chạy phần còn lại của constructor không tham số.
+`ChainQuiz()` delegates to `ChainQuiz(int)`; the constructor accepting `int` finishes before the remaining statements in the no-argument constructor run.
 
-### Câu 3: Thứ tự gọi cha - con?
+### Question 3: In What Order Do Parent and Child Constructors Run?
 
 ```java
 class Animal {
@@ -1419,26 +1419,26 @@ class Cat extends Animal {
 }
 ```
 
-Với `new Cat()`, kết quả là:
+For `new Cat()`, the output is:
 
 ```text
 Animal
 Cat
 ```
 
-`Cat()` không ghi `super()` nên trình biên dịch chèn lời gọi `super()` ngầm định; việc khởi tạo cha được thực hiện trước phần thân constructor con.
+Because `Cat()` does not explicitly invoke `super()`, the compiler inserts an implicit `super()` call; superclass initialization precedes the subclass constructor body.
 
-### Bài tập thiết kế
+### Design Exercise
 
-Hãy tự xây dựng lớp `CourseEnrollment` có:
+Build a `CourseEnrollment` class with:
 
-- `studentId` và `courseId` là hai giá trị bắt buộc, không được `null` hoặc rỗng.
-- `semester` là tùy chọn với giá trị mặc định `"2026-FALL"`.
-- Một constructor nhận đủ ba tham số và một overload chỉ nhận hai tham số.
-- Logic kiểm tra tập trung vào **một** constructor; những trường bắt buộc khai báo `private final`.
-- Viết `main` minh họa hai cách tạo và kiểm tra dữ liệu không hợp lệ.
+- `studentId` and `courseId` as required, non-`null`, nonempty values.
+- `semester` as an optional value defaulting to `"2026-FALL"`.
+- One constructor taking all three parameters and an overload taking only two.
+- Validation centralized in **one** constructor, with required fields declared `private final`.
+- A `main` method demonstrating both creation paths and invalid-input checks.
 
-Gợi ý chữ ký:
+Suggested signatures:
 
 ```java
 CourseEnrollment(String studentId, String courseId) {
@@ -1450,50 +1450,50 @@ CourseEnrollment(String studentId, String courseId, String semester) {
 }
 ```
 
-Một bước mở rộng: nếu về sau có thêm sáu tùy chọn đăng ký, hãy cân nhắc Builder thay vì tạo nhiều overload có tham số kiểu `String` dễ nhầm thứ tự.
+Extension: if six more enrollment options are added later, consider a Builder instead of many overloads with `String` parameters whose order is easy to confuse.
 
 ---
 
-**Ghi nhớ:** Java chỉ tự sinh **default constructor không tham số** khi lớp không khai báo constructor nào. Constructor có tham số giúp bảo đảm dữ liệu bắt buộc; overload tạo nhiều cách khởi tạo; `this(...)` tái sử dụng logic giữa các constructor và `super(...)` khởi tạo phần lớp cha. Khi số lượng lựa chọn tăng hoặc cách tạo mang ý nghĩa nghiệp vụ riêng, static factory và Builder có thể làm API dễ hiểu và an toàn hơn.
+**Remember:** Java generates an implicit **default no-argument constructor** only when a class declares no constructors. Parameterized constructors enforce required data; overloads offer multiple creation paths; `this(...)` reuses logic between constructors, and `super(...)` initializes the superclass portion. As options grow or creation acquires distinct business meaning, static factories and Builders can make APIs clearer and safer.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="lifecycle-004">Thứ tự khởi tạo trong quan hệ kế thừa</a>
+## <a id="lifecycle-004">Initialization order in inheritance</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thứ tự khởi tạo trong quan hệ kế thừa (Java OOP)
+# Initialization Order in Inheritance (Java OOP)
 
-Khi tạo đối tượng từ một lớp **kế thừa** lớp khác, Java không chạy tất cả phần khởi tạo của lớp con trước rồi mới đến lớp cha. JVM phải chuẩn bị lớp, tạo đối tượng và xây dựng phần trạng thái của **lớp cha trước lớp con** theo những quy tắc xác định.
+When creating an object from a class that **inherits** from another class, Java does not execute all subclass initialization before handling the superclass. The JVM must prepare the classes, create the object, and construct the **superclass state before the subclass state** according to defined rules.
 
-Hiểu đúng trình tự này giúp dự đoán kết quả khi có `static`, field initializer, initializer block, constructor, `super(...)`, `this(...)`, cũng như tránh lỗi khi một constructor gọi phương thức có thể bị ghi đè.
+Understanding this order helps predict behavior involving `static`, field initializers, initialization blocks, constructors, `super(...)`, and `this(...)`, and avoid errors when a constructor invokes an overridable method.
 
-> Phạm vi: các ví dụ tương thích Java 11+. “Khởi tạo lớp” (`static`) và “khởi tạo đối tượng” (instance) là hai việc khác nhau; phần giải thích dưới đây phân biệt rõ chúng.
+> Scope: the examples work with Java 11+. “Class initialization” (`static`) and “object initialization” (instance) are different operations; the explanation below distinguishes them.
 
-## 1. Thứ tự tổng quát khi chạy `new Child()`
+## 1. General Initialization Order for `new Child()`
 
-Giả sử `Child extends Parent` và đây là lần đầu chương trình chủ động sử dụng `Child` theo cách đòi hỏi JVM khởi tạo lớp:
+Suppose `Child extends Parent` and this is the program's first active use of `Child` that requires JVM class initialization:
 
-1. **Khởi tạo lớp `Parent`**, bao gồm static field initializer và static initialization block, theo thứ tự xuất hiện trong mã nguồn.
-2. **Khởi tạo lớp `Child`**, chạy các phần `static` của lớp con theo thứ tự mã nguồn.
-3. Cấp phát đối tượng `Child` và thiết lập giá trị **mặc định** cho tất cả instance field (ví dụ `0`, `false`, `null`). Các field khai báo ở phần lớp cha cũng nằm trong đối tượng này.
-4. Thực hiện chuỗi constructor về phía lớp cha. Khi đến phần khởi tạo instance của `Parent`, Java chạy các instance field initializer và instance initialization block của `Parent` **theo thứ tự văn bản**, rồi thực thi thân constructor `Parent`.
-5. Quay về `Child`, chạy instance field initializer và instance initialization block của `Child` **theo thứ tự văn bản**, rồi thực thi thân constructor `Child`.
+1. **Initialize class `Parent`**, running its static field initializers and static initialization blocks in source-code order.
+2. **Initialize class `Child`**, executing the subclass's `static` initialization elements in source-code order.
+3. Allocate a `Child` object and assign **default** values to all instance fields (such as `0`, `false`, and `null`). Fields declared by the superclass are part of this same object.
+4. Follow the constructor chain toward the superclass. When processing `Parent` instance initialization, Java runs `Parent` instance field initializers and instance initialization blocks **in textual order**, then executes the `Parent` constructor body.
+5. Return to `Child`, execute `Child` instance field initializers and instance initialization blocks **in textual order**, then execute the `Child` constructor body.
 
-Nếu có nhiều lớp kế thừa, quá trình bắt đầu từ lớp tổ tiên phía trên và tiến dần tới lớp cụ thể được `new`. Mỗi cấp lớp đóng góp phần khởi tạo instance của mình.
+With a deeper inheritance hierarchy, the process begins at the highest ancestor and proceeds toward the concrete class named by `new`. Each class level contributes its own instance initialization.
 
-**Hai điểm dễ nhầm:**
+**Two common misconceptions:**
 
-- Khởi tạo `static` của một lớp thường diễn ra **một lần trong phạm vi class loader khởi tạo lớp đó**, chứ không lặp lại mỗi khi `new`. Việc nạp lớp (`loading`) và khởi tạo lớp (`initialization`) cũng không phải lúc nào xảy ra cùng thời điểm.
-- Constructor của cha được **gọi trước phần khởi tạo instance của con**. Các field của con đã có giá trị **mặc định** do cấp phát đối tượng, nhưng các biểu thức khởi tạo cụ thể của chúng vẫn chưa chạy.
+- A class's `static` initialization normally happens **once within the class loader that initializes it**, not on every `new`. Class loading (`loading`) and class initialization (`initialization`) also do not necessarily occur at the same time.
+- The superclass constructor is **invoked before subclass instance initialization**. Subclass fields already have **default** values from object allocation, but their specific initializer expressions have not yet run.
 
-Sơ đồ thứ tự điển hình:
+Typical order diagram:
 
 ```mermaid
 flowchart TD
@@ -1507,11 +1507,11 @@ flowchart TD
     H --> I["Đối tượng Child được khởi tạo xong"]
 ```
 
-*Các biểu thức đối số của lời gọi constructor và chuỗi `this(...)`/`super(...)` được đánh giá khi xử lý lời gọi tương ứng; sơ đồ tập trung vào thứ tự chạy các phần khởi tạo và thân constructor trong các ví dụ thông thường.*
+*Constructor-call argument expressions and chains of `this(...)`/`super(...)` are evaluated when those calls are processed; this diagram focuses on the order of initialization elements and constructor bodies in ordinary examples.*
 
-## 2. Ví dụ đầy đủ: quan sát tất cả các bước
+## 2. Full Example: Tracing Every Step
 
-Tạo file **`InitializationTrace.java`**:
+Create the file **`InitializationTrace.java`**:
 
 ```java
 public class InitializationTrace {
@@ -1568,14 +1568,14 @@ public class InitializationTrace {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac InitializationTrace.java
 java InitializationTrace
 ```
 
-**Kết quả:**
+**Output:**
 
 ```text
 === ĐỐI TƯỢNG THỨ NHẤT ===
@@ -1598,41 +1598,41 @@ java InitializationTrace
 10. Child: constructor
 ```
 
-Phân tích:
+Analysis:
 
-- Trong lần tạo thứ nhất, `new Child()` yêu cầu khởi tạo `Child`. Vì `Child extends Parent`, các phần `static` của `Parent` được khởi tạo trước `Child`. **Trong từng lớp**, field và block `static` chạy theo thứ tự xuất hiện.
-- Phần instance của `Parent` (dòng 5–7) chạy trước phần instance của `Child` (dòng 8–10).
-- Lần `new Child()` thứ hai **không in lại dòng 1–4**, vì các lớp này đã được khởi tạo. Nhưng nó tạo instance mới, nên dòng 5–10 vẫn xuất hiện.
-- Hai biến `parentValue` và `childValue` có giá trị `1` do `mark` trả về; mục đích của hàm là in dấu vết để dễ kiểm tra thứ tự.
+- On the first creation, `new Child()` requires initialization of `Child`. Because `Child extends Parent`, the `static` elements of `Parent` initialize before those of `Child`. **Within each class**, static fields and `static` blocks run in declaration order.
+- The instance portion of `Parent` (lines 5–7) runs before the instance portion of `Child` (lines 8–10).
+- The second `new Child()` **does not print lines 1–4 again**, because the classes are already initialized. It creates a new instance, so lines 5–10 still appear.
+- Both `parentValue` and `childValue` have the value `1` because `mark` returns it; the method prints a trace to make execution order easy to verify.
 
-**Một thay đổi để tự thử:** đổi vị trí static block và static field của cùng một lớp, rồi đổi vị trí instance block và instance field của lớp ấy. Thứ tự in tương ứng cũng sẽ đổi. Quy tắc “cha trước con” không có nghĩa field initializer luôn trước block initializer trong cùng lớp: **phụ thuộc thứ tự trong mã nguồn**.
+**Try one change:** swap the static block and static field within one class, then swap that class's instance block and instance field. The output order changes accordingly. “Superclass before subclass” does not mean field initializers always precede block initializers within a class: **source-code order matters**.
 
-## 3. Phân biệt khởi tạo lớp và khởi tạo đối tượng
+## 3. Class Initialization Versus Object Initialization
 
-| Thành phần | Khi nào chạy? | Liên quan đến lớp hay từng instance? |
+| Component | When does it run? | Class-wide or per instance? |
 | --- | --- | --- |
-| `static int value = ...;` | Khi lớp được khởi tạo | Thuộc lớp |
-| `static { ... }` | Khi lớp được khởi tạo | Thuộc lớp |
-| `int value = ...;` | Khi tạo từng đối tượng, tới lượt lớp khai báo field | Thuộc đối tượng |
-| `{ ... }` (instance initializer block) | Khi tạo từng đối tượng, tới lượt lớp khai báo block | Thuộc đối tượng |
-| Constructor | Khi tạo đối tượng qua chuỗi constructor | Thuộc quá trình tạo đối tượng |
-| Instance field có giá trị mặc định | Ngay sau cấp phát đối tượng, trước các initializer cụ thể | Thuộc đối tượng |
+| `static int value = ...;` | When the class is initialized | Class-wide |
+| `static { ... }` | When the class is initialized | Class-wide |
+| `int value = ...;` | For each object, when initialization reaches the declaring class | Per instance |
+| `{ ... }` (instance initializer block) | For each object, when initialization reaches the declaring class | Per instance |
+| Constructor | When constructing an object through the constructor chain | Part of object construction |
+| Instance field default values | Immediately after allocation, before specific initializers | Per instance |
 
-Trong Java, giá trị mặc định của instance field được thiết lập trước khi chạy các constructor:
+In Java, instance fields receive default values before constructors execute:
 
-| Kiểu field | Giá trị mặc định |
+| Field type | Default value |
 | --- | --- |
 | `byte`, `short`, `int`, `long` | `0` |
 | `float`, `double` | `0.0` |
 | `boolean` | `false` |
-| `char` | `'\u0000'` (ký tự NUL) |
-| Kiểu tham chiếu như `String` hoặc `List` | `null` |
+| `char` | `'\u0000'` (NUL character) |
+| Reference types such as `String` or `List` | `null` |
 
-Điều này **khác biến cục bộ**: biến cục bộ không được tự động cấp giá trị mặc định để sử dụng; trình biên dịch yêu cầu gán giá trị trước khi đọc.
+This **differs from local variables**: local variables do not receive automatically readable default values; the compiler requires assignment before reading them.
 
-Một lớp có thể đã được JVM nạp hoặc liên kết mà **chưa** chạy initializer `static`. Việc truy cập một hằng số `static final` thuộc loại *compile-time constant* có thể không kích hoạt khởi tạo lớp định nghĩa hằng số, vì giá trị có thể được nội tuyến tại nơi sử dụng. Do đó đừng xem “có nhắc tới tên lớp” là điều kiện đủ để mọi static block chạy.
+A class can be loaded or linked by the JVM **without** yet executing its `static` initializers. Accessing a `static final` *compile-time constant* may not trigger initialization of the class that defines it, because the value can be inlined at the call site. Merely mentioning a class name is therefore insufficient to guarantee execution of all static blocks.
 
-### Một lần `new` vẫn tạo một đối tượng có phần trạng thái của cha
+### One `new` Still Creates a Single Object Containing Superclass State
 
 ```java
 class Vehicle {
@@ -1648,13 +1648,13 @@ System.out.println(car.brand); // Generic
 System.out.println(car.doors); // 4
 ```
 
-`Car` không “chứa một đối tượng `Vehicle` riêng biệt do tự động `new Vehicle()`”. Đối tượng `Car` có các thành phần instance kế thừa từ `Vehicle` và thành phần do `Car` khai báo. Chuỗi constructor đảm bảo việc khởi tạo chúng có thứ tự.
+`Car` does not “contain a separate `Vehicle` object automatically created by `new Vehicle()`.” A `Car` object contains inherited instance components from `Vehicle` and components declared by `Car`. The constructor chain ensures they are initialized in order.
 
-## 4. `super(...)` và constructor của lớp cha
+## 4. `super(...)` and Superclass Constructors
 
-Khi tạo `Child`, Java cần thực hiện một constructor thích hợp của `Parent`. Constructor của lớp cha **không được kế thừa** như một phương thức bình thường; lớp con chỉ gọi constructor cha thông qua `super(...)` trong chuỗi khởi tạo.
+When creating `Child`, Java must execute an appropriate constructor of `Parent`. Superclass constructors **are not inherited** like ordinary methods; a subclass invokes one through `super(...)` as part of the initialization chain.
 
-### Lớp cha có constructor không tham số
+### Superclass with a No-Argument Constructor
 
 ```java
 class Device {
@@ -1671,16 +1671,16 @@ class Phone extends Device {
 }
 ```
 
-`new Phone()` in:
+`new Phone()` prints:
 
 ```text
 Device()
 Phone()
 ```
 
-Nếu bỏ dòng `super();` trong ví dụ này, trình biên dịch Java 11 sẽ tự chèn lời gọi `super();` ngầm ở đầu constructor. Điều đó **không** có nghĩa JVM tự tìm một constructor cha bất kỳ phù hợp: trường hợp mặc định hướng đến **constructor không tham số**.
+If you omit `super();` in this example, the Java 11 compiler inserts an implicit `super();` call at the beginning of the constructor. This **does not** mean the JVM searches for any compatible superclass constructor: the implicit call targets the **no-argument constructor**.
 
-### Lớp cha chỉ có constructor có tham số
+### Superclass with Only a Parameterized Constructor
 
 ```java
 class Account {
@@ -1710,22 +1710,22 @@ class SavingsAccount extends Account {
 }
 ```
 
-`new SavingsAccount("SV001", 5)` in:
+`new SavingsAccount("SV001", 5)` prints:
 
 ```text
 Account: SV001
 SavingsAccount: 5
 ```
 
-Nếu xóa `super(id)`, trình biên dịch Java 11 sẽ cố gọi `super()`, nhưng `Account` **không có** constructor không tham số, dẫn đến lỗi biên dịch. Java không tự tạo constructor không tham số cho một lớp đã khai báo constructor có tham số.
+If `super(id)` is removed, the Java 11 compiler tries to call `super()`, but `Account` **has no** no-argument constructor, so compilation fails. Java does not automatically generate a no-argument constructor for a class that declares a parameterized constructor.
 
-Trong các ví dụ Java 11, lời gọi constructor `super(...)` hoặc `this(...)` phải là câu lệnh đầu tiên của constructor khi được viết tường minh. Một số phiên bản Java mới hỗ trợ cú pháp constructor linh hoạt hơn, nhưng chuỗi khởi tạo và nhu cầu gọi constructor cha vẫn là cốt lõi để hiểu thứ tự.
+In these Java 11 examples, an explicit `super(...)` or `this(...)` constructor invocation must be the first statement in a constructor. Some newer Java versions allow more flexible constructor syntax, but constructor chaining and the need to invoke a superclass constructor remain essential to understanding initialization order.
 
-### Các tham số của `super(...)`
+### Arguments to `super(...)`
 
-Phần đối số `super(expression)` được đánh giá để lựa chọn và truyền giá trị cho constructor cha. Cần phân biệt **đánh giá biểu thức đối số** với **thực thi thân constructor cha**. Với bài tập dự đoán log, khi các biểu thức đối số có side effect, hãy xem xét chúng riêng thay vì áp dụng máy móc một danh sách log đơn giản.
+The arguments in `super(expression)` are evaluated to choose and pass values to the superclass constructor. Distinguish **evaluating argument expressions** from **executing the superclass constructor body**. When predicting logs, consider argument expressions with side effects separately instead of mechanically applying a simple log sequence.
 
-Ví dụ dễ hiểu:
+A straightforward example:
 
 ```java
 class Parent {
@@ -1742,11 +1742,11 @@ class Child extends Parent {
 }
 ```
 
-`new Child("  hello  ")` in `Parent: hello` rồi `Child`.
+`new Child("  hello  ")` prints `Parent: hello` followed by `Child`.
 
-## 5. `this(...)`: nhiều constructor trong cùng một lớp
+## 5. `this(...)`: Multiple Constructors in One Class
 
-`this(...)` **gọi constructor khác của chính lớp hiện tại**. Nó giúp tái sử dụng logic khởi tạo và tránh lặp mã.
+`this(...)` **invokes another constructor in the same class**. It reuses initialization logic and avoids duplicate code.
 
 ```java
 public class ConstructorChainDemo {
@@ -1781,7 +1781,7 @@ public class ConstructorChainDemo {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Base constructor
@@ -1790,16 +1790,16 @@ Derived(int) constructor body: 99
 Derived() constructor body
 ```
 
-Diễn giải:
+Explanation:
 
-1. `Derived()` chuyển việc khởi tạo đến `Derived(int)` bằng `this(99)`.
-2. `Derived(int)` gọi `Base()` thông qua `super()`.
-3. Sau khi constructor cha hoàn thành, các instance field initializer và instance block của `Derived` chạy **một lần**.
-4. Thân `Derived(int)` chạy, sau đó chương trình quay lại thân `Derived()`.
+1. `Derived()` delegates initialization to `Derived(int)` through `this(99)`.
+2. `Derived(int)` invokes `Base()` through `super()`.
+3. After the superclass constructor finishes, `Derived` instance field initializers and instance blocks run **once**.
+4. The `Derived(int)` constructor body runs, and execution returns to the `Derived()` constructor body.
 
-**Không** xảy ra chuyện field `value` được khởi tạo hai lần chỉ vì có hai constructor trong cùng chuỗi `this(...)`. Mỗi lần tạo instance, chuỗi constructor rốt cuộc gọi constructor cha đúng một lần theo đường đi tương ứng.
+The `value` field is **not** initialized twice just because the `this(...)` chain contains two constructors. Each object creation ultimately invokes the superclass constructor once along its corresponding chain.
 
-Một constructor không được đồng thời viết hai lời gọi constructor `this(...)` và `super(...)` trong cùng nhánh khởi tạo; chuỗi `this(...)` sẽ kết thúc tại một constructor thực hiện lời gọi `super(...)` trực tiếp hoặc ngầm. Vòng lặp gọi constructor (ví dụ A gọi B, B gọi A qua `this(...)`) là lỗi biên dịch.
+A constructor cannot directly contain both `this(...)` and `super(...)` constructor invocations on the same initialization path; the `this(...)` chain eventually reaches a constructor that invokes `super(...)` explicitly or implicitly. Cyclic constructor calls (for example, A calls B and B calls A through `this(...)`) are compilation errors.
 
 ```mermaid
 sequenceDiagram
@@ -1816,11 +1816,11 @@ sequenceDiagram
     D0-->>Main: in thân Derived(), hoàn tất
 ```
 
-## 6. Bẫy quan trọng: gọi phương thức override trong constructor cha
+## 6. Important Pitfall: Invoking an Override in a Superclass Constructor
 
-Phương thức instance có thể dùng **dynamic dispatch**: dù được gọi từ code của lớp cha, lời gọi có thể chạy bản override của lớp con. Nhưng vào thời điểm constructor cha đang chạy, field initializer của lớp con **chưa chạy**.
+Instance methods may use **dynamic dispatch**: a call from superclass code can execute a subclass override. But while the superclass constructor is running, subclass field initializers **have not run yet**.
 
-Xem chương trình **`OverrideDuringConstruction.java`**:
+Examine **`OverrideDuringConstruction.java`**:
 
 ```java
 public class OverrideDuringConstruction {
@@ -1856,7 +1856,7 @@ public class OverrideDuringConstruction {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Base bắt đầu
@@ -1865,20 +1865,20 @@ Base kết thúc
 Derived constructor: Đã sẵn sàng
 ```
 
-**Tại sao in `null` chứ không phải “Đã sẵn sàng”?**
+**Why does it print `null` instead of the subclass's initialized message?**
 
-- Đối tượng được tạo là `Derived`, nên phương thức override `Derived.show()` được chọn khi `Base` gọi `show()`.
-- Tại thời điểm gọi, toàn bộ instance field đã có giá trị mặc định, vì thế `message` là `null`.
-- Biểu thức gán `message = "Đã sẵn sàng"` thuộc initializer của `Derived`, chỉ thực thi **sau khi constructor `Base` hoàn thành**.
-- Sau đó thân constructor `Derived` mới thấy giá trị đã khởi tạo.
+- The object being created is a `Derived`, so `Derived.show()` is selected when `Base` invokes `show()`.
+- At that point, all instance fields have default values, so `message` is `null`.
+- The assignment `message = "Đã sẵn sàng"` belongs to a `Derived` initializer, which executes only **after the `Base` constructor completes**.
+- The `Derived` constructor body then sees the initialized value.
 
-Nếu `show()` gọi `message.length()`, chương trình có thể ném `NullPointerException` trước khi constructor con hoàn tất.
+If `show()` invokes `message.length()`, the program may throw `NullPointerException` before the subclass constructor completes.
 
-### Thiết kế an toàn hơn
+### A Safer Design
 
-Không gọi phương thức có thể bị override từ constructor lớp cha khi phương thức đó phụ thuộc trạng thái của lớp con. Thay vào đó, constructor cha nên sử dụng dữ liệu của chính lớp mình và logic `private`, `final` hoặc `static` thích hợp; hoặc để bước khởi chạy cần đối tượng hoàn chỉnh diễn ra **sau khi** constructor trả về.
+Do not call an overridable method from a superclass constructor when it depends on subclass state. Instead, the superclass constructor should use its own data and suitable `private`, `final`, or `static` logic; or defer any startup step requiring the complete object until **after** the constructor returns.
 
-Ví dụ lớp cha giữ trách nhiệm riêng:
+Example of a superclass handling its own responsibilities:
 
 ```java
 class SafeBase {
@@ -1907,11 +1907,11 @@ class SafeDerived extends SafeBase {
 }
 ```
 
-Ngoài việc tránh gọi phương thức override, nên tránh **đưa `this` ra ngoài** trước khi constructor hoàn tất (ví dụ đăng ký callback để đối tượng khác có thể gọi lại ngay). Điều đó cũng có thể làm lộ đối tượng chưa được khởi tạo đầy đủ.
+Besides avoiding overridable method calls, avoid **letting `this` escape** before the constructor completes (for example, registering a callback that another object can invoke immediately). This can also expose a partially initialized object.
 
-## 7. Trường hợp có nhiều cấp kế thừa
+## 7. Multiple Levels of Inheritance
 
-Giả sử `C extends B` và `B extends A`:
+Suppose `C extends B` and `B extends A`:
 
 ```java
 public class ThreeLevels {
@@ -1939,7 +1939,7 @@ public class ThreeLevels {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 A static
@@ -1953,40 +1953,40 @@ C instance
 C constructor
 ```
 
-Trong lần tạo thứ hai của `C`, ba dòng `static` không chạy lại. Phần instance/constructor vẫn đi từ `A` sang `B` rồi `C`.
+When creating `C` the second time, the three `static` lines are not printed again. Instance initialization and constructors still run from `A` to `B` to `C`.
 
-**Lưu ý:** khối `static` và khối instance trong mã ví dụ đều được viết ở dạng cú pháp hợp lệ:
+**Note:** Both the `static` and instance blocks in the example use valid syntax:
 
-- `static { ... }`: static initialization block, không có đối tượng làm receiver.
-- `{ ... }`: instance initialization block, chạy khi tạo đối tượng tại vị trí tương ứng trong phần khởi tạo instance của lớp.
+- `static { ... }`: a static initialization block, with no object receiver.
+- `{ ... }`: an instance initialization block, executed during construction at its corresponding point in the declaring class's instance initialization.
 
-Không nên nhầm “constructor chạy từ cha đến con” với “tất cả câu lệnh trong constructor con được chạy trước vì ta gọi `new C()`”. `new C()` chọn kiểu đối tượng cần tạo, nhưng nội dung constructor cha sẽ được hoàn thành trước phần nội dung của constructor con.
+Do not confuse “constructors run from parent to child” with “all statements in the subclass constructor run first because we called `new C()`.” The `new C()` expression selects the type to instantiate, but superclass constructor bodies complete before the subclass constructor body.
 
-## 8. Các lỗi thường gặp khi học thứ tự khởi tạo
+## 8. Common Mistakes About Initialization Order
 
-| Nhận định hoặc cách viết | Kết luận đúng |
+| Claim or code pattern | Correct conclusion |
 | --- | --- |
-| “`new Child()` phải chạy constructor Child trước vì gọi Child” | Sai: thân constructor cha chạy trước thân constructor con |
-| “Mọi `static` luôn chạy khi program khởi động” | Sai: lớp thường được khởi tạo khi có hành vi sử dụng chủ động yêu cầu điều đó |
-| “Mỗi lần tạo instance đều chạy lại static block” | Sai: static initializer không lặp theo instance |
-| “Instance field của Child đã có giá trị khởi tạo cụ thể khi Parent constructor chạy” | Sai trong trường hợp thông thường: lúc ấy field Child mới có giá trị mặc định |
-| “`super()` tạo thêm một đối tượng Parent khác” | Sai: đó là một bước khởi tạo phần lớp cha trong cùng đối tượng Child |
-| “Constructor của Parent được Child kế thừa như method” | Sai: constructor không được kế thừa |
-| “Parent chỉ có constructor có tham số nhưng Child bỏ `super(args)` vẫn tự tìm được” | Sai: `super()` ngầm không khớp sẽ gây lỗi biên dịch |
-| “`this(...)` làm field initializer của cùng lớp chạy nhiều lần” | Sai: chuỗi constructor khởi tạo instance phần lớp đó một lần |
-| “Gọi phương thức override trong constructor cha chắc chắn dùng trạng thái Child đã khởi tạo” | Sai: override có thể chạy trước initializer của Child |
-| “Trong một lớp, mọi field initializer luôn chạy trước mọi initializer block” | Sai: chúng thực thi theo thứ tự xuất hiện trong mã nguồn |
-| “Truy cập một hằng `static final` kiểu nguyên thủy luôn kích hoạt static block” | Không luôn đúng đối với *compile-time constant* |
+| “`new Child()` must run the Child constructor first because Child was requested” | Incorrect: the superclass constructor body runs before the subclass body |
+| “Every `static` initializer runs when the program starts” | Incorrect: a class normally initializes when an active use requires it |
+| “Every new instance reruns static blocks” | Incorrect: static initializers do not run per instance |
+| “Child instance fields already have specific initialized values while the Parent constructor runs” | Incorrect in normal cases: Child fields still hold default values |
+| “`super()` creates an additional Parent object” | Incorrect: it initializes the superclass portion of the same Child object |
+| “Child inherits Parent constructors like methods” | Incorrect: constructors are not inherited |
+| “When Parent has only a parameterized constructor, Child can omit `super(args)` and Java will find one” | Incorrect: an unmatched implicit `super()` causes a compilation error |
+| “`this(...)` causes the class's field initializers to run multiple times” | Incorrect: its constructor chain initializes that class's instance portion once |
+| “Calling an override in a parent constructor always sees initialized Child state” | Incorrect: the override may run before Child initializers |
+| “Every field initializer in a class runs before every initializer block” | Incorrect: they execute in source-code order |
+| “Accessing a primitive `static final` constant always triggers static blocks” | Not necessarily true for *compile-time constants* |
 
-### Trường hợp việc khởi tạo thất bại
+### When Initialization Fails
 
-Nếu một static initializer ném ngoại lệ không được xử lý, quá trình khởi tạo lớp thất bại. Khi lỗi không phải `Error`, lần thất bại thường được biểu hiện bằng `ExceptionInInitializerError`; những lần cố sử dụng lớp sau đó có thể gặp `NoClassDefFoundError` vì lớp ở trạng thái khởi tạo lỗi. Điều này khác với ngoại lệ ném từ một constructor instance: đối tượng đang được tạo không hoàn tất, nhưng bản thân lớp không nhất thiết bị đánh dấu khởi tạo lỗi.
+If a static initializer throws an uncaught exception, class initialization fails. When the failure is not an `Error`, it is usually reported as `ExceptionInInitializerError`; later attempts to use the class may encounter `NoClassDefFoundError` because the class is in an erroneous initialization state. This differs from an exception thrown by an instance constructor: the object under construction does not complete, but the class itself is not necessarily marked as having failed initialization.
 
-Một lưu ý khi kiểm tra thứ tự bằng `System.out.println`: bản thân logging cũng là hành động có side effect. Trong chương trình thực tế, tránh logic nghiệp vụ phức tạp, đọc dữ liệu môi trường dễ lỗi hay tự tạo luồng trong static initializer; nên kiểm soát lỗi tại các bước khởi tạo rõ ràng của ứng dụng.
+When checking execution order with `System.out.println`, remember that logging itself has side effects. In production, avoid complex business logic, failure-prone environment reads, or starting threads in static initializers; handle errors at clearly defined application initialization steps.
 
-## 9. Bài tập thực hành và đáp án giải thích
+## 9. Practice Exercises with Explanations
 
-### Bài tập 1: đoán thứ tự
+### Exercise 1: Predict the Order
 
 ```java
 class P {
@@ -2004,9 +2004,9 @@ new Q();
 new Q();
 ```
 
-**Đáp án:** `A D B C E F B C E F`. `A` và `D` chỉ in trong lần khởi tạo lớp đầu tiên; mỗi lần tạo instance luôn khởi tạo phần của `P` rồi `Q`.
+**Answer:** `A D B C E F B C E F`. `A` and `D` print only on the first class initialization; each instance initializes the `P` portion followed by `Q`.
 
-### Bài tập 2: constructor lớp cha không có mặc định
+### Exercise 2: Superclass without a Default Constructor
 
 ```java
 class Animal {
@@ -2020,11 +2020,11 @@ class Cat extends Animal {
 }
 ```
 
-**Câu hỏi:** Vì sao không biên dịch? Sửa thế nào?
+**Question:** Why does it fail to compile? How would you fix it?
 
-**Đáp án:** Java 11 mặc định chèn `super()` vào `Cat()`, nhưng `Animal` chỉ khai báo `Animal(String)`. Sửa bằng cách gọi `super("Mèo");` trong `Cat()`; hoặc thiết kế thêm một constructor không tham số ở `Animal` nếu điều đó có ý nghĩa nghiệp vụ.
+**Answer:** Java 11 implicitly inserts `super()` into `Cat()`, but `Animal` declares only `Animal(String)`. Fix this by invoking `super("Mèo");` in `Cat()`, or add a no-argument constructor to `Animal` if that makes sense for the domain.
 
-### Bài tập 3: giá trị field khi constructor cha gọi override
+### Exercise 3: Field Values When a Superclass Constructor Calls an Override
 
 ```java
 class A {
@@ -2040,43 +2040,43 @@ class B extends A {
 new B();
 ```
 
-**Đáp án:** `0`. Lời gọi động chọn `B.print()` trong lúc `A()` đang chạy, trước khi initializer `number = 7` được thực thi. Nếu chuyển lời gọi `print()` tới thời điểm sau `new B()` hoàn tất, kết quả sẽ là `7`.
+**Answer:** `0`. Dynamic dispatch selects `B.print()` while `A()` is executing, before the `number = 7` initializer runs. Moving the `print()` call until after `new B()` completes would produce `7`.
 
-### Bài tập 4: tự mở rộng
+### Exercise 4: Extend the Example
 
-Hãy tạo ba lớp `Person`, `Employee`, `Manager` theo quan hệ `Manager extends Employee extends Person`; mỗi lớp có một static block, một instance field initializer và constructor in tên lớp. Sau đó:
+Create three classes, `Person`, `Employee`, and `Manager`, with `Manager extends Employee extends Person`. Each class should have a static block, an instance field initializer, and a constructor that prints its class name. Then:
 
-1. Tạo lần lượt hai đối tượng `Manager`.
-2. Dự đoán chính xác những dòng nào in một lần và những dòng nào in hai lần.
-3. Thêm constructor `Manager()` dùng `this(String department)`; kiểm tra initializer của `Manager` có chạy lặp hay không.
-4. Cho `Person` chỉ có constructor nhận `String name`; sửa các lớp con để truyền đủ thông tin bằng `super(...)`.
-5. Thử đưa một phương thức `describe()` có thể override vào constructor `Person` và giải thích vì sao kết quả có thể chưa phản ánh trạng thái của `Manager`.
+1. Create two `Manager` objects in succession.
+2. Predict exactly which lines print once and which print twice.
+3. Add a `Manager()` constructor using `this(String department)`; check whether `Manager` initializers run repeatedly.
+4. Give `Person` only a constructor accepting `String name`; update the subclasses to pass all required data through `super(...)`.
+5. Try calling an overridable `describe()` method from the `Person` constructor, and explain why its output may not yet reflect the `Manager` state.
 
-## Ghi nhớ để đọc một constructor trong hệ kế thừa
+## Remembering How to Read Constructors in an Inheritance Hierarchy
 
-Khi nhìn thấy `new Subclass(...)`, hãy lần theo chuỗi `this(...)` và `super(...)` để xác định **constructor nào được gọi**. Sau đó tách biệt hai pha: **khởi tạo lớp (`static`, khi cần)** và **khởi tạo mỗi instance (giá trị mặc định, phần khởi tạo của cha, thân constructor cha, phần khởi tạo của con, thân constructor con)**. Cần đặc biệt thận trọng với những lời gọi phương thức bị override trong constructor vì tại thời điểm ấy đối tượng chưa được khởi tạo đầy đủ.
+When you see `new Subclass(...)`, trace the `this(...)` and `super(...)` chain to determine **which constructors are invoked**. Then distinguish two phases: **class initialization (`static`, when needed)** and **per-instance initialization (default values, parent initializers, parent constructor body, child initializers, child constructor body)**. Take special care with overridden method calls from constructors because the object may still be incompletely initialized at that point.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="lifecycle-005">Hàm tạo tĩnh, Factory và Builder</a>
+## <a id="lifecycle-005">Static factory methods, Factory, and Builder</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Hàm tạo tĩnh (Static Factory Method), Factory và Builder trong Java
+# Static Factory Methods, Factory, and Builder in Java
 
-Khi viết OOP, câu lệnh `new` không phải cách duy nhất để **lấy một đối tượng**. Ta có thể che constructor sau một phương thức tĩnh, giao việc chọn lớp cụ thể cho một Factory, hoặc thu thập tham số bằng Builder rồi mới tạo đối tượng. Ba cách này cùng liên quan tới **quá trình khởi tạo và vòng đời đối tượng**, nhưng giải quyết những vấn đề khác nhau.
+In OOP, using `new` is not the only way to **obtain an object**. You can hide a constructor behind a static method, delegate the choice of concrete class to a Factory, or collect parameters in a Builder before constructing the object. All three relate to **object creation and lifecycle**, but address different problems.
 
-> **Phân biệt ngay từ đầu:** Constructor là cú pháp khởi tạo đối tượng của Java; *static factory method* là phương thức `static` trả về một đối tượng; *Factory* thường là đối tượng/lớp chịu trách nhiệm chọn và cung cấp đối tượng; *Builder* là đối tượng hỗ trợ cấu hình từng bước rồi gọi `build()`. Không có nghĩa cứ gọi một factory là chắc chắn tạo một instance mới.
+> **Key distinctions:** A constructor is Java's object-initialization syntax; a *static factory method* is a `static` method that returns an object; a *Factory* is usually an object/class responsible for choosing and supplying objects; a *Builder* configures an object step by step and then invokes `build()`. Calling a factory does not guarantee creation of a new instance.
 
-## 1. Bắt đầu từ constructor và vòng đời đối tượng
+## 1. Starting with Constructors and the Object Lifecycle
 
-Đoạn Java cơ bản:
+A basic Java example:
 
 ~~~java
 public class User {
@@ -2100,9 +2100,9 @@ User user = new User("hello@example.com");
 System.out.println(user.getEmail());
 ~~~
 
-Ở biểu thức `new User(...)`, JVM cấp phát/khởi tạo một instance theo quy tắc ngôn ngữ Java và chạy constructor sau bước khởi tạo thích hợp. Constructor có cùng tên lớp, **không có kiểu trả về**, có thể có nhiều phiên bản (overloading), và có thể kiểm tra tính hợp lệ của trạng thái ban đầu.
+In `new User(...)`, the JVM allocates and initializes an instance under Java's language rules and invokes its constructor after the appropriate initialization steps. A constructor shares its class's name, **has no return type**, can be overloaded, and can validate initial state.
 
-Tuy nhiên, khi có nhiều cách tạo dữ liệu, constructor bắt đầu bộc lộ nhược điểm về cách đặt tên:
+However, constructors become less expressive when multiple creation approaches need descriptive names:
 
 ~~~java
 // Cùng nhận một double nên không thể khai báo cả hai constructor này:
@@ -2110,19 +2110,19 @@ Tuy nhiên, khi có nhiều cách tạo dữ liệu, constructor bắt đầu b�
 // Temperature(double fahrenheit)
 ~~~
 
-Hai constructor phía trên có **cùng chữ ký** `Temperature(double)`; Java không thể phân biệt chúng chỉ bằng tên tham số. Static factory method xử lý được trường hợp đó.
+The two constructors above have the **same signature** `Temperature(double)`; Java cannot distinguish them by parameter names alone. A static factory method handles that case.
 
-Trong mọi cách tạo đối tượng ở bài này, nhớ phân biệt:
+For every object-creation approach in this lesson, distinguish:
 
-- **Tạo instance:** constructor thực sự chạy cho một đối tượng mới (trực tiếp hoặc bên trong factory/builder).
-- **Nhận instance:** phương thức trả về một đối tượng đã tồn tại, đối tượng cache, instance dùng chung, hoặc một implementation cụ thể.
-- **Sử dụng và kết thúc sử dụng:** khi không còn tham chiếu mạnh có thể truy cập đến object, object có thể đủ điều kiện cho garbage collection. Factory/Builder không thay đổi nguyên tắc này; tài nguyên bên ngoài như file/socket vẫn phải được đóng đúng cách khi cần.
+- **Creating an instance:** the constructor actually executes for a new object (directly or inside a factory/builder).
+- **Obtaining an instance:** a method returns an existing object, a cached object, a shared instance, or a particular implementation.
+- **Using and releasing an object:** once no reachable strong reference remains to an object, it may become eligible for garbage collection. Factories and Builders do not change this principle; external resources such as files/sockets still need timely closing when appropriate.
 
-## 2. Static Factory Method: đặt tên cho các cách tạo
+## 2. Static Factory Methods: Naming Creation Paths
 
-**Static factory method** là phương thức `static` trả về một đối tượng. Nó có thể gọi một constructor, xử lý/chuyển đổi dữ liệu trước khi tạo, hoặc quyết định trả về đối tượng có sẵn.
+A **static factory method** is a `static` method that returns an object. It can invoke a constructor, process or convert data before construction, or return an existing object.
 
-Ví dụ thực tế: một nhiệt độ có thể được cung cấp theo °C hoặc °F. Ta chỉ lưu **Celsius** làm dạng nội bộ chuẩn:
+A practical example: a temperature can be specified in °C or °F. Internally, we store only **Celsius** as the canonical representation:
 
 `Temperature.java` (Java 11+):
 
@@ -2173,32 +2173,32 @@ public class Main {
 }
 ~~~
 
-Nhờ tên `celsius` và `fahrenheit`, chỗ gọi thể hiện **ý nghĩa** của tham số. Class chỉ công khai các cách tạo hợp lệ; instance không có setter nên không thể cập nhật trường `celsius` sau khi tạo. Dù vậy, hai lời gọi ở ví dụ trên tạo **hai đối tượng riêng**, vì mỗi factory đều gọi `new Temperature(...)`.
+The names `celsius` and `fahrenheit` reveal the **meaning** of the arguments at call sites. The class exposes only valid creation paths; with no setter, the instance's `celsius` field cannot be updated after creation. Nevertheless, the two calls above create **separate objects**, because each factory calls `new Temperature(...)`.
 
-### Khi nào static factory hữu ích?
+### When Are Static Factories Useful?
 
-1. **Tên mô tả ý nghĩa:** `of(...)`, `from(...)`, `parse(...)`, `forGuest(...)`, `fromCsv(...)` giúp người đọc hiểu nguồn dữ liệu.
-2. **Kiểm tra và chuẩn hóa đầu vào:** factory áp đặt quy tắc hợp lệ trước khi trả đối tượng.
-3. **Ẩn implementation:** kiểu trả về có thể là interface/superclass, còn instance là một implementation cụ thể.
-4. **Tái sử dụng/caching khi phù hợp:** factory có thể trả instance cũ, singleton hoặc object đã được cache thay vì tạo mới.
-5. **Giữ API gọn:** có thể giấu constructor bằng `private`/package-private và tập trung các con đường tạo hợp lệ.
+1. **Meaningful names:** `of(...)`, `from(...)`, `parse(...)`, `forGuest(...)`, and `fromCsv(...)` make the data source clear.
+2. **Input validation and normalization:** the factory enforces validity rules before returning an object.
+3. **Hiding implementations:** the return type may be an interface/superclass while the instance is a specific implementation.
+4. **Reuse/caching when appropriate:** a factory may return an old instance, singleton, or cached object instead of allocating a new one.
+5. **A compact API:** constructors can be hidden with `private`/package-private access while valid creation paths stay centralized.
 
-Một số tên thường gặp (chủ yếu là **quy ước**, không phải cú pháp đặc biệt của Java):
+Some common names (mostly **conventions**, not special Java syntax):
 
-| Tên phương thức | Ý nghĩa hay được dùng | Ví dụ gần gũi |
+| Method name | Common meaning | Familiar example |
 | --- | --- | --- |
-| `of(...)` | Tạo/nhận instance từ các tham số | `List.of("a", "b")` |
-| `from(...)` | Chuyển dữ liệu/kiểu khác sang kiểu đích | `Instant.from(temporal)` |
-| `valueOf(...)` | Lấy object từ giá trị tương ứng | `Integer.valueOf(42)` |
-| `parse(...)` | Phân tích chuỗi để có giá trị kiểu đích | `LocalDate.parse("2026-10-15")` |
-| `getInstance(...)` | Lấy một instance, có thể dùng chung | Tên do thư viện tự định nghĩa |
-| `newInstance(...)` | Tên gợi ý tạo mới | Tên do thư viện tự định nghĩa |
+| `of(...)` | Create/obtain an instance from parameters | `List.of("a", "b")` |
+| `from(...)` | Convert another kind of data/type to the target type | `Instant.from(temporal)` |
+| `valueOf(...)` | Obtain an object for a corresponding value | `Integer.valueOf(42)` |
+| `parse(...)` | Parse a string into a target-type value | `LocalDate.parse("2026-10-15")` |
+| `getInstance(...)` | Obtain an instance, possibly shared | A library-defined name |
+| `newInstance(...)` | Name suggesting a new instance | A library-defined name |
 
-Không suy ra hành vi cache/chắc chắn tạo mới **chỉ từ tên**. Luôn xem hợp đồng của API: chẳng hạn `Integer.valueOf` có thể trả object cache cho một số giá trị, còn `List.of` tạo/nhận một danh sách không sửa được và không bảo đảm danh tính instance.
+Do not infer caching behavior or guaranteed new allocation **from the name alone**. Read the API contract: for example, `Integer.valueOf` may return cached objects for some values, while `List.of` creates/obtains an unmodifiable list without guaranteeing instance identity.
 
-### Static factory không phải “constructor static”
+### A Static Factory Is Not a “Static Constructor”
 
-Java **không có static constructor** theo nghĩa khai báo `static User(...)` hoặc thêm `static` vào constructor. Một khối khởi tạo tĩnh `static { ... }` chạy khi lớp được khởi tạo theo quy tắc JVM; nó dùng để khởi tạo trạng thái tĩnh, **không phải** factory trả về object. Static factory method là phương thức bình thường có từ khóa `static` và có kiểu trả về.
+Java **has no static constructors** in the sense of declaring `static User(...)` or adding `static` to a constructor. A static initialization block, `static { ... }`, runs when JVM rules initialize the class; it initializes static state and **does not** act as a factory returning an object. A static factory method is an ordinary method with the `static` keyword and a return type.
 
 ~~~java
 public class Config {
@@ -2224,11 +2224,11 @@ public class Config {
 }
 ~~~
 
-## 3. Factory: giao việc lựa chọn loại đối tượng cho một nơi riêng
+## 3. Factory: Centralizing the Choice of Object Type
 
-Static factory ở ví dụ `Temperature` nằm **ngay trong lớp trả về**. Nhưng có hệ thống cần quyết định **loại implementation** dựa trên cấu hình, trường hợp nghiệp vụ hoặc môi trường chạy. Khi đó, một lớp/đối tượng Factory riêng giúp mã gọi không phải rải `new ConcreteType(...)` khắp nơi.
+The `Temperature` static factory lives **inside the returned class**. But some systems must choose an **implementation type** based on configuration, business conditions, or the runtime environment. A separate Factory class/object prevents callers from scattering `new ConcreteType(...)` throughout the codebase.
 
-Ví dụ: chọn hình thức gửi thông báo. Để minh họa OOP, hai implementation chỉ in thông báo ra console, **không gửi email/SMS thật**.
+Example: selecting a notification channel. For OOP illustration, both implementations only print to the console; they **do not send real emails or SMS messages**.
 
 `NotificationDemo.java` (Java 11+):
 
@@ -2289,7 +2289,7 @@ public class NotificationDemo {
 }
 ~~~
 
-Người gọi chỉ biết `Notifier` và lựa chọn `Channel`. Factory chịu trách nhiệm khởi tạo class thực tế; mã sử dụng interface để gọi `send`. Khi cần thay cách tạo `EmailNotifier` (ví dụ bổ sung các dependency hoặc cấu hình), phần thay đổi có thể được tập trung trong vùng xây dựng đối tượng.
+Callers only depend on `Notifier` and the selected `Channel`. The Factory constructs the actual class; application code calls `send` through the interface. If creation of `EmailNotifier` changes (for example, to supply dependencies or configuration), those changes can be concentrated where objects are built.
 
 ~~~mermaid
 flowchart LR
@@ -2302,18 +2302,18 @@ flowchart LR
     Interface --> Use["Client gọi send(...)"]
 ~~~
 
-### “Factory” và “Factory Method pattern” có giống nhau?
+### Are “Factory” and the “Factory Method Pattern” the Same?
 
-Không hoàn toàn. Các thuật ngữ dễ bị gọi lẫn nhau:
+Not exactly. These terms are often confused:
 
-| Thuật ngữ | Đặc điểm | Ví dụ |
+| Term | Characteristics | Example |
 | --- | --- | --- |
-| **Static factory method** | Phương thức `static` trả về object; thường nằm ở lớp sản phẩm | `Temperature.fahrenheit(86)` |
-| **Simple Factory** | Một hàm/lớp tập trung logic lựa chọn và tạo implementation; không phải một trong 23 mẫu GoF được đặt tên riêng | `NotifierFactory.create(Channel)` ở trên |
-| **Factory Method (GoF)** | Lớp cha định nghĩa điểm mở rộng tạo đối tượng, lớp con ghi đè phương thức tạo | `Creator.createProduct()` được subclass cài đặt |
-| **Abstract Factory (GoF)** | Cung cấp interface tạo một **họ đối tượng liên quan** mà không buộc client gọi lớp cụ thể | `UiFactory.createButton()` và `createDialog()` cho từng giao diện |
+| **Static factory method** | A `static` method returning an object, usually on the product class | `Temperature.fahrenheit(86)` |
+| **Simple Factory** | A method/class centralizing implementation selection and creation; not one of the 23 individually named GoF patterns | `NotifierFactory.create(Channel)` above |
+| **Factory Method (GoF)** | A superclass defines an extensible creation operation; subclasses override it | `Creator.createProduct()` implemented by a subclass |
+| **Abstract Factory (GoF)** | Provides an interface for creating a **family of related objects** without requiring clients to name concrete classes | `UiFactory.createButton()` and `createDialog()` for each UI family |
 
-Một ví dụ **Factory Method pattern** tối giản:
+A minimal **Factory Method pattern** example:
 
 ~~~java
 interface Report {
@@ -2361,22 +2361,22 @@ ReportService service = new CsvReportService();
 service.printReport();
 ~~~
 
-Ở đây `createReport()` là **instance method** được subclass ghi đè, không cần là `static`. Vì thế, “static factory method” và “Factory Method design pattern” là hai khái niệm khác nhau.
+Here, `createReport()` is an overridden **instance method**; it need not be `static`. Thus, a “static factory method” and the “Factory Method design pattern” are different concepts.
 
-**Điểm cần cân nhắc:** Một factory dùng `switch` tập trung chỗ lựa chọn nhưng khi thêm kênh mới vẫn phải sửa `switch`, nên không tự động đạt nguyên tắc Open/Closed tuyệt đối. Với dự án lớn, có thể dùng đăng ký implementation qua `Map<Channel, Supplier<Notifier>>`, dependency injection hoặc chiến lược cấu hình phù hợp. Không nên áp dụng quá nhiều tầng Factory nếu chỉ có một loại đối tượng đơn giản.
+**Trade-off:** A factory using `switch` centralizes selection, but adding a new channel still requires modifying the `switch`; it does not automatically satisfy the Open/Closed Principle in every case. Larger projects may register implementations through `Map<Channel, Supplier<Notifier>>`, dependency injection, or a suitable configuration strategy. Avoid excessive Factory layers for a single simple object type.
 
-## 4. Builder: cấu hình từng bước trước khi tạo đối tượng
+## 4. Builder: Configure Step by Step Before Creating an Object
 
-Constructor với nhiều tham số dễ gây nhầm và khó thêm tùy chọn:
+Constructors with many parameters are easy to misuse and hard to extend:
 
 ~~~java
 // Người đọc khó biết 0, 20 và true tương ứng tham số nào:
 SearchRequest request = new SearchRequest("java", 0, 20, true);
 ~~~
 
-Nếu có thêm nhiều tham số không bắt buộc, cách tạo một “rừng constructor” (telescoping constructors) càng khó bảo trì. **Builder pattern** giải quyết bằng đối tượng trung gian có các phương thức đặt tên rõ ràng; chỉ khi gọi `build()` mới tạo đối tượng kết quả.
+Adding more optional parameters creates an increasingly difficult “forest of constructors” (telescoping constructors). The **Builder pattern** solves this with an intermediate object whose clearly named methods configure the result; the final object is created only when `build()` is called.
 
-Ví dụ `SearchRequest` có từ khóa bắt buộc, các tùy chọn `page`, `pageSize` và nhãn lọc.
+For example, `SearchRequest` has a required query and optional `page`, `pageSize`, and filter tags.
 
 `SearchRequest.java` (Java 11+):
 
@@ -2477,7 +2477,7 @@ public class SearchDemo {
 }
 ~~~
 
-Phân tích luồng:
+Analyzing the flow:
 
 ~~~mermaid
 flowchart TD
@@ -2489,12 +2489,12 @@ flowchart TD
     F --> G["Sao chép List; đối tượng kết quả bất biến"]
 ~~~
 
-- `builder(...)` là **static factory tạo Builder**, chưa tạo `SearchRequest`.
-- `page(...), pageSize(...), addTag(...)` cập nhật trạng thái **mutable** của Builder và trả `this` để viết theo chuỗi (fluent API).
-- `build()` gọi constructor `private SearchRequest(Builder)` và trả đối tượng đã cấu hình.
-- `List.copyOf(builder.tags)` bảo vệ danh sách của `SearchRequest` khỏi các thay đổi sau đó trên Builder. Vì `String` bất biến, các phần tử cũng không bị cập nhật tại chỗ.
+- `builder(...)` is a **static factory for a Builder**; it does not yet create `SearchRequest`.
+- `page(...), pageSize(...), addTag(...)` update the Builder's **mutable** state and return `this` for fluent chaining.
+- `build()` invokes the `private SearchRequest(Builder)` constructor and returns the configured object.
+- `List.copyOf(builder.tags)` protects the `SearchRequest` list from later changes to the Builder. Since `String` is immutable, its elements cannot be changed in place either.
 
-Kiểm chứng việc tái sử dụng Builder:
+Checking what happens when a Builder is reused:
 
 ~~~java
 SearchRequest.Builder builder = SearchRequest.builder("oop");
@@ -2510,34 +2510,34 @@ System.out.println(second.getTags()); // [basic, advanced]
 System.out.println(first == second);  // false
 ~~~
 
-**Chú ý:** Builder trong ví dụ là đối tượng mutable và **không được thiết kế thread-safe**; không nên chia sẻ Builder cho nhiều luồng sửa đồng thời. `build()` cũng **không bắt buộc phải tạo mới** theo mọi API Builder trên thế giới, nhưng trong implementation mẫu của chúng ta, mỗi lần gọi đều thực hiện `new SearchRequest(...)`.
+**Note:** The Builder in this example is mutable and **not designed to be thread-safe**; do not share it among threads that modify it concurrently. `build()` is also **not required to create a new instance** under every Builder API, but in our sample implementation, each call executes `new SearchRequest(...)`.
 
-## 5. Chọn cách tạo phù hợp với bài toán
+## 5. Choosing the Right Creation Approach
 
-| Tiêu chí | Constructor | Static Factory Method | Factory riêng | Builder |
+| Criterion | Constructor | Static Factory Method | Separate Factory | Builder |
 | --- | --- | --- | --- | --- |
-| Cú pháp điển hình | `new Order(...)` | `Order.from(...)` | `factory.create(...)` | `Order.builder().build()` |
-| Mục tiêu chính | Khởi tạo trực tiếp | Đặt tên/chọn quy tắc trả object | Tập trung logic chọn implementation/tạo phụ thuộc | Cấu hình nhiều tham số rõ nghĩa |
-| Có cần tạo instance mới mỗi lần? | Có, khi dùng `new` | Không nhất thiết | Không nhất thiết | Tùy hợp đồng của `build()` |
-| Tham số tùy chọn | Dùng overload, đôi khi rối | Có thể có overload | Tùy API | Thuận tiện cho nhiều tùy chọn |
-| Ẩn lớp triển khai cụ thể | Không khi gọi trực tiếp | Có thể | Thường có | Có thể |
-| Chi phí thiết kế | Thấp | Thấp đến vừa | Vừa | Vừa đến cao |
+| Typical syntax | `new Order(...)` | `Order.from(...)` | `factory.create(...)` | `Order.builder().build()` |
+| Main purpose | Direct initialization | Naming a creation path or choosing return behavior | Centralizing implementation selection and dependency creation | Configuring many parameters clearly |
+| Must each call create a new instance? | Yes, when using `new` | Not necessarily | Not necessarily | Depends on the contract of `build()` |
+| Optional parameters | Use overloads, which may become confusing | Overloads are possible | API-dependent | Convenient for many options |
+| Hide concrete implementation class | No, when invoked directly | Possible | Common | Possible |
+| Design cost | Low | Low to moderate | Moderate | Moderate to high |
 
-Một số tình huống chọn nhanh:
+Some quick selection examples:
 
-- **`Point(int x, int y)`**: dữ liệu đơn giản, ít tham số, tạo rõ ràng → constructor thường đủ.
-- **`Temperature.celsius(30)` / `fahrenheit(86)`**: cùng loại tham số nhưng khác ý nghĩa → static factory.
-- **Chọn bộ mã hóa/gửi thông báo theo cấu hình** → Factory cung cấp interface thích hợp.
-- **Cấu hình nhiều trường bắt buộc/tùy chọn, cần giá trị mặc định và validation** → Builder.
-- **Tạo object rất phức tạp, cần cả chọn implementation và cấu hình từng bước** → có thể kết hợp Factory cung cấp một Builder, rồi gọi `build()`.
+- **`Point(int x, int y)`**: simple data with few parameters and straightforward creation → a constructor is usually enough.
+- **`Temperature.celsius(30)` / `fahrenheit(86)`**: the same parameter type has different meanings → use static factories.
+- **Select an encoder/notification sender from configuration** → use a Factory to supply the appropriate interface.
+- **Configure many required/optional fields, including defaults and validation** → use a Builder.
+- **Create complex objects with both implementation selection and stepwise configuration** → a Factory may supply a Builder, followed by `build()`.
 
-Các phương pháp **không loại trừ nhau**: class có thể dùng constructor `private`, static factory trả `Builder`, Factory khác quyết định triển khai, còn Builder gọi constructor để tạo kết quả.
+These techniques **are not mutually exclusive**: a class can have a `private` constructor, a static factory returning a `Builder`, another Factory selecting implementations, and the Builder invoking the constructor to create the result.
 
-## 6. Liên quan đến dependency injection và Spring
+## 6. Relationship to Dependency Injection and Spring
 
-Trong ứng dụng Spring, container thường là bên chịu trách nhiệm khởi tạo/quản lý bean và tiêm dependency. Vì vậy, Factory trong dự án thật có thể cần **các dependency được inject**, thay vì tự `new` mọi dịch vụ.
+In Spring applications, the container is often responsible for creating and managing beans and injecting dependencies. Therefore, a real project Factory may need **injected dependencies** instead of constructing every service with `new`.
 
-Ví dụ tối giản:
+A minimal illustration:
 
 ~~~java
 import org.springframework.stereotype.Component;
@@ -2561,13 +2561,13 @@ public class NotifierSelector {
 }
 ~~~
 
-Ở đây giả định `EmailService` và `SmsService` là bean đã tồn tại, cùng implement `MessageSender`, còn `Channel` là enum có `EMAIL`, `SMS`. Đoạn code mang tính minh họa **tích hợp Spring**; không phải chương trình Java độc lập như các ví dụ phía trên. Với selector này, `select` **trả về bean được quản lý sẵn**, không tạo service mới. Tránh `new EmailService()` trong logic nếu service cần Spring inject dependency, interceptor, transaction proxy hoặc lifecycle callback.
+This assumes `EmailService` and `SmsService` are existing beans implementing `MessageSender`, and `Channel` is an enum with `EMAIL` and `SMS`. The code illustrates **Spring integration**; it is not a standalone Java program like the previous examples. Here, `select` **returns an existing managed bean**, rather than creating a service. Avoid `new EmailService()` in application logic if the service relies on Spring injection, interceptors, transaction proxies, or lifecycle callbacks.
 
-Trong Spring, annotation `@Bean` trên phương thức cấu hình có thể trả object để container quản lý, nhưng không đồng nghĩa mọi `@Bean` method đều là static factory method. Cần phân biệt **cơ chế quản lý bean của framework** và **mẫu tạo đối tượng trong Java thuần**.
+In Spring, an `@Bean` annotation on a configuration method can return an object for container management, but that does not mean every `@Bean` method is a static factory method. Distinguish the **framework's bean management mechanism** from **object-creation patterns in plain Java**.
 
-## 7. Những lỗi và hiểu nhầm phổ biến
+## 7. Common Errors and Misconceptions
 
-**1. Tưởng static factory luôn tạo mới**
+**1. Assuming Static Factories Always Create New Instances**
 
 ~~~java
 Integer a = Integer.valueOf(42);
@@ -2577,19 +2577,19 @@ System.out.println(a.equals(b)); // true
 // a == b không nên dùng để kiểm tra bằng nhau về giá trị.
 ~~~
 
-`valueOf` có thể dùng cache; ứng dụng nên dựa vào **hợp đồng dữ liệu** (`equals` khi muốn so sánh giá trị), không phụ thuộc việc factory cấp phát instance nào. Với object mutable, dùng chung instance có thể gây sửa trạng thái ngoài ý muốn, nên chỉ cache/chia sẻ khi có chủ đích.
+`valueOf` may use caching; applications should follow the **value contract** (using `equals` to compare values), not depend on which instance a factory allocates. Sharing a mutable object can cause unintended state changes, so cache or share such instances only deliberately.
 
-**2. Đưa logic nghiệp vụ hoặc I/O nặng vào mọi constructor/factory**
+**2. Putting Heavy Business Logic or I/O into Every Constructor/Factory**
 
-Constructor/factory nên đảm bảo trạng thái hợp lệ; các công việc I/O có thể cần thiết theo thiết kế nhưng phải minh bạch về lỗi, tài nguyên, thời gian và side effect. Không biến mỗi `new` hoặc `of` thành lời gọi mạng bất ngờ.
+Constructors and factories should ensure valid state. I/O may be necessary by design, but failures, resources, latency, and side effects must be explicit. Do not turn every `new` or `of` into an unexpected network call.
 
-**3. Cho rằng Builder tự động đảm bảo immutable**
+**3. Assuming Builders Automatically Guarantee Immutability**
 
-Builder thường mutable; object được xây dựng có thể vẫn mutable nếu field/setter/collection bị lộ. Muốn immutable, nên dùng field `private final`, validate đầu vào, defensive copy cho trạng thái mutable, tránh setter công khai và thận trọng với phần tử lồng nhau.
+A Builder is often mutable, and the constructed object may also be mutable if fields, setters, or collections are exposed. For immutable results, use `private final` fields, validate inputs, defensively copy mutable state, avoid public setters, and take care with nested elements.
 
-**4. Chỉ kiểm tra từng setter mà bỏ qua ràng buộc giữa các trường**
+**4. Validating Individual Setters but Ignoring Cross-Field Constraints**
 
-Nếu `startDate` phải trước `endDate`, riêng `startDate(...)` và `endDate(...)` có thể chưa đủ để xác thực. Kiểm tra ràng buộc chung ở `build()` hoặc constructor cuối:
+If `startDate` must precede `endDate`, validating `startDate(...)` and `endDate(...)` separately may not be sufficient. Check the combined constraint in `build()` or the final constructor:
 
 ~~~java
 public TimeRange build() {
@@ -2600,91 +2600,91 @@ public TimeRange build() {
 }
 ~~~
 
-Mã trên là phác thảo phần `build()` khi lớp Builder có các trường `start`, `end` kiểu `LocalDateTime` (hoặc kiểu thời gian so sánh tương đương); nó nhấn mạnh **thời điểm kiểm tra bất biến tổng thể**.
+The code above sketches `build()` for a Builder with `start` and `end` fields of type `LocalDateTime` (or another comparable time type); it emphasizes **when to validate whole-object invariants**.
 
 **5. Overengineering**
 
-Một class hai tham số rõ ràng không cần Builder hàng trăm dòng. Không cần tạo `FactoryFactory` chỉ để bọc một câu lệnh `new`. Chọn abstraction khi nó thực sự cải thiện ý nghĩa lời gọi, mở rộng implementation hoặc kiểm soát khởi tạo.
+A class with two clear parameters does not need a hundreds-of-lines Builder. There is no need to create a `FactoryFactory` solely to wrap a single `new` statement. Choose abstractions when they improve call-site meaning, implementation extensibility, or control over creation.
 
-**6. Hiểu sai khi kết hợp với kế thừa**
+**6. Misunderstanding Inheritance and Factories**
 
-Constructor không được override. Static method trong Java có thể bị **method hiding**, không phải overriding đa hình theo instance; nó không đóng vai trò điểm mở rộng giống phương thức `protected createProduct()` trong GoF Factory Method. Với các hệ thống cần polymorphism ở bước tạo, cân nhắc Factory Method, Abstract Factory, hoặc injection.
+Constructors cannot be overridden. Java static methods can be subject to **method hiding**, which is different from instance-polymorphic overriding; they do not offer the same extension point as a `protected createProduct()` method in the GoF Factory Method pattern. For polymorphic creation, consider Factory Method, Abstract Factory, or dependency injection.
 
-## 8. Câu hỏi luyện tập
+## 8. Practice Questions
 
-**Câu 1:** Tại sao hai constructor `Temperature(double celsius)` và `Temperature(double fahrenheit)` không thể cùng tồn tại?
+**Question 1:** Why can't the constructors `Temperature(double celsius)` and `Temperature(double fahrenheit)` coexist?
 
-**Đáp án:** Chúng có cùng chữ ký kiểu tham số. Tên biến tham số không tham gia phân biệt overload; các static factory được đặt tên `celsius` và `fahrenheit` giải quyết được.
+**Answer:** They have the same parameter-type signature. Parameter names do not distinguish overloads; named static factories `celsius` and `fahrenheit` solve the problem.
 
-**Câu 2:** Lời gọi `Temperature.fahrenheit(86)` có nhất thiết tạo object mới không?
+**Question 2:** Must `Temperature.fahrenheit(86)` create a new object?
 
-**Đáp án:** Trong implementation mẫu, có vì nó gọi `new Temperature(...)`. Nhưng về khái niệm static factory method nói chung, không bắt buộc; factory có thể trả object đã tồn tại.
+**Answer:** Yes in the sample implementation, because it calls `new Temperature(...)`. But static factory methods in general need not; a factory may return an existing object.
 
-**Câu 3:** `NotifierFactory.create(Channel.EMAIL)` và `ReportService.createReport()` khác nhau điểm nào?
+**Question 3:** How do `NotifierFactory.create(Channel.EMAIL)` and `ReportService.createReport()` differ?
 
-**Đáp án:** Ví dụ đầu là **Simple Factory**, dùng một static method với `switch` để chọn implementation; ví dụ sau là **Factory Method pattern**, để subclass override phương thức tạo `Report`.
+**Answer:** The former is a **Simple Factory** using a static method with `switch` to select an implementation; the latter uses the **Factory Method pattern**, allowing subclasses to override creation of `Report`.
 
-**Câu 4:** Vì sao Builder hay dùng `return this`?
+**Question 4:** Why do Builders commonly use `return this`?
 
-**Đáp án:** Để gọi nối tiếp `builder.page(1).pageSize(30).build()`. Đây là fluent API; các bước trước `build()` thay đổi **Builder**, chưa nhất thiết tạo object kết quả.
+**Answer:** To enable fluent chaining such as `builder.page(1).pageSize(30).build()`. This is a fluent API; steps before `build()` modify the **Builder**, without necessarily creating the result object.
 
-**Câu 5:** Vì sao `List.copyOf(builder.tags)` xuất hiện trong constructor của `SearchRequest`?
+**Question 5:** Why is `List.copyOf(builder.tags)` used in the `SearchRequest` constructor?
 
-**Đáp án:** Để chụp trạng thái danh sách tại thời điểm tạo. Nếu Builder tiếp tục thêm tag, `SearchRequest` đã tạo không bị thay đổi theo; người dùng cũng không chỉnh sửa List trả từ getter bằng `add/remove`.
+**Answer:** To snapshot the list at construction. If the Builder later adds tags, an existing `SearchRequest` stays unchanged; callers also cannot modify the getter's list through `add/remove`.
 
-**Câu 6:** Nên chọn gì cho một immutable class chỉ có `id` và `name` bắt buộc?
+**Question 6:** What would you choose for an immutable class with only required `id` and `name` fields?
 
-**Đáp án:** Một constructor đơn giản có validation thường đã đủ; thêm static factory nếu cần tên mô tả một cách tạo đặc biệt. Không có lý do mặc định phải dùng Builder.
+**Answer:** A simple validating constructor is usually sufficient; add a static factory if a special creation path needs a meaningful name. There is no default requirement to use a Builder.
 
-**Ghi nhớ:** Constructor tạo instance trực tiếp; static factory **đặt tên và kiểm soát cách lấy object**; Factory **chịu trách nhiệm chọn/cung cấp implementation**; Builder **tập hợp cấu hình rồi hoàn tất đối tượng**. Chọn đúng kỹ thuật từ nhu cầu tạo object và quy tắc bất biến của lớp, thay vì áp một mẫu thiết kế cho mọi tình huống.
+**Remember:** Constructors create instances directly; static factories **name and control how objects are obtained**; Factories **select and supply implementations**; Builders **collect configuration and then complete objects**. Choose techniques based on creation needs and class invariants instead of applying a design pattern everywhere.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="lifecycle-006">Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ</a>
+## <a id="lifecycle-006">Object lifetime, reachability, and memory reclamation</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ trong Java
+# Object Lifetime, Reachability, and Memory Reclamation in Java
 
-Trong Java, đối tượng được tạo ra trong quá trình chương trình chạy và thường được lưu trong vùng nhớ do JVM quản lý. Java có **garbage collector (GC)** để thu hồi bộ nhớ từ các đối tượng không còn được chương trình sử dụng theo tiêu chí *reachability* (khả năng truy cập).
+In Java, objects are created while the program runs and are usually stored in JVM-managed memory. Java has a **garbage collector (GC)** that reclaims memory from objects no longer considered usable by the program according to *reachability*.
 
-Tuy nhiên, có ba vấn đề phải phân biệt:
+However, three issues must be distinguished:
 
-1. **Thời gian tồn tại (lifetime):** Một đối tượng được tạo khi nào, còn được chương trình sử dụng khi nào và khi nào bộ nhớ dành cho nó thực sự có thể được thu hồi?
-2. **Khả năng truy cập (reachability):** Có còn đường tham chiếu từ các điểm xuất phát mà GC xem là đang được sử dụng đến đối tượng hay không?
-3. **Giải phóng bộ nhớ và tài nguyên:** JVM thu hồi bộ nhớ đối tượng khác với việc ứng dụng đóng file, kết nối mạng, kết nối cơ sở dữ liệu hay tài nguyên hệ điều hành.
+1. **Lifetime:** When is an object created, when can the program still use it, and when can its memory actually be reclaimed?
+2. **Reachability:** Is there still a reference path to the object from the starting points that the GC considers in use?
+3. **Memory and resource reclamation:** JVM object-memory reclamation differs from an application's responsibility to close files, network connections, database connections, or operating-system resources.
 
-Một lệnh `obj = null` **không phải** lệnh xóa đối tượng. Việc ra khỏi một phương thức cũng không bảo đảm GC chạy ngay. Ngược lại, một đối tượng tưởng như đã “dùng xong” vẫn có thể bị giữ trong bộ nhớ rất lâu nếu còn một tham chiếu mạnh từ nơi khác.
+An assignment such as `obj = null` **does not delete an object**. Returning from a method also does not guarantee that GC runs immediately. Conversely, an object that seems “finished” may remain in memory for a long time if something else still holds a strong reference.
 
-## 1. Phân biệt các khái niệm quan trọng
+## 1. Distinguishing Key Concepts
 
-| Khái niệm | Bản chất | Ví dụ |
+| Concept | Meaning | Example |
 |---|---|---|
-| **Tạo đối tượng** | Thực hiện thao tác tạo instance, thường là `new`, hoặc một cơ chế khác do API cung cấp | `new Book("Java")` |
-| **Tham chiếu (reference)** | Giá trị cho phép mã Java truy cập tới đối tượng | `Book current = book;` |
-| **Phạm vi biến (scope)** | Đoạn mã mà một tên biến có thể được sử dụng theo quy tắc ngôn ngữ | Biến cục bộ chỉ được gọi tên trong khối khai báo |
-| **Khả năng truy cập** | Có đường đi tham chiếu từ các GC roots tới đối tượng hay không | Một field của singleton còn giữ `Book` |
-| **Đủ điều kiện để thu gom** | GC không còn coi đối tượng là reachable theo mô hình xử lý tương ứng | Sau khi loại bỏ tham chiếu mạnh cuối cùng |
-| **Thu hồi bộ nhớ** | JVM/GC thực sự tái sử dụng hoặc giải phóng bộ nhớ do đối tượng chiếm giữ | Không thể chọn chính xác thời điểm từ mã Java thông thường |
-| **Đóng tài nguyên** | Kết thúc việc sở hữu file/socket/connection… theo hợp đồng API | `close()` hoặc `try-with-resources` |
+| **Object creation** | Creating an instance, usually with `new` or another mechanism provided by an API | `new Book("Java")` |
+| **Reference** | A value that lets Java code access an object | `Book current = book;` |
+| **Variable scope** | The source-code region where a variable name can be used under language rules | A local variable can be named only inside its declaring block |
+| **Reachability** | Whether a reference path leads from GC roots to an object | A singleton field still holds a `Book` |
+| **Eligibility for collection** | The GC no longer considers the object reachable under the applicable processing model | After removing the last strong reference |
+| **Memory reclamation** | The JVM/GC actually reuses or releases the memory occupied by an object | Ordinary Java code cannot select the exact moment |
+| **Resource closure** | Ending ownership of a file/socket/connection according to its API contract | `close()` or `try-with-resources` |
 
-Ba mệnh đề sau **không tương đương**:
+The following three statements **are not equivalent**:
 
-- “Biến `x` ra khỏi scope”.
-- “Đối tượng từng được `x` tham chiếu hiện không còn reachable”.
-- “GC đã thu hồi bộ nhớ của đối tượng đó”.
+- “The variable `x` has gone out of scope.”
+- “The object formerly referenced by `x` is now unreachable.”
+- “The GC has reclaimed that object's memory.”
 
-Đây có thể là ba thời điểm khác nhau.
+These can happen at three different times.
 
-## 2. Tạo đối tượng và lưu giữ tham chiếu
+## 2. Creating Objects and Keeping References
 
-Ví dụ:
+For example:
 
 ~~~java
 class Book {
@@ -2702,7 +2702,7 @@ a = null;
 System.out.println(b.title); // Java
 ~~~
 
-Lúc đầu, `a` trỏ tới `Book`. Phép gán `b = a` sao chép **giá trị tham chiếu**, nên cả hai cùng trỏ đến *một* đối tượng. Sau `a = null`, chỉ có `a` không còn trỏ tới nó; `b` vẫn dùng được.
+Initially, `a` refers to a `Book`. The assignment `b = a` copies the **reference value**, so both variables refer to *one* object. After `a = null`, only `a` stops referring to it; `b` remains usable.
 
 ~~~mermaid
 flowchart LR
@@ -2710,7 +2710,7 @@ flowchart LR
     B["b"] --> O["Book object<br/>title = Java"]
 ~~~
 
-Java **truyền tham số theo giá trị**. Khi truyền biến tham chiếu vào phương thức, Java sao chép giá trị tham chiếu. Phương thức có thể thay đổi trạng thái đối tượng được trỏ tới, nhưng gán lại tham số cục bộ không làm thay đổi biến tham chiếu của phía gọi.
+Java **passes parameters by value**. When a reference variable is passed to a method, Java copies the reference value. The method can modify the referenced object's state, but reassigning the local parameter does not change the caller's reference variable.
 
 ~~~java
 static void clearLocalReference(Book book) {
@@ -2722,13 +2722,13 @@ clearLocalReference(myBook);
 System.out.println(myBook.title); // OOP
 ~~~
 
-Đoạn trên minh họa phương thức đặt trong một lớp Java thích hợp. Đối tượng không bị xóa vì tham số `book` đã gán `null`.
+The snippet illustrates a method defined inside an appropriate Java class. The object is not deleted when the `book` parameter is set to `null`.
 
-## 3. Ví dụ thực hành hoàn chỉnh: vòng đời qua các tham chiếu
+## 3. Complete Example: Object Lifetime Through References
 
-Chương trình dưới đây dùng một danh sách static để minh họa một tham chiếu có thể giữ đối tượng tiếp tục được truy cập, rồi loại bỏ đường tham chiếu đó. Phần đầu có đầu ra xác định; ví dụ **không cố ép GC chạy**.
+The program below uses a static list to demonstrate how a reference can keep an object reachable and then how removing that reference path affects reachability. The initial output is deterministic; the example **does not try to force GC to run**.
 
-Lưu thành **`Demo.java`** và chạy trên Java 17 trở lên:
+Save it as **`Demo.java`** and run with Java 17 or later:
 
 ~~~java
 import java.util.ArrayList;
@@ -2775,14 +2775,14 @@ public class Demo {
 }
 ~~~
 
-Thực thi:
+Execute:
 
 ~~~bash
 javac Demo.java
 java Demo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 true
@@ -2792,16 +2792,16 @@ Hợp đồng số 1
 0
 ~~~
 
-**Diễn giải:**
+**Explanation:**
 
-1. `new Document(...)` tạo một đối tượng `Document`.
-2. `alias = original` thêm một biến tham chiếu tới cùng đối tượng; không tạo đối tượng mới.
-3. `original = null` chỉ loại một đường tham chiếu. `alias` vẫn dùng được.
-4. `registry.add(alias)` khiến danh sách static nắm giữ đối tượng qua tham chiếu mạnh.
-5. `alias = null` không làm đối tượng đủ điều kiện thu gom vì danh sách còn giữ nó.
-6. `registry.clear()` loại đường tham chiếu từ danh sách. Nếu không còn đường mạnh nào khác khiến đối tượng reachable, nó có thể trở thành đối tượng có thể thu gom. Điều này **không** đồng nghĩa GC đã thực sự thu hồi bộ nhớ ngay ở dòng đó.
+1. `new Document(...)` creates a `Document` object.
+2. `alias = original` adds another reference variable to the same object; it does not create a new one.
+3. `original = null` removes just one reference path. `alias` is still usable.
+4. `registry.add(alias)` makes the static list hold a strong reference to the object.
+5. `alias = null` does not make the object eligible for collection because the list still holds it.
+6. `registry.clear()` removes the list's reference path. If no other strong path makes the object reachable, it may become eligible for collection. This **does not** mean the GC has actually reclaimed its memory at that statement.
 
-Sơ đồ trước và sau khi xóa registry:
+Diagram before and after clearing the registry:
 
 ~~~mermaid
 flowchart TB
@@ -2817,11 +2817,11 @@ flowchart TB
     end
 ~~~
 
-Hình vẽ mô tả **quan hệ tham chiếu có ý nghĩa logic**. Các JVM và thuật toán JIT/GC có thể sắp xếp bộ nhớ và tối ưu hóa mã khác nhau; sơ đồ không xác định vị trí vật lý của object trong RAM.
+The diagram shows **logical reference relationships**. JVMs and JIT/GC algorithms can organize memory and optimize code differently; the diagram does not establish an object's physical location in RAM.
 
-## 4. Scope của biến không phải lifetime của đối tượng
+## 4. Variable Scope Is Not Object Lifetime
 
-Một biến cục bộ có phạm vi theo khối lệnh. Nhưng đối tượng mà nó từng trỏ tới có thể tiếp tục sống nếu một field, phần tử collection hoặc đối tượng khác còn giữ tham chiếu.
+A local variable has block scope. But an object it once referenced may remain alive if a field, collection element, or another object still holds a reference.
 
 ~~~java
 import java.util.ArrayList;
@@ -2849,22 +2849,22 @@ class NotebookStore {
 }
 ~~~
 
-Sau khi `addExample()` kết thúc, `local` không còn được dùng theo tên đó, nhưng `books` có thể tiếp tục giữ `Notebook`. Nếu `NotebookStore` vẫn reachable, đối tượng `Notebook` trong danh sách cũng có thể reachable.
+After `addExample()` returns, the name `local` is no longer in use, but `books` may still hold the `Notebook`. If `NotebookStore` remains reachable, the `Notebook` object in the list can remain reachable as well.
 
-Chiều ngược lại cũng đáng chú ý: một biến nằm trong scope về mặt mã nguồn **không đảm bảo** rằng GC phải giữ đối tượng tới hết khối lệnh nếu JVM chứng minh được object không còn được dùng. JIT và GC có thể tối ưu hóa vùng sống của tham chiếu dựa trên việc sử dụng thực tế.
+The reverse also matters: a variable being in scope at the source-code level **does not guarantee** that the GC must keep its object alive until the block ends if the JVM can prove the object is no longer used. JIT and GC optimizations can shorten reference liveness according to actual use.
 
-Đối với code Java thông thường, hãy suy luận từ các đường tham chiếu mà chương trình thực sự còn cần và không dựa vào một thời điểm thu gom cụ thể. Với thư viện quản lý tài nguyên ngoài heap có yêu cầu sống chính xác tới cuối đoạn mã, `Reference.reachabilityFence(obj)` là công cụ chuyên biệt; nó không phải thay thế cho `close()`.
+For ordinary Java code, reason about the reference paths the program truly needs, without relying on a particular collection time. Libraries managing off-heap resources that require a reference to stay live through a precise point can use the specialized `Reference.reachabilityFence(obj)` method; it is not a replacement for `close()`.
 
-## 5. GC roots và đồ thị khả năng truy cập
+## 5. GC Roots and the Reachability Graph
 
-JVM có các điểm xuất phát (*GC roots*) để tìm những đối tượng đang được sử dụng. Các loại roots cụ thể tùy JVM và cơ chế thu gom, nhưng thường liên quan đến:
+The JVM uses starting points (*GC roots*) to discover objects currently in use. Exact root categories depend on the JVM and collection mechanism, but typically involve:
 
-- Tham chiếu còn sống trong các luồng Java đang thực thi, như đối tượng được giữ bởi biến cục bộ hoặc tham số cần thiết.
-- Tham chiếu trong các field static của những lớp đang được giữ/nạp thích hợp.
-- Các tham chiếu do JNI hoặc cơ chế runtime/native giữ.
-- Một số cấu trúc runtime khác mà JVM coi là roots.
+- Live references in executing Java threads, such as objects held by required local variables or parameters.
+- References in static fields of appropriately loaded and retained classes.
+- References held through JNI or runtime/native mechanisms.
+- Other runtime structures that the JVM treats as roots.
 
-Từ roots, GC duyệt qua các field tham chiếu, phần tử mảng và quan hệ đối tượng để xác định các object còn reachable.
+From these roots, the GC traverses reference fields, array elements, and object relationships to identify reachable objects.
 
 ~~~mermaid
 flowchart LR
@@ -2877,13 +2877,13 @@ flowchart LR
     Y --> X
 ~~~
 
-Trong hình, `Service`, `Cache`, `Order`, `Customer`, `Report` có đường tới root. Cặp `Temporary X` và `Temporary Y` chỉ tham chiếu qua lại nhưng **không có đường từ root**, nên có thể được GC thu gom.
+In the diagram, `Service`, `Cache`, `Order`, `Customer`, and `Report` have paths from a root. `Temporary X` and `Temporary Y` refer to each other but **have no path from a root**, so the GC may collect them.
 
-**Một chu trình tham chiếu không tự làm rò rỉ bộ nhớ trong Java.** JVM hiện đại chủ yếu dựa vào reachability, không yêu cầu lập trình viên phá mọi chu trình như trong một số hệ thống dùng reference counting đơn thuần.
+**A reference cycle does not automatically cause a memory leak in Java.** Modern JVM collectors primarily use reachability; unlike simple reference-counting systems, they do not require programmers to break every cycle.
 
-### Strong reference là gì?
+### What Is a Strong Reference?
 
-Tham chiếu bình thường bạn sử dụng khi viết:
+The ordinary reference you use when writing:
 
 ~~~java
 Order order = new Order();
@@ -2891,15 +2891,15 @@ List<Order> orders = new ArrayList<>();
 orders.add(order);
 ~~~
 
-là **strong reference**. Trong ví dụ, danh sách tiếp tục giữ strong reference đến `order`. Nếu danh sách còn reachable từ GC roots, bản thân đối tượng `Order` vẫn được giữ lại.
+This is a **strong reference**. The list continues to hold a strong reference to `order`. If the list is reachable from GC roots, the `Order` object is retained.
 
-Ví dụ `Order` ở đây chỉ là lớp minh họa trong một ngữ cảnh có định nghĩa tương ứng.
+The `Order` class here is only illustrative and is assumed to be defined in the surrounding context.
 
-Một đối tượng chỉ trở nên *không còn strong reachable* khi không còn đường strong reference thích hợp từ roots. Có thêm các mức reachability khác khi sử dụng `java.lang.ref`, sẽ bàn ở phần sau.
+An object stops being *strongly reachable* when no appropriate strong-reference path from a root remains. Other reachability levels exist when using `java.lang.ref`, as discussed below.
 
-## 6. “Được GC thu gom” có nghĩa gì và khi nào xảy ra?
+## 6. What Does “Collected by the GC” Mean, and When Does It Happen?
 
-Một vòng đời được mô tả ở mức khái quát:
+A high-level lifecycle can be represented as follows:
 
 ~~~mermaid
 stateDiagram-v2
@@ -2910,38 +2910,38 @@ stateDiagram-v2
     NotStronglyReachable --> Reclaimed: GC có thể xử lý, thu hồi
 ~~~
 
-Sơ đồ đơn giản hóa tình huống tham chiếu mạnh. Trong thực tế, đối tượng có thể trở lại strong reachable, có weak/soft/phantom references, và có các bước xử lý của GC tùy trạng thái. Không nên coi đây là state machine đầy đủ của garbage collector.
+This diagram simplifies strong-reference reachability. In reality, objects can become strongly reachable again, weak/soft/phantom references may exist, and the GC applies state-dependent processing steps. Do not treat this as a complete garbage collector state machine.
 
-Ba điểm cần ghi nhớ:
+Three key points:
 
-**Thứ nhất:** trở thành không còn reachable không tự động tạo một lệnh giải phóng bộ nhớ ở dòng Java kế tiếp. JVM quyết định lúc nào thực hiện GC và thực hiện ra sao.
+**First:** becoming unreachable does not automatically trigger memory deallocation on the next Java line. The JVM decides when and how to run GC.
 
-**Thứ hai:** bộ nhớ được thu hồi cho heap JVM có thể được **tái sử dụng cho đối tượng mới**. JVM không có nghĩa vụ lập tức trả lượng RAM đó về hệ điều hành.
+**Second:** reclaimed JVM heap memory may be **reused for new objects**. The JVM is not obligated to return that RAM immediately to the operating system.
 
-**Thứ ba:** mục tiêu của GC là quản lý bộ nhớ đối tượng; GC không phải một cơ chế bảo đảm mọi tài nguyên bên ngoài bộ nhớ heap được đóng đúng hạn.
+**Third:** the GC manages object memory; it does not guarantee timely closing of every resource outside the heap.
 
-Bạn có thể gặp:
+You may encounter:
 
 ~~~java
 System.gc();
 ~~~
 
-Đây là **yêu cầu/gợi ý** để JVM cân nhắc thực hiện thu gom rác, không phải hợp đồng bảo đảm GC đã chạy xong hay mọi object đủ điều kiện đã bị thu hồi. Có thể có cấu hình JVM phớt lờ yêu cầu này. Không viết logic nghiệp vụ hoặc bài test mà tính đúng đắn phụ thuộc vào `System.gc()`.
+This is a **request or hint** for the JVM to consider collecting garbage, not a guarantee that collection has finished or that every eligible object has been reclaimed. Some JVM configurations may ignore the request. Do not write business logic or tests whose correctness depends on `System.gc()`.
 
-## 7. Các loại tham chiếu: strong, soft, weak và phantom
+## 7. Reference Types: Strong, Soft, Weak, and Phantom
 
-Package `java.lang.ref` cung cấp cơ chế để làm việc với các mức reachability chuyên biệt.
+The `java.lang.ref` package supports specialized reachability mechanisms.
 
-| Loại | Cách tạo/biểu diễn | Vai trò | Lưu ý |
+| Type | How it is created/represented | Purpose | Considerations |
 |---|---|---|---|
-| **Strong reference** | Biến/field/thành phần collection tham chiếu bình thường | Giữ object có thể sử dụng như thường lệ | Nếu reachable từ root theo đường strong, GC không thu hồi object như rác |
-| **Soft reference** | `SoftReference<T>` | Cho phép JVM thu hồi đối tượng khi cần bộ nhớ, từng được dùng cho cache nhạy áp lực bộ nhớ | Thời điểm thu hồi không bảo đảm; thường không nên dùng thay chính sách cache rõ ràng |
-| **Weak reference** | `WeakReference<T>` | Không giữ object sống chỉ vì tham chiếu yếu | `get()` có thể trở thành `null` sau khi GC xử lý |
-| **Phantom reference** | `PhantomReference<T>` với `ReferenceQueue` | Cơ chế theo dõi giai đoạn xử lý sau khi đối tượng không còn được sử dụng, phục vụ quản lý tài nguyên chuyên biệt | `get()` luôn trả `null`; cần thiết kế queue/cleanup đúng |
+| **Strong reference** | Ordinary variable/field/collection reference | Keeps an object ordinarily usable | If strongly reachable from a root, the GC does not reclaim it as garbage |
+| **Soft reference** | `SoftReference<T>` | Allows the JVM to reclaim an object under memory pressure; historically used for memory-sensitive caches | Collection timing is not guaranteed; prefer explicit cache policies in most cases |
+| **Weak reference** | `WeakReference<T>` | Does not keep an object alive solely through the weak reference | `get()` may become `null` after GC processing |
+| **Phantom reference** | `PhantomReference<T>` with `ReferenceQueue` | Tracks a later stage of handling objects no longer usable, for specialized resource management | `get()` always returns `null`; queue and cleanup must be designed correctly |
 
-Strong reference thông thường là loại quan trọng nhất trong mã OOP hằng ngày. Weak, soft và phantom là **công cụ nâng cao**; chúng không nên xuất hiện chỉ vì muốn “tự động tối ưu bộ nhớ”.
+Ordinary strong references are the most important kind in everyday OOP code. Weak, soft, and phantom references are **advanced tools**; do not add them merely to “optimize memory automatically.”
 
-### Ví dụ WeakReference không ràng buộc thời điểm GC
+### WeakReference Example without a Guaranteed GC Schedule
 
 ~~~java
 import java.lang.ref.WeakReference;
@@ -2970,13 +2970,13 @@ class WeakDemo {
 }
 ~~~
 
-Sau `strong = null`, chương trình **không thể khẳng định** nhánh nào sẽ được chạy: nó phụ thuộc thời điểm GC và cách JVM xác định đối tượng còn được dùng. Nếu `weak.get()` trả về một tham chiếu khác `null`, biến `observed` tạm thời giữ một strong reference và có thể sử dụng giá trị đó.
+After `strong = null`, the program **cannot predict** which branch runs: that depends on when the GC runs and how the JVM determines the object's liveness. If `weak.get()` returns a non-`null` reference, the `observed` variable temporarily holds a strong reference and can use the value.
 
-**Không** viết bài kiểm thử trông đợi `weak.get() == null` ngay sau `strong = null`.
+**Do not** write a test that expects `weak.get() == null` immediately after `strong = null`.
 
-### ReferenceQueue dùng để làm gì?
+### What Is ReferenceQueue Used For?
 
-Một `ReferenceQueue<T>` giúp mã quản lý nhận biết khi một đối tượng tham chiếu tương ứng đã được GC đưa vào hàng đợi theo quy tắc của loại reference.
+A `ReferenceQueue<T>` lets management code detect when the GC enqueues a corresponding reference according to the rules of that reference type.
 
 ~~~java
 import java.lang.ref.Reference;
@@ -3004,27 +3004,27 @@ class QueueDemo {
 }
 ~~~
 
-Kết quả dòng đầu **không cố định**. Để sử dụng queue trong ứng dụng thực tế, cần lập trình vòng xử lý và vòng đời phù hợp; ví dụ chỉ cho thấy API và lý do không được giả định GC xảy ra theo lịch.
+The first output line **is nondeterministic**. Real applications need an appropriate queue-processing loop and lifecycle; this example only shows the API and why GC timing cannot be assumed.
 
-### WeakHashMap không phải “bản đồ không rò rỉ”
+### WeakHashMap Is Not a “Leak-Proof Map”
 
-`WeakHashMap<K,V>` giữ khóa theo tham chiếu yếu. Nếu không còn strong reference tới khóa từ nơi khác, entry có thể được dọn khi GC xử lý. Tuy nhiên:
+`WeakHashMap<K,V>` holds keys weakly. When no other strong reference to a key remains, its entry may be removed after GC processing. However:
 
-- Đây không phải cache có TTL, giới hạn kích thước hay chính sách loại bỏ xác định.
-- Nếu *value* giữ strong reference quay lại chính *key*, đối tượng key có thể vẫn còn reachable qua value và map, khiến mục tiêu dọn entry không đạt.
-- Không dùng nó để bảo đảm dọn bản ghi đúng giờ hoặc giải quyết mọi trường hợp rò rỉ.
+- It is not a cache with TTL, size limits, or deterministic eviction.
+- If a *value* holds a strong reference back to its own *key*, that key may remain reachable through the map and value, defeating entry cleanup.
+- Do not rely on it for scheduled record removal or for solving every memory leak.
 
-## 8. Một Java object có thể đã được đóng resource nhưng vẫn còn sống
+## 8. A Java Object Can Be Closed Yet Remain Alive
 
-Tình trạng **reachable/unreachable** nói về khả năng GC tìm thấy object từ các roots. Tình trạng **open/closed** nói về vòng đời tài nguyên ngoài heap mà object có thể đang đại diện. Hai trạng thái độc lập:
+**Reachable/unreachable** describes whether the GC can find an object from its roots. **Open/closed** describes the lifecycle of an external resource that the object may represent. These states are independent:
 
-| Ví dụ | Object còn reachable? | Resource còn mở? |
+| Example | Is the object still reachable? | Is the resource open? |
 |---|---|---|
-| `BufferedReader` đang được dùng trong `try` | Có | Thường có |
-| `BufferedReader` đã `close()` nhưng biến vẫn giữ tham chiếu | Có thể có | Đã yêu cầu đóng theo hợp đồng |
-| Mã bỏ hết tham chiếu tới reader mà quên đóng | Có thể không | Không có bảo đảm đã đóng đúng lúc |
+| `BufferedReader` in use within `try` | Yes | Usually yes |
+| `BufferedReader` already `close()`d while a variable still holds its reference | Possibly | Closure requested according to the contract |
+| Code drops all references to a reader without closing it | Possibly not | Timely closure is not guaranteed |
 
-Khi chính phương thức mở file và sở hữu reader, nên dùng:
+When the method itself opens and owns the reader, use:
 
 ~~~java
 try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -3032,25 +3032,25 @@ try (BufferedReader reader = Files.newBufferedReader(path)) {
 } // Java gọi close() khi rời try.
 ~~~
 
-Đoạn này cần các import `java.io.BufferedReader`, `java.nio.file.Files` và một `Path path` hợp lệ. `try-with-resources` bảo đảm gọi `close()` khi thoát khối theo luồng Java thông thường, kể cả khi gặp exception; không bảo đảm GC đã thu hồi object tại dấu ngoặc đóng. Với lỗi từ `close()`, tài nguyên lồng nhau, `AutoCloseable`, `finalize()` và ownership, xem bài *Đóng tài nguyên và giới hạn của hàm hủy*.
+This snippet requires imports of `java.io.BufferedReader` and `java.nio.file.Files` and a valid `Path path`. `try-with-resources` guarantees that `close()` is invoked when the block exits through ordinary Java control flow, including exceptions; it does not mean the GC reclaims the object at the closing brace. For errors from `close()`, nested resources, `AutoCloseable`, `finalize()`, and ownership, see *Resource cleanup and the limits of finalizers*.
 
-## 9. Khi nào vẫn xảy ra memory leak trong Java?
+## 9. When Can Memory Leaks Still Happen in Java?
 
-Trong Java, *memory leak* không nhất thiết là khối nhớ “mất địa chỉ” theo nghĩa của ngôn ngữ quản lý bộ nhớ thủ công. Nó thường có nghĩa **đối tượng không còn hữu ích với nghiệp vụ nhưng vẫn được tham chiếu mạnh từ một root**, làm GC không thể thu hồi nó.
+In Java, a *memory leak* need not mean “lost address of an allocated block” as in manually managed memory. It usually means **an object no longer useful to the application remains strongly referenced from a root**, preventing the GC from reclaiming it.
 
-Các trường hợp thường gặp:
+Common cases:
 
-| Nguồn giữ tham chiếu | Tình huống | Hậu quả | Cách kiểm soát |
+| Reference holder | Situation | Consequence | Mitigation |
 |---|---|---|---|
-| Static collection | Thêm mọi session vào `static List` và không xóa | Bộ nhớ tăng theo số request | Loại mục hết hạn, giới hạn cache, thiết kế ownership |
-| Cache không giới hạn | `Map<Id, Value>` giữ mọi kết quả vĩnh viễn | Heap tăng không kiểm soát | Dùng cache có kích thước/TTL/eviction |
-| Event listener | Đăng ký listener nhưng quên hủy | Publisher tiếp tục giữ subscriber | `unsubscribe` đúng vòng đời |
-| Scheduled task | Task giữ closure tham chiếu tới đối tượng không còn cần | Đối tượng được giữ lâu hơn mong đợi | Hủy task, đóng executor theo ownership |
-| ThreadLocal | Giá trị sống theo thread chạy dài hạn nếu không dọn đúng | Dữ liệu cũ còn bị giữ qua nhiều tác vụ | `remove()` trong `finally` |
-| Collection / queue | Không xóa phần tử đã xử lý | Các phần tử vẫn reachable | `remove()`, `clear()` khi hợp lý |
-| Object graph | Root giữ một object lớn và toàn bộ các con | Nhiều đối tượng được giữ gián tiếp | Rà soát cạnh tham chiếu và vòng đời của root |
+| Static collection | Every session is added to a `static List` and never removed | Memory grows with requests | Remove expired entries, bound caches, define ownership |
+| Unbounded cache | A `Map<Id, Value>` retains every result indefinitely | Uncontrolled heap growth | Use cache size limits, TTL, and eviction |
+| Event listener | A listener is registered but never unregistered | Publisher retains subscriber | Call `unsubscribe` at the correct lifecycle point |
+| Scheduled task | A task's closure references an object no longer needed | Object remains retained longer than expected | Cancel tasks; close executors according to ownership |
+| ThreadLocal | Value stays on a long-running thread without proper cleanup | Stale data survives across many tasks | Call `remove()` in `finally` |
+| Collection / queue | Processed elements are never removed | Elements remain reachable | Use `remove()` or `clear()` when appropriate |
+| Object graph | A root retains a large object and all its children | Many objects remain indirectly retained | Review reference edges and root lifetime |
 
-### Ví dụ: bộ nhớ tăng vì cache không giới hạn
+### Example: Memory Growth from an Unbounded Cache
 
 ~~~java
 import java.util.ArrayList;
@@ -3065,9 +3065,9 @@ class BadHistory {
 }
 ~~~
 
-Nếu `record` được gọi liên tục với các mảng lớn, `ALL_REQUESTS` giữ mọi mảng bằng strong reference. GC không thể tự biết mục nào “không còn có giá trị nghiệp vụ”.
+If `record` is called repeatedly with large arrays, `ALL_REQUESTS` retains all arrays through strong references. The GC cannot determine which entries have “no remaining business value.”
 
-Một phương án là thiết kế nơi lưu có **giới hạn** và cơ chế loại bỏ:
+One approach is to use **bounded** storage with an eviction mechanism:
 
 ~~~java
 import java.util.ArrayDeque;
@@ -3093,9 +3093,9 @@ class RecentMessages {
 }
 ~~~
 
-Bộ nhớ của cấu trúc giới hạn này vẫn phụ thuộc kích thước chuỗi đầu vào, vì `MAX_SIZE` chỉ giới hạn **số phần tử**, không giới hạn tổng byte. Nếu cần quota bộ nhớ, phải kiểm soát cả kích thước mỗi phần tử và tổng ngân sách.
+The memory used by this bounded structure still depends on input string sizes, because `MAX_SIZE` limits only the **number of entries**, not total bytes. For a memory quota, bound both the size of each entry and the overall budget.
 
-### Ví dụ: ThreadLocal trong thread pool
+### Example: ThreadLocal in a Thread Pool
 
 ~~~java
 private static final ThreadLocal<String> CURRENT_USER = new ThreadLocal<>();
@@ -3111,11 +3111,11 @@ static void handleRequest(String userId) {
 }
 ~~~
 
-Đoạn này được đặt trong một lớp thích hợp. Với thread pool, luồng có thể được tái sử dụng cho request tiếp theo. `remove()` trong `finally` giúp tránh giữ dữ liệu cũ và rò rỉ ngữ cảnh giữa các request. Nếu code bất đồng bộ chuyển xử lý sang luồng khác, cần cơ chế truyền context phù hợp; ThreadLocal không tự di chuyển giá trị.
+This snippet belongs inside a suitable class. In a thread pool, a thread may be reused for a later request. Calling `remove()` in `finally` helps prevent stale context from being retained or leaked across requests. If asynchronous processing moves to another thread, use an appropriate context-propagation mechanism; ThreadLocal values do not move automatically.
 
-## 10. Đối tượng tham chiếu lẫn nhau có bị giữ mãi không?
+## 10. Do Mutually Referencing Objects Remain Alive Forever?
 
-Không nhất thiết. Xét:
+Not necessarily. Consider:
 
 ~~~java
 class Node {
@@ -3131,7 +3131,7 @@ first = null;
 second = null;
 ~~~
 
-Hai object `Node` tạo một chu trình. Nếu chúng không còn reachable từ bất cứ GC root nào thì chúng có thể được GC thu gom dù vẫn trỏ tới nhau.
+The two `Node` objects form a cycle. If neither is reachable from any GC root, the GC may collect both even though they still refer to each other.
 
 ~~~mermaid
 flowchart LR
@@ -3140,64 +3140,64 @@ flowchart LR
     B --> A
 ~~~
 
-Đường đứt nét biểu thị đường root đã bị mất, **không phải một cạnh tham chiếu thực tế**. GC dựa vào reachability có thể nhận ra cả nhóm đều không còn được chương trình dùng. Cần cẩn thận với chu trình khi một trong các node vẫn reachable qua root: lúc đó cả nhóm có thể tiếp tục được giữ.
+The dashed line indicates a lost root path, **not an actual reference edge**. A reachability-based GC can recognize that the entire group is no longer used by the program. Be careful when one node in a cycle remains root-reachable: the whole group may then remain retained.
 
-## 11. Phạm vi vùng nhớ: heap, stack và static
+## 11. Memory Areas: Heap, Stack, and Static State
 
-Trong quá trình học Java thường gặp cách diễn đạt “object nằm trên heap, biến cục bộ nằm trên stack”. Đây là **mô hình học tập hữu ích**, nhưng chưa mô tả đầy đủ mọi tối ưu hóa JVM hiện đại.
+When learning Java, people often say “objects live on the heap, local variables on the stack.” This is a **useful learning model**, but it does not capture every modern JVM optimization.
 
-| Khía cạnh | Hiểu ở mức lập trình | Lưu ý |
+| Aspect | Programming-level model | Considerations |
 |---|---|---|
-| Đối tượng và mảng | Có thể được cấp phát trong vùng nhớ đối tượng do JVM quản lý | JIT có thể loại bỏ/đổi cách cấp phát nhờ escape analysis |
-| Biến cục bộ, tham số | Nằm trong khung thực thi logic của phương thức | JVM/JIT có thể dùng thanh ghi hoặc tối ưu hóa khác |
-| Instance field | Thuộc trạng thái của từng đối tượng | Có thể giữ tham chiếu mạnh đến object khác |
-| Static field | Thuộc về lớp được nạp, không phải một instance cụ thể | Có thể khiến object được giữ trong thời gian dài |
-| Native/off-heap resources | Có thể được quản lý ngoài heap Java | Cần theo hợp đồng API, thường có cơ chế close/release |
+| Objects and arrays | May be allocated in JVM-managed object memory | The JIT may eliminate or transform allocations through escape analysis |
+| Local variables and parameters | Exist in logical method execution frames | The JVM/JIT may use registers or other optimizations |
+| Instance fields | Form part of each object's state | May strongly reference other objects |
+| Static fields | Belong to loaded classes, not individual instances | Can retain objects for a long time |
+| Native/off-heap resources | May be managed outside the Java heap | Follow the API contract, often using close/release mechanisms |
 
-Không nên dùng những khẳng định tuyệt đối như “mọi biến cục bộ luôn nằm trên stack vật lý”, “mọi đối tượng có địa chỉ cố định”, hay “biến static luôn nằm ở một vùng nhớ xác định”. Những chi tiết triển khai phụ thuộc JVM, collector và tối ưu hóa.
+Avoid absolute claims such as “every local variable always resides on the physical stack,” “every object has a fixed address,” or “static variables always occupy a predetermined memory area.” Implementation details depend on the JVM, collector, and optimizations.
 
-### Đối tượng bị di chuyển trong bộ nhớ có mất danh tính không?
+### Does Moving an Object in Memory Change Its Identity?
 
-Một số garbage collector có thể **di chuyển đối tượng** để gom bộ nhớ và giảm phân mảnh. Điều này không làm thay đổi danh tính logic mà mã Java quan sát qua phép `==` giữa các tham chiếu còn hợp lệ. Java không cho phép bạn dựa vào một địa chỉ bộ nhớ thô cố định của đối tượng như ID nghiệp vụ.
+Some garbage collectors **move objects** to compact memory and reduce fragmentation. This does not change the logical identity observed by Java code through `==` comparisons between valid references. Java does not let you treat a fixed raw object address as a business ID.
 
-Nếu cần ID bền vững, sử dụng một định danh được quản lý theo yêu cầu ứng dụng, ví dụ `UUID`, khóa database hoặc mã nghiệp vụ, chứ không dựa vào `hashCode()` hay địa chỉ máy.
+For durable IDs, use an application-managed identifier such as a `UUID`, database key, or domain ID rather than `hashCode()` or a machine address.
 
-## 12. Chẩn đoán một đối tượng bị giữ ngoài dự kiến
+## 12. Diagnosing Unexpected Object Retention
 
-Nếu heap tăng đều dù dữ liệu nghiệp vụ cũ đáng lẽ đã hết hạn, **đừng suy luận chỉ từ một lần đo RAM**. Đo xu hướng object còn sống sau các chu kỳ tải tương đương, rồi xem **đường giữ tham chiếu từ GC root tới object**.
+If heap use keeps growing after old business data should have expired, **do not infer a leak from a single RAM measurement**. Measure live-object trends after comparable load cycles, then inspect **reference paths from GC roots to retained objects**.
 
-Một ví dụ điều tra với profiler hoặc heap dump:
+An investigation using a profiler or heap dump might look like this:
 
 ~~~text
 GC root → Static field → Cache → Map entry → RequestData
 ~~~
 
-Nếu `RequestData` đã hết hạn mà entry vẫn còn, cách sửa thường nằm ở **chính sách của cache** (giới hạn, TTL, xóa khi hết nhu cầu), không nằm ở dòng `new RequestData(...)`. Heap dump và dominator tree giúp xác định tập object bị giữ; JFR và GC metrics giúp đối chiếu xu hướng cấp phát/thu gom. Việc thu thập heap dump trên hệ thống thật có thể gây tải, nên chọn thời điểm thích hợp.
+If `RequestData` has expired but an entry remains, the fix is usually in the **cache policy** (size limits, TTL, removal when no longer needed), not the `new RequestData(...)` statement. Heap dumps and dominator trees identify retained object sets; JFR and GC metrics help correlate allocation and collection trends. Heap dumps can affect production performance, so choose collection times carefully.
 
-Công cụ chẩn đoán GC, phân biệt heap leak với native memory pressure và ví dụ lệnh JDK được tập trung ở bài *Thu gom rác và quản lý bộ nhớ thủ công*.
+GC diagnostic tools, distinguishing heap leaks from native memory pressure, and JDK command examples are covered in *Garbage collection and manual memory management*.
 
-## 13. Vài tình huống thiết kế điển hình
+## 13. Common Design Scenarios
 
-| Tình huống | Cách xử lý phù hợp | Vì sao? |
+| Scenario | Appropriate approach | Why? |
 |---|---|---|
-| Một đối tượng dùng trong một lần tính toán | Để tham chiếu cục bộ và không lưu giữ ngoài nhu cầu | Khi không còn đường từ roots, GC có thể thu gom |
-| Kết quả được cache | Cache có giới hạn/TTL và chính sách loại bỏ | Tránh giữ dữ liệu không còn hữu ích |
-| Subscription/listener | Trả về handle hủy đăng ký hoặc quản lý `close()` | Tránh publisher giữ subscriber vô hạn |
-| File, stream, database connection | Dùng `try-with-resources` theo ownership | Đóng tài nguyên đúng vòng đời |
-| Cấu trúc graph có vòng tham chiếu | Không cần phá vòng chỉ để “cho GC chạy” | GC thu gom nhóm unreachable |
-| Theo dõi object không được giữ sống bởi mã theo dõi | Cân nhắc `WeakReference`/queue nếu thực sự cần | Tránh quan sát tạo thêm strong retention |
-| Giải phóng đối tượng ở một dòng mã xác định | Không xây thiết kế trên giả định này | Java không bảo đảm lịch GC |
-| Session gắn với thread pool | Dọn ThreadLocal trong `finally` | Thread được tái sử dụng qua nhiều tác vụ |
+| Object used for one computation | Keep a local reference without retaining it beyond the need | Once no root path remains, the GC may collect it |
+| Cached result | Use a bounded/TTL cache with eviction policies | Avoid retaining data that is no longer useful |
+| Subscription/listener | Return an unsubscription handle or manage `close()` | Prevent publishers from retaining subscribers indefinitely |
+| File, stream, database connection | Use `try-with-resources` according to ownership | Close resources at the right lifecycle point |
+| Graph with reference cycles | No need to break cycles just to “make GC run” | GC collects unreachable groups |
+| Observe objects without keeping them alive | Consider `WeakReference`/queues when truly needed | Avoid introducing strong retention through observation |
+| Release an object at an exact source-code line | Do not build designs around this assumption | Java does not guarantee GC scheduling |
+| Session associated with a thread pool | Clean up ThreadLocal in `finally` | Threads are reused across tasks |
 
-### Cân nhắc thêm khi đối tượng quản lý tài nguyên
+### Additional Considerations for Resource-Owning Objects
 
-Một `Connection` hoặc `InputStream` có thể **đã được đóng nhưng vẫn là một đối tượng Java còn sống** nếu còn tham chiếu. Gọi `close()` không biến tham chiếu thành `null`, cũng không thu hồi heap ngay. Tương tự, một object chứa socket còn reachable không bảo đảm socket vẫn mở; trạng thái resource và reachability là hai trục khác nhau.
+A `Connection` or `InputStream` can **be closed while still existing as a Java object** if references remain. Calling `close()` neither changes a reference to `null` nor immediately reclaims heap memory. Similarly, a reachable object wrapping a socket does not guarantee that the socket is still open; resource state and reachability are separate dimensions.
 
-Một thiết kế tốt nên thể hiện rõ: ai **sở hữu** tài nguyên, ai được phép dùng, khi nào phải đóng và hành vi nào hợp lệ sau khi đóng.
+A good design makes clear **who owns** the resource, who may use it, when it must close, and which operations remain valid afterward.
 
-## 14. Bài tập kiểm tra hiểu biết
+## 14. Knowledge-Check Exercises
 
-### Bài 1 — `null` có xóa object?
+### Exercise 1 — Does `null` Delete an Object?
 
 ~~~java
 class Item { int count = 2; }
@@ -3208,9 +3208,9 @@ x = null;
 System.out.println(y.count);
 ~~~
 
-**Đáp án:** in `2`. Object vẫn có thể truy cập qua `y`.
+**Answer:** Prints `2`. The object remains accessible through `y`.
 
-### Bài 2 — Tham chiếu rời scope có đủ để GC thu hồi?
+### Exercise 2 — Does Leaving Scope Make an Object GC-Eligible?
 
 ~~~java
 class Service {
@@ -3223,11 +3223,11 @@ class Service {
 }
 ~~~
 
-Giả sử đã import `java.util.List` và `java.util.ArrayList`. Sau khi `run()` trả về, `result` ra khỏi scope. Đối tượng mới tạo có chắc đủ điều kiện GC không?
+Assume `java.util.List` and `java.util.ArrayList` are imported. After `run()` returns, `result` is out of scope. Is the newly created object definitely eligible for collection?
 
-**Đáp án:** Không. `STORE` còn giữ strong reference nếu field/list vẫn reachable. Phải loại đường tham chiếu này (và các đường khác nếu có) khi không còn cần dữ liệu.
+**Answer:** No. `STORE` still holds a strong reference if that field/list remains reachable. When the data is no longer needed, remove this reference path (and any others).
 
-### Bài 3 — Chu trình không có root
+### Exercise 3 — A Rootless Reference Cycle
 
 ~~~java
 Node a = new Node();
@@ -3238,13 +3238,13 @@ a = null;
 b = null;
 ~~~
 
-**Đáp án:** Nếu không còn đường reachable nào khác tới hai node, cả hai có thể được GC thu gom. Chu trình đơn thuần không giữ chúng sống.
+**Answer:** If no other reachable path leads to either node, the GC may collect both. A cycle alone does not keep them alive.
 
-### Bài 4 — Có nên đợi GC đóng file?
+### Exercise 4 — Should You Wait for GC to Close a File?
 
-**Đáp án:** Không. Sử dụng `try-with-resources` hoặc `close()` theo quy tắc sở hữu tài nguyên. GC không hứa đóng file đúng thời điểm.
+**Answer:** No. Use `try-with-resources` or `close()` according to resource ownership rules. The GC does not promise timely file closure.
 
-### Bài 5 — Kết quả WeakReference sau khi bỏ strong reference
+### Exercise 5 — WeakReference Results After Dropping Strong References
 
 ~~~java
 WeakReference<Object> weak;
@@ -3255,45 +3255,45 @@ WeakReference<Object> weak;
 // Điều gì được đảm bảo về weak.get() tại đây?
 ~~~
 
-**Đáp án:** Không thể khẳng định `weak.get()` chắc chắn `null` hay chắc chắn khác `null` chỉ từ việc ra khỏi khối. Nếu GC đã làm rỗng weak reference thì trả `null`; nếu object vẫn còn đó và chưa bị làm rỗng thì có thể nhận tham chiếu tới object.
+**Answer:** You cannot conclude that `weak.get()` must be `null` or must be non-`null` merely because a block ended. If the GC cleared the weak reference it returns `null`; otherwise it may still return an object reference.
 
-### Bài 6 — Chọn cách sửa phù hợp
+### Exercise 6 — Choosing an Appropriate Fix
 
-Một ứng dụng giữ tất cả lịch sử request trong `static ArrayList`; heap tăng khi lưu lượng tăng và dữ liệu cũ không được sử dụng nữa.
+An application keeps all request history in a `static ArrayList`; heap use grows with traffic even though old data is no longer needed.
 
-**Đáp án gợi ý:** Đặt giới hạn/chính sách vòng đời cho lịch sử, chỉ lưu những thông tin cần thiết, loại mục hết hạn và xác nhận bằng profiler/heap dump rằng không còn đường giữ tham chiếu ngoài ý muốn. Gọi `System.gc()` không giải quyết được nếu danh sách vẫn giữ object.
+**Suggested answer:** Bound the history and define a lifecycle policy, retain only necessary information, remove expired entries, and verify with a profiler/heap dump that no unintended reference paths remain. Calling `System.gc()` does not help while the list still retains objects.
 
-## 15. Checklist khi tự đánh giá một lớp Java
+## 15. Checklist for Reviewing a Java Class
 
-- Đối tượng được tạo khi nào và **ai** phải giữ tham chiếu tới nó?
-- Object có được đặt vào field, collection, cache, callback, ThreadLocal hoặc singleton không?
-- Nếu không còn dùng, đường tham chiếu mạnh nào phải bị loại bỏ?
-- Có tài nguyên ngoài heap nào cần **đóng đúng lúc** không?
-- Các sự kiện như request kết thúc, timeout, hủy subscription, shutdown đã được xử lý chưa?
-- Có đoạn code nào đang mặc định `System.gc()` hoặc `finalize()` sẽ giải phóng tài nguyên đúng hạn không?
-- Có thể chứng minh bằng số liệu và đường từ GC roots rằng đối tượng đang bị giữ ngoài dự kiến không?
+- When is the object created, and **who** needs to retain a reference?
+- Is the object stored in a field, collection, cache, callback, ThreadLocal, or singleton?
+- When no longer needed, which strong-reference paths must be removed?
+- Are there off-heap resources that need **timely closing**?
+- Have request completion, timeouts, subscription cancellation, and shutdown been handled?
+- Does any code assume `System.gc()` or `finalize()` will release resources on schedule?
+- Can metrics and GC-root paths demonstrate that an object is retained unexpectedly?
 
-**Nguyên tắc cần nhớ:** Java tự động quản lý việc thu hồi **bộ nhớ đối tượng** dựa trên khả năng truy cập; lập trình viên vẫn chịu trách nhiệm thiết kế **vòng đời dữ liệu, quan hệ tham chiếu và vòng đời tài nguyên**. Một đối tượng không còn có ích nhưng vẫn reachable có thể tiếp tục chiếm bộ nhớ; một object đã mất đường tham chiếu không biến mất tức thì; và `close()` giải quyết một trách nhiệm khác với GC.
+**Remember:** Java automatically manages **object-memory reclamation** based on reachability; programmers must still design **data lifecycles, reference relationships, and resource lifecycles**. A no-longer-useful but reachable object can keep occupying memory; an unreachable object does not disappear immediately; and `close()` fulfills a different responsibility from GC.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="lifecycle-007">Thu gom rác và quản lý bộ nhớ thủ công</a>
+## <a id="lifecycle-007">Garbage collection and manual memory management</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thu gom rác và quản lý bộ nhớ thủ công trong Java
+# Garbage Collection and Manual Memory Management in Java
 
-> **OOP → Vòng đời.** Trong Java, lập trình viên tạo đối tượng và sử dụng chúng, còn **Garbage Collector (GC)** giúp thu hồi bộ nhớ của các đối tượng không còn có thể được chương trình truy cập. Tuy nhiên, GC **không đồng nghĩa mọi tài nguyên đều tự được giải phóng đúng lúc**: file, socket, kết nối cơ sở dữ liệu hay vùng nhớ native vẫn cần cách quản lý vòng đời phù hợp.
+> **OOP → Object Lifecycle.** In Java, programmers create and use objects while the **Garbage Collector (GC)** reclaims memory from objects no longer reachable by the program. However, GC **does not mean all resources are automatically released at the right time**: files, sockets, database connections, and native memory still require appropriate lifecycle management.
 
-## 1. Java tự động quản lý phần nào?
+## 1. What Does Java Manage Automatically?
 
-Xét đoạn mã:
+Consider this code:
 
 ```java
 final class User {
@@ -3314,31 +3314,31 @@ static String loadName() {
 }
 ```
 
-`new User("An")` tạo một instance. Trong suốt lúc `loadName()` thực thi, tham chiếu `user` cho phép sử dụng đối tượng. Khi phương thức trả về và không còn tham chiếu nào khác tới instance này, đối tượng có thể trở thành **đủ điều kiện để GC thu hồi**. JVM quyết định **khi nào** và **bằng cách nào** thu hồi; không có cam kết đối tượng được xóa ngay lúc phương thức kết thúc.
+`new User("An")` creates an instance. While `loadName()` is running, the `user` reference can be used to access it. Once the method returns and no other references to this instance remain, it may become **eligible for garbage collection**. The JVM decides **when** and **how** to reclaim memory; there is no guarantee the object is deleted when the method ends.
 
-Nên phân biệt những thành phần sau:
+Distinguish the following components:
 
-| Thành phần | Chứa gì? | Cách quản lý |
+| Component | What does it contain? | How is it managed? |
 |---|---|---|
-| Java heap | Nhiều đối tượng và mảng Java | GC quản lý vùng nhớ của các đối tượng không còn reachable |
-| Stack của luồng | Các frame thực thi, thông tin lời gọi, biến cục bộ theo mô hình JVM | Gắn với lời gọi/luồng; không phải khu vực mà ta `free()` từng biến |
-| Metaspace (trên HotSpot hiện đại) | Metadata của các lớp | JVM quản lý; có thể tăng nếu nạp quá nhiều lớp/class loader |
-| Native/off-heap memory | Bộ nhớ do API/native code sử dụng ngoài Java heap | Phụ thuộc API: GC, cơ chế scope/arena hoặc `close()` |
-| File descriptor, socket, DB connection | Tài nguyên hệ điều hành/hệ thống ngoài | Phải hoàn trả theo hợp đồng của API, thường qua `close()` |
+| Java heap | Many Java objects and arrays | The GC manages memory of objects that are no longer reachable |
+| Thread stack | Execution frames, call information, and local variables in the JVM model | Associated with calls/threads; not an area where each variable is individually `free()`d |
+| Metaspace (on modern HotSpot) | Class metadata | Managed by the JVM; may grow if too many classes/class loaders are loaded |
+| Native/off-heap memory | Memory used by APIs/native code outside the Java heap | API-dependent: GC, scopes/arenas, or `close()` |
+| File descriptors, sockets, DB connections | External OS/system resources | Released according to API contracts, usually through `close()` |
 
-Mô hình “object ở heap, tham chiếu cục bộ ở stack” hữu ích để bắt đầu, nhưng **không phải cam kết vị trí vật lý tuyệt đối**. JVM có thể tối ưu hóa cấp phát hoặc thay object bằng các giá trị riêng khi hành vi quan sát được vẫn tương đương.
+The model “objects on the heap, local references on the stack” is useful at first, but it **does not guarantee an absolute physical location**. The JVM may optimize allocations or replace objects with separate values while preserving equivalent observable behavior.
 
-### GC khác với quản lý bộ nhớ thủ công như thế nào?
+### How Does GC Differ from Manual Memory Management?
 
-Trong những ngôn ngữ cho phép quản lý bộ nhớ thủ công, mã chương trình có thể xin bộ nhớ và chủ động trả lại, ví dụ cặp `malloc/free` trong C. Nếu dùng sai dễ dẫn đến **memory leak**, **double free** hoặc **use-after-free**.
+Languages with manual memory management let program code allocate and explicitly release memory, for example with `malloc/free` in C. Misuse can lead to **memory leaks**, **double frees**, or **use-after-free**.
 
-Với **đối tượng heap Java thông thường**, ta không gọi `free(object)` hay `delete object`. Không có thao tác Java chuẩn cho phép lập trình viên quyết định thu hồi ngay bộ nhớ của một object cụ thể.
+For **ordinary Java heap objects**, you do not invoke `free(object)` or `delete object`. Standard Java provides no operation for programmers to force immediate reclamation of a specific object's memory.
 
-Tuy vậy, lập trình viên Java vẫn chịu trách nhiệm **kiểm soát số đối tượng còn được giữ lại**, giới hạn cache, giải phóng resource, tránh cấp phát quá mức và theo dõi mức sử dụng bộ nhớ.
+Java programmers must still **control how many objects remain retained**, bound caches, release resources, avoid excessive allocations, and monitor memory use.
 
-## 2. GC xác định object còn cần giữ dựa vào reachability
+## 2. GC Uses Reachability to Determine Which Objects Are Still Needed
 
-GC bắt đầu từ các **GC roots** (tham chiếu đang cần bởi luồng thực thi, một số tham chiếu static/JNI/runtime...) rồi đi qua các field và phần tử mảng để tìm object còn reachable. Việc gán `x = null` chỉ bỏ **một** đường tham chiếu. Một object vẫn có thể được giữ bởi cache hoặc callback khác.
+The GC starts from **GC roots** (references needed by executing threads, certain static/JNI/runtime references, etc.) and traverses fields and array elements to find reachable objects. Assigning `x = null` removes only **one** reference path. Another cache or callback may still retain the object.
 
 ~~~mermaid
 flowchart LR
@@ -3348,17 +3348,17 @@ flowchart LR
     B --> A
 ~~~
 
-`RequestData` reachable qua `Cache`. Cặp `Node A ↔ Node B` không có đường từ root trong hình có thể được GC thu hồi dù tồn tại vòng tham chiếu: Java không cần chủ động `free` hay cắt mọi chu trình bằng tay. GC cũng không bảo đảm **khi nào** object mất đường tham chiếu sẽ thực sự được thu hồi.
+`RequestData` is reachable through `Cache`. The pair `Node A ↔ Node B` shown without a root path can be garbage-collected despite its reference cycle: Java does not require explicit `free` calls or manually breaking every cycle. GC also does not guarantee **when** an unreachable object will actually be reclaimed.
 
-Tham chiếu thông thường là **strong reference**; Java còn có `WeakReference`, `SoftReference` và `PhantomReference` cho mục đích chuyên biệt. Không suy ra chúng tạo thời điểm cleanup xác định. Phần mô hình GC roots và các mức reachability được trình bày sâu trong bài *Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ*.
+Ordinary references are **strong references**; Java also provides `WeakReference`, `SoftReference`, and `PhantomReference` for specialized purposes. None guarantees deterministic cleanup timing. GC roots and reachability levels are explained in depth in *Object lifetime, reachability, and memory reclamation*.
 
-## 3. GC hoạt động như thế nào ở mức khái niệm?
+## 3. How Does GC Work Conceptually?
 
-Một mô hình dễ hiểu gồm ba công việc:
+An approachable model contains three tasks:
 
-1. **Xác định object còn sống:** truy tìm từ GC roots để nhận biết các đối tượng vẫn reachable.
-2. **Thu hồi vùng nhớ không còn được sử dụng:** lấy lại bộ nhớ gắn với object không còn reachable.
-3. **Quản lý bố cục vùng nhớ:** một số collector có thể di chuyển/gom object để giảm phân mảnh hoặc tăng hiệu quả cấp phát.
+1. **Identify live objects:** trace from GC roots to find objects that remain reachable.
+2. **Reclaim unused memory:** recover memory belonging to unreachable objects.
+3. **Manage the memory layout:** some collectors move or compact objects to reduce fragmentation or improve allocation efficiency.
 
 ```mermaid
 flowchart TD
@@ -3371,21 +3371,21 @@ flowchart TD
     F --> G["Bộ nhớ có thể dùng lại"]
 ```
 
-Nhiều bộ thu gom được thiết kế dựa trên quan sát rằng nhiều object sống rất ngắn. Chúng có thể sử dụng cơ chế **generational** (các thế hệ), kết hợp nhiều đợt thu gom. Những thuật ngữ như *minor GC*, *major GC*, *full GC*, *stop-the-world*, *concurrent marking* xuất hiện trong log và tài liệu, nhưng **ý nghĩa chính xác phụ thuộc collector/JDK đang sử dụng**.
+Many collectors are designed around the observation that many objects live only briefly. They may use **generational** collection combined with multiple collection phases. Terms such as *minor GC*, *major GC*, *full GC*, *stop-the-world*, and *concurrent marking* appear in logs and documentation, but **their precise meanings depend on the collector/JDK**.
 
-| Khái niệm | Cách hiểu thực dụng |
+| Concept | Practical meaning |
 |---|---|
-| Young generation | Nơi nhiều object mới được phân bổ trong các collector phân thế hệ |
-| Old generation | Thường chứa object tồn tại lâu hơn |
-| Stop-the-world (STW) | Một giai đoạn tạm dừng thực thi ứng dụng để GC thực hiện công việc cần thiết |
-| Concurrent GC | Một phần việc GC chạy đồng thời với thread ứng dụng |
-| Compaction | Gom/di chuyển dữ liệu đang sống để giảm phân mảnh |
+| Young generation | Where many new objects are allocated in generational collectors |
+| Old generation | Often contains longer-lived objects |
+| Stop-the-world (STW) | A phase that pauses application execution for necessary GC work |
+| Concurrent GC | Some GC work proceeds alongside application threads |
+| Compaction | Moves/consolidates live data to reduce fragmentation |
 
-Không có một “thuật toán GC của Java” duy nhất. Ví dụ, HotSpot có những collector như G1, ZGC, Parallel GC; lựa chọn và hành vi phụ thuộc phiên bản JDK, mục tiêu độ trễ, dung lượng và cấu hình. Với bài OOP, điều quan trọng nhất là hiểu **reachability**, **không quyết định được thời điểm thu hồi**, và **GC không tự sửa thiết kế giữ tham chiếu sai**.
+There is no single “Java GC algorithm.” For example, HotSpot offers collectors such as G1, ZGC, and Parallel GC; selection and behavior depend on JDK version, latency goals, capacity, and configuration. For OOP, focus on **reachability**, **nondeterministic reclamation timing**, and **the fact that GC cannot fix incorrect reference-retention design**.
 
-## 4. GC không biết khi nào dữ liệu đã hết giá trị nghiệp vụ
+## 4. GC Cannot Know When Data Has Lost Business Value
 
-Một cache không giới hạn có thể giữ mọi payload dù chúng không còn hữu ích. Các object đó vẫn reachable từ map, nên GC **không coi chúng là rác**. Đây là một dạng *logical memory leak* của ứng dụng Java:
+An unbounded cache may retain every payload long after it is useful. The objects remain reachable from the map, so the GC **does not consider them garbage**. This is a form of *logical memory leak* in Java applications:
 
 ~~~java
 static final Map<String, byte[]> payloads = new HashMap<>();
@@ -3395,11 +3395,11 @@ static void remember(String id, byte[] data) {
 }
 ~~~
 
-Đoạn minh họa đặt trong lớp có import `java.util.Map` và `java.util.HashMap`. Nếu tiếp tục thêm ID mới mà không đặt giới hạn, dung lượng có thể tăng theo tải. Cách chữa là xác định retention policy: TTL, số phần tử, ngân sách byte, xóa các entry không còn cần hoặc chọn cache library phù hợp.
+This example belongs in a class importing `java.util.Map` and `java.util.HashMap`. If new IDs are added without limits, memory may grow with traffic. The fix is a retention policy: TTL, entry count, byte budget, removal of no-longer-needed entries, or an appropriate cache library.
 
-GC có thể chạy rất thường xuyên mà không giảm được retained heap nếu mọi object cũ vẫn có đường strong reference từ root. Khi phân tích nguyên nhân, hãy dùng **heap dump và đường giữ tham chiếu** thay vì chỉ nhìn số lần GC. Bài *Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ* có ví dụ registry/cache, listener, `ThreadLocal` và cách truy lần theo GC roots; bài này sẽ tập trung vào cơ chế GC và các loại bộ nhớ cần đo.
+GC may run frequently without reducing retained heap usage if every old object still has a strong-reference path from a root. Diagnose the problem using **heap dumps and retaining paths** rather than GC frequency alone. *Object lifetime, reachability, and memory reclamation* covers registries/caches, listeners, `ThreadLocal`, and tracing GC roots; this lesson focuses on GC mechanics and measurable memory types.
 
-## 5. `null`, `System.gc()` và `finalize()`: những kỳ vọng sai
+## 5. `null`, `System.gc()`, and `finalize()`: False Expectations
 
 ```java
 User a = new User("An");
@@ -3409,21 +3409,21 @@ a = null;    // Không xóa object: b vẫn tham chiếu tới nó
 // System.gc(); // Không phải cách đảm bảo xóa User
 ```
 
-- **`a = null`** chỉ thay đổi biến `a`. Nếu còn `b` hoặc tham chiếu khác, đối tượng vẫn reachable.
-- **`System.gc()`** là lời yêu cầu JVM cố gắng thực hiện GC; không phải mệnh lệnh đảm bảo GC diễn ra, cũng không trả bộ nhớ của từng object ngay lập tức.
-- **`finalize()`** không phù hợp để dọn dẹp tài nguyên. Finalization đã bị deprecated for removal và có nhiều vấn đề về độ tin cậy, bảo mật, hiệu năng. Không dùng nó cho code mới.
+- **`a = null`** changes only variable `a`. If `b` or another reference remains, the object is still reachable.
+- **`System.gc()`** requests that the JVM make an effort to run GC; it is not a command guaranteeing collection or immediate reclamation of individual objects.
+- **`finalize()`** is unsuitable for resource cleanup. Finalization is deprecated for removal and has substantial reliability, security, and performance problems. Avoid it in new code.
 
-Không cần gán `null` cho mọi biến cục bộ trước khi thoát phương thức. Thông thường, việc để biến hết phạm vi và tổ chức vòng đời đối tượng rõ ràng đã đủ. Việc chủ động xóa phần tử khỏi cache, unregister listener hoặc kết thúc một tác vụ sống lâu thường quan trọng hơn.
+There is no need to assign `null` to every local variable before leaving a method. Letting variables leave scope and defining clear object lifecycles is usually enough. Explicitly evicting cache entries, unregistering listeners, or ending long-lived tasks often matters more.
 
-## 6. GC chỉ quyết định thu hồi heap object; resource có hợp đồng khác
+## 6. GC Reclaims Heap Objects; Other Resources Follow Different Contracts
 
-Một `FileInputStream` có thể giữ file descriptor do hệ điều hành cấp, trong khi `Connection` có thể được quản lý bởi connection pool. Object Java wrapper bị GC thu hồi **không bảo đảm** những tài nguyên ấy đã được trả về đúng thời điểm.
+A `FileInputStream` may hold an operating-system file descriptor, while a `Connection` may be managed by a connection pool. Garbage collection of the Java wrapper object **does not guarantee** these resources are returned at the right time.
 
-| Thứ cần hoàn trả | Cơ chế nên dựa vào | Điểm cần nhớ |
+| Resource to release | Appropriate mechanism | Key point |
 |---|---|---|
-| Bộ nhớ của object unreachable trên heap | GC của JVM | Không thể `free(obj)` bằng cú pháp Java chuẩn |
-| File/socket/connection | `close()` theo ownership, thường dùng `try-with-resources` | Đóng resource không đồng nghĩa xóa Java object |
-| Bộ nhớ native/off-heap có scope | Hợp đồng API, chẳng hạn `Arena.close()` | Cần đúng phiên bản JDK và quy tắc sở hữu |
+| Memory of unreachable heap objects | JVM garbage collector | Standard Java cannot call `free(obj)` |
+| File/socket/connection | Ownership-based `close()`, often via `try-with-resources` | Closing a resource does not delete the Java object |
+| Scoped native/off-heap memory | API contract, such as `Arena.close()` | Follow the JDK version and ownership rules |
 
 ~~~java
 try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -3431,13 +3431,13 @@ try (BufferedReader reader = Files.newBufferedReader(path)) {
 }
 ~~~
 
-Ví dụ trên giả sử `path` là `java.nio.file.Path` hợp lệ và đã import `java.io.BufferedReader`, `java.nio.file.Files`. Java gọi `reader.close()` khi rời khối `try` theo semantics ngôn ngữ, kể cả khi đọc ném exception. Về đóng nhiều resource, suppressed exceptions, `AutoCloseable`, `Cleaner` và `finalize()`, bài *Đóng tài nguyên và giới hạn của hàm hủy* giữ nơi giảng giải và ví dụ chạy đầy đủ.
+This example assumes `path` is a valid `java.nio.file.Path` and that `java.io.BufferedReader` and `java.nio.file.Files` are imported. Java invokes `reader.close()` upon leaving the `try` block according to language semantics, including when reading throws an exception. For multiple resource closure, suppressed exceptions, `AutoCloseable`, `Cleaner`, and `finalize()`, see *Resource cleanup and the limits of finalizers* for full explanations and runnable examples.
 
-## 7. Khi nào Java thực sự cho phép quản lý native memory thủ công?
+## 7. When Can Java Explicitly Manage Native Memory?
 
-Với Java heap object thông thường, không có `free(object)`. Nhưng các API cấp phát bộ nhớ ngoài heap có thể yêu cầu quản lý **ownership** và **lifetime** rõ ràng.
+Ordinary Java heap objects have no `free(object)` operation. But APIs allocating memory outside the heap may require explicit **ownership** and **lifetime** management.
 
-Ví dụ tiêu biểu ở **Java 22+** là Foreign Function & Memory API (FFM) với `Arena` và `MemorySegment`:
+A representative example in **Java 22+** is the Foreign Function & Memory API (FFM), with `Arena` and `MemorySegment`:
 
 ```java
 import java.lang.foreign.Arena;
@@ -3457,50 +3457,50 @@ public class NativeMemoryDemo {
 }
 ```
 
-Lưu thành `NativeMemoryDemo.java` và biên dịch/chạy với **JDK 22 trở lên**:
+Save as `NativeMemoryDemo.java` and compile/run with **JDK 22 or later**:
 
 ```bash
 javac NativeMemoryDemo.java
 java NativeMemoryDemo
 ```
 
-Ở đây:
+Here:
 
-- `arena.allocate(16)` xin 16 byte bộ nhớ native gắn với arena.
-- `MemorySegment` biểu diễn vùng nhớ có kích thước và giới hạn truy cập; không phải một `byte[]` thông thường trong Java heap.
-- `Arena.ofConfined()` tạo arena có **quyền truy cập giới hạn ở luồng sở hữu**.
-- Khi khối `try` kết thúc, `arena.close()` giải phóng allocations gắn với arena. Sau đó, cố truy cập segment đã bị vô hiệu hóa sẽ phát sinh lỗi theo hợp đồng API.
+- `arena.allocate(16)` allocates 16 bytes of native memory associated with the arena.
+- `MemorySegment` represents a memory region with a defined size and access bounds; it is not an ordinary Java-heap `byte[]`.
+- `Arena.ofConfined()` creates an arena with **access restricted to its owning thread**.
+- When the `try` block ends, `arena.close()` releases allocations associated with the arena. Subsequent attempts to access an invalidated segment fail according to the API contract.
 
-Lưu ý phiên bản: FFM API được chuẩn hóa ở Java 22; các phiên bản JDK trước có dạng incubator/preview với API và cách bật khác nhau, nên không sao chép máy móc ví dụ Java 22 sang Java 17.
+Version note: the FFM API was standardized in Java 22; earlier JDK releases had incubator/preview variants with different APIs and activation rules, so do not copy the Java 22 example directly into Java 17.
 
-`ByteBuffer.allocateDirect(...)` cũng cho phép làm việc với buffer trực tiếp ngoài heap, nhưng **không cung cấp một `free()` chuẩn trên chính ByteBuffer** để lập trình viên quyết định thu hồi ngay. Đừng dùng reflection hoặc các API nội bộ để ép giải phóng buffer; khi cần vòng đời native memory xác định, chọn API có contract quản lý vòng đời rõ ràng như FFM `Arena`, hoặc dùng thư viện được thiết kế cho việc đó.
+`ByteBuffer.allocateDirect(...)` also supports direct off-heap buffers, but **does not provide a standard `free()` method on ByteBuffer itself** for immediate programmer-controlled release. Do not use reflection or internal APIs to force buffer reclamation; when deterministic native-memory lifecycles are needed, choose an API with an explicit lifecycle contract such as FFM `Arena`, or a library designed for that purpose.
 
-## 8. Lỗi thiếu bộ nhớ không phải lúc nào cũng là heap leak
+## 8. Out-of-Memory Errors Are Not Always Heap Leaks
 
-Ví dụ những nguyên nhân cần phân biệt:
+Examples of causes to distinguish:
 
-| Triệu chứng hoặc lỗi | Khả năng liên quan | Hướng xem xét |
+| Symptom or error | Possible cause | What to inspect |
 |---|---|---|
-| `OutOfMemoryError: Java heap space` | Heap không đáp ứng thêm cấp phát | Object nào còn sống, cache/list, heap limit |
-| `OutOfMemoryError: Metaspace` | Metadata lớp chiếm nhiều native memory | Dynamic class loading, class loader leak |
-| `OutOfMemoryError: Direct buffer memory` | Giới hạn bộ nhớ direct buffer bị chạm | Số lượng/vòng đời direct buffers |
-| Không thể tạo native thread mới | Thiếu thread/native resources hoặc giới hạn hệ điều hành | Thread count, thread pool, stack size |
-| Process RSS tăng nhưng heap ổn định | Native memory, stacks, mmap, các vùng khác | Native memory metrics/profiler |
+| `OutOfMemoryError: Java heap space` | Heap cannot satisfy an allocation | Live objects, caches/lists, heap limits |
+| `OutOfMemoryError: Metaspace` | Class metadata occupies too much native memory | Dynamic class loading, class-loader leaks |
+| `OutOfMemoryError: Direct buffer memory` | Direct-buffer memory limit reached | Number and lifetime of direct buffers |
+| Cannot create another native thread | Thread/native-resource exhaustion or OS limits | Thread count, thread pools, stack sizes |
+| Process RSS grows while the heap is stable | Native memory, stacks, mmap, other regions | Native-memory metrics/profilers |
 
-Thông báo lỗi cụ thể phụ thuộc JVM, phiên bản và cách lỗi phát sinh; bảng trên là **định hướng điều tra**, không phải chẩn đoán chắc chắn.
+Exact error messages depend on the JVM, version, and failure mode; this table provides **investigation guidance**, not a definitive diagnosis.
 
-Vấn đề có thể là:
+Possible issues include:
 
-- **Memory leak:** dữ liệu bị giữ lại vô hạn, tăng theo thời gian.
-- **Memory pressure bình thường:** ứng dụng xử lý lô dữ liệu lớn, heap nhỏ so với tải; GC vẫn thu hồi được.
-- **Excess allocation:** tạo quá nhiều object ngắn hạn làm tăng tần suất GC và CPU.
-- **Native resource leak:** file descriptor, socket, direct/native memory hoặc thread bị giữ quá lâu.
+- **Memory leak:** data is retained indefinitely and grows over time.
+- **Normal memory pressure:** the application handles large data batches with a heap too small for the load; the GC can still reclaim memory.
+- **Excess allocation:** too many short-lived objects increase GC frequency and CPU use.
+- **Native resource leak:** file descriptors, sockets, direct/native memory, or threads are retained too long.
 
-Không nên kết luận “GC lỗi” chỉ vì RAM process tăng. JVM có thể **giữ lại bộ nhớ đã dành cho heap** để tái sử dụng; heap đã commit không bắt buộc được trả ngay cho hệ điều hành sau GC.
+Do not conclude that “GC is broken” merely because process RAM grows. The JVM may **retain previously committed heap memory** for reuse; committed heap space need not be returned to the OS immediately after GC.
 
-## 9. Kiểm tra bộ nhớ và GC ở môi trường thực tế
+## 9. Monitoring Memory and GC in Real Environments
 
-Ví dụ với HotSpot/JDK hiện đại:
+Example using a modern HotSpot/JDK:
 
 ```bash
 # Chạy chương trình với giới hạn heap rõ ràng (ví dụ 256 MiB).
@@ -3519,37 +3519,37 @@ jcmd <pid> GC.class_histogram
 jcmd <pid> VM.native_memory summary
 ```
 
-`<pid>` là số PID thực, cần thay bằng giá trị tương ứng trong lệnh thực thi. `-Xmx` quy định giới hạn **Java heap**; nó không phải giới hạn toàn bộ RAM của tiến trình vì còn native memory, thread stacks, metaspace, code cache, v.v.
+`<pid>` is the actual process ID and must be replaced in the commands. `-Xmx` sets the **Java heap** limit; it is not a limit on total process RAM because native memory, thread stacks, metaspace, code cache, and other regions also consume memory.
 
-Để thu thập số liệu native memory bằng Native Memory Tracking (NMT) trên HotSpot, có thể bật từ lúc khởi động:
+To collect native-memory statistics using Native Memory Tracking (NMT) on HotSpot, enable it at startup:
 
 ```bash
 java -XX:NativeMemoryTracking=summary -Xmx256m -cp . MyApp
 ```
 
-Sau đó chạy `jcmd <pid> VM.native_memory summary`. NMT không nhất thiết phản ánh mọi phần bộ nhớ do thư viện native cấp phát ngoài khả năng theo dõi của JVM.
+Then run `jcmd <pid> VM.native_memory summary`. NMT may not account for all memory allocated by native libraries outside the JVM's tracking scope.
 
-Các công cụ hữu ích khác gồm **Java Flight Recorder (JFR)** để xem cấp phát và GC, **VisualVM** để quan sát heap và tham chiếu, cùng **heap dump** để xác định retention paths và dominators. Tạo heap dump hoặc thống kê class histogram trên hệ thống lớn có thể gây chi phí và tạm dừng, nên đo có chủ đích ở môi trường phù hợp.
+Other useful tools include **Java Flight Recorder (JFR)** for allocation and GC analysis, **VisualVM** for heap and reference inspection, and **heap dumps** for identifying retention paths and dominators. Heap dumps and class histograms can be costly or pause large systems, so collect them deliberately in suitable environments.
 
-### Thứ tự xử lý một nghi vấn leak
+### Investigating a Suspected Leak, Step by Step
 
-1. Đo heap sử dụng **sau GC** theo thời gian, cùng mức traffic/tải và số lượng object.
-2. Nếu lượng object sống tăng đều, thu thập heap dump hoặc allocation profile ở thời điểm thích hợp.
-3. Xem **retained size** và đường tham chiếu tới GC root của các object chiếm nhiều bộ nhớ.
-4. Tìm cấu trúc nào giữ chúng: collection, singleton, cache, `ThreadLocal`, listener, hàng đợi...
-5. Sửa thiết kế vòng đời/giới hạn dữ liệu; kiểm tra lại dưới tải tương đương.
+1. Measure heap use **after GC** over time at comparable traffic/load and object counts.
+2. If live-object usage keeps growing, capture a heap dump or allocation profile at an appropriate time.
+3. Inspect **retained size** and GC-root reference paths for memory-heavy objects.
+4. Identify retaining structures: collections, singletons, caches, `ThreadLocal`, listeners, queues, and so on.
+5. Fix lifecycle and data-bounding rules; retest under comparable load.
 
-Việc tăng `-Xmx` đôi khi cần thiết cho tải hợp lệ, nhưng **không giải quyết nguyên nhân leak** nếu chương trình cứ giữ thêm dữ liệu mãi mãi.
+Increasing `-Xmx` may be necessary for legitimate load, but **does not fix the cause of a leak** if the program retains ever more data.
 
-## 10. Nguyên tắc thiết kế OOP giúp quản lý bộ nhớ
+## 10. OOP Design Principles for Memory Management
 
-- **Quy định owner của resource:** lớp nào mở file hoặc sở hữu socket/connection phải có quy tắc chuyển giao hoặc đóng rõ ràng.
-- **Dùng `try-with-resources` cho resource `AutoCloseable`:** đóng theo phạm vi là lựa chọn mặc định khi phù hợp.
-- **Giới hạn lifetime của dữ liệu:** cache, listener, queue và session phải có chính sách hết hạn/dỡ bỏ.
-- **Không đưa object sống ngắn vào phạm vi sống quá lâu:** một trường `static` dễ giữ cả đồ thị tham chiếu lớn.
-- **Tránh giữ graph quá lớn không cần thiết:** khi bỏ một entry khỏi collection, object chỉ trở thành eligible cho GC nếu không còn reachable qua đường khác.
-- **Hiểu mục tiêu tối ưu:** nhiều object nhỏ sống ngắn không nhất thiết là vấn đề; tránh tối ưu quá sớm nếu chưa đo.
-- **Xem xét cả heap và native memory:** GC chỉ giải một phần của bài toán tài nguyên.
+- **Define resource ownership:** the class opening a file or owning a socket/connection needs clear transfer or closing rules.
+- **Use `try-with-resources` for `AutoCloseable` resources:** scope-based closing is the default choice when appropriate.
+- **Limit data lifetime:** caches, listeners, queues, and sessions need expiration/removal policies.
+- **Do not put short-lived objects into excessively long-lived scopes:** a `static` field can retain a large reference graph.
+- **Avoid keeping unnecessarily large object graphs:** removing a collection entry makes an object GC-eligible only if no other path reaches it.
+- **Understand optimization goals:** many small short-lived objects are not automatically a problem; measure before optimizing.
+- **Consider both heap and native memory:** GC addresses only part of resource management.
 
 ```mermaid
 flowchart TD
@@ -3562,55 +3562,55 @@ flowchart TD
     F --> H["Tài nguyên được hoàn trả theo hợp đồng"]
 ```
 
-## 11. Bài tập và câu hỏi tự kiểm tra
+## 11. Exercises and Self-Check Questions
 
-**Bài 1 — reachability.** Hãy vẽ đường tham chiếu từ một `static Map<String, User>` tới các đối tượng `User`. Nếu một biến cục bộ trở thành `null` nhưng `Map` vẫn chứa `User`, GC có thu hồi được object đó không? Giải thích bằng GC roots.
+**Exercise 1 — reachability.** Draw reference paths from a `static Map<String, User>` to `User` objects. If a local variable becomes `null` but the `Map` still contains a `User`, can the GC collect that object? Explain using GC roots.
 
-**Bài 2 — vòng tham chiếu.** Tạo hai `Node` trỏ qua lại. Khi không còn đường từ GC root tới chúng, liệu vòng tham chiếu này có tự giữ chúng sống mãi không?
+**Exercise 2 — reference cycles.** Create two `Node` objects pointing to each other. When neither is reachable from any GC root, does the cycle keep them alive forever?
 
-**Bài 3 — phát hiện leak.** Chuyển `RequestHistory` không giới hạn thành cache chỉ giữ 50 mục gần nhất. Kiểm tra `size()` không vượt quá 50 sau 10.000 lần gọi `record`.
+**Exercise 3 — detecting leaks.** Change an unbounded `RequestHistory` into a cache that retains only the 50 most recent entries. Verify `size()` stays at or below 50 after 10,000 calls to `record`.
 
-**Bài 4 — quản lý thủ công.** Viết lớp `ReportWriter` sở hữu một `BufferedWriter`, implement `AutoCloseable`, rồi dùng trong `try-with-resources`. Khi constructor hoặc ghi dữ liệu ném exception, những tài nguyên nào cần được đóng? Ai sở hữu chúng?
+**Exercise 4 — manual management.** Write a `ReportWriter` class that owns a `BufferedWriter`, implements `AutoCloseable`, and is used inside `try-with-resources`. If construction or writing throws an exception, which resources must be closed, and who owns them?
 
-**Bài 5 — chẩn đoán.** Một service có heap ổn định nhưng RSS process tăng. Hãy liệt kê ít nhất ba khu vực cần kiểm tra ngoài heap. Vì sao chỉ xem `-Xmx` là chưa đủ?
+**Exercise 5 — diagnosis.** A service has stable heap usage but increasing process RSS. List at least three areas to examine outside the heap. Why is inspecting only `-Xmx` insufficient?
 
-### Tự kiểm tra nhanh
+### Quick Self-Check
 
-| Nhận định | Đúng/Sai | Giải thích |
+| Statement | True/False | Explanation |
 |---|---|---|
-| Đối tượng Java tự bị hủy ngay khi biến cục bộ hết scope | **Sai** | Thời điểm GC không xác định, có thể còn tham chiếu khác |
-| Object trỏ qua lại luôn không bao giờ được GC | **Sai** | Reachability từ GC roots mới là trọng tâm |
-| `System.gc()` bảo đảm giải phóng ngay một object | **Sai** | Chỉ là yêu cầu tới JVM |
-| GC tự đóng file, socket đúng thời điểm mong muốn | **Sai** | Cần hợp đồng đóng/quyền sở hữu |
-| Một `static List` tăng mãi có thể gây memory leak | **Đúng** | Các phần tử còn reachable |
-| `try-with-resources` gọi `close()` kể cả khi có lỗi trong thân `try` | **Đúng** | Đây là hành vi của cú pháp Java |
+| A Java object is immediately destroyed when a local variable leaves scope | **False** | GC timing is nondeterministic; other references may remain |
+| Objects in a reference cycle can never be collected | **False** | Reachability from GC roots is what matters |
+| `System.gc()` guarantees immediate reclamation of an object | **False** | It merely makes a request to the JVM |
+| The GC automatically closes files and sockets at the desired time | **False** | Requires closing and ownership contracts |
+| An ever-growing `static List` can cause a memory leak | **True** | Its elements remain reachable |
+| `try-with-resources` invokes `close()` even if the `try` body fails | **True** | This is defined by Java language syntax |
 
-**Ghi nhớ:** Với bộ nhớ heap Java, hãy quản lý **tham chiếu và vòng đời sử dụng**, để GC quyết định thu hồi object không còn reachable. Với file, socket, database connection và vùng nhớ native có phạm vi sở hữu rõ ràng, hãy **đóng hoặc giải phóng đúng hợp đồng API**. Biết phân biệt hai trách nhiệm này là nền tảng để ứng dụng Java chạy ổn định trong thời gian dài.
+**Remember:** For Java heap memory, manage **references and usage lifecycles**, letting the GC decide when to reclaim unreachable objects. For files, sockets, database connections, and owned native-memory regions, **close or release them according to API contracts**. Distinguishing these responsibilities is fundamental to long-running Java applications.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="lifecycle-008">Đóng tài nguyên và giới hạn của hàm hủy</a>
+## <a id="lifecycle-008">Resource cleanup and the limits of finalizers</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đóng tài nguyên và giới hạn của hàm hủy trong Java
+# Resource Cleanup and the Limits of Finalizers in Java
 
-Trong Java, **đối tượng** được cấp phát và quản lý bộ nhớ bởi JVM, nhưng nhiều đối tượng còn đại diện cho **tài nguyên cần được giải phóng đúng lúc**: tệp đang mở, kết nối cơ sở dữ liệu, socket, luồng đọc/ghi, bộ nhớ ngoài heap hoặc một đối tượng giữ khóa. Vì vậy, cần phân biệt hai việc:
+In Java, the JVM allocates and manages memory for **objects**, but many objects also represent **resources that must be released promptly**: open files, database connections, sockets, input/output streams, off-heap memory, or objects holding locks. Therefore, distinguish two activities:
 
-- **Thu hồi bộ nhớ của đối tượng:** Garbage Collector (GC) xử lý khi đối tượng không còn được truy cập theo các quy tắc của JVM.
-- **Đóng tài nguyên mà đối tượng đang sở hữu:** ứng dụng phải chủ động thực hiện vào thời điểm không còn sử dụng, thường bằng `close()` và `try-with-resources`.
+- **Reclaiming object memory:** the garbage collector (GC) handles this when an object becomes unreachable under JVM rules.
+- **Closing resources owned by an object:** the application must explicitly release them when finished, usually with `close()` and `try-with-resources`.
 
-**Thông điệp quan trọng:** Trong Java, không có “hàm hủy” (*destructor*) chạy tự động, có thời điểm xác định giống destructor của C++. Cơ chế `finalize()` cũ không đáng tin để đóng tài nguyên và đã bị đánh dấu **deprecated for removal**; mã Java mới không nên dùng nó.
+**Key message:** Java has no automatically invoked, deterministic *destructor* equivalent to C++ destructors. The old `finalize()` mechanism is unreliable for closing resources and is marked **deprecated for removal**; new Java code should avoid it.
 
-## 1. Vì sao thu gom rác không thay thế việc đóng tài nguyên?
+## 1. Why Can't Garbage Collection Replace Resource Cleanup?
 
-Xét mã đọc một tệp:
+Consider reading a file:
 
 ```java
 BufferedReader reader = Files.newBufferedReader(path);
@@ -3618,17 +3618,17 @@ String line = reader.readLine();
 // Không đóng reader
 ```
 
-Biến `reader` giữ tham chiếu đến một đối tượng Java, còn `BufferedReader` gián tiếp sử dụng tài nguyên hệ điều hành liên quan đến tệp. Khi biến không còn được dùng, JVM **không bảo đảm** tài nguyên sẽ được đóng ngay. Nếu lặp lại thao tác mở tệp mà bỏ qua `close()`, ứng dụng có thể cạn file descriptor hoặc gặp lỗi mở tệp mới.
+The `reader` variable references a Java object, while `BufferedReader` indirectly uses operating-system resources associated with the file. When the variable is no longer used, the JVM **does not guarantee** immediate closure. Repeatedly opening files without calling `close()` can exhaust file descriptors or cause subsequent file opens to fail.
 
-| Thứ được quản lý | Ví dụ | Ai chịu trách nhiệm chính? | Khi nào giải phóng? |
+| Managed item | Example | Who is primarily responsible? | When is it released? |
 | --- | --- | --- | --- |
-| Bộ nhớ heap Java | Đối tượng `Customer`, `StringBuilder` | JVM/GC | Khi JVM quyết định thu gom đối tượng không còn được truy cập |
-| Tài nguyên tệp | `BufferedReader`, `FileInputStream` | Mã sử dụng và lớp API sở hữu tài nguyên | Chủ động `close()`, lý tưởng ngay khi xong việc |
-| Kết nối cơ sở dữ liệu | JDBC `Connection`, `PreparedStatement`, `ResultSet` | Mã ứng dụng phối hợp với driver/pool | Đóng theo phạm vi sử dụng; `Connection.close()` có thể trả kết nối về pool |
-| Socket mạng | `Socket`, các stream liên quan | Mã sở hữu kết nối | Đóng khi trao đổi xong hoặc khi hủy yêu cầu |
-| Executor/luồng chạy | Executor và tác vụ | Thành phần quản lý vòng đời | Tắt bằng API phù hợp, chờ hoàn tất khi cần; chi tiết khác theo phiên bản Java |
+| Java heap memory | `Customer`, `StringBuilder` objects | JVM/GC | When the JVM decides to collect unreachable objects |
+| File resource | `BufferedReader`, `FileInputStream` | The code using it and the resource-owning API class | Explicitly via `close()`, ideally immediately after use |
+| Database connection | JDBC `Connection`, `PreparedStatement`, `ResultSet` | Application code in coordination with driver/pool | Close at scope end; `Connection.close()` may return it to the pool |
+| Network socket | `Socket` and related streams | Connection owner | Close after communication or when the request is canceled |
+| Executor/thread | Executor and tasks | Component managing the lifecycle | Shut down using the appropriate API and await completion as needed; details vary by Java version |
 
-Một đối tượng có thể đã không còn tham chiếu từ mã nghiệp vụ nhưng tài nguyên hệ điều hành chưa được đóng đúng lúc. Ngược lại, một đối tượng Java **vẫn đang tồn tại** hoàn toàn có thể đã đóng tài nguyên và tiếp tục được truy cập để kiểm tra trạng thái.
+An object may become unreferenced by business code while its OS resource has not yet been closed promptly. Conversely, a Java object **may still exist** after closing its resource and remain accessible for checking state.
 
 ```mermaid
 flowchart TD
@@ -3641,11 +3641,11 @@ flowchart TD
     G --> H["GC thu hồi bộ nhớ vào thời điểm phù hợp"]
 ```
 
-Sơ đồ mô tả vòng đời mong muốn. Lệnh `close()` có thể phát sinh lỗi và một số tài nguyên có semantics riêng; việc “đóng thành công” phải tuân theo hợp đồng của API cụ thể.
+The diagram illustrates the intended lifecycle. Calling `close()` can fail, and some resources have specialized semantics; successful closure must follow the specific API contract.
 
-## 2. Cách chuẩn: `try-with-resources`
+## 2. Standard Approach: `try-with-resources`
 
-Từ Java 7, `try-with-resources` tự động gọi `close()` đối với các tài nguyên khai báo trong phần `try (...)` khi rời khỏi khối, kể cả khi thân `try` ném ngoại lệ.
+Since Java 7, `try-with-resources` automatically calls `close()` on resources declared inside `try (...)` when the block exits, including when the `try` body throws an exception.
 
 ```java
 import java.io.BufferedReader;
@@ -3664,17 +3664,17 @@ class ReaderExample {
 }
 ```
 
-`BufferedReader` là tài nguyên có thể đóng. Khi `readLine()` hoàn tất, `return` không làm mất bước đóng; Java vẫn gọi `close()` trước khi phương thức thực sự trả kết quả cho caller.
+`BufferedReader` is closeable. Once `readLine()` completes, a `return` statement does not skip cleanup; Java still invokes `close()` before the method actually returns its result to the caller.
 
-Nếu `Files.newBufferedReader(...)` không mở được tệp, lời gọi tạo tài nguyên ném ngoại lệ và không có `reader` được khởi tạo thành công để đóng. Nếu tài nguyên đã mở thành công nhưng đọc thất bại, cơ chế của `try-with-resources` vẫn thực hiện đóng.
+If `Files.newBufferedReader(...)` cannot open a file, resource construction throws and no successfully initialized `reader` exists to close. If opening succeeds but reading fails, `try-with-resources` still performs cleanup.
 
-**Quy tắc:** Đối tượng trong danh sách `try (...)` phải là kiểu triển khai `AutoCloseable` (hoặc `Closeable`, vốn kế thừa `AutoCloseable`).
+**Rule:** Resources declared in `try (...)` must implement `AutoCloseable` (or `Closeable`, which extends `AutoCloseable`).
 
-## 3. Ví dụ hoàn chỉnh: quản lý vòng đời tài nguyên
+## 3. Complete Example: Managing Resource Lifecycles
 
-Ví dụ sau cho thấy hai hành vi: tài nguyên tự định nghĩa được đóng **theo thứ tự ngược với thứ tự khởi tạo** và việc đọc/ghi tệp đóng stream ngay sau khi dùng.
+The following example shows two behaviors: custom resources close **in reverse initialization order**, and file reading/writing streams close immediately after use.
 
-Lưu toàn bộ mã vào file **`Main.java`**, dùng Java 17 hoặc Java 21:
+Put all the code into **`Main.java`** and use Java 17 or Java 21:
 
 ```java
 import java.io.BufferedReader;
@@ -3741,14 +3741,14 @@ public class Main {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Đầu ra:
+Output:
 
 ```text
 Mở A
@@ -3760,19 +3760,19 @@ Dùng B
 Xin chào Java
 ```
 
-**Điều gì xảy ra?**
+**What happens?**
 
-1. `Session("A")` được tạo trước, rồi `Session("B")`.
-2. Trong thân `try`, chương trình dùng cả hai tài nguyên.
-3. Khi hết khối, Java tự gọi `second.close()` trước, sau đó `first.close()`.
-4. Ở phần tệp, writer đóng trước khi reader bắt đầu đọc. Khi đọc xong, reader đóng; `finally` xóa tệp tạm.
-5. Phương thức `Session.use()` chặn việc thao tác sau khi tài nguyên đã đóng.
+1. `Session("A")` is created first, followed by `Session("B")`.
+2. Inside the `try` body, the program uses both resources.
+3. When the block ends, Java automatically invokes `second.close()` before `first.close()`.
+4. For the file example, the writer closes before the reader starts. After reading, the reader closes; `finally` deletes the temporary file.
+5. `Session.use()` prevents operations after the resource has closed.
 
-Lệnh `Files.deleteIfExists(file)` có thể tự ném `IOException`; trong ứng dụng thật, cần quyết định cách báo cáo lỗi xóa tệp, đặc biệt nếu trước đó đã có lỗi đọc/ghi. Ví dụ này phù hợp để thấy các phạm vi sở hữu riêng: **đóng luồng I/O** và **xóa đường dẫn tệp tạm** là hai việc khác nhau.
+`Files.deleteIfExists(file)` can itself throw `IOException`; in a real application, decide how to report deletion failures, especially if an earlier read/write failure already occurred. This illustrates separate ownership scopes: **closing I/O streams** and **deleting a temporary file path** are different responsibilities.
 
-## 4. `AutoCloseable` và `Closeable`
+## 4. `AutoCloseable` and `Closeable`
 
-Hai giao diện cơ bản thường gặp:
+Two commonly used interfaces:
 
 ```java
 public interface AutoCloseable {
@@ -3786,23 +3786,23 @@ public interface Closeable extends AutoCloseable {
 }
 ```
 
-| Tiêu chí | `AutoCloseable` | `Closeable` |
+| Criterion | `AutoCloseable` | `Closeable` |
 | --- | --- | --- |
-| Mục đích | Hợp đồng tổng quát cho tài nguyên cần đóng | Hợp đồng đóng tài nguyên I/O |
-| Ngoại lệ được khai báo trong `close()` | `Exception` | `IOException` |
-| Có dùng trong `try-with-resources`? | Có | Có |
-| Đóng nhiều lần | Không được bảo đảm an toàn chung cho mọi triển khai | Hợp đồng `Closeable` quy định việc đóng một tài nguyên đã đóng không gây tác dụng |
-| Ví dụ | `java.sql.Connection`, đối tượng khóa hoặc transaction scope do ứng dụng viết | `BufferedReader`, `InputStream`, `OutputStream` |
+| Purpose | General contract for resources that must be closed | Contract for closing I/O resources |
+| Declared exception in `close()` | `Exception` | `IOException` |
+| Usable in `try-with-resources`? | Yes | Yes |
+| Repeated closing | Not universally guaranteed safe for every implementation | The `Closeable` contract says closing an already-closed resource has no effect |
+| Examples | `java.sql.Connection`, custom lock or transaction-scope objects | `BufferedReader`, `InputStream`, `OutputStream` |
 
-Khi tự triển khai, có thể khai báo `close()` không `throws` hoặc khai báo ngoại lệ cụ thể hẹp hơn. Ví dụ `Session.close()` ở trên không ném checked exception.
+When implementing your own class, `close()` can declare no `throws` clause or a narrower exception type. For example, `Session.close()` above does not throw a checked exception.
 
-**Lưu ý về idempotence:** Tự tạo lớp có `close()` an toàn khi được gọi lặp lại thường rất có ích, nhưng `AutoCloseable` **không bắt buộc** mọi lớp triển khai đều phải idempotent. Không nên giả định có thể đóng hai lần hoặc dùng lại mọi tài nguyên sau khi đóng.
+**Idempotence note:** It is often useful to design a custom `close()` that is safe to invoke repeatedly, but `AutoCloseable` **does not require** every implementation to be idempotent. Never assume repeated closing or post-close reuse is always supported.
 
-## 5. `try-with-resources` bảo đảm những gì?
+## 5. What Does `try-with-resources` Guarantee?
 
-Có hai điều đặc biệt quan trọng:
+Two behaviors are especially important:
 
-### 5.1. Đóng theo thứ tự ngược
+### 5.1. Closing in Reverse Order
 
 ```java
 try (Resource a = openA();
@@ -3812,15 +3812,15 @@ try (Resource a = openA();
 }
 ```
 
-Java đóng theo thứ tự `c`, `b`, `a`. Nếu khởi tạo `b` thất bại thì `a` (đã tạo thành công) vẫn được đóng; `c` chưa được tạo.
+Java closes resources in the order `c`, `b`, `a`. If initializing `b` fails, the already-created `a` still closes; `c` has not been created.
 
-Điều này rất phù hợp với các tài nguyên phụ thuộc nhau, ví dụ một `ResultSet` sử dụng `PreparedStatement`, còn statement được tạo từ `Connection`.
+This is especially useful for dependent resources, such as a `ResultSet` using a `PreparedStatement` built from a `Connection`.
 
-### 5.2. Ngoại lệ khi đóng có thể bị *suppressed*
+### 5.2. Closing Exceptions Can Be *Suppressed*
 
-Giả sử cả phần xử lý và bước đóng đều ném lỗi. Java cần giữ được nguyên nhân quan trọng nhất thay vì để lỗi đóng che mất lỗi xử lý.
+Suppose both processing and cleanup throw errors. Java must preserve the main failure instead of letting a closing error obscure it.
 
-Lưu ví dụ độc lập thành **`SuppressedDemo.java`**:
+Save this standalone example as **`SuppressedDemo.java`**:
 
 ```java
 import java.io.IOException;
@@ -3846,62 +3846,62 @@ public class SuppressedDemo {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Chính: Lỗi xử lý
 Kèm theo: Lỗi khi đóng
 ```
 
-Trong `try-with-resources`, ngoại lệ từ thân `try` là ngoại lệ chính; lỗi `close()` được đính kèm vào `getSuppressed()`. Nếu thân `try` không lỗi mà `close()` lỗi, ngoại lệ đóng có thể được ném ra trực tiếp.
+With `try-with-resources`, an exception from the `try` body is primary, and a `close()` failure is attached through `getSuppressed()`. If the `try` body succeeds but `close()` fails, the closing exception may be thrown directly.
 
-Không nên tự ý bỏ qua lỗi đóng vì một số API có thể chỉ phát hiện lỗi ghi/flush khi đóng. Khi ghi log, cân nhắc cả nguyên nhân chính lẫn các ngoại lệ suppressed để không mất thông tin điều tra.
+Do not casually ignore closing errors: some APIs detect write/flush failures only during close. When logging, consider the primary exception and any suppressed exceptions to preserve diagnostic information.
 
-## 6. Vì sao không dùng `finalize()` như một hàm hủy?
+## 6. Why Not Use `finalize()` as a Destructor?
 
-Một số tài liệu cũ có thể cho thấy lớp override phương thức `protected void finalize() throws Throwable` của `Object`. Đây là cơ chế **finalization**, từng được xem như một cách xử lý trước khi bộ nhớ đối tượng bị thu hồi.
+Some older documentation shows a class overriding `protected void finalize() throws Throwable` from `Object`. This mechanism, called **finalization**, was once viewed as a way to perform work before object memory was reclaimed.
 
-Không nên dùng cách này trong Java hiện đại:
+Avoid this in modern Java:
 
-- Không thể biết chính xác **khi nào** JVM có thể chạy finalizer.
-- Không có cam kết finalizer sẽ chạy trước khi chương trình kết thúc; một đối tượng có thể không được finalize.
-- Finalizer có thể chạy trên luồng không do mã nghiệp vụ kiểm soát, gây khó khăn về đồng bộ và xử lý lỗi.
-- Việc giữ hoặc “hồi sinh” tham chiếu từ finalizer làm vòng đời phức tạp, gây rủi ro hiệu năng, bảo mật và tính đúng đắn.
-- `Object.finalize()` và finalization đã được **deprecated for removal** trong những phiên bản Java hiện đại (JEP 421). Tính năng này có thể bị vô hiệu hóa hoặc bị loại bỏ trong tương lai.
+- You cannot know exactly **when** the JVM may run a finalizer.
+- A finalizer is not guaranteed to run before the program exits; some objects may never be finalized.
+- Finalizers may run on threads outside application control, complicating synchronization and error handling.
+- Retaining or “resurrecting” references from a finalizer complicates lifecycles and risks performance, security, and correctness.
+- `Object.finalize()` and finalization have been **deprecated for removal** in modern Java releases (JEP 421). This feature may be disabled or removed in the future.
 
-Đặc biệt, **`System.gc()` chỉ là một yêu cầu/gợi ý cho JVM**, không phải cam kết sẽ thu gom ngay, càng không phải một phương thức đóng file/socket/connection. Không bao giờ dùng `System.gc()` để cố ép một finalizer chạy.
+In particular, **`System.gc()` is only a request or hint to the JVM**, not a promise of immediate collection, and certainly not a method for closing files, sockets, or connections. Never call `System.gc()` to try to force a finalizer to run.
 
-| Cơ chế | Mục đích | Thời điểm dự đoán được? | Có phù hợp để đóng tài nguyên chính? |
+| Mechanism | Purpose | Predictable timing? | Suitable for primary resource closure? |
 | --- | --- | --- | --- |
-| `try-with-resources` | Đóng `AutoCloseable` khi rời phạm vi | Có, theo luồng thực thi bình thường hoặc ném ngoại lệ | **Có: ưu tiên** |
-| `close()` gọi tường minh | Đóng theo quyết định nghiệp vụ | Có, tại lời gọi | Có, nếu quản lý ngoại lệ và phạm vi sở hữu |
-| `finally` | Luôn cố thực thi mã dọn dẹp khi rời khối | Theo luồng Java, trừ các tình huống kết thúc bất thường của tiến trình/JVM | Có khi cần quản lý thủ công |
-| `Cleaner` | Dọn dẹp dự phòng phụ thuộc vào GC | Không | Chỉ là phương án dự phòng phù hợp, không thay thế đóng tường minh |
-| `finalize()` | Cơ chế finalization cũ | Không | **Không dùng cho mã mới** |
-| GC | Quản lý bộ nhớ heap | Không | Không phải công cụ đóng tài nguyên nghiệp vụ |
+| `try-with-resources` | Closes `AutoCloseable` on scope exit | Yes, during normal control flow or exception propagation | **Yes: preferred** |
+| Explicit `close()` | Closes according to business logic | Yes, at the call | Yes, if exceptions and ownership are handled |
+| `finally` | Always attempts cleanup on leaving a block | During Java control flow, except abnormal process/JVM termination | Yes, when manual cleanup is needed |
+| `Cleaner` | Backup cleanup dependent on GC | No | Only as a suitable fallback, not a replacement for explicit close |
+| `finalize()` | Legacy finalization mechanism | No | **Not for new code** |
+| GC | Manages heap memory | No | Not a mechanism for closing business resources |
 
-**Không có cơ chế nào bảo đảm mã Java tùy ý sẽ chạy khi tiến trình bị kill đột ngột, máy mất điện hoặc JVM crash.** Vì vậy, phần lớn tài nguyên cần thiết phải được đóng sớm ở những ranh giới nghiệp vụ có kiểm soát.
+**No mechanism guarantees arbitrary Java cleanup code runs if the process is abruptly killed, power is lost, or the JVM crashes.** Therefore, most resources should be closed early at controlled business boundaries.
 
-## 7. `Cleaner` có phải là destructor mới?
+## 7. Is `Cleaner` a New Destructor?
 
-`java.lang.ref.Cleaner` cho phép đăng ký một hành động dọn dẹp khi đối tượng được đánh giá là có thể thu gom. Nó hữu ích trong **một số thiết kế chuyên sâu**, thường để có cơ chế dự phòng cho tài nguyên native mà ứng dụng quên đóng.
+`java.lang.ref.Cleaner` lets code register a cleanup action for when an object becomes eligible for collection. It can help in **certain advanced designs**, usually as a fallback for native resources that an application forgot to close.
 
-Nhưng `Cleaner` **không biến việc dọn dẹp thành tất định**:
+But `Cleaner` **does not make cleanup deterministic**:
 
-1. Không biết chính xác khi nào GC sẽ làm đối tượng đủ điều kiện để cleanup.
-2. Không nên mong đợi cleanup chạy đúng lúc hoặc chắc chắn trước khi tiến trình kết thúc.
-3. Nếu hành động cleanup vô tình giữ tham chiếu mạnh đến chính đối tượng cần dọn, nó có thể ngăn đối tượng trở thành ứng viên được thu gom.
-4. Mã cleanup chạy trong bối cảnh khác với code nghiệp vụ, nên phải thiết kế cho thread-safety và ngoại lệ.
+1. You cannot predict exactly when the GC will make an object eligible for cleanup.
+2. Do not assume cleanup runs promptly or before process exit.
+3. If the cleanup action accidentally holds a strong reference to the target object, it can prevent that object from becoming eligible for collection.
+4. Cleanup code runs in a different context from business logic and needs appropriate thread-safety and exception handling.
 
-Cách tư duy đúng: API công khai vẫn có `close()` để caller chủ động đóng; `Cleaner` chỉ là **lưới an toàn dự phòng**, và chỉ nên thêm khi thật sự cần. Đối với kết nối JDBC, tệp và socket thông thường, `try-with-resources` là giải pháp cơ bản, rõ ràng hơn.
+The right model is to keep a public `close()` API for caller-controlled release; `Cleaner` is only a **fallback safety net** and should be added when genuinely needed. For ordinary JDBC connections, files, and sockets, `try-with-resources` is simpler and clearer.
 
-## 8. Ai sở hữu tài nguyên và ai phải đóng?
+## 8. Who Owns a Resource, and Who Must Close It?
 
-Một bug phổ biến là “thấy đối tượng triển khai `AutoCloseable` thì tự đóng” mà không xét ai sở hữu nó.
+A common bug is seeing that an object implements `AutoCloseable` and closing it without checking ownership.
 
-**Nguyên tắc ownership:** Thành phần **tạo ra hoặc nhận quyền sở hữu** tài nguyên có trách nhiệm đóng ở cuối phạm vi sử dụng đã thỏa thuận. Thành phần chỉ **mượn** tài nguyên thường không đóng nó, trừ khi hợp đồng API nói rõ.
+**Ownership principle:** The component that **creates or assumes ownership** of a resource must close it at the end of the agreed usage scope. A component that only **borrows** a resource generally does not close it unless the API contract explicitly says so.
 
-Ví dụ:
+For example:
 
 ```java
 class TextService {
@@ -3913,7 +3913,7 @@ class TextService {
 }
 ```
 
-Caller sẽ quyết định phạm vi:
+The caller decides the scope:
 
 ```java
 try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -3922,13 +3922,13 @@ try (BufferedReader reader = Files.newBufferedReader(path)) {
 }
 ```
 
-Nếu `readOneLine()` tự đóng reader, caller sẽ bị bất ngờ khi không thể đọc thêm.
+If `readOneLine()` closes the reader itself, the caller will be surprised to find it can no longer read additional data.
 
-Trong các framework, vòng đời còn được điều phối bởi container: ví dụ tài nguyên của một request, transaction hay bean do framework quản lý có thể cần để container tự đóng tại thời điểm quy định. Nếu code tự gọi `close()` lên đối tượng do container quản lý, có thể khiến thành phần khác dùng lỗi. Cần đọc hợp đồng của loại tài nguyên cụ thể.
+Frameworks also coordinate resource lifecycles: for example, request, transaction, or bean resources managed by a framework may need to be closed by the container at the prescribed time. Manually calling `close()` on a container-managed resource can cause failures elsewhere. Follow the contract for the specific resource type.
 
-## 9. Đóng kết nối JDBC và tài nguyên lồng nhau
+## 9. Closing JDBC Connections and Nested Resources
 
-Mẫu dưới đây minh họa JDBC: chỉ để học cấu trúc, cần `DataSource`, bảng `students` và dữ liệu thật của ứng dụng để chạy.
+This JDBC example illustrates the structure; running it requires a `DataSource`, a `students` table, and actual application data.
 
 ```java
 import java.sql.Connection;
@@ -3960,15 +3960,15 @@ class StudentRepository {
 }
 ```
 
-Phạm vi kết nối nằm ở `try` ngoài. `ResultSet` đóng khi khối trong kết thúc; sau đó statement và connection được đóng khi rời khối ngoài.
+The connection scope is the outer `try` block. The `ResultSet` closes when the inner block finishes; then the statement and connection close when the outer block exits.
 
-Với connection pool, `Connection.close()` thường **trả kết nối về pool** thay vì đóng vật lý kết nối TCP tới máy chủ ngay. Do đó, bỏ qua `close()` có thể làm hết kết nối trong pool dù GC vẫn còn hoạt động bình thường.
+With connection pooling, `Connection.close()` usually **returns the connection to the pool** instead of immediately closing the physical TCP connection. Omitting `close()` can exhaust a connection pool even while GC operates normally.
 
-Khi giao dịch cần `commit()` hoặc `rollback()`, **việc đóng connection không thể thay thế quản lý transaction đúng cách**. Cần tuân thủ hợp đồng của driver, pool hoặc transaction manager.
+When transactions require `commit()` or `rollback()`, **closing a connection is no substitute for proper transaction management**. Follow the driver, pool, or transaction-manager contract.
 
-## 10. Tự triển khai `AutoCloseable` sao cho có ích
+## 10. Implementing a Useful `AutoCloseable` Class
 
-Một lớp sở hữu tài nguyên nên định nghĩa rõ trạng thái sống/đã đóng. Ví dụ lớp bọc một `BufferedReader`:
+A resource-owning class should clearly define its open and closed states. Consider a wrapper around `BufferedReader`:
 
 ```java
 import java.io.BufferedReader;
@@ -4005,7 +4005,7 @@ final class LineSource implements AutoCloseable {
 }
 ```
 
-Caller dùng:
+The caller uses it like this:
 
 ```java
 try (LineSource source = new LineSource(path)) {
@@ -4016,15 +4016,15 @@ try (LineSource source = new LineSource(path)) {
 }
 ```
 
-Mẫu này phù hợp cho đối tượng được sử dụng **tuần tự**. Trường `closed` không tự làm API thread-safe; nếu nhiều luồng đồng thời gọi `nextLine()` và `close()`, cần một chiến lược đồng bộ hoặc tài liệu hóa rõ rằng không hỗ trợ gọi đồng thời.
+This design suits **sequential** use. The `closed` field does not make the API thread-safe; concurrent calls to `nextLine()` and `close()` require synchronization or an explicit statement that concurrent use is unsupported.
 
-Khi `close()` có thể lỗi, cần quyết định hợp đồng về thử đóng lại và trạng thái sau lỗi. Trong ví dụ, wrapper được coi là **không thể dùng tiếp** ngay khi quá trình đóng bắt đầu; đây là lựa chọn thiết kế có chủ đích, không phải quy tắc bắt buộc cho mọi tài nguyên.
+When `close()` can fail, define whether retrying closure is allowed and what state follows an error. Here, the wrapper becomes **unusable** as soon as closing begins; this is a deliberate design choice, not a universal resource rule.
 
-Một lời gọi `close()` không có nghĩa có thể sử dụng lại tài nguyên sau đó. Nhiều stream/socket không cho phép mở lại cùng một thể hiện; muốn dùng lần nữa thường phải **tạo đối tượng tài nguyên mới**.
+A `close()` call does not imply that the resource can be reused afterward. Many streams/sockets cannot be reopened on the same instance; using them again often requires **creating a new resource object**.
 
-## 11. `finally` so với `try-with-resources`
+## 11. `finally` Versus `try-with-resources`
 
-Trước Java 7, mã đóng tài nguyên thường đặt trong `finally`:
+Before Java 7, cleanup code was commonly placed in `finally`:
 
 ```java
 BufferedReader reader = null;
@@ -4038,9 +4038,9 @@ try {
 }
 ```
 
-Phần trên minh họa cú pháp dọn dẹp thủ công, cần đặt trong phương thức khai báo hoặc xử lý `IOException`. Nó ngắn nhưng dễ phát sinh lỗi khi có nhiều tài nguyên: quên kiểm tra `null`, quên đóng một tài nguyên hoặc vô tình để lỗi đóng che mất lỗi xử lý.
+This snippet illustrates manual cleanup syntax and must be placed in a method that declares or handles `IOException`. It is short but error-prone with multiple resources: you might forget a `null` check, miss closing a resource, or let a closing error hide the processing error.
 
-Với đối tượng triển khai `AutoCloseable`, ưu tiên:
+For objects implementing `AutoCloseable`, prefer:
 
 ```java
 try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -4048,26 +4048,26 @@ try (BufferedReader reader = Files.newBufferedReader(path)) {
 }
 ```
 
-Tuy nhiên, `finally` **vẫn hữu ích** cho những hành động dọn dẹp không nằm trong hợp đồng `AutoCloseable`, chẳng hạn xóa tệp tạm, trả lại trạng thái hay giải phóng một khóa theo API riêng. Trong mọi trường hợp, `finally` không nên được hiểu là chạy bất chấp mọi sự cố bên ngoài JVM.
+Nevertheless, `finally` **remains useful** for cleanup actions outside the `AutoCloseable` contract, such as deleting a temporary file, restoring state, or releasing a lock through a special API. In all cases, do not assume `finally` runs despite every possible failure outside the JVM.
 
-## 12. Những lỗi thường gặp
+## 12. Common Mistakes
 
-| Lỗi | Hậu quả có thể xảy ra | Cách làm phù hợp |
+| Mistake | Possible consequence | Appropriate approach |
 | --- | --- | --- |
-| Không gọi `close()`, trông chờ GC | Tài nguyên mở lâu, cạn handle/pool | `try-with-resources` |
-| Override `finalize()` để đóng socket/file | Thời điểm dọn dẹp không bảo đảm | Bỏ finalization; dùng `close()` |
-| Gọi `System.gc()` sau mỗi request | Không bảo đảm đóng tài nguyên, ảnh hưởng hiệu năng | Quản lý vòng đời rõ ràng |
-| Tự đóng tài nguyên chỉ đang mượn | Caller không thể tiếp tục sử dụng | Thống nhất hợp đồng ownership |
-| Chỉ đóng khi chạy thành công | Ngoại lệ khiến tài nguyên bị bỏ mở | `try-with-resources` hoặc `finally` phù hợp |
-| Quên lỗi khi `close()` thất bại | Không thấy lỗi flush/ghi/chuyển trạng thái | Ghi log, xem `getSuppressed()` khi cần |
-| Cho rằng `close()` luôn có thể gọi nhiều lần | Một số API không hỗ trợ | Đọc hợp đồng tài nguyên; thiết kế wrapper rõ ràng |
-| Gọi tài nguyên sau khi đóng | `IOException` hoặc `IllegalStateException` tùy API | Kiểm soát trạng thái và phạm vi sử dụng |
-| Tự đóng connection do transaction manager kiểm soát | Phá hỏng vòng đời transaction | Để container quản lý đúng hợp đồng |
-| Tin `Cleaner` sẽ chạy trước shutdown | Dọn dẹp bị trễ hoặc không thực hiện | Chỉ dùng Cleaner làm fallback |
+| Forgetting `close()` and waiting for GC | Resources stay open; handles/pool are exhausted | `try-with-resources` |
+| Overriding `finalize()` to close sockets/files | Unpredictable cleanup timing | Avoid finalization; use `close()` |
+| Calling `System.gc()` after each request | No resource-closing guarantee; performance impact | Manage lifecycles explicitly |
+| Closing a resource that is only borrowed | The caller cannot continue using it | Agree on ownership contracts |
+| Closing only after success | Exceptions leave resources open | `try-with-resources` or suitable `finally` cleanup |
+| Ignoring a failed `close()` | Missed flush/write/state-transition errors | Log errors and inspect `getSuppressed()` when needed |
+| Assuming `close()` always supports repeated calls | Some APIs do not | Read resource contracts; design wrappers explicitly |
+| Using a resource after closing it | `IOException` or `IllegalStateException`, depending on the API | Enforce state and valid usage scopes |
+| Manually closing a transaction-manager-controlled connection | Broken transaction lifecycle | Let the container manage it according to contract |
+| Assuming `Cleaner` runs before shutdown | Cleanup may be delayed or skipped | Use Cleaner only as a fallback |
 
-## 13. Bài tập tự kiểm tra
+## 13. Self-Check Exercises
 
-**Câu 1.** Đoạn nào đúng hơn cho một tệp được mở trong một phương thức ngắn?
+**Question 1.** Which approach is better for a file opened inside a short method?
 
 ```java
 // A
@@ -4080,57 +4080,57 @@ try (BufferedReader reader = Files.newBufferedReader(path)) {
 }
 ```
 
-**Đáp án:** **B**. Java vẫn gọi `close()` khi thoát bằng `return` hoặc khi gặp ngoại lệ sau khi mở thành công.
+**Answer:** **B**. Java still invokes `close()` upon `return` or an exception after successful resource opening.
 
-**Câu 2.** Hai tài nguyên mở theo thứ tự `A`, `B` trong cùng danh sách `try (...)`. Chúng đóng theo thứ tự nào?
+**Question 2.** Two resources are opened as `A`, then `B`, in the same `try (...)` declaration. In what order do they close?
 
-**Đáp án:** **B rồi A**, vì `try-with-resources` đóng theo thứ tự ngược.
+**Answer:** **B then A**, because `try-with-resources` closes resources in reverse order.
 
-**Câu 3.** Thân `try` ném `IllegalStateException`, còn `close()` ném `IOException`. Ngoại lệ nào thường là ngoại lệ chính?
+**Question 3.** The `try` body throws `IllegalStateException` and `close()` throws `IOException`. Which exception is normally primary?
 
-**Đáp án:** Lỗi của thân `try` là ngoại lệ chính; lỗi `close()` được lưu trong `getSuppressed()`.
+**Answer:** The exception from the `try` body is primary; the `close()` failure is stored by `getSuppressed()`.
 
-**Câu 4.** Một `Connection` lấy từ connection pool được `close()`. Có chắc kết nối TCP vật lý tới database bị đóng ngay không?
+**Question 4.** A pooled `Connection` has `close()` called on it. Must the physical TCP connection to the database close immediately?
 
-**Đáp án:** **Không.** Với pool, `close()` thường trả kết nối về pool cho request khác dùng; đó vẫn là hành động bắt buộc để trả quyền sử dụng.
+**Answer:** **No.** In a pool, `close()` typically returns the connection for reuse by other requests; callers must still release their claim on it.
 
-**Câu 5.** Khi GC thu hồi một đối tượng Java, có thể kết luận file descriptor mà nó từng giữ đã được đóng đúng lúc không?
+**Question 5.** When the GC reclaims a Java object, can we conclude that a file descriptor it once held was closed on time?
 
-**Đáp án:** **Không.** Tài nguyên ngoài bộ nhớ heap cần được đóng chủ động; không thể dựa vào thời điểm GC.
+**Answer:** **No.** Resources outside heap memory require explicit cleanup; GC timing cannot be relied upon.
 
-**Câu 6.** Có nên dùng `finalize()` hoặc `Cleaner` làm bước dọn dẹp chính cho kết nối mạng không?
+**Question 6.** Should `finalize()` or `Cleaner` be the primary cleanup step for network connections?
 
-**Đáp án:** **Không.** Ưu tiên hợp đồng sở hữu rõ ràng, `AutoCloseable.close()` và `try-with-resources`. `Cleaner` chỉ có thể là giải pháp dự phòng trong các trường hợp phù hợp, còn `finalize()` không dùng cho mã mới.
+**Answer:** **No.** Prefer explicit ownership contracts, `AutoCloseable.close()`, and `try-with-resources`. `Cleaner` can be a fallback in appropriate cases, while `finalize()` should not be used in new code.
 
-**Ghi nhớ:** GC quản lý **bộ nhớ đối tượng**, còn `close()` quản lý **tài nguyên có vòng đời nghiệp vụ**. Một lớp quản lý tài nguyên tốt định nghĩa rõ quyền sở hữu, thời điểm đóng, cách xử lý lỗi và hành vi sau khi đóng. Trong Java hiện đại, hãy dùng `try-with-resources` bất cứ khi nào API hỗ trợ `AutoCloseable`, thay vì trông đợi “hàm hủy” hoặc GC xử lý hộ.
+**Remember:** The GC manages **object memory**, while `close()` manages **resources with business lifecycles**. A well-designed resource-owning class defines ownership, closing time, error handling, and post-close behavior. In modern Java, use `try-with-resources` whenever an API supports `AutoCloseable`, rather than expecting a “destructor” or GC to handle it.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="lifecycle-009">Tránh để đối tượng chưa khởi tạo xong bị sử dụng</a>
+## <a id="lifecycle-009">Preventing the use of incompletely initialized objects</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tránh để đối tượng chưa khởi tạo xong bị sử dụng trong Java
+# Preventing the Use of Incompletely Initialized Objects in Java
 
-Trong Java, **constructor** chịu trách nhiệm thiết lập trạng thái ban đầu của đối tượng. Nếu tham chiếu đến đối tượng bị đưa ra bên ngoài **trước khi constructor và chuỗi khởi tạo liên quan hoàn tất**, mã khác có thể gọi phương thức hoặc đọc field khi đối tượng mới ở trạng thái dở dang. Hiện tượng này thường gọi là **this escape** (*tham chiếu `this` thoát khỏi quá trình khởi tạo*).
+In Java, a **constructor** establishes an object's initial state. If a reference to that object becomes externally accessible **before its constructor and the related initialization chain complete**, other code may invoke methods or read fields while the object is still partially initialized. This is commonly called **this escape** (*the `this` reference escapes during construction*).
 
-Vấn đề không chỉ xảy ra trong chương trình đa luồng. Một callback được gọi ngay trong lúc đăng ký listener cũng có thể dùng đối tượng quá sớm, ngay trên cùng thread. Trong chương trình đa luồng, sự cố còn khó tái hiện hơn do thời điểm thực thi và khả năng nhìn thấy dữ liệu giữa các thread.
+This problem is not limited to multithreaded programs. A callback invoked immediately during listener registration can use the object too early on the same thread. Multithreaded failures are even harder to reproduce because execution timing and visibility of data across threads vary.
 
-Bài này giải thích tình huống gây lỗi, lý do gây lỗi và cách thiết kế để một đối tượng chỉ được sử dụng khi nó đã sẵn sàng.
+This lesson explains the failure scenarios, their causes, and how to design objects so they are used only when ready.
 
-## 1. Một đối tượng đi qua những giai đoạn nào?
+## 1. What Stages Does an Object Go Through?
 
-Khi thực hiện `new SomeClass(...)`, JVM và ngôn ngữ Java thực hiện quá trình khởi tạo đối tượng theo quy tắc của Java, bao gồm thiết lập giá trị mặc định cho các field, chạy chuỗi constructor lớp cha, thực hiện field initializer/instance initializer của các lớp theo thứ tự phù hợp rồi chạy phần thân constructor.
+During `new SomeClass(...)`, the JVM and Java language initialize the object according to Java's rules: setting default field values, executing the superclass constructor chain, running each class's field and instance initializers in the appropriate order, and executing constructor bodies.
 
-Một đặc điểm cần nhớ: **đối tượng có thể đã tồn tại trong khi constructor chưa hoàn thành**. Một tham chiếu đến đối tượng đó có thể bị lộ trong giai đoạn này, ví dụ qua `this`.
+Remember: **an object may already exist even though its constructor has not finished**. A reference to it can escape at this stage, for example through `this`.
 
-Giả sử có lớp:
+Suppose we have this class:
 
 ```java
 public final class Session {
@@ -4148,34 +4148,34 @@ public final class Session {
 }
 ```
 
-Trong đường sử dụng bình thường, caller chỉ nhận tham chiếu từ biểu thức `new Session(...)` **sau khi constructor hoàn thành thành công**. Nhưng constructor có thể làm rò rỉ `this` bằng cách lưu nó vào nơi khác hoặc chuyển nó cho một callback.
+In ordinary use, the caller receives a reference from `new Session(...)` **only after the constructor completes successfully**. However, the constructor can leak `this` by storing it elsewhere or passing it to a callback.
 
-### Phân biệt hai rủi ro
+### Two Distinct Risks
 
-| Rủi ro | Điều gì xảy ra? | Ví dụ |
+| Risk | What happens? | Example |
 |---|---|---|
-| **Dùng sớm (premature use)** | Mã khác truy cập đối tượng khi quá trình khởi tạo chưa xong | Listener được gọi ngay khi đăng ký từ constructor |
-| **Công bố không an toàn (unsafe publication)** | Một thread khác nhận tham chiếu mà không có quan hệ đồng bộ phù hợp, nên khả năng nhìn thấy trạng thái có thể không được bảo đảm | Gán đối tượng vào field dùng chung thông thường rồi để thread khác đọc không đồng bộ |
+| **Premature use** | Other code accesses an object before initialization finishes | A listener is invoked immediately during registration from its constructor |
+| **Unsafe publication** | Another thread receives a reference without a suitable synchronization relationship, so state visibility may not be guaranteed | Assigning the object to an ordinary shared field, then allowing another thread to read it without synchronization |
 
-Hai vấn đề có liên quan nhưng không đồng nhất. Ngay cả khi việc công bố tham chiếu có cơ chế đồng bộ, **công bố trước khi khởi tạo xong vẫn cho phép mã khác sử dụng một đối tượng chưa hoàn chỉnh**.
+These risks are related but different. Even when reference publication is synchronized, **publishing an object before initialization finishes still allows other code to use an incomplete object**.
 
-## 2. this escape là gì?
+## 2. What Is This Escape?
 
-Trong phương thức instance và constructor, `this` tham chiếu tới chính đối tượng hiện tại. **This escape** xảy ra khi trong lúc xây dựng, tham chiếu tới đối tượng này trở nên truy cập được từ một nơi có thể sử dụng nó trước khi quá trình khởi tạo kết thúc.
+Inside instance methods and constructors, `this` refers to the current object. **This escape** occurs when a reference to the object becomes accessible somewhere that can use it before construction completes.
 
-Những đường làm rò rỉ `this` thường gặp:
+Common ways `this` escapes include:
 
-- Đăng ký listener hoặc callback vào một event bus, registry hay service dùng chung ngay trong constructor.
-- Lưu `this` vào field `static` hoặc một collection do thành phần khác có quyền truy cập nắm giữ.
-- Truyền `this` cho mã không kiểm soát được, đặc biệt nếu mã đó gọi ngược hoặc giữ lại tham chiếu.
-- Khởi chạy thread hoặc asynchronous task dùng `this` trong constructor.
-- Đưa ra bên ngoài lambda/method reference/đối tượng inner class có giữ tham chiếu tới `this`.
+- Registering a listener or callback with an event bus, registry, or shared service inside a constructor.
+- Storing `this` in a `static` field or a collection accessible to another component.
+- Passing `this` to uncontrolled code, especially code that may invoke callbacks or retain the reference.
+- Starting a thread or asynchronous task that uses `this` from a constructor.
+- Exposing a lambda, method reference, or inner-class instance that captures `this`.
 
-Việc truyền `this` cho một phương thức hỗ trợ nội bộ mà bạn kiểm soát và không giữ hoặc đưa tham chiếu ra ngoài **không nhất thiết** gây this escape. Yếu tố quan trọng là liệu tham chiếu có thể được dùng từ bên ngoài ranh giới khởi tạo sớm hay không.
+Passing `this` to a controlled internal helper that neither retains nor publishes the reference **does not necessarily** cause this escape. The critical question is whether the reference can be used outside the initialization boundary too early.
 
-## 3. Ví dụ lỗi xác định: đăng ký callback quá sớm
+## 3. Deterministic Failure Example: Registering a Callback Too Early
 
-Ví dụ dưới đây cố tình mô phỏng registry gọi callback **ngay trong lúc đăng ký**. Không cần thread phụ nên lỗi có thể dự đoán được.
+The following example deliberately simulates a registry invoking a callback **during registration**. No extra thread is involved, so the failure is predictable.
 
 File `UnsafeListenerDemo.java`:
 
@@ -4210,17 +4210,17 @@ public class UnsafeListenerDemo {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Tên báo cáo: null
 ```
 
-Mặc dù `reportName` được khai báo `final` và được gán trong constructor, callback chạy **trước câu lệnh gán**. Lúc đó field tham chiếu vẫn mang giá trị mặc định `null`. Nếu `onEvent()` gọi `reportName.length()`, chương trình sẽ ném `NullPointerException`.
+Although `reportName` is declared `final` and assigned in the constructor, the callback runs **before the assignment**. At that point, the reference field still has its default value, `null`. If `onEvent()` invokes `reportName.length()`, the program throws `NullPointerException`.
 
-Đây không phải lỗi của từ khóa `final`; lỗi là do việc gọi mã có thể quan sát đối tượng trước khi trạng thái hợp lệ được thiết lập.
+The `final` keyword is not the problem; the problem is calling code that can observe the object before valid state has been established.
 
-### Luồng gây lỗi
+### Failure Sequence
 
 ```mermaid
 sequenceDiagram
@@ -4237,13 +4237,13 @@ sequenceDiagram
     Obj-->>Main: constructor hoàn thành
 ```
 
-Một số thư viện chỉ lưu listener và không gọi callback ngay, nhưng vẫn có nguy cơ nếu thread khác phát sự kiện trước khi constructor kết thúc. Không nên phụ thuộc vào giả định “listener sẽ chưa được gọi đâu” khi API không bảo đảm điều đó.
+Some libraries only store listeners and do not invoke callbacks immediately, but a risk remains if another thread publishes an event before the constructor finishes. Do not rely on an assumption that “the listener will not be called yet” unless the API guarantees it.
 
-## 4. Cách sửa: xây dựng xong rồi mới đăng ký
+## 4. Fix: Finish Construction Before Registration
 
-Cách thiết kế rõ ràng là **tách việc khởi tạo trạng thái khỏi việc đưa đối tượng vào hệ thống bên ngoài**.
+A clear design **separates state initialization from exposing the object to external systems**.
 
-Ví dụ dùng static factory để caller chỉ nhận đối tượng sau khi các bước tạo và đăng ký đã hoàn tất:
+For example, use a static factory so callers receive the object only after creation and registration steps are complete:
 
 ```java
 import java.util.Objects;
@@ -4292,15 +4292,15 @@ public final class SafeListenerDemo {
 }
 ```
 
-Tại thời điểm `registry.register(...)` chạy, constructor `ReportListener(String)` đã **trả về thành công** và đối tượng có trạng thái hợp lệ. Ngay cả callback đồng bộ trong `register` cũng thấy tên báo cáo đúng.
+When `registry.register(...)` runs, the `ReportListener(String)` constructor has **returned successfully** and the object is valid. Even a synchronous callback from `register` sees the correct report name.
 
-Mô hình này áp dụng tốt khi phải gắn một đối tượng vào event bus, message handler, cache, scheduler hay hệ thống plugin.
+This pattern works well for attaching objects to an event bus, message handler, cache, scheduler, or plugin system.
 
-**Lưu ý về lỗi đăng ký:** Nếu `register` ném exception, factory ở trên cũng không trả thành công. Tuy nhiên registry có thể đã lưu listener trước khi ném lỗi. Với hệ thống thực, cần định nghĩa rõ việc đăng ký có nguyên tử hay không, có cách hủy đăng ký không, và cách xử lý rollback/cleanup.
+**Registration failure note:** If `register` throws an exception, the factory does not return successfully. However, the registry might have stored the listener before throwing. Real systems must specify whether registration is atomic, how to unregister, and how to handle rollback or cleanup.
 
-### Nếu bắt buộc có bước activate riêng?
+### What If a Separate Activation Step Is Required?
 
-Có thể thiết kế hai giai đoạn:
+You can design a two-phase process:
 
 ```java
 final class Consumer {
@@ -4325,13 +4325,13 @@ final class Consumer {
 }
 ```
 
-Ví dụ trên minh họa ý tưởng tách hai giai đoạn trong **môi trường gọi tuần tự**. Nó chưa phải API thread-safe: nếu `activate` có thể bị gọi đồng thời hoặc `register` gọi callback tái nhập, cần thiết kế lại trạng thái/khoá và xử lý lỗi một cách rõ ràng. Factory thường giảm khả năng caller quên gọi `activate`.
+The example above separates the two phases in a **sequential calling environment**. Its API is not thread-safe: if `activate` can be called concurrently or `register` invokes a reentrant callback, state/locking and failure handling need further design. A factory usually reduces the chance that callers forget to invoke `activate`.
 
-## 5. Không gọi phương thức có thể bị override trong constructor
+## 5. Do Not Call Overridable Methods from Constructors
 
-Một nguyên nhân khác của việc dùng đối tượng quá sớm là **dynamic dispatch** trong lúc constructor lớp cha còn chạy. Java có thể gọi phương thức override của lớp con **trước khi các field initializer và constructor của lớp con hoàn tất**.
+Another cause of premature use is **dynamic dispatch** while a superclass constructor is still executing. Java can invoke a subclass override **before the subclass's field initializers and constructor have finished**.
 
-Ví dụ chạy độc lập:
+A standalone example:
 
 ```java
 public class OverrideDuringConstruction {
@@ -4364,22 +4364,22 @@ public class OverrideDuringConstruction {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Child label = null
 Child constructor
 ```
 
-Tại sao? Khi `new Child()`:
+Why? During `new Child()`:
 
-1. Các field instance nhận giá trị mặc định (với `label` là `null`).
-2. Constructor lớp cha `Parent()` chạy.
-3. Lệnh `printStatus()` được dispatch động đến `Child.printStatus()`.
-4. Field initializer `label = "Ready"` của `Child` **chưa chạy**.
-5. Sau khi constructor cha xong, phần khởi tạo riêng của `Child` mới diễn ra.
+1. Instance fields receive default values (`label` is `null`).
+2. The superclass constructor `Parent()` runs.
+3. The `printStatus()` call is dynamically dispatched to `Child.printStatus()`.
+4. The field initializer `label = "Ready"` of `Child` **has not run yet**.
+5. The subclass-specific initialization in `Child` happens only after the superclass constructor finishes.
 
-Thứ tự quan trọng có thể hình dung:
+The important execution order can be visualized as follows:
 
 ```mermaid
 flowchart TD
@@ -4392,13 +4392,13 @@ flowchart TD
     G --> H["Đối tượng Child hoàn tất"]
 ```
 
-### Thiết kế an toàn hơn
+### A Safer Design
 
-- Trong constructor, chỉ gọi các phương thức **`private`, `final` hoặc `static`** phù hợp, khi cần tránh việc subclass ghi đè làm thay đổi luồng khởi tạo. Phương thức `private` không override được; `final` khóa việc override.
-- Tốt hơn nữa, kiểm tra đầu vào và thiết lập dữ liệu cần thiết trực tiếp qua các helper không thể override.
-- Nếu logic cần dữ liệu của lớp con, thực hiện **sau khi toàn bộ constructor kết thúc**, thông qua phương thức được caller gọi hoặc qua factory kiểm soát vòng đời.
+- In constructors, invoke appropriate **`private`, `final`, or `static`** methods when you need to prevent subclass overrides from changing the initialization flow. `private` methods cannot be overridden; `final` methods prohibit overriding.
+- Better still, validate inputs and establish required state directly through non-overridable helpers.
+- If logic depends on subclass data, run it **after all constructors have completed**, through a caller-invoked method or a factory controlling the lifecycle.
 
-Ví dụ:
+For example:
 
 ```java
 class Parent {
@@ -4438,11 +4438,11 @@ Child child = new Child("C01", "Ready");
 child.printStatus(); // C01: Ready
 ```
 
-Ở ví dụ này, constructor cha không gọi phương thức mà lớp con có thể override; `printStatus()` chỉ chạy sau khi `new Child(...)` hoàn thành.
+In this example, the superclass constructor does not invoke a method that subclasses can override; `printStatus()` runs only after `new Child(...)` completes.
 
-## 6. Không khởi chạy thread dùng this ngay trong constructor
+## 6. Do Not Start a Thread That Uses this Inside a Constructor
 
-Một lỗi đặc biệt nguy hiểm:
+A particularly dangerous mistake:
 
 ```java
 class UnsafeWorker {
@@ -4455,13 +4455,13 @@ class UnsafeWorker {
 }
 ```
 
-Lambda ở đây tham chiếu field instance, tức giữ tham chiếu tới `this`. Sau `Thread.start()`, thread mới **có thể** chạy trước câu lệnh `threshold = 10`, nên có thể in `0`; kết quả phụ thuộc lịch chạy. Việc thử nhiều lần mà luôn thấy `10` **không chứng minh chương trình đúng**.
+The lambda captures an instance field, and therefore retains a reference to `this`. After `Thread.start()`, the new thread **may** run before the assignment `threshold = 10`, so it may print `0`; the result depends on scheduling. Repeated runs that always print `10` **do not prove the program is correct**.
 
-Quan hệ *happens-before* giữa các hành động ở thread gọi **trước** `Thread.start()` và hành động ở thread mới không bảo đảm một phép gán được thực hiện **sau** `start()` sẽ xuất hiện trước lần đọc trên worker.
+The *happens-before* relationship from actions performed by the calling thread **before** `Thread.start()` to actions in the new thread does not guarantee that an assignment performed **after** `start()` happens before the worker reads it.
 
-### Tạo xong rồi mới start
+### Finish Construction Before Starting the Thread
 
-Một thiết kế phù hợp với công việc chạy nền:
+A suitable design for background work:
 
 ```java
 public final class SafeWorker {
@@ -4492,15 +4492,15 @@ public final class SafeWorker {
 }
 ```
 
-Tại thời điểm `start()` được gọi, constructor `SafeWorker` đã trả về, toàn bộ field đã được thiết lập. Các hành động được thực hiện trước `Thread.start()` *happen-before* hành động của thread mới; trường hợp này không để thread chạy trước khi khởi tạo xong.
+When `start()` is invoked, the `SafeWorker` constructor has already returned and all fields have been initialized. Actions before `Thread.start()` *happen-before* actions in the new thread, so the thread cannot run before initialization is complete in this example.
 
-Điều đó không tự biến mọi truy cập về sau thành thread-safe. Nếu thread đọc/ghi **trạng thái mutable** được chia sẻ với thread khác, vẫn cần cơ chế đồng bộ tương ứng.
+That does not automatically make all subsequent access thread-safe. If threads read or write **shared mutable state**, suitable synchronization is still required.
 
-Trong ứng dụng thực, nên cân nhắc **`ExecutorService`** để quản lý công việc, đồng thời có bước dừng/hủy theo vòng đời. Nguyên tắc vẫn là: **submit task tham chiếu tới đối tượng sau khi constructor trả về**, và quản lý đóng tài nguyên rõ ràng.
+In real applications, consider using **`ExecutorService`** to manage work, including lifecycle-aware shutdown and cancellation. The principle remains: **submit tasks that reference the object only after its constructor returns**, and explicitly manage resource cleanup.
 
-## 7. Constructor exception và đối tượng dở dang
+## 7. Constructor Exceptions and Partially Initialized Objects
 
-Một constructor có thể ném exception khi kiểm tra dữ liệu:
+A constructor may throw an exception while validating input:
 
 ```java
 public final class EmailAddress {
@@ -4519,9 +4519,9 @@ public final class EmailAddress {
 }
 ```
 
-Nếu `new EmailAddress("invalid")` ném exception, biểu thức tạo đối tượng không trả một tham chiếu hợp lệ cho caller theo đường thực thi bình thường.
+If `new EmailAddress("invalid")` throws, the creation expression does not return a valid reference to the caller during normal execution.
 
-Tuy nhiên, nếu constructor **đã lưu `this` vào một biến dùng chung trước khi ném lỗi**, tham chiếu đến đối tượng dở dang vẫn có thể tồn tại ngoài constructor:
+However, if a constructor **stores `this` in a shared variable before throwing**, a reference to the partially initialized object can remain outside the constructor:
 
 ```java
 import java.util.ArrayList;
@@ -4545,9 +4545,9 @@ class UnsafeRegistration {
 }
 ```
 
-`REGISTRY` trong ví dụ chỉ minh họa vấn đề dùng sớm, **không thread-safe**. Nếu gọi `new UnsafeRegistration(null)` rồi bắt exception, registry vẫn giữ tham chiếu đến đối tượng mà field `value` chưa được gán.
+In this example, `REGISTRY` illustrates premature use and **is not thread-safe**. If you call `new UnsafeRegistration(null)` and catch the exception, the registry still holds a reference to an object whose `value` field was never assigned.
 
-Sửa bằng cách chỉ đăng ký **sau khi tạo thành công**:
+Fix this by registering the object **only after successful construction**:
 
 ```java
 static UnsafeRegistration createAndRegister(String input) {
@@ -4557,13 +4557,13 @@ static UnsafeRegistration createAndRegister(String input) {
 }
 ```
 
-Khi áp dụng cách này, cần **bỏ `REGISTRY.add(this)` khỏi constructor**. Trong hệ thống nhiều thread, registry cũng phải có chiến lược đồng bộ phù hợp. Nếu đăng ký có thể lỗi sau khi tạo, cần quy định hành vi xử lý lỗi hoặc hủy đăng ký.
+When applying this fix, you must **remove `REGISTRY.add(this)` from the constructor**. In a multithreaded system, the registry also needs an appropriate synchronization strategy. If registration can fail after construction, specify how failures or unregistration are handled.
 
-## 8. Safe publication không đồng nghĩa chỉ dùng volatile
+## 8. Safe Publication Requires More Than Just volatile
 
-Với ứng dụng đa luồng, sau khi đối tượng hoàn thành khởi tạo, còn phải **công bố tham chiếu** theo cách để thread khác quan sát được trạng thái theo Java Memory Model.
+In multithreaded applications, even after initialization finishes, you must **publish the reference** so other threads can observe the object's state under the Java Memory Model.
 
-### Một ví dụ công bố không an toàn
+### An Unsafe Publication Example
 
 ```java
 class Config {
@@ -4588,9 +4588,9 @@ class Holder {
 // if (config != null) { use(config); }
 ```
 
-Nếu hai thread truy cập `current` mà không có *happens-before* thích hợp, chúng có **data race**. Thread B không được bảo đảm khi nào sẽ thấy tham chiếu mới; các giá trị trường cũng phải xét quy tắc Java Memory Model. Trường `final` như `port` có những bảo đảm đặc biệt khi đối tượng được xây dựng đúng (không để `this` escape), nhưng không thay thế yêu cầu công bố và đồng bộ toàn bộ trạng thái mutable.
+If two threads access `current` without a suitable *happens-before* relationship, they have a **data race**. Thread B is not guaranteed to observe the new reference at a particular time, and field values must also be considered under the Java Memory Model. A `final` field such as `port` has special guarantees when an object is properly constructed (without `this` escaping), but those guarantees do not replace safe publication and synchronization for all mutable state.
 
-### Công bố sau khi khởi tạo qua volatile
+### Publishing After Initialization with volatile
 
 ```java
 class Holder {
@@ -4607,28 +4607,28 @@ class Holder {
 }
 ```
 
-Một phép ghi `volatile` *happens-before* những lần đọc `volatile` về sau nhìn thấy giá trị được ghi theo thứ tự đồng bộ. Các ghi trạng thái trước khi công bố có thể được quan sát đúng qua đường đồng bộ này.
+A `volatile` write *happens-before* subsequent `volatile` reads that observe the written value according to synchronization order. State writes before publication can be observed correctly through that synchronization path.
 
-**Quan trọng:** `volatile` trên biến giữ tham chiếu không làm các thay đổi tùy ý **sau khi công bố** trên các trường mutable của đối tượng tự trở nên an toàn. Cũng không khắc phục được việc truyền `this` ra ngoài khi constructor vẫn đang chạy.
+**Important:** Applying `volatile` to a reference variable does not automatically make arbitrary changes to the object's mutable fields **after publication** safe. It also does not fix allowing `this` to escape while the constructor is still running.
 
-Ngoài `volatile`, có thể công bố bằng khóa `synchronized` phù hợp, concurrent collection có hợp đồng đồng bộ thích hợp, hoặc thông qua quá trình khởi tạo lớp (ví dụ field `static final`) và các cơ chế đồng bộ hợp lệ khác. Cần đọc và ghi qua **cùng hợp đồng đồng bộ**, tránh chỉ đồng bộ một phía.
+Besides `volatile`, publication can use a suitable `synchronized` lock, concurrent collections with appropriate synchronization contracts, class initialization (for example, a `static final` field), or other valid synchronization mechanisms. Both reading and writing must follow **the same synchronization contract**; synchronizing only one side is insufficient.
 
-### Bảng phân biệt
+### Comparison Table
 
-| Tình huống | Khởi tạo hoàn tất trước khi đối tượng được dùng? | Công bố an toàn giữa thread? |
+| Scenario | Is initialization complete before use? | Is publication between threads safe? |
 |---|---|---|
-| Gọi callback đồng bộ trong constructor trước khi gán field | Không | Không liên quan; đã lỗi ngay cùng thread |
-| `new Thread(this::task).start()` trước khi constructor xong | Không được bảo đảm | `start()` không bảo vệ các thao tác xảy ra sau nó |
-| Factory tạo xong rồi đăng ký callback, chạy tuần tự | Có | Không cần đồng bộ nếu chỉ cùng thread; nhiều thread phải xét registry |
-| Factory tạo xong rồi start thread đọc trạng thái đã gán | Có | Có quan hệ happens-before từ hành động trước `start()` tới worker |
-| Tạo xong rồi gán field dùng chung thông thường giữa thread | Có | Không mặc nhiên |
-| Tạo xong rồi công bố qua `volatile` đúng cách | Có | Có bảo đảm visibility cho trạng thái trước publication qua giao thức này |
+| Invoking a synchronous callback from a constructor before assigning fields | No | Not applicable; the failure occurs on the same thread |
+| Calling `new Thread(this::task).start()` before the constructor finishes | Not guaranteed | `start()` does not protect operations performed afterward |
+| A factory completes construction and then registers a callback sequentially | Yes | Synchronization is unnecessary for same-thread use; a multithreaded registry needs analysis |
+| A factory completes construction and starts a thread reading the initialized state | Yes | Actions before `start()` have a happens-before relationship with the worker |
+| Completing construction and assigning an ordinary shared field across threads | Yes | Not automatically |
+| Completing construction and correctly publishing through `volatile` | Yes | This protocol guarantees visibility for state established before publication |
 
-## 9. final field giúp gì và không giúp gì?
+## 9. What Do final Fields Guarantee, and What Don't They?
 
-Field `final` chỉ được gán trong quá trình khởi tạo theo các quy tắc của Java và giúp thể hiện các thành phần không được gán lại. Java Memory Model có **final field semantics**, đem lại bảo đảm đặc biệt về giá trị field `final` khi đối tượng đã được xây dựng đúng và **tham chiếu `this` không thoát ra trong quá trình xây dựng**.
+A `final` field can only be assigned during initialization under Java's rules, expressing that the field cannot be reassigned afterward. The Java Memory Model has **final field semantics**, providing special guarantees for `final` field values when the object is properly constructed and **the `this` reference does not escape during construction**.
 
-Ví dụ thiết kế đơn giản:
+A simple design example:
 
 ```java
 public final class PaymentRequest {
@@ -4656,20 +4656,20 @@ public final class PaymentRequest {
 }
 ```
 
-Ở đây đối tượng không lộ `this` trong constructor, hai field được thiết lập và không đổi sau đó. Thiết kế như vậy dễ kiểm tra và giảm nhu cầu đồng bộ trạng thái bên trong.
+Here, the object does not expose `this` from its constructor; both fields are initialized and remain unchanged. Such a design is easier to verify and reduces the need to synchronize internal state.
 
-Nhưng cần nhớ:
+But remember:
 
-- `final` trên field tham chiếu chỉ ngăn **gán lại field**, không khiến đối tượng được tham chiếu bất biến.
-- `final List<Item> items` vẫn có thể chứa `List` hoặc `Item` mutable. Nếu cần tính bất biến sâu hơn, phải kiểm soát aliasing/defensive copy.
-- `final` không có tác dụng chữa tình trạng gọi callback sớm khi field khác vẫn chưa được gán.
-- Với trạng thái được cập nhật sau khi tạo, vẫn cần thiết kế đồng bộ cho các thread liên quan.
+- A `final` reference field only prevents **reassignment of the field**; it does not make the referenced object immutable.
+- `final List<Item> items` can still contain a mutable `List` or mutable `Item` objects. For deeper immutability, control aliasing and defensive copying.
+- `final` cannot fix premature callbacks that run before other fields are assigned.
+- State updated after construction still requires appropriate synchronization across threads.
 
-## 10. Factory và đối tượng immutable: cách giảm rủi ro
+## 10. Factories and Immutable Objects: Reducing Risk
 
-Một mẫu API hiệu quả là **validate → tạo đủ dữ liệu → trả đối tượng hoàn chỉnh**. Với dữ liệu có tham chiếu tới collection, còn phải xử lý sao chép và chia sẻ.
+A useful API pattern is **validate → build complete state → return a complete object**. When data contains collection references, copying and sharing also require care.
 
-Ví dụ cấu hình immutable, Java 11+:
+An immutable configuration example, Java 11+:
 
 ```java
 import java.util.List;
@@ -4703,22 +4703,22 @@ public final class JobConfig {
 }
 ```
 
-`List.copyOf` tạo hoặc trả về một danh sách không thể thay đổi qua giao diện `List`, đồng thời từ chối phần tử `null`. Ở ví dụ này các phần tử là `String` immutable, nên thiết kế tránh được đường sửa trạng thái thông qua danh sách. Với kiểu phần tử mutable, `List.copyOf` **không deep copy** các phần tử.
+`List.copyOf` creates or returns a list that cannot be modified through the `List` interface and rejects `null` elements. Here, elements are immutable `String` values, so the list provides no path for modifying the configuration's state. With mutable element types, `List.copyOf` **does not deep-copy** elements.
 
-Không có lệnh đăng ký sự kiện, đưa `this` vào vùng dùng chung hay khởi động tác vụ trong constructor. Sau khi `JobConfig.of(...)` trả về, người gọi mới sở hữu tham chiếu đến đối tượng hoàn chỉnh. Nếu đưa cấu hình cho thread khác, vẫn cần cơ chế công bố phù hợp.
+The constructor does not register events, place `this` in shared storage, or start tasks. Only after `JobConfig.of(...)` returns does the caller hold a reference to the complete object. Publishing the configuration to another thread still requires a suitable mechanism.
 
-## 11. Checklist kiểm tra constructor và vòng đời
+## 11. Constructor and Lifecycle Review Checklist
 
-Khi review một lớp có hành vi khởi tạo phức tạp, hãy kiểm tra:
+When reviewing a class with complex initialization behavior, check:
 
-1. **Constructor đã thiết lập đủ trạng thái bắt buộc chưa?** Có kiểm tra tham số và bất biến trước khi công khai đối tượng không?
-2. **Có lộ `this` trước khi kết thúc constructor không?** Tìm việc đăng ký listener, gọi callback, thêm vào global registry, submit task, tạo thread hoặc chuyển `this` cho mã ngoài.
-3. **Constructor cha có gọi phương thức có thể override không?** Subclass có thể bị gọi trước khi field initializer của nó chạy.
-4. **Có thể khởi tạo thất bại giữa chừng không?** Nếu có, registry/callback/tài nguyên đã giữ tham chiếu tới đối tượng lỗi chưa?
-5. **Sau constructor, đối tượng được công bố sang thread khác thế nào?** Cần quan hệ happens-before đúng cho trường hợp sử dụng.
-6. **Có trạng thái mutable chia sẻ không?** Tách vấn đề khởi tạo an toàn và truy cập đồng thời trong suốt vòng đời.
+1. **Has the constructor established all required state?** Does it validate parameters and invariants before exposing the object?
+2. **Can `this` escape before the constructor finishes?** Look for listener registration, callbacks, global-registry insertion, task submission, thread creation, or passing `this` to external code.
+3. **Does a superclass constructor call an overridable method?** A subclass override may run before its field initializers.
+4. **Can initialization fail midway?** If so, could a registry, callback, or resource already hold a reference to the failed object?
+5. **How is the object published to another thread after construction?** Ensure the appropriate happens-before relationship for its use.
+6. **Is mutable state shared?** Distinguish safe initialization from concurrent access throughout the lifecycle.
 
-Có thể tổ chức các bước:
+The steps can be organized as follows:
 
 ```mermaid
 flowchart TD
@@ -4731,11 +4731,11 @@ flowchart TD
     G --> H["Cho phép bên ngoài sử dụng"]
 ```
 
-**Không nên hiểu sơ đồ như yêu cầu mọi lớp đều phải có factory hoặc đăng ký sự kiện.** Đối với lớp dữ liệu đơn giản, chỉ cần constructor thiết lập đầy đủ trạng thái là đủ; bước publish chỉ xuất hiện khi thực sự có tương tác bên ngoài hoặc nhiều thread.
+**This diagram does not mean every class needs a factory or event registration.** For simple data classes, a constructor that completely initializes state is sufficient; publication becomes relevant when there is external interaction or multiple threads.
 
-## 12. Bài tập tự kiểm tra
+## 12. Self-Check Exercises
 
-### Bài 1 — Dự đoán đầu ra
+### Exercise 1 — Predict the Output
 
 ```java
 class Base {
@@ -4760,9 +4760,9 @@ class Child extends Base {
 // new Child();
 ```
 
-**Đáp án: `0`.** `describe()` dispatch tới override của `Child` trong constructor `Base`, khi `count` mới nhận giá trị mặc định `0`; field initializer `count = 7` sẽ chạy sau đó.
+**Answer: `0`.** `describe()` dynamically dispatches to the `Child` override from the `Base` constructor, while `count` still has its default value of `0`; the field initializer `count = 7` runs afterward.
 
-### Bài 2 — Vì sao final vẫn chưa đủ?
+### Exercise 2 — Why Isn't final Enough?
 
 ```java
 class Store {
@@ -4776,13 +4776,13 @@ class Store {
 }
 ```
 
-**Câu hỏi:** Có thể dựa vào `final` để khẳng định mọi mã thấy `published` sẽ luôn quan sát trạng thái hoàn tất không?
+**Question:** Can `final` guarantee that every reader of `published` sees fully initialized state?
 
-**Đáp án: Không.** `this` đã bị công bố trong khi constructor chưa hoàn tất. Nếu có mã khác đọc và sử dụng sớm, nó có thể quan sát trạng thái chưa gán. Ngoài ra field `published` cũng không có đồng bộ phù hợp cho chia sẻ giữa thread. Cách làm đúng là tạo xong, rồi công bố qua cơ chế thích hợp.
+**Answer: No.** `this` was published before the constructor completed. Other code that reads and uses it early may observe unassigned state. In addition, the `published` field is not suitably synchronized for sharing across threads. The correct approach is to complete construction and then publish using an appropriate mechanism.
 
-### Bài 3 — Refactor thành factory
+### Exercise 3 — Refactor to a Factory
 
-Cho lớp:
+Given this class:
 
 ```java
 class ChatConsumer {
@@ -4799,32 +4799,32 @@ class ChatConsumer {
 }
 ```
 
-Hãy sửa thành:
+Refactor it as follows:
 
-- Constructor `private` nhận `channel`, kiểm tra và gán field.
-- Phương thức `public static ChatConsumer createAndSubscribe(EventBus bus, String channel)` tạo xong đối tượng rồi gọi `bus.subscribe(consumer::onMessage)`.
-- Nếu `subscribe` có thể lỗi hoặc registry yêu cầu hủy đăng ký, bổ sung cơ chế cleanup phù hợp; khi nhiều thread phát sự kiện, `EventBus` cần quy tắc đồng bộ rõ ràng.
+- Make the `private` constructor accept `channel`, validate it, and assign the field.
+- Define `public static ChatConsumer createAndSubscribe(EventBus bus, String channel)` to finish constructing the object before invoking `bus.subscribe(consumer::onMessage)`.
+- If `subscribe` can fail or the registry requires unsubscription, add appropriate cleanup; if events are dispatched from multiple threads, `EventBus` needs clear synchronization rules.
 
-### Bài 4 — Nhận diện hành vi nguy hiểm
+### Exercise 4 — Identify Dangerous Behavior
 
-Đánh dấu những hành động cần xem xét khi xuất hiện **trong constructor**:
+Mark actions that need scrutiny when performed **inside a constructor**:
 
-| Hành động | Đánh giá |
+| Action | Assessment |
 |---|---|
-| Gán `this.id = validatedId` | Thông thường an toàn |
-| Gọi `private static String normalize(String)` | Thông thường an toàn nếu không lộ `this` |
-| `eventBus.register(this)` | Rủi ro this escape |
-| `executor.submit(this::process)` | Rủi ro this escape |
-| Gọi `public void initialize()` có thể bị subclass override | Rủi ro dùng dữ liệu subclass chưa khởi tạo |
-| Sau khi factory tạo xong, gọi `register(instance)` | An toàn hơn về thời điểm; vẫn xét đồng bộ/lỗi đăng ký |
+| Assigning `this.id = validatedId` | Usually safe |
+| Calling `private static String normalize(String)` | Usually safe if `this` does not escape |
+| `eventBus.register(this)` | Risk of this escape |
+| `executor.submit(this::process)` | Risk of this escape |
+| Calling an overridable `public void initialize()` | Risk of using uninitialized subclass state |
+| Calling `register(instance)` after factory construction completes | Safer timing; still consider synchronization and registration failures |
 
 ---
 
-## Ghi nhớ
+## Key Takeaways
 
-Một đối tượng có thể đã được cấp phát nhưng **chưa được khởi tạo xong**. Tránh để `this` thoát khỏi constructor qua listener, registry, callback, thread hay tác vụ bất đồng bộ; tránh gọi phương thức có thể override trong constructor vì lớp con có thể chưa sẵn sàng. Khi cần đăng ký hoặc khởi chạy, hãy **khởi tạo hoàn chỉnh trước**, sau đó mới kích hoạt hoặc công bố đối tượng qua cơ chế phù hợp. Đối với nhiều thread, phân biệt rõ *tránh dùng sớm* với *safe publication*: xử lý tốt cả hai mới giảm được lỗi vòng đời khó tái hiện.
+An object may have been allocated but **not yet fully initialized**. Prevent `this` from escaping the constructor through listeners, registries, callbacks, threads, or asynchronous tasks; avoid calling overridable methods from constructors because subclasses may not be ready. When registration or startup is required, **complete initialization first**, then activate or publish the object through a suitable mechanism. In multithreaded code, distinguish *preventing premature use* from *safe publication*: addressing both helps avoid hard-to-reproduce lifecycle bugs.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

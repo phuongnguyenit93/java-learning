@@ -1,356 +1,356 @@
 summaries:
 - id: polymorphism-001
-  title: Đa hình và nhiều cách thực hiện cùng một thao tác
+  title: Polymorphism and Multiple Implementations of the Same Operation
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Đa hình và nhiều cách thực hiện cùng một thao tác**
+    **Polymorphism and Multiple Implementations of the Same Operation**
 
-    Nhận diện đa hình qua cùng lời gọi ShippingPolicy.quote(Parcel) nhưng các đối tượng EconomyShipping, StandardShipping và ExpressShipping thực thi công thức riêng. Bài giải thích vai trò của kiểu tham chiếu và kiểu runtime, cách CheckoutService chỉ phụ thuộc vào hợp đồng báo giá, cùng yêu cầu mọi implementation giữ quy tắc đầu vào, kết quả và lỗi.
+    Recognize polymorphism when the same ShippingPolicy.quote(Parcel) call executes different pricing formulas on EconomyShipping, StandardShipping, and ExpressShipping objects. This lesson explains the roles of reference types and runtime types, how CheckoutService depends only on the quotation contract, and why every implementation must honor the rules for inputs, results, and errors.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Lời gọi chung và hành vi khác nhau
+    ### Shared Calls and Different Behaviors
 
-    1. Vì sao ba class giao hàng có thể cùng được lưu dưới kiểu ShippingPolicy và cùng nhận lời gọi quote(Parcel)?
-    2. Kiểu khai báo của biến policy và lớp runtime của đối tượng ảnh hưởng khác nhau thế nào đến lời gọi quote?
-    3. Với kiện 1.500 g nội thành, vì sao Economy, Standard và Express lần lượt báo 20.000, 25.000 và 95.000 VND?
+    1. Why can all three shipping classes be stored as ShippingPolicy and receive the same quote(Parcel) call?
+    2. How do the declared type of the policy variable and the object's runtime class affect the quote call differently?
+    3. For an intra-city parcel weighing 1.500 g, why do Economy, Standard, and Express quote 20.000, 25.000, and 95.000 VND, respectively?
 
-    ### Hợp đồng và nơi chọn strategy
+    ### Contracts and Strategy Selection
 
-    1. Vì sao chỉ trùng tên quote mà không khai báo implements ShippingPolicy thì chưa đủ để Java dùng như một subtype?
-    2. Điều gì sẽ xảy ra nếu implementation báo giá âm hoặc trả thời gian dự kiến không hợp lệ dù code biên dịch?
-    3. Khi nào Map hoặc switch tại bước chọn gói là hợp lý, và khi nào chuỗi điều kiện lặp ở nhiều service làm mất lợi ích đa hình?
+    1. Why isn't having a method named quote sufficient for Java to treat a class as a subtype if it does not declare implements ShippingPolicy?
+    2. What happens if an implementation quotes a negative price or returns an invalid estimated time even though the code compiles?
+    3. When is a Map or switch appropriate for package selection, and when do repeated conditionals across services undermine the benefits of polymorphism?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Nhận diện dynamic dispatch | Truy vết ba lượt quote đến ba implementation tương ứng từ cùng biến ShippingPolicy. |
-    | Kiểm chứng công thức | Tính lại phí và thời gian của ba gói với kiện 1.500 g nội thành. |
-    | Thiết kế client chung | Dùng CheckoutService nhận ShippingPolicy mà không cài công thức của từng gói. |
-    | Đánh giá hợp đồng | Kiểm tra kết quả quote khác null, phí không âm, ngày dự kiến dương và đầu vào hợp lệ. |
-    | Mở rộng strategy | Chỉ đúng nơi đăng ký một implementation mới và các contract tests cần thêm. |
+    | Recognize dynamic dispatch | Trace three quote calls from the same ShippingPolicy variable to their corresponding implementations. |
+    | Verify pricing formulas | Recalculate the fees and delivery times of three packages for an intra-city parcel weighing 1.500 g. |
+    | Design a shared client | Make CheckoutService accept ShippingPolicy without implementing each package's pricing formula. |
+    | Evaluate contracts | Check that quote results are non-null, fees are nonnegative, estimated days are positive, and inputs are valid. |
+    | Extend strategies | Identify where to register a new implementation and which contract tests must be added. |
 - id: polymorphism-002
-  title: Đa hình kiểu con qua giao diện hoặc lớp cha
+  title: Subtype Polymorphism Through Interfaces or Superclasses
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Đa hình kiểu con qua giao diện hoặc lớp cha**
+    **Subtype Polymorphism Through Interfaces or Superclasses**
 
-    Làm rõ đa hình kiểu con với interface implements và superclass extends. Qua NotificationSender và Report, người học thấy tham chiếu kiểu cha có thể mang nhiều object khác nhau, một final method ở superclass vẫn gọi được hook override, cùng giới hạn upcasting/downcasting và generic collection invariant.
+    Clarify subtype polymorphism through interface implements and superclass extends. Using NotificationSender and Report, learners see how a supertype reference can refer to different objects, how a final superclass method can still call an overridden hook, and the limitations of upcasting, downcasting, and generic collection invariance.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Kiểu cha và thực thi
+    ### Supertypes and Implementations
 
-    1. Vì sao NotificationDispatcher dùng được EmailSender hoặc PushSender mà không chứa nhánh theo loại kênh?
-    2. Report.preview() được khai báo final nhưng gọi SalesReport.content() và AuditReport.content() khác nhau như thế nào?
-    3. Khi một Device reference trỏ Printer, tại sao upcasting không tạo object mới và không cho gọi trực tiếp printPage()?
+    1. Why can NotificationDispatcher use EmailSender or PushSender without branching on the channel type?
+    2. Although Report.preview() is declared final, how does it invoke SalesReport.content() and AuditReport.content() differently?
+    3. When a Device reference refers to a Printer, why does upcasting neither create a new object nor permit direct calls to printPage()?
 
-    ### Ép kiểu và hợp đồng subtype
+    ### Casting and Subtype Contracts
 
-    1. Trong trường hợp nào ép Device xuống Printer tạo ClassCastException và khi nào kiểm tra instanceof là thích hợp?
-    2. Vì sao danh sách chỉ chứa EmailSender không tự gán được cho List khai báo phần tử NotificationSender trong Java?
-    3. Khi thêm SmsSender, những cam kết về đầu vào Notification, trạng thái DeliveryResult và lỗi phải giữ ra sao?
+    1. When does casting Device to Printer cause ClassCastException, and when is an instanceof check appropriate?
+    2. Why can't a list of EmailSender elements be assigned directly to a List declared to hold NotificationSender elements in Java?
+    3. When adding SmsSender, how must the guarantees regarding Notification inputs, DeliveryResult states, and errors be maintained?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Phân tích subtype | Phân biệt quan hệ implements và extends, kiểu tĩnh/runtime trong lời gọi qua biến cha. |
-    | Theo dõi override từ superclass | Giải thích vì sao Report.preview final vẫn thực thi content do subclass cung cấp. |
-    | Ép kiểu an toàn | Chẩn đoán compile error và ClassCastException rồi đặt instanceof tại điểm cần chức năng subtype. |
-    | Dùng collection đa hình | Duyệt List các NotificationSender và giải thích khác biệt generic invariant với wildcard extends. |
-    | Giữ khả năng thay thế | Nêu những ràng buộc hành vi chung khi dùng nhiều kênh gửi thông báo. |
+    | Analyze subtypes | Distinguish implements and extends relationships and static/runtime types in calls through supertype variables. |
+    | Trace overrides from a superclass | Explain why final Report.preview still executes content implementations supplied by subclasses. |
+    | Cast safely | Diagnose compilation errors and ClassCastException, then use instanceof where subtype-specific functionality is required. |
+    | Use polymorphic collections | Iterate through a List of NotificationSender objects and explain generic invariance versus extends wildcards. |
+    | Preserve substitutability | State the shared behavioral constraints when multiple notification channels are used. |
 - id: polymorphism-003
-  title: Phân giải phương thức tĩnh và phân giải động
+  title: Static Method Resolution and Dynamic Dispatch
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Phân giải phương thức tĩnh và phân giải động**
+    **Static Method Resolution and Dynamic Dispatch**
 
-    Phân tích một lời gọi Java theo hai giai đoạn: compiler tìm và chọn chữ ký overload từ kiểu tĩnh của receiver, đối số; sau đó JVM chọn thân override của method instance dựa trên object runtime. Dispatcher/SmartDispatcher cho phép kiểm chứng cast receiver, static hiding, field resolution, super, constructor và ý nghĩa các opcode gọi method.
+    Analyze a Java method call in two stages: the compiler finds and selects an overload signature using the static types of the receiver and arguments; then the JVM selects the overridden instance-method body according to the runtime object. Dispatcher/SmartDispatcher demonstrates receiver casts, static hiding, field resolution, super, constructors, and the meaning of method-invocation opcodes.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Compile time và runtime
+    ### Compile Time and Runtime
 
-    1. Vì sao general.dispatch(sms) gọi SmartDispatcher.dispatch(Event) còn specific.dispatch(sms) gọi bản SmsEvent?
-    2. Cast receiver từ SmartDispatcher về Dispatcher khiến tập overload mà compiler nhìn thấy thay đổi thế nào?
-    3. Vì sao với choose(long), choose(Integer), choose(int...), đối số literal 5 chọn overload long?
-    4. Overloading có tự dùng lớp runtime của đối số để tìm chữ ký cụ thể hơn sau khi chương trình chạy không?
+    1. Why does general.dispatch(sms) invoke SmartDispatcher.dispatch(Event) while specific.dispatch(sms) invokes the SmsEvent version?
+    2. How does casting the receiver from SmartDispatcher to Dispatcher change the overload set visible to the compiler?
+    3. Given choose(long), choose(Integer), and choose(int...), why does literal argument 5 select the long overload?
+    4. Does overloading use an argument's runtime class to find a more specific signature after the program starts running?
 
-    ### Thành viên đặc biệt và quan sát JVM
+    ### Special Members and JVM Observations
 
-    1. Static method hiding và field lookup khác với instance method overriding ở bước quyết định nào?
-    2. Lời gọi this.run() và super.run() khác nhau ra sao, đặc biệt khi method lớp cha gọi hook subclass?
-    3. Tại sao không nên gọi hook overridable từ constructor superclass?
-    4. invokedynamic khác ý nghĩa với dispatch OOP của invokevirtual hay invokeinterface thế nào?
+    1. At which decision stage do static method hiding and field lookup differ from instance-method overriding?
+    2. How do this.run() and super.run() differ, particularly when a superclass method calls a subclass hook?
+    3. Why should an overridable hook not be called from a superclass constructor?
+    4. How does the purpose of invokedynamic differ from OOP dispatch using invokevirtual or invokeinterface?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Giải dispatch hai pha | Lập bảng chính xác chữ ký compile time và implementation runtime cho các lời gọi Dispatcher. |
-    | Phân tích cast receiver | Dự đoán output specific.dispatch(sms) trước/sau ép kiểu receiver. |
-    | Chẩn đoán overload | Giải thích widening, boxing, varargs và ambiguity với null. |
-    | Phân biệt hiding | Dự đoán lời gọi static và field theo kiểu tĩnh mà không nhầm với override. |
-    | Liên hệ bytecode | Nêu nhóm lời gọi của invokestatic, invokevirtual, invokeinterface, invokespecial và phân biệt invokedynamic. |
+    | Explain two-stage dispatch | Build an accurate table of compile-time signatures and runtime implementations for Dispatcher calls. |
+    | Analyze receiver casts | Predict the output of specific.dispatch(sms) before and after casting the receiver. |
+    | Diagnose overloads | Explain widening, boxing, varargs, and ambiguity involving null. |
+    | Distinguish hiding | Predict static-method and field lookup using static types without confusing them with overriding. |
+    | Relate behavior to bytecode | Identify invocation categories for invokestatic, invokevirtual, invokeinterface, and invokespecial, and distinguish invokedynamic. |
 - id: polymorphism-004
-  title: Ghi đè và lựa chọn phương thức khi chạy
+  title: Overriding and Runtime Method Selection
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Ghi đè và lựa chọn phương thức khi chạy**
+    **Overriding and Runtime Method Selection**
 
-    Đi sâu vào overriding đúng chữ ký và hợp đồng. RuntimeDispatchDemo giữ kiểm tra khoảng cách và tổng phí trong DeliveryPlan.quote final, cho lớp con thay đổi distanceFee qua hook, có thể tận dụng super.distanceFee. Bài cũng giải thích covariant return, visibility, checked exception và bẫy dispatch đến subclass trong constructor lớp cha.
+    Examine overriding with correct signatures and contracts. RuntimeDispatchDemo keeps distance validation and total-fee calculation in final DeliveryPlan.quote, while subclasses customize distanceFee through a hook that may reuse super.distanceFee. The lesson also explains covariant returns, visibility, checked exceptions, and the trap of dispatching to a subclass during superclass construction.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Override và quy trình chung
+    ### Overrides and Shared Processes
 
-    1. Vì sao StandardPlan.quote(3) là 16.000 VND, ExpressPlan.quote(3) là 26.000 VND dù cùng gọi quote?
-    2. Final quote() không override được nhưng vì sao vẫn gọi được ExpressPlan.distanceFee()?
-    3. Khi nào covariant return hợp lệ và vì sao giảm access hay mở rộng checked exception không phù hợp sẽ bị từ chối?
-    4. super.distanceFee() đóng vai trò gì khi ExpressPlan muốn cộng thêm 5.000 VND?
+    1. Why does StandardPlan.quote(3) return 16.000 VND while ExpressPlan.quote(3) returns 26.000 VND even though both call quote?
+    2. Why can a final quote() method still invoke ExpressPlan.distanceFee() even though quote() cannot be overridden?
+    3. When are covariant returns valid, and why are reduced access or incompatible broader checked exceptions rejected?
+    4. What role does super.distanceFee() play when ExpressPlan needs to add 5.000 VND?
 
-    ### Bảo vệ invariant và construction
+    ### Protecting Invariants and Construction
 
-    1. Vì sao constructor Parent có thể in null khi nó gọi describe() bị Child override?
-    2. Với một subclass mới, cần bảo toàn những quy tắc nào về distanceKm, phụ phí không âm và overflow?
-    3. Nếu method ở lớp con đổi tham số thành kiểu khác, vì sao nó trở thành overload thay vì override?
+    1. Why can a Parent constructor print null when it calls describe() overridden by Child?
+    2. For a new subclass, which rules concerning distanceKm, nonnegative surcharges, and overflow must be preserved?
+    3. If a subclass method changes its parameter type, why does it become an overload rather than an override?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Viết override hợp lệ | Cài @Override đúng chữ ký, quyền truy cập, return type và checked exception. |
-    | Đọc Template Method | Truy vết từ final quote sang hook distanceFee để tính phí Standard/Express. |
-    | Dùng super đúng mục đích | Kết hợp thuật toán cha và phụ phí con mà không lặp validation hoặc side effect. |
-    | Phát hiện bẫy constructor | Giải thích output null trước khi field subclass được khởi tạo và đề xuất tránh hook sớm. |
-    | Giữ contract khi mở rộng | Chỉ ra invariant được bảo vệ tại lớp nền và điều kiện hook phải đáp ứng. |
+    | Write valid overrides | Implement @Override with correct signatures, access levels, return types, and checked exceptions. |
+    | Read Template Method | Trace the final quote method into the distanceFee hook to calculate Standard/Express fees. |
+    | Use super appropriately | Combine superclass algorithms with subclass surcharges without duplicating validation or side effects. |
+    | Detect constructor traps | Explain null output before subclass fields are initialized and suggest avoiding early hook calls. |
+    | Preserve contracts when extending | Identify invariants protected by the base class and conditions that hooks must satisfy. |
 - id: polymorphism-005
-  title: Phân biệt ghi đè với nạp chồng
+  title: Distinguishing Overriding from Overloading
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Phân biệt ghi đè với nạp chồng**
+    **Distinguishing Overriding from Overloading**
 
-    Phân biệt overloading cùng tên khác tham số với overriding cùng chữ ký tương thích ở supertype. DispatchDemo minh họa hai pha compiler chọn overload rồi JVM chọn override; các ca null, cast, widening/boxing/varargs và @Override giúp người học debug chính xác code nhiều phương thức cùng tên.
+    Distinguish overloading, which uses the same name with different parameters, from overriding, which uses a compatible signature in a supertype. DispatchDemo illustrates the compiler selecting an overload before the JVM selects an override; cases involving null, casts, widening/boxing/varargs, and @Override help learners debug code with multiple methods sharing a name.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Chữ ký và hai giai đoạn
+    ### Signatures and Two Stages
 
-    1. Vì sao đổi riêng return type hoặc tên tham số không tạo overload hợp lệ?
-    2. Trong DispatchDemo, tại sao formatter.format(animalReference) chạy SpecialFormatter: Animal nhưng formatter.format(dog) chạy Formatter: Dog?
-    3. Cast (Animal) dog thay đổi lựa chọn overload như thế nào dù vẫn là object Dog?
-    4. Vì sao ChildHandler chỉ thêm handle(String) không làm lời gọi qua BaseHandler tự dùng overload ấy?
+    1. Why doesn't changing only the return type or parameter names create a valid overload?
+    2. In DispatchDemo, why does formatter.format(animalReference) execute SpecialFormatter: Animal while formatter.format(dog) executes Formatter: Dog?
+    3. How does casting dog to (Animal) change overload selection even though the object remains a Dog?
+    4. Why doesn't adding only handle(String) to ChildHandler cause calls through BaseHandler to select that overload automatically?
 
-    ### Các ca dễ nhầm
+    ### Common Sources of Confusion
 
-    1. show(null) chọn String thay Object trong trường hợp nào và khi nào mơ hồ giữa String với Integer?
-    2. Tại sao literal 10 chọn show(long) khi đồng thời có show(Integer) và show(int...) ở ví dụ?
-    3. Static, private, final method và constructor được overload hay override với ràng buộc nào?
-    4. Dùng @Override và DispatchContractCheck xác nhận chữ ký thực sự được ghi đè bằng cách nào?
+    1. When does show(null) select String over Object, and when is it ambiguous between String and Integer?
+    2. Why does literal 10 select show(long) when the example also provides show(Integer) and show(int...)?
+    3. Under what constraints can static, private, and final methods and constructors be overloaded or overridden?
+    4. How do @Override and DispatchContractCheck confirm that a signature is actually overridden?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Phân loại method trùng tên | Viết được hai chữ ký overload và một override hợp lệ, giải thích return type không phân biệt overload. |
-    | Dự đoán kết quả | Tái tạo năm dòng output DispatchDemo theo kiểu tĩnh của argument và runtime receiver. |
-    | Giải cast và null | Phân tích most-specific, ambiguity và thay đổi overload khi ép kiểu. |
-    | Phân biệt conversion | Giải thích pha widening, boxing, varargs trong overload resolution. |
-    | Kiểm chứng override | Dùng @Override và kiểm tra ngắn để phát hiện chữ ký lạc khỏi hợp đồng. |
+    | Classify same-named methods | Write two overloaded signatures and one valid override; explain why return types do not distinguish overloads. |
+    | Predict results | Reproduce the five output lines of DispatchDemo using the static argument type and runtime receiver. |
+    | Explain casts and null | Analyze most-specific selection, ambiguity, and changes to overload selection caused by casts. |
+    | Distinguish conversions | Explain the widening, boxing, and varargs phases of overload resolution. |
+    | Verify overrides | Use @Override and a short check to detect signatures that diverge from the contract. |
 - id: polymorphism-006
-  title: Phân biệt che khuất thành viên với ghi đè
+  title: Distinguishing Member Hiding from Overriding
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Phân biệt che khuất thành viên với ghi đè**
+    **Distinguishing Member Hiding from Overriding**
 
-    Chỉ rõ một class con khai báo thành viên trùng tên với cha có thể là field hiding, static hiding hoặc instance override. Demo Parent/Child cho thấy field được chọn theo kiểu tĩnh, static theo tên class còn describe theo runtime. Bài giải thích hai field cùng tên có trạng thái độc lập và vì sao nên đóng gói dữ liệu rồi expose hành vi có hợp đồng.
+    Explain how a subclass declaring a member with the same name as its superclass may be hiding a field, hiding a static method, or overriding an instance method. The Parent/Child demo shows that fields are selected by static type, static members by class name, and describe by runtime dispatch. The lesson explains why two same-named fields have independent state and why data should be encapsulated behind behavior with a defined contract.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Trùng tên nhưng khác quy tắc
+    ### Same Names, Different Rules
 
-    1. Vì sao Parent parentView trỏ Child nhưng parentView.label và childView.label trả hai field khác nhau?
-    2. Tại sao parentView.kind() không dùng dynamic dispatch còn parentView.describe() có?
-    3. Phương thức secretLabel() ở SecureChild có override private method cùng tên trong SecureBase không và vì sao?
-    4. Trong Child.inspect(), this.label, super.label, this.describe() và super.describe() lấy member từ đâu?
+    1. Why do parentView.label and childView.label access different fields when Parent parentView refers to a Child?
+    2. Why does parentView.kind() avoid dynamic dispatch while parentView.describe() uses it?
+    3. Does secretLabel() in SecureChild override a same-named private method in SecureBase, and why?
+    4. In Child.inspect(), where do this.label, super.label, this.describe(), and super.describe() resolve their members?
 
-    ### Trạng thái và thiết kế API
+    ### State and API Design
 
-    1. Khi gán CounterChild.count và CounterBase.count qua hai tham chiếu, vì sao số liệu giữ độc lập?
-    2. Field final có thể bị hide trong subclass thế nào, còn final instance method chặn override ra sao?
-    3. Vì sao nên dùng environment() getter được override thay vì public field environment trùng tên?
-    4. Khi hai interface cùng khai báo VERSION hoặc default action(), những mơ hồ cần giải quyết là gì?
+    1. Why do the values stay independent when CounterChild.count and CounterBase.count are assigned through two references?
+    2. How can a final field be hidden in a subclass, while a final instance method prevents overriding?
+    3. Why should an overridden environment() getter be used instead of same-named public environment fields?
+    4. What ambiguities must be resolved when two interfaces both declare VERSION or default action()?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Nhận diện hiding | Phân loại chính xác field hiding, static hiding, private method riêng và override. |
-    | Dự đoán kết quả Demo | Giải thích được các dòng parentView.label, kind, describe, report và inspect. |
-    | Theo dõi hai field độc lập | Mô phỏng cập nhật count của Parent/Child qua cast mà không nhầm là một biến. |
-    | Dùng super hợp lệ | Phân biệt super.field, super.method và giới hạn truy cập private. |
-    | Chỉnh thiết kế trạng thái | Đề xuất private field và phương thức overridable để biểu diễn hành vi runtime. |
+    | Recognize hiding | Correctly classify field hiding, static hiding, independent private methods, and overriding. |
+    | Predict demo results | Explain the parentView.label, kind, describe, report, and inspect output lines. |
+    | Track two independent fields | Simulate updates to Parent/Child count fields through casts without treating them as one variable. |
+    | Use super legally | Distinguish super.field and super.method and respect private access restrictions. |
+    | Improve state design | Propose private fields and overridable methods to express runtime-dependent behavior. |
 - id: polymorphism-007
-  title: Phạm vi đa hình của phương thức và thuộc tính
+  title: The Scope of Polymorphism for Methods and Fields
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Phạm vi đa hình của phương thức và thuộc tính**
+    **The Scope of Polymorphism for Methods and Fields**
 
-    Xác định các thành viên Java có hoặc không có đa hình động: instance overridable, abstract, interface/default method đối chiếu với field, static, private, final, constructor và overload. PolymorphismScopeDemo minh họa cùng VipTicket có giá trị field khác nhau khi đổi kiểu tham chiếu, trong khi display/getDisplayName override theo runtime; chính sách DiscountPolicy biến dữ liệu thành hành vi có hợp đồng.
+    Identify which Java members support dynamic polymorphism: overridable instance methods, abstract methods, and interface/default methods, as opposed to fields, static, private, and final members, constructors, and overloads. PolymorphismScopeDemo shows how the same VipTicket object exposes different field values when the reference type changes, while display/getDisplayName are overridden according to runtime type; DiscountPolicy turns data into contract-driven behavior.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Ranh giới member
+    ### Member Boundaries
 
-    1. Với Ticket ticket trỏ VipTicket, vì sao ticket.display() là VIP-method nhưng ticket.label là Ticket-field?
-    2. Vì sao cast sang VipTicket đổi field được nhìn thấy nhưng không đổi object runtime?
-    3. Vì sao ticket.showInternalNote() và showField() vẫn dùng private method hoặc field của Ticket?
-    4. Getter getDisplayName() có thể override như thế nào dù Person.name vẫn là field private của lớp cha?
+    1. When Ticket ticket refers to VipTicket, why does ticket.display() produce VIP-method while ticket.label produces Ticket-field?
+    2. Why does casting to VipTicket change the visible field without changing the runtime object?
+    3. Why do ticket.showInternalNote() and showField() still use Ticket's private method or field?
+    4. How can getDisplayName() be overridden even when Person.name remains a private superclass field?
 
-    ### Thiết kế điểm mở rộng
+    ### Designing Extension Points
 
-    1. Abstract method, method interface và default method có thể dispatch vào class thực tế ra sao?
-    2. Final, static, private method và constructor không cung cấp runtime polymorphism như instance overridable vì sao?
-    3. super.header() khác với lời gọi header() từ Report.render() trên MonthlyReport ở điểm nào?
-    4. Vì sao chuyển field Discount.percent sang DiscountPolicy.apply() giúp client nhận đúng quy tắc giảm giá?
+    1. How can abstract methods, interface methods, and default methods dispatch to the actual class?
+    2. Why don't final, static, and private methods or constructors provide runtime polymorphism like overridable instance methods?
+    3. How does super.header() differ from calling header() within Report.render() on MonthlyReport?
+    4. Why does moving from the Discount.percent field to DiscountPolicy.apply() let clients receive the correct discount rule?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Lập ma trận polymorphic members | Phân loại phương thức overridable và các member không được override theo runtime. |
-    | Giải thích Ticket/VipTicket | Dự đoán đúng output display, label, code, category, showInternalNote, showField và bothFields. |
-    | Thiết kế getter | Viết getter Employee override để mở rộng tên hiển thị trên dữ liệu private của Person. |
-    | Chọn behavior thay field | Dùng DiscountPolicy.apply để tính kết quả 90.000 và 100.000 VND từ cùng giá ban đầu. |
-    | Phân tích cast và super | Giải thích được cast chỉ đổi kiểu tĩnh và super không tạo đối tượng cha thứ hai. |
+    | Build a polymorphic-member matrix | Classify overridable methods and members that do not undergo runtime overriding. |
+    | Explain Ticket/VipTicket | Correctly predict the output for display, label, code, category, showInternalNote, showField, and bothFields. |
+    | Design getters | Write an overriding Employee getter that extends the displayed name using Person's private data. |
+    | Choose behavior over fields | Use DiscountPolicy.apply to calculate 90.000 and 100.000 VND from the same original price. |
+    | Analyze casts and super | Explain why casting changes only the static type and super does not create a second superclass object. |
 - id: polymorphism-008
-  title: Duck typing và đa hình theo khả năng
+  title: Duck Typing and Capability-Based Polymorphism
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Duck typing và đa hình theo khả năng**
+    **Duck Typing and Capability-Based Polymorphism**
 
-    Mở rộng tư duy đa hình từ cây kế thừa danh từ sang những khả năng độc lập mà client cần, đồng thời phân biệt Java nominal typing với duck typing động ở Python. Qua WildDuck, RobotDuck, SqueakyToy, interface Quackable/Swimmable/Rechargeable và method reference toy::quack, bài minh họa cách adapter kết nối class có cùng hành vi nhưng chưa implements interface và khi nào instanceof chỉ kiểm tra vai trò tùy chọn.
+    Broaden polymorphic design beyond noun-based inheritance trees to independent capabilities required by clients, while distinguishing Java's nominal typing from Python's dynamic duck typing. Using WildDuck, RobotDuck, SqueakyToy, the Quackable/Swimmable/Rechargeable interfaces, and method reference toy::quack, the lesson illustrates how adapters connect classes with matching behavior that do not yet implement an interface, and when instanceof is suitable for checking optional roles.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Kiểu cấu trúc và kiểu danh nghĩa
+    ### Structural and Nominal Typing
 
-    1. Vì sao Python make_sound có thể gọi quack trên class khác họ, còn Java không tự gán SqueakyToy vào Quackable dù method cùng tên?
-    2. WildDuck implements Quackable, Swimmable có tự là subtype của một AmphibiousVoice extends cả hai interface không?
-    3. Quackable q = toy::quack khác phép gán trực tiếp q = toy về quan hệ kiểu và đối tượng adapter thế nào?
-    4. Reflection Java khác duck typing động và structural typing được kiểm tra khi biên dịch ra sao?
+    1. Why can Python make_sound call quack on unrelated classes, while Java cannot automatically assign SqueakyToy to Quackable even with an identically named method?
+    2. Does WildDuck implements Quackable, Swimmable automatically make it a subtype of AmphibiousVoice, which extends both interfaces?
+    3. How does Quackable q = toy::quack differ from directly assigning q = toy in type relationships and adapter objects?
+    4. How does Java reflection differ from dynamic duck typing and compile-time-checked structural typing?
 
-    ### Thiết kế theo năng lực
+    ### Capability-Based Design
 
-    1. Vì sao runActivity gọi quack cho cả ba participant nhưng chỉ WildDuck được bơi và RobotDuck được sạc?
-    2. Khi swimmingLesson luôn đòi khả năng bơi, vì sao nên nhận Swimmable thay vì Object và cast?
-    3. Instanceof ở hoạt động tùy chọn khác ra sao với kiểm tra kiểu lặp chỉ để thay thế hành vi quack?
-    4. Vì sao các class có cùng method signature vẫn có thể khác nhau về side effect, lỗi và hợp đồng?
+    1. Why does runActivity call quack for all three participants while only WildDuck can swim and RobotDuck can recharge?
+    2. When swimmingLesson always requires swimming capability, why should it accept Swimmable instead of Object and a cast?
+    3. How does instanceof checking for optional activities differ from repeated type checks used only to substitute quack behavior?
+    4. Why can classes with identical method signatures still differ in side effects, errors, and contracts?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Giải thích nominal typing | Chỉ ra Java yêu cầu quan hệ implements/extends hoặc adapter chứ không tự coi method cùng tên là subtype. |
-    | Mô hình hóa capability | Tách Quackable, Swimmable, Rechargeable theo đúng khả năng từng đối tượng. |
-    | Dùng method reference | Viết toy::quack làm Quackable mà không sửa class SqueakyToy. |
-    | Chọn optional capability | Dùng instanceof tại ranh giới thích hợp và nhận interface trực tiếp khi tính năng bắt buộc. |
-    | Đánh giá integration | Giải thích giới hạn reflection và lý do cần contract test cho adapter. |
+    | Explain nominal typing | Show why Java requires an implements/extends relationship or an adapter rather than treating matching method names as a subtype relationship. |
+    | Model capabilities | Separate Quackable, Swimmable, and Rechargeable according to each object's actual capabilities. |
+    | Use method references | Use toy::quack as Quackable without modifying SqueakyToy. |
+    | Select optional capabilities | Use instanceof at appropriate boundaries and accept an interface directly when the capability is mandatory. |
+    | Evaluate integration | Explain reflection's limitations and why adapters require contract tests. |
 - id: polymorphism-009
-  title: Đa hình thay cho điều kiện kiểm tra từng loại
+  title: Replacing Type Checks with Polymorphism
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Đa hình thay cho điều kiện kiểm tra từng loại**
+    **Replacing Type Checks with Polymorphism**
 
-    Áp dụng polymorphism vào bài toán refactor nhiều nhánh if/else hoặc instanceof theo tên dịch vụ vận chuyển. ShippingPolicy và QuoteService tách công thức khỏi code điều phối, factory/switch ở ranh giới chịu trách nhiệm lựa chọn implementation. Bài cũng dạy giữ kiểm thử hồi quy và contract test để thay cấu trúc mà không đổi giá, lỗi hay đơn vị.
+    Apply polymorphism when refactoring multiple if/else or instanceof branches based on shipping-service names. ShippingPolicy and QuoteService separate pricing formulas from orchestration code, while a boundary-level factory/switch selects the implementation. The lesson also emphasizes regression and contract tests that preserve prices, errors, and units when changing the structure.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Nhận diện cơ hội refactor
+    ### Identifying Refactoring Opportunities
 
-    1. Nếu cùng nhánh STANDARD/EXPRESS/ECO xuất hiện ở nhiều service, rủi ro nào phát sinh khi thêm SAME_DAY?
-    2. Vì sao QuoteService chỉ dùng ShippingPolicy làm giảm phụ thuộc vào concrete classes?
-    3. Với Parcel 1.500 g, 3 km, làm sao tính đúng 18.000, 41.000 và 12.500 VND của ba implementation?
-    4. Vì sao mọi policy trả quote hợp lệ vẫn cần contract test dù compiler bảo đảm chữ ký?
+    1. If the same STANDARD/EXPRESS/ECO branches appear in multiple services, what risks arise when SAME_DAY is added?
+    2. Why does having QuoteService depend only on ShippingPolicy reduce coupling to concrete classes?
+    3. For a Parcel weighing 1.500 g traveling 3 km, how do the three implementations calculate 18.000, 41.000, and 12.500 VND correctly?
+    4. Why does every policy still need contract tests to ensure valid quotes even when the compiler guarantees the method signature?
 
-    ### Ranh giới của đa hình
+    ### Boundaries of Polymorphism
 
-    1. Tại sao switch ở selectPolicy để đổi mã đầu vào thành implementation vẫn hợp lý?
-    2. Khi nào if theo trạng thái đơn giản hoặc instanceof để xử lý dữ liệu hỗn hợp tốt hơn tạo hàng loạt subclass?
-    3. Quy trình refactor từng bước phải so sánh những kết quả và trường hợp biên nào trước khi xóa các nhánh cũ?
-    4. Vì sao một policy trả âm hoặc tự đổi tiền VND sang đơn vị khác có thể vi phạm LSP dù QuoteService giữ nguyên?
+    1. Why is a switch in selectPolicy still reasonable for mapping an input code to an implementation?
+    2. When is a simple state-based if or instanceof for mixed data preferable to creating numerous subclasses?
+    3. Which results and edge cases must a stepwise refactoring process compare before removing the old branches?
+    4. Why can a policy that returns a negative value or independently converts VND to another unit violate LSP even when QuoteService is unchanged?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Phát hiện điều kiện theo loại | Xác định được chuỗi nhánh lặp nhiều nơi và rủi ro bỏ sót xử lý khi thêm gói. |
-    | Refactor thành strategy | Đưa công thức vào ShippingPolicy implementations; giữ QuoteService chỉ gọi quote. |
-    | Đặt boundary chọn kiểu | Lựa chọn rõ factory, switch hay Map registry ở đầu vào mà không nhân bản công thức. |
-    | Kiểm thử hồi quy | Xác minh ba kết quả 18.000/41.000/12.500 VND và loại SameDay 58.000 VND. |
-    | Đánh giá tradeoff | Biện minh lúc điều kiện nhỏ, enum/sealed hoặc instance checking vẫn phù hợp. |
+    | Detect type-based conditionals | Identify repeated branching across locations and the risk of missing handling when adding a package. |
+    | Refactor to strategies | Move pricing formulas into ShippingPolicy implementations so QuoteService only calls quote. |
+    | Place the type-selection boundary | Choose a factory, switch, or Map registry at the input boundary without duplicating pricing formulas. |
+    | Run regression tests | Verify the three results 18.000/41.000/12.500 VND and the SameDay option at 58.000 VND. |
+    | Evaluate tradeoffs | Justify when small conditionals, enum/sealed models, or instance checking remain appropriate. |
 - id: polymorphism-010
-  title: Ví dụ nhiều phương thức thanh toán
+  title: Example of Multiple Payment Methods
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Ví dụ nhiều phương thức thanh toán**
+    **Example of Multiple Payment Methods**
 
-    Tổng hợp kỹ thuật đa hình vào checkout Java mô phỏng. PaymentMethod có name/pay được triển khai riêng bởi CardPayment, WalletPayment và BankTransferPayment; cùng CheckoutService gọi pay nhưng thu được PAID, DECLINED hoặc PENDING với ý nghĩa khác nhau. Người học dùng RecordingPayment kiểm tra luồng gọi, mở rộng COD và nhận diện giới hạn của demo trong xử lý tiền thật.
+    Bring polymorphism techniques together in a simulated Java checkout. PaymentMethod defines name/pay, implemented separately by CardPayment, WalletPayment, and BankTransferPayment; the same CheckoutService calls pay but receives PAID, DECLINED, or PENDING with distinct meanings. Learners use RecordingPayment to verify call flow, extend the example with COD, and recognize the demo's limitations for real-money processing.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Runtime polymorphism trong thanh toán
+    ### Runtime Polymorphism in Payments
 
-    1. Vì sao CheckoutService không cần instanceof CardPayment hoặc WalletPayment mà vẫn gọi đúng implementation pay?
-    2. Với WalletPayment bắt đầu 150.000 VND, vì sao sau 120.000 VND còn 30.000 và lần trả thêm 40.000 bị từ chối?
-    3. Tại sao BankTransferPayment phải trả PENDING sau khi tạo hướng dẫn thay vì mặc định PAID?
-    4. Thêm CashOnDeliveryPayment trả PENDING tác động đến CheckoutService và danh sách chọn phương thức ra sao?
+    1. Why can CheckoutService call the correct pay implementation without instanceof checks for CardPayment or WalletPayment?
+    2. If WalletPayment starts with 150.000 VND, why does paying 120.000 VND leave 30.000 VND, and why is a subsequent 40.000 VND payment declined?
+    3. Why must BankTransferPayment return PENDING after generating instructions instead of defaulting to PAID?
+    4. How does adding CashOnDeliveryPayment that returns PENDING affect CheckoutService and the available payment-method selection?
 
-    ### Kiểm thử và giới hạn thực tế
+    ### Testing and Real-World Limitations
 
-    1. RecordingPayment phải ghi những thông tin gì để chứng minh CheckoutService gọi đúng một lần và truyền nguyên request?
-    2. Nếu implementation trả null, CheckoutService trong ví dụ phát hiện bằng cách nào?
-    3. Vì sao synchronized trên WalletPayment chỉ bảo vệ instance trong một JVM thay vì nhiều máy?
-    4. Trong thanh toán thật, timeout, chuyển khoản chờ xác nhận và retry gây rủi ro gì nếu không có idempotency hay lưu bền vững?
+    1. What must RecordingPayment record to prove that CheckoutService invokes it exactly once and passes the original request unchanged?
+    2. How does the example CheckoutService detect an implementation returning null?
+    3. Why does synchronized on WalletPayment protect an instance only within one JVM rather than across multiple machines?
+    4. In real payments, what risks arise from timeouts, transfers awaiting confirmation, and retries without idempotency or durable persistence?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Trace đa hình checkout | Xác định đúng class runtime chạy pay và tái hiện ba kết quả thẻ, ví, chuyển khoản. |
-    | Hiểu trạng thái thanh toán | Phân biệt PAID/DECLINED/PENDING, dự đoán số dư 30.000 VND và lần từ chối tiếp theo. |
-    | Mở rộng method | Tạo COD implements PaymentMethod và xác minh service vẫn gọi pay mà không cần nhánh mới. |
-    | Test bằng fake | Dùng RecordingPayment xác nhận số lần gọi, request và status trả về của CheckoutService. |
-    | Chỉ ra giới hạn demo | Giải thích yêu cầu idempotency, persistence, trạng thái chưa chắc chắn và concurrency trong hệ thống thực. |
+    | Trace checkout polymorphism | Identify the runtime class executing pay and reproduce the three outcomes for cards, wallets, and bank transfers. |
+    | Understand payment states | Distinguish PAID/DECLINED/PENDING and predict the 30.000 VND balance and subsequent declined payment. |
+    | Extend payment methods | Create COD implements PaymentMethod and verify that the service still calls pay without an additional branch. |
+    | Test with fakes | Use RecordingPayment to confirm the call count, request, and returned status in CheckoutService. |
+    | Identify demo limitations | Explain the need for idempotency, persistence, handling uncertain states, and concurrency in real systems. |

@@ -1,316 +1,316 @@
 summaries:
 - id: abstraction-001
-  title: Trừu tượng hóa và chọn đặc điểm thiết yếu
+  title: Abstraction and Selecting Essential Characteristics
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Trừu tượng hóa và chọn đặc điểm thiết yếu**
+    **Abstraction and Selecting Essential Characteristics**
 
-    Một đối tượng ngoài đời có rất nhiều đặc điểm, nhưng mỗi chức năng phần mềm chỉ cần một phần trong số đó. Bài học giúp người học xuất phát từ câu hỏi nghiệp vụ để chọn dữ liệu, hành vi và quy tắc phù hợp, tránh buộc mọi caller mang theo một mô hình quá lớn hoặc hiểu công thức nội bộ.
+    A real-world object has many characteristics, but each software feature needs only some of them. This lesson helps learners start from business questions to select appropriate data, behavior, and rules, avoiding a model so large that every caller must carry it around or understand its internal formulas.
 
-    Qua bài toán báo phí giao hàng, người học thấy lý do QuoteInput chỉ chứa cân nặng và quãng đường, ShippingPricing công bố hành vi báo phí, còn chính sách tiêu chuẩn và giao nhanh giữ thuật toán riêng. Cùng một kiện hàng có thể cần góc nhìn khác khi theo dõi vận chuyển.
+    Through the shipping-fee quotation problem, learners see why QuoteInput contains only weight and distance, ShippingPricing exposes the quoting behavior, and standard and express pricing policies keep their own algorithms. Tracking the same parcel may require a different view.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Xác định bản chất theo ngữ cảnh
+    ### Identifying Essentials in Context
 
-    1. Vì sao không thể có một tập thuộc tính thiết yếu cố định cho mọi bài toán liên quan đến kiện hàng?
-    2. Nếu chuyển từ báo phí sang theo dõi vận chuyển, dữ liệu và hành vi cần công bố sẽ thay đổi thế nào?
-    3. Khi nào một thông tin đang được bỏ qua trở thành đầu vào bắt buộc do quy tắc nghiệp vụ thay đổi?
+    1. Why can't a single fixed set of essential attributes serve every problem involving a parcel?
+    2. If the use case changes from fee quotation to shipment tracking, how must the exposed data and behavior change?
+    3. When does information previously omitted become a required input because business rules have changed?
 
-    ### Thiết kế hợp đồng và kiểm chứng
+    ### Designing and Verifying Contracts
 
-    1. Vì sao QuoteInput chỉ cần weightGrams và distanceKm trong công thức minh họa, còn ShippingPricing nên công bố hành vi quoteFee?
-    2. Caller của ShippingPricing cần biết những cam kết gì về đơn vị, giá trị hợp lệ, làm tròn và lỗi?
-    3. So với một EverythingShipment có nhiều trường không liên quan, thiết kế đầu vào theo use case giảm loại phụ thuộc nào?
-    4. Vì sao một lớp cụ thể hoặc record vẫn có thể thể hiện trừu tượng hóa mà không cần abstract class hay interface?
-    5. Với 1.001 gram và 0 km, làm thế nào suy luận phí tiêu chuẩn từ hợp đồng làm tròn cân nặng trong bài?
+    1. Why does QuoteInput need only weightGrams and distanceKm in the example formula, while ShippingPricing should expose the quoteFee behavior?
+    2. What guarantees about units, valid values, rounding, and errors must callers of ShippingPricing know?
+    3. Compared with an EverythingShipment containing many unrelated fields, which dependencies does use-case-specific input design reduce?
+    4. Why can a concrete class or record embody abstraction without requiring an abstract class or interface?
+    5. For 1.001 grams (one thousand and one grams) and 0 km, how can the standard fee be derived from the lesson's weight-rounding contract?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Phân tích yêu cầu theo use case | Lập bảng giữ hoặc bỏ từng thuộc tính của kiện hàng và giải thích quyết định bằng quy tắc nghiệp vụ cụ thể. |
-    | Thiết kế dữ liệu đầu vào tối thiểu | Phác thảo record hoặc class cho báo phí hay theo dõi, với tên trường, đơn vị và validation tương ứng. |
-    | Xây dựng hợp đồng hành vi | Đề xuất API có phương thức và kiểu kết quả thể hiện mục đích nghiệp vụ, thay vì bắt caller thực hiện thuật toán. |
-    | Phân tách hợp đồng với chính sách thực hiện | Chỉ ra vai trò của ShippingPricing, StandardPricing, ExpressPricing và composition trong ví dụ. |
-    | Đánh giá mức trừu tượng | Phát hiện mô hình quá rộng hoặc hợp đồng Object mơ hồ và đề xuất ranh giới API cụ thể hơn. |
-    | Kiểm tra kết quả theo quy tắc | Tính được phí cho trường hợp biên làm tròn khối lượng và đối chiếu với đầu ra minh họa. |
+    | Analyze requirements by use case | Tabulate which parcel attributes to retain or omit and justify each choice using specific business rules. |
+    | Design minimal input data | Sketch a record or class for quoting or tracking, with appropriate field names, units, and validation. |
+    | Build behavioral contracts | Propose an API whose methods and result types express business intent instead of making callers implement the algorithm. |
+    | Separate contracts from implementation policies | Identify the roles of ShippingPricing, StandardPricing, ExpressPricing, and composition in the example. |
+    | Evaluate abstraction levels | Identify an overly broad model or vague Object contract and propose a more specific API boundary. |
+    | Verify results against rules | Calculate fees for weight-rounding boundary cases and compare them with the example outputs. |
 - id: abstraction-002
-  title: Phân biệt trừu tượng với đóng gói
+  title: Distinguishing Abstraction from Encapsulation
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Phân biệt trừu tượng với đóng gói**
+    **Distinguishing Abstraction from Encapsulation**
 
-    Bài học giúp người học nhận ra hai câu hỏi thiết kế khác nhau: đối tượng cần công bố khả năng nào cho người dùng và đối tượng phải kiểm soát những đường thay đổi trạng thái nào. Có interface chưa chắc đã bảo vệ dữ liệu; có private chưa chắc API đã diễn đạt đúng trách nhiệm.
+    This lesson helps learners recognize two distinct design questions: which capabilities an object should expose to users, and which paths for changing its state it must control. Having an interface does not necessarily protect data; having private fields does not necessarily make an API express the right responsibilities.
 
-    Bằng SeatInventory và InMemorySeatInventory, người học phân biệt hợp đồng đặt ghế mà BookingService sử dụng với kiểm tra sức chứa, trường private và bản sao lịch sử nhằm bảo vệ bất biến. Các ví dụ SafeAccount và collection mutable cho thấy vì sao getter/setter hay access modifier đơn lẻ chưa đủ.
+    With SeatInventory and InMemorySeatInventory, learners distinguish the seat-booking contract used by BookingService from capacity checks, private fields, and history copies that protect invariants. Examples involving SafeAccount and mutable collections show why getters/setters or access modifiers alone are insufficient.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Vai trò riêng của hai nguyên lý
+    ### Distinct Roles of the Two Principles
 
-    1. Trong ví dụ đặt ghế, SeatInventory thể hiện abstraction ở đâu còn InMemorySeatInventory thực hiện encapsulation ở đâu?
-    2. Vì sao BookingService có thể đổi từ InMemorySeatInventory sang SoldOutInventory mà không cần biết cấu trúc lưu ghế?
-    3. Một lớp không có interface riêng vẫn có thể cung cấp abstraction tốt theo những điều kiện nào?
+    1. In the seat-booking example, where does SeatInventory express abstraction, and where does InMemorySeatInventory implement encapsulation?
+    2. Why can BookingService switch from InMemorySeatInventory to SoldOutInventory without knowing how seats are stored?
+    3. Under what conditions can a class without a separate interface still provide good abstraction?
 
-    ### Bảo vệ trạng thái và nhận diện lỗi
+    ### Protecting State and Identifying Flaws
 
-    1. Vì sao khai báo private balance nhưng cho phép setBalance nhận số âm vẫn là đóng gói yếu?
-    2. Vì sao trả trực tiếp một List mutable có thể làm hỏng bất biến dù trường giữ List là private final?
-    3. Khi nào nên dùng List.copyOf, và vì sao bản sao collection không tự bảo đảm bất biến sâu của phần tử mutable?
-    4. Mức truy cập private, package-private, protected và public ảnh hưởng ra sao đến ranh giới kiểm soát?
-    5. Vì sao việc reserve kiểm tra rồi giảm ghế trong ví dụ không tự động an toàn khi chạy nhiều luồng?
+    1. Why is encapsulation still weak if balance is declared private but setBalance accepts negative amounts?
+    2. Why can directly returning a mutable List break invariants even if the field holding it is private final?
+    3. When should List.copyOf be used, and why does copying a collection not automatically make its mutable elements deeply immutable?
+    4. How do the private, package-private, protected, and public access levels affect control boundaries?
+    5. Why is checking and then decrementing the seat count in reserve not automatically thread-safe?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Phân biệt mục tiêu thiết kế | Phân loại tình huống thuộc abstraction, encapsulation hoặc cả hai, kèm giải thích theo trách nhiệm và invariant. |
-    | Phân tích phụ thuộc ở client | Giải thích vì sao BookingService chỉ dùng hợp đồng SeatInventory và dự đoán ảnh hưởng khi thay implementation. |
-    | Bảo vệ bất biến | Viết hoặc sửa constructor và phương thức reserve, deposit, withdraw để ngăn giá trị không hợp lệ. |
-    | Phát hiện lộ trạng thái mutable | Chỉ ra đường sửa nội bộ qua getter List và đề xuất snapshot hoặc API chỉ đọc phù hợp. |
-    | Đánh giá quyền truy cập | Chọn phạm vi truy cập cho trạng thái và thao tác công khai, nêu được lý do bảo vệ hợp đồng. |
-    | Nhận diện giới hạn kỹ thuật | Giải thích vì sao interface/private không thay cho đồng bộ hoặc transaction khi có cạnh tranh cập nhật. |
+    | Distinguish design goals | Classify scenarios as abstraction, encapsulation, or both, with explanations based on responsibilities and invariants. |
+    | Analyze client dependencies | Explain why BookingService uses only the SeatInventory contract and predict the effect of replacing its implementation. |
+    | Protect invariants | Write or fix constructors and reserve, deposit, and withdraw methods to reject invalid values. |
+    | Detect exposed mutable state | Identify paths for modifying internal data through a List getter and propose suitable snapshots or read-only APIs. |
+    | Evaluate access control | Choose access levels for state and public operations, explaining how these choices protect the contract. |
+    | Recognize technical limitations | Explain why interfaces/private fields cannot replace synchronization or transactions when updates contend. |
 - id: abstraction-003
-  title: Hợp đồng sử dụng và chi tiết thực hiện
+  title: Usage Contracts and Implementation Details
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Hợp đồng sử dụng và chi tiết thực hiện**
+    **Usage Contracts and Implementation Details**
 
-    Bài học giúp người học phân biệt lời hứa mà caller có quyền dựa vào với thuật toán, lưu trữ hoặc dịch vụ bên ngoài có thể thay đổi. Khớp chữ ký Java chưa đủ: giá trị trả về, lỗi, đơn vị, tác dụng phụ và thời điểm đánh giá đều góp phần tạo hợp đồng hành vi.
+    This lesson helps learners distinguish the promises callers may rely on from algorithms, storage, or external services that may change. Matching Java signatures is insufficient: return values, errors, units, side effects, and evaluation timing all form part of a behavioral contract.
 
-    Ví dụ LeavePolicy dùng chính sách nghỉ phép thông thường và thử việc để cho thấy hai implementation có thể trả quyết định khác nhau nhưng vẫn giữ cam kết chung: không duyệt quá số ngày còn, không trả null và không âm thầm trừ quota. Người học cũng thực hành cách kiểm chứng hợp đồng và cách ly client khi provider thay đổi.
+    The LeavePolicy example uses regular and probationary leave policies to show how two implementations may return different decisions while respecting shared guarantees: never approve more days than remain, never return null, and never silently deduct leave quota. Learners also practice verifying contracts and isolating clients when providers change.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Thiết lập hợp đồng từ góc nhìn caller
+    ### Defining Contracts from the Caller's Perspective
 
-    1. Với LeavePolicy.evaluate, những điều kiện đầu vào, kết quả, lỗi và side effect nào thuộc hợp đồng chung?
-    2. Tại sao @Override và kiểu trả về LeaveDecision không đủ để bảo đảm một implementation tuân thủ ngữ nghĩa?
-    3. Vì sao APPROVED trong ví dụ chỉ là kết quả đánh giá một snapshot, chưa đồng nghĩa đơn nghỉ đã được lưu hoặc trừ ngày phép?
+    1. For LeavePolicy.evaluate, which input conditions, results, errors, and side effects belong to the shared contract?
+    2. Why are @Override and a LeaveDecision return type insufficient to ensure semantic compliance by an implementation?
+    3. Why does APPROVED in the example represent only an evaluation of a snapshot, rather than proof that the leave request was saved or leave days deducted?
 
-    ### Khả năng thay thế và kiểm thử
+    ### Substitutability and Testing
 
-    1. Vì sao chính sách thường có thể chấp thuận 3/5 ngày, chính sách thử việc từ chối 3/5 ngày mà cả hai vẫn hợp lệ?
-    2. Implementation trả null, duyệt 6/5 ngày hoặc tự trừ ngày phép vi phạm chính xác cam kết nào?
-    3. Contract test chung khác gì kiểm thử LeaveReviewService bằng một fake policy?
-    4. Khi chuyển implementation sang REST/HTTP, caller có thể cần biết thêm giới hạn nào về timeout, lỗi hệ thống, độ mới dữ liệu và retry?
-    5. Những thay đổi nào phá hợp đồng dù chữ ký evaluate vẫn giữ nguyên?
+    1. Why can a regular policy approve 3 of 5 days while a probationary policy rejects 3 of 5 days, with both remaining valid?
+    2. Which specific guarantees are violated by an implementation that returns null, approves 6 of 5 days, or deducts leave days itself?
+    3. How does a shared contract test differ from testing LeaveReviewService with a fake policy?
+    4. When moving an implementation to REST/HTTP, what additional limits concerning timeouts, system errors, data freshness, and retries might callers need to know?
+    5. Which changes break the contract even when the evaluate signature stays the same?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Đặc tả hợp đồng hành vi | Viết rõ miền giá trị LeaveRequest, tính non-null của LeaveDecision, quy tắc chung và cam kết không side effect. |
-    | Tách vai trò client/provider | Vẽ phụ thuộc LeaveReviewService → LeavePolicy và chỉ ra các chính sách là implementation có thể thay thế. |
-    | Phân tích tính thay thế | Phân loại các kết quả APPROVED, EXCEEDS_TRIAL_LIMIT, null và thay đổi quota theo đúng hoặc sai hợp đồng. |
-    | Xây dựng contract test | Đề xuất ca kiểm tra kết quả khác null, không phê duyệt vượt phép, từ chối null và không thay đổi dữ liệu. |
-    | Kiểm thử client độc lập | Chọn một policy giả tuân thủ hợp đồng để kiểm tra đường chuyển request và nhận quyết định. |
-    | Đánh giá thay đổi triển khai | Liệt kê các thuộc tính có thể quan sát khi chuyển từ in-memory sang HTTP và xác định cam kết cần cập nhật. |
+    | Specify behavioral contracts | Define the valid range of LeaveRequest values, the non-null guarantee for LeaveDecision, shared rules, and the no-side-effect guarantee. |
+    | Separate client/provider roles | Draw the LeaveReviewService → LeavePolicy dependency and identify the policies as substitutable implementations. |
+    | Analyze substitutability | Classify APPROVED, EXCEEDS_TRIAL_LIMIT, null, and changes to quota as compliant or noncompliant with the contract. |
+    | Build contract tests | Propose tests for non-null results, no approval beyond available leave, rejection of null, and no data modification. |
+    | Test clients independently | Choose a contract-compliant fake policy to test the path for passing requests and receiving decisions. |
+    | Evaluate implementation changes | List observable properties when moving from in-memory to HTTP and identify guarantees that need updating. |
 - id: abstraction-004
-  title: Tiền điều kiện, hậu điều kiện và cam kết hành vi
+  title: Preconditions, Postconditions, and Behavioral Guarantees
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Tiền điều kiện, hậu điều kiện và cam kết hành vi**
+    **Preconditions, Postconditions, and Behavioral Guarantees**
 
-    Một API chỉ đáng tin khi mô tả rõ trạng thái cần có trước lời gọi, kết quả sau khi thành công và điều phải giữ trong suốt vòng đời đối tượng. Bài học dùng SeatInventory để chuyển quy tắc đặt/trả ghế thành các cam kết có thể tính toán, viết mã và kiểm thử.
+    An API is trustworthy only when it clearly defines the state required before a call, the result after success, and what must remain true throughout the object's lifetime. This lesson uses SeatInventory to turn seat reservation/release rules into guarantees that can be calculated, implemented, and tested.
 
-    Người học phân biệt lỗi đầu vào với thiếu ghế, kiểm tra bảo toàn trạng thái khi thất bại, phát hiện implementation tăng tiền điều kiện trái hợp đồng và nhận ra giới hạn khi chạy đa luồng hoặc bất đồng bộ.
+    Learners distinguish invalid-input errors from insufficient seats, verify that state is preserved on failure, detect implementations that improperly strengthen preconditions, and recognize limitations in multithreaded or asynchronous execution.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Diễn đạt cam kết kiểm chứng được
+    ### Expressing Verifiable Guarantees
 
-    1. Tiền điều kiện, hậu điều kiện và bất biến khác nhau thế nào với thao tác reserve(n) và release(n)?
-    2. Từ capacity = 10 và available = 10, sau reserve(3) rồi release(1) phải bảo đảm những giá trị nào?
-    3. Tại sao hậu điều kiện “số ghế được cập nhật” yếu hơn công thức available_after = available_before - n?
-    4. Khi reserve(9) lúc còn 8 ghế, API minh họa phải báo lỗi gì và giữ trạng thái như thế nào?
+    1. How do preconditions, postconditions, and invariants differ for reserve(n) and release(n)?
+    2. Starting with capacity = 10 and available = 10, what values must be guaranteed after reserve(3) followed by release(1)?
+    3. Why is the postcondition “the seat count is updated” weaker than the formula available_after = available_before - n?
+    4. When reserve(9) is called with only 8 seats available, what error must the example API report, and how must it preserve state?
 
-    ### Thay thế, lỗi và điều kiện chạy
+    ### Substitution, Errors, and Execution Conditions
 
-    1. Vì sao một implementation chỉ nhận reserve(n) với n từ 2 trở lên vi phạm hợp đồng chấp nhận reserve(1)?
-    2. Làm thế nào viết contract test để kiểm tra trạng thái trước và sau lời gọi, kể cả đường exception?
-    3. Vì sao assert trong Java không thích hợp làm cơ chế bảo vệ duy nhất cho tham số API public?
-    4. Điều gì thay đổi trong cam kết nếu reserve là xử lý async hoặc nhiều luồng cùng đặt ghế?
-    5. Vì sao check available() rồi reserve(1) ở hai lời gọi riêng không đủ bảo đảm tính nguyên tử?
+    1. Why does an implementation accepting reserve(n) only when n is at least 2 violate a contract that permits reserve(1)?
+    2. How can contract tests verify state before and after calls, including exception paths?
+    3. Why is Java's assert unsuitable as the sole guard for public API parameters?
+    4. How do the guarantees change if reserve executes asynchronously or multiple threads reserve seats concurrently?
+    5. Why is checking available() and then calling reserve(1) in separate calls insufficient to guarantee atomicity?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Đặc tả tiền và hậu điều kiện | Viết quy tắc thành công, ngoại lệ và công thức trạng thái trước/sau cho reserve và release. |
-    | Chứng minh bất biến | Phân tích constructor, cập nhật và các nhánh thất bại để kiểm tra 0 ≤ available ≤ capacity. |
-    | Cài đặt theo hợp đồng | Chọn thứ tự validate trước khi sửa trạng thái và giải thích vì sao lỗi không được trừ ghế một phần. |
-    | Phân tích tương thích LSP | Phát hiện lớp con siết tiền điều kiện hoặc làm yếu hậu điều kiện và đưa ra cách thiết kế đúng. |
-    | Tạo phép thử hành vi | Thiết kế ca biên cho đủ ghế, thiếu ghế, n không dương, trả vượt ghế và kiểm tra trạng thái giữ nguyên khi lỗi. |
-    | Nêu phạm vi bảo đảm | Phân biệt kết quả sync, async, cập nhật đa luồng và giới hạn của transaction hoặc synchronized theo phạm vi hệ thống. |
+    | Specify preconditions and postconditions | Write success rules, exceptions, and before/after state formulas for reserve and release. |
+    | Prove invariants | Analyze constructors, updates, and failure branches to verify 0 ≤ available ≤ capacity. |
+    | Implement to the contract | Validate before changing state and explain why an error must not partially deduct seats. |
+    | Analyze LSP compatibility | Detect subclasses that strengthen preconditions or weaken postconditions and propose correct designs. |
+    | Create behavioral tests | Design boundary tests for sufficient seats, insufficient seats, nonpositive n, excessive releases, and unchanged state on errors. |
+    | State the scope of guarantees | Distinguish synchronous and asynchronous results, multithreaded updates, and the system-level limits of transactions or synchronized. |
 - id: abstraction-005
-  title: Lớp trừu tượng và phương thức trừu tượng
+  title: Abstract Classes and Abstract Methods
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Lớp trừu tượng và phương thức trừu tượng**
+    **Abstract Classes and Abstract Methods**
 
-    Bài học hướng dẫn dùng abstract class để chia sẻ trạng thái, constructor và quy trình ổn định giữa các lớp cùng họ, còn abstract method xác định bước buộc lớp con thực hiện. Đây là cơ chế Java cụ thể để xây dựng hợp đồng kế thừa và đa hình mà không lặp mã kiểm tra chung.
+    This lesson shows how to use an abstract class to share state, constructors, and a stable process among related classes, while abstract methods specify steps that subclasses must implement. This is a concrete Java mechanism for establishing inheritance contracts and polymorphism without duplicating shared validation code.
 
-    Qua ShippingPlan, người học theo dõi quote() final kiểm tra dữ liệu, gọi extraFee() được override ở EconomyShipping hoặc ExpressShipping, rồi cộng tổng phí. Bài học cũng làm rõ constructor lớp trừu tượng, lỗi biên dịch, giới hạn override và thời điểm nên chọn interface thay cho kế thừa.
+    With ShippingPlan, learners trace how final quote() validates data, calls extraFee() as overridden by EconomyShipping or ExpressShipping, and then calculates the total fee. The lesson also clarifies abstract-class constructors, compilation errors, overriding restrictions, and when to choose an interface instead of inheritance.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Cú pháp và vòng đời đối tượng
+    ### Syntax and Object Lifecycles
 
-    1. Vì sao không thể new ShippingPlan trực tiếp nhưng có thể khai báo biến ShippingPlan nhận EconomyShipping?
-    2. Lớp abstract có thể chứa constructor, field, phương thức có thân và không có abstract method không?
-    3. Khi tạo lớp con, constructor lớp cha xử lý trạng thái chung vào thời điểm nào?
-    4. Vì sao không nên gọi phương thức có thể override từ constructor lớp cha?
+    1. Why can't ShippingPlan be instantiated directly with new, while a ShippingPlan variable can refer to EconomyShipping?
+    2. Can an abstract class have constructors, fields, methods with bodies, and no abstract methods?
+    3. When is shared state handled by the parent constructor during subclass instantiation?
+    4. Why should a parent constructor avoid calling overridable methods?
 
-    ### Quy trình chung và ghi đè
+    ### Shared Processes and Overriding
 
-    1. Vì sao quote() được đánh dấu final còn extraFee() được khai báo abstract trong ví dụ tính phí?
-    2. Khi biến kiểu ShippingPlan trỏ tới ExpressShipping, Java quyết định extraFee() nào sẽ chạy?
-    3. Những lỗi biên dịch nào xảy ra nếu lớp concrete không implement abstract method, giảm quyền truy cập hoặc đổi sai chữ ký override?
-    4. Khi nào abstract class có lợi hơn interface và khi nào dùng composition sẽ rõ nghĩa hơn?
+    1. Why is quote() marked final while extraFee() is declared abstract in the pricing example?
+    2. When a ShippingPlan variable refers to ExpressShipping, how does Java determine which extraFee() runs?
+    3. Which compilation errors arise if a concrete class fails to implement an abstract method, reduces visibility, or uses an incorrect overriding signature?
+    4. When is an abstract class more useful than an interface, and when does composition express the intent more clearly?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Nhận diện cú pháp hợp lệ | Phân biệt khai báo abstract class/method hợp lệ với abstract có body, abstract final hoặc khởi tạo abstract trực tiếp. |
-    | Tạo lớp nền dùng chung | Thiết kế abstract class giữ constructor, state được bảo vệ và phương thức chung cho họ đối tượng có quan hệ kế thừa thực. |
-    | Hiện thực điểm biến thiên | Override đúng phương thức extraFee và label với chữ ký, quyền truy cập, kiểu trả về phù hợp. |
-    | Giải thích Template Method | Mô phỏng đường gọi quote → kiểm tra → extraFee runtime → cộng phí và lý do cố định quy trình bằng final. |
-    | Kiểm tra vòng đời khởi tạo | Phân tích rủi ro lời gọi override trước khi field lớp con được khởi tạo đầy đủ. |
-    | Chọn công cụ trừu tượng | So sánh abstract class, interface và composition dựa trên yêu cầu chia sẻ trạng thái/quy trình, giới hạn đơn kế thừa. |
+    | Identify valid syntax | Distinguish valid abstract class/method declarations from abstract methods with bodies, abstract final combinations, or direct instantiation of abstract classes. |
+    | Create a shared base class | Design an abstract class with a constructor, protected state, and shared methods for a family with a genuine inheritance relationship. |
+    | Implement variation points | Override extraFee and label correctly with appropriate signatures, visibility, and return types. |
+    | Explain Template Method | Simulate quote → validation → runtime extraFee → fee summation, and explain why final fixes the process. |
+    | Verify initialization lifecycles | Analyze the risk of calling overridden methods before subclass fields are fully initialized. |
+    | Choose abstraction mechanisms | Compare abstract classes, interfaces, and composition based on shared state/process requirements and single-inheritance limits. |
 - id: abstraction-006
-  title: Phân biệt lớp cụ thể với lớp trừu tượng
+  title: Distinguishing Concrete Classes from Abstract Classes
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Phân biệt lớp cụ thể với lớp trừu tượng**
+    **Distinguishing Concrete Classes from Abstract Classes**
 
-    Bài học làm rõ vai trò của kiểu tham chiếu và lớp thực tế được khởi tạo trong một cây kế thừa. Lớp trừu tượng mô tả phần chung và những điểm chưa hoàn thiện; lớp cụ thể đáp ứng đầy đủ các phương thức còn thiếu để tạo đối tượng, khi constructor và phạm vi truy cập cho phép.
+    This lesson clarifies the roles of reference types and the actual instantiated class in an inheritance hierarchy. An abstract class describes shared behavior and unfinished parts; a concrete class implements all remaining methods so that objects can be created, provided constructors and access levels permit it.
 
-    Ví dụ NotificationChannel với EmailChannel, SmsChannel cho phép quan sát hành vi send() chung final gọi deliver() riêng của từng lớp con. Người học từ đó phân biệt abstract ở cấp lớp và method, đọc được kết quả đa hình và phát hiện lỗi biên dịch khi triển khai thiếu.
+    The NotificationChannel example with EmailChannel and SmsChannel shows how shared final send() invokes each subclass's own deliver(). Learners thereby distinguish abstract classes from abstract methods, interpret polymorphic behavior, and detect compilation errors caused by incomplete implementations.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Phân biệt kiểu lớp và đối tượng
+    ### Distinguishing Class Types from Objects
 
-    1. Với NotificationChannel channel = new SmsChannel(), kiểu khai báo và kiểu đối tượng thực tế là gì?
-    2. Lớp trừu tượng khác lớp cụ thể ở khả năng new trực tiếp và nghĩa vụ thực hiện abstract method như thế nào?
-    3. Vì sao một abstract class không có abstract method vẫn không được tạo instance trực tiếp?
-    4. Một lớp concrete có bắt buộc tự viết phương thức mới nếu mọi phương thức đã có implementation được kế thừa không?
+    1. In NotificationChannel channel = new SmsChannel(), what are the declared type and the actual object type?
+    2. How do abstract and concrete classes differ in direct instantiation and the obligation to implement abstract methods?
+    3. Why can an abstract class with no abstract methods still not be instantiated directly?
+    4. Must a concrete class define new methods itself if all required method implementations are inherited?
 
-    ### Theo dõi hành vi và chọn cấu trúc
+    ### Tracing Behavior and Choosing Structures
 
-    1. Tại sao send() final vẫn có thể dẫn đến cách gửi email hoặc SMS khác nhau?
-    2. Constructor của NotificationChannel chạy ra sao khi new EmailChannel, và vì sao không nên gọi hook overridable từ constructor?
-    3. Khi nào interface Trackable thích hợp hơn việc ép nhiều kiểu khác họ kế thừa chung một abstract class?
-    4. Lỗi gì xảy ra nếu lớp con quên override deliver(), override sai tên hoặc khai báo phương thức abstract là private?
+    1. Why can final send() still lead to different ways of sending email or SMS?
+    2. How does NotificationChannel's constructor run when creating new EmailChannel, and why should constructors avoid calling overridable hooks?
+    3. When is the Trackable interface preferable to forcing unrelated types to inherit from one abstract class?
+    4. What errors occur if a subclass fails to override deliver(), overrides the wrong name, or declares an abstract method private?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Xác định khả năng khởi tạo | Phân loại class abstract, concrete và final, giải thích điều kiện hợp lệ của biểu thức new. |
-    | Đọc kiểu tham chiếu và runtime | Giải thích đối tượng được tạo từ SmsChannel, còn biến NotificationChannel công bố bề mặt sử dụng chung. |
-    | Theo dõi đa hình động | Mô phỏng send() kiểm tra dữ liệu rồi dispatch deliver() theo từng đối tượng cụ thể. |
-    | Hoàn thiện lớp con | Viết subclass triển khai đúng abstract method và sử dụng @Override để kiểm chứng chữ ký. |
-    | Đánh giá constructor lớp cha | Dự đoán thứ tự khởi tạo và nhận diện nguy cơ gọi phương thức override quá sớm. |
-    | Lựa chọn quan hệ OOP | Đề xuất abstract class, interface, concrete class hoặc composition từ các nhu cầu chia sẻ hành vi thực tế. |
+    | Determine instantiability | Classify abstract, concrete, and final classes, and explain when new expressions are valid. |
+    | Interpret reference and runtime types | Explain that the object is created as SmsChannel while the NotificationChannel variable exposes a shared API surface. |
+    | Trace dynamic polymorphism | Simulate send() validating data and then dispatching deliver() according to each concrete object. |
+    | Complete subclasses | Write subclasses that correctly implement abstract methods and use @Override to verify signatures. |
+    | Evaluate parent constructors | Predict initialization order and identify risks of invoking overridden methods too early. |
+    | Choose OOP relationships | Propose abstract classes, interfaces, concrete classes, or composition based on actual shared-behavior needs. |
 - id: abstraction-007
-  title: Mức trừu tượng phù hợp với bài toán
+  title: Choosing the Right Level of Abstraction
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Mức trừu tượng phù hợp với bài toán**
+    **Choosing the Right Level of Abstraction**
 
-    Trừu tượng hóa chỉ có ích khi làm hành vi nghiệp vụ rõ ràng và chi phí thay đổi hợp lý. Bài học giúp người học nhận ra thiết kế quá thấp khiến caller tự lặp logic, còn thiết kế quá cao khiến một chức năng đơn giản phải đi qua nhiều tầng class, factory và generic khó hiểu.
+    Abstraction is useful only when it makes business behavior clear and keeps the cost of change reasonable. This lesson helps learners recognize that too little abstraction forces callers to duplicate logic, while excessive abstraction makes a simple feature pass through many confusing layers of classes, factories, and generics.
 
-    Qua chính sách phí gửi xe, người học biết bắt đầu với ParkingFeeCalculator cụ thể cho một công thức, sau đó trích xuất ParkingFeePolicy khi xuất hiện hai chính sách tính phí cần dùng chung trong ParkingCheckout. Các ca 15, 16, 75, 76 phút cho thấy việc nâng mức trừu tượng phải bảo toàn hành vi.
+    Through parking-fee policies, learners start with a concrete ParkingFeeCalculator for one formula, then extract ParkingFeePolicy when two pricing policies must be used by ParkingCheckout. The 15-, 16-, 75-, and 76-minute cases demonstrate that raising the abstraction level must preserve behavior.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Nhận diện mức thiết kế
+    ### Assessing Design Levels
 
-    1. Vì sao để UI, REST controller và batch job tự tính phí gửi xe là mức trừu tượng quá thấp?
-    2. Khi chỉ có một công thức cố định, vì sao một class ParkingFeeCalculator có API rõ có thể đủ tốt?
-    3. Những dấu hiệu nào cho thấy hệ thống factory, registry, AbstractRateEngine quá tổng quát so với yêu cầu hiện tại?
+    1. Why is it too little abstraction to let the UI, REST controller, and batch job each calculate parking fees themselves?
+    2. When there is only one fixed formula, why might a ParkingFeeCalculator class with a clear API be sufficient?
+    3. What signs indicate that a system of factories, registries, and AbstractRateEngine is too general for current requirements?
 
-    ### Tiến hóa theo nhu cầu thực tế
+    ### Evolving with Actual Needs
 
-    1. Khi nào việc xuất hiện HourlyPolicy và FlatPerVisitPolicy tạo lý do thực sự để giới thiệu ParkingFeePolicy?
-    2. ParkingCheckout phụ thuộc policy qua constructor giúp thay đổi điều gì mà không sửa logic checkout?
-    3. Vì sao dùng Object hoặc Map cho đầu vào có thể làm hợp đồng trở nên mơ hồ dù nhìn có vẻ tái sử dụng cao?
-    4. Làm thế nào chuyển từ calculator sang nhiều policy mà vẫn giữ các kết quả phí ở mốc 15, 16, 75 và 76 phút?
-    5. Khi nào composition phù hợp hơn kế thừa nhiều tầng trong bài toán nhiều chính sách?
+    1. When do HourlyPolicy and FlatPerVisitPolicy provide a genuine reason to introduce ParkingFeePolicy?
+    2. What can change without modifying checkout logic when ParkingCheckout receives its policy through a constructor?
+    3. Why can using Object or Map for input make a contract ambiguous despite appearing highly reusable?
+    4. How can the design move from one calculator to multiple policies while preserving fees at 15, 16, 75, and 76 minutes?
+    5. When is composition more suitable than multilevel inheritance for multiple policies?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Chẩn đoán thiết kế thiếu hoặc thừa trừu tượng | Nêu dấu hiệu phân tán công thức hoặc tầng trung gian không có trách nhiệm rõ, gắn với hậu quả cụ thể. |
-    | Chọn API khởi đầu vừa đủ | Đề xuất lớp cụ thể với phương thức calculateVnd và ràng buộc tham số, kết quả minh bạch. |
-    | Nhận diện điểm biến thiên thật | Giải thích thời điểm cần trích xuất ParkingFeePolicy khi checkout phục vụ hai công thức khác nhau. |
-    | Thiết kế composition | Mô tả quan hệ ParkingCheckout chứa ParkingFeePolicy và cách truyền implementation tương ứng. |
-    | Bảo toàn hành vi khi refactor | Lập bảng kiểm tra phí ở các mốc 0, 15, 16, 75, 76 phút và giá trị lỗi cho đầu vào âm. |
-    | Đánh giá chi phí thiết kế | So sánh mức dễ đọc, số phụ thuộc, độ ổn định của hợp đồng và chi phí thêm biến thể trước khi tạo abstraction mới. |
+    | Diagnose under- or over-abstraction | Identify scattered formulas or intermediate layers with unclear responsibilities and explain their concrete consequences. |
+    | Choose a sufficient starting API | Propose a concrete class with a calculateVnd method, explicit parameter constraints, and transparent results. |
+    | Recognize genuine variation points | Explain when ParkingFeePolicy should be extracted because checkout must support two different formulas. |
+    | Design composition | Describe ParkingCheckout containing a ParkingFeePolicy and how the corresponding implementation is supplied. |
+    | Preserve behavior when refactoring | Tabulate fees at 0, 15, 16, 75, and 76 minutes and error values for negative input. |
+    | Evaluate design costs | Compare readability, dependency counts, contract stability, and the cost of adding variants before creating another abstraction. |
 - id: abstraction-008
-  title: Rò rỉ chi tiết thực hiện qua giao diện sử dụng
+  title: Implementation Details Leaking Through a Public Interface
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Rò rỉ chi tiết thực hiện qua giao diện sử dụng**
+    **Implementation Details Leaking Through a Public Interface**
 
-    Một API trông trừu tượng nhưng vẫn có thể buộc caller hiểu HashMap, SQLException, transaction hoặc thứ tự dữ liệu tình cờ của implementation. Bài học giúp phát hiện khi chi tiết triển khai đi xuyên qua hợp đồng sử dụng, khiến mã bên ngoài khó đổi backend và dễ phá bất biến.
+    An API may look abstract yet still force callers to understand HashMap, SQLException, transactions, or an implementation's incidental data ordering. This lesson helps learners detect implementation details that leak through a usage contract, making external code harder to adapt to another backend and more likely to break invariants.
 
-    Qua LeakyBookStore và BookCatalog, người học chuyển từ getInternalBooks().get(isbn) sang findByIsbn và searchByTitle có ngữ nghĩa rõ, phân biệt kết quả không tìm thấy với lỗi hệ thống, đồng thời xét những thuộc tính hành vi cần công bố như thứ tự kết quả, độ mới dữ liệu và vòng đời Stream.
+    Through LeakyBookStore and BookCatalog, learners move from getInternalBooks().get(isbn) to findByIsbn and searchByTitle with clear semantics, distinguish not-found results from system errors, and consider behavioral properties that must be exposed, such as result ordering, data freshness, and Stream lifetimes.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Must Be Able to Answer
 
-    ### Nhận diện chi tiết bị lộ
+    ### Recognizing Leaked Details
 
-    1. Vì sao getInternalBooks() trả HashMap khiến caller phụ thuộc triển khai và có thể sửa trạng thái nội bộ?
-    2. Nếu thay HashMap mutable bằng unmodifiableMap, vấn đề đóng gói và vấn đề rò rỉ abstraction đã được xử lý đến đâu?
-    3. Khi nào Path hoặc IOException là phần hợp đồng hợp lý, thay vì dấu hiệu leaky abstraction?
+    1. Why does getInternalBooks() returning a HashMap make callers depend on implementation details and potentially modify internal state?
+    2. If a mutable HashMap is replaced with an unmodifiableMap, to what extent are the encapsulation and leaky-abstraction problems resolved?
+    3. When are Path or IOException reasonable parts of a contract rather than signs of a leaky abstraction?
 
-    ### Thiết kế lại API và giữ ngữ nghĩa
+    ### Redesigning APIs and Preserving Semantics
 
-    1. BookCatalog nên công bố hành vi tìm kiếm nào để LibraryService độc lập với HashMap, SQL hoặc HTTP?
-    2. Vì sao Optional.empty khi không thấy sách phải khác với thất bại khi truy vấn database?
-    3. Các thuộc tính tìm kiếm nào cần giữ nhất quán giữa implementation, như so khớp hoa/thường, thứ tự ISBN và giới hạn số kết quả?
-    4. Một Stream phụ thuộc connection đang mở đặt ra trách nhiệm vòng đời nào cho caller và adapter?
-    5. Khi nào dùng kiểu Page/Pageable của Spring là ranh giới hợp lý, và khi nào nó tạo phụ thuộc framework không cần thiết?
-    6. Các bước chuyển dần client khỏi API rò rỉ là gì để không làm hỏng tương thích sử dụng?
+    1. Which search behaviors should BookCatalog expose so LibraryService remains independent of HashMap, SQL, or HTTP?
+    2. Why must Optional.empty for a missing book be distinguished from a database-query failure?
+    3. Which search properties must remain consistent across implementations, such as case matching, ISBN ordering, and result limits?
+    4. What lifecycle responsibilities does a Stream tied to an open connection impose on callers and adapters?
+    5. When are Spring's Page/Pageable types a reasonable boundary, and when do they introduce unnecessary framework dependencies?
+    6. What steps allow clients to migrate away from a leaky API without breaking usage compatibility?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Phát hiện API rò rỉ | Chỉ ra trong ví dụ những chỗ công bố HashMap, ResultSet, SQLException hoặc phụ thuộc session ngoài phạm vi caller. |
-    | Phân biệt rò implementation với đóng gói kém | Phân tích độc lập việc lộ cấu trúc dữ liệu và cho phép sửa collection mutable. |
-    | Thiết kế hợp đồng theo nghiệp vụ | Viết phác thảo findByIsbn và searchByTitle với kiểu kết quả, điều kiện đầu vào và lỗi có ý nghĩa rõ ràng. |
-    | Bảo vệ dữ liệu trả về | Chọn List.copyOf khi phù hợp, giải thích giới hạn của sao chép nông và phần tử mutable. |
-    | Giữ hành vi thay thế được | Xây ca kiểm tra tìm theo ISBN, chữ hoa/thường, thứ tự, limit và phân biệt không có dữ liệu với lỗi backend. |
-    | Quản lý lỗi và tài nguyên | Mô tả cách adapter ánh xạ SQLException có giữ cause và cách đóng Stream phụ thuộc connection. |
-    | Lập lộ trình sửa API | Xác định nhu cầu caller, thêm API nghiệp vụ, chuyển mã gọi, loại đường truy cập cũ và kiểm thử hợp đồng. |
+    | Detect leaky APIs | Identify where the example exposes HashMap, ResultSet, SQLException, or session dependencies outside the caller's scope. |
+    | Distinguish implementation leaks from poor encapsulation | Analyze exposed data structures separately from permission to mutate collections. |
+    | Design business-oriented contracts | Sketch findByIsbn and searchByTitle with clear result types, input conditions, and meaningful errors. |
+    | Protect returned data | Use List.copyOf where appropriate and explain the limits of shallow copies and mutable elements. |
+    | Preserve substitutable behavior | Build tests for ISBN search, case matching, ordering, limits, and distinguishing no data from backend errors. |
+    | Manage errors and resources | Describe how adapters map SQLException while preserving its cause and close connection-dependent Streams. |
+    | Plan API migration | Identify caller needs, add business APIs, migrate calling code, remove old access paths, and test the contract. |

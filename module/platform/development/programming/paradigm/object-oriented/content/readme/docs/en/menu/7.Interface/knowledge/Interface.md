@@ -1,39 +1,39 @@
 <a id="back-to-top"></a>
 
-# Giao diện
+# Interfaces
 
 ## Menu
-- [Giao diện như một hợp đồng và một vai trò](#interface-001)
-- [Khai báo và thực hiện giao diện](#interface-002)
-- [Lập trình dựa trên giao diện](#interface-003)
-- [Một đối tượng đảm nhận nhiều giao diện](#interface-004)
-- [Chọn giao diện hay lớp trừu tượng](#interface-005)
-- [Giao diện nhỏ và phân tách vai trò](#interface-006)
-- [Thành viên mặc định và giới hạn tùy ngôn ngữ](#interface-007)
-- [Thay thế cách thực hiện mà giữ hợp đồng](#interface-008)
-- [Thiết kế giao diện thanh toán hoặc lưu trữ](#interface-009)
+- [Interfaces as contracts and roles](#interface-001)
+- [Declaring and implementing interfaces](#interface-002)
+- [Programming to interfaces](#interface-003)
+- [One object implementing multiple interfaces](#interface-004)
+- [Choosing an interface or an abstract class](#interface-005)
+- [Small interfaces and role segregation](#interface-006)
+- [Default members and language-specific limitations](#interface-007)
+- [Replacing implementations while preserving contracts](#interface-008)
+- [Designing payment or storage interfaces](#interface-009)
 
-## <a id="interface-001">Giao diện như một hợp đồng và một vai trò</a>
+## <a id="interface-001">Interfaces as contracts and roles</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Giao diện như một hợp đồng và một vai trò trong Java
+# Interfaces as contracts and roles in Java
 
-Trong Java, **giao diện (`interface`)** là một cách mô tả **khả năng mà một đối tượng cam kết cung cấp**, để mã sử dụng có thể gọi khả năng đó mà không cần biết đối tượng thuộc lớp cụ thể nào.
+In Java, **an interface (`interface`)** describes **capabilities that an object commits to providing**, allowing client code to invoke those capabilities without knowing the object's concrete class.
 
-Hãy tưởng tượng ứng dụng cần gửi thông báo. Mã nghiệp vụ chỉ quan tâm việc **gửi một thông báo tới người nhận**. Nó không nên phải biết nơi gửi là email, SMS, thông báo trong ứng dụng, hay một phiên bản giả lập phục vụ kiểm thử. Ta có thể đặt tên chung cho khả năng đó là `DeliveryChannel`.
+Imagine an application that needs to send notifications. Its business logic only cares about **delivering a notification to a recipient**. It should not need to know whether delivery uses email, SMS, an in-app notification, or a test double. We can name this shared capability `DeliveryChannel`.
 
-Hai cách nhìn bổ sung cho nhau:
+These two perspectives complement each other:
 
-- **Giao diện như hợp đồng:** nếu một lớp `implements DeliveryChannel`, lớp đó phải cung cấp các thao tác của giao diện và đáp ứng những quy tắc sử dụng đã công bố.
-- **Giao diện như vai trò:** một đối tượng có thể được sử dụng *trong vai trò* kênh gửi thông báo, ngay cả khi bản chất của đối tượng còn có những khả năng khác. Một lớp có thể thực hiện nhiều vai trò thông qua nhiều interface.
+- **Interface as a contract:** if a class `implements DeliveryChannel`, it must provide the interface's operations and honor its published usage rules.
+- **Interface as a role:** an object can be used *in the role of* a notification delivery channel even if it has other capabilities. A class can fulfill multiple roles by implementing multiple interfaces.
 
-Hợp đồng giúp các bên phối hợp ổn định. Vai trò giúp ta nói về **điều đối tượng làm được** thay vì hỏi **nó được tạo từ lớp nào**.
+Contracts enable reliable collaboration between components. Roles let us discuss **what an object can do** rather than **which class created it**.
 
-## 1. Interface định nghĩa những gì?
+## 1. What does an interface define?
 
-Ví dụ đơn giản:
+A simple example:
 
 ~~~java
 interface DeliveryChannel {
@@ -41,29 +41,29 @@ interface DeliveryChannel {
 }
 ~~~
 
-Đối với Java compiler, giao diện này khai báo một thao tác có tên `deliver`, nhận `Notice` và trả về `DeliveryReceipt`.
+To the Java compiler, this interface declares an operation named `deliver` that accepts a `Notice` and returns a `DeliveryReceipt`.
 
-Ở ngữ cảnh này, phương thức được hiểu là `public abstract` dù không viết rõ hai từ khóa đó. Một class cụ thể triển khai giao diện phải cung cấp phiên bản `public` tương ứng, trừ khi class cũng là abstract.
+Here, the method is implicitly `public abstract` even though neither keyword appears. A concrete class implementing the interface must provide a corresponding `public` implementation unless the class itself is abstract.
 
-Tuy nhiên, **chữ ký phương thức chưa phải toàn bộ hợp đồng**. Người viết và người sử dụng giao diện còn phải thống nhất:
+However, **a method signature is not the entire contract**. Interface authors and users must also agree on the following:
 
-| Câu hỏi | Quy ước cần có |
+| Question | Required agreement |
 |---|---|
-| Ai được gọi? | Mã đang giữ một tham chiếu kiểu `DeliveryChannel` |
-| Đầu vào nào hợp lệ? | `Notice` khác `null`, có người nhận và nội dung hợp lệ |
-| Lời gọi thành công có ý nghĩa gì? | Trong ví dụ học tập: hoàn tất một lần **mô phỏng** gửi |
-| Giá trị trả về nói gì? | `DeliveryReceipt` khác `null`, cho biết kênh và thông tin thao tác |
-| Đầu vào có bị sửa không? | Không; `Notice` được thiết kế bất biến |
-| Nếu không thực hiện được thì sao? | Thông báo lỗi theo quy ước, không tự ý trả `null` hoặc coi như thành công |
-| Có gây tác dụng phụ không? | Phải nói rõ trong hợp đồng thực tế; ví dụ dưới chỉ mô phỏng, không gửi mạng thật |
+| Who may invoke it? | Code holding a reference of type `DeliveryChannel` |
+| What input is valid? | A `Notice` that is not `null`, with a valid recipient and content |
+| What does a successful call mean? | In this learning example: completing one **simulated** delivery |
+| What does the return value convey? | A `DeliveryReceipt` that is not `null`, identifying the channel and operation details |
+| Is the input modified? | No; `Notice` is designed to be immutable |
+| What happens on failure? | Report an error as specified; do not arbitrarily return `null` or pretend to succeed |
+| Are there side effects? | The real contract must state them; this example only simulates delivery and sends nothing over a network |
 
-Interface cung cấp **khung cú pháp được compiler kiểm tra**. Quy tắc như “không trả `null`”, “không âm thầm bỏ thông báo” hoặc “phải dùng đúng người nhận” là **hợp đồng hành vi**, được giữ bằng thiết kế, kiểm tra và kiểm thử.
+An interface provides **a syntactic structure checked by the compiler**. Rules such as “do not return `null`,” “do not silently drop notifications,” and “use the intended recipient” are part of the **behavioral contract**, enforced through design, validation, and tests.
 
-## 2. Ví dụ Java hoàn chỉnh: cùng một vai trò, nhiều cách thực hiện
+## 2. Complete Java example: one role, multiple implementations
 
-Tình huống: hệ thống gửi lời chào đến người dùng thông qua một kênh được cấu hình từ bên ngoài. Ta có một service chung, hai cách gửi mô phỏng và một vai trò phụ dùng để kiểm tra sức khỏe kênh.
+Scenario: a system sends a welcome message through a delivery channel configured externally. We have a shared service, two simulated delivery implementations, and an additional role for checking channel health.
 
-Lưu toàn bộ vào **`Demo.java`**, chạy với Java 17 trở lên:
+Save everything in **`Demo.java`** and run it with Java 17 or later:
 
 ~~~java
 import java.util.Objects;
@@ -182,14 +182,14 @@ final class NotificationService {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac Demo.java
 java Demo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 EMAIL -> U-01: Chào mừng bạn!
@@ -197,17 +197,17 @@ SMS -> U-02: Chào mừng bạn!
 SMS sẵn sàng: true
 ~~~
 
-Các lớp `EmailChannel` và `SmsChannel` **chưa gửi email hoặc SMS thật**. Mục đích của ví dụ là để thấy cách tách giao diện và cách thực hiện. Trong hệ thống thật, mỗi adapter cần ánh xạ mã người nhận sang địa chỉ phù hợp, xử lý sự cố mạng, timeout và bảo đảm kết quả có ngữ nghĩa đã thống nhất.
+The `EmailChannel` and `SmsChannel` classes **do not send real emails or SMS messages**. This example illustrates how to separate an interface from its implementations. In a real system, each adapter must map recipient IDs to actual destinations, handle network failures and timeouts, and ensure that results have the agreed meaning.
 
-### Đọc chương trình qua ba góc nhìn
+### Reading the program from three perspectives
 
-**Góc nhìn của client:** `NotificationService` chỉ có field kiểu `DeliveryChannel`. Từ đó, nó được phép gọi `deliver(Notice)` mà không cần biết công thức hay quy trình nội bộ của từng kênh.
+**Client perspective:** `NotificationService` only has a field of type `DeliveryChannel`. It can therefore call `deliver(Notice)` without knowing either channel's internal algorithm or procedure.
 
-**Góc nhìn của implementation:** `EmailChannel` và `SmsChannel` khai báo `implements DeliveryChannel`, cung cấp `deliver()` công khai, kiểm tra đầu vào và trả kết quả theo hợp đồng chung.
+**Implementation perspective:** `EmailChannel` and `SmsChannel` declare `implements DeliveryChannel`, provide a public `deliver()` method, validate inputs, and return results according to the shared contract.
 
-**Góc nhìn vai trò:** đối tượng `sms` vừa là `DeliveryChannel`, vừa là `HealthCheck`. Hai biến `deliveryRole` và `healthRole` có thể giữ tham chiếu tới **cùng một đối tượng**, nhưng mỗi biến chỉ bộc lộ những thao tác thuộc kiểu giao diện được khai báo cho nó.
+**Role perspective:** the `sms` object is both a `DeliveryChannel` and a `HealthCheck`. The `deliveryRole` and `healthRole` variables may reference **the same object**, but each exposes only the operations defined by its declared interface type.
 
-Không cần tạo hai đối tượng chỉ vì đối tượng đó có hai vai trò.
+There is no need to create two objects just because one object fulfills two roles.
 
 ~~~mermaid
 classDiagram
@@ -236,11 +236,11 @@ classDiagram
     NotificationService --> DeliveryChannel : phụ thuộc
 ~~~
 
-## 3. “Là một vai trò” khác “là một loại thực thể” thế nào?
+## 3. How is “being a role” different from “being a type of entity”?
 
-Một **class** thường chứa cách cài đặt và trạng thái cụ thể. Một **interface** thường nêu ra một khả năng mà nhiều kiểu đối tượng khác nhau có thể đảm nhiệm.
+A **class** typically contains concrete state and implementation details. An **interface** typically specifies a capability that different kinds of objects can fulfill.
 
-Ví dụ một ứng dụng có thể xác định:
+For example, an application might define:
 
 ~~~java
 interface Printable {
@@ -252,9 +252,9 @@ interface Exportable {
 }
 ~~~
 
-Một báo cáo có thể đóng vai `Printable` để in và `Exportable` để xuất file. Một hóa đơn cũng có thể đóng những vai trò đó, dù báo cáo và hóa đơn không cần có chung một lớp cha nghiệp vụ cụ thể.
+A report can act as `Printable` when printed and as `Exportable` when exported. An invoice can fulfill those same roles even though reports and invoices need not share a specific business superclass.
 
-Ngôn ngữ kiểu thể hiện rất rõ ý tưởng này:
+The type system makes this idea explicit:
 
 ~~~java
 void printDocument(Printable document) {
@@ -262,25 +262,25 @@ void printDocument(Printable document) {
 }
 ~~~
 
-Đoạn phương thức trên minh họa trong một lớp thích hợp. Người gọi chỉ cần một đối tượng làm được vai trò `Printable`. Hàm không cần nhận `Invoice`, `PdfReport`, hoặc kiểm tra từng kiểu bằng chuỗi `if/else`.
+This method fragment belongs inside an appropriate class. Its caller only needs an object that can fulfill the `Printable` role. The method need not accept an `Invoice` or `PdfReport` specifically, or check each concrete type using an `if/else` chain.
 
-Trong Java, interface **cũng là một kiểu dữ liệu (reference type)**. Có thể dùng nó cho kiểu biến, tham số, kiểu trả về, tham số generic hoặc field. Nó không chỉ là tài liệu mô tả kiến trúc.
+In Java, an interface **is also a data type (a reference type)**. It can be used as a variable type, parameter type, return type, generic type argument, or field type. It is more than an architectural description.
 
-Ví dụ trong JDK:
+Examples from the JDK:
 
-| Interface | Vai trò được biểu diễn | Đối tượng cụ thể có thể thực hiện |
+| Interface | Role represented | Possible concrete implementers |
 |---|---|---|
-| `Runnable` | Có hành vi `run()` | Một tác vụ được đưa cho executor/thread |
-| `Comparable<T>` | Có thứ tự tự nhiên để so sánh với kiểu phù hợp | `String`, `Integer`, nhiều value object |
-| `Comparator<T>` | Có chiến lược so sánh hai giá trị | Comparator theo giá, ngày, tên |
-| `Iterable<T>` | Có thể duyệt các phần tử | Một collection hoặc kiểu tùy biến |
-| `AutoCloseable` | Có thể đóng tài nguyên | File stream, tài nguyên tùy biến |
+| `Runnable` | Provides `run()` behavior | A task submitted to an executor/thread |
+| `Comparable<T>` | Defines a natural order for comparison with a compatible type | `String`, `Integer`, and many value objects |
+| `Comparator<T>` | Provides a strategy for comparing two values | Comparators by price, date, or name |
+| `Iterable<T>` | Supports iteration over elements | A collection or custom type |
+| `AutoCloseable` | Supports closing a resource | File streams or custom resources |
 
-Một đối tượng có thể triển khai nhiều interface mà không cần đi theo một cây phân cấp lớp duy nhất.
+An object can implement multiple interfaces without belonging to a single class hierarchy.
 
-## 4. Kiểu khai báo quyết định thao tác có thể gọi
+## 4. The declared type determines which operations can be called
 
-Xét phần này của ví dụ:
+Consider this fragment from the example:
 
 ~~~java
 SmsChannel sms = new SmsChannel();
@@ -292,22 +292,22 @@ channel.deliver(new Notice("U-10", "Xin chào"));
 System.out.println(monitor.isHealthy());
 ~~~
 
-Khi biến `channel` có kiểu `DeliveryChannel`, ta **không thể** viết trực tiếp `channel.isHealthy()`, dù đối tượng thực tế cũng là `SmsChannel`:
+When `channel` has type `DeliveryChannel`, we **cannot** directly call `channel.isHealthy()` even though the actual object is a `SmsChannel`:
 
 ~~~java
 // channel.isHealthy(); // Lỗi biên dịch: phương thức không thuộc
 //                     // kiểu DeliveryChannel.
 ~~~
 
-Điều này là có chủ đích. Một phần của hệ thống chỉ cần khả năng gửi thì không nên phụ thuộc vô tình vào API giám sát.
+This restriction is intentional. A component that only needs delivery capability should not accidentally depend on the monitoring API.
 
-Nếu thực sự cần giám sát, truyền một tham số `HealthCheck` riêng hoặc thiết kế dependency phù hợp. Đừng liên tục ép kiểu sang `SmsChannel` để “lấy thêm” các phương thức ngoài hợp đồng; ép kiểu như thế làm client phụ thuộc ngược lại implementation cụ thể.
+If monitoring is genuinely required, pass a separate `HealthCheck` parameter or design an appropriate dependency. Avoid repeatedly casting to `SmsChannel` to “get access” to methods outside the contract; such casts make the client depend on a specific implementation.
 
-**Đa hình (polymorphism)** xảy ra tại lời gọi `channel.deliver(...)`: Java thực hiện `deliver()` của class cụ thể đang được tham chiếu, chứ không thực hiện một “thuật toán mặc định” do tên biến quyết định.
+**Polymorphism** occurs at the `channel.deliver(...)` call: Java invokes the `deliver()` implementation belonging to the referenced concrete class, rather than some “default algorithm” selected by the variable name.
 
-## 5. Một contract tốt cần đi xa hơn compiler
+## 5. A good contract goes beyond the compiler
 
-Xét trường hợp một lớp khác khai báo:
+Consider another class that declares:
 
 ~~~java
 final class BrokenChannel implements DeliveryChannel {
@@ -318,46 +318,46 @@ final class BrokenChannel implements DeliveryChannel {
 }
 ~~~
 
-Class này **biên dịch được**, vì trả về `null` là hợp lệ về mặt kiểu tham chiếu. Nhưng nó **vi phạm hợp đồng hành vi** đã nói rõ kết quả không được null.
+This class **compiles**, because returning `null` is valid for a reference type. But it **violates the behavioral contract** requiring a non-null result.
 
-Hoặc một class có thể:
+Alternatively, a class could:
 
-- Trả receipt cho **người nhận khác** với đầu vào.
-- Ném `UnsupportedOperationException` với mọi `Notice` hợp lệ.
-- Trả kết quả “đã gửi” dù không thực hiện thao tác được quy định.
-- Thay đổi dữ liệu đầu vào trái với cam kết.
-- Bất ngờ yêu cầu người gọi truyền một kiểu con bí mật, dù giao diện chấp nhận kiểu cha rộng hơn.
+- Return a receipt for **a different recipient** from the input.
+- Throw `UnsupportedOperationException` for every valid `Notice`.
+- Report “delivered” even though it never performed the promised operation.
+- Modify input data contrary to its commitment.
+- Unexpectedly require callers to pass a secret subtype even though the interface accepts a broader parent type.
 
-Compiler không tự chứng minh những quy tắc đó.
+The compiler cannot prove these rules on its own.
 
-### Các phần của hợp đồng hành vi
+### Elements of a behavioral contract
 
-| Thành phần | Ý nghĩa | Ví dụ với `DeliveryChannel` |
+| Element | Meaning | Example for `DeliveryChannel` |
 |---|---|---|
-| **Precondition** | Điều kiện người gọi cần đáp ứng | Truyền `Notice` khác null và hợp lệ |
-| **Postcondition** | Cam kết sau khi hoàn thành bình thường | Trả `DeliveryReceipt` khác null |
-| **Invariant** | Điều kiện đối tượng phải duy trì | Receipt có tên kênh hợp lệ |
-| **Failure contract** | Khi nào, bằng cách nào thông báo lỗi | `NullPointerException` nếu truyền notice null |
-| **Side-effect contract** | Trạng thái nào có thể bị tác động | Ví dụ mô phỏng không thực hiện gửi mạng thật |
+| **Precondition** | Conditions the caller must satisfy | Pass a valid, non-null `Notice` |
+| **Postcondition** | Guarantee after normal completion | Return a non-null `DeliveryReceipt` |
+| **Invariant** | Condition an object must maintain | A receipt contains a valid channel name |
+| **Failure contract** | When and how failures are reported | `NullPointerException` when the notice is null |
+| **Side-effect contract** | Which state or resources may be affected | The simulation does not send anything over a real network |
 
-Đừng tùy tiện thêm vào giao diện các cam kết mà mọi implementation không thể giữ. Chẳng hạn, nếu hứa “`deliver()` luôn hoàn thành trong 1 ms”, một adapter HTTP thực tế rất khó đáp ứng. Hợp đồng nên đủ mạnh để client dùng đúng, nhưng vẫn cho phép nhiều cách triển khai hợp lệ.
+Avoid making promises in an interface that not every implementation can keep. For example, a promise that “`deliver()` always completes within 1 ms” would be difficult for a real HTTP adapter to honor. A contract should be strong enough for correct client use while allowing multiple valid implementations.
 
-### Nguyên tắc thay thế
+### Substitution principle
 
-Một lớp triển khai giao diện phải được sử dụng thay cho các lớp triển khai khác **trong phạm vi hợp đồng** mà không làm client gặp bất ngờ trái với lời hứa chung. Điều này gần với **Liskov Substitution Principle (LSP)**.
+A class implementing an interface must be usable in place of other implementations **within the contract's guarantees** without surprising clients in ways that violate shared promises. This is closely related to the **Liskov Substitution Principle (LSP)**.
 
-Nhưng không có yêu cầu rằng:
+However, there is no requirement that:
 
-- Hai kênh phải dùng cùng thuật toán.
-- Hai receipt phải chứa cùng tên kênh.
-- Hai provider có cùng hiệu năng nếu hợp đồng không quy định.
-- Mọi implementation đều phải được tạo và quản lý theo một cách.
+- Two channels use the same algorithm.
+- Two receipts contain the same channel name.
+- Two providers have identical performance unless the contract specifies it.
+- Every implementation is created and managed in the same way.
 
-Phần khác biệt chính là chi tiết thực hiện. Phần ổn định là hợp đồng mà client dựa vào.
+Implementation details may differ. The stable part is the contract clients rely on.
 
-## 6. Hợp đồng giúp client độc lập với cách gửi
+## 6. Contracts keep clients independent of delivery mechanisms
 
-Đối tượng `NotificationService` trong ví dụ chính nhận `DeliveryChannel` qua constructor. Nơi tạo ứng dụng có thể truyền `new EmailChannel()` hoặc `new SmsChannel()`; mã `sendWelcome` chỉ biết `deliver(Notice)` và không cần sửa khi chuyển kênh.
+In the main example, `NotificationService` receives a `DeliveryChannel` through its constructor. The application setup code can pass `new EmailChannel()` or `new SmsChannel()`; the `sendWelcome` method only knows `deliver(Notice)` and needs no changes when switching channels.
 
 ~~~java
 DeliveryChannel selected = new SmsChannel();
@@ -365,11 +365,11 @@ NotificationService service = new NotificationService(selected);
 DeliveryReceipt result = service.sendWelcome("U-04");
 ~~~
 
-Cách nhận một dependency đã có từ bên ngoài gọi là **constructor injection**. Nó giúp cô lập nơi lựa chọn implementation, nhưng không có nghĩa mỗi class phải tạo thêm một interface. Chọn hợp đồng khi nó phản ánh **khả năng mà client thực sự cần**; bài *Lập trình dựa trên giao diện* sẽ phân tích hướng phụ thuộc, composition root và fake test cụ thể hơn.
+Receiving an existing dependency from outside is called **constructor injection**. It isolates the decision about which implementation to use, but does not mean every class needs an additional interface. Define a contract when it reflects **a capability the client actually requires**; the *Programming to interfaces* lesson explores dependency direction, the composition root, and concrete fake tests.
 
-## 7. Một vai trò không nên hứa những khả năng không có
+## 7. A role should not promise unavailable capabilities
 
-Nếu `DeliveryChannel` còn buộc mọi implementation phải `revoke(messageId)`, một kênh không thể thu hồi tin đã gửi sẽ phải viết method vô nghĩa hoặc luôn ném lỗi. Tốt hơn là tách hai vai trò độc lập:
+If `DeliveryChannel` also required every implementation to provide `revoke(messageId)`, a channel unable to retract sent messages would have to implement a meaningless method or always throw an exception. It is better to separate the two roles:
 
 ~~~java
 interface Sender {
@@ -381,22 +381,22 @@ interface Revocable {
 }
 ~~~
 
-Một lớp chỉ nên `implements Revocable` khi có thể thực sự đáp ứng hợp đồng hủy. Client chỉ cần gửi thì yêu cầu `Sender`; client cần thu hồi mới yêu cầu `Revocable`. Đây là ý tưởng của **Interface Segregation Principle (ISP)**: giới hạn phụ thuộc theo nhu cầu, không phải tách máy móc một phương thức thành một interface. Bài *Giao diện nhỏ và phân tách vai trò* có quy trình refactor hợp đồng quá rộng.
+A class should only `implements Revocable` when it can actually satisfy the revocation contract. A client that only sends messages requires `Sender`; one that needs revocation requires `Revocable`. This reflects the **Interface Segregation Principle (ISP)**: limit dependencies according to client needs, rather than mechanically creating one interface per method. The *Small interfaces and role segregation* lesson shows how to refactor an overly broad contract.
 
-## 8. Vai trò và họ lớp có triển khai chung là hai trục khác nhau
+## 8. Roles and class families sharing implementations are separate dimensions
 
-| Câu hỏi | Interface | Abstract class |
+| Question | Interface | Abstract class |
 |---|---|---|
-| Mục tiêu chủ yếu | Nêu hợp đồng hành vi của một vai trò | Chia sẻ trạng thái, constructor hoặc thuật toán của một họ lớp |
-| Khả năng kết hợp | Class `implements` nhiều interface | Class trực tiếp `extends` tối đa một superclass |
-| Trạng thái instance | Không khai báo field instance | Có thể giữ field instance và invariant |
-| Constructor | Không có | Có |
+| Main purpose | Define the behavioral contract for a role | Share state, constructors, or algorithms within a class family |
+| Composition options | A class can `implements` multiple interfaces | A class can directly `extends` at most one superclass |
+| Instance state | Cannot declare instance fields | Can hold instance fields and invariants |
+| Constructor | None | Supported |
 
-Ví dụ `Invoice` và `AnalyticsReport` cùng có thể `implements Exportable` dù không có cùng superclass nghiệp vụ. Nếu một nhóm exporter thực sự cần cùng bộ nhớ đệm và constructor cấu hình, nhóm đó có thể dùng một abstract base class **đồng thời** implement `Exportable`; exporter khác có thể implement trực tiếp. Lựa chọn giữa kế thừa và composition được minh họa trọn vẹn ở bài *Chọn giao diện hay lớp trừu tượng*.
+For example, `Invoice` and `AnalyticsReport` can both `implements Exportable` without sharing a business superclass. If a group of exporters truly needs the same buffer and configuration constructor, it can use an abstract base class that **also** implements `Exportable`, while others implement the interface directly. The *Choosing an interface or an abstract class* lesson fully illustrates inheritance versus composition.
 
-## 9. Một số thành viên Java interface có sẵn cách thực hiện
+## 9. Some Java interface members can include implementations
 
-Mặc dù phần chính của `DeliveryChannel` là phương thức `public abstract` `deliver`, Java 17 còn cho interface chứa:
+Although the main member of `DeliveryChannel` is the `public abstract` method `deliver`, Java 17 also allows interfaces to contain:
 
 ~~~java
 interface Greeter {
@@ -416,13 +416,13 @@ interface Greeter {
 }
 ~~~
 
-`default` có thân dùng chung cho implementation; `static` được gọi qua `Greeter.hasName(...)`, không phải instance; `private` là helper chỉ dùng **bên trong interface** (ví dụ trên chưa dùng đến `normalize`). Field trong interface luôn ngầm `public static final`, **không** tạo trạng thái riêng cho từng object. Nếu hai interface độc lập có default method cùng chữ ký, class có thể cần tự override để giải quyết. Bài *Thành viên mặc định và giới hạn tùy ngôn ngữ* giải thích đầy đủ modifier, xung đột, giới hạn `Object` và khác biệt phiên bản.
+`default` provides a body shared by implementations; `static` is called through `Greeter.hasName(...)` rather than an instance; `private` is a helper usable only **inside the interface** (the example above does not use `normalize` yet). Interface fields are implicitly `public static final` and **do not** create per-object state. If two unrelated interfaces define default methods with the same signature, a class may need to override the method to resolve the conflict. The *Default members and language-specific limitations* lesson explains modifiers, conflicts, `Object` limitations, and version differences in detail.
 
-## 10. Interface như một vai trò có thể truyền vào callback
+## 10. Interfaces as roles passed into callbacks
 
-Một interface chỉ có **một abstract method** có thể được khai báo là *functional interface* và triển khai bằng lambda.
+An interface with **one abstract method** can be declared a *functional interface* and implemented with a lambda.
 
-Ví dụ:
+For example:
 
 ~~~java
 @FunctionalInterface
@@ -431,7 +431,7 @@ interface PriceRule {
 }
 ~~~
 
-Sử dụng:
+Usage:
 
 ~~~java
 PriceRule tenPercentOff = original -> original * 90 / 100;
@@ -439,17 +439,17 @@ PriceRule tenPercentOff = original -> original * 90 / 100;
 System.out.println(tenPercentOff.apply(200_000)); // 180000
 ~~~
 
-Biến `tenPercentOff` đảm nhiệm vai trò `PriceRule`, mặc dù ta không viết một class named implementation bằng tay. Lambda được Java chuyển thành một đối tượng có thể thực hiện hợp đồng functional interface.
+The `tenPercentOff` variable fulfills the `PriceRule` role even though we did not manually write a named implementation class. Java turns the lambda into an object that can fulfill the functional interface contract.
 
-Trong ví dụ này, công thức chỉ minh họa giảm giá 10% với số nguyên dương đủ nhỏ để không tràn `long`; hợp đồng tài chính thực tế phải nêu rõ kiểm tra số âm, làm tròn và xử lý overflow.
+Here the formula only demonstrates a 10% discount on sufficiently small positive integers to avoid `long` overflow; a real financial contract must specify how to validate negative values, round amounts, and handle overflow.
 
-Các interface như `Runnable`, `Comparator<T>`, `Predicate<T>`, `Function<T,R>` là những ví dụ quen thuộc về cách **vai trò** cho phép truyền hành vi qua tham số.
+Interfaces such as `Runnable`, `Comparator<T>`, `Predicate<T>`, and `Function<T,R>` are familiar examples of **roles** that allow behavior to be passed as an argument.
 
-`@FunctionalInterface` giúp compiler kiểm tra rằng interface vẫn có đúng một abstract method theo quy tắc áp dụng. Annotation hữu ích nhưng không bắt buộc để Java nhận diện functional interface hợp lệ.
+`@FunctionalInterface` instructs the compiler to verify that the interface still has exactly one abstract method under the applicable rules. The annotation is useful but not required for Java to recognize a valid functional interface.
 
-## 11. Một hợp đồng rõ cho phép kiểm tra client bằng fake
+## 11. A clear contract lets us test clients with fakes
 
-Không cần gửi SMS thật để biết `NotificationService` tạo `Notice` đúng. Một test double có thể lưu thông báo nhận được:
+We do not need to send real SMS messages to verify that `NotificationService` constructs the correct `Notice`. A test double can record incoming notifications:
 
 ~~~java
 final class RecordingChannel implements DeliveryChannel {
@@ -470,39 +470,39 @@ if (!"U-03".equals(fake.last.recipientId())) {
 }
 ~~~
 
-Đoạn kiểm thử dùng lại `Notice`, `DeliveryReceipt` và `NotificationService` ở ví dụ chính. Nó chỉ xác nhận **client gọi đúng hợp đồng**, không chứng minh adapter email/SMS thật hoạt động. Phần kiểm thử nhiều implementation cùng một hợp đồng và phát hiện vi phạm semantics là trọng tâm của bài *Thay thế cách thực hiện mà giữ hợp đồng*.
+This test reuses `Notice`, `DeliveryReceipt`, and `NotificationService` from the main example. It only verifies that **the client invokes the contract correctly**; it does not prove that real email or SMS adapters work. Testing multiple implementations against one contract and detecting semantic violations is the focus of *Replacing implementations while preserving contracts*.
 
-## 12. Tiến hóa interface là thay đổi lời hứa với nhiều bên
+## 12. Evolving an interface changes promises to many parties
 
-Khi một interface được nhiều module sử dụng, việc thay đổi `deliver(Notice)` thành `deliver(String)` có thể khiến các class triển khai và client không biên dịch. Thêm abstract method cũng thường buộc các concrete implementer bổ sung mã; thêm default method giảm một số tác động về nguồn nhưng vẫn có thể gây xung đột và thay đổi hành vi.
+When multiple modules use an interface, changing `deliver(Notice)` to `deliver(String)` may prevent implementations and clients from compiling. Adding an abstract method also usually forces concrete implementers to add code; adding a default method reduces some source-level impact but may still introduce conflicts or change behavior.
 
-Nguy hiểm hơn là **giữ nguyên chữ ký nhưng đổi ý nghĩa kết quả**. Ví dụ, nếu `DeliveryReceipt` trước đây có nghĩa *nhà cung cấp đã tiếp nhận*, không được âm thầm đổi thành *người nhận đã xem* mà vẫn gọi đó là cùng một cam kết. Caller có thể đưa ra quyết định sai dù mọi mã vẫn biên dịch.
+More dangerously, developers might **keep the signature while changing what the result means**. For example, if `DeliveryReceipt` used to mean *accepted by the provider*, it must not silently change to *read by the recipient* while claiming to preserve the same guarantee. Callers could make wrong decisions even though all code still compiles.
 
-Khi thay kênh, hãy giữ nhất quán điều kiện đầu vào, kết quả, lỗi và side effects đã hứa. Nếu cần đổi semantics, hãy công bố phiên bản hợp đồng mới hoặc chiến lược chuyển đổi rõ ràng, đồng thời chạy kiểm thử hành vi của mỗi implementation.
+When switching channels, consistently preserve promised input conditions, results, errors, and side effects. If semantics must change, publish a new contract version or a clear migration strategy, and run behavioral tests against each implementation.
 
-## 13. Khi nào không nên tạo interface mới?
+## 13. When should we avoid creating another interface?
 
-Interface hữu ích nhưng cũng có chi phí bảo trì. Hãy cân nhắc không tạo thêm một interface nếu:
+Interfaces are useful but add maintenance costs. Consider skipping a new interface when:
 
-- Chỉ có một class đơn giản và chưa có ranh giới phụ thuộc cần ổn định.
-- Interface phản chiếu gần như mọi public method của class mà không tạo ra vai trò rõ ràng.
-- Các consumer liên tục ép kiểu sang implementation cụ thể để dùng những method bị bỏ ngoài interface.
-- Interface chứa nhiều phương thức chỉ có một phần implementation hỗ trợ.
-- API còn thay đổi nhanh, chưa rõ hợp đồng ổn định cho consumer.
+- There is only one simple class and no dependency boundary that needs stability yet.
+- The interface mirrors nearly every public method of a class without defining a clear role.
+- Consumers repeatedly cast to a concrete implementation to reach methods omitted from the interface.
+- The interface has many methods that only some implementations support.
+- The API is changing quickly, so a stable consumer contract is not yet clear.
 
-Ngược lại, interface đặc biệt phù hợp với **adapter tích hợp bên ngoài, chiến lược có thể thay thế, plugin, callback, cộng tác giữa module và dependency injection**.
+Conversely, interfaces are especially useful for **external integration adapters, replaceable strategies, plugins, callbacks, cross-module collaboration, and dependency injection**.
 
-Một tiêu chí thực dụng: mô tả interface bằng một câu **“đối tượng này có thể…”**. Nếu câu ấy rõ ràng, có người dùng cụ thể và có cam kết kiểm chứng được, interface có cơ sở tốt để tồn tại.
+A practical test is to describe the interface in one sentence: **“this object can…”**. If that statement is clear, has a specific consumer, and defines verifiable promises, the interface has a good reason to exist.
 
-## 14. Tình huống luyện tập
+## 14. Practice scenarios
 
-### Tình huống 1 — Thiết kế theo vai trò
+### Scenario 1 — Designing around roles
 
-Một hệ thống có `PdfReport`, `Invoice`, `EmailMessage`. `PdfReport` có thể in và xuất file; `Invoice` có thể in; `EmailMessage` có thể gửi. Nên ép tất cả `extends Document` có mọi phương thức `print()`, `export()`, `send()` không?
+A system contains `PdfReport`, `Invoice`, and `EmailMessage`. `PdfReport` can be printed and exported; `Invoice` can be printed; `EmailMessage` can be sent. Should they all be forced to `extends Document` with every `print()`, `export()`, and `send()` method?
 
-**Gợi ý:** không nhất thiết. Có thể dùng các interface theo vai trò `Printable`, `Exportable`, `Sendable`; mỗi lớp chỉ `implements` những khả năng thật sự cung cấp.
+**Hint:** not necessarily. Use role-based interfaces such as `Printable`, `Exportable`, and `Sendable`; each class should only `implements` the capabilities it actually provides.
 
-### Tình huống 2 — Nhận diện vi phạm hợp đồng
+### Scenario 2 — Spotting contract violations
 
 ~~~java
 class NullChannel implements DeliveryChannel {
@@ -513,9 +513,9 @@ class NullChannel implements DeliveryChannel {
 }
 ~~~
 
-**Đáp án:** class có thể biên dịch nhưng vi phạm hợp đồng `deliver` phải trả receipt khác null khi hoàn thành bình thường.
+**Answer:** the class can compile but violates the `deliver` contract, which requires a non-null receipt on normal completion.
 
-### Tình huống 3 — Vai trò khác kiểu thực tế
+### Scenario 3 — Roles versus runtime types
 
 ~~~java
 SmsChannel sms = new SmsChannel();
@@ -523,11 +523,11 @@ DeliveryChannel sender = sms;
 HealthCheck health = sms;
 ~~~
 
-Hỏi: có bao nhiêu đối tượng `SmsChannel` được tạo? Có thể gọi `sender.isHealthy()` trực tiếp không?
+Question: how many `SmsChannel` objects are created? Can we call `sender.isHealthy()` directly?
 
-**Đáp án:** một đối tượng; `sender.isHealthy()` không biên dịch được vì phương thức không thuộc interface `DeliveryChannel`, dù `health.isHealthy()` hợp lệ.
+**Answer:** one object; `sender.isHealthy()` does not compile because the method is absent from the `DeliveryChannel` interface, although `health.isHealthy()` is valid.
 
-### Tình huống 4 — Client phụ thuộc implementation
+### Scenario 4 — A client depending on an implementation
 
 ~~~java
 class Job {
@@ -535,51 +535,51 @@ class Job {
 }
 ~~~
 
-Hỏi: muốn kiểm thử `Job` bằng kênh giả thì nên thay đổi hướng phụ thuộc ra sao?
+Question: to test `Job` using a fake channel, how should the dependency direction change?
 
-**Gợi ý:** cho `Job` nhận `DeliveryChannel` qua constructor; nơi tạo `Job` cung cấp `EmailChannel` thật hoặc `RecordingChannel` giả theo môi trường.
+**Hint:** let `Job` receive `DeliveryChannel` through its constructor; the code that creates `Job` supplies a real `EmailChannel` or fake `RecordingChannel` according to the environment.
 
-### Tình huống 5 — Interface quá rộng
+### Scenario 5 — An overly broad interface
 
-Nếu mọi class thực hiện `StorageManager` phải có cả `upload()`, `read()`, `delete()`, nhưng một module chỉ được phép đọc, thiết kế nào dễ đảm bảo quyền hạn hơn?
+If every class implementing `StorageManager` must support `upload()`, `read()`, and `delete()`, but one module is allowed only to read, which design makes access control easier to enforce?
 
-**Gợi ý:** một vai trò `ReadableStorage` chỉ công khai `read()`, và các vai trò ghi/xóa chỉ được cấp cho nơi có quyền tương ứng. Phân tách vai trò cũng giúp giảm API mà code sử dụng có thể gọi nhầm.
+**Hint:** provide a `ReadableStorage` role exposing only `read()` and give write/delete roles only to code with the corresponding permissions. Splitting roles also reduces the API surface that clients might call by mistake.
 
-### Tình huống 6 — Dùng interface để biểu thị thuật toán
+### Scenario 6 — Expressing an algorithm through an interface
 
-Muốn sắp xếp danh sách nhân viên theo tên hoặc lương, bạn có cần sửa class `Employee` mỗi khi đổi tiêu chí?
+To sort employees by name or salary, must you modify the `Employee` class whenever the criterion changes?
 
-**Gợi ý:** không. Có thể truyền một `Comparator<Employee>` khác nhau vào thao tác sắp xếp. `Comparator` biểu thị **vai trò chiến lược so sánh**, còn class `Employee` biểu thị thực thể dữ liệu. Khi tiêu chí đổi, client chọn một implementation hoặc lambda khác.
+**Hint:** no. Pass different `Comparator<Employee>` implementations to the sort operation. `Comparator` represents **the comparison strategy role**, while `Employee` represents the data entity. When the criterion changes, the client chooses another implementation or lambda.
 
-## Ghi nhớ khi thiết kế Java OOP
+## Key takeaways for Java OOP design
 
-Hãy chọn giao diện bằng cách bắt đầu từ **người sử dụng**: họ cần đối tượng làm điều gì, đầu vào hợp lệ ra sao, kết quả nào có thể tin cậy và lỗi được xử lý như thế nào? Sau đó cho các class triển khai những hành vi đó bằng chi tiết riêng.
+Choose interfaces by starting with **the consumer**: what should an object be able to do, what inputs are valid, which results can be trusted, and how should failures be handled? Then let classes implement those behaviors using their own details.
 
-Một interface tốt mang tên một **vai trò có ý nghĩa**, bộc lộ các thao tác đủ nhỏ để client sử dụng độc lập, và có một **hợp đồng hành vi rõ ràng**. Class implement giao diện được thay đổi thuật toán, cấu trúc dữ liệu hoặc nhà cung cấp, nhưng phải tiếp tục thực hiện những cam kết mà client dựa vào. Nhờ thế, thiết kế OOP linh hoạt hơn mà vẫn dễ đọc, dễ thử nghiệm và có thể mở rộng có kiểm soát.
+A good interface names a **meaningful role**, exposes operations focused enough for independent client use, and specifies a **clear behavioral contract**. An implementing class may change algorithms, data structures, or providers, but must continue honoring the guarantees clients depend on. This makes OOP designs more flexible while keeping them readable, testable, and extensible in a controlled way.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="interface-002">Khai báo và thực hiện giao diện</a>
+## <a id="interface-002">Declaring and implementing interfaces</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Khai báo và thực hiện giao diện (interface) trong Java
+# Declaring and implementing interfaces in Java
 
-Trong lập trình hướng đối tượng, **giao diện (interface)** mô tả những hành vi mà một kiểu đối tượng cam kết cung cấp. Một lớp **thực hiện giao diện** (*implements*) bằng cách viết mã cho các phương thức thuộc hợp đồng đó.
+In object-oriented programming, **an interface** describes the behaviors that an object type promises to provide. A class **implements an interface** (*implements*) by writing code for the methods in that contract.
 
-Ví dụ: hệ thống bán hàng có nhiều cách tính phí giao hàng. Dịch vụ thanh toán chỉ cần yêu cầu “tính phí giao cho quãng đường và giá trị đơn này”, không cần biết phí được tính theo gói tiết kiệm hay giao nhanh. Interface cho phép tách **điều người gọi cần** khỏi **cách từng lớp tính toán**.
+For example, a sales system may have several ways to calculate shipping fees. The checkout service only needs to ask “what is the delivery fee for this distance and order value?” It does not need to know whether the fee comes from an economy or express shipping policy. An interface separates **what the caller needs** from **how each class calculates it**.
 
-Bài học dùng Java 11 trở lên, với các ví dụ tệp `.java` có thể biên dịch trực tiếp.
+This lesson uses Java 11 or later, with `.java` files that can be compiled directly.
 
-## 1. Cú pháp căn bản
+## 1. Basic syntax
 
-Khai báo một giao diện:
+Declare an interface:
 
 ```java
 public interface Greeter {
@@ -587,7 +587,7 @@ public interface Greeter {
 }
 ```
 
-Khai báo một lớp thực hiện:
+Declare an implementing class:
 
 ```java
 public final class VietnameseGreeter implements Greeter {
@@ -598,52 +598,52 @@ public final class VietnameseGreeter implements Greeter {
 }
 ```
 
-Sử dụng:
+Usage:
 
 ```java
 Greeter greeter = new VietnameseGreeter();
 System.out.println(greeter.greet("Lan")); // Xin chào, Lan
 ```
 
-Các thành phần cần hiểu:
+Key elements to understand:
 
-| Cú pháp | Ý nghĩa |
+| Syntax | Meaning |
 | --- | --- |
-| `interface Greeter` | Khai báo kiểu giao diện có tên `Greeter` |
-| `String greet(String name);` | Chữ ký phương thức; ở đây là phương thức abstract, chưa có thân |
-| `class VietnameseGreeter implements Greeter` | Lớp cam kết thực hiện giao diện |
-| `@Override` | Đề nghị trình biên dịch kiểm tra rằng phương thức thực sự override/implement một phương thức kế thừa |
-| `public String greet(...)` | Cung cấp thân phương thức; `public` là bắt buộc vì hợp đồng interface là public |
-| `Greeter greeter = new VietnameseGreeter()` | Biến có kiểu interface giữ tham chiếu tới đối tượng triển khai cụ thể |
+| `interface Greeter` | Declares an interface type named `Greeter` |
+| `String greet(String name);` | Method signature; here it is an abstract method without a body |
+| `class VietnameseGreeter implements Greeter` | Declares a class that promises to implement the interface |
+| `@Override` | Requests a compiler check that the method actually overrides/implements an inherited method |
+| `public String greet(...)` | Provides the method body; `public` is required because the interface contract is public |
+| `Greeter greeter = new VietnameseGreeter()` | An interface-typed variable holds a reference to a concrete implementing object |
 
-Trong một interface, phương thức instance thông thường không có thân như `greet` ở trên **ngầm là `public abstract`**. Vì vậy:
+In an interface, an ordinary instance method without a body, such as `greet` above, **is implicitly `public abstract`**. Therefore:
 
 ```java
 String greet(String name);
 ```
 
-tương đương với:
+is equivalent to:
 
 ```java
 public abstract String greet(String name);
 ```
 
-Lớp triển khai bắt buộc dùng phương thức `public`, không thể giảm mức truy cập thành `protected`, package-private hay `private`.
+An implementing class must use a `public` method; it cannot reduce access to `protected`, package-private, or `private`.
 
-Điểm quan trọng: **interface là một kiểu dữ liệu**, nhưng không thể tạo trực tiếp bằng `new Greeter()`. Ta tạo đối tượng từ một lớp cụ thể thực hiện interface (hoặc từ một biểu thức/lớp ẩn danh phù hợp), rồi lưu tham chiếu của nó dưới kiểu giao diện.
+Key point: **an interface is a data type**, but you cannot instantiate it directly using `new Greeter()`. Instead, create an object from a concrete implementing class (or a suitable anonymous class/expression) and store its reference using the interface type.
 
-## 2. Bài toán thực tế: thay đổi cách tính phí giao hàng
+## 2. Real-world problem: changing shipping fee calculations
 
-Giả sử một đơn hàng cần báo phí theo hai chính sách:
+Suppose an order can be quoted under two policies:
 
-- **Tiết kiệm:** phí cơ bản 10.000 VND cộng 2.500 VND cho mỗi km; miễn phí khi giá trị hàng đạt từ 500.000 VND.
-- **Giao nhanh:** phí cơ bản 20.000 VND cộng 5.000 VND cho mỗi km; không miễn phí theo giá trị hàng.
+- **Economy:** a base fee of 10.000 VND plus 2.500 VND per km; shipping is free when the goods are worth at least 500.000 VND.
+- **Express:** a base fee of 20.000 VND plus 5.000 VND per km; no free-shipping threshold based on order value.
 
-Quãng đường là số km nguyên không âm và giá trị đơn hàng là số tiền nguyên VND không âm. Với các giá trị lớn khiến phép tính `long` tràn số, ví dụ báo lỗi thay vì trả phí sai.
+Distance is a nonnegative whole number of kilometers, and order value is a nonnegative integer amount in VND. When large values would overflow `long` arithmetic, the example reports an error instead of returning an incorrect fee.
 
-Ta muốn phần thanh toán không cần chứa một chuỗi `if (shippingType.equals(...))` để tự quyết định mọi công thức. Thay vào đó, dịch vụ thanh toán **phụ thuộc vào interface**.
+We want checkout logic to avoid an `if (shippingType.equals(...))` chain that decides every formula itself. Instead, the checkout service **depends on an interface**.
 
-### Bước 1: định nghĩa hợp đồng trong `ShippingFeePolicy.java`
+### Step 1: define the contract in `ShippingFeePolicy.java`
 
 ```java
 /**
@@ -668,13 +668,13 @@ public interface ShippingFeePolicy {
 }
 ```
 
-Ở đây `calculate(...)` là **điểm mở rộng**: mỗi chính sách tự đưa ra công thức, nhưng mọi chính sách đều phải giữ quy tắc đầu vào và kết quả đã mô tả. `validateInputs(...)` là phương thức `static` thuộc chính interface; các lớp triển khai có thể gọi nó trực tiếp qua `ShippingFeePolicy.validateInputs(...)`.
+Here `calculate(...)` is an **extension point**: each policy supplies its own formula, but all policies must satisfy the stated input and output rules. `validateInputs(...)` is a `static` method on the interface itself; implementing classes can call it directly through `ShippingFeePolicy.validateInputs(...)`.
 
-Về mặt thiết kế, không phải lúc nào cũng nên đặt logic dùng chung trong interface. Ở ví dụ này, việc kiểm tra hai tham số là một phần thống nhất của hợp đồng, nên phương thức `static` ngắn giúp minh họa khả năng của interface trong Java hiện đại.
+From a design perspective, shared logic does not always belong in an interface. In this example, validating the two parameters is part of the shared contract, so a short `static` method demonstrates a capability of modern Java interfaces.
 
-### Bước 2: triển khai chính sách tiết kiệm
+### Step 2: implement the economy policy
 
-Tệp `EconomyShipping.java`:
+File `EconomyShipping.java`:
 
 ```java
 public final class EconomyShipping implements ShippingFeePolicy {
@@ -698,11 +698,11 @@ public final class EconomyShipping implements ShippingFeePolicy {
 }
 ```
 
-`EconomyShipping` dùng `implements ShippingFeePolicy`. Trình biên dịch kiểm tra lớp đã cung cấp phương thức `calculate(int, long)` với kiểu trả về phù hợp. Công thức và các hằng số nội bộ thuộc lớp cụ thể; caller dùng interface không cần biết chúng.
+`EconomyShipping` uses `implements ShippingFeePolicy`. The compiler verifies that the class provides `calculate(int, long)` with a compatible return type. The formula and internal constants belong to the concrete class; an interface-typed caller need not know them.
 
-### Bước 3: triển khai chính sách giao nhanh
+### Step 3: implement the express policy
 
-Tệp `ExpressShipping.java`:
+File `ExpressShipping.java`:
 
 ```java
 public final class ExpressShipping implements ShippingFeePolicy {
@@ -721,11 +721,11 @@ public final class ExpressShipping implements ShippingFeePolicy {
 }
 ```
 
-Hai lớp đều **đáp ứng cùng chữ ký**, nhưng triển khai hành vi khác nhau. Đó là nền tảng để chương trình sử dụng tính đa hình: lời gọi `policy.calculate(...)` chạy phương thức của lớp thực tế mà biến `policy` đang tham chiếu.
+Both classes **satisfy the same signature** but implement different behavior. This enables polymorphism: a `policy.calculate(...)` call executes the method of the concrete class referenced by `policy`.
 
-### Bước 4: dịch vụ sử dụng giao diện, không lệ thuộc lớp cụ thể
+### Step 4: let the service use the interface instead of a concrete class
 
-Tệp `ShippingQuoteService.java`:
+File `ShippingQuoteService.java`:
 
 ```java
 import java.util.Objects;
@@ -743,11 +743,11 @@ public final class ShippingQuoteService {
 }
 ```
 
-`ShippingQuoteService` không viết `new EconomyShipping()` hay `new ExpressShipping()` bên trong. Đối tượng chính sách được đưa vào qua constructor. Đây là một ví dụ đơn giản của **dependency injection bằng constructor**: thành phần cấp cao nhận một dependency qua kiểu trừu tượng. Không cần framework để sử dụng cách thiết kế này.
+`ShippingQuoteService` does not construct `new EconomyShipping()` or `new ExpressShipping()` internally. The policy object is passed through its constructor. This is a simple example of **constructor-based dependency injection**: a higher-level component receives a dependency through an abstraction. No framework is required to use this design.
 
-### Bước 5: chạy ví dụ tổng hợp
+### Step 5: run the complete example
 
-Tệp `Main.java`, cùng thư mục với bốn tệp trên:
+File `Main.java`, in the same directory as the four files above:
 
 ```java
 public class Main {
@@ -773,14 +773,14 @@ public class Main {
 }
 ```
 
-Chạy bằng terminal:
+Run from a terminal:
 
 ```bash
 javac ShippingFeePolicy.java EconomyShipping.java ExpressShipping.java ShippingQuoteService.java Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 35000
@@ -789,17 +789,17 @@ Kết quả:
 Từ chối: Quãng đường và giá trị đơn không được âm
 ```
 
-Giải thích kết quả:
+Explaining the output:
 
-| Chính sách | Quãng đường | Giá trị hàng | Phí trả về |
+| Policy | Distance | Order value | Returned fee |
 | --- | ---: | ---: | ---: |
 | Economy | 10 km | 300.000 VND | 10.000 + 2.500 × 10 = **35.000 VND** |
-| Economy | 10 km | 600.000 VND | **0 VND** (đủ điều kiện miễn phí) |
+| Economy | 10 km | 600.000 VND | **0 VND** (qualifies for free shipping) |
 | Express | 10 km | 300.000 VND | 20.000 + 5.000 × 10 = **70.000 VND** |
 
-Dịch vụ chỉ biết `ShippingFeePolicy`. Khi bổ sung một chính sách thứ ba, ta tạo lớp khác thực hiện cùng interface rồi truyền vào dịch vụ; phần tính phí tại `ShippingQuoteService` không cần sửa.
+The service only knows `ShippingFeePolicy`. To add a third policy, create another class implementing the same interface and pass it to the service; no change to the fee calculation inside `ShippingQuoteService` is required.
 
-## 3. Luồng đa hình nhìn từ interface
+## 3. Understanding polymorphic dispatch through interfaces
 
 ```mermaid
 classDiagram
@@ -823,9 +823,9 @@ classDiagram
     ShippingQuoteService --> ShippingFeePolicy : sử dụng
 ```
 
-Mũi tên nét đứt với đầu tam giác rỗng biểu thị quan hệ **realization/implements**. `ShippingQuoteService` hợp tác với `ShippingFeePolicy` qua một field có kiểu interface.
+The dashed line with a hollow triangle represents a **realization/implements** relationship. `ShippingQuoteService` collaborates with `ShippingFeePolicy` through a field whose type is the interface.
 
-Luồng thực hiện:
+Execution flow:
 
 ```mermaid
 sequenceDiagram
@@ -839,9 +839,9 @@ sequenceDiagram
     Service-->>Client: phí VND
 ```
 
-Trong một lời gọi cụ thể, `policy` có thể tham chiếu `EconomyShipping` hoặc `ExpressShipping`. Java quyết định **implementation của phương thức instance** tại thời điểm chạy dựa trên kiểu thực tế của đối tượng. Trình biên dịch vẫn dùng **kiểu của biến tham chiếu** để kiểm tra những phương thức có thể gọi.
+In a particular call, `policy` may refer to an `EconomyShipping` or `ExpressShipping` object. At runtime Java selects **the instance method implementation** based on the actual object type. The compiler still uses **the declared reference type** to determine which methods may be called.
 
-Ví dụ:
+For example:
 
 ```java
 ShippingFeePolicy policy = new EconomyShipping();
@@ -851,11 +851,11 @@ long fee = policy.calculate(8, 200_000); // Hợp lệ
 // này không được khai báo trong ShippingFeePolicy.
 ```
 
-Nếu cần hành vi chỉ có ở một lớp cụ thể, hãy tự hỏi có nên thêm một hợp đồng riêng hay không. Ép kiểu liên tục từ interface xuống lớp triển khai thường là dấu hiệu phần trừu tượng chưa phù hợp.
+If you need behavior available only on a concrete class, consider whether a separate contract would be appropriate. Repeatedly downcasting from an interface to its implementation often indicates that the abstraction does not fit the client.
 
-## 4. Những quy tắc khi khai báo và thực hiện interface
+## 4. Rules for declaring and implementing interfaces
 
-### Phương thức abstract phải được thực hiện đầy đủ
+### Abstract methods must be implemented
 
 ```java
 interface Printer {
@@ -864,7 +864,7 @@ interface Printer {
 }
 ```
 
-Một lớp **concrete** khai báo `implements Printer` phải cung cấp đầy đủ phương thức abstract chưa được kế thừa từ nơi khác:
+A **concrete** class declaring `implements Printer` must provide every abstract method that has not already been inherited from another source:
 
 ```java
 class ConsolePrinter implements Printer {
@@ -883,7 +883,7 @@ class ConsolePrinter implements Printer {
 }
 ```
 
-Nếu thiếu `pagesPrinted()`, lớp concrete sẽ không biên dịch. Lớp `abstract` có thể chọn chỉ triển khai một phần hợp đồng để lớp con hoàn thiện:
+If `pagesPrinted()` is missing, the concrete class will not compile. An `abstract` class may implement only part of the contract and leave the rest for subclasses:
 
 ```java
 abstract class BasePrinter implements Printer {
@@ -895,9 +895,9 @@ abstract class BasePrinter implements Printer {
 }
 ```
 
-Chú ý `pagesPrinted()` của `BasePrinter` ở đây trả `0` cố định chỉ để minh họa cú pháp; nếu sử dụng thực tế, triển khai cần trả số trang chính xác theo hợp đồng mong muốn.
+Note that `pagesPrinted()` in `BasePrinter` returns a fixed `0` solely to illustrate syntax; a real implementation should return the accurate page count required by its contract.
 
-### Không thể thu hẹp quyền truy cập
+### Access levels cannot be narrowed
 
 ```java
 interface Task {
@@ -912,11 +912,11 @@ class MyTask implements Task {
 }
 ```
 
-Viết `void execute()` thiếu `public` khi implement sẽ gây lỗi biên dịch vì đang cố giảm quyền truy cập của phương thức `public`.
+Writing `void execute()` without `public` when implementing the method causes a compile error because it attempts to reduce the access level of a `public` method.
 
-### Chữ ký phải tương thích
+### Method signatures must be compatible
 
-Phương thức triển khai phải khớp tên và danh sách tham số; kiểu trả về phải tương thích, bao gồm quy tắc **covariant return type** với kiểu tham chiếu. Khai báo một overload có tham số khác không thay thế được phương thức phải implement.
+An implementation must match the method name and parameter list, and its return type must be compatible, including the **covariant return type** rules for reference types. Declaring an overload with different parameters does not implement the required method.
 
 ```java
 interface Parser {
@@ -936,11 +936,11 @@ class TrimParser implements Parser {
 }
 ```
 
-`@Override` rất hữu ích: nếu gõ nhầm `parse(Object)` thay cho `parse(String)`, trình biên dịch sẽ báo không có phương thức đúng để override.
+`@Override` is very useful: if you mistakenly write `parse(Object)` instead of `parse(String)`, the compiler reports that no matching method exists to override.
 
-## 5. Interface có thể khai báo cả phương thức có thân
+## 5. Interfaces may also declare methods with bodies
 
-Trong `ShippingFeePolicy` ở ví dụ chính, `calculate(int,long)` là phương thức **abstract** cần được lớp cụ thể hiện thực, còn `static validateInputs(...)` đã có thân và được gọi bằng tên interface. Java hiện đại còn cho phép:
+In the main `ShippingFeePolicy` example, `calculate(int,long)` is an **abstract** method that concrete classes must implement, whereas `static validateInputs(...)` already has a body and is called through the interface name. Modern Java also permits:
 
 ~~~java
 interface NamedTask {
@@ -960,11 +960,11 @@ interface NamedTask {
 }
 ~~~
 
-`default` tạo hành vi instance có thể kế thừa/override; `static` không được gọi như phương thức instance; `private` là helper trong interface (ở ví dụ này chưa được gọi). Mọi field khai báo trực tiếp trong interface ngầm là `public static final`, không có state instance. Để học **đầy đủ** quy tắc modifier, field, xung đột default và tính tương thích ngôn ngữ, xem bài *Thành viên mặc định và giới hạn tùy ngôn ngữ*.
+`default` provides instance behavior that may be inherited or overridden; `static` cannot be called as an instance method; and `private` is a helper inside the interface (unused in this example). Every field declared directly in an interface is implicitly `public static final`, with no per-instance state. For the **complete** rules on modifiers, fields, default-method conflicts, and language compatibility, see *Default members and language-specific limitations*.
 
-## 6. `implements` nhiều interface vẫn chỉ tạo một đối tượng
+## 6. Using `implements` for multiple interfaces still creates only one object
 
-Một class có thể nhận nhiều hợp đồng qua danh sách phân cách bằng dấu phẩy:
+A class can accept several contracts through a comma-separated list:
 
 ~~~java
 interface Printable { void print(); }
@@ -980,25 +980,25 @@ Printable printer = report;
 Exportable exporter = report;
 ~~~
 
-Hai biến interface `printer` và `exporter` tham chiếu **cùng một** `Report`; chúng không tạo thêm instance và mỗi biến chỉ cung cấp API của vai trò tương ứng. Một interface cũng có thể `extends` nhiều interface khác, còn class Java chỉ trực tiếp `extends` một class.
+The interface variables `printer` and `exporter` both refer to **the same** `Report` object; they create no additional instances, and each exposes only the API of its corresponding role. An interface may also `extends` multiple interfaces, whereas a Java class may directly `extends` only one class.
 
-Nếu các interface độc lập có cùng default method, Java có quy tắc giải quyết xung đột, không chọn ngẫu nhiên. Bài *Một đối tượng đảm nhận nhiều giao diện* có trace thay đổi trạng thái qua nhiều tham chiếu và các trường hợp method collision.
+When unrelated interfaces declare the same default method, Java has explicit rules for resolving the conflict; it does not choose randomly. The *One object implementing multiple interfaces* lesson traces state changes through multiple references and examines method collisions.
 
-## 7. Interface khác abstract class ở vai trò thiết kế
+## 7. How interfaces and abstract classes differ in design
 
-| Nhu cầu | Interface | Abstract class |
+| Requirement | Interface | Abstract class |
 |---|---|---|
-| Mở API cho nhiều loại class khác nhau | Khai báo hợp đồng qua `implements` | Ràng buộc vào một họ kế thừa |
-| Dùng nhiều vai trò đồng thời | Cho phép `implements` nhiều interface | Class chỉ có một superclass trực tiếp |
-| Chia sẻ constructor, field instance, thuật toán nền | Không có constructor/field instance | Hỗ trợ trạng thái và phần triển khai dùng chung |
+| Expose an API to unrelated class types | Declare a contract through `implements` | Constrain types to an inheritance family |
+| Combine multiple roles | Allow a class to `implements` multiple interfaces | A class has only one direct superclass |
+| Share constructors, instance fields, or base algorithms | No constructors or instance fields | Supports shared state and implementation |
 
-Ví dụ `ShippingQuoteService` chỉ quan tâm `ShippingFeePolicy`; nó không cần biết các chính sách có chung superclass hay không. Nếu một nhóm chính sách thật sự dùng cùng công thức nền và trạng thái cấu hình, nhóm đó có thể kế thừa một abstract class `implements ShippingFeePolicy`, còn chính sách độc lập vẫn `implements` trực tiếp. Bài *Chọn giao diện hay lớp trừu tượng* triển khai minh họa đầy đủ cùng lựa chọn composition.
+For example, `ShippingQuoteService` only cares about `ShippingFeePolicy`; it does not need to know whether policies share a superclass. If a family of policies genuinely shares a base formula and configuration state, it may extend an abstract class that `implements ShippingFeePolicy`, while independent policies can still `implements` the interface directly. The *Choosing an interface or an abstract class* lesson provides a complete example of this choice and composition.
 
-## 8. Kiểm tra hợp đồng của nhiều implementation
+## 8. Checking the contract across implementations
 
-Dù cả `EconomyShipping` và `ExpressShipping` đều biên dịch, chương trình vẫn có thể sai nếu implementation trả phí âm hoặc bỏ qua yêu cầu dữ liệu không âm. Trình biên dịch kiểm tra **chữ ký**; các ràng buộc nghiệp vụ phải được giữ bằng code và kiểm thử.
+Although `EconomyShipping` and `ExpressShipping` both compile, the program may still be wrong if an implementation returns a negative fee or ignores the requirement for nonnegative inputs. The compiler checks **signatures**; business constraints must be upheld through code and testing.
 
-Tệp `ContractCheck.java`:
+File `ContractCheck.java`:
 
 ```java
 public class ContractCheck {
@@ -1047,37 +1047,37 @@ public class ContractCheck {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac ShippingFeePolicy.java EconomyShipping.java ExpressShipping.java ContractCheck.java
 java ContractCheck
 ```
 
-Kết quả:
+Output:
 
 ```text
 PASS: Các implementation giữ hợp đồng
 ```
 
-Trong dự án thực tế, những kiểm tra này có thể thành test JUnit chạy với nhiều implementation. Việc **dùng cùng một bộ kiểm tra hành vi** giúp phát hiện một lớp mới implement đúng chữ ký nhưng vi phạm quy tắc mà client đang dựa vào.
+In real projects, these checks can become JUnit tests run against several implementations. **Using the same behavioral tests** helps detect a new class that implements the correct signature but violates a rule clients depend on.
 
-### Một vài lỗi biên dịch cần nhận diện
+### Common compilation errors to recognize
 
-| Mã hoặc tình huống | Vấn đề | Cách sửa |
+| Code or scenario | Problem | Fix |
 | --- | --- | --- |
-| `new ShippingFeePolicy()` | Interface không có instance để khởi tạo trực tiếp | `new EconomyShipping()` hoặc một implementation khác |
-| Class implement thiếu `calculate` | Class concrete chưa đáp ứng hợp đồng | Viết đủ phương thức hoặc khai báo class `abstract` |
-| `long calculate(...)` thiếu `public` | Giảm quyền truy cập của phương thức interface | Thêm `public` |
-| Viết `calculate(long, long)` thay vì `calculate(int, long)` | Overload khác chữ ký, không thực hiện phương thức yêu cầu | Khớp đúng danh sách kiểu tham số |
-| Gọi `policy.specialFeature()` không thuộc interface | Kiểu biến không công bố phương thức đó | Thiết kế lại hợp đồng hoặc dùng đúng kiểu khi thật sự cần |
-| Gọi `policy.validateInputs(...)` | Static method không là phương thức instance kế thừa | Dùng `ShippingFeePolicy.validateInputs(...)` |
-| Hai default method xung đột | Không có implementation duy nhất được chọn | Override và phân giải xung đột |
-| Dùng interface như kho field mutable | Field trong interface luôn là hằng `public static final` | Đặt trạng thái trong class hoặc đối tượng phù hợp |
+| `new ShippingFeePolicy()` | An interface cannot be instantiated directly | Use `new EconomyShipping()` or another implementation |
+| A class implements the interface but omits `calculate` | The concrete class has not fulfilled the contract | Implement the required method or declare the class `abstract` |
+| `long calculate(...)` without `public` | Attempts to reduce the access level of an interface method | Add `public` |
+| Writing `calculate(long, long)` instead of `calculate(int, long)` | An overload with a different signature does not implement the required method | Match the parameter type list exactly |
+| Calling `policy.specialFeature()` when it is not in the interface | The declared variable type does not expose that method | Redesign the contract or use the appropriate type when genuinely necessary |
+| Calling `policy.validateInputs(...)` | A static method is not an inherited instance method | Use `ShippingFeePolicy.validateInputs(...)` |
+| Two conflicting default methods | No unique implementation can be selected | Override the method and resolve the conflict |
+| Using an interface as mutable field storage | Interface fields are always `public static final` constants | Keep state in a suitable class or object |
 
-## 9. Cách tổ chức tệp trong dự án thật
+## 9. Organizing files in real projects
 
-Ví dụ trên để các lớp trong cùng thư mục không khai báo package, thuận tiện cho người mới biên dịch bằng `javac`. Với ứng dụng lớn, hãy dùng package rõ ràng. Ví dụ:
+The example places all classes in one directory without package declarations so beginners can compile them with `javac`. Larger applications should use clear package structures. For example:
 
 ```text
 src/main/java/com/example/shipping/
@@ -1087,15 +1087,15 @@ src/main/java/com/example/shipping/
 └── ShippingQuoteService.java
 ```
 
-Mỗi tệp sẽ khai báo `package com.example.shipping;` ở đầu. `Main` hay một REST controller ở package khác sử dụng interface bằng `import` tương ứng. Khi có Spring, một bean thuộc lớp triển khai có thể được inject vào service qua constructor, nhưng **bản thân interface Java không phụ thuộc Spring**. Nếu nhiều bean cùng implement một interface, cấu hình cần làm rõ implementation nào được chọn; đó là việc của cơ chế DI, không phải quyết định tự động của Java interface.
+Each file would begin with `package com.example.shipping;`. `Main` or a REST controller in another package uses the interface through the corresponding `import`. With Spring, a bean from an implementing class can be injected into the service through a constructor, but **a Java interface itself does not depend on Spring**. If several beans implement the same interface, configuration must specify which implementation is selected; that is the DI mechanism's responsibility, not an automatic decision made by Java interfaces.
 
-Một cách thiết kế thường hiệu quả là cho domain/service phụ thuộc vào **giao diện nhỏ có mục đích rõ ràng**, thay vì gom mọi thao tác không liên quan vào một “siêu interface”. Nếu client chỉ cần tính phí, không nên buộc nó phải biết thêm giao diện lưu đơn hàng, gửi email và theo dõi bưu kiện.
+A useful design is to make domain/service code depend on **small, purpose-specific interfaces** instead of combining unrelated operations into a “super-interface.” If a client only calculates fees, it should not also need to know about order storage, email delivery, and parcel tracking.
 
-## 10. Tự thực hành
+## 10. Practice on your own
 
-**Bài tập A — thay công thức mà không sửa service.** Tạo `SameDayShipping implements ShippingFeePolicy` với phí 35.000 VND + 7.000 VND mỗi km, không miễn phí. Giữ nguyên kiểm tra đầu vào. Truyền vào `ShippingQuoteService` rồi tính phí cho 4 km. **Kết quả mong đợi: 63.000 VND**.
+**Exercise A — change the formula without changing the service.** Create `SameDayShipping implements ShippingFeePolicy` with a fee of 35.000 VND + 7.000 VND per km and no free shipping. Preserve input validation. Pass it to `ShippingQuoteService` and calculate the fee for 4 km. **Expected result: 63.000 VND**.
 
-**Bài tập B — dự đoán lỗi biên dịch.**
+**Exercise B — predict the compilation error.**
 
 ```java
 interface Reader {
@@ -1109,19 +1109,19 @@ class FileReaderExample implements Reader {
 }
 ```
 
-Lỗi nằm ở đâu? Phương thức của `Reader` ngầm là `public`, còn `FileReaderExample.read()` không có modifier nên là package-private. Sửa thành `public String read()` và nên thêm `@Override`.
+Where is the error? The method in `Reader` is implicitly `public`, but `FileReaderExample.read()` has no modifier and is therefore package-private. Change it to `public String read()` and consider adding `@Override`.
 
-**Bài tập C — interface nhiều phương thức.** Tạo `Resizable` với `void resize(int width, int height)` và `int area()`. Triển khai `Rectangle` sao cho chiều dài/rộng phải dương, `area()` trả diện tích và không làm đổi trạng thái. Hãy quyết định rõ xử lý trường hợp nhân số `int` bị tràn.
+**Exercise C — an interface with multiple methods.** Define `Resizable` with `void resize(int width, int height)` and `int area()`. Implement `Rectangle` with positive width and height; `area()` should return the area without changing state. Decide explicitly how to handle overflow when multiplying `int` values.
 
-**Bài tập D — nhiều interface.** Viết `interface Identifiable { String id(); }` và `interface Printable { void print(); }`; tạo một lớp `Invoice` thực hiện cả hai. Dùng hai biến có kiểu interface để gọi hành vi tương ứng trên cùng một đối tượng.
+**Exercise D — multiple interfaces.** Write `interface Identifiable { String id(); }` and `interface Printable { void print(); }`; create an `Invoice` class that implements both. Use two interface-typed variables to invoke their respective behaviors on the same object.
 
-**Bài tập E — default method.** Tạo `interface Named { String name(); default String displayName() { return name().trim(); } }`. Cài đặt một lớp sử dụng default method và một lớp override nó. Quan sát cách client gọi `displayName()` qua biến `Named`.
+**Exercise E — default methods.** Define `interface Named { String name(); default String displayName() { return name().trim(); } }`. Implement one class that uses the default method and another that overrides it. Observe how clients invoke `displayName()` through a `Named` variable.
 
-## Ghi nhớ khi đọc hoặc thiết kế interface
+## Key points when reading or designing interfaces
 
-Một interface tốt trả lời được: **“Đối tượng triển khai phải cung cấp những hành vi nào, với dữ liệu vào và kết quả như thế nào?”**. Khi thực hiện interface, hãy kiểm tra chữ ký, quyền truy cập `public`, những cam kết nghiệp vụ và các trường hợp lỗi. Khi sử dụng interface, hãy tạo đối tượng triển khai rồi thao tác qua **kiểu giao diện** để giảm sự phụ thuộc vào chi tiết bên trong.
+A good interface answers: **“Which behaviors must an implementing object provide, and what are the valid inputs and expected results?”** When implementing an interface, check method signatures, `public` access, business guarantees, and failure cases. When using one, create an implementing object and interact through **the interface type** to reduce coupling to internal details.
 
-Ba dòng then chốt:
+Three essential lines:
 
 ```java
 interface Action { void run(); }       // Khai báo hợp đồng
@@ -1130,34 +1130,34 @@ class Job implements Action {          // Thực hiện hợp đồng
 }
 ```
 
-Và:
+And:
 
 ```java
 Action action = new Job(); // Biến theo interface, đối tượng theo class
 action.run();              // Gọi implementation của Job
 ```
 
-Khi đã phân biệt được **`interface` khai báo hợp đồng**, **`implements` cung cấp hành vi** và **biến kiểu interface gọi qua đa hình**, bạn có thể mở rộng ứng dụng bằng các triển khai mới mà vẫn giữ nguyên cách sử dụng từ phía client.
+Once you understand that **`interface` declares the contract**, **`implements` supplies the behavior**, and **an interface-typed variable enables polymorphic calls**, you can add new implementations without changing how clients use the application.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="interface-003">Lập trình dựa trên giao diện</a>
+## <a id="interface-003">Programming to interfaces</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Lập trình dựa trên giao diện (Programming to Interfaces) trong Java
+# Programming to interfaces in Java
 
-> **Chủ đề:** OOP → Giao diện. Khi một thành phần chỉ cần biết **một khả năng/hợp đồng** của thành phần khác, hãy cho nó phụ thuộc vào `interface` thay vì lớp triển khai cụ thể. Nhờ vậy, mã nghiệp vụ có thể làm việc với nhiều implementation, thay đổi công nghệ phía sau và kiểm thử bằng fake mà không phải sửa logic chính.
+> **Topic:** OOP → Interfaces. When a component only needs to know **a capability or contract** of another component, make it depend on an `interface` instead of a concrete implementing class. Business logic can then work with multiple implementations, switch underlying technologies, and use fakes in tests without changing its core logic.
 
-## 1. Vấn đề khi phụ thuộc trực tiếp vào lớp cụ thể
+## 1. The problem with depending directly on concrete classes
 
-Giả sử `CheckoutService` thực hiện thanh toán qua một bộ xử lý thẻ:
+Suppose `CheckoutService` processes payments through a card gateway:
 
 ```java
 class CardGateway {
@@ -1176,9 +1176,9 @@ class CheckoutService {
 }
 ```
 
-Ở đây `CheckoutService` tự tạo và phụ thuộc trực tiếp vào `CardGateway`. Nếu muốn dùng ví trả trước, giả lập lỗi thanh toán khi kiểm thử hoặc thay nhà cung cấp, thường phải sửa `CheckoutService` hoặc thêm các nhánh `if` để lựa chọn loại gateway.
+Here `CheckoutService` constructs and depends directly on `CardGateway`. To use a prepaid wallet, simulate payment errors in tests, or change providers, we would usually have to modify `CheckoutService` or add `if` branches to choose a gateway.
 
-**Nguyên tắc lập trình dựa trên giao diện:** thay vì biết *ai* xử lý, `CheckoutService` chỉ cần biết *có thể yêu cầu thanh toán như thế nào*.
+**The principle of programming to interfaces:** instead of knowing *who* processes a payment, `CheckoutService` only needs to know *how to request a payment*.
 
 ```java
 interface PaymentGateway {
@@ -1186,9 +1186,9 @@ interface PaymentGateway {
 }
 ```
 
-Giao diện mô tả **hành vi mà bên sử dụng được quyền dựa vào**. Những lớp khác nhau có thể `implements PaymentGateway` và tự quyết định cách thực hiện.
+The interface specifies **the behavior consumers may rely on**. Different classes can `implements PaymentGateway` and decide how to perform the operation.
 
-## 2. Mối quan hệ giữa người dùng giao diện và lớp triển khai
+## 2. How interface consumers and implementations relate
 
 ```mermaid
 classDiagram
@@ -1218,21 +1218,21 @@ classDiagram
     PaymentGateway <|.. PrepaidWalletGateway : implements
 ```
 
-Mũi tên từ `CheckoutService` tới `PaymentGateway` là **phụ thuộc vào abstraction**. Các lớp gateway là **implementation** của hợp đồng. `CheckoutService` không cần ép kiểu hoặc kiểm tra `instanceof` để quyết định gửi yêu cầu tới lớp nào.
+The arrow from `CheckoutService` to `PaymentGateway` represents **a dependency on an abstraction**. Gateway classes are **implementations** of the contract. `CheckoutService` does not need casts or `instanceof` checks to decide which class receives a request.
 
-Ba vai trò thường gặp:
+Three common roles:
 
-| Vai trò | Trong ví dụ | Trách nhiệm |
+| Role | In this example | Responsibility |
 |---|---|---|
-| Giao diện | `PaymentGateway` | Khai báo thao tác thanh toán |
-| Thành phần sử dụng | `CheckoutService` | Điều phối checkout bằng hợp đồng chung |
-| Lớp triển khai | `SimulatedCardGateway`, `PrepaidWalletGateway` | Thực hiện cách thanh toán cụ thể |
+| Interface | `PaymentGateway` | Declares the payment operation |
+| Consumer | `CheckoutService` | Coordinates checkout using the shared contract |
+| Implementing classes | `SimulatedCardGateway`, `PrepaidWalletGateway` | Provide specific payment mechanisms |
 
-Hợp đồng không chỉ là **chữ ký hàm**. Nó nên mô tả ý nghĩa tham số, giá trị trả về, trường hợp thất bại, tác động lên hệ thống và việc một lời gọi có thể bị thực hiện lặp hay không.
+The contract is more than **a method signature**. It should explain parameter meaning, return values, failure cases, side effects, and whether an operation may be repeated.
 
-## 3. Ví dụ Java hoàn chỉnh: thay implementation mà không sửa CheckoutService
+## 3. Complete Java example: switch implementations without modifying CheckoutService
 
-Tạo tệp `InterfaceProgrammingDemo.java` (Java 17 trở lên):
+Create `InterfaceProgrammingDemo.java` (Java 17 or later):
 
 ```java
 import java.util.Objects;
@@ -1330,14 +1330,14 @@ public class InterfaceProgrammingDemo {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac InterfaceProgrammingDemo.java
 java InterfaceProgrammingDemo
 ```
 
-Kết quả mong đợi:
+Expected output:
 
 ```text
 CARD: true
@@ -1346,11 +1346,11 @@ WALLET 2: false
 WALLET BALANCE: 20000
 ```
 
-`CheckoutService` có **một** constructor nhận `PaymentGateway` và **một** cách xử lý `checkout`. Dù được truyền cổng thẻ hay ví, nó vẫn gọi `gateway.charge(request)`. Lời gọi thực tế đến implementation phù hợp với đối tượng được truyền vào.
+`CheckoutService` has **one** constructor accepting `PaymentGateway` and **one** `checkout` code path. Whether supplied a card or wallet gateway, it calls `gateway.charge(request)`. The actual invocation reaches the implementation belonging to the supplied object.
 
-Trong ví dụ, `SimulatedCardGateway` luôn thành công để minh họa thay thế implementation; đây **không phải** tích hợp thẻ thật. `PrepaidWalletGateway` quản lý trạng thái trong một instance và đồng bộ lệnh trừ tiền bằng `synchronized`. Hệ thống thanh toán thật còn yêu cầu xác thực, idempotency, transaction, lưu trữ bền vững và xử lý kết quả không chắc chắn từ bên ngoài.
+In this example, `SimulatedCardGateway` always succeeds to illustrate replacing implementations; it is **not** a real card integration. `PrepaidWalletGateway` manages state within one instance and synchronizes debits using `synchronized`. Real payment systems also require authentication, idempotency, transactions, durable storage, and handling of uncertain external results.
 
-### Kiểu biến và đối tượng thực tế
+### Declared types and runtime objects
 
 ```java
 PaymentGateway gateway = new SimulatedCardGateway();
@@ -1358,10 +1358,10 @@ PaymentResult result =
     gateway.charge(new PaymentRequest("ORD-04", 10_000));
 ```
 
-- Kiểu **khai báo** của `gateway` là `PaymentGateway`: người gọi chỉ có thể dựa vào các thành viên truy cập được từ hợp đồng này.
-- **Đối tượng thực** là `SimulatedCardGateway`: việc gọi phương thức instance được triển khai trong lớp này.
-- Thay bằng `new PrepaidWalletGateway(50_000)` vẫn hợp lệ về kiểu, vì lớp đó cũng `implements PaymentGateway`.
-- Java chọn implementation của phương thức instance theo **kiểu runtime của đối tượng**, một biểu hiện của đa hình (polymorphism).
+- The **declared** type of `gateway` is `PaymentGateway`: callers can rely only on members exposed by this contract.
+- The **actual object** is a `SimulatedCardGateway`: its class supplies the instance-method implementation.
+- Replacing it with `new PrepaidWalletGateway(50_000)` is also type-correct because that class `implements PaymentGateway`.
+- Java selects the instance-method implementation using **the object's runtime type**, a form of polymorphism.
 
 ```mermaid
 flowchart TD
@@ -1375,11 +1375,11 @@ flowchart TD
     G --> H["CheckoutService trả kết quả"]
 ```
 
-Chính bước **cung cấp đối tượng triển khai** quyết định hành vi. `interface` không tự biết cách tạo gateway nào, không tự kết nối dịch vụ ngoài và không tự xử lý cấu hình.
+The step of **supplying an implementing object** determines the behavior. An `interface` does not itself choose which gateway to create, connect to external services, or handle configuration.
 
-## 4. Dependency Injection bằng constructor
+## 4. Constructor-based dependency injection
 
-Trong ví dụ, `CheckoutService` nhận `PaymentGateway` từ bên ngoài:
+In the example, `CheckoutService` receives a `PaymentGateway` from outside:
 
 ```java
 public CheckoutService(PaymentGateway gateway) {
@@ -1387,9 +1387,9 @@ public CheckoutService(PaymentGateway gateway) {
 }
 ```
 
-Đây là **constructor injection**: phụ thuộc được cung cấp lúc tạo `CheckoutService`, giúp lớp không cần viết `new SimulatedCardGateway()` ở bên trong.
+This is **constructor injection**: the dependency is supplied when creating `CheckoutService`, so the class does not need to write `new SimulatedCardGateway()` internally.
 
-Có thể chọn implementation trong thành phần khởi tạo ứng dụng (*composition root*):
+The implementation can be selected in the application bootstrap component (*composition root*):
 
 ```java
 PaymentGateway selected = new SimulatedCardGateway();
@@ -1398,22 +1398,22 @@ PaymentGateway selected = new SimulatedCardGateway();
 CheckoutService service = new CheckoutService(selected);
 ```
 
-Không cần Spring hay thư viện DI để sử dụng kỹ thuật này. Framework DI có thể tự cấu hình và cung cấp object, nhưng **nguyên tắc thiết kế** vẫn là cho mã nghiệp vụ nhận abstraction đã được tạo sẵn.
+You do not need Spring or a DI library for this technique. A DI framework can configure and supply objects, but the **design principle** remains that business code receives a previously created abstraction.
 
-| Thiết kế | Hệ quả |
+| Design | Consequence |
 |---|---|
-| `new CardGateway()` ngay trong `CheckoutService` | Gắn chặt lớp nghiệp vụ với một implementation và cách khởi tạo |
-| Constructor nhận `CardGateway` cụ thể | Cho phép truyền từ ngoài nhưng vẫn ràng buộc vào một lớp |
-| Constructor nhận `PaymentGateway` | Có thể truyền bất kỳ implementation tuân thủ hợp đồng |
-| Tạo interface chỉ để bọc một helper đơn giản, không có nhu cầu thay đổi | Có thể thêm cấu trúc mà không mang lại lợi ích rõ ràng |
+| Creating `new CardGateway()` inside `CheckoutService` | Ties the business class to one implementation and its construction |
+| Constructor accepts a concrete `CardGateway` | Allows injection from outside but still depends on one class |
+| Constructor accepts `PaymentGateway` | Accepts any implementation honoring the contract |
+| Creating an interface merely to wrap a simple helper with no need for substitution | Adds structure without a clear benefit |
 
-**Dependency Inversion Principle (DIP)** nói về hướng phụ thuộc giữa mã cấp cao và chi tiết triển khai: cả hai nên dựa trên abstraction phù hợp. **Dependency Injection (DI)** là một cách *cung cấp* phụ thuộc đó. Hai khái niệm có quan hệ nhưng không đồng nhất.
+**Dependency Inversion Principle (DIP)** concerns the direction of dependencies between high-level logic and implementation details: both should rely on suitable abstractions. **Dependency Injection (DI)** is a way to *supply* those dependencies. The concepts are related but distinct.
 
-## 5. Kiểm thử không cần dùng dịch vụ thanh toán thật
+## 5. Testing without a real payment service
 
-Một lợi ích cụ thể của lập trình dựa trên giao diện là có thể thay gateway bằng **fake** đơn giản để kiểm tra logic sử dụng.
+A practical benefit of programming to interfaces is that we can replace the gateway with a simple **fake** to verify consumer logic.
 
-Giả sử vẫn dùng các kiểu `PaymentGateway`, `PaymentRequest`, `PaymentResult`, `CheckoutService` đã định nghĩa bên trong `InterfaceProgrammingDemo`. Ta có thể viết một lớp test độc lập `CheckoutContractCheck.java` như sau, đặt cùng thư mục:
+Suppose we still use the `PaymentGateway`, `PaymentRequest`, `PaymentResult`, and `CheckoutService` types defined inside `InterfaceProgrammingDemo`. We can write a separate test class named `CheckoutContractCheck.java` in the same directory:
 
 ```java
 public class CheckoutContractCheck {
@@ -1452,50 +1452,50 @@ public class CheckoutContractCheck {
 }
 ```
 
-Chạy sau khi đã tạo cả hai tệp:
+Run after creating both files:
 
 ```bash
 javac InterfaceProgrammingDemo.java CheckoutContractCheck.java
 java CheckoutContractCheck
 ```
 
-Kết quả: `PASS`.
+Result: `PASS`.
 
-Ở đây, fake giúp quan sát rằng `CheckoutService` đã gửi đúng `orderId` và `amountCents`, chỉ gọi `charge` một lần, và chuyển kết quả về người gọi. Không cần mạng, credentials hay tài khoản thanh toán.
+Here, the fake lets us observe that `CheckoutService` supplies the correct `orderId` and `amountCents`, calls `charge` only once, and forwards the result to its caller. No network, credentials, or payment account is needed.
 
-**Giới hạn:** test này chứng minh cách `CheckoutService` làm việc với giao diện, **không** chứng minh tích hợp cổng thanh toán thật đúng. Mỗi implementation thực tế vẫn cần kiểm thử riêng; giả lập không nên che mất lỗi về giao dịch, timeout hay trạng thái thanh toán không xác định.
+**Limitation:** this test proves how `CheckoutService` interacts with the interface; it **does not** prove that the real payment integration is correct. Each real implementation still needs its own tests; a simulation must not conceal transaction errors, timeouts, or uncertain payment states.
 
-## 6. Interface là hợp đồng hành vi, không chỉ là chữ ký
+## 6. An interface is a behavioral contract, not merely a signature
 
-Một interface có thể biên dịch đúng nhưng các implementation vẫn có hành vi mâu thuẫn nếu hợp đồng thiếu rõ ràng.
+An interface may compile correctly while implementations behave inconsistently if the contract is unclear.
 
-Ví dụ với `PaymentGateway.charge`, cần định nghĩa:
+For `PaymentGateway.charge`, for example, define:
 
-| Khía cạnh | Câu hỏi hợp đồng cần trả lời |
+| Aspect | Contract question to answer |
 |---|---|
-| Đầu vào | Số tiền có phải dương? `orderId` có bắt buộc? |
-| Kết quả | `successful=false` biểu thị điều gì? |
-| Lỗi | Timeout, tham số sai hoặc lỗi kỹ thuật được báo bằng cách nào? |
-| Tác dụng phụ | Một lời gọi có trừ tiền, lưu trạng thái hay gửi sự kiện không? |
-| Gọi lặp | Nếu cùng `orderId` được gọi lại, giao dịch có thể bị thu tiền hai lần không? |
-| Concurrency | Gateway có an toàn khi dùng chung giữa nhiều luồng không? |
-| Vòng đời | Implementation có kết nối, thread hay resource cần đóng không? |
+| Input | Must the amount be positive? Is `orderId` required? |
+| Result | What does `successful=false` mean? |
+| Errors | How are timeouts, invalid parameters, and technical failures reported? |
+| Side effects | Does a call debit funds, persist state, or publish an event? |
+| Repeated calls | If the same `orderId` is submitted again, could the payment be charged twice? |
+| Concurrency | Is the gateway safe to share across multiple threads? |
+| Lifecycle | Does an implementation own connections, threads, or resources that must be closed? |
 
-Trong mã minh họa, request tự kiểm tra dữ liệu; kết quả `successful` phân biệt thành công và không thành công ở mức đơn giản. Đây chưa phải thiết kế thanh toán sản xuất. Với một API thanh toán thật, thường cần mã giao dịch/idempotency key, phân biệt `DECLINED` với `UNKNOWN`, tránh coi timeout là thất bại chắc chắn và không tùy tiện retry lệnh thu tiền.
+In the example code, the request validates its data, and the `successful` result distinguishes success from failure in a simplified way. This is not a production payment design. A real payment API usually needs transaction identifiers/idempotency keys, a distinction between `DECLINED` and `UNKNOWN`, and care not to treat timeouts as definite failures or retry charges indiscriminately.
 
-**Thay thế implementation** có ích khi các implementation giữ đúng **ngữ nghĩa mà người dùng giao diện kỳ vọng**. Nếu một gateway có thể trừ tiền hai lần cho cùng một yêu cầu còn gateway khác không, chỉ có cùng chữ ký Java là chưa đủ để xem chúng thay thế được trong mọi ngữ cảnh. Đây là phần thực tế của nguyên tắc thay thế Liskov (LSP).
+**Replacing implementations** is valuable when each implementation preserves **the semantics expected by interface consumers**. If one gateway can charge twice for the same request while another cannot, identical Java signatures do not make them interchangeable in every context. This is the practical side of the Liskov Substitution Principle (LSP).
 
-## 7. Ngôn ngữ hỗ trợ nhiều dạng interface, nhưng không tự sinh implementation
+## 7. Languages support different interface features but do not generate implementations automatically
 
-Java cho interface chứa `public abstract` method, `default` method (Java 8+), `static` method (Java 8+) và helper `private` (Java 9+). Một lớp có thể implement nhiều interface; các field khai báo trong interface luôn là `public static final`, không phải trạng thái instance.
+Java interfaces may contain `public abstract` methods, `default` methods (Java 8+), `static` methods (Java 8+), and `private` helpers (Java 9+). A class can implement multiple interfaces; fields declared in an interface are always `public static final`, not instance state.
 
-Ví dụ `PaymentGateway` ở bài này chỉ cần abstract method `charge`, vì mỗi loại gateway phải tự quyết định quy trình thanh toán. Thêm default `charge` trả “thành công” giả sẽ **che giấu việc triển khai chưa hoàn tất** và làm hợp đồng nguy hiểm hơn. Những default method hợp lý thường được xây dựng từ hành vi đã có của interface, không bịa ra thành công nghiệp vụ.
+The `PaymentGateway` example only needs the abstract `charge` method because each gateway must define its payment workflow. A default `charge` that pretends to succeed would **hide missing implementations** and make the contract more dangerous. Reasonable default methods are usually derived from existing interface behavior rather than fabricating business success.
 
-Nếu hai interface độc lập có default method cùng chữ ký, class triển khai có thể phải override để phân giải. Quy tắc cú pháp, thứ tự ưu tiên và hạn chế theo phiên bản được học tại bài *Thành viên mặc định và giới hạn tùy ngôn ngữ*; việc một đối tượng làm nhiều vai trò có bài riêng tiếp theo.
+If two unrelated interfaces have default methods with the same signature, an implementing class may need to override the method to resolve the conflict. The *Default members and language-specific limitations* lesson covers syntax, precedence, and version-specific restrictions; the next lesson explores objects fulfilling multiple roles.
 
-## 8. Lập trình dựa trên interface trong thư viện Java
+## 8. Programming to interfaces in Java libraries
 
-Một ví dụ quen thuộc là khai báo theo interface của collection:
+A familiar example is declaring variables using collection interfaces:
 
 ```java
 import java.util.ArrayList;
@@ -1510,11 +1510,11 @@ names = new LinkedList<>(names);
 System.out.println(names.size()); // 2
 ```
 
-Biến `names` được khai báo `List<String>`, nên mã dùng các thao tác thuộc hợp đồng `List`, bất kể triển khai là `ArrayList` hay `LinkedList`.
+`names` has the declared type `List<String>`, so code uses operations from the `List` contract whether the implementation is `ArrayList` or `LinkedList`.
 
-Nhưng **không phải mọi implementation có hiệu năng hay hành vi bổ sung giống nhau**: một số danh sách không cho sửa, một số có đặc điểm truy cập ngẫu nhiên khác nhau. Lựa chọn implementation vẫn phải dựa vào nhu cầu thật.
+However, **not all implementations have the same performance or additional behavior**: some lists are immutable, while others have different random-access characteristics. Choose implementations according to actual requirements.
 
-Chữ ký API cũng nên diễn đạt yêu cầu tối thiểu:
+API signatures should also express the minimum requirements:
 
 ```java
 static void printAll(Iterable<String> values) {
@@ -1524,67 +1524,67 @@ static void printAll(Iterable<String> values) {
 }
 ```
 
-Nếu chỉ cần duyệt, `Iterable<String>` có thể diễn đạt nhu cầu tốt hơn `ArrayList<String>`. Nếu cần truy cập theo chỉ số và kích thước, `List<String>` là phù hợp hơn.
+If only iteration is needed, `Iterable<String>` may express the requirement better than `ArrayList<String>`. If indexed access and a known size are needed, `List<String>` is more suitable.
 
-Tuy nhiên, **không nên tự động biến mọi kiểu thành `Object` hoặc `Iterable`**: hợp đồng quá chung khiến người gọi và người triển khai thiếu thông tin. Chọn abstraction **đủ hẹp về trách nhiệm và đủ mạnh để mô tả nghiệp vụ**.
+However, **do not automatically generalize every type to `Object` or `Iterable`**: an overly broad contract leaves callers and implementers without enough information. Choose an abstraction **focused enough in responsibility and strong enough to capture business semantics**.
 
-## 9. Khi nào nên tạo interface riêng?
+## 9. When should you introduce your own interface?
 
-Một interface riêng mang lại giá trị khi:
+A dedicated interface adds value when:
 
-- Có nhiều implementation với cùng một ý nghĩa nghiệp vụ.
-- Một dependency là ranh giới hạ tầng dễ thay đổi: gửi thông báo, lưu trữ, thanh toán, đồng bộ dữ liệu.
-- Thành phần nghiệp vụ cần test độc lập bằng fake, stub hoặc spy.
-- Nhiều người cùng làm việc dựa trên một hợp đồng ổn định.
-- Muốn một module cấp cao không phải import các chi tiết thư viện/kết nối của module cấp thấp.
+- Multiple implementations share the same business meaning.
+- A dependency forms an infrastructure boundary likely to change, such as notifications, storage, payments, or data synchronization.
+- Business code needs independent tests using fakes, stubs, or spies.
+- Multiple developers collaborate against a stable contract.
+- A high-level module should not import library or connection details from a low-level module.
 
-Ngược lại, nếu chỉ có một helper nhỏ, không có hợp đồng thay thế hữu ích, tạo hàng loạt `IXxx`, `XxxImpl` chỉ thêm file và tầng gọi. Interface nên xuất phát từ **điều mà bên sử dụng thật sự cần**, không chỉ từ thói quen “mỗi class phải có một interface”.
+Conversely, if there is only a small helper with no meaningful substitution contract, creating numerous `IXxx` and `XxxImpl` types only adds files and layers. Interfaces should arise from **what their actual consumers need**, not from a habit of giving every class an interface.
 
-### Lỗi thiết kế thường gặp
+### Common design mistakes
 
-| Lỗi | Hệ quả | Cách sửa |
+| Mistake | Consequence | Fix |
 |---|---|---|
-| Service giữ `new ConcreteGateway()` bên trong | Không thay gateway bằng injection | Nhận `PaymentGateway` qua constructor |
-| API trả kiểu implementation không cần thiết | Lộ chi tiết cấu trúc | Trả interface/kiểu nghiệp vụ phù hợp |
-| Dùng `instanceof` để chọn loại gateway | Service biết và phân nhánh theo mọi implementation | Đưa hành vi khác nhau vào implementation của interface |
-| Interface quá lớn với nhiều phương thức không liên quan | Lớp triển khai bị ép thực hiện phần không cần | Tách các hợp đồng có trách nhiệm rõ (ISP) |
-| Implementation làm sai ngữ nghĩa của interface | Lỗi chỉ xuất hiện khi thay implementation | Ghi rõ hợp đồng và dùng contract tests |
-| Tạo interface chỉ để đủ mẫu code | Tăng độ phức tạp không có giá trị | Bắt đầu từ nhu cầu thay thế hoặc ranh giới phụ thuộc |
-| Coi interface là cơ chế quản lý transaction | Thay implementation nhưng dữ liệu vẫn có thể không nhất quán | Thiết kế transaction, error handling, idempotency riêng |
+| A service creates `new ConcreteGateway()` internally | Cannot replace the gateway through injection | Accept `PaymentGateway` in the constructor |
+| API unnecessarily returns a concrete implementation type | Exposes structural details | Return a suitable interface or domain type |
+| Uses `instanceof` to choose a gateway | The service knows and branches on every implementation | Move the varying behavior into interface implementations |
+| Overly large interface with unrelated methods | Implementers are forced to support unnecessary operations | Split into clear, focused contracts (ISP) |
+| An implementation violates interface semantics | Errors surface only when switching implementations | Document the contract and run contract tests |
+| Creates interfaces only to follow a code template | Adds complexity without value | Start from substitution needs or dependency boundaries |
+| Treats an interface as a transaction manager | Data may still become inconsistent when implementations change | Design transactions, error handling, and idempotency separately |
 
-## 10. Bài tập thực hành
+## 10. Practice exercises
 
-**Bài 1 – Gửi thông báo.** Tạo `NotificationSender` với `void send(String destination, String message)`. Viết hai implementation `ConsoleSender` và `InMemorySender`, rồi tạo `OrderNotifier` nhận `NotificationSender` qua constructor. Dùng fake để xác nhận một thông báo đã được gửi đúng nội dung.
+**Exercise 1 – Sending notifications.** Define `NotificationSender` with `void send(String destination, String message)`. Write `ConsoleSender` and `InMemorySender` implementations, then create `OrderNotifier` that accepts `NotificationSender` through its constructor. Use a fake to verify that a notification with the correct content was sent.
 
-**Bài 2 – Thay gateway.** Thêm `RejectAllGateway` trả `PaymentResult(false, "...")` cho mọi yêu cầu. Tạo `CheckoutService` mới với gateway đó mà không sửa bất kỳ dòng nào trong `CheckoutService`.
+**Exercise 2 – Replacing the gateway.** Add `RejectAllGateway` that returns `PaymentResult(false, "...")` for all requests. Create a new `CheckoutService` instance with that gateway without modifying any code inside `CheckoutService`.
 
-**Bài 3 – Hợp đồng gọi lặp.** Chỉnh giao diện thanh toán để nhận một `idempotencyKey` và thiết kế implementation giả lập lưu kết quả theo key. Chứng minh hai yêu cầu trùng key không trừ tiền hai lần. Mô tả rủi ro khi lưu cache key chỉ trong RAM.
+**Exercise 3 – Repeated-call contracts.** Change the payment interface to accept an `idempotencyKey` and design a simulated implementation that stores results by key. Show that two requests with the same key do not charge twice. Describe the risk of keeping the key cache only in RAM.
 
-**Bài 4 – Chọn abstraction.** Một phương thức chỉ cần đọc các phần tử chuỗi từ cấu trúc dữ liệu. Nên nhận `ArrayList<String>`, `List<String>`, `Collection<String>` hay `Iterable<String>`? Giải thích khả năng nào thực sự cần thiết.
+**Exercise 4 – Choosing an abstraction.** A method only needs to read string elements from a data structure. Should it accept `ArrayList<String>`, `List<String>`, `Collection<String>`, or `Iterable<String>`? Explain which capability it actually requires.
 
-**Bài 5 – Phân biệt DI và interface.** Có thể làm constructor injection với một concrete class không? Có. Vậy khi nào thêm interface mới có lợi? Hãy trả lời bằng khả năng thay thế implementation và phạm vi phụ thuộc.
+**Exercise 5 – DI versus interfaces.** Can constructor injection use a concrete class? Yes. When is adding an interface beneficial? Answer in terms of implementation substitution and dependency scope.
 
-**Điểm cần nhớ:** Lập trình dựa trên giao diện giúp phần nghiệp vụ tập trung vào **hợp đồng nó cần**, trong khi các lớp khác thực hiện chi tiết cụ thể. Thực hành quan trọng nhất là xác định **đúng abstraction, đúng quyền sở hữu dependency và đúng ngữ nghĩa khi thay implementation** — không phải thêm interface cho mọi class.
+**Key takeaway:** Programming to interfaces keeps business logic focused on **the contract it needs**, while other classes handle implementation details. The key practice is to choose **the right abstraction, the right owner of dependencies, and the right semantics when substituting implementations** — rather than adding an interface for every class.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="interface-004">Một đối tượng đảm nhận nhiều giao diện</a>
+## <a id="interface-004">One object implementing multiple interfaces</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Một đối tượng đảm nhận nhiều giao diện trong Java
+# One object implementing multiple interfaces in Java
 
-Một thiết bị văn phòng có thể vừa **in**, vừa **quét tài liệu**, vừa **báo cáo trạng thái**. Người cần in chỉ quan tâm khả năng in; người cần quét chỉ quan tâm khả năng quét. Java cho phép **một đối tượng duy nhất thực hiện nhiều hợp đồng hành vi** bằng cách để lớp của nó `implements` nhiều `interface`.
+An office device may **print**, **scan documents**, and **report its status**. Someone printing only needs the printing capability; someone scanning only needs scanning. Java lets **one object fulfill multiple behavioral contracts** by allowing its class to `implements` multiple `interface` types.
 
-Điểm quan trọng: mỗi `interface` mô tả một **vai trò hoặc năng lực**, không nhất thiết tương ứng với một đối tượng khác nhau. Một instance có thể được sử dụng đồng thời qua nhiều biến tham chiếu có kiểu interface khác nhau, và mọi thao tác vẫn tác động lên trạng thái của **cùng instance**.
+The key point is that each `interface` describes a **role or capability**, not necessarily a separate object. One instance can be used simultaneously through several reference variables with different interface types, and all operations still affect **the same instance**.
 
-## 1. Cú pháp cốt lõi
+## 1. Core syntax
 
 ~~~java
 interface Printable {
@@ -1618,19 +1618,19 @@ printer.print("Báo cáo");
 System.out.println(scanner.scan("HD-001")); // PDF:HD-001
 ~~~
 
-Ở đây:
+Here:
 
-- `OfficeMachine` là **một lớp cụ thể** thực thi hai interface.
-- `new OfficeMachine()` chỉ tạo **một đối tượng OfficeMachine**.
-- `printer` và `scanner` là **hai biến tham chiếu**, mỗi biến quan sát đối tượng theo một hợp đồng khác nhau.
-- Biến kiểu `Printable` chỉ cho phép gọi những hành vi công khai thuộc hợp đồng `Printable` (và những thành viên có thể gọi theo quy tắc của kiểu), dù đối tượng thực tế còn biết quét.
-- Java chọn phần triển khai `print` hoặc `scan` của lớp thực tế tại thời điểm chạy.
+- `OfficeMachine` is **one concrete class** implementing two interfaces.
+- `new OfficeMachine()` creates **only one OfficeMachine object**.
+- `printer` and `scanner` are **two reference variables**, each viewing the object through a different contract.
+- A `Printable` variable exposes only the public behaviors available through the `Printable` contract (and other members callable under the type rules), even if the actual object can also scan.
+- At runtime, Java invokes the concrete class's implementation of `print` or `scan`.
 
-Không tồn tại hai “nửa đối tượng” riêng biệt được tạo ra khi gán vào hai biến interface. Đây là **đa hình theo interface**: cùng một instance có thể được đối xử như nhiều kiểu hợp đồng.
+Assigning an object to two interface variables does not create two separate “halves” of the object. This is **interface polymorphism**: one instance can be treated as several contract types.
 
-## 2. Ví dụ hoàn chỉnh: một máy, nhiều vai trò
+## 2. Complete example: one machine, multiple roles
 
-Tạo file **`MultipleInterfacesDemo.java`**. Ví dụ chạy trên Java 11+, chỉ dùng thư viện chuẩn Java.
+Create **`MultipleInterfacesDemo.java`**. The example runs on Java 11+ and uses only the Java standard library.
 
 ~~~java
 import java.util.Objects;
@@ -1746,14 +1746,14 @@ public class MultipleInterfacesDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac MultipleInterfacesDemo.java
 java MultipleInterfacesDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Cùng instance: true
@@ -1762,19 +1762,19 @@ Kết quả quét: PDF:HD-001
 Trạng thái: OFFICE-01 | printed=1 | scanned=1
 ~~~
 
-**Điều gì xảy ra?**
+**What happens?**
 
-1. `machine` tham chiếu tới đối tượng `OfficeMachine` mới tạo.
-2. Gán `printPort = machine`, `scanPort = machine` và `monitorPort = machine` **sao chép giá trị tham chiếu**; không gọi `new` lần nữa.
-3. `PrintDesk` nhận đối tượng đó dưới vai trò `Printable`, gọi `print`, làm tăng `printedPages`.
-4. `ScanDesk` nhận chính đối tượng ấy dưới vai trò `Scannable`, gọi `scan`, làm tăng `scannedPages`.
-5. `monitorPort.status()` quan sát **cả hai bộ đếm trên cùng đối tượng**.
+1. `machine` references the newly created `OfficeMachine` object.
+2. Assigning `printPort = machine`, `scanPort = machine`, and `monitorPort = machine` **copies reference values**; it does not call `new` again.
+3. `PrintDesk` receives that object in the `Printable` role, calls `print`, and increments `printedPages`.
+4. `ScanDesk` receives the same object in the `Scannable` role, calls `scan`, and increments `scannedPages`.
+5. `monitorPort.status()` observes **both counters on the same object**.
 
-Lưu ý: trong một ví dụ sản xuất, việc tăng bộ đếm trước khi in/quét thành công có thể không phản ánh số tác vụ đã hoàn tất; ở đây các phương thức chỉ mô phỏng bằng chuỗi và console, nên không có thiết bị hay I/O thực.
+Note: in production, incrementing a counter before printing or scanning succeeds may not reflect completed work. Here the methods only simulate operations using strings and the console; no real device or I/O is involved.
 
-## 3. Mô hình quan hệ class–interface và đối tượng tại runtime
+## 3. Class–interface relationships and objects at runtime
 
-Một lớp có thể `implements` nhiều giao diện bằng dấu phẩy:
+A class may `implements` multiple interfaces using commas:
 
 ~~~java
 class OfficeMachine implements Printable, Scannable, StatusReadable {
@@ -1809,7 +1809,7 @@ classDiagram
     StatusReadable <|.. OfficeMachine
 ~~~
 
-Sơ đồ lớp thể hiện **một kiểu cụ thể** hiện thực hóa **ba hợp đồng**. Còn sơ đồ tham chiếu bên dưới thể hiện **một instance đang tồn tại**:
+The class diagram shows **one concrete type** implementing **three contracts**. The reference diagram below, however, depicts **one existing instance**:
 
 ~~~mermaid
 flowchart LR
@@ -1818,11 +1818,11 @@ flowchart LR
     R["monitorPort: StatusReadable"] --> M
 ~~~
 
-Đừng nhầm ba **kiểu tham chiếu** với ba đối tượng. Khi một đối tượng triển khai nhiều interface, nó được phép xuất hiện ở nhiều API có yêu cầu kiểu khác nhau.
+Do not confuse three **reference types** with three objects. An object implementing multiple interfaces can be passed to APIs requiring different types.
 
-## 4. Kiểu khai báo quyết định thao tác nào có thể gọi
+## 4. The declared type controls which operations may be called
 
-Giả sử:
+Suppose:
 
 ~~~java
 OfficeMachine machine = new OfficeMachine("OFFICE-02");
@@ -1830,7 +1830,7 @@ Printable printer = machine;
 Scannable scanner = machine;
 ~~~
 
-Các lời gọi hợp lệ:
+Valid calls:
 
 ~~~java
 printer.print("Tài liệu A");
@@ -1841,16 +1841,16 @@ machine.scan("Trang D");
 machine.status();
 ~~~
 
-Nhưng:
+But:
 
 ~~~java
 // printer.scan("Trang E"); // LỖI BIÊN DỊCH
 // scanner.print("Tài liệu F"); // LỖI BIÊN DỊCH
 ~~~
 
-Biến `printer` có **kiểu tĩnh** là `Printable`; compiler không cho phép gọi `scan` qua biến này vì hợp đồng `Printable` không khai báo `scan`. Điều đó **không có nghĩa** instance phía sau mất năng lực quét.
+The `printer` variable has the **static type** `Printable`; the compiler disallows calling `scan` through that variable because the `Printable` contract does not declare `scan`. That **does not mean** the underlying instance has lost its scanning capability.
 
-Nếu một API thực sự cần cả hai vai trò, có thể khai báo một kiểu hợp đồng bao gồm hai interface:
+If an API really needs both roles, define a contract type that combines the two interfaces:
 
 ~~~java
 interface MultiFunctionDevice extends Printable, Scannable {
@@ -1874,22 +1874,22 @@ device.print("Kế hoạch");
 System.out.println(device.scan("Trang 01"));
 ~~~
 
-Đây là **một interface kế thừa nhiều interface**, cũng hợp lệ trong Java. Nó khác với việc một class kế thừa nhiều class: Java **không hỗ trợ một class `extends` đồng thời nhiều class**.
+This is **an interface extending multiple interfaces**, which is legal in Java. It differs from a class extending multiple classes: Java **does not support a class `extends` multiple classes**.
 
-Bảng đối chiếu:
+Comparison:
 
-| Khai báo | Hợp lệ? | Ý nghĩa |
+| Declaration | Valid? | Meaning |
 | --- | --- | --- |
-| `class X implements A, B` | Có | Một lớp hiện thực nhiều interface |
-| `interface C extends A, B` | Có | Gộp/kế thừa nhiều hợp đồng |
-| `class X extends Parent implements A, B` | Có | Một lớp cha trực tiếp, nhiều interface |
-| `class X extends Parent1, Parent2` | Không | Java không cho đa kế thừa lớp |
-| `Printable p = new OfficeMachine(...)` | Có | Dùng instance concrete qua tham chiếu interface |
-| `new Printable()` | Không | Không khởi tạo interface trực tiếp |
+| `class X implements A, B` | Yes | One class implements multiple interfaces |
+| `interface C extends A, B` | Yes | Combines/inherits multiple contracts |
+| `class X extends Parent implements A, B` | Yes | One direct superclass and multiple interfaces |
+| `class X extends Parent1, Parent2` | No | Java disallows multiple class inheritance |
+| `Printable p = new OfficeMachine(...)` | Yes | Uses a concrete instance through an interface reference |
+| `new Printable()` | No | Cannot instantiate an interface directly |
 
-## 5. Một client chỉ cần nhìn thấy vai trò nó sử dụng
+## 5. Clients should only see the roles they use
 
-`PrintDesk(Printable printer)` cho phép truyền `OfficeMachine` hoặc một máy chỉ hỗ trợ in. Nếu constructor nhận hẳn `OfficeMachine`, nó vô tình ràng buộc việc in với cả các chức năng quét và giám sát của một model cụ thể.
+`PrintDesk(Printable printer)` accepts an `OfficeMachine` or a printer-only device. If its constructor required `OfficeMachine` instead, printing would become unnecessarily coupled to that specific model's scanning and monitoring features.
 
 ~~~java
 class CloudPrinter implements Printable {
@@ -1902,27 +1902,27 @@ class CloudPrinter implements Printable {
 // PrintDesk desk = new PrintDesk(new CloudPrinter());
 ~~~
 
-Bài học ở đây là **một class có thể đáp ứng nhiều vai trò, nhưng mỗi client chỉ nên yêu cầu vai trò mình cần**. Nếu ép máy in một chức năng implement cả `Scannable` rồi ném `UnsupportedOperationException`, hợp đồng đã quá rộng. Bài *Giao diện nhỏ và phân tách vai trò* phân tích sâu Interface Segregation Principle và cách tách interface theo nhóm client.
+The lesson is that **one class may fulfill many roles, but each client should require only the role it needs**. Forcing a print-only device to implement `Scannable` and then throw `UnsupportedOperationException` means the contract is too broad. The *Small interfaces and role segregation* lesson explores the Interface Segregation Principle and how to divide interfaces by client needs.
 
-## 6. Interface không chia sẻ các field instance
+## 6. Interfaces do not share instance fields
 
-| Thành phần | Interface | Class |
+| Element | Interface | Class |
 |---|---|---|
-| Hợp đồng phương thức | Có | Có thể khai báo/thực hiện |
-| Field trạng thái riêng theo instance | Không | Có |
-| Constructor | Không | Có |
-| Kế thừa nhiều interface | Có, qua `extends` | Có thể `implements` nhiều interface |
-| Kế thừa class | Không | Chỉ `extends` trực tiếp một class |
+| Method contract | Yes | Can declare and implement methods |
+| Per-instance state fields | No | Yes |
+| Constructor | No | Yes |
+| Inheriting multiple interfaces | Yes, through `extends` | Can `implements` multiple interfaces |
+| Inheriting from a class | No | Can directly `extends` only one class |
 
-Bởi vậy `OfficeMachine` đặt `printedPages` và `scannedPages` trong **class**, còn `Printable`, `Scannable` chỉ công bố những thao tác mà client gọi được. Một phương thức abstract trong interface ngầm là `public`; class thực hiện không thể giảm quyền truy cập. Interface cũng có thể có `default`/`static`/`private` method nhưng không vì thế có state instance riêng.
+That is why `OfficeMachine` stores `printedPages` and `scannedPages` in the **class**, while `Printable` and `Scannable` only expose operations clients can invoke. Abstract interface methods are implicitly `public`; implementing classes cannot reduce their accessibility. Interfaces may also contain `default`/`static`/`private` methods, but these do not create separate instance state.
 
-So sánh khi nào nên dùng abstract class để dùng chung constructor, trạng thái và thuật toán được triển khai ở bài *Chọn giao diện hay lớp trừu tượng*.
+The *Choosing an interface or an abstract class* lesson compares when to use an abstract class to share constructors, state, and algorithms.
 
-## 7. Trùng tên phương thức giữa hai interface
+## 7. Method name collisions across interfaces
 
-Một lớp implement nhiều interface có thể gặp các phương thức cùng tên. Cần phân biệt **cùng hợp đồng abstract**, **overload khác tham số** và **xung đột default implementation**.
+A class implementing multiple interfaces may encounter methods with the same name. Distinguish between **identical abstract contracts**, **overloads with different parameters**, and **conflicting default implementations**.
 
-### Hai interface cùng yêu cầu một phương thức abstract
+### Two interfaces require the same abstract method
 
 ~~~java
 interface Auditable {
@@ -1941,9 +1941,9 @@ class AuditConsole implements Auditable, Loggable {
 }
 ~~~
 
-Một implementation `log(String)` là đủ, vì cả hai giao diện yêu cầu cùng chữ ký với kiểu trả về tương thích. Hai interface **không tạo hai bản sao phương thức** trong đối tượng.
+One implementation of `log(String)` is sufficient because both interfaces require the same signature with compatible return types. The two interfaces **do not create two copies of the method** inside the object.
 
-### Hai interface có phương thức overload
+### Two interfaces declare overloaded methods
 
 ~~~java
 interface TextWriter {
@@ -1967,11 +1967,11 @@ class Writer implements TextWriter, NumberWriter {
 }
 ~~~
 
-Hai `write` có danh sách tham số khác nhau, nên lớp triển khai cả hai dưới dạng **overloading**.
+The two `write` methods have different parameter lists, so the class implements both as **overloads**.
 
-### Hai interface khai báo `default` method trùng chữ ký
+### Two interfaces declare the same `default` method signature
 
-Đây là trường hợp dễ gây nhầm:
+This case often causes confusion:
 
 ~~~java
 interface LocalLabel {
@@ -1990,7 +1990,7 @@ interface RemoteLabel {
 // class Hybrid implements LocalLabel, RemoteLabel { }
 ~~~
 
-Java không tự chọn ngẫu nhiên một `default`. Lớp phải giải quyết xung đột, chẳng hạn tự cung cấp implementation:
+Java does not arbitrarily choose one `default`. The implementing class must resolve the conflict, for example by providing its own implementation:
 
 ~~~java
 class Hybrid implements LocalLabel, RemoteLabel {
@@ -2007,15 +2007,15 @@ Hybrid hybrid = new Hybrid();
 System.out.println(hybrid.label()); // LOCAL + REMOTE
 ~~~
 
-Bản `Hybrid.label()` là một phương thức duy nhất, chủ động kết hợp hai cách mặc định. Nếu logic miền nghiệp vụ cần chọn chỉ một bên, lớp có thể trả về một trong hai hoặc viết lại hoàn toàn.
+The `Hybrid.label()` method is a single implementation that explicitly combines the two defaults. If business logic requires choosing only one, the class can return one of them or provide an entirely new implementation.
 
-**Quy tắc ưu tiên quan trọng:** nếu một superclass có phương thức instance phù hợp, phương thức của class thường được ưu tiên so với default method cùng chữ ký của interface; các xung đột default không phải lúc nào cũng cần override. Riêng trường hợp hai default không thể phân giải, compiler yêu cầu xử lý rõ.
+**Important precedence rule:** when a superclass provides a matching instance method, the class method generally takes precedence over an interface default method with the same signature; default conflicts do not always require an override. When two defaults cannot be resolved, however, the compiler requires an explicit solution.
 
-**Không thể chỉ đổi kiểu trả về** để overload hai phương thức cùng tên/cùng tham số. Nếu hai interface yêu cầu return type không tương thích, có thể không tồn tại implementation hợp lệ; cần chỉnh lại thiết kế hợp đồng.
+**Changing only the return type cannot overload** two methods with the same name and parameters. If two interfaces require incompatible return types, no valid implementation may exist; the contract design must be revised.
 
-## 8. Một đối tượng, nhiều tham chiếu và việc ép kiểu
+## 8. One object, multiple references, and casts
 
-Trong chương trình chính:
+In the main program:
 
 ~~~java
 OfficeMachine machine = new OfficeMachine("OFFICE-03");
@@ -2024,9 +2024,9 @@ Scannable b = machine;
 StatusReadable c = machine;
 ~~~
 
-`a`, `b`, `c` cùng tham chiếu **một** đối tượng, nhưng các thao tác có thể gọi qua từng biến là khác nhau. Phép gán không tạo bản sao của thiết bị hay trạng thái.
+`a`, `b`, and `c` all reference **one** object, but the operations accessible through each variable differ. Assignment creates no copy of the device or its state.
 
-Ta có thể kiểm tra kiểu thực tế bằng `instanceof`:
+We can inspect the actual type using `instanceof`:
 
 ~~~java
 if (a instanceof Scannable) {
@@ -2035,21 +2035,21 @@ if (a instanceof Scannable) {
 }
 ~~~
 
-Đoạn trên hợp lệ vì đối tượng mà `a` đang trỏ tới thực sự hỗ trợ `Scannable`. Nhưng không phải mọi `Printable` đều là `Scannable`: `new CloudPrinter()` ở ví dụ trên không tự hỗ trợ quét. Ép kiểu thiếu kiểm tra có thể gây `ClassCastException`.
+This is valid because the object referenced by `a` really supports `Scannable`. But not every `Printable` is `Scannable`: `new CloudPrinter()` in the earlier example does not automatically support scanning. An unchecked cast can cause a `ClassCastException`.
 
-Nếu một hàm **luôn cần cả in và quét**, nên khai báo tham số kiểu `MultiFunctionDevice` hoặc một abstraction phù hợp thay vì luôn nhận `Printable` rồi ép kiểu để tìm tính năng bổ sung. Dùng `instanceof` như cơ chế tùy chọn đôi khi hợp lý, nhưng lạm dụng sẽ làm giảm lợi ích của thiết kế dựa trên interface.
+If a method **always needs both printing and scanning**, give it a `MultiFunctionDevice` parameter or another suitable abstraction instead of accepting `Printable` and always casting to find extra features. Using `instanceof` for optional capabilities is sometimes reasonable, but overuse weakens the benefits of interface-based design.
 
-Lưu ý cách so sánh trong ví dụ chạy được:
+Note the comparison in the runnable example:
 
 ~~~java
 ((Object) printPort == (Object) scanPort)
 ~~~
 
-`==` với tham chiếu kiểm tra **cùng instance**, không kiểm tra nội dung hay hợp đồng. Việc ép hai phía sang `Object` ở đây chỉ để thể hiện rõ ta đang so sánh danh tính đối tượng.
+`==` on references checks **object identity**, not contents or contract equality. Both sides are cast to `Object` here only to make it explicit that we are comparing object identities.
 
-## 9. Vai trò có thể cung cấp một thao tác mặc định nhỏ
+## 9. Roles can provide small default operations
 
-Ví dụ interface in có thể định nghĩa hành vi in hai lần **dựa trên chính hợp đồng in**:
+For example, a printing interface could define a print-twice operation **using its existing printing contract**:
 
 ~~~java
 interface RepeatablePrinter {
@@ -2062,11 +2062,11 @@ interface RepeatablePrinter {
 }
 ~~~
 
-Lớp implement `RepeatablePrinter` chỉ cần định nghĩa `print` để dùng hành vi mặc định `printTwice`; các lần gọi vẫn chạy implementation của đối tượng thực. Nhưng default method **không cấp thêm field instance**, và phải thỏa semantics chung của mọi implementation (chẳng hạn “in hai bản” chỉ hợp lý khi gọi `print` hai lần là điều hợp lệ). Đối với quy tắc `static`/`private`, xung đột default và thay đổi interface theo phiên bản Java, xem bài *Thành viên mặc định và giới hạn tùy ngôn ngữ*.
+A class implementing `RepeatablePrinter` only needs to define `print` to reuse the default `printTwice` behavior; calls still dispatch to the actual object's implementation. However, a default method **does not add instance fields**, and its semantics must work for every implementation (for example, “print two copies” only makes sense when calling `print` twice is valid). For `static`/`private` rules, default conflicts, and interface evolution across Java versions, see *Default members and language-specific limitations*.
 
-## 10. Interface không phải là “đa kế thừa trạng thái”
+## 10. Interfaces are not “multiple inheritance of state”
 
-Một lớp Java chỉ `extends` một superclass trực tiếp nhưng có thể `implements` nhiều interface:
+A Java class directly `extends` only one superclass but may `implements` multiple interfaces:
 
 ~~~java
 class Device {
@@ -2102,9 +2102,9 @@ class AllInOne extends Device implements Printable, Scannable {
 }
 ~~~
 
-`AllInOne` kế thừa trạng thái `serial` từ một superclass, đồng thời đáp ứng hai hợp đồng. Nó **không** nhận hai bộ field instance từ hai interface, vì interface không có field instance.
+`AllInOne` inherits `serial` state from one superclass while fulfilling two contracts. It **does not** receive two sets of instance fields from the interfaces because interfaces do not have instance fields.
 
-Khi một năng lực yêu cầu một thành phần độc lập phức tạp (ví dụ kết nối máy quét hoặc hàng đợi máy in), lớp có thể dùng **composition**:
+When a capability needs a complex independent component (such as a scanner connection or print queue), the class can use **composition**:
 
 ~~~java
 class PrintEngine {
@@ -2135,33 +2135,33 @@ class ComposedOfficeMachine implements Printable, Scannable {
 }
 ~~~
 
-Trong trường hợp này, **một đối tượng `ComposedOfficeMachine`** vẫn thực hiện hai interface, còn việc thực thi được ủy quyền cho hai đối tượng thành phần. Composition giúp giữ mã thiết bị riêng biệt mà không yêu cầu đa kế thừa class.
+Here, **one `ComposedOfficeMachine` object** still implements both interfaces while delegating work to two component objects. Composition keeps device logic separate without requiring multiple class inheritance.
 
-## 11. Khi nào nên yêu cầu hai vai trò trên cùng một đối tượng?
+## 11. When should two roles be required on the same object?
 
-Nếu bộ phận in và quét hoạt động độc lập, hai dependency `Printable` và `Scannable` có thể được cung cấp bởi **hai thiết bị khác nhau**, linh hoạt hơn một siêu-interface. Nếu yêu cầu nghiệp vụ là in và quét **trên cùng thiết bị**, một hợp đồng `MultiFunctionDevice extends Printable, Scannable` diễn đạt ràng buộc đó ở cấp kiểu.
+If printing and scanning operate independently, two dependencies of types `Printable` and `Scannable` may come from **two different devices**, which is more flexible than a combined interface. If the business requirement is to print and scan **on the same device**, a `MultiFunctionDevice extends Printable, Scannable` contract expresses that constraint in the type system.
 
-Dù một lớp tự `implements` nhiều interface, caller vẫn cần kiểm tra **hợp đồng hành vi**: `scan(pageId)` có trả đúng dữ liệu hay không, `print(document)` có bảo đảm điều đã hứa không, và các phương thức có trạng thái chia sẻ có tương tác ngoài dự kiến không. Trong ví dụ học tập, bộ đếm tăng một lần cho mỗi thao tác mô phỏng; hệ thống thật phải xác định thế nào mới tính là tác vụ hoàn tất.
+Even if a class `implements` multiple interfaces, its caller must still verify **behavioral contracts**: does `scan(pageId)` return the correct data, does `print(document)` fulfill its promise, and do methods sharing state interact unexpectedly? In this learning example, each simulated operation increments a counter once; real systems must define what constitutes a completed task.
 
-Thiết kế đa vai trò có lợi khi mỗi giao diện có ý nghĩa độc lập với client, không phải để biến class thành nơi gom mọi tính năng.
+Multiple roles are useful when each interface has independent meaning to its clients, rather than turning a class into a collection of unrelated features.
 
-## 12. Lỗi thường gặp và cách nhận diện
+## 12. Common mistakes and how to recognize them
 
-| Lỗi | Vì sao sai | Cách sửa |
+| Mistake | Why it is wrong | Fix |
 | --- | --- | --- |
-| Nghĩ `implements A, B` tạo hai đối tượng | Từ khóa `implements` chỉ công bố và đáp ứng hợp đồng ở cấp class | Theo dõi `new` để biết số instance thực được tạo |
-| Gọi `scan()` qua biến `Printable` | Kiểu khai báo không có phương thức đó | Dùng `Scannable` hoặc kiểu hợp đồng gộp |
-| Implement method interface với quyền truy cập mặc định | Giảm visibility của phương thức `public abstract` | Khai báo `public` khi override |
-| Quên triển khai abstract method | Concrete class chưa đáp ứng đầy đủ hợp đồng | Implement đủ hoặc khai báo class `abstract` |
-| Trùng `default` method nhưng không giải quyết | Java không chọn một implementation tùy ý | Override để phân giải |
-| Ép mọi `Printable` sang `Scannable` | Có implementation chỉ biết in | Kiểm tra kiểu khi thật cần, hoặc thiết kế abstraction phù hợp |
-| Tạo interface quá lớn | Lớp chỉ hỗ trợ một phần phải viết method vô nghĩa | Chia theo nhóm năng lực client dùng |
-| Lưu trạng thái mutable vào hằng số interface | Field interface là `static final`, chia sẻ ở cấp kiểu | Đặt trạng thái instance trong class |
-| Tạo interface cho mọi lớp mà không có vai trò rõ | Tăng số kiểu và độ phức tạp | Trích abstraction khi có nhu cầu thay thế/chia sẻ hợp đồng |
+| Assuming `implements A, B` creates two objects | `implements` declares and fulfills contracts at class level | Count `new` expressions to determine how many instances are created |
+| Calling `scan()` through a `Printable` variable | The declared type does not expose that method | Use `Scannable` or a combined contract type |
+| Implementing interface methods with default access | Reduces the visibility of a `public abstract` method | Declare the override `public` |
+| Forgetting an abstract method | The concrete class does not fulfill the contract | Implement all methods or declare the class `abstract` |
+| Leaving conflicting `default` methods unresolved | Java cannot choose an arbitrary implementation | Override to resolve the conflict |
+| Casting every `Printable` to `Scannable` | Some implementations can only print | Check the type when needed or design an appropriate abstraction |
+| Creating an oversized interface | Classes that support only some features must add meaningless methods | Split by capabilities clients actually use |
+| Placing mutable state in interface constants | Interface fields are `static final` and shared at the type level | Keep per-instance state in classes |
+| Creating an interface for every class without a clear role | Increases the number of types and complexity | Extract an abstraction when substitution or a shared contract is needed |
 
-## 13. Thực hành tự kiểm tra
+## 13. Self-check exercises
 
-**Câu 1.** Đoạn sau tạo bao nhiêu đối tượng?
+**Question 1.** How many objects does the following code create?
 
 ~~~java
 OfficeMachine m = new OfficeMachine("A1");
@@ -2170,74 +2170,74 @@ Scannable s = m;
 StatusReadable r = m;
 ~~~
 
-**Đáp án:** Một `OfficeMachine`. Ba phép gán sau chỉ tạo các biến tham chiếu/chép giá trị tham chiếu, không tạo instance mới.
+**Answer:** One `OfficeMachine`. The three following assignments only create reference variables/copy reference values, not new instances.
 
-**Câu 2.** `Printable p = new OfficeMachine("A2"); p.scan("X");` có chạy được không?
+**Question 2.** Will `Printable p = new OfficeMachine("A2"); p.scan("X");` compile and run?
 
-**Đáp án:** Không biên dịch vì `Printable` không khai báo `scan()`. Instance có thể quét, nhưng compiler chỉ xét API có thể gọi theo kiểu tĩnh `Printable` của biến `p`.
+**Answer:** It does not compile because `Printable` does not declare `scan()`. The instance may be capable of scanning, but the compiler only considers the API available through the static `Printable` type of variable `p`.
 
-**Câu 3.** Tại sao `PrintDesk` dùng tham số `Printable` thay vì `OfficeMachine`?
+**Question 3.** Why does `PrintDesk` accept `Printable` instead of `OfficeMachine`?
 
-**Đáp án:** Nó chỉ cần chức năng in. Vì vậy có thể dùng `OfficeMachine`, `CloudPrinter` hay implementation phù hợp khác mà không gắn cứng vào một lớp cụ thể.
+**Answer:** It only needs printing. It can therefore use `OfficeMachine`, `CloudPrinter`, or another suitable implementation without depending on a specific class.
 
-**Câu 4.** Hai interface có cùng `void reset()` abstract; lớp implement cả hai có phải viết hai phương thức `reset()` không?
+**Question 4.** If two interfaces have the same abstract `void reset()` method, must a class implementing both define two `reset()` methods?
 
-**Đáp án:** Không. Nếu chữ ký và kiểu trả về tương thích, một implementation công khai `reset()` đáp ứng cả hai. Nếu hai default method `reset()` xung đột, lớp cần chủ động giải quyết.
+**Answer:** No. If signatures and return types are compatible, one public `reset()` implementation satisfies both. If two default `reset()` methods conflict, the class must explicitly resolve them.
 
-**Câu 5.** Một interface kế thừa đồng thời `Printable` và `Scannable` có hợp lệ không? Còn class `extends` hai class?
+**Question 5.** Can one interface extend both `Printable` and `Scannable`? Can a class `extends` two classes?
 
-**Đáp án:** `interface MultiFunctionDevice extends Printable, Scannable` hợp lệ. Class Java không được `extends` hai superclass trực tiếp.
+**Answer:** `interface MultiFunctionDevice extends Printable, Scannable` is valid. A Java class cannot `extends` two direct superclasses.
 
-**Câu 6.** `final class OfficeMachine implements Printable, Scannable` có hợp lệ không?
+**Question 6.** Is `final class OfficeMachine implements Printable, Scannable` valid?
 
-**Đáp án:** Có. `final` ngăn lớp khác kế thừa `OfficeMachine`, nhưng không ngăn chính `OfficeMachine` hiện thực nhiều interface. Các đối tượng của lớp vẫn dùng được như `Printable` hay `Scannable`.
+**Answer:** Yes. `final` prevents other classes from extending `OfficeMachine`, but does not prevent `OfficeMachine` itself from implementing multiple interfaces. Its objects can still be used as `Printable` or `Scannable`.
 
-**Câu 7.** Khi một phần mềm cần cả in và quét, nên truyền riêng `Printable` và `Scannable` hay dùng một kiểu gộp?
+**Question 7.** When software needs printing and scanning, should it receive separate `Printable` and `Scannable` dependencies or a combined type?
 
-**Đáp án:** Phụ thuộc yêu cầu. Nếu hai chức năng có thể được cung cấp bởi **hai thiết bị khác nhau**, hai tham số độc lập linh hoạt hơn. Nếu nghiệp vụ bắt buộc cả hai khả năng thuộc **cùng một thiết bị**, một hợp đồng gộp như `MultiFunctionDevice` làm rõ ràng buộc đó ở cấp kiểu.
+**Answer:** It depends. If the capabilities may come from **two different devices**, independent parameters offer more flexibility. If business rules require both capabilities to belong to **the same device**, a combined contract such as `MultiFunctionDevice` makes the constraint explicit at the type level.
 
-**Ghi nhớ:** Một object có thể đóng nhiều vai trò; interface mô tả **người khác có thể yêu cầu đối tượng làm gì**, còn class xác định **đối tượng thực hiện điều đó thế nào và quản lý trạng thái ra sao**. `implements` nhiều interface mở rộng các hợp đồng mà một instance đáp ứng, không nhân bản instance và cũng không cho class đa kế thừa trạng thái.
+**Remember:** One object can play multiple roles; interfaces describe **what others may ask the object to do**, while classes determine **how the object does it and manages its state**. A class that `implements` multiple interfaces expands the contracts one instance fulfills; it neither duplicates the instance nor inherits state from multiple classes.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="interface-005">Chọn giao diện hay lớp trừu tượng</a>
+## <a id="interface-005">Choosing an interface or an abstract class</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Chọn giao diện (interface) hay lớp trừu tượng (abstract class) trong Java
+# Choosing an interface or an abstract class in Java
 
-Khi nhiều đối tượng cung cấp hành vi giống nhau, Java cho phép mô tả điểm chung bằng **`interface`** hoặc **`abstract class`**. Cả hai đều hỗ trợ đa hình (*polymorphism*), nhưng giải quyết các nhu cầu thiết kế khác nhau:
+When several objects provide similar behavior, Java can describe what they share using an **`interface`** or an **`abstract class`**. Both support polymorphism (*polymorphism*), but address different design needs:
 
-- **Interface** phù hợp khi cần quy định **một hợp đồng hành vi** để các lớp, dù không cùng họ kế thừa, đều có thể thực hiện.
-- **Abstract class** phù hợp khi các lớp con thực sự thuộc **một họ lớp**, cần kế thừa **trạng thái, constructor hoặc phần thuật toán đã triển khai chung**.
+- **Interfaces** are appropriate when defining **a behavioral contract** that classes can implement even if they do not share an inheritance hierarchy.
+- **Abstract classes** are appropriate when subclasses genuinely belong to **a class family** and need to inherit **shared state, constructors, or portions of implemented algorithms**.
 
-Hai lựa chọn có thể **phối hợp**: một abstract class có thể `implements` một interface và cung cấp phần triển khai dùng chung cho một số lớp con. Điểm xuất phát nên là trách nhiệm và mối quan hệ trong bài toán, không phải mong muốn tạo thêm tầng kiến trúc.
+These options can **work together**: an abstract class may `implements` an interface and share implementation among some subclasses. Start with responsibilities and business relationships instead of adding architectural layers for their own sake.
 
-## 1. So sánh bản chất và giới hạn ngôn ngữ
+## 1. Comparing their nature and language limitations
 
-| Tiêu chí | `interface` | `abstract class` |
+| Criterion | `interface` | `abstract class` |
 |---|---|---|
-| Mục đích chính | Khai báo hợp đồng/khả năng mà đối tượng cung cấp | Định nghĩa nền tảng chung cho các lớp có quan hệ kế thừa |
-| Khai báo | `interface FeePolicy { ... }` | `abstract class BasePolicy { ... }` |
-| Quan hệ với lớp cụ thể | `implements` | `extends` |
-| Một lớp có thể sử dụng bao nhiêu? | Implement nhiều interface | Trực tiếp extends tối đa **một** lớp |
-| Constructor | **Không có constructor** | Có constructor, thường dùng để khởi tạo trạng thái nền |
-| Trạng thái instance | Không khai báo được instance field thông thường | Có thể có instance field, kể cả `private final` |
-| Field khai báo trực tiếp | Mặc nhiên `public static final` | Có thể là instance/static, mang các access modifier phù hợp |
-| Phương thức có phần thân | Có `default`, `static` và `private` (theo phiên bản Java) | Có phương thức thường, `static`, `final`, `private`... |
-| Phương thức trừu tượng | Phương thức khai báo không có thân mặc nhiên `public abstract` (trừ các trường hợp đặc biệt như `private`/`static`/`default`) | Có thể khai báo `abstract` với mức truy cập thích hợp, nhưng không `private` |
-| Trạng thái sử dụng | Diễn đạt “**có thể làm việc gì**” | Diễn đạt “**là một dạng của lớp nền**” và tái sử dụng phần chung |
-| Thay đổi API | Thêm abstract method có thể làm các implementation phải cập nhật; `default` có thể hỗ trợ tiến hóa | Thay đổi trạng thái/hành vi được kế thừa có thể ảnh hưởng trực tiếp đến lớp con |
+| Main purpose | Declare the contract/capability an object provides | Define a common foundation for related subclasses |
+| Declaration | `interface FeePolicy { ... }` | `abstract class BasePolicy { ... }` |
+| Relationship to concrete classes | `implements` | `extends` |
+| How many can one class use? | Implement multiple interfaces | Directly extend at most **one** class |
+| Constructors | **No constructors** | Has constructors, often used to initialize shared state |
+| Instance state | Cannot declare ordinary instance fields | Can have instance fields, including `private final` |
+| Directly declared fields | Implicitly `public static final` | Can be instance/static fields with suitable access modifiers |
+| Methods with bodies | Supports `default`, `static`, and `private` (depending on Java version) | Supports ordinary methods, `static`, `final`, `private`, and more |
+| Abstract methods | Bodyless methods are implicitly `public abstract` (apart from special cases involving `private`/`static`/`default`) | May declare `abstract` methods with suitable accessibility, but not `private` |
+| Conceptual relationship | Expresses “**what an object can do**” | Expresses “**a specialized kind of the base class**” and reuses common functionality |
+| API evolution | Adding an abstract method may force implementers to update; `default` may ease evolution | Changing inherited state or behavior can directly affect subclasses |
 
-Điều quan trọng: **interface không chỉ chứa phương thức trừu tượng**, và **abstract class không bắt buộc phải có abstract method**. Một abstract class vẫn có thể được đánh dấu `abstract` chỉ để ngăn khởi tạo trực tiếp.
+Key points: **interfaces are not limited to abstract methods**, and **abstract classes need not declare abstract methods**. An abstract class can still be marked `abstract` solely to prevent direct instantiation.
 
-Một lớp không thể `new` trực tiếp interface hoặc abstract class:
+Neither an interface nor an abstract class can be instantiated directly with `new`:
 
 ```java
 interface Exporter {
@@ -2252,17 +2252,17 @@ abstract class AbstractExporter {
 // new AbstractExporter(); // Lỗi biên dịch
 ```
 
-Nhưng có thể tạo instance của lớp cụ thể implement/extends, kể cả anonymous class triển khai đủ phương thức cần thiết.
+But an instance of a concrete implementing/extending class can be created, including an anonymous class that supplies all required methods.
 
-## 2. Câu hỏi quyết định: hợp đồng hay trạng thái chung?
+## 2. The deciding question: contract or shared state?
 
-Giả sử một hệ thống cần tính **phí giao hàng**. Mỗi chiến lược có thể trả lời cùng câu hỏi:
+Suppose a system needs to calculate **shipping fees**. Every strategy can answer the same question:
 
-> Với một kiện hàng có cân nặng và quãng đường xác định, phí vận chuyển dự kiến bằng bao nhiêu VND?
+> What is the estimated shipping fee in VND for a parcel with a specified weight and distance?
 
-Một số cách tính phụ thuộc cân nặng, quãng đường; cách khác có thể cho miễn phí khi nhận hàng tại điểm giao dịch. Với nơi sử dụng chức năng báo phí, điều quan trọng là **gọi được một thao tác thống nhất**.
+Some fee calculations depend on weight and distance; others may waive fees for store pickup. From the quote consumer's perspective, what matters is **having one consistent operation to call**.
 
-Ta có thể định nghĩa:
+We can define:
 
 ```java
 interface DeliveryFeePolicy {
@@ -2270,13 +2270,13 @@ interface DeliveryFeePolicy {
 }
 ```
 
-Interface này không yêu cầu mọi cách tính phí phải kế thừa cùng một thuật toán hay có cùng trạng thái. Nó chỉ buộc chúng cung cấp kết quả báo phí theo hợp đồng.
+This interface does not require every fee policy to inherit the same algorithm or hold the same state. It only requires each policy to return a fee quote according to the contract.
 
-Sau đó, nếu có **hai chính sách đều dựa trên phí nền + quãng đường + kilogram tính cước**, việc lặp lại phép tính ở cả hai là cơ hội cân nhắc một abstract class dùng chung. Một cách tính **nhận hàng tại cửa hàng** có thể trực tiếp implement interface mà không phải kế thừa công thức tính cước trên.
+If **two policies both use base fee + distance + billable kilograms**, however, duplicating that calculation may justify a shared abstract class. A **store pickup** policy can implement the interface directly without inheriting the weight-based fee formula.
 
-Đây là tình huống phối hợp `interface` và `abstract class` có lý do nghiệp vụ rõ ràng.
+This is a case where combining `interface` and `abstract class` serves a clear business need.
 
-## 3. Ví dụ Java hoàn chỉnh: interface làm hợp đồng, abstract class chia sẻ thuật toán
+## 3. Complete Java example: an interface defines the contract, an abstract class shares the algorithm
 
 File `DeliveryFeeDemo.java` (Java 17+):
 
@@ -2400,14 +2400,14 @@ public class DeliveryFeeDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac DeliveryFeeDemo.java
 java DeliveryFeeDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Tiêu chuẩn: 19000 VND
@@ -2415,16 +2415,16 @@ Giao nhanh: 33500 VND
 Nhận tại cửa hàng: 0 VND
 ```
 
-Cách tính trong ví dụ:
+Calculations in this example:
 
-- `1_200` gram được làm tròn thành **2 kg tính cước**.
-- Tiêu chuẩn = `10_000 + 5 × 1_000 + 2 × 2_000 = 19_000` VND.
-- Giao nhanh = `18_000 + 5 × 1_500 + 2 × 4_000 = 33_500` VND.
-- Nhận tại cửa hàng: miễn phí theo quy tắc ví dụ.
+- `1_200` grams is rounded up to **2 billable kg**.
+- Standard = `10_000 + 5 × 1_000 + 2 × 2_000 = 19_000` VND.
+- Express = `18_000 + 5 × 1_500 + 2 × 4_000 = 33_500` VND.
+- Store pickup: free under the example's rules.
 
-Đây là công thức minh họa để thấy thiết kế OOP; không đại diện giá cước của bất kỳ hãng vận chuyển nào.
+These illustrative formulas demonstrate OOP design; they do not represent any carrier's actual rates.
 
-### Sơ đồ quan hệ
+### Relationship diagram
 
 ```mermaid
 classDiagram
@@ -2451,19 +2451,19 @@ classDiagram
     DeliveryFeePolicy <|.. StorePickupPolicy
 ```
 
-Từ ví dụ, có thể thấy hai mức trách nhiệm:
+The example shows two levels of responsibility:
 
-**`DeliveryFeePolicy` định nghĩa hợp đồng.** Phần code in báo phí chỉ biết một biến kiểu `DeliveryFeePolicy` và gọi `quoteVnd(...)`. Cách tính có thể là tiêu chuẩn, nhanh hoặc nhận tại cửa hàng. Caller không phải dùng `instanceof` để phân loại rồi tự tính.
+**`DeliveryFeePolicy` defines the contract.** Fee-quoting code only knows a `DeliveryFeePolicy` variable and calls `quoteVnd(...)`. The calculation may use standard, express, or store pickup. The caller does not need `instanceof` checks to classify a policy and compute its fee.
 
-**`WeightDistancePolicy` chia sẻ một phần hiện thực.** Nó sở hữu đơn giá nền và đơn giá theo kilomet, kiểm tra constructor, tính khối lượng làm tròn, kiểm tra kết quả, đồng thời cung cấp một bước mở rộng `feePerChargedKgVnd()`. Hai lớp con `StandardPolicy` và `ExpressPolicy` chỉ cung cấp phần khác nhau.
+**`WeightDistancePolicy` shares part of the implementation.** It owns the base rate and per-kilometer rate, validates the constructor, rounds billable weight, checks the result, and exposes a `feePerChargedKgVnd()` extension point. Its subclasses `StandardPolicy` and `ExpressPolicy` only supply the varying parts.
 
-Phương thức `quoteVnd` trong abstract class được đánh dấu `final` để lớp con không vô tình phá vỡ luồng kiểm tra và tính phí chung; lớp con chỉ được tùy biến tại điểm mở rộng đã định nghĩa. Đây là một dạng *Template Method* đơn giản. Phương thức trừu tượng `feePerChargedKgVnd()` chỉ được gọi lúc báo phí, **không gọi trong constructor** khi lớp con chưa khởi tạo xong.
+The `quoteVnd` method in the abstract class is marked `final` so subclasses cannot accidentally break the shared validation and fee-calculation flow; subclasses customize only the defined extension point. This is a simple *Template Method* pattern. The abstract `feePerChargedKgVnd()` method is only called while quoting a fee, **not from the constructor** before subclass initialization completes.
 
-`StorePickupPolicy` không phải một dạng tính phí theo khối lượng, vì vậy nếu ép nó `extends WeightDistancePolicy` rồi trả về 0 ở các bước tính là đang tạo một quan hệ kế thừa gượng ép. Implement trực tiếp interface phản ánh nghiệp vụ chính xác hơn.
+`StorePickupPolicy` is not a kind of weight-based fee policy. Forcing it to `extends WeightDistancePolicy` and return 0 from calculation steps would impose an artificial inheritance relationship. Implementing the interface directly models the business domain more accurately.
 
-## 4. Những khác biệt thực sự ảnh hưởng đến quyết định
+## 4. Differences that actually affect the decision
 
-### 4.1. Nhiều vai trò không buộc phải chung một superclass
+### 4.1. Multiple roles do not require a shared superclass
 
 ~~~java
 interface Printable { void print(); }
@@ -2475,11 +2475,11 @@ class Invoice implements Printable, Archivable {
 }
 ~~~
 
-`Invoice` có thể đáp ứng **hai khả năng độc lập** mà không cần ép vào một class cha chứa cả hai. Nếu thật sự thuộc một họ `Document` có trạng thái chung, nó vẫn có thể `extends Document implements Printable, Archivable`. Java chỉ cho class trực tiếp `extends` **một** superclass; interface thì có thể `extends` nhiều interface. Bài *Một đối tượng đảm nhận nhiều giao diện* tập trung vào các biến tham chiếu, xung đột cùng chữ ký và sự phối hợp trạng thái khi một instance có nhiều vai trò.
+`Invoice` can fulfill **two independent capabilities** without being forced into a superclass containing both. If it truly belongs to a `Document` family with shared state, it may still `extends Document implements Printable, Archivable`. Java allows a class to directly `extends` **one** superclass, while interfaces may `extends` multiple interfaces. The *One object implementing multiple interfaces* lesson focuses on reference variables, signature conflicts, and shared-state interactions across roles.
 
-### 4.2. Khi cần constructor và trạng thái dùng chung
+### 4.2. When you need constructors and shared state
 
-Interface không có constructor và cũng không giữ instance field thông thường. Khai báo:
+An interface has no constructor and cannot hold ordinary instance fields. Consider this declaration:
 
 ```java
 interface Limits {
@@ -2487,9 +2487,9 @@ interface Limits {
 }
 ```
 
-không có nghĩa mỗi implementation sở hữu một `MAX_RETRIES` riêng biệt. Đây là **hằng số static** gắn với interface.
+It does not mean each implementation owns a separate `MAX_RETRIES`. This is a **static constant** associated with the interface.
 
-Nếu nhiều lớp con thực sự phải chia sẻ trạng thái nền và các bước khởi tạo thống nhất, abstract class giúp đặt constructor và kiểm soát các field:
+If subclasses genuinely need shared base state and uniform initialization, an abstract class provides a constructor and controls the fields:
 
 ```java
 abstract class BaseProcessor {
@@ -2510,9 +2510,9 @@ abstract class BaseProcessor {
 }
 ```
 
-Lưu ý: dùng abstract class **chỉ để chia sẻ vài dòng mã** có thể tạo phụ thuộc kế thừa không đáng có. Một lớp helper hoặc một đối tượng được truyền vào theo **composition** đôi khi tốt hơn, đặc biệt khi các lớp cần dùng chung thuật toán nhưng không thực sự thuộc một họ kế thừa.
+Note: using an abstract class **only to share a few lines of code** can create unnecessary inheritance coupling. A helper class or an injected object composed into the class through **composition** may be better, especially when classes need to reuse an algorithm without belonging to one inheritance family.
 
-### 4.3. `default` method hỗ trợ chia sẻ hành vi, không chia sẻ trạng thái
+### 4.3. `default` methods share behavior, not state
 
 ~~~java
 interface Named {
@@ -2524,17 +2524,17 @@ interface Named {
 }
 ~~~
 
-Lớp implement `Named` có thể dùng `displayName()` mà không tự viết lại, vì hành vi mặc định được suy ra từ method `name()` của hợp đồng. Nhưng interface vẫn **không có instance field hay constructor**. Khi thuật toán chung cần field cấu hình, invariant và điểm mở rộng của một họ class, abstract class hoặc composition vẫn là lựa chọn cần xét. Bài *Thành viên mặc định và giới hạn tùy ngôn ngữ* phân tích đầy đủ modifier và quy tắc kết hợp default method.
+A class implementing `Named` can use `displayName()` without rewriting it because the default behavior is derived from the contract's `name()` method. But an interface still **has no instance fields or constructors**. When a shared algorithm needs configuration fields, invariants, and extension points for a class family, consider an abstract class or composition. The *Default members and language-specific limitations* lesson explains modifiers and the rules for combining default methods in detail.
 
-## 5. Xung đột `default` có thể làm đổi chi phí kết hợp các vai trò
+## 5. Conflicting `default` methods can make combining roles more costly
 
-Nếu hai interface **độc lập** đều khai báo `default String label()`, class implement cả hai không thể để Java tự chọn ngẫu nhiên. Nó phải override `label()` để cung cấp một hành vi thống nhất, có thể chủ động gọi `A.super.label()` hoặc `B.super.label()` khi hợp lệ.
+If two **unrelated** interfaces both declare `default String label()`, a class implementing both cannot let Java arbitrarily choose. It must override `label()` to define consistent behavior and may explicitly call `A.super.label()` or `B.super.label()` when legal.
 
-Ngược lại, nếu superclass có một phương thức instance concrete cùng chữ ký tương thích, implementation của class thường được ưu tiên hơn default của interface. Đây là một giới hạn khi chia sẻ hành vi qua nhiều interface, không phải lý do mặc định để thay chúng bằng một abstract class duy nhất: quyết định còn phụ thuộc vào nhu cầu **trạng thái/constructor chung**. Bài chuyên sâu về *Thành viên mặc định và giới hạn tùy ngôn ngữ* có ví dụ Java chạy được cho từng quy tắc phân giải.
+Conversely, when a superclass has a concrete instance method with a compatible signature, the class implementation generally takes precedence over the interface default. This is a limitation of sharing behavior across interfaces, but does not automatically justify replacing them with one abstract class: the decision still depends on the need for **shared state/constructors**. The dedicated *Default members and language-specific limitations* lesson provides runnable Java examples for each resolution rule.
 
-## 6. Chọn theo quan hệ nghiệp vụ và điểm thay đổi
+## 6. Choose based on business relationships and sources of change
 
-Một cách ra quyết định có thể dùng trực tiếp trong review thiết kế:
+A decision-making approach suitable for design reviews:
 
 ```mermaid
 flowchart TD
@@ -2549,19 +2549,19 @@ flowchart TD
     E --> J["Xác định constructor, invariant<br/>và điểm mở rộng rõ ràng"]
 ```
 
-Những câu hỏi thực tế nên đặt:
+Practical questions to ask:
 
-1. **Caller cần gì?** Nếu caller chỉ cần gọi `send()`, `quoteVnd()` hoặc `save()`, hãy bắt đầu từ hợp đồng hành vi gọn, bất kể implementation là loại đối tượng nào.
-2. **Có trạng thái chung không?** Nếu cần constructor chung kiểm tra cấu hình, field dùng chung và một phần thuật toán ổn định, abstract class có giá trị.
-3. **Có quan hệ “is-a” đúng nghĩa không?** Một `StandardPolicy` có thể là dạng đặc biệt của `WeightDistancePolicy`. Một `StorePickupPolicy` thì không, dù cùng trả phí.
-4. **Lớp có cần kế thừa một superclass khác?** Nếu có, việc ràng buộc vào một abstract class mới có thể không khả thi vì Java chỉ hỗ trợ một superclass. Interface có tính kết hợp tốt hơn.
-5. **Hành vi nào thật sự biến thiên?** Trừu tượng hóa nên phản ánh nhu cầu đã có hoặc biến thiên dự kiến có cơ sở, thay vì tạo nhiều tầng trước khi xác định trách nhiệm.
+1. **What does the caller need?** If the caller only needs to call `send()`, `quoteVnd()`, or `save()`, start with a concise behavioral contract, regardless of the implementing object's type.
+2. **Is there shared state?** If common constructors must validate configuration, and fields and parts of the algorithm are shared, an abstract class is valuable.
+3. **Is there a genuine “is-a” relationship?** A `StandardPolicy` may be a specialization of `WeightDistancePolicy`. A `StorePickupPolicy` is not, even though both return a fee.
+4. **Does the class need to extend another superclass?** If so, binding it to a new abstract class may be impossible because Java supports only one superclass. Interfaces combine more flexibly.
+5. **Which behaviors actually vary?** Abstractions should reflect current needs or justified expectations of change, rather than adding layers before responsibilities are known.
 
-## 7. Khi nào nên chọn composition thay cho abstract class?
+## 7. When should composition replace an abstract class?
 
-Giả sử hai lớp rất khác nhau đều cần một thuật toán kiểm tra mã số. Chúng không cùng họ nghiệp vụ, nên bắt cả hai `extends AbstractValidatorUser` chỉ để tái sử dụng đoạn code kiểm tra là gượng ép.
+Suppose two very different classes both need an identifier-validation algorithm. They do not belong to the same business family, so forcing both to `extends AbstractValidatorUser` just to reuse validation code is artificial.
 
-Một đối tượng hỗ trợ độc lập có thể được **kết hợp**:
+An independent helper object can be **composed** into each class:
 
 ```java
 import java.util.Objects;
@@ -2593,33 +2593,33 @@ final class EventTicket {
 }
 ```
 
-`GiftVoucher` và `EventTicket` dùng lại `CodeValidator` nhưng không phải kế thừa nhau. Khi quy tắc kiểm tra chung phù hợp, composition cho phép tái sử dụng mà không chiếm mất quan hệ kế thừa của lớp.
+`GiftVoucher` and `EventTicket` reuse `CodeValidator` without inheriting from each other. When common validation rules apply, composition permits reuse without consuming a class's inheritance relationship.
 
-Tùy quy mô bài toán, một phương thức utility `static` hoặc value object `Code` cũng có thể đơn giản hơn việc inject một validator riêng. **Không phải mọi chức năng dùng chung đều cần một interface hoặc abstract class.**
+Depending on problem scale, a `static` utility method or `Code` value object may be simpler than injecting a separate validator. **Not every shared feature requires an interface or abstract class.**
 
-## 8. Những sai lầm thường gặp
+## 8. Common design mistakes
 
-| Thiết kế dễ mắc lỗi | Vì sao chưa phù hợp | Hướng cải thiện |
+| Problematic design | Why it may be unsuitable | Improvement |
 |---|---|---|
-| Tạo interface cho mọi class dù chỉ có một implementation và không có nhu cầu hợp đồng | Tăng số file/tầng mà chưa có lợi ích rõ | Bắt đầu từ class cụ thể; trích interface khi có nhu cầu thực |
-| Đưa tất cả implementation vào cùng một abstract class lớn | Lớp con bị ràng buộc vào dữ liệu/hành vi không phù hợp | Interface nhỏ theo khả năng; chia sẻ hiện thực bằng composition hoặc abstract base cho đúng nhóm |
-| Dùng interface để chứa tập hằng số chung | Mượn interface cho mục đích không phải hợp đồng hành vi | Dùng class/enum chuyên trách cho hằng số |
-| Tạo `abstract class` chỉ chứa một abstract method và không có logic/trạng thái dùng chung | Có thể tạo hạn chế single inheritance không cần thiết | Cân nhắc interface |
-| Đưa nhiều `default method` có trạng thái giả lập qua getter vào interface | Làm hợp đồng phụ thuộc nhiều chi tiết và tăng nguy cơ xung đột | Chuyển thuật toán sang component hoặc base class nếu cùng họ |
-| Cho subclass sửa tự do mọi bước của thuật toán nền | Dễ phá invariant, dẫn đến kết quả không nhất quán | Giữ phần thuật toán ổn định bằng `final`, chỉ mở điểm tùy biến cần thiết |
-| Không bảo đảm các implementation tuân theo cùng hợp đồng | Caller phải kiểm tra kiểu cụ thể, mất đa hình | Nêu rõ điều kiện đầu vào, đầu ra, lỗi và quy tắc chung |
+| Creating an interface for every class, even with only one implementation and no contract requirement | Adds files and layers without clear benefits | Start with a concrete class; extract an interface when a real need arises |
+| Putting every implementation under one large abstract class | Subclasses become coupled to irrelevant data and behaviors | Use small capability-based interfaces; share implementation through composition or an abstract base for the appropriate family |
+| Using an interface as a collection of constants | Repurposes a behavioral contract for an unrelated goal | Use a dedicated constants class or enum |
+| Creating an `abstract class` with only one abstract method and no shared state/logic | May impose an unnecessary single-inheritance restriction | Consider an interface |
+| Adding many `default method` declarations with simulated state through getters | Couples the contract to details and increases conflicts | Move the algorithm to a component or shared base class for a true class family |
+| Letting subclasses change every step of the base algorithm freely | May break invariants and produce inconsistent results | Keep stable algorithm steps `final` and expose only necessary extension points |
+| Failing to ensure that implementations honor one contract | Callers need concrete type checks, losing polymorphism | Specify input conditions, outputs, failures, and shared rules |
 
-Một interface tốt không chỉ là “cùng tên phương thức”. Nếu `quoteVnd` ở policy A trả **VND**, nhưng policy B lại trả **nghìn VND**, cả hai có cùng chữ ký mà vẫn **vi phạm hợp đồng ý nghĩa**. Để dùng đa hình đúng, mọi implementation phải bảo toàn kỳ vọng của caller: đơn vị, phạm vi dữ liệu, lỗi và các quy tắc đã công bố.
+A good interface means more than “methods with the same name.” If `quoteVnd` in policy A returns **VND** but policy B returns **thousands of VND**, they share a signature but still **violate the semantic contract**. To use polymorphism correctly, every implementation must honor the caller's expectations: units, valid ranges, failures, and published rules.
 
-## 9. Tự kiểm tra kiến thức
+## 9. Check your understanding
 
-**Bài 1 — Nên chọn gì?**
+**Exercise 1 — Which should you choose?**
 
-Một ứng dụng cho phép xuất báo cáo ra CSV và PDF. Đầu ra khác nhau, nhưng người gọi chỉ muốn `export(report)`, không quan tâm định dạng cụ thể.
+An application exports reports to CSV and PDF. The outputs differ, but callers only need `export(report)` without knowing the specific format.
 
-**Gợi ý:** Một `ReportExporter` interface là lựa chọn tự nhiên để thể hiện hợp đồng. Chỉ bổ sung abstract class nếu có phần xử lý chung thực sự đáng chia sẻ, chẳng hạn chính sách đặt tên file hoặc kiểm tra đầu vào thống nhất cho một nhóm exporter.
+**Hint:** A `ReportExporter` interface naturally expresses the contract. Add an abstract class only if there is genuinely useful common processing to share, such as naming files or validating inputs across a group of exporters.
 
-**Bài 2 — Kết quả nào xảy ra?**
+**Exercise 2 — What happens?**
 
 ```java
 interface A {
@@ -2639,15 +2639,15 @@ class C implements A, B {
 }
 ```
 
-**Đáp án:** Lớp `C` sẽ báo lỗi biên dịch vì xung đột hai default method; cần định nghĩa `description()` để giải quyết.
+**Answer:** Class `C` fails to compile due to a conflict between two default methods; it must define `description()` to resolve the conflict.
 
-**Bài 3 — Vì sao abstract class có constructor?**
+**Exercise 3 — Why do abstract classes have constructors?**
 
-Hai lớp `StandardShipping` và `ExpressShipping` phải có cùng `regionCode` hợp lệ và dùng chung thuật toán xử lý vùng giao hàng. Hãy thiết kế `abstract class RegionShipping` nhận mã vùng trong constructor, gán field `private final`, triển khai một phần logic, đồng thời để một phương thức `protected abstract` cho lớp con tự tính phụ phí.
+The `StandardShipping` and `ExpressShipping` classes both require a valid `regionCode` and share an algorithm for handling delivery regions. Design `abstract class RegionShipping` to accept a region code in its constructor, assign it to a `private final` field, implement part of the logic, and leave a `protected abstract` method for subclasses to calculate the surcharge.
 
-**Gợi ý:** Abstract class phù hợp nếu hai lớp thật sự cùng một họ chính sách và dùng chung bất biến/thuật toán. Nếu nhiều chính sách khác kiểu cũng phải dùng qua cùng service, có thể để `RegionShipping implements ShippingPolicy`, còn các chính sách không dùng vùng giao có thể implement `ShippingPolicy` trực tiếp.
+**Hint:** An abstract class fits when both classes genuinely belong to the same policy family and share invariants/algorithms. If other policies must also be used through the same service, `RegionShipping implements ShippingPolicy` can define the shared base, while policies without region-based shipping can implement `ShippingPolicy` directly.
 
-**Bài 4 — Có thể implement nhiều interface không?**
+**Exercise 4 — Can a class implement multiple interfaces?**
 
 ```java
 interface Searchable {
@@ -2669,35 +2669,35 @@ class CatalogService implements Searchable, Auditable {
 }
 ```
 
-**Đáp án:** Hợp lệ. `CatalogService` thực hiện hai hợp đồng. Vì các phương thức của interface là `public`, phương thức triển khai phải là `public`; không thể dùng quyền truy cập hẹp hơn.
+**Answer:** Valid. `CatalogService` implements two contracts. Because interface methods are `public`, implementing methods must also be `public`; narrower access is not allowed.
 
 ---
 
-**Ghi nhớ:** Chọn **`interface`** khi muốn mô tả **hợp đồng/khả năng có thể được nhiều loại đối tượng thực hiện**. Chọn **`abstract class`** khi có **họ lớp kế thừa hợp lý**, cần **constructor, trạng thái hoặc thuật toán dùng chung**. Có thể kết hợp cả hai, đồng thời ưu tiên **composition** nếu chỉ muốn tái sử dụng chức năng giữa những lớp không có quan hệ kế thừa thực sự. Tiêu chí cuối cùng là API rõ ràng, đúng nghiệp vụ và dễ thay đổi.
+**Remember:** Choose an **`interface`** to describe **a contract/capability implemented by multiple kinds of objects**. Choose an **`abstract class`** when there is **a meaningful inheritance family** requiring **shared constructors, state, or algorithms**. The two can be combined; prefer **composition** when you only need to reuse functionality among unrelated classes. The final criteria are a clear API, faithful domain modeling, and ease of change.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="interface-006">Giao diện nhỏ và phân tách vai trò</a>
+## <a id="interface-006">Small interfaces and role segregation</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Giao diện nhỏ và phân tách vai trò trong Java
+# Small interfaces and role segregation in Java
 
-Khi thiết kế OOP, `interface` là nơi mô tả **hợp đồng sử dụng**: mã bên ngoài được phép yêu cầu đối tượng làm gì. Nếu đưa quá nhiều khả năng không liên quan vào một interface, các lớp và service sẽ phải biết hoặc triển khai cả những phương thức không phục vụ trách nhiệm của chúng.
+In OOP design, an `interface` describes **a usage contract**: what external code may ask an object to do. Packing too many unrelated capabilities into one interface forces classes and services to know about or implement methods unrelated to their responsibilities.
 
-**Interface Segregation Principle (ISP)** — nguyên tắc phân tách giao diện trong SOLID — phát biểu theo ý nghĩa thực hành: **client không nên bị buộc phụ thuộc vào những phương thức nó không sử dụng**.
+**The Interface Segregation Principle (ISP)**, one of the SOLID principles, says in practical terms: **clients should not be forced to depend on methods they do not use**.
 
-Trong Java, “client” ở đây có thể là một lớp service, một module, một đối tượng phụ thuộc vào interface hoặc một lớp phải `implements` interface. Giải pháp thường là chia hợp đồng lớn thành **các interface nhỏ, gắn kết theo vai trò hoặc nhu cầu sử dụng**. “Nhỏ” là nhỏ về *trách nhiệm*, không phải một quy tắc cứng rằng mỗi interface chỉ được có một phương thức.
+In Java, a “client” may be a service class, a module, an object depending on an interface, or a class required to `implements` it. The usual solution is to split a broad contract into **smaller interfaces grouped by role or consumer need**. “Small” refers to *responsibility*, not a rigid rule requiring one method per interface.
 
-## 1. Dấu hiệu một interface quá rộng
+## 1. Signs that an interface is too broad
 
-Giả sử ứng dụng quản lý tài liệu khai báo:
+Suppose a document-management application declares:
 
 ```java
 interface DocumentManager {
@@ -2708,7 +2708,7 @@ interface DocumentManager {
 }
 ```
 
-Một công cụ tìm kiếm chỉ cần `read()`. Một kho tài liệu đã xuất bản chỉ cho phép đọc, nhưng nếu muốn triển khai `DocumentManager` thì vẫn phải cung cấp cả `save()`, `delete()`, `publish()`:
+A search tool only needs `read()`. A published document archive allows reading only, yet implementing `DocumentManager` would also require providing `save()`, `delete()`, and `publish()`:
 
 ```java
 final class ReadOnlyArchive implements DocumentManager {
@@ -2734,13 +2734,13 @@ final class ReadOnlyArchive implements DocumentManager {
 }
 ```
 
-Đây là một **mùi thiết kế**: interface công bố những khả năng mà một số đối tượng tuân theo hợp đồng không thể thực hiện. Điều đó khiến caller dễ tưởng thao tác hợp lệ rồi gặp `UnsupportedOperationException` ở runtime.
+This is a **design smell**: the interface exposes capabilities that some conforming objects cannot provide. Callers may assume an operation is valid, only to receive an `UnsupportedOperationException` at runtime.
 
-Vấn đề còn xảy ra ở phía client. Nếu `SearchService` nhận một `DocumentManager`, mã tìm kiếm có thể bị ảnh hưởng bởi các thay đổi liên quan đến xuất bản, xóa hoặc ghi dữ liệu dù không sử dụng chúng. Việc thay đổi một giao diện rộng cũng kéo theo nhiều lớp triển khai và các fake/mock trong kiểm thử phải cập nhật.
+The problem also affects clients. If `SearchService` receives a `DocumentManager`, changes to publishing, deleting, or writing may affect the search code even though it never uses those operations. Changes to a broad interface also force many implementations and test fakes/mocks to be updated.
 
-## 2. Phân tách theo khả năng mà client thực sự cần
+## 2. Segregate by capabilities clients actually need
 
-Thay vì một hợp đồng bao trùm, ta định nghĩa các vai trò độc lập:
+Instead of one all-encompassing contract, define independent roles:
 
 ```java
 interface DocumentReader {
@@ -2756,18 +2756,18 @@ interface DocumentPublisher {
 }
 ```
 
-Mỗi service chỉ nhận kiểu thể hiện khả năng cần thiết:
+Each service only accepts a type expressing its required capability:
 
-| Client hoặc triển khai | Phụ thuộc/triển khai | Lý do |
+| Client or implementation | Depends on / implements | Reason |
 | --- | --- | --- |
-| `SearchService` | `DocumentReader` | Chỉ tra cứu tài liệu |
-| `EditorService` | `DocumentWriter` | Chỉ lưu bản nháp |
-| `PublicationService` | `DocumentReader` và `DocumentPublisher` | Tìm tài liệu rồi xuất bản |
-| `InMemoryDocuments` | `DocumentReader`, `DocumentWriter` | Có cả khả năng đọc và ghi |
-| `SnapshotCatalog` | `DocumentReader` | Dữ liệu chỉ đọc |
-| `ConsolePublisher` | `DocumentPublisher` | Chỉ xử lý hành vi xuất bản |
+| `SearchService` | `DocumentReader` | Only searches documents |
+| `EditorService` | `DocumentWriter` | Only saves drafts |
+| `PublicationService` | `DocumentReader` and `DocumentPublisher` | Finds documents and then publishes them |
+| `InMemoryDocuments` | `DocumentReader`, `DocumentWriter` | Supports both reading and writing |
+| `SnapshotCatalog` | `DocumentReader` | Read-only data |
+| `ConsolePublisher` | `DocumentPublisher` | Only performs publishing |
 
-Một lớp **được phép triển khai nhiều interface nhỏ** khi thực sự cung cấp nhiều khả năng. ISP không đòi phải tạo đúng một class cho mỗi interface.
+A class **may implement multiple small interfaces** when it really provides multiple capabilities. ISP does not require one class per interface.
 
 ```mermaid
 flowchart LR
@@ -2781,11 +2781,11 @@ flowchart LR
     Console["ConsolePublisher"] -.-> Publisher
 ```
 
-Các mũi tên liền chỉ sự phụ thuộc của client, mũi tên đứt biểu diễn các lớp triển khai hợp đồng. `SearchService` không cần biết lớp cung cấp dữ liệu có cho phép sửa hay không.
+Solid arrows show client dependencies; dashed arrows show classes realizing contracts. `SearchService` does not need to know whether its data source allows modifications.
 
-## 3. Ví dụ Java chạy được: đọc, ghi và xuất bản tài liệu
+## 3. Runnable Java example: reading, writing, and publishing documents
 
-Đặt toàn bộ đoạn dưới đây vào file **`Main.java`**, biên dịch bằng **Java 17 hoặc Java 21**.
+Put all of the following code in **`Main.java`** and compile with **Java 17 or Java 21**.
 
 ```java
 import java.util.HashMap;
@@ -2942,14 +2942,14 @@ public class Main {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 Java ISP
@@ -2959,15 +2959,15 @@ Không tìm thấy
 Bản đã duyệt
 ```
 
-**Giải thích thiết kế:**
+**Design explanation:**
 
-1. `SearchService` biết đến `DocumentReader`, không biết `save()` hay `publish()`. Ta có thể cấp cho nó `InMemoryDocuments` hoặc `SnapshotCatalog` mà không thay đổi mã của service.
-2. `EditorService` nhận `DocumentWriter`, không cần các phương thức tìm kiếm hay xuất bản.
-3. `PublicationService` cần **hai khả năng**, nên phụ thuộc vào hai interface. Một client hoàn toàn có thể dùng nhiều interface; “phân tách” không có nghĩa cấm kết hợp.
-4. `SnapshotCatalog` chỉ triển khai `DocumentReader`, vì vậy không phải ném `UnsupportedOperationException` cho các phương thức ghi/xóa mà nó không hỗ trợ.
-5. `Map.copyOf(source)` bảo vệ snapshot trước thay đổi cấu trúc của map ngoài. Các `Document` trong ví dụ chứa `String` bất biến. Nếu giá trị map là những đối tượng mutable, cần xem xét sao chép sâu hay value object an toàn hơn.
+1. `SearchService` knows `DocumentReader`, not `save()` or `publish()`. We can supply `InMemoryDocuments` or `SnapshotCatalog` without changing service code.
+2. `EditorService` accepts `DocumentWriter` without needing search or publishing methods.
+3. `PublicationService` needs **two capabilities**, so it depends on two interfaces. A client can certainly use multiple interfaces; “segregation” does not prohibit combining them.
+4. `SnapshotCatalog` only implements `DocumentReader`, so it does not need to throw `UnsupportedOperationException` for unsupported write/delete operations.
+5. `Map.copyOf(source)` protects the snapshot from structural changes to the external map. The `Document` values in this example contain immutable `String` components. If map values are mutable objects, consider deep copies or safer value objects.
 
-Lỗi sử dụng sai vai trò được trình biên dịch phát hiện sớm. Ví dụ dưới đây **cố tình không hợp lệ**:
+Misuse of roles is caught early by the compiler. The example below is **intentionally invalid**:
 
 ```java
 DocumentReader catalog = new SnapshotCatalog(Map.of());
@@ -2975,13 +2975,13 @@ DocumentReader catalog = new SnapshotCatalog(Map.of());
 // EditorService cần DocumentWriter, catalog chỉ có kiểu DocumentReader.
 ```
 
-Nếu một đối tượng cụ thể thực sự có cả khả năng đọc và ghi, caller có thể giữ tham chiếu theo từng interface ở nơi phù hợp. Thiết kế trên phân quyền **ở mức API kiểu dữ liệu**, không tự thay thế xác thực và phân quyền bảo mật khi triển khai hệ thống thực tế.
+If a concrete object truly supports both reading and writing, callers can hold references through the appropriate interfaces. This design constrains access **at the type-level API**, but does not replace authentication and authorization in a real system.
 
-## 4. ISP khác gì “mỗi interface chỉ có một phương thức”?
+## 4. Does ISP mean “one method per interface”?
 
-Một interface có nhiều phương thức vẫn hợp lý nếu chúng phục vụ **cùng một vai trò gắn kết**.
+An interface may reasonably have several methods when they serve **one cohesive role**.
 
-Ví dụ:
+For example:
 
 ```java
 interface DocumentReader {
@@ -2991,21 +2991,21 @@ interface DocumentReader {
 }
 ```
 
-Ba phương thức cùng hỗ trợ **tra cứu tài liệu**. Nếu mọi client đọc dữ liệu nhìn nhận đây là một nhóm hành vi phù hợp thì interface trên có thể là một thiết kế tốt. Ngược lại, nếu các client chỉ dùng từng phần độc lập và việc thêm/sửa hợp đồng khiến chúng phải phụ thuộc nhiều khả năng không liên quan, có thể tách tiếp.
+All three methods support **document lookup**. If data-reading clients regard these as one meaningful set of behaviors, the interface may be well designed. Conversely, if clients only use independent subsets and contract changes force unrelated dependencies, further segregation may help.
 
-Tiêu chí phân tách hiệu quả:
+Useful criteria for splitting an interface:
 
-- Các phương thức có phục vụ cùng một **nhu cầu hoặc vai trò của client** không?
-- Những nhóm client khác nhau có cần các tập phương thức khác nhau không?
-- Một triển khai có phải cung cấp phương thức không có ý nghĩa hoặc chỉ ném `UnsupportedOperationException` không?
-- Một thay đổi ở nhóm hành vi A có bắt nhóm client/triển khai chỉ sử dụng B phải chỉnh sửa không?
-- Tên interface có diễn đạt được một khả năng rõ ràng (`Reader`, `Writer`, `Publisher`) hay chỉ là một cái tên tổng quát (`Manager`, `EverythingService`)?
+- Do the methods address the same **client need or role**?
+- Do different client groups require different subsets of methods?
+- Must an implementation provide meaningless methods or only throw `UnsupportedOperationException`?
+- Does a change in behavior group A force changes in clients/implementations that only use group B?
+- Does the interface name express a clear capability (`Reader`, `Writer`, `Publisher`) or just a generic concept (`Manager`, `EverythingService`)?
 
-**Không nên đếm số phương thức máy móc.** Hai phương thức không cùng trách nhiệm vẫn có thể tạo interface kém; năm phương thức cùng phục vụ một hợp đồng nhất quán có thể hoàn toàn phù hợp.
+**Do not count methods mechanically.** Two unrelated methods may form a poor interface; five methods supporting one coherent contract may be perfectly appropriate.
 
-## 5. Kết hợp các vai trò khi thật sự cần
+## 5. Combining roles when genuinely necessary
 
-Java cho phép một interface kế thừa nhiều interface khác:
+Java lets one interface extend multiple other interfaces:
 
 ```java
 interface DocumentEditor extends DocumentReader, DocumentWriter {
@@ -3013,33 +3013,33 @@ interface DocumentEditor extends DocumentReader, DocumentWriter {
 }
 ```
 
-`DocumentEditor` biểu thị vai trò có cả khả năng đọc và ghi. Hữu ích khi một client hoặc một nhóm triển khai **thật sự yêu cầu cả hai** như một hợp đồng thống nhất.
+`DocumentEditor` represents a role combining reading and writing. It is useful when a client or implementation group **truly requires both** as one contract.
 
-Tuy nhiên, cần hiểu hai điểm:
+However, two points matter:
 
-- Lớp `InMemoryDocuments implements DocumentReader, DocumentWriter` **không tự động trở thành một `DocumentEditor`**. Muốn dùng kiểu kết hợp, lớp phải khai báo `implements DocumentEditor` (hoặc một lớp con/adapter triển khai đúng interface ấy).
-- Client chỉ cần đọc vẫn nên nhận `DocumentReader`. Không nên đổi mọi tham số thành `DocumentEditor` chỉ vì đã có giao diện kết hợp.
+- A class declaring `InMemoryDocuments implements DocumentReader, DocumentWriter` **does not automatically become a `DocumentEditor`**. To use the combined type, the class must declare `implements DocumentEditor` (or a subclass/adapter must correctly implement that interface).
+- A read-only client should still accept `DocumentReader`. Do not change every parameter to `DocumentEditor` just because a combined interface exists.
 
-Khi làm việc với các capability có thể tổ hợp, không nhất thiết mọi cấu hình đều tồn tại. Ví dụ kho chỉ đọc có thể hỗ trợ `DocumentReader` mà không hỗ trợ `DocumentWriter`; công cụ xuất bản có thể nhận một `Document` mà không thể tự tìm kiếm dữ liệu.
+Not every possible combination of capabilities necessarily exists. For example, a read-only store may support `DocumentReader` without `DocumentWriter`; a publisher may accept a `Document` without being able to search for data.
 
-## 6. ISP và các nguyên lý OOP liên quan
+## 6. ISP and related OOP principles
 
-| Nguyên lý | Câu hỏi trọng tâm | Quan hệ với interface nhỏ |
+| Principle | Core question | Relationship to small interfaces |
 | --- | --- | --- |
-| **ISP** — Interface Segregation Principle | Client có bị phụ thuộc vào phương thức không dùng? | Chia hợp đồng theo nhu cầu sử dụng thực tế |
-| **SRP** — Single Responsibility Principle | Module/lớp có một lý do chính để thay đổi? | Thường hỗ trợ cùng hướng phân chia nhưng áp dụng lên trách nhiệm của module/lớp |
-| **DIP** — Dependency Inversion Principle | Thành phần nghiệp vụ phụ thuộc vào hợp đồng ổn định hay chi tiết cài đặt? | Interface theo vai trò tạo những abstraction phù hợp cho dependency injection |
-| **LSP** — Liskov Substitution Principle | Triển khai có tuân thủ hành vi mà hợp đồng đã hứa? | Tránh interface bắt triển khai hỗ trợ thao tác vô nghĩa rồi ném lỗi không được cam kết |
+| **ISP** — Interface Segregation Principle | Does a client depend on unused methods? | Split contracts according to actual consumer needs |
+| **SRP** — Single Responsibility Principle | Does a module/class have one main reason to change? | Often supports similar divisions but applies to module/class responsibilities |
+| **DIP** — Dependency Inversion Principle | Does business logic depend on stable contracts or implementation details? | Role-based interfaces provide suitable abstractions for dependency injection |
+| **LSP** — Liskov Substitution Principle | Does an implementation honor promised contract behavior? | Avoid forcing implementations to offer meaningless operations and then throw unspecified errors |
 
-Có thể hình dung: **SRP giúp phân định trách nhiệm**, **ISP giúp định hình bề mặt hợp đồng theo client**, **DIP giúp client phụ thuộc vào hợp đồng**, còn **LSP yêu cầu triển khai tôn trọng ngữ nghĩa hợp đồng đó**.
+One way to think about it: **SRP separates responsibilities**, **ISP shapes contract surfaces for clients**, **DIP directs clients toward contracts**, and **LSP requires implementations to honor contract semantics**.
 
-Ví dụ `ReadOnlyArchive` triển khai một `DocumentManager` công bố `save()` nhưng luôn ném `UnsupportedOperationException`. Đây là dấu hiệu trực tiếp của ISP kém và có thể tạo vấn đề về khả năng thay thế nếu hợp đồng `save()` hứa rằng các triển khai đều có thể lưu.
+For example, `ReadOnlyArchive` implements a `DocumentManager` exposing `save()` but always throws `UnsupportedOperationException`. That directly indicates poor ISP adherence and may violate substitutability if the `save()` contract promises that every implementation can save.
 
-## 7. Tách giao diện mà vẫn giữ nguyên lớp triển khai
+## 7. Segregating interfaces without splitting implementation classes
 
-Một hiểu nhầm là phân tách interface đồng nghĩa phải chia một class thành nhiều class hoặc nhiều service nhỏ.
+It is a misconception that splitting interfaces means splitting one class into many classes or services.
 
-Thực tế, `InMemoryDocuments` trong ví dụ vẫn **một lớp** cung cấp hai vai trò. Việc tách interface chủ yếu cải thiện **quan hệ phụ thuộc của người sử dụng**:
+In fact, `InMemoryDocuments` in the example remains **one class** providing two roles. Interface segregation mainly improves **client dependency relationships**:
 
 ```java
 final class SearchService {
@@ -3048,7 +3048,7 @@ final class SearchService {
 }
 ```
 
-Nếu mã tìm kiếm được viết như sau, nó phụ thuộc nhiều khả năng hơn cần thiết:
+If the search code is written as follows, it depends on more capabilities than it needs:
 
 ```java
 // Mẫu phụ thuộc rộng không cần thiết:
@@ -3061,15 +3061,15 @@ final class SearchServiceTooBroad {
 }
 ```
 
-Lúc này chỉ có thể truyền đúng `InMemoryDocuments` hoặc lớp con của nó (ở đây lớp là `final` nên không có lớp con); một nguồn dữ liệu chỉ đọc khác không thể thay thế dễ dàng. Dùng `DocumentReader` thể hiện rõ nhu cầu và cho phép các triển khai độc lập đáp ứng hợp đồng đó.
+Now only an `InMemoryDocuments` or its subclass can be passed (and this class is `final`, so it has no subclasses); another read-only data source is hard to substitute. Using `DocumentReader` expresses the requirement and permits independent implementations.
 
-Tuy nhiên, **không phải lúc nào cũng cần tạo interface**. Trong phạm vi một ứng dụng nhỏ, nếu một loại đối tượng cụ thể là hợp đồng ổn định và không có nhiều vai trò khác nhau, phụ thuộc trực tiếp vào class đôi khi đơn giản hơn. ISP hướng dẫn cách tổ chức *khi đã có giao diện*, không yêu cầu “mỗi class phải có một interface”.
+However, **creating an interface is not always necessary**. In a small application, if a concrete type is a stable contract without distinct roles, depending directly on a class may be simpler. ISP guides organization *when interfaces already exist*; it does not require “one interface per class.”
 
-## 8. Kiểm thử dễ hơn nhờ vai trò nhỏ
+## 8. Smaller roles make testing easier
 
-Một service chỉ phụ thuộc vào `DocumentReader` có thể được kiểm thử bằng một fake rất nhỏ, không cần khởi tạo repository, kết nối DB hay giả lập phương thức ghi/xóa/xuất bản.
+A service depending only on `DocumentReader` can be tested with a tiny fake; there is no need to initialize a repository, connect to a database, or simulate write/delete/publish methods.
 
-Đoạn dưới giả định các kiểu `Document`, `DocumentReader`, `SearchService` đã được định nghĩa như ví dụ chính; đặt trong một phương thức hoặc bài kiểm thử:
+The following snippet assumes `Document`, `DocumentReader`, and `SearchService` are defined as in the main example; put it inside a method or test:
 
 ```java
 DocumentReader fake = id -> {
@@ -3089,106 +3089,106 @@ if (!"Không tìm thấy".equals(service.findTitle("UNKNOWN"))) {
 }
 ```
 
-Interface `DocumentReader` chỉ có một phương thức trừu tượng nên là **functional interface** và có thể dùng lambda như trên. Nếu sau này ta thêm nhiều phương thức trừu tượng vào `DocumentReader`, đoạn lambda sẽ không còn hợp lệ: đó là một lý do thực tế để cân nhắc khả năng tương thích khi mở rộng hợp đồng.
+`DocumentReader` has only one abstract method, so it is a **functional interface** and can be implemented with the lambda above. If multiple abstract methods are added to `DocumentReader` later, that lambda will stop compiling: a practical reason to consider compatibility when expanding a contract.
 
-Kiểm thử không phải lý do duy nhất để tách interface. Giá trị chính là code dùng API chỉ biết những khả năng nó cần; dễ tạo fake chỉ là một lợi ích đi kèm.
+Testing is not the only reason to split interfaces. The main value is that client code only sees the capabilities it needs; easier fakes are a side benefit.
 
-## 9. Những sai lầm khi áp dụng
+## 9. Common mistakes when applying ISP
 
-| Sai lầm | Vì sao có vấn đề? | Cách xử lý |
+| Mistake | Why is it a problem? | How to address it |
 | --- | --- | --- |
-| Một interface `SuperService` chứa đọc, ghi, xuất báo cáo, gửi email | Client phụ thuộc nhiều vai trò không dùng | Tách theo nhóm nhu cầu của client |
-| Phương thức không hỗ trợ chỉ `throw UnsupportedOperationException` | API hứa khả năng nhưng triển khai không thực hiện được | Không triển khai capability không có, hoặc định nghĩa rõ hỗ trợ tùy chọn |
-| Tách một interface cho từng getter đơn lẻ | Tăng số loại không mang lại ranh giới có ý nghĩa | Nhóm theo vai trò gắn kết thay vì theo số phương thức |
-| Client cần `read` nhưng nhận kiểu `DocumentEditor` | Client bị phụ thuộc cả quyền ghi | Dùng `DocumentReader` |
-| Dùng `default` method rỗng để che khả năng không hỗ trợ | Thao tác trông thành công nhưng không thực hiện gì | Chỉ dùng default method khi có hành vi mặc định đúng hợp đồng |
-| Một interface thay đổi liên tục, nhiều nơi phải sửa mock | Hợp đồng quá rộng hoặc thiếu ổn định | Phân tích nhóm client chịu ảnh hưởng rồi tách nếu có cơ sở |
-| Chỉ tách chữ ký mà bỏ qua ngữ nghĩa | Triển khai có hành vi trái kỳ vọng | Ghi rõ tiền điều kiện, kết quả, lỗi, thứ tự và nhất quán |
-| Coi interface là cơ chế phân quyền bảo mật | Caller có thể vượt ranh giới kiểu dữ liệu qua API khác | Vẫn phải có authorization tại tầng nghiệp vụ/hạ tầng |
-| Tạo hàng loạt interface một cách máy móc | Khó điều hướng, nhiều lớp chuyển tiếp vô ích | Chỉ tách tại những ranh giới có nhu cầu thật |
+| A `SuperService` interface combines reading, writing, exporting reports, and sending email | Clients depend on unused roles | Split according to client needs |
+| Unsupported methods only `throw UnsupportedOperationException` | The API promises a capability the implementation cannot provide | Do not implement absent capabilities, or explicitly define optional support |
+| Creating a separate interface for every individual getter | Adds types without meaningful boundaries | Group methods by cohesive roles instead of method count |
+| A client needs `read` but accepts `DocumentEditor` | The client also depends on write access | Accept `DocumentReader` |
+| Using an empty `default` method to conceal unsupported features | The operation appears to succeed but does nothing | Use defaults only when their behavior satisfies the contract |
+| One interface changes constantly, forcing many mock updates | The contract may be too broad or unstable | Analyze affected client groups and split when justified |
+| Splitting signatures while ignoring semantics | Implementations may violate expectations | Document preconditions, results, errors, ordering, and consistency |
+| Treating interfaces as security authorization | Callers may bypass the type boundary using another API | Enforce authorization in business/infrastructure layers as well |
+| Generating interfaces mechanically | Makes navigation difficult and adds unnecessary forwarding layers | Split only at boundaries with genuine needs |
 
-**Về `default` method:** phương thức mặc định là tính năng hợp lệ của Java, rất hữu ích cho hành vi có thể suy ra từ hợp đồng hiện tại. Nhưng thêm một `default void publish() { }` vào interface chung chỉ để mọi triển khai “biên dịch được” sẽ che đi sự khác nhau về khả năng hỗ trợ, không giải quyết nguyên nhân của interface quá rộng.
+**On `default` methods:** default methods are valid Java features, useful for behavior derived from an existing contract. However, adding `default void publish() { }` to a shared interface merely so every implementation “compiles” hides different support capabilities instead of fixing an overly broad contract.
 
-## 10. Quy trình cải tiến một giao diện quá rộng
+## 10. Refactoring an overly broad interface
 
-Giả sử hệ thống đang dùng `DocumentManager` lớn ở nhiều nơi:
+Suppose a system uses a large `DocumentManager` in many places:
 
-1. **Xem từng nhóm client thực sự gọi phương thức nào.** Ví dụ service tìm kiếm chỉ gọi `read`, editor chỉ gọi `save`, publisher chỉ gọi `publish`.
-2. **Xác định các vai trò ổn định.** Nhóm phương thức có ý nghĩa nhất quán theo client; tránh chia dựa trên số lượng cơ học.
-3. **Tạo interface nhỏ có hợp đồng rõ.** Ví dụ `DocumentReader`, `DocumentWriter`, `DocumentPublisher` với quy tắc đầu vào/kết quả/lỗi được mô tả.
-4. **Cho các triển khai khai báo đúng capability chúng có.** Lớp chỉ đọc không cần triển khai ghi/xóa.
-5. **Chuyển client sang yêu cầu hẹp nhất phù hợp.** Constructor của `SearchService` nhận `DocumentReader` thay cho `DocumentManager`.
-6. **Kiểm tra tương thích hành vi và kiểm thử.** Thay một implementation khác mà client vẫn chạy đúng hợp đồng; nếu đang duy trì thư viện công khai, lên kế hoạch tương thích API trước khi bỏ interface cũ.
+1. **Identify which methods each client group actually calls.** For example, search services only call `read`, editors only call `save`, and publishers only call `publish`.
+2. **Identify stable roles.** Group methods with consistent meanings for consumers; avoid dividing by a mechanical count.
+3. **Create small interfaces with clear contracts.** For example, `DocumentReader`, `DocumentWriter`, and `DocumentPublisher` with specified input, result, and failure rules.
+4. **Have implementations declare only the capabilities they provide.** Read-only classes need not implement write/delete operations.
+5. **Move clients to the narrowest suitable dependency.** The `SearchService` constructor accepts `DocumentReader` instead of `DocumentManager`.
+6. **Verify behavior and run tests.** Substitute an implementation and check that clients still satisfy the contract; for public libraries, plan API compatibility before removing the old interface.
 
-Không bắt buộc xóa interface cũ ngay trong một hệ thống có nhiều client đang dùng. Có thể di chuyển từng client, dùng adapter ở ranh giới và loại bỏ hợp đồng rộng khi không còn phụ thuộc và việc thay đổi phiên bản cho phép.
+An existing interface does not need to be deleted immediately when many clients use it. Migrate clients incrementally, use adapters at boundaries, and retire the broad contract when dependencies are gone and versioning permits.
 
-## 11. Bài tập tự kiểm tra
+## 11. Self-check exercises
 
-**Câu 1.** Một `ReportService` chỉ cần xuất CSV, nhưng constructor nhận `OfficeSuite` có `exportCsv()`, `sendEmail()`, `manageUsers()`. Điều bất hợp lý là gì?
+**Question 1.** A `ReportService` only exports CSV, but its constructor accepts `OfficeSuite` with `exportCsv()`, `sendEmail()`, and `manageUsers()`. What is wrong?
 
-**Đáp án:** Client phụ thuộc vào những khả năng không dùng. Có thể định nghĩa vai trò `CsvExporter` và chỉ yêu cầu interface đó.
+**Answer:** The client depends on unused capabilities. Define a `CsvExporter` role and require only that interface.
 
-**Câu 2.** `ReadOnlyArchive` bắt buộc triển khai `save()` rồi ném `UnsupportedOperationException`. Nên xem xét điều gì?
+**Question 2.** `ReadOnlyArchive` must implement `save()` and then throws `UnsupportedOperationException`. What should be reconsidered?
 
-**Đáp án:** Tách `Reader` và `Writer` để kho chỉ đọc chỉ triển khai khả năng đọc. Nếu không hỗ trợ là một phần hợp đồng tùy chọn được thiết kế rõ thì cần mô tả và xử lý riêng, không để caller bất ngờ.
+**Answer:** Separate `Reader` and `Writer` so the read-only store only implements reading. If optional support is explicitly part of the contract, document and handle it separately rather than surprising callers.
 
-**Câu 3.** `interface UserReader` có `findById`, `findByEmail`, `existsById`. Nó có vi phạm ISP vì chứa ba phương thức không?
+**Question 3.** An `interface UserReader` declares `findById`, `findByEmail`, and `existsById`. Does having three methods violate ISP?
 
-**Đáp án:** Không thể kết luận chỉ từ số phương thức. Cần xem chúng có tạo thành vai trò tra cứu gắn kết và phù hợp nhu cầu của client hay không.
+**Answer:** You cannot tell from method count alone. Determine whether the methods form one cohesive lookup role matching client needs.
 
-**Câu 4.** Một lớp có thể vừa `implements DocumentReader, DocumentWriter` vừa bảo đảm ISP không?
+**Question 4.** Can a class `implements DocumentReader, DocumentWriter` and still satisfy ISP?
 
-**Đáp án:** Có. Các client vẫn nhận từng interface theo nhu cầu của mình. Phân tách interface không cấm một lớp cung cấp nhiều vai trò.
+**Answer:** Yes. Clients still receive only the interface required for their role. Segregation does not prevent a class from providing multiple roles.
 
-**Câu 5.** Nếu `SearchService` chỉ nhận `DocumentReader`, có phải hệ thống đã ngăn tuyệt đối hành vi sửa dữ liệu?
+**Question 5.** If `SearchService` only receives `DocumentReader`, has the system completely prevented data modification?
 
-**Đáp án:** Không. Nó chỉ hạn chế khả năng nhìn thấy qua kiểu tham chiếu đó trong Java. Phân quyền thực tế, cập nhật ở module khác và giới hạn an ninh vẫn phải được quản lý đúng.
+**Answer:** No. The Java reference type only limits the capabilities exposed through that reference. Real authorization, updates in other modules, and security boundaries still need to be enforced properly.
 
-**Ghi nhớ:** Thiết kế interface theo **vai trò của người sử dụng**, giữ các khả năng có liên quan trong cùng một hợp đồng, và để mỗi client phụ thuộc vào tập phương thức cần thiết. Sự phân tách hợp lý giảm phụ thuộc, tránh các phương thức “không hỗ trợ”, giúp thay thế triển khai và viết kiểm thử dễ dàng hơn — trong khi vẫn giữ API đủ rõ và không phát sinh quá nhiều interface vô nghĩa.
+**Remember:** Design interfaces around **consumer roles**, keep related capabilities together in one contract, and make each client depend only on the methods it needs. Sensible segregation reduces coupling, avoids “unsupported” methods, and makes implementations easier to substitute and test — while keeping APIs clear and avoiding excessive, meaningless interfaces.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="interface-007">Thành viên mặc định và giới hạn tùy ngôn ngữ</a>
+## <a id="interface-007">Default members and language-specific limitations</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thành viên mặc định và giới hạn tùy ngôn ngữ của giao diện
+# Default members and language-specific interface limitations
 
-Trong OOP, **giao diện (interface)** mô tả một khả năng hoặc hợp đồng mà những lớp khác nhau có thể thực hiện. Tuy nhiên, không phải ngôn ngữ nào cũng cho phép interface chứa cùng loại thành viên. Ngay trong Java, tập tính năng của interface cũng đã phát triển: ngoài phương thức trừu tượng, Java hiện đại còn hỗ trợ **phương thức mặc định (`default`)**, phương thức `static`, và phương thức hỗ trợ `private`.
+In OOP, **an interface** describes a capability or contract that different classes can implement. However, languages differ in which members interfaces may contain. Even within Java, interface features have evolved: besides abstract methods, modern Java supports **default methods (`default`)**, `static` methods, and `private` helper methods.
 
-Để hiểu đúng chủ đề, cần phân biệt hai nghĩa của từ *mặc định*:
+To understand the topic, distinguish two meanings of *default*:
 
-- **Thành viên được ngầm gán modifier:** ví dụ, một phương thức thông thường chỉ có chữ ký trong Java interface được hiểu là `public abstract`; field của interface ngầm là `public static final`.
-- **Phương thức `default`:** phương thức có **thân cài đặt sẵn** ngay trong interface, dùng từ khóa `default`. Lớp triển khai có thể kế thừa hoặc override cách cài đặt này theo quy tắc Java.
+- **Implicitly assigned modifiers:** for example, a regular signature-only method in a Java interface is implicitly `public abstract`; an interface field is implicitly `public static final`.
+- **`default` methods:** methods with **an existing implementation body** in the interface, declared with the `default` keyword. Implementing classes may inherit or override that implementation under Java's rules.
 
-Không được nhầm **`default` trên interface method** với **quyền truy cập package-private** thường được gọi là “default access” ở Java. Hai khái niệm hoàn toàn khác nhau.
+Do not confuse **`default` on an interface method** with **package-private access**, often called “default access” in Java. They are entirely different concepts.
 
-Bài sử dụng Java 17 để giải thích các quy tắc, ví dụ biên dịch được, những lỗi dễ mắc và điểm khác nhau khi chuyển ý tưởng sang các ngôn ngữ khác.
+This lesson uses Java 17 to explain the rules, compile-ready examples, common errors, and differences when applying the concept in other languages.
 
-## 1. Thành viên nào được phép xuất hiện trong Java interface?
+## 1. Which members are permitted in Java interfaces?
 
-| Loại thành viên | Java 17 hỗ trợ? | Ý nghĩa, giới hạn |
+| Member type | Supported in Java 17? | Meaning and limitations |
 |---|---|---|
-| Phương thức `public abstract` | Có | Khai báo hành vi mà implementation phải đáp ứng |
-| Phương thức `default` | Có (từ Java 8) | Có thân hàm; implementation có thể sử dụng hoặc override |
-| Phương thức `public static` | Có (từ Java 8) | Tiện ích gắn với chính interface; gọi bằng `TenInterface.method()` |
-| Phương thức `private`, `private static` | Có (từ Java 9) | Helper nội bộ cho các phương thức có thân của interface |
-| Field/hằng số | Có | Mọi field đều ngầm là `public static final` và phải có initializer |
-| Field instance có thể thay đổi | Không | Interface Java không lưu trạng thái instance trực tiếp |
-| Constructor | Không | Không thể tạo trực tiếp instance của interface |
-| Khối khởi tạo instance | Không | Không có đối tượng interface để khởi tạo |
-| Phương thức `protected` / package-private | Không | Phương thức interface chỉ có các mức truy cập hợp lệ theo quy tắc `public` hoặc `private` |
-| Interface lồng nhau | Có | Có thể định nghĩa kiểu lồng trong interface, với các quy tắc modifier tương ứng |
-| Kế thừa nhiều interface | Có | Một interface có thể `extends` nhiều interface |
-| Một class implements nhiều interface | Có | Nhưng phải giải quyết xung đột phương thức theo quy tắc Java |
+| `public abstract` method | Yes | Declares behavior that implementations must provide |
+| `default` method | Yes (since Java 8) | Has a method body; implementations may reuse or override it |
+| `public static` method | Yes (since Java 8) | Utility tied to the interface itself; called as `TenInterface.method()` |
+| `private`, `private static` methods | Yes (since Java 9) | Internal helpers for interface methods with bodies |
+| Field/constant | Yes | Every field is implicitly `public static final` and needs an initializer |
+| Mutable instance field | No | A Java interface cannot directly store instance state |
+| Constructor | No | Cannot directly instantiate an interface |
+| Instance initializer block | No | There is no interface instance to initialize |
+| `protected` / package-private methods | No | Interface methods follow valid `public` or `private` access rules |
+| Nested interfaces | Yes | Can declare types nested in an interface, with their applicable modifier rules |
+| Multiple interface inheritance | Yes | An interface can `extends` multiple interfaces |
+| One class implementing multiple interfaces | Yes | Must resolve method conflicts according to Java rules |
 
-Một vài quy tắc cú pháp cần nhớ:
+Some syntax rules to remember:
 
 ~~~java
 interface Auditable {
@@ -3209,21 +3209,21 @@ interface Auditable {
 }
 ~~~
 
-`normalizedId()` ở đây là private helper hợp lệ, dù ví dụ nhỏ chưa gọi đến nó. Các phương thức không có `private` trong interface thường là public; field không thể biến thành biến riêng theo từng đối tượng.
+`normalizedId()` is a valid private helper here, although this small example does not call it. Non-`private` methods in an interface are generally public; fields cannot become per-object private variables.
 
-### Vì sao `default` quan trọng?
+### Why does `default` matter?
 
-Trước Java 8, khi thêm một phương thức trừu tượng vào một interface đang có nhiều implementation, các lớp triển khai thường phải cập nhật mã. Phương thức `default` giúp interface đưa ra **một cách cài đặt chung hợp lệ**, để những lớp triển khai hiện có có thể dùng hành vi mới trong nhiều trường hợp.
+Before Java 8, adding an abstract method to an interface with many implementations usually required changes to those classes. A `default` method lets the interface provide **a valid common implementation**, allowing existing classes to adopt new behavior in many cases.
 
-Nhưng `default` không tự động bảo đảm mọi thay đổi đều tương thích: xung đột tên phương thức, kế thừa, ý nghĩa nghiệp vụ, hoặc mã đã biên dịch trước đó vẫn có thể gây vấn đề. Chỉ nên thêm default method khi có hành vi chung thực sự đúng cho mọi implementation mà nó áp dụng.
+However, `default` does not guarantee compatibility for every change: method name collisions, inheritance, business semantics, and previously compiled code can still cause problems. Add a default method only when it provides behavior that is genuinely valid for every implementation to which it applies.
 
-## 2. Ví dụ Java hoàn chỉnh: abstract, default, static và private
+## 2. Complete Java example: abstract, default, static, and private
 
-Hãy tưởng tượng ứng dụng có nhiều thực thể cần được hiển thị tên, chẳng hạn người dùng và hóa đơn. Interface `Named` quy định khả năng cung cấp tên, đồng thời có quy tắc chung để tạo nhãn hiển thị.
+Imagine an application with different entities, such as users and invoices, whose names must be displayed. The `Named` interface declares the ability to provide a name and a common rule for constructing display labels.
 
-Một hóa đơn ngoài vai trò `Named` còn có vai trò `Loggable`; cả hai interface đều cung cấp `default label()`. Lớp hóa đơn phải giải quyết sự trùng lặp này.
+An invoice plays both the `Named` and `Loggable` roles; each interface also provides `default label()`. The invoice class must resolve this conflict.
 
-Lưu toàn bộ thành **`Demo.java`**, dùng Java 17 trở lên:
+Save everything as **`Demo.java`** and use Java 17 or later:
 
 ~~~java
 public class Demo {
@@ -3326,14 +3326,14 @@ final class Invoice implements Named, Loggable {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac Demo.java
 java Demo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Tên: Lan
@@ -3343,30 +3343,30 @@ true
 40
 ~~~
 
-**Giải thích các vị trí đáng chú ý:**
+**Explanation of notable points:**
 
-1. `Named.name()` không có thân: `User` và `Invoice` phải hiện thực phương thức này.
-2. `Named.label()` và `Named.shortLabel()` có thân: `User` sử dụng implementation mặc định mà không phải viết lại.
-3. `Named.isValidName(...)` được gọi từ constructor của hai class. Nó là static method nên được gọi bằng **tên interface**.
-4. `normalize()` và `withinLimit()` là private helper bên trong `Named`. Chúng không xuất hiện trong API mà client/implementation được phép gọi.
-5. `MAX_NAME_LENGTH` là hằng số chung; không có bản sao field riêng cho từng `User` hoặc `Invoice`.
-6. `Invoice` không thể kế thừa một cách mơ hồ cả hai default `label()`. Nó override và quyết định kết quả, có thể gọi `Named.super.label()` hoặc `Loggable.super.label()` để tận dụng hai implementation sẵn có.
+1. `Named.name()` has no body: `User` and `Invoice` must implement it.
+2. `Named.label()` and `Named.shortLabel()` have bodies: `User` inherits their default implementations without rewriting them.
+3. `Named.isValidName(...)` is called by both class constructors. It is static, so it is called through **the interface name**.
+4. `normalize()` and `withinLimit()` are private helpers inside `Named`. They are not exposed in the API callable by clients or implementing classes.
+5. `MAX_NAME_LENGTH` is a shared constant; `User` and `Invoice` do not each get their own field copy.
+6. `Invoice` cannot ambiguously inherit both `label()` defaults. It overrides the method and chooses the result, optionally invoking `Named.super.label()` or `Loggable.super.label()` to reuse both existing implementations.
 
-Đây là ví dụ về **tái sử dụng hành vi mặc định mà không cần chia sẻ một lớp cha có trạng thái**.
+This example shows **default behavior reuse without inheriting a stateful superclass**.
 
-## 3. Cơ chế giải quyết xung đột default method
+## 3. How default-method conflicts are resolved
 
-Java cho phép một class implements nhiều interface, nhưng không cho chọn tùy tiện một implementation khi xảy ra xung đột cùng chữ ký.
+Java allows classes to implement multiple interfaces, but does not arbitrarily select one implementation when methods have conflicting signatures.
 
-Ba quy tắc thực dụng:
+Three practical rules:
 
-| Trường hợp | Quy tắc |
+| Situation | Rule |
 |---|---|
-| Superclass có instance method phù hợp | Phương thức từ class thường được ưu tiên trước default method từ interface (*class wins*) |
-| Một interface con cụ thể hơn override default của interface cha | Phương thức từ interface chuyên biệt hơn được chọn |
-| Hai default method độc lập cùng chữ ký | Class triển khai phải override để giải quyết xung đột |
+| A superclass provides a matching instance method | The class method generally takes precedence over an interface default method (*class wins*) |
+| A more specific subinterface overrides its parent interface's default | The more specific interface method is selected |
+| Two unrelated default methods have the same signature | The implementing class must override the method to resolve the conflict |
 
-### Trường hợp 1: class thắng interface
+### Case 1: class methods take precedence over interface defaults
 
 ~~~java
 interface HasLabel {
@@ -3390,9 +3390,9 @@ class Test {
 }
 ~~~
 
-`Derived` thừa hưởng `label()` từ `Base`. Java không dùng default `HasLabel.label()` để ghi đè phương thức của superclass.
+`Derived` inherits `label()` from `Base`. Java does not use the default `HasLabel.label()` to override the superclass method.
 
-### Trường hợp 2: interface chuyên biệt hơn
+### Case 2: a more specific interface takes precedence
 
 ~~~java
 interface ParentRole {
@@ -3413,9 +3413,9 @@ class Test {
 }
 ~~~
 
-Trong trường hợp này `ChildRole` mở rộng `ParentRole` và định nghĩa hành vi chuyên biệt hơn; đó là implementation được kế thừa.
+Here `ChildRole` extends `ParentRole` and defines more specific behavior; that is the inherited implementation.
 
-### Trường hợp 3: hai default độc lập
+### Case 3: two unrelated defaults
 
 ~~~java
 interface A {
@@ -3435,9 +3435,9 @@ class C implements A, B {
 }
 ~~~
 
-Khi override, class có thể viết logic hoàn toàn mới hoặc dùng cú pháp `InterfaceName.super.method()` để gọi một default method hợp lệ từ interface. Cú pháp này có các điều kiện về interface kế thừa trực tiếp/phương thức được phép gọi; không phải cách tùy ý gọi default của mọi tổ tiên trong hệ phân cấp.
+When overriding, a class may write entirely new logic or use `InterfaceName.super.method()` to invoke a valid interface default method. This syntax has restrictions involving directly inherited interfaces and callable methods; it is not an arbitrary way to invoke defaults from any ancestor in the hierarchy.
 
-Sơ đồ cách lựa chọn ở mức khái quát:
+High-level decision diagram:
 
 ~~~mermaid
 flowchart TD
@@ -3450,13 +3450,13 @@ flowchart TD
     F -->|Không| H["Dùng default method hợp lệ"]
 ~~~
 
-Sơ đồ phục vụ nhận diện các tình huống thường gặp, không thay thế đầy đủ quy tắc phân giải phương thức trong Java Language Specification.
+This diagram helps identify common situations; it does not replace the full method resolution rules in the Java Language Specification.
 
-## 4. Các quy tắc modifier dễ hiểu sai
+## 4. Modifier rules that are easy to misunderstand
 
-### 4.1. Phương thức chỉ có chữ ký là `public abstract`
+### 4.1. Signature-only methods are `public abstract`
 
-Hai cách khai báo sau có ý nghĩa tương đương:
+The following two declarations are equivalent:
 
 ~~~java
 interface Vehicle {
@@ -3465,7 +3465,7 @@ interface Vehicle {
 }
 ~~~
 
-Khi lớp không abstract triển khai, method phải được khai báo `public`:
+A non-abstract implementing class must declare its method `public`:
 
 ~~~java
 class Bicycle implements Vehicle {
@@ -3481,7 +3481,7 @@ class Bicycle implements Vehicle {
 }
 ~~~
 
-Sai nếu viết:
+The following is invalid:
 
 ~~~java
 // class BrokenBicycle implements Vehicle {
@@ -3490,9 +3490,9 @@ Sai nếu viết:
 // }
 ~~~
 
-Không thể biến một phương thức của interface thành `protected` hay package-private chỉ vì class triển khai không muốn public.
+An interface method cannot be made `protected` or package-private simply because its implementing class does not want it public.
 
-### 4.2. `default` là một loại phương thức có thân
+### 4.2. `default` denotes a method with a body
 
 ~~~java
 interface Greeting {
@@ -3502,9 +3502,9 @@ interface Greeting {
 }
 ~~~
 
-`default` ở đây **không** có nghĩa package-private. Phương thức có thể được client gọi công khai qua tham chiếu interface. Không thể kết hợp `default` với `abstract`, `static` hoặc `private` cho cùng một phương thức theo cách tùy ý: mỗi modifier có quy tắc hợp lệ riêng.
+Here, `default` **does not** mean package-private. Clients can publicly invoke the method through an interface reference. You cannot freely combine `default` with `abstract`, `static`, or `private` on the same method: each modifier has its own validity rules.
 
-Một implementation có thể override:
+An implementation may override it:
 
 ~~~java
 class FormalGreeting implements Greeting {
@@ -3515,9 +3515,9 @@ class FormalGreeting implements Greeting {
 }
 ~~~
 
-Khi override, vẫn phải giữ phạm vi truy cập phù hợp và tôn trọng hợp đồng hành vi.
+When overriding, preserve the required access level and honor the behavioral contract.
 
-### 4.3. Phương thức `static` phải gọi qua tên interface
+### 4.3. `static` methods must be called through the interface name
 
 ~~~java
 interface TextTools {
@@ -3529,7 +3529,7 @@ interface TextTools {
 System.out.println(TextTools.isBlank("  ")); // true
 ~~~
 
-Đoạn gọi `System.out.println` nằm trong phương thức Java thích hợp. Không dùng `new TextTools()` vì interface không có constructor. Static method của interface **không được kế thừa như instance method** vào class triển khai:
+The `System.out.println` call belongs inside an appropriate Java method. Do not write `new TextTools()` because an interface has no constructor. An interface static method **is not inherited as an instance method** by its implementing class:
 
 ~~~java
 class TextService implements TextTools {}
@@ -3538,9 +3538,9 @@ class TextService implements TextTools {}
 // new TextService().isBlank("x"); // Cũng không hợp lệ.
 ~~~
 
-Khác với instance default method, `static` method không tham gia đa hình override theo kiểu đối tượng. Nếu class khai báo phương thức static trùng tên/chữ ký, đó là một khai báo riêng, không phải override static method của interface.
+Unlike instance default methods, `static` methods do not participate in polymorphic overriding based on an object's type. If a class declares a static method with the same name/signature, it is a separate declaration, not an override of the interface's static method.
 
-### 4.4. Phương thức `private` là chi tiết nội bộ
+### 4.4. `private` methods are internal implementation details
 
 ~~~java
 interface GreetingFactory {
@@ -3566,13 +3566,13 @@ interface GreetingFactory {
 }
 ~~~
 
-Private method trong interface có thân và chỉ được dùng từ mã thích hợp **bên trong chính interface**, không thể được client gọi, không thể bị override như một phần của hợp đồng và không thể là abstract. Cả private instance method và private static method đều được Java 17 hỗ trợ.
+Private interface methods have bodies and are callable only from appropriate code **inside the interface itself**. Clients cannot call them, implementing classes cannot override them as part of the contract, and they cannot be abstract. Java 17 supports both private instance and private static interface methods.
 
-Có thể dùng helper `private static` từ những method khác trong interface, trong khi private instance method cần ngữ cảnh instance của interface. Hai dạng có phạm vi mục đích khác nhau.
+A `private static` helper can be called from other interface methods, whereas a private instance method requires an interface instance context. The forms serve different purposes.
 
-## 5. Field trong interface luôn là public static final
+## 5. Interface fields are always public static final
 
-Đây là điểm đặc biệt quan trọng:
+This is especially important:
 
 ~~~java
 interface Limits {
@@ -3580,7 +3580,7 @@ interface Limits {
 }
 ~~~
 
-Trong Java, câu trên được hiểu tương đương:
+Java interprets the declaration above as equivalent to:
 
 ~~~java
 interface Limits {
@@ -3588,9 +3588,9 @@ interface Limits {
 }
 ~~~
 
-`MAX_ITEMS` là **một hằng số gắn với interface**, không phải số lượng mặt hàng của từng instance.
+`MAX_ITEMS` is **a constant associated with the interface**, not an item count for each instance.
 
-Bạn không thể viết:
+You cannot write:
 
 ~~~java
 // interface Wrong {
@@ -3599,7 +3599,7 @@ Bạn không thể viết:
 // }
 ~~~
 
-Dù `final`, hằng tham chiếu vẫn có thể trỏ tới một đối tượng **mutable**:
+Even with `final`, a reference constant may still point to a **mutable** object:
 
 ~~~java
 import java.util.ArrayList;
@@ -3613,9 +3613,9 @@ interface Settings {
 // Settings.CODES.add("A1");          // Vẫn có thể sửa nội dung List!
 ~~~
 
-Field này ngầm là `public static final`, **không có nghĩa danh sách bất biến**. Công khai mutable object dưới dạng hằng số là thiết kế nhiều rủi ro: người gọi có thể sửa trạng thái chung mà không qua kiểm soát.
+This field is implicitly `public static final`, which **does not mean its list is immutable**. Exposing a mutable object as a constant is risky because callers can modify shared state without control.
 
-Nên dùng bất biến phù hợp, ví dụ:
+Prefer an appropriate immutable representation, for example:
 
 ~~~java
 interface SupportedCodes {
@@ -3623,13 +3623,13 @@ interface SupportedCodes {
 }
 ~~~
 
-Trong dự án thực tế, nếu hằng số chỉ liên quan đến một nhóm chức năng, có thể dùng một lớp `final` hoặc cấu hình có tên rõ ràng thay vì biến một interface thành “kho hằng số” (*constant interface anti-pattern*).
+In real projects, if constants only concern one group of features, consider a `final` class or clearly named configuration instead of using an interface as a “constant repository” (*constant interface anti-pattern*).
 
-Ngoài ra, **field của interface phải được khởi tạo**, nhưng không nhất thiết mọi initializer là compile-time constant theo nghĩa JLS. Ví dụ có thể là `new Object()`, dù làm vậy cần thận trọng về vòng đời và trạng thái dùng chung.
+Also, **interface fields must be initialized**, but not every initializer is necessarily a compile-time constant under JLS terminology. For example, `new Object()` is allowed, although shared state and lifecycle implications require care.
 
-## 6. Interface không có trạng thái instance, constructor hoặc vòng đời riêng
+## 6. Interfaces have no instance state, constructor, or separate lifecycle
 
-Không thể khai báo một field thay đổi độc lập cho từng đối tượng triển khai ngay trong interface:
+An interface cannot directly declare a mutable field that belongs independently to each implementing object:
 
 ~~~java
 // interface Session {
@@ -3638,7 +3638,7 @@ Không thể khai báo một field thay đổi độc lập cho từng đối t�
 // }
 ~~~
 
-Nếu mỗi session phải có số lần request riêng, class cài đặt lưu field:
+If each session needs its own request counter, the implementing class stores the field:
 
 ~~~java
 interface SessionCounter {
@@ -3661,15 +3661,15 @@ final class UserSession implements SessionCounter {
 }
 ~~~
 
-Interface quy định những việc có thể làm với một session; class giữ trạng thái và cài đặt hành vi. Các default method có thể gọi getter/abstract method để sử dụng trạng thái của đối tượng triển khai, nhưng bản thân interface **không cấp phát instance field riêng**.
+Interfaces declare what a session can do; classes store state and implement behavior. Default methods may call getters/abstract methods to use an implementing object's state, but the interface itself **does not allocate separate instance fields**.
 
-Interface cũng không thể được tạo bằng `new SessionCounter()`. Bạn có thể tạo một instance của class implements interface, hoặc dùng anonymous class/lambda khi quy tắc loại interface cho phép.
+An interface cannot be instantiated using `new SessionCounter()`. You can instantiate an implementing class, or use an anonymous class/lambda when the interface type permits it.
 
-## 7. Giới hạn đặc biệt: phương thức của `Object`
+## 7. Special restrictions involving `Object` methods
 
-Mọi object Java có các phương thức công khai như `toString()`, `equals(Object)`, `hashCode()` từ `Object`. Interface được phép khai báo chữ ký trừu tượng tương ứng để nêu hợp đồng, nhưng không được cung cấp default implementation trực tiếp cho các phương thức khớp với các phương thức public non-static của `Object`.
+Every Java object has public methods such as `toString()`, `equals(Object)`, and `hashCode()` from `Object`. An interface may declare corresponding abstract signatures to describe a contract, but may not provide default implementations for methods matching public non-static methods of `Object`.
 
-Ví dụ không hợp lệ:
+Invalid example:
 
 ~~~java
 // interface Described {
@@ -3679,7 +3679,7 @@ Ví dụ không hợp lệ:
 // }
 ~~~
 
-Muốn tùy chỉnh `toString()`, hãy override trong **class** cụ thể:
+To customize `toString()`, override it in a concrete **class**:
 
 ~~~java
 interface Described {
@@ -3705,11 +3705,11 @@ final class Note implements Described {
 }
 ~~~
 
-Lý do là các quy tắc tương tác giữa `Object` và phương thức interface khác với việc cung cấp default của một phương thức nghiệp vụ thông thường. Đây là một giới hạn Java cụ thể; không nên suy ra mọi ngôn ngữ có interface đều áp dụng chính xác cùng quy tắc.
+The reason is that rules governing interactions between `Object` methods and interface methods differ from providing a default for an ordinary business operation. This is a Java-specific restriction; do not assume every language with interfaces applies precisely the same rule.
 
-## 8. Interface có thể kế thừa interface, nhưng không kế thừa class
+## 8. Interfaces may extend interfaces, but not classes
 
-Một interface Java có thể mở rộng nhiều interface:
+A Java interface can extend multiple interfaces:
 
 ~~~java
 interface Readable {
@@ -3727,16 +3727,16 @@ interface ReadWrite extends Readable, Writable {
 }
 ~~~
 
-Một class implements `ReadWrite` phải đáp ứng `read()` và `write()` trừ khi nó là abstract, hoặc các phương thức đó đã có implementation hợp lệ từ class cha.
+A class implementing `ReadWrite` must fulfill `read()` and `write()` unless it is abstract or valid implementations are already inherited from a superclass.
 
-`interface` không được `extends` một class:
+An `interface` cannot `extends` a class:
 
 ~~~java
 // class Base {}
 // interface Wrong extends Base {} // Lỗi.
 ~~~
 
-Một **class** chỉ được trực tiếp `extends` một class nhưng có thể `implements` nhiều interface:
+A **class** may directly `extends` only one class but may `implements` multiple interfaces:
 
 ~~~java
 class BasicDocument {}
@@ -3755,27 +3755,27 @@ class EditableDocument extends BasicDocument
 }
 ~~~
 
-Đó là cơ chế cho phép **nhiều vai trò** mà không đưa toàn bộ lớp vào một cây kế thừa implementation phức tạp.
+This enables **multiple roles** without forcing every class into a complex implementation inheritance tree.
 
-### Default method không phải một cách kế thừa trạng thái
+### Default methods do not provide state inheritance
 
-Việc nhiều interface có default implementation không biến Java thành ngôn ngữ cho phép một class kế thừa nhiều superclass có instance fields, constructors và initialization logic. Java vẫn giữ phân biệt **kế thừa implementation từ một class** với **triển khai nhiều hợp đồng giao diện**.
+Multiple interfaces with default implementations do not turn Java into a language allowing a class to inherit several superclasses with instance fields, constructors, and initialization logic. Java still distinguishes **inheriting implementation from one class** from **implementing multiple interface contracts**.
 
-## 9. Interface và abstract class: phương thức mặc định khác gì phương thức thường?
+## 9. Interfaces versus abstract classes: how do default methods differ from ordinary methods?
 
-Một default method trong interface và một concrete method trong abstract class đều có thân, nhưng vai trò thiết kế khác nhau.
+An interface default method and an abstract class's concrete method both have bodies, but play different design roles.
 
-| Tiêu chí | Interface có default method | Abstract class có concrete method |
+| Criterion | Interface with default methods | Abstract class with concrete methods |
 |---|---|---|
-| Có field instance | Không | Có |
-| Có constructor | Không | Có |
-| Một class kế thừa bao nhiêu | Implements nhiều interface | Extends trực tiếp tối đa một class |
-| Thích hợp cho | Hành vi chung từ một khả năng/contract | Hành vi và trạng thái dùng chung của họ class |
-| Xử lý trùng method | Có quy tắc default conflict, có thể phải override | Class method có thứ tự kế thừa class |
-| Có thể dùng `protected` cho instance method | Không | Có |
-| Có thể có `private` helper | Có | Có |
+| Instance fields | No | Yes |
+| Constructors | No | Yes |
+| How many can a class inherit from? | Can implement multiple interfaces | Can directly extend at most one class |
+| Best suited for | Shared behavior derived from a capability/contract | Shared behavior and state of a class family |
+| Method collision handling | Default-conflict rules apply; overrides may be necessary | Class method inheritance follows the class hierarchy |
+| Can instance methods be `protected`? | No | Yes |
+| Can have `private` helpers? | Yes | Yes |
 
-Ví dụ abstract class cho phép lưu trạng thái chung:
+For example, an abstract class can store shared state:
 
 ~~~java
 abstract class BaseWorker {
@@ -3793,7 +3793,7 @@ abstract class BaseWorker {
 }
 ~~~
 
-Interface thuần túy có thể chỉ quy định:
+An interface can simply specify:
 
 ~~~java
 interface Worker {
@@ -3804,20 +3804,20 @@ interface Worker {
 }
 ~~~
 
-Nếu một nhóm class cần chung constructor, field và invariant, abstract class hoặc **composition** có thể hợp lý hơn. Nếu nhiều loại class khác nhau chỉ cần cùng một hành vi/khả năng, interface phù hợp hơn. Không có quy tắc “default method luôn tốt hơn abstract class”.
+If a group of classes needs a common constructor, fields, and invariants, an abstract class or **composition** may be more suitable. If unrelated class types only need a shared capability, an interface is more appropriate. There is no rule that “default methods are always better than abstract classes.”
 
-## 10. Java khác những ngôn ngữ khác ở đâu?
+## 10. How does Java differ from other languages?
 
-Ý tưởng “giao diện là một hợp đồng” có tính phổ quát, nhưng các hạn chế cú pháp và khả năng cung cấp implementation **phụ thuộc ngôn ngữ và phiên bản**.
+The idea of “an interface as a contract” is broadly applicable, but syntactic restrictions and implementation capabilities **depend on the language and version**.
 
-| Ngôn ngữ | Có thể đặt implementation sẵn trong cấu trúc interface? | Trạng thái/khả năng đặc trưng |
+| Language | Can an interface provide an implementation? | State and distinctive capabilities |
 |---|---|---|
-| **Java 17** | Có, qua `default`; có `static` và `private` method | Không có instance field/constructor trong interface; field ngầm `public static final` |
-| **C# hiện đại** | Có thể có default interface implementation | Hệ thống member, property và quy tắc triển khai khác Java; không bê nguyên quy tắc Java sang |
-| **Kotlin** | Interface method có thể có thân | Interface có thể khai báo property với accessor nhưng không có backing field riêng |
-| **TypeScript** | Interface là hợp đồng kiểu tĩnh, không mang phần cài đặt runtime của phương thức | Interface theo cơ chế structural typing và bị loại bỏ sau biên dịch sang JavaScript |
+| **Java 17** | Yes, through `default`; also `static` and `private` methods | No interface instance fields/constructors; fields are implicitly `public static final` |
+| **Modern C#** | Can provide default interface implementations | Its member, property, and implementation rules differ from Java; do not copy Java rules directly |
+| **Kotlin** | Interface methods may have bodies | Interfaces may declare properties with accessors but no separate backing fields |
+| **TypeScript** | Interfaces specify static types without runtime method implementations | Uses structural typing; interfaces are erased when compiling to JavaScript |
 
-Ví dụ gần nghĩa trong TypeScript:
+A roughly equivalent example in TypeScript:
 
 ~~~typescript
 interface Greeter {
@@ -3831,22 +3831,22 @@ class FriendlyGreeter implements Greeter {
 }
 ~~~
 
-Interface TypeScript không trực tiếp chứa mã chạy như Java `default method`. Muốn tái sử dụng implementation, TypeScript thường dùng class, function, mixin hoặc composition tùy trường hợp.
+TypeScript interfaces do not directly contain executable code like Java `default method` implementations. To reuse implementations, TypeScript commonly uses classes, functions, mixins, or composition as appropriate.
 
-Trong Kotlin, một interface có thể có property khai báo bằng accessor, nhưng không thể lưu một backing field của property ấy bên trong interface như class thông thường. Trong C#, các tính năng interface và khả năng gắn implementation phụ thuộc phiên bản ngôn ngữ/runtime. Không nên giả định việc C# có một tính năng tương tự Java `default` thì mọi quy tắc xung đột, kế thừa và dispatch đều giống nhau.
+In Kotlin, an interface can declare a property with an accessor but cannot store that property's backing field inside the interface as a regular class can. In C#, interface features and attached implementations depend on language/runtime versions. The presence of a feature similar to Java `default` does not mean that conflict, inheritance, and dispatch rules are identical.
 
-Đặc biệt, **“interface” không đồng nghĩa với “một thứ bắt buộc chỉ có các chữ ký trống”** trong mọi ngôn ngữ và phiên bản. Khi chuyển dự án giữa Java, Kotlin, C# và TypeScript, cần đối chiếu tài liệu cú pháp, khả năng biểu diễn trạng thái và quy tắc thực thi cụ thể của công nghệ đang dùng.
+In particular, **“interface” does not always mean “a construct containing only empty method signatures”** across languages and versions. When moving projects among Java, Kotlin, C#, and TypeScript, consult the relevant syntax, state-modeling, and execution rules for the technologies in use.
 
-## 11. Những thay đổi của Java qua phiên bản
+## 11. How Java interfaces have evolved
 
-| Giai đoạn | Năng lực đáng chú ý |
+| Era | Notable capabilities |
 |---|---|
-| Java trước 8 | Interface chủ yếu dùng abstract methods và các hằng số; chưa có default/static interface methods như cách hiện đại |
-| Java 8 | Thêm `default` và `static` methods trong interface |
-| Java 9 | Thêm private instance/static helper methods trong interface |
-| Java 17 | Có đầy đủ các dạng trên; Java cũng hỗ trợ sealed classes/interfaces để kiểm soát những kiểu được phép mở rộng |
+| Before Java 8 | Interfaces mainly held abstract methods and constants, without modern default/static interface methods |
+| Java 8 | Added `default` and `static` methods to interfaces |
+| Java 9 | Added private instance/static helper methods to interfaces |
+| Java 17 | Supports all of the above; Java also supports sealed classes/interfaces to restrict which types may extend them |
 
-Một ví dụ sealed interface (Java 17):
+A sealed interface example (Java 17):
 
 ~~~java
 sealed interface PaymentResult permits Approved, Declined {}
@@ -3855,130 +3855,130 @@ record Approved(String transactionId) implements PaymentResult {}
 record Declined(String reason) implements PaymentResult {}
 ~~~
 
-Đây là một **giới hạn về tập lớp có thể triển khai interface**, không phải một dạng default method. `permits` xác định các lớp con trực tiếp được cho phép; các lớp đó tuân thủ những quy định tương ứng như `final`, `sealed` hoặc `non-sealed` theo ngữ cảnh.
+This is **a restriction on the set of classes permitted to implement the interface**, rather than a kind of default method. `permits` lists allowed direct subclasses; those classes follow applicable rules such as `final`, `sealed`, or `non-sealed` according to context.
 
-Vì bài tập dựa trên Java 17, những ví dụ về `private` method trong interface hoặc sealed interface sẽ không biên dịch nếu đem nguyên xi sang phiên bản Java quá cũ.
+Since the exercises use Java 17, the interface `private` method and sealed-interface examples will not compile unchanged on much older Java versions.
 
-## 12. Sử dụng default method có trách nhiệm
+## 12. Using default methods responsibly
 
-Default method không nên trở thành nơi giấu logic nghiệp vụ phức tạp hoặc trạng thái toàn cục. Một default method tốt thường:
+Default methods should not hide complex business logic or global state. A good default method usually:
 
-- **Được diễn đạt dựa trên các phương thức đã có của hợp đồng**, giống `label()` gọi `name()`.
-- Có cách thực hiện hợp lý cho **mọi implementation** chấp nhận hành vi mặc định ấy.
-- Không giả định class triển khai có field, constructor hoặc cấu trúc nội bộ cụ thể.
-- Giữ đúng ý nghĩa nghiệp vụ và rõ ràng về exception/side effect.
-- Được kiểm tra khi có nhiều interface kế thừa hoặc triển khai giao nhau.
+- **Builds on existing contract methods**, as `label()` does by calling `name()`.
+- Has a sensible implementation for **every implementation** that inherits the default.
+- Does not assume the implementing class has particular fields, constructors, or internal structures.
+- Preserves business meaning and clearly defines exceptions and side effects.
+- Is tested when multiple inherited or implemented interfaces interact.
 
-Ví dụ `label()` dựa trên `name()` khá tự nhiên. Nhưng đặt một default `saveToDatabase()` giả định tất cả lớp đều có connection, transaction và table sẽ là abstraction không đáng tin, trừ khi hợp đồng thực sự cung cấp đủ khả năng và quy tắc cần thiết.
+For example, `label()` derived from `name()` is natural. But a default `saveToDatabase()` that assumes every class has a connection, transaction, and table would be an unreliable abstraction unless the contract actually provides the required capabilities and rules.
 
-### Interface evolution có rủi ro gì?
+### What are the risks of interface evolution?
 
-Giả sử interface công khai đã được nhiều plugin triển khai. Khi thêm một default method mới:
+Suppose a public interface has already been implemented by several plugins. Adding a new default method may mean:
 
-1. Các implementation cũ **có thể** dùng được mà không phải bổ sung phương thức.
-2. Nếu class đã khai báo method cùng tên/chữ ký với quyền truy cập không phù hợp, mã nguồn có thể phát sinh lỗi tương thích.
-3. Nếu plugin đồng thời triển khai interface khác có default method trùng chữ ký, có thể phát sinh xung đột.
-4. Nếu default method giả định precondition mới hoặc thay đổi side effect, các client có thể gặp hành vi ngoài mong đợi.
-5. Tương thích mã nguồn, nhị phân và hành vi là ba khái niệm khác nhau; cần kiểm tra theo phiên bản phân phối của thư viện.
+1. Existing implementations **may** use it without adding a method.
+2. If a class already declares a method with the same name/signature but incompatible access, source compatibility errors may occur.
+3. If a plugin also implements another interface with the same default method signature, conflicts may arise.
+4. If the default method introduces a new precondition or changes side effects, clients may encounter unexpected behavior.
+5. Source, binary, and behavioral compatibility are distinct; verify each for the library's distributed version.
 
-Do đó `default` **giảm bớt một loại thay đổi bắt buộc** khi mở rộng interface; nó không phải tấm vé cho phép sửa public API mà không kiểm thử.
+Thus `default` **reduces one kind of required change** when expanding interfaces; it does not give us permission to modify public APIs without testing.
 
-## 13. Các lỗi biên dịch và hiểu lầm thường gặp
+## 13. Common compilation errors and misconceptions
 
-| Sai lầm | Vì sao sai | Cách sửa |
+| Mistake | Why it is wrong | Fix |
 |---|---|---|
-| Cho rằng mọi interface method đều abstract | Java 8+ cho phép `default`/`static`, Java 9+ cho phép `private` | Phân biệt các dạng method theo modifier |
-| Dùng `default` như quyền truy cập package-private | `default` trên interface method là implementation công khai mặc định | Phân biệt từ khóa `default` với việc bỏ access modifier ở class |
-| Gọi static method qua đối tượng triển khai | Static interface method không được kế thừa như instance method | Dùng `InterfaceName.method()` |
-| Viết `private int count` trong interface | Field luôn ngầm `public static final` | Đặt trạng thái instance trong class triển khai |
-| Cho rằng field `final List` có nội dung bất biến | Final chỉ ngăn gán lại tham chiếu | Dùng dữ liệu/collection bất biến và quản lý state |
-| Implements hai interface có default trùng chữ ký mà không override | Không có quy tắc chọn tự động giữa hai default độc lập | Override để giải quyết |
-| Cài method interface với quyền truy cập package-private | Abstract interface method ngầm public | Override bằng `public` |
-| Định nghĩa `default toString()` trong interface | Không được cung cấp default ghi đè phương thức public non-static của `Object` | Override `toString()` trong class |
-| Coi private interface helper là API cho implementation | Private helper không thuộc hợp đồng được kế thừa | Công khai khả năng phù hợp hoặc giữ helper nội bộ |
-| Dùng interface chỉ để thay mọi class | Tăng abstraction không cần thiết, thiếu trạng thái chung | Chọn interface, class, abstract class hoặc composition theo nhu cầu |
-| Sao chép cách viết từ ngôn ngữ khác | Quy tắc interface khác nhau | Kiểm tra tính năng theo ngôn ngữ và phiên bản |
+| Assuming all interface methods are abstract | Java 8+ permits `default`/`static`; Java 9+ permits `private` | Distinguish methods by modifier |
+| Using `default` to mean package-private access | `default` on an interface method provides a public default implementation | Distinguish the `default` keyword from omitting access modifiers on a class |
+| Calling a static method through an implementing object | Static interface methods are not inherited as instance methods | Use `InterfaceName.method()` |
+| Declaring `private int count` in an interface | Fields are implicitly `public static final` | Put per-instance state in the implementing class |
+| Assuming the contents of a `final List` field are immutable | Final prevents reassigning the reference only | Use immutable data/collections and manage state |
+| Implementing two interfaces with the same default method without overriding | There is no automatic selection between unrelated defaults | Override to resolve it |
+| Implementing an interface method with package-private access | Abstract interface methods are implicitly public | Override as `public` |
+| Declaring `default toString()` in an interface | Cannot provide a default overriding a public non-static `Object` method | Override `toString()` in the class |
+| Treating private interface helpers as APIs for implementations | Private helpers are not inherited contract members | Expose a suitable capability or keep helpers internal |
+| Using interfaces merely to replace every class | Adds unnecessary abstractions while lacking shared state | Choose interfaces, classes, abstract classes, or composition by need |
+| Copying syntax from another language | Interface rules differ between languages | Verify features by language and version |
 
-## 14. Tự kiểm tra kiến thức
+## 14. Knowledge check
 
-**Câu 1.** Interface sau khai báo `int LIMIT = 10;`. `LIMIT` có phải là field riêng của mỗi instance không?
+**Question 1.** An interface declares `int LIMIT = 10;`. Is `LIMIT` a separate field in every instance?
 
-**Đáp án:** Không. Trong Java interface, field ngầm `public static final`; nó gắn với interface và được khởi tạo theo quy tắc của lớp/interface.
+**Answer:** No. In a Java interface, fields are implicitly `public static final`; they belong to the interface and are initialized according to class/interface rules.
 
-**Câu 2.** Một class implements interface có `default greet()` nhưng không override phương thức ấy. Code có thể gọi `greet()` trên instance class không?
+**Question 2.** A class implements an interface with `default greet()` but does not override it. Can code call `greet()` on a class instance?
 
-**Đáp án:** Có, nếu không có xung đột và không có quy tắc khác ghi đè hành vi. Class có thể kế thừa default implementation hợp lệ.
+**Answer:** Yes, provided there is no conflict or another rule that overrides the behavior. The class may inherit a valid default implementation.
 
-**Câu 3.** Hai interface không liên quan đều có `default String message()`. Class implements cả hai có thể để trống phần thân không?
+**Question 3.** Two unrelated interfaces both declare `default String message()`. Can a class implementing both leave its body empty?
 
-**Đáp án:** Không. Class phải override `message()` và chọn hoặc kết hợp hành vi phù hợp.
+**Answer:** No. The class must override `message()` and select or combine suitable behavior.
 
-**Câu 4.** Viết `User.isValidName("Lan")` có thay được `Named.isValidName("Lan")` khi `User implements Named` không?
+**Question 4.** Can `User.isValidName("Lan")` replace `Named.isValidName("Lan")` when `User implements Named`?
 
-**Đáp án:** Không. Static method trong interface không được kế thừa sang class `User`; phải gọi qua tên interface khai báo.
+**Answer:** No. Interface static methods are not inherited by `User`; they must be invoked through the declaring interface name.
 
-**Câu 5.** Có thể khai báo `private String normalize(...)` có thân bên trong interface Java 17 không?
+**Question 5.** Can an interface in Java 17 declare a `private String normalize(...)` method with a body?
 
-**Đáp án:** Có. Đây là private helper của interface, không phải một phương thức mà class implements được phép override hoặc client được phép gọi.
+**Answer:** Yes. It is a private interface helper, not a method that implementing classes can override or clients can invoke.
 
-**Câu 6.** Có nên dùng `default` để triển khai một thao tác cần trực tiếp thay đổi field `balance` mà chỉ vài implementation có?
+**Question 6.** Should `default` implement an operation that directly modifies a `balance` field provided by only a few implementations?
 
-**Đáp án:** Không nên nếu interface không có hợp đồng và khả năng chung để làm việc đó. Đặt hành vi trong class phù hợp, hoặc thiết kế interface hẹp hơn cho những class thực sự có khả năng ấy.
+**Answer:** Not when the interface lacks a shared contract and capabilities for that operation. Put the behavior in an appropriate class or define a narrower interface for classes that genuinely support it.
 
-**Câu 7.** Interface Java và TypeScript có nhất thiết giống nhau về hành vi runtime không?
+**Question 7.** Must Java and TypeScript interfaces have identical runtime behavior?
 
-**Đáp án:** Không. Java interface có thể cung cấp default method chạy được; TypeScript interface chủ yếu phục vụ kiểm tra kiểu tại thời điểm biên dịch và không tự sinh implementation runtime tương ứng.
+**Answer:** No. Java interfaces may provide executable default methods; TypeScript interfaces primarily enforce types at compile time and do not generate corresponding runtime implementations.
 
-## Nguyên tắc áp dụng
+## Guidelines for applying these rules
 
-Khi thiết kế hoặc đọc một Java interface, hãy xác định rõ **phương thức nào là nghĩa vụ phải hiện thực**, **phương thức nào đã có implementation chung**, **thành viên nào thuộc chính interface**, và **trạng thái nào phải thuộc về class triển khai**.
+When designing or reading a Java interface, identify **which methods implementers must supply**, **which methods already have shared implementations**, **which members belong to the interface itself**, and **which state belongs in implementing classes**.
 
-Dùng `default` cho hành vi chung thực sự có ý nghĩa; dùng `static` cho tiện ích gắn với hợp đồng; dùng `private` để chia sẻ logic nội bộ mà không mở rộng public API. Khi kết hợp nhiều interface, kiểm tra xung đột default method và quy tắc kế thừa. Quan trọng hơn, khi làm việc với ngôn ngữ hoặc phiên bản khác, hãy đối chiếu giới hạn thực tế của nó thay vì coi “interface” ở mọi nơi đều có cùng quy tắc với Java.
+Use `default` for genuinely meaningful shared behavior, `static` for contract-related utilities, and `private` for internal code reuse without expanding the public API. When combining interfaces, check default-method conflicts and inheritance rules. More broadly, consult the actual limits of each language and version instead of assuming “interface” follows Java's rules everywhere.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="interface-008">Thay thế cách thực hiện mà giữ hợp đồng</a>
+## <a id="interface-008">Replacing implementations while preserving contracts</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thay thế cách thực hiện mà giữ hợp đồng trong Java OOP
+# Replacing implementations while preserving contracts in Java OOP
 
-Một interface giúp mã sử dụng phụ thuộc vào **hành vi được hứa**, thay vì phụ thuộc trực tiếp vào thuật toán hoặc cấu trúc dữ liệu bên trong. Nhờ vậy, ta có thể đổi cách thực hiện (*implementation*) mà phần còn lại của chương trình vẫn hoạt động đúng.
+An interface lets client code depend on **promised behavior** instead of directly depending on internal algorithms or data structures. This allows us to switch implementations (*implementation*) while the rest of the program continues to work correctly.
 
-Điều kiện để thay thế an toàn không chỉ là “hai lớp cùng `implements` một interface”. Chúng còn phải giữ **hợp đồng hành vi (behavioral contract)**: cùng ý nghĩa thao tác, cùng quy tắc đầu vào, kết quả, trạng thái, lỗi và các bảo đảm quan sát được đã công bố.
+Safe substitution requires more than “two classes both `implements` the same interface.” They must preserve **the behavioral contract**: the meaning of operations, input rules, results, state, errors, and published observable guarantees.
 
-Ví dụ xuyên suốt: một hệ thống bán hàng cần tra cứu bảng giá sản phẩm theo mã SKU. Phiên bản đầu lưu giá bằng `HashMap`; phiên bản khác dùng `TreeMap`. Dịch vụ báo tiền thanh toán không cần biết cấu trúc nào đang được dùng.
+Running example: a retail system needs to look up product prices by SKU. The first version stores prices in a `HashMap`; another uses a `TreeMap`. The checkout quotation service should not need to know which structure is being used.
 
-## 1. “Thay implementation” nghĩa là gì?
+## 1. What does “replacing an implementation” mean?
 
-Giả sử chương trình có phụ thuộc sau:
+Suppose the program has this dependency:
 
 ```java
 HashMapPriceCatalog catalog = new HashMapPriceCatalog();
 CheckoutQuoteService checkout = new CheckoutQuoteService(catalog);
 ```
 
-Phía sử dụng hiện biết một lớp cụ thể `HashMapPriceCatalog`. Một thiết kế linh hoạt hơn khai báo phụ thuộc bằng interface:
+The client currently knows the concrete `HashMapPriceCatalog` class. A more flexible design declares the dependency using an interface:
 
 ```java
 PriceCatalog catalog = new HashMapPriceCatalog();
 CheckoutQuoteService checkout = new CheckoutQuoteService(catalog);
 ```
 
-Khi cần cách lưu khác:
+When a different storage mechanism is needed:
 
 ```java
 PriceCatalog catalog = new TreeMapPriceCatalog();
 CheckoutQuoteService checkout = new CheckoutQuoteService(catalog);
 ```
 
-Đối tượng thực tế thay đổi nhưng **constructor và logic của `CheckoutQuoteService` không phải chỉnh sửa**. Đó là sử dụng *đa hình* và *lập trình hướng tới giao diện*.
+The actual object changes, but **the constructor and logic of `CheckoutQuoteService` require no changes**. This is *polymorphism* and *programming to interfaces* in practice.
 
 ```mermaid
 classDiagram
@@ -4000,24 +4000,24 @@ classDiagram
     CheckoutQuoteService --> PriceCatalog : phụ thuộc vào hợp đồng
 ```
 
-Sự thay thế phải giữ những điều mà client có quyền kỳ vọng:
+Substitution must preserve what the client is entitled to expect:
 
-| Khía cạnh của hợp đồng | Ví dụ yêu cầu phải giữ |
+| Contract aspect | Requirement to preserve |
 | --- | --- |
-| Chữ ký | `findPrice(String)` trả về `OptionalLong` |
-| Đầu vào hợp lệ | SKU gồm 3–12 chữ in hoa/chữ số |
-| Ngữ nghĩa dữ liệu | Giá có thể bằng 0, không được âm |
-| Kết quả | SKU không tồn tại trả `OptionalLong.empty()` |
-| Cập nhật | `putPrice` ghi đè giá trước đó cho cùng SKU |
-| Thứ tự | `listSkus()` trả mã theo thứ tự từ điển tăng dần |
-| Khả năng sửa | Danh sách trả về là snapshot không sửa được |
-| Lỗi | SKU sai hoặc giá âm bị từ chối theo quy tắc đã hứa |
+| Signature | `findPrice(String)` returns `OptionalLong` |
+| Valid input | An SKU contains 3–12 uppercase letters/digits |
+| Data semantics | Prices may be 0, but must never be negative |
+| Result | A missing SKU returns `OptionalLong.empty()` |
+| Updates | `putPrice` overwrites the previous price for the same SKU |
+| Ordering | `listSkus()` returns codes in ascending lexicographic order |
+| Mutability | The returned list is an unmodifiable snapshot |
+| Errors | Invalid SKUs or negative prices are rejected according to the promised rules |
 
-Những yêu cầu này **không được trình biên dịch tự kiểm tra hết** chỉ nhờ từ khóa `implements`. Cần tài liệu rõ ràng và kiểm thử trên từng cách thực hiện.
+These requirements are **not fully enforced by the compiler** merely because a class uses `implements`. They require clear documentation and tests for each implementation.
 
-## 2. Định nghĩa hợp đồng trước khi chọn cấu trúc dữ liệu
+## 2. Define the contract before choosing a data structure
 
-Tạo tệp **`PriceCatalog.java`**:
+Create **`PriceCatalog.java`**:
 
 ```java
 import java.util.List;
@@ -4062,13 +4062,13 @@ public interface PriceCatalog {
 }
 ```
 
-Hai phương thức `static` trong interface chỉ dùng để chia sẻ kiểm tra đầu vào của ví dụ. Chúng được gọi qua tên `PriceCatalog` và **không phải các phương thức instance được override**.
+The two `static` methods in the interface only share example input-validation logic. They are invoked through `PriceCatalog` and **are not instance methods that implementations override**.
 
-Chúng ta chủ động làm hợp đồng đủ chính xác để hai cách lưu trữ khác nhau vẫn cho kết quả giống nhau về hành vi. Ví dụ, không để `HashMap` trả thứ tự bất kỳ còn `TreeMap` trả thứ tự sắp xếp, vì khi đó mã in bảng giá có thể đổi kết quả chỉ do thay implementation.
+We deliberately make the contract precise enough for different storage strategies to behave identically from the client's perspective. For example, a `HashMap` should not return arbitrary order while a `TreeMap` returns sorted order, since that would change printed price lists solely because the implementation changed.
 
-## 3. Implementation A: lưu trữ bằng HashMap
+## 3. Implementation A: storing prices with HashMap
 
-Tạo **`HashMapPriceCatalog.java`**:
+Create **`HashMapPriceCatalog.java`**:
 
 ```java
 import java.util.ArrayList;
@@ -4112,15 +4112,15 @@ public final class HashMapPriceCatalog implements PriceCatalog {
 }
 ```
 
-`HashMap` không đảm bảo thứ tự duyệt khóa. Vì hợp đồng yêu cầu danh sách mã được sắp xếp, implementation này phải **tự sắp xếp** trước khi trả ra.
+`HashMap` does not guarantee key iteration order. Because the contract requires sorted codes, this implementation must **sort them itself** before returning the list.
 
-`List.copyOf` giúp tạo danh sách snapshot không sửa được; sửa catalog sau đó không làm danh sách kết quả thay đổi. Ở đây phần tử là `String` bất biến, nên không có vấn đề rò rỉ đối tượng phần tử mutable.
+`List.copyOf` creates an unmodifiable snapshot; modifying the catalog afterward does not change the returned list. Here its elements are immutable `String` values, so mutable element objects cannot leak through it.
 
-Lưu ý chi tiết quan trọng: khi giá bằng 0, `prices.get(sku)` trả `Long.valueOf(0)`, khác `null`. Vì thế `OptionalLong.of(0)` vẫn thể hiện **SKU có tồn tại với giá 0 VND**. Không được dùng kiểm tra `value == 0` để kết luận SKU vắng mặt.
+An important detail: when a price is 0, `prices.get(sku)` returns `Long.valueOf(0)`, not `null`. Therefore `OptionalLong.of(0)` still indicates **an existing SKU with a price of 0 VND**. Do not test `value == 0` to infer that an SKU is missing.
 
-## 4. Implementation B: lưu trữ bằng TreeMap
+## 4. Implementation B: storing prices with TreeMap
 
-Tạo **`TreeMapPriceCatalog.java`**:
+Create **`TreeMapPriceCatalog.java`**:
 
 ```java
 import java.util.ArrayList;
@@ -4161,23 +4161,23 @@ public final class TreeMapPriceCatalog implements PriceCatalog {
 }
 ```
 
-`TreeMap` duy trì thứ tự khóa theo quy tắc so sánh tự nhiên của `String`. Vì SKU chỉ dùng chữ in hoa và chữ số, thứ tự đó phù hợp quy định tăng dần trong ví dụ.
+`TreeMap` maintains keys in their natural `String` order. Because SKUs use only uppercase letters and digits, this matches the ascending-order requirement in the example.
 
-Hai lớp khác nhau về **cách tổ chức dữ liệu**:
+The classes differ in **how they organize data**:
 
-| Chi tiết | `HashMapPriceCatalog` | `TreeMapPriceCatalog` |
+| Detail | `HashMapPriceCatalog` | `TreeMapPriceCatalog` |
 | --- | --- | --- |
-| Cấu trúc nội bộ | Bảng băm | Cây tìm kiếm có thứ tự |
-| Tìm/thêm/xóa thông thường | Trung bình gần `O(1)` (không phải bảo đảm tuyệt đối) | `O(log n)` |
-| Duyệt mã có thứ tự | Phải sắp xếp trước khi trả | Khóa vốn được duy trì có thứ tự |
-| `listSkus()` | `O(n log n)` do sắp xếp trong trường hợp tổng quát | `O(n)` để tạo snapshot |
-| Kiểu sử dụng từ client | `PriceCatalog` | `PriceCatalog` |
+| Internal structure | Hash table | Ordered search tree |
+| Typical lookup/insertion/deletion | Close to `O(1)` on average (not an absolute guarantee) | `O(log n)` |
+| Traversing codes in order | Must sort before returning | Keys are already maintained in order |
+| `listSkus()` | `O(n log n)` due to sorting in the general case | `O(n)` to create the snapshot |
+| Type seen by clients | `PriceCatalog` | `PriceCatalog` |
 
-Độ phức tạp nói trên chỉ là đặc tính thuật toán khái quát; thời gian thực tế còn phụ thuộc dữ liệu, máy ảo và môi trường chạy. **Hiệu năng có thể khác**, nhưng đầu ra và quy tắc đã cam kết phải giữ nguyên.
+These complexities are general algorithmic characteristics; real timing also depends on data, the VM, and the runtime environment. **Performance may differ**, but promised outputs and rules must remain unchanged.
 
-## 5. Dịch vụ chỉ phụ thuộc vào giao diện
+## 5. The service depends only on the interface
 
-Tạo **`CheckoutQuoteService.java`**:
+Create **`CheckoutQuoteService.java`**:
 
 ```java
 import java.util.NoSuchElementException;
@@ -4205,20 +4205,20 @@ public final class CheckoutQuoteService {
 }
 ```
 
-Dịch vụ biết **kiểu trừu tượng `PriceCatalog`** và các hành vi được hứa của nó; không thao tác trực tiếp `HashMap`, `TreeMap` hoặc tên lớp triển khai. Constructor nhận dependency từ bên ngoài, là một hình thức *constructor injection* đơn giản, không cần framework.
+The service knows **the `PriceCatalog` abstraction** and its promised behavior; it does not manipulate `HashMap`, `TreeMap`, or concrete implementation names directly. Its constructor receives the dependency from outside, a simple form of *constructor injection* that needs no framework.
 
-`Math.multiplyExact` ném `ArithmeticException` nếu phép nhân giá với số lượng vượt miền `long`; tránh âm thầm tràn số và báo giá sai.
+`Math.multiplyExact` throws `ArithmeticException` if multiplying a price by its quantity exceeds the `long` range, preventing silent overflow and incorrect quotations.
 
-Dịch vụ có thể trông cậy vào các kết quả của hợp đồng:
+The service can rely on these contractual outcomes:
 
-- Giá bằng 0 vẫn là giá hợp lệ, nên đơn hàng miễn phí có tổng 0.
-- SKU không có dẫn đến `OptionalLong.empty()` và dịch vụ chủ động ném `NoSuchElementException`.
-- SKU sai cú pháp bị catalog từ chối bằng `IllegalArgumentException`.
-- Không cần xét nhánh riêng cho từng implementation.
+- A price of 0 remains valid, so a free order has a total of 0.
+- A missing SKU produces `OptionalLong.empty()`, and the service explicitly throws `NoSuchElementException`.
+- The catalog rejects malformed SKUs with `IllegalArgumentException`.
+- No implementation-specific branches are required.
 
-### Chạy hai cách thực hiện mà không sửa service
+### Run two implementations without changing the service
 
-Tạo **`Main.java`**:
+Create **`Main.java`**:
 
 ```java
 public class Main {
@@ -4248,20 +4248,20 @@ public class Main {
 }
 ```
 
-Biên dịch:
+Compile:
 
 ```bash
 javac PriceCatalog.java HashMapPriceCatalog.java TreeMapPriceCatalog.java CheckoutQuoteService.java Main.java
 ```
 
-Chạy lần lượt:
+Run each version:
 
 ```bash
 java Main
 java Main tree
 ```
 
-**Cả hai lần đều cho kết quả:**
+**Both runs produce the same output:**
 
 ```text
 [KB01, MS02]
@@ -4271,7 +4271,7 @@ true
 [KB01]
 ```
 
-Khi đổi cách lưu, chỉ có **chỗ cấu hình/tạo đối tượng** thay đổi, còn `CheckoutQuoteService` hoạt động như cũ.
+Switching storage mechanisms changes only **the configuration/object-creation point**; `CheckoutQuoteService` continues to behave as before.
 
 ```mermaid
 flowchart TD
@@ -4283,13 +4283,13 @@ flowchart TD
     T --> R
 ```
 
-Đây là ý nghĩa thực tế của **thay implementation mà giữ hợp đồng**. Hình thức lưu trữ thay đổi, còn client vẫn tương tác với cùng một khả năng ở mức nghiệp vụ.
+This is the practical meaning of **replacing an implementation while preserving its contract**. Storage changes, but clients still interact with the same business capability.
 
-## 6. Kiểm thử hợp đồng trên nhiều cách thực hiện
+## 6. Testing the contract against multiple implementations
 
-Chỉ kiểm tra mã biên dịch là chưa đủ. Java kiểm tra rằng lớp triển khai có đủ chữ ký tương thích; nó **không tự chứng minh** rằng `listSkus()` sắp xếp đúng, `putPrice()` ghi đè hay `findPrice()` phân biệt “không có” với “giá bằng 0”.
+Checking compilation alone is insufficient. Java verifies that a class provides compatible method signatures; it **does not prove** that `listSkus()` sorts correctly, `putPrice()` overwrites prices, or `findPrice()` distinguishes “missing” from “priced at 0”.
 
-Một cách kiểm tra là chạy **cùng bộ test** trên các implementation khác nhau. Tạo **`PriceCatalogContractTest.java`**:
+One approach is to run **the same test suite** against different implementations. Create **`PriceCatalogContractTest.java`**:
 
 ```java
 import java.util.List;
@@ -4378,26 +4378,26 @@ public class PriceCatalogContractTest {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac PriceCatalog.java HashMapPriceCatalog.java TreeMapPriceCatalog.java PriceCatalogContractTest.java
 java PriceCatalogContractTest
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 PASS: cả hai cách thực hiện giữ hợp đồng
 ```
 
-Test trên minh họa nhiều phần của hợp đồng: trạng thái ban đầu, sắp xếp, snapshot, giá 0, ghi đè, xóa và validation. Nó không chứng minh toán học mọi tình huống; khi mở rộng hệ thống, có thể chuyển thành JUnit parameterized tests và bổ sung kịch bản biên.
+The tests cover several contract requirements: initial state, ordering, snapshots, price 0, overwrites, deletion, and validation. They do not mathematically prove correctness in every case; a larger system can use JUnit parameterized tests and add edge cases.
 
-**Điểm đáng chú ý:** test nhận tham số `PriceCatalog`. Khi thêm cách thực hiện mới, ta chỉ cần tạo đối tượng mới rồi chạy `verify(...)`. Không nên sao chép một bộ test gần giống cho từng lớp, vì chúng dễ phát triển thành những định nghĩa hợp đồng không nhất quán.
+**Key point:** the test accepts a `PriceCatalog` parameter. To test a new implementation, create another object and invoke `verify(...)`. Avoid copying near-identical tests for each class, since they can diverge into inconsistent definitions of the contract.
 
-## 7. Khi nào một lớp “implements đúng” nhưng vẫn vi phạm hợp đồng?
+## 7. When does a class compile while still violating its contract?
 
-Giả sử có lớp sau:
+Consider this class:
 
 ```java
 import java.util.List;
@@ -4426,45 +4426,45 @@ public final class BrokenCatalog implements PriceCatalog {
 }
 ```
 
-Lớp này **có thể biên dịch** vì đủ phương thức theo cú pháp của `PriceCatalog`. Nhưng nó không giữ hợp đồng hành vi: sau `putPrice("KB01", 100_000)`, giá phải tra được là 100.000; mã không có phải trả `OptionalLong.empty()`; `remove` chỉ trả true khi thực sự xóa.
+This class **may compile** because it provides the methods required by `PriceCatalog`. But it violates the behavioral contract: after `putPrice("KB01", 100_000)`, the price should be retrievable as 100.000; a missing SKU must return `OptionalLong.empty()`; and `remove` should return true only when an entry was actually removed.
 
-Vì vậy có hai lớp kiểm tra độc lập:
+There are therefore two separate layers of verification:
 
-| Lớp kiểm tra | Công cụ hỗ trợ | Ví dụ |
+| Verification layer | Supporting tool | Example |
 | --- | --- | --- |
-| **Tương thích kiểu** | Trình biên dịch Java | Đủ phương thức, tham số, kiểu trả về, phạm vi truy cập |
-| **Tương thích hành vi** | Đặc tả, test, lập luận và quan sát thực thi | Ghi đè đúng, xử lý lỗi đúng, kết quả được sắp xếp |
+| **Type compatibility** | Java compiler | Required methods, parameters, return types, and access levels |
+| **Behavioral compatibility** | Specification, tests, reasoning, and runtime observation | Correct overwrites, errors, and sorted results |
 
-Một subclass hoặc implementation có thể vượt qua phần đầu và vẫn thất bại ở phần sau.
+An implementation or subclass can pass the first layer and fail the second.
 
-## 8. Liên hệ nguyên lý thay thế Liskov (LSP)
+## 8. Connection to the Liskov Substitution Principle (LSP)
 
-**Liskov Substitution Principle** nói theo cách thực dụng: khi mã client được viết đúng theo hợp đồng của kiểu trừu tượng, thay đối tượng hiện tại bằng một kiểu con/implementation hợp lệ không làm phá vỡ tính đúng đắn mà client dựa vào.
+**The Liskov Substitution Principle**, in practical terms, says that when client code follows the contract of an abstract type, replacing its current object with a valid subtype or implementation must not undermine the correctness that the client relies on.
 
-Áp dụng vào `PriceCatalog`:
+Applied to `PriceCatalog`:
 
-- **Không siết chặt tiền điều kiện:** nếu interface chấp nhận SKU `"KB01"`, một implementation không thể tự ý yêu cầu mã dài tối thiểu 8 ký tự rồi từ chối `"KB01"`.
-- **Không làm yếu hậu điều kiện:** sau khi `putPrice("KB01", 100_000)` hoàn thành, implementation phải cho phép tìm thấy đúng giá đó; không được tùy ý cập nhật sau vài giây nếu hợp đồng hiện tại hứa có hiệu lực ngay.
-- **Giữ bất biến:** số tiền lưu là `long >= 0` và chỉ có một giá hiện hành cho mỗi SKU.
-- **Giữ các bảo đảm lỗi và hiệu ứng phụ đã công bố:** không âm thầm xóa cả catalog khi một yêu cầu bị từ chối.
-- **Giữ các tính chất quan sát được:** danh sách mã được sắp xếp, không sửa được và là snapshot.
+- **Do not strengthen preconditions:** if the interface accepts SKU `"KB01"`, an implementation cannot arbitrarily require at least 8 characters and then reject `"KB01"`.
+- **Do not weaken postconditions:** when `putPrice("KB01", 100_000)` completes, the new price must be retrievable; an implementation cannot delay the update for several seconds if the current contract guarantees immediate effect.
+- **Preserve invariants:** stored amounts are `long >= 0` and there is only one current price for each SKU.
+- **Preserve documented error and side-effect guarantees:** do not silently delete the entire catalog because a request was rejected.
+- **Preserve observable properties:** the code list is sorted, unmodifiable, and a snapshot.
 
-Những điểm này mạnh hơn sự giống nhau của tên phương thức. Nếu quy tắc thật sự khác, hãy **định nghĩa interface khác hoặc một chính sách nghiệp vụ riêng**, thay vì tự nhận cùng hợp đồng nhưng gây bất ngờ cho client.
+These requirements go beyond matching method names. If the rules genuinely differ, **define another interface or a separate business policy** rather than claiming the same contract and surprising clients.
 
-### Điều gì *được phép* khác?
+### What *may* differ?
 
-Giữa hai implementation, các chi tiết **không được hợp đồng cố định** có thể khác:
+Between implementations, details **not fixed by the contract** may vary:
 
-- Cấu trúc dữ liệu, thuật toán, cách cache.
-- Mức sử dụng bộ nhớ, chi phí tìm kiếm, cách tổ chức nội bộ.
-- Log kỹ thuật không thuộc API công khai.
-- Cách triển khai validation miễn là đầu vào và lỗi quan sát được vẫn đúng như hợp đồng.
+- Data structures, algorithms, and caching strategies.
+- Memory usage, lookup costs, and internal organization.
+- Technical logs outside the public API.
+- How validation is implemented, provided the observable inputs and errors still match the contract.
 
-Ngược lại, nếu API đã cam kết thread-safe, lưu bền vững hay thao tác nguyên tử, implementation mới cũng phải giữ các bảo đảm đó. Chúng **không còn là chi tiết có thể bỏ qua**.
+Conversely, if an API promises thread safety, durable storage, or atomic operations, a replacement must preserve those guarantees too. They **are no longer optional implementation details**.
 
-## 9. Đặt điểm thay thế ở ngoài mã nghiệp vụ
+## 9. Keep the substitution point outside business logic
 
-Nếu tạo implementation trực tiếp trong `CheckoutQuoteService`:
+If an implementation is constructed directly inside `CheckoutQuoteService`:
 
 ```java
 // Thiết kế gắn chặt, khó đổi:
@@ -4473,9 +4473,9 @@ public CheckoutQuoteService() {
 }
 ```
 
-thì dịch vụ phải sửa khi đổi sang `TreeMapPriceCatalog`. Phụ thuộc vào interface ở field chưa đủ nếu constructor vẫn quyết định lớp cụ thể.
+then the service must change when switching to `TreeMapPriceCatalog`. Depending on an interface in a field is insufficient if the constructor still chooses the concrete class.
 
-Cách tốt hơn:
+A better approach:
 
 ```java
 public CheckoutQuoteService(PriceCatalog catalog) {
@@ -4483,82 +4483,82 @@ public CheckoutQuoteService(PriceCatalog catalog) {
 }
 ```
 
-Chỗ khởi tạo ứng dụng (composition root) chọn implementation và **tiêm phụ thuộc** vào service. Khi chạy thật với dependency injection framework, có thể dùng cấu hình để chọn bean nhưng nguyên lý Java vẫn vậy.
+The application setup code (*composition root*) selects the implementation and **injects the dependency** into the service. A real application using a dependency injection framework can choose the bean through configuration, but the Java design principle is the same.
 
-Cần phân biệt:
+Distinguish between:
 
-- **Thay thế triển khai ở lần khởi chạy tiếp theo:** đổi cấu hình/tạo đối tượng rồi tiêm vào service; không phải chỉnh thuật toán báo giá.
-- **Thay thế động ngay khi đang chạy:** cần quyết định cách quản lý tham chiếu, trạng thái cũ, dữ liệu chuyển đổi và đồng thời. Tự đổi một biến cấu hình không làm mọi đối tượng đã tạo tự nhận implementation mới.
+- **Switching implementations at the next startup:** change configuration/object creation and inject the new object into the service; the quoting algorithm does not change.
+- **Switching implementations dynamically while running:** decide how references, old state, data migration, and concurrency are handled. Changing a configuration variable alone does not make already constructed objects adopt a new implementation.
 
-Trong ví dụ, hai catalog đều bắt đầu rỗng. Để chuyển từ một catalog đã có dữ liệu sang cái khác, phải **chuyển dữ liệu hiện có** theo cách bảo toàn hợp đồng. Chỉ đổi `new HashMapPriceCatalog()` thành `new TreeMapPriceCatalog()` không tự chuyển những giá đã lưu trong đối tượng cũ.
+In this example, both catalogs start empty. Moving from an existing populated catalog to another requires **migrating existing data** in a way that preserves the contract. Simply replacing `new HashMapPriceCatalog()` with `new TreeMapPriceCatalog()` does not transfer prices stored in the old object.
 
-## 10. Khi thay bằng database, HTTP hoặc cache
+## 10. Replacing storage with a database, HTTP service, or cache
 
-Thay `HashMap` bằng repository dùng database nghe có vẻ chỉ là đổi nơi lưu. Nhưng độ trễ, giao dịch, lỗi mạng và khả năng đồng thời có thể làm **khác hợp đồng quan sát được**.
+Replacing a `HashMap` with a database-backed repository may sound like a simple storage change. But latency, transactions, network failures, and concurrency can **change observable contract behavior**.
 
-Ví dụ:
+For example:
 
-| Thay đổi implementation | Câu hỏi hợp đồng cần giải quyết |
+| Implementation change | Contract question to resolve |
 | --- | --- |
-| Dùng database | `putPrice` trả về sau khi ghi đã được commit hay chỉ gửi lệnh? |
-| Dùng cache | Sau khi cập nhật, `findPrice` có thể trả giá cũ không? Trong bao lâu? |
-| Dùng HTTP | Mạng lỗi được biểu diễn bằng ngoại lệ nào? Có retry hay không? |
-| Dùng lưu trữ phân tán | Có đảm bảo đọc thấy ngay dữ liệu vừa ghi hay chỉ nhất quán sau một khoảng? |
-| Chạy nhiều luồng | Hai lần cập nhật đồng thời được tuần tự hóa hay xử lý tranh chấp ra sao? |
-| Lưu bản sao bất biến | Là snapshot tại thời điểm nào? Khi nguồn đổi thì bản sao có cập nhật không? |
+| Database | Does `putPrice` return after the write is committed or merely after the command is sent? |
+| Cache | Can `findPrice` return stale values after an update? For how long? |
+| HTTP | How are network failures represented as exceptions? Are requests retried? |
+| Distributed storage | Are your own writes immediately visible, or is consistency eventually achieved? |
+| Multiple threads | Are concurrent updates serialized, or how are conflicts handled? |
+| Immutable copy | At which moment is the snapshot taken? Does it update when the source changes? |
 
-Nếu API yêu cầu “`putPrice` hoàn thành thì `findPrice` trả giá mới”, triển khai có cache cũ hoặc ghi bất đồng bộ **không được tuyên bố thay thế tương đương** khi chưa có cơ chế đáp ứng yêu cầu ấy.
+If an API promises “after `putPrice` completes, `findPrice` returns the new price,” an implementation with stale caching or asynchronous writes **cannot claim equivalent substitutability** unless it provides a mechanism meeting that requirement.
 
-Khi yêu cầu sản phẩm thay đổi, có thể phải **điều chỉnh hợp đồng một cách công khai** (chẳng hạn chuyển sang `CompletionStage`, khai báo lỗi I/O, hoặc đưa vào cơ chế kiểm soát phiên bản). Đừng giấu những khác biệt có ý nghĩa sau một interface có chữ ký giống hệt rồi xem là tương thích.
+When product requirements change, you may need to **revise the contract explicitly** (for example, adopt `CompletionStage`, declare I/O errors, or introduce version control). Do not conceal meaningful differences behind an unchanged interface signature and call the implementations compatible.
 
-## 11. Checklist đánh giá một cách thực hiện mới
+## 11. Checklist for evaluating a new implementation
 
-Trước khi thay lớp đang chạy bằng lớp mới, kiểm tra các câu hỏi:
+Before replacing a running implementation, check these questions:
 
-1. **Cùng chữ ký:** tên, tham số, kiểu trả về, khả năng truy cập có tương thích không?
-2. **Cùng miền đầu vào:** dữ liệu trước đây hợp lệ có còn được chấp nhận không?
-3. **Cùng ý nghĩa kết quả:** giá trị trả về, trạng thái và thứ tự quan sát có giống các cam kết không?
-4. **Cùng hành vi lỗi:** ngoại lệ, rollback/giữ nguyên trạng thái và null/empty có đúng như tài liệu?
-5. **Cùng bất biến:** các phương thức sửa dữ liệu có giữ đối tượng ở trạng thái hợp lệ?
-6. **Cùng bảo đảm đã công bố:** thread-safety, tính nguyên tử, độ bền, tính nhất quán có bị giảm?
-7. **Chuyển đổi trạng thái:** nếu implementation cũ đã có dữ liệu, việc thay thế có cần migration?
-8. **Kiểm thử:** cùng một bộ test hợp đồng có chạy được với tất cả implementation hay không?
+1. **Same signature:** are names, parameters, return types, and access levels compatible?
+2. **Same input domain:** are previously valid inputs still accepted?
+3. **Same result semantics:** do return values, state, and observed order meet the same guarantees?
+4. **Same failure behavior:** do exceptions, rollback/state preservation, and null/empty values match the documentation?
+5. **Same invariants:** do state-changing methods leave the object in a valid state?
+6. **Same published guarantees:** have thread safety, atomicity, durability, or consistency weakened?
+7. **State migration:** does replacing an implementation containing existing data require migration?
+8. **Testing:** does the same contract-test suite pass for every implementation?
 
-### Tự luyện tập
+### Practice exercises
 
-**Bài 1.** Tạo `LinkedHashMapPriceCatalog implements PriceCatalog`. Dùng `LinkedHashMap` để giữ thứ tự thêm, nhưng `listSkus()` vẫn phải **sắp xếp theo mã tăng dần** để giữ hợp đồng. Chạy lại `PriceCatalogContractTest.verify(...)` cho lớp mới.
+**Exercise 1.** Create `LinkedHashMapPriceCatalog implements PriceCatalog`. Use `LinkedHashMap` to preserve insertion order, but `listSkus()` must still **sort codes in ascending order** to honor the contract. Run `PriceCatalogContractTest.verify(...)` against the new class.
 
-**Bài 2.** Sửa `TreeMapPriceCatalog` để trả danh sách khóa theo thứ tự giảm dần. Mã có còn biên dịch? Có. Nó có tương thích hành vi? **Không**, vì vi phạm cam kết thứ tự `listSkus()`.
+**Exercise 2.** Modify `TreeMapPriceCatalog` to return its keys in descending order. Does the code still compile? Yes. Is it behaviorally compatible? **No**, because it violates the ordering guarantee of `listSkus()`.
 
-**Bài 3.** Giả sử SKU hợp lệ có giá bằng 0. Nếu một implementation viết `if (value == 0) return OptionalLong.empty();`, dịch vụ báo tiền có thể sai như thế nào? Hãy tạo test chứng minh giá 0 và “mã không tồn tại” là hai trạng thái khác nhau.
+**Exercise 3.** Suppose a valid SKU can have a price of 0. If an implementation writes `if (value == 0) return OptionalLong.empty();`, how could that break quotation logic? Write a test proving that a price of 0 and a “missing code” are different states.
 
-**Bài 4.** Nếu cần dùng cùng `CheckoutQuoteService` với một catalog từ database, hãy viết rõ ít nhất bốn cam kết bổ sung về lỗi truy cập dữ liệu, tính nhất quán sau cập nhật, thời điểm commit và xử lý đồng thời trước khi quyết định có thể dùng nguyên interface hay không.
+**Exercise 4.** If you want to use `CheckoutQuoteService` with a database-backed catalog, specify at least four additional guarantees concerning data-access errors, consistency after updates, commit timing, and concurrency before deciding whether the existing interface can be reused.
 
-**Điểm cần nhớ:** interface tạo **điểm có thể thay thế**, nhưng chỉ hợp đồng hành vi nhất quán mới biến sự thay thế thành an toàn. Thiết kế nên để client phụ thuộc vào trừu tượng, implementation chịu trách nhiệm tuân thủ lời hứa, và một bộ kiểm thử dùng chung kiểm chứng lời hứa đó.
+**Key takeaway:** an interface provides **a substitution point**, but consistent behavioral contracts make substitution safe. Clients should depend on abstractions, implementations should fulfill their promises, and a shared test suite should verify those promises.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="interface-009">Thiết kế giao diện thanh toán hoặc lưu trữ</a>
+## <a id="interface-009">Designing payment or storage interfaces</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thiết kế giao diện thanh toán hoặc lưu trữ trong Java
+# Designing payment or storage interfaces in Java
 
-**Chủ đề:** OOP → Giao diện (Interface) → Thiết kế giao diện thanh toán hoặc lưu trữ.
+**Topic:** OOP → Interfaces → Designing payment or storage interfaces.
 
-Khi xây dựng chức năng thanh toán, mã nghiệp vụ thường cần **gửi yêu cầu thu tiền** và **lưu kết quả giao dịch**. Đó là hai khả năng khác nhau. Chúng có thể được mô tả bằng hai giao diện nhỏ: `PaymentGateway` để xử lý thanh toán và `PaymentRepository` để truy xuất/lưu dữ liệu. Mã sử dụng chỉ biết **hợp đồng**, còn việc gọi API bên ngoài hay ghi cơ sở dữ liệu thuộc về lớp triển khai.
+When implementing payments, business code usually needs to **submit charge requests** and **store transaction results**. These are two distinct capabilities. They can be described by two focused interfaces: `PaymentGateway` for processing payments and `PaymentRepository` for retrieving/storing data. Clients know only **the contracts**; external API calls and database writes belong to implementing classes.
 
-Bài học sử dụng Java 17 và một bộ xử lý thanh toán **mô phỏng**, chạy được mà không cần tài khoản hoặc dịch vụ bên ngoài.
+This lesson uses Java 17 and a **simulated** payment processor that runs without external accounts or services.
 
-## 1. Bắt đầu từ trách nhiệm, không bắt đầu từ tên thư viện
+## 1. Start with responsibilities, not library names
 
-Một thiết kế phụ thuộc trực tiếp vào chi tiết có thể trông như sau:
+A design tied directly to implementation details might look like this:
 
 ```java
 class CheckoutService {
@@ -4572,18 +4572,18 @@ class CheckoutService {
 }
 ```
 
-`VendorCardClient` và `SqlPaymentDao` ở đây là **tên minh họa**, không phải lớp có sẵn trong JDK. Kiểu thiết kế này gây khó khi thay nhà cung cấp, đổi nơi lưu trữ, hoặc kiểm thử trường hợp lỗi vì `CheckoutService` gắn trực tiếp với các implementation.
+`VendorCardClient` and `SqlPaymentDao` are **illustrative names**, not classes built into the JDK. This design makes it difficult to switch providers, move storage, or test failure scenarios because `CheckoutService` is directly tied to concrete implementations.
 
-Trước khi viết code, hãy xác định các hợp đồng:
+Before writing code, identify the contracts:
 
-| Thành phần | Câu hỏi cần trả lời | Hợp đồng nên thể hiện |
+| Component | Question to answer | What the contract should express |
 |---|---|---|
-| Thanh toán | Làm sao gửi yêu cầu thu tiền và nhận kết quả? | `PaymentGateway.charge(...)` |
-| Lưu trữ | Làm sao tìm kết quả theo mã yêu cầu và lưu kết quả mới? | `PaymentRepository.findByRequestId(...)`, `save(...)` |
-| Nghiệp vụ | Ai kiểm tra yêu cầu, phối hợp thao tác, quyết định trả kết quả? | `CheckoutService.pay(...)` |
-| Lắp ghép hệ thống | Ai tạo gateway và repository thực tế? | Mã khởi tạo ứng dụng / dependency injection |
+| Payments | How do we submit a charge request and receive its result? | `PaymentGateway.charge(...)` |
+| Storage | How do we find a result by request ID and save a new one? | `PaymentRepository.findByRequestId(...)`, `save(...)` |
+| Business logic | Who validates requests, coordinates operations, and determines the result? | `CheckoutService.pay(...)` |
+| Application composition | Who constructs the actual gateway and repository? | Application bootstrap code / dependency injection |
 
-Hai interface có cùng mục tiêu về **phân tách phụ thuộc**, nhưng không nên gộp vào một `PaymentManager` khổng lồ: thay cách lưu trữ không nhất thiết buộc phải thay cách thanh toán.
+Both interfaces support **separating dependencies**, but should not be combined into one huge `PaymentManager`: changing storage does not necessarily require changing payment processing.
 
 ```mermaid
 classDiagram
@@ -4614,13 +4614,13 @@ classDiagram
     PaymentRepository <|.. MemoryPaymentRepository
 ```
 
-Mũi tên từ `CheckoutService` tới interface thể hiện **hướng phụ thuộc của mã nguồn**. Hai implementation hiện tại có thể được thay bằng lớp gọi cổng thanh toán hoặc database mà không phải thay đổi chữ ký của `CheckoutService`.
+Arrows from `CheckoutService` to interfaces show **the source-code dependency direction**. The current implementations can be replaced with gateway or database adapters without changing `CheckoutService` method signatures.
 
-## 2. Thiết kế dữ liệu đi qua ranh giới interface
+## 2. Design data crossing interface boundaries
 
-Một giao diện tốt không chỉ là tên phương thức. Dữ liệu đầu vào/đầu ra cần diễn đạt đúng nghiệp vụ và hạn chế trạng thái không hợp lệ.
+A good interface is more than a method name. Inputs and outputs should express business requirements and limit invalid states.
 
-Ví dụ:
+For example:
 
 ```java
 public enum PaymentStatus {
@@ -4654,21 +4654,21 @@ public record PaymentResult(
 ) {}
 ```
 
-Trong đó:
+Specifically:
 
-- `requestId` xác định **một yêu cầu thanh toán logic**; khi gọi lại cùng yêu cầu, hệ thống cần có chính sách xử lý trùng lặp.
-- `orderId` cho biết yêu cầu thuộc đơn hàng nào.
-- `amountCents` là số tiền nguyên theo **đơn vị nhỏ nhất giả định** để tránh lỗi số thực khi minh họa. Hệ thống tiền tệ thật cần quy tắc currency/scale và làm tròn rõ ràng.
-- `PaymentStatus` dùng enum thay cho chuỗi tự do như `"SUCCESSS"`.
-- `providerReference` là mã tham chiếu từ nơi thực hiện giao dịch; ví dụ mô phỏng sẽ tự tạo một giá trị.
+- `requestId` identifies **one logical payment request**; the system needs a policy for duplicate submissions.
+- `orderId` identifies the order the request belongs to.
+- `amountCents` is an integer amount in an **assumed minor currency unit** to avoid floating-point errors in this example. Real monetary systems need explicit currency, scale, and rounding rules.
+- `PaymentStatus` uses an enum rather than an arbitrary string such as `"SUCCESSS"`.
+- `providerReference` is a reference identifier from the transaction processor; the simulation generates its own value.
 
-`record` được hỗ trợ ổn định từ Java 16, phù hợp để mô tả dữ liệu trao đổi bất biến ở mức các thành phần primitive/`String`/`enum`. Nó cũng sinh `equals`, `hashCode`, `toString` và accessor.
+`record` has been a stable Java feature since Java 16, and works well for modeling shallowly immutable data containing primitive/`String`/`enum` components. It also generates `equals`, `hashCode`, `toString`, and accessors.
 
-Ở ranh giới thật, trạng thái thanh toán có thể cần thêm `PENDING`, `UNKNOWN`, `REFUNDED` và mã lỗi. Hai trạng thái trên đủ để dạy thiết kế interface, **không đại diện đầy đủ cho mọi hệ thống thanh toán**.
+Real payment boundaries may need additional statuses such as `PENDING`, `UNKNOWN`, and `REFUNDED`, plus error codes. The two statuses here suffice for teaching interface design; they **do not cover every real payment system**.
 
-## 3. Ví dụ hoàn chỉnh, có thể biên dịch và chạy
+## 3. Complete example you can compile and run
 
-Lưu toàn bộ đoạn sau thành **`PaymentInterfacesDemo.java`**. Tất cả kiểu được đặt trong một lớp ngoài để ví dụ chạy độc lập.
+Save the following as **`PaymentInterfacesDemo.java`**. All types are nested inside one outer class so the example runs independently.
 
 ```java
 import java.util.Map;
@@ -4859,14 +4859,14 @@ public class PaymentInterfacesDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac PaymentInterfacesDemo.java
 java PaymentInterfacesDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 REQ-01: APPROVED
@@ -4876,13 +4876,13 @@ Số lần gọi gateway: 2
 Có lưu REQ-01: true
 ```
 
-**Giải thích:** có ba lần gọi `checkout.pay(...)`, nhưng lần thứ hai dùng lại `REQ-01` và được trả từ repository. Trong phạm vi **cùng instance `CheckoutService` đang chạy và cùng dữ liệu trong RAM**, gateway chỉ nhận hai lệnh mới.
+**Explanation:** `checkout.pay(...)` is called three times, but the second call reuses `REQ-01` and retrieves the result from the repository. Within **the same running `CheckoutService` instance and the same in-memory data**, the gateway receives only two new requests.
 
-Bài toán thanh toán thực tế không thể coi đoạn mã này là giải pháp chống thu tiền trùng ở môi trường production: nếu chương trình chết sau khi gateway đã thu tiền nhưng trước khi `repository.save`, lần gọi lại có thể gửi lệnh thu tiền lần nữa. Cần idempotency được bảo đảm ở phía gateway, trạng thái bền vững và cơ chế xử lý phục hồi.
+Real payment systems must not treat this code as a production safeguard against duplicate charges: if the process crashes after the gateway charges a payment but before `repository.save`, a retry may submit another charge. Proper protection requires gateway-enforced idempotency, durable state, and recovery mechanisms.
 
-## 4. Ý nghĩa của từng giao diện
+## 4. What each interface represents
 
-### `PaymentGateway`: ranh giới hệ thống bên ngoài
+### `PaymentGateway`: the external-system boundary
 
 ```java
 interface PaymentGateway {
@@ -4890,9 +4890,9 @@ interface PaymentGateway {
 }
 ```
 
-Interface này cố ý không nhắc đến URL, JSON, thư viện HTTP, token hoặc tên nhà cung cấp. Những chi tiết ấy phải nằm trong adapter cụ thể.
+This interface deliberately says nothing about URLs, JSON, HTTP libraries, tokens, or provider names. Those details belong in concrete adapters.
 
-Ví dụ một implementation thật trong tương lai có thể mang hình dạng:
+A future real implementation might look like this:
 
 ```java
 final class ExternalPaymentGateway implements PaymentGateway {
@@ -4913,9 +4913,9 @@ final class ExternalPaymentGateway implements PaymentGateway {
 }
 ```
 
-Đoạn trên là **phác thảo thiết kế**, không phải phần của ví dụ chạy độc lập. Khi triển khai thật, phải xác định hành vi khi timeout, mạng gián đoạn, lỗi từ chối, phản hồi không xác định, thanh toán bất đồng bộ và khả năng retry. Không được coi mọi exception là “chưa trừ tiền”.
+The code above is **a design sketch**, not part of the standalone runnable example. A real implementation must define behavior for timeouts, connection failures, declines, unknown outcomes, asynchronous payments, and retries. Never assume every exception means “no money was charged.”
 
-### `PaymentRepository`: ranh giới nơi lưu trữ
+### `PaymentRepository`: the persistence boundary
 
 ```java
 interface PaymentRepository {
@@ -4924,20 +4924,20 @@ interface PaymentRepository {
 }
 ```
 
-Mã nghiệp vụ chỉ yêu cầu **tìm theo mã** và **lưu kết quả**. Nó không phụ thuộc vào JDBC, JPA, MongoDB hay cấu trúc bảng cụ thể.
+Business logic only needs to **find by ID** and **save results**. It does not depend on JDBC, JPA, MongoDB, or a specific table structure.
 
-| Implementation | Cách lưu | Khi nào thích hợp? |
+| Implementation | Storage mechanism | Appropriate use |
 |---|---|---|
-| `MemoryPaymentRepository` | `ConcurrentHashMap` trong RAM | Demo, test đơn giản |
-| `JdbcPaymentRepository` | SQL và JDBC | Ứng dụng cần dữ liệu bền vững |
-| `JpaPaymentRepository` | ORM/JPA | Dự án đã dùng JPA, entity và transaction |
-| `RemotePaymentRepository` | API lưu trữ ở dịch vụ khác | Kiến trúc tách dịch vụ khi có lý do rõ ràng |
+| `MemoryPaymentRepository` | `ConcurrentHashMap` in RAM | Demos and simple tests |
+| `JdbcPaymentRepository` | SQL and JDBC | Applications requiring durable data |
+| `JpaPaymentRepository` | ORM/JPA | Projects already using JPA, entities, and transactions |
+| `RemotePaymentRepository` | Storage API in another service | A separate-service architecture when justified |
 
-Tên implementation ở ba dòng cuối chỉ mô tả khả năng thiết kế, **không phải mã đã triển khai trong ví dụ này**. Để thay từ RAM sang database, cần thực hiện đúng semantics của `findByRequestId`/`save` và xử lý uniqueness/transaction/race condition.
+The last three implementation names describe possible designs; they are **not implemented in this example**. Moving from RAM to a database requires maintaining `findByRequestId`/`save` semantics and handling uniqueness, transactions, and race conditions.
 
-Một nguyên tắc rất quan trọng: `Optional.empty()` có nghĩa “không tìm thấy”, **không nên che giấu lỗi kết nối database** bằng cách trả `Optional.empty()`. Lỗi hạ tầng nên được báo đúng để caller phân biệt “vắng dữ liệu” với “không truy vấn được”.
+A critical principle: `Optional.empty()` means “not found”; it **must not mask a database connection failure** by returning `Optional.empty()`. Infrastructure errors should be reported accurately so callers can distinguish “no data” from “unable to query.”
 
-## 5. Constructor injection: cung cấp implementation từ bên ngoài
+## 5. Constructor injection: supplying implementations externally
 
 ```java
 CheckoutService checkout =
@@ -4947,21 +4947,21 @@ CheckoutService checkout =
         );
 ```
 
-`CheckoutService` nhận phụ thuộc qua constructor. Nó không biết, và không cần biết, hai đối tượng đó được tạo bằng cách nào.
+`CheckoutService` receives its dependencies through the constructor. It neither knows nor needs to know how those objects are created.
 
-Đó là **Dependency Injection (DI)** thực hiện thủ công. Không cần Spring để áp dụng. Khi dùng framework DI, việc lựa chọn bean/configuration thay cho đoạn `new` sẽ do cấu hình ứng dụng thực hiện, còn hợp đồng vẫn giữ nguyên.
+This is **Dependency Injection (DI)** performed manually. Spring is not required. With a DI framework, application configuration chooses the beans rather than explicitly calling `new`; the contracts stay the same.
 
-Sự khác nhau cần ghi nhớ:
+Keep these distinctions in mind:
 
-- **Interface** định nghĩa một tập hành vi mà implementation phải hỗ trợ.
-- **Dependency Injection** là cách cung cấp phụ thuộc cho thành phần cần sử dụng.
-- **Dependency Inversion Principle (DIP)** định hướng để logic cấp cao phụ thuộc vào abstraction phù hợp thay vì chi tiết triển khai.
+- **Interfaces** define behaviors an implementation must support.
+- **Dependency Injection** is a mechanism for supplying dependencies to components that need them.
+- **The Dependency Inversion Principle (DIP)** directs high-level logic to depend on suitable abstractions instead of implementation details.
 
-Có thể constructor-inject cả concrete class, vì thế **DI không tự đồng nghĩa với sử dụng interface**. Interface hữu ích khi một ranh giới có nhiều implementation hoặc cần cô lập dependency trong kiểm thử.
+Constructors can inject concrete classes too, so **DI does not automatically imply using interfaces**. Interfaces are useful when a boundary has multiple implementations or when tests need isolated dependencies.
 
-## 6. Kiểm thử CheckoutService bằng fake thay vì cổng thật
+## 6. Testing CheckoutService with a fake gateway
 
-Để kiểm tra logic phối hợp, có thể tạo một implementation rất nhỏ cho `PaymentGateway` và dùng `MemoryPaymentRepository`. Đặt đoạn sau trong file **`CheckoutServiceCheck.java`** cạnh `PaymentInterfacesDemo.java`:
+To test coordination logic, we can implement a tiny `PaymentGateway` fake and reuse `MemoryPaymentRepository`. Put the following code in **`CheckoutServiceCheck.java`** alongside `PaymentInterfacesDemo.java`:
 
 ```java
 public class CheckoutServiceCheck {
@@ -5026,54 +5026,54 @@ public class CheckoutServiceCheck {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac PaymentInterfacesDemo.java CheckoutServiceCheck.java
 java CheckoutServiceCheck
 ```
 
-Kết quả mong đợi:
+Expected output:
 
 ```text
 PASS
 ```
 
-Fake ghi nhận số lần gọi, cho phép kiểm tra checkout không gọi gateway khi request đã có kết quả lưu. Bài test này kiểm tra **mã nghiệp vụ với fake**, không xác minh tính đúng đắn của hệ thống thanh toán bên ngoài.
+The fake records how often it is called so we can verify that checkout skips the gateway when a request already has a stored result. This test checks **business logic with a fake**, not the correctness of an external payment system.
 
-Có thể viết các bài test khác cho trường hợp gateway trả kết quả sai `orderId`, repository không lưu được hoặc `requestId` bị sử dụng lại với số tiền khác.
+Other tests can cover a gateway returning a different `orderId` from the request, repository save failures, or reusing a `requestId` with a different amount.
 
-## 7. Những điều hợp đồng thanh toán phải nói rõ
+## 7. What a payment contract must specify
 
-Chữ ký `PaymentResult charge(PaymentCommand)` chỉ mô tả kiểu dữ liệu. Với hệ thống thật, phải bổ sung các quy tắc:
+The signature `PaymentResult charge(PaymentCommand)` only defines data types. A real system needs additional rules:
 
-| Khía cạnh | Câu hỏi cần trả lời |
+| Aspect | Question to answer |
 |---|---|
-| Input | Số tiền dùng đơn vị nào, currency nào, phạm vi `requestId` ra sao? |
-| Thành công | Khi nào một khoản tiền được coi là đã thu thành công? |
-| Từ chối | `DECLINED` có nghĩa không thu được tiền hay chỉ chưa xác nhận? |
-| Timeout | Không nhận được phản hồi thì có thể tiền đã bị trừ chưa? |
-| Idempotency | Gửi lại cùng `requestId` có phát sinh khoản thu mới không? |
-| Retry | Những lỗi nào được phép tự thử lại? |
-| Persistence | Kết quả nào cần ghi bền vững trước khi thông báo thành công? |
-| Concurrency | Có thể đồng thời xử lý cùng một yêu cầu ở nhiều instance không? |
-| Security | Ai được phép yêu cầu thanh toán cho đơn hàng? |
+| Input | Which amount unit and currency are used, and what is the scope of `requestId`? |
+| Success | When is money considered successfully charged? |
+| Decline | Does `DECLINED` mean no money was collected or merely that payment has not been confirmed? |
+| Timeout | If no response arrives, might the funds already have been debited? |
+| Idempotency | Does resubmitting the same `requestId` create another charge? |
+| Retry | Which failures may be retried automatically? |
+| Persistence | Which results must be stored durably before reporting success? |
+| Concurrency | Can multiple instances process the same request concurrently? |
+| Security | Who is authorized to initiate payment for an order? |
 
-**Đặc biệt:** `synchronized` trong `CheckoutService.pay` chỉ tuần tự hóa các lời gọi trên **một đối tượng service cụ thể**. Nó không khóa các instance khác, các tiến trình khác hoặc database. `ConcurrentHashMap` giúp các thao tác riêng lẻ của map an toàn hơn khi nhiều luồng dùng, nhưng **không biến chuỗi “tìm → gọi cổng → lưu” thành giao dịch nguyên tử**.
+**In particular:** `synchronized` on `CheckoutService.pay` only serializes calls on **one specific service object**. It does not lock other instances, processes, or databases. `ConcurrentHashMap` makes individual map operations safer under concurrency, but **does not turn the “look up → charge → save” sequence into an atomic transaction**.
 
-Ở môi trường thật, một hướng xử lý là:
+A possible production approach is:
 
-1. Đảm bảo ràng buộc unique `requestId` tại tầng lưu trữ bền vững, hoặc quản lý một bản ghi yêu cầu có trạng thái.
-2. Gửi **idempotency key** tới nhà cung cấp thanh toán theo hợp đồng của họ.
-3. Lưu trạng thái/biên nhận giao dịch, phân biệt kết quả chắc chắn với trường hợp đang chờ/không xác định.
-4. Thiết kế phục hồi khi tiến trình chết hoặc mạng đứt giữa các bước; retry có kiểm soát, reconciliation khi cần.
-5. Không giữ lock database kéo dài một cách ngây thơ qua các lời gọi mạng chậm; chọn chiến lược transaction/state machine phù hợp.
+1. Enforce a unique `requestId` constraint in durable storage, or maintain a request record with an explicit state.
+2. Send an **idempotency key** to the payment provider according to its contract.
+3. Persist transaction states/receipts, distinguishing definitive outcomes from pending or unknown results.
+4. Design recovery for process crashes or network failures between steps, with controlled retries and reconciliation when necessary.
+5. Avoid naively holding long-running database locks across slow network calls; choose a suitable transaction/state-machine strategy.
 
-Những điều này nằm ở yêu cầu nghiệp vụ/hạ tầng, không tự được giải quyết bằng việc khai báo `interface`.
+These requirements belong to business and infrastructure design; declaring an `interface` does not solve them automatically.
 
-## 8. Tránh thiết kế interface quá lớn hoặc quá phụ thuộc công nghệ
+## 8. Avoid interfaces that are too broad or tied to technology
 
-Một giao diện như sau làm lộ chi tiết SQL cho mọi mã nghiệp vụ:
+The following interface exposes SQL details to all business code:
 
 ```java
 interface BadPaymentStore {
@@ -5081,9 +5081,9 @@ interface BadPaymentStore {
 }
 ```
 
-Nó cũng khiến mọi caller phải biết cấu trúc bảng, truy vấn và vòng đời `ResultSet`. Đây là abstraction quá thấp nếu mục tiêu chỉ là tìm/lưu thanh toán.
+It forces every caller to know the table structure, queries, and `ResultSet` lifecycle. This is too low-level an abstraction if the goal is simply to find and save payments.
 
-Giao diện phù hợp với nhu cầu nghiệp vụ hơn:
+An interface closer to the business requirements:
 
 ```java
 interface PaymentRepository {
@@ -5092,9 +5092,9 @@ interface PaymentRepository {
 }
 ```
 
-Nhờ vậy implementation có thể tự dùng SQL, nhưng người gọi không phải quản lý kết nối hoặc biết database.
+The implementation can then use SQL internally without forcing callers to manage connections or know the database.
 
-Tương tự, tránh dồn quá nhiều hành vi không liên quan:
+Likewise, avoid bundling too many unrelated behaviors together:
 
 ```java
 interface EverythingPayment {
@@ -5106,34 +5106,34 @@ interface EverythingPayment {
 }
 ```
 
-Một lớp chỉ cần lưu giao dịch sẽ bị ép biết về email, in ấn và xuất CSV. Nên tách hợp đồng nhỏ theo **trách nhiệm thực sự** — ứng dụng của Interface Segregation Principle (ISP). Tuy nhiên, cũng không cần tạo một interface cho từng phương thức nếu các hành vi thuộc cùng một trách nhiệm gắn kết.
+A class that only stores transactions would be forced to know about email, printing, and CSV exports. Split contracts by **actual responsibilities** as advised by the Interface Segregation Principle (ISP). However, one interface per method is unnecessary when related behaviors serve the same cohesive responsibility.
 
-### Quy tắc chọn interface hay abstract class
+### Guidelines for choosing interfaces or abstract classes
 
-| Nhu cầu | Thường phù hợp |
+| Requirement | Usually appropriate |
 |---|---|
-| Nhiều adapter khác nhau cần cùng hợp đồng gọi thanh toán | `interface PaymentGateway` |
-| Nhiều cách lưu trữ khác nhau với cùng thao tác dữ liệu | `interface PaymentRepository` |
-| Một họ implementation có trạng thái chung, constructor và quy trình dùng chung | Cân nhắc `abstract class` |
-| Chỉ có một thuật toán nhỏ, không có nhu cầu thay thế hoặc ranh giới đáng kể | Có thể dùng class đơn giản, chưa cần interface |
+| Different payment adapters need the same charging contract | `interface PaymentGateway` |
+| Different storage solutions provide the same data operations | `interface PaymentRepository` |
+| A family of implementations shares state, constructors, and a common workflow | Consider an `abstract class` |
+| One small algorithm with no need for substitution or a meaningful boundary | A simple class may be enough without an interface |
 
-Lựa chọn dựa vào **điều mà client thật sự sử dụng**. Đừng tạo interface chỉ vì tên lớp có hậu tố `Impl` hoặc vì một mẫu kiến trúc bắt buộc mọi class phải có interface.
+Base the choice on **what clients actually use**. Do not create interfaces merely because a class name has the suffix `Impl` or a design template demands an interface for every class.
 
-## 9. Bài tập thực hành
+## 9. Practice exercises
 
-**Bài 1 — đổi cách lưu.** Viết `FilePaymentRepository implements PaymentRepository` hoặc phác thảo `JdbcPaymentRepository`. Chỉ thay phần khởi tạo trong `main`, giữ nguyên `CheckoutService`. Xác định cách lưu idempotency key và phòng ghi trùng.
+**Exercise 1 — change storage.** Write `FilePaymentRepository implements PaymentRepository` or sketch `JdbcPaymentRepository`. Change only the setup in `main` and keep `CheckoutService` unchanged. Specify how to persist idempotency keys and prevent duplicate writes.
 
-**Bài 2 — thêm gateway.** Viết `RejectAllGateway implements PaymentGateway` luôn trả `DECLINED`. Xác nhận checkout vẫn hoạt động mà không sửa mã nghiệp vụ.
+**Exercise 2 — add a gateway.** Implement `RejectAllGateway implements PaymentGateway` that always returns `DECLINED`. Confirm checkout still works without editing business logic.
 
-**Bài 3 — test kết quả bất thường.** Viết fake gateway trả `PaymentResult` với `orderId` khác yêu cầu. Dự đoán ngoại lệ mà `CheckoutService` ném, và xác nhận repository chưa lưu kết quả ấy.
+**Exercise 3 — test an abnormal result.** Write a fake gateway that returns a `PaymentResult` with a different `orderId` from the request. Predict the exception thrown by `CheckoutService` and verify that the repository did not save that result.
 
-**Bài 4 — sự cố giữa hai bước.** Mô phỏng gateway trả APPROVED nhưng repository ném lỗi khi `save`. Trả lời: tiền đã được thu hay chưa? Có an toàn khi gọi `charge` lại không? Đề xuất xử lý idempotency và trạng thái bền vững.
+**Exercise 4 — failure between steps.** Simulate a gateway returning APPROVED while the repository throws an error during `save`. Was the payment already charged? Is calling `charge` again safe? Propose an idempotency and durable-state strategy.
 
-**Bài 5 — chọn hợp đồng tối thiểu.** Một màn hình chỉ cần đọc trạng thái thanh toán, không được phép tạo lệnh thu tiền. Nên cho màn hình nhận `PaymentGateway`, `PaymentRepository` hay một interface truy vấn chỉ đọc? Giải thích theo nguyên tắc cấp quyền/trách nhiệm tối thiểu.
+**Exercise 5 — select the smallest contract.** A screen only needs to read payment status and must not initiate charges. Should it receive `PaymentGateway`, `PaymentRepository`, or a read-only query interface? Explain using least-privilege and single-responsibility principles.
 
-**Ghi nhớ:** Thiết kế giao diện thanh toán hoặc lưu trữ bắt đầu từ **hợp đồng nghiệp vụ ổn định và ranh giới trách nhiệm rõ ràng**. `PaymentGateway` che cách giao tiếp nhà cung cấp; `PaymentRepository` che cách lưu trữ; `CheckoutService` điều phối thông qua các abstraction. Điều đó giúp thay implementation và kiểm thử dễ hơn, nhưng tính đúng đắn của thanh toán thật vẫn phụ thuộc vào idempotency, xử lý lỗi, transaction và lưu trữ bền vững.
+**Remember:** Design payment and storage interfaces around **stable business contracts and clear responsibility boundaries**. `PaymentGateway` abstracts provider communication; `PaymentRepository` abstracts storage; `CheckoutService` coordinates through these abstractions. This makes substitutions and testing easier, but real payment correctness still depends on idempotency, error handling, transactions, and durable storage.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

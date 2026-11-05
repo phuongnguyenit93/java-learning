@@ -1,114 +1,114 @@
 <a id="back-to-top"></a>
 
-# Thiết kế lớp
+# Class Design
 
 ## Menu
-- [Xác định trách nhiệm của từng lớp](#class-design-001)
-- [Tính gắn kết bên trong lớp](#class-design-002)
-- [Mức phụ thuộc giữa các lớp](#class-design-003)
-- [Tách dữ liệu, nghiệp vụ và tương tác bên ngoài](#class-design-004)
-- [Đặt tên lớp, thuộc tính và phương thức](#class-design-005)
-- [Đối tượng thực thể, đối tượng giá trị và dịch vụ](#class-design-006)
-- [Mô hình giàu hành vi và mô hình chỉ chứa dữ liệu](#class-design-007)
-- [Tách truy vấn khỏi thao tác thay đổi trạng thái](#class-design-008)
-- [Giới hạn việc truy cập sâu vào chuỗi đối tượng](#class-design-009)
+- [Defining each class's responsibilities](#class-design-001)
+- [Cohesion within a class](#class-design-002)
+- [Coupling between classes](#class-design-003)
+- [Separating data, business logic, and external interactions](#class-design-004)
+- [Naming classes, fields, and methods](#class-design-005)
+- [Entities, value objects, and services](#class-design-006)
+- [Rich domain models and anemic data models](#class-design-007)
+- [Separating queries from state-changing operations](#class-design-008)
+- [Limiting deep navigation through object chains](#class-design-009)
 
-## <a id="class-design-001">Xác định trách nhiệm của từng lớp</a>
+## <a id="class-design-001">Defining each class's responsibilities</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Xác định trách nhiệm của từng lớp trong thiết kế OOP (Java)
+# Defining class responsibilities in OOP design (Java)
 
-Một hệ thống có nhiều class chưa chắc đã được thiết kế tốt. Điều quan trọng là **mỗi class chịu trách nhiệm về phần nào của bài toán, sở hữu những quy tắc nào và cần cộng tác với class nào**. Nếu phân chia sai, một class sẽ biết quá nhiều, nhiều class cùng sửa một quy tắc, và mỗi thay đổi nhỏ kéo theo sửa hàng loạt nơi.
+A system with many classes is not necessarily well designed. What matters is **which part of the problem each class owns, which rules it enforces, and which other classes it collaborates with**. Poor separation makes one class know too much, several classes change the same rule, and small changes trigger edits throughout the codebase.
 
-Bài này hướng dẫn cách đi từ yêu cầu nghiệp vụ đến trách nhiệm của từng lớp, phân biệt trách nhiệm với thao tác kỹ thuật, áp dụng **Single Responsibility Principle (SRP)**, **high cohesion/low coupling**, và tự kiểm chứng thiết kế bằng một chương trình Java chạy độc lập.
+This lesson shows how to derive class responsibilities from business requirements, distinguish responsibilities from technical operations, apply the **Single Responsibility Principle (SRP)** and **high cohesion/low coupling**, and validate the design with a standalone Java program.
 
-## 1. “Trách nhiệm của lớp” nghĩa là gì?
+## 1. What does a “class responsibility” mean?
 
-**Trách nhiệm (responsibility)** là điều một class phải **biết** hoặc **thực hiện** để mô hình hoạt động đúng.
+A **responsibility** is something a class must **know** or **do** for the model to function correctly.
 
-- **Trách nhiệm về thông tin (*knowing*)**: biết mã bản sách, trạng thái đơn hàng, hạn trả, các dòng sản phẩm...
-- **Trách nhiệm về hành vi (*doing*)**: tính tổng tiền, xác thực một thao tác, chuyển trạng thái, điều phối quy trình, lưu/truy xuất dữ liệu...
+- **Information responsibilities (*knowing*)**: knowing a book-copy ID, order status, due date, product line items, and so on.
+- **Behavioral responsibilities (*doing*)**: calculating totals, validating operations, changing state, coordinating workflows, storing/retrieving data, and so on.
 
-Trong một thiết kế tốt, dữ liệu và hành vi **liên quan chặt chẽ** thường cùng nằm trong một class. Nếu class chứa trạng thái nhưng mọi hành vi quan trọng lại nằm trong “tiện ích” ngoài class, quy tắc rất dễ bị nhân bản hoặc bỏ qua.
+In a good design, **closely related** data and behavior usually belong in the same class. If a class holds state but every important behavior lives in external “utilities,” business rules are easily duplicated or bypassed.
 
-Ví dụ:
+For example:
 
-| Yêu cầu nghiệp vụ | Trách nhiệm cần có | Nơi có thể đặt |
+| Business requirement | Required responsibility | Possible owner |
 | --- | --- | --- |
-| Không được mượn bản sách đang có người mượn | Tra cứu tình trạng mượn hiện hành | Repository/đối tượng quản lý giao dịch |
-| Một độc giả được mượn tối đa 2 bản cùng lúc | Áp dụng giới hạn mượn | `LoanPolicy` |
-| Hạn trả là 14 ngày kể từ ngày mượn | Tính hạn trả | `LoanPolicy` |
-| Một lần mượn có người mượn, bản sách, ngày mượn/hạn trả hợp lệ | Bảo vệ dữ liệu của lần mượn | `Loan` |
-| Mượn sách cần kiểm tra rồi ghi nhận kết quả | Điều phối quy trình mượn | `LoanService` |
-| Cần lưu và tìm các lần mượn | Truy cập nơi lưu trữ | `LoanRepository` |
+| A checked-out book copy cannot be borrowed again | Look up current loan status | Repository/transaction-management object |
+| A borrower may have at most 2 active loans | Enforce the borrowing limit | `LoanPolicy` |
+| A loan is due 14 days after checkout | Calculate the due date | `LoanPolicy` |
+| A loan must have a valid borrower, copy, checkout date, and due date | Protect loan data | `Loan` |
+| Borrowing requires validation followed by recording the result | Coordinate the borrowing workflow | `LoanService` |
+| Loans must be stored and retrieved | Access persistent storage | `LoanRepository` |
 
-Các tên lớp chỉ là một **phương án hợp lý cho bối cảnh cụ thể**. Không có quy tắc cứng rằng cứ một dòng yêu cầu là phải tạo một class.
+These class names are merely **one reasonable design for this specific context**. There is no rigid rule that each line of requirements must become one class.
 
-## 2. Trách nhiệm khác với danh sách phương thức
+## 2. Responsibilities are not method lists
 
-Đặt tên hành vi là cách cụ thể hóa trách nhiệm, nhưng **một class có nhiều method vẫn có thể chỉ mang một trách nhiệm**.
+Naming operations makes responsibilities concrete, but **a class with many methods may still have just one responsibility**.
 
-Ví dụ `Money` có thể gồm `add`, `subtract`, `multiply`, `compareTo`; tất cả cùng phục vụ trách nhiệm biểu diễn và tính toán giá trị tiền tệ. Ngược lại, một class chỉ có hai method `calculateSalary()` và `sendMarketingEmail()` vẫn có hai lý do nghiệp vụ khác nhau để thay đổi.
+For example, `Money` may provide `add`, `subtract`, `multiply`, and `compareTo`; all serve the responsibility of representing and calculating monetary values. Conversely, a class with only two methods, `calculateSalary()` and `sendMarketingEmail()`, still has two unrelated business reasons to change.
 
-Một cách đặt câu hỏi tốt:
+A useful question to ask:
 
-> **Khi một quy tắc thay đổi, class nào sẽ phải thay đổi vì quy tắc ấy?**
+> **When a rule changes, which class should change because of that rule?**
 
-Nếu `LoanService` phải sửa khi đổi giao thức gửi email, đổi cấu trúc SQL, đổi chính sách hạn trả và đổi cấu trúc phản hồi HTTP, đó là dấu hiệu nó đang ôm các trách nhiệm thuộc nhiều mối quan tâm khác nhau.
+If `LoanService` must change when the email protocol, SQL schema, due-date policy, or HTTP response shape changes, it likely owns responsibilities from several distinct concerns.
 
-### SRP: Một lý do thay đổi
+### SRP: One reason to change
 
-**Single Responsibility Principle** thường được diễn đạt là “một class chỉ nên có một lý do để thay đổi”. “Một lý do” nên hiểu là **một nhóm trách nhiệm phục vụ một chủ thể/quy tắc có liên quan**, không phải “chỉ có một phương thức”.
+The **Single Responsibility Principle** is often phrased as “a class should have only one reason to change.” “One reason” means **a cohesive set of responsibilities serving one stakeholder or related rule**, not “only one method.”
 
-Ví dụ:
+For example:
 
-- Chính sách mượn sách thay đổi → cân nhắc sửa `LoanPolicy`.
-- Cách ghi dữ liệu từ bộ nhớ sang database thay đổi → sửa implementation của `LoanRepository`.
-- Quy trình mượn cần bước phê duyệt mới → sửa hoặc mở rộng orchestration trong `LoanService`.
-- Cấu trúc HTTP request/response thay đổi → sửa controller/DTO ở ranh giới HTTP.
+- When borrowing policies change → consider changing `LoanPolicy`.
+- When persistence moves from memory to a database → change the `LoanRepository` implementation.
+- When borrowing requires a new approval step → change or extend orchestration in `LoanService`.
+- When HTTP request/response structures change → update the controller/DTO at the HTTP boundary.
 
-Không thể chứng minh SRP chỉ bằng cách đếm số dòng hoặc số method. Một class 200 dòng có thể gắn kết tốt; một class 20 dòng vẫn có thể pha trộn trách nhiệm sai.
+SRP cannot be proved simply by counting lines or methods. A 200-line class can be cohesive; a 20-line class can still mix unrelated responsibilities.
 
-## 3. Các bước xác định trách nhiệm từ yêu cầu
+## 3. Steps for deriving responsibilities from requirements
 
-### Bước 1 — Viết tình huống sử dụng thay vì đoán class
+### Step 1 — Write use cases instead of guessing classes
 
-Ví dụ: “Độc giả chọn một **bản sách có mã riêng**. Hệ thống từ chối nếu bản đó đang được mượn, từ chối nếu độc giả đã mượn đủ giới hạn, rồi tạo phiếu mượn với hạn trả theo chính sách hiện hành”.
+For example: “A borrower selects a **specific, uniquely identified book copy**. The system rejects the request if that copy is already borrowed or the borrower has reached the loan limit, then creates a loan with a due date determined by the current policy.”
 
-Tách thành những sự kiện/quy tắc:
+Break this down into events and rules:
 
-1. Ai đang thực hiện? Độc giả (`borrowerId`).
-2. Đối tượng liên quan? **Bản sách cụ thể** (`BookCopy`), không chỉ đầu sách chung (`BookTitle`).
-3. Trạng thái cần kiểm tra? Bản sách đã có lượt mượn đang hoạt động hay chưa?
-4. Quy tắc? Giới hạn lượt mượn, số ngày được mượn.
-5. Kết quả? Một `Loan` mới được ghi nhận.
-6. Ràng buộc hệ thống? Mọi bước kiểm tra và ghi phải nhất quán, nhất là khi nhiều người mượn cùng lúc.
+1. Who performs the action? The borrower (`borrowerId`).
+2. Which object is involved? A **specific book copy** (`BookCopy`), not just the book title (`BookTitle`).
+3. Which state must be checked? Is there an active loan for this copy?
+4. What are the rules? The borrowing limit and number of loan days.
+5. What is the result? A new `Loan` is recorded.
+6. What system constraints apply? Validation and recording must remain consistent, especially under concurrent requests.
 
-### Bước 2 — Liệt kê trách nhiệm trước khi gán lớp
+### Step 2 — List responsibilities before assigning classes
 
-| Trách nhiệm | Dữ liệu/rule cần biết | Loại hành vi |
+| Responsibility | Required data/rules | Behavior category |
 | --- | --- | --- |
-| Nhận dạng bản sách | `copyId`, `title` | Domain data |
-| Mô tả lần mượn | `borrowerId`, bản sách, ngày mượn, hạn trả | Domain entity/value |
-| Áp dụng thời hạn và giới hạn | `loanDays`, `maxActiveLoans` | Domain policy |
-| Truy vấn tình trạng và ghi phiếu | Tập lượt mượn | Persistence abstraction |
-| Điều phối một yêu cầu mượn | Repository + policy + ngày hiện tại | Application service |
-| Hiển thị hoặc nhận HTTP | Input/output cụ thể của giao diện | Adapter/controller |
+| Identify a book copy | `copyId`, `title` | Domain data |
+| Describe a loan | `borrowerId`, book copy, checkout date, due date | Domain entity/value |
+| Enforce loan periods and limits | `loanDays`, `maxActiveLoans` | Domain policy |
+| Query availability and record loans | The set of loans | Persistence abstraction |
+| Coordinate a borrowing request | Repository + policy + current date | Application service |
+| Display or receive HTTP data | Interface-specific input/output | Adapter/controller |
 
-### Bước 3 — Chọn nơi có đủ thông tin để quyết định
+### Step 3 — Assign decisions to the object with sufficient information
 
-Đây là tư duy **Information Expert**: ưu tiên đặt hành vi ở đối tượng biết dữ liệu mà hành vi đó cần, miễn là không vi phạm ranh giới phụ thuộc.
+This is the **Information Expert** approach: favor the object that knows the data needed to make a decision, provided dependency boundaries remain intact.
 
-Ví dụ:
+For example:
 
-- `Loan` tự bảo vệ tính hợp lệ nội tại: ngày trả sau ngày mượn.
-- `LoanPolicy` biết công thức hạn trả và ngưỡng mượn, nên không buộc `LoanService` lặp hằng số `14` ở nhiều nơi.
-- `LoanRepository` biết dữ liệu các lượt mượn hiện hành, nên service hỏi repository thay vì tự duy trì một bản sao danh sách.
-- `LoanService` biết **thứ tự** các thao tác nhưng không cần biết chi tiết dùng `HashMap`, SQL hay REST API để lưu.
+- `Loan` enforces its own invariants: the due date must come after the checkout date.
+- `LoanPolicy` knows the due-date formula and borrowing threshold, so `LoanService` need not repeat the constant `14` in multiple places.
+- `LoanRepository` knows current loan data, so the service queries it rather than maintaining a duplicate list.
+- `LoanService` knows **the sequence** of operations without needing to know whether storage uses `HashMap`, SQL, or a REST API.
 
-### Bước 4 — Vẽ cộng tác, kiểm tra hướng phụ thuộc
+### Step 4 — Draw collaborations and verify dependency direction
 
 ```mermaid
 flowchart LR
@@ -121,31 +121,31 @@ flowchart LR
     R -. "cài đặt khác" .-> DB["Database-backed repository"]
 ```
 
-`LoanService` phụ thuộc **hợp đồng repository**, nên chính sách nghiệp vụ không phải thay đổi chỉ vì đổi bộ nhớ sang SQL. Luồng điều khiển là service gọi repository; lưu đồ không có nghĩa entity hoặc policy được tùy ý truy cập HTTP, database, logger và email.
+`LoanService` depends on **the repository contract**, so business policy need not change merely because storage switches from memory to SQL. The control flow is the service calling the repository; the diagram does not imply that entities or policies should freely access HTTP, databases, loggers, and email.
 
-### Bước 5 — Chọn API phù hợp với trách nhiệm
+### Step 5 — Choose APIs that fit responsibilities
 
-Một class tốt không chỉ có đúng method; nó còn **không mở những cách sửa trạng thái phá quy tắc**. Constructor và public method phải có precondition/postcondition rõ ràng. Khi không cần cho sửa collection nội bộ, trả về snapshot/read-only view.
+A good class has not only appropriate methods; it also **avoids exposing state mutations that violate rules**. Constructors and public methods should have clear preconditions and postconditions. Return snapshots or read-only views when callers should not modify internal collections.
 
-## 4. CRC Card: kiểm tra class có nhận quá nhiều việc không
+## 4. CRC cards: does a class take on too much?
 
-CRC = **Class – Responsibilities – Collaborators**. Một thẻ ngắn cho từng class giúp nhóm thảo luận trước khi code:
+CRC stands for **Class – Responsibilities – Collaborators**. A concise card for each class helps the team discuss design before coding:
 
 | Class | Responsibilities | Collaborators |
 | --- | --- | --- |
-| `BookCopy` | Giữ danh tính và tiêu đề của bản sách | Không cần |
-| `Loan` | Giữ sự kiện mượn hợp lệ | `BookCopy` |
-| `LoanPolicy` | Quyết định giới hạn và ngày trả | Không cần repository |
-| `LoanRepository` | Tìm lượt mượn đang hoạt động, ghi dữ liệu | `Loan` |
-| `LoanService` | Kiểm tra điều kiện và điều phối mượn | Policy, repository, `Clock` |
+| `BookCopy` | Preserve the identity and title of a book copy | None |
+| `Loan` | Represent a valid borrowing event | `BookCopy` |
+| `LoanPolicy` | Determine loan limits and due dates | No repository needed |
+| `LoanRepository` | Find active loans and record loan data | `Loan` |
+| `LoanService` | Check eligibility and coordinate borrowing | Policy, repository, `Clock` |
 
-Nếu một thẻ phải liệt kê quá nhiều trách nhiệm không liên quan, đó là tín hiệu để xem lại. Nếu hai thẻ có cùng quy tắc, cần xác định **nguồn chân lý duy nhất** để tránh kết quả khác nhau.
+If a card lists too many unrelated responsibilities, review the design. If two cards contain the same rule, identify **a single source of truth** to prevent inconsistent results.
 
-## 5. Ví dụ Java 17 hoàn chỉnh: mượn sách theo trách nhiệm
+## 5. Complete Java 17 example: borrowing based on responsibilities
 
-Ví dụ sau minh họa cách chia lớp nhỏ theo **sự thay đổi của quy tắc**, vẫn đủ đơn giản để chạy trong một file. Một lượt mượn sau khi lưu được coi là đang hoạt động; thao tác **trả sách** chưa nằm trong phạm vi demo.
+The example divides classes according to **how their rules change**, while remaining simple enough to run in one file. A saved loan is treated as active; **returning a book** is outside this demo's scope.
 
-Tạo `ClassResponsibilityDemo.java`:
+Create `ClassResponsibilityDemo.java`:
 
 ```java
 import java.time.Clock;
@@ -308,14 +308,14 @@ public class ClassResponsibilityDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac ClassResponsibilityDemo.java
 java ClassResponsibilityDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Due: 2026-10-29
@@ -324,24 +324,24 @@ Borrowing limit reached
 Active loans: 2
 ```
 
-### Chỉ ra từng trách nhiệm bằng hành vi cụ thể
+### Mapping each responsibility to a concrete behavior
 
-| Khi thay đổi... | Thành phần chịu ảnh hưởng trực tiếp | Vì sao? |
+| When this changes... | Directly affected component | Why? |
 | --- | --- | --- |
-| Thời hạn từ 14 thành 21 ngày | Dữ liệu cấu hình tạo `LoanPolicy`, không sửa `LoanService.borrow` | Service chỉ sử dụng chính sách |
-| Công thức hạn trả đổi sang ngày làm việc | `LoanPolicy` và dependency lịch nếu cần | Quy tắc tính ngày thuộc policy |
-| Thêm kiểm tra ngày trả hợp lệ | `Loan` | Bất biến dữ liệu của chính lần mượn |
-| Chuyển lưu bộ nhớ sang SQL | Implementation của `LoanRepository` và cấu hình nối | Service chỉ biết interface |
-| Thêm bước ghi audit sau khi mượn | Quy trình ở `LoanService` hoặc cộng tác viên audit mới | Đây là hành vi điều phối |
-| Đổi định dạng JSON trả cho mobile | Controller/response DTO ngoài ví dụ | JSON không phải trách nhiệm của entity/domain policy |
+| Loan period changes from 14 to 21 days | Configuration used to construct `LoanPolicy`, not `LoanService.borrow` | The service only uses the policy |
+| Due-date calculation switches to business days | `LoanPolicy` and a calendar dependency if needed | Date calculation belongs to the policy |
+| Add validation for due dates | `Loan` | Invariants of the loan itself |
+| Switch in-memory storage to SQL | `LoanRepository` implementation and connection configuration | The service only knows the interface |
+| Add audit logging after borrowing | The workflow in `LoanService` or a new audit collaborator | This is orchestration behavior |
+| Change the response JSON format for mobile | Controller/response DTO outside the example | JSON is not the responsibility of an entity or domain policy |
 
-**Lưu ý quan trọng về concurrency:** demo chạy tuần tự trong bộ nhớ. Cặp thao tác “đếm số phiếu mượn → kiểm tra ngưỡng → lưu” **không nguyên tử** khi nhiều yêu cầu chạy đồng thời. Trong ứng dụng production, phải đặt kiểm tra và ghi dưới giao dịch/khóa hoặc một cơ chế cấp phát bảo đảm giới hạn, đồng thời ràng buộc không cho một bản sách có hai phiếu đang hoạt động trong DB. Việc tách trách nhiệm đúng **không tự động** đảm bảo tính nhất quán đa luồng.
+**Important concurrency note:** this demo runs sequentially in memory. The sequence “count loans → check the limit → save” **is not atomic** when concurrent requests occur. In production, validation and persistence must be protected by transactions/locks or another mechanism that enforces the limit, together with a database constraint preventing two active loans for the same copy. Correct responsibility boundaries **do not automatically** guarantee concurrent consistency.
 
-Nếu mở rộng bài toán trả sách, repository phải nhận biết trạng thái active/returned; lúc đó có thể đưa hành vi đổi trạng thái vào `Loan` hoặc một aggregate phù hợp và để application service điều phối. Đây là thay đổi nghiệp vụ, không nên giả định code hiện tại đã xử lý.
+If book returns are added, the repository must distinguish active from returned loans. The state transition might then belong in `Loan` or an appropriate aggregate, while the application service coordinates the workflow. This is a new business requirement; the current code should not be assumed to handle it.
 
-## 6. Phát hiện class đang gánh sai trách nhiệm
+## 6. Detecting classes with misplaced responsibilities
 
-Ví dụ mô tả một `LibraryManager` xử lý mọi thứ:
+Consider a `LibraryManager` that handles everything:
 
 ```java
 class LibraryManager {
@@ -356,9 +356,9 @@ class LibraryManager {
 }
 ```
 
-Đây thường là **God Class** hoặc Service có quá nhiều lý do thay đổi. Một thay đổi schema DB, chính sách thư viện, email template hay HTTP JSON đều có thể buộc sửa cùng class.
+This often becomes a **God Class**, or a service with too many reasons to change. A database schema update, library policy change, email template revision, or HTTP JSON adjustment could all require editing the same class.
 
-Hướng cải thiện là đặt trách nhiệm ở đúng ranh giới:
+The better approach is to place responsibilities at their proper boundaries:
 
 ```mermaid
 sequenceDiagram
@@ -381,150 +381,150 @@ sequenceDiagram
     API-->>Reader: Response DTO
 ```
 
-Đối tượng `Loan` biết nó có dữ liệu hợp lệ; `LoanPolicy` biết giới hạn; `LoanRepository` biết cách truy cập dữ liệu; `LoanService` biết thứ tự hành vi. Controller chỉ chuyển đổi request/response và xử lý các trách nhiệm giao tiếp phù hợp.
+A `Loan` knows whether its own data is valid; `LoanPolicy` knows the limits; `LoanRepository` knows how to access stored data; `LoanService` knows the order of operations. The controller only maps requests/responses and handles appropriate communication concerns.
 
-Không nhất thiết phải tách `EmailSender`, `LoanFactory`, `DateCalculator`, `LoanValidator` thành class riêng ngay ngày đầu. Chỉ tạo abstraction khi có một **trách nhiệm độc lập đáng quản lý**, một quy tắc rõ hoặc nhu cầu thay thế/test thực tế.
+There is no need to immediately split `EmailSender`, `LoanFactory`, `DateCalculator`, and `LoanValidator` into separate classes. Introduce an abstraction when it represents **an independent responsibility worth managing**, an explicit rule, or a real substitution/testing need.
 
-## 7. High Cohesion và Low Coupling
+## 7. High cohesion and low coupling
 
-- **Cohesion (tính gắn kết):** các field và method trong cùng class phục vụ một mục đích gần nhau đến mức nào?
-- **Coupling (mức phụ thuộc):** class cần biết bao nhiêu chi tiết triển khai của class khác, và thay đổi ở đó tác động thế nào?
+- **Cohesion:** how closely do fields and methods inside one class contribute to a shared purpose?
+- **Coupling:** how much of other classes' implementation details must this class know, and how do changes elsewhere affect it?
 
-| Dấu hiệu | Hướng thiết kế tốt | Dấu hiệu cần xem lại |
+| Indicator | Good design direction | Signal to reconsider |
 | --- | --- | --- |
-| Cohesion | Các method cùng bảo vệ các dữ liệu/quy tắc liên quan | Cả gửi email, SQL và công thức nghiệp vụ trong cùng class |
-| Coupling | Service dựa vào interface repository | Service tạo thẳng `new SqlLoanRepository(...)` trong phương thức nghiệp vụ |
-| Encapsulation | Trạng thái được cập nhật qua hành vi hợp lệ | Public setter cho phép bỏ qua validation |
-| Knowledge | Class chỉ biết thông tin cần thực hiện trách nhiệm | Method đi qua chuỗi `a.getB().getC().getD()` rồi sửa trạng thái sâu |
-| Testability | Policy có thể test độc lập; ngày hiện tại được truyền qua `Clock` | Hàm tự gọi thời gian thực, DB thật và email thật để tính quy tắc |
+| Cohesion | Methods protect related data and rules | Email delivery, SQL, and business formulas in one class |
+| Coupling | A service depends on a repository interface | A service directly constructs `new SqlLoanRepository(...)` inside business logic |
+| Encapsulation | State changes through valid operations | Public setters allow bypassing validation |
+| Knowledge | A class knows only what its responsibility requires | A method traverses `a.getB().getC().getD()` and mutates deep state |
+| Testability | A policy can be tested independently; current time is injected through `Clock` | Logic directly accesses the real clock, database, and email system to evaluate rules |
 
-Tối ưu một chỉ số không phải mục tiêu duy nhất. Ví dụ tách thành hàng chục class “chỉ có một method” có thể tạo thêm nhiều phụ thuộc khó hiểu hơn class ban đầu. Hãy cân bằng độ rõ nghĩa, chi phí thay đổi, tính dễ kiểm thử và nhu cầu thực tế.
+Optimizing one metric is not the only goal. Splitting into dozens of “one-method” classes, for example, can create more confusing dependencies than the original design. Balance clarity, change cost, testability, and actual needs.
 
-### “Dữ liệu thuộc ai, hành vi thuộc ai?”
+### “Who owns the data, and who owns the behavior?”
 
-Có những hành vi tính toán trên nhiều đối tượng và cần thông tin không một entity nào sở hữu đầy đủ. Không nên ép mọi hành vi vào entity.
+Some computations span multiple objects and require information that no single entity completely owns. Do not force every behavior into an entity.
 
-- **Entity/value object** giữ bất biến liên quan đến chính trạng thái của nó.
-- **Domain service/policy** chịu quy tắc nghiệp vụ kết hợp nhiều đối tượng hoặc cần mô hình chính sách độc lập.
-- **Application service** điều phối một use case, quyền truy cập, transaction, repository và các cổng tích hợp.
-- **Infrastructure adapter** giao tiếp DB, file, queue, API ngoài.
-- **Presentation adapter** nhận và trả dữ liệu phù hợp HTTP/CLI/UI.
+- **Entity/value object:** maintains invariants tied to its own state.
+- **Domain service/policy:** enforces business rules spanning multiple objects or needing an independent policy model.
+- **Application service:** coordinates use cases, access control, transactions, repositories, and integration ports.
+- **Infrastructure adapter:** communicates with databases, files, queues, or external APIs.
+- **Presentation adapter:** accepts and returns data for HTTP/CLI/UI.
 
-Đây là cách phân chia hay gặp, **không phải luật bắt buộc**. Hệ thống nhỏ có thể ít lớp hơn. Ranh giới nên được quyết định bởi nơi có trách nhiệm thực và sự thay đổi được mong đợi.
+These are common divisions, **not mandatory rules**. Smaller systems may use fewer classes. Boundaries should follow actual responsibilities and reasonably expected changes.
 
-## 8. Khi nào nên tách lớp, khi nào nên giữ nguyên?
+## 8. When should you split a class, and when should it stay intact?
 
-### Nên cân nhắc tách khi
+### Consider splitting when
 
-1. Một class có những hành vi thay đổi vì **các nhóm yêu cầu độc lập** (ví dụ tính tiền và gửi hóa đơn qua email).
-2. Logic cùng một quy tắc bị sao chép ở nhiều nơi.
-3. Test một phép tính đơn giản lại bắt buộc khởi động DB, HTTP hoặc dịch vụ bên ngoài.
-4. Có nhiều nhánh `if/switch` vì một chiến lược/chính sách có thể thay đổi theo loại giao dịch.
-5. Thay đổi nhỏ phá nhiều chức năng không liên quan, cho thấy mức phụ thuộc quá rộng.
+1. A class's behaviors change for **independent groups of requirements** (such as calculating charges and emailing invoices).
+2. The same business rule is duplicated across multiple locations.
+3. Testing a simple calculation requires starting a database, HTTP server, or external service.
+4. Numerous `if/switch` branches choose strategies/policies based on transaction type.
+5. Small changes break unrelated functionality, suggesting overly broad coupling.
 
-### Chưa cần tách chỉ vì
+### Do not split merely because
 
-1. Class có hơn một method.
-2. Class dài hơn ngưỡng dòng tùy ý.
-3. Một helper có thể được đặt tên riêng nhưng không có quy tắc độc lập.
-4. Muốn có interface cho **mọi** class dù chưa có ranh giới cần thay thế.
-5. Dự đoán quá nhiều tình huống tương lai không có yêu cầu rõ.
+1. A class has more than one method.
+2. A class exceeds an arbitrary line-count threshold.
+3. A helper could be named separately but has no independent rule.
+4. You want interfaces for **every** class before there is a boundary that needs substitution.
+5. You imagine many hypothetical future scenarios without clear requirements.
 
-Ví dụ `LoanPolicy` là một record nhỏ và có thể để các quy tắc liên quan ở cùng một chỗ. Không cần tự động tách `MaxLoanPolicy` và `DueDatePolicy` chỉ vì chúng là hai method. Nếu giới hạn theo nhóm khách hàng do bộ phận A quản lý và hạn trả do bộ phận B quản lý, hoặc mỗi quy tắc có những biến thể khác nhau, việc tách mới có căn cứ.
+For example, `LoanPolicy` is a small record and can keep related rules together. There is no need to automatically split `MaxLoanPolicy` and `DueDatePolicy` just because it has two methods. If borrowing limits are managed by department A and due dates by department B, or each rule has distinct variants, then separation has a sound justification.
 
-## 9. Quy trình refactor từ lớp lớn sang các lớp có trách nhiệm rõ
+## 9. Refactoring a large class into classes with clear responsibilities
 
-Giả sử `LoanController` đang truy vấn SQL, tính hạn trả và trả JSON trong cùng một method. Có thể refactor từng bước:
+Suppose `LoanController` queries SQL, calculates due dates, and returns JSON in one method. It can be refactored incrementally:
 
-1. **Ghi nhận hành vi hiện tại:** các đầu vào, kết quả, lỗi khi sách đang mượn/hết hạn mức. Dùng test cho các quy tắc quan trọng.
-2. **Định nghĩa invariant:** một bản sách chỉ có một lượt mượn active; người mượn không vượt giới hạn.
-3. **Trích xuất quy tắc thuần:** đưa tính hạn trả và ngưỡng vào `LoanPolicy` (không lệ thuộc IO).
-4. **Trích xuất persistence:** đưa SQL qua `LoanRepository`; giữ hợp đồng rõ và test với adapter.
-5. **Đặt workflow trong service:** lấy dữ liệu, gọi policy, lưu Loan, trả kết quả.
-6. **Thu gọn controller:** ánh xạ request, xử lý lỗi/response DTO, gọi service.
-7. **Xác nhận lại:** chạy test tình huống thành công/thất bại, kiểm tra transaction, dữ liệu lưu, logging và các ảnh hưởng ngoài ý muốn.
+1. **Capture existing behavior:** inputs, outcomes, and errors when a copy is already borrowed or the limit is reached. Add tests for important rules.
+2. **Define invariants:** each book copy has at most one active loan, and borrowers never exceed their limits.
+3. **Extract pure rules:** move due-date calculations and thresholds into `LoanPolicy` (without I/O dependencies).
+4. **Extract persistence:** move SQL behind `LoanRepository`, define a clear contract, and test the adapter.
+5. **Place the workflow in the service:** fetch data, invoke the policy, save the loan, and return the result.
+6. **Simplify the controller:** map requests, handle errors/response DTOs, and call the service.
+7. **Revalidate:** test success/failure scenarios and inspect transactions, saved data, logs, and unintended side effects.
 
-Thực hiện từng thay đổi nhỏ và kiểm tra hành vi thường an toàn hơn việc viết lại toàn bộ trong một lần. Đừng dùng “phân chia trách nhiệm” làm lý do để xóa những kiểm tra dữ liệu hoặc giao dịch hiện có.
+Making small changes and verifying behavior at each step is usually safer than rewriting the entire system at once. Do not use “separating responsibilities” as a reason to delete existing validation or transactional safeguards.
 
-## 10. Cách kiểm thử trách nhiệm thay vì kiểm thử riêng từng getter
+## 10. Testing responsibilities rather than individual getters
 
-| Đơn vị kiểm thử | Tình huống then chốt | Bằng chứng |
+| Test target | Key scenario | Evidence |
 | --- | --- | --- |
-| `BookCopy` | Mã rỗng hoặc tên rỗng | Constructor từ chối |
-| `Loan` | Hạn trả bằng hoặc trước ngày mượn | Bất biến được bảo vệ |
-| `LoanPolicy` | Đã đạt giới hạn; tính hạn trả | Kết quả độc lập DB, clock thực |
-| `LoanService` | Bản sách đang mượn; người mượn quá hạn mức | Không gọi `save` khi bị từ chối |
-| `LoanService` | Đủ điều kiện | Gọi repository lưu Loan với ngày đúng |
-| Repository adapter | Lưu/truy vấn và khóa duy nhất | Hợp đồng với nơi lưu dữ liệu đúng |
-| Use case tích hợp | Hai yêu cầu cùng mượn một bản sách | Không tạo hai lượt mượn active |
+| `BookCopy` | Blank ID or title | Constructor rejects it |
+| `Loan` | Due date on or before the checkout date | Invariant is enforced |
+| `LoanPolicy` | Loan limit reached; calculating due dates | Results independent of database and real clock |
+| `LoanService` | Copy already borrowed; borrower over limit | Does not call `save` on rejection |
+| `LoanService` | Valid request | Asks repository to save a loan with the correct dates |
+| Repository adapter | Saving/looking up loans and unique constraints | Meets the storage contract |
+| Integrated use case | Two concurrent requests for the same copy | Does not create two active loans |
 
-Một cách kiểm thử service là dùng **fake repository** in-memory hoặc mock repository và kiểm tra hành vi theo tình huống, thay vì mock mọi method nội bộ. Test policy bằng dữ liệu đầu vào/đầu ra thực tế. Trong chương trình lớn, integration test riêng cho transaction/unique constraint là cần thiết vì unit test không thể chứng minh tính nhất quán database.
+One way to test the service is to use an in-memory **fake repository** or mock and assert behavior in each scenario, instead of mocking every internal method. Test policies with actual inputs and outputs. In larger systems, separate integration tests for transactions and unique constraints are necessary because unit tests cannot prove database consistency.
 
-## 11. Bài tập tự thiết kế
+## 11. Class-design exercises
 
-**Bài A — Chia trách nhiệm hệ thống đặt hàng.** Yêu cầu: người mua thêm sản phẩm, hệ thống tính tổng, áp mã giảm giá, kiểm tra tồn kho, ghi đơn và gửi email xác nhận. Hãy liệt kê trách nhiệm và đề xuất class/collaborator phù hợp. Giải thích vì sao định dạng email không nên đặt trong `Order`.
+**Exercise A — Divide order-management responsibilities.** Requirements: a shopper adds items, the system calculates totals, applies coupons, checks inventory, saves orders, and emails confirmations. List the responsibilities and propose suitable classes/collaborators. Explain why email formatting should not belong in `Order`.
 
-**Bài B — Đánh giá class nhiều method.** `BankAccount` có `deposit`, `withdraw`, `balance`, `transferTo` và `exportMonthlyCsv`. Method nào phù hợp trách nhiệm quản lý số dư, method nào có dấu hiệu thuộc tầng báo cáo? `transferTo` cần phối hợp hai account/transaction như thế nào?
+**Exercise B — Evaluate a class with many methods.** `BankAccount` provides `deposit`, `withdraw`, `balance`, `transferTo`, and `exportMonthlyCsv`. Which methods fit the responsibility of managing a balance, and which suggest reporting concerns? How should `transferTo` coordinate two accounts and a transaction?
 
-**Bài C — Mở rộng ví dụ mượn sách.** Thêm `returnBook(copyId)`, trạng thái `ACTIVE/RETURNED` và quy tắc không trả cùng một phiếu hai lần. Quyết định entity nào giữ chuyển trạng thái, repository tra cứu nào cần thiết và service điều phối ra sao. Kiểm tra không còn lượt active sau khi trả.
+**Exercise C — Extend the borrowing example.** Add `returnBook(copyId)`, `ACTIVE/RETURNED` status, and a rule prohibiting returning the same loan twice. Decide which entity owns state transitions, what repository queries are needed, and how the service coordinates them. Verify there are no active loans after return.
 
-**Bài D — Review dấu hiệu thiết kế.** Một class `ReportService` có 15 phương thức đều chuyển đổi cùng một cấu trúc báo cáo thành các phép đo liên quan; class khác `UserHelper` chỉ có 3 phương thức xử lý password, SQL và email. Class nào đáng xem lại trước? Giải thích dựa trên **lý do thay đổi và tính gắn kết**, không dựa trên số method.
+**Exercise D — Review design indicators.** One `ReportService` has 15 methods that all transform one report structure into related metrics; another `UserHelper` has only 3 methods for passwords, SQL, and email. Which merits review first? Explain using **reasons to change and cohesion**, not method count.
 
-## 12. Checklist tự đánh giá thiết kế lớp
+## 12. Self-assessment checklist for class design
 
-- Có thể mô tả **trách nhiệm chính của mỗi lớp bằng một câu rõ ràng** không?
-- Mỗi invariant/rule có một nơi đủ thẩm quyền quyết định, tránh nhiều phiên bản mâu thuẫn không?
-- Các field/method của lớp có cùng phục vụ trách nhiệm đó không?
-- Lớp cần biết bao nhiêu chi tiết bên ngoài? Có thể phụ thuộc interface ở ranh giới biến động không?
-- Service chỉ điều phối hay đang tự thực hiện toàn bộ chính sách, SQL, định dạng giao diện?
-- Getter, setter, constructor có để lộ cách phá vỡ invariant không?
-- Các thay đổi thường gặp ảnh hưởng đến ít lớp và đúng vùng trách nhiệm không?
-- Có thể kiểm thử phần logic thuần mà không phụ thuộc DB/network/thời gian thực không?
-- Khi nhiều yêu cầu chạy đồng thời, transaction và khóa bảo vệ những invariant liên lớp ở đâu?
-- Nếu tách/gộp lớp, tác dụng thực tế có rõ hơn chi phí thêm abstraction không?
+- Can you describe **each class's main responsibility in one clear sentence**?
+- Does each invariant/rule have one authoritative owner, avoiding conflicting versions?
+- Do a class's fields and methods all support that responsibility?
+- How many external details must the class know? Could it depend on an interface at a changing boundary?
+- Does the service only orchestrate, or does it implement every policy, SQL operation, and UI formatting rule itself?
+- Can getters, setters, or constructors expose ways to violate invariants?
+- Do common changes affect only a few classes, in the appropriate responsibility area?
+- Can pure logic be tested independently of databases, networks, and real time?
+- Under concurrent requests, where do transactions and locks protect cross-class invariants?
+- Does splitting/merging classes provide benefits that clearly outweigh added abstraction costs?
 
-**Điểm cốt lõi:** hãy chia lớp theo **trách nhiệm và ranh giới thay đổi**, đồng thời đặt hành vi ở nơi có đủ thông tin để bảo vệ quy tắc. Một thiết kế OOP tốt khiến người đọc biết *khi yêu cầu X đổi thì cần nhìn vào lớp nào*, và khiến các lớp khác ít phải sửa theo.
+**Core takeaway:** divide classes by **responsibility and change boundaries**, and place behavior where the information needed to protect a rule is available. Good OOP design tells readers *which class to inspect when requirement X changes* and minimizes changes to unrelated classes.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-design-002">Tính gắn kết bên trong lớp</a>
+## <a id="class-design-002">Cohesion within a class</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tính gắn kết bên trong lớp (Cohesion) trong OOP Java
+# Cohesion within a class in Java OOP
 
-> **Mục tiêu:** Hiểu tính gắn kết là gì; đánh giá liệu dữ liệu và hành vi trong một lớp có phục vụ cùng một trách nhiệm hay không; nhận biết lớp “ôm đồm”; và biết refactor thành các lớp có ranh giới rõ ràng mà không chia nhỏ quá mức.
+> **Goal:** Understand cohesion; assess whether a class's data and behavior support one responsibility; recognize overloaded classes; and refactor into well-defined boundaries without excessive fragmentation.
 
-## 1. Cohesion là gì?
+## 1. What is cohesion?
 
-**Tính gắn kết bên trong lớp (class cohesion)** mô tả mức độ các thuộc tính, phương thức và quy tắc trong **cùng một lớp** cùng phục vụ một mục tiêu có ý nghĩa. Một lớp có **cohesion cao** khi các phần tử của nó tạo thành một khái niệm nhất quán và thường thay đổi vì cùng một nhóm lý do nghiệp vụ.
+**Class cohesion** describes how closely the fields, methods, and rules **within one class** serve one meaningful purpose. A class has **high cohesion** when its members form a coherent concept and tend to change for related business reasons.
 
-Ví dụ:
+For example:
 
-- `Cart` giữ các dòng hàng, kiểm tra số lượng và tính tổng tiền hàng: các hành vi xoay quanh trạng thái giỏ hàng → cohesion thường **cao**.
-- `CartManager` vừa tính giá, lưu database, gửi email, ghi log đăng nhập, xuất báo cáo CSV và kiểm tra quyền truy cập: các hành vi chịu những lý do thay đổi khác nhau → cohesion thường **thấp**.
+- `Cart` holds line items, validates quantities, and calculates item totals: all these behaviors concern shopping-cart state → typically **high** cohesion.
+- `CartManager` calculates prices, writes to databases, emails users, logs sign-ins, exports CSV reports, and checks permissions: these behaviors change for unrelated reasons → typically **low** cohesion.
 
-Có thể tự hỏi: **“Nếu phải mô tả lớp này bằng một câu rõ ràng không dùng từ ‘và’, mình sẽ nói gì?”** Đây chỉ là mẹo đánh giá, không phải tiêu chuẩn máy móc. Một lớp điều phối use case có thể kết hợp nhiều bước để hoàn thành **một** nghiệp vụ, vẫn cohesive nếu không chứa chi tiết triển khai của từng bước.
+Ask yourself: **“How would I describe this class in one clear sentence without the word ‘and’?”** This is a heuristic, not a mechanical standard. A use-case coordinator may combine several steps to accomplish **one** business goal and remain cohesive as long as it does not embed implementation details for each step.
 
-**Cohesion không đồng nghĩa “có ít phương thức” hoặc “mọi phương thức đều đọc cùng một field”.** Một lớp chỉ có 2 phương thức nhưng làm hai việc không liên quan vẫn ít gắn kết. Một lớp có nhiều thao tác quanh cùng một domain concept vẫn có thể gắn kết tốt.
+**Cohesion does not mean “few methods” or “every method reads the same field.”** A class with only 2 unrelated methods still has low cohesion. A class with many operations around the same domain concept can have high cohesion.
 
-## 2. Phân biệt cohesion và coupling
+## 2. Distinguishing cohesion from coupling
 
-| Tiêu chí | Cohesion – gắn kết nội bộ | Coupling – phụ thuộc giữa các thành phần |
+| Criterion | Cohesion – within a component | Coupling – between components |
 |---|---|---|
-| Câu hỏi chính | Các phần **trong cùng lớp** có liên quan chặt chẽ đến một trách nhiệm không? | Lớp này cần biết/giả định bao nhiêu về lớp khác? |
-| Phạm vi quan sát | Fields, methods, invariants, lý do thay đổi | Constructor dependency, API, kiểu dữ liệu, gọi phương thức, chia sẻ trạng thái |
-| Mục tiêu thiết kế thường gặp | **Cao**: trách nhiệm nhất quán | **Thấp vừa đủ**: phụ thuộc tối thiểu, giao diện ổn định |
-| Dấu hiệu xấu | Một lớp xử lý việc không liên quan | Sửa một lớp bắt buộc sửa hàng loạt lớp khác |
-| Cách cải thiện điển hình | Extract Class, di chuyển hành vi về đúng owner | Dependency Inversion, interface/port, giới hạn API |
+| Main question | Do the parts **within one class** closely serve the same responsibility? | How much must this class know or assume about other classes? |
+| Scope of observation | Fields, methods, invariants, reasons to change | Constructor dependencies, APIs, types, method calls, shared state |
+| Typical design goal | **High**: coherent responsibility | **Low enough**: minimal dependencies, stable interfaces |
+| Warning sign | One class handles unrelated tasks | Changing one class forces changes across many others |
+| Common improvement | Extract Class; move behavior to its owner | Dependency Inversion, interfaces/ports, limited APIs |
 
-Hai tính chất **khác nhau** nhưng có liên hệ. Tách một lớp thành nhiều lớp nhỏ có thể tăng cohesion cục bộ nhưng cũng làm tăng số phụ thuộc; thiết kế tốt phải cân bằng cả hai.
+These qualities are **distinct** but related. Splitting a class into smaller ones may increase local cohesion while adding dependencies; a good design balances both.
 
 ~~~mermaid
 flowchart LR
@@ -546,23 +546,23 @@ flowchart LR
     Low -. tách trách nhiệm .-> High
 ~~~
 
-Sơ đồ diễn đạt mục tiêu **gom các hành vi cùng thay đổi về đúng chủ thể**, không phải quy tắc “mỗi phương thức là một lớp”.
+The diagram illustrates the goal of **grouping behaviors that change together with their proper owner**, not “one class per method.”
 
-## 3. Dấu hiệu một lớp có cohesion thấp
+## 3. Signs of low cohesion
 
-1. **Tên quá chung:** `Manager`, `Helper`, `Processor`, `Util` mà trách nhiệm thực tế trải nhiều miền nghiệp vụ.
-2. **Các nhóm method dùng các nhóm field độc lập:** phương thức `sendEmail()` chỉ dùng SMTP config, `calculateTax()` chỉ dùng taxRate và `saveOrder()` chỉ dùng JDBC connection.
-3. **Có nhiều lý do thay đổi độc lập:** chính sách chiết khấu thay đổi, nhà cung cấp email đổi, schema database đổi đều bắt phải sửa cùng một file/lớp.
-4. **Có nhiều dạng lỗi khác nhau trong cùng lớp:** exception mạng, xác thực đầu vào, quy tắc giá, serialization bị trộn trong một hàm lớn.
-5. **Test khó độc lập:** muốn kiểm tra phép tính thuần nhưng phải khởi động database, HTTP client hoặc SMTP.
-6. **Constructor chứa quá nhiều phụ thuộc không cùng phục vụ một nhiệm vụ:** đây là tín hiệu cần xem xét, không phải kết luận tuyệt đối.
-7. **Các feature sửa cùng lớp nhưng ít dùng chung ngữ cảnh:** làm tăng xung đột merge và gây lan truyền thay đổi.
+1. **Overly generic names:** `Manager`, `Helper`, `Processor`, or `Util` with responsibilities spanning unrelated domains.
+2. **Method groups use separate sets of fields:** `sendEmail()` only uses SMTP configuration, `calculateTax()` only uses taxRate, and `saveOrder()` only uses a JDBC connection.
+3. **Multiple independent reasons to change:** a discount policy, email vendor, or database schema update all require modifying the same class/file.
+4. **Mixed error categories in one class:** network exceptions, input validation, pricing rules, and serialization are interwoven in a large method.
+5. **Hard to test independently:** testing a pure computation requires starting a database, HTTP client, or SMTP service.
+6. **A constructor with too many dependencies unrelated to one task:** a signal worth investigating, not a definitive verdict.
+7. **Features frequently change the same class while sharing little context:** increases merge conflicts and spreads changes.
 
-Đặc biệt, **đừng kết luận cohesion thấp chỉ vì một hàm dài**. Hàm dài có thể là vấn đề về độ phức tạp hoặc khả năng đọc, trong khi toàn lớp vẫn đúng một trách nhiệm. Ngược lại, tách hàm lớn thành mười hàm nhỏ bên trong một lớp vẫn không giải quyết sự trộn lẫn trách nhiệm.
+Importantly, **do not infer low cohesion from a long method alone**. A long method may harm readability or complexity while the class still has one responsibility. Conversely, splitting a large method into ten small methods in the same class does not fix mixed responsibilities.
 
-## 4. Ví dụ trước refactor: một lớp làm quá nhiều việc
+## 4. Before refactoring: one class handles too much
 
-Ví dụ đơn giản sau có thể biên dịch trong dự án Java 17 khi tách vào `LegacyCheckoutService.java`. Nó minh họa rõ ba nhóm việc: **tính tiền**, **lưu trữ**, và **gửi thông báo**.
+The simple example below can compile in a Java 17 project as `LegacyCheckoutService.java`. It highlights three groups of work: **calculating amounts**, **persistence**, and **sending notifications**.
 
 ~~~java
 import java.math.BigDecimal;
@@ -602,25 +602,25 @@ final class LegacyCheckoutService {
 }
 ~~~
 
-Ở ví dụ này, `database` chỉ liên quan việc lưu; thuật toán tính tiền không cần nó; gửi email cũng không dùng nó. Mỗi nhóm có nguyên nhân thay đổi độc lập:
+In this example, `database` is needed only for persistence; calculating totals and sending emails do not use it. Each group changes independently:
 
-| Nhóm hành vi | Khi nào cần sửa? | Chủ thể thích hợp |
+| Behavior group | When does it change? | Appropriate owner |
 |---|---|---|
-| `calculateTotal()` | Quy tắc tính tiền, cách làm tròn, giảm giá | `Cart` hoặc thành phần pricing đúng miền nghiệp vụ |
-| `saveOrder()` | Đổi storage/database/schema | `OrderRepository` |
-| `sendReceipt()` | Đổi nhà cung cấp email/template | `ReceiptSender` |
-| `checkout()` | Đổi thứ tự và quy tắc xử lý checkout | `CheckoutService` điều phối use case |
+| `calculateTotal()` | Pricing rules, rounding, discounts | `Cart` or an appropriate domain pricing component |
+| `saveOrder()` | Storage/database/schema changes | `OrderRepository` |
+| `sendReceipt()` | Email provider/template changes | `ReceiptSender` |
+| `checkout()` | Checkout workflow sequence and rules change | `CheckoutService` orchestrating the use case |
 
-Một lớp duy nhất bị buộc phải quan tâm cả bốn thay đổi. Đó là vấn đề cohesion, **không chỉ là số dòng mã**.
+A single class must accommodate all four changes. That is a cohesion problem, **not merely a line-count problem**.
 
-## 5. Sau refactor: mỗi lớp có trách nhiệm mạch lạc
+## 5. After refactoring: each class has a coherent responsibility
 
-Ở thiết kế mới:
+In the revised design:
 
-- `Cart` bảo vệ **danh sách mặt hàng và quy tắc tính tổng tiền từ các dòng hiện có**.
-- `OrderRepository` có hợp đồng **lưu và tra cứu đơn**; implementation quyết định lưu ở đâu.
-- `ReceiptSender` có hợp đồng **gửi biên nhận**; implementation quyết định kênh gửi.
-- `CheckoutService` **điều phối một use case checkout** và ủy quyền các chi tiết.
+- `Cart` protects **the item list and the rules for computing the total from existing lines**.
+- `OrderRepository` defines a contract for **saving and finding orders**; the implementation chooses the storage mechanism.
+- `ReceiptSender` defines a contract for **sending receipts**; the implementation chooses the delivery channel.
+- `CheckoutService` **orchestrates a checkout use case** and delegates implementation details.
 
 ~~~mermaid
 classDiagram
@@ -654,7 +654,7 @@ classDiagram
     ConsoleReceiptSender ..|> ReceiptSender
 ~~~
 
-**Mã Java 17+ hoàn chỉnh trong một tệp `CohesionDemo.java`:**
+**Complete Java 17+ code in one file, `CohesionDemo.java`:**
 
 ~~~java
 import java.math.BigDecimal;
@@ -794,14 +794,14 @@ public class CohesionDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac CohesionDemo.java
 java CohesionDemo
 ~~~
 
-Kết quả minh họa:
+Illustrative output:
 
 ~~~text
 Receipt ORD-42: 280000 -> user@example.com
@@ -809,46 +809,46 @@ Receipt ORD-42: 280000 -> user@example.com
 true
 ~~~
 
-**Vì sao cohesion tốt hơn?** Phương thức của `Cart` tập trung vào trạng thái giỏ hàng; `OrderRepository` xử lý persistence; `ReceiptSender` xử lý thông báo. `CheckoutService` vẫn dùng cả lưu trữ lẫn gửi thông báo, nhưng **một mục tiêu** của nó là thực hiện luồng checkout theo thứ tự: tạo dữ liệu đơn → lưu → yêu cầu gửi biên nhận. Sự phối hợp nhiều bước không đồng nghĩa cohesion thấp.
+**Why is cohesion better?** `Cart` methods focus on shopping-cart state; `OrderRepository` handles persistence; `ReceiptSender` handles notifications. `CheckoutService` still uses both storage and messaging, but **its single goal** is to carry out checkout in sequence: prepare order data → save → request receipt delivery. Coordinating multiple steps does not imply low cohesion.
 
-**Giới hạn của ví dụ:** `ConsoleReceiptSender` chỉ in ra console, không gửi email thật. Mã tập trung vào thiết kế lớp, chưa xử lý tính nguyên tử giữa database và hạ tầng thông báo. Hệ thống thực cần xác định rõ hành vi khi gửi email lỗi sau khi lưu đơn, cân nhắc transaction, retry/idempotency hoặc outbox. Nếu giỏ hàng có thể được sửa đồng thời giữa lúc lấy `snapshot()` và `total()`, hai giá trị có thể lệch nhau; cần snapshot nhất quán hoặc chỉ cho phép một luồng chỉnh sửa theo vòng đời của giỏ hàng.
+**Example limitations:** `ConsoleReceiptSender` only prints to the console; it sends no real email. The code focuses on class design and does not ensure atomicity across the database and notification infrastructure. A real system must define behavior if email delivery fails after an order is saved, considering transactions, retry/idempotency, or an outbox. If the cart can change concurrently between `snapshot()` and `total()`, the two values may disagree; use a consistent snapshot or restrict cart modifications to one thread during its lifecycle.
 
-## 6. Cohesion liên quan thế nào tới SRP?
+## 6. How does cohesion relate to SRP?
 
-**Single Responsibility Principle (SRP)** thường được giải thích là “một lớp chỉ có một lý do để thay đổi”, hiểu sát hơn là **một nhóm tác nhân/nhu cầu thay đổi nghiệp vụ chủ đạo**. Cohesion là đặc điểm của sự nhất quán nội bộ; SRP là nguyên tắc về **ranh giới trách nhiệm và lý do thay đổi**.
+The **Single Responsibility Principle (SRP)** is often explained as “a class should have one reason to change,” more precisely **one primary group of business stakeholders/change needs**. Cohesion describes internal coherence; SRP is a principle about **responsibility boundaries and reasons for change**.
 
-Chúng liên quan nhưng không đồng nhất:
+They are related but not identical:
 
-- `Cart` có `addLine()`, `isEmpty()`, `total()`: nhiều thao tác nhưng cùng bảo vệ quy tắc giỏ hàng.
-- `CheckoutService` gọi repository và receipt sender: nó điều phối **một** use case, không tự triển khai SQL và SMTP.
-- Nếu yêu cầu tính thuế quá phức tạp, nhiều vùng lãnh thổ, nhiều bản chính sách, cần xem xét trích xuất `TaxPolicy`/`PricingService`. Nhưng nếu chỉ cộng subtotal của các dòng hiện có, để `Cart.total()` là hợp lý.
-- Cần tách lớp theo **lý do thay đổi thực tế**, không theo công thức một class/method.
+- `Cart` has `addLine()`, `isEmpty()`, and `total()`: multiple operations that collectively protect cart rules.
+- `CheckoutService` calls the repository and receipt sender: it coordinates **one** use case without implementing SQL or SMTP itself.
+- If tax calculations become complex, vary across jurisdictions, or require multiple policy versions, consider extracting `TaxPolicy`/`PricingService`. If the cart simply sums existing line subtotals, however, `Cart.total()` is appropriate.
+- Split classes by **real reasons to change**, not one class per method.
 
-Một câu hỏi hữu ích khi review: **“Nếu đội quản lý giá thay đổi quy tắc thuế, có cần sửa lớp gửi biên nhận hay kho lưu đơn không?”** Nếu thường xuyên có, ranh giới trách nhiệm đang bị trộn.
+A helpful review question: **“If the pricing team changes tax rules, must we edit the receipt sender or order repository?”** If so, responsibility boundaries may be mixed.
 
-## 7. Các mức gắn kết trong thiết kế – cách dùng để suy nghĩ
+## 7. Cohesion levels in design: a thinking tool
 
-Một số tài liệu phân loại cohesion trong thiết kế chương trình từ yếu đến mạnh. Các nhãn này vốn thường được dạy ở mức **module hoặc chức năng**; khi áp dụng vào **lớp OOP**, hãy dùng làm công cụ phân tích định tính, không coi như thang điểm chuẩn tuyệt đối.
+Some references classify program cohesion from weak to strong. These labels are traditionally taught at the **module or function** level; for **OOP classes**, use them as a qualitative analytical aid rather than an absolute standardized scoring scale.
 
-| Loại gắn kết | Ý nghĩa | Ví dụ trong Java | Đánh giá |
+| Cohesion type | Meaning | Java example | Assessment |
 |---|---|---|---|
-| **Coincidental** – ngẫu nhiên | Gom việc không liên quan | `MiscUtils` chứa `sendEmail()`, `hashPassword()` và `formatMoney()` | Thường rất yếu |
-| **Logical** – theo nhóm kỹ thuật | Các thao tác cùng dạng nhưng xử lý nhiều mục đích qua cờ điều khiển | `Handler.process(type)` dùng switch cho email/SMS/export CSV | Thường nên cân nhắc tách |
-| **Temporal** – theo thời điểm | Các việc cùng chạy ở lúc startup/shutdown | `StartupTasks` mở cache, chạy migration, in banner | Có thể hợp lý tại điểm orchestration |
-| **Procedural** – theo thứ tự | Các bước đi cùng nhau vì thứ tự gọi | `Workflow` chạy validate → save → notify | Có thể cohesive nếu cùng use case |
-| **Communicational** – cùng dữ liệu | Các phương thức cùng thao tác trên một dữ liệu miền nghiệp vụ | `Cart` thêm dòng, lấy tổng, kiểm tra rỗng | Thường tốt nếu đúng domain |
-| **Sequential** – đầu ra bước trước là đầu vào bước sau | Pipeline parse → normalize → validate | `ImportPipeline` xử lý một bản ghi | Có thể phù hợp hoặc cần tách chiến lược |
-| **Functional** – cùng một chức năng rõ ràng | Thành phần chỉ chuyên tính thuế theo policy nhất quán | `TaxCalculator` | Thường rất mạnh |
+| **Coincidental** – accidental | Groups unrelated tasks | `MiscUtils` contains `sendEmail()`, `hashPassword()`, and `formatMoney()` | Usually very weak |
+| **Logical** – technical grouping | Similar operations selected for unrelated purposes using a control flag | `Handler.process(type)` switches among email/SMS/CSV export | Often worth splitting |
+| **Temporal** – same time | Tasks run together at startup/shutdown | `StartupTasks` opens a cache, runs migrations, and prints a banner | May be appropriate at the orchestration point |
+| **Procedural** – ordered steps | Operations grouped because they execute in sequence | `Workflow` runs validate → save → notify | Can be cohesive for a single use case |
+| **Communicational** – shared data | Methods work on the same domain data | `Cart` adds lines, computes totals, and checks for emptiness | Often good when domain-aligned |
+| **Sequential** – output feeds next step | A parse → normalize → validate pipeline | `ImportPipeline` processes a record | May fit or require strategy extraction |
+| **Functional** – one well-defined function | Component devoted to computing taxes under a consistent policy | `TaxCalculator` | Usually very strong |
 
-**Không chấm điểm lớp dựa duy nhất vào tên loại:** Một `ApplicationBootstrap` cố ý thực hiện những việc cùng thời điểm khởi động là hợp lý ở *composition root*. Một `CheckoutService` cố ý gọi ba bước theo trình tự cũng hợp lý khi nó điều phối một use case. Vấn đề nảy sinh nếu coordinator vừa quản lý quy trình vừa nhồi chi tiết thuật toán của những trách nhiệm khác.
+**Do not score a class solely by the cohesion-category name:** An `ApplicationBootstrap` intentionally performs startup tasks and fits at the *composition root*. A `CheckoutService` intentionally runs three steps in order and can fit one use case. Problems arise when coordinators also embed algorithms belonging to separate responsibilities.
 
-## 8. Cách tự đánh giá cohesion của một lớp
+## 8. How to evaluate a class's cohesion
 
-Hãy dùng một bảng **method × field** (ví dụ có 6 phương thức và 4 trường) để tìm các cụm trách nhiệm. Đây không phải công thức duy nhất: các phương thức thuần không dùng field vẫn có thể phục vụ đúng một khái niệm.
+Use a **method × field** matrix (for example, 6 methods and 4 fields) to identify responsibility clusters. This is not a complete formula: pure methods that access no fields may still contribute to one coherent concept.
 
-Ví dụ một lớp có bốn trường độc lập: `orders`, `smtpClient`, `taxRate`, `csvFormat`.
+Consider a class with four unrelated fields: `orders`, `smtpClient`, `taxRate`, and `csvFormat`.
 
-| Phương thức | orders | smtpClient | taxRate | csvFormat |
+| Method | orders | smtpClient | taxRate | csvFormat |
 |---|:---:|:---:|:---:|:---:|
 | `saveOrder()` | ✓ | | | |
 | `findOrder()` | ✓ | | | |
@@ -856,36 +856,36 @@ Ví dụ một lớp có bốn trường độc lập: `orders`, `smtpClient`, `
 | `calculateTax()` | | | ✓ | |
 | `exportCsv()` | | | | ✓ |
 
-Ma trận có các **cụm rời rạc**: hai phương thức liên quan lưu đơn, một phương thức email, một phương thức thuế, một phương thức xuất file. Đây là tín hiệu mạnh rằng lớp có nhiều trách nhiệm độc lập.
+The matrix shows **disconnected clusters**: two methods concern order storage, one email, one tax, and one file export. This strongly suggests several independent responsibilities.
 
-Ngược lại, với `Cart`:
+By contrast, for `Cart`:
 
-| Phương thức | lines / CartLine | Quy tắc giỏ hàng |
+| Method | lines / CartLine | Cart rules |
 |---|:---:|:---:|
-| `addLine()` | ✓ | kiểm tra dữ liệu |
-| `isEmpty()` | ✓ | ngăn checkout giỏ rỗng |
-| `total()` | ✓ | tính tổng các dòng |
-| `snapshot()` | ✓ | tránh lộ trạng thái mutable |
+| `addLine()` | ✓ | validates data |
+| `isEmpty()` | ✓ | prevents checkout with an empty cart |
+| `total()` | ✓ | computes line totals |
+| `snapshot()` | ✓ | avoids exposing mutable state |
 
-Các thao tác cùng bảo vệ một đối tượng miền nghiệp vụ.
+All these operations protect the same domain object.
 
-**Nhận diện cohesion dựa vào ý nghĩa**, không chỉ mức trùng lặp trường. Chẳng hạn, `validateEmail()` không đọc field nào nhưng có thể hợp lý trong một value object `EmailAddress` vì nó bảo vệ invariant của giá trị này.
+**Assess cohesion by meaning**, not just field overlap. For example, `validateEmail()` may read no fields yet fit a value object `EmailAddress` because it enforces that value's invariant.
 
-### LCOM và các metric khác
+### LCOM and other metrics
 
-`LCOM` (*Lack of Cohesion of Methods*) là họ chỉ số đo **sự thiếu gắn kết** giữa các phương thức. Có nhiều định nghĩa như LCOM1, LCOM2, LCOM3, LCOM4 và chúng **không cho cùng một giá trị** trên cùng một lớp. Một số biến thể dựa trên việc hai phương thức có cùng sử dụng field không; một số dựa trên đồ thị liên thông giữa phương thức.
+`LCOM` (*Lack of Cohesion of Methods*) is a family of metrics for **how little methods cohere**. Definitions include LCOM1, LCOM2, LCOM3, and LCOM4, and they **can produce different values** for the same class. Some variants measure shared field usage, while others use connectivity graphs between methods.
 
-Điểm cần nắm:
+Key points:
 
-- **Tên metric thôi là chưa đủ**: khi báo cáo “LCOM = 3”, phải nêu biến thể/công cụ và cách tính.
-- Theo một số biến thể, LCOM cao gợi ý lớp thiếu gắn kết; không suy diễn được một ngưỡng phổ quát áp dụng cho mọi dự án.
-- Static utility, immutable value object, lớp kế thừa, lớp dùng delegation, DTO, framework adapter có thể khiến chỉ số lệch so với ý nghĩa nghiệp vụ.
-- Phương thức truy cập field gián tiếp qua getter/helper có thể bị các phương pháp đo tĩnh diễn giải khác nhau.
-- Metric hỗ trợ **tìm lớp đáng review**, không thay thế việc hiểu trách nhiệm và lý do thay đổi.
+- **The metric name alone is insufficient**: when reporting “LCOM = 3”, specify the variant/tool and calculation method.
+- In some variants, a high LCOM indicates poor cohesion; there is no universal threshold suitable for every project.
+- Static utilities, immutable value objects, inherited classes, delegation-heavy classes, DTOs, and framework adapters may yield metrics that misrepresent business meaning.
+- Methods that access fields indirectly through getters/helpers may be interpreted differently by static metrics.
+- Metrics help **identify classes for review**, not replace understanding of responsibilities and reasons to change.
 
-Có thể kết hợp dấu hiệu định lượng như số lượng public methods, số trường/phụ thuộc, thay đổi theo lịch sử Git, độ phức tạp phương thức và thời gian kiểm thử. Nhưng đừng chia một lớp chỉ để làm số liệu đẹp hơn.
+Combine numerical indicators such as public-method count, number of fields/dependencies, Git change history, method complexity, and test duration when useful. But do not split a class merely to improve the numbers.
 
-## 9. Quy trình refactor từ cohesion thấp thành cao
+## 9. Refactoring low cohesion into high cohesion
 
 ~~~mermaid
 flowchart TD
@@ -902,24 +902,24 @@ flowchart TD
     J -->|Có| K[Đánh giá lại cohesion và coupling]
 ~~~
 
-**Thực hiện an toàn theo từng bước:**
+**Proceed safely in stages:**
 
-1. **Đọc hợp đồng hiện có:** các public method, ngoại lệ, tác dụng phụ, thread safety, transaction, thứ tự xử lý và cách caller dùng lớp.
-2. **Lập bản đồ trách nhiệm:** thay vì nhìn số dòng, hãy gom các phương thức/field theo use case và “ai yêu cầu thay đổi chức năng này?”.
-3. **Nhận diện invariant:** dữ liệu nào phải đổi cùng nhau để luôn hợp lệ? Đặt dữ liệu và hành vi bảo vệ invariant gần nhau. Không tùy tiện tách `Cart.lines` khỏi `Cart.addLine()` rồi để caller sửa danh sách.
-4. **Tạo lớp mới có tên nói đúng nhiệm vụ:** ví dụ `ReceiptSender`, `OrderRepository`, `PricePolicy`; ưu tiên API nhỏ, ổn định.
-5. **Di chuyển logic trước khi xóa đường cũ:** dùng `Extract Class`/`Move Method`; trong chuyển tiếp có thể giữ adapter/delegation tương thích có kiểm soát nếu nhiều caller phụ thuộc API cũ.
-6. **Tiêm phụ thuộc qua constructor:** giúp việc kiểm thử độc lập và thể hiện rõ collaborator bắt buộc. Nhưng **đừng tạo interface cho mọi lớp** nếu không có nhu cầu thay thế implementation hay biên kiến trúc.
-7. **Chạy test nghiệp vụ và integration test thích hợp:** xem xét lỗi database/email, rollback, kết quả tính tiền, thời gian/độ trễ và tương thích API.
-8. **Review tác động hệ thống:** refactor có làm nhiều lớp phụ thuộc chằng chịt hơn hoặc khiến quy tắc nghiệp vụ bị phân tán không? Nếu có, điều chỉnh lại ranh giới.
+1. **Read the existing contract:** public methods, exceptions, side effects, thread safety, transactions, processing order, and how callers use the class.
+2. **Map responsibilities:** instead of line counts, group methods/fields by use case and by “who requests changes to this functionality?”
+3. **Identify invariants:** which data must change together to remain valid? Keep that data close to the behavior enforcing its invariants. Do not arbitrarily separate `Cart.lines` from `Cart.addLine()` and let callers modify the list.
+4. **Create appropriately named classes:** for example, `ReceiptSender`, `OrderRepository`, and `PricePolicy`; favor small, stable APIs.
+5. **Move logic before removing old entry points:** use `Extract Class`/`Move Method`. During migration, carefully maintained compatible adapters/delegation may help when many callers still depend on the previous API.
+6. **Inject dependencies via constructors:** supports isolated testing and makes required collaborators explicit. But **do not introduce an interface for every class** without substitution or architectural-boundary needs.
+7. **Run business and appropriate integration tests:** check database/email failures, rollbacks, calculated amounts, timing/latency, and API compatibility.
+8. **Review system-wide effects:** has the refactor introduced tangled dependencies or scattered business rules? If so, reconsider the boundaries.
 
-Một refactor thất bại điển hình là chuyển mỗi method sang một service, sau đó mọi thao tác đơn giản phải chuyền qua 8 service. Cohesion của từng lớp có vẻ “cao”, nhưng coupling và độ khó hiểu của luồng nghiệp vụ tăng. Nên gom theo **khái niệm và invariant**, không theo kích thước file.
+A typical failed refactor moves each method into its own service, after which simple operations traverse 8 services. Individual classes may look “highly cohesive,” but coupling rises and business flows become harder to understand. Group by **concepts and invariants**, not file size.
 
-## 10. Kiểm thử cho thiết kế mới
+## 10. Testing the new design
 
-Kiểm thử nên khẳng định **hành vi và ranh giới tương tác**. Với ví dụ `CohesionDemo.java`, dùng JUnit Jupiter 5.
+Tests should verify **behavior and interaction boundaries**. For `CohesionDemo.java`, use JUnit Jupiter 5.
 
-**`CohesionDemoTest.java`** (đặt cùng package để gọi các class package-private):
+**`CohesionDemoTest.java`** (in the same package to access package-private classes):
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -993,41 +993,41 @@ class CohesionDemoTest {
 }
 ~~~
 
-**Test này chứng minh được gì?**
+**What does this test prove?**
 
-- `Cart` bảo vệ số lượng dương, không để caller thay đổi danh sách qua snapshot và tính tổng đúng.
-- `CheckoutService` điều phối đúng thứ tự, chỉ gọi các cộng tác viên qua hợp đồng đã tiêm, và không gọi chúng khi đầu vào sai.
-- Không cần khởi động database hay hệ thống gửi email để kiểm tra phép tính.
+- `Cart` enforces positive quantities, prevents callers from modifying its list through the snapshot, and correctly calculates totals.
+- `CheckoutService` coordinates the correct sequence, invokes collaborators only through injected contracts, and avoids calling them on invalid input.
+- No database or email service must be started to test the calculations.
 
-**Test chưa chứng minh điều gì?** Nó chưa chứng minh có transaction đúng, dữ liệu được lưu bền vững, hay email ngoài đời được giao thành công. Cần integration test với repository/gateway thật hoặc môi trường test tương ứng. Một test chỉ kiểm tra “class có 3 field” hay “method có tên calculateTotal” không xác nhận cohesion; đó là chi tiết triển khai.
+**What does this test not prove?** It does not establish correct transactions, durable persistence, or successful delivery of real emails. Integration tests against actual repositories/gateways or suitable test environments are still required. A test checking only “the class has 3 fields” or “the method is called calculateTotal” does not establish cohesion; those are implementation details.
 
-## 11. Những trường hợp không nên tách lớp máy móc
+## 11. Cases where splitting classes mechanically is unhelpful
 
-| Tình huống | Vì sao vẫn có thể cohesion tốt | Điều nên xem |
+| Scenario | Why cohesion may still be good | What to watch for |
 |---|---|---|
-| **Aggregate/domain entity** có nhiều hành vi | Các hành vi bảo vệ cùng trạng thái và invariant | Đừng biến domain thành anemic model |
-| **Application service / coordinator** gọi nhiều phụ thuộc | Các phụ thuộc phục vụ **một use case** | Có đang chứa thuật toán hạ tầng quá sâu không? |
-| **Value object** có factory, parse, validate, normalize | Cùng khái niệm và dữ liệu bất biến | Tránh “utils” trộn nhiều loại giá trị |
-| **Controller** có nhiều endpoint gần nhau | Cùng một resource hoặc bounded context | Tránh trộn nghiệp vụ và HTTP mapping |
-| **Adapter** bao nhiều thao tác của cùng một API | Cùng một ranh giới tích hợp | Tránh lộ trực tiếp implementation vào domain |
-| **Startup/composition root** tạo nhiều đối tượng | Mục đích chính là lắp ghép ứng dụng | Giữ wiring; không nhồi business rules |
+| **Aggregate/domain entity** with many behaviors | Behaviors protect the same state and invariants | Do not turn the domain into an anemic model |
+| **Application service / coordinator** calling many dependencies | All dependencies serve **one use case** | Does it embed too many infrastructure algorithms? |
+| **Value object** with factory, parse, validate, and normalize methods | One concept with immutable data | Avoid “utils” mixing different value types |
+| **Controller** with multiple related endpoints | One resource or bounded context | Avoid mixing business logic with HTTP mapping |
+| **Adapter** supporting many operations on the same API | One integration boundary | Avoid leaking implementations directly into the domain |
+| **Startup/composition root** building many objects | Main responsibility is assembling the application | Keep wiring here; do not embed business rules |
 
-Ví dụ `Money` có các phép cộng, trừ, nhân, quy đổi/định dạng cơ bản; không vì nhiều phương thức mà kết luận cần nhiều lớp. Tuy nhiên quy đổi tiền tệ phụ thuộc tỷ giá thời gian thực thường nên do một cộng tác viên có trách nhiệm riêng cung cấp, thay vì làm một value object bất biến phải gọi HTTP.
+For example, `Money` can support addition, subtraction, multiplication, and basic conversions/formatting; multiple methods alone do not imply it should be split. But converting currencies at real-time exchange rates should generally involve a separate collaborator rather than forcing an immutable value object to call HTTP.
 
-## 12. Cohesion và hiệu năng, thread safety, dữ liệu
+## 12. Cohesion, performance, thread safety, and data
 
-Cohesion cao thường giúp cô lập thay đổi, nhưng **không tự bảo đảm** tốc độ chạy, an toàn luồng hoặc tránh mất dữ liệu:
+High cohesion often isolates changes, but **does not itself guarantee** performance, thread safety, or prevention of data loss:
 
-- `Cart` ví dụ dùng `ArrayList` mutable và không thread-safe. Với cart trong session chỉ do một luồng chỉnh sửa tại mỗi thời điểm, có thể chấp nhận. Nếu nhiều request đồng thời thay đổi cùng cart, cần cơ chế đồng bộ hoặc thiết kế bất biến.
-- Tách repository vào lớp riêng không làm giao dịch DB tự động nguyên tử. Transaction boundary nằm ở use case hoặc tầng phù hợp theo framework và nghiệp vụ.
-- Nếu tính total nhiều lần trên danh sách lớn, có thể cần cache kết quả kèm invalidation khi `addLine()`. Nhưng tối ưu hóa phải dựa trên đo đạc, không phá invariant chỉ để giảm số dòng.
-- `BigDecimal` được dùng cho tiền để tránh lỗi nhị phân của `double`; ứng dụng thật còn cần thống nhất currency, scale và rounding policy.
+- The example `Cart` uses a mutable `ArrayList` and is not thread-safe. That may be acceptable for a session cart modified by only one thread at a time. If concurrent requests modify the same cart, synchronization or immutable design is needed.
+- Moving persistence into a separate repository class does not automatically make database transactions atomic. The transaction boundary belongs at the use case or another appropriate layer, depending on framework and business rules.
+- If totals are repeatedly calculated over a large collection, caching and invalidating the result when `addLine()` is invoked may help. Optimize based on measurements without breaking invariants merely to reduce code size.
+- `BigDecimal` is used for money to avoid binary floating-point inaccuracies of `double`; real applications also need agreed currency, scale, and rounding policies.
 
-**Thiết kế lớp tốt là sự cân bằng:** cohesion cao, coupling được quản lý, invariants được bảo vệ, API dễ đọc và mức phức tạp phù hợp phạm vi bài toán.
+**Good class design balances multiple goals:** high cohesion, managed coupling, protected invariants, readable APIs, and complexity appropriate to the problem.
 
-## 13. Bài tập: cải thiện cohesion của UserManager
+## 13. Exercise: improving UserManager cohesion
 
-Cho lớp giả định có API:
+Consider this hypothetical class API:
 
 ~~~java
 class UserManager {
@@ -1039,57 +1039,57 @@ class UserManager {
 }
 ~~~
 
-**Yêu cầu:** Hãy phân nhóm method theo chủ thể thay đổi; đề xuất các lớp như `RegistrationService`, `PasswordVerifier`, `UserReportExporter`, `NewsletterService` và `RevenueReportService` **chỉ khi** ranh giới đó thực sự đúng trong domain. Phác thảo sơ đồ phụ thuộc; không để mọi lớp quay lại tham chiếu `UserManager` như một “god service” trá hình.
+**Task:** Group methods by source of change; propose classes such as `RegistrationService`, `PasswordVerifier`, `UserReportExporter`, `NewsletterService`, and `RevenueReportService` **only if** those boundaries truly fit the domain. Sketch the dependency diagram; do not let every class point back to `UserManager` as a disguised “god service.”
 
-Viết tối thiểu các test sau:
+Write at least the following tests:
 
-1. Đăng ký hợp lệ và xác thực mật khẩu đúng quy tắc.
-2. Xuất CSV không phụ thuộc SMTP; gửi newsletter không yêu cầu mở file CSV.
-3. Quy tắc doanh thu thay đổi không làm thay đổi logic đăng ký và xác thực.
-4. Use case điều phối vẫn có thể chạy từ một composition root rõ ràng mà không xuất hiện vòng phụ thuộc.
+1. Valid registration and password verification according to the rules.
+2. CSV export does not depend on SMTP; sending newsletters does not require opening a CSV file.
+3. Revenue rule changes do not alter registration or authentication logic.
+4. The coordinating use case can still run from a clear composition root without circular dependencies.
 
-**Tự đánh giá:** Bạn có thể nói một câu ngắn giải thích trách nhiệm của từng lớp mới không? Phương thức và trạng thái cần bảo vệ một invariant có ở cùng chủ thể không? Đường đi từ một use case tới các cộng tác viên có dễ lần theo không?
+**Self-assessment:** Can you briefly explain each new class's responsibility in one sentence? Do methods and state that enforce an invariant stay with the same owner? Can you easily trace a use case's path through its collaborators?
 
 ---
 
-**Ghi nhớ:** *Cohesion cao* là các phần bên trong lớp **cùng phục vụ một trách nhiệm có ý nghĩa**, vì vậy thay đổi nghiệp vụ dễ khoanh vùng và kiểm thử độc lập. Đánh giá cohesion phải dựa vào **ngữ nghĩa, invariant và lý do thay đổi**, không chỉ tên lớp, số method, số field hay điểm LCOM.
+**Remember:** *High cohesion* means members of a class **jointly serve one meaningful responsibility**, so business changes are easier to isolate and test independently. Evaluate cohesion by **semantics, invariants, and reasons to change**, not just class names, method counts, field counts, or LCOM scores.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-design-003">Mức phụ thuộc giữa các lớp</a>
+## <a id="class-design-003">Coupling between classes</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Mức phụ thuộc giữa các lớp (Coupling) trong thiết kế OOP
+# Coupling between classes in OOP design
 
-## 1. Vì sao cần quan tâm mức phụ thuộc?
+## 1. Why does coupling matter?
 
-Giả sử ứng dụng bán hàng có lớp `CheckoutService` xử lý thanh toán. Ban đầu hệ thống chỉ dùng một cổng thanh toán và gửi biên nhận qua email. Sau này cần chuyển nhà cung cấp thanh toán, thêm SMS, kiểm thử mà không trừ tiền thật, hoặc chạy demo ngoại tuyến.
+Suppose a retail application has a `CheckoutService` that handles checkout. Initially it uses one payment gateway and emails receipts. Later it must switch payment providers, add SMS, run tests without charging real money, or demonstrate the system offline.
 
-Nếu `CheckoutService` tự tạo một đối tượng cổng thanh toán cụ thể, tự gọi HTTP, tự cấu hình email và biết cấu trúc bảng database, chỉ một thay đổi nhỏ bên ngoài có thể buộc sửa hàng loạt dòng trong `CheckoutService`.
+If `CheckoutService` constructs a concrete payment gateway, calls HTTP directly, configures email, and knows the database table structure, a small external change may force many edits to `CheckoutService`.
 
-Đó là vấn đề **coupling**: mức độ một lớp/phần mềm **bị ràng buộc bởi lớp/phần mềm khác**. Phụ thuộc càng chặt vào chi tiết dễ thay đổi, việc sửa, kiểm thử, thay thế và sử dụng lại thường càng khó.
+This is **coupling**: how strongly one class or component **depends on another**. The tighter the dependence on frequently changing details, the harder modification, testing, substitution, and reuse generally become.
 
-**Coupling không chỉ là số lượng lớp được import.** Hai lớp có thể cần trao đổi với nhau nhưng không bị gắn chặt vào cấu trúc nội bộ của nhau. Ngược lại, chỉ một mối phụ thuộc cũng có thể rất chặt nếu bên dùng dựa vào nhiều giả định ngầm về thứ tự gọi, trạng thái và ngoại lệ của bên được dùng.
+**Coupling is not just the number of imported classes.** Two classes may communicate without depending on each other's internals. Conversely, one dependency can be tightly coupled if the consumer makes many implicit assumptions about call order, state, and exceptions.
 
-Mục tiêu thực tế là **giảm những phụ thuộc không cần thiết và hướng phụ thuộc vào hợp đồng ổn định**, chứ không phải cố đưa số mối phụ thuộc về 0.
+The practical goal is to **remove unnecessary dependencies and point dependencies toward stable contracts**, not to reduce every dependency count to 0.
 
-## 2. Nhìn ở ba mức: mã nguồn, đối tượng và thay đổi
+## 2. Three perspectives: source code, runtime objects, and change
 
-| Góc nhìn | Cần quan sát | Câu hỏi hữu ích |
+| Perspective | What to observe | Useful question |
 |---|---|---|
-| **Phụ thuộc ở mã nguồn** | Import, chữ ký phương thức, kiểu field, `extends`, `implements`, lời gọi API | Nếu API/kiểu B đổi, lớp A có cần sửa hoặc biên dịch lại không? |
-| **Phụ thuộc ở thời điểm chạy** | A giữ/cần đối tượng B; cấu hình, mạng, transaction, dữ liệu chia sẻ | Nếu B lỗi hoặc chậm, A có bị ảnh hưởng thế nào? |
-| **Phụ thuộc khi thay đổi** | Giả định về dữ liệu, trình tự gọi, định dạng, chính sách nghiệp vụ | Đổi một quy tắc có kéo theo việc sửa nhiều lớp không? |
+| **Source-code dependency** | Imports, method signatures, field types, `extends`, `implements`, API calls | If B's API or type changes, must class A change or be recompiled? |
+| **Runtime dependency** | A holds/needs an instance of B; configuration, networking, transactions, shared data | How is A affected when B fails or slows down? |
+| **Change dependency** | Assumptions about data, call sequences, formats, business policies | Does changing one rule require edits to many classes? |
 
-Hai lớp có thể liên kết tại runtime mà vẫn tương đối dễ thay thế nhờ một interface nhỏ và hợp đồng rõ ràng. Ngược lại, giao tiếp bằng chuỗi dữ liệu “ma thuật” có thể làm chúng bị ràng buộc ngầm dù mã nguồn gần như không import nhau.
+Two classes can be linked at runtime yet remain fairly substitutable through a small interface with a clear contract. Conversely, “magic” data strings can create hidden coupling even when the source code contains almost no mutual imports.
 
-Một cách hình dung đơn giản:
+A simple illustration:
 
 ```mermaid
 flowchart LR
@@ -1098,11 +1098,11 @@ flowchart LR
     A -.->|"thay B có thể buộc sửa A"| A
 ```
 
-Khi B đổi phương thức, kiểu trả về, định dạng lỗi hoặc quy tắc bắt buộc phải gọi trước/sau, A có thể phải thay đổi theo. Độ lan truyền này là tín hiệu thực dụng của coupling.
+When B changes a method, return type, error format, or required call sequence, A may need to change as well. That propagation is a practical sign of coupling.
 
-## 3. Hai phong cách thiết kế: phụ thuộc chặt và phụ thuộc lỏng
+## 3. Two design approaches: tight and loose coupling
 
-### 3.1. Ví dụ phụ thuộc chặt (tight coupling)
+### 3.1. Tightly coupled example
 
 ```java
 // Minh họa một thiết kế khó thay đổi, không phải chương trình đầy đủ.
@@ -1119,17 +1119,17 @@ final class CheckoutService {
 }
 ```
 
-Giả định `CardProcessor`, `SmtpMailer` và `Order` là các lớp đã được định nghĩa. Những vấn đề lộ ra:
+Assume `CardProcessor`, `SmtpMailer`, and `Order` are already defined classes. The problems include:
 
-- `CheckoutService` biết rõ **lớp cụ thể** của bên thanh toán và gửi thư.
-- Service **tự tạo dependency**, khiến kiểm thử khó thay bằng fake khi không gọi dịch vụ thật.
-- Địa chỉ máy chủ và thông tin cấu hình nằm trong lớp nghiệp vụ.
-- Việc đổi nhà cung cấp hoặc kênh gửi biên nhận kéo theo sửa service.
-- Hai tác dụng phụ là “trừ tiền” và “gửi thư” bị gắn vào một luồng; cần thiết kế xử lý lỗi phù hợp.
+- `CheckoutService` knows the **concrete classes** used for payments and messaging.
+- The service **constructs its dependencies**, making it hard to inject fakes without calling real services.
+- Server addresses and configuration reside in the business class.
+- Changing providers or receipt-delivery channels forces service changes.
+- The two side effects, “charge money” and “send mail,” are tied into one workflow and require appropriate failure handling.
 
-Không phải cứ dùng `new` là sai: `new Money(...)` hoặc tạo DTO/value object riêng bên trong service thường hoàn toàn hợp lý. Vấn đề ở đây là **tự tạo và phụ thuộc trực tiếp vào những cộng tác viên có chi tiết bên ngoài dễ thay đổi**.
+Using `new` is not inherently wrong: creating `new Money(...)` or a DTO/value object inside the service is often reasonable. The issue is **directly constructing and depending on collaborators whose external implementation details are likely to change**.
 
-### 3.2. Hướng phụ thuộc vào hợp đồng
+### 3.2. Depend on contracts instead
 
 ```mermaid
 classDiagram
@@ -1164,13 +1164,13 @@ classDiagram
     ReceiptSender <|.. ConsoleReceiptSender : hiện thực
 ```
 
-Giờ `CheckoutService` cần hai **hợp đồng có ý nghĩa nghiệp vụ**: `PaymentGateway` và `ReceiptSender`. Các implementation được cung cấp từ bên ngoài, thường qua constructor injection.
+`CheckoutService` now needs two **meaningful business contracts**: `PaymentGateway` and `ReceiptSender`. Their implementations are supplied externally, usually through constructor injection.
 
-Nhờ đó, service không phải biết cổng thanh toán dùng HTTP, mock, queue hay adapter của nhà cung cấp nào. Nó vẫn có dependency vào *hành vi thanh toán*, nhưng được cách ly khỏi phần lớn chi tiết triển khai.
+As a result, the service need not know which HTTP client, mock, queue, or vendor adapter the payment gateway uses. It still depends on *payment behavior*, but is insulated from most implementation details.
 
-## 4. Ví dụ Java 11+ hoàn chỉnh, chạy được và tự kiểm tra
+## 4. Complete runnable Java 11+ example with self-checks
 
-Lưu toàn bộ ví dụ sau vào tệp `CouplingDemo.java`:
+Save the entire example as `CouplingDemo.java`:
 
 ```java
 import java.util.Objects;
@@ -1338,14 +1338,14 @@ public class CouplingDemo {
 }
 ```
 
-Chạy trên JDK 11 trở lên:
+Run on JDK 11 or later:
 
 ```bash
 javac CouplingDemo.java
 java CouplingDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 Paid ORD-7: 280000 cents
@@ -1354,32 +1354,32 @@ RESULT tx-ORD-7
 Fake checks passed
 ```
 
-Ở bản thiết kế này:
+In this design:
 
-1. **`CheckoutService` có trách nhiệm điều phối checkout**; việc tính tổng thuộc `Order`, thao tác thu tiền thuộc `PaymentGateway`, việc gửi biên nhận thuộc `ReceiptSender`.
-2. **Lớp nghiệp vụ dùng interface** nên thay `ConsolePaymentGateway` bằng adapter khác không đòi sửa nội dung `CheckoutService` nếu hợp đồng và hành vi cam kết không đổi.
-3. **Constructor injection** cho phép truyền các fake khi kiểm thử. Test xác nhận mã đơn, số tiền và người nhận thay vì chỉ so khớp cấu trúc code.
-4. **Sự phụ thuộc chưa biến mất:** checkout vẫn cần một dịch vụ có khả năng thu tiền và một dịch vụ gửi biên nhận. Ta chỉ giảm việc dính chặt vào chi tiết của các dịch vụ đó.
+1. **`CheckoutService` is responsible for coordinating checkout**; `Order` calculates totals, `PaymentGateway` performs charges, and `ReceiptSender` delivers receipts.
+2. **Business code uses interfaces**, so replacing `ConsolePaymentGateway` with another adapter does not require changing `CheckoutService` if contractual behavior and guarantees remain the same.
+3. **Constructor injection** allows fake implementations in tests. Tests verify order IDs, amounts, and recipients instead of only comparing code structure.
+4. **Dependencies have not disappeared:** checkout still needs a charging capability and a receipt-sending service. The design only reduces coupling to their details.
 
-Đây là ví dụ về **thiết kế phụ thuộc**, không phải quy trình thanh toán production đầy đủ. Nếu thu tiền thành công nhưng gửi biên nhận lỗi, lệnh thu tiền không thể tự “undo”. Hệ thống thực cần trạng thái giao dịch rõ ràng, idempotency, retry/outbox, hoặc cơ chế phù hợp để không trừ tiền lặp lại. Việc giảm coupling giúp cô lập chính sách tích hợp nhưng **không tự giải quyết các bài toán phân tán**.
+This demonstrates **dependency design**, not a complete production payment workflow. If charging succeeds but receipt delivery fails, the charge cannot simply be “undone.” Real systems need explicit transaction states, idempotency, retry/outbox, or other mechanisms to avoid double charging. Reducing coupling isolates integration policies, but **does not solve distributed-system problems on its own**.
 
-## 5. Các dạng coupling thường được nhắc tới
+## 5. Commonly discussed forms of coupling
 
-Một số tài liệu OOP và structured design phân biệt những kiểu phụ thuộc sau. Đây là **phân loại để suy nghĩ**, không phải bảng xếp hạng tuyệt đối dùng cho mọi kiến trúc Java hiện đại.
+Some OOP and structured-design references distinguish these forms of dependency. This is **a classification for reasoning**, not an absolute ranking for every modern Java architecture.
 
-| Dạng | Dấu hiệu | Ví dụ/bất lợi | Cách cải thiện khi cần |
+| Form | Indicator | Example / drawback | Improvement when needed |
 |---|---|---|---|
-| **Content coupling** | A can thiệp hoặc phụ thuộc trực tiếp vào chi tiết thực thi/nội bộ B | A sửa trực tiếp cấu trúc riêng tư của B thông qua reflection | Đóng gói trạng thái; cung cấp API theo hành vi |
-| **Common coupling** | Nhiều thành phần phụ thuộc cùng trạng thái dùng chung | Biến `static` mutable/global cache bị sửa ở nhiều nơi | Giới hạn nơi sở hữu và quyền thay đổi trạng thái |
-| **External coupling** | Nhiều thành phần phụ thuộc một giao thức/định dạng bên ngoài | Mỗi lớp tự diễn giải response JSON của nhà cung cấp | Adapter/anti-corruption layer, hợp đồng và versioning |
-| **Control coupling** | A truyền cờ/mã để điều khiển chi tiết các nhánh của B | `process(order, true, 3)` với các cờ khó hiểu | Tách thao tác có tên hoặc dùng policy/strategy |
-| **Stamp coupling** | A đưa cho B cả cấu trúc phức tạp dù B chỉ cần một phần | Truyền toàn bộ `UserProfile` để chỉ lấy email | Truyền dữ liệu hoặc contract nhỏ thực sự cần |
-| **Data coupling** | Các thành phần trao đổi dữ liệu xác định rõ | `charge(orderId, amountCents)` | Thường có thể chấp nhận và dễ hiểu |
-| **Message coupling** | Giao tiếp bằng lời gọi/hợp đồng thông điệp, hạn chế hiểu nội bộ | `gateway.charge(request)` qua interface nhỏ | Chú trọng hợp đồng, lỗi, versioning; không tự coi là không phụ thuộc |
+| **Content coupling** | A directly interferes with or relies on B's internal implementation | A changes B's private structure using reflection | Encapsulate state; provide behavior-oriented APIs |
+| **Common coupling** | Multiple components depend on shared state | A mutable `static` variable or global cache is changed in many places | Limit ownership and mutation rights for shared state |
+| **External coupling** | Several components depend on an external protocol/format | Each class parses a vendor's JSON response on its own | Use an adapter/anti-corruption layer, contracts, and versioning |
+| **Control coupling** | A passes flags/codes to select B's internal branches | `process(order, true, 3)` with opaque flags | Use intention-revealing operations or a policy/strategy |
+| **Stamp coupling** | A passes an entire complex structure when B only needs part | Passing `UserProfile` merely to extract an email address | Pass only the needed data or focused contract |
+| **Data coupling** | Components exchange clearly defined data | `charge(orderId, amountCents)` | Often acceptable and easy to understand |
+| **Message coupling** | Communication occurs through calls/message contracts with limited knowledge of internals | `gateway.charge(request)` through a small interface | Pay attention to contracts, errors, and versioning; dependencies still exist |
 
-Cần đọc bối cảnh: truyền `UserProfile` không nhất thiết sai nếu bên được gọi có trách nhiệm nghiệp vụ với **cả profile**. Truyền quá nhiều tham số nguyên thủy cũng có thể dẫn đến *primitive obsession*; một value object như `Money` hay `PaymentRequest` giúp diễn đạt hợp đồng tốt hơn.
+Context matters: passing `UserProfile` is not necessarily wrong when the callee genuinely needs **the whole profile**. Passing too many primitive arguments may also cause *primitive obsession*; a value object such as `Money` or `PaymentRequest` can express the contract better.
 
-### Một ví dụ về control coupling
+### An example of control coupling
 
 ```java
 // Mã khó đọc: caller phải biết giá trị mode/flag mang ý nghĩa gì.
@@ -1388,7 +1388,7 @@ void publish(Document doc, int mode, boolean urgent) {
 }
 ```
 
-Có thể thay bằng thao tác phản ánh mục đích hoặc policy rõ nghĩa:
+Replace it with intention-revealing operations or a clearly named policy:
 
 ```java
 interface DocumentPublisher {
@@ -1403,13 +1403,13 @@ final class EmailPublisher implements DocumentPublisher {
 }
 ```
 
-`Document` và chi tiết triển khai ở đây được giả định tồn tại. Chỉ nên thêm nhiều lớp triển khai khi thực sự có các hành vi thay thế độc lập; nếu chỉ hai nhánh đơn giản và ổn định, một enum và `switch` rõ ràng cũng có thể đủ.
+Assume `Document` and the implementation details exist elsewhere. Introduce multiple implementation classes only when independently substitutable behaviors exist; for two simple, stable branches, a clear enum and `switch` may suffice.
 
-## 6. Nguyên tắc giảm coupling và ranh giới áp dụng
+## 6. Principles for reducing coupling and their boundaries
 
-### A. Information hiding – giấu chi tiết triển khai
+### A. Information hiding – conceal implementation details
 
-Đừng để các lớp bên ngoài biết cấu trúc lưu trữ nội bộ của một object chỉ để thay đổi nghiệp vụ:
+Do not expose an object's internal storage structure to external classes merely so they can perform a business operation:
 
 ```java
 // Tránh:
@@ -1421,19 +1421,19 @@ order.addLine(productId, quantity);
 order.markPaid(paymentId);
 ```
 
-Lớp gọi biết **hành vi mà Order cam kết**, không cần biết phải sửa bao nhiêu field. Khi cấu trúc nội bộ đổi từ List sang Map, API bên ngoài có thể giữ nguyên.
+Callers know **the behavior Order promises** rather than the number of fields to modify. When internal storage changes from a List to a Map, the external API can stay the same.
 
 ### B. Dependency Inversion Principle (DIP)
 
-Module nghiệp vụ có vai trò chính không nên phải gắn vào chi tiết hạ tầng dễ thay đổi; cả hai có thể phụ thuộc một abstraction phù hợp. Trong ví dụ, `CheckoutService` và adapter thanh toán cùng biết interface `PaymentGateway`.
+High-level business modules should not be tied to volatile infrastructure details; both can depend on a suitable abstraction. In this example, `CheckoutService` and the payment adapter both know the `PaymentGateway` interface.
 
-**DIP không đồng nhất với dependency injection (DI).** DIP là nguyên tắc tổ chức phụ thuộc; DI là một kỹ thuật cung cấp cộng tác viên từ ngoài vào. Có thể dùng constructor injection mà vẫn phụ thuộc vào concrete class khó thay thế. Ngược lại, một interface nhỏ vẫn có giá trị mà không cần framework DI.
+**DIP is not the same as dependency injection (DI).** DIP is a principle for organizing dependencies; DI is a technique for supplying collaborators from outside. Constructor injection can still depend on a concrete class that is hard to replace. Conversely, a small interface can be valuable without a DI framework.
 
 ### C. Interface Segregation Principle (ISP)
 
-Một interface quá rộng cũng tạo coupling. Nếu `PaymentProvider` chứa các hàm `charge`, `refund`, `issueCard`, `manageAccount`, `generateReport`, service chỉ xử lý checkout sẽ phụ thuộc vào nhiều điều nó không cần.
+An overly broad interface also creates coupling. If `PaymentProvider` contains `charge`, `refund`, `issueCard`, `manageAccount`, and `generateReport`, a checkout-only service depends on capabilities it does not need.
 
-Tách hợp đồng theo vai trò sử dụng khi các vai trò thực sự độc lập:
+Split contracts by consumer roles when the roles are genuinely independent:
 
 ```java
 interface PaymentCharger {
@@ -1445,19 +1445,19 @@ interface PaymentRefunder {
 }
 ```
 
-Không nên tách interface chỉ để có thật nhiều file. Nếu nhiều thao tác luôn đi cùng nhau và cùng thay đổi, một hợp đồng thống nhất có thể đơn giản, dễ hiểu hơn.
+Do not split interfaces merely to create more files. If several operations always belong together and change together, one cohesive contract may be simpler to understand.
 
-### D. Single Responsibility và cohesion
+### D. Single responsibility and cohesion
 
-**Coupling** nói về **quan hệ giữa các lớp**; **cohesion** (mức gắn kết chức năng) nói về **các trách nhiệm trong cùng một lớp**.
+**Coupling** concerns **relationships between classes**; **cohesion** concerns **responsibilities within the same class**.
 
-Một lớp vừa thanh toán, gửi mail, đọc SQL và vẽ PDF thường có nhiều lý do để thay đổi. Việc phân chia đúng trách nhiệm có thể giảm coupling có hại và tăng cohesion. Tuy nhiên tách một thao tác đơn giản thành hàng chục wrapper chỉ để “mỗi lớp một dòng” có thể làm luồng xử lý khó hiểu hơn.
+A class that processes payments, sends email, reads SQL, and generates PDFs often has many reasons to change. Assigning responsibilities correctly can reduce harmful coupling and improve cohesion. However, wrapping a simple operation in dozens of classes so that “each class has one line” can make workflows harder to follow.
 
-Đánh giá thiết kế cần cân bằng: **cohesion cao, coupling phù hợp** và số lượng thành phần vừa đủ.
+Evaluate design with a balance of **high cohesion, appropriate coupling**, and a manageable number of components.
 
-### E. Law of Demeter và chuỗi truy cập
+### E. Law of Demeter and navigation chains
 
-Cẩn trọng khi một lớp đào sâu vào nhiều tầng chi tiết của object khác:
+Be careful when a class reaches through many levels of another object's internals:
 
 ```java
 // Ràng buộc vào nhiều nấc cấu trúc:
@@ -1465,17 +1465,17 @@ String city = order.getCustomer()
         .getAddress().getCity();
 ```
 
-Nếu “thành phố giao hàng” là khái niệm ổn định của đơn hàng, cân nhắc:
+If “shipping city” is a stable order concept, consider:
 
 ```java
 String city = order.getShippingCity();
 ```
 
-Nhưng đừng tự động biến mọi getter lồng nhau thành phương thức chuyển tiếp. DTO để hiển thị hoặc truy vấn dữ liệu thuần túy có thể hợp lý với chuỗi truy cập. Câu hỏi quan trọng là **lớp hiện tại có đang biết cấu trúc nội bộ mà nó không nên biết không?**
+But do not automatically replace every nested getter with a forwarding method. A presentation DTO or pure data query may legitimately use access chains. The key question is **whether this class knows internal structure it should not need to know**.
 
-## 7. Coupling ở cấp package và module
+## 7. Coupling at package and module level
 
-Ở cấp hệ thống, phụ thuộc có thể tạo thành chu trình:
+At the system level, dependencies can form cycles:
 
 ```mermaid
 flowchart LR
@@ -1484,7 +1484,7 @@ flowchart LR
     C --> A
 ```
 
-Khi cả ba module import qua lại, khó cô lập thay đổi và kiểm thử từng phần. Một cách sắp xếp khác:
+When all three modules import one another, changes and individual tests become hard to isolate. An alternative organization is:
 
 ```mermaid
 flowchart TB
@@ -1495,60 +1495,60 @@ flowchart TB
     Adapter --> Domain
 ```
 
-Trong cách tổ chức này, những kiểu nghiệp vụ ổn định và contract cần thiết có thể được đặt tại domain/application; hạ tầng hiện thực contract. Nơi khởi tạo ứng dụng (composition root) kết nối adapter với service. Sự phụ thuộc **mã nguồn** hướng vào hợp đồng, dù luồng **runtime** vẫn đi từ service ra hạ tầng thông qua implementation.
+In this structure, stable domain types and required contracts can live in the domain/application layer; infrastructure implements those contracts. The application bootstrap (*composition root*) connects adapters to services. **Source-code** dependencies point toward contracts, even though **runtime** calls still flow from services to infrastructure implementations.
 
-Không nên áp một sơ đồ kiến trúc cứng cho mọi bài toán. Dự án nhỏ có thể dùng package đơn giản; hệ thống lớn với nhiều tích hợp và chu kỳ thay đổi khác nhau thường hưởng lợi từ ranh giới rõ.
+Do not impose one rigid architectural diagram on every problem. Small projects can have simple packages; large systems with many integrations and distinct change cycles often benefit from explicit boundaries.
 
-### Khi hai module buộc phải giao tiếp hai chiều?
+### What if two modules must communicate in both directions?
 
-Trước hết kiểm tra xem trách nhiệm có bị phân chia sai không. Có thể trích một hợp đồng chung, dùng callback hoặc domain event. Nhưng event cũng tạo **coupling theo thông điệp**: bên nhận phụ thuộc schema, thời điểm, thứ tự, tính trùng lặp và cách xử lý lỗi. “Không import nhau” không có nghĩa “không còn phụ thuộc”.
+First verify whether responsibilities have been split incorrectly. You may extract a shared contract, use callbacks, or publish domain events. Events still create **message coupling**: consumers depend on schemas, timing, order, duplication, and failure handling. “No mutual imports” does not mean “no dependencies.”
 
-## 8. Đo coupling như thế nào?
+## 8. How can we measure coupling?
 
-Các chỉ số có thể hỗ trợ phát hiện vấn đề, nhưng cần đọc cùng hành vi thực tế.
+Metrics can help identify problems, but must be interpreted alongside actual behavior.
 
-| Chỉ số/tín hiệu | Cách hiểu | Giới hạn |
+| Metric / indicator | Interpretation | Limitation |
 |---|---|---|
-| **CBO (Coupling Between Objects)** | Số lớp mà một lớp liên hệ/phụ thuộc theo định nghĩa của công cụ | Cách đếm không thống nhất giữa công cụ; không nói trực tiếp mối phụ thuộc nào nguy hiểm |
-| **Fan-out** | Một module có bao nhiêu dependency đi ra | Nhiều dependency vào API ổn định có thể ít rủi ro hơn một dependency vào chi tiết dễ đổi |
-| **Fan-in** | Có bao nhiêu nơi phụ thuộc vào một module | Fan-in cao có thể cho thấy component chung hữu ích, nhưng thay đổi ở đó cần thận trọng |
-| **Chu trình phụ thuộc** | A → B → C → A | Có thể khiến phân lớp và triển khai độc lập khó hơn |
-| **Change coupling** | Các file/lớp thường phải đổi cùng nhau | Cần xem lịch sử thay đổi; có thể do cùng feature chứ không do thiết kế xấu |
-| **Khó kiểm thử cô lập** | Test phải mở database, mạng hoặc nhiều service mới chạy được | Có thể do ranh giới quá rộng, dependency ẩn hoặc thiếu abstraction thích hợp |
+| **CBO (Coupling Between Objects)** | Number of classes a class relates to or depends on, per a tool's definition | Counting rules differ across tools; does not reveal which dependency is risky |
+| **Fan-out** | Number of outgoing dependencies from a module | Many dependencies on stable APIs may be safer than one dependency on volatile details |
+| **Fan-in** | Number of consumers depending on a module | High fan-in may indicate a useful shared component, but changes require care |
+| **Dependency cycle** | A → B → C → A | May complicate layering and independent deployment |
+| **Change coupling** | Files/classes often have to change together | Check change history; shared features can also explain correlated edits |
+| **Difficulty testing in isolation** | Tests require databases, networks, or several services | May indicate broad boundaries, hidden dependencies, or missing abstractions |
 
-Một ví dụ: `ReportService` dùng năm class value object nhỏ, bất biến, với hợp đồng ổn định không nhất thiết có vấn đề hơn `CheckoutService` phụ thuộc một SDK thanh toán vừa lớn vừa thay đổi thường xuyên.
+For example, a `ReportService` using five small, immutable value objects with stable contracts is not necessarily worse off than a `CheckoutService` depending on a single large, frequently changing payment SDK.
 
-Muốn đánh giá đúng, hãy kết hợp **chi phí khi thay đổi**, **khả năng chạy test**, **độ ổn định của hợp đồng** và **mức độ hiểu biết về chi tiết bên ngoài**. Đừng chỉ đếm `import` hoặc số lượng field.
+Assess **change costs**, **testability**, **contract stability**, and **knowledge of external details** together. Do not simply count `import` statements or fields.
 
-## 9. Quy trình thực tế khi thấy hai lớp phụ thuộc chặt
+## 9. A practical workflow for tightly coupled classes
 
-1. **Chỉ ra điều đang biến động:** nhà cung cấp, nguồn dữ liệu, cấu trúc object, quy tắc nghiệp vụ, định dạng thông điệp hay cơ chế gửi nhận?
-2. **Xác định lớp nào cần trách nhiệm gì:** `CheckoutService` cần “thu tiền”, không cần biết endpoint HTTP cụ thể.
-3. **Vạch hợp đồng nhỏ nhưng đầy đủ:** tham số, kết quả, ngoại lệ, các điều kiện tiền/hậu phải rõ ràng.
-4. **Đưa phần thay đổi thường xuyên vào implementation riêng:** adapter database, HTTP, email hoặc chính sách nghiệp vụ có nhiều biến thể.
-5. **Cung cấp dependency có chủ đích:** constructor injection cho thành phần bắt buộc và ổn định trong thời gian sống service; truyền tham số nếu chỉ cần theo từng thao tác.
-6. **Kiểm thử qua hợp đồng:** giả lập giao diện ở ranh giới, kiểm tra hành vi observable; thêm integration test cho adapter thật khi cần.
-7. **Đánh giá lại độ phức tạp:** nếu sau refactor số lớp tăng nhiều nhưng thay đổi thực tế không đơn giản hơn, thiết kế có thể đã trừu tượng hóa quá sớm.
+1. **Identify what varies:** provider, data source, object structure, business rule, message format, or delivery mechanism?
+2. **Determine each class's required responsibility:** `CheckoutService` needs to “charge a payment,” not know a particular HTTP endpoint.
+3. **Define a focused but complete contract:** parameters, results, exceptions, and preconditions/postconditions should be explicit.
+4. **Isolate frequently changing details in separate implementations:** database, HTTP, email adapters, or business policies with multiple variants.
+5. **Supply dependencies deliberately:** use constructor injection for required collaborators stable over the service lifecycle; use method parameters for per-operation dependencies.
+6. **Test through contracts:** simulate interfaces at boundaries and verify observable behavior; add integration tests for real adapters when needed.
+7. **Reassess complexity:** if a refactor adds many classes without making actual changes easier, the design may be prematurely abstracted.
 
-Không phải lớp nào cũng cần interface. `Money`, `OrderId`, `LocalDate` hay thuật toán nội bộ ổn định thường có thể được dùng trực tiếp mà không cần tạo `IMoneyFactoryAdapter` và hàng loạt wrapper vô nghĩa.
+Not every class needs an interface. `Money`, `OrderId`, `LocalDate`, and stable internal algorithms can often be used directly without creating `IMoneyFactoryAdapter` and layers of pointless wrappers.
 
-## 10. Những nhầm lẫn hay gặp
+## 10. Common misconceptions
 
-| Nhận định sai | Cách hiểu đúng |
+| Incorrect claim | Correct interpretation |
 |---|---|
-| “Càng ít dependency càng tốt trong mọi trường hợp.” | Thiết kế cần hợp tác giữa các lớp; mục tiêu là phụ thuộc **có chủ đích và dễ quản lý**. |
-| “Chỉ import một lớp nên coupling chắc chắn thấp.” | Một lớp có thể biết rất nhiều chi tiết và giả định của một dependency duy nhất. |
-| “Có interface là đã loose coupling.” | Nếu interface sao chép toàn bộ SDK bên ngoài hoặc thay đổi liên tục, lớp dùng vẫn bị ràng buộc chặt. |
-| “Dependency injection giải quyết mọi coupling.” | DI giúp cung cấp implementation và kiểm thử; hợp đồng vẫn có thể thiết kế kém. |
-| “Gọi qua event/message broker thì không còn coupling.” | Vẫn có phụ thuộc vào schema, delivery semantics, version và thứ tự xử lý. |
-| “Static utility luôn là vấn đề.” | Hàm pure, stateless như `Math.multiplyExact` thường ổn; shared mutable state mới cần xem xét kỹ. |
-| “Tách càng nhiều lớp càng dễ bảo trì.” | Quá nhiều abstraction/wrapper làm tăng độ khó điều hướng và quản lý. |
-| “Coupling thấp nghĩa là cohesion cao.” | Đây là hai trục khác nhau: quan hệ giữa lớp và trách nhiệm bên trong lớp. |
-| “Test có fake chạy được nghĩa là tích hợp production an toàn.” | Fake kiểm tra logic ứng dụng; adapter/network/database và failure modes còn cần kiểm chứng phù hợp. |
+| “Fewer dependencies are always better.” | Classes must collaborate; seek **intentional, manageable dependencies**. |
+| “Importing only one class guarantees low coupling.” | One class may know extensive details and assumptions about a single dependency. |
+| “Having an interface means loose coupling.” | If the interface copies an entire external SDK or changes constantly, the consumer remains tightly coupled. |
+| “Dependency injection solves all coupling.” | DI makes supplying implementations and testing easier; the contract can still be poorly designed. |
+| “Events/message brokers remove all coupling.” | Dependencies on schemas, delivery semantics, versions, and processing order remain. |
+| “Static utilities are always a problem.” | Pure, stateless functions such as `Math.multiplyExact` are often fine; shared mutable state needs closer scrutiny. |
+| “More classes always mean easier maintenance.” | Excess abstractions and wrappers make navigation and management harder. |
+| “Low coupling implies high cohesion.” | They are independent dimensions: relationships across classes versus responsibilities within them. |
+| “A test passing with a fake means production integration is safe.” | Fakes validate application logic; adapters, networks, databases, and failure modes still need appropriate verification. |
 
-## 11. Bài tập thực hành
+## 11. Practice exercises
 
-### Bài 1 – Nhận diện coupling mạnh
+### Exercise 1 – Identify strong coupling
 
 ```java
 class MonthlyReportService {
@@ -1560,15 +1560,15 @@ class MonthlyReportService {
 }
 ```
 
-*Đây là mã minh họa; các lớp vendor chưa được khai báo.*
+*This is illustrative code; vendor classes have not been declared.*
 
-Hỏi: nếu chuyển từ Oracle sang PostgreSQL hoặc đổi thư viện xuất PDF, phải sửa nơi nào? Làm gì để `MonthlyReportService` ít hiểu hơn về chi tiết đó?
+Question: if the application switches from Oracle to PostgreSQL or changes PDF export libraries, where must the code change? How can `MonthlyReportService` know less about those details?
 
-**Gợi ý:** xác định hợp đồng lấy dữ liệu báo cáo và hợp đồng dựng tài liệu (chỉ khi có lý do cần thay đổi/kiểm thử độc lập). Đưa cấu hình và khởi tạo adapter ra khỏi service; tách truy vấn theo nhu cầu miền nghiệp vụ.
+**Hint:** identify contracts for obtaining report data and rendering documents (when there is a genuine need for substitution or independent testing). Move adapter configuration and construction out of the service; design queries around domain needs.
 
-### Bài 2 – Interface có đủ không?
+### Exercise 2 – Is an interface enough?
 
-Một dự án có:
+A project contains:
 
 ```java
 interface HugePaymentSdkFacade {
@@ -1579,65 +1579,65 @@ interface HugePaymentSdkFacade {
 }
 ```
 
-`CheckoutService` gọi tất cả hàm này. Tại sao dù có interface, coupling vẫn cao?
+`CheckoutService` calls all these methods. Why is coupling still high despite the interface?
 
-**Gợi ý:** interface làm lộ những chi tiết của nhà cung cấp; thay vendor vẫn buộc sửa lớp nghiệp vụ. Hợp đồng tốt hơn nên thể hiện hành động như `charge(request)` và quy tắc kết quả/lỗi nghiệp vụ.
+**Hint:** the interface exposes vendor-specific details; changing vendors still forces changes to business code. A better contract should express an operation such as `charge(request)` and domain-level rules for results and failures.
 
-### Bài 3 – Chọn cách truyền dependency
+### Exercise 3 – Choose how to pass dependencies
 
-Một formatter chỉ được dùng trong một lần xuất báo cáo; còn repository được dùng trong hầu hết thao tác của một service. Bạn sẽ truyền chúng qua phương thức hay constructor?
+A formatter is used only during one report export, while a repository is used in most operations of a service. Would you pass them as method arguments or through the constructor?
 
-**Gợi ý:** formatter có thể là tham số khi khác nhau theo mỗi request. Repository ổn định và bắt buộc thường phù hợp constructor injection. Đây là lựa chọn theo vòng đời và API; không có luật tuyệt đối.
+**Hint:** the formatter can be a parameter when it varies per request. A stable, required repository usually fits constructor injection. This choice depends on lifecycle and API design; there is no absolute rule.
 
-### Bài 4 – Phát hiện coupling khi thay đổi
+### Exercise 4 – Detect change coupling
 
-Một lần thay đổi định dạng địa chỉ buộc sửa `Customer`, `Order`, `Invoice`, `EmailSender` và `CsvExporter` vì tất cả tự đọc `address.line1`, `address.line2` và ghép chuỗi theo cách riêng.
+Changing an address format requires editing `Customer`, `Order`, `Invoice`, `EmailSender`, and `CsvExporter` because all of them read `address.line1` and `address.line2` and concatenate strings independently.
 
-Bạn sẽ tìm ranh giới nào để giảm sự lan truyền thay đổi?
+Which boundary would you introduce to reduce this change propagation?
 
-**Gợi ý:** xem `Address` như value object với hành vi/định dạng rõ trách nhiệm, hoặc tạo formatter theo ngữ cảnh xuất dữ liệu. Không ép mọi định dạng (email, hóa đơn, CSV) về một chuỗi duy nhất nếu yêu cầu khác nhau.
+**Hint:** model `Address` as a value object with appropriately owned behavior/formatting, or create context-specific formatters. Do not force different email, invoice, and CSV requirements into one output string.
 
-### Bài 5 – Kiểm thử tính thay thế
+### Exercise 5 – Test substitutability
 
-Dựa vào `CouplingDemo.java`, tạo `FailingPaymentGateway` ném exception trong `charge()`. Kiểm tra `RecordingReceiptSender` **không được gọi** nếu thu tiền không thành công.
+Using `CouplingDemo.java`, create a `FailingPaymentGateway` that throws an exception in `charge()`. Verify that `RecordingReceiptSender` **is not called** when charging fails.
 
-**Gợi ý:** thêm một biến `boolean called` trong sender; gọi `checkout()` và bắt lỗi dự kiến, sau đó assert `called == false`. Bài mở rộng: nếu gateway thu tiền xong nhưng sender lỗi, hệ thống nên lưu trạng thái và retry biên nhận thế nào để tránh thu tiền hai lần?
+**Hint:** add a `boolean called` field to the sender; call `checkout()`, catch the expected error, and assert `called == false`. Extension: if the gateway charges successfully but the sender fails, how should the system track state and retry receipts without charging twice?
 
 ---
 
-**Ghi nhớ:** coupling phản ánh mức độ một lớp phải biết, dựa vào và bị ảnh hưởng bởi lớp khác. Thiết kế tốt giữ **trách nhiệm rõ**, **hợp đồng ổn định**, **chi tiết có thể thay thế ở ranh giới cần thiết** và **hành vi dễ kiểm thử**. Hãy giảm sự lan truyền thay đổi thực tế, đồng thời tránh tạo abstraction khi chưa có nhu cầu.
+**Remember:** coupling describes how much one class must know about, rely on, and be affected by another. Good design maintains **clear responsibilities**, **stable contracts**, **substitutable details at appropriate boundaries**, and **testable behavior**. Reduce actual change propagation without introducing abstractions prematurely.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-design-004">Tách dữ liệu, nghiệp vụ và tương tác bên ngoài</a>
+## <a id="class-design-004">Separating data, business logic, and external interactions</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tách dữ liệu, nghiệp vụ và tương tác bên ngoài trong thiết kế lớp Java
+# Separating data, business logic, and external interactions in Java class design
 
-Một chức năng “đặt hàng” có thể đồng thời phải nhận JSON, kiểm tra giỏ hàng, tính số tiền, lưu database và gửi email xác nhận. Nếu đặt tất cả trong một class, mọi thay đổi từ định dạng HTTP đến quy tắc khuyến mãi đều buộc sửa cùng một nơi. Khi chạy test tính tiền, chương trình lại cần khởi động database hoặc dịch vụ email.
+An “order placement” feature may need to accept JSON, validate a cart, calculate an amount, save to a database, and email a confirmation. Putting everything in one class means that changes ranging from HTTP formats to promotion rules require editing the same place. Even testing a calculation would then require starting a database or email service.
 
-Giải pháp là **phân định trách nhiệm của dữ liệu, logic nghiệp vụ và tương tác với thế giới bên ngoài**, rồi kết nối chúng bằng những giao diện đủ rõ. Mục tiêu là thay đổi và kiểm thử từng phần mà không làm rối quy tắc cốt lõi.
+The solution is to **establish clear boundaries among data, business logic, and interactions with the outside world**, and connect them through well-defined interfaces. The aim is to change and test each area without entangling core business rules.
 
-## 1. Hiểu đúng ba nhóm trách nhiệm
+## 1. Understanding three responsibility categories
 
-| Nhóm | Câu hỏi mà thành phần trả lời | Ví dụ | Điều nên tránh |
+| Category | Question the component answers | Examples | What to avoid |
 | --- | --- | --- | --- |
-| Dữ liệu và mô hình miền (*data/domain model*) | Đối tượng có trạng thái gì? Những giá trị nào hợp lệ? | `OrderLine`, `Order`, `Money` | Để bất kỳ ai sửa dữ liệu khiến đơn hàng mất hợp lệ |
-| Nghiệp vụ (*business rules/use case*) | Khi nào được đặt hàng? Tính tổng và giảm giá thế nào? Luồng xử lý ra sao? | `PricingPolicy`, `CheckoutService` | Gắn công thức giảm giá trực tiếp vào controller/SQL/email |
-| Tương tác bên ngoài (*I/O, infrastructure, adapters*) | Nhận yêu cầu, lưu ở đâu, thông báo bằng cách nào? | HTTP controller, JDBC repository, email gateway | Đưa thư viện HTTP/SQL vào đối tượng nghiệp vụ |
+| Data and domain model (*data/domain model*) | What state does an object have? Which values are valid? | `OrderLine`, `Order`, `Money` | Allowing arbitrary mutations that make an order invalid |
+| Business logic (*business rules/use case*) | When may an order be placed? How are totals and discounts computed? What is the workflow? | `PricingPolicy`, `CheckoutService` | Embedding discount formulas directly in controllers/SQL/email |
+| External interaction (*I/O, infrastructure, adapters*) | How are requests received, data stored, and notifications sent? | HTTP controller, JDBC repository, email gateway | Importing HTTP/SQL libraries into domain objects |
 
-**Điều chỉnh quan trọng:** “tách dữ liệu và nghiệp vụ” **không có nghĩa** entity chỉ chứa getter/setter còn tất cả quy tắc bị đẩy sang service. Một domain entity tốt có thể tự kiểm tra bất biến và cung cấp hành vi hợp lệ. Điều cần tách là **logic cốt lõi** khỏi chi tiết kết nối HTTP, cơ sở dữ liệu, file, email hay hệ thống khác.
+**Important clarification:** “separating data and business logic” **does not mean** entities become getter/setter containers while all rules move into services. Good domain entities can enforce invariants and expose valid behaviors. What must be separated is **core logic** from HTTP connections, databases, files, email, and other external systems.
 
-Ví dụ `OrderLine` biết số lượng phải dương và biết tính thành tiền. `Order` bảo vệ tổng tiền hợp lệ. `CheckoutService` điều phối tạo và lưu đơn. `OrderRepository` định nghĩa cách yêu cầu lưu; lớp cài đặt JDBC mới biết câu SQL cụ thể.
+For example, `OrderLine` knows that quantity must be positive and can calculate its line total. `Order` protects the validity of its total. `CheckoutService` coordinates creating and saving the order. `OrderRepository` defines the storage contract; only the JDBC implementation needs to know the actual SQL.
 
-## 2. Vì sao đặt chung mọi thứ trong một class gây vấn đề?
+## 2. Why is mixing everything in one class problematic?
 
 ```java
 // PSEUDOCODE: ví dụ cần cải tiến, không phải đoạn có thể chạy độc lập.
@@ -1661,19 +1661,19 @@ class CheckoutController {
 }
 ```
 
-Những phụ thuộc bị trộn lẫn:
+The mixed dependencies cause several problems:
 
-- Chỉ muốn thay cách nhận JSON cũng có thể ảnh hưởng code tính tiền.
-- Chỉ muốn test giảm giá lại phải giả lập HTTP, database và email.
-- Cùng một quy tắc có thể bị sao chép sang CLI, API thứ hai hoặc tác vụ chạy nền.
-- Nếu lưu đơn thành công nhưng gửi email lỗi, không rõ hệ thống xử lý trạng thái dở dang như thế nào.
-- Controller chứa quá nhiều lý do thay đổi; lỗi thực hiện trong một tầng khó được phát hiện qua test tập trung.
+- Changing JSON request handling can affect pricing code.
+- Testing a discount requires mocking HTTP, databases, and email.
+- The same rule may be copied into a CLI, another API, or a background job.
+- When saving succeeds but emailing fails, the system has no clear policy for the partial outcome.
+- The controller has too many reasons to change, and errors in one layer are harder to detect with focused tests.
 
-Tách trách nhiệm giúp làm rõ **ai quyết định điều gì** và **lỗi ở đâu được xử lý**. Không có một cách tách duy nhất phù hợp với mọi quy mô dự án.
+Separating responsibilities clarifies **who decides what** and **where errors are handled**. No single decomposition fits projects of every size.
 
-## 3. Thiết kế luồng phụ thuộc
+## 3. Designing the dependency flow
 
-Một cách tổ chức thực tế là: adapter nhận dữ liệu, application service điều phối, domain model/policy giữ quy tắc, còn persistence/notification được truy cập qua *port* (interface).
+A practical arrangement is that an adapter receives data, an application service coordinates, a domain model/policy enforces rules, and persistence/notifications are accessed through *ports* (interfaces).
 
 ```mermaid
 flowchart LR
@@ -1688,36 +1688,36 @@ flowchart LR
     N -. "cài đặt" .-> E["Email / Console adapter"]
 ```
 
-Đường mũi tên liền mô tả nơi một thành phần gọi hoặc dùng thành phần kia trong luồng. **Hướng phụ thuộc trong mã nguồn** cần được kiểm soát: tầng nghiệp vụ định nghĩa những port cần thiết; adapter bên ngoài cài đặt các port đó. Tầng domain không import controller, JDBC, `System.out` hoặc thư viện gửi email.
+Solid arrows show where one component invokes or uses another in the flow. **Source-code dependency direction** must be controlled: the business layer defines its required ports; external adapters implement those ports. The domain layer does not import controllers, JDBC, `System.out`, or email libraries.
 
-Trong thiết kế theo **Dependency Inversion Principle**, `CheckoutService` phụ thuộc `OrderRepository`/ `ReceiptGateway` là *interface*; lớp `JdbcOrderRepository` hoặc `SmtpReceiptGateway` mới phụ thuộc vào công nghệ cụ thể.
+Under the **Dependency Inversion Principle**, `CheckoutService` depends on `OrderRepository`/ `ReceiptGateway` *interfaces*; `JdbcOrderRepository` and `SmtpReceiptGateway` depend on their respective technologies.
 
-### Một số thuật ngữ dễ nhầm
+### Commonly confused terms
 
-| Thuật ngữ | Nhiệm vụ thực tế | Có chứa quy tắc nghiệp vụ không? |
+| Term | Actual responsibility | Does it contain business rules? |
 | --- | --- | --- |
-| DTO / Command | Mang dữ liệu vào/ra giữa các ranh giới | Chủ yếu kiểm tra định dạng đầu vào; không phải nguồn chân lý của invariant |
-| Value object | Biểu diễn một giá trị có nghĩa trong domain | Có thể tự kiểm tra và thực hiện phép toán của giá trị đó |
-| Entity / Aggregate | Bảo vệ trạng thái và các chuyển đổi hợp lệ | Có; đây thường là nơi quan trọng để giữ invariant |
-| Domain policy/service | Quy tắc không thuộc riêng một entity hoặc cần cấu hình độc lập | Có |
-| Application service | Điều phối một use case và các cộng tác viên | Có thể kiểm tra điều kiện quy trình, nhưng hạn chế nhồi công thức domain |
-| Repository port | Hợp đồng lưu/truy vấn đối tượng miền | Không biết SQL trong bản interface |
-| Adapter | Chuyển đổi I/O thành các hợp đồng của hệ thống | Không nên định nghĩa lại quy tắc tính tiền, hạn mức... |
+| DTO / Command | Carries data across boundaries | Mostly input-format validation; not the source of truth for invariants |
+| Value object | Represents a meaningful domain value | Can validate itself and perform value-specific operations |
+| Entity / Aggregate | Protects state and valid transitions | Yes; often essential for preserving invariants |
+| Domain policy/service | Handles rules not owned by one entity or needing independent configuration | Yes |
+| Application service | Coordinates one use case and its collaborators | May check workflow conditions, but should avoid embedding complex domain formulas |
+| Repository port | Contract for storing/querying domain objects | The interface contains no SQL knowledge |
+| Adapter | Converts I/O into system contracts | Should not redefine pricing rules, limits, and so on |
 
-`Data class` không nhất thiết chỉ là record; nó là lựa chọn hình thức biểu diễn. `record` Java hữu ích cho dữ liệu bất biến, nhưng entity có vòng đời và chuyển trạng thái có thể phù hợp hơn với class có hành vi và trường đóng gói.
+A `Data class` is not necessarily a record; that is an implementation choice. Java `record` is useful for immutable data, whereas entities with lifecycles and state transitions may be better represented by classes with encapsulated fields and behavior.
 
-## 4. Ví dụ Java 17 độc lập: đặt hàng và gửi biên nhận
+## 4. Standalone Java 17 example: placing orders and sending receipts
 
-Yêu cầu:
+Requirements:
 
-- Khách hàng có thể đặt ít nhất một dòng hàng.
-- Mỗi dòng có mã sản phẩm, số lượng dương và giá tính bằng **đơn vị cent** không âm.
-- Mã `SAVE10` giảm 10% tổng tiền trước giảm, làm tròn **xuống đến cent**; không nhập mã thì không giảm.
-- Mã ưu đãi không hỗ trợ phải bị từ chối **trước khi lưu đơn**.
-- Đơn hàng được lưu qua `OrderRepository`; gửi biên nhận qua `ReceiptGateway`.
-- Có thể chạy thử với repository trong bộ nhớ và gateway in ra console, không cần HTTP hay database.
+- A customer may place an order with at least one line item.
+- Each line has a product code, a positive quantity, and a nonnegative price in **cents**.
+- The `SAVE10` code discounts the pre-discount total by 10%, **rounding down to cents**; no code means no discount.
+- Unsupported promotion codes must be rejected **before the order is saved**.
+- Orders are stored through `OrderRepository`; receipts are sent through `ReceiptGateway`.
+- The example can run with an in-memory repository and a console-output gateway, without HTTP or a database.
 
-Tạo file **`SeparationOfConcernsDemo.java`**:
+Create **`SeparationOfConcernsDemo.java`**:
 
 ```java
 import java.math.BigDecimal;
@@ -1945,14 +1945,14 @@ public class SeparationOfConcernsDemo {
 }
 ```
 
-Biên dịch và chạy bằng Java 17 trở lên:
+Compile and run with Java 17 or later:
 
 ```bash
 javac SeparationOfConcernsDemo.java
 java SeparationOfConcernsDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Receipt ORDER-001 = 283.50
@@ -1960,22 +1960,22 @@ Saved = true
 Unknown promotion
 ```
 
-Tính tay: `2 × 120.00 + 3 × 25.00 = 315.00`; giảm 10% là `31.50`; thanh toán `283.50`. Trong code, tiền lưu bằng số nguyên cent để tránh lỗi làm tròn của `double`; chính sách giảm giá và quy tắc làm tròn được ghi rõ. Với hệ thống nhiều loại tiền, cần mô hình `Money` có currency, scale và rounding mode phù hợp.
+Manually: `2 × 120.00 + 3 × 25.00 = 315.00`; a 10% discount is `31.50`; the amount payable is `283.50`. The code stores monetary amounts in integer cents to avoid `double` rounding errors; its discount and rounding rules are explicit. Multi-currency systems need a `Money` model with appropriate currency, scale, and rounding modes.
 
-### Vì sao đây là ví dụ phân tách đúng trách nhiệm?
+### Why does this example separate responsibilities correctly?
 
-- `CheckoutCommand`/`LineInput` là dữ liệu đầu vào; không biết SQL, email hoặc quy tắc tính tiền.
-- `OrderLine` là **value object có hành vi**, giữ bất biến và tính thành tiền một dòng.
-- `Order` là mô hình miền, đảm bảo danh sách không rỗng và số phải trả nằm trong khoảng hợp lệ. `List.copyOf` tạo snapshot danh sách; các phần tử trong ví dụ là record với thành phần bất biến nên không làm lộ trạng thái mutable.
-- `StandardPricingPolicy` biết khuyến mãi, không biết cách nhận request hoặc lưu database.
-- `CheckoutService` biến input thành đối tượng miền rồi phối hợp lưu/gửi biên nhận. Nó không tự viết SQL hoặc tính lại công thức `SAVE10`.
-- `InMemoryOrderRepository` và `ConsoleReceiptGateway` là adapter. Đổi cách lưu hoặc gửi không đòi sửa `OrderLine` hay `Order`.
+- `CheckoutCommand`/`LineInput` are input data structures; they do not know SQL, email, or pricing rules.
+- `OrderLine` is a **value object with behavior** that enforces invariants and calculates a line total.
+- `Order` is a domain model that guarantees a nonempty list and an amount payable within valid bounds. `List.copyOf` snapshots the list; its elements are records with immutable components, so mutable state is not exposed.
+- `StandardPricingPolicy` knows promotions, not request handling or database persistence.
+- `CheckoutService` converts input into domain objects and coordinates persistence and receipt delivery. It neither writes SQL nor reimplements the `SAVE10` formula.
+- `InMemoryOrderRepository` and `ConsoleReceiptGateway` are adapters. Switching storage or notification mechanisms does not require changes to `OrderLine` or `Order`.
 
-**Giới hạn của bản demo:** repository trong bộ nhớ không thread-safe, ID generator cố định dành cho lần checkout thành công duy nhất. Hệ thống thật phải sinh ID duy nhất và áp dụng ràng buộc uniqueness trong nơi lưu trữ.
+**Demo limitations:** the in-memory repository is not thread-safe, and the fixed ID generator supports only one successful checkout. A real system must generate unique IDs and enforce uniqueness constraints in storage.
 
-Ngoài ra, `orders.save(order)` có thể thành công rồi `receipts.sendReceipt(order)` thất bại. Khi đó **đơn đã được lưu nhưng caller có thể nhận exception**. Đây là lý do một bản production thường dùng transactional outbox, hàng đợi và xử lý idempotent để phát biên nhận an toàn sau commit. Đừng ngộ nhận rằng đưa hai thao tác vào một method hoặc chỉ thêm `@Transactional` sẽ tự tạo giao dịch nguyên tử giữa database và hệ thống email.
+Moreover, `orders.save(order)` may succeed while `receipts.sendReceipt(order)` fails. Then **the order is saved but the caller may receive an exception**. That is why production systems often use transactional outboxes, queues, and idempotent processing to deliver receipts reliably after commit. Putting both operations into one method or merely adding `@Transactional` does not automatically establish an atomic transaction across a database and an email system.
 
-## 5. Luồng xử lý và vị trí kiểm thử
+## 5. Processing flow and test boundaries
 
 ```mermaid
 sequenceDiagram
@@ -2002,9 +2002,9 @@ sequenceDiagram
     end
 ```
 
-### Unit test miền không cần I/O
+### Domain unit tests without I/O
 
-Chính sách giá là phép tính thuần từ đầu vào sang đầu ra. Có thể kiểm thử độc lập mà không cần mock mạng/database:
+The pricing policy is a pure calculation from inputs to outputs. It can be tested independently without mocking network or database operations:
 
 ```java
 PricingPolicy policy = new StandardPricingPolicy();
@@ -2014,26 +2014,26 @@ assert policy.payableCents(31_500, null) == 31_500;
 assert policy.payableCents(0, "SAVE10") == 0;
 ```
 
-Chạy với `java -ea` để bật Java `assert`, hoặc dùng JUnit trong dự án thật. Nên bổ sung test với tổng không chia hết cho 10, mã không hỗ trợ, giá âm, số lượng 0 và tràn `long` để xác nhận các cạnh biên.
+Run with `java -ea` to enable Java `assert`, or use JUnit in a real project. Add tests for totals not divisible by 10, unsupported codes, negative prices, quantity 0 and `long` overflow to verify boundary cases.
 
-### Unit test quy trình với fake/mock
+### Workflow unit tests with fakes/mocks
 
-Với `CheckoutService`, fake `OrderRepository` có thể ghi nhận `save` đã được gọi với tổng tiền đúng; fake `ReceiptGateway` có thể đếm số lần gửi. Các kiểm tra quan trọng:
+For `CheckoutService`, a fake `OrderRepository` can record whether `save` was called with the right total; a fake `ReceiptGateway` can count deliveries. Important assertions include:
 
-| Tình huống | Điều cần khẳng định |
+| Scenario | What to assert |
 | --- | --- |
-| Dòng hàng hợp lệ + promo hợp lệ | Tạo Order đúng tổng, lưu một lần, yêu cầu gửi một lần |
-| SKU rỗng hoặc quantity không dương | Bị từ chối trước `save` và `sendReceipt` |
-| Promo không hỗ trợ | Không lưu và không gửi |
-| Repository báo lỗi | Không gửi biên nhận; báo lỗi cho use case |
-| Gateway báo lỗi sau khi lưu | Xử lý trạng thái đã lưu theo thiết kế retry/outbox |
-| Hai request trùng ID | Repository thật phải áp dụng ràng buộc duy nhất |
+| Valid line items + valid promotion | Creates Order with the right total, saves once, requests delivery once |
+| Blank SKU or nonpositive quantity | Rejected before `save` or `sendReceipt` |
+| Unsupported promotion | Neither saves nor sends |
+| Repository failure | Does not send a receipt; propagates failure to the use case |
+| Gateway failure after saving | Handles persisted state according to retry/outbox design |
+| Two requests with the same ID | Real repository must enforce uniqueness |
 
-Không cần test lại công thức giảm giá ở controller. Controller test trách nhiệm chuyển HTTP thành command, ánh xạ lỗi thành status code và JSON; policy test công thức riêng.
+Do not retest the discount formula in the controller. Controller tests should cover mapping HTTP into commands and mapping errors into status codes and JSON; policy tests cover the formula separately.
 
-## 6. Ranh giới “dữ liệu” và domain: tránh mô hình thiếu hành vi
+## 6. The boundary between “data” and domain: avoid anemic models
 
-Một lỗi hay gặp là tạo entity với hàng loạt setter rồi dồn mọi nghiệp vụ sang service:
+A common mistake is creating entities with unrestricted setters and pushing all business rules into services:
 
 ```java
 // Thiết kế dễ bị phá vỡ invariant.
@@ -2043,43 +2043,43 @@ class Order {
 }
 ```
 
-Caller có thể tự thay `totalCents` không khớp tổng của các dòng. Tách tầng không có nghĩa cho phép trạng thái miền mất kiểm soát.
+Callers can change `totalCents` so it no longer matches the sum of the line items. Layer separation must not leave domain state uncontrolled.
 
-Một hướng tốt hơn là dùng constructor/factory, đóng gói field và chỉ cho thay đổi qua các hành vi hợp lệ, ví dụ `addLine`, `confirm`, `cancel`. Trong demo, `Order` được tạo một lần, bất biến sau khi tạo. Nếu đơn có vòng đời thay đổi, hãy thêm trạng thái và những chuyển đổi nghiệp vụ vào chính aggregate phù hợp.
+A better approach uses constructors/factories, encapsulates fields, and allows only valid state-changing operations such as `addLine`, `confirm`, and `cancel`. In the demo, `Order` is constructed once and remains immutable. If an order has a changing lifecycle, place state and business transitions in the appropriate aggregate.
 
-Phân biệt:
+Distinguish among:
 
-| Loại dữ liệu | Ví dụ | Quy tắc nên chứa |
+| Data type | Example | Rules to contain |
 | --- | --- | --- |
-| Request DTO | `CheckoutCommand` | Cấu trúc đầu vào; parse/format cơ bản |
-| Domain value object | `OrderLine` | SKU hợp lệ, quantity, phép tính dòng hàng |
-| Domain entity/aggregate | `Order` | Bất biến và chuyển trạng thái của đơn |
-| Persistence record | Hàng dữ liệu SQL/JPA mapping | Chuyển đổi sang/từ dạng lưu |
-| Response DTO | `OrderResponse` | Dạng dữ liệu API cam kết trả về |
+| Request DTO | `CheckoutCommand` | Input shape; basic parsing/formatting |
+| Domain value object | `OrderLine` | Valid SKU, quantity, and line-price calculation |
+| Domain entity/aggregate | `Order` | Order invariants and state transitions |
+| Persistence record | SQL row/JPA mapping | Conversion to/from stored form |
+| Response DTO | `OrderResponse` | Shape of the data promised by the API |
 
-Không phải dự án nào cũng cần DTO và persistence model tách rời entity. Quyết định dựa trên mức độ phức tạp và sự biến động của các ranh giới. Tuy nhiên, khi entity bị ràng buộc mạnh vào schema hoặc serialization, tách chúng thường giúp domain độc lập hơn.
+Not every project needs separate DTOs and persistence models distinct from entities. Decide based on boundary complexity and change frequency. But when entities become tightly coupled to schemas or serialization, separating them often improves domain independence.
 
-## 7. “Pure core, imperative shell” trong OOP
+## 7. “Pure core, imperative shell” in OOP
 
-Một cách nhìn khác là đặt phần logic ít side effect ở trung tâm, phần có I/O ở rìa.
+Another perspective keeps logic with few side effects at the center and places I/O at the edges.
 
-**Pure core:** cùng input thì cùng output và không ghi file, log, mạng, database. Ví dụ `PricingPolicy.payableCents`. Nó dễ test và dễ chạy lại.
+**Pure core:** the same input yields the same output without writing to files, logs, networks, or databases. For example, `PricingPolicy.payableCents`. This code is easy to test and rerun.
 
-**Imperative shell:** thực hiện nhận request, gọi domain logic, lưu dữ liệu và phát thông báo. Ví dụ `CheckoutService` điều phối các port, còn adapter thực hiện I/O thật.
+**Imperative shell:** receives requests, invokes domain logic, persists data, and sends notifications. `CheckoutService` coordinates ports, while adapters perform real I/O.
 
-Không phải mọi domain method đều thuần hàm: entity có thể thay đổi trạng thái hợp lệ bằng `confirm()` hoặc `cancel()`. Nguyên tắc có ích là **cô lập I/O và sự phụ thuộc không ổn định**, không phải cấm mọi hành vi thay đổi trạng thái bên trong đối tượng.
+Not every domain method is a pure function: an entity may legitimately change state through `confirm()` or `cancel()`. The useful principle is to **isolate I/O and volatile dependencies**, not prohibit all state changes within objects.
 
-Những phụ thuộc có thể gây khó kiểm thử:
+Dependencies that complicate testing include:
 
-- Đồng hồ hệ thống: thay `LocalDate.now()` trực tiếp bằng `Clock` được truyền vào khi thời gian là quy tắc.
-- Random/UUID: dùng `OrderIdGenerator` hoặc nguồn ID được tiêm qua constructor.
-- Environment/config: lấy từ bên ngoài rồi chuyển thành cấu hình/policy rõ ràng.
-- Email/HTTP/SQL: cung cấp port rồi viết adapter tương ứng.
-- Database transaction: đặt tại ranh giới use case hoặc unit of work phù hợp, không nhúng vào phép tính giá.
+- System clocks: replace direct calls to `LocalDate.now()` with an injected `Clock` when time affects a rule.
+- Random values/UUIDs: use `OrderIdGenerator` or an ID source injected through the constructor.
+- Environment/configuration: obtain these externally and convert them into explicit settings/policies.
+- Email/HTTP/SQL: define ports with appropriate adapters.
+- Database transactions: place them at a suitable use-case or unit-of-work boundary, not inside pricing calculations.
 
-## 8. Khi áp dụng với Spring Boot/JPA
+## 8. Applying this design with Spring Boot/JPA
 
-Một cấu trúc điển hình:
+A typical package structure:
 
 ```text
 com.example.orders
@@ -2101,9 +2101,9 @@ com.example.orders
     └── CheckoutResponse.java
 ```
 
-Đây là **một cách tổ chức**. Với hệ thống nhỏ, có thể gộp package đơn giản hơn; package đặt tên đẹp không bù được dependency sai.
+This is **one possible organization**. Small systems may use simpler packages; attractive package names cannot compensate for incorrect dependencies.
 
-Ví dụ sơ đồ phụ thuộc trong Spring:
+Example Spring dependency flow:
 
 ```java
 // application port
@@ -2127,85 +2127,85 @@ public class JpaOrderRepositoryAdapter implements OrderRepository {
 }
 ```
 
-Đoạn trên chỉ minh họa tích hợp: `SpringDataOrderRepository`, các entity và mapper phải được định nghĩa trong ứng dụng thật. Class domain không cần annotation HTTP hoặc gửi email.
+This only illustrates integration: `SpringDataOrderRepository`, entities, and mappers must be defined in the real application. Domain classes do not need HTTP annotations or email-sending code.
 
-`@Transactional` trên application service có thể bao bọc các thao tác ghi database, nhưng **không** mở rộng transaction ACID sang SMTP/HTTP khác hệ thống. Khi cần “lưu đơn xong chắc chắn sẽ gửi thông báo”, có thể ghi bản ghi outbox trong cùng giao dịch DB; worker riêng đọc outbox để gửi, retry và xử lý trùng. Luồng này có *eventual consistency*: thông báo có thể đến sau khi đơn đã lưu.
+`@Transactional` on an application service may wrap database writes, but **does not** extend ACID transactions across a separate SMTP/HTTP system. When notifications must eventually be sent after orders are stored, an outbox entry can be saved within the same database transaction; a separate worker reads the outbox, sends notifications, retries, and handles duplicates. This is *eventual consistency*: notifications may arrive after an order is saved.
 
-## 9. Dấu hiệu thiết kế sai và cách sửa
+## 9. Signs of flawed design and appropriate fixes
 
-| Dấu hiệu | Vì sao có hại? | Hướng sửa phù hợp |
+| Symptom | Why is it harmful? | Appropriate remedy |
 | --- | --- | --- |
-| Controller viết SQL và tính discount | Pha trộn adapter với nghiệp vụ | Controller tạo command, gọi service; policy tính giá |
-| Entity tự gửi email hoặc gọi HTTP | Domain phụ thuộc I/O | Phát sự kiện nghiệp vụ hoặc để service gọi port |
-| Repository chứa luật “giảm 10%” | Luật bị chôn trong lưu trữ | Đưa vào domain policy |
-| DTO có mutable list rồi truyền thẳng cho domain | Caller sửa lén trạng thái | Chuyển đổi/validate, tạo defensive copy |
-| Service chứa hàng trăm `if` giá/thuế | Thay policy ảnh hưởng use case | Trích xuất policy có tên rõ |
-| Dùng `new Jdbc...` trong service | Không thay adapter dễ, test phụ thuộc DB | Constructor injection + port |
-| “Interface cho mọi class” kể cả value object đơn giản | Tạo abstraction không có giá trị | Chỉ dùng khi có ranh giới biến động hay hợp đồng cần |
-| Gửi email rồi mới lưu đơn | Có thể gửi thông báo cho đơn không tồn tại | Xác định luồng ghi/commit và cơ chế thông báo đáng tin |
-| Catch mọi exception rồi trả “success” | Che lỗi và phá cam kết API | Phân loại lỗi, rollback/retry và báo trạng thái đúng |
+| Controller runs SQL and calculates discounts | Mixes adapters with business logic | Controller creates command, invokes service; policy calculates prices |
+| Entity emails users or calls HTTP | Domain depends on I/O | Publish a domain event or let a service call a port |
+| Repository contains a “10% discount” rule | Business rule buried in persistence | Move it to a domain policy |
+| DTO exposes a mutable list directly to domain logic | Callers can change state without validation | Convert/validate and make defensive copies |
+| Service has hundreds of pricing/tax `if` branches | Policy changes affect the use case | Extract a clearly named policy |
+| Service constructs `new Jdbc...` | Hard to replace adapters; tests need a database | Use constructor injection and a port |
+| “An interface for every class,” including simple value objects | Adds abstractions without value | Use interfaces only for meaningful contracts or boundaries that change |
+| Email sent before saving an order | May notify about an order that does not exist | Define reliable write/commit and notification flow |
+| Catch every exception and return “success” | Hides failures and violates API guarantees | Classify errors, rollback/retry as appropriate, report accurate status |
 
-**Đừng tách cơ học theo “mỗi method một class”.** Class nên có trách nhiệm rõ, gắn kết và đủ hành vi. Nếu một module nhỏ chỉ có hai use case và một database, không cần sao chép đầy đủ kiến trúc nhiều tầng của hệ thống lớn.
+**Do not mechanically split one class per method.** A class should have a coherent responsibility and enough behavior to fulfill it. A small module with two use cases and one database need not copy the entire layered architecture of a large system.
 
-## 10. Cách làm khi nhận yêu cầu mới
+## 10. Handling a new requirement
 
-Giả sử cần “thêm miễn phí vận chuyển cho đơn đủ điều kiện”, hãy đi theo trình tự:
+Suppose the requirement is “offer free shipping on eligible orders.” Follow these steps:
 
-1. **Diễn đạt quy tắc:** ngưỡng miễn phí tính trước hay sau giảm giá? Áp dụng cho currency nào? Từ ngày nào?
-2. **Xác định nguồn dữ liệu:** giỏ hàng, địa chỉ nhận, bảng phí, thông tin chính sách.
-3. **Đặt trách nhiệm:** phép tính phí/miễn phí ở domain policy phù hợp; gọi dịch vụ giao vận qua port nếu thật sự cần I/O; service điều phối thứ tự.
-4. **Giữ ranh giới:** request DTO chứa địa chỉ, mapper tạo đối tượng miền; adapter giao vận chuyển đổi request/response của bên thứ ba.
-5. **Kiểm thử rule trước:** dưới/trên ngưỡng, promo cộng dồn, tiền tệ khác, lỗi khi tra phí.
-6. **Kiểm thử tích hợp sau:** database, transaction, retry, API contract, trường hợp cùng một request được gửi lại.
+1. **Specify the rule:** is the threshold measured before or after discounts? Which currency applies? From which date?
+2. **Identify input data:** cart, destination, rate table, policy information.
+3. **Assign responsibility:** fee/waiver calculations belong in an appropriate domain policy; invoke a shipping service through a port if I/O is truly required; the service coordinates execution order.
+4. **Preserve boundaries:** request DTO carries an address; mapper builds domain objects; shipping adapter transforms third-party requests/responses.
+5. **Test rules first:** below/above thresholds, stacked promotions, other currencies, rate-lookup failures.
+6. **Test integration next:** database, transactions, retries, API contracts, repeated submissions of the same request.
 
-Nhờ sự phân chia này, thêm cách tính phí mới không đòi sửa controller lẫn SQL chỉ vì hai phần đó sử dụng chung một use case.
+With these boundaries, adding a fee calculation does not force changes to both the controller and SQL just because they participate in the same use case.
 
-## 11. Bài tập thực hành
+## 11. Practice exercises
 
-**Bài A — Tách lớp đang ôm việc.** Một `RegistrationController` trực tiếp validate email, kiểm tra tài khoản tồn tại bằng SQL, hash mật khẩu, lưu DB, gửi email chào mừng, trả JSON. Hãy thiết kế các thành phần mới và chọn đúng nơi đặt invariant “email duy nhất”. Chỉ ra bước nào cần transaction và bước nào nên xử lý bất đồng bộ.
+**Exercise A — Split an overloaded class.** A `RegistrationController` directly validates emails, checks existing accounts with SQL, hashes passwords, saves to a database, sends welcome emails, and returns JSON. Design new components and choose where to enforce the “unique email” invariant. Identify which steps need a transaction and which should be asynchronous.
 
-**Bài B — Đưa thời gian ra ranh giới.** Chính sách thuê sách: hạn trả 14 ngày sau ngày mượn; có ngày nghỉ lễ. Thiết kế domain policy thuần hàm từ `LocalDate` và lịch nghỉ đã cung cấp, đồng thời để adapter hoặc application service chịu trách nhiệm lấy ngày hiện tại/nguồn lịch.
+**Exercise B — Move time to a boundary.** A book-rental policy sets a due date 14 days after borrowing, accounting for holidays. Design a pure domain policy from `LocalDate` and a supplied holiday calendar, while an adapter or application service obtains the current date/calendar source.
 
-**Bài C — Kiểm thử không I/O.** Viết test cho `StandardPricingPolicy` khi subtotal là 1 cent, 9 cents, 10 cents, và số lớn gần ngưỡng `long`. Giải thích quy tắc làm tròn xuống; bảo đảm `Order` dùng `Math.addExact` để không trả số tiền âm vì tràn.
+**Exercise C — Test without I/O.** Test `StandardPricingPolicy` with subtotals of 1 cent, 9 cents, 10 cents, and a large value near the `long` limit. Explain the round-down rule; ensure `Order` uses `Math.addExact` instead of returning negative totals from overflow.
 
-**Bài D — Xử lý lỗi sau lưu.** Trong ví dụ checkout, repository lưu thành công nhưng receipt gateway ném exception. Đề xuất cơ chế outbox tối giản gồm các trạng thái `PENDING/SENT`, thao tác retry idempotent và cách khách hàng kiểm tra đơn hàng đã tạo, để không phải thực hiện lại việc đặt hàng do lỗi gửi mail.
+**Exercise D — Handle post-save failure.** In checkout, a repository saves successfully but the receipt gateway throws an exception. Propose a minimal outbox with `PENDING/SENT` states, idempotent retries, and a way for customers to check that their order was placed, without repeating checkout because email failed.
 
-**Bài E — Thử đổi adapter.** Thay `ConsoleReceiptGateway` thành fake chỉ ghi nhận số lần gửi; kiểm chứng tính tiền và repository không cần chỉnh. Sau đó thử tạo `JdbcOrderRepositoryAdapter` giả lập và xác định class nào **không** cần đổi.
+**Exercise E — Swap an adapter.** Replace `ConsoleReceiptGateway` with a fake that only records delivery counts; verify the pricing logic and repository need no modifications. Then sketch a `JdbcOrderRepositoryAdapter` and identify which classes **should not** change.
 
-## 12. Checklist review thiết kế lớp
+## 12. Class-design review checklist
 
-- **Domain** có thể kiểm tra logic cốt lõi mà không cần khởi động framework, HTTP, file, database, email không?
-- Data DTO có được chuyển thành object miền và kiểm tra invariant ở ranh giới thích hợp không?
-- Entity/value object có hành vi bảo vệ trạng thái, tránh public setter không kiểm soát không?
-- Application service có điều phối use case qua các hợp đồng rõ ràng không?
-- Có lớp nào vừa tính toán domain, vừa ghi SQL, vừa định dạng response không?
-- Phụ thuộc từ domain có đi vào một framework hoặc adapter cụ thể không?
-- Các input không ổn định như clock, ID, configuration, random có nguồn được kiểm soát để test không?
-- Giao dịch, idempotency, retry và lỗi từng side effect có chính sách rõ không?
-- Có thực sự cần interface/adapter mới, hay cách đơn giản hơn vẫn rõ trách nhiệm?
-- Khi đổi công thức giá, schema DB hoặc giao thức email, số lớp phải sửa có hợp lý không?
+- Can **domain** logic be tested without starting frameworks, HTTP, files, databases, or email?
+- Are DTOs transformed into domain objects and invariants checked at appropriate boundaries?
+- Do entities/value objects protect state with behaviors rather than uncontrolled public setters?
+- Does the application service coordinate use cases through clear contracts?
+- Does any class calculate domain rules while also writing SQL and formatting responses?
+- Do domain dependencies point into specific frameworks or adapters?
+- Are volatile inputs such as clocks, IDs, configuration, and randomness controlled for testing?
+- Are transactions, idempotency, retries, and side-effect failures governed by clear policies?
+- Is a new interface/adapter really needed, or would a simpler design still express responsibilities clearly?
+- When pricing formulas, database schemas, or email protocols change, is the number of affected classes reasonable?
 
-**Ý chính:** tách dữ liệu, nghiệp vụ và tương tác bên ngoài là tách **ranh giới thay đổi và trách nhiệm**. Hãy để mô hình miền giữ các bất biến, use case điều phối hành vi, và adapter giải quyết công nghệ I/O. Khi đó có thể phát triển nghiệp vụ mà không buộc mọi lần thay đổi đều chạm tới database, controller hoặc email.
+**Key takeaway:** separating data, business logic, and external interactions means separating **responsibilities and change boundaries**. Domain models preserve invariants, use cases coordinate behavior, and adapters deal with I/O technology. Business features can then evolve without every change touching the database, controller, or email code.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-design-005">Đặt tên lớp, thuộc tính và phương thức</a>
+## <a id="class-design-005">Naming classes, fields, and methods</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đặt tên lớp, thuộc tính và phương thức trong Java OOP
+# Naming classes, fields, and methods in Java OOP
 
-**Mục tiêu:** Đọc tên là đoán được **vai trò của lớp**, **ý nghĩa và đơn vị dữ liệu**, **hành vi của phương thức**, cũng như **tác dụng phụ và hợp đồng trả về**. Tên tốt làm cho code dễ đọc, giúp phân chia trách nhiệm và giảm sai sót khi dùng API. Tên không thay thế cho thiết kế tốt, nhưng là một phần quan trọng của thiết kế.
+**Goal:** Names should reveal **a class's role**, **the meaning and units of data**, **a method's behavior**, and **side effects and return contracts**. Good names make code readable, clarify responsibilities, and reduce API misuse. Naming is not a substitute for sound design, but it is an essential part of it.
 
-## 1. Nguyên tắc cốt lõi: tên phải kể đúng sự thật
+## 1. Core principle: names must tell the truth
 
-Xét đoạn mã:
+Consider this code:
 
 ~~~java
 DataManager m = new DataManager();
@@ -2213,9 +2213,9 @@ m.process(x);
 boolean flag = m.check();
 ~~~
 
-Người đọc không thể biết `DataManager` quản lý cái gì, `process()` tạo mới hay xóa dữ liệu, `check()` đang kiểm tra điều kiện nào, hay `flag` có nghĩa gì. Tên quá mơ hồ buộc người khác mở thân hàm và lần theo nhiều lớp để hiểu.
+A reader cannot tell what `DataManager` manages, whether `process()` creates or deletes data, what condition `check()` checks, or what `flag` means. Vague names force people to inspect method bodies and trace several classes to understand code.
 
-Một phiên bản rõ nghĩa hơn:
+A more descriptive version:
 
 ~~~java
 OrderRepository orders = new InMemoryOrderRepository();
@@ -2223,49 +2223,49 @@ orders.insert(order);
 boolean exists = orders.findById(order.orderId()).isPresent();
 ~~~
 
-Ở đây, tên cho biết repository quản lý đơn hàng, `insert()` bổ sung một đơn, `findById()` tra cứu theo mã và kết quả có thể không tồn tại. Ví dụ này vẫn đòi hỏi hợp đồng nêu rõ nếu trùng mã thì làm gì, nhưng API đã dễ hiểu hơn.
+Here, the names show that the repository manages orders, `insert()` adds an order, and `findById()` looks up an ID with a possibly missing result. The contract still needs to say what happens with duplicate IDs, but the API is easier to understand.
 
-**Năm câu hỏi trước khi chốt tên:**
+**Five questions before finalizing a name:**
 
-1. **Tên thuộc khái niệm nghiệp vụ nào?** `Order`, `Cart`, `Payment` hay một hạ tầng kỹ thuật như `OrderRepository`?
-2. **Tên nêu vai trò hay chỉ kiểu dữ liệu?** `remainingSeats` hữu ích hơn `number`; `userIds` hữu ích hơn `stringList`.
-3. **Người gọi có đoán được hành vi không?** `cancelReservation()` rõ hơn `handle()`.
-4. **Tên có phản ánh điều kiện và kết quả không?** `findById()` gợi ý việc “có thể không tìm thấy”; `requireById()` có thể biểu đạt quy ước “thiếu thì ném lỗi” nếu được tài liệu hóa.
-5. **Tên có còn đúng sau thay đổi triển khai không?** `OrderRepository` cho phép đổi từ JDBC sang API; `JdbcOrderDao` mang thông tin công nghệ và chỉ phù hợp nếu chính lớp đó thật sự là adapter JDBC.
+1. **Which business concept does it represent?** `Order`, `Cart`, `Payment`, or infrastructure such as `OrderRepository`?
+2. **Does it convey the role rather than just the data type?** `remainingSeats` is more useful than `number`; `userIds` is more useful than `stringList`.
+3. **Can callers predict the action?** `cancelReservation()` is clearer than `handle()`.
+4. **Does it reflect conditions and results?** `findById()` suggests “might not exist”; `requireById()` may indicate “throw if missing” if that convention is documented.
+5. **Will it stay accurate if implementation changes?** `OrderRepository` accommodates a switch from JDBC to API calls; `JdbcOrderDao` contains technology details and only fits when the class truly is a JDBC adapter.
 
-Không nên tối ưu tên chỉ để ngắn. Một tên đủ dài nhưng cụ thể thường rẻ hơn thời gian suy luận của mỗi người đọc. Ngược lại, tên dài lặp lại thông tin đã có trong ngữ cảnh cũng làm code nặng nề.
+Do not optimize names solely for brevity. A longer, precise name is often cheaper than repeated reader inference. Conversely, names that repeat information already in context make code cumbersome.
 
-## 2. Quy ước đặt tên chuẩn trong Java
+## 2. Standard Java naming conventions
 
-| Thành phần | Quy ước thông dụng | Ví dụ | Ghi chú |
+| Element | Common convention | Example | Notes |
 |---|---|---|---|
-| Class | `UpperCamelCase`, thường là danh từ/cụm danh từ | `ShoppingCart`, `OrderRepository` | Chỉ ra đối tượng hoặc trách nhiệm |
-| Interface | `UpperCamelCase` | `PaymentGateway`, `Runnable` | Gọi theo **hợp đồng**, không bắt buộc thêm tiền tố `I` |
-| Record | `UpperCamelCase` | `Money`, `OrderLine` | Tên mô tả giá trị hoặc nhóm dữ liệu |
-| Enum type | `UpperCamelCase` | `OrderStatus` | Nêu một tập trạng thái/loại |
-| Enum constant | `UPPER_SNAKE_CASE` | `PENDING_PAYMENT`, `PAID` | Thường là các giá trị cố định |
-| Method | `lowerCamelCase`, thường là động từ/cụm động từ | `addLine()`, `findById()` | Tên mô tả hành động hoặc truy vấn |
-| Field | `lowerCamelCase` | `orderId`, `remainingSeats` | Tránh tiền tố kiểu Hungary `strName`, `mName` |
-| Parameter / local variable | `lowerCamelCase` | `orderId`, `customerEmail` | Có thể ngắn khi ngữ cảnh cực rõ |
-| Hằng số có tên | `UPPER_SNAKE_CASE` | `MAX_RETRY_ATTEMPTS` | Với hằng số thực sự bất biến, thường `static final` |
-| Package | chữ thường, tên nhóm theo miền/chức năng | `com.example.orders` | Tránh camelCase hoặc dấu gạch dưới cho package mới |
-| Generic type parameter | thường một chữ hoa có nghĩa | `T`, `E`, `K`, `V`, `ID` | Với generic phức tạp, tên dài rõ nghĩa cũng được |
+| Class | `UpperCamelCase`, usually a noun/noun phrase | `ShoppingCart`, `OrderRepository` | Describes the object or responsibility |
+| Interface | `UpperCamelCase` | `PaymentGateway`, `Runnable` | Named for the **contract**; no mandatory `I` prefix |
+| Record | `UpperCamelCase` | `Money`, `OrderLine` | Describes a value or data grouping |
+| Enum type | `UpperCamelCase` | `OrderStatus` | Names a set of states or categories |
+| Enum constant | `UPPER_SNAKE_CASE` | `PENDING_PAYMENT`, `PAID` | Usually fixed values |
+| Method | `lowerCamelCase`, usually a verb/verb phrase | `addLine()`, `findById()` | Names the action or query |
+| Field | `lowerCamelCase` | `orderId`, `remainingSeats` | Avoid Hungarian-style prefixes `strName`, `mName` |
+| Parameter / local variable | `lowerCamelCase` | `orderId`, `customerEmail` | Short names can work in very clear contexts |
+| Named constant | `UPPER_SNAKE_CASE` | `MAX_RETRY_ATTEMPTS` | Typically `static final` for truly immutable constants |
+| Package | Lowercase, grouped by domain/feature | `com.example.orders` | Avoid camelCase or underscores in new package names |
+| Generic type parameter | Usually one meaningful uppercase letter | `T`, `E`, `K`, `V`, `ID` | Longer, clear names can help complex generics |
 
-Đây là **quy ước** Java được cộng đồng và hệ sinh thái dùng rộng rãi, không phải mọi tên sai style đều bị compiler từ chối. Java phân biệt chữ hoa/chữ thường: `orderId` và `OrderId` là hai identifier khác nhau.
+These are widely used Java **conventions**, not compiler-enforced naming laws. Java is case-sensitive: `orderId` and `OrderId` are different identifiers.
 
-**Phân biệt `final` và hằng số:** `private final List<Order> orders` chỉ giữ nguyên **tham chiếu** tới danh sách, các phần tử vẫn có thể thêm/xóa; không nên tự động viết `ORDERS` chỉ vì có `final`. `private static final int MAX_ITEMS = 100;` mới là dạng hằng số đặt tên `UPPER_SNAKE_CASE` điển hình. Tương tự, `private static final List<String> CODES = new ArrayList<>()` có tham chiếu không đổi nhưng nội dung vẫn mutable, nên cần xét tính bất biến thực tế trước khi xem nó là hằng số.
+**Distinguish `final` from constants:** `private final List<Order> orders` makes only the list **reference** unassignable; elements may still be added/removed. Do not automatically rename it `ORDERS` just because it has `final`. `private static final int MAX_ITEMS = 100;` is a typical `UPPER_SNAKE_CASE` constant. Likewise, `private static final List<String> CODES = new ArrayList<>()` has a fixed reference but mutable contents, so consider actual immutability before treating it as a constant.
 
-### Từ viết tắt và thuật ngữ
+### Abbreviations and terminology
 
-Ưu tiên tên dễ đọc như `HttpClient`, `customerId`, `paymentUrl`, `parseJson()`. Các từ viết tắt đã quen như `URL`, `HTTP`, `DTO`, `ID` có thể xuất hiện, nhưng cần **thống nhất quy ước của dự án**, nhất là tên API công khai. Các thư viện Java hiện có cả tên kiểu `URL` và `URI`; không được tùy tiện đổi tên API thư viện.
+Prefer readable names such as `HttpClient`, `customerId`, `paymentUrl`, and `parseJson()`. Familiar abbreviations such as `URL`, `HTTP`, `DTO`, and `ID` are fine, but follow **a consistent project convention**, especially in public APIs. Existing Java libraries include types named `URL` and `URI`; do not arbitrarily rename library APIs.
 
-Ví dụ `getURL()` và `getUrl()` có thể dẫn đến cách JavaBeans introspection suy ra tên property khác nhau ở một số trường hợp, do quy tắc decapitalize. Khi sửa code dùng reflection, serialization hoặc binding, hãy kiểm tra hành vi thực tế chứ không chỉ đổi chữ hoa.
+For example, `getURL()` and `getUrl()` may produce different property names under JavaBeans introspection due to decapitalization rules. When renaming code used by reflection, serialization, or binding, verify actual behavior rather than merely changing letter case.
 
-## 3. Đặt tên lớp: ưu tiên khái niệm và trách nhiệm
+## 3. Naming classes: prioritize concepts and responsibilities
 
-### Lớp mô hình nghiệp vụ
+### Domain-model classes
 
-Tên danh từ như `Invoice`, `ShoppingCart`, `OrderLine`, `BankAccount` thường nói rõ thực thể/giá trị mà đối tượng biểu diễn. Các phương thức đi kèm bảo vệ invariant của khái niệm đó.
+Nouns such as `Invoice`, `ShoppingCart`, `OrderLine`, and `BankAccount` usually clarify which entity or value an object represents. Its methods enforce the concept's invariants.
 
 ~~~java
 final class ShoppingCart {
@@ -2275,32 +2275,32 @@ final class ShoppingCart {
 record OrderLine(String sku, int quantity) {}
 ~~~
 
-Nếu tên `Cart` đã nằm trong package `com.example.checkout.cart`, không cần luôn gọi `CheckoutShoppingCartDataModel`. Cần đủ cụ thể để không lẫn với một `Cart` khác trong cùng ngữ cảnh; tránh thêm nhiều tiền tố lặp.
+If `Cart` already lives in package `com.example.checkout.cart`, there is no need to call it `CheckoutShoppingCartDataModel`. Be specific enough to avoid confusion with another `Cart` in context, but avoid redundant prefixes.
 
-### Lớp chuyên cung cấp hành vi
+### Classes that provide behaviors
 
-Một số trách nhiệm không phải “thực thể” mà là cộng tác viên:
+Some responsibilities are not “entities” but collaborators:
 
-| Tên mơ hồ | Tên gợi ý | Trách nhiệm được làm rõ |
+| Vague name | Suggested name | Clarified responsibility |
 |---|---|---|
-| `OrderManager` | `OrderRepository` | Lưu, truy vấn đơn hàng |
-| `PaymentHelper` | `PaymentGateway` | Giao tiếp cổng thanh toán |
-| `ThingProcessor` | `InvoiceCalculator` | Tính số tiền hóa đơn |
-| `ReportUtil` | `CsvReportExporter` | Kết xuất báo cáo CSV |
-| `DataHandler` | `InventoryReservationService` | Nghiệp vụ giữ hàng tồn |
-| `EmailStuff` | `ReceiptSender` | Gửi biên nhận |
+| `OrderManager` | `OrderRepository` | Store and query orders |
+| `PaymentHelper` | `PaymentGateway` | Communicate with payment systems |
+| `ThingProcessor` | `InvoiceCalculator` | Calculate invoice amounts |
+| `ReportUtil` | `CsvReportExporter` | Export reports as CSV |
+| `DataHandler` | `InventoryReservationService` | Reserve inventory under business rules |
+| `EmailStuff` | `ReceiptSender` | Send receipts |
 
-Tên đuôi `Service`, `Manager`, `Handler`, `Processor` không bị cấm; chúng chỉ trở nên yếu khi **không nói được service làm gì**. `CheckoutService` có thể là tên tốt nếu nó thực hiện một use case checkout được xác định rõ. Không ép mọi lớp thành `SomethingService`.
+Suffixes such as `Service`, `Manager`, `Handler`, and `Processor` are not forbidden; they are weak only when they **fail to explain what the service does**. `CheckoutService` may be a good name for a clearly defined checkout use case. Do not force every class to become `SomethingService`.
 
-**Interface:** gọi bằng khả năng/hợp đồng, ví dụ `TaxPolicy`, `ShippingGateway`, `OrderRepository`. Implementation nên thể hiện sự khác biệt có ích: `JdbcOrderRepository`, `InMemoryOrderRepository`, `StripePaymentGateway`. Không cần viết `IOrderRepository`/`OrderRepositoryImpl` theo thói quen nếu tên không mang thêm thông tin; dự án hiện có convention riêng thì giữ nhất quán trong phạm vi đó.
+**Interfaces:** name them by capability/contract, such as `TaxPolicy`, `ShippingGateway`, and `OrderRepository`. Implementation names should convey useful differences: `JdbcOrderRepository`, `InMemoryOrderRepository`, and `StripePaymentGateway`. Avoid reflexive `IOrderRepository`/`OrderRepositoryImpl` naming when it adds no information; follow any established project convention consistently.
 
-**Ngoại lệ:** lớp có ý nghĩa lỗi như `InsufficientBalanceException` hoặc `OrderNotFoundException` cho phép caller nắm loại lỗi; đừng dùng `MyException` hay `CustomException` khi public API có thể nói cụ thể hơn.
+**Exceptions:** a meaningful name such as `InsufficientBalanceException` or `OrderNotFoundException` tells callers what went wrong; avoid `MyException` or `CustomException` when a public API can be more specific.
 
-**Class có hậu tố `Dto`/`Request`/`Response`:** phù hợp ở biên HTTP hoặc tích hợp nếu kiểu đó là dạng vận chuyển dữ liệu. Đừng dùng DTO làm domain entity một cách vô thức; một `CreateOrderRequest` không nhất thiết bảo vệ cùng invariant với `Order`.
+**Classes with `Dto`/`Request`/`Response` suffixes:** appropriate at HTTP/integration boundaries when they transport data. Do not unknowingly treat a DTO as a domain entity; `CreateOrderRequest` need not enforce the same invariants as `Order`.
 
-## 4. Đặt tên thuộc tính: ý nghĩa, số lượng, đơn vị và trạng thái
+## 4. Naming fields: meaning, quantity, units, and state
 
-Một field nên thể hiện **dữ liệu lưu trong field là gì**:
+A field name should communicate **what the stored data represents**:
 
 ~~~java
 // Khó đọc vì thiếu ý nghĩa:
@@ -2316,18 +2316,18 @@ private boolean emailVerified;
 private List<String> permittedCountryCodes;
 ~~~
 
-### Danh sách và số nhiều
+### Collections and plurals
 
-- Một phần tử: `order`, `customer`, `selectedProduct`.
-- Nhiều phần tử: `orders`, `customerIds`, `selectedProducts`.
-- Một tập hợp tra cứu: `ordersById` khi là `Map<String, Order>`; tên thể hiện **khóa** được dùng.
-- `pendingOrders` nói rõ bộ lọc, trong khi `orders` chỉ nói về loại phần tử.
+- One element: `order`, `customer`, `selectedProduct`.
+- Multiple elements: `orders`, `customerIds`, `selectedProducts`.
+- A lookup collection: `ordersById` for a `Map<String, Order>`; the name describes **the key** used.
+- `pendingOrders` describes a filter, while `orders` merely describes the element type.
 
-Không cần mang tên kiểu kỹ thuật vào mọi trường như `arrayListOfOrders` vì đổi `ArrayList` sang `LinkedList`/`List` làm tên trở nên sai. Thường khai báo theo abstraction phù hợp: `List<Order> pendingOrders`.
+Avoid embedding technical collection types in every field name, such as `arrayListOfOrders`; switching `ArrayList` to `LinkedList`/`List` would make the name inaccurate. Prefer an appropriate abstraction: `List<Order> pendingOrders`.
 
-### Đơn vị và miền giá trị
+### Units and value ranges
 
-`timeout = 500` không cho biết 500 ms, giây hay phút. Có hai hướng:
+`timeout = 500` does not say whether 500 is milliseconds, seconds, or minutes. Two approaches are:
 
 ~~~java
 long timeoutMillis = 500L;        // Nếu API thật sự lưu con số millis
@@ -2335,20 +2335,20 @@ java.time.Duration timeout =
         java.time.Duration.ofMillis(500); // Tốt khi API hỗ trợ Duration
 ~~~
 
-Tương tự `balanceCents` cụ thể hơn `balance` nếu dữ liệu là số nguyên đơn vị cent; `discountRate` (tỉ lệ 0–1) và `discountPercent` (0–100) **không được sử dụng thay thế** mà không có quy ước. Với tiền tệ thực tế, có thể cần kiểu `Money(amount, currency)`, `BigDecimal` và quy tắc rounding, không chỉ đổi tên field.
+Likewise, `balanceCents` is more precise than `balance` for an integer number of cents; `discountRate` (ratio 0–1) and `discountPercent` (0–100) **are not interchangeable** without an agreed convention. Real monetary values may require `Money(amount, currency)`, `BigDecimal`, and rounding rules, not just a renamed field.
 
-### Biến boolean: đặt thành mệnh đề khẳng định dễ đọc
+### Boolean variables: use readable affirmative predicates
 
-| Khó hiểu | Gợi ý | Khi dùng |
+| Unclear | Suggested | Use case |
 |---|---|---|
-| `flag` | `emailVerified` | Field trạng thái |
-| `status` kiểu boolean | `paymentCompleted` | Một trạng thái nhị phân xác định |
-| `notInvalid` | `valid` | Tránh phủ định kép |
-| `check()` | `hasAvailableSeats()` | Method truy vấn điều kiện |
-| `testUser()` | `canAccessResource()` | Method trả về quyền truy cập |
-| `enabledOrNot` | `isEnabled()` | Getter boolean nếu theo quy ước API |
+| `flag` | `emailVerified` | State field |
+| Boolean `status` | `paymentCompleted` | A specific binary state |
+| `notInvalid` | `valid` | Avoid double negation |
+| `check()` | `hasAvailableSeats()` | Condition query |
+| `testUser()` | `canAccessResource()` | Permission-checking method |
+| `enabledOrNot` | `isEnabled()` | Boolean getter under API conventions |
 
-Đọc trong câu lệnh:
+Read it in a statement:
 
 ~~~java
 if (account.isLocked()) {
@@ -2360,38 +2360,38 @@ if (cart.hasItems() && payment.canBeCaptured()) {
 }
 ~~~
 
-Lưu ý: `isEnabled()` là tên method JavaBeans thường gặp cho boolean; record `record Settings(boolean enabled)` sinh accessor `enabled()`. Đừng sửa tất cả accessor record thành `getEnabled()` chỉ để giống JavaBeans; xem yêu cầu của framework và API đang có.
+Note that `isEnabled()` is a conventional JavaBeans name for Boolean methods; `record Settings(boolean enabled)` generates `enabled()`. Do not rename all record accessors to `getEnabled()` just to match JavaBeans; consider actual framework and API requirements.
 
-## 5. Đặt tên phương thức: nói rõ thao tác và hợp đồng
+## 5. Naming methods: express actions and contracts
 
-Phương thức làm việc nên mang một **động từ hoặc cụm hành động**; method truy vấn có thể mang tên thuộc tính hoặc mệnh đề rõ nghĩa. Tên không chỉ mô tả “thực hiện gì”, mà còn nên giúp người dùng dự đoán có thay đổi trạng thái, I/O, lỗi hoặc kết quả rỗng không.
+Action methods should use **verbs or verb phrases**; query methods may use attribute names or clear predicates. A name should indicate not only “what happens” but also help callers anticipate state changes, I/O, failures, and absent results.
 
-| Method yếu | Method rõ hơn | Lợi ích |
+| Weak method | Clearer method | Benefit |
 |---|---|---|
-| `process(order)` | `placeOrder(order)` | Nêu use case |
-| `handle(orderId)` | `cancelOrder(orderId)` | Nêu tác động |
-| `calculate(x)` | `calculateShippingFee(destination)` | Nêu giá trị được tính |
-| `update(x)` | `changeDeliveryAddress(address)` | Nêu field/invariant được sửa |
-| `check(orderId)` | `existsById(orderId)` | Giá trị trả về dễ hiểu |
-| `get(id)` | `findById(id)` | Thể hiện truy vấn theo ID |
-| `doPayment()` | `capturePayment()` | Phân biệt giữ tiền và thu tiền |
-| `run()` | `generateMonthlyStatement()` | Rõ kết quả nghiệp vụ |
+| `process(order)` | `placeOrder(order)` | Identifies the use case |
+| `handle(orderId)` | `cancelOrder(orderId)` | Identifies the effect |
+| `calculate(x)` | `calculateShippingFee(destination)` | Identifies the value being computed |
+| `update(x)` | `changeDeliveryAddress(address)` | Identifies the field/invariant modified |
+| `check(orderId)` | `existsById(orderId)` | Makes the return value easier to understand |
+| `get(id)` | `findById(id)` | Indicates lookup by ID |
+| `doPayment()` | `capturePayment()` | Distinguishes authorization from capture |
+| `run()` | `generateMonthlyStatement()` | Makes the business outcome clear |
 
-### Một số tiền tố hữu ích, nhưng không phải luật cứng
+### Useful prefixes, not rigid rules
 
-- `getName()` / `name()`: đọc một thuộc tính; tuân theo JavaBeans khi framework cần.
-- `isLocked()`, `hasItems()`, `canSubmit()`: truy vấn boolean.
-- `findById()`: thường phù hợp khi **không tìm thấy** là kết quả bình thường, ví dụ trả `Optional<T>`.
-- `requireById()` hoặc `loadRequiredById()`: có thể đặt cho quy ước **không tìm thấy thì ném exception**; phải viết rõ trong contract. Không có quy tắc Java toàn cục bắt buộc `get` hay `find` xử lý lỗi theo một cách duy nhất.
-- `calculateTotal()` / `subtotalAmount()`: tính toán không chủ ý tạo tác dụng phụ.
-- `createOrder()`, `placeOrder()`, `cancelOrder()`: biểu đạt hành động biến đổi trạng thái.
-- `save()`, `insert()`, `update()`: phải giải thích khác biệt giữa ghi mới, cập nhật, upsert, xử lý trùng khóa và transaction; chỉ đổi tên không biến hành vi thành đúng.
-- `sendEmail()`, `enqueueEmail()`, `scheduleEmail()`: phân biệt đã gọi gửi, đưa vào hàng đợi và lên lịch. Nếu chỉ publish message thì gọi `enqueue`/`publish` trung thực hơn tuyên bố đã gửi thành công.
-- `validate()` có thể ném ngoại lệ hoặc trả danh sách lỗi; nếu hai hành vi tồn tại, nên có tên/hợp đồng phân biệt như `isValid()` và `validateOrThrow()`.
+- `getName()` / `name()`: reads a property; follow JavaBeans rules when a framework requires them.
+- `isLocked()`, `hasItems()`, `canSubmit()`: Boolean queries.
+- `findById()`: suitable when **not found** is an expected outcome, such as returning `Optional<T>`.
+- `requireById()` or `loadRequiredById()`: may indicate a **throw-if-missing** convention, which must be documented. Java does not mandate one global error policy for `get` or `find`.
+- `calculateTotal()` / `subtotalAmount()`: computations not intended to have side effects.
+- `createOrder()`, `placeOrder()`, `cancelOrder()`: actions that change state.
+- `save()`, `insert()`, `update()`: document the difference between new writes, updates, upserts, duplicate-key handling, and transactions; a name alone does not ensure correct behavior.
+- `sendEmail()`, `enqueueEmail()`, `scheduleEmail()`: distinguish initiating delivery, enqueuing, and scheduling. If code only publishes a message, `enqueue`/`publish` is more accurate than claiming successful delivery.
+- `validate()` may throw or return a list of errors; if both semantics exist, distinguish them by names/contracts such as `isValid()` and `validateOrThrow()`.
 
-**Đừng giấu side effect trong tên getter:** một `getBalance()` gọi API thanh toán từ xa, thay đổi trạng thái hoặc có thể tốn vài giây là điều caller dễ bất ngờ. Nếu nghiệp vụ bắt buộc truy xuất từ xa, tên như `fetchBalance()` cùng tài liệu thời gian, lỗi, cache có thể rõ hơn.
+**Do not hide side effects behind getter names:** a `getBalance()` that calls a remote payment API, changes state, or takes several seconds can surprise callers. If remote access is required, `fetchBalance()` with documented timing, errors, and caching may be clearer.
 
-### Tránh boolean flag điều khiển hai nghiệp vụ
+### Avoid Boolean flags that control separate workflows
 
 ~~~java
 // Mơ hồ: true có nghĩa gì? Khó nhớ khi đọc lời gọi.
@@ -2402,7 +2402,7 @@ orderService.submitOrder(order);
 orderService.previewOrder(order);
 ~~~
 
-Nếu khác biệt chỉ là tham số cấu hình hợp lệ của một nghiệp vụ, có thể dùng enum có tên:
+If the difference is merely a valid configuration setting within one operation, a named enum may work:
 
 ~~~java
 enum DeliveryPriority { STANDARD, EXPRESS }
@@ -2410,11 +2410,11 @@ enum DeliveryPriority { STANDARD, EXPRESS }
 shippingService.scheduleShipment(order, DeliveryPriority.EXPRESS);
 ~~~
 
-Không cần tách tất cả method có tham số boolean: hãy tách khi cờ tạo hai hành vi độc lập khiến tên chung che giấu trách nhiệm.
+Not every Boolean parameter requires splitting a method: split when the flag selects independent behaviors that the generic name conceals.
 
-## 6. Ví dụ hoàn chỉnh: từ tên chung chung tới API OOP dễ hiểu
+## 6. Complete example: from generic names to a readable OOP API
 
-Bài toán: người dùng thêm sản phẩm vào giỏ, xem tổng tạm tính và đặt đơn. Một vài tên yếu thường thấy trong code cũ:
+Scenario: a user adds products to a cart, views a subtotal, and places an order. Legacy code often has vague names such as:
 
 ~~~java
 // Mã Java hợp lệ nhưng tên không nói rõ trách nhiệm.
@@ -2428,9 +2428,9 @@ class Manager {
 }
 ~~~
 
-Người đọc không đoán được `data` là giỏ hàng hay danh sách đơn đã lưu, `flag` biểu diễn trạng thái nào, `calc()` tính gì, `process()` có ghi dữ liệu hay không.
+Readers cannot tell whether `data` represents a cart or saved orders, what `flag` means, what `calc()` calculates, or whether `process()` persists anything.
 
-### Thiết kế tên và trách nhiệm mới
+### Revised names and responsibility boundaries
 
 ~~~mermaid
 classDiagram
@@ -2463,12 +2463,12 @@ classDiagram
     InMemoryOrderRepository ..|> OrderRepository
 ~~~
 
-- `ShoppingCart` là danh từ biểu diễn đối tượng nghiệp vụ; `addProduct()` nói hành động, `hasItems()` nói điều kiện, `snapshot()` nói người gọi nhận **ảnh chụp dữ liệu**.
-- `CartLine` là một dòng hàng có `quantity` và `unitPrice`; `lineTotal()` nói rõ tổng riêng của dòng.
-- `CheckoutService.placeOrder()` nói mục tiêu use case và tác dụng chính; `OrderRepository.insert()` nói thao tác ghi mới.
-- `InMemoryOrderRepository` mô tả đặc điểm triển khai; người dùng của interface không cần biết nó lưu bằng `ConcurrentHashMap`.
+- `ShoppingCart` is a noun representing a business object; `addProduct()` communicates an action, `hasItems()` a condition, and `snapshot()` that callers receive **a snapshot of data**.
+- `CartLine` represents a line item with `quantity` and `unitPrice`; `lineTotal()` clearly means the total for that line.
+- `CheckoutService.placeOrder()` names the use-case goal and main effect; `OrderRepository.insert()` denotes a new-write operation.
+- `InMemoryOrderRepository` explains the implementation; consumers of the interface need not know it uses a `ConcurrentHashMap`.
 
-**Toàn bộ mã trong tệp `NamingDemo.java`, chạy bằng Java 17+:**
+**Complete code in `NamingDemo.java`, runnable with Java 17+:**
 
 ~~~java
 import java.math.BigDecimal;
@@ -2604,28 +2604,28 @@ javac NamingDemo.java
 java NamingDemo
 ~~~
 
-Kết quả dự kiến:
+Expected output:
 
 ~~~text
 280000
 true
 ~~~
 
-Trong ví dụ:
+In this example:
 
-1. `orderId` là **mã đơn**, `sku` là **mã hàng**, `quantity` là **số lượng**, `unitPrice` là **đơn giá**. Không dùng các tên `str1`, `x`, `val`.
-2. `CartSnapshot` mô tả dữ liệu sao chép tại thời điểm đặt đơn. `snapshot()` dùng cùng một danh sách đã sao chép để tính subtotal, tránh tính tổng từ một nguồn khác so với danh sách được lưu.
-3. `OrderRepository.insert()` đúng với hành vi từ chối trùng ID qua `putIfAbsent`, còn `findById()` thể hiện khả năng trả về `Optional.empty()`.
-4. `CheckoutService.placeOrder()` trả về `Order` đã được ghi, nên caller đặt tên biến `placedOrder` thay vì `result` chung chung.
-5. `BigDecimal` dùng cho phép tính tiền trong ví dụ, tránh phép tính tiền bằng `double`. Ứng dụng thật còn cần currency, rounding/scale policy, và quy tắc thuế/chiết khấu.
+1. `orderId` is **the order ID**, `sku` is **the product code**, `quantity` is **the quantity**, and `unitPrice` is **the unit price**. Avoid opaque names such as `str1`, `x`, or `val`.
+2. `CartSnapshot` represents copied data at order-placement time. `snapshot()` uses the same copied list to compute the subtotal, preventing discrepancies between calculated totals and stored items.
+3. `OrderRepository.insert()` matches the behavior of rejecting duplicate IDs through `putIfAbsent`, while `findById()` indicates the possibility of returning `Optional.empty()`.
+4. `CheckoutService.placeOrder()` returns the saved `Order`, so the caller names its variable `placedOrder` rather than a generic `result`.
+5. `BigDecimal` is used for monetary calculations instead of `double`. Real applications also need currency, rounding/scale policies, and taxation/discount rules.
 
-Đây là mẫu minh họa **đặt tên và ranh giới lớp**, không phải hệ thống đặt hàng đầy đủ: `ShoppingCart` mutable chưa bảo đảm thread safety khi nhiều luồng cùng thêm hàng; repository bộ nhớ không bền vững qua lần chạy; quy tắc duplicate ID, transaction và xác thực cần được định nghĩa thêm khi triển khai thật.
+This illustrates **naming and class boundaries**, not a complete order-management system: mutable `ShoppingCart` has no thread-safety guarantees for concurrent updates; its in-memory repository does not persist across runs; and duplicate-ID rules, transactions, and authentication need further design for production.
 
-**Vì sao các tên ăn khớp nhau?** Ở lời gọi `checkout.placeOrder("ORD-42", cart)` có thể dự đoán đây là tác vụ tạo đơn; `orders.findById(...)` là truy vấn; `cart.snapshot()` tạo một bản dữ liệu ổn định để truyền sang đơn mới. Người đọc không phải mở từng thân hàm để tìm chức năng cơ bản.
+**Why do the names fit together?** A call to `checkout.placeOrder("ORD-42", cart)` makes the order-placement action clear; `orders.findById(...)` is a query; and `cart.snapshot()` creates stable data for a new order. Readers need not open every method body to understand the basic functionality.
 
-## 7. Tên tốt cần đi cùng API và tính nhất quán
+## 7. Good names must align with APIs and consistency
 
-Một tên nghe “hay” không bù được hợp đồng sai:
+A name that sounds “good” cannot compensate for a broken contract:
 
 ~~~java
 // Sai về mặt ý nghĩa: tên nói truy vấn nhưng thực tế xóa dữ liệu.
@@ -2634,9 +2634,9 @@ Order findById(String id) {
 }
 ~~~
 
-Nếu truy vấn có side effect, cần xem lại thiết kế, không chỉ sửa tên cho hấp dẫn. Tên là **cam kết** với caller.
+If a query has side effects, reconsider the design rather than just making the name more attractive. A name is **a promise** to its caller.
 
-Trong cùng một lớp, tránh hai tên cho một ý nghĩa nếu không có khác biệt thật:
+Within one class, avoid multiple names for the same meaning unless real differences exist:
 
 ~~~java
 findOrder(id);
@@ -2645,9 +2645,9 @@ getOrder(id);
 fetchOrder(id);
 ~~~
 
-Nếu bốn method có bốn hành vi khác nhau, cần tài liệu chỉ rõ: truy vấn bộ nhớ, truy vấn DB, fetch HTTP, hoặc ném lỗi khi thiếu. Nếu chỉ là bí danh lịch sử, giảm số bí danh để API dễ học hơn.
+If the four methods truly have different behaviors, documentation should distinguish in-memory lookup, database lookup, HTTP fetching, and throwing on a missing item. If they are only legacy aliases, reduce the number so the API is easier to learn.
 
-### Có nên thêm tên class vào tên method?
+### Should method names repeat the class name?
 
 ~~~java
 // Lặp thừa ngữ cảnh:
@@ -2659,11 +2659,11 @@ cart.addProduct(product);
 orderRepository.findById(orderId);
 ~~~
 
-Tuy nhiên, `OrderRepository.findByCustomerId()` có thông tin quan trọng ở `CustomerId` vì nó phân biệt kiểu truy vấn. Không xóa thông tin chỉ để tên ngắn.
+However, `OrderRepository.findByCustomerId()` contains meaningful `CustomerId` information because it distinguishes the query. Do not remove important information merely to shorten a name.
 
-### Tên phương thức có quan hệ với exception và null
+### Method names, exceptions, and null
 
-Nếu một method có thể không tìm thấy dữ liệu, hãy chọn và thực hiện **một hợp đồng nhất quán**:
+If a method may not find data, choose and enforce **one consistent contract**:
 
 ~~~java
 Optional<Order> findById(String orderId);  // Không tìm thấy -> empty()
@@ -2671,11 +2671,11 @@ Optional<Order> findById(String orderId);  // Không tìm thấy -> empty()
 Order requireById(String orderId);          // Không tìm thấy -> exception
 ~~~
 
-Đây là **quy ước API được thiết kế**, không phải chuẩn Java bắt buộc. `Optional` hữu ích với kết quả “có hoặc không”; không cần bọc mọi biến hoặc field trong `Optional`. Nêu rõ lỗi từ chối và tác động của việc ghi dữ liệu, nhất là API public.
+This is **a deliberately designed API convention**, not a mandatory Java standard. `Optional` is useful for “present or absent” results; there is no need to wrap every variable or field in `Optional`. Explicitly document rejections and side effects of writes, especially for public APIs.
 
-## 8. Đặt tên tham số, biến cục bộ và biến vòng lặp
+## 8. Naming parameters, local variables, and loop variables
 
-Tên biến nên tỷ lệ với **phạm vi sử dụng**:
+Variable names should reflect **their scope of use**:
 
 ~~~java
 // i là hợp lý khi chỉ là index của vòng lặp ngắn:
@@ -2689,24 +2689,24 @@ for (OrderLine orderLine : orderLines) {
 }
 ~~~
 
-Với dữ liệu chuyển đổi, tên đầu vào và kết quả nên mô tả sự khác nhau:
+For transformed data, input and output names should describe their differences:
 
 ~~~java
 String rawEmail = request.email();
 String normalizedEmail = rawEmail.strip().toLowerCase(java.util.Locale.ROOT);
 ~~~
 
-Nhưng đừng chọn `normalizedEmail` nếu nghiệp vụ chưa định nghĩa việc hạ chữ hoa có hợp lệ cho toàn bộ email hay không; nhiều hệ thống thường chỉ lowercase miền (domain), và chính sách so sánh email cần nhất quán. Ví dụ trên minh họa **đặt tên dữ liệu trước/sau biến đổi**, không phải quy tắc chuẩn hóa email áp dụng cho mọi hệ thống.
+However, do not use `normalizedEmail` unless the business domain defines whether lowercasing an entire email address is valid; many systems lowercase only the domain portion, and email comparison policies must be consistent. This example demonstrates **naming data before and after transformation**, not a universal email-normalization rule.
 
-Một tham số như `timeoutMillis` tốt hơn `time` nếu API chỉ chấp nhận mili giây; nếu dùng `Duration timeout` thì kiểu dữ liệu đã chứa thông tin đơn vị, tên `timeout` là đủ.
+A parameter named `timeoutMillis` is better than `time` when the API accepts only milliseconds; with a `Duration timeout` type, the type already conveys units, so `timeout` is sufficient.
 
-Tránh tên dễ nhầm về số học: `total` là tổng của gì, bao gồm thuế chưa? Trong thanh toán, `subtotalAmount`, `taxAmount`, `shippingFee`, `grandTotalAmount` có thể là những khái niệm khác nhau. Đừng gom tất cả thành `amount` nếu chúng đồng thời xuất hiện trong cùng phương thức.
+Avoid ambiguous numerical names: what is `total` a total of, and does it include tax? In payments, `subtotalAmount`, `taxAmount`, `shippingFee`, and `grandTotalAmount` may all be distinct. Do not collapse them into `amount` when they appear together in a method.
 
-## 9. JavaBeans, record, ORM và serialization
+## 9. JavaBeans, records, ORMs, and serialization
 
-Đặt tên không chỉ ảnh hưởng người đọc. Một số công cụ suy ra **property names**, tên bean hoặc tên cột từ code.
+Naming affects more than readers. Some tools derive **property names**, bean identifiers, or column names from code.
 
-### JavaBeans getter/setter
+### JavaBeans getters/setters
 
 ~~~java
 public final class CustomerView {
@@ -2727,19 +2727,19 @@ public final class CustomerView {
 }
 ~~~
 
-Nhiều framework JavaBeans nhận diện property `displayName` từ `getDisplayName()` và `active` từ `isActive()`. Tuy nhiên, behavior thực tế còn phụ thuộc thư viện/phiên bản và annotation. Không đổi chữ ký getter public tùy hứng khi có client reflection.
+Many JavaBeans frameworks infer property `displayName` from `getDisplayName()` and `active` from `isActive()`. Actual behavior still depends on library versions and annotations. Avoid casually changing public getter signatures used by reflection-based clients.
 
-### Record accessor
+### Record accessors
 
 ~~~java
 public record CustomerSummary(String customerId, boolean active) {}
 ~~~
 
-Record tự tạo accessor `customerId()` và `active()`, không tự tạo `getCustomerId()` hoặc `isActive()`. Người dùng library cần biết kiểu là record và framework hỗ trợ record ở phiên bản nào.
+Records generate `customerId()` and `active()` accessors automatically, not `getCustomerId()` or `isActive()`. Library consumers need to know the type is a record and which versions of their frameworks support records.
 
-### API/ORM/JSON đã phát hành
+### Published API/ORM/JSON contracts
 
-Nếu REST payload chứa field `customer_id` nhưng Java field là `customerId`, có thể đặt mapping tường minh qua annotation/mapper thay vì buộc mọi tên Java trùng định dạng JSON:
+If a REST payload uses `customer_id` but the Java field is `customerId`, map them explicitly via annotations/mappers rather than making every Java name match JSON formatting:
 
 ~~~java
 // Ví dụ khái niệm với Jackson:
@@ -2749,22 +2749,22 @@ record CustomerDto(
 ) {}
 ~~~
 
-Tương tự, JPA có thể suy ra tên cột hoặc được cấu hình với `@Column(name = "...")`; đổi tên Java field có thể gây thay đổi mapping nếu không khóa tên theo schema. Spring cũng có thể tạo tên bean mặc định dựa trên tên class; thay tên có thể làm thay đổi wiring bằng `@Qualifier` hoặc theo tên.
+Similarly, JPA may derive column names or use `@Column(name = "...")`; changing Java field names can affect mappings unless schema names are fixed explicitly. Spring may also derive default bean names from class names; renaming classes can affect wiring through `@Qualifier` or name-based injection.
 
-**Điểm quan trọng:** Rename ở public API có thể làm hỏng source compatibility, binary compatibility, reflection, JSON contract, database mapping, cấu hình Spring, tài liệu, log parsing và script bên ngoài. Nếu mới chỉ refactor một private field không bị đọc bằng reflection, phạm vi tác động thường nhỏ hơn nhiều.
+**Important:** renaming a public API can break source compatibility, binary compatibility, reflection, JSON contracts, database mappings, Spring configuration, documentation, log parsing, and external scripts. Renaming a private field not accessed through reflection usually has a much smaller impact.
 
-## 10. Đổi tên an toàn trên codebase đang sử dụng
+## 10. Renaming safely in an existing codebase
 
-Cách làm với một API tên cũ `createOrder()` cần đổi thành `placeOrder()`:
+Suppose the old API method `createOrder()` should be renamed `placeOrder()`:
 
-1. **Hiểu hành vi hiện tại:** tạo đối tượng trong bộ nhớ, lưu DB hay thực hiện cả workflow? Chỉ đổi tên khi tên mới đúng với semantics.
-2. **Tìm usage và ranh giới công khai:** compile-time callers, overloads, method references, reflection, serialization, plugin SPI, cấu hình Spring/ORM và script.
-3. **Dùng Rename Symbol của IDE:** để cập nhật symbol và reference; kiểm tra thêm những chỗ dùng chuỗi ký tự mà tool không tự nhận diện.
-4. **Nếu API còn client cũ:** có thể giữ wrapper tương thích có ghi chú deprecated trong một chu kỳ migration.
-5. **Chạy build/test:** compile tất cả module liên quan, test reflection/JSON/database mapping nếu có; kiểm tra API docs, ví dụ, log và metric.
-6. **Khi xóa tên cũ:** chỉ thực hiện theo chính sách versioning, kiểm tra các consumer đã di chuyển.
+1. **Understand current behavior:** does it create an in-memory object, persist to a database, or perform an entire workflow? Rename only when the new name matches the semantics.
+2. **Find usages and public boundaries:** compile-time callers, overloads, method references, reflection, serialization, plugin SPIs, Spring/ORM configuration, and scripts.
+3. **Use your IDE's Rename Symbol feature:** update symbols and references, then inspect string-based usages that tools may miss.
+4. **Support legacy API clients:** keep a compatibility wrapper marked deprecated during a migration period if needed.
+5. **Build and test:** compile all relevant modules; test reflection/JSON/database mappings where applicable; review API docs, examples, logs, and metrics.
+6. **Remove the old name:** only according to versioning policy and after checking that consumers have migrated.
 
-Ví dụ wrapper công khai:
+Example public wrapper:
 
 ~~~java
 public final class OrderApplicationService {
@@ -2781,23 +2781,23 @@ public final class OrderApplicationService {
 }
 ~~~
 
-Đoạn wrapper chỉ minh họa **chiến lược migration** và không dùng trực tiếp với `NamingDemo.java` (trong ví dụ đầy đủ, class điều phối mang tên `CheckoutService`). Khi giữ wrapper, việc gọi `createOrder()` vẫn chạy theo contract cũ nếu `placeOrder()` có cùng ngữ nghĩa; việc đổi tên không cho phép thay đổi hành vi một cách âm thầm. Nếu hệ thống dùng các method name làm protocol hoặc key serialized, cần migration riêng.
+The wrapper only demonstrates **a migration strategy**; it is not used directly with `NamingDemo.java` (the complete example calls its coordinating class `CheckoutService`). While keeping the wrapper, `createOrder()` must honor its old contract if `placeOrder()` has equivalent semantics; a rename must not silently change behavior. If method names are used as protocol or serialized keys, they need separate migration handling.
 
-## 11. Đo chất lượng tên bằng cách review và kiểm thử
+## 11. Reviewing and testing name quality
 
-Tên khó đo bằng một chỉ số tự động vì phụ thuộc ngữ cảnh nghiệp vụ. Có thể tự review bằng các câu hỏi:
+Name quality is difficult to quantify automatically because it depends on business context. Review these questions:
 
-| Câu hỏi review | Ví dụ đạt | Dấu hiệu cần sửa |
+| Review question | Good example | Warning sign |
 |---|---|---|
-| Class thể hiện một vai trò rõ? | `ReceiptSender` | `GeneralHelper` làm 6 việc khác nhau |
-| Field có ý nghĩa và đơn vị? | `retryDelayMillis` | `delay` mà không ai biết đơn vị |
-| Boolean đọc như câu hỏi? | `hasOutstandingInvoices()` | `check()` |
-| Method bộc lộ tác động? | `cancelSubscription()` | `processSubscription()` |
-| Kết quả “có thể thiếu” rõ? | `findById(): Optional<Order>` | `get()` âm thầm trả null |
-| Tên public không lộ detail không cần thiết? | `OrderRepository` | `JdbcMysqlV2Util` trong API nghiệp vụ |
-| Tên đồng bộ với thực thi? | `insert()` báo trùng khóa | `find()` lại xóa dữ liệu |
+| Does the class express a clear role? | `ReceiptSender` | `GeneralHelper` handles 6 unrelated tasks |
+| Does a field express meaning and units? | `retryDelayMillis` | `delay` with unspecified units |
+| Does a Boolean read like a question? | `hasOutstandingInvoices()` | `check()` |
+| Does a method reveal effects? | `cancelSubscription()` | `processSubscription()` |
+| Are possibly missing results clear? | `findById(): Optional<Order>` | `get()` silently returns null |
+| Does a public name avoid unnecessary implementation details? | `OrderRepository` | `JdbcMysqlV2Util` in a domain API |
+| Does a name match behavior? | `insert()` reports a duplicate key | `find()` deletes data |
 
-Tên test cũng là tài liệu. Với JUnit Jupiter 5, dùng tên mô tả **kịch bản và kết quả**:
+Test names also document behavior. With JUnit Jupiter 5, choose names describing **scenarios and outcomes**:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -2845,27 +2845,27 @@ class NamingDemoTest {
 }
 ~~~
 
-Tên `placingOrderStoresAnImmutableCartSnapshot` tự nói tình huống kiểm thử; `insertingDuplicateOrderIdIsRejected` nói rõ điều kiện lỗi. Chạy test này cần JUnit Jupiter 5 được cấu hình trong project. Các test kiểm tra **hành vi thật** của ví dụ, không chỉ kiểm tra rằng code có tên method mong muốn.
+`placingOrderStoresAnImmutableCartSnapshot` states the tested scenario; `insertingDuplicateOrderIdIsRejected` makes the error condition clear. This test requires JUnit Jupiter 5 configured in the project. Tests assert **actual behavior**, not just the presence of particular method names.
 
-Lưu ý về từ “immutable”: `Order.lines()` chứa bản sao danh sách không sửa được qua API và `CartLine` là record bất biến với các thành phần `String`, `int`, `BigDecimal` (đều bất biến). Vì vậy ảnh chụp trong **ví dụ này** giữ nguyên. Với bản sao danh sách chứa phần tử mutable, `List.copyOf` không tự tạo deep copy, nên tên `immutableSnapshot` sẽ gây hiểu nhầm nếu không có biện pháp bổ sung.
+Regarding “immutable”: `Order.lines()` returns an unmodifiable list copy and `CartLine` is an immutable record with `String`, `int`, and `BigDecimal` components (all immutable). Thus the snapshot remains unchanged **in this example**. A list copy containing mutable elements does not automatically become a deep copy through `List.copyOf`, so `immutableSnapshot` would mislead without further precautions.
 
-## 12. Lỗi thường gặp và cách sửa
+## 12. Common errors and fixes
 
-| Lỗi | Hậu quả | Hướng xử lý |
+| Error | Consequence | Resolution |
 |---|---|---|
-| Dùng `Manager`, `Helper`, `Util` cho nhiều việc không liên quan | Khó xác định trách nhiệm lớp | Đặt tên theo capability/domain, xem lại cohesion |
-| Dùng `data`, `temp`, `flag` trong scope lớn | Người đọc phải lần theo nhiều dòng | Nêu vai trò và trạng thái: `pendingOrders`, `paymentCaptured` |
-| Tên phương thức che giấu I/O hoặc thay đổi trạng thái | Caller bất ngờ về hiệu năng và lỗi | Đặt tên có nghĩa hoặc ghi contract rõ |
-| Viết tắt không thống nhất | Khó tìm kiếm và nhận biết cùng khái niệm | Lập từ điển thuật ngữ và convention chung |
-| Thêm kiểu cụ thể vào tên domain không cần thiết | Tên sai khi đổi implementation | Đặt theo ý nghĩa, để type declaration làm phần còn lại |
-| Tên dài lặp lại class/package | API khó đọc | Xóa phần trùng mà không xóa ý nghĩa |
-| Đổi getter/DTO public mà không kiểm tra mapping | Lỗi JSON, bean binding, binary compatibility | Kiểm thử biên, migration/versioning |
-| Tách một hành vi thành nhiều tên đồng nghĩa | API khó học, nhiều alias tồn tại | Một tên chính, deprecated wrapper tạm thời nếu cần |
-| Trả kết quả trái ngụ ý của tên | Vi phạm kỳ vọng caller | Đồng bộ hợp đồng, method name và implementation |
+| Using `Manager`, `Helper`, or `Util` for unrelated tasks | Obscures class responsibility | Name the capability/domain; review cohesion |
+| Using `data`, `temp`, or `flag` in broad scopes | Readers must trace many lines | Express role and state: `pendingOrders`, `paymentCaptured` |
+| Hiding I/O or state changes in method names | Surprises callers with performance or failures | Choose accurate names or document the contract |
+| Inconsistent abbreviations | Makes search and concept recognition harder | Maintain a shared terminology glossary and conventions |
+| Unnecessary concrete type in a domain name | Becomes inaccurate after implementation changes | Name the meaning; let the type declaration provide details |
+| Long names that repeat class/package context | Makes APIs cumbersome | Remove redundancy without losing meaning |
+| Renaming public getters/DTOs without checking mappings | Breaks JSON, bean binding, or binary compatibility | Test boundaries and plan migration/versioning |
+| Giving one behavior many synonymous names | API is hard to learn; aliases proliferate | Prefer one primary name with temporary deprecated wrappers if needed |
+| Returning results that contradict names | Violates caller expectations | Align contracts, method names, and implementations |
 
-## 13. Bài tập thiết kế tên theo miền nghiệp vụ
+## 13. Business-domain naming exercise
 
-Một chương trình đặt lịch đang có API sau:
+An enrollment application currently has this API:
 
 ~~~java
 class ProcessManager {
@@ -2880,63 +2880,63 @@ class ProcessManager {
 }
 ~~~
 
-**Giả định nghiệp vụ** để tránh đoán mò: hệ thống quản lý chỗ ngồi trong lớp học. `n` là số chỗ còn lại; `f` cho biết lớp đã đóng đăng ký; `values` là các mã học viên đã ghi danh. `doWork(studentId)` ghi danh học viên; `check(studentId)` kiểm tra học viên đã ghi danh; `execute(studentId, flag)` thêm hoặc hủy ghi danh tùy flag; `get(studentId)` trả về mã xác nhận nếu học viên có đăng ký.
+**Business assumptions** to avoid guessing: the system manages seats in a classroom. `n` is the number of remaining seats; `f` indicates registration is closed; `values` stores enrolled student IDs. `doWork(studentId)` enrolls a student; `check(studentId)` checks enrollment; `execute(studentId, flag)` enrolls or cancels depending on the flag; `get(studentId)` returns a confirmation code if enrollment exists.
 
-Hãy thực hiện:
+Complete the following:
 
-1. Đề xuất tên class theo một trách nhiệm, ví dụ `ClassEnrollment` nếu nó giữ và bảo vệ danh sách học viên; tránh dùng `Manager` khi không cần.
-2. Đổi fields thành `remainingSeats`, `registrationClosed` và `enrolledStudentIds` hoặc chọn cấu trúc dữ liệu phù hợp để không cho phép đăng ký trùng.
-3. Tạo các phương thức thể hiện hành vi `enrollStudent()`, `cancelEnrollment()`, `isEnrolled()`, `findConfirmationCode()` (nếu không thấy là trường hợp bình thường, cân nhắc `Optional<String>`); thay method cờ boolean bằng hai hành vi rõ.
-4. Ghi invariants: không đăng ký trùng, không âm số chỗ, không đăng ký khi đóng, hủy phải cập nhật số chỗ.
-5. Viết test tên theo hành vi, chẳng hạn `enrollingStudentDecreasesAvailableSeats()`, `enrollingTwiceIsRejected()`, `closedRegistrationRejectsEnrollment()`.
-6. Kiểm tra mọi tên còn đúng với hành vi đã triển khai. Nếu xác nhận chỉ được tạo khi đăng ký thành công, tên `findConfirmationCode()` không được che giấu việc tự động tạo đăng ký mới.
+1. Propose a class name for one responsibility, such as `ClassEnrollment` if it owns and protects enrollment records; avoid `Manager` unless needed.
+2. Rename fields `remainingSeats`, `registrationClosed`, and `enrolledStudentIds`, or choose a data structure that prevents duplicate enrollment.
+3. Implement intention-revealing methods `enrollStudent()`, `cancelEnrollment()`, `isEnrolled()`, and `findConfirmationCode()` (consider `Optional<String>` when missing data is normal); replace flag-driven behavior with two explicit operations.
+4. Define invariants: no duplicate enrollments, no negative seat counts, no enrollment after registration closes, and cancellation must update the seat count.
+5. Write behavior-oriented tests such as `enrollingStudentDecreasesAvailableSeats()`, `enrollingTwiceIsRejected()`, and `closedRegistrationRejectsEnrollment()`.
+6. Verify that every name matches its actual behavior. If confirmation codes are created only after enrollment succeeds, `findConfirmationCode()` must not conceal an automatic new enrollment.
 
-**Tự đánh giá:** Người chưa biết code có thể đọc lời gọi method và đoán được tác động chính không? Tên có thể dùng ổn định khi thay danh sách bằng database không? API có phân biệt rõ truy vấn với thao tác làm đổi trạng thái không?
+**Self-assessment:** Can someone unfamiliar with the code read a method call and predict its main effect? Will names remain accurate if lists become database tables? Does the API clearly separate queries from state-changing operations?
 
 ---
 
-**Ghi nhớ:** Đặt tên tốt là **một quyết định thiết kế**. Class nói rõ *đối tượng là gì/đảm nhận gì*, field nói rõ *dữ liệu và đơn vị*, method nói rõ *hành vi và hợp đồng*. Tên càng gần ngôn ngữ nghiệp vụ, nhất quán với Java và trung thực với tác dụng thực tế, code càng dễ đọc, kiểm thử và thay đổi.
+**Remember:** Naming well is **a design decision**. Classes reveal *what an object is or does*, fields reveal *data and units*, and methods reveal *behavior and contracts*. Names that reflect domain language, follow Java conventions, and accurately describe effects make code easier to read, test, and change.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-design-006">Đối tượng thực thể, đối tượng giá trị và dịch vụ</a>
+## <a id="class-design-006">Entities, value objects, and services</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đối tượng thực thể, đối tượng giá trị và dịch vụ trong thiết kế lớp OOP
+# Entities, value objects, and services in OOP class design
 
-## 1. Ba cách phân chia trách nhiệm trong mô hình miền nghiệp vụ
+## 1. Three responsibility roles in a business domain model
 
-Giả sử đang thiết kế ứng dụng chuyển tiền. Hệ thống có **tài khoản ngân hàng**, **số tiền** và hành động **chuyển tiền giữa hai tài khoản**. Ba khái niệm này nhìn có vẻ đều có thể biểu diễn bằng class Java, nhưng chúng có cách tồn tại và cách so sánh khác nhau:
+Suppose we are designing a money-transfer application. It has **bank accounts**, **monetary amounts**, and the operation of **transferring money between accounts**. All three may be modeled as Java classes, but they differ in identity, lifecycle, and equality:
 
-- **Entity (đối tượng thực thể):** có *danh tính riêng* xuyên suốt vòng đời. Tài khoản mang ID `ACC-001` vẫn là tài khoản ấy sau khi số dư thay đổi.
-- **Value Object (đối tượng giá trị):** được xác định bằng *các giá trị cấu thành*. Hai đối tượng biểu diễn cùng 50.000 VND là tương đương về mặt giá trị, không cần ID riêng.
-- **Service (dịch vụ):** cung cấp *một thao tác hoặc quy trình* không thuộc tự nhiên về một object đơn lẻ. Chuyển tiền phải làm việc với hai tài khoản nên có thể được điều phối bởi `TransferService`.
+- **Entity:** has its own *identity* throughout its lifecycle. An account with ID `ACC-001` is still the same account after its balance changes.
+- **Value Object:** is defined by *its constituent values*. Two objects representing the same 50.000 VND are equal by value without needing separate IDs.
+- **Service:** provides *an operation or workflow* that does not naturally belong to one object. A transfer involves two accounts and can be coordinated by `TransferService`.
 
-Đây là các **vai trò thiết kế**, thường được dùng trong Domain-Driven Design (DDD) và mô hình miền nghiệp vụ hướng đối tượng. Chúng không phải ba từ khóa đặc biệt của Java, cũng không đồng nghĩa máy móc với `@Entity`, `record`, `@Service` trong framework.
+These are **design roles**, commonly used in Domain-Driven Design (DDD) and object-oriented domain modeling. They are not special Java keywords and do not automatically correspond to `@Entity`, `record`, or `@Service` framework constructs.
 
-Một câu hỏi định hướng hữu ích là: **“Ta cần nhận diện chính đối tượng đó, cần giữ một giá trị, hay cần thực hiện một hành vi?”**
+A useful guiding question is: **“Do we need to identify an individual object, represent a value, or carry out a behavior?”**
 
-## 2. Bảng so sánh
+## 2. Comparison
 
-| Tiêu chí | Entity | Value Object | Service |
+| Criterion | Entity | Value Object | Service |
 |---|---|---|---|
-| Đặc trưng | **Danh tính** phân biệt các thực thể | **Thuộc tính và giá trị** xác định sự tương đương | **Hành vi/quy trình** |
-| Ví dụ | `Account`, `Customer`, `Order` | `Money`, `EmailAddress`, `DateRange` | `TransferService`, `ShippingFeeCalculator` |
-| Bình đẳng | Thường theo ID ổn định trong phạm vi miền | Theo toàn bộ thành phần mang ý nghĩa | Thường không cần so sánh theo ID miền |
-| Trạng thái | Có thể thay đổi qua hành vi hợp lệ | Nên bất biến (*immutable*) | Domain Service thường hạn chế trạng thái nghiệp vụ; Application Service có thể giữ các dependency |
-| Vòng đời | Tạo, thay đổi, vô hiệu hóa/xóa; ID tiếp tục xác định cùng thực thể | Có thể thay bằng instance mới cùng giá trị | Thực hiện thao tác khi được gọi |
-| Vị trí logic | Quy tắc thuộc về chính thực thể | Quy tắc kiểm tra/tính toán của giá trị | Quy tắc phối hợp nhiều đối tượng hoặc điều phối use case |
-| Rủi ro khi dùng sai | Đồng nhất hai entity vì tên/số dư giống nhau | Sửa nội dung VO sau khi dùng làm khóa Map/Set | Biến service thành “god class” chứa hết logic |
+| Distinguishing feature | **Identity** distinguishes instances | **Attributes and values** determine equivalence | **Behavior/workflow** |
+| Example | `Account`, `Customer`, `Order` | `Money`, `EmailAddress`, `DateRange` | `TransferService`, `ShippingFeeCalculator` |
+| Equality | Usually based on a stable ID within the domain | Based on all semantically relevant components | Usually does not require domain-ID equality |
+| State | May change through valid operations | Preferably *immutable* | Domain services often avoid mutable business state; application services may hold dependencies |
+| Lifecycle | Create, modify, deactivate/delete; ID still identifies the entity | Can be replaced by another instance with the same value | Executes behavior when invoked |
+| Logic ownership | Rules intrinsic to the entity | Validation and calculation rules of the value | Rules spanning objects or use-case coordination |
+| Risk of misuse | Treating two entities as identical because names/balances match | Mutating a VO used as a Map/Set key | Creating a “god class” service containing all logic |
 
-Không phải cứ là **danh từ** thì thành Entity, cứ là **số/chuỗi** thì thành Value Object, hoặc cứ là **động từ** thì cần Service. Vai trò phụ thuộc vào ý nghĩa nghiệp vụ và nhu cầu duy trì danh tính, bất biến, giao dịch.
+Not every **noun** should become an Entity, every **number/string** a Value Object, or every **verb** a Service. The role depends on business meaning and the need for identity, invariants, and transactions.
 
-## 3. Sơ đồ: ba vai trò liên kết thế nào?
+## 3. Diagram: how the three roles connect
 
 ```mermaid
 classDiagram
@@ -2969,17 +2969,17 @@ classDiagram
     TransferService ..> Money : giá trị giao dịch
 ```
 
-Trong sơ đồ:
+In the diagram:
 
-- `Account` có định danh riêng và giữ **giá trị số dư hiện tại**. Mỗi khi số dư đổi, ta có thể tạo một `Money` mới.
-- `Money` biểu diễn số lượng đơn vị tiền tệ và mã tiền tệ; *hai Money bằng giá trị* không đồng nghĩa các tài khoản giữ chúng là một tài khoản.
-- `TransferService` phối hợp thay đổi hai entity, dùng cùng một Money làm số tiền chuyển.
+- `Account` has its own identity and holds **the current balance value**. When a balance changes, a new `Money` can be created.
+- `Money` represents an amount in minor currency units and a currency code; *two equal Money values* do not make their owning accounts the same account.
+- `TransferService` coordinates changes to two entities using a Money value as the transfer amount.
 
-Hình thoi ở đây minh họa **sở hữu giá trị số dư như một phần trạng thái tài khoản**; vòng đời và các ràng buộc được quyết định bởi mô hình, không phải do cú pháp Java tự thực hiện. Một Value Object hoàn toàn có thể được chia sẻ giữa nhiều entity nếu nó bất biến.
+The diamond illustrates **ownership of the balance value as part of account state**; the model defines lifecycle and constraints, not the Java syntax itself. An immutable Value Object may safely be shared by multiple entities.
 
-## 4. Entity: điều cốt lõi là danh tính
+## 4. Entities: identity is fundamental
 
-Một `Account` có các thuộc tính:
+An `Account` has these attributes:
 
 ```text
 id       = 4d3d... (định danh ổn định)
@@ -2987,9 +2987,9 @@ balance  = 100.000 VND
 status   = ACTIVE
 ```
 
-Sau khi chủ tài khoản rút 30.000 VND, `balance` còn 70.000 VND nhưng `id` không đổi. Hệ thống phải nhận ra đây **vẫn là cùng tài khoản**.
+After the owner withdraws 30.000 VND, `balance` becomes 70.000 VND but `id` stays unchanged. It is **still the same account**.
 
-Ví dụ tối giản:
+Minimal example:
 
 ```java
 import java.util.Objects;
@@ -3032,36 +3032,36 @@ final class Customer {
 }
 ```
 
-Trong thiết kế này, **hai instance `Customer` với cùng UUID đại diện cho cùng thực thể**, dù `displayName` khác nhau (ví dụ hai bản chụp của dữ liệu trước/sau khi đổi tên). Sử dụng `displayName` để tính `hashCode()` sẽ rất rủi ro nếu tên thay đổi trong khi object nằm trong `HashSet`.
+Here, **two `Customer` instances with the same UUID represent one entity**, even when `displayName` differs (for example, snapshots taken before and after renaming). Including `displayName` in `hashCode()` would be dangerous if the name changes while the object is stored in a `HashSet`.
 
-Tuy nhiên, không có một quy tắc `equals()/hashCode()` áp dụng máy móc cho mọi hệ thống:
+However, no one-size-fits-all rule for `equals()/hashCode()` applies to every system:
 
-- **ID được cấp khi tạo** và bất biến (UUID, ULID, ID miền nghiệp vụ): có thể dùng so sánh theo ID ổn định như ví dụ.
-- **ID do database cấp sau khi lưu:** entity chưa được persist có ID `null`; nếu dùng ID tùy tiện, hai entity mới có thể bị coi bằng nhau, hoặc hash thay đổi sau persist.
-- **ORM/JPA proxy và kế thừa:** cần quy tắc so sánh tương thích với vòng đời persistence và kiểu proxy. Không sao chép bừa `getClass()`/`instanceof` từ bài ví dụ vào entity JPA phức tạp.
-- Nếu không thực sự cần *logical equality* giữa các instance, cân nhắc so sánh ID một cách tường minh thay vì override equality.
+- **IDs assigned at creation** and immutable (UUID, ULID, domain IDs): stable ID-based equality as shown can work.
+- **Database-generated IDs assigned on persistence:** unpersisted entities may have a `null` ID; careless ID equality can equate two new objects or change their hash after persistence.
+- **ORM/JPA proxies and inheritance:** equality must suit persistence lifecycles and proxy types. Do not blindly copy `getClass()`/`instanceof` from examples into complex JPA entities.
+- If *logical equality* between instances is unnecessary, consider comparing IDs explicitly instead of overriding equality.
 
-Một Entity tốt thường **đóng gói trạng thái và quy tắc chuyển trạng thái**: `account.withdraw(...)`, `order.cancel(...)`, `customer.rename(...)`. Việc chỉ có hàng loạt getter/setter công khai khiến logic nghiệp vụ dễ bị phân tán.
+Good entities usually **encapsulate state and valid state transitions**: `account.withdraw(...)`, `order.cancel(...)`, `customer.rename(...)`. Exposing only getters and setters scatters business logic.
 
-## 5. Value Object: bằng nhau vì giá trị, không vì danh tính
+## 5. Value Objects: equal by value, not identity
 
-Một `Money` gồm **số tiền theo đơn vị nhỏ nhất** (*minor units*) và **loại tiền**:
+A `Money` value comprises **an amount in minor units** (*minor units*) and **a currency**:
 
-- `new Money(10_000, VND)` tương đương một đối tượng khác có cùng cặp thuộc tính.
-- `new Money(10_000, USD)` **không bằng** Money 10.000 VND.
-- Ở VND, minor unit phổ biến là 1 đồng (ISO 4217 quy định 0 chữ số thập phân). Ở USD, 1.999 minor units là 19,99 USD (100 cents = 1 USD).
-- Phép cộng chỉ hợp lệ khi cùng tiền tệ; nếu cần quy đổi, phải có tỷ giá và chính sách làm tròn rõ ràng.
+- `new Money(10_000, VND)` is equal in value to another object with the same components.
+- `new Money(10_000, USD)` **does not equal** Money denominated in 10.000 VND.
+- For VND, the common minor unit is 1 dong (ISO 4217 specifies 0 decimal places). For USD, 1.999 minor units equal 19,99 USD (100 cents = 1 USD).
+- Addition is valid only for matching currencies; conversions need an exchange rate and explicit rounding rules.
 
-**Tại sao cần một class Money thay vì dùng `long` hoặc `double` đơn thuần?**
+**Why use a Money class rather than a plain `long` or `double`?**
 
 ```java
 double price = 0.1 + 0.2;
 System.out.println(price == 0.3); // false
 ```
 
-Kiểu `double` biểu diễn các số nhị phân dấu phẩy động, nên không thích hợp để biểu diễn chính xác nhiều giá trị tiền thập phân. `long` với minor units hoặc `BigDecimal` với scale/rounding có quy ước rõ ràng thường phù hợp hơn.
+`double` represents binary floating-point numbers and cannot exactly represent many decimal monetary values. `long` with minor units or `BigDecimal` with explicit scale/rounding conventions is usually more suitable.
 
-Với **Java 17+**, `record` là cách ngắn gọn tạo Value Object bất biến ở mức trường dữ liệu:
+With **Java 17+**, a `record` offers a concise way to create shallowly immutable Value Objects:
 
 ```java
 import java.util.Currency;
@@ -3097,7 +3097,7 @@ record Money(long minorUnits, Currency currency) {
 }
 ```
 
-`record` sinh `equals()`, `hashCode()` và `toString()` dựa trên các thành phần của record. Ví dụ:
+`record` generates `equals()`, `hashCode()`, and `toString()` from record components. For example:
 
 ```java
 Money first = Money.vnd(50_000);
@@ -3108,21 +3108,21 @@ System.out.println(first.equals(second)); // true: cùng giá trị
 System.out.println(first.plus(second));   // Money[minorUnits=100000, currency=VND]
 ```
 
-Phương thức `plus()` **tạo Money mới**, không sửa đối tượng gốc. `Math.addExact()` và `Math.subtractExact()` phát hiện tràn số nguyên thay vì âm thầm cho kết quả sai.
+The `plus()` method **creates a new Money**, leaving the original untouched. `Math.addExact()` and `Math.subtractExact()` detect integer overflow rather than silently producing wrong results.
 
-**Record chỉ bất biến nông (*shallow immutability*)**. Nếu field chứa `List` có thể sửa hoặc object lồng nhau mutable, cần sao chép phòng vệ và thiết kế cẩn thận. Ví dụ `record Basket(List<Item> items)` mặc định vẫn có thể bị thay đổi qua `basket.items().add(...)` nếu không bảo vệ danh sách. Ở `Money` trên, `Currency` bất biến nên an toàn để chia sẻ.
+**Records are only shallowly immutable (*shallow immutability*)**. When a field holds a mutable `List` or nested mutable object, defensive copying and careful design are required. For example, `record Basket(List<Item> items)` can still be modified through `basket.items().add(...)` by default if the list is unprotected. In `Money`, `Currency` is immutable and safe to share.
 
-**Một điểm quan trọng về BigDecimal:** `new BigDecimal("10.0").equals(new BigDecimal("10.00"))` trả `false` vì khác scale, dù `compareTo() == 0`. Nếu Money dùng BigDecimal, hãy chuẩn hóa scale/ràng buộc ngay ở constructor và thống nhất cách so sánh, làm tròn.
+**An important BigDecimal detail:** `new BigDecimal("10.0").equals(new BigDecimal("10.00"))` returns `false` because scales differ, even though `compareTo() == 0`. When modeling Money with BigDecimal, normalize/constrain scale in the constructor and define consistent equality and rounding.
 
-## 6. Service: hành vi không thuộc riêng một entity hay value object
+## 6. Services: behavior belonging to neither a single entity nor a value object
 
-Một tài khoản có thể tự đảm bảo rằng **số dư không âm khi rút tiền**. Một Money có thể tự kiểm tra **cùng loại tiền khi cộng**. Nhưng hành vi “chuyển tiền từ A sang B” liên quan **hai Account**, nên việc đặt nó vào `Account A` hoặc `Account B` có thể làm trách nhiệm một bên bị méo.
+An account can enforce **a nonnegative balance on withdrawals**. Money can ensure **matching currencies on addition**. But transferring funds from A to B involves **two Account** objects, so assigning the whole operation to `Account A` or `Account B` may distort one account's responsibility.
 
-Một **Domain Service** thể hiện hành vi miền nghiệp vụ phối hợp các object, khi hành vi ấy **không có chủ thể tự nhiên duy nhất**. Ví dụ `TransferService.transfer(from, to, amount)`. Trong nhiều trường hợp domain service có thể stateless; điều này **không đồng nghĩa mọi service đều không có field**.
+A **Domain Service** represents domain behavior spanning objects when there is **no single natural owner**. For example, `TransferService.transfer(from, to, amount)`. Domain services can often be stateless, but **that does not mean all services have no fields**.
 
-Một **Application Service** lại điều phối *use case* hoàn chỉnh: xác thực/quyền, mở transaction, tải các entity từ repository, gọi hành vi domain, lưu kết quả, phát sự kiện hoặc gửi thông báo. Nó nên tránh làm thay những quy tắc thực chất thuộc Entity/Value Object.
+An **Application Service** coordinates an entire *use case*: authentication/authorization, opening transactions, loading entities through repositories, invoking domain behavior, saving results, publishing events, or sending notifications. It should avoid replacing the rules that belong in entities or Value Objects.
 
-Ví dụ hai tầng:
+An example showing both layers:
 
 ```mermaid
 flowchart TD
@@ -3136,11 +3136,11 @@ flowchart TD
     App --> DB[("Database / transaction")]
 ```
 
-Đường `ApplicationService → repository/transaction` giúp tách công việc lấy/lưu dữ liệu khỏi **quy tắc chuyển tiền**. Trong ứng dụng rất nhỏ, có thể không cần tách mọi tầng thành class riêng; điều quan trọng là trách nhiệm đúng nơi và dễ kiểm thử.
+The `ApplicationService → repository/transaction` path separates loading/persisting from **transfer rules**. Very small applications need not give every layer its own class; correctly placed responsibilities and testability matter most.
 
-## 7. Ví dụ hoàn chỉnh Java 17+: Account, Money và TransferService
+## 7. Complete Java 17+ example: Account, Money, and TransferService
 
-Lưu toàn bộ mã sau vào file `EntityValueServiceDemo.java`:
+Save all the following code in `EntityValueServiceDemo.java`:
 
 ```java
 import java.util.Currency;
@@ -3311,14 +3311,14 @@ public class EntityValueServiceDemo {
 }
 ```
 
-Biên dịch và chạy với JDK 17 hoặc mới hơn:
+Compile and run with JDK 17 or later:
 
 ```bash
 javac EntityValueServiceDemo.java
 java EntityValueServiceDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 Money equals: true
@@ -3329,38 +3329,38 @@ Rejected: Insufficient funds
 Source after rejection: 70000 VND
 ```
 
-### Phân tích vai trò trong ví dụ
+### Understanding the roles in the example
 
-**`Account` là Entity.** Sau chuyển tiền, số dư từ 100.000 VND giảm còn 70.000 VND nhưng `source.id()` không đổi. Hai đối tượng Account cùng UUID được xem là cùng *danh tính miền nghiệp vụ* trong quy ước của ví dụ, dù snapshot số dư khác nhau. Không nên đồng thời dùng hai snapshot cùng ID như hai bản ghi độc lập có thể cập nhật tự do.
+**`Account` is an Entity.** After the transfer, the balance falls from 100.000 VND to 70.000 VND, but `source.id()` remains unchanged. Two Account objects with the same UUID are treated as one *domain identity* under this example's convention, even if their balance snapshots differ. Do not freely update two independent snapshots bearing the same ID as though they were unrelated records.
 
-**`Money` là Value Object.** Hai Money 50.000 VND khác instance nhưng `equals()` bằng nhau. Mỗi phép cộng/trừ trả một Money mới. `Money` tự giữ quy tắc về loại tiền và phát hiện tràn số; nó không cần biết số dư thuộc tài khoản nào.
+**`Money` is a Value Object.** Two 50.000 VND Money values may be different instances yet equal under `equals()`. Addition/subtraction creates new Money values. `Money` enforces currency compatibility and detects overflow without knowing which account owns a balance.
 
-**`TransferService` là Domain Service.** Nó phối hợp hai tài khoản: cấm chuyển về cùng tài khoản, yêu cầu amount dương, kiểm tra đủ tiền và currency trước khi gọi hành vi của các entity. Đây là quy tắc trên *mối tương tác*, không phải trách nhiệm tự nhiên của riêng Money.
+**`TransferService` is a Domain Service.** It coordinates two accounts: prohibits transfers to the same account, requires a positive amount, checks sufficient funds and currency before invoking entity behavior. These are rules governing *an interaction*, not a natural responsibility of Money alone.
 
-**Giới hạn thực tế cần hiểu:** ví dụ chỉ mô hình hóa thao tác **tuần tự trong bộ nhớ**. Việc kiểm tra trước rồi gọi `withdraw()` và `deposit()` **chưa tạo ra atomic transaction** trong trường hợp đa luồng, nhiều tiến trình, crash hoặc có DB. Với hệ thống chuyển tiền thật, phải bổ sung cơ chế transaction, locking/optimistic concurrency, kiểm tra số dư nhất quán tại cơ sở dữ liệu, idempotency, audit và cách xử lý lỗi. Preflight ở code demo chỉ giúp tránh một số lỗi trước khi bắt đầu cập nhật.
+**Practical limitation:** the example models only **sequential in-memory** operations. Checking first and then calling `withdraw()` and `deposit()` **does not provide an atomic transaction** under multiple threads, processes, crashes, or databases. Real transfers require transactions, locking/optimistic concurrency, consistent balance checks in the database, idempotency, auditing, and failure recovery. The demo's preflight checks only avoid some failures before updates begin.
 
-## 8. Quy tắc nào đặt ở đâu?
+## 8. Where should each rule live?
 
-Giả sử cùng miền nghiệp vụ quản lý đơn hàng:
+Consider the order-management domain:
 
-| Quy tắc/hành vi | Nơi thường phù hợp | Vì sao |
+| Rule / behavior | Typical owner | Reason |
 |---|---|---|
-| Email phải đúng định dạng mà hệ thống chấp nhận | `EmailAddress` (Value Object) | Bất biến thuộc chính dữ liệu email |
-| Không được thêm dòng đơn có số lượng âm | `Order.addLine()` hoặc `OrderLine` | Bất biến của thực thể/giá trị trong đơn |
-| Một đơn đã hủy không thể chuyển sang đã thanh toán | `Order.pay()` | Quy tắc chuyển trạng thái của cùng Entity |
-| Hai khoản Money chỉ cộng khi cùng tiền tệ | `Money.plus()` | Quy tắc toán học của giá trị |
-| Chọn cách tính phí vận chuyển từ cân nặng, vùng và chính sách áp dụng | Có thể là `ShippingFeeCalculator` (Domain Service) | Nếu chính sách tính phí không thuộc riêng một entity |
-| Tải đơn, kiểm tra quyền, gọi thanh toán, lưu và phát sự kiện | `PlaceOrderApplicationService` | Điều phối use case và hạ tầng |
-| Truy vấn đơn hàng theo mã từ DB | `OrderRepository` | Trừu tượng hóa truy cập dữ liệu, không phải Entity |
-| Trả JSON dữ liệu hiển thị cho client | DTO/Presenter/API layer | Trách nhiệm giao tiếp, không phải Entity miền nghiệp vụ |
+| Email must match the system's accepted format | `EmailAddress` (Value Object) | Invariant of the email value |
+| Negative quantities cannot be added to orders | `Order.addLine()` or `OrderLine` | Invariant of an order entity/value |
+| A cancelled order cannot become paid | `Order.pay()` | State-transition rule of the same Entity |
+| Two Money amounts can be added only in one currency | `Money.plus()` | Mathematical rule of the value |
+| Select a shipping charge by weight, region, and applicable policy | Possibly `ShippingFeeCalculator` (Domain Service) | The policy may not belong to any single entity |
+| Load orders, authorize access, invoke payment, persist, publish events | `PlaceOrderApplicationService` | Coordinates use cases and infrastructure |
+| Query orders by ID from a database | `OrderRepository` | Abstracts persistence rather than domain entities |
+| Return display data as JSON to the client | DTO/Presenter/API layer | Communication responsibility, not domain entity behavior |
 
-**Đừng đẩy mọi quy tắc vào Service.** Nếu `Order` chỉ có getter/setter còn mọi kiểm tra “đã hủy chưa”, “được thanh toán chưa”, “có thể thêm dòng không” nằm rải rác ở hàng chục service, mô hình dễ trở thành *anemic domain model*. Ứng dụng CRUD đơn giản đôi khi chấp nhận thiết kế này, nhưng miền nghiệp vụ nhiều bất biến thường hưởng lợi khi hành vi nằm gần dữ liệu của Entity/Value Object.
+**Do not push every rule into services.** If `Order` only exposes getters/setters while checks such as “already cancelled?”, “can this be paid?”, and “can a line be added?” live across dozens of services, the result may be an *anemic domain model*. Simple CRUD applications can sometimes tolerate this, but domains with many invariants benefit from keeping behavior close to Entity/Value Object data.
 
-**Cũng đừng cố gắn mọi hàm vào Entity.** Một thuật toán tính giá vận chuyển có thể liên quan chính sách bảng giá, vùng giao hàng và gói dịch vụ. Nếu không có một entity rõ ràng sở hữu thuật toán, Domain Service là lựa chọn hợp lý.
+**Do not force every function into an Entity either.** A shipping algorithm may combine rate policies, delivery regions, and service tiers. If no entity clearly owns it, a Domain Service is appropriate.
 
-## 9. Domain Service khác Application Service thế nào?
+## 9. How do Domain Services and Application Services differ?
 
-Cả hai có thể có hậu tố `Service`, nhưng nằm ở trách nhiệm khác nhau.
+Both may end in `Service`, but their responsibilities differ.
 
 ```mermaid
 sequenceDiagram
@@ -3377,7 +3377,7 @@ sequenceDiagram
     App-->>Client: TransferResult
 ```
 
-Một thiết kế hướng đối tượng có thể dùng các hợp đồng:
+An object-oriented design can define contracts such as:
 
 ```java
 // Trích đoạn minh họa về cấu trúc tầng ứng dụng,
@@ -3413,27 +3413,27 @@ final class TransferApplicationService {
 }
 ```
 
-Trích đoạn này trình bày **phân công trách nhiệm**, không phải implementation giao dịch production. Hai lệnh `save()` riêng biệt có thể thất bại giữa chừng. Trong ứng dụng có DB, *ranh giới transaction* thường thuộc Application Service/infrastructure: cần bảo đảm hai cập nhật số dư được commit/rollback thống nhất; với hệ phân tán còn có những giới hạn khác.
+This fragment illustrates **responsibility allocation**, not production transaction handling. Two separate `save()` calls can fail between operations. In a database application, the *transaction boundary* usually belongs to the Application Service/infrastructure: both balance changes must commit or roll back together; distributed systems impose additional constraints.
 
-Sự phân biệt chính:
+The key distinction:
 
-- **Domain Service:** thể hiện quy tắc miền (*chuyển tiền hợp lệ ra sao?*), có thể kiểm thử bằng entity/VO thuần.
-- **Application Service:** điều phối thao tác của người dùng/hệ thống (*tải gì, xác thực ai, mở transaction, lưu gì, trả gì?*).
-- **Infrastructure Service/Adapter:** hiện thực việc gửi email, truy cập database, gọi HTTP, lưu file hoặc cache.
+- **Domain Service:** expresses domain rules (*what makes a money transfer valid?*), testable with plain entities/VOs.
+- **Application Service:** orchestrates user/system actions (*what to load, whom to authorize, which transaction to start, what to save and return?*).
+- **Infrastructure Service/Adapter:** implements email delivery, database access, HTTP calls, file storage, or caching.
 
-Không nhất thiết cứ một nghiệp vụ là phải có ba lớp service riêng. Nếu Entity đã sở hữu trọn hành vi, gọi trực tiếp Entity từ Application Service có thể đơn giản và rõ hơn.
+You do not need three separate service classes for every operation. When an Entity owns all required behavior, an Application Service may call it directly for simpler, clearer design.
 
-## 10. Phân biệt Entity miền nghiệp vụ với JPA Entity
+## 10. Domain Entities versus JPA Entities
 
-Một class có `@jakarta.persistence.Entity` là **thực thể persistence** trong JPA. Điều đó không tự đảm bảo class được thiết kế tốt như **Domain Entity**:
+A class annotated with `@jakarta.persistence.Entity` is **a persistence entity** in JPA. That does not automatically make it a well-designed **Domain Entity**:
 
-- JPA thường cần constructor, chiến lược khóa chính, lazy-loading và quy tắc quản lý phiên.
-- ID dùng trong database không nhất thiết là **định danh miền** hiển thị ra API hoặc người dùng.
-- Một Domain Value Object có thể được map bằng `@Embeddable`, converter hoặc lưu dưới dạng cột khác.
-- Một Domain Entity có thể được lưu qua repository bằng JDBC, tài liệu NoSQL, event store, file, hoặc thậm chí tồn tại chỉ trong bộ nhớ; nó không bắt buộc phải có `@Entity`.
-- Spring `@Service` là stereotype để framework phát hiện bean; annotation đó **không quyết định** bean là Domain Service hay Application Service.
+- JPA typically requires constructors, primary-key strategies, lazy loading, and session-management rules.
+- A database ID is not necessarily the **domain identifier** exposed through the API or to users.
+- A Domain Value Object may be mapped with `@Embeddable`, converters, or a different column representation.
+- A Domain Entity may be persisted through repositories using JDBC, NoSQL documents, event stores, files, or even only in memory; it does not require `@Entity`.
+- Spring's `@Service` is a stereotype annotation for bean discovery; it **does not determine** whether the bean represents a Domain Service or an Application Service.
 
-Ví dụ minh họa giá trị nhúng trong JPA:
+An example of embedded values in JPA:
 
 ```java
 // Pseudocode minh họa ý tưởng ánh xạ; cần JPA dependency/annotation
@@ -3445,15 +3445,15 @@ class MoneyEmbeddable {
 }
 ```
 
-Không chọn Entity/Value Object **chỉ vì cách lưu vào DB**. Nên xuất phát từ quy tắc miền, rồi mới chọn ánh xạ persistence phù hợp.
+Do not choose Entity versus Value Object **solely based on database storage**. Start with domain rules, then select an appropriate persistence mapping.
 
-## 11. Những lỗi thiết kế thường gặp
+## 11. Common design mistakes
 
-### Sai lầm 1: coi hai Entity có cùng thuộc tính là một
+### Mistake 1: treating entities with matching attributes as the same entity
 
-Hai khách hàng cùng tên “Lan” và cùng ngày sinh chưa chắc là cùng người. Equality của Entity phải dựa vào khái niệm danh tính đúng phạm vi nghiệp vụ, tránh chọn thuộc tính có thể trùng hoặc thay đổi.
+Two customers both named “Lan” and born on the same date are not necessarily the same person. Entity equality must use the correct business identity, not attributes that may be duplicated or changed.
 
-### Sai lầm 2: lưu Value Object mutable và dùng làm khóa Map
+### Mistake 2: storing a mutable Value Object as a Map key
 
 ```java
 // Không nên: lớp địa chỉ có thể sửa và hashCode phụ thuộc thành phần.
@@ -3462,34 +3462,34 @@ counts.put(address, 1);
 address.setStreet("Đường khác");
 ```
 
-Nếu hash thay đổi sau khi chèn, thao tác `get(address)` có thể trả kết quả không mong đợi. Dùng Value Object bất biến; thay địa chỉ bằng một instance mới.
+If the hash changes after insertion, `get(address)` can return unexpected results. Use immutable Value Objects; represent address changes with new instances.
 
-### Sai lầm 3: dùng primitive trần cho giá trị nhiều quy tắc
+### Mistake 3: using raw primitives for rule-heavy values
 
 ```java
 void charge(double amount, String currency);
 ```
 
-Caller có thể truyền âm, NaN, mã tiền tệ sai hoặc làm tròn tùy ý. Một `Money` VO có constructor kiểm tra hợp lệ và API tính toán rõ ràng sẽ an toàn hơn.
+Callers may pass negative values, NaN, incorrect currencies, or inconsistent rounding. A `Money` Value Object with validation in its constructor and a clear arithmetic API is safer.
 
-### Sai lầm 4: Service biết/sửa toàn bộ field nội bộ
+### Mistake 4: letting services read/change all internal fields
 
 ```java
 // Tránh mở public field để service tự gán không có kiểm soát:
 account.balance = account.balance.minus(amount);
 ```
 
-Đặt bất biến gần Entity và cung cấp hành vi có tên. Với logic qua nhiều entity, domain service **phối hợp thông qua API hợp lệ** của entity, hạn chế xuyên thủng encapsulation.
+Keep invariants with Entities and expose named behaviors. When logic spans Entities, a domain service **coordinates through valid entity APIs**, rather than breaking encapsulation.
 
-### Sai lầm 5: tạo Service cho mọi phép tính
+### Mistake 5: creating a service for every calculation
 
-Nếu `Money.plus()` chỉ là cộng hai giá trị và kiểm tra currency, không cần `MoneyAdditionService` riêng. Logic tự nhiên thuộc Value Object.
+If `Money.plus()` simply adds values and checks currency, a separate `MoneyAdditionService` is unnecessary. That logic belongs naturally in the Value Object.
 
-### Sai lầm 6: tạo Entity cho từng value
+### Mistake 6: turning every value into an Entity
 
-Nếu `EmailAddress("a@example.test")` không có vòng đời độc lập và không cần ID riêng, việc thêm `emailId` cùng repository cho từng email chỉ làm mô hình phức tạp. Cần Entity khi **danh tính và lịch sử độc lập thật sự có ý nghĩa**.
+If `EmailAddress("a@example.test")` has no independent lifecycle or identity, adding an `emailId` and repository for every email only complicates the model. Use an Entity when **independent identity and history really matter**.
 
-### Sai lầm 7: nhầm stateless service với không có dependency
+### Mistake 7: assuming stateless services have no dependencies
 
 ```java
 final class ShippingFeeService {
@@ -3505,36 +3505,36 @@ final class ShippingFeeService {
 }
 ```
 
-Service có thể giữ **tham chiếu đến dependency**, ví dụ chính sách tính phí, nhưng vẫn không lưu **trạng thái nghiệp vụ thay đổi theo từng lần tính**. Stateless mô tả cách quản lý trạng thái xử lý, không có nghĩa field phải luôn rỗng.
+A service may retain **references to dependencies**, such as a fee policy, without storing **mutable business state specific to each calculation**. Stateless describes how runtime state is managed, not an absence of fields.
 
-## 12. Khi thiết kế lớp mới, tự hỏi sáu điều
+## 12. Six questions when designing a new class
 
-1. **Thay đổi thuộc tính có làm nó thành một đối tượng khác không?** Nếu không, có thể là Entity. Một đơn hàng thay trạng thái vẫn là đơn hàng ấy.
-2. **Hai object có cùng nội dung có thay thế được cho nhau không?** Nếu có và không cần danh tính riêng, nghiêng về Value Object.
-3. **Có quy tắc hợp lệ/tính toán gắn chặt với dữ liệu này không?** Đặt trong VO hoặc Entity thay vì sao chép ở các service.
-4. **Hành vi tác động đến nhiều Entity hoặc một chính sách miền không thuộc hẳn object nào?** Cân nhắc Domain Service.
-5. **Hành vi chủ yếu điều phối transaction, repository, quyền, network?** Cân nhắc Application Service hoặc infrastructure adapter.
-6. **Nếu business rule thay đổi, có sửa tại một nơi dễ tìm không?** Nếu phải dò nhiều controller/service/mapper, ranh giới trách nhiệm có thể chưa hợp lý.
+1. **Does changing an attribute make this a different object?** If not, it may be an Entity. An order remains the same order after its status changes.
+2. **Can two objects with the same content replace each other?** If so, and independent identity is unnecessary, favor a Value Object.
+3. **Are validation or calculation rules closely tied to this data?** Put them in a VO or Entity rather than copying them among services.
+4. **Does the behavior affect several Entities or a domain policy without one natural owner?** Consider a Domain Service.
+5. **Does the behavior mainly coordinate transactions, repositories, permissions, or networks?** Consider an Application Service or infrastructure adapter.
+6. **When a business rule changes, is there one obvious place to edit?** If you must search multiple controllers/services/mappers, the responsibility boundaries may be wrong.
 
-## 13. Bài tập và cách tự kiểm chứng
+## 13. Exercises and self-checks
 
-**Bài 1 — Customer và EmailAddress.** Mỗi khách hàng có UUID và email. Khách có thể đổi email.
+**Exercise 1 — Customer and EmailAddress.** Each customer has a UUID and an email address. Customers can change their email.
 
-- **Gợi ý:** `Customer` là Entity vì UUID vẫn giữ nguyên; `EmailAddress` là VO bất biến, có thể thay instance khi đổi email. Đổi email cần đi qua hành vi của Customer và qua kiểm tra uniqueness ở ranh giới phù hợp nếu hệ thống yêu cầu.
+- **Hint:** `Customer` is an Entity because its UUID remains stable; `EmailAddress` is an immutable VO, replaced by a new instance when email changes. Email changes should go through Customer behavior and appropriate uniqueness checks if the system requires them.
 
-**Bài 2 — Hai địa chỉ giống nhau.** Hai khách hàng khác nhau cùng nhận hàng tại “12 Nguyễn Huệ, TP.HCM”.
+**Exercise 2 — Identical addresses.** Two different customers receive shipments at “12 Nguyen Hue Street, Ho Chi Minh City”.
 
-- **Gợi ý:** hai VO Address có thể bằng nhau theo giá trị, nhưng hai Entity Customer vẫn khác nhau. Không dùng địa chỉ làm danh tính khách hàng.
+- **Hint:** two Address VOs can be equal by value while the two Customer Entities remain distinct. Do not use an address as customer identity.
 
-**Bài 3 — Giảm số dư khi rút.** Nên đặt điều kiện “không được âm số dư” ở đâu?
+**Exercise 3 — Balance reduction on withdrawal.** Where should the “balance must not become negative” rule live?
 
-- **Gợi ý:** Entity `Account` bảo vệ bất biến số dư khi rút; `Money` bảo vệ currency và phép toán. Nếu nhiều tài khoản tương tác, domain service phối hợp.
+- **Hint:** the `Account` Entity protects the balance invariant on withdrawal; `Money` protects currency and arithmetic. A domain service coordinates interactions among accounts.
 
-**Bài 4 — Thanh toán rồi gửi email.** `PayOrderApplicationService` cần tải order, kiểm tra quyền, gọi cổng thanh toán, lưu trạng thái và phát thông báo.
+**Exercise 4 — Payment followed by email.** `PayOrderApplicationService` needs to load an order, check authorization, call a payment gateway, save the state, and publish a notification.
 
-- **Gợi ý:** orchestration ở Application Service. Entity `Order` quyết định liệu trạng thái được phép chuyển sang `PAID`; gateway/email nằm ở adapter. Tránh dồn mọi quyết định vào service.
+- **Hint:** orchestration belongs in the Application Service. The `Order` Entity determines whether a transition to `PAID` is permitted; gateway/email code belongs in adapters. Avoid moving every decision into the service.
 
-**Bài 5 — Test với Java ví dụ.** Hãy mở rộng `EntityValueServiceDemo.java` để xác nhận:
+**Exercise 5 — Test the Java example.** Extend `EntityValueServiceDemo.java` to verify:
 
 ```java
 // Đặt trong main, sau khi khởi tạo hai Account:
@@ -3559,43 +3559,43 @@ if (!source.balance().equals(beforeSource)
 }
 ```
 
-Đây là kiểm thử quy tắc **đầu vào âm bị từ chối** trong luồng tuần tự. Muốn bảo đảm chuyển tiền thật sự nguyên tử khi có hai luồng hoặc nhiều tiến trình, cần kiểm thử ở mức transaction/concurrency của hệ thống lưu trữ.
+This tests the rule that **negative input is rejected** in a sequential flow. Ensuring real transfers are atomic across multiple threads or processes requires transaction/concurrency tests against the persistence system.
 
 ---
 
-**Ghi nhớ:** **Entity** được nhận diện bằng *danh tính*, **Value Object** được nhận diện bằng *giá trị*, còn **Service** thể hiện *hành vi/phối hợp* phù hợp với ranh giới miền hoặc use case. Phân vai chính xác giúp các bất biến nằm đúng chỗ, giảm lặp logic và khiến việc thay đổi, kiểm thử lớp Java dễ hơn.
+**Remember:** an **Entity** is identified by *identity*, a **Value Object** by *value*, and a **Service** provides *behavior/coordination* appropriate to the domain or use-case boundary. Assigning roles correctly keeps invariants in the right place, reduces duplicated logic, and makes Java classes easier to change and test.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-design-007">Mô hình giàu hành vi và mô hình chỉ chứa dữ liệu</a>
+## <a id="class-design-007">Rich domain models and anemic data models</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Mô hình giàu hành vi và mô hình chỉ chứa dữ liệu trong OOP (Java)
+# Rich domain models and anemic data models in Java OOP
 
-Khi thiết kế các lớp, ta thường đứng trước một lựa chọn: lớp `Order` chỉ chứa các trường `status`, `items`, `total` cùng getter/setter, hay nó phải biết **cách thêm sản phẩm, tính tổng tiền, xác nhận đơn và từ chối thay đổi không hợp lệ**?
+When designing classes, we often face a choice: should `Order` hold only `status`, `items`, `total`, and getters/setters, or should it know **how to add items, compute totals, confirm orders, and reject invalid changes**?
 
-Đây là điểm khác biệt cốt lõi giữa **Rich Domain Model (mô hình miền giàu hành vi)** và **Anemic Domain Model (mô hình miền thiếu hành vi, thường chỉ chứa dữ liệu)**. Cả hai đều có các lớp biểu diễn dữ liệu, nhưng khác nhau về **nơi đặt quy tắc nghiệp vụ, quyền thay đổi trạng thái và cách bảo vệ bất biến**.
+This is the core distinction between a **Rich Domain Model** and an **Anemic Domain Model** (usually mostly data). Both have classes representing data, but differ in **where business rules live, who can change state, and how invariants are enforced**.
 
-Mục tiêu bài này: hiểu sự khác biệt, đọc và thiết kế Java đúng, chọn kiến trúc theo độ phức tạp nghiệp vụ, biết khi nào cần một domain service và kiểm thử các trạng thái hợp lệ.
+This lesson aims to clarify the difference, guide correct Java modeling, select an approach based on business complexity, recognize when domain services are needed, and test valid states.
 
-## 1. Hai cách mô hình hóa cùng một bài toán
+## 1. Two ways to model the same problem
 
-Giả sử ứng dụng bán hàng có quy tắc:
+Suppose a retail application has these rules:
 
-1. Một đơn hàng bắt đầu ở `DRAFT`.
-2. Có thể thêm sản phẩm khi còn `DRAFT`; mỗi dòng hàng có số lượng dương và đơn giá không âm.
-3. Chỉ được xác nhận khi đơn có ít nhất một dòng.
-4. Sau khi `CONFIRMED`, không được thêm sản phẩm.
-5. Tổng tiền phải luôn bằng tổng thành tiền của các dòng hàng.
+1. An order starts in `DRAFT`.
+2. Items may be added only while it remains `DRAFT`; each line has a positive quantity and nonnegative unit price.
+3. An order may be confirmed only when it contains at least one line.
+4. Items cannot be added after `CONFIRMED`.
+5. The order total must always equal the sum of its line totals.
 
-### Mô hình chỉ chứa dữ liệu (anemic)
+### Data-only (anemic) model
 
 ```java
 // Minh họa một kiểu anemic có thể gây lỗi nếu mở setter công khai.
@@ -3613,7 +3613,7 @@ class OrderLineData {
 }
 ```
 
-Logic nghiệp vụ thường bị đẩy sang service:
+Business logic is often pushed into services:
 
 ```java
 // Phác thảo: toàn bộ nghiệp vụ ở service.
@@ -3625,11 +3625,11 @@ void confirm(OrderData order) {
 }
 ```
 
-Vấn đề là một caller khác vẫn có thể sửa thẳng `order.status = "CONFIRMED"` hoặc `order.totalCents = -1` mà không cần qua `confirm`. Nếu nhiều service tự thực hiện các bước kiểm tra, quy tắc dễ trùng lặp và không đồng nhất.
+Another caller can still directly assign `order.status = "CONFIRMED"` or `order.totalCents = -1` without invoking `confirm`. When many services independently perform these checks, rules are easily duplicated or become inconsistent.
 
-**Không phải mọi lớp dữ liệu đều xấu.** DTO để nhận/trả HTTP, đối tượng cấu hình, record truyền dữ liệu hay dữ liệu kết quả truy vấn có thể rất hợp lý khi chỉ mang giá trị. “Anemic Domain Model” đáng chú ý khi **mô hình nghiệp vụ vốn có nhiều quy tắc**, nhưng entity không giữ được hành vi hay bất biến của mình.
+**Not every data class is bad.** HTTP request/response DTOs, configuration objects, data-transfer records, and query results can reasonably contain only values. An “Anemic Domain Model” is concerning when **the business domain has many rules**, yet entities cannot protect their behavior or invariants.
 
-### Mô hình giàu hành vi (rich)
+### Rich domain model
 
 ```java
 // API ở mức ý tưởng:
@@ -3641,7 +3641,7 @@ long payable = order.totalCents();
 // order.setTotalCents(...) cho bên ngoài gọi tùy ý.
 ```
 
-Tại đây `Order` biết **cái gì được phép làm với trạng thái của chính nó**. Code gọi đơn hàng dùng ngôn ngữ nghiệp vụ (`addItem`, `confirm`) thay vì lắp ghép setter và hy vọng mọi nơi nhớ hết quy tắc.
+Here, `Order` knows **which operations are valid for its own state**. Client code speaks in domain terms (`addItem`, `confirm`), rather than composing setters and hoping every caller remembers all the rules.
 
 ```mermaid
 flowchart LR
@@ -3654,36 +3654,36 @@ flowchart LR
     end
 ```
 
-Sơ đồ không nói Rich Model phải chứa **mọi** thao tác. Lưu database, gửi email, gọi API vận chuyển vẫn thuộc những thành phần bên ngoài; chúng không phải hành vi tự nhiên của đối tượng `Order`.
+The diagram does not imply that a Rich Model contains **every** operation. Database writes, email delivery, and shipping API calls still belong to external components; they are not natural behaviors of an `Order` object.
 
-## 2. So sánh theo các tiêu chí quan trọng
+## 2. Comparing important criteria
 
-| Tiêu chí | Rich Domain Model | Anemic Domain Model |
+| Criterion | Rich Domain Model | Anemic Domain Model |
 | --- | --- | --- |
-| Entity có gì? | Dữ liệu, hành vi và ràng buộc đi cùng nhau | Chủ yếu field, getter/setter hoặc record |
-| Nơi giữ invariant của entity | Trong constructor/factory và phương thức nghiệp vụ | Thường ở service bên ngoài, dễ bị bỏ qua nếu mở mutation |
-| Cách cập nhật | `order.confirm()`, `account.withdraw(amount)` | `order.setStatus(...)` hoặc service sửa field |
-| Độ gắn kết (*cohesion*) | Hành vi liên quan tới dữ liệu ở gần nhau | Có thể tách xa dữ liệu và hành vi |
-| Nguy cơ trùng quy tắc | Thấp hơn nếu API bảo vệ trạng thái | Cao hơn nếu nhiều service cùng sửa dữ liệu |
-| Độ đơn giản ban đầu | Cần thiết kế domain API và trạng thái | Ít code hơn cho dữ liệu đơn giản/CRUD |
-| Tính phù hợp | Nghiệp vụ nhiều quy tắc, trạng thái, chuyển đổi | DTO, mapping, báo cáo, CRUD đơn giản với quy tắc ít |
-| Điểm cần cảnh giác | Entity phình to, gọi I/O trong domain, khó load ORM | “Transaction script” rải rác và setter làm mất invariant |
+| What does an entity contain? | Data, behaviors, and constraints together | Mainly fields, getters/setters, or records |
+| Who enforces entity invariants? | Constructors/factories and domain methods | Usually external services; easy to bypass when mutation is exposed |
+| How is state changed? | `order.confirm()`, `account.withdraw(amount)` | `order.setStatus(...)` or services changing fields |
+| Cohesion | Behavior lives close to related data | Behavior may be separated from the data |
+| Risk of duplicated rules | Lower when APIs protect state | Higher when multiple services mutate data |
+| Initial simplicity | Requires designing domain APIs and state | Less code for simple data/CRUD |
+| Best fit | Rule-heavy domains with states and transitions | DTOs, mapping, reporting, simple CRUD with few rules |
+| Risks | Bloated entities, I/O inside domain, tricky ORM loading | Scattered “transaction scripts” and setters that break invariants |
 
-**Không thể kết luận một kiến trúc chỉ bằng việc có getter/setter hay không.** Một entity có thể dùng getter, có method update được kiểm soát và vẫn là mô hình giàu hành vi. Một lớp dữ liệu bất biến do service tạo ra vẫn có thể tạo thành thiết kế tốt nếu nghiệp vụ thực sự đơn giản.
+**You cannot classify an architecture solely by whether getters/setters exist.** An entity may expose getters and controlled update methods while remaining rich. An immutable data class created by a service may be good design when business logic is genuinely simple.
 
-## 3. Bất biến (invariant): tiêu chí quan trọng nhất
+## 3. Invariants: the most important criterion
 
-**Invariant** là điều kiện phải đúng với mọi trạng thái được công khai là hợp lệ của đối tượng.
+An **invariant** is a condition that must hold in every publicly valid object state.
 
-Đối với đơn hàng:
+For orders:
 
-- `lines` không được chứa dòng có `quantity <= 0`.
-- `totalCents` không âm, bằng tổng các `quantity × unitPriceCents`.
-- `CONFIRMED` chỉ đạt được khi có dòng hàng.
-- Sau `CONFIRMED`, không thể gọi `addItem` thành công.
-- Trạng thái chỉ chuyển theo những quy tắc được định nghĩa.
+- `lines` cannot contain a line with `quantity <= 0`.
+- `totalCents` is nonnegative and equals the sum of `quantity × unitPriceCents` for all lines.
+- `CONFIRMED` is reachable only when the order has line items.
+- After `CONFIRMED`, `addItem` cannot succeed.
+- State transitions follow only defined rules.
 
-Trong rich model, các hành vi được thiết kế quanh bất biến:
+In a rich model, behaviors are designed around invariants:
 
 ```mermaid
 stateDiagram-v2
@@ -3696,19 +3696,19 @@ stateDiagram-v2
     CANCELLED --> CANCELLED : đọc dữ liệu
 ```
 
-Trong dự án thật, việc hủy đơn đã thanh toán có thể cần hoàn tiền, kiểm tra vận chuyển và nhiều bước khác. Sơ đồ chỉ thể hiện **một chính sách đơn giản**. Phải xác định trạng thái và bước chuyển theo nghiệp vụ cụ thể, không tự áp đặt trạng thái `CANCELLED` cho mọi hệ thống.
+In real projects, canceling a paid order may require refunds, shipment checks, and additional steps. The diagram only describes **a simple policy**. Define states and transitions for the actual domain instead of applying `CANCELLED` indiscriminately to every system.
 
-## 4. Ví dụ Java 17 hoàn chỉnh: Rich Domain Model
+## 4. Complete Java 17 example: Rich Domain Model
 
-Đoạn dưới là **một file Java chạy được**, không cần Spring, JPA, database hay thư viện ngoài. Để việc phân vai rõ ràng, file có:
+The following is **a standalone runnable Java file**, requiring no Spring, JPA, database, or external libraries. It contains distinct responsibilities:
 
-- `OrderLine`: value object chứa dữ liệu và cách tính thành tiền.
-- `Order`: entity/aggregate quản lý dòng hàng, tổng tiền, trạng thái và hành vi.
-- `OrderRepository`: cổng lưu/truy vấn.
-- `OrderApplicationService`: điều phối use case.
-- `ConsoleOrderNotifier`: adapter minh họa tương tác ngoài.
+- `OrderLine`: a value object holding line data and calculating the line amount.
+- `Order`: an entity/aggregate managing line items, totals, state, and behavior.
+- `OrderRepository`: a persistence/query port.
+- `OrderApplicationService`: coordinates the use case.
+- `ConsoleOrderNotifier`: an adapter demonstrating an external interaction.
 
-Tạo file `RichVsAnemicDemo.java`:
+Create `RichVsAnemicDemo.java`:
 
 ```java
 import java.util.ArrayList;
@@ -3924,14 +3924,14 @@ public class RichVsAnemicDemo {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac RichVsAnemicDemo.java
 java RichVsAnemicDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 Total cents: 31500
@@ -3942,58 +3942,58 @@ Cannot confirm empty order
 After cancel: CANCELLED
 ```
 
-### Vì sao ví dụ là “giàu hành vi”?
+### Why is this a “rich” model?
 
-1. **Không có setter `status` hoặc `totalCents`.** Trạng thái chỉ đổi qua những method có tên và quy tắc cụ thể.
-2. **`OrderLine` kiểm tra bất biến của mình.** Dòng hàng không thể được tạo hợp lệ với số lượng bằng 0 hay giá âm.
-3. **`Order` giữ quy tắc của aggregate.** Nó quyết định thời điểm được thêm dòng, cộng gộp SKU, từ chối giá không nhất quán và không xác nhận đơn rỗng.
-4. **Tổng tiền được tính từ nguồn dữ liệu thực.** Không có field `totalCents` mutable dễ lệch với chi tiết đơn.
-5. **Tràn số bị phát hiện rõ.** `Math.multiplyExact` và `Math.addExact` ném `ArithmeticException` thay vì âm thầm tạo tổng sai. Nếu đơn không thể tính tổng hợp lệ, `addItem` không cập nhật dòng mới.
-6. **Collection nội bộ không bị lộ ra ngoài.** `lines()` trả `List.copyOf` từ `OrderLine` bất biến; caller không thể thêm/xóa hoặc sửa từng dòng qua getter.
+1. **There are no `status` or `totalCents` setters.** State changes only through named methods with explicit rules.
+2. **`OrderLine` enforces its own invariants.** A line item with quantity 0 or negative price cannot be validly created.
+3. **`Order` enforces aggregate rules.** It controls when lines may be added, merges SKUs, rejects inconsistent prices, and refuses to confirm empty orders.
+4. **Totals are calculated from the actual source data.** There is no mutable `totalCents` field that can disagree with order lines.
+5. **Overflow is detected explicitly.** `Math.multiplyExact` and `Math.addExact` throw `ArithmeticException` rather than silently producing invalid totals. When a correct total cannot be computed, `addItem` does not update the new line.
+6. **Internal collections are not exposed.** `lines()` returns a `List.copyOf` snapshot of immutable `OrderLine` objects; callers cannot add/remove or modify line items through the getter.
 
-Application service vẫn có giá trị: lấy đơn từ repository, gọi nghiệp vụ, lưu thay đổi, yêu cầu gửi thông báo. Nó không cần tự viết lại `if (status != DRAFT)` hay tính tổng dòng hàng.
+The application service is still valuable: it loads orders through a repository, invokes domain behavior, persists changes, and requests notifications. It need not repeat `if (status != DRAFT)` checks or calculate line totals itself.
 
-### Giới hạn cần hiểu
+### Limitations to understand
 
-Ví dụ này **chỉ chạy tuần tự trong bộ nhớ**. `InMemoryOrderRepository` giữ tham chiếu đến cùng một `Order`; nếu `confirm()` thành công mà `save()` hoặc notifier gặp lỗi, ví dụ không có rollback giao dịch. Trong hệ thống thực, thao tác cần transaction phù hợp, cơ chế load/save entity đúng, kiểm soát version/locking khi cập nhật đồng thời và chính sách gửi thông báo sau commit (chẳng hạn transactional outbox).
+This example **runs sequentially in memory**. `InMemoryOrderRepository` holds a reference to the same `Order` instance; if `confirm()` succeeds but `save()` or the notifier fails, there is no transactional rollback. Real systems need suitable transactions, correct entity loading/saving, versioning/locking for concurrent updates, and notification-after-commit policies (such as a transactional outbox).
 
-`long` cent phù hợp để giải thích số học chính xác và giới hạn tràn; với nhiều loại tiền và cách làm tròn khác nhau, nên dùng value object `Money` gồm amount và currency cùng quy tắc scale/rounding rõ ràng. Không sử dụng `double` làm đơn vị lưu trữ cho số tiền nghiệp vụ cần chính xác.
+Integer `long` cents illustrate exact arithmetic and overflow limits; for multiple currencies and rounding modes, use a `Money` value object with amount, currency, and explicit scale/rounding policies. Do not use `double` to store monetary amounts requiring exactness.
 
-`Order.cancel()` trong demo cho phép hủy đơn đã xác nhận; ứng dụng thực có thể yêu cầu không được hủy khi đã giao, phải hoàn tiền hoặc có phân quyền. Các quy tắc đó cần được đưa vào domain model hoặc service có trách nhiệm phù hợp.
+`Order.cancel()` permits cancellation after confirmation in the demo. A real application may prohibit cancellation after shipping or require refunds and authorization. Such rules belong in the domain model or an appropriate responsible service.
 
-## 5. Điều gì vẫn nên nằm ngoài entity?
+## 5. What should remain outside an entity?
 
-“Rich” nghĩa là **giàu hành vi nghiệp vụ**, không phải là một đối tượng biết làm mọi thứ.
+“Rich” means **rich in business behavior**, not an object that does everything.
 
-| Hành vi | Vị trí thường hợp lý | Lý do |
+| Behavior | Typical owner | Reason |
 | --- | --- | --- |
-| `Order.addItem` | `Order` | Thay đổi trạng thái và bất biến của chính đơn |
-| `Order.confirm` | `Order` | Chuyển trạng thái của aggregate |
-| `OrderLine.amountCents` | `OrderLine` | Tính toán trên chính dữ liệu của dòng |
-| `CheckoutService.checkout` | Application service | Điều phối nhiều domain object, repository, giao dịch |
-| `PricingPolicy.calculate` | Domain policy/service | Quy tắc giá có thể độc lập và cần nhiều đầu vào |
-| `OrderRepository.save` | Port + adapter persistence | Tương tác database / kho dữ liệu |
-| `EmailSender.send` | Port + adapter email | Giao tiếp với hệ thống ngoài |
-| Nhận JSON, trả HTTP status | Controller / web adapter | Hợp đồng giao tiếp API |
-| Chạy `@Transactional` | Thường ở application boundary | Phạm vi giao dịch của use case |
+| `Order.addItem` | `Order` | Modifies the order's own state and invariants |
+| `Order.confirm` | `Order` | Transitions aggregate state |
+| `OrderLine.amountCents` | `OrderLine` | Calculates from the line's own data |
+| `CheckoutService.checkout` | Application service | Coordinates domain objects, repositories, and transactions |
+| `PricingPolicy.calculate` | Domain policy/service | Pricing rule may be independent and require multiple inputs |
+| `OrderRepository.save` | Persistence port + adapter | Interacts with databases/data storage |
+| `EmailSender.send` | Email port + adapter | Communicates with external systems |
+| Receiving JSON and returning an HTTP status | Controller / web adapter | API communication contract |
+| Running `@Transactional` | Usually at an application boundary | Transaction scope of a use case |
 
-Một dấu hiệu sai là để `Order.confirm()` tự gọi `new JdbcConnection(...)` hay `smtp.send(...)`. Khi đó entity phụ thuộc hạ tầng, test chuyển trạng thái phải kéo cả DB/email vào, và lỗi I/O có thể làm rối bất biến. Domain method tốt nhất chỉ thay đổi trạng thái hoặc trả giá trị/sự kiện nghiệp vụ, còn bên ngoài thực hiện side effect.
+A warning sign is `Order.confirm()` directly calling `new JdbcConnection(...)` or `smtp.send(...)`. That couples the entity to infrastructure, forces database/email dependencies into state-transition tests, and lets I/O failures complicate invariants. A domain method should usually change state or return domain values/events while external components perform side effects.
 
-### Domain service không đồng nghĩa với anemic model
+### A domain service does not imply an anemic model
 
-Đôi khi một quy tắc không thuộc rõ về **một** entity:
+Sometimes a rule does not clearly belong to **one** entity:
 
-- Chuyển tiền giữa hai tài khoản đòi kiểm tra cả hai và ghi atomically.
-- Áp giá ưu đãi theo cấp khách hàng có thể cần `Customer`, `Order`, `Promotion` và một policy.
-- Phân bổ chỗ ngồi có thể cần cả chuyến bay, sơ đồ ghế và quyền đặt.
+- Transferring funds between accounts requires validating both and recording changes atomically.
+- Customer-tier promotions may involve `Customer`, `Order`, `Promotion`, and a policy.
+- Seat allocation may involve flights, seating plans, and booking permissions.
 
-Dùng domain service/policy cho quy tắc có ngữ cảnh riêng, còn mỗi entity vẫn giữ invariant nội tại. Ví dụ dịch vụ chuyển tiền điều phối `source.withdraw(...)` và `destination.deposit(...)` trong transaction; `Account` chịu trách nhiệm không cho số dư âm khi rút nếu đó là luật của tài khoản.
+Use a domain service/policy for rules requiring a separate context, while entities still enforce their own invariants. For example, a transfer service coordinates `source.withdraw(...)` and `destination.deposit(...)` within a transaction; `Account` ensures withdrawals do not produce negative balances when that is an account rule.
 
-Ngược lại, đặt tất cả quy tắc ngay trong một service duy nhất, chỉ gọi `setBalance`, `setStatus`, `setLines` thường là dấu hiệu entity đã mất quyền bảo vệ trạng thái.
+Conversely, placing all rules in one service and only calling `setBalance`, `setStatus`, and `setLines` often indicates that entities have lost control over their state.
 
-## 6. Tránh nhầm với DTO, record và POJO
+## 6. Do not confuse this with DTOs, records, and POJOs
 
-**Record không tự động là anemic.** Một Java record có thể có compact constructor để validate, method tính toán và hành vi bất biến:
+**Records are not automatically anemic.** A Java record can validate in a compact constructor and provide calculations or immutable behaviors:
 
 ```java
 record Quantity(int value) {
@@ -4009,57 +4009,57 @@ record Quantity(int value) {
 }
 ```
 
-`Quantity` tuy chỉ có một field nhưng có hành vi ý nghĩa, là value object tốt. Ngược lại `record CheckoutRequest(String sku, int quantity)` có thể chỉ là dữ liệu đầu vào, và điều đó hoàn toàn hợp lý.
+`Quantity` has only one field but meaningful behavior, making it a good value object. Conversely, `record CheckoutRequest(String sku, int quantity)` may only carry input data, which is perfectly reasonable.
 
-**POJO** (*Plain Old Java Object*) nói về việc một class Java không bắt buộc kế thừa framework hay base class đặc biệt; không cho biết nó rich hay anemic. **Entity** nói về danh tính/vòng đời; **DTO** nói về vận chuyển dữ liệu; **Rich/Anemic** nói về nơi đặt hành vi nghiệp vụ. Đây là những trục phân loại khác nhau.
+**POJO** (*Plain Old Java Object*) means a Java class does not require special framework inheritance; it does not indicate whether it is rich or anemic. **Entity** concerns identity/lifecycle; **DTO** concerns transporting data; **Rich/Anemic** concerns ownership of business behavior. These are separate dimensions.
 
-| Loại | Mục đích chính | Rich/anemic có bắt buộc không? |
+| Type | Main purpose | Must it be rich/anemic? |
 | --- | --- | --- |
-| HTTP request DTO | Nhận dữ liệu qua API | Chỉ chứa dữ liệu thường hợp lý |
-| HTTP response DTO | Trả dữ liệu cho client | Chỉ chứa dữ liệu thường hợp lý |
-| Value object `Money` | Tiền hợp lệ và phép toán trên tiền | Nên bảo vệ invariant và cung cấp hành vi hữu ích |
-| Domain entity `Order` | Danh tính, vòng đời, bất biến đơn hàng | Giàu hành vi hữu ích khi có quy tắc/trạng thái |
-| ORM persistence entity | Biểu diễn dữ liệu DB | Có thể tách domain, tùy kiến trúc |
-| Projection/read model | Dữ liệu báo cáo, query/read-only | Chủ yếu dữ liệu là đủ |
-| Domain service | Quy tắc nghiệp vụ xuyên nhiều đối tượng | Có hành vi, không nhất thiết có nhiều trạng thái |
+| HTTP request DTO | Receives data through APIs | Data-only representation is often appropriate |
+| HTTP response DTO | Returns data to clients | Data-only representation is often appropriate |
+| Value object `Money` | Valid monetary values and arithmetic | Should enforce invariants and provide useful behavior |
+| Domain entity `Order` | Identity, lifecycle, order invariants | Rich behavior helps when there are rules/state |
+| ORM persistence entity | Represents stored database data | May be separated from the domain depending on architecture |
+| Projection/read model | Reports and query/read-only results | Mainly data is sufficient |
+| Domain service | Business rules spanning objects | Has behavior; not necessarily extensive state |
 
-Một hệ thống có thể **kết hợp cả hai cách**: rich model ở phần giao dịch phức tạp; record/DTO cho danh sách tra cứu, báo cáo, nhập xuất và màn hình chỉ đọc.
+A system can **combine both approaches**: rich models for complex transactions and records/DTOs for lookups, reporting, import/export, and read-only screens.
 
-## 7. Nhìn sâu vào thay đổi nghiệp vụ
+## 7. Evaluating changing business requirements
 
-Một thiết kế tốt được kiểm chứng khi yêu cầu thay đổi.
+A good design proves its value when requirements change.
 
-**Yêu cầu A:** “Sau khi xác nhận đơn, không cho sửa mặt hàng.”
+**Requirement A:** “Once an order is confirmed, its line items cannot be changed.”
 
-- Với rich model, quy tắc được đặt trong `Order.addItem` (và mọi phương thức thay đổi tương đương).
-- Với mô hình chỉ dữ liệu và setter public, phải đảm bảo tất cả controller/service/job đều nhớ kiểm tra. Bỏ sót một đường ghi là dữ liệu sai.
+- In a rich model, this rule lives in `Order.addItem` (and every equivalent mutation method).
+- With a data-only model and public setters, all controllers/services/jobs must remember the check. Missing one write path corrupts data.
 
-**Yêu cầu B:** “Thêm trạng thái `PAID`, không được hủy đơn đã thanh toán.”
+**Requirement B:** “Add `PAID` status and forbid canceling paid orders.”
 
-- Rich: thêm chuyển trạng thái `markPaid()`, cập nhật điều kiện `cancel()` và test state machine.
-- Anemic: sửa nhiều service nếu mỗi service kiểm tra status riêng; nếu đã gom mọi cập nhật vào một domain service kiểm soát chặt thì vẫn có thể giữ nhất quán.
+- Rich: add a `markPaid()` transition, update `cancel()` conditions, and test the state machine.
+- Anemic: several services may need updates if each checks status independently; centralized and strictly enforced state changes in a domain service can still maintain consistency.
 
-**Yêu cầu C:** “Chuyển lưu đơn từ database A sang database B.”
+**Requirement C:** “Switch order storage from database A to database B.”
 
-- Đây là thay đổi adapter/repository, không phải lý do sửa `Order.confirm()`.
-- Nếu entity gọi thẳng SQL, ranh giới thiết kế đã bị trộn lẫn bất kể entity giàu bao nhiêu method.
+- This is an adapter/repository change, not a reason to modify `Order.confirm()`.
+- If an entity directly calls SQL, the boundaries are mixed regardless of how many methods it contains.
 
-**Yêu cầu D:** “Thay cách tính thuế dựa trên địa phương và cấu hình bên thứ ba.”
+**Requirement D:** “Change tax calculations by region and third-party configuration.”
 
-- Không nên bắt entity tự gọi HTTP đến nhà cung cấp thuế.
-- Application service lấy dữ liệu đầu vào qua adapter rồi dùng domain policy `TaxCalculator` để áp dụng giá trị; nếu quy tắc cần nhiều loại tham số, policy có thể là đối tượng chuyên trách.
+- Do not force entities to call an external tax provider over HTTP.
+- An application service obtains inputs through an adapter and uses a domain `TaxCalculator` policy; a dedicated policy object can handle rules requiring multiple types of inputs.
 
-## 8. Khi nào Anemic Model vẫn phù hợp?
+## 8. When is an Anemic Model appropriate?
 
-Anemic không phải nhãn để loại bỏ mọi class chỉ có dữ liệu. Nó có thể là **lựa chọn có ý thức** khi:
+“Anemic” should not be used to dismiss every data-only class. It can be **a deliberate choice** when:
 
-1. Ứng dụng chủ yếu là **CRUD đơn giản**: lưu/chỉnh/sửa một biểu mẫu với ít quy tắc.
-2. Lớp là **DTO/projection** dùng để truyền hoặc đọc dữ liệu, không phải nơi quyết định trạng thái nghiệp vụ.
-3. Logic chủ yếu là **biến đổi dữ liệu theo pipeline**, ít danh tính/vòng đời; cách thiết kế hàm thuần có thể rõ ràng hơn nhồi hành vi vào object.
-4. Các thao tác nghiệp vụ đã được quản lý tập trung và không cho caller vượt qua quy tắc bằng setter tùy tiện.
-5. Đây là đoạn code phụ trợ nội bộ đơn giản; thêm aggregate/policy/service phức tạp làm chi phí vượt lợi ích.
+1. An application is mostly **simple CRUD**: storing/editing forms with few rules.
+2. The class is a **DTO/projection** used to transfer or read data, not decide business state.
+3. Logic is primarily **pipeline data transformation** with little identity/lifecycle; pure functions may be clearer than forcing behavior into objects.
+4. Business operations are centrally controlled and callers cannot bypass rules via arbitrary setters.
+5. This is simple internal supporting code where complex aggregates/policies/services would cost more than they help.
 
-Ví dụ mô hình chỉ đọc:
+An example read-only model:
 
 ```java
 record MonthlySalesReport(
@@ -4068,13 +4068,13 @@ record MonthlySalesReport(
         long revenueCents) { }
 ```
 
-Nó không cần tự gọi SQL, cũng không phải tự quyết định cách tổng hợp báo cáo: một query service tạo `MonthlySalesReport`, còn report chỉ chứa kết quả. Đây là mô hình dữ liệu phù hợp chứ không phải một rich entity còn thiếu method.
+It need not call SQL or decide how reports are aggregated: a query service creates `MonthlySalesReport`, which only holds results. This is a suitable data model, not an unfinished rich entity.
 
-**Điểm quyết định:** nếu có nhiều invariant và chuyển trạng thái cần được bảo vệ ở nhiều luồng xử lý, rich domain model thường đem lại lợi ích rõ rệt. Nếu chủ yếu đọc/ghi dữ liệu và không có hành vi cốt lõi đáng đóng gói, DTO/data model có thể đơn giản hơn.
+**The deciding factor:** with many invariants and state transitions spanning workflows, rich domain models often offer clear benefits. When code mostly reads/writes data without core behaviors worth encapsulating, DTO/data models may be simpler.
 
-## 9. Những sai lầm khi áp dụng Rich Model
+## 9. Mistakes in applying Rich Models
 
-### Sai lầm 1 — Entity trở thành God Object
+### Mistake 1 — Turning an entity into a God Object
 
 ```java
 class Order {
@@ -4085,9 +4085,9 @@ class Order {
 }
 ```
 
-Đây không phải rich domain model lành mạnh. `Order` đang ôm trách nhiệm I/O và giao diện. Tách adapter và application service, giữ ở entity hành vi thuộc trạng thái/quy tắc đơn hàng.
+This is not a healthy rich domain model. `Order` has absorbed I/O and presentation responsibilities. Move them to adapters and application services, keeping entity behavior related to its own state and rules.
 
-### Sai lầm 2 — “Rich” bằng cách thêm nhiều getter bọc lại
+### Mistake 2 — Calling a model “rich” just by adding forwarding getters
 
 ```java
 class Order {
@@ -4097,27 +4097,27 @@ class Order {
 }
 ```
 
-Nhiều method không có nghĩa là giàu hành vi. Quan trọng là API diễn đạt **ý định nghiệp vụ** và ngăn trạng thái sai.
+Method count alone does not make a rich model. The API must express **business intent** and prevent invalid state.
 
-### Sai lầm 3 — Để trạng thái phụ thuộc bên ngoài quyết định một phần, rồi quên kiểm tra lại
+### Mistake 3 — Partially relying on external state, then forgetting to revalidate
 
-Ví dụ `Order` không thể tự biết tồn kho thực tế nếu dữ liệu nằm tại service bên ngoài. Quy trình đúng cần application service/đối tượng chính sách có nguồn dữ liệu tương ứng để kiểm tra hoặc giữ chỗ tồn kho; `Order` chỉ chịu những bất biến mà nó có đủ thông tin để đảm bảo.
+For example, `Order` cannot know actual inventory when it belongs to an external service. The application service or a policy with the appropriate data source must check/reserve inventory; `Order` only owns invariants it can enforce with available information.
 
-### Sai lầm 4 — Dồn mọi công thức vào entity dù không thuộc entity
+### Mistake 4 — Putting every formula in an entity even when it does not belong there
 
-Giảm giá theo hợp đồng khách hàng hoặc thuế theo quốc gia có thể cần `PromotionPolicy`, `TaxPolicy` hoặc domain service; làm tất cả trong `Order` khiến entity biết quá nhiều và dễ coupling.
+Customer-contract discounts or country-specific taxes may require `PromotionPolicy`, `TaxPolicy`, or a domain service; embedding all of these in `Order` adds coupling and excessive knowledge.
 
-### Sai lầm 5 — Quên ràng buộc DB và xử lý đồng thời
+### Mistake 5 — Forgetting database constraints and concurrency
 
-`Order.confirm()` bảo vệ trạng thái của **một instance**. Nếu hai request khác nhau cùng load và thay đổi một đơn, vẫn có thể mất cập nhật (*lost update*). Khi lưu vào JPA/SQL cần transaction, optimistic locking (ví dụ `@Version`) hoặc kỹ thuật đồng bộ hóa phù hợp. Một phương thức domain đúng trong bộ nhớ **không tự bảo đảm** tính nhất quán khi chạy phân tán.
+`Order.confirm()` enforces state rules for **one instance**. If two requests load and modify the same order concurrently, updates may be lost (*lost update*). Persisting through JPA/SQL requires transactions, optimistic locking (such as `@Version`), or appropriate synchronization. A correct in-memory domain method **does not guarantee** consistency across distributed processes.
 
-### Sai lầm 6 — Gọi service bên ngoài từ entity trong transaction
+### Mistake 6 — Invoking external services from entities inside transactions
 
-Gửi email trong `Order.confirm()` không khiến database và SMTP commit atomically. Nếu gửi mail thành công rồi DB rollback, người dùng thấy xác nhận cho đơn chưa lưu. Một lựa chọn thực tế là ghi sự kiện/outbox cùng giao dịch DB, xử lý gửi sau commit và có idempotency/retry.
+Sending email in `Order.confirm()` does not make database and SMTP commits atomic. If email succeeds but the database rolls back, users see confirmation for an order that was not stored. One solution is an outbox entry committed with the database, followed by post-commit delivery with retries and idempotency.
 
-## 10. Liên hệ với DDD Aggregate, encapsulation và Spring/JPA
+## 10. DDD aggregates, encapsulation, and Spring/JPA
 
-Trong **Domain-Driven Design (DDD)**, *aggregate root* là điểm quản lý các bất biến cần nhất quán ngay của một cụm đối tượng. `Order` có thể là aggregate root, `OrderLine` là thành phần bên trong.
+In **Domain-Driven Design (DDD)**, an *aggregate root* governs invariants that must remain immediately consistent within a group of objects. `Order` may be an aggregate root with `OrderLine` as an internal component.
 
 ```mermaid
 classDiagram
@@ -4150,9 +4150,9 @@ classDiagram
     OrderApplicationService --> OrderRepository : dùng port
 ```
 
-**Aggregate** không có nghĩa mọi quan hệ 1–N đều là composition hay mọi object trong sơ đồ đều lưu trong cùng một bảng. Ranh giới aggregate được chọn theo invariant cần đảm bảo khi cập nhật. Ví dụ `Order` không nên trực tiếp sở hữu toàn bộ `Customer` hay `Product` chỉ vì có quan hệ tham chiếu.
+An **aggregate** does not mean every 1–N relationship is composition or that every object in the diagram must share one database table. Choose aggregate boundaries according to invariants that updates must preserve. For example, `Order` should not directly own all of `Customer` or `Product` merely because they are referenced.
 
-Với Spring Boot/JPA, cách tổ chức có thể gồm:
+A Spring Boot/JPA organization may include:
 
 ```text
 orders/
@@ -4175,43 +4175,43 @@ orders/
     OrderResponse.java
 ```
 
-Có hai lựa chọn thực tế:
+There are two practical approaches:
 
-- **Domain entity độc lập JPA:** mapper chuyển giữa domain và persistence entity. Domain test gọn, ít ràng buộc framework, đổi persistence dễ hơn nhưng cần mapping code.
-- **JPA entity kiêm domain entity:** có thể tiết kiệm mapping; cần chú ý constructor cho ORM, proxy, lazy loading, setter công khai, dirty checking và cách `equals/hashCode` hoạt động. Dù dùng một class hay hai class, các public method nghiệp vụ vẫn nên bảo vệ invariant.
+- **Domain entity independent of JPA:** mappers convert between domain and persistence entities. Domain tests remain lightweight and framework-independent, and persistence changes are easier, at the cost of mapping code.
+- **JPA entity also serving as domain entity:** reduces mapping, but requires care around ORM constructors, proxies, lazy loading, public setters, dirty checking, and `equals/hashCode` behavior. Whether using one class or two, public business methods should still enforce invariants.
 
-`@Transactional` nên đặt ở ranh giới use case phù hợp, nơi nhiều bước lưu cần đi cùng nhau. Nó không thay thế việc áp quy tắc qua domain method và không tự giao dịch được với mail server hay dịch vụ HTTP.
+Place `@Transactional` at an appropriate use-case boundary where several persistence steps must succeed together. It neither replaces domain-method rule enforcement nor extends a transaction automatically to mail servers or HTTP services.
 
-**Thiết kế test hợp lý:**
+**Appropriate testing strategy:**
 
-| Mức test | Nội dung nên kiểm tra |
+| Test level | What to verify |
 | --- | --- |
-| Domain unit test | `Order.addItem` chỉ cho `DRAFT`; số lượng/giá sai bị từ chối; tổng tiền chính xác |
-| State transition test | Không xác nhận đơn rỗng; không sửa sau confirm; chính sách cancel đúng |
-| Application service test | Load đúng ID, gọi domain method, save và phát yêu cầu thông báo theo hợp đồng |
-| Persistence integration test | Save/load lại entity giữ nguyên invariant; kiểm tra unique/locking/transaction |
-| API test | JSON, validation đầu vào, HTTP status và quyền truy cập |
-| Concurrent/integration test | Hai request đổi cùng một đơn, không âm thầm ghi đè trạng thái của nhau |
+| Domain unit test | `Order.addItem` only works in `DRAFT`; invalid quantity/price is rejected; totals are correct |
+| State-transition test | Empty orders cannot be confirmed; post-confirmation edits fail; cancellation follows policy |
+| Application service test | Loads correct ID, invokes domain behavior, saves and requests notifications according to contract |
+| Persistence integration test | Save/reload preserves invariants; verifies uniqueness, locking, and transactions |
+| API test | JSON, input validation, HTTP statuses, and authorization |
+| Concurrency/integration test | Two requests changing the same order do not silently overwrite each other's state |
 
-## 11. Cách refactor từ Anemic sang Rich một cách an toàn
+## 11. Safely refactoring from an anemic to a rich model
 
-Giả sử hiện tại hệ thống dùng `OrderData` với field công khai và `OrderService` tính mọi quy tắc. Không cần viết lại tất cả trong một lượt.
+Suppose the system uses `OrderData` with public fields while `OrderService` implements all the rules. There is no need to rewrite everything at once.
 
-1. **Tìm các đường sửa trạng thái:** controller, service, batch job, import dữ liệu, consumer message; liệt kê chỗ set status/lines/total.
-2. **Viết invariant rõ ràng:** trạng thái hợp lệ, điều kiện xác nhận, cách tính tiền và quy tắc số lượng.
-3. **Bổ sung test hành vi hiện có:** test các luồng hợp lệ, lỗi và trạng thái sau lỗi trước khi chuyển code.
-4. **Đưa hành vi sát dữ liệu cần bảo vệ:** thêm `Order.confirm()`, `Order.addItem()`, tạo `OrderLine` bất biến.
-5. **Di chuyển điểm gọi:** các service chuyển từ `setStatus` hoặc sửa `List` trực tiếp sang phương thức nghiệp vụ.
-6. **Thu hẹp API:** khi caller đã chuyển hết, bỏ/giới hạn setter nguy hiểm và getter trả collection mutable.
-7. **Giữ orchestration ở application service:** giao dịch, repository, idempotency và thông báo vẫn được tổ chức ở tầng thích hợp.
-8. **Kiểm tra persistence:** ORM mapping, migration, concurrency và khả năng load lại đối tượng có trạng thái cũ.
-9. **Dừng ở nơi có giá trị:** không biến mọi DTO/report thành entity phức tạp khi không có bất biến nghiệp vụ cần bảo vệ.
+1. **Find every state-mutation path:** controllers, services, batch jobs, imports, message consumers; list where status, lines, and totals are assigned.
+2. **Specify invariants:** valid states, confirmation conditions, total calculation, and quantity rules.
+3. **Add tests for existing behavior:** cover valid flows, errors, and post-error states before moving code.
+4. **Move behavior next to the data it protects:** add `Order.confirm()` and `Order.addItem()`, and create immutable `OrderLine` values.
+5. **Migrate callers:** services replace `setStatus` or direct `List` mutations with domain operations.
+6. **Narrow the API:** once callers have migrated, remove/restrict dangerous setters and getters exposing mutable collections.
+7. **Keep orchestration in application services:** organize transactions, repositories, idempotency, and notifications at appropriate layers.
+8. **Review persistence:** ORM mappings, migrations, concurrency, and reloading objects with older states.
+9. **Stop where it adds value:** do not turn every DTO/report into a complex entity without business invariants to enforce.
 
-Các bước trên giúp các thay đổi có thể review và kiểm chứng. Khi dữ liệu DB cũ có khả năng vi phạm invariant mới, cần có chiến lược xử lý/migration rõ ràng thay vì giả định constructor mới luôn đọc được mọi bản ghi.
+These steps keep changes reviewable and verifiable. If legacy database records may violate new invariants, plan explicit remediation/migration instead of assuming new constructors can read every old record.
 
-## 12. Câu hỏi ôn tập và bài tập
+## 12. Review questions and exercises
 
-### Bài 1 — Chỉ ra mô hình thiếu hành vi
+### Exercise 1 — Spot the anemic model
 
 ```java
 class BankAccount {
@@ -4226,57 +4226,57 @@ class TransferService {
 }
 ```
 
-Hãy tìm ít nhất bốn vấn đề: số tiền âm/0, số dư không đủ, tràn số, tài khoản null, cập nhật dở dang hoặc đồng thời. Thiết kế lại `Account.withdraw`/`deposit` để mỗi tài khoản bảo vệ invariant của mình. Xác định giao dịch chuyển tiền giữa **hai** account thuộc trách nhiệm của application/domain service và transaction ở đâu.
+Identify at least four problems: negative transfer amounts or an amount of 0, insufficient funds, overflow, null accounts, partial updates, or concurrency. Redesign `Account.withdraw`/`deposit` so each account protects its invariants. Decide where the transfer across **two** accounts belongs among application/domain services and transactions.
 
-### Bài 2 — Phân biệt DTO và rich entity
+### Exercise 2 — Distinguish DTOs from rich entities
 
-Dùng `CreateOrderRequest`, `Order`, `OrderLine`, `OrderResponse`. Xác định class nào chỉ cần mang dữ liệu, class nào cần hành vi và tại sao. Không để `OrderResponse` trở thành nơi tính tổng tiền thay domain.
+Using `CreateOrderRequest`, `Order`, `OrderLine`, and `OrderResponse`, identify which classes only transport data, which need behavior, and why. Do not let `OrderResponse` calculate totals instead of the domain.
 
-### Bài 3 — Bổ sung quy tắc nghiệp vụ
+### Exercise 3 — Add business rules
 
-Mở rộng ví dụ Java: chỉ cho `cancel()` khi `DRAFT`, thêm `pay()` chuyển `CONFIRMED` sang `PAID`, cấm thêm dòng và hủy đơn đã thanh toán. Vẽ state machine và viết test cho mọi bước chuyển hợp lệ/không hợp lệ.
+Extend the Java example: allow `cancel()` only in `DRAFT`; add `pay()` to transition from `CONFIRMED` to `PAID`; prohibit adding lines or canceling paid orders. Draw a state machine and test all valid and invalid transitions.
 
-### Bài 4 — Thiết kế giới hạn tồn kho
+### Exercise 4 — Design inventory limits
 
-Một `Product` có tồn kho thay đổi theo hàng nghìn đơn. Nên lưu toàn bộ số tồn kho trong `Order` không? Hãy đề xuất `InventoryReservationService` hoặc aggregate tồn kho riêng, làm rõ transaction/locking giữa việc giữ hàng và đặt hàng.
+A `Product` has stock that changes across thousands of orders. Should `Order` store the entire inventory? Propose `InventoryReservationService` or a separate inventory aggregate, and specify transactions/locking around reservations and order placement.
 
-### Bài 5 — Phản biện lựa chọn kiến trúc
+### Exercise 5 — Challenge an architectural choice
 
-Một màn hình chỉ có `MonthlySalesReport(month, totalOrders, revenue)`, xây từ câu truy vấn SQL và không có state transition. Việc thêm class domain giàu hành vi có lợi ích gì? Có cần không? Nêu lý do chọn record/projection đơn giản.
+A screen only displays `MonthlySalesReport(month, totalOrders, revenue)` built from a SQL query without state transitions. What would a rich domain class add? Is it needed? Explain why a simple record/projection is appropriate.
 
-## 13. Checklist quyết định sử dụng Rich hay Anemic
+## 13. Checklist for choosing rich or anemic models
 
-- **Nghiệp vụ có nhiều trạng thái/chuyển đổi không?** Nếu có, entity nên cung cấp hành vi để thực thi các bước chuyển.
-- **Có invariant phải đúng qua mọi nơi gọi không?** Đưa invariant vào constructor/factory/method nghiệp vụ của owner phù hợp.
-- **Có nhiều service đang lặp cùng một quy tắc không?** Chọn một nơi làm nguồn chân lý, loại bỏ đường sửa trạng thái trái quy tắc.
-- **Mô hình chỉ là DTO/projection hoặc CRUD đơn giản?** Một data-only class có thể đủ và dễ hiểu hơn.
-- **Hành vi có thực sự thuộc đối tượng này không?** Nếu phải đọc nhiều entity hoặc chính sách bên ngoài, cân nhắc domain service/policy.
-- **Entity đang tự gọi SQL/email/HTTP không?** Tách ra port/adapter/application service để bảo vệ ranh giới.
-- **Có public setter làm bỏ qua bất biến không?** Thu hẹp API và cho phép thao tác bằng ngôn ngữ nghiệp vụ.
-- **Đồng thời/persistence có bảo vệ invariant không?** Cần transaction, ràng buộc DB, locking và test phù hợp khi thiết kế mở rộng.
-- **Mô hình có dễ hiểu và test hơn sau khi chia không?** Nếu chỉ nhiều class hơn nhưng luật bị phân tán thì chưa đạt mục tiêu.
+- **Does the domain have many states/transitions?** If so, entities should provide behavior for those transitions.
+- **Must invariants hold across every caller?** Enforce them in the responsible owner's constructor, factory, or domain methods.
+- **Do multiple services repeat the same rule?** Choose one source of truth and eliminate invalid mutation paths.
+- **Is the model only a DTO/projection or simple CRUD?** A data-only class may be sufficient and more readable.
+- **Does behavior really belong to this object?** If it requires many entities or external policies, consider a domain service/policy.
+- **Does the entity directly call SQL/email/HTTP?** Extract ports/adapters/application services to preserve boundaries.
+- **Do public setters bypass invariants?** Narrow the API and expose domain-specific operations.
+- **Are invariants protected during concurrency/persistence?** Use appropriate transactions, database constraints, locking, and tests as the design scales.
+- **Is the resulting model easier to understand and test?** More classes with scattered rules do not achieve the goal.
 
-**Kết luận:** Rich Domain Model phù hợp khi trạng thái và quy tắc của đối tượng cần được bảo vệ nhất quán; mô hình chỉ chứa dữ liệu phù hợp với DTO, projection và nghiệp vụ đơn giản. Chọn cách tổ chức theo **trách nhiệm thực tế và nơi bất biến được kiểm soát**, không theo số lượng getter/setter hoặc độ dài class.
+**Conclusion:** Rich Domain Models fit domains where object state and rules need consistent protection; data-only models fit DTOs, projections, and simple business operations. Choose based on **actual responsibilities and invariant ownership**, not numbers of getters/setters or class length.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-design-008">Tách truy vấn khỏi thao tác thay đổi trạng thái</a>
+## <a id="class-design-008">Separating queries from state-changing operations</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tách truy vấn khỏi thao tác thay đổi trạng thái trong thiết kế lớp (Command–Query Separation)
+# Separating queries from state-changing operations in class design (Command–Query Separation)
 
-**Mục tiêu:** Biết phân biệt phương thức chỉ đọc trạng thái (*query*) với phương thức chủ động thay đổi trạng thái (*command*), thiết kế API Java dễ hiểu và dễ kiểm thử, xử lý ngoại lệ thực tế mà không nhầm với kiến trúc CQRS.
+**Goal:** Distinguish read-only methods (*queries*) from methods that intentionally change state (*commands*); design understandable, testable Java APIs; handle practical exceptions without confusing CQS with CQRS architecture.
 
-## 1. Vấn đề: một câu hỏi lại âm thầm gây thay đổi
+## 1. The problem: a question that silently changes something
 
-Xét một lớp quản lý hàng tồn kho:
+Consider an inventory-management class:
 
 ~~~java
 class Inventory {
@@ -4293,19 +4293,19 @@ class Inventory {
 }
 ~~~
 
-Tên `getAvailableQuantity` khiến người gọi kỳ vọng một câu hỏi đọc dữ liệu. Nhưng một lần gọi lại thay đổi số lượng trong kho. Ví dụ UI gọi lại để cập nhật màn hình, logging gọi để ghi thông tin, hoặc test gọi để kiểm tra trạng thái đều có thể vô tình làm mất hàng tồn.
+The name `getAvailableQuantity` makes callers expect a read operation. But invoking it changes the available inventory. A UI refresh, logging operation, or test inspecting state could inadvertently reduce stock.
 
-**Command–Query Separation (CQS)** là nguyên tắc thiết kế phương thức thường gắn với Bertrand Meyer: một thao tác nên là **truy vấn cung cấp thông tin** hoặc **lệnh tạo thay đổi**, với hợp đồng rõ ràng về tác động của nó.
+**Command–Query Separation (CQS)** is a method-design principle associated with Bertrand Meyer: an operation should be either **a query that provides information** or **a command that changes something**, with an explicit contract for its effects.
 
-- **Query (truy vấn):** Trả về dữ liệu hoặc kết quả tính toán; không làm thay đổi **trạng thái quan sát được của miền nghiệp vụ**. Ví dụ: `availableQuantity()`, `canReserve(int)`, `balance()`.
-- **Command (lệnh):** Thực hiện thay đổi trạng thái hoặc hành vi có tác dụng phụ như ghi DB, gửi yêu cầu thanh toán, phát sự kiện. Ví dụ: `reserve(int)`, `deposit(amount)`, `submitOrder()`.
-- **Hợp đồng API phải làm rõ điều gì có thể xảy ra:** method có được gọi lặp hay không, có tính idempotent không, có thể ném ngoại lệ nào và trạng thái sau thất bại là gì.
+- **Query:** Returns data or a computed result without changing **observable business-domain state**. Examples: `availableQuantity()`, `canReserve(int)`, `balance()`.
+- **Command:** Changes state or performs a side effect such as a database write, payment request, or event publication. Examples: `reserve(int)`, `deposit(amount)`, `submitOrder()`.
+- **API contracts must explain potential effects:** whether repeat calls are allowed, whether an operation is idempotent, what exceptions it can raise, and what state remains after failure.
 
-Điều cốt lõi không phải tên `get...` hay kiểu trả về `void`, mà là **ý nghĩa hành vi**. Một method `void calculate()` vẫn có thể là query được thiết kế kém nếu không làm gì ngoài tính toán rồi bỏ kết quả. Ngược lại, `createOrder()` thường cần trả về mã đơn được tạo, dù nó là command. CQS là **hướng dẫn thiết kế**, không phải quy tắc cú pháp cưỡng bức.
+The key is not the `get...` prefix or a `void` return type, but **behavioral meaning**. A `void calculate()` method could be a poorly designed query that discards its computation. Conversely, `createOrder()` commonly needs to return the new order ID even though it is a command. CQS is **a design guideline**, not a syntax restriction.
 
-## 2. Thiết kế lại một ví dụ nhỏ
+## 2. Redesigning a small example
 
-Thiết kế ban đầu gộp đọc và thay đổi:
+The original design combines reading and writing:
 
 ~~~java
 final class BadStock {
@@ -4321,7 +4321,7 @@ final class BadStock {
 }
 ~~~
 
-Có hai ý định nghiệp vụ khác nhau: **kiểm tra khả năng cấp hàng** và **thực sự giữ hàng**. Tách chúng:
+There are two separate business intentions: **checking stock availability** and **actually reserving stock**. Separate them:
 
 ~~~java
 final class Stock {
@@ -4347,7 +4347,7 @@ final class Stock {
 }
 ~~~
 
-Cách sử dụng:
+Usage:
 
 ~~~java
 Stock stock = new Stock();
@@ -4358,13 +4358,13 @@ stock.reserve(4);                           // Command
 System.out.println(stock.availableUnits()); // 6
 ~~~
 
-**Điểm quan trọng:** `canReserve(4)` không bảo đảm `reserve(4)` sẽ luôn thành công sau đó nếu nhiều luồng/giao dịch cùng dùng kho. Command phải **tự kiểm tra lại điều kiện tại thời điểm ghi**. Không tách thành “query kiểm tra rồi command trừ không điều kiện” trong hệ thống đồng thời.
+**Important:** `canReserve(4)` cannot guarantee `reserve(4)` will subsequently succeed when concurrent threads or transactions access the same inventory. The command must **recheck conditions at write time**. Do not split the system into “query checks availability, then command decrements unconditionally” under concurrency.
 
-## 3. Java 17: API tài khoản có truy vấn thuần và lệnh an toàn
+## 3. Java 17: account APIs with pure queries and safe commands
 
-Ví dụ hoàn chỉnh dùng `BigDecimal` cho tiền và đồng bộ trên một đối tượng để việc kiểm tra–thay đổi số dư là nguyên tử trong **một process**. Mọi loại tiền trong ví dụ được xem là cùng đơn vị; hệ thống tài chính thật phải mô hình hóa currency, scale và chính sách làm tròn.
+The complete example uses `BigDecimal` for money and synchronizes operations on one object so checking and changing a balance are atomic within **one process**. All amounts are treated as one currency unit; real financial systems must model currency, scale, and rounding policies.
 
-**Tệp `AccountDemo.java`:**
+**File `AccountDemo.java`:**
 
 ~~~java
 import java.math.BigDecimal;
@@ -4442,29 +4442,29 @@ public class AccountDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac AccountDemo.java
 java AccountDemo
 ~~~
 
-**Vì sao đây là một thiết kế có CQS rõ ràng?**
+**Why is CQS explicit in this design?**
 
-| Phương thức | Vai trò | Giá trị trả về | Có thay đổi trạng thái nghiệp vụ? |
+| Method | Role | Return value | Changes business state? |
 |---|---|---|---|
-| `balance()` | Query | `BigDecimal` | Không |
-| `snapshot()` | Query | `AccountSnapshot` bất biến | Không |
-| `canWithdraw(amount)` | Query | `boolean` | Không |
-| `deposit(amount)` | Command | `void` | Có: số dư và lịch sử |
-| `withdraw(amount)` | Command | `void` | Có: số dư và lịch sử |
-| `requirePositive(amount)` | Hàm kiểm tra nội bộ | `void` hoặc exception | Không |
+| `balance()` | Query | `BigDecimal` | No |
+| `snapshot()` | Query | Immutable `AccountSnapshot` | No |
+| `canWithdraw(amount)` | Query | `boolean` | No |
+| `deposit(amount)` | Command | `void` | Yes: balance and history |
+| `withdraw(amount)` | Command | `void` | Yes: balance and history |
+| `requirePositive(amount)` | Internal validation helper | `void` or exception | No |
 
-`AccountSnapshot` dùng `List.copyOf` để giữ bản sao không thể sửa bằng API collection. `BigDecimal` và `String` cũng là kiểu bất biến. Nếu snapshot chứa đối tượng lồng có thể sửa thì `List.copyOf` **không** tự biến các đối tượng lồng thành bất biến.
+`AccountSnapshot` uses `List.copyOf` to create an unmodifiable collection snapshot. `BigDecimal` and `String` are immutable too. If a snapshot contains nested mutable objects, `List.copyOf` **does not** make those nested objects immutable.
 
-`synchronized` giúp phối hợp thao tác trên **cùng một đối tượng Account trong một JVM**. Đây không phải giải pháp cho nhiều instance dịch vụ cùng cập nhật một tài khoản trong DB; ứng dụng thực cần transaction, khóa hoặc optimistic locking và kiểm soát concurrency tại nơi lưu trữ.
+`synchronized` coordinates operations on **the same Account object in one JVM**. It does not solve concurrent updates to one database account across multiple service instances; real applications need transactions, locks or optimistic locking, and concurrency control in persistence.
 
-## 4. Trực quan hóa luồng đọc và ghi
+## 4. Visualizing reading and writing flows
 
 ~~~mermaid
 flowchart TD
@@ -4478,22 +4478,22 @@ flowchart TD
     U --> S
 ~~~
 
-Bộ phận giao diện có thể gọi query để hiển thị bao nhiêu lần tùy ý mà không làm thay đổi tài khoản. Command phản ánh **một ý định thực hiện hành động** của người dùng hoặc use case. Nếu UI gọi command hai lần do retry, điều đó không tự động an toàn: cần xem xét idempotency.
+The UI can invoke queries repeatedly to display data without modifying an account. Commands express **an intent to take action** from a user or use case. If the UI retries a command, that is not automatically safe: consider idempotency.
 
-## 5. CQS và CQRS: liên quan nhưng không giống nhau
+## 5. CQS versus CQRS: related but different
 
-**CQS** là nguyên tắc **thiết kế phương thức/API**, thường áp dụng ngay bên trong một lớp OOP. **CQRS** (*Command Query Responsibility Segregation*) là một cách **tổ chức kiến trúc** tách đường xử lý lệnh và truy vấn, đôi khi dùng mô hình dữ liệu hoặc nơi lưu trữ riêng.
+**CQS** is a principle for **method/API design**, often applied within an OOP class. **CQRS** (*Command Query Responsibility Segregation*) is an **architectural approach** that separates command and query processing paths, sometimes with separate data models or stores.
 
-| Khía cạnh | CQS | CQRS |
+| Aspect | CQS | CQRS |
 |---|---|---|
-| Cấp độ | Phương thức, lớp, interface, API | Application / hệ thống / kiến trúc |
-| Câu hỏi | Method này đọc hay làm thay đổi trạng thái? | Đường đọc và ghi cần xử lý bằng mô hình/thành phần riêng hay không? |
-| Bắt buộc tách database? | Không | Cũng không bắt buộc; có thể tách handler nhưng dùng cùng DB |
-| Mục tiêu | Tính dễ đoán, dễ dùng và kiểm thử của API | Mô hình đọc/ghi độc lập theo nhu cầu nghiệp vụ, mở rộng và hiệu năng |
-| Ví dụ | `account.balance()` / `account.withdraw(x)` | `WithdrawCommandHandler` / `AccountBalanceQueryHandler` |
-| Chi phí | Thường thấp | Có thể cao: thêm mapping, synchronization, eventual consistency |
+| Level | Methods, classes, interfaces, APIs | Application/system/architecture |
+| Question | Does this method read or change state? | Should reads and writes use separate models/components? |
+| Must databases be split? | No | No; separate handlers may share one database |
+| Goal | Predictable, usable, testable APIs | Independent read/write models based on business needs, scaling, and performance |
+| Example | `account.balance()` / `account.withdraw(x)` | `WithdrawCommandHandler` / `AccountBalanceQueryHandler` |
+| Cost | Usually low | Can be high: extra mapping, synchronization, eventual consistency |
 
-Một ứng dụng có CQS tốt **không cần** áp dụng CQRS. Nếu CQRS có read model được cập nhật bất đồng bộ, dữ liệu đọc có thể **trễ** sau command thành công; phải định nghĩa yêu cầu nhất quán. CQS trong một đối tượng không tự tạo độ trễ đó.
+An application with good CQS **does not need** CQRS. When CQRS read models update asynchronously, reads may **lag** behind successful commands; consistency requirements must be specified. CQS on one object does not inherently introduce that lag.
 
 ~~~mermaid
 flowchart LR
@@ -4504,26 +4504,26 @@ flowchart LR
     Write -. cập nhật/projection .-> Read
 ~~~
 
-Sơ đồ chỉ minh họa **một kiến trúc CQRS có mô hình đọc và ghi riêng**; không phải điều kiện cần để tuân thủ CQS.
+The diagram illustrates **one CQRS architecture with separate read and write models**, not a requirement for following CQS.
 
-## 6. Ranh giới của “không thay đổi trạng thái”
+## 6. What counts as “not changing state”?
 
-Một query lý tưởng không có **tác dụng phụ quan sát được** đối với domain. Cần phân biệt:
+An ideal query has no **observable side effects** in the domain. Distinguish these cases:
 
-1. **Thay đổi dữ liệu nghiệp vụ:** `getBalance()` tự tăng phí, `findOrder()` tự đánh dấu đơn đã giao → trái kỳ vọng query; nên tách thành command có tên rõ.
-2. **Ghi log, metrics, tracing:** hệ thống quan sát có thể tạo dữ liệu kỹ thuật, nhưng đó không nên làm kết quả nghiệp vụ thay đổi. Nên minh bạch, đặc biệt với audit log và quyền riêng tư.
-3. **Cache/memoization:** một getter lần đầu tính rồi lưu cache là thay đổi trạng thái nội bộ vì tối ưu. Về mặt CQS thực dụng, có thể chấp nhận nếu **giữ nguyên hành vi quan sát được**, không ảnh hưởng luồng xử lý, concurrency hay idempotency; tuyệt đối không dùng cache để che giấu một command nghiệp vụ.
-4. **Lazy loading ORM:** đọc getter của JPA entity có thể kích hoạt SQL SELECT, network và exception nếu session đóng. Dù không chủ động cập nhật dữ liệu, phương thức không còn “thuần” theo nghĩa không I/O. Cần biết ranh giới persistence, tránh giả định mọi getter rẻ hoặc an toàn sau transaction.
-5. **Truy vấn tăng bộ đếm đọc hoặc ghi `lastSeen`:** nếu đó là thay đổi domain, nên thiết kế như một command riêng hoặc một use case được đặt tên phản ánh cả đọc và ghi; không che dấu trong `get...`.
-6. **Đọc file hay gọi API:** là query về mặt intent nếu chỉ thu thập thông tin, nhưng có thể timeout/thất bại. “Không thay đổi trạng thái domain” không đồng nghĩa “không bao giờ phát sinh I/O”.
+1. **Business-state mutation:** `getBalance()` increments fees or `findOrder()` marks an order delivered → violates query expectations; use a clearly named command.
+2. **Logs, metrics, tracing:** observability may record technical data without changing business results. Be transparent, especially for audit logs and privacy.
+3. **Caching/memoization:** a getter that computes and stores a cache on first access changes internal state as an optimization. Pragmatic CQS can allow this when **observable behavior stays the same** and control flow, concurrency, and idempotency are unaffected; never hide a business command behind a cache.
+4. **ORM lazy loading:** accessing a JPA entity getter may trigger SQL SELECT, network I/O, or an exception if the session is closed. Although it does not intentionally modify business data, it is no longer “pure” in the no-I/O sense. Understand persistence boundaries; do not assume all getters are cheap or safe after a transaction.
+5. **Read counters or `lastSeen` updates:** when these change domain state, model them as separate commands or clearly named use cases that expose both reading and writing; do not hide them in `get...`.
+6. **File reads or API calls:** these may be queries by intent when gathering information, yet they can time out or fail. “Does not change domain state” does not mean “never performs I/O.”
 
-Một query được gọi nhiều lần với cùng dữ liệu và không có sửa đổi xen giữa nên cho kết quả nhất quán theo hợp đồng. Không nhất thiết trả về **cùng object identity**, đặc biệt khi tạo snapshot mới.
+Repeated queries over the same data with no intervening changes should yield consistent contractual results. They need not return **the same object identity**, especially when producing fresh snapshots.
 
-## 7. Command có bắt buộc trả về void?
+## 7. Must commands return void?
 
-Không. Phân loại theo **tác dụng** chứ không chỉ kiểu trả về.
+No. Classify operations by their **effects**, not just their return types.
 
-Ví dụ `createOrder(request)` ghi đơn mới và trả về `OrderId`. Đây vẫn là **command**:
+For example, `createOrder(request)` persists a new order and returns an `OrderId`. It is still a **command**:
 
 ~~~java
 record OrderId(String value) {}
@@ -4537,19 +4537,19 @@ interface OrderQueries {
 }
 ~~~
 
-Trả `OrderId`, trạng thái thành công hoặc phiên bản mới là cách hợp lý để xác định kết quả command. Tuy nhiên, cần tránh việc một method vừa âm thầm ghi rồi trả nguyên một danh sách phức tạp để giả làm query. Nếu nghiệp vụ cần một giá trị tổng hợp mới sau khi ghi, cân nhắc command trả ID/version và query riêng khi thực sự có lợi. Đừng tách thêm API chỉ để đạt “void tuyệt đối” nếu khiến caller phải gọi thừa không cần thiết.
+Returning an `OrderId`, success status, or new version is a valid way to report a command's outcome. However, avoid having a method silently write data and then return a complex collection while pretending to be a query. If business logic needs a newly calculated value after a write, consider returning an ID/version from the command and offering a separate query when that is useful. Do not split APIs merely to enforce “void-only commands” if this forces callers to make needless extra calls.
 
-Một quy ước tiện dụng:
+A useful naming convention:
 
-- `get`, `find`, `list`, `calculate`, `can` → ưu tiên query rõ ràng.
-- `create`, `update`, `reserve`, `pay`, `withdraw`, `cancel` → thể hiện command rõ ràng.
-- `getAndReset`, `readAndMarkSeen`, `checkAndReserve` → cần xem xét tách trách nhiệm hoặc đổi tên/hợp đồng để làm lộ hiệu ứng.
+- `get`, `find`, `list`, `calculate`, `can` → favor clear queries.
+- `create`, `update`, `reserve`, `pay`, `withdraw`, `cancel` → clearly indicate commands.
+- `getAndReset`, `readAndMarkSeen`, `checkAndReserve` → consider splitting responsibilities or renaming/documenting effects explicitly.
 
-Tên chỉ là tín hiệu. Các quy tắc nghiệp vụ, transaction, error handling và quyền hạn quyết định nội dung thực sự.
+Names are only clues. Actual behavior depends on business rules, transactions, error handling, and permissions.
 
-## 8. Tránh điều kiện kiểm tra rồi thực hiện không nguyên tử (TOCTOU)
+## 8. Avoid non-atomic check-then-act operations (TOCTOU)
 
-Tách query và command rất hữu ích, nhưng có thể tạo lỗi nếu caller tưởng kết quả query “khóa” trạng thái:
+Separating queries and commands is useful, but errors arise when callers assume a query result “locks” state:
 
 ~~~java
 if (inventory.canReserve(2)) {
@@ -4557,25 +4557,25 @@ if (inventory.canReserve(2)) {
 }
 ~~~
 
-Đây là **time-of-check to time-of-use (TOCTOU)**. Cách xử lý:
+This is **time-of-check to time-of-use (TOCTOU)**. To prevent it:
 
-- Query `canReserve` chỉ giúp UI hiển thị khả năng **tạm thời**, không bảo đảm thành công.
-- Command `reserve` phải kiểm tra lại **trong cùng vùng bảo vệ thay đổi**.
-- Với cùng một JVM, có thể dùng `synchronized` hay lock phù hợp để gộp kiểm tra–ghi.
-- Với database, nên thực hiện update có điều kiện trong transaction hoặc dùng version/optimistic locking. Ví dụ điều kiện `WHERE available >= :qty` và kiểm tra số hàng cập nhật. Không dựa vào `SELECT` trước đó làm bằng chứng chắc chắn.
-- Với nhiều service, phải xác định ranh giới nhất quán ở nơi thật sự sở hữu tồn kho, thay vì chỉ khóa object ở một instance ứng dụng.
+- The `canReserve` query helps the UI display only **temporary availability**; it cannot guarantee success.
+- The `reserve` command must recheck the condition **inside the same protected update operation**.
+- Within one JVM, `synchronized` or a suitable lock can combine the check and write.
+- With a database, use a conditional update in a transaction or version-based/optimistic locking. For example, use `WHERE available >= :qty` and check the number of affected rows. An earlier `SELECT` alone does not prove that the condition still holds.
+- Across services, define the consistency boundary where inventory is actually owned, rather than locking an object in just one application instance.
 
-CQS tách **ý định đọc** và **ý định thay đổi**; tính nguyên tử là một yêu cầu khác cần đảm bảo ở command.
+CQS separates **the intent to read** from **the intent to change**; atomicity is a separate requirement for commands.
 
-## 9. Idempotency của command và an toàn khi retry
+## 9. Command idempotency and safe retries
 
-**Query không có side effect nghiệp vụ**, nhưng command có thể tạo tác dụng phụ. Một command không mặc định idempotent:
+**Queries have no business side effects**, but commands can. A command is not automatically idempotent:
 
-- `setStatus("PAID")` thường idempotent nếu thực hiện lại không tạo thêm hiệu ứng.
-- `deposit(100)` thực hiện hai lần tăng số dư hai lần: **không idempotent**.
-- `sendEmail()` gọi lại có thể gửi thêm email dù dữ liệu không đổi.
+- `setStatus("PAID")` is usually idempotent if repeating it creates no additional effects.
+- Calling `deposit(100)` twice increases the balance twice: **not idempotent**.
+- Repeating `sendEmail()` may send another email even when the data is unchanged.
 
-Khi client retry do timeout, cần một **idempotency key** gắn với ý định giao dịch. Ví dụ API nhận `requestId` duy nhất rồi ghi nhận yêu cầu đã hoàn thành để lần gửi lại không chạy hiệu ứng lần nữa.
+When a client retries after a timeout, use an **idempotency key** linked to the transaction intent. For example, an API accepts a unique `requestId` and records the completed request so retries do not repeat its effects.
 
 ~~~text
 POST /payments
@@ -4583,11 +4583,11 @@ Idempotency-Key: pay-req-8f9...
 Body: {"orderId":"O-101","amountCents":50000}
 ~~~
 
-Để thực hiện đúng trên nhiều instance, việc kiểm tra/chèn khóa và cập nhật dữ liệu cần atomic trong cơ chế lưu trữ thích hợp; một `HashSet<String>` trong RAM đơn lẻ không bảo đảm an toàn đa process hoặc restart.
+To guarantee this across instances, key lookup/insertion and data changes must be atomic in suitable persistent storage; a single in-memory `HashSet<String>` does not ensure safety across processes or restarts.
 
-## 10. Test nguyên tắc CQS bằng hành vi quan sát được
+## 10. Testing CQS through observable behavior
 
-Với tệp `AccountDemo.java` ở mục 3, có thể tạo **`AccountTest.java`** dùng JUnit Jupiter 5:
+Using `AccountDemo.java` from section 3, create **`AccountTest.java`** with JUnit Jupiter 5:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -4634,11 +4634,11 @@ class AccountTest {
 }
 ~~~
 
-Các test trên xác nhận query không thay đổi trạng thái nghiệp vụ, command giữ invariant khi thành công và thất bại, snapshot không lộ collection mutable. Chúng **không** kiểm thử độ bền dữ liệu database, bảo đảm phân tán hoặc hiệu ứng thanh toán thật. Những khía cạnh đó cần integration tests phù hợp.
+These tests confirm that queries do not alter business state, commands preserve invariants on success and failure, and snapshots do not expose mutable collections. They **do not** verify database durability, distributed guarantees, or real payment effects. Those require appropriate integration tests.
 
-Không cần test dựa vào reflection để đếm số method có prefix `get` hay xem kiểu trả về có phải `void`; điều đó không chứng minh hợp đồng đọc/ghi.
+There is no need to use reflection to count methods with a `get` prefix or inspect whether return types are `void`; neither proves a read/write contract.
 
-## 11. Quy trình refactor method đang trộn query và command
+## 11. Refactoring methods that mix queries and commands
 
 ~~~mermaid
 flowchart TD
@@ -4650,71 +4650,71 @@ flowchart TD
     F --> G[Kiểm thử kết quả, rollback và retry]
 ~~~
 
-Thực hiện theo thứ tự:
+Follow this sequence:
 
-1. **Tìm đúng các method khả nghi:** `getAndDelete`, `fetchAndMarkRead`, `calculateAndSave`, `checkAndReserve`, getter có setter ẩn hoặc query phát thông báo.
-2. **Xác định side effect cần giữ:** thay đổi field, DB, cache nghiệp vụ, event, email, transaction; đồng thời liệt kê giá trị trả về và ngoại lệ hiện hành.
-3. **Làm rõ use case:** người dùng đang hỏi tình trạng hay đang yêu cầu thay đổi? Cùng một thao tác có thể cần hai API nếu cả hai nhu cầu đều hợp lệ.
-4. **Tạo query có hợp đồng đọc:** trả snapshot/DTO/value object khi cần ngăn sửa trạng thái qua object tham chiếu.
-5. **Tạo command có tên phản ánh thay đổi:** tự validation và đảm bảo invariant tại thời điểm ghi; quyết định return value thiết thực.
-6. **Di chuyển caller:** thay code đang dựa vào side effect của getter; lưu ý API public có thể cần deprecation/migration.
-7. **Kiểm tra transaction/concurrency/retry:** tránh tình trạng check trước, ghi sau thiếu khóa; bổ sung idempotency khi hành vi cần.
-8. **Kiểm thử:** query không tạo tác động ngoài mong đợi, command xử lý thành công/thất bại nhất quán, integration test xác nhận tác động thật.
+1. **Find genuinely suspicious methods:** `getAndDelete`, `fetchAndMarkRead`, `calculateAndSave`, `checkAndReserve`, getters with hidden setters, or queries that publish notifications.
+2. **Identify side effects that must be preserved:** field changes, database writes, business caches, events, emails, transactions; also list current return values and exceptions.
+3. **Clarify the use case:** is the user inspecting state or requesting a change? Both may justify separate APIs.
+4. **Create a read-only query contract:** return snapshots/DTOs/value objects when necessary to stop callers from mutating state through returned references.
+5. **Create a command that names the change:** validate inputs and enforce invariants at write time; choose a useful return value.
+6. **Migrate callers:** remove dependencies on hidden getter side effects; public APIs may require deprecation and migration.
+7. **Review transactions, concurrency, and retries:** prevent unlocked check-then-write sequences and add idempotency when needed.
+8. **Test:** ensure queries cause no unexpected changes, commands handle success/failure consistently, and integration tests verify real effects.
 
-**Ví dụ quyết định refactor:** `MessageService.fetchAndMarkRead(id)` có thể tách thành `findById(id)` và `markRead(id)` nếu UI vừa cần xem trước mà không đánh dấu đã đọc, vừa cần đánh dấu chủ động. Nếu nghiệp vụ quy định “xem tin nhắn đồng nghĩa đánh dấu đã đọc” thì có thể giữ một **use case command** `openMessage(id)` trả nội dung và nêu rõ hiệu ứng trong hợp đồng; không che hành vi đó sau tên `getMessage`.
+**Example refactoring decision:** `MessageService.fetchAndMarkRead(id)` can become `findById(id)` and `markRead(id)` if the UI needs both previewing without marking read and explicitly marking read. If the business rule says “opening a message marks it as read,” keep an explicit **use-case command** `openMessage(id)` that returns content and documents its effects, rather than hiding them behind `getMessage`.
 
-## 12. Các sai lầm thường gặp
+## 12. Common mistakes
 
-| Sai lầm | Hậu quả | Cách cải thiện |
+| Mistake | Consequence | Improvement |
 |---|---|---|
-| Getter tự ghi dữ liệu nghiệp vụ | Refresh UI có thể tạo thay đổi ngoài ý muốn | Tách query khỏi command hoặc đặt tên/hợp đồng thể hiện side effect |
-| Nghĩ command bắt buộc `void` | Tạo API bất tiện, truy vấn thừa để lấy ID/version | Cho command trả metadata cần thiết, vẫn gọi đúng là command |
-| Nghĩ CQS chính là CQRS | Áp dụng architecture phức tạp cho bài toán đơn giản | Phân biệt mức method với mức kiến trúc |
-| Query trả thẳng `List` mutable bên trong | Caller sửa state không qua command | Trả snapshot/immutable view phù hợp |
-| Chỉ kiểm tra trước bằng query | TOCTOU/race condition | Command kiểm tra–ghi nguyên tử tại owner của dữ liệu |
-| Coi cache nội bộ giống thay đổi nghiệp vụ | Tối ưu vô hại cũng bị cấm máy móc | Xác định rõ trạng thái quan sát được và giới hạn side effect |
-| Retry command không idempotent | Thanh toán/ghi dữ liệu bị lặp | Sử dụng idempotency key và transaction phù hợp |
-| Tách mọi API một cách cực đoan | Tăng call round-trip, tăng complexity | Chọn ranh giới có lợi ích thực tế |
+| Getter writes business data | Refreshing the UI may cause unintended changes | Separate queries from commands or use names/contracts that disclose side effects |
+| Assuming commands must return `void` | Awkward APIs and unnecessary queries for IDs/versions | Return necessary metadata from commands while keeping their identity as commands |
+| Confusing CQS with CQRS | Adds architectural complexity to a simple problem | Distinguish method-level and architectural separation |
+| Query returns an internal mutable `List` directly | Callers can mutate state without commands | Return a suitable snapshot or immutable view |
+| Only checks a condition in an earlier query | TOCTOU/race condition | Have the command check and write atomically where the data is owned |
+| Treating internal caching as a business mutation | Harmless optimizations are prohibited mechanically | Define observable state and permissible side effects precisely |
+| Retrying non-idempotent commands | Repeats charges or writes | Use idempotency keys and appropriate transactions |
+| Splitting every API excessively | Adds round trips and complexity | Split only where it provides real value |
 
-## 13. Bài tập vận dụng
+## 13. Applied exercise
 
-Một hệ thống thư viện có:
+A library system has:
 
 ~~~java
 BookView borrowAndGetBook(String bookId, String memberId);
 ~~~
 
-Method vừa trừ số sách còn lại, tạo phiếu mượn, vừa trả nội dung hiển thị sách.
+The method decrements available copies, creates a loan receipt, and returns data for displaying the book.
 
-Hãy xác định các nhu cầu thực tế và thiết kế lại:
+Identify the actual requirements and redesign it:
 
-- `BookView findBook(String bookId)` chỉ đọc metadata/số lượng tại thời điểm truy vấn.
-- `BorrowReceipt borrowBook(String bookId, String memberId, String requestId)` là command kiểm tra quyền mượn, điều kiện tồn kho và ghi phiếu mượn trong transaction. Nó có thể trả phiếu biên nhận để dùng ngay.
-- Nếu UI cần trạng thái mới nhất sau khi mượn, có thể query lại; nếu hệ thống dùng optimistic update thì kiểm tra trường hợp mượn thất bại do cạnh tranh.
-- Nếu client retry, bảo đảm `requestId` không tạo hai phiếu mượn.
+- `BookView findBook(String bookId)` only reads metadata and available quantities at query time.
+- `BorrowReceipt borrowBook(String bookId, String memberId, String requestId)` is a command that checks borrowing rights and inventory, then records the loan in a transaction. It can return a receipt for immediate use.
+- If the UI needs the latest state after borrowing, it can query again; with optimistic updates, handle loan rejection due to competing requests.
+- If the client retries, ensure `requestId` does not create duplicate loans.
 
-**Câu hỏi tự kiểm tra:** Người gọi có thể nhận ra method nào làm thay đổi hệ thống không? Query có an toàn khi được gọi lặp không? Command có bảo vệ invariant tại lúc ghi không? API có nêu rõ trạng thái lỗi và các hiệu ứng ngoài hệ thống không?
+**Self-check questions:** Can a caller tell which method changes the system? Are queries safe to repeat? Do commands enforce invariants at write time? Does the API specify failure states and effects on external systems?
 
 ---
 
-**Ghi nhớ:** Hãy thiết kế phương thức để một câu hỏi **không bí mật làm thay đổi trạng thái nghiệp vụ**, còn lệnh **thể hiện rõ ý định thay đổi**. Phân tách đúng làm API dễ dự đoán, nhưng vẫn phải bảo vệ tính nguyên tử, tính nhất quán và khả năng retry của những command có side effect.
+**Remember:** Design methods so a question **does not secretly change business state**, while a command **clearly conveys the intent to change it**. Proper separation makes APIs predictable, but atomicity, consistency, and safe retries must still be enforced for commands with side effects.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-design-009">Giới hạn việc truy cập sâu vào chuỗi đối tượng</a>
+## <a id="class-design-009">Limiting deep navigation through object chains</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Giới hạn việc truy cập sâu vào chuỗi đối tượng trong thiết kế lớp OOP
+# Limiting deep object-chain navigation in OOP class design
 
-## 1. Vấn đề: một lớp “biết” quá nhiều lớp phía sau
+## 1. The problem: a class “knows” too much about objects behind another object
 
-Giả sử ứng dụng thư viện cần tính tiền phạt khi bạn đọc trả sách trễ. Một đoạn mã có thể viết rất nhanh:
+Suppose a library application calculates late fees when borrowers return books past their due dates. This code is easy to write:
 
 ```java
 long fee = loan.getMember()
@@ -4723,36 +4723,36 @@ long fee = loan.getMember()
            * overdueDays;
 ```
 
-Đoạn trên giả định các phương thức getter tồn tại. Nó trông dễ hiểu, nhưng `LoanReturnService` (nơi chạy đoạn mã) phải biết đến **ít nhất ba nấc cấu trúc nội bộ**:
+The example assumes those getter methods exist. Although readable at first glance, `LoanReturnService` (where the code runs) must know **at least three levels of internal structure**:
 
-1. `Loan` lưu người mượn `Member`;
-2. `Member` lưu gói thành viên `MembershipPlan`;
-3. `MembershipPlan` chứa mức phạt theo ngày.
+1. `Loan` stores a borrower of type `Member`;
+2. `Member` stores a `MembershipPlan`;
+3. `MembershipPlan` holds the daily late-fee rate.
 
-Nếu sau này phí phạt phụ thuộc loại sách, thời điểm mượn, số ngày được miễn hoặc chương trình ưu đãi, service sẽ phải đào sâu thêm vào các lớp khác. Việc thay đổi cấu trúc `Member` hay `MembershipPlan` cũng có thể khiến service lỗi biên dịch hoặc tính phí sai.
+If fees later depend on book type, loan date, grace periods, or promotions, the service must dig further into other classes. Changes to `Member` or `MembershipPlan` internals may also break compilation or produce incorrect fees.
 
-Đây là hiện tượng thường được gọi là **message chain**, **train wreck** (chuỗi dấu chấm gọi phương thức dài), hoặc vi phạm quy tắc thực dụng của **Law of Demeter (LoD) – nguyên tắc ít hiểu biết**.
+This is commonly called a **message chain**, a **train wreck** (a long dotted method-call chain), or a violation of the practical **Law of Demeter (LoD), the principle of least knowledge**.
 
-Một thiết kế giàu hành vi hơn có thể là:
+A more behavior-rich design might look like:
 
 ```java
 long fee = loan.calculateLateFeeCents(overdueDays);
 ```
 
-Ở đây service nêu yêu cầu nghiệp vụ **“tính phí trễ của khoản mượn này”**, còn khoản mượn và các đối tượng gần nó quyết định cách tính. Service không cần biết *phí được lấy qua bao nhiêu nấc object*.
+Now the service asks for the business operation **“calculate this loan's late fee”**, while the loan and its immediate collaborators decide how. The service does not need to know *how many objects must be traversed to obtain the rate*.
 
-> Ý chính: một lớp nên giao tiếp qua giao diện mà những đối tượng trực tiếp cộng tác cung cấp, thay vì đi xuyên qua chúng để hỏi chi tiết và điều khiển các đối tượng ở xa.
+> Key idea: a class should communicate through interfaces exposed by its direct collaborators, instead of traversing them to inspect and control distant objects.
 
-## 2. Law of Demeter thực sự nói gì?
+## 2. What does the Law of Demeter actually say?
 
-Một cách diễn giải thường dùng của LoD là: trong một phương thức, ưu tiên gọi phương thức của những **đối tượng gần gũi** (*friends*):
+A common interpretation of LoD is to favor method calls on **closely related objects** (*friends*):
 
-- chính đối tượng hiện tại (`this`);
-- các tham số truyền trực tiếp vào phương thức;
-- các đối tượng thuộc trạng thái trực tiếp của nó (field/cộng tác viên trực tiếp);
-- các đối tượng được tạo trong phương thức đó.
+- the current object (`this`);
+- parameters passed directly to the method;
+- objects held in its immediate state (fields/direct collaborators);
+- objects created within the method.
 
-Và hãy hạn chế gọi phương thức trên một đối tượng **vừa lấy được từ đối tượng khác**:
+Avoid invoking methods on an object **just retrieved from another object**:
 
 ```java
 // Cấu trúc sâu: a nhận b từ một object rồi tiếp tục điều khiển b.
@@ -4762,11 +4762,11 @@ a.getB().getC().perform();
 a.performRequiredOperation();
 ```
 
-Trong cách phát biểu chặt của LoD có nhiều biến thể và ngoại lệ cho đối tượng toàn cục, các kết quả trả về hoặc cấu trúc dữ liệu. Vì vậy, các gạch đầu dòng trên là **quy tắc thiết kế dễ áp dụng**, không phải thuật toán kiểm tra cú pháp tuyệt đối.
+Strict formulations of LoD include variants and exceptions for globals, returned values, and data structures. These bullets therefore offer **practical design guidance**, not an absolute syntax-checking algorithm.
 
-**Một dấu chấm không tự tạo vấn đề, và nhiều dấu chấm không tự khẳng định thiết kế sai.** Điều cần đánh giá là caller có phải **biết quá nhiều về cấu trúc và trách nhiệm của những object khác** hay không.
+**One dot does not inherently create a problem, and multiple dots do not automatically prove a design is wrong.** The real question is whether a caller must **know too much about the structure and responsibilities of other objects**.
 
-Ví dụ:
+For example:
 
 ```java
 // Không phải cứ có dấu chấm là vi phạm có ý nghĩa:
@@ -4776,30 +4776,30 @@ String normalized = input.trim().toLowerCase();
 query.select("name").from("customers").where("active = true");
 ```
 
-Các API xử lý dữ liệu hoặc builder có thể cố ý trả lại một object để tiếp tục thao tác. LoD hữu ích nhất khi bảo vệ **ranh giới hành vi của các đối tượng có trách nhiệm riêng** trong miền nghiệp vụ.
+Data-processing APIs and builders may intentionally return objects for further operations. LoD is most helpful when protecting **behavioral boundaries among objects with distinct responsibilities** in the business domain.
 
-## 3. “Ask for data” và “Tell, don't ask”
+## 3. “Ask for data” versus “Tell, don't ask”
 
-Cùng một yêu cầu trả sách trễ có thể được viết theo hai hướng:
+The same late-return task can be implemented in two ways:
 
-| Cách tiếp cận | Ví dụ | Hệ quả thiết kế |
+| Approach | Example | Design consequence |
 |---|---|---|
-| **Đào sâu rồi tự xử lý** | `loan.getMember().getPlan().getRate() * days` | Caller biết cấu trúc của Loan, Member, Plan và công thức nghiệp vụ |
-| **Gửi thông điệp về hành vi** | `loan.calculateLateFeeCents(days)` | Caller biết năng lực của Loan; chi tiết có thể được ẩn bên trong |
-| **Truyền đúng giá trị cần thiết vào cộng tác viên** | `feePolicy.calculate(loanSnapshot, days)` | Hữu ích nếu tính phí là chính sách độc lập, không thuộc riêng Loan |
+| **Dig into objects and implement the rule externally** | `loan.getMember().getPlan().getRate() * days` | Caller knows Loan, Member, and Plan structure and the business formula |
+| **Request behavior** | `loan.calculateLateFeeCents(days)` | Caller depends on Loan's capability; details can remain encapsulated |
+| **Pass necessary data to a collaborator** | `feePolicy.calculate(loanSnapshot, days)` | Useful when the fee is an independent policy rather than Loan's own responsibility |
 
-Câu khẩu quyết **“Tell, don't ask”** nhấn mạnh việc yêu cầu một object *thực hiện công việc thuộc trách nhiệm của nó*, thay vì lấy toàn bộ trạng thái của nó rồi thao tác từ bên ngoài.
+The **“Tell, don't ask”** maxim encourages asking an object *to perform work it owns*, rather than retrieving all its state and manipulating it externally.
 
-Điều này liên quan đến:
+This relates to:
 
-- **Encapsulation:** bảo vệ bất biến và trạng thái nội bộ, công khai hành vi có chủ đích.
-- **Information hiding:** khi cấu trúc bên trong thay đổi, ít lớp bên ngoài bị ảnh hưởng.
-- **Coupling:** giảm số chi tiết của các lớp xa mà caller phải biết.
-- **High cohesion:** quy tắc nào thuộc đối tượng nào thì đặt gần trạng thái và khái niệm đó.
+- **Encapsulation:** protects invariants and internal state, exposing intentional behavior.
+- **Information hiding:** internal structure can change with minimal impact on external classes.
+- **Coupling:** reduces how much callers must know about distant classes.
+- **High cohesion:** keeps rules close to the data and concepts that own them.
 
-Nhưng **“Tell, don't ask” không có nghĩa cấm mọi getter**. Đọc dữ liệu để hiển thị UI, serialize DTO, tính báo cáo và giao tiếp với một cấu trúc dữ liệu được công khai có thể hoàn toàn phù hợp.
+However, **“Tell, don't ask” does not ban getters**. Reading data for a UI, serializing DTOs, computing reports, or working with intentionally exposed data structures can be entirely appropriate.
 
-## 4. Minh họa UML: cấu trúc nội bộ và hướng gọi hành vi
+## 4. UML illustration: internal structure versus behavioral calls
 
 ```mermaid
 classDiagram
@@ -4825,7 +4825,7 @@ classDiagram
     Member --> MembershipPlan : gói thành viên
 ```
 
-Sơ đồ mô tả việc `LoanReturnService` biết trực tiếp `Loan`. `Loan` biết `Member`; `Member` biết `MembershipPlan`. Mỗi lớp chỉ cần gọi **cộng tác viên trực tiếp** của nó.
+The diagram shows `LoanReturnService` knowing `Loan` directly; `Loan` knows `Member`; `Member` knows `MembershipPlan`. Each class only invokes **its direct collaborators**.
 
 ```mermaid
 sequenceDiagram
@@ -4841,13 +4841,13 @@ sequenceDiagram
     L-->>S: phí
 ```
 
-Chuỗi tương tác runtime vẫn có nhiều bước. Điểm khác biệt là **service không trực tiếp điều hướng đến Plan** hay tự diễn giải số ngày và mức phí. Các bước ở trong ranh giới trách nhiệm của từng đối tượng.
+Runtime execution still involves multiple calls. The difference is that **the service does not navigate directly to Plan** or interpret days and rates itself. Each step stays within its object's responsibility boundary.
 
-**Cần phân biệt:** LoD không cấm hệ thống có nhiều tầng đối tượng, cũng không cấm một lời gọi nghiệp vụ cuối cùng thực hiện nhiều lời gọi nội bộ. Nó hạn chế việc *caller* biết và phụ thuộc không cần thiết vào cấu trúc xa.
+**Important distinction:** LoD does not forbid layered object structures or multi-step internal execution. It discourages a *caller* from knowing and depending unnecessarily on distant structure.
 
-## 5. Ví dụ Java chạy được: tính phí trả sách trễ
+## 5. Runnable Java example: calculating overdue-book fees
 
-Ví dụ sử dụng tiền theo đơn vị nhỏ nhất (cent), tránh dùng `double` để cộng/trừ số tiền không chính xác. Lưu vào tệp `DemeterDemo.java`, biên dịch bằng JDK 11 hoặc mới hơn:
+Amounts use minor currency units (cents), avoiding `double` for exact monetary arithmetic. Save as `DemeterDemo.java` and compile with JDK 11 or later:
 
 ```java
 import java.util.Objects;
@@ -4965,14 +4965,14 @@ public class DemeterDemo {
 }
 ```
 
-Lệnh chạy:
+Run:
 
 ```bash
 javac DemeterDemo.java
 java DemeterDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 First fee: 500
@@ -4980,22 +4980,22 @@ Second fee: 160
 Rejected duplicate return
 ```
 
-Hãy quan sát:
+Observe:
 
-1. `LoanReturnService` chỉ gọi `loan.calculateLateFeeCents(...)` và `loan.markReturned()`. Nó không cần getter `getBorrower()` hay `getPlan()`.
-2. `Loan` gọi phương thức của field trực tiếp `borrower`.
-3. `Member` gọi phương thức của field trực tiếp `plan`.
-4. `MembershipPlan` sở hữu công thức mức phí và kiểm tra số ngày. `Math.multiplyExact()` phát hiện overflow.
-5. Khi thay đổi mức phí theo gói, caller không phải được sửa để đọc một chuỗi thuộc tính khác.
-6. `Loan` sở hữu quy tắc “mỗi phiếu chỉ được đánh dấu trả một lần”.
+1. `LoanReturnService` only invokes `loan.calculateLateFeeCents(...)` and `loan.markReturned()`. It needs neither `getBorrower()` nor `getPlan()` getters.
+2. `Loan` invokes a method on its direct `borrower` field.
+3. `Member` invokes a method on its direct `plan` field.
+4. `MembershipPlan` owns the fee formula and validates the number of days. `Math.multiplyExact()` detects overflow.
+5. Changing rates for a membership plan does not require caller changes to traverse different properties.
+6. `Loan` owns the rule that a loan may be marked returned only once.
 
-**Giới hạn nghiệp vụ của demo:** phép tính dùng gói *hiện tại* của thành viên tại thời điểm trả. Nếu hệ thống yêu cầu phí theo gói *lúc mượn* (không đổi khi người dùng nâng cấp sau đó), `Loan` phải chụp (*snapshot*) biểu phí lúc tạo hoặc lưu một chính sách áp dụng tương ứng. Đây là quyết định nghiệp vụ, không phải kết quả tự động của LoD.
+**Business limitation of the demo:** the calculation uses the member's *current* plan at return time. If the fee must use the plan *at loan creation time* (unaffected by a later upgrade), `Loan` must snapshot the rate schedule at creation or record the applicable policy. This is a business decision, not an automatic outcome of LoD.
 
-**Giới hạn triển khai:** demo đánh dấu `returned` sau khi tính phí và giả định việc thu phí thành công. Hệ thống thật cần xử lý đồng bộ trạng thái thanh toán, transaction/idempotency và concurrency; LoD không tự cung cấp các bảo đảm đó.
+**Implementation limitation:** the demo marks `returned` after calculating a fee and assumes charging succeeds. Real systems must coordinate payment state, transactions/idempotency, and concurrency; LoD does not provide those guarantees.
 
-## 6. Vì sao đổi cấu trúc bên trong ít tác động hơn?
+## 6. Why do internal structure changes have less impact?
 
-Giả sử ngày mai công thức phạt đổi từ “số ngày × phí/ngày” sang “miễn hai ngày đầu, có mức phí tối đa”. Với thiết kế đào sâu, nhiều service có thể đang thực hiện:
+Suppose tomorrow the penalty formula changes from “days × fee per day” to “first two days free, with a maximum charge.” Deep-navigation code in several services may look like:
 
 ```java
 long fee = loan.getMember()
@@ -5003,15 +5003,15 @@ long fee = loan.getMember()
                .getDailyLateFeeCents() * overdueDays;
 ```
 
-Mỗi nơi phải tìm và sửa cùng quy tắc. Với thiết kế hành vi:
+Each location must find and revise the same rule. With behavior-oriented design:
 
 ```java
 long fee = loan.calculateLateFeeCents(overdueDays);
 ```
 
-Ta có thể đổi `MembershipPlan.feeFor(...)`, hoặc thay cơ chế tính phí bằng policy phù hợp, **giữ nguyên hợp đồng của Loan** nếu ý nghĩa và dữ liệu đầu vào không đổi.
+We can change `MembershipPlan.feeFor(...)` or substitute a suitable fee policy while **preserving Loan's contract** if its semantics and inputs remain unchanged.
 
-Ví dụ công thức khác:
+For example, a different formula:
 
 ```java
 long feeFor(int overdueDays) {
@@ -5026,37 +5026,37 @@ long feeFor(int overdueDays) {
 }
 ```
 
-Đây là **một phương án thay thế** cho phương thức `feeFor` ở trên, không dùng đồng thời hai phương thức trùng chữ ký trong cùng lớp. Mức miễn và trần tiền chỉ để minh họa; trong dự án thực chúng phải đến từ quy tắc đã được phê duyệt và cần kiểm thử.
+This is **an alternative implementation** of the `feeFor` method above; do not declare both methods with identical signatures in the same class. The grace period and fee cap are illustrative; real projects should derive them from approved rules and tests.
 
-Nhờ API đúng mức trừu tượng, caller bớt bị ràng buộc vào cách lưu/cách tính.
+An API at the right abstraction level reduces caller coupling to storage and calculation details.
 
-## 7. Có phải cứ getter là sai?
+## 7. Are getters always wrong?
 
-**Không.** Getter có nhiều vai trò hợp lý:
+**No.** Getters serve many valid purposes:
 
-- Cung cấp dữ liệu cho DTO hoặc lớp trình bày.
-- Truy vấn trạng thái đọc mà caller thực sự có quyền biết.
-- Trả về Value Object bất biến dùng làm dữ liệu cho thuật toán khác.
-- Cho phép test quan sát kết quả công khai.
-- Truy cập cấu trúc data-centric như `record`, JSON DTO hoặc kết quả truy vấn được thiết kế để điều hướng.
+- Providing data to DTOs or presentation components.
+- Exposing read-only state that callers legitimately need.
+- Returning immutable Value Objects as inputs to other algorithms.
+- Allowing tests to observe public outcomes.
+- Navigating data-centric structures such as `record` types, JSON DTOs, or query results designed for traversal.
 
-Vấn đề cần chú ý là **getter tạo ra sự lệ thuộc vào cấu trúc lồng nhau và kéo theo logic nghiệp vụ phân tán**.
+Be concerned when **getters couple callers to nested structure and spread business logic across the codebase**.
 
-| Biểu thức | Nhận xét |
+| Expression | Assessment |
 |---|---|
-| `order.getCustomer().getMembership().getPlan().getDiscountRate()` | Tín hiệu đáng xem xét nếu service dùng nó để tự áp mức giảm giá |
-| `order.calculateTotalAfterDiscount()` | Phù hợp nếu Order/miền đặt quy tắc tổng tiền ở đây |
-| `address.getCity()` | Hợp lý khi object `address` là tham số dữ liệu trực tiếp của formatter |
-| `dto.customer().address().city()` | Có thể chấp nhận ở tầng trình bày nếu DTO cố ý phơi bày cấu trúc |
-| `builder.withName("A").withEmail("b@c.test").build()` | Fluent builder, không phải đào xuyên qua các entity miền |
-| `users.stream().filter(...).map(...).toList()` | Chuỗi thao tác của Stream API được thiết kế để compose |
-| `service.getDao().getConnection().getMetaData().getTables(...)` | Có thể tạo coupling đến chi tiết tài nguyên và vòng đời kết nối; xem lại ranh giới |
+| `order.getCustomer().getMembership().getPlan().getDiscountRate()` | Worth reviewing if a service uses it to apply discounts itself |
+| `order.calculateTotalAfterDiscount()` | Appropriate when Order/domain owns the total-calculation rule |
+| `address.getCity()` | Reasonable when `address` is a formatter's direct input |
+| `dto.customer().address().city()` | May be fine in presentation code when DTOs intentionally expose their structure |
+| `builder.withName("A").withEmail("b@c.test").build()` | Fluent builder, not traversal through domain entities |
+| `users.stream().filter(...).map(...).toList()` | Stream API operations are designed to compose |
+| `service.getDao().getConnection().getMetaData().getTables(...)` | Can couple callers to resource internals and connection lifecycles; reconsider the boundary |
 
-Một kiểm tra đơn giản: **nếu thay cách cất dữ liệu ở lớp giữa mà phải sửa lớp đang gọi, liệu caller có đang biết chi tiết mà nó không cần biết?** Nếu có, cân nhắc đưa hành vi về nơi phù hợp hoặc đưa dữ liệu qua một contract rõ ràng.
+A simple check: **if changing storage inside an intermediate class requires changing the caller, does the caller know details it should not need?** If so, consider moving behavior to the right owner or passing data through a clear contract.
 
-## 8. Không “chữa cháy” bằng hàng loạt getter bọc ngoài
+## 8. Do not “fix” chains by adding countless forwarding getters
 
-Giả sử service cần mã bưu chính để tính cước vận chuyển:
+Suppose a service needs a postal code to calculate shipping charges:
 
 ```java
 String postalCode = order.getCustomer()
@@ -5064,7 +5064,7 @@ String postalCode = order.getCustomer()
                          .getPostalCode();
 ```
 
-Có thể thêm:
+You could add:
 
 ```java
 String Order.getCustomerPostalCode() {
@@ -5072,13 +5072,13 @@ String Order.getCustomerPostalCode() {
 }
 ```
 
-Điều này rút ngắn chuỗi trong caller nhưng **chưa chắc làm mô hình tốt hơn**. Nếu từ đó tạo thêm hàng chục phương thức `getCustomerCity()`, `getCustomerStreet()`, `getCustomerDistrict()`..., `Order` trở thành “mặt tiền chuyển tiếp” cho mọi field của `Customer`, trong khi chưa rõ trách nhiệm chính của Order.
+That shortens the caller's chain but **does not necessarily improve the model**. Adding dozens of methods such as `getCustomerCity()`, `getCustomerStreet()`, and `getCustomerDistrict()` can turn `Order` into a forwarding facade for every `Customer` field, without clarifying Order's real responsibility.
 
-Hai cách tốt hơn tùy nhu cầu:
+Two better approaches depend on the requirement:
 
-**Cách A: Đưa hành vi đến nơi sở hữu quy tắc.** Nếu Order chịu trách nhiệm chuẩn bị địa chỉ giao của chính đơn hàng, `order.shippingLabel()` hoặc `order.confirmDeliveryDestination()` có thể là API hợp lý. Bên trong, nó cộng tác với các thành phần gần nó.
+**Approach A: Move behavior to the owner of the rule.** If Order is responsible for preparing its own shipping destination, `order.shippingLabel()` or `order.confirmDeliveryDestination()` may be suitable APIs. Internally it collaborates with nearby components.
 
-**Cách B: Chọn một ranh giới dữ liệu rõ ràng.** Nếu `ShippingRateCalculator` cần nhiều trường địa chỉ, truyền trực tiếp một **`ShippingAddress` Value Object** bất biến, thay vì cho calculator tự đi từ Order → Customer → Address:
+**Approach B: Define a clear data boundary.** If `ShippingRateCalculator` needs multiple address fields, pass an immutable **`ShippingAddress` Value Object** directly, rather than making the calculator navigate Order → Customer → Address:
 
 ```java
 record ShippingAddress(String city, String postalCode) {
@@ -5093,27 +5093,27 @@ interface ShippingRateCalculator {
 }
 ```
 
-Bộ tính phí phụ thuộc vào **hợp đồng đầu vào cần thiết**, không phụ thuộc vào cấu trúc Order/Customer. `Order` hoặc tầng ứng dụng chịu trách nhiệm cung cấp địa chỉ phù hợp từ nghiệp vụ (ví dụ địa chỉ được *chụp lại khi tạo đơn*, khác địa chỉ hiện tại của khách).
+The rate calculator depends on **the necessary input contract**, not the Order/Customer structure. `Order` or the application layer supplies the appropriate address according to business rules (for example, an address *snapshotted when an order was placed*, not the customer's current address).
 
-**Trade-off:** truyền VO qua một tầng ứng dụng là hợp lý khi đây là **dữ liệu độc lập cần cho phép tính**. Nếu mọi đối tượng chỉ phát tán dữ liệu thô để service tự viết quy tắc nghiệp vụ của chúng, hệ thống lại trở về thiết kế thiếu đóng gói.
+**Trade-off:** passing a VO through the application layer makes sense for **independent data required for a calculation**. If every class merely distributes raw data so services can reimplement its business rules, the design becomes an anemic model again.
 
-## 9. Phân biệt tránh chuỗi truy cập và tránh phụ thuộc
+## 9. Distinguishing navigation-chain avoidance from dependency reduction
 
-LoD **không đồng nghĩa** “mỗi method chỉ được có một dấu chấm”. Số lượng dấu chấm là tín hiệu ban đầu, không phải thước đo đầy đủ về thiết kế.
+LoD **does not mean** “every method may contain only one dot.” Dot count is an initial indicator, not a complete measure of design quality.
 
-| Vấn đề | Law of Demeter gợi ý | Điều chưa được bảo đảm |
+| Problem | Law of Demeter suggests | What it does not guarantee |
 |---|---|---|
-| Caller đọc quá sâu vào domain model | Giao tiếp với object gần nhất qua hành vi | Không tự xác định chính xác trách nhiệm của lớp |
-| Đổi cấu trúc bên trong làm caller hỏng | Che giấu điều hướng nội bộ sau contract ổn định | Contract vẫn có thể thiết kế mơ hồ hoặc quá rộng |
-| Logic nghiệp vụ bị sao chép ngoài Entity | Chuyển quy tắc về đối tượng sở hữu hoặc domain policy | Không thay thế việc phân tích miền nghiệp vụ |
-| Test phải dựng graph object rất sâu | Tách ranh giới giao tiếp phù hợp | Không có nghĩa mọi đối tượng đều cần interface/mock |
-| Hiệu năng kém do truy vấn lồng nhau | Xem lại mô hình dữ liệu và cách truy cập | Rút ngắn chain Java không tự loại bỏ database round-trip |
+| Callers traverse deeply into domain models | Communicate with the nearest object through its behavior | Does not automatically identify correct class responsibilities |
+| Internal structure changes break callers | Hide internal navigation behind a stable contract | The contract may still be vague or too broad |
+| Business logic is duplicated outside Entities | Move rules to their owners or a domain policy | Does not replace domain analysis |
+| Tests require constructing deep object graphs | Choose suitable collaboration boundaries | Not every object requires an interface/mock |
+| Nested queries perform poorly | Review data models and access strategies | Shorter Java chains do not remove database round trips |
 
-LoD liên quan mạnh đến **encapsulation**, nhưng **Single Responsibility Principle (SRP)** và **cohesion** vẫn cần được cân nhắc. Đưa toàn bộ hành vi của hệ thống vào một “God Object” để không phải gọi sâu **không phải** cách áp dụng LoD tốt.
+LoD is closely related to **encapsulation**, but **the Single Responsibility Principle (SRP)** and **cohesion** also matter. Concentrating all system behavior in one “God Object” merely to avoid deep calls **is not** good LoD design.
 
-## 10. Đối tượng “bạn bè” ở cấp phương thức
+## 10. “Friend” objects at method scope
 
-Ví dụ sau phân loại mức gần gũi của các object:
+The following example classifies how closely objects relate to one another:
 
 ```java
 final class InvoiceMailer {
@@ -5134,9 +5134,9 @@ final class InvoiceMailer {
 }
 ```
 
-Giả định `Invoice`, `MailMessage` và `MailGateway` đã được định nghĩa. Những lời gọi trên tương tác với tham số `invoice`, đối tượng tạo trong phương thức `message` và field trực tiếp `gateway`, nên khá phù hợp với cách đọc thông dụng của LoD.
+Assume `Invoice`, `MailMessage`, and `MailGateway` have been defined. The calls use the `invoice` parameter, `message` created within the method, and direct `gateway` field, which generally follow the common LoD interpretation.
 
-Ngược lại:
+By contrast:
 
 ```java
 // Mailer phải biết cấu trúc internal của invoice → customer → profile.
@@ -5145,13 +5145,13 @@ gateway.send(new MailMessage(
     "Invoice " + invoice.number()));
 ```
 
-Nếu địa chỉ nhận hóa đơn là một khái niệm của Invoice, hãy cung cấp `invoice.recipientEmail()`. Điều đó bảo đảm lựa chọn email hóa đơn nằm ở nơi sở hữu quy tắc: có thể dùng email đã được xác nhận lúc lập hóa đơn, khác với email hiện tại của khách hàng.
+If an invoice's delivery address is part of the Invoice concept, expose `invoice.recipientEmail()`. This ensures the rule for selecting an invoice email address belongs to its appropriate owner: it may use the email confirmed at invoice creation rather than the customer's current email.
 
-**Điểm cốt lõi:** phương thức gọi trực tiếp trên tham số là bình thường; thứ nên xét lại là khi caller tiếp tục **đào sâu object được lấy ra từ tham số** để điều khiển các chi tiết bên trong.
+**Key point:** invoking methods on direct parameters is normal; reconsider calls where a caller keeps **digging into objects retrieved from parameters** to control their internals.
 
-## 11. Khi gặp Optional, null, Stream và builder
+## 11. Optional, null, Stream, and builders
 
-### Chuỗi null-check không giải quyết coupling
+### Null checks do not solve coupling
 
 ```java
 String zip = order != null
@@ -5161,9 +5161,9 @@ String zip = order != null
     : "";
 ```
 
-Thêm kiểm tra null có thể tránh `NullPointerException`, nhưng caller vẫn phụ thuộc vào toàn bộ đường đi. Hơn nữa gọi getter lặp lại có thể có tác dụng phụ hoặc trả snapshot khác nếu dữ liệu thay đổi.
+Adding null checks may prevent `NullPointerException`, but the caller still depends on the entire traversal path. Repeated getter calls might also cause side effects or produce different snapshots when data changes.
 
-Dùng `Optional` cũng không tự khắc phục vấn đề:
+Using `Optional` does not automatically fix this:
 
 ```java
 Optional.ofNullable(order)
@@ -5173,9 +5173,9 @@ Optional.ofNullable(order)
     .orElse("");
 ```
 
-Chuỗi `map` tránh một số kiểm tra null thủ công, nhưng caller vẫn biết cấu trúc `Order → Customer → Address`. Nếu mục đích là lấy mã bưu chính phục vụ nghiệp vụ thuộc Order, hãy thiết kế API đó đúng chỗ.
+The `map` chain removes some manual null checks, but callers still know the `Order → Customer → Address` structure. If obtaining a postal code is a responsibility of the order, define the API at that boundary.
 
-### Fluent APIs là ngoại lệ có chủ đích
+### Fluent APIs are intentionally different
 
 ```java
 String output = "  HELLO  ".trim().toLowerCase();
@@ -5186,11 +5186,11 @@ List<String> names = users.stream()
     .toList();
 ```
 
-Lưu ý `Stream.toList()` cần Java 16+; với Java 11 có thể dùng `collect(Collectors.toList())`. Những API bất biến/fluent này có giao thức công khai rõ ràng; gọi chuỗi là cách sử dụng hợp lý. Không cần tạo một lớp wrapper riêng chỉ để làm giảm số dấu chấm.
+`Stream.toList()` requires Java 16+; Java 11 can use `collect(Collectors.toList())`. These immutable/fluent APIs expose clear public protocols, and chaining calls is an appropriate use. No extra wrapper is needed just to reduce dots.
 
-## 12. Vấn đề đặc biệt ở ORM và JPA/Hibernate
+## 12. Special considerations with ORM and JPA/Hibernate
 
-Một chuỗi như:
+A chain such as:
 
 ```java
 String country = order.getCustomer()
@@ -5198,20 +5198,20 @@ String country = order.getCustomer()
                       .getCountryCode();
 ```
 
-có thể không chỉ là vấn đề coupling. Nếu `customer` hoặc `address` là quan hệ ORM được tải **lazy**, truy cập getter có thể kích hoạt truy vấn SQL; trong vòng lặp nhiều đơn hàng, có thể xảy ra **N+1 queries**, hoặc lỗi như `LazyInitializationException` nếu session đã đóng (tùy mapping và trạng thái).
+may involve more than coupling. If `customer` or `address` is a **lazy-loaded** ORM relationship, getter access may trigger SQL queries. In a loop over many orders, this can cause **N+1 queries**, or exceptions such as `LazyInitializationException` when the session is closed (depending on the mapping and state).
 
-Tuy nhiên:
+However:
 
-- Đưa chain vào `order.shippingCountryCode()` **không tự loại bỏ SQL query**; chỉ chuyển vị trí gọi.
-- Chọn fetch strategy, query projection, entity graph, batch fetching hoặc DTO phù hợp mới giải quyết chi phí truy xuất.
-- Không nhất thiết thêm mọi mối quan hệ hai chiều để tiện điều hướng.
-- Tránh serialize nguyên object graph JPA trực tiếp ra JSON nếu quan hệ hai chiều hoặc lazy proxy gây vòng tham chiếu, rò dữ liệu hay load quá nhiều. Một DTO/API contract rõ ràng thường dễ kiểm soát hơn.
+- Moving the chain into `order.shippingCountryCode()` **does not automatically remove SQL queries**; it only changes where they run.
+- Appropriate fetch strategies, query projections, entity graphs, batch fetching, and DTOs address retrieval costs.
+- Do not add every bidirectional relationship merely to make navigation convenient.
+- Avoid serializing entire JPA object graphs directly to JSON when bidirectional relationships or lazy proxies cause reference cycles, data leakage, or excessive loading. Explicit DTO/API contracts usually provide better control.
 
-Vì vậy cần đánh giá **cả ranh giới hướng đối tượng lẫn truy cập dữ liệu**, không coi LoD như một kỹ thuật tối ưu hiệu năng tự động.
+Evaluate **both object-oriented boundaries and data access** rather than treating LoD as an automatic performance optimization.
 
-## 13. Quy trình refactor một chuỗi truy cập sâu
+## 13. A process for refactoring deep navigation chains
 
-Giả sử phát hiện đoạn mã:
+Suppose you find this code:
 
 ```java
 if (order.getCustomer().getMembership().getTier().isGold()) {
@@ -5219,35 +5219,35 @@ if (order.getCustomer().getMembership().getTier().isGold()) {
 }
 ```
 
-Hãy làm theo trình tự:
+Follow these steps:
 
-1. **Đặt tên câu hỏi nghiệp vụ:** “Đơn hàng này được giảm bao nhiêu theo chính sách thành viên?” thay vì “tier có phải GOLD?”.
-2. **Tìm nơi chịu trách nhiệm:** nếu thành viên tự xác định mức ưu đãi, có thể đặt `membership.discountFor(orderAmount)`. Nếu chính sách phức tạp và liên quan nhiều yếu tố, dùng `DiscountPolicy` hoặc domain service.
-3. **Thiết kế contract rõ:** ví dụ `order.discountedTotal(policy)` hoặc `policy.calculate(orderSnapshot)`; xác định đơn vị tiền tệ, làm tròn, quy tắc khuyến mãi và thời điểm chụp dữ liệu.
-4. **Giữ bất biến trong miền:** entity chịu trách nhiệm tính tổng hợp lệ, policy chịu trách nhiệm quy tắc giảm giá, không để controller tự nhân `90 / 100`.
-5. **Thay caller bằng API mới:** controller/service chỉ cần kết quả mức giá; không phải duyệt đồ thị của khách hàng.
-6. **Kiểm thử hành vi trước/sau:** GOLD, không GOLD, thiếu membership, làm tròn, thay đổi chính sách, không để giá âm.
-7. **Bỏ các getter không còn cần nếu an toàn:** giảm API công khai, nhưng không xóa getter còn phục vụ nhu cầu truy vấn dữ liệu hợp lệ.
+1. **Name the business question:** “What discount does this order qualify for under membership rules?” instead of “is the tier GOLD?”
+2. **Find the responsible owner:** if membership itself determines discounts, put `membership.discountFor(orderAmount)` there. For complex rules with several inputs, use a `DiscountPolicy` or domain service.
+3. **Define a clear contract:** for example, `order.discountedTotal(policy)` or `policy.calculate(orderSnapshot)`; specify currency units, rounding, promotions, and snapshot timing.
+4. **Protect domain invariants:** entities calculate valid totals, policies determine discount rules, and controllers do not directly multiply by `90 / 100`.
+5. **Switch callers to the new API:** controllers/services obtain only the pricing result, not a traversal of the customer graph.
+6. **Test behavior before and after:** GOLD, non-GOLD, no membership, rounding, policy changes, and prevention of negative prices.
+7. **Remove unnecessary getters when safe:** reduce the public API without deleting getters needed for legitimate data queries.
 
-**Không nên mặc định** mọi cấu trúc điều hướng sâu đều được sửa bằng một phương thức “get” khác. Đôi khi đúng hơn là **phân định lại trách nhiệm nghiệp vụ**, hoặc trích Value Object/policy có ý nghĩa rõ ràng.
+**Do not assume** every deep navigation problem is solved by another “get” method. It may be better to **reassign business responsibilities** or extract a meaningful Value Object/policy.
 
-## 14. Lỗi phổ biến và cách xử lý
+## 14. Common mistakes and solutions
 
-| Cách làm dễ mắc | Hệ quả | Hướng suy nghĩ tốt hơn |
+| Common mistake | Consequence | Better approach |
 |---|---|---|
-| Caller tự đọc nhiều cấp để tính quy tắc | Phụ thuộc vào cấu trúc sâu, logic phân tán | Gọi hành vi của object sở hữu quy tắc |
-| Thêm hàng chục forwarding getter | Lớp trung gian phình to, API rối | Bộc lộ capability thực sự hoặc VO đúng ranh giới |
-| Xóa mọi getter vì “LoD cấm getter” | Tầng hiển thị/truy vấn dữ liệu khó dùng | Phân biệt domain behavior và data projection |
-| Đưa mọi quy tắc vào một Service khổng lồ | Entity không có hành vi, cohesion thấp | Giữ bất biến cùng entity/VO; dùng service khi cần |
-| Mock toàn bộ object graph sâu trong test | Test giòn, gắn vào chi tiết getter | Test hành vi công khai qua đối tượng/cổng cộng tác |
-| Chuyển chain Java sang một method nhưng giữ nguyên việc gọi DB nhiều lần | N+1/lazy lỗi vẫn tồn tại | Thiết kế fetch/projection/transaction hợp lý |
-| Dùng `Optional.map(...)` để che mọi chain | Giảm null-check nhưng coupling không đổi | Phân tích trách nhiệm và API |
-| Áp dụng LoD tuyệt đối lên builder, Stream, DTO | Tạo wrapper thừa, code khó đọc | Cho phép chuỗi có hợp đồng data/fluent rõ |
-| Giấu field bằng API nhưng API còn phụ thuộc tên bảng/cột SDK | Coupling chỉ chuyển hình thức | Thiết kế hợp đồng theo ngữ nghĩa nghiệp vụ ổn định |
+| Caller reads several nested levels to enforce a rule | Depends on deep structure; logic becomes scattered | Invoke behavior on the object owning the rule |
+| Adding dozens of forwarding getters | Intermediate class grows; API becomes confusing | Expose the actual capability or an appropriate VO boundary |
+| Removing every getter because “LoD forbids getters” | Presentation/data-query layers become hard to use | Distinguish domain behavior from data projections |
+| Putting all rules into one giant Service | Anemic entities and poor cohesion | Keep invariants with entities/VOs; use services when necessary |
+| Mocking entire nested object graphs in tests | Brittle tests tied to getter implementation details | Test public behavior through objects/collaboration ports |
+| Moving a Java chain into one method without changing DB access | N+1/lazy-loading issues remain | Design appropriate fetch/projection/transaction boundaries |
+| Hiding every chain with `Optional.map(...)` | Reduces null checks but leaves coupling unchanged | Reassess responsibilities and APIs |
+| Applying LoD rigidly to builders, Streams, and DTOs | Creates needless wrappers and hard-to-read code | Allow chains with clear data/fluent contracts |
+| Hiding fields behind APIs that still expose SDK table/column names | Only changes the form of coupling | Design contracts around stable business semantics |
 
-## 15. Bài tập tự luyện
+## 15. Practice exercises
 
-### Bài 1: xác định lớp đang biết quá nhiều
+### Exercise 1: Identify the class that knows too much
 
 ```java
 void sendReminder(Loan loan) {
@@ -5259,23 +5259,23 @@ void sendReminder(Loan loan) {
 }
 ```
 
-**Câu hỏi:** Có bao nhiêu tầng cấu trúc bị lộ ra cho mã gửi nhắc nhở? Nếu email liên hệ của khoản mượn phải được chốt lúc mượn, nên làm gì?
+**Question:** How many structure levels are exposed to the reminder-sending code? If the loan's contact email must be fixed at checkout time, what should change?
 
-**Gợi ý:** thay bằng API như `loan.reminderRecipientEmail()` hoặc một VO/DTO chứa thông tin nhắc nhở của phiếu mượn. Nếu địa chỉ phải được chốt, lưu snapshot hoặc chính sách chọn người nhận tại ranh giới phù hợp. Không nhầm email hiện tại của profile với email được dùng lúc mượn.
+**Hint:** replace the chain with an API such as `loan.reminderRecipientEmail()` or a VO/DTO containing reminder information. If the address must remain fixed, store a snapshot or choose the recipient through a policy at the appropriate boundary. Do not confuse the profile's current email with the address used when the loan began.
 
-### Bài 2: LoD và Value Object
+### Exercise 2: LoD and Value Objects
 
 ```java
 long cents = invoice.total().minorUnits();
 ```
 
-**Câu hỏi:** Có nên cấm biểu thức này chỉ vì có hai dấu chấm?
+**Question:** Should this expression be forbidden merely because it contains two dots?
 
-**Gợi ý:** `invoice.total()` trả `Money` bất biến; tầng API cần chuyển sang JSON hoặc hiển thị có thể đọc `minorUnits()` hợp lý. Nếu business caller phải làm một loạt quy tắc tiền tệ thủ công, nên dùng hành vi của Money/invoice thay vì tách giá trị primitive.
+**Hint:** `invoice.total()` returns immutable `Money`; presentation code converting it to JSON or text can reasonably read `minorUnits()`. If a business caller performs many primitive monetary calculations by hand, use behavior on Money/invoice rather than extracting primitive values.
 
-### Bài 3: bảo vệ hành vi trong Entity
+### Exercise 3: Protect entity behavior
 
-Một `Order` có `status` và `paidAt`. Controller viết:
+An `Order` has `status` and `paidAt`. The controller writes:
 
 ```java
 if (order.getStatus().equals("NEW")) {
@@ -5284,17 +5284,17 @@ if (order.getStatus().equals("NEW")) {
 }
 ```
 
-**Gợi ý:** dùng `order.markPaid(paymentReference, paidAt)` (hoặc API đúng nghiệp vụ), đặt điều kiện chuyển trạng thái và tính nhất quán của thời điểm thanh toán bên trong Order. Quy tắc chỉ cho phép thanh toán một lần nên thuộc cùng nơi với trạng thái.
+**Hint:** use `order.markPaid(paymentReference, paidAt)` (or a domain-appropriate API) and keep transition checks and payment-timestamp consistency inside Order. The rule that an order may be paid only once belongs with its state.
 
-### Bài 4: hoàn thiện ví dụ Java
+### Exercise 4: Extend the Java example
 
-Trong `DemeterDemo`, bổ sung chính sách “gói Premium miễn ngày đầu tiên, tính phí từ ngày thứ hai” và kiểm thử phí cho 0, 1, 2, 4 ngày trễ.
+In `DemeterDemo`, add a policy where “Premium plans waive the first late day and charge starting on the second day,” and test fees for 0, 1, 2, 4 late days.
 
-**Gợi ý:** có thể mô hình hóa một `LateFeePolicy` Value Object hoặc interface nếu thật sự có nhiều chính sách, đặt ở phía `MembershipPlan`. Giữ nguyên lời gọi `loan.calculateLateFeeCents(days)` tại service. Đặt ràng buộc tránh số âm và tràn số.
+**Hint:** a `LateFeePolicy` Value Object or interface may fit when several policies actually exist; locate it near `MembershipPlan`. Keep the service call `loan.calculateLateFeeCents(days)` unchanged. Enforce nonnegative amounts and detect overflow.
 
-### Bài 5: xét ngoại lệ
+### Exercise 5: Consider an exception
 
-Màn hình báo cáo nhận DTO:
+A reporting screen receives a DTO:
 
 ```java
 String city = reportDto.customer()
@@ -5302,15 +5302,15 @@ String city = reportDto.customer()
                        .city();
 ```
 
-**Câu hỏi:** Có nhất thiết sửa thành `reportDto.getShippingCity()` không?
+**Question:** Must it be changed to `reportDto.getShippingCity()`?
 
-**Gợi ý:** không. DTO thường được tạo để đọc cấu trúc dữ liệu; hãy đánh giá xem schema là hợp đồng công khai và UI có quyền sử dụng các trường đó hay không. Chỉ cần cân nhắc ranh giới nếu trình bày phải tự viết các quy tắc domain hoặc bị ràng buộc vào cấu trúc persistence.
+**Hint:** no. DTOs are often meant to expose readable data structures; consider whether the schema is a public contract and the UI is entitled to use those fields. Reconsider boundaries only if presentation code implements domain rules or is tied to persistence internals.
 
 ---
 
-**Ghi nhớ:** hạn chế truy cập sâu không phải một cuộc thi giảm dấu chấm. Hãy để lớp gọi **yêu cầu hành vi có ý nghĩa** từ cộng tác viên trực tiếp, để lớp sở hữu dữ liệu **giữ những quy tắc và bất biến của mình**, và chỉ bộc lộ cấu trúc dữ liệu khi đó là một hợp đồng chủ đích. Nhờ vậy, sửa cấu trúc một lớp ít kéo theo sửa hàng loạt lớp xung quanh.
+**Remember:** limiting deep navigation is not a contest to reduce dots. Let callers **request meaningful behavior** from direct collaborators, let data owners **enforce their own rules and invariants**, and expose data structure only when it is an intentional contract. That way, internal changes to one class are less likely to force changes throughout its neighbors.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

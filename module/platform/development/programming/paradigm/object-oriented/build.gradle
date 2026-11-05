@@ -3,3 +3,7 @@
 dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+generateModuleExcel {
+    languageList = ['en','vi'] // List<String>
+}

@@ -1,75 +1,75 @@
 version: 1
 type: LEARNING_ROADMAP
-title: GIAO DIỆN — LIÊN KẾT BÀI HỌC
-roadmapHeading: Mạch liên kết bài học
+title: INTERFACES — LESSON CONNECTIONS
+roadmapHeading: Learning Path Connections
 roadmap:
 - id: interface-001
   order: 1
-  title: Giao diện như một hợp đồng và một vai trò
-  description: Xác lập interface là một hợp đồng về khả năng và hành vi, đồng thời là vai trò mà đối tượng có thể đảm nhận. Chữ ký Java mới là phần compiler xác nhận; đầu vào, kết quả và lỗi còn cần quy ước riêng.
+  title: Interfaces as Contracts and Roles
+  description: Establishes an interface as a contract for capabilities and behavior, as well as a role an object can fulfill. The Java compiler checks only method signatures; inputs, results, and errors require additional conventions.
   transition:
     to: interface-002
-    description: '**Từ ý nghĩa lời hứa → biết khai báo và thực hiện đúng cú pháp Java**'
+    description: '**From the meaning of a promise → declaring and implementing interfaces with correct Java syntax**'
 - id: interface-002
   order: 2
-  title: Khai báo và thực hiện giao diện
-  description: Thực hành interface, implements, public override, static method và đa hình qua hai chính sách phí giao hàng. Xác minh compile, kết quả tính phí và kiểm tra hành vi dùng chung.
+  title: Declaring and Implementing Interfaces
+  description: Practice the interface and implements keywords, public override methods, static methods, and polymorphism through two shipping-fee policies. Verify compilation, calculated fees, and shared behavioral checks.
   transition:
     to: interface-003
-    description: '**Từ một ví dụ implements → chủ động tổ chức hướng phụ thuộc của service**'
+    description: '**From an implements example → deliberately structuring service dependency direction**'
 - id: interface-003
   order: 3
-  title: Lập trình dựa trên giao diện
-  description: Cho CheckoutService nhận PaymentGateway từ constructor, chọn adapter ở composition root và thay bằng fake để kiểm thử. Phân biệt dependency injection với dependency inversion và nêu contract thanh toán.
+  title: Programming to Interfaces
+  description: Have CheckoutService receive PaymentGateway through its constructor, select an adapter at the composition root, and substitute a fake for testing. Distinguish dependency injection from dependency inversion and specify the payment contract.
   transition:
     to: interface-004
-    description: '**Từ một dependency trừu tượng → xét cách một instance đảm nhiệm đồng thời nhiều vai trò**'
+    description: '**From an abstract dependency → exploring how one instance can fulfill multiple roles simultaneously**'
 - id: interface-004
   order: 4
-  title: Một đối tượng đảm nhận nhiều giao diện
-  description: Một OfficeMachine có ba vai trò và bộ trạng thái chung, trong khi kiểu tham chiếu chỉ bộc lộ API của từng vai trò. Bài mở rộng sang interface kế thừa nhiều interface và default method trùng tên.
+  title: One Object Implementing Multiple Interfaces
+  description: One OfficeMachine fulfills three roles and shares a single state, while each reference type exposes only the API of its role. The lesson extends to interfaces that inherit multiple interfaces and default methods with conflicting names.
   transition:
     to: interface-005
-    description: '**Từ khả năng phối hợp vai trò → chọn mô hình chia sẻ hành vi/trạng thái phù hợp**'
+    description: '**From combining roles → choosing an appropriate model for sharing behavior and state**'
 - id: interface-005
   order: 5
-  title: Chọn giao diện hay lớp trừu tượng
-  description: Dùng interface cho hợp đồng DeliveryFeePolicy, abstract class cho họ WeightDistancePolicy dùng chung constructor và thuật toán; cân nhắc composition khi các lớp không cùng họ.
+  title: Choosing Between Interfaces and Abstract Classes
+  description: Use an interface for the DeliveryFeePolicy contract and an abstract class for the WeightDistancePolicy family, which shares a constructor and algorithm; consider composition when classes do not belong to the same family.
   transition:
     to: interface-006
-    description: '**Từ chọn abstraction → thu hẹp hợp đồng theo đúng nhu cầu người sử dụng**'
+    description: '**From choosing abstractions → narrowing contracts to match client needs**'
 - id: interface-006
   order: 6
-  title: Giao diện nhỏ và phân tách vai trò
-  description: Áp dụng ISP để tách DocumentReader, DocumentWriter, DocumentPublisher, tránh ép kho chỉ đọc triển khai API ghi. Các service phụ thuộc vào đúng vai trò nhưng một class vẫn có thể hỗ trợ nhiều vai trò.
+  title: Small Interfaces and Role Segregation
+  description: Apply ISP to separate DocumentReader, DocumentWriter, and DocumentPublisher, avoiding the need for a read-only repository to implement a write API. Services depend on the appropriate role, while a single class can still support multiple roles.
   transition:
     to: interface-007
-    description: '**Từ kích thước và trách nhiệm contract → tìm hiểu những thành viên Java thật sự cho phép**'
+    description: '**From contract size and responsibilities → examining which members Java actually permits**'
 - id: interface-007
   order: 7
-  title: Thành viên mặc định và giới hạn tùy ngôn ngữ
-  description: Phân biệt public abstract, default, static, private và field public static final, cùng quy tắc class wins, default conflict, giới hạn Object và khác biệt Java với các ngôn ngữ khác.
+  title: Default Members and Language-Specific Limitations
+  description: Distinguish public abstract, default, static, and private members from public static final fields, and examine the class-wins rule, default-method conflicts, Object restrictions, and differences between Java and other languages.
   transition:
     to: interface-008
-    description: '**Từ hiểu quy tắc khai báo và dispatch → kiểm chứng thay implementation có giữ lời hứa hay không**'
+    description: '**From understanding declaration and dispatch rules → verifying whether replacing an implementation preserves its promises**'
 - id: interface-008
   order: 8
-  title: Thay thế cách thực hiện mà giữ hợp đồng
-  description: Đổi HashMapPriceCatalog sang TreeMapPriceCatalog nhưng giữ semantics về SKU, giá 0, thứ tự, snapshot và lỗi. Contract tests và LSP phân biệt tương thích hành vi với chỉ tương thích chữ ký.
+  title: Replacing Implementations While Preserving Contracts
+  description: Replace HashMapPriceCatalog with TreeMapPriceCatalog while preserving semantics for SKUs, zero prices, ordering, snapshots, and errors. Contract tests and LSP distinguish behavioral compatibility from signature compatibility alone.
   transition:
     to: interface-009
-    description: '**Từ các nguyên tắc thay thế → tổng hợp vào bài toán có hai ranh giới hạ tầng và nguy cơ giao dịch**'
+    description: '**From substitution principles → applying them to two infrastructure boundaries and transaction risks**'
 - id: interface-009
   order: 9
-  title: Thiết kế giao diện thanh toán hoặc lưu trữ
-  description: Tách PaymentGateway, PaymentRepository và CheckoutService qua DTO và constructor injection; dùng fake kiểm tra luồng yêu cầu. Bài chỉ rõ giới hạn idempotency trong RAM khi gateway thành công nhưng lưu kết quả thất bại.
+  title: Designing Payment or Persistence Interfaces
+  description: Separate PaymentGateway, PaymentRepository, and CheckoutService using DTOs and constructor injection; use fakes to verify request flows. The lesson explains the limits of in-memory idempotency when a gateway succeeds but saving the result fails.
   transition: null
 comparisonMarkdown: |-
-  ## 2. Bảng đối chiếu các bài học
+  ## 2. Lesson Comparison Table
 
-  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | Criterion | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 | Lesson 6 | Lesson 7 | Lesson 8 | Lesson 9 |
   | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-  | Tên | Giao diện như một hợp đồng và một vai trò | Khai báo và thực hiện giao diện | Lập trình dựa trên giao diện | Một đối tượng đảm nhận nhiều giao diện | Chọn giao diện hay lớp trừu tượng | Giao diện nhỏ và phân tách vai trò | Thành viên mặc định và giới hạn tùy ngôn ngữ | Thay thế cách thực hiện mà giữ hợp đồng | Thiết kế giao diện thanh toán hoặc lưu trữ |
-  | Vấn đề cần hiểu | Chữ ký khác lời hứa hành vi ra sao? | Implements và override đúng như thế nào? | Service nên phụ thuộc vào ai? | Một instance mang nhiều vai trò thế nào? | Khi nào cần chung state và thuật toán? | Client có phụ thuộc method không dùng? | Java hỗ trợ thành viên và phân giải default ra sao? | Hai implementation có thật sự tương đương? | Tách thanh toán/lưu dữ liệu và xử lý gọi lặp thế nào? |
-  | Giá trị đối với OOP/module | Xác định contract tin cậy | Biên dịch và thực thi đúng giao diện | Giảm coupling, tăng khả năng test | Tái sử dụng instance qua vai trò | Tránh kế thừa gượng ép | Giữ ranh giới API theo client | Tránh sai cú pháp và API evolution | Thay adapter mà giữ semantics | Tích hợp nhiều ranh giới có kiểm soát |
-  | Tư duy hình thành | Thiết kế từ lời hứa | Chuyển contract thành mã chạy | Đảo hướng dependency | Tách kiểu tham chiếu khỏi object | Chọn cơ chế trừu tượng hóa | Tập trung nhu cầu từng client | Phân tích giới hạn compiler/runtime | Chứng minh substitutability bằng test | Thiết kế failure handling và idempotency |
+  | Name | Interfaces as Contracts and Roles | Declaring and Implementing Interfaces | Programming to Interfaces | One Object Implementing Multiple Interfaces | Choosing Between Interfaces and Abstract Classes | Small Interfaces and Role Segregation | Default Members and Language-Specific Limitations | Replacing Implementations While Preserving Contracts | Designing Payment or Persistence Interfaces |
+  | Key question | How do signatures differ from behavioral promises? | How should implements and overrides be used correctly? | What should a service depend on? | How can one instance fulfill multiple roles? | When is shared state and an algorithm needed? | Does a client depend on methods it does not use? | Which members does Java support, and how are default methods resolved? | Are two implementations truly equivalent? | How should payment and persistence be separated, and repeated calls handled? |
+  | Value for OOP/the module | Define a reliable contract | Compile and execute interface implementations correctly | Reduce coupling and improve testability | Reuse an instance through different roles | Avoid forced inheritance | Keep API boundaries aligned with client needs | Avoid syntax errors and API evolution problems | Replace adapters without changing semantics | Integrate multiple boundaries with control |
+  | Mindset developed | Design around promises | Turn contracts into running code | Invert dependency direction | Separate reference types from objects | Choose an abstraction mechanism | Focus on each client's needs | Analyze compiler and runtime limitations | Prove substitutability with tests | Design failure handling and idempotency |

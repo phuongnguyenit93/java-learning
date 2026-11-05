@@ -8,10 +8,10 @@ Group1Controller:
     usage: true
     cases:
     - id: case_001
-      title: Thực thi vòng lặp tính toán CPU
-      description: Truyền mode=cpu để kiểm tra nhánh tính toán số học và quan sát tín hiệu hoàn tất trên stdout.
-      detailDescription: <p>Nhánh cpu gọi Case9Utils.compute với 2000000 vòng lặp. Service chỉ in kết quả sau khi phép tính trả giá trị dương. Việc
-        chạy hoàn tất không tự đo CPU time, GC hay latency của request.</p>
+      title: Execute the CPU computation loop
+      description: Pass mode=cpu to exercise the arithmetic computation branch and observe the completion signal on stdout.
+      detailDescription: <p>The cpu branch calls Case9Utils.compute with 2000000 iterations. The Service prints the result only after the computation
+        returns a positive value. Completing the run does not itself measure CPU time, GC, or request latency.</p>
       input:
         pathParams: {}
         queryParams:
@@ -22,27 +22,28 @@ Group1Controller:
       response: null
       observations:
       - type: LOG
-        source: stdout của JVM chạy ứng dụng Spring Boot
-        program: Terminal hoặc cửa sổ console của IDE
+        source: stdout of the JVM running the Spring Boot application
+        program: Terminal or IDE console window
         expect:
           keyword: workload completed; result=
-          results: <p>Sau khi gọi request, tìm dòng <code>workload completed; result=</code> kèm số dương. Dòng này được in sau khi nhánh <code>compute(2000000)</code>
-            hoàn tất và qua kiểm tra giá trị dương.</p>
-          conclusion: <p>Nhánh CPU đã trả kết quả hợp lệ cho lần gọi này. Dòng log không đo thời gian xử lý, CPU usage hoặc mức cấp phát của JVM.</p>
+          results: <p>After sending the request, look for a line containing <code>workload completed; result=</code> followed by a positive number. The line is printed after <code>compute(2000000)</code>
+            completes and the positive-value check passes.</p>
+          conclusion: <p>The CPU branch returned a valid result for this invocation. This log line does not measure processing time, CPU usage, or JVM memory allocation.</p>
       - type: JFR
-        source: JFR recording của JVM, chỉ khi đã bật ghi và CPU sampling
+        source: JVM JFR recording, only when recording and CPU sampling are enabled
         program: Java Mission Control
         expect:
           keyword: jdk.ExecutionSample
-          results: <p>Nếu recording có CPU sampling phù hợp, lọc các event <code>jdk.ExecutionSample</code> theo khoảng chạy request và xem stack
-            liên quan <code>Case9Utils.compute</code>. Event không nhất thiết xuất hiện ở mỗi lần gọi ngắn.</p>
-          conclusion: <p>Sample có thể hỗ trợ nhận diện nơi CPU được sử dụng; cần nhiều mẫu và phép đo có kiểm soát trước khi kết luận bottleneck.
-            Không có recording thì không có bằng chứng JFR.</p>
+          results: <p>If the recording contains suitable CPU samples, filter <code>jdk.ExecutionSample</code> events to the request execution interval and inspect stacks
+            involving <code>Case9Utils.compute</code>. Such events may not appear for every short invocation.</p>
+          conclusion: <p>Samples can help identify where CPU time is spent; multiple samples and controlled measurements are needed before identifying a bottleneck.
+            Without a recording, there is no JFR evidence.</p>
     - id: case_002
-      title: Thực thi workload cấp phát mảng
-      description: Truyền mode=allocation để quan sát nhánh tạo byte array và phân biệt dấu hiệu cấp phát với thời gian xử lý.
-      detailDescription: <p>Nhánh allocation chạy Case9Utils.allocate với 2000000 lần tạo mảng 1024 byte; mỗi vòng ghi mảng vào field volatile keepAlive.
-        Kết quả trả về là tổng độ dài đã cộng trong vòng lặp, không phải số byte live hoặc lượng bộ nhớ JVM giữ lại.</p>
+      title: Execute the array allocation workload
+      description: Pass mode=allocation to observe the byte-array creation branch and distinguish evidence of allocation from processing time.
+      detailDescription: <p>The allocation branch runs Case9Utils.allocate, creating a 1024-byte array 2000000 times; each iteration assigns the array
+        to the volatile field keepAlive. The returned result is the sum of array lengths accumulated in the loop, not the number of live bytes or
+        the amount of memory retained by the JVM.</p>
       input:
         pathParams: {}
         queryParams:
@@ -53,29 +54,29 @@ Group1Controller:
       response: null
       observations:
       - type: LOG
-        source: stdout của JVM chạy ứng dụng Spring Boot
-        program: Terminal hoặc cửa sổ console của IDE
+        source: stdout of the JVM running the Spring Boot application
+        program: Terminal or IDE console window
         expect:
           keyword: workload completed; result=
-          results: <p>Tìm dòng <code>workload completed; result=</code> kèm số dương sau khi nhánh <code>allocate(2000000)</code> hoàn thành. Giá
-            trị result đến từ phép cộng <code>bytes.length</code>, không phải một phép đo heap.</p>
-          conclusion: <p>Lần gọi đã chạy qua các phép cấp phát và kiểm tra kết quả trong code. Không thể suy ra GC pause, allocation rate thực đo,
-            bộ nhớ còn giữ hay latency chỉ từ log này.</p>
+          results: <p>Look for a line containing <code>workload completed; result=</code> followed by a positive number after <code>allocate(2000000)</code> completes. The
+            result comes from summing <code>bytes.length</code>, not from a heap measurement.</p>
+          conclusion: <p>This invocation executed the allocations and checked the result in code. This log alone cannot establish GC pause times, measured allocation rate,
+            retained memory, or latency.</p>
       - type: JFR
-        source: JFR recording của JVM, chỉ khi đã bật recording và allocation event thích hợp
+        source: JVM JFR recording, only when recording and appropriate allocation events are enabled
         program: Java Mission Control
         expect:
           keyword: jdk.ObjectAllocationSample
-          results: <p>Nếu JVM/recording bật event <code>jdk.ObjectAllocationSample</code>, tìm sample gắn với <code>Case9Utils.allocate</code> trong
-            khoảng thực thi; đối chiếu thêm sự kiện GC nếu recording có thu thập. Số lượng sample phụ thuộc cấu hình và thời gian chạy.</p>
-          conclusion: <p>Các sample có thể cung cấp bằng chứng về cấp phát liên quan workload. Chúng không tự chứng minh GC là nguồn gây chậm hoặc
-            thể hiện chính xác tổng số byte được cấp phát.</p>
+          results: <p>If the JVM/recording enables <code>jdk.ObjectAllocationSample</code> events, look for samples associated with <code>Case9Utils.allocate</code> during
+            execution; also cross-check GC events if the recording collects them. Sample counts depend on configuration and execution duration.</p>
+          conclusion: <p>Samples may provide evidence of allocations related to this workload. They do not by themselves prove that GC is the cause of slowness or
+            precisely show the total number of bytes allocated.</p>
     - id: case_003
-      title: Thiếu tham số mode
-      description: Bỏ query mode để xác minh nhánh kiểm tra số lượng đối số trong Service.
-      detailDescription: '<p>Controller biến mode=null thành mảng String rỗng; Service thấy số đối số khác một và ném IllegalArgumentException với
-        thông báo <code>use: cpu|allocation</code> trước khi chạy workload. Định dạng lỗi HTTP phụ thuộc cơ chế xử lý exception ngoài phương thức
-        này.</p>'
+      title: Missing mode parameter
+      description: Omit the mode query parameter to verify the argument-count check in the Service.
+      detailDescription: '<p>The Controller converts mode=null to an empty String array; the Service detects an argument count other than one and throws
+        IllegalArgumentException with the message <code>use: cpu|allocation</code> before running the workload. The HTTP error format depends on
+        exception handling outside this method.</p>'
       input:
         pathParams: {}
         queryParams: {}
@@ -85,19 +86,19 @@ Group1Controller:
       response: null
       observations:
       - type: DEBUGGER
-        source: IllegalArgumentException ném tại Group1Service.executeCase9
-        program: Java IDE debugger với exception breakpoint cho IllegalArgumentException
+        source: IllegalArgumentException thrown at Group1Service.executeCase9
+        program: Java IDE debugger with an exception breakpoint for IllegalArgumentException
         expect:
           keyword: 'use: cpu|allocation'
-          results: '<p>Khi chạy request trên JVM đã attach debugger và bật break on thrown IllegalArgumentException, dừng tại kiểm tra <code>args.length
-            != 1</code>; exception mang message <code>use: cpu|allocation</code>. Method không đi đến dòng in <code>workload completed</code>.</p>'
-          conclusion: <p>Thiếu mode bị từ chối trước khi chọn nhánh workload. Không suy ra được mã trạng thái hoặc JSON lỗi HTTP vì Controller không
-            định nghĩa response lỗi và exception handler có thể được cấu hình riêng.</p>
+          results: '<p>When the request runs with a debugger attached to the JVM and break on thrown IllegalArgumentException enabled, execution stops at the <code>args.length
+            != 1</code> check; the exception has the message <code>use: cpu|allocation</code>. The method never reaches the line that prints <code>workload completed</code>.</p>'
+          conclusion: <p>A missing mode is rejected before a workload branch is selected. The HTTP status code or error JSON cannot be inferred because the Controller does not
+            define an error response, and an exception handler may be configured separately.</p>
     - id: case_004
-      title: Giá trị mode không được hỗ trợ
-      description: Truyền mode=unknown để đi vào nhánh default của biểu thức switch.
-      detailDescription: <p>Service nhận đúng một đối số nhưng giá trị không bằng cpu hoặc allocation; nhánh default ném IllegalArgumentException
-        với message bằng chính input. Không có stdout hoàn tất từ phương thức này.</p>
+      title: Unsupported mode value
+      description: Pass mode=unknown to enter the default branch of the switch expression.
+      detailDescription: <p>The Service receives exactly one argument, but its value is neither cpu nor allocation; the default branch throws
+        IllegalArgumentException with the input itself as the message. This method produces no completion output on stdout.</p>
       input:
         pathParams: {}
         queryParams:
@@ -108,11 +109,11 @@ Group1Controller:
       response: null
       observations:
       - type: DEBUGGER
-        source: IllegalArgumentException ném từ nhánh default trong Group1Service.executeCase9
-        program: Java IDE debugger với exception breakpoint cho IllegalArgumentException
+        source: IllegalArgumentException thrown from the default branch in Group1Service.executeCase9
+        program: Java IDE debugger with an exception breakpoint for IllegalArgumentException
         expect:
           keyword: unknown
-          results: <p>Với debugger được gắn và breakpoint trên exception, thấy nhánh <code>default</code> ném IllegalArgumentException mang message
-            <code>unknown</code> trước khi Service ghi log hoàn tất.</p>
-          conclusion: <p>Giá trị mode khác hai lựa chọn được code cho phép sẽ bị từ chối. HTTP status/body cụ thể do cơ chế xử lý lỗi của ứng dụng
-            quyết định, nên không kết luận từ exception Java đơn lẻ.</p>
+          results: <p>With a debugger attached and an exception breakpoint enabled, observe the <code>default</code> branch throwing IllegalArgumentException with the message
+            <code>unknown</code> before the Service logs completion.</p>
+          conclusion: <p>Any mode value other than the two supported choices is rejected. The specific HTTP status and body depend on the application's error handling,
+            so they cannot be inferred from the Java exception alone.</p>

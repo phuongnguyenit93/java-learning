@@ -1,58 +1,58 @@
 <a id="back-to-top"></a>
 
-# Quan hệ
+# Relationships
 
 ## Menu
-- [Liên kết giữa các đối tượng](#relationships-001)
-- [Sự phụ thuộc tạm thời và liên kết lâu dài](#relationships-002)
-- [Tập hợp và hợp thành](#relationships-003)
-- [Số lượng: một-một, một-nhiều và nhiều-nhiều](#relationships-004)
-- [Hướng liên kết và khả năng điều hướng](#relationships-005)
-- [Quan hệ hai chiều và giữ dữ liệu nhất quán](#relationships-006)
-- [Vòng phụ thuộc và cách phá vòng](#relationships-007)
-- [Đọc ký hiệu quan hệ trong sơ đồ lớp](#relationships-008)
+- [Links between objects](#relationships-001)
+- [Temporary dependencies and long-lived associations](#relationships-002)
+- [Aggregation and composition](#relationships-003)
+- [Multiplicity: one-to-one, one-to-many, and many-to-many](#relationships-004)
+- [Association direction and navigability](#relationships-005)
+- [Bidirectional relationships and data consistency](#relationships-006)
+- [Circular dependencies and how to break them](#relationships-007)
+- [Reading relationship notation in class diagrams](#relationships-008)
 
-## <a id="relationships-001">Liên kết giữa các đối tượng</a>
+## <a id="relationships-001">Links between objects</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Liên kết giữa các đối tượng trong OOP (Association)
+# Links between objects in OOP (Association)
 
-## 1. Liên kết giữa các đối tượng là gì?
+## 1. What is a link between objects?
 
-Trong lập trình hướng đối tượng, một **liên kết (link)** là mối quan hệ cụ thể giữa **những đối tượng đang tồn tại** trong chương trình. Ở mức thiết kế lớp, kiểu quan hệ này thường được gọi là **association** (quan hệ liên kết).
+In object-oriented programming, a **link** is a concrete relationship between **existing objects** in a program. At the class-design level, this kind of relationship is commonly called an **association**.
 
-Ví dụ trong hệ thống hỗ trợ khách hàng:
+For example, in a customer support system:
 
-- Một `Ticket` có thể được giao cho một `Agent` (nhân viên hỗ trợ).
-- Một `Agent` có thể được giao nhiều `Ticket`.
-- Ticket vẫn có thể tồn tại khi chưa được giao cho ai; nhân viên cũng tồn tại mà không cần có ticket.
+- A `Ticket` can be assigned to an `Agent` (support representative).
+- An `Agent` can be assigned multiple `Ticket` objects.
+- A ticket may exist without an assignee, and an agent may exist without any tickets.
 
-Nếu ticket `SUP-42` đang được giao cho nhân viên Lan, đó là một **liên kết cụ thể tại thời điểm chạy**. Khi chuyển ticket cho Minh, liên kết thay đổi mà không cần tạo lại lớp hay các đối tượng.
+If ticket `SUP-42` is currently assigned to Lan, that is a **specific link at runtime**. Reassigning the ticket to Minh changes the link without recreating the class or either object.
 
-Phân biệt hai cấp độ:
+Distinguish two levels:
 
-| Cấp độ | Câu hỏi | Ví dụ |
+| Level | Question | Example |
 |---|---|---|
-| **Quan hệ giữa các lớp** | Các đối tượng của hai lớp *có thể* liên hệ thế nào? | `Ticket` có thể tham chiếu đến `Agent`. |
-| **Liên kết giữa các đối tượng** | Hiện tại *đối tượng nào* đang liên hệ với đối tượng nào? | Ticket `SUP-42` đang được giao cho đối tượng Lan. |
+| **Relationship between classes** | How *can* instances of the two classes relate? | `Ticket` may reference `Agent`. |
+| **Link between objects** | *Which particular objects* are currently related? | Ticket `SUP-42` is assigned to the Lan object. |
 
-Java thường biểu diễn liên kết bằng **tham chiếu đối tượng** nằm trong trường (field), phần tử của `List`/`Set`, hoặc cấu trúc quản lý quan hệ. Hai biến cùng trỏ đến một object **không tạo ra hai object**.
+Java commonly represents links through **object references** stored in fields, `List`/`Set` elements, or structures that manage relationships. Two variables referring to the same object **do not create two objects**.
 
-## 2. Đọc một quan hệ: chiều truy cập và số lượng
+## 2. Reading an association: navigability and multiplicity
 
-Một **association** trả lời “ai liên hệ với ai?”; hai thuộc tính cần xác định thêm là **hướng truy cập** (*navigability*) và **bội số** (*multiplicity*).
+An **association** answers "who is related to whom?" Two additional properties to define are **navigability** and **multiplicity**.
 
-- **Một chiều:** `Ticket` giữ `Agent assignee`, nhưng `Agent` không giữ danh sách ticket. Muốn tìm các ticket của Lan có thể hỏi repository.
-- **Hai chiều:** ngoài `Ticket.assignee`, `Agent` giữ `Set<Ticket>`. Cả hai đường đi cần được đồng bộ khi phân công/chuyển/gỡ.
+- **Unidirectional:** `Ticket` holds `Agent assignee`, but `Agent` does not store a list of tickets. A repository can be queried to find Lan's tickets.
+- **Bidirectional:** In addition to `Ticket.assignee`, `Agent` holds a `Set<Ticket>`. Both directions must be synchronized when assigning, reassigning, or unassigning a ticket.
 
-| Bội số | Ý nghĩa trong mô hình hỗ trợ |
+| Multiplicity | Meaning in the support model |
 |---|---|
-| `0..1` gần `Agent` | Một ticket có thể chưa phân công hoặc có một agent |
-| `0..*` gần `Ticket` | Một agent có thể phụ trách 0 hoặc nhiều ticket |
+| `0..1` near `Agent` | A ticket may have no assignee or one agent |
+| `0..*` near `Ticket` | An agent may handle zero or more tickets |
 
-Bội số **đặt sát đầu nào thì đếm số đối tượng ở đầu đó ứng với một đối tượng phía bên kia**. Các ràng buộc khác như `1`, `1..*`, `m..n` và cách hiện thực 1–1/1–N/N–N là trọng tâm của bài **Số lượng: một-một, một-nhiều và nhiều-nhiều**.
+The multiplicity **written near an endpoint counts how many objects at that endpoint can relate to one object at the opposite end**. Other constraints such as `1`, `1..*`, `m..n`, and ways to implement 1–1/1–N/N–N are covered in **Multiplicity: one-to-one, one-to-many, and many-to-many**.
 
 ```mermaid
 classDiagram
@@ -71,11 +71,11 @@ classDiagram
     Agent "0..1" <--> "0..*" Ticket : được giao cho
 ```
 
-Sơ đồ và ví dụ hai chiều dưới đây thống nhất: `Ticket` tìm người phụ trách, còn `Agent` tìm các ticket đang được giao. **Hai chiều không đồng nghĩa sở hữu vòng đời**: gỡ ticket khỏi Lan không làm đối tượng Lan biến mất.
+The diagram and bidirectional example below are consistent: `Ticket` can find its assignee, while `Agent` can find its assigned tickets. **Bidirectionality does not imply lifecycle ownership**: unassigning a ticket from Lan does not make the Lan object disappear.
 
-## 3. Ví dụ Java chạy được: liên kết hai chiều có thể thay đổi
+## 3. Runnable Java example: a mutable bidirectional association
 
-Tạo một tệp tên `AssociationDemo.java`:
+Create a file named `AssociationDemo.java`:
 
 ```java
 import java.util.Collections;
@@ -172,14 +172,14 @@ public class AssociationDemo {
 }
 ```
 
-Chạy bằng JDK 11 trở lên:
+Run with JDK 11 or later:
 
 ```bash
 javac AssociationDemo.java
 java AssociationDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Lan
@@ -190,20 +190,20 @@ true
 true
 ```
 
-Điểm cốt lõi nằm ở `changeAssignee()`: khi thay người phụ trách, ta **gỡ ticket khỏi tập hợp của agent cũ**, cập nhật tham chiếu, rồi **thêm vào tập hợp của agent mới**. Việc này bảo toàn quy tắc:
+The key is `changeAssignee()`: when changing the assignee, we **remove the ticket from the previous agent's set**, update the reference, and then **add it to the new agent's set**. This preserves the rule:
 
 ```text
 agent.getTickets().contains(ticket)
     == (ticket.getAssignee() == agent)
 ```
 
-Ví dụ đặt hai lớp bên trong `AssociationDemo` để code có thể nằm trong một tệp và giữ các collection ở chế độ `private`. Trong dự án thực, có thể tách ra các tệp riêng và tổ chức thao tác cập nhật quan hệ qua API nội bộ hoặc domain service. Không nên cho bên ngoài gọi `getTickets().add(...)` để thay đổi chỉ một phía.
+The example nests the two classes inside `AssociationDemo` so that the code fits in one file and the collections remain `private`. In a real project, they can be placed in separate files, with relationship updates coordinated through an internal API or domain service. External callers should not be allowed to call `getTickets().add(...)` to change only one side.
 
-**Lưu ý về danh tính:** ví dụ giữ `Ticket` trong `Set` theo danh tính đối tượng vì `Ticket` không ghi đè `equals()/hashCode()`. Nếu cần định nghĩa bằng mã ticket, mã phải ổn định và quy tắc equality/hash nhất quán; đổi thuộc tính tham gia hash khi object đã ở trong `HashSet`/`LinkedHashSet` có thể làm hỏng thao tác tìm/xóa.
+**Identity note:** The example stores `Ticket` objects in a `Set` using object identity because `Ticket` does not override `equals()/hashCode()`. If identity must be based on the ticket code, that code must remain stable and the equality/hash rules must be consistent; changing a property used for hashing after an object has been inserted into a `HashSet`/`LinkedHashSet` can break lookup and removal.
 
-## 4. Liên kết một chiều: khi nào chỉ cần một tham chiếu?
+## 4. Unidirectional association: when is one reference enough?
 
-Nếu yêu cầu chỉ là “xem ai đang phụ trách ticket”, ta có thể loại bỏ `Set<Ticket>` trong `Agent`. Lúc đó:
+If the only requirement is to "see who is assigned to a ticket," we can remove `Set<Ticket>` from `Agent`. Then:
 
 ```java
 final class Agent {
@@ -225,17 +225,17 @@ final class Ticket {
 }
 ```
 
-Phiên bản này đơn giản hơn, nhưng không thể trực tiếp hỏi `agent.getTickets()`. Muốn tìm tất cả ticket của Lan, ứng dụng phải duyệt tập ticket, truy vấn repository hoặc cơ sở dữ liệu.
+This version is simpler, but we cannot call `agent.getTickets()` directly. To find all of Lan's tickets, the application must scan its tickets or query a repository or database.
 
-Chọn **một chiều** khi không cần điều hướng ngược; chọn **hai chiều** khi nghiệp vụ truy cập cả hai hướng và có nơi chịu trách nhiệm đồng bộ. “Có quan hệ về mặt nghiệp vụ” không đồng nghĩa “cả hai lớp bắt buộc phải chứa field tham chiếu đến nhau”.
+Choose a **unidirectional** association when reverse navigation is unnecessary; choose a **bidirectional** association when the business needs both directions and there is a clear owner for synchronization. "There is a business relationship" does not mean "both classes must have reference fields pointing to each other."
 
-## 5. Khi liên kết có nhiều đối tượng hoặc có thông tin riêng
+## 5. When links involve multiple objects or have their own data
 
-- **Một–một:** một `Employee` có tối đa một `AccessCard` và ngược lại, nếu chính sách yêu cầu.
-- **Một–nhiều:** một `Agent` có thể phụ trách nhiều `Ticket`, nhưng mỗi ticket có tối đa một người phụ trách.
-- **Nhiều–nhiều:** một `Student` học nhiều `Course`; một `Course` có nhiều sinh viên.
+- **One-to-one:** An `Employee` may have at most one `AccessCard` and vice versa, if policy requires it.
+- **One-to-many:** An `Agent` can handle many `Ticket` objects, but each ticket has at most one assignee.
+- **Many-to-many:** A `Student` takes many `Course` objects; a `Course` has many students.
 
-Khi **chính liên kết** có ngày đăng ký, trạng thái, điểm hoặc quyền, nên cân nhắc một đối tượng trung gian `Enrollment(student, course, enrolledAt, status)` thay vì hai `Set` tách rời. Một `Enrollment` kết nối đúng một `Student` và một `Course`, đồng thời sở hữu dữ liệu của lần đăng ký.
+When **the relationship itself** has an enrollment date, status, grade, or permissions, consider an intermediate `Enrollment(student, course, enrolledAt, status)` object instead of two separate `Set` collections. Each `Enrollment` connects exactly one `Student` and one `Course` while holding the data for that enrollment.
 
 ```mermaid
 classDiagram
@@ -249,85 +249,85 @@ classDiagram
     Course "1" <-- "0..*" Enrollment : thuộc khóa học
 ```
 
-Đừng suy ra bội số chỉ từ việc có `List` hay `Set`: phải xác định **cả hai phía** và cưỡng chế giới hạn bằng API/DB nếu cần. Bài về multiplicity xây một registry chạy được và kiểm tra đăng ký trùng.
+Do not infer multiplicity merely from the presence of a `List` or `Set`: define **both ends** and enforce limits through the API/database when necessary. The multiplicity lesson builds a runnable registry and checks for duplicate enrollments.
 
-## 6. Phân biệt với các quan hệ thường dễ nhầm
+## 6. Distinguishing commonly confused relationships
 
-| Khái niệm | Câu hỏi để nhận biết | Ví dụ |
+| Concept | Diagnostic question | Example |
 |---|---|---|
-| **Association (liên kết)** | Object A biết hoặc có quan hệ thường trực với object B? | Ticket được giao cho Agent. |
-| **Dependency (phụ thuộc)** | A chỉ dùng B tạm thời, chẳng hạn trong tham số phương thức? | `ReportService.export(Formatter formatter)`. |
-| **Aggregation (kết tập)** | Một object nhóm các object khác, thành viên vẫn có thể tồn tại độc lập? | Đội hỗ trợ gồm các nhân viên. |
-| **Composition (hợp thành)** | Thành phần thuộc độc quyền vào toàn thể, vòng đời gắn chặt? | Đơn hàng sở hữu các dòng đơn hàng theo mô hình nghiệp vụ. |
-| **Inheritance (kế thừa)** | B có thực sự là một loại A (`is-a`)? | `EmailTicket extends Ticket`. |
+| **Association** | Does object A know object B or maintain an ongoing relationship with it? | A Ticket is assigned to an Agent. |
+| **Dependency** | Does A use B only temporarily, for example as a method parameter? | `ReportService.export(Formatter formatter)`. |
+| **Aggregation** | Does one object group other objects that can still exist independently? | A support team contains employees. |
+| **Composition** | Is a part owned exclusively by a whole, with a tightly coupled lifecycle? | An order owns its order lines in the domain model. |
+| **Inheritance** | Is B truly a kind of A (`is-a`)? | `EmailTicket extends Ticket`. |
 
-Aggregation và composition là các cách mô hình hóa quan hệ toàn thể–thành phần; **một field tham chiếu hay collection tự nó không chứng minh được quy tắc sở hữu và vòng đời**. Đây là quy tắc nghiệp vụ phải được thiết kế, thực thi và kiểm thử.
+Aggregation and composition model whole–part relationships; **a reference field or collection alone does not establish ownership and lifecycle rules**. Those are business rules that must be designed, enforced, and tested.
 
-Không dùng kế thừa chỉ để object này “có” object kia: `Ticket extends Agent` là sai bản chất, vì ticket **được giao cho** nhân viên chứ không **phải là** nhân viên.
+Do not use inheritance merely because one object "has" another: `Ticket extends Agent` is conceptually wrong because a ticket **is assigned to** an agent; it **is not** an agent.
 
-## 7. Những lỗi thiết kế liên kết hay gặp
+## 7. Common association-design mistakes
 
-**Chỉ cập nhật một phía.** Nếu đổi `ticket.assignee` mà không sửa `agent.tickets`, hai hướng trả về kết quả khác nhau. Nên có một đầu mối cập nhật quan hệ.
+**Updating only one side.** If you change `ticket.assignee` without updating `agent.tickets`, the two directions disagree. Use one controlled entry point for relationship updates.
 
-**Trả về collection có thể sửa trực tiếp.** `getTickets()` trả `Set` nội bộ cho bên ngoài gọi `clear()` sẽ phá bất biến. Dùng bản sao chỉ đọc, API thêm/xóa có kiểm soát hoặc chỉ lưu một chiều.
+**Returning a directly mutable collection.** If `getTickets()` exposes the internal `Set`, callers can break invariants by calling `clear()`. Use a read-only copy, a controlled add/remove API, or a unidirectional association.
 
-**Không định nghĩa rõ `null` và bội số.** `0..1` cho phép không có người phụ trách; `1` cần từ chối giá trị trống hoặc có cơ chế buộc gán trước khi đối tượng trở thành hợp lệ.
+**Leaving `null` and multiplicity undefined.** `0..1` allows no assignee; `1` requires rejecting missing values or ensuring an assignment is made before the object is considered valid.
 
-**Giữ cả hai chiều khi không cần.** Nó làm tăng bộ nhớ, mức liên kết giữa lớp và số chỗ phải cập nhật. Hãy xuất phát từ những truy vấn/thao tác thực tế.
+**Maintaining both directions unnecessarily.** This increases memory usage, coupling between classes, and the number of places requiring updates. Start with actual queries and operations.
 
-**Nhầm object trong RAM với hàng trong database.** Tham chiếu Java là mối quan hệ trong bộ nhớ; khóa ngoại là cách biểu diễn quan hệ trong cơ sở dữ liệu. ORM (chẳng hạn JPA) có quy tắc tải dữ liệu, owning side, cascade và transaction riêng. Không suy ra rằng “có cả hai field Java” thì hai phía ở database tự đồng bộ.
+**Confusing an object in RAM with a database row.** Java references represent in-memory relationships; foreign keys represent relationships in a database. ORM tools (such as JPA) have their own loading, owning-side, cascade, and transaction rules. Do not assume that "both Java fields exist" means the two database sides synchronize automatically.
 
-**Quên vấn đề đồng thời.** Ví dụ trên minh họa bất biến trong một luồng. Nếu nhiều luồng cùng phân công một ticket, cần thiết kế đồng bộ/transaction phù hợp; các bước `remove → assign → add` không tự động nguyên tử trong môi trường đa luồng.
+**Ignoring concurrency.** The example illustrates invariants in one thread. If several threads assign the same ticket concurrently, appropriate synchronization/transaction design is necessary; the `remove → assign → add` steps are not automatically atomic in a multithreaded environment.
 
-## 8. Tự kiểm tra hiểu biết
+## 8. Check your understanding
 
-1. Nếu `Ticket` chỉ có `assignee`, còn `Agent` không có `tickets`, liệu quan hệ “ticket được giao cho nhân viên” có tồn tại không? **Có**: đó là liên kết một chiều.
-2. Chuyển ticket từ Lan sang Minh phải thay đổi những dữ liệu nào trong ví dụ hai chiều? **Gỡ khỏi danh sách của Lan, đổi `assignee`, thêm vào danh sách của Minh.**
-3. Một ticket chưa có nhân viên phụ trách có trái quy tắc `0..1` không? **Không**: số 0 được chấp nhận.
-4. Khi nào nên tạo `Enrollment` thay vì hai tập `Set`? **Khi lần đăng ký có thuộc tính/hành vi/quy tắc riêng** như ngày, trạng thái hay điểm.
-5. Việc viết `private Agent assignee;` có tự chứng minh rằng `Agent` sở hữu vòng đời `Ticket` không? **Không**: đó chỉ là tham chiếu; sở hữu vòng đời là một quyết định mô hình hóa khác.
+1. If `Ticket` has only `assignee` and `Agent` has no `tickets`, does the "ticket assigned to agent" relationship still exist? **Yes**: it is a unidirectional association.
+2. When reassigning a ticket from Lan to Minh in the bidirectional example, what must change? **Remove it from Lan's set, change `assignee`, and add it to Minh's set.**
+3. Does a ticket without an assignee violate `0..1`? **No**: zero is permitted.
+4. When should you introduce `Enrollment` instead of two `Set` collections? **When each enrollment has its own properties, behavior, or rules**, such as a date, status, or grade.
+5. Does declaring `private Agent assignee;` prove that `Agent` owns the lifecycle of `Ticket`? **No**: it is only a reference; lifecycle ownership is a separate modeling decision.
 
-**Ghi nhớ:** association mô tả *ai liên hệ với ai*; multiplicity quy định *bao nhiêu*; navigability quy định *đi từ đâu sang đâu*. Trong Java, hãy đóng gói thao tác tạo, đổi và hủy liên kết để những quy tắc này luôn đúng.
+**Remember:** Association describes *who relates to whom*; multiplicity specifies *how many*; navigability specifies *which direction you can traverse*. In Java, encapsulate the creation, modification, and removal of links to ensure those rules always hold.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="relationships-002">Sự phụ thuộc tạm thời và liên kết lâu dài</a>
+## <a id="relationships-002">Temporary dependencies and long-lived associations</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Sự phụ thuộc tạm thời và liên kết lâu dài trong OOP
+# Temporary dependencies and long-lived associations in OOP
 
-## 1. Một đối tượng “dùng” đối tượng khác theo hai cách khác nhau
+## 1. Two different ways one object can "use" another
 
-Giả sử một hệ thống quản lý yêu cầu hỗ trợ (support ticket):
+Consider a support-ticket management system:
 
-- Ticket **được phân công cho** một nhân viên. Hệ thống cần biết người phụ trách để truy vấn, chuyển giao, hiển thị trạng thái ở những lần thao tác sau.
-- Khi gửi thông báo phân công, hệ thống **sử dụng** một bộ gửi tin nhắn trong đúng thao tác gửi. Sau khi gửi xong, đối tượng xử lý không nhất thiết phải giữ bộ gửi đó.
+- A ticket **is assigned to** a support agent. The system needs to remember the assignee for later queries, reassignments, and status displays.
+- When sending an assignment notification, the system **uses** a message sender during that send operation. Once the notification is sent, the processing object does not necessarily retain the sender.
 
-Cả hai đều liên quan đến việc đối tượng này sử dụng đối tượng khác, nhưng **ý nghĩa thiết kế khác nhau**:
+Both involve one object using another, but their **design implications differ**:
 
-- **Sự phụ thuộc tạm thời** (dependency, trong ví dụ là *method-level dependency*) xuất hiện khi một lớp cần lớp khác để thực hiện một thao tác. Ví dụ nhận một tham số, tạo biến cục bộ hoặc gọi hàm tĩnh. Đối tượng sử dụng không nhất thiết giữ tham chiếu đó làm trạng thái lâu dài.
-- **Liên kết lâu dài** (association) là mối quan hệ được mô hình hóa giữa các đối tượng, thường được thể hiện bằng tham chiếu hoặc collection được lưu trong field. Liên kết có thể được truy cập ở nhiều thời điểm trong vòng đời của object, cho đến khi bị thay đổi hoặc gỡ bỏ.
+- A **temporary dependency** (in this example, a *method-level dependency*) arises when one class needs another to perform an operation, such as receiving a parameter, creating a local variable, or calling a static method. The user object need not retain that reference as long-lived state.
+- A **long-lived association** models a relationship between objects, often represented by a reference or collection stored in a field. The link can be accessed at different points during an object's lifetime until it is changed or removed.
 
-**“Tạm thời” và “lâu dài” ở đây nói về cách một đối tượng sử dụng/lưu mối quan hệ, không có nghĩa rằng đối tượng được sử dụng phải được tạo mới hoặc bị hủy khi phương thức kết thúc.** Một bộ gửi tin nhắn dùng qua tham số có thể là singleton tồn tại suốt ứng dụng; một liên kết trong field cũng có thể bị thay đổi chỉ sau một giây.
+**"Temporary" and "long-lived" describe how an object uses or stores a relationship; they do not mean the referenced object must be created anew or destroyed when a method returns.** A message sender passed as a parameter could be an application-wide singleton; an association held in a field might change after only one second.
 
-## 2. Nhận biết qua UML và mã Java
+## 2. Recognizing them in UML and Java code
 
-| Tiêu chí | Phụ thuộc tạm thời (dependency) | Liên kết lâu dài (association) |
+| Criterion | Temporary dependency | Long-lived association |
 |---|---|---|
-| Câu hỏi chính | “Lớp A cần B để **làm việc gì**?” | “Đối tượng A **đang liên hệ với** đối tượng B nào?” |
-| Dấu hiệu phổ biến trong Java | Tham số phương thức, biến cục bộ, lời gọi phương thức tĩnh | Field tham chiếu, collection các đối tượng, cấu trúc quản lý liên kết |
-| Thời điểm cần tham chiếu | Khi chạy thao tác liên quan | Giữa nhiều thao tác, khi trạng thái quan hệ còn hiệu lực |
-| UML | Mũi tên **nét đứt** từ lớp dùng đến lớp được dùng | **Đường liền**; có thể thêm bội số và chiều truy cập |
-| Ví dụ | `TicketService` gọi `MessageSender.send(...)` | `Ticket` giữ `Agent assignee` |
-| Hệ quả thường gặp | Thay tham số/implementation có thể thay hành vi xử lý | Thay liên kết làm thay đổi trạng thái nghiệp vụ |
-| Điều cần thiết kế | Đầu vào, hợp đồng API, lỗi khi gọi | Bội số, thay thế/gỡ liên kết, tính nhất quán, vòng đời nghiệp vụ |
+| Main question | "What does class A need B to **do**?" | "Which object B is object A **currently related to**?" |
+| Common Java indicators | Method parameters, local variables, static method calls | Reference fields, collections of objects, link-management structures |
+| When the reference is needed | While executing the relevant operation | Across multiple operations while the relationship remains in effect |
+| UML | **Dashed arrow** from the using class to the used class | **Solid line**, optionally with multiplicities and navigability |
+| Example | `TicketService` calls `MessageSender.send(...)` | `Ticket` holds `Agent assignee` |
+| Typical consequence | Changing a parameter or implementation may change processing behavior | Changing the link changes business state |
+| What must be designed | Inputs, API contract, call-time errors | Multiplicity, replacement/removal, consistency, business lifecycle |
 
 ```mermaid
 classDiagram
@@ -355,15 +355,15 @@ classDiagram
     TicketService ..> MessageSender : dùng lúc thông báo
 ```
 
-Đọc sơ đồ:
+Reading the diagram:
 
-1. **Đường liền** từ `Ticket` đến `Agent`: ticket có thể giữ tham chiếu đến nhân viên phụ trách; mỗi ticket có `0..1` agent, mỗi agent có thể phụ trách `0..*` ticket.
-2. **Đường nét đứt** từ `TicketService` đến `MessageSender`: service cần biết *cách gọi* sender khi thực hiện `notifyAssignee(...)`, nhưng không cần giữ sender trong field.
-3. `TicketService` cũng phụ thuộc `Ticket` trong chữ ký của phương thức. Có dependency không nhất thiết phải hình thành một association được lưu lâu dài.
+1. The **solid line** from `Ticket` to `Agent`: a ticket may retain a reference to its assignee; each ticket has `0..1` agents, and each agent may handle `0..*` tickets.
+2. The **dashed line** from `TicketService` to `MessageSender`: the service needs to know *how to call* the sender while executing `notifyAssignee(...)`, but does not have to store it in a field.
+3. `TicketService` also depends on `Ticket` through its method signature. A dependency does not necessarily imply a stored, long-lived association.
 
-## 3. Ví dụ Java chạy được
+## 3. Runnable Java example
 
-Tạo file `RelationshipDemo.java` với nội dung sau (Java 11+):
+Create `RelationshipDemo.java` with the following contents (Java 11+):
 
 ```java
 import java.util.Objects;
@@ -466,14 +466,14 @@ public class RelationshipDemo {
 }
 ```
 
-Biên dịch/chạy:
+Compile and run:
 
 ```bash
 javac RelationshipDemo.java
 java RelationshipDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 To: lan@example.test | Bạn được giao ticket SUP-42
@@ -482,22 +482,22 @@ To: minh@example.test | Bạn được giao ticket SUP-42
 Chưa phân công: true
 ```
 
-### Phân tích từng thời điểm
+### Analysis at each point in time
 
-| Thời điểm | Trạng thái `ticket.assignee` | `sender` trong `notifyAssignee` |
+| Point in time | State of `ticket.assignee` | `sender` in `notifyAssignee` |
 |---|---|---|
-| Trước `assignTo(lan)` | `null` | Chưa gọi |
-| Sau `assignTo(lan)` | Trỏ đến đối tượng Lan | Chưa gọi |
-| Trong lần `notifyAssignee(...)` đầu | Vẫn trỏ đến Lan | Có tham chiếu tham số tới `ConsoleSender` |
-| Sau lần gọi đầu | Vẫn trỏ đến Lan | `TicketService` không giữ tham chiếu sender |
-| Sau `assignTo(minh)` | Trỏ đến Minh | Không ảnh hưởng đến kiểu dependency |
-| Sau `unassign()` | `null` | Không ảnh hưởng đến sender |
+| Before `assignTo(lan)` | `null` | Not called yet |
+| After `assignTo(lan)` | References the Lan object | Not called yet |
+| During the first `notifyAssignee(...)` call | Still references Lan | Parameter holds a reference to `ConsoleSender` |
+| After the first call | Still references Lan | `TicketService` does not retain a sender reference |
+| After `assignTo(minh)` | References Minh | Dependency type is unaffected |
+| After `unassign()` | `null` | Sender is unaffected |
 
-Lưu ý: việc kết thúc phương thức **không bảo đảm** đối tượng `ConsoleSender` bị thu gom bộ nhớ ngay lập tức. Một object có thể còn được nơi khác tham chiếu. Điểm đáng chú ý là **`TicketService` không lưu nó để dùng ở lần gọi sau**.
+Note: returning from a method **does not guarantee** that the `ConsoleSender` object is garbage-collected immediately. Other code may still hold references to it. The important point is that **`TicketService` does not store it for later calls**.
 
-## 4. Ba biến thể cho thấy sự khác nhau
+## 4. Three variations that clarify the difference
 
-### A. Phụ thuộc qua tham số phương thức
+### A. Dependency through a method parameter
 
 ```java
 void sendReceipt(Receipt receipt, MailGateway gateway) {
@@ -505,9 +505,9 @@ void sendReceipt(Receipt receipt, MailGateway gateway) {
 }
 ```
 
-`MailGateway` được gọi trong một thao tác. Bên sử dụng không cần có field `gateway`. Đây là ví dụ rõ ràng về dependency ở mức phương thức. (Đoạn minh họa giả định `Receipt` và `MailGateway` đã được khai báo.)
+`MailGateway` is called during one operation. The caller needs no `gateway` field. This is a straightforward method-level dependency. (The snippet assumes `Receipt` and `MailGateway` have already been declared.)
 
-### B. Liên kết được lưu thành trạng thái
+### B. An association stored as state
 
 ```java
 final class ProjectTask {
@@ -528,9 +528,9 @@ final class ProjectTask {
 }
 ```
 
-`ProjectTask` giữ tham chiếu `owner` sau khi `assign(...)` trả về. Ta có thể truy cập owner sau nhiều thao tác khác nhau. Đó là association một chiều ở cấp đối tượng.
+`ProjectTask` retains the `owner` reference after `assign(...)` returns. The owner can be accessed across different operations. This is a unidirectional object-level association.
 
-### C. Dependency injection qua constructor: phụ thuộc về thiết kế nhưng có field
+### C. Constructor dependency injection: a design dependency with a field
 
 ```java
 final class NotificationService {
@@ -546,43 +546,43 @@ final class NotificationService {
 }
 ```
 
-Ở đây `NotificationService` **phụ thuộc vào hợp đồng** `MessageSender` và lưu tham chiếu được tiêm qua constructor. Vì có field, quan hệ tham chiếu tồn tại giữa các lần gọi phương thức. Trong UML, tùy mức chi tiết của sơ đồ, ta có thể biểu diễn association đến interface hoặc dependency đến abstraction.
+Here, `NotificationService` **depends on the `MessageSender` contract** and stores the reference injected through its constructor. Because it has a field, the reference relationship persists across method calls. In UML, depending on the diagram's level of detail, this may be shown as an association to the interface or a dependency on the abstraction.
 
-Vì thế, **không nên áp dụng máy móc “cứ có dependency thì chỉ sống trong một phương thức” hay “cứ có field thì không phải dependency”**. Dependency là khái niệm rộng: thay đổi định nghĩa của một lớp/interface có thể ảnh hưởng lớp dùng nó. Association mô tả một quan hệ cấu trúc giữa các đối tượng, thường cụ thể hơn.
+Therefore, **do not mechanically apply "dependencies only last for one method" or "having a field means it is not a dependency."** Dependency is a broader concept: changing a class or interface definition can affect its users. Association describes a structural relationship between objects and is usually more specific.
 
-## 5. Chọn cách biểu diễn nào trong thiết kế thực tế?
+## 5. Which representation should you choose in real designs?
 
-Hãy tự hỏi:
+Ask yourself:
 
-1. **Có cần truy vấn quan hệ sau khi thao tác hiện tại kết thúc không?** Nếu cần nhớ “ticket đang thuộc về ai”, hãy mô hình hóa một association bằng trạng thái của object hoặc trong kho dữ liệu.
-2. **Đây là dữ liệu nghiệp vụ hay công cụ để làm việc?** Người phụ trách ticket là quan hệ nghiệp vụ; formatter, exporter, sender thường là cộng tác viên phục vụ thao tác.
-3. **Nếu thay đối tượng được dùng, ý nghĩa thay đổi là gì?** Đổi `Agent` làm đổi trách nhiệm xử lý ticket; đổi `MessageSender` từ email sang SMS chủ yếu đổi kênh gửi thông báo.
-4. **Ai chịu trách nhiệm duy trì liên kết?** Một association hai chiều hoặc quan hệ có ràng buộc bội số cần nơi cập nhật thống nhất. Dependency qua tham số không cần đồng bộ hai phía chỉ vì phương thức dùng đến đối tượng đó.
-5. **Số lần gọi và chi phí truyền tham số ra sao?** Nếu hầu hết phương thức trong service đều cần một cộng tác viên ổn định, constructor injection có thể phù hợp hơn việc truyền đi truyền lại tham số. Đây là lựa chọn API/DI, không nhất thiết là mối quan hệ nghiệp vụ lâu dài.
+1. **Will the relationship be queried after the current operation ends?** If you need to remember "who currently owns the ticket," model an association in object state or persistent storage.
+2. **Is this business data or a tool for doing work?** A ticket's assignee is a business relationship; formatters, exporters, and senders are often collaborators used for operations.
+3. **What does replacing the referenced object mean?** Changing `Agent` changes responsibility for the ticket; changing `MessageSender` from email to SMS mainly changes the notification channel.
+4. **Who maintains the link?** A bidirectional association or a relationship with multiplicity constraints needs a consistent update mechanism. A parameter dependency does not require synchronizing two sides merely because a method uses the object.
+5. **How frequent are calls, and what is the cost of passing parameters?** If most service methods need a stable collaborator, constructor injection may be more appropriate than repeatedly passing it. This is an API/DI choice, not necessarily a long-lived business relationship.
 
-Không có quy tắc “liên kết lâu dài luôn tốt hơn” hay “dependency ngắn hạn luôn ít coupling hơn”. Chọn theo dữ liệu cần giữ, trách nhiệm của lớp, luồng truy cập và khả năng kiểm thử.
+There is no rule that "long-lived associations are always better" or "short-lived dependencies always reduce coupling." Choose based on the data to retain, class responsibilities, access patterns, and testability.
 
-## 6. Bội số, khả năng gỡ liên kết và vòng đời
+## 6. Multiplicity, unlinking, and lifecycle
 
-Với `Ticket -> Agent` của ví dụ:
+For the example's `Ticket -> Agent` relationship:
 
-- `0..1` phía `Agent`: một ticket chưa có hoặc có đúng một người phụ trách.
-- `0..*` phía `Ticket`: một agent có thể được nhiều ticket trỏ đến.
-- `assignTo(...)` đổi người phụ trách; `unassign()` hủy liên kết. **Object Agent không bị xóa** khi ticket bỏ liên kết.
-- Java field chỉ lưu **tham chiếu đến object**, không lưu “bản sao” object và không tự tạo ràng buộc cơ sở dữ liệu.
+- `0..1` at the `Agent` end: a ticket has no assignee or exactly one.
+- `0..*` at the `Ticket` end: multiple tickets may refer to the same agent.
+- `assignTo(...)` changes the assignee; `unassign()` removes the link. **The Agent object is not deleted** when a ticket is unassigned.
+- A Java field stores only **an object reference**, not a "copy" of the object, and does not automatically create a database constraint.
 
-Nếu chỉ lưu field ở phía `Ticket`, ta có association **một chiều**. Muốn từ `Agent` lấy danh sách ticket, phải truy vấn một nguồn dữ liệu khác hoặc thiết kế thêm chiều ngược. Nếu lưu cả hai phía, cần đồng bộ mỗi lần gán/chuyển/gỡ để tránh:
+If only `Ticket` stores a field, the association is **unidirectional**. To retrieve tickets from `Agent`, query another data source or introduce reverse navigation. If both sides are stored, every assignment, reassignment, and removal must be synchronized to avoid:
 
 ```text
 ticket.getAssignee() == lan
 nhưng !lan.getTickets().contains(ticket)
 ```
 
-Association không đồng nghĩa với **composition**: việc ticket giữ agent không khiến ticket sở hữu vòng đời agent. Với thành phần có vòng đời thuộc một “toàn thể”, ta phải thể hiện rõ quy tắc sở hữu đó trong mô hình và code.
+Association is not the same as **composition**: a ticket referencing an agent does not make the ticket the owner of the agent's lifecycle. When a component's lifecycle belongs to a "whole," explicitly represent that ownership rule in the model and code.
 
-## 7. Vì sao phân biệt này hữu ích khi kiểm thử và bảo trì?
+## 7. Why is this distinction useful for testing and maintenance?
 
-**Kiểm thử dependency theo từng thao tác:** triển khai interface giả (fake/stub) và truyền vào phương thức để xác nhận thông báo được gửi đúng đích mà không gọi dịch vụ thật. Ví dụ:
+**Testing an operation-level dependency:** implement a fake/stub interface and pass it to the method to verify that a notification reaches the right destination without calling a real service. For example:
 
 ```java
 // Minh họa bên trong phương thức kiểm thử cùng phạm vi các lớp demo.
@@ -611,54 +611,54 @@ if (!sender.message.contains("SUP-42")) {
 }
 ```
 
-**Kiểm thử association sau nhiều thao tác:** tạo ticket, phân công cho A, đổi sang B, rồi gỡ. Kiểm tra `getAssignee()` sau *mỗi* bước; việc giữ/gỡ link là trạng thái nghiệp vụ cần xác nhận độc lập với thành công của gửi thông báo.
+**Testing an association across operations:** create a ticket, assign it to A, reassign it to B, then remove the assignment. Check `getAssignee()` after *each* step; maintaining or removing the link is business state that must be verified independently of notification success.
 
-**Ảnh hưởng khi thay đổi thiết kế:** đổi API `MessageSender` có thể khiến `TicketService` phải sửa vì phụ thuộc ở cấp mã nguồn. Đổi bội số hay quy tắc người phụ trách ảnh hưởng mô hình `Ticket`, API gán người, lưu trữ và các tình huống nghiệp vụ. Hai loại thay đổi đòi hỏi phạm vi kiểm thử khác nhau.
+**Impact of design changes:** changing the `MessageSender` API may require changes to `TicketService` because of source-level dependency. Changing multiplicity or assignment rules affects the `Ticket` model, assignment API, storage, and business scenarios. These changes require different testing scopes.
 
-## 8. Lỗi thường gặp
+## 8. Common mistakes
 
-| Lỗi | Hậu quả | Hướng xử lý |
+| Mistake | Consequence | Remedy |
 |---|---|---|
-| Lưu mọi đối tượng sử dụng vào field | State dư thừa, khó theo dõi quan hệ và vòng đời | Dùng tham số/local cho cộng tác viên chỉ cần tại chỗ |
-| Chỉ truyền đối tượng nghiệp vụ qua tham số dù phải nhớ qua nhiều thao tác | Mất trạng thái liên kết khi xử lý lần sau | Lưu liên kết ở aggregate/domain model hoặc repository |
-| Cho rằng kết thúc phương thức sẽ hủy object tham số | Hiểu sai Java GC và tham chiếu chia sẻ | Phân biệt phạm vi biến tham chiếu với vòng đời object |
-| Nhầm field của DI với quan hệ “sở hữu” nghiệp vụ | Áp quy tắc composition/cascade không phù hợp | Tách phụ thuộc dịch vụ và association miền nghiệp vụ |
-| Lưu association hai chiều mà chỉ cập nhật một phía | Hai chiều truy cập cho kết quả khác nhau | Đóng gói thao tác gán, chuyển và gỡ quan hệ |
-| Đồng nhất dependency với quan hệ UML một chiều | Vẽ sơ đồ mơ hồ, thiếu bội số và trạng thái | Dùng nét đứt cho quan hệ sử dụng; nét liền khi mô hình hóa association |
+| Storing every used object in a field | Redundant state and unclear relationships/lifecycles | Use parameters or locals for collaborators needed only during an operation |
+| Passing a business object only as a parameter even when it must be remembered across operations | Relationship state is lost on subsequent operations | Store the link in an aggregate/domain model or repository |
+| Assuming the end of a method destroys its argument object | Misunderstanding Java GC and shared references | Distinguish reference-variable scope from object lifecycle |
+| Confusing a DI field with a business ownership relationship | Applying inappropriate composition/cascade rules | Separate service dependencies from domain associations |
+| Storing a bidirectional association but updating only one end | Navigation in the two directions yields inconsistent results | Encapsulate assignment, reassignment, and unlinking |
+| Treating dependency as identical to unidirectional UML association | Ambiguous diagrams missing multiplicity and state | Use dashed lines for usage dependencies and solid lines for modeled associations |
 
-### Bài tập tự luyện
+### Practice exercises
 
-Thiết kế chức năng xuất hóa đơn gồm `Invoice`, `Customer`, `PdfExporter`.
+Design an invoice-export feature involving `Invoice`, `Customer`, and `PdfExporter`.
 
-1. Mỗi hóa đơn thuộc một khách hàng và cần tra lại khách hàng trong các lần xem sau. Quan hệ nào? **Association** giữa `Invoice` và `Customer`.
-2. Khi bấm nút xuất PDF, phương thức nhận `PdfExporter` để dựng file, không giữ exporter. Quan hệ nào? **Dependency ở mức phương thức**.
-3. Nếu `InvoiceService` nhận `PdfExporter` trong constructor và giữ field để dùng nhiều lần thì sao? Service **phụ thuộc vào abstraction của exporter** và đồng thời giữ **tham chiếu cấu trúc dài hơn một lời gọi**.
-4. Việc đổi PDF exporter có khiến khách hàng của hóa đơn thay đổi không? **Không**: đây là hai quan hệ phục vụ hai trách nhiệm khác nhau.
-5. Xóa liên kết invoice–customer có đồng nghĩa xóa object customer không? **Không**: association không tự quyết định quyền sở hữu hay vòng đời.
+1. Each invoice belongs to one customer, whose information must be retrieved during later views. Which relationship is this? **Association** between `Invoice` and `Customer`.
+2. On clicking Export PDF, a method receives `PdfExporter` to build the file but does not retain it. Which relationship is this? **Method-level dependency**.
+3. What if `InvoiceService` receives `PdfExporter` in its constructor and stores it for repeated use? The service **depends on the exporter abstraction** while also keeping **a structural reference longer than one call**.
+4. Does replacing the PDF exporter change the invoice's customer? **No**: these relationships serve different responsibilities.
+5. Does removing the invoice–customer link imply deleting the customer object? **No**: association alone does not determine ownership or lifecycle.
 
-**Cốt lõi:** dependency trả lời “**cần ai để thực hiện thao tác?**”, association trả lời “**đang liên hệ với ai như một phần trạng thái/mô hình?**”. Trong Java, hãy xem kỹ nơi lưu tham chiếu, mục đích nghiệp vụ và thời gian cần truy cập quan hệ; đừng kết luận chỉ dựa vào tuổi thọ của object hoặc sự xuất hiện của một kiểu trong source code.
+**The essential distinction:** dependency answers "**who is needed to perform this operation?**" while association answers "**who is related as part of the model or state?**" In Java, examine where references are stored, their business purpose, and how long relationships must remain accessible; do not draw conclusions solely from an object's lifetime or the appearance of a type in source code.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="relationships-003">Tập hợp và hợp thành</a>
+## <a id="relationships-003">Aggregation and composition</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tập hợp (Aggregation) và hợp thành (Composition) trong OOP Java
+# Aggregation and composition in Java OOP
 
-**Chủ đề:** Hai cách biểu diễn quan hệ toàn thể – bộ phận (*whole–part relationship*) giữa các đối tượng: **tập hợp (aggregation)** và **hợp thành (composition)**. Bài học tập trung vào cách chọn đúng quan hệ, nhận biết quyền sở hữu (*ownership*), thiết kế vòng đời đối tượng và thể hiện quan hệ bằng Java/UML.
+**Topic:** Two ways of representing **whole–part relationships** between objects: **aggregation** and **composition**. This lesson focuses on choosing the appropriate relationship, identifying **ownership**, designing object lifecycles, and representing relationships in Java/UML.
 
-> **Phân biệt thuật ngữ:** “Tập hợp” ở đây là **aggregation trong mô hình đối tượng/UML**, không đồng nghĩa với kiểu `Collection`, `List` hay `Set` của Java Collections Framework. Một trường kiểu `List<T>` tự nó chưa nói lên quan hệ đang là aggregation hay composition.
+> **Terminology:** "Aggregation" here means **aggregation in object modeling/UML**, not the `Collection`, `List`, or `Set` types of the Java Collections Framework. A field of type `List<T>` alone does not tell you whether the relationship is aggregation or composition.
 
-## 1. Nền tảng: quan hệ “có/chứa” chưa đủ để kết luận
+## 1. Foundations: a "has/contains" relationship is not enough
 
-Giả sử một `Team` có nhiều `Employee`, một `Order` có nhiều `OrderLine`. Cả hai đều có thể biểu diễn bằng trường tham chiếu hay danh sách Java:
+Suppose a `Team` has multiple `Employee` objects, and an `Order` has multiple `OrderLine` objects. Both can be represented using reference fields or Java lists:
 
 ~~~java
 class Team {
@@ -670,24 +670,24 @@ class Order {
 }
 ~~~
 
-Cú pháp trên **không chứng minh** bất kỳ quan hệ nào là hợp thành. Muốn chọn mô hình, cần hỏi:
+The syntax above **does not prove** that either relationship is composition. To choose a model, ask:
 
-1. **Bộ phận có danh tính và ý nghĩa riêng ngoài toàn thể không?** Nhân viên vẫn là nhân viên khi rời đội; một dòng đơn hàng thường chỉ có ý nghĩa trong chính đơn hàng đó.
-2. **Ai sở hữu và quyết định việc tạo, gắn, gỡ và hủy bộ phận?** Đơn hàng thường quản lý các dòng của mình; đội chỉ tập hợp nhân viên đang tham gia.
-3. **Một bộ phận có thể thuộc nhiều toàn thể cùng lúc không?** Một nhân viên có thể tham gia hai đội nếu nghiệp vụ cho phép; một dòng đơn hàng cụ thể không nên đồng thời thuộc hai đơn hàng.
-4. **Nếu xóa toàn thể, điều gì xảy ra theo quy tắc nghiệp vụ?** Giải tán đội không có nghĩa nhân viên bị xóa khỏi hệ thống; xóa một đơn nháp có thể xóa các dòng của đơn đó.
+1. **Does the part have an identity and meaning outside the whole?** An employee remains an employee after leaving a team; an order line usually has meaning only within its particular order.
+2. **Who owns and controls the creation, attachment, removal, and destruction of the part?** An order typically manages its own lines, while a team merely groups participating employees.
+3. **Can one part belong to several wholes simultaneously?** An employee may join two teams if the business allows it; a particular order line should not belong to two orders at the same time.
+4. **What happens when the whole is deleted according to business rules?** Dissolving a team does not mean deleting its employees from the system; deleting a draft order may delete its lines.
 
-Đó là các quy tắc nghiệp vụ, không phải đặc điểm tự động của `List`, `new`, `final` hay cơ chế thu gom rác.
+These are business rules, not automatic properties of `List`, `new`, `final`, or garbage collection.
 
-## 2. Ba quan hệ dễ nhầm lẫn
+## 2. Three commonly confused relationships
 
-| Quan hệ UML | Ý nghĩa cơ bản | Ví dụ | Ký hiệu đầu toàn thể |
+| UML relationship | Basic meaning | Example | Notation at the whole end |
 |---|---|---|---|
-| **Association** (liên kết) | Các đối tượng biết hoặc tương tác với nhau; không mặc định quan hệ toàn thể–bộ phận | `Doctor` khám `Patient` | Đường nối thường |
-| **Aggregation** (tập hợp/chia sẻ) | Một đối tượng nhóm/có các đối tượng khác; phần tử có thể tồn tại độc lập | `Team` gồm các `Employee` | Hình thoi **rỗng** |
-| **Composition** (hợp thành) | Quan hệ toàn thể–bộ phận với **quyền sở hữu mạnh**, bộ phận thuộc tối đa một toàn thể tại một thời điểm | `Order` sở hữu `OrderLine` | Hình thoi **đặc** |
+| **Association** | Objects know or interact with one another; not necessarily a whole–part relationship | A `Doctor` examines a `Patient` | Ordinary connecting line |
+| **Aggregation** (shared aggregation) | An object groups/contains other objects; the parts can exist independently | A `Team` consists of `Employee` objects | **Hollow** diamond |
+| **Composition** | Whole–part relationship with **strong ownership**; each part belongs to at most one whole at a time | An `Order` owns its `OrderLine` objects | **Filled** diamond |
 
-**Điểm cần chính xác:** UML định nghĩa *shared aggregation* (hình thoi rỗng) khá lỏng, không gán sẵn một quy tắc vòng đời cụ thể. Vì thế trong tài liệu thiết kế nghiêm túc, nếu chỉ cần “đội có tham chiếu tới nhân viên”, một **association** thông thường cũng có thể rõ ràng hơn hình thoi rỗng. **Composition** có ngữ nghĩa mạnh hơn: phần tử nằm dưới quyền sở hữu của một composite tại một thời điểm; khi toàn thể bị hủy trong mô hình, các phần thuộc nó cũng bị hủy theo quy tắc sở hữu.
+**An important distinction:** UML defines *shared aggregation* (the hollow diamond) loosely, without assigning any specific lifecycle rule. Thus, in a rigorous design document, if all you mean is "the team references employees," an ordinary **association** may be clearer than a hollow diamond. **Composition** has stronger semantics: a part is owned by one composite at a time; when the whole is destroyed in the model, its parts are also destroyed according to the ownership contract.
 
 ~~~mermaid
 classDiagram
@@ -699,13 +699,13 @@ classDiagram
     PurchaseOrder "1" *-- "0..*" OrderLine : sở hữu
 ~~~
 
-Trong class diagram, **hình thoi luôn đặt ở phía đối tượng toàn thể**: phía `Team` hay `PurchaseOrder`, không đặt tại phía đối tượng bộ phận. Bội số `0..*` là lựa chọn theo ví dụ: đội có thể chưa có thành viên, đơn nháp có thể chưa có dòng. Nếu quy tắc yêu cầu một đơn đã xác nhận phải có ít nhất một dòng, hãy biểu diễn và kiểm tra ràng buộc đó ở trạng thái phù hợp.
+In a class diagram, **the diamond always appears at the whole end**: the `Team` or `PurchaseOrder` side, not the part side. The `0..*` multiplicity is specific to this example: a team may have no members yet, and a draft order may have no lines. If a confirmed order must have at least one line, model and enforce that constraint in the appropriate state.
 
-## 3. Aggregation: đội tập hợp nhân viên độc lập
+## 3. Aggregation: a team grouping independent employees
 
-Giả sử nhân viên có thể tham gia nhiều nhóm công việc. `Team` giữ các tham chiếu đến `Employee`, nhưng `Employee` được tạo và quản lý độc lập. Khi bỏ nhân viên khỏi nhóm, đối tượng nhân viên vẫn tồn tại để tham gia nhóm khác.
+Suppose employees may join multiple work teams. `Team` holds references to `Employee` objects, but each `Employee` is created and managed independently. Removing an employee from a team leaves the employee object available for other teams.
 
-**Tệp `AggregationDemo.java` — Java 17+:**
+**File `AggregationDemo.java` — Java 17+:**
 
 ~~~java
 import java.util.LinkedHashSet;
@@ -765,24 +765,24 @@ public class AggregationDemo {
 }
 ~~~
 
-Biên dịch và chạy: `javac AggregationDemo.java`, sau đó `java AggregationDemo`.
+Compile and run: `javac AggregationDemo.java`, then `java AggregationDemo`.
 
-**Điểm thiết kế quan trọng:**
+**Important design points:**
 
-- `Employee` được tạo **trước và độc lập với** `Team`. Việc rời một nhóm không làm mất thực thể nhân viên.
-- Theo nghiệp vụ giả định, cùng một nhân viên được phép tham gia nhiều nhóm. Nếu hệ thống quy định mỗi nhân viên chỉ có một nhóm, phải thêm ràng buộc cho miền nghiệp vụ; UML aggregation không tự áp đặt hay kiểm tra ràng buộc đó.
-- `Set.copyOf(members)` tạo một tập hợp không thể sửa qua tham chiếu trả về, tránh người gọi `team.members().clear()` để làm hỏng trạng thái bên trong. Trong ví dụ, `Employee` là `record` bất biến; nếu phần tử có thể đổi trạng thái thì chỉ trả về `Set.copyOf` **không** làm các phần tử trở thành bất biến.
-- `Set` nhận biết phần tử trùng bằng `equals()/hashCode()`. Với `record Employee`, cả `id` và `name` tham gia so sánh; ở hệ thống thực tế có thể muốn quản lý duy nhất theo mã nhân viên thay vì hai trường này.
+- `Employee` is created **before and independently of** `Team`. Leaving a team does not eliminate the employee entity.
+- Under the assumed business rules, one employee may belong to multiple teams. If the system allows only one team per employee, add a domain constraint; UML aggregation neither imposes nor checks that rule automatically.
+- `Set.copyOf(members)` produces an unmodifiable set, preventing callers from corrupting internal state through `team.members().clear()`. Here, `Employee` is an immutable `record`; if elements were mutable, returning `Set.copyOf` alone would **not** make them immutable.
+- `Set` detects duplicates through `equals()/hashCode()`. For `record Employee`, both `id` and `name` take part in equality; a real system might enforce uniqueness by employee ID instead.
 
-**Không diễn giải sai vòng đời:** Xóa một biến `Team` hoặc gọi `removeMember` không kích hoạt thao tác “xóa đối tượng Employee” trong JVM. Java không có phép `delete object` thủ công kiểu C++; một đối tượng chỉ đủ điều kiện được GC khi không còn đường tham chiếu mạnh giữ nó sống, và thời điểm GC không được bảo đảm.
+**Do not misinterpret lifecycles:** Deleting a `Team` variable or calling `removeMember` does not trigger a "delete Employee object" operation in the JVM. Java has no manual `delete object` operation like C++; an object becomes eligible for GC only when no strong-reference path keeps it reachable, and garbage-collection timing is not guaranteed.
 
-## 4. Composition: đơn hàng sở hữu các dòng hàng
+## 4. Composition: an order owning its line items
 
-Một `OrderLine` mô tả số lượng và đơn giá của một mặt hàng **trong một đơn hàng cụ thể**. Trong mô hình này, dòng hàng được sinh ra qua `Order`, không được chia sẻ giữa hai đơn và không được quản lý như một thực thể độc lập.
+An `OrderLine` describes the quantity and unit price of an item **within one particular order**. In this model, a line item is created through `Order`, is not shared between orders, and is not managed as an independent entity.
 
-Ví dụ dùng **đối tượng con riêng tư** và API hành vi thay vì công khai `List<OrderLine>`. Đây là cách thể hiện ownership tốt hơn việc chỉ viết `private final List<...>`.
+The example uses **private child objects** and behavior-oriented methods rather than exposing a `List<OrderLine>`. This expresses ownership better than merely declaring `private final List<...>`.
 
-**Tệp `CompositionDemo.java` — Java 17+:**
+**File `CompositionDemo.java` — Java 17+:**
 
 ~~~java
 import java.math.BigDecimal;
@@ -875,32 +875,32 @@ public class CompositionDemo {
 }
 ~~~
 
-Biên dịch và chạy: `javac CompositionDemo.java`, sau đó `java CompositionDemo`.
+Compile and run: `javac CompositionDemo.java`, then `java CompositionDemo`.
 
-Hai đơn có thể cùng tham chiếu **mã sản phẩm** `"JAVA-BOOK"`, nhưng mỗi đơn sở hữu một đối tượng `LineItem` riêng. Đây là khác biệt giữa **chia sẻ thông tin về sản phẩm** và **chia sẻ chính phần tử cấu thành đơn hàng**. Sản phẩm trong catalog có vòng đời riêng; còn `LineItem` biểu diễn giá/số lượng tại một đơn hàng.
+Two orders may reference the same **product code** `"JAVA-BOOK"`, but each owns a distinct `LineItem` object. This distinguishes **sharing product information** from **sharing the actual part that makes up an order**. A catalog product has its own lifecycle; `LineItem` represents price and quantity in one order.
 
-Trong ví dụ, `LineItem` là lớp lồng `private`, được tạo bằng `Order.addLine()` và không thoát ra qua API. `BigDecimal` là bất biến; danh sách nội bộ không bị lộ. Điều đó hỗ trợ bất biến nghiệp vụ rằng không thể lấy một dòng từ đơn A rồi gắn trực tiếp sang đơn B. `final` trên tham chiếu danh sách chỉ cấm gán lại biến `lines`; chính việc **đóng gói và kiểm soát API** mới bảo vệ nội dung danh sách.
+In the example, `LineItem` is a `private` nested class created by `Order.addLine()` and never exposed through the API. `BigDecimal` is immutable, and the internal list is not exposed. This supports the business invariant that a line cannot be taken from order A and directly attached to order B. `final` on the list reference only prevents reassigning `lines`; **encapsulation and API control** are what protect the list's contents.
 
-**Vòng đời ở hai tầng cần phân biệt:**
+**Distinguish the different lifecycle layers:**
 
-- **Tầng domain/UML:** nếu đơn bị hủy khỏi mô hình, các dòng thuộc đơn cũng bị hủy theo quyết định nghiệp vụ, không được giữ lại như dòng của một đơn khác.
-- **Tầng runtime Java:** JVM không tự xóa đệ quy các đối tượng vào đúng thời điểm bạn “hủy đơn”. GC dựa trên khả năng tiếp cận của tham chiếu; các quan hệ composition cần được thể hiện bằng API và quy tắc domain. Nếu các phần tử đã bị rò rỉ ra ngoài qua tham chiếu khác, chúng vẫn có thể tồn tại trong bộ nhớ.
-- **Tầng database:** xóa hàng `orders` không mặc nhiên xóa hàng `order_lines`; cần cơ chế phù hợp, ví dụ transaction, foreign key `ON DELETE CASCADE`, hoặc ánh xạ ORM với cascade/orphan removal đúng trường hợp.
+- **Domain/UML layer:** if an order is destroyed in the model, its lines are destroyed with it according to business ownership rules; they cannot remain as lines of another order.
+- **Java runtime layer:** the JVM does not recursively delete objects at the exact moment you "destroy an order." GC is based on reference reachability; composition must be expressed through APIs and domain rules. If references to parts have escaped, those parts may still exist in memory.
+- **Database layer:** deleting an `orders` row does not automatically delete `order_lines` rows; appropriate mechanisms are needed, such as a transaction, a foreign key with `ON DELETE CASCADE`, or correctly configured ORM cascade/orphan removal.
 
-## 5. Cách nhận ra quan hệ từ yêu cầu nghiệp vụ
+## 5. Recognizing relationships from business requirements
 
-| Câu hỏi | Nghiêng về aggregation / association | Nghiêng về composition |
+| Question | Suggests aggregation / association | Suggests composition |
 |---|---|---|
-| Phần tử có ý nghĩa độc lập không? | Có: nhân viên, bác sĩ, tài khoản | Không, hoặc bị ràng buộc chặt với toàn thể: dòng đơn hàng |
-| Có thể đồng thời là bộ phận của nhiều toàn thể không? | Có thể, tùy mô hình | **Không** theo ngữ nghĩa UML của composition |
-| Ai quản lý việc tạo và xóa phần tử? | Thực thể/dịch vụ độc lập | Toàn thể thường kiểm soát |
-| Xóa toàn thể có xóa phần tử trong mô hình không? | Thường không | Có, theo hợp đồng sở hữu |
-| Chia sẻ tham chiếu cùng phần tử giữa hai toàn thể? | Có thể hợp lệ | Vi phạm exclusivity khi hai toàn thể cùng sở hữu |
-| Cài đặt Java thường gặp | Tham chiếu/collection tới đối tượng bên ngoài | Tạo con qua phương thức của chủ, che giấu API thay đổi hoặc áp ràng buộc owner |
+| Does the part have independent meaning? | Yes: employee, doctor, account | No, or closely tied to the whole: order line |
+| Can it simultaneously belong to several wholes? | Possibly, depending on the model | **No**, under UML composition semantics |
+| Who manages the part's creation and deletion? | An independent entity/service | Usually the whole |
+| Does deleting the whole delete the part in the model? | Usually not | Yes, according to the ownership contract |
+| Can two wholes share a reference to the same part? | Potentially valid | Violates exclusivity if both wholes own it |
+| Common Java implementation | References/collections pointing to external objects | Create children through owner methods, hide modification APIs, or enforce owner constraints |
 
-**Cảnh giác với ví dụ kinh điển:** `Car` – `Engine` hay `House` – `Room` không thể được chốt quan hệ chỉ nhờ từ ngữ. Nếu động cơ được tháo và chuyển sang xe khác, hoặc phòng được mô hình hóa độc lập trong hệ thống quản lý bất động sản, yêu cầu nghiệp vụ đã thay đổi. Với composition, có thể chuyển một part từ composite A sang B, nhưng phải **gỡ quyền sở hữu cũ trước khi gắn quyền sở hữu mới**, không được thuộc cả hai cùng thời điểm.
+**Be cautious with classic examples:** You cannot decide whether `Car` – `Engine` or `House` – `Room` is composition from the words alone. If an engine can be removed and fitted into another car, or rooms are modeled independently in a property-management system, the business requirements differ. In composition, a part may move from composite A to B, but **its old ownership must end before the new ownership begins**; it cannot belong to both at once.
 
-## 6. UML: ký hiệu, hướng, multiplicity, navigability
+## 6. UML: notation, direction, multiplicity, and navigability
 
 ~~~mermaid
 classDiagram
@@ -929,30 +929,30 @@ classDiagram
     PurchaseOrder "1" *-- "0..*" OrderLine : các dòng riêng
 ~~~
 
-- **Hình thoi rỗng (`o--`)** biểu thị shared aggregation; **hình thoi đặc (`*--`)** biểu thị composition. Ký hiệu nằm tại đầu **whole**.
-- **Multiplicity** cho biết số lượng liên kết hợp lệ tại mỗi đầu. Ví dụ `PurchaseOrder "1" *-- "0..*" OrderLine`: mỗi `OrderLine` của mô hình gắn đúng một `PurchaseOrder`, còn một đơn nháp có thể có nhiều dòng. Khi hệ thống hỗ trợ xóa/di chuyển dòng, cần định nghĩa các trạng thái chuyển tiếp hợp lệ.
-- **Navigability** cho biết từ đối tượng nào có thể điều hướng tới đối tượng khác; không đồng nhất với ownership. Một composition có thể có hoặc không cho phép phần tử đi ngược về đối tượng chủ qua tham chiếu `order`.
-- **Aggregation không tự làm rõ chia sẻ hoặc tồn tại lâu dài:** đừng suy luận mọi shared aggregation đều *bắt buộc* cho phép đồng sở hữu. Ràng buộc đó do nghiệp vụ xác định. Nếu không cần ngữ nghĩa toàn thể–bộ phận rõ, dùng association thường đủ.
-- Một composition **không yêu cầu mọi trường hợp phải có đối tượng con tại thời điểm khởi tạo**. Đơn nháp chưa có dòng là hợp lệ nếu trạng thái “đã gửi” yêu cầu `lineCount >= 1` và được kiểm tra khi `submit()`.
+- A **hollow diamond (`o--`)** denotes shared aggregation; a **filled diamond (`*--`)** denotes composition. The symbol appears at the **whole** end.
+- **Multiplicity** indicates the valid number of related objects at each end. For example, `PurchaseOrder "1" *-- "0..*" OrderLine` means each `OrderLine` belongs to exactly one `PurchaseOrder`, while a draft order may have multiple lines. If deleting/moving lines is supported, valid transition states must be defined.
+- **Navigability** indicates which object can navigate to the other; it is not the same as ownership. A composition may or may not allow a part to navigate back to its owner through an `order` reference.
+- **Aggregation does not automatically define sharing or longevity:** do not assume that every shared aggregation *must* permit joint ownership. Business requirements determine such constraints. If explicit whole–part semantics are unnecessary, an association is often enough.
+- Composition **does not always require child objects to exist at initialization**. A draft with no lines is valid if the "submitted" state requires `lineCount >= 1` and that constraint is checked by `submit()`.
 
-## 7. Quy tắc triển khai thực tế trong Java
+## 7. Practical implementation rules in Java
 
-**Để biểu diễn aggregation đúng ý định:**
+**To model aggregation as intended:**
 
-1. Truyền phần tử được tạo từ ngoài vào constructor hoặc `addMember()` của đối tượng nhóm.
-2. Khi gỡ khỏi nhóm, chỉ thay đổi **quan hệ thành viên**, không vô tình xóa phần tử gốc.
-3. Trả về collection không cho phép caller sửa trạng thái nội bộ; cân nhắc snapshot/danh sách bất biến tùy nhu cầu.
-4. Xác định rõ phần tử được phép chia sẻ giữa nhiều nhóm hay chỉ được tham gia một nhóm; đây là luật domain, không phải tính năng của hình thoi.
+1. Pass externally created elements to the group's constructor or `addMember()`.
+2. When removing an element from a group, change only **its membership relationship**; do not accidentally delete the original element.
+3. Return a collection that does not let callers modify internal state; consider snapshots or immutable collections as appropriate.
+4. Specify whether elements can be shared among groups or belong to only one; this is a domain rule, not a feature of the diamond symbol.
 
-**Để biểu diễn composition rõ ràng:**
+**To model composition clearly:**
 
-1. Xác định ai là chủ (*owner*) và part có được tồn tại độc lập không.
-2. Cho owner tạo/thêm/sửa/xóa part qua các phương thức có tên theo hành vi nghiệp vụ; ngăn gắn một part vào nhiều owner cùng lúc.
-3. Không trả ra collection có thể sửa trực tiếp hoặc một part có thể bị tái gán owner tùy tiện. Nếu phải trả ra part, dùng giá trị bất biến, DTO/snapshot, hoặc kiểm tra owner.
-4. Kiểm tra invariants ở ranh giới của aggregate: số lượng dương, giá không âm, đơn đã khóa thì không thể sửa, đơn đã gửi phải có dòng.
-5. Quyết định rõ chính sách lưu trữ: khi xóa owner thì xử lý part nào, trong cùng transaction nào; việc đó **không phát sinh tự động** từ quan hệ Java.
+1. Identify the **owner** and whether each part can exist independently.
+2. Let the owner create/add/modify/delete parts through business-oriented methods; prevent a part from being attached to multiple owners simultaneously.
+3. Do not expose a directly mutable collection or a part whose owner can be reassigned arbitrarily. If parts must be returned, use immutable values, DTOs/snapshots, or owner validation.
+4. Check invariants at aggregate boundaries: positive quantities, nonnegative prices, no editing locked orders, and at least one line in submitted orders.
+5. Define persistence policy explicitly: which parts are removed when the owner is deleted, and within which transaction. This **does not happen automatically** because of a Java relationship.
 
-Một dạng composition khác thường gặp là constructor khởi tạo part một lần:
+Another common form of composition initializes a part once in the constructor:
 
 ~~~java
 final class Computer {
@@ -964,11 +964,11 @@ final class Computer {
 }
 ~~~
 
-Ví dụ này gợi ý quyền sở hữu, nhưng **chưa chứng minh** mô hình composition nếu `Computer` còn công khai reference part cho bên ngoài thay chủ sở hữu hoặc cho phép chia sẻ. Ngữ nghĩa đến từ luật domain và API được thiết kế, không đến từ vị trí đặt từ khóa `new`.
+This suggests ownership but **does not prove** composition if `Computer` exposes the part reference, allows outside code to change its owner, or permits sharing. The semantics come from domain rules and API design, not from where `new` appears.
 
-## 8. Khi làm việc với Spring/JPA
+## 8. Working with Spring/JPA
 
-Java object graph, UML và lưu trữ quan hệ là ba lớp khác nhau. Một liên kết `@OneToMany` **không đủ** để bảo đảm composition. Ví dụ có chủ đích `PurchaseOrderEntity` quản lý `OrderLineEntity` có thể dùng:
+Java object graphs, UML, and relationship persistence are three different layers. An `@OneToMany` association **is not enough** to guarantee composition. A deliberate design in which `PurchaseOrderEntity` manages `OrderLineEntity` objects might use:
 
 ~~~java
 // Minh họa trường ánh xạ trong PurchaseOrderEntity (không phải lớp đầy đủ)
@@ -978,94 +978,94 @@ Java object graph, UML và lưu trữ quan hệ là ba lớp khác nhau. Một l
 private List<OrderLineEntity> lines = new ArrayList<>();
 ~~~
 
-Cần thêm trường `@ManyToOne` và `@JoinColumn` phù hợp ở phía `OrderLineEntity`, đồng bộ **cả hai phía** liên kết qua phương thức `addLine/removeLine`, và đặt transaction đúng chỗ. Khi orphan removal bật, loại một dòng khỏi quan hệ được quản lý có thể dẫn tới xóa dòng tại thời điểm flush; hãy chắc chắn đây đúng là nghiệp vụ mong muốn. `CascadeType.ALL` bao gồm cả REMOVE nên nguy hiểm nếu bộ phận thực sự là entity chia sẻ, chẳng hạn `Employee` được nhiều nhóm tham chiếu.
+Add suitable `@ManyToOne` and `@JoinColumn` fields on the `OrderLineEntity` side, synchronize **both sides** of the association through `addLine/removeLine` methods, and place transactions appropriately. With orphan removal enabled, removing a line from a managed association may delete that line when changes are flushed; ensure that this is the intended business behavior. `CascadeType.ALL` includes REMOVE and is therefore dangerous when the part is a shared entity, such as an `Employee` referenced by multiple teams.
 
-Đối với aggregation `Team` – `Employee`, thường không nên cấu hình cascade REMOVE từ Team sang Employee. Xóa nhóm chỉ cần xóa membership (ví dụ hàng ở bảng liên kết) nếu nhân viên vẫn tồn tại độc lập. Lựa chọn `@ManyToMany`, một entity `Membership`, hoặc bảng join có ràng buộc riêng còn phụ thuộc việc cần lưu ngày gia nhập, vai trò hay lịch sử thay đổi.
+For `Team` – `Employee` aggregation, you generally should not configure cascade REMOVE from Team to Employee. Deleting a team should remove only its memberships (for example, rows in a join table) if employees remain independent. Whether to use `@ManyToMany`, a `Membership` entity, or a join table with its own constraints depends on whether you need to store joining dates, roles, or change history.
 
-## 9. Kiểm thử hành vi thay vì kiểm tra hình dạng mã
+## 9. Test behavior rather than code structure
 
-Với ví dụ `AggregationDemo`, những trường hợp có giá trị:
+Useful cases for `AggregationDemo` include:
 
-- Một `Employee` tham gia hai `Team` theo đúng chính sách đã đặt.
-- Xóa khỏi team A không làm mất bản ghi nhân viên và không ảnh hưởng membership ở team B.
-- Caller không thể sửa nội bộ `members` qua collection trả về.
-- Giá trị rỗng/null bị chặn đúng hợp đồng.
+- An `Employee` joining two `Team` objects when allowed by policy.
+- Removing the employee from team A without deleting the employee record or affecting membership in team B.
+- Ensuring callers cannot modify internal `members` through the returned collection.
+- Rejecting blank/null values according to the contract.
 
-Với `CompositionDemo`:
+For `CompositionDemo`:
 
-- Hai `Order` thêm cùng `sku` vẫn giữ **dòng riêng** và tính tổng độc lập.
-- Thêm dòng có số lượng bằng 0 hoặc đơn giá âm bị từ chối.
-- `submit()` từ chối đơn rỗng và khóa thao tác sửa sau khi thành công.
-- API ngoài không thể lấy đối tượng `LineItem` từ đơn A rồi gắn trực tiếp vào đơn B.
-- Integration test xác nhận các dòng của một đơn bị xóa theo giao dịch khi xóa đơn thật trong database, nếu đó là policy hệ thống.
+- Two `Order` objects adding the same `sku` while keeping **separate line items** and calculating totals independently.
+- Rejecting a line with zero quantity or a negative unit price.
+- Ensuring `submit()` rejects empty orders and locks modifications after successful submission.
+- Preventing external APIs from taking a `LineItem` from order A and attaching it directly to order B.
+- Using integration tests to confirm that an order's lines are transactionally deleted when the order is deleted from the database, if required by policy.
 
-Không cần kiểm thử bằng reflection chỉ để chắc chắn có trường `List<LineItem>` hay constructor gọi `new LineItem()`; điều cần bảo vệ là **quy tắc sở hữu và hành vi quan sát được**.
+Reflection tests are not needed merely to confirm that a `List<LineItem>` field exists or a constructor calls `new LineItem()`; what matters is protecting **ownership rules and observable behavior**.
 
-## 10. Sai lầm thường gặp
+## 10. Common misconceptions
 
-| Nhầm lẫn | Vì sao sai | Cách sửa |
+| Misconception | Why it is wrong | Correction |
 |---|---|---|
-| “Có `List` thì chắc chắn aggregation” | Collection chỉ là cấu trúc lưu tham chiếu | Dựa vào ý nghĩa domain và vòng đời |
-| “Có `new` trong constructor thì chắc chắn composition” | Đối tượng con vẫn có thể bị chia sẻ hoặc đổi chủ | Bảo vệ quyền sở hữu bằng API/invariant |
-| “Composition có nghĩa Java xóa con ngay khi xóa cha” | GC không phải cơ chế cascade domain | Tách quy tắc domain, tham chiếu và persistence |
-| “Aggregation luôn cho phép chia sẻ giữa nhiều whole” | Shared aggregation trong UML không áp luật chia sẻ cố định | Ghi rõ ràng buộc business cụ thể |
-| “Hình thoi rỗng có định nghĩa chặt như hình thoi đặc” | UML để nhiều chi tiết shared aggregation cho người mô hình hóa | Dùng association nếu không cần ownership |
-| “`final List` không thể bị sửa” | `final` chỉ giữ nguyên tham chiếu | Đóng gói danh sách; trả snapshot/read-only view |
-| “`CascadeType.ALL` dùng được cho mọi quan hệ has-a” | REMOVE có thể xóa dữ liệu chia sẻ | Chọn cascade theo ownership thực tế |
+| "A `List` always means aggregation" | A collection is just a reference-storage structure | Base the choice on domain meaning and lifecycle |
+| "A `new` in a constructor always means composition" | Child objects may still be shared or assigned another owner | Enforce ownership through APIs/invariants |
+| "Composition means Java immediately deletes children when a parent is deleted" | GC is not a domain cascade mechanism | Separate domain rules, references, and persistence |
+| "Aggregation always permits sharing across multiple wholes" | UML shared aggregation does not impose fixed sharing rules | State specific business constraints |
+| "The hollow diamond has as strict a definition as the filled diamond" | UML leaves many shared-aggregation details to the modeler | Use association if ownership semantics are unnecessary |
+| "A `final List` cannot be modified" | `final` only fixes the reference | Encapsulate the list; return a snapshot/read-only view |
+| "`CascadeType.ALL` works for any has-a relationship" | REMOVE may delete shared data | Choose cascades based on actual ownership |
 
-## 11. Bài tập vận dụng
+## 11. Application exercises
 
-**Bối cảnh:** Nền tảng học tập có `Course`, `Student`, `Enrollment`, `Quiz`, `Question`.
+**Scenario:** A learning platform has `Course`, `Student`, `Enrollment`, `Quiz`, and `Question`.
 
-Hãy quyết định đâu là association, aggregation hoặc composition dựa trên yêu cầu sau:
+Decide which relationships are association, aggregation, or composition based on these requirements:
 
-1. Một `Student` được ghi danh nhiều `Course`; xóa khóa học không được xóa sinh viên.
-2. `Enrollment` lưu sinh viên, khóa học, ngày ghi danh và trạng thái; chỉ tồn tại khi một lượt đăng ký hợp lệ tồn tại, nhưng có yêu cầu lưu lịch sử dù khóa học đã đóng.
-3. Mỗi bản `Quiz` có các `Question` riêng; khi hủy bản nháp quiz thì hủy câu hỏi của bản nháp. Ngân hàng câu hỏi gốc (nếu có) vẫn độc lập và có thể được dùng để tạo bản sao cho quiz khác.
+1. A `Student` enrolls in many `Course` objects; deleting a course must not delete its students.
+2. `Enrollment` stores the student, course, enrollment date, and status; it exists only for a valid enrollment, but its history must be retained even after the course closes.
+3. Each `Quiz` has its own `Question` objects; discarding a draft quiz discards its draft questions. The original question bank (if any) remains independent and may be used to create copies for another quiz.
 
-**Gợi ý thiết kế:** `Course` – `Student` là quan hệ qua `Enrollment` thay vì trực tiếp dùng composition; `Enrollment` có vòng đời riêng theo quy tắc lưu lịch sử; `Quiz` – các bản `Question` sở hữu riêng có thể là composition, còn `QuestionBankEntry` là thực thể độc lập được tham chiếu hoặc sao chép dữ liệu. Sơ đồ chỉ đúng khi gắn với các ràng buộc vừa nêu.
+**Design guidance:** `Course` – `Student` is related through `Enrollment` rather than direct composition; `Enrollment` has its own lifecycle governed by history-retention rules; `Quiz` and its individually owned `Question` copies may form a composition, while `QuestionBankEntry` is an independent entity that is referenced or copied. The diagram is correct only when its stated constraints are enforced.
 
-**Tự kiểm tra:** Bạn có chỉ ra được ai có quyền tạo/xóa part, khi toàn thể bị xóa thì dữ liệu nào cần giữ, và một part có thể thuộc bao nhiêu whole tại một thời điểm không?
+**Self-check:** Can you identify who may create/delete a part, which data must be retained when the whole is deleted, and how many wholes a part may belong to at one time?
 
 ---
 
-**Ghi nhớ:** *Aggregation* thể hiện một quan hệ toàn thể–bộ phận lỏng, với bộ phận có thể tồn tại độc lập; *composition* biểu diễn **quyền sở hữu mạnh và độc quyền tại một thời điểm**. Sự khác biệt nằm ở **hợp đồng miền nghiệp vụ** và cách bảo vệ hợp đồng đó, không ở việc Java dùng trường, collection hay dấu `new`.
+**Remember:** *Aggregation* describes a loose whole–part relationship whose parts can exist independently; *composition* represents **strong, exclusive ownership at any given time**. The distinction lies in the **domain contract** and how it is enforced, not in whether Java uses fields, collections, or `new`.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="relationships-004">Số lượng: một-một, một-nhiều và nhiều-nhiều</a>
+## <a id="relationships-004">Multiplicity: one-to-one, one-to-many, and many-to-many</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Số lượng trong quan hệ OOP: một–một, một–nhiều và nhiều–nhiều
+# Multiplicity in OOP relationships: one-to-one, one-to-many, and many-to-many
 
-**Phạm vi:** Quan hệ giữa các đối tượng trong lập trình hướng đối tượng (OOP), cách mô tả số lượng bằng UML (*multiplicity/cardinality*) và cách cài đặt, duy trì quy tắc nghiệp vụ bằng Java.
+**Scope:** Relationships between objects in object-oriented programming (OOP), expressing their cardinalities using UML (*multiplicity/cardinality*), and implementing and maintaining business rules in Java.
 
-Một quan hệ như “sinh viên học môn học” vẫn chưa đủ để thiết kế class. Cần hỏi thêm: **mỗi sinh viên được học bao nhiêu môn, và mỗi môn có bao nhiêu sinh viên?** Số lượng ở hai phía quyết định cấu trúc dữ liệu, API cập nhật, cách bảo vệ tính nhất quán và đôi khi cả thiết kế lưu trữ.
+A relationship such as "students take courses" is not enough to design classes. You must also ask: **how many courses may each student take, and how many students may take each course?** The cardinality at both ends determines data structures, update APIs, consistency safeguards, and sometimes persistence design.
 
-## 1. Đọc đúng số lượng quan hệ
+## 1. Reading relationship multiplicity correctly
 
-Trong UML, số lượng được đặt **ở đầu gần lớp mà nó đếm**. Ví dụ `Department "1" -- "0..*" Employee` có nghĩa:
+In UML, multiplicity appears **at the end near the class whose instances it counts**. For example, `Department "1" -- "0..*" Employee` means:
 
-- Một `Department` có thể liên kết với **0 hoặc nhiều** `Employee`.
-- Mỗi `Employee` liên kết với **đúng 1** `Department` theo mô hình này.
+- A `Department` may be linked to **zero or more** `Employee` objects.
+- Each `Employee` is linked to **exactly one** `Department` in this model.
 
-| Ký hiệu UML | Ý nghĩa | Ví dụ |
+| UML notation | Meaning | Example |
 | --- | --- | --- |
-| `1` | Chính xác một | Mỗi phiếu bảo hành thuộc đúng một sản phẩm trong hệ thống đã chọn |
-| `0..1` | Không có hoặc có một | Người dùng có thể chưa tạo hồ sơ mở rộng |
-| `0..*` (hoặc `*`) | Không hoặc nhiều | Dự án mới chưa có công việc |
-| `1..*` | Ít nhất một | Nhóm được yêu cầu có ít nhất một thành viên |
-| `2..5` | Từ hai đến năm | Một bàn đăng ký từ 2–5 người, theo quy tắc đặt bàn của ứng dụng |
+| `1` | Exactly one | Each warranty record belongs to exactly one product in the chosen system |
+| `0..1` | Zero or one | A user may not yet have created an extended profile |
+| `0..*` (or `*`) | Zero or many | A new project may have no tasks |
+| `1..*` | At least one | A team must have at least one member |
+| `2..5` | From two to five | A table reservation covers 2–5 people under the application's booking rules |
 
-`1`, `0..1`, `0..*` là **ràng buộc số lượng** trong mô hình, không phải kiểu dữ liệu Java. Một trường đơn (`User owner`) hay tập hợp (`List<Task>`) chỉ là cách cài đặt; chúng không tự bảo đảm quy tắc đó.
+`1`, `0..1`, and `0..*` are **cardinality constraints** in the model, not Java data types. A single field (`User owner`) or collection (`List<Task>`) is just an implementation choice; neither automatically enforces those constraints.
 
-### Ba kiểu quan hệ quen thuộc
+### Three familiar relationship types
 
 ```mermaid
 classDiagram
@@ -1081,17 +1081,17 @@ classDiagram
     Student "0..*" -- "0..*" Course : đăng ký
 ```
 
-| Kiểu | Nhìn từ A | Nhìn từ B | Ví dụ thực tế |
+| Type | From A's perspective | From B's perspective | Practical example |
 | --- | --- | --- | --- |
-| Một–một (1–1) | Mỗi A có tối đa/đúng một B tùy ràng buộc | Mỗi B có tối đa/đúng một A | Một tài khoản có một hồ sơ do hệ thống cấp |
-| Một–nhiều (1–N) | Một A có nhiều B | Mỗi B thuộc một A trong phạm vi mô hình | Một dự án có nhiều công việc |
-| Nhiều–nhiều (N–N) | Một A liên kết nhiều B | Một B liên kết nhiều A | Sinh viên đăng ký nhiều khóa học, mỗi khóa có nhiều sinh viên |
+| One-to-one (1–1) | Each A has at most/exactly one B, depending on the constraint | Each B has at most/exactly one A | An account has one profile issued by the system |
+| One-to-many (1–N) | One A has many B objects | Each B belongs to one A within the model | A project has many tasks |
+| Many-to-many (N–N) | One A relates to many B objects | One B relates to many A objects | Students enroll in multiple courses, each taken by many students |
 
-**Chú ý:** 1–1 không có nghĩa luôn là `1` ở cả hai đầu. `1`–`0..1` vẫn thường được gọi là quan hệ một–một *tùy chọn* ở một phía. Tương tự, 1–N có thể là `1`–`0..*` hoặc `1`–`1..*`, tùy nghiệp vụ.
+**Note:** 1–1 does not always require `1` at both ends. `1`–`0..1` is often described as a one-to-one relationship that is *optional* at one end. Similarly, 1–N may mean `1`–`0..*` or `1`–`1..*`, depending on business rules.
 
-## 2. Quan hệ một–một: đúng một hay tối đa một?
+## 2. One-to-one: exactly one or at most one?
 
-Ví dụ: mỗi `User` luôn có một `Profile` được khởi tạo cùng lúc. Quan hệ được thiết kế là `User (1) -> Profile (1)`. Một biến tham chiếu thể hiện thuận tiện một đầu quan hệ:
+For example, every `User` always has a `Profile` created at the same time. The intended relationship is `User (1) -> Profile (1)`. A reference variable conveniently represents one end:
 
 ```java
 final class User {
@@ -1109,9 +1109,9 @@ final class User {
 record Profile(String displayName) { }
 ```
 
-Ở đây, constructor `User` luôn tạo `Profile`; sau khi tạo thành công, `profile` không thể bị gán lại. Nếu constructor nhận `Profile` từ ngoài, cần kiểm tra `null` và xác định một `Profile` có được chia sẻ hay không.
+Here, the `User` constructor always creates a `Profile`; after successful construction, `profile` cannot be reassigned. If the constructor instead accepts an external `Profile`, it must check for `null` and establish whether that `Profile` may be shared.
 
-Một biến tham chiếu `Profile profile` **không tự bảo đảm tính duy nhất trên toàn hệ thống**. Ví dụ:
+A `Profile profile` reference variable **does not guarantee system-wide uniqueness**. For example:
 
 ```java
 Profile shared = new Profile("An");
@@ -1119,13 +1119,13 @@ Profile shared = new Profile("An");
 // nếu API cho phép truyền shared vào constructor.
 ```
 
-Nếu quy tắc yêu cầu “mỗi hồ sơ chỉ thuộc một người”, phải bảo đảm bằng API/domain service, registry hoặc ràng buộc duy nhất tại tầng lưu trữ. `private` và `final` chỉ hạn chế truy cập/gán lại ở một vị trí, không tạo luật một–một toàn cục.
+If the rule is "each profile belongs to only one person," enforce it through APIs/domain services, a registry, or uniqueness constraints in storage. `private` and `final` only restrict access and reassignment at a particular location; they do not establish a global one-to-one rule.
 
-**Biến thể tùy chọn `0..1`:** tài khoản có thể chưa hoàn thiện hồ sơ. Có thể dùng `Profile profile` là `null` với hợp đồng rõ ràng, hoặc `Optional<Profile>` làm kiểu **trả về** của getter. Không nên nhầm `Optional` với lời bảo đảm về tính duy nhất giữa mọi `User`.
+**Optional `0..1` variation:** an account may not yet have a completed profile. You can allow `Profile profile` to be `null` under a clear contract, or use `Optional<Profile>` as the getter's **return type**. Do not mistake `Optional` for a uniqueness guarantee across all `User` objects.
 
-## 3. Quan hệ một–nhiều: đối tượng cha và tập hợp con
+## 3. One-to-many: a parent object and a collection of children
 
-Một `Project` có nhiều `Task`; một `Task` thuộc đúng một dự án (theo quy tắc ví dụ).
+A `Project` has many `Task` objects; each `Task` belongs to exactly one project (under the example's rules).
 
 ```mermaid
 classDiagram
@@ -1141,26 +1141,26 @@ classDiagram
     Project "1" --> "0..*" Task : quản lý
 ```
 
-Biểu diễn thường thấy ở phía một:
+A common representation on the one side:
 
 ```java
 private final List<Task> tasks = new ArrayList<>();
 ```
 
-Với quan hệ một–nhiều, bạn cần giải quyết **hai nhóm quy tắc**:
+For a one-to-many relationship, you need to address **two sets of rules**:
 
-1. **Số lượng:** một dự án có thể có 0 task hay phải có ít nhất 1 task? Số lượng tối đa có giới hạn không?
-2. **Tính toàn vẹn:** task có thể chuyển dự án không, ai được thêm/xóa, task trùng nội dung có được xem là hai công việc không?
+1. **Cardinality:** may a project have 0 tasks, or must it have at least 1? Is there a maximum?
+2. **Integrity:** may tasks move between projects, who may add/delete them, and do tasks with identical contents count as two separate tasks?
 
-Nếu `getTasks()` trả trực tiếp danh sách có thể sửa, caller có thể `clear()` hay `add()` để bỏ qua điều kiện nghiệp vụ. Thường nên để đối tượng quản lý cung cấp các hành vi rõ ràng: `addTask`, `removeTask`, `moveTask`, và chỉ trả danh sách đọc/snapshot.
+If `getTasks()` returns a mutable internal list, callers can use `clear()` or `add()` to bypass business constraints. Prefer explicit operations on the managing object, such as `addTask`, `removeTask`, and `moveTask`, with only read-only lists or snapshots exposed.
 
-| Cấu trúc | Phù hợp khi | Cần chú ý |
+| Structure | Suitable when | Watch out for |
 | --- | --- | --- |
-| `List<Task>` | Có thứ tự, có thể có các phần tử trùng theo `equals` | Kiểm tra trùng theo ID nếu nghiệp vụ cần |
-| `Set<Task>` | Muốn loại trùng theo `equals/hashCode` | Phải định nghĩa equality ổn định |
-| `Map<TaskId, Task>` | Tra cứu nhanh và duy nhất theo ID | Phải giữ khóa trùng khớp ID của đối tượng |
+| `List<Task>` | Order matters and elements may duplicate according to `equals` | Check for duplicate IDs if required |
+| `Set<Task>` | Duplicates should be excluded according to `equals/hashCode` | Define stable equality |
+| `Map<TaskId, Task>` | Fast lookups and uniqueness by ID are needed | Keep keys consistent with object IDs |
 
-**Quan hệ hai chiều:** nếu `Task` cũng có `Project project`, mỗi lần chuyển task phải cập nhật **cả** `oldProject.tasks`, `newProject.tasks` và `task.project` trong một thao tác hợp lệ. Tránh cho mọi caller tùy ý gọi setter ở một phía vì dễ tạo trạng thái “task trỏ về A nhưng chỉ xuất hiện trong danh sách B”.
+**Bidirectional relationship:** if `Task` also has `Project project`, each task move must update **all of** `oldProject.tasks`, `newProject.tasks`, and `task.project` as one valid operation. Avoid allowing arbitrary callers to invoke a setter on just one side, which can produce "task points to A but appears only in B's list."
 
 ```mermaid
 flowchart TD
@@ -1172,13 +1172,13 @@ flowchart TD
     E --> F["Kiểm tra invariant hai chiều"]
 ```
 
-Trong ứng dụng có giao dịch/cơ sở dữ liệu, toàn bộ cập nhật cần được bao trong transaction thích hợp để tránh trạng thái dở dang khi lỗi.
+In transactional/database-backed applications, the entire update should be enclosed in an appropriate transaction to avoid partial state after a failure.
 
-## 4. Quan hệ nhiều–nhiều: chọn cách biểu diễn có chủ ý
+## 4. Many-to-many: choose the representation deliberately
 
-Ví dụ một `Student` có thể học nhiều `Course`, và một `Course` có thể có nhiều `Student`.
+For example, a `Student` may take many `Course` objects, and a `Course` may have many `Student` objects.
 
-Cách trực tiếp trong bộ nhớ là hai tập hợp:
+A straightforward in-memory representation uses two sets:
 
 ```java
 class Student {
@@ -1189,11 +1189,11 @@ class Course {
 }
 ```
 
-Nhưng đoạn phác thảo này chưa an toàn: ai có quyền cập nhật? Nếu chỉ thêm vào `student.courses` mà quên `course.students` thì hai phía mâu thuẫn; nếu dùng `HashSet`, `equals/hashCode` cũng phải ổn định. Các trường trên còn đang có quyền truy cập mặc định và không có kiểm tra nghiệp vụ.
+However, this sketch is not safe yet: who is authorized to update it? Adding to `student.courses` without updating `course.students` leaves the sides inconsistent; if `HashSet` is used, `equals/hashCode` must also remain stable. These fields also have default access and no business validation.
 
-### Dùng đối tượng trung gian khi quan hệ có thông tin riêng
+### Using an intermediate object when the relationship has its own data
 
-Đăng ký môn học thường có `enrolledOn`, `status`, `grade`… Đây là **thuộc tính của lần đăng ký**, không phải thuộc tính riêng của sinh viên hoặc môn học. Tạo `Enrollment` làm quan hệ có danh tính/quy tắc rõ ràng:
+Course enrollment often has `enrolledOn`, `status`, `grade`, and other properties. These are **attributes of the enrollment**, not of the student or course independently. Introduce `Enrollment` to give the relationship explicit identity and rules:
 
 ```mermaid
 classDiagram
@@ -1214,15 +1214,15 @@ classDiagram
     Course "1" --> "0..*" Enrollment : có lượt đăng ký
 ```
 
-Mỗi `Enrollment` gắn với đúng một `Student` và đúng một `Course`. Nhờ vậy quan hệ N–N ban đầu được biểu diễn bằng **hai quan hệ 1–N** đối với đối tượng trung gian.
+Each `Enrollment` is associated with exactly one `Student` and exactly one `Course`. The original N–N relationship is thus represented by **two 1–N relationships** involving the intermediate object.
 
-Ưu điểm: có thể cấm đăng ký trùng theo cặp `(studentId, courseId)`, lưu thời điểm đăng ký, trạng thái chờ/xác nhận, điểm số, lịch sử nghiệp vụ hoặc những điều kiện riêng của từng khóa học.
+Benefits include preventing duplicate enrollment for the `(studentId, courseId)` pair and storing enrollment dates, pending/confirmed status, grades, business history, or course-specific conditions.
 
-Nếu lưu vào cơ sở dữ liệu quan hệ, bảng `enrollment` thường có khóa ngoại `student_id`, `course_id`, cùng ràng buộc unique trên cặp này nếu quy tắc cấm đăng ký trùng. Với JPA/Hibernate, bạn có thể dùng `@ManyToMany` cho quan hệ thuần liên kết, nhưng khi liên kết có dữ liệu riêng, entity `Enrollment` thường rõ ràng và dễ mở rộng hơn. Các annotation không thay thế việc xác định quy tắc cập nhật hai phía hoặc uniqueness.
+In a relational database, the `enrollment` table typically has `student_id` and `course_id` foreign keys and a unique constraint on the pair if duplicate enrollment is forbidden. With JPA/Hibernate, `@ManyToMany` may be used for a pure link, but an `Enrollment` entity is usually clearer and easier to extend when the relationship has its own data. Annotations do not replace explicit rules for updating both sides or enforcing uniqueness.
 
-## 5. Ví dụ Java đầy đủ cho cả ba kiểu
+## 5. Complete Java example of all three types
 
-Đặt đoạn dưới vào `MultiplicityDemo.java` (Java 17 trở lên). Ví dụ cố ý quản lý quan hệ nhiều–nhiều ở một registry duy nhất; lớp `Student` và `Course` không cần tự giữ hai danh sách có thể lệch nhau.
+Place the following code in `MultiplicityDemo.java` (Java 17 or later). The example deliberately manages the many-to-many relationship in one registry; `Student` and `Course` do not each need separate lists that could become inconsistent.
 
 ```java
 import java.time.LocalDate;
@@ -1357,14 +1357,14 @@ public class MultiplicityDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac MultiplicityDemo.java
 java MultiplicityDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 An
@@ -1375,101 +1375,101 @@ false
 3
 ```
 
-Giải thích:
+Explanation:
 
-- `User` tạo một `Profile` trong constructor. Đây là cách thiết kế 1–1 bắt buộc trong phạm vi instance ở ví dụ.
-- `Project` có hai `Task`; `List.copyOf` ngăn caller sửa danh sách qua getter. Vì `Task` là record với thành phần `String` bất biến, caller cũng không thể sửa trực tiếp các phần tử.
-- `EnrollmentRegistry` lưu một liên kết cho mỗi cặp ID. Đăng ký lặp `(1, 10)` trả `false` và không tạo bản ghi mới.
-- Một sinh viên có 2 đăng ký; tổng registry có 3 đăng ký. Một course `java` được hai sinh viên cùng học, thể hiện N–N.
+- `User` creates a `Profile` in its constructor. This implements a mandatory 1–1 relationship within the example's instances.
+- `Project` has two `Task` objects; `List.copyOf` prevents callers from modifying the list through the getter. Because `Task` is a record with immutable `String` components, callers cannot directly modify the elements either.
+- `EnrollmentRegistry` stores one link per ID pair. Repeating enrollment `(1, 10)` returns `false` and creates no new record.
+- One student has 2 enrollments; the registry has 3 in total. Two students take the same `java` course, illustrating N–N.
 
-**Giới hạn của demo:** `EnrollmentRegistry` chạy trong bộ nhớ, giả định mã định danh sinh viên/khóa học là duy nhất, không xác thực chúng đã tồn tại trong kho dữ liệu và **chưa thread-safe**. Trong hệ thống nhiều request chạy đồng thời, cần kiểm soát giao dịch và ràng buộc unique ở database; thao tác kiểm tra `containsKey` rồi `put` không tự là thao tác nguyên tử.
+**Demo limitations:** `EnrollmentRegistry` runs in memory, assumes student/course identifiers are unique, does not verify their existence in storage, and **is not thread-safe**. In a system handling concurrent requests, transactions and database uniqueness constraints are needed; checking `containsKey` and then calling `put` is not inherently atomic.
 
-## 6. Số lượng quan hệ không đồng nghĩa với ownership
+## 6. Multiplicity is not the same as ownership
 
-Phân biệt hai câu hỏi độc lập:
+Distinguish two independent questions:
 
-- **Multiplicity:** có thể có **bao nhiêu** đối tượng ở mỗi đầu?
-- **Loại quan hệ/vòng đời:** đối tượng này **tham chiếu, chia sẻ, quản lý hay sở hữu** đối tượng kia theo quy tắc nào?
+- **Multiplicity:** **how many** objects may occur at each end?
+- **Relationship type/lifecycle:** under what rules does one object **reference, share, manage, or own** the other?
 
-Ví dụ, `Project 1 -- 0..* Task` có thể được mô hình hóa thành association với task còn tồn tại sau khi chuyển dự án, hoặc thành composition nếu task chỉ có ý nghĩa trong vòng đời dự án. Cùng là 1–N nhưng hành vi xóa/chuyển và quyền sở hữu khác nhau.
+For example, `Project 1 -- 0..* Task` could be modeled as an association in which tasks survive project reassignment, or as composition if tasks only make sense within a project's lifecycle. Both are 1–N, but deletion, transfer, and ownership behavior differ.
 
-**Hướng điều hướng (*navigability*)** cũng độc lập với multiplicity: `Project` có thể biết danh sách `Task`, `Task` có thể biết `Project`, cả hai bên cùng biết hoặc dùng registry/query service để tra cứu. Việc có hai trường tham chiếu không biến 1–N thành N–N.
+**Navigability** is also independent of multiplicity: `Project` may know its `Task` list, `Task` may know its `Project`, both may know each other, or a registry/query service may resolve the relationship. Having reference fields in both classes does not turn a 1–N relationship into N–N.
 
-## 7. Bất biến cần giữ theo từng kiểu
+## 7. Invariants to maintain for each type
 
-| Kiểu | Bất biến quan trọng | Chỗ nên cưỡng chế |
+| Type | Important invariant | Where to enforce it |
 | --- | --- | --- |
-| 1–1 bắt buộc | A có đúng một B, B không thuộc hai A nếu quy tắc yêu cầu | Constructor/factory; kiểm tra domain; unique ở lưu trữ |
-| 1–1 tùy chọn | A có tối đa một B; có thể chưa có | Phương thức gán/gỡ, ràng buộc unique và khả năng null rõ ràng |
-| 1–N | Child thuộc đúng một owner, không xuất hiện ở hai tập hợp trái quy tắc | Thao tác thêm/chuyển/xóa tập trung |
-| N–N | Cặp A–B hợp lệ, không bị trùng nếu ứng dụng yêu cầu | Association object/registry; unique composite key |
-| Mọi kiểu | Không có liên kết mồ côi, sai trạng thái, hoặc sửa được bằng đường tắt | Encapsulation, validation, transaction, test |
+| Mandatory 1–1 | A has exactly one B, and B does not belong to two A objects if forbidden | Constructor/factory; domain checks; storage uniqueness |
+| Optional 1–1 | A has at most one B; it may have none | Assignment/removal methods, uniqueness constraints, explicit nullability |
+| 1–N | A child belongs to exactly one owner and never appears in two collections against the rules | Centralized add/move/remove operations |
+| N–N | An A–B pair is valid and not duplicated if required | Association object/registry; unique composite key |
+| All types | No orphaned, inconsistent, or bypassable links | Encapsulation, validation, transactions, tests |
 
-Một số sai lầm phổ biến:
+Common mistakes include:
 
-1. **Nghĩ `List` nghĩa là nhiều–nhiều.** `List` chỉ là tập hợp ở một đầu; muốn biết 1–N hay N–N phải xét cả số lượng ở đầu còn lại.
-2. **Nghĩ `@OneToOne` hoặc một field là đủ.** Quy tắc duy nhất/không-null còn phụ thuộc mô hình, API và cấu hình lưu trữ.
-3. **Quên đối tượng trung gian khi quan hệ có thuộc tính.** `Enrollment.grade` không phải điểm chung của mọi khóa học hay điểm chung của mọi sinh viên.
-4. **Cập nhật quan hệ hai chiều một nửa.** Chỉ thêm vào một collection làm dữ liệu bộ nhớ không nhất quán.
-5. **Trả về collection mutable nội bộ.** Caller có thể phá vỡ min/max, quy tắc trùng hoặc liên kết ngược.
-6. **Dùng `Set` nhưng `equals/hashCode` phụ thuộc field mutable.** Thay đổi field khi object đang trong hash collection có thể làm tra cứu/xóa sai.
-7. **Bỏ qua tranh chấp đồng thời.** Hai request cùng kiểm tra “chưa có liên kết” vẫn có thể cùng ghi; cần unique constraint/giao dịch phù hợp.
+1. **Assuming `List` means many-to-many.** A `List` represents multiple objects at one end; whether the relationship is 1–N or N–N depends on the other end too.
+2. **Assuming `@OneToOne` or a single field is enough.** Uniqueness and non-null constraints also depend on the model, API, and storage configuration.
+3. **Omitting an intermediate object when the relationship has attributes.** `Enrollment.grade` is not a grade shared by every course or every student.
+4. **Partially updating a bidirectional relationship.** Adding to only one collection makes in-memory data inconsistent.
+5. **Exposing an internal mutable collection.** Callers may bypass minimum/maximum counts, uniqueness, or reverse-link rules.
+6. **Using `Set` when `equals/hashCode` depends on mutable fields.** Changing such a field while the object is in a hash collection can break lookup and removal.
+7. **Ignoring concurrency.** Two requests may both check that "no link exists" and then both write; suitable uniqueness constraints/transactions are required.
 
-## 8. Luyện tập áp dụng
+## 8. Application exercises
 
-**Bài A — Nhận diện multiplicity.** Vẽ UML cho các yêu cầu:
+**Exercise A — Identify multiplicity.** Draw UML for these requirements:
 
-- Một khách hàng có thể có từ 0 đến nhiều địa chỉ giao hàng; mỗi địa chỉ trong mô hình gắn với đúng một khách hàng.
-- Một nhân viên có thể được cấp 0 hoặc 1 thẻ ra vào, mỗi thẻ gắn đúng một nhân viên.
-- Một tác giả viết nhiều cuốn sách, một cuốn có thể có nhiều tác giả.
+- A customer may have zero or more delivery addresses; each address belongs to exactly one customer in the model.
+- An employee may be issued zero or one access card; each card is assigned to exactly one employee.
+- An author writes multiple books, and a book may have multiple authors.
 
-**Bài B — Cài đặt 1–N có giới hạn.** `Team` có **1 đến 5** thành viên; cấm thành viên trùng ID. Thiết kế `addMember`/`removeMember`. Khi tạo team phải có ít nhất một thành viên; khi xóa thành viên cuối cùng phải từ chối hoặc hủy team theo nghiệp vụ.
+**Exercise B — Implement bounded 1–N.** A `Team` has **1 to 5** members; duplicate member IDs are forbidden. Design `addMember`/`removeMember`. A team must initially have at least one member; removing the final member must either be rejected or dissolve the team according to business rules.
 
-**Bài C — Mở rộng N–N.** Thêm `status` (`PENDING`, `ACTIVE`, `CANCELLED`) và `grade` vào `Enrollment`. Quyết định việc đăng ký lại một khóa đã hủy là *cập nhật bản ghi cũ* hay *tạo lần đăng ký mới*, từ đó chọn key/unique constraint hợp lý. Phương án đúng phụ thuộc quy tắc lưu lịch sử.
+**Exercise C — Extend N–N.** Add `status` (`PENDING`, `ACTIVE`, `CANCELLED`) and `grade` to `Enrollment`. Decide whether re-enrolling in a cancelled course should *update the previous record* or *create a new enrollment*, then choose suitable keys/uniqueness constraints. The correct choice depends on history-retention rules.
 
-**Bài D — Review code.** Cho `Course` chứa `List<Student>` nhưng `Student` không giữ danh sách course. Hãy giải thích vì sao vẫn **có thể** là N–N; đề xuất cách truy vấn “những khóa của sinh viên X” qua repository/registry mà không cần cập nhật hai collection.
+**Exercise D — Code review.** Suppose `Course` contains `List<Student>` but `Student` stores no course list. Explain why the relationship **can still** be N–N; propose querying "courses taken by student X" through a repository/registry without maintaining two collections.
 
-### Tự kiểm tra trước khi kết thúc thiết kế
+### Final design self-check
 
-Với mỗi quan hệ, hãy phát biểu thành hai câu: “**một A có bao nhiêu B?**” và “**một B có bao nhiêu A?**”. Ghi rõ `0` có hợp lệ không, yêu cầu tính duy nhất, cách tạo/gỡ/chuyển liên kết và nơi duy trì bất biến. Chỉ sau đó mới chọn field đơn, `List`, `Set`, `Map` hoặc class liên kết.
+For each relationship, state two things: "**how many B objects can one A have?**" and "**how many A objects can one B have?**" Specify whether `0` is allowed, uniqueness requirements, how links are created/removed/moved, and where invariants are enforced. Only then choose a single field, `List`, `Set`, `Map`, or association class.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="relationships-005">Hướng liên kết và khả năng điều hướng</a>
+## <a id="relationships-005">Association direction and navigability</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Hướng liên kết và khả năng điều hướng trong OOP
+# Association direction and navigability in OOP
 
-## 1. Hướng liên kết là gì?
+## 1. What is association direction?
 
-Trong mô hình hướng đối tượng, **association** mô tả quan hệ giữa các đối tượng. **Khả năng điều hướng (navigability)** cho biết một đối tượng có thể **đi theo quan hệ để tìm đối tượng ở đầu bên kia** hay không.
+In object-oriented modeling, an **association** describes a relationship between objects. **Navigability** indicates whether an object can **follow the relationship to reach an object at the other end**.
 
-Ví dụ một hệ thống quản lý bán hàng:
+For example, consider a sales management system:
 
-- Từ một đơn hàng, ta cần tìm được khách hàng đặt đơn để hiển thị tên và địa chỉ giao hàng.
-- Từ một khách hàng, ta *có thể* cần liệt kê tất cả đơn hàng của khách đó.
-- Hai yêu cầu truy cập này **khác nhau**: triển khai chiều `Order → Customer` không tự tạo chiều `Customer → Order`.
+- From an order, we need to find the customer who placed it to display their name and delivery address.
+- From a customer, we *may* need to list all of their orders.
+- These two access requirements **are different**: implementing `Order → Customer` does not automatically provide `Customer → Order`.
 
-Hãy phân biệt ba khái niệm:
+Distinguish three concepts:
 
-| Khái niệm | Câu hỏi thiết kế | Ví dụ |
+| Concept | Design question | Example |
 |---|---|---|
-| **Association** | Hai loại đối tượng có quan hệ nghiệp vụ gì? | Đơn hàng thuộc về khách hàng. |
-| **Navigability** | Đứng tại object A, ta truy cập trực tiếp được object B qua quan hệ không? | `order.getCustomer()`. |
-| **Multiplicity** | Một object được liên kết với bao nhiêu object của phía kia? | Một đơn hàng có đúng một khách; một khách có nhiều đơn. |
+| **Association** | What business relationship exists between the object types? | An order belongs to a customer. |
+| **Navigability** | From object A, can we directly access object B through the relationship? | `order.getCustomer()`. |
+| **Multiplicity** | How many objects on the other side can one object be related to? | An order has exactly one customer; a customer has many orders. |
 
-**Hướng liên kết không phải hướng luồng dữ liệu, luồng điều khiển, hay chiều tạo object.** Một khách hàng có thể được tạo trước đơn hàng, trong khi quan hệ vẫn chỉ cho phép điều hướng từ `Order` sang `Customer`.
+**Association direction is not the direction of data flow, control flow, or object creation.** A customer may be created before an order, even if navigation is only possible from `Order` to `Customer`.
 
-## 2. Cách đọc ký hiệu UML
+## 2. Reading UML notation
 
-### Liên kết một chiều
+### Unidirectional association
 
 ```mermaid
 classDiagram
@@ -1486,16 +1486,16 @@ classDiagram
     Order "0..*" --> "1" Customer : đặt bởi
 ```
 
-Đọc sơ đồ như sau:
+Read the diagram as follows:
 
-- Đường **liền có mũi tên `Order → Customer`**: từ object đơn hàng có thể truy cập object khách hàng.
-- Số `1` gần `Customer`: **mỗi đơn hàng gắn với đúng một khách hàng**.
-- Số `0..*` gần `Order`: **mỗi khách hàng có thể có từ 0 đến nhiều đơn hàng**.
-- Không có field `orders` trong `Customer`: điều hướng ngược không khả dụng trực tiếp bằng cách gọi trên object `Customer`. Tuy nhiên có thể truy vấn qua repository hoặc các cấu trúc khác.
+- A **solid line with an arrow `Order → Customer`**: from an order object, the customer object can be accessed.
+- `1` near `Customer`: **each order is associated with exactly one customer**.
+- `0..*` near `Order`: **each customer may have zero or more orders**.
+- No `orders` field exists in `Customer`: reverse navigation is not directly available through a call on the `Customer` object. A repository or other structure may still provide the query.
 
-**Quy tắc đọc bội số:** ký hiệu đặt cạnh *đầu nào* thì cho biết số đối tượng ở đầu đó mà *một đối tượng phía đối diện* có thể liên kết tới.
+**Multiplicity reading rule:** a label near *one endpoint* counts how many objects at that end can be associated with *one object at the opposite endpoint*.
 
-### Liên kết hai chiều
+### Bidirectional association
 
 ```mermaid
 classDiagram
@@ -1511,18 +1511,18 @@ classDiagram
     Team "0..1" <--> "0..*" Member : thành viên
 ```
 
-Đọc sơ đồ:
+Reading the diagram:
 
-- `Team` cho phép tìm các `Member` hiện thuộc nhóm.
-- `Member` cho phép tìm `Team` hiện phụ trách mình.
-- `0..1` cạnh `Team`: một thành viên thuộc tối đa một nhóm tại một thời điểm.
-- `0..*` cạnh `Member`: một nhóm có thể có nhiều thành viên.
+- `Team` can locate its current `Member` objects.
+- `Member` can locate the `Team` it currently belongs to.
+- `0..1` next to `Team`: a member belongs to at most one team at a time.
+- `0..*` next to `Member`: a team can have many members.
 
-Trong UML, **một đường association không có mũi tên không đủ để kết luận nó hai chiều**: tùy ký pháp và quy ước sơ đồ, việc không ghi mũi tên có thể chỉ là **chưa chỉ rõ navigability**. Nếu cần làm rõ hai chiều, hãy chỉ định rõ cả hai hướng trong mô hình hoặc chú thích bằng lời.
+In UML, **an association line without arrows is not sufficient evidence that it is bidirectional**: depending on notation and diagram conventions, missing arrows may mean **navigability is unspecified**. If bidirectionality matters, explicitly model both directions or explain them in a note.
 
-## 3. Quan hệ một chiều trong Java: chỉ lưu đường cần đi
+## 3. Unidirectional relationships in Java: store only the required path
 
-Tạo tệp `UnidirectionalDemo.java`:
+Create `UnidirectionalDemo.java`:
 
 ```java
 import java.util.Objects;
@@ -1578,36 +1578,36 @@ public class UnidirectionalDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac UnidirectionalDemo.java
 java UnidirectionalDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Lan
 O100
 ```
 
-Điều gì xảy ra ở bộ nhớ?
+What happens in memory?
 
 ```mermaid
 flowchart LR
     o["order : Order O100"] -->|"field customer"| c["lan : Customer C01"]
 ```
 
-`order` giữ **tham chiếu** tới `lan`, không chứa một bản sao `Customer`. Trong Java, việc `Customer` không có field `orders` chỉ nói rằng nó **không nắm sẵn cách điều hướng ngược theo thiết kế này**. Ta vẫn có thể tìm các `Order` theo customer bằng kho dữ liệu hoặc bằng cách duyệt tập hợp các đơn hàng.
+`order` holds **a reference** to `lan`, not a copy of the `Customer`. In Java, a `Customer` object without an `orders` field **has no built-in reverse navigation in this design**. We can still find `Order` objects by customer through storage or by scanning a collection of orders.
 
-**Khi phù hợp:** ứng dụng thường cần từ đơn hàng xem khách; trang lịch sử mua hàng có thể dùng repository để truy vấn, không cần tải/giữ tất cả đơn hàng trong mỗi `Customer`.
+**When this works well:** the application often needs to display a customer from an order; a purchase-history page can query a repository instead of loading/storing all orders inside each `Customer`.
 
-## 4. Nếu thực sự cần hai hướng: đồng bộ đúng một liên kết
+## 4. If both directions are needed: synchronize one relationship correctly
 
-Với `Team ↔ Member`, mỗi `Member` thuộc tối đa một `Team`. Nếu `Member.team == t`, tập `t.members` phải chứa đúng member đó; khi chuyển nhóm, phải **gỡ nhóm cũ → đổi tham chiếu → thêm nhóm mới**.
+For `Team ↔ Member`, each `Member` belongs to at most one `Team`. If `Member.team == t`, the `t.members` set must contain that member; moving teams requires **removing from the old team → changing the reference → adding to the new team**.
 
-Ví dụ Java 11+ dưới đây dùng một cổng cập nhật và giữ hai tham chiếu trong cùng một đối tượng đồ thị. Lưu là `BidirectionalNavigationDemo.java`:
+The Java 11+ example below uses a single update entry point and maintains both references in the same object graph. Save it as `BidirectionalNavigationDemo.java`:
 
 ```java
 import java.util.LinkedHashSet;
@@ -1657,25 +1657,25 @@ javac BidirectionalNavigationDemo.java
 java BidirectionalNavigationDemo
 ```
 
-Kết quả: ba dòng `true`. Hai kiểu lồng nhau dùng cùng enclosing class nên được phép truy cập các trường `private` của nhau theo quy tắc Java. `Member` là nơi cập nhật duy nhất; `Team.members()` trả snapshot, không cho caller phá liên kết bằng `add/remove` ở ngoài.
+Output: three lines containing `true`. The two nested types share an enclosing class, so Java allows them to access one another's `private` fields. `Member` is the sole update entry point; `Team.members()` returns a snapshot so callers cannot break links using external `add/remove` calls.
 
-Đây mới là demo đơn luồng tối giản, **chưa có validation sức chứa, xử lý lỗi giữa chừng hay khóa đồng thời**. Bài **Quan hệ hai chiều và giữ dữ liệu nhất quán** phát triển cùng ý tưởng thành một chuyển phòng ban có kiểm tra trước khi sửa, ca phòng đầy, invariant tests và ví dụ JPA. Đừng thêm hướng ngược chỉ để “sơ đồ đầy đủ” nếu ứng dụng không cần truy vấn ngược.
+This is only a minimal single-threaded demonstration; it **lacks capacity validation, partial-failure handling, and concurrency locking**. The lesson **Bidirectional relationships and data consistency** extends the idea to departmental transfers with pre-update validation, full-department cases, invariant tests, and a JPA example. Do not add reverse navigation simply to "complete the diagram" when the application does not query in that direction.
 
-## 5. Lựa chọn 1 chiều hay 2 chiều: dựa trên truy vấn thực tế
+## 5. Choosing one or two directions: follow actual queries
 
-| Tình huống | Hướng nên cân nhắc | Lý do |
+| Scenario | Direction to consider | Reason |
 |---|---|---|
-| Hiển thị khách hàng của một đơn hàng | `Order → Customer` | Đơn hàng cần khách hàng, ít phải quản lý thêm trạng thái |
-| Hiển thị đơn hàng đã mua của khách hàng | Truy vấn repository, hoặc chiều `Customer → Order` khi phù hợp | Không nhất thiết phải giữ mọi đơn trong RAM của customer |
-| Mỗi thành viên phải biết nhóm; nhóm cần danh sách thành viên để phân công | Hai chiều `Team ↔ Member` | Nghiệp vụ thường xuyên tra cả hai hướng |
-| Kiểm tra quyền của một tài liệu thông qua chủ sở hữu | `Document → Owner` | Đối tượng tài liệu đủ thông tin kiểm tra |
-| Nhiều-nhiều giữa học viên và khóa học, đăng ký có ngày/trạng thái riêng | `Enrollment` làm đối tượng trung gian | Liên kết có dữ liệu và quy tắc riêng |
+| Display an order's customer | `Order → Customer` | The order needs the customer; little extra state to manage |
+| Display a customer's purchase history | Query a repository, or `Customer → Order` if appropriate | Not every order must be held in a customer's RAM |
+| Members must know their team, and teams must list members for assignments | Bidirectional `Team ↔ Member` | Business operations frequently query both directions |
+| Check a document's permissions through its owner | `Document → Owner` | The document contains enough information for the check |
+| Many-to-many between learners and courses, with enrollment dates/status | Intermediate `Enrollment` object | The relationship has its own data and rules |
 
-Có thể dùng association hai chiều khi miền nghiệp vụ thực sự cần. Tuy nhiên **không cần xây cả hai chiều chỉ vì quan hệ về mặt logic là đối xứng**. Việc thêm field ngược có chi phí: phải đồng bộ, dễ gặp vòng tham chiếu và thường khiến các lớp gắn chặt hơn.
+Use a bidirectional association when the domain genuinely needs it. However, **do not implement both directions merely because the logical relationship is symmetric**. Adding reverse fields comes at a cost: synchronization, potential reference cycles, and often tighter coupling between classes.
 
-### Ví dụ: nhiều-nhiều và lớp liên kết
+### Example: many-to-many and an association class
 
-Nếu một sinh viên đăng ký nhiều khóa học và một khóa học có nhiều sinh viên, việc biểu diễn mỗi phía bằng `Set` có thể đủ khi quan hệ chỉ là một cặp. Nhưng nếu “đăng ký học” có `registeredAt`, `status`, `finalGrade`, hãy tạo `Enrollment`:
+If a student enrolls in many courses and each course has many students, storing a `Set` on each side may suffice when the link is just a pair. But if an "enrollment" has `registeredAt`, `status`, or `finalGrade`, introduce `Enrollment`:
 
 ```mermaid
 classDiagram
@@ -1690,13 +1690,13 @@ classDiagram
     Enrollment "0..*" --> "1" Course : khóa học
 ```
 
-Lớp `Enrollment` nắm thông tin của **chính mối liên kết**. Từ Student hoặc Course có điều hướng ngược đến Enrollment hay không vẫn là quyết định độc lập, tùy cách thiết kế field và truy vấn.
+The `Enrollment` class holds information about **the association itself**. Whether Student or Course offers reverse navigation to Enrollment is still a separate decision based on fields and query design.
 
-## 6. Hai cách thể hiện hướng trong thiết kế
+## 6. Two ways of providing access paths in a design
 
-**Hướng cấu trúc trong object graph:** object A có field tham chiếu đến object B. Ví dụ `member.getTeam()` hoạt động nhờ `Member.team`.
+**Structural navigation in an object graph:** object A has a field referencing object B. For example, `member.getTeam()` works through `Member.team`.
 
-**Hướng truy vấn qua repository:** A không giữ field/collection B nhưng application vẫn tìm được B bằng một truy vấn. Ví dụ:
+**Repository-based query direction:** A does not store a B field/collection, but the application can still find B through a query. For example:
 
 ```java
 interface OrderRepository {
@@ -1708,17 +1708,17 @@ interface OrderRepository {
 java.util.List<Order> orders = repository.findByCustomerId(customer.getId());
 ```
 
-Đoạn trên **không tự làm `Customer` trở thành association hai chiều trong object graph**; nó chỉ chứng minh nghiệp vụ có thể lấy dữ liệu chiều ngược thông qua một thành phần khác. Trong thực tế, việc ánh xạ SQL/JPA, lazy loading và cache ảnh hưởng đến hiệu năng, nhưng không thay đổi ý nghĩa của chiều trong sơ đồ đối tượng.
+The above **does not automatically turn `Customer` into a bidirectional association in the object graph**; it only shows that a business operation can retrieve data in the reverse direction through another component. In practice, SQL/JPA mapping, lazy loading, and caching affect performance, but do not change what the direction means in an object diagram.
 
-## 7. Hướng điều hướng và quan hệ phụ thuộc có phải cùng một thứ?
+## 7. Are navigability and dependency the same thing?
 
-Không. UML có các loại quan hệ khác nhau:
+No. UML distinguishes different kinds of relationships:
 
-- **Association** (đường liền): thể hiện liên kết giữa các instance; navigability mô tả có thể truy cập một đầu từ đầu kia.
-- **Dependency** (đường nét đứt với mũi tên): một thành phần sử dụng hoặc phụ thuộc định nghĩa của thành phần kia, ví dụ service nhận interface làm tham số.
-- **Inheritance/generalization** (đường liền, tam giác rỗng hướng về lớp cha): quan hệ “là một loại”, không phải chỉ đường điều hướng giữa hai object.
+- **Association** (solid line): represents links between instances; navigability describes whether one end can be reached from the other.
+- **Dependency** (dashed arrow): one component uses or depends on another component's definition, such as a service accepting an interface parameter.
+- **Inheritance/generalization** (solid line with a hollow triangle pointing toward the parent): an "is-a" relationship, not a navigation path between two objects.
 
-Ví dụ:
+Example:
 
 ```mermaid
 classDiagram
@@ -1740,33 +1740,33 @@ classDiagram
     InvoiceExporter ..> PdfWriter : gọi API
 ```
 
-`InvoiceExporter` có thể sử dụng `Invoice` và `PdfWriter` trong một lời gọi mà không giữ chúng thành trạng thái. Mũi tên dependency không nói rằng có một liên kết object lâu dài hoặc rằng `PdfWriter` biết ngược trở lại exporter.
+`InvoiceExporter` may use `Invoice` and `PdfWriter` in one call without retaining them as state. A dependency arrow does not imply a long-lived object link or that `PdfWriter` has reverse knowledge of the exporter.
 
-## 8. Những lỗi quyết định khả năng điều hướng
+## 8. Common navigability design mistakes
 
-| Lỗi thiết kế | Hệ quả | Cách cải thiện |
+| Design mistake | Consequence | Improvement |
 |---|---|---|
-| Thêm field chiều ngược mà không có yêu cầu truy vấn | Tăng trạng thái phải đồng bộ và khả năng vòng tham chiếu | Dùng một chiều + repository nếu đủ |
-| `getMembers()` trả collection nội bộ sửa được | Caller có thể bỏ qua cổng cập nhật | Trả snapshot hoặc immutable view đúng nhu cầu |
-| Thay một phía nhưng quên phía còn lại | `member.team` và `team.members` trả hai “sự thật” khác nhau | Một phương thức điều phối liên kết |
-| Hai setter gọi qua lại vô điều kiện | Đệ quy vô hạn, có thể `StackOverflowError` | Một đầu điều phối; helper nội bộ không gọi ngược |
-| Serialize `Team → Member → Team` trực tiếp | Vòng object graph có thể gây JSON lặp sâu | DTO chỉ chứa thông tin cần trả |
-| Dùng mũi tên UML để suy ra quyền sở hữu | Tưởng đổi liên kết sẽ xóa object bên kia | Tách navigability khỏi lifecycle và cascade |
-| Coi JPA `mappedBy` là tự sửa hai phía Java | Hai phía vẫn sai trước khi reload | Đồng bộ object graph, hiểu owning side và transaction |
+| Adding reverse fields without a query requirement | More state to synchronize and potential reference cycles | Use one direction plus a repository if sufficient |
+| `getMembers()` returns a mutable internal collection | Callers bypass the update entry point | Return an appropriate snapshot or immutable view |
+| Updating one side but not the other | `member.team` and `team.members` give different "truths" | One method coordinates the link |
+| Two setters call each other unconditionally | Infinite recursion, possibly `StackOverflowError` | One side coordinates; internal helpers do not call back |
+| Directly serializing `Team → Member → Team` | Cyclic object graphs may cause deeply recursive JSON | Use DTOs containing only the necessary data |
+| Inferring ownership from a UML arrow | Mistakenly assuming changing a link deletes the other object | Separate navigability from lifecycle/cascade |
+| Assuming JPA `mappedBy` automatically updates both Java sides | The two sides remain inconsistent until reloading | Synchronize the object graph; understand the owning side and transactions |
 
-**Lưu ý:** chu trình tham chiếu giữa hai object không tự gây rò rỉ trong JVM; GC dựa trên khả năng tiếp cận từ GC roots. Nhưng việc giữ collection lớn và cập nhật hai chiều đồng thời vẫn cần giải pháp lưu trữ, khóa hoặc transaction phù hợp. Bài kế tiếp trình bày cụ thể kỹ thuật để bảo vệ invariant trong một thao tác có thể thất bại.
+**Note:** a reference cycle between two objects does not itself cause a JVM memory leak; GC uses reachability from GC roots. However, retaining large collections and concurrently updating both directions still calls for suitable storage, locking, or transaction mechanisms. The next lesson shows concrete techniques for preserving invariants when operations may fail.
 
-## 9. Bài tập kiểm tra thiết kế
+## 9. Design-check exercises
 
-**Bài 1.** Mỗi phiếu bảo hành thuộc về một sản phẩm. Hệ thống chỉ mở phiếu rồi xem sản phẩm, còn màn hình danh sách phiếu tra qua cơ sở dữ liệu. Nên điều hướng thế nào?
+**Exercise 1.** Each warranty record belongs to one product. The system only opens records and views products, while the record list is queried from the database. Which navigation direction should be used?
 
-**Gợi ý:** association `Warranty → Product` là đủ trong object graph; danh sách phiếu sử dụng truy vấn repository theo mã sản phẩm.
+**Hint:** `Warranty → Product` is sufficient in the object graph; the record list can be retrieved via a repository query using the product code.
 
-**Bài 2.** Một thư viện có nhiều cuốn sách và ứng dụng thường xuyên cần hỏi “sách này hiện ở thư viện nào?” và “thư viện này đang quản lý các sách nào?”. Hãy chọn hướng và bội số nếu sách có thể chưa được xếp thư viện.
+**Exercise 2.** A library manages many books, and the application frequently asks "which library currently holds this book?" and "which books does this library currently manage?" Choose direction and multiplicity if books may be unassigned to any library.
 
-**Gợi ý:** `Library ↔ Book`, gần `Library` là `0..1`, gần `Book` là `0..*`. Khi chuyển sách từ A sang B phải gỡ khỏi A, đổi tham chiếu của sách và thêm vào B.
+**Hint:** `Library ↔ Book`: beside `Library`, put `0..1`; beside `Book`, put `0..*`. Moving a book from A to B requires removing it from A, updating its reference, and adding it to B.
 
-**Bài 3.** Phát hiện lỗi:
+**Exercise 3.** Identify the bug:
 
 ```java
 // Giả sử Team có tập members, Member có field team.
@@ -1774,47 +1774,47 @@ member.setTeam(teamA);
 teamB.getMembers().add(member);
 ```
 
-**Gợi ý:** dữ liệu hai phía không thống nhất; API cho phép sửa tự do càng làm lỗi dễ xảy ra. Thay bằng một thao tác quản lý liên kết cập nhật đúng cả hai phía.
+**Hint:** the two sides are inconsistent, and unrestricted mutation APIs make the problem easier to introduce. Replace them with a controlled relationship operation that updates both sides correctly.
 
-**Bài 4.** Vì sao có thể gọi truy vấn `findOrdersByCustomerId(id)` mà vẫn khẳng định mô hình object `Order → Customer` là một chiều?
+**Exercise 4.** Why can you call `findOrdersByCustomerId(id)` while still describing the `Order → Customer` object model as unidirectional?
 
-**Gợi ý:** truy vấn nằm ở repository, không phát sinh field `Customer.orders`. Đường truy cập dữ liệu của ứng dụng rộng hơn đường tham chiếu trực tiếp của object.
+**Hint:** the query lives in the repository and does not create a `Customer.orders` field. Application-level data access paths are broader than direct object references.
 
-**Bài 5.** UML association không có mũi tên có chắc chắn là hai chiều không?
+**Exercise 5.** Is a UML association without arrows necessarily bidirectional?
 
-**Gợi ý:** không. Nếu sơ đồ cần thể hiện navigability một cách nghiêm ngặt, phải ghi tường minh hoặc thống nhất quy ước trước khi đọc.
+**Hint:** no. If a diagram must communicate navigability precisely, specify it explicitly or agree on conventions before interpreting the diagram.
 
 ---
 
-**Điểm cần nắm:** *Association* trả lời “ai liên kết với ai?”, *multiplicity* trả lời “một bên có bao nhiêu đối tượng bên kia?”, còn *navigability* trả lời “đứng tại object này có thể đi trực tiếp sang object kia không?”. Hãy triển khai đúng những chiều thật sự cần, và nếu giữ cả hai phía thì bảo vệ tính nhất quán bằng một API cập nhật có kiểm soát.
+**Key takeaway:** *Association* answers "who is related to whom?", *multiplicity* answers "how many objects can be related at each end?", and *navigability* answers "can this object directly reach the other one?" Implement only the directions actually needed, and if both ends are stored, preserve consistency through a controlled update API.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="relationships-006">Quan hệ hai chiều và giữ dữ liệu nhất quán</a>
+## <a id="relationships-006">Bidirectional relationships and data consistency</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Quan hệ hai chiều và giữ dữ liệu nhất quán trong OOP (Java)
+# Bidirectional relationships and data consistency in OOP (Java)
 
-Trong lập trình hướng đối tượng, **quan hệ hai chiều (bidirectional association)** xuất hiện khi hai đối tượng đều biết cách truy cập đối tượng ở đầu bên kia. Ví dụ, một nhân viên biết mình thuộc phòng ban nào, còn phòng ban biết danh sách nhân viên của mình.
+In object-oriented programming, a **bidirectional association** exists when two objects can each navigate to the object at the other end. For example, an employee knows their department, and a department knows its list of employees.
 
-Điểm khó không nằm ở việc thêm hai trường tham chiếu. Điểm khó là **giữ hai trường đó mô tả cùng một sự thật** sau mọi thao tác thêm, gỡ, chuyển liên kết, xử lý lỗi và ghi xuống cơ sở dữ liệu.
+The difficult part is not adding two reference fields. It is **keeping both fields consistent with the same reality** after every link addition, removal, transfer, error, and database update.
 
-Bài này tập trung vào các quy tắc triển khai trong Java, với ví dụ chạy độc lập và lưu ý thực tế khi dùng JPA/Hibernate.
+This lesson focuses on Java implementation rules, with a standalone runnable example and practical notes about JPA/Hibernate.
 
-## 1. Quan hệ một chiều và hai chiều
+## 1. Unidirectional and bidirectional relationships
 
-Giả sử mỗi `Employee` thuộc tối đa một `Department`, mỗi `Department` có thể có nhiều `Employee`.
+Suppose each `Employee` belongs to at most one `Department`, while each `Department` may have many `Employee` objects.
 
-**Một chiều:** chỉ nhân viên giữ tham chiếu `department`; muốn tìm các nhân viên thuộc phòng ban có thể truy vấn repository. Không nhất thiết phải đặt collection bên trong `Department`.
+**Unidirectional:** only the employee stores a `department` reference; a repository can be queried to find the department's employees. A collection in `Department` is not necessarily required.
 
-**Hai chiều:** `Employee` giữ `department`, đồng thời `Department` giữ collection `employees`.
+**Bidirectional:** `Employee` stores `department` and `Department` stores an `employees` collection.
 
 ```mermaid
 classDiagram
@@ -1833,33 +1833,33 @@ classDiagram
     Department "0..1" <--> "0..*" Employee : thuộc / chứa
 ```
 
-Ở ví dụ, nhân viên có thể chưa được phân phòng (`0..1`) và phòng ban có thể chưa có nhân viên (`0..*`). **Số lượng quan hệ (multiplicity)** và **hướng điều hướng (navigability)** là hai quyết định riêng: 1–N không bắt buộc phải có tham chiếu hai chiều.
+In the example, an employee may have no department (`0..1`), and a department may have no employees (`0..*`). **Multiplicity** and **navigability** are separate decisions: a 1–N relationship does not require bidirectional references.
 
-| Thiết kế | Thông tin lưu trong đối tượng | Thuận lợi | Chi phí |
+| Design | Data stored in objects | Advantage | Cost |
 | --- | --- | --- | --- |
-| Một chiều `Employee -> Department` | Mỗi `Employee` biết một `Department` | Ít trạng thái trùng lặp; đơn giản hơn | Tìm nhân viên theo phòng cần nguồn truy vấn hoặc duyệt |
-| Một chiều `Department -> Employee` | Phòng lưu collection nhân viên | Duyệt thành viên dễ | Không thể hỏi trực tiếp phòng của nhân viên qua field |
-| Hai chiều | Cả hai phía đều lưu tham chiếu | Điều hướng hai phía nhanh trong object graph | Mọi thay đổi phải đồng bộ hai phía |
-| Chỉ lưu ID và truy vấn qua service | Không nhất thiết giữ object reference | Giảm phụ thuộc, thuận tiện ở ranh giới hệ thống | Phải truy vấn/caching và duy trì luật ở tầng dữ liệu |
+| Unidirectional `Employee -> Department` | Each `Employee` knows one `Department` | Less duplicated state; simpler | Finding employees by department requires querying or scanning |
+| Unidirectional `Department -> Employee` | The department stores an employee collection | Easy iteration over members | Cannot directly query an employee's department through a field |
+| Bidirectional | Both sides store references | Fast navigation both ways in the object graph | Every update must synchronize both sides |
+| IDs only, queried through a service | Object references need not be retained | Less coupling; convenient at system boundaries | Requires querying/caching and enforcing rules in the data layer |
 
-**Không tự động chọn hai chiều chỉ vì có thể:** thêm một hướng điều hướng cũng làm tăng trạng thái phải giữ nhất quán.
+**Do not choose bidirectionality just because it is possible:** adding a navigation path also increases the state that must be kept consistent.
 
-## 2. Định nghĩa invariant trước khi viết code
+## 2. Define invariants before writing code
 
-Với mọi `Employee e` và `Department d` nằm trong cùng phạm vi quản lý:
+For every `Employee e` and `Department d` within the same management scope:
 
 ```text
 e.department == d   <=>   d.employees chứa đúng đối tượng e
 ```
 
-Đây là **bất biến hai chiều** (*bidirectional invariant*). Từ đó suy ra:
+This is a **bidirectional invariant**. It implies:
 
-1. Nếu `e.department == null`, `e` không được xuất hiện trong danh sách nhân viên của bất kỳ phòng nào.
-2. Nếu phòng `A` chứa `e`, `e.department` phải trỏ về `A`.
-3. Nếu một nhân viên chỉ được thuộc một phòng, không phòng khác nào được đồng thời chứa nhân viên ấy.
-4. Mọi giới hạn bổ sung (sức chứa, nhân viên đang hoạt động, ID không trùng trong phòng...) cũng phải đúng sau một thao tác thành công.
+1. If `e.department == null`, `e` must not appear in any department's employee list.
+2. If department `A` contains `e`, `e.department` must point back to `A`.
+3. If an employee may belong to only one department, no other department may contain the employee simultaneously.
+4. Additional constraints (capacity, active-employee status, unique employee IDs within a department, etc.) must also hold after a successful operation.
 
-Lỗi phổ biến khi thay đổi một phía:
+A common one-sided update mistake:
 
 ```java
 // Giả sử employee đang thuộc phòng A:
@@ -1869,7 +1869,7 @@ employee.setDepartment(departmentB);
 // ba tham chiếu cùng mô tả ba trạng thái khác nhau.
 ```
 
-Tương tự, `departmentB.getEmployees().add(employee)` chỉ sửa collection B, chưa sửa `employee.department`. Hai setter độc lập có thể làm người gọi quên cập nhật nửa còn lại.
+Likewise, `departmentB.getEmployees().add(employee)` modifies only collection B, not `employee.department`. Two independent setters make it easy for callers to forget the other half.
 
 ```mermaid
 flowchart TD
@@ -1882,29 +1882,29 @@ flowchart TD
     F --> G["Invariant hai chiều đúng"]
 ```
 
-Sơ đồ mô tả thứ tự logic trong **một thao tác được kiểm soát**. Khi thao tác có thể thất bại giữa chừng hoặc chạy đồng thời, cần bảo vệ phạm vi cập nhật bằng giao dịch, khóa hoặc cơ chế khôi phục thích hợp.
+The diagram illustrates the logical order within **one controlled operation**. If the operation can fail partway through or run concurrently, protect the entire update with suitable transactions, locks, or recovery mechanisms.
 
-## 3. Ba nguyên tắc thiết kế API
+## 3. Three principles for API design
 
-**Một cửa cập nhật liên kết.** Cho phép `employee.moveTo(newDepartment)`, hoặc `department.assign(employee)`, hoặc một domain service có quyền cập nhật cả hai. Không công khai nhiều setter độc lập để các caller tự “nhớ” đồng bộ.
+**One entry point for relationship updates.** Expose `employee.moveTo(newDepartment)`, `department.assign(employee)`, or a domain service authorized to update both ends. Do not expose multiple independent setters and expect callers to remember synchronization.
 
-**Đóng gói collection.** `getEmployees()` không trả về collection mutable nội bộ. Trả snapshot chỉ đọc/DTO để caller không thể `add/remove` ở ngoài cổng kiểm tra. Nếu phần tử bên trong mutable, snapshot của collection không tự làm các phần tử bất biến.
+**Encapsulate collections.** `getEmployees()` should not return the internal mutable collection. Return read-only snapshots/DTOs so callers cannot perform `add/remove` operations outside validation. If the elements themselves are mutable, a collection snapshot does not make them immutable.
 
-**Xác thực trước, sửa sau.** Kiểm tra phòng mới tồn tại, sức chứa, quyền chuyển và trạng thái hai chiều hiện tại trước khi thay đổi. Nếu không hợp lệ, kết quả phải là **không có thay đổi nào**.
+**Validate first, modify second.** Check that the destination department exists, has capacity, permits the transfer, and that the current bidirectional state is consistent before changing anything. If validation fails, **nothing should change**.
 
-| Hành vi | Cập nhật cần thiết | Điều cần bảo vệ |
+| Operation | Required updates | What to protect |
 | --- | --- | --- |
-| Gán nhân viên chưa có phòng vào A | Thêm vào A; `employee.department = A` | Không trùng; A còn chỗ |
-| Chuyển từ A sang B | Gỡ A; gán B; thêm B | Không để E đồng thời thuộc A và B |
-| Hủy phân phòng | Gỡ khỏi phòng cũ; gán `null` | Không còn liên kết ngược sót lại |
-| Gán lại đúng phòng đang thuộc | Không làm gì (*idempotent*) | Không thêm trùng hoặc phát sự kiện trùng |
-| Gán thất bại vì B hết chỗ | Giữ nguyên liên kết với A | Không gỡ E khỏi A trước khi kiểm tra B |
+| Assign an unassigned employee to A | Add to A; `employee.department = A` | No duplicates; capacity in A |
+| Transfer from A to B | Remove from A; set B; add to B | E must not belong to both A and B |
+| Unassign an employee | Remove from old department; set `null` | No stale reverse link remains |
+| Reassign to the same department | Do nothing (*idempotent*) | No duplicate entry or event |
+| Assignment fails because B is full | Preserve the existing link to A | Do not remove E from A before validating B |
 
-## 4. Ví dụ Java 17 hoàn chỉnh: chuyển phòng ban nhất quán
+## 4. Complete Java 17 example: consistent department transfers
 
-Ví dụ dưới đây có thể biên dịch độc lập, không cần Spring hoặc database. Cả hai phía được thay đổi qua **một phương thức `Employee.moveTo(...)`**; collection nhân viên không lộ ra ngoài để chỉnh trực tiếp.
+The example below compiles independently without Spring or a database. Both ends are updated through **one `Employee.moveTo(...)` method**; the employee collection is not exposed for direct modification.
 
-Tạo file `BidirectionalAssociationDemo.java`:
+Create `BidirectionalAssociationDemo.java`:
 
 ```java
 import java.util.LinkedHashSet;
@@ -2058,14 +2058,14 @@ public class BidirectionalAssociationDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac BidirectionalAssociationDemo.java
 java BidirectionalAssociationDemo
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 Department is full: ENG
@@ -2075,22 +2075,22 @@ An o SAL
 SAL sau go = 0
 ```
 
-### Vì sao đoạn code giữ được bất biến?
+### Why does this code preserve the invariant?
 
-- `Employee.department` và `Department.employees` đều là `private`; caller chỉ cập nhật qua `moveTo`.
-- `moveTo` trả về ngay nếu đích đã là phòng hiện tại.
-- Kiểm tra trạng thái cũ và sức chứa phòng mới xảy ra **trước** ba bước sửa dữ liệu. Nếu kiểm tra ném exception, trạng thái ban đầu không đổi.
-- Khi thành công, phương thức xóa liên kết ngược cũ, cập nhật tham chiếu tiến và tạo liên kết ngược mới.
-- `members()` trả snapshot collection, nên thao tác ngoài như `members().clear()` không thể sửa collection thật. Các `Employee` trong snapshot vẫn là object tham chiếu, nhưng người dùng không có setter tùy tiện để phá hỏng quan hệ.
-- `verify` kiểm tra tính nhất quán từ cả hai phía cho các nhân viên được đưa vào test.
+- `Employee.department` and `Department.employees` are both `private`; callers can update the relationship only through `moveTo`.
+- `moveTo` returns immediately if the destination is already the current department.
+- Existing-state and new-capacity checks occur **before** the three modification steps. If validation throws an exception, the original state remains unchanged.
+- On success, the method removes the old reverse link, updates the forward reference, and creates the new reverse link.
+- `members()` returns a collection snapshot, so external operations such as `members().clear()` cannot modify the actual collection. The `Employee` objects in the snapshot are still referenced objects, but callers have no arbitrary setter with which to break the association.
+- `verify` checks consistency from both directions for employees included in the test.
 
-**Giới hạn có chủ đích của ví dụ:** đây là mô hình **đơn luồng trong bộ nhớ**. Hai request đồng thời có thể cùng vượt qua kiểm tra sức chứa rồi cùng thêm thành viên. Mọi đối tượng tham gia phải được quản lý trong cùng phạm vi và thao tác không được ngắt giữa chừng. Khi yêu cầu chạy đa luồng, phải chọn đồng bộ hóa phù hợp cho toàn bộ thao tác hoặc chuyển invariant sang một tầng giao dịch khác.
+**Intentional limitations:** this is a **single-threaded, in-memory** model. Two concurrent requests may both pass the capacity check and then both add employees. All participating objects must be managed within the same scope, and the operation must not be interrupted midway. For multithreading, synchronize the entire operation appropriately or move the invariant to a different transactional layer.
 
-Ví dụ cũng dùng **object identity** làm phép so sánh thành viên vì `Employee` không override `equals/hashCode`. Kiểm tra ID trùng trong một phòng là luật nghiệp vụ bổ sung; hệ thống thực tế thường cần quản lý ID duy nhất toàn cục tại repository hoặc database.
+The example also uses **object identity** to compare employees because `Employee` does not override `equals/hashCode`. Checking for duplicate IDs within a department is an additional business rule; a real system usually needs globally unique IDs managed by a repository or database.
 
-## 5. Khi có quan hệ hai chiều nhiều–nhiều
+## 5. When a many-to-many relationship is bidirectional
 
-Với `Student` và `Course`, một sinh viên học nhiều khóa và một khóa có nhiều sinh viên. Nếu cả hai class giữ `Set` của nhau thì thao tác đăng ký phải thay đổi **cả hai tập**.
+With `Student` and `Course`, each student takes multiple courses and each course has multiple students. If both classes store `Set` collections referencing one another, enrollment must update **both sets**.
 
 ```mermaid
 classDiagram
@@ -2104,7 +2104,7 @@ classDiagram
     Student "0..*" -- "0..*" Course : đăng ký
 ```
 
-Ý tưởng của phương thức **trung tâm** (minh họa khi hai tập được quản lý nội bộ và có quy tắc định danh ổn định):
+The idea behind a **centralized** method (illustrated with internally managed sets and stable identity rules):
 
 ```java
 // Đoạn minh họa; studentCourses và courseStudents là các tập
@@ -2122,18 +2122,18 @@ void unenroll(Student student, Course course) {
 }
 ```
 
-Đừng nhân bản phương thức update theo hai hướng rồi gọi qua lại không kiểm soát: `student.addCourse(course)` gọi `course.addStudent(student)` rồi ngược lại có thể tạo **đệ quy vô hạn**. Một giải pháp là một phía điều phối, phía kia có phương thức nội bộ chỉ sửa tập cục bộ (*internal helper*). Các thao tác cập nhật phải xét sự nhất quán trước khi sửa nếu phát hiện dữ liệu đã lỗi.
+Do not duplicate update methods on both ends and have them call each other without control: `student.addCourse(course)` calling `course.addStudent(student)` and vice versa can cause **infinite recursion**. One solution is to let one side coordinate while the other exposes an *internal helper* that updates only its local set. Update operations should check existing consistency before making changes if corrupt state is detected.
 
-Nếu liên kết có thêm `enrolledAt`, `status`, `grade` hoặc lịch sử đăng ký, một class `Enrollment` liên kết đúng một `Student` với đúng một `Course` thường dễ bảo vệ invariant hơn. Nó làm rõ trạng thái của **bản thân quan hệ**, tránh nhét thuộc tính liên kết vào sai thực thể.
+If the link has `enrolledAt`, `status`, `grade`, or enrollment history, an `Enrollment` class linking exactly one `Student` to exactly one `Course` often makes invariants easier to protect. It captures the state of **the relationship itself**, rather than placing association attributes on the wrong entity.
 
-## 6. Bidirectional association với JPA/Hibernate
+## 6. Bidirectional associations with JPA/Hibernate
 
-Trong ORM, phải phân biệt **hai ý nghĩa khác nhau của “owner”**:
+In ORM, distinguish **two different meanings of "owner"**:
 
-- **Đầu sở hữu quan hệ trong JPA (*owning side*):** phía mà Hibernate/JPA dùng để ghi khóa ngoại hoặc bảng liên kết xuống database. `mappedBy` khai báo phía nghịch (*inverse side*).
-- **Chủ sở hữu nghiệp vụ (*domain owner*):** nơi giữ quy tắc thêm/xóa/chuyển liên kết. Hai khái niệm không nhất thiết trùng nhau.
+- **JPA owning side:** the side Hibernate/JPA uses to write the foreign key or association table to the database. `mappedBy` declares the *inverse side*.
+- **Domain owner:** the component responsible for rules governing link additions, removals, and transfers. These two meanings do not necessarily coincide.
 
-Với `Department` 1–N `Employee`, thiết kế thường gặp:
+For `Department` 1–N `Employee`, a common design is:
 
 ```java
 // Trong class Employee có @Entity:
@@ -2146,9 +2146,9 @@ private Department department;
 private Set<Employee> employees = new HashSet<>();
 ```
 
-`Employee.department` là **owning side** của khóa ngoại `department_id`; `Department.employees` là collection nghịch dùng để điều hướng. Nếu code chỉ thêm một `Employee` vào `department.employees` nhưng không cập nhật `employee.department`, in-memory graph lệch nhau và khóa ngoại có thể không được ghi như kỳ vọng.
+`Employee.department` is the **owning side** of the `department_id` foreign key; `Department.employees` is the inverse collection used for navigation. If code only adds an `Employee` to `department.employees` without updating `employee.department`, the in-memory graph becomes inconsistent and the foreign key may not be persisted as expected.
 
-Do đó cần một helper đồng bộ hai phía:
+Therefore, use a helper that synchronizes both sides:
 
 ```java
 // Pseudo-implementation minh họa trong Department entity.
@@ -2165,23 +2165,23 @@ public void addEmployee(Employee e) {
 }
 ```
 
-Trong ví dụ helper này, `assignDepartmentInternally` có phạm vi truy cập đủ hẹp và không được gọi tùy tiện từ application service. Nếu public setter tồn tại và vẫn được dùng ở nơi khác, invariant chưa được bảo vệ. Phần `old.employees.remove` và `this.employees.add` cũng cần được quản lý trong một transaction khi các entity là persistent.
+In this helper example, `assignDepartmentInternally` has suitably restricted access and should not be invoked arbitrarily by application services. If a public setter remains available and used elsewhere, the invariant is still unprotected. The `old.employees.remove` and `this.employees.add` operations must also be managed in a transaction when the entities are persistent.
 
-### Những điều JPA không tự giải quyết
+### What JPA does not solve automatically
 
-| Thành phần | Nó giúp gì? | Không tự bảo đảm điều gì? |
+| Feature | What does it provide? | What does it not guarantee automatically? |
 | --- | --- | --- |
-| `@OneToMany(mappedBy = "...")` | Biết phía nghịch và cách điều hướng | Không tự đồng bộ hai collection/field trong mọi thao tác Java |
-| `@ManyToOne` và FK | Ánh xạ liên kết lưu trên bảng child | Không ngăn caller sửa object graph sai trước flush |
-| `@Transactional` | Gom các ghi DB trong một giao dịch | Không tự sửa logic cập nhật thiếu một phía |
-| `@Version` | Phát hiện xung đột optimistic locking khi version được kiểm tra/cập nhật | Không thay thế unique constraint, và không chắc bắt được mọi thay đổi chỉ ở collection nghịch |
-| Unique/FK/check constraint | Chặn dữ liệu DB vi phạm quy tắc cụ thể | Không tự làm hai tham chiếu đã nạp trong heap đồng bộ ngay |
+| `@OneToMany(mappedBy = "...")` | Identifies the inverse side and navigation mapping | Does not automatically synchronize two Java collections/fields during every operation |
+| `@ManyToOne` and foreign key | Map the link stored on the child table | Do not prevent callers from corrupting the object graph before flush |
+| `@Transactional` | Groups database writes into one transaction | Does not fix update logic that omits one end |
+| `@Version` | Detects optimistic-locking conflicts when versions are checked/updated | Does not replace uniqueness constraints or necessarily detect every inverse-collection-only change |
+| Unique/FK/check constraint | Prevents specific violations in database data | Does not immediately synchronize two already-loaded heap references |
 
-**Lưu ý về `cascade` và `orphanRemoval`:** đây là chính sách vòng đời/persistence riêng. Không nên đặt `CascadeType.REMOVE` tùy tiện cho quan hệ được chia sẻ; xóa một phía có thể làm xóa luôn đối tượng vẫn được nơi khác sử dụng. `orphanRemoval = true` chỉ hợp lý khi child thật sự phụ thuộc vòng đời của owner theo nghiệp vụ.
+**About `cascade` and `orphanRemoval`:** these are separate lifecycle/persistence policies. Do not apply `CascadeType.REMOVE` indiscriminately to shared relationships; removing one side could delete objects still in use elsewhere. `orphanRemoval = true` is appropriate only when the child truly depends on the owner's lifecycle according to business rules.
 
-### Khi chuyển phòng trong một giao dịch
+### Transferring departments within a transaction
 
-Một application service có thể thực hiện:
+An application service might execute:
 
 ```java
 @Transactional
@@ -2197,13 +2197,13 @@ public void transferEmployee(Long employeeId, Long targetDepartmentId) {
 }
 ```
 
-Đây là **đoạn tích hợp giả định** `Employee` entity có helper và hai repository phù hợp; không phải một file Java độc lập như demo trên.
+This is **a hypothetical integration snippet** assuming an `Employee` entity with a helper and two suitable repositories; it is not a standalone Java file like the previous demo.
 
-Nếu quy tắc yêu cầu “phòng tối đa N người”, hai transaction đồng thời có thể đều thấy phòng còn chỗ. Phải chọn biện pháp nhất quán như **pessimistic locking trên bản ghi phòng**, thiết kế optimistic locking có chạm đúng version cần bảo vệ, hoặc ràng buộc/database strategy phù hợp. Chỉ thêm `@Transactional` thường **không đủ** để bảo vệ giới hạn tổng số thành viên dưới cạnh tranh.
+If the rule is "at most N people per department," two concurrent transactions may both see available capacity. Choose consistency mechanisms such as **pessimistic locking on the department record**, optimistic locking that updates the version protecting the constraint, or a suitable database constraint/strategy. Adding `@Transactional` alone is generally **not enough** to enforce a total membership limit under concurrency.
 
-## 7. Lỗi thường gặp và cách phát hiện
+## 7. Common mistakes and how to detect them
 
-### 7.1 Getter lộ collection có thể thay đổi
+### 7.1 A getter exposes a mutable collection
 
 ```java
 // Sai: bỏ qua add/remove được kiểm soát
@@ -2212,62 +2212,62 @@ public Set<Employee> employees() {
 }
 ```
 
-Dùng snapshot đọc, immutable DTO hoặc immutable view phù hợp. `Collections.unmodifiableSet(employees)` là **view live** (thấy cập nhật bên trong); `Set.copyOf(employees)` là **snapshot** về thành viên ở thời điểm gọi. Cả hai chỉ ngăn chỉnh **collection qua tham chiếu trả về**, không làm các phần tử mutable trở thành immutable.
+Use a read-only snapshot, immutable DTO, or suitable immutable view. `Collections.unmodifiableSet(employees)` is a **live view** (it reflects internal updates); `Set.copyOf(employees)` is a **snapshot** of membership at call time. Both only prevent modification of **the collection through the returned reference**; neither makes mutable elements immutable.
 
-### 7.2 Chỉ cập nhật phía nghịch của JPA
+### 7.2 Updating only JPA's inverse side
 
 ```java
 department.getEmployees().add(employee);
 // employee.department vẫn null hoặc trỏ về phòng cũ!
 ```
 
-Cần đổi owning side và cập nhật object graph phía nghịch để truy vấn trong transaction nhất quán.
+Update the owning side and the inverse side of the object graph so queries remain consistent within the transaction.
 
-### 7.3 Xóa quan hệ nhưng quên liên kết ngược
+### 7.3 Removing a relationship but forgetting the reverse link
 
 ```java
 employee.department = null;
 // Phòng cũ vẫn chứa employee: còn dữ liệu "ma".
 ```
 
-Phải xóa khỏi tập nhân viên của phòng cũ trong cùng một thao tác.
+Remove the employee from the old department's set as part of the same operation.
 
-### 7.4 `equals/hashCode` dựa vào trường có thể thay đổi
+### 7.4 `equals/hashCode` based on mutable fields
 
-Nếu một entity nằm trong `HashSet` và `hashCode()` phụ thuộc `department` hoặc tên có thể đổi, sau khi thay đổi nó có thể không được tìm/xóa đúng trong set. Dùng định danh bất biến hoặc chiến lược equality phù hợp với lifecycle của entity và ORM; không tùy tiện đưa association mutable vào `equals/hashCode`.
+If an entity is stored in a `HashSet` and `hashCode()` depends on mutable properties such as `department` or name, changing them can break lookup/removal in the set. Use immutable identity or an equality strategy appropriate to the entity's lifecycle and ORM; do not arbitrarily include mutable associations in `equals/hashCode`.
 
-### 7.5 Đệ quy vô hạn do cập nhật đối xứng
+### 7.5 Infinite recursion caused by symmetric updates
 
 ```text
 A.addB(B) -> B.addA(A) -> A.addB(B) -> ...
 ```
 
-Cho **một phía điều phối**, phía kia cung cấp phương thức nội bộ chỉ cập nhật dữ liệu, hoặc thêm điều kiện kiểm tra trước thao tác. Không dựa vào thứ tự gọi tình cờ.
+Let **one side coordinate**, with the other exposing internal data-only update helpers, or add guards before operations. Do not depend on accidental call order.
 
-### 7.6 Serialize vòng tham chiếu
+### 7.6 Serializing reference cycles
 
 ```text
 Department -> employees -> Employee.department -> Department -> ...
 ```
 
-Khi trả entity trực tiếp qua JSON, vòng tham chiếu có thể gây lỗi serialize, dữ liệu dư thừa hoặc lazy-loading ngoài transaction. Thiết kế **DTO** theo hợp đồng API (chẳng hạn `DepartmentResponse(code, employeeIds)`) thay vì xuất toàn bộ object graph. Các annotation JSON có thể hỗ trợ nhưng không thay thế thiết kế dữ liệu trả về.
+When returning entities directly as JSON, reference cycles can cause serialization errors, redundant data, or lazy loading outside a transaction. Design **DTOs** around API contracts (such as `DepartmentResponse(code, employeeIds)`) instead of exposing entire object graphs. JSON annotations may help but do not replace response-data design.
 
-## 8. Chiến lược kiểm thử tính nhất quán
+## 8. Strategies for testing consistency
 
-Test phải kiểm tra **cả hai đầu quan hệ** sau mỗi thao tác, bao gồm tình huống thất bại.
+Tests must check **both ends of the relationship** after every operation, including failed operations.
 
-| Kịch bản | Kiểm tra kỳ vọng |
+| Scenario | Expected checks |
 | --- | --- |
-| Thêm nhân viên chưa được gán vào A | `e.department == A` và `A.members` chứa e |
-| Chuyển e từ A sang B | A không chứa e; B chứa e; `e.department == B` |
-| Chuyển e sang chính B | Không đổi; không nhân đôi; không phát side effect thừa |
-| Gỡ e khỏi B | `e.department == null`, B không chứa e |
-| B đủ giới hạn sức chứa | Từ chối; A/B/e giữ đúng trạng thái trước lời gọi |
-| Caller cố sửa danh sách trả về | Không thể thay đổi tập nội bộ |
-| Hai request đồng thời chuyển/thêm | Tổng số thành viên và hai đầu vẫn hợp lệ sau khi hoàn tất |
-| Save/flush/clear/reload entity JPA | Liên kết sau khi nạp lại khớp dữ liệu DB |
+| Assign an unassigned employee to A | `e.department == A` and `A.members` contains e |
+| Transfer e from A to B | A does not contain e; B contains e; `e.department == B` |
+| Transfer e to B again | Unchanged; no duplicate entry or unnecessary side effect |
+| Unassign e from B | `e.department == null`; B does not contain e |
+| B has reached its capacity limit | Rejected; A/B/e retain their exact pre-call states |
+| Caller attempts to modify the returned list | Internal set remains unmodifiable from the outside |
+| Two concurrent requests transfer/add employees | Total membership count and both ends remain valid afterward |
+| Save/flush/clear/reload JPA entities | Reloaded relationships match database data |
 
-Ví dụ assertion có tính chất dễ hiểu:
+An easy-to-read assertion example:
 
 ```java
 // Giả sử employee đã chuyển từ oldDepartment sang newDepartment:
@@ -2276,53 +2276,53 @@ assert !oldDepartment.members().contains(employee);
 assert newDepartment.members().contains(employee);
 ```
 
-Ở kiểm thử JPA, nên gọi `flush()`, `clear()` rồi load lại trước khi khẳng định DB đã được cập nhật: object graph đúng trong persistence context chưa chứng minh dữ liệu lưu trữ đúng.
+In JPA tests, call `flush()` and `clear()`, then reload before asserting the database was updated: a correct object graph in the persistence context does not prove stored data is correct.
 
-Đối với cạnh tranh đồng thời, kiểm thử nhiều luồng hoặc integration test dùng database thật hữu ích hơn việc chỉ gọi liên tục trên một thread. Một unit test tuần tự không chứng minh được cấu trúc thread-safe.
+For concurrency, multithreaded tests or integration tests against a real database are more meaningful than repeated calls on a single thread. A sequential unit test does not prove a design is thread-safe.
 
-## 9. Bài tập thực hành
+## 9. Practice exercises
 
-**Bài 1 — Trường học:** một `Classroom` có nhiều `Student`; mỗi `Student` thuộc một lớp tại một thời điểm. Cài đặt `transferTo(Classroom)` để đồng bộ hai phía, có giới hạn 40 học sinh và không cho ID trùng. Test chuyển từ lớp đầy sang lớp khác và chuyển **vào lớp đầy** phải giữ trạng thái cũ.
+**Exercise 1 — School:** a `Classroom` contains many `Student` objects, and each `Student` belongs to one classroom at a time. Implement `transferTo(Classroom)` to synchronize both ends, enforce a limit of 40 students, and reject duplicate IDs. Test transfers from a full class to another, as well as transfers **into a full class** that must preserve the previous state.
 
-**Bài 2 — Nhiều–nhiều:** `Developer` có nhiều `Project` và mỗi `Project` có nhiều `Developer`. Đặt một service kiểm soát `joinProject`/`leaveProject`; viết kiểm thử xác nhận cả hai tập luôn đồng bộ sau đăng ký, rời dự án và đăng ký lặp.
+**Exercise 2 — Many-to-many:** a `Developer` has many `Project` objects, and each `Project` has many `Developer` objects. Have a service control `joinProject`/`leaveProject`; test that both sets stay synchronized after joining, leaving, and repeated joins.
 
-**Bài 3 — JPA:** một `Order` chứa nhiều `OrderLine`; mỗi `OrderLine` tham chiếu `Order`. Chọn owning side, viết helper `addLine`/`removeLine`, quyết định khi nào `orphanRemoval` phù hợp và kiểm thử lại từ DB sau `flush/clear`.
+**Exercise 3 — JPA:** an `Order` contains many `OrderLine` objects, and each `OrderLine` references its `Order`. Choose the owning side, implement `addLine`/`removeLine` helpers, decide when `orphanRemoval` is appropriate, and verify against the database after `flush/clear`.
 
-**Bài 4 — Review một bug:** hệ thống chuyển nhân viên từ A sang B bằng cách gọi `B.getEmployees().add(e)`, rồi `e.setDepartment(B)`, nhưng không xóa khỏi A. Hãy xác định invariant bị vi phạm, sửa API và bổ sung test cho trường hợp B từ chối nhân viên.
+**Exercise 4 — Review a bug:** a system transfers an employee from A to B by calling `B.getEmployees().add(e)` and then `e.setDepartment(B)` without removing e from A. Identify the violated invariant, fix the API, and add tests for cases where B rejects the employee.
 
-## 10. Checklist khi thiết kế quan hệ hai chiều
+## 10. Bidirectional relationship design checklist
 
-- Quan hệ có **thực sự cần điều hướng hai chiều** hay một hướng và truy vấn là đủ?
-- Đã xác định multiplicity, nullability, tính duy nhất và vòng đời của liên kết chưa?
-- **Ai là cổng cập nhật duy nhất**, và có setter/getter mutable nào vượt qua cổng đó?
-- Mọi thao tác thêm/gỡ/chuyển đều **xác thực trước và sửa đủ hai phía** chứ?
-- Khi chuyển thất bại, có giữ nguyên trạng thái cũ không?
-- Collection/equality có ổn định khi field của entity thay đổi không?
-- Dùng ORM thì owning side, `mappedBy`, `cascade`, `orphanRemoval` đã đúng ý nghĩa nghiệp vụ chưa?
-- Dữ liệu nhiều request có cần transaction, locking, unique/FK constraint và test đồng thời không?
-- Có kiểm chứng lại hai hướng **sau khi đọc lại từ DB**, không chỉ sau thao tác trên object trong bộ nhớ?
+- Does the relationship **really need bidirectional navigation**, or is one direction plus querying enough?
+- Have multiplicity, nullability, uniqueness, and relationship lifecycle been specified?
+- **Who is the sole update entry point**, and do any mutable getters/setters bypass it?
+- Do all add/remove/transfer operations **validate first and then update both ends completely**?
+- If a transfer fails, is the previous state preserved?
+- Do collection behavior and equality remain stable as entity fields change?
+- With ORM, do owning side, `mappedBy`, `cascade`, and `orphanRemoval` match the business semantics?
+- Does concurrent request handling require transactions, locks, uniqueness/foreign-key constraints, and concurrency tests?
+- Have both directions been verified **after reloading from the database**, not just after in-memory object updates?
 
-**Điểm cốt lõi:** quan hệ hai chiều chỉ đúng khi hai hướng cùng thể hiện **một trạng thái nghiệp vụ duy nhất**. Hãy quản lý thay đổi qua API tập trung, bảo vệ invariant và kiểm tra cả hai phía; khi có persistence hoặc xử lý đồng thời, cần bổ sung cơ chế đảm bảo tính nhất quán tại đúng ranh giới giao dịch.
+**Key point:** a bidirectional association is correct only when both directions represent **one consistent business state**. Manage changes through a centralized API, protect invariants, and verify both sides; with persistence or concurrent processing, add appropriate consistency mechanisms at the correct transaction boundaries.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="relationships-007">Vòng phụ thuộc và cách phá vòng</a>
+## <a id="relationships-007">Circular dependencies and how to break them</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Vòng phụ thuộc và cách phá vòng trong thiết kế OOP Java
+# Circular dependencies and how to break them in Java OOP design
 
-> **Mục tiêu:** Nhận diện chu trình phụ thuộc (*circular dependency*) giữa các lớp, đối tượng, package, module hoặc bean; hiểu tác hại thực tế; và refactor thành luồng cộng tác một chiều mà vẫn giữ được hành vi nghiệp vụ.
+> **Goal:** Identify circular dependencies between classes, objects, packages, modules, or beans; understand their practical consequences; and refactor to unidirectional collaboration without changing business behavior.
 
-## 1. Vòng phụ thuộc là gì?
+## 1. What is a circular dependency?
 
-Giả sử lớp `OrderService` cần `ShippingService` để giao hàng, nhưng `ShippingService` lại gọi ngược `OrderService` để cập nhật trạng thái đơn hàng.
+Suppose `OrderService` needs `ShippingService` to ship orders, but `ShippingService` calls back into `OrderService` to update order status.
 
 ~~~mermaid
 flowchart LR
@@ -2330,21 +2330,21 @@ flowchart LR
     S -->|gọi để đổi trạng thái| O
 ~~~
 
-Đây là **chu trình có hướng** trong đồ thị phụ thuộc: từ `OrderService` đi theo các cạnh phụ thuộc rồi quay lại chính nó. Khi một hệ thống có thêm lớp, chu trình có thể dài hơn: `A → B → C → A`.
+This is a **directed cycle** in the dependency graph: starting from `OrderService`, following dependencies eventually leads back to itself. In a larger system, the cycle may be longer: `A → B → C → A`.
 
-Một số khái niệm cần tách biệt:
+Several concepts must be distinguished:
 
-- **Phụ thuộc ở mức thiết kế:** `A` cần API, hành vi hay cấu trúc của `B` để thực hiện trách nhiệm của mình. Hai lớp hoặc hai module phụ thuộc ngược nhau làm việc sửa và kiểm thử khó phân tách.
-- **Chu trình khởi tạo đối tượng:** muốn tạo `A` phải có `B`, nhưng muốn tạo `B` lại phải có `A`. Nếu cả hai yêu cầu qua constructor thì không tạo được cặp đối tượng hoàn chỉnh theo cách thông thường.
-- **Chu trình gọi lúc chạy:** `A.method()` gọi `B.method()` và `B.method()` lại gọi `A.method()` không có điều kiện dừng. Vấn đề này có thể gây `StackOverflowError`, dù chương trình vẫn biên dịch và đối tượng đã được khởi tạo.
-- **Vòng tham chiếu trong object graph:** đối tượng `Parent` chứa `Child` và `Child` giữ tham chiếu `parent` để điều hướng. Đây **không nhất thiết** là lỗi thiết kế hoặc lỗi bộ nhớ trong Java; tính hợp lý phụ thuộc mô hình, API và cách quản lý vòng đời.
-- **Chu trình module/build:** module `orders` phụ thuộc `shipping`, trong khi `shipping` phụ thuộc `orders`. Công cụ build có thể từ chối chu trình project/module, trong khi hai lớp trong cùng compilation unit hoặc source set có thể tham chiếu lẫn nhau.
+- **Design-level dependency:** `A` needs the API, behavior, or structure of `B` to fulfill its responsibility. Mutual dependencies between classes or modules make changes and tests harder to isolate.
+- **Object-construction cycle:** creating `A` requires `B`, but creating `B` requires `A`. If both must be supplied through constructors, the pair cannot be assembled in the usual way.
+- **Runtime call cycle:** `A.method()` calls `B.method()`, and `B.method()` calls `A.method()` again without a termination condition. This can cause `StackOverflowError` even if the code compiles and objects have been initialized.
+- **Reference cycle in an object graph:** `Parent` contains `Child`, and `Child` retains a `parent` reference for navigation. This is **not necessarily** a design defect or a Java memory leak; whether it is appropriate depends on the model, API, and lifecycle management.
+- **Module/build cycle:** module `orders` depends on `shipping` while `shipping` depends on `orders`. Build tools may reject project/module cycles, even though two classes in the same compilation unit or source set can reference each other.
 
-Vì thế câu hỏi chính không phải “có hai mũi tên ngược chiều không?”, mà là: **hai trách nhiệm có đang buộc phải biết chi tiết triển khai của nhau, gây khó khởi tạo, kiểm thử, thay thế hoặc phát triển không?**
+So the main question is not "are there arrows pointing in both directions?" but **do these responsibilities require mutual knowledge of implementation details, making initialization, testing, replacement, or evolution difficult?**
 
-## 2. Ví dụ thiết kế gây vòng
+## 2. Example of a design with a cycle
 
-Mã sau biểu diễn hai service yêu cầu lẫn nhau qua constructor:
+The following code shows two services that require each other through their constructors:
 
 ~~~java
 final class OrderService {
@@ -2377,7 +2377,7 @@ final class ShippingService {
 }
 ~~~
 
-Hai định nghĩa lớp có thể biên dịch khi cùng được biên dịch với nhau, nhưng việc lắp ghép đối tượng trở thành bài toán vòng tròn:
+The class definitions compile when compiled together, but constructing the objects becomes a circular problem:
 
 ~~~java
 // Không thể có đối tượng hoàn chỉnh để truyền vào ngay từ đầu.
@@ -2385,13 +2385,13 @@ Hai định nghĩa lớp có thể biên dịch khi cùng được biên dịch 
 // ShippingService shipping = new ShippingService(order); // order chưa tồn tại
 ~~~
 
-Truyền `null`, dùng setter để “vá” vòng, hoặc tạo một đối tượng bán khởi tạo làm giảm tính an toàn của thiết kế; đối tượng có thể bị gọi khi phụ thuộc chưa sẵn sàng. Nếu có DI container, container cũng phải đối mặt với chu trình khởi tạo.
+Passing `null`, using setters to "patch" the cycle, or creating partially initialized objects weakens design safety; an object might be invoked before its dependencies are ready. A DI container must also confront the construction cycle.
 
-**Nguyên nhân thiết kế:** `OrderService` vừa chịu trách nhiệm xác nhận đơn, vừa điều khiển vận chuyển; `ShippingService` vừa xử lý vận chuyển, vừa biết cách cập nhật nghiệp vụ đơn. Hai trách nhiệm bị kết dính qua lời gọi hai chiều.
+**Design cause:** `OrderService` both confirms orders and orchestrates shipping, while `ShippingService` both handles shipping and knows how to update order business state. The two responsibilities are entangled through two-way calls.
 
-## 3. Phá vòng bằng một lớp điều phối rõ trách nhiệm
+## 3. Breaking the cycle with a clearly responsible coordinator
 
-Hướng refactor hợp lý là có một **use case coordinator** chịu trách nhiệm cho luồng “đặt đơn và yêu cầu giao hàng”, còn các thành phần bên dưới thực hiện từng nhiệm vụ độc lập.
+A sensible refactoring introduces a **use-case coordinator** responsible for "placing an order and requesting shipment," while lower-level components perform separate tasks.
 
 ~~~mermaid
 flowchart TD
@@ -2401,9 +2401,9 @@ flowchart TD
     G --> E[Hệ thống vận chuyển]
 ~~~
 
-Trong thiết kế này, `OrderRepository` không gọi ngược `CheckoutCoordinator`, và `ShippingGateway` cũng không phụ thuộc ngược vào coordinator. Bản thân các thành phần cùng được dùng bởi coordinator không cần biết nhau.
+In this design, `OrderRepository` never calls back into `CheckoutCoordinator`, and `ShippingGateway` does not depend on the coordinator either. Components used by the same coordinator need not know one another.
 
-**Ví dụ Java 17+ hoàn chỉnh, chạy độc lập trong một tệp `OrderFlowDemo.java`:**
+**Complete Java 17+ example, runnable as a standalone `OrderFlowDemo.java` file:**
 
 ~~~java
 import java.util.Map;
@@ -2479,42 +2479,42 @@ public class OrderFlowDemo {
 }
 ~~~
 
-Chạy bằng `javac OrderFlowDemo.java` rồi `java OrderFlowDemo` với JDK 17 trở lên. Kết quả dự kiến:
+Run `javac OrderFlowDemo.java` followed by `java OrderFlowDemo` with JDK 17 or later. Expected output:
 
 ~~~text
 Request shipment for ORD-42
 Order[id=ORD-42, totalCents=250000]
 ~~~
 
-Mã này có những điểm quan trọng:
+Important points about this code:
 
-1. **Đồ thị phụ thuộc là một chiều:** `CheckoutCoordinator` biết hai cổng (`OrderRepository`, `ShippingGateway`); không cổng nào cần tham chiếu về coordinator.
-2. **Constructor injection:** hai cộng tác viên được cung cấp ngay lúc xây dựng đối tượng, và `Objects.requireNonNull` bảo đảm chúng có mặt.
-3. **Cổng là giao diện nhỏ:** repository quản lý lưu trữ, gateway quản lý yêu cầu vận chuyển. Triển khai thực tế có thể đổi mà không sửa luồng nghiệp vụ.
-4. **Các trách nhiệm có biên rõ:** flow orchestration nằm ở coordinator, không dàn trải giữa hai service gọi ngược nhau.
-5. **Không đánh tráo lỗi giao dịch:** đoạn trên chỉ minh họa cấu trúc phụ thuộc; nếu lưu đơn thành công mà gọi hệ thống giao hàng thất bại thì có thể để lại trạng thái chưa nhất quán. Trong hệ thống thật cần transaction phù hợp, retry/idempotency, hoặc *transactional outbox* khi giao tiếp giữa DB và hệ thống ngoài.
+1. **The dependency graph is unidirectional:** `CheckoutCoordinator` knows two ports (`OrderRepository`, `ShippingGateway`); neither port needs a reference back to the coordinator.
+2. **Constructor injection:** both collaborators are supplied when the object is constructed, and `Objects.requireNonNull` ensures they are present.
+3. **Ports are small interfaces:** the repository manages storage; the gateway handles shipment requests. Concrete implementations can change without modifying the business flow.
+4. **Responsibilities have clear boundaries:** orchestration belongs in the coordinator instead of being spread across services that call each other.
+5. **Do not gloss over transactional failures:** this code illustrates dependency structure only; saving an order successfully but failing to request shipment can leave inconsistent state. Real systems need suitable transactions, retries/idempotency, or a *transactional outbox* for communication between a database and an external system.
 
-**Lưu ý:** Thêm interface **không tự phá vòng**. Nếu `OrderService → ShippingPort → ShippingService → OrderService`, chu trình vẫn tồn tại ở **đồ thị bean/triển khai**, dù một cạnh đã đi qua abstraction. Phải thay đổi hướng tương tác hoặc phân tách trách nhiệm thật sự.
+**Note:** Introducing an interface **does not automatically break a cycle**. With `OrderService → ShippingPort → ShippingService → OrderService`, the **bean/implementation graph** is still cyclic even though one edge goes through an abstraction. The interaction direction or actual responsibilities must change.
 
-## 4. Những cách phá vòng và khi nào áp dụng
+## 4. Ways to break cycles and when to use them
 
-| Cách xử lý | Ý tưởng | Phù hợp khi | Điều cần tránh |
+| Approach | Idea | Suitable when | Pitfall to avoid |
 |---|---|---|---|
-| **Trích xuất trách nhiệm chung** | Di chuyển logic dùng chung sang `Policy`, `Calculator` hoặc domain service độc lập | Hai bên gọi nhau chỉ để dùng cùng một quy tắc | Tạo `Utils` khổng lồ, làm mất ranh giới miền nghiệp vụ |
-| **Điều phối tại tầng trên** | Một coordinator/use case gọi các thành phần theo thứ tự | Hai service gọi ngược để hoàn thành một workflow | Coordinator ôm toàn bộ logic, biến thành “god object” |
-| **Dependency Inversion** | Định nghĩa cổng nhỏ ở tầng phù hợp, tầng thấp triển khai cổng | Tầng nghiệp vụ phụ thuộc trực tiếp vào hạ tầng | Chỉ đổi tên hoặc chèn interface, để đồ thị runtime vẫn có vòng |
-| **Domain event / message** | Bên phát thông báo sự kiện, bên xử lý đăng ký lắng nghe | Phản ứng sau thay đổi trạng thái, giảm gọi trực tiếp | Sự kiện đồng bộ vẫn có thể gây gọi lồng/đệ quy; bất đồng bộ cần idempotency/quan sát lỗi |
-| **Tách module hợp đồng** | Đưa DTO/interface dùng chung sang module độc lập | Hai project/module import ngược nhau để lấy kiểu chung | Đưa toàn bộ nghiệp vụ vào “common” |
-| **Gộp các lớp thật sự cùng trách nhiệm** | Một thành phần mới sở hữu cùng invariant và vòng đời | Ranh giới ban đầu bị chia tách nhân tạo | Gộp chỉ để qua kiểm tra build, tạo lớp quá lớn |
-| **Xóa phụ thuộc không cần thiết** | Truyền dữ liệu tối thiểu như ID/value thay vì cả service | Chỉ gọi để lấy một vài trường hoặc trạng thái | Chuyển toàn bộ trạng thái qua DTO dư thừa gây coupling khác |
+| **Extract shared responsibility** | Move shared logic into an independent `Policy`, `Calculator`, or domain service | Both components call each other only to reuse the same rule | Creating a giant `Utils` class and losing domain boundaries |
+| **Coordinate at a higher layer** | A coordinator/use case invokes components in order | Two services call back to complete one workflow | Coordinator takes over all logic and becomes a "god object" |
+| **Dependency Inversion** | Define a small port at the appropriate layer and implement it in a lower layer | The business layer depends directly on infrastructure | Merely renaming or inserting an interface while the runtime graph stays cyclic |
+| **Domain event / message** | A publisher announces events; registered handlers react | Handling reactions to state changes without direct calls | Synchronous events can still nest calls or recurse; async requires idempotency and error observability |
+| **Extract a contract module** | Move shared DTOs/interfaces to an independent module | Projects/modules import each other only for shared types | Moving all business logic into "common" |
+| **Merge components with truly shared responsibility** | A new component owns one invariant and lifecycle | Original boundaries were artificially split | Merging merely to pass a build check and creating a huge class |
+| **Remove unnecessary dependencies** | Pass minimal data such as IDs/values instead of an entire service | Calls exist only to retrieve a few fields or status values | Moving all state through redundant DTOs and creating new coupling |
 
-Chọn cách theo **nguồn gốc chu trình**. Nếu hai lớp chỉ dùng cùng một hàm tính phí, trích xuất tính phí thường gọn nhất. Nếu hai lớp điều phối tiến trình, đặt workflow vào coordinator. Nếu hai package import nhau do vài kiểu dữ liệu, tách contract module là ứng viên tốt. Không cần đưa event bus vào một luồng đồng bộ đơn giản chỉ để vẽ các mũi tên đẹp hơn.
+Choose based on **the cycle's root cause**. If two classes merely share a fee-calculation function, extracting that calculation is often simplest. If both orchestrate a process, move the workflow into a coordinator. If two packages import each other for a few types, extracting a contract module may be appropriate. There is no need for an event bus in a simple synchronous workflow merely to make the arrows look cleaner.
 
-## 5. Trích xuất phụ thuộc chung: từ A ↔ B thành A → C ← B
+## 5. Extracting a shared dependency: from A ↔ B to A → C ← B
 
-Giả sử `InvoiceService` cần `DiscountService` để tính tiền, nhưng `DiscountService` gọi ngược `InvoiceService` chỉ để biết mức trần chiết khấu. Cách thiết kế này khiến quy tắc “mức trần” bị đặt sai lớp.
+Suppose `InvoiceService` needs `DiscountService` for pricing, but `DiscountService` calls back into `InvoiceService` only to learn the maximum discount. This design places the "maximum discount" rule in the wrong class.
 
-**Trước:**
+**Before:**
 
 ~~~mermaid
 flowchart LR
@@ -2522,7 +2522,7 @@ flowchart LR
     D --> I
 ~~~
 
-**Sau:** tách quy tắc giảm giá thành một policy độc lập.
+**After:** extract the discount rule into an independent policy.
 
 ~~~mermaid
 flowchart TD
@@ -2530,7 +2530,7 @@ flowchart TD
     D[DiscountService] --> P
 ~~~
 
-Ví dụ các lớp Java (đặt trong một tệp hoặc các tệp tương ứng):
+Example Java classes (in one file or their corresponding separate files):
 
 ~~~java
 final class DiscountPolicy {
@@ -2569,22 +2569,22 @@ final class DiscountService {
 }
 ~~~
 
-`InvoiceService` và `DiscountService` đều biết `DiscountPolicy` nhưng không cần biết nhau. `Math.multiplyExact` báo lỗi nếu phép nhân số nguyên tràn phạm vi `long`; dùng `long` cho đơn vị cents cũng cần quy tắc làm tròn của nghiệp vụ, ví dụ này dùng phép chia nguyên.
+Both `InvoiceService` and `DiscountService` know `DiscountPolicy`, but need not know each other. `Math.multiplyExact` signals an error if integer multiplication overflows `long`; even when `long` represents cents, business rounding rules are needed, and this example uses integer division.
 
-Một đối tượng `DiscountPolicy` là thành phần độc lập, không duy trì trạng thái giữa hai lần gọi; việc chia sẻ một instance hay tạo riêng tùy vòng đời và cấu hình ứng dụng.
+A `DiscountPolicy` object is an independent, stateless component across calls; sharing one instance or creating separate instances depends on application lifecycle and configuration.
 
-## 6. Dependency Inversion: điều gì thật sự đổi hướng?
+## 6. Dependency Inversion: what direction actually changes?
 
-Ở thiết kế phân tầng, domain thường không nên import hạ tầng trực tiếp.
+In layered design, the domain should generally not import infrastructure directly.
 
-**Thiết kế phụ thuộc vào triển khai:**
+**Design dependent on implementation:**
 
 ~~~mermaid
 flowchart LR
     S[ApplicationService] --> J[JdbcOrderRepository]
 ~~~
 
-**Thiết kế hướng vào contract do tầng nghiệp vụ sở hữu:**
+**Design depending on a contract owned by the business layer:**
 
 ~~~mermaid
 flowchart LR
@@ -2592,19 +2592,19 @@ flowchart LR
     J[JdbcOrderRepository] -. implements .-> P
 ~~~
 
-Cổng `OrderRepository` được đặt trong module ứng dụng/domain thích hợp, adapter `JdbcOrderRepository` thực hiện nó. Package/module của adapter có thể phụ thuộc vào contract, còn application service không cần phụ thuộc trực tiếp vào adapter. Đây là **đảo chiều phụ thuộc mã nguồn**, dù tại runtime vẫn có object adapter thật được tiêm vào service.
+The `OrderRepository` port belongs in an appropriate application/domain module, and the `JdbcOrderRepository` adapter implements it. The adapter's package/module can depend on the contract, while the application service no longer depends directly on the adapter. This **inverts the source-code dependency** even though a real adapter object is still injected into the service at runtime.
 
-Đừng chỉ kiểm tra import trong một file. Khi runtime wiring là:
+Do not inspect only the imports in one file. If runtime wiring looks like:
 
 ~~~text
 A -> PortB -> ImplementationB -> A
 ~~~
 
-thì **vòng phụ thuộc đối tượng vẫn còn**. Hãy kiểm tra **đồ thị lớp** và **đồ thị thành phần được khởi tạo**; hai đồ thị không phải lúc nào cũng giống nhau.
+then **the object dependency cycle still exists**. Examine both **the class graph** and **the instantiated component graph**; they are not always identical.
 
-## 7. Domain event có thể phá lời gọi trực tiếp, nhưng cần ranh giới rõ
+## 7. Domain events can break direct calls, but need clear boundaries
 
-Thay vì `OrderService` gọi `EmailService` rồi `EmailService` gọi ngược `OrderService` để tìm đơn, domain có thể phát `OrderPlaced(orderId, customerId)`. Một handler riêng đọc dữ liệu cần thiết và gửi email:
+Rather than have `OrderService` call `EmailService` and then have `EmailService` call back into `OrderService` to find an order, the domain can publish `OrderPlaced(orderId, customerId)`. An independent handler reads the required data and sends an email:
 
 ~~~mermaid
 flowchart LR
@@ -2614,19 +2614,19 @@ flowchart LR
     H --> M[EmailGateway]
 ~~~
 
-Chỉ dùng event khi “đơn đã được đặt” là một **sự kiện có ý nghĩa miền nghiệp vụ**. Nếu handler phải truy vấn dữ liệu mới, ranh giới contract nên ổn định (ID hoặc snapshot tối thiểu), tránh đưa nguyên entity có trạng thái ORM/lazy-loading sang message.
+Use an event only when "the order was placed" is a **meaningful domain event**. If handlers need to query data, define a stable contract boundary (IDs or a minimal snapshot) rather than sending an entire ORM entity with lazy-loaded state through messages.
 
-Phân biệt ba trường hợp:
+Distinguish three cases:
 
-- **Event đồng bộ trong cùng process:** giảm phụ thuộc trực tiếp nhưng handler vẫn chạy trên call stack của bên phát. Nếu handler lại kích hoạt event ban đầu, có thể tạo vòng gọi vô hạn.
-- **Event bất đồng bộ:** người phát không chờ handler chạy trong cùng stack, nhưng xuất hiện bài toán giao hàng ít nhất một lần, retry, trùng thông điệp, sắp xếp thứ tự và xử lý nhất quán cuối cùng.
-- **Transactional outbox:** ghi thay đổi dữ liệu và bản ghi outbox trong cùng transaction DB, một worker chuyển outbox thành message. Cần xử lý publish trùng và idempotency ở consumer; outbox không tự đảm bảo exactly-once end-to-end.
+- **Synchronous event in the same process:** reduces direct coupling, but handlers still execute on the publisher's call stack. If a handler triggers the original event again, it may cause infinite recursive calls.
+- **Asynchronous event:** the publisher does not wait for the handler on the same stack, but must handle at-least-once delivery, retries, duplicate messages, ordering, and eventual consistency.
+- **Transactional outbox:** write data changes and an outbox record in the same database transaction, then have a worker turn outbox records into messages. Duplicate publication and consumer idempotency still need handling; an outbox does not guarantee end-to-end exactly-once delivery by itself.
 
-Nếu việc gửi email không ảnh hưởng tới khả năng tạo đơn, event là lựa chọn có thể hợp lý. Nếu quy tắc yêu cầu kiểm tra tồn kho **trước** khi xác nhận đơn, một lời gọi đồng bộ có contract rõ có thể dễ kiểm soát hơn.
+If sending email does not determine whether an order can be created, an event may be appropriate. If the rules require an inventory check **before** confirming an order, a synchronous call with a clear contract may be easier to control.
 
-## 8. Chu trình bean trong Spring và cách xử lý
+## 8. Spring bean cycles and how to address them
 
-Ví dụ sau minh họa vòng phụ thuộc qua **constructor injection**:
+The following example illustrates a cycle created by **constructor injection**:
 
 ~~~java
 import org.springframework.stereotype.Service;
@@ -2644,22 +2644,22 @@ class ShippingApplicationService {
 }
 ~~~
 
-Khi context cần tạo cả hai singleton bean, không bean nào có thể được tạo đầy đủ trước để cấp cho bean kia. Spring thường báo lỗi khởi tạo liên quan đến vòng phụ thuộc, chẳng hạn `BeanCurrentlyInCreationException` hoặc phân tích cycle tùy phiên bản và cách wiring.
+When the application context needs both singleton beans, neither can be fully constructed first and supplied to the other. Spring generally reports a circular-dependency initialization error, such as `BeanCurrentlyInCreationException` or a cycle analysis, depending on version and wiring.
 
-**Cách sửa theo thiết kế:** tái cấu trúc thành `CheckoutCoordinator` với các cổng độc lập như ở mục 3. Spring nhận các implementation qua constructor; sơ đồ runtime còn một chiều. Nếu dùng annotation Spring, các class coordinator/adapter có thể được đánh dấu `@Service`/`@Repository` hoặc cấu hình qua `@Bean`; kiến trúc phải đúng trước, sau đó mới wiring.
+**Design-level fix:** restructure into a `CheckoutCoordinator` using independent ports, as in section 3. Spring injects implementations through constructors, leaving a unidirectional runtime graph. With Spring annotations, coordinator/adapter classes may use `@Service`/`@Repository` or be configured through `@Bean`; get the architecture right before wiring it.
 
-Các cách né lỗi có giới hạn:
+Workarounds have limitations:
 
-- `@Lazy` trên một cạnh có thể hoãn việc lấy bean, nhưng **không biến** vòng logic thành đồ thị lành mạnh. Nếu thao tác thực tế cứ gọi ngược nhau, vấn đề vẫn còn.
-- `ObjectProvider<T>` hoặc `Provider<T>` cho phép lấy phụ thuộc muộn, hữu ích khi cần scope/lifecycle động, nhưng không phải giải pháp mặc định cho vòng kiến trúc.
-- Setter/field injection có thể làm một số vòng singleton khởi tạo được ở cấu hình thích hợp, nhưng đối tượng dễ ở trạng thái chưa đủ phụ thuộc; vòng gọi phương thức vẫn tồn tại.
-- Cấu hình cho phép circular references (nếu phiên bản framework hỗ trợ) là **biện pháp tương thích tạm thời**, không thay cho xử lý trách nhiệm.
+- `@Lazy` on one edge can delay bean resolution but **does not turn** a logical cycle into a healthy graph. If operations still call each other recursively, the problem remains.
+- `ObjectProvider<T>` or `Provider<T>` supports late dependency lookup and can help with dynamic scope/lifecycle needs, but is not the default remedy for architectural cycles.
+- Setter/field injection can allow certain singleton cycles to initialize under suitable configuration, but objects may be used before all dependencies are ready; cyclic method calls still exist.
+- Allowing circular references in configuration (if supported by the framework version) is **a temporary compatibility workaround**, not a replacement for correcting responsibilities.
 
-**Một lỗi khác:** `@Transactional`, `@Async`, proxy AOP và các callback khởi tạo có thể làm thời điểm truy cập bean khác dự tính. Khi refactor, kiểm tra boundary giao dịch, lời gọi qua proxy, exception, rollback và việc phát event; tránh đổi kiến trúc rồi vô tình đổi semantics của transaction.
+**Another pitfall:** `@Transactional`, `@Async`, AOP proxies, and initialization callbacks can affect when beans are accessed. During refactoring, review transaction boundaries, proxy-mediated calls, exceptions, rollbacks, and event publication to avoid accidentally changing transaction semantics.
 
-## 9. Phụ thuộc vòng ở package và module
+## 9. Circular dependencies at package and module levels
 
-Giả sử project Java có cấu trúc:
+Suppose a Java project has this structure:
 
 ~~~text
 orders/
@@ -2668,9 +2668,9 @@ shipping/
     ShippingService.java   -> import orders.OrderService
 ~~~
 
-Hai package trong cùng module vẫn có thể biên dịch, nhưng cấu trúc dễ tạo chu trình kiến trúc. Với project/module riêng biệt, nếu `orders` phụ thuộc `shipping` và `shipping` phụ thuộc `orders`, hệ thống build có thể không sắp xếp thứ tự build hợp lệ. Với Java Platform Module System (JPMS), đồ thị `requires` giữa named modules không được tạo chu trình.
+Two packages in the same module may still compile, but the design creates an architectural cycle. With separate projects/modules, if `orders` depends on `shipping` while `shipping` depends on `orders`, the build system may be unable to find a valid build order. In the Java Platform Module System (JPMS), the `requires` graph between named modules may not contain cycles.
 
-Một cách tổ chức:
+One possible organization:
 
 ~~~text
 order-contract/
@@ -2684,24 +2684,24 @@ application/
     CheckoutCoordinator.java -> orders, shipping, order-contract
 ~~~
 
-`order-contract` chỉ chứa những contract thực sự dùng chung và ổn định; không nên trở thành “sọt rác” chứa mọi model và utility. Hướng phụ thuộc từ application vào cả hai adapter có thể phù hợp ở **composition root** nếu dự án khởi tạo các thành phần ở đó, nhưng code nghiệp vụ application nên ưu tiên interface và không import adapter cụ thể.
+`order-contract` should contain only genuinely shared, stable contracts, not become a dumping ground for models and utilities. A dependency from the application to both adapters may be appropriate at the **composition root** where components are constructed, but application business logic should prefer interfaces and avoid importing concrete adapters.
 
-Đối với module hệ thống, hãy kiểm tra **cạnh build-time** (project dependency), **cạnh compile-time** (import/type reference), và **cạnh runtime** (bean/provider wiring). Phá được một vòng trong import chưa bảo đảm vòng runtime biến mất.
+For system modules, examine **build-time edges** (project dependencies), **compile-time edges** (imports/type references), and **runtime edges** (bean/provider wiring). Breaking an import cycle does not guarantee the runtime cycle is gone.
 
-## 10. Cách chẩn đoán và refactor có kiểm soát
+## 10. Diagnosing and refactoring with control
 
-Một quy trình thực tế:
+A practical process:
 
-1. **Vẽ các cạnh thật:** ghi rõ lớp/module nào phụ thuộc lớp/module nào, dùng làm gì, và qua constructor, field, static call hay callback. Đừng suy luận quan hệ từ tên.
-2. **Xác định mức độ:** vòng nằm ở import/project module, bean constructor, lời gọi runtime hay object graph thông thường? Vòng ở một mức không nhất thiết tồn tại ở mức khác.
-3. **Lần theo nhu cầu mỗi cạnh:** bên gọi cần toàn bộ service, hay chỉ một giá trị, quy tắc, hoặc thông báo sự kiện? Từ đó xác định trách nhiệm đặt sai.
-4. **Chọn điểm cắt có ý nghĩa:** bỏ lời gọi không cần thiết, trích xuất policy, đưa điều phối lên use case, dùng port đúng tầng, hoặc đưa contract dùng chung vào module độc lập.
-5. **Di chuyển từng caller:** cập nhật constructor, phương thức và dependency injection configuration. Tránh giữ alias cũ vô thời hạn nếu nó kéo lại đường phụ thuộc vòng.
-6. **Kiểm thử hành vi:** giữ thứ tự thao tác quan trọng, kết quả, exception, transaction và trạng thái. Với API công khai, kiểm tra ảnh hưởng tương thích nhị phân/nguồn.
-7. **Kiểm tra đồ thị lại:** cả kiến trúc tĩnh và runtime wiring; thử khởi động ứng dụng từ một context sạch.
-8. **Theo dõi giới hạn hoạt động:** nếu chuyển sang event, quan sát retry/duplicate và trạng thái chưa đồng bộ; nếu dùng coordinator, tránh cho nó trở thành lớp xử lý mọi việc.
+1. **Draw the real edges:** record which class/module depends on which, why, and whether the dependency is through a constructor, field, static call, or callback. Do not infer dependencies from names alone.
+2. **Identify the level:** is the cycle in imports/project modules, bean constructors, runtime calls, or an ordinary object graph? A cycle at one level need not exist at another.
+3. **Trace why each edge is needed:** does the caller need the whole service or just a value, rule, or event notification? Use this to identify misplaced responsibilities.
+4. **Choose a meaningful cut:** eliminate unnecessary calls, extract a policy, move orchestration to a use case, use a correctly placed port, or extract shared contracts to an independent module.
+5. **Migrate callers one by one:** update constructors, methods, and dependency-injection configuration. Avoid keeping old aliases indefinitely if they recreate the cycle.
+6. **Test behavior:** preserve important operation order, results, exceptions, transactions, and state. For public APIs, assess source and binary compatibility.
+7. **Recheck the graph:** inspect both static architecture and runtime wiring; try starting the application in a clean context.
+8. **Monitor operational limitations:** for events, watch retries/duplicates and temporarily inconsistent states; for coordinators, avoid making them responsible for everything.
 
-Ví dụ các lệnh hỗ trợ kiểm tra (tùy build tool):
+Example diagnostic commands (depending on the build tool):
 
 ~~~bash
 # Maven: xem quan hệ dependency giữa các artifact
@@ -2714,13 +2714,13 @@ mvn dependency:tree
 jdeps -verbose:class -filter:none -cp target/classes target/classes
 ~~~
 
-Đọc kết quả theo phạm vi: `mvn dependency:tree` và `gradlew dependencies` cho biết quan hệ artifact/project, **không đủ** để tìm vòng gọi giữa mọi class. `jdeps` giúp phân tích phụ thuộc tĩnh bytecode, nhưng không thấy đầy đủ reflection, callback động hay runtime bean wiring. Với Gradle Windows, có thể dùng `gradlew.bat dependencies`; đường dẫn `target/classes` là ví dụ thường gặp ở Maven và cần điều chỉnh theo dự án. Các kiến trúc phức tạp có thể dùng quy tắc kiểm soát dependency giữa package/module trong test kiến trúc.
+Interpret the results according to their scope: `mvn dependency:tree` and `gradlew dependencies` show artifact/project relationships, **not enough** to find call cycles between every class. `jdeps` analyzes static bytecode dependencies but cannot fully see reflection, dynamic callbacks, or runtime bean wiring. On Windows with Gradle, use `gradlew.bat dependencies`; `target/classes` is a common Maven example path and must be adapted to the project. Complex architectures can enforce package/module dependency rules through architecture tests.
 
-## 11. Đảm bảo test phát hiện lỗi chứ không chỉ “tạo được bean”
+## 11. Ensure tests detect defects, not merely successful bean creation
 
-Từ ví dụ `CheckoutCoordinator`, ta có thể kiểm tra **thứ tự** “save trước rồi request shipment”, dữ liệu được truyền đúng và phụ thuộc không gọi ngược coordinator. Dưới đây là test JUnit Jupiter 5 dùng fake, không cần framework mocking:
+Using `CheckoutCoordinator`, we can test the **order** "save first, then request shipment," correct data propagation, and the absence of callbacks into the coordinator. The following JUnit Jupiter 5 test uses fakes without a mocking framework:
 
-**`CheckoutCoordinatorTest.java`** (đặt cạnh các class từ `OrderFlowDemo.java` trong cùng package):
+**`CheckoutCoordinatorTest.java`** (place it alongside the classes from `OrderFlowDemo.java` in the same package):
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -2769,61 +2769,61 @@ class CheckoutCoordinatorTest {
 }
 ~~~
 
-Đây là test về contract và tương tác cần giữ. Một test chỉ dùng reflection để xác nhận lớp có trường `private final ShippingGateway` hoặc chỉ kiểm tra source không chứa chuỗi `extends` là quá lệ thuộc triển khai. Đối với ứng dụng Spring, bổ sung **integration test khởi tạo application context** nhằm phát hiện vòng bean; nếu kết nối DB/messaging, kiểm tra transaction và retry theo môi trường test riêng.
+These tests protect the required contracts and interactions. A test using reflection only to confirm a `private final ShippingGateway` field, or merely searching source text for the absence of `extends`, is too implementation-dependent. For Spring applications, add **application-context startup integration tests** to catch bean cycles; with database/messaging integrations, test transactions and retries in a suitable test environment.
 
-**Điểm cần cẩn trọng về lỗi giao hàng:** test trên đảm bảo thứ tự phương thức, không chứng minh tính nguyên tử của cập nhật DB và tác vụ hệ thống ngoài. Một bài test tích hợp cần kiểm tra kịch bản gọi gateway thất bại, liệu đơn được giữ ở trạng thái nào và luồng phục hồi ra sao.
+**Be careful about shipment failures:** the test establishes method order but does not prove atomicity across database writes and external-system actions. An integration test should cover gateway failure, the resulting order state, and recovery behavior.
 
-## 12. Những hiểu lầm thường gặp
+## 12. Common misconceptions
 
-| Nhận định | Đánh giá chính xác |
+| Claim | Accurate assessment |
 |---|---|
-| “Mọi đối tượng tham chiếu vòng đều sai” | Không. Quan hệ cha–con hai chiều có thể hữu ích; Java GC có thể thu hồi cả nhóm không còn reachable từ GC roots |
-| “Chèn interface là đã phá vòng” | Chỉ đúng nếu **đồ thị phụ thuộc thực sự** đổi hướng, không còn đường quay về |
-| “`@Lazy` xử lý triệt để circular dependency” | Thường chỉ hoãn khởi tạo; không sửa trách nhiệm hoặc vòng gọi runtime |
-| “Event bus luôn giải quyết mọi vòng” | Có thể chuyển coupling sang schema/event và tạo vòng phản ứng; thêm độ phức tạp lỗi/nhất quán |
-| “Lỗi Spring context là bằng chứng duy nhất có vòng” | Compiler, tests, runtime recursion, kiến trúc package/module cũng cần được kiểm tra |
-| “Hai chiều sẽ gây memory leak trong Java” | Reference cycles tự chúng không ngăn GC thu hồi; leak xảy ra nếu còn đường tham chiếu từ các GC roots |
-| “Coordinator càng nhiều dependency càng tốt” | Coordinator nên điều phối use case; quy tắc nghiệp vụ có trách nhiệm riêng cần đặt ở thành phần phù hợp |
+| "Every reference cycle is wrong" | No. Bidirectional parent–child links can be useful; Java GC can reclaim an unreachable group when no GC-root path reaches it |
+| "Adding an interface breaks the cycle" | Only if **the actual dependency graph** changes direction with no return path |
+| "`@Lazy` completely solves circular dependencies" | It often merely defers initialization without fixing responsibilities or runtime call cycles |
+| "An event bus solves every cycle" | Coupling may shift to schemas/events and create reaction cycles; failure/consistency complexity increases |
+| "A Spring context error is the only evidence of a cycle" | Compilers, tests, runtime recursion, and package/module architecture must also be examined |
+| "Bidirectional links cause memory leaks in Java" | Reference cycles alone do not prevent GC; leaks happen when GC-root references keep objects reachable |
+| "The more dependencies a coordinator has, the better" | A coordinator should orchestrate use cases; distinct business rules belong in suitable components |
 
-## 13. Bài tập áp dụng: refactor notification cho đăng ký khóa học
+## 13. Application exercise: refactor course-enrollment notifications
 
-**Thiết kế ban đầu:** `EnrollmentService` gọi `NotificationService` sau khi ghi danh, nhưng `NotificationService` gọi lại `EnrollmentService` để lấy email và tên khóa học. Hai service được constructor-inject lẫn nhau.
+**Original design:** `EnrollmentService` calls `NotificationService` after enrollment, but `NotificationService` calls back into `EnrollmentService` to obtain the email address and course name. Each service receives the other through constructor injection.
 
-Hãy viết lại theo một trong hai phương án:
+Rewrite it using either approach:
 
-- **Đồng bộ:** `EnrollStudentUseCase` lấy thông tin bằng `EnrollmentRepository`/`StudentDirectory`, lưu ghi danh, rồi gọi `NotificationGateway.sendConfirmation(recipient, courseName)`. Gateway không gọi lại use case.
-- **Bất đồng bộ:** Sau khi ghi danh thành công, phát `StudentEnrolled(enrollmentId)` và xử lý thông báo qua handler độc lập. Nếu có DB + message broker, hãy mô tả cách outbox/retry/idempotency bảo vệ luồng.
+- **Synchronous:** `EnrollStudentUseCase` obtains information through `EnrollmentRepository`/`StudentDirectory`, saves the enrollment, and calls `NotificationGateway.sendConfirmation(recipient, courseName)`. The gateway does not call back into the use case.
+- **Asynchronous:** After successful enrollment, publish `StudentEnrolled(enrollmentId)` and process notification through an independent handler. With a database and message broker, describe how an outbox, retries, and idempotency protect the workflow.
 
-Tiêu chí tự kiểm tra: Có thể vẽ đồ thị dependency **không còn đường quay lại** use case không? Có thể constructor-inject mọi thành phần từ một composition root không? Dữ liệu có đủ ở ranh giới gọi hay event không? Khi gửi thông báo thất bại, trạng thái ghi danh có được xác định rõ không?
+Self-check criteria: Can you draw a dependency graph **with no path back** to the use case? Can all components be constructor-injected from one composition root? Is the data sufficient at call or event boundaries? Is the enrollment state well-defined if notification fails?
 
 ---
 
-**Ghi nhớ:** Để phá vòng phụ thuộc, hãy tìm **trách nhiệm đang đi sai chiều**, đặt nó vào đúng thành phần hoặc lớp điều phối, rồi xác minh lại cả **đồ thị phụ thuộc** lẫn **hành vi thực tế**. Việc làm chương trình khởi tạo được là cần thiết, nhưng thiết kế còn phải dễ hiểu, kiểm thử được và đủ an toàn trước lỗi vận hành.
+**Remember:** To break a dependency cycle, identify **responsibilities pointing in the wrong direction**, move them to appropriate components or coordinators, then verify both **the dependency graph** and **actual behavior**. Successful initialization is necessary, but the design must also remain understandable, testable, and resilient to operational failures.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="relationships-008">Đọc ký hiệu quan hệ trong sơ đồ lớp</a>
+## <a id="relationships-008">Reading relationship notation in class diagrams</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đọc ký hiệu quan hệ trong sơ đồ lớp UML
+# Reading relationship notation in UML class diagrams
 
-## 1. Đọc một sơ đồ lớp: bắt đầu từ đâu?
+## 1. Reading a class diagram: where should you start?
 
-Sơ đồ lớp (*UML class diagram*) thể hiện các **kiểu đối tượng**, thành phần của chúng và **những quan hệ giữa các kiểu**. Khi nhìn thấy hai hộp được nối bằng một đường, đừng vội kết luận “hai lớp gọi nhau”. Cần đọc đủ:
+A *UML class diagram* shows **object types**, their members, and **relationships between those types**. When you see two boxes connected by a line, do not immediately conclude that "the two classes call each other." Read all of the following:
 
-1. **Loại nét và đầu đường:** liền hay đứt; mũi tên thường, tam giác rỗng, hình thoi rỗng hay hình thoi đặc?
-2. **Đầu nào là đầu nguồn/đầu đích:** lớp nào phụ thuộc, lớp nào là loại tổng quát, lớp nào là *toàn thể*?
-3. **Bội số ở hai đầu:** một đối tượng bên này liên hệ với bao nhiêu đối tượng bên kia?
-4. **Tên quan hệ/tên vai trò:** “quản lý”, “đặt bởi”, “thành viên”, “sở hữu” có bổ sung ngữ nghĩa gì?
-5. **Đối chiếu với mã Java:** đó là field, collection, tham số phương thức, `extends` hay `implements`?
+1. **Line style and endpoint symbol:** solid or dashed; ordinary arrow, hollow triangle, hollow diamond, or filled diamond?
+2. **Source and destination ends:** which class depends on another, which is the general type, and which is the *whole*?
+3. **Multiplicity at both ends:** how many objects on one side can relate to an object on the other?
+4. **Relationship/role names:** what meaning is added by terms such as "manages," "placed by," "member," or "owns"?
+5. **Java implementation:** does it correspond to a field, collection, method parameter, `extends`, or `implements`?
 
-Ví dụ:
+Example:
 
 ```mermaid
 classDiagram
@@ -2841,22 +2841,22 @@ classDiagram
     Order "0..*" --> "1" Customer : đặt bởi
 ```
 
-Đọc đầy đủ: **mỗi `Order` gắn với đúng một `Customer`**, **mỗi `Customer` có thể gắn với 0 hoặc nhiều `Order`**, và mũi tên chỉ khả năng điều hướng từ `Order` sang `Customer` trong mô hình này. Từ mã Java, ta có thể nghĩ đến field `private Customer customer;` trong `Order`. Không có nghĩa mỗi khách hàng tự động giữ một danh sách đơn hàng trong bộ nhớ.
+The full interpretation is: **each `Order` is associated with exactly one `Customer`**, **each `Customer` may be associated with 0 or more `Order` objects**, and the arrow indicates navigation from `Order` to `Customer` in this model. In Java, this suggests a `private Customer customer;` field in `Order`. It does not mean every customer automatically stores an in-memory list of orders.
 
-## 2. Bảng tra nhanh sáu quan hệ quan trọng
+## 2. Quick reference: six important relationships
 
-| Quan hệ | Dấu hiệu khi đọc | Ý nghĩa | Gợi ý hiện thực Java |
+| Relationship | Visual cue | Meaning | Possible Java implementation |
 |---|---|---|---|
-| **Association – liên kết** | Đường **liền**; có thể có mũi tên chỉ chiều điều hướng | Các instance có quan hệ với nhau | Field tham chiếu, `List`/`Set` hoặc cơ chế liên kết |
-| **Dependency – phụ thuộc** | Đường **đứt**, mũi tên mở hướng đến thành phần được dùng | Thành phần A cần B để làm việc | Tham số, biến cục bộ, lời gọi API hoặc kiểu trong chữ ký |
-| **Aggregation – kết tập** | Đường liền, **hình thoi rỗng** ở phía toàn thể | Quan hệ toàn thể–thành phần với thành phần có thể tồn tại độc lập | Một nhóm giữ tham chiếu đến các phần tử |
-| **Composition – hợp thành** | Đường liền, **hình thoi đặc** ở phía toàn thể | Sở hữu thành phần mạnh; thành phần gắn vòng đời với một toàn thể trong mô hình | Toàn thể tạo/quản lý thành phần và ràng buộc vòng đời |
-| **Generalization – khái quát hóa/kế thừa** | Đường liền, **tam giác rỗng** trỏ về kiểu tổng quát | Lớp con *là một loại* lớp cha | `extends` |
-| **Realization – hiện thực hóa** | Đường đứt, **tam giác rỗng** trỏ về đặc tả/interface | Lớp hiện thực hợp đồng của interface | `implements` |
+| **Association** | **Solid** line; may have an arrow indicating navigability | Instances are related | Reference field, `List`/`Set`, or another linking mechanism |
+| **Dependency** | **Dashed** line with an open arrow toward the used component | Component A needs B to perform work | Parameters, local variables, API calls, or types in signatures |
+| **Aggregation** | Solid line with a **hollow diamond** at the whole end | Whole–part relationship whose parts can exist independently | A group holds references to its members |
+| **Composition** | Solid line with a **filled diamond** at the whole end | Strong ownership; a part's lifecycle is linked to one whole in the model | Whole creates/manages parts and enforces lifecycle rules |
+| **Generalization / inheritance** | Solid line with a **hollow triangle** pointing to the general type | A subclass *is a kind of* parent class | `extends` |
+| **Realization** | Dashed line with a **hollow triangle** pointing to a specification/interface | A class implements an interface contract | `implements` |
 
-Các dấu hiệu này có thể cùng xuất hiện trong một hệ thống. Ví dụ `CheckoutService` phụ thuộc `PaymentGateway`, `StripeGateway` hiện thực `PaymentGateway`, trong khi `Order` hợp thành các `OrderLine` và liên kết đến `Customer`.
+These relationships can coexist in a system. For example, `CheckoutService` depends on `PaymentGateway`, `StripeGateway` realizes `PaymentGateway`, while `Order` composes `OrderLine` objects and is associated with `Customer`.
 
-## 3. Association: đọc đầu mũi tên, tên vai trò và bội số
+## 3. Association: reading arrows, role names, and multiplicity
 
 ```mermaid
 classDiagram
@@ -2866,34 +2866,34 @@ classDiagram
     Department "0..1" <-- "0..*" Employee : làm việc tại
 ```
 
-Hãy đọc **bội số đặt gần một đầu là số lượng ở đầu đó cho một đối tượng ở đầu đối diện**:
+Read **multiplicity at an endpoint as the number of objects there that may be linked to one object at the opposite end**:
 
-- `0..1` cạnh `Department`: mỗi `Employee` làm việc ở **0 hoặc 1 phòng ban**.
-- `0..*` cạnh `Employee`: mỗi `Department` có **0 hoặc nhiều nhân viên**.
-- Mũi tên `Employee → Department`: từ nhân viên có thể tìm phòng ban. Nó **không** tự chứng minh rằng `Department` có collection `employees`.
-- Chú thích “làm việc tại” là **tên quan hệ**, không phải phép gán giá trị hay tên một phương thức bắt buộc.
+- `0..1` next to `Department`: each `Employee` works in **0 or 1 department**.
+- `0..*` next to `Employee`: each `Department` has **0 or more employees**.
+- The `Employee → Department` arrow: an employee can find their department. This **does not** establish that `Department` stores an `employees` collection.
+- The "works in" label is **the relationship name**, not an assignment or a required method name.
 
-### Bội số thường gặp
+### Common multiplicities
 
-| Bội số UML | Cách đọc chính xác | Ví dụ |
+| UML multiplicity | Precise interpretation | Example |
 |---|---|---|
-| `1` | Đúng một | Mỗi đơn hàng hợp lệ có đúng một khách hàng |
-| `0..1` | Không có hoặc có một | Nhân viên có thể chưa được phân phòng ban |
-| `*` hoặc `0..*` | Không hoặc nhiều | Phòng ban có thể chưa có nhân viên |
-| `1..*` | Ít nhất một | Một phiếu bàn giao hoàn tất cần tối thiểu một mục |
-| `2..5` | Từ hai đến năm | Nhóm trực có từ hai đến năm người |
-| `3` | Đúng ba | Một bộ sản phẩm bắt buộc có ba thành phần |
+| `1` | Exactly one | Every valid order has exactly one customer |
+| `0..1` | Zero or one | An employee may have no assigned department |
+| `*` or `0..*` | Zero or many | A department may have no employees yet |
+| `1..*` | At least one | A completed handover record requires at least one item |
+| `2..5` | From two to five | A duty team has between two and five people |
+| `3` | Exactly three | A product bundle must have three components |
 
-Lưu ý: bội số là **ràng buộc của mô hình**, không phải thứ Java tự kiểm soát chỉ vì đã khai báo `List<Employee>`. Muốn đảm bảo “ít nhất một”, “không quá năm”, hay “đúng một”, code hoặc tầng lưu trữ phải kiểm tra quy tắc.
+Remember that multiplicity is **a model constraint**, not something Java automatically enforces because a `List<Employee>` was declared. To guarantee "at least one," "no more than five," or "exactly one," code or the persistence layer must enforce those rules.
 
-### Về chiều điều hướng
+### About navigation direction
 
-- Đường liền có mũi tên mở về B thường biểu diễn **có thể điều hướng từ A đến B**.
-- Mũi tên chỉ điều hướng **không** phải ký hiệu “B là cha của A”.
-- Association **không có mũi tên** cần được đọc theo quy ước của sơ đồ: có trường hợp hướng không được chỉ định; không nên mặc định chắc chắn hai chiều.
-- Nếu cần thể hiện rõ hai chiều, hãy vẽ/ghi chú rõ cả hai chiều hoặc chỉ rõ các thuộc tính ở hai lớp.
+- A solid line with an open arrow toward B generally means **you can navigate from A to B**.
+- A navigability arrow **does not** mean "B is A's parent class."
+- An association **without arrows** must be interpreted according to the diagram's conventions: its direction may be unspecified, so do not automatically assume bidirectionality.
+- If both directions must be clear, draw or annotate them explicitly or show the corresponding properties in both classes.
 
-Ví dụ mã Java tương ứng với chiều `Employee → Department`:
+Example Java code corresponding to `Employee → Department`:
 
 ```java
 final class Department {
@@ -2915,13 +2915,13 @@ final class Employee {
 }
 ```
 
-Không có `Department.getEmployees()` vì ví dụ chỉ hiện thực chiều từ nhân viên sang phòng ban. Nếu ứng dụng cần danh sách nhân viên, có thể tra bằng repository; không nhất thiết phải bổ sung liên kết hai chiều trong mỗi object.
+There is no `Department.getEmployees()` because the example implements only employee-to-department navigation. If the application needs employee lists, it can query a repository; it need not add bidirectional links to every object.
 
-## 4. Hai hình thoi: aggregation và composition
+## 4. The two diamonds: aggregation and composition
 
-Hai hình thoi nằm ở **phía toàn thể**, không nằm ở phía thành phần. Đây là quy tắc quan trọng khi đọc chiều.
+Both diamond symbols appear at **the whole end**, not the part end. This is an important rule when reading direction.
 
-### Aggregation – hình thoi rỗng
+### Aggregation – hollow diamond
 
 ```mermaid
 classDiagram
@@ -2931,7 +2931,7 @@ classDiagram
     Team "0..*" o-- "0..*" Specialist : tập hợp
 ```
 
-Hình thoi **rỗng gần `Team`** chỉ `Team` là phía toàn thể. Một `Specialist` có thể tồn tại ngoài Team và có thể tham gia nhiều team nếu quy tắc nghiệp vụ cho phép. Trong ví dụ, `0..*` ở cả hai đầu diễn đạt một specialist có thể tham gia nhiều nhóm và một nhóm có thể có nhiều specialist.
+The **hollow diamond next to `Team`** identifies `Team` as the whole. A `Specialist` can exist independently of a team and can join multiple teams if business rules permit it. In this example, `0..*` at both ends indicates that one specialist may join several teams and one team may have several specialists.
 
 ```java
 import java.util.ArrayList;
@@ -2951,9 +2951,9 @@ class Team {
 }
 ```
 
-Nếu xóa Team khỏi danh mục quản lý, điều đó không đương nhiên đồng nghĩa phải xóa nhân sự Specialist. Aggregation mô tả ngữ nghĩa gom nhóm; nó **không tự tạo quy tắc xóa/GC** cho Java.
+Removing a Team from a management catalog does not automatically mean deleting its Specialist staff. Aggregation expresses grouping semantics; it **does not automatically create deletion/GC rules** in Java.
 
-### Composition – hình thoi đặc
+### Composition – filled diamond
 
 ```mermaid
 classDiagram
@@ -2963,9 +2963,9 @@ classDiagram
     Order "1" *-- "0..*" OrderLine : chứa
 ```
 
-Hình thoi **đặc gần `Order`** chỉ `Order` là **toàn thể sở hữu** các `OrderLine`. Mỗi dòng đơn hàng thuộc về đúng một đơn hàng trong mô hình; một đơn hàng có thể chứa nhiều dòng. Trong composition của UML, một *part* thuộc tối đa một *composite* tại cùng thời điểm; vòng đời của part phụ thuộc vào toàn thể theo quy tắc miền nghiệp vụ.
+The **filled diamond next to `Order`** identifies `Order` as **the whole that owns** the `OrderLine` objects. Each order line belongs to exactly one order in the model, while an order may contain several lines. In UML composition, a *part* belongs to at most one *composite* at a time; its lifecycle depends on the whole according to domain rules.
 
-Triển khai nên tạo và thay đổi dòng đơn hàng thông qua đơn hàng:
+Implementations should create and modify order lines through the order:
 
 ```java
 import java.util.ArrayList;
@@ -2996,13 +2996,13 @@ final class Order {
 }
 ```
 
-Chú ý **`OrderLine` trong Java vẫn là một object bình thường**. Hình thoi đặc không khiến JVM tự xóa nó khi `Order` hết được tham chiếu, cũng không cấm mã khác giữ tham chiếu đến nó. Thiết kế API, ràng buộc lưu trữ và quy tắc nghiệp vụ mới thực thi ý nghĩa sở hữu. Trong ví dụ, `Order` kiểm soát việc tạo dòng; nếu cần bảo vệ tuyệt đối quyền sở hữu, hãy tiếp tục hạn chế việc công khai/chuyển dòng giữa các order.
+Note that **`OrderLine` is still an ordinary Java object**. The filled diamond does not make the JVM immediately delete it when `Order` becomes unreachable, nor does it prevent other code from holding references to it. API design, persistence constraints, and business rules enforce ownership semantics. Here, `Order` controls line creation; if strict ownership is required, further restrict exposure and transfer of lines across orders.
 
-**Không suy diễn chỉ từ field:** `private Customer customer;` không đủ để khẳng định composition. Thông thường một khách hàng tồn tại độc lập với từng đơn hàng của mình.
+**Do not infer composition from a field alone:** `private Customer customer;` is not enough to establish composition. A customer normally exists independently of individual orders.
 
-## 5. Tam giác rỗng: phân biệt extends và implements
+## 5. Hollow triangles: distinguishing extends and implements
 
-Tam giác rỗng luôn hướng về **kiểu tổng quát hoặc hợp đồng**. **Nét liền hay nét đứt** quyết định quan hệ cần đọc.
+A hollow triangle always points toward **the general type or contract**. Whether the line is **solid or dashed** determines the relationship.
 
 ```mermaid
 classDiagram
@@ -3026,10 +3026,10 @@ classDiagram
     PaymentGateway <|.. ConsoleGateway : realization
 ```
 
-- `PaymentMethod <|-- CardPayment`: tam giác gần `PaymentMethod` với nét liền → `CardPayment` **kế thừa** `PaymentMethod`.
-- `PaymentGateway <|.. ConsoleGateway`: tam giác gần `PaymentGateway` với nét đứt → `ConsoleGateway` **hiện thực** hợp đồng `PaymentGateway`.
+- `PaymentMethod <|-- CardPayment`: the triangle near `PaymentMethod` with a solid line means `CardPayment` **inherits from** `PaymentMethod`.
+- `PaymentGateway <|.. ConsoleGateway`: the triangle near `PaymentGateway` with a dashed line means `ConsoleGateway` **implements** the `PaymentGateway` contract.
 
-Ánh xạ Java:
+Java mapping:
 
 ```java
 abstract class PaymentMethod {
@@ -3055,12 +3055,12 @@ final class ConsoleGateway implements PaymentGateway {
 }
 ```
 
-Đừng nhầm *tam giác rỗng* với *mũi tên điều hướng*. Hai quan hệ này trả lời hai câu hỏi khác nhau:
+Do not confuse *hollow triangles* with *navigability arrows*. They answer different questions:
 
-- Generalization/realization: “lớp này **là kiểu con/hiện thực hợp đồng nào**?”
-- Association: “object này **liên kết và đi đến object nào**?”
+- Generalization/realization: "**which type does this class extend or which contract does it implement?**"
+- Association: "**which objects is this object linked to and able to navigate to?**"
 
-## 6. Đường đứt có mũi tên mở: dependency
+## 6. Dashed lines with open arrows: dependency
 
 ```mermaid
 classDiagram
@@ -3077,7 +3077,7 @@ classDiagram
     ReportExporter ..> Report : đọc dữ liệu
 ```
 
-Ở đây `ReportExporter` *phụ thuộc* `Formatter` và `Report` để thực hiện thao tác. Dấu `..>` biểu diễn mũi tên phụ thuộc hướng **từ nơi dùng tới nơi được dùng**.
+Here `ReportExporter` *depends on* `Formatter` and `Report` to perform its operation. The `..>` notation represents a dependency arrow pointing **from the user to the used component**.
 
 ```java
 interface Formatter {
@@ -3096,16 +3096,16 @@ final class ReportExporter {
 }
 ```
 
-Không có field `formatter` hay `report` trong exporter. Điều đó phù hợp với ví dụ sử dụng đối tượng qua tham số, nhưng **dependency rộng hơn phạm vi tham số**: lớp A vẫn có dependency vào interface B khi lưu B trong field hoặc gọi B ở nơi khác. Dependency UML mô tả quan hệ phụ thuộc thiết kế; nó không khẳng định đối tượng B có tuổi thọ ngắn.
+The exporter has no `formatter` or `report` fields. That fits the example of using objects through parameters, but **dependencies are not limited to parameter scope**: class A still depends on interface B if it stores B in a field or invokes B elsewhere. UML dependency describes design-level reliance; it does not imply that object B is short-lived.
 
-## 7. Ví dụ tổng hợp chạy được: cùng một nghiệp vụ có nhiều ký hiệu
+## 7. Runnable combined example: multiple symbols in one business scenario
 
-Hãy xây mô hình thanh toán đơn hàng có:
+Build an order-payment model with:
 
-- `Order → Customer`: association một chiều.
-- `Order ◆— OrderLine`: composition; mỗi dòng thuộc đơn hàng.
-- `CheckoutService ⋯▷ PaymentGateway`: dependency; service dùng cổng thanh toán trong một lần checkout.
-- `ConsoleGateway ⋯▷ PaymentGateway` với tam giác rỗng: realization; implementation của interface.
+- `Order → Customer`: a unidirectional association.
+- `Order ◆— OrderLine`: composition; each line belongs to an order.
+- `CheckoutService ⋯▷ PaymentGateway`: dependency; the service uses the payment gateway during checkout.
+- `ConsoleGateway ⋯▷ PaymentGateway` with a hollow triangle: realization; an implementation of the interface.
 
 ```mermaid
 classDiagram
@@ -3144,7 +3144,7 @@ classDiagram
     PaymentGateway <|.. ConsoleGateway : hiện thực
 ```
 
-Tạo một tệp `RelationSymbolsDemo.java` (JDK 11+):
+Create a `RelationSymbolsDemo.java` file (JDK 11+):
 
 ```java
 import java.util.ArrayList;
@@ -3252,25 +3252,25 @@ public class RelationSymbolsDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac RelationSymbolsDemo.java
 java RelationSymbolsDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Charge ORD-100: 270000 cents
 Customer: Lan
 ```
 
-Từ một sơ đồ duy nhất, ta đã biết lớp nào nên có **tham chiếu**, lớp nào nên **kiểm soát thành phần**, lớp nào chỉ cần **API cộng tác**, và lớp nào phải khai báo `implements`. Sơ đồ định hướng cấu trúc; để bảo toàn các ràng buộc, vẫn cần triển khai và kiểm thử các hành vi cụ thể.
+From one diagram, we can identify which classes should hold **references**, which should **control their parts**, which need only **collaborator APIs**, and which must declare `implements`. A diagram guides structure; concrete behavior still needs to be implemented and tested to enforce constraints.
 
-## 8. Các ký hiệu nằm trong hộp lớp
+## 8. Symbols inside class boxes
 
-Để đọc quan hệ đúng, cũng cần hiểu thông tin bên trong hộp:
+To read relationships correctly, you also need to understand the information inside class boxes:
 
 ```mermaid
 classDiagram
@@ -3283,31 +3283,31 @@ classDiagram
     }
 ```
 
-| Ký hiệu | Ý nghĩa trong UML | Java tương ứng thường gặp |
+| Symbol | Meaning in UML | Common Java equivalent |
 |---|---|---|
 | `+` | Public | `public` |
 | `-` | Private | `private` |
 | `#` | Protected | `protected` |
-| `~` | Package visibility | Không ghi modifier |
-| Tên được gạch dưới trong UML | Thành viên **static** | `static` |
-| Tên in nghiêng trong UML | Thành phần **abstract** | `abstract` |
-| `operation(arg: Type): Result` | Phương thức với tham số và kiểu trả về | `Result operation(Type arg)` |
+| `~` | Package visibility | No modifier |
+| Underlined name in UML | **Static** member | `static` |
+| Italic name in UML | **Abstract** member | `abstract` |
+| `operation(arg: Type): Result` | Method with parameter and return type | `Result operation(Type arg)` |
 
-Những ký hiệu này mô tả **phạm vi truy cập và thành viên**, còn đường nối giữa các hộp mô tả **quan hệ giữa các lớp**. Dấu `-` trước field **không phải** nét đứt dependency; nó là ký hiệu `private`.
+These symbols describe **access levels and members**, while the lines between boxes describe **relationships between classes**. A `-` before a field is **not** a dashed dependency; it means `private`.
 
-## 9. Tên vai trò, ràng buộc và vài điểm nâng cao
+## 9. Role names, constraints, and advanced details
 
-Ngoài tên association, sơ đồ có thể ghi **role name** ở gần một đầu, ví dụ `orders` cạnh `Order` hoặc `customer` cạnh `Customer`. Role name diễn đạt **vai trò của đối tượng ở đầu đó khi nhìn từ đầu đối diện**; đôi khi tương ứng với tên field trong code.
+In addition to an association name, a diagram may show a **role name** near an endpoint, such as `orders` near `Order` or `customer` near `Customer`. A role name expresses **the role of objects at that endpoint from the opposite end's perspective**; it may correspond to a field name in code.
 
-Một số ràng buộc có thể xuất hiện cạnh association hoặc thuộc tính:
+Some constraints may appear beside an association or attribute:
 
-- `{ordered}`: thứ tự các đối tượng liên kết có ý nghĩa.
-- `{unique}`: tập các giá trị/đối tượng liên kết không lặp theo quy tắc.
-- `{readOnly}`: đầu liên kết/thuộc tính không cho phép gán lại trong ngữ cảnh được mô tả.
+- `{ordered}`: the order of associated objects matters.
+- `{unique}`: the associated values/objects must not repeat according to the rule.
+- `{readOnly}`: the association end/attribute does not allow reassignment in the stated context.
 
-Không đồng nhất máy móc UML `{ordered}` với `ArrayList` hay `{unique}` với `HashSet`: đó là **ràng buộc cần thể hiện trong hành vi**, lựa chọn collection chỉ là một phần hiện thực.
+Do not mechanically equate UML `{ordered}` with `ArrayList` or `{unique}` with `HashSet`: these are **constraints that behavior must enforce**, and collection selection is only part of the implementation.
 
-Khi **mối liên kết có thông tin riêng** (ví dụ học viên đăng ký khóa học có thời gian, trạng thái, điểm số), có thể dùng **association class** trong UML hoặc tạo lớp miền trung gian như `Enrollment` trong Java:
+When **the association has its own data** (for example, a learner's enrollment has a date, status, and grade), use an **association class** in UML or introduce an intermediate domain class such as `Enrollment` in Java:
 
 ```mermaid
 classDiagram
@@ -3322,48 +3322,48 @@ classDiagram
     Enrollment "0..*" --> "1" Course : khóa học
 ```
 
-Đây là cách biểu diễn bằng **lớp trung gian bình thường** trong Mermaid để dễ đọc; UML association class chuẩn có ký pháp riêng (lớp nối với đường association bằng nét đứt). Đừng nhầm ký pháp lớp trung gian với dependency.
+For readability, this Mermaid diagram uses **an ordinary intermediate class**; a standard UML association class has its own notation (the class is connected to the association line by a dashed line). Do not confuse intermediate-class notation with a dependency.
 
-## 10. Các lỗi đọc sơ đồ phổ biến
+## 10. Common diagram-reading mistakes
 
-| Cách hiểu sai | Cách đọc đúng |
+| Misinterpretation | Correct reading |
 |---|---|
-| “Số `1` ở gần Customer tức mỗi Customer có một Order.” | `1` ở phía Customer tức **mỗi Order có một Customer**; nhìn phía Order để biết mỗi Customer có bao nhiêu Order. |
-| “Mọi mũi tên đều là kế thừa.” | Kế thừa có **tam giác rỗng và nét liền**; association dùng đường liền với mũi tên điều hướng; dependency có nét đứt và mũi tên mở. |
-| “Hình thoi đặc đặt ở lớp con.” | Hình thoi đặt ở **phía toàn thể** của quan hệ whole–part. |
-| “Chỉ cần có `List<Child>` là composition.” | Collection chưa nói được quyền sở hữu hay vòng đời; cần đọc và thực thi quy tắc miền nghiệp vụ. |
-| “Đường association không có mũi tên chắc chắn hai chiều.” | Có thể **chưa xác định navigability**; cần xem ghi chú/quy ước sơ đồ. |
-| “Có đường dependency tức mỗi object đều có field tham chiếu.” | Dependency có thể đến từ tham số, biến cục bộ, lời gọi API; không bắt buộc field. |
-| “`extends` và `implements` dùng cùng loại nét UML.” | Generalization dùng **nét liền**, realization dùng **nét đứt**, cả hai có tam giác rỗng hướng về kiểu tổng quát/hợp đồng. |
-| “UML bắt JVM tự xóa part khi xóa whole.” | UML mô tả quy tắc thiết kế; Java GC dựa trên khả năng còn được tham chiếu, không đọc sơ đồ. |
+| "The `1` next to Customer means each Customer has one Order." | `1` on the Customer end means **each Order has one Customer**; check the Order end to see how many orders each customer may have. |
+| "Every arrow means inheritance." | Inheritance uses a **hollow triangle and solid line**; association uses a solid line with navigability arrows; dependency uses a dashed line and open arrow. |
+| "The filled diamond belongs on the child class." | Diamonds belong at **the whole end** of whole–part relationships. |
+| "Having `List<Child>` means composition." | A collection does not establish ownership or lifecycle; read and enforce domain rules. |
+| "An arrowless association is definitely bidirectional." | Navigability may be **unspecified**; check the diagram's notes/conventions. |
+| "A dependency line means each object has a reference field." | Dependencies may arise from parameters, local variables, or API calls; fields are not required. |
+| "`extends` and `implements` use the same UML line style." | Generalization is **solid**, realization is **dashed**, and both use hollow triangles pointing to the general type/contract. |
+| "UML makes the JVM delete parts when a whole is deleted." | UML models design rules; Java GC works through reference reachability and does not read diagrams. |
 
-## 11. Bài tập tự kiểm tra
+## 11. Self-check exercises
 
-**Bài 1.** Sơ đồ `Library "1" *-- "0..*" BookCopy` có hình thoi đặc gần `Library`. Hãy đọc vai trò, bội số, vòng đời.
+**Exercise 1.** The `Library "1" *-- "0..*" BookCopy` diagram has a filled diamond near `Library`. Interpret the roles, multiplicities, and lifecycle.
 
-**Gợi ý:** Library là toàn thể; mỗi BookCopy thuộc một Library trong mô hình; một Library có thể có nhiều BookCopy. Quy tắc sở hữu/vòng đời phải được thực thi bằng logic nghiệp vụ.
+**Hint:** Library is the whole; each BookCopy belongs to one Library in the model, while a Library may have many BookCopy objects. Ownership/lifecycle rules must be enforced by business logic.
 
-**Bài 2.** `ReportGenerator ..> PdfWriter` vẽ bằng đường đứt, mũi tên mở. Có bắt buộc `ReportGenerator` chứa `PdfWriter writer;` không?
+**Exercise 2.** `ReportGenerator ..> PdfWriter` is drawn with a dashed line and open arrow. Must `ReportGenerator` contain a `PdfWriter writer;` field?
 
-**Đáp án:** Không. Có thể sử dụng `PdfWriter` qua tham số của một phương thức.
+**Answer:** No. `PdfWriter` may be used through a method parameter.
 
-**Bài 3.** Trong UML, `Gateway <|.. StripeGateway` khác `Gateway <|-- StripeGateway` thế nào?
+**Exercise 3.** In UML, how does `Gateway <|.. StripeGateway` differ from `Gateway <|-- StripeGateway`?
 
-**Đáp án:** Nét đứt + tam giác rỗng là realization (thường `implements` interface); nét liền + tam giác rỗng là generalization (thường `extends`).
+**Answer:** A dashed line with a hollow triangle means realization (typically `implements` an interface); a solid line with a hollow triangle means generalization (typically `extends`).
 
-**Bài 4.** Mỗi nhân viên có thể tham gia tối đa ba dự án; mỗi dự án có tối thiểu một nhân viên. Hãy điền bội số cho `Employee -- Project`.
+**Exercise 4.** Each employee may join up to three projects, and each project must have at least one employee. Supply the multiplicities for `Employee -- Project`.
 
-**Đáp án:** Gần `Project` ghi `0..3`; gần `Employee` ghi `1..*`. Đây là số lượng đối tượng của đầu đó gắn với **một** đối tượng phía đối diện.
+**Answer:** Near `Project`, put `0..3`; near `Employee`, put `1..*`. Each label counts objects at its end associated with **one** object at the opposite end.
 
-**Bài 5.** Cho `Course "0..*" -- "0..*" Student` và mỗi lần đăng ký có ngày, trạng thái, điểm. Chọn cấu trúc phù hợp trong Java.
+**Exercise 5.** Given `Course "0..*" -- "0..*" Student`, with each enrollment carrying a date, status, and grade, choose a suitable Java design.
 
-**Gợi ý:** Dùng một lớp `Enrollment` chứa tham chiếu đến `Student`, `Course` và thông tin của lần đăng ký. Thiết kế ràng buộc duy nhất cho cặp sinh viên–khóa học nếu nghiệp vụ yêu cầu.
+**Hint:** Use an `Enrollment` class containing references to `Student` and `Course` plus enrollment data. Define a uniqueness constraint on the student–course pair if business rules require it.
 
 ---
 
-**Ghi nhớ khi đọc sơ đồ:** **nét đường** nhận diện loại quan hệ; **đầu mũi tên/tam giác/hình thoi** xác định chiều và vai trò; **bội số** quy định số lượng object ở mỗi đầu; **field, collection, extends, implements hoặc tham số Java** giúp kiểm tra cách hiện thực. Đọc đồng thời các thành phần này trước khi chuyển UML thành mã.
+**Remember when reading diagrams:** **Line style** identifies the relationship type; **arrows, triangles, and diamonds** determine direction and roles; **multiplicity** specifies object counts at each end; and **Java fields, collections, extends, implements, or parameters** reveal possible implementations. Interpret all these elements together before translating UML into code.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

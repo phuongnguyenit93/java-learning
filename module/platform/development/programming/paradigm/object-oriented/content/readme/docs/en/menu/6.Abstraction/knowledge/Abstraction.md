@@ -1,54 +1,54 @@
 <a id="back-to-top"></a>
 
-# Trừu tượng
+# Abstraction
 
 ## Menu
-- [Trừu tượng hóa và chọn đặc điểm thiết yếu](#abstraction-001)
-- [Phân biệt trừu tượng với đóng gói](#abstraction-002)
-- [Hợp đồng sử dụng và chi tiết thực hiện](#abstraction-003)
-- [Tiền điều kiện, hậu điều kiện và cam kết hành vi](#abstraction-004)
-- [Lớp trừu tượng và phương thức trừu tượng](#abstraction-005)
-- [Phân biệt lớp cụ thể với lớp trừu tượng](#abstraction-006)
-- [Mức trừu tượng phù hợp với bài toán](#abstraction-007)
-- [Rò rỉ chi tiết thực hiện qua giao diện sử dụng](#abstraction-008)
+- [Abstraction and Selecting Essential Characteristics](#abstraction-001)
+- [Distinguishing Abstraction from Encapsulation](#abstraction-002)
+- [Usage Contracts and Implementation Details](#abstraction-003)
+- [Preconditions, Postconditions, and Behavioral Guarantees](#abstraction-004)
+- [Abstract Classes and Abstract Methods](#abstraction-005)
+- [Distinguishing Concrete Classes from Abstract Classes](#abstraction-006)
+- [Choosing the Right Level of Abstraction](#abstraction-007)
+- [Leaking Implementation Details Through Public Interfaces](#abstraction-008)
 
-## <a id="abstraction-001">Trừu tượng hóa và chọn đặc điểm thiết yếu</a>
+## <a id="abstraction-001">Abstraction and Selecting Essential Characteristics</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Trừu tượng hóa và chọn đặc điểm thiết yếu trong OOP (Java)
+# Abstraction and Selecting Essential Characteristics in OOP (Java)
 
-**Trừu tượng hóa (abstraction)** là quá trình xác định những đặc điểm và hành vi **cần thiết cho một mục đích cụ thể**, đồng thời tạm bỏ qua những chi tiết không ảnh hưởng đến mục đích đó. Trong lập trình hướng đối tượng, ta sử dụng kết quả của quá trình ấy để thiết kế lớp, đối tượng, interface và các hợp đồng tương tác.
+**Abstraction** is the process of identifying characteristics and behaviors **necessary for a particular purpose** while setting aside details that do not affect that purpose. In object-oriented programming, we use the resulting model to design classes, objects, interfaces, and interaction contracts.
 
-Điểm mấu chốt: **không tồn tại một danh sách đặc điểm “thiết yếu” đúng cho mọi bài toán**. Một thông tin quan trọng với bộ phận giao hàng có thể hoàn toàn không cần thiết cho bộ phận tính giá hoặc báo cáo.
+The key point is that **no single list of "essential" characteristics is correct for every problem**. Information important to a delivery team may be entirely irrelevant to pricing or reporting.
 
-## 1. Từ đối tượng ngoài đời đến mô hình phần mềm
+## 1. From Real-World Objects to Software Models
 
-Xét một **kiện hàng** trong hệ thống thương mại điện tử. Ngoài thực tế, kiện hàng có thể có hàng chục thông tin: mã vận đơn, cân nặng, kích thước, màu hộp, địa chỉ lấy hàng, người gửi, người nhận, đơn vị vận chuyển, trạng thái, lịch sử quét mã, ảnh chụp và nhiều thông tin khác.
+Consider a **parcel** in an e-commerce system. In reality, a parcel may have dozens of attributes: tracking number, weight, dimensions, box color, pickup address, sender, recipient, carrier, status, scan history, photographs, and more.
 
-Nếu đang xây dựng chức năng **báo phí giao hàng theo cân nặng và quãng đường**, ta có thể chỉ cần:
+If we are building a feature to **quote shipping fees based on weight and distance**, we may need only:
 
-- `weightGrams`: cân nặng tính bằng gram;
-- `distanceKm`: quãng đường tính bằng kilomet;
-- hành vi `quoteFee(...)`: tính và trả về mức phí dự kiến.
+- `weightGrams`: weight in grams;
+- `distanceKm`: distance in kilometers;
+- the `quoteFee(...)` behavior: calculate and return an estimated fee.
 
-Những thông tin như màu hộp, ảnh chụp hay người đang cầm kiện hàng **không tham gia công thức tính phí của ví dụ này**, nên không cần xuất hiện trong API tính phí.
+Information such as box color, photographs, or the person holding the parcel **does not enter the fee calculation in this example**, so it need not appear in the pricing API.
 
-Nhưng với chức năng **theo dõi vận chuyển**, mô hình phù hợp lại khác: mã vận đơn, trạng thái hiện tại và thời điểm cập nhật là các yếu tố thiết yếu; cân nặng có thể không cần.
+For **shipment tracking**, however, the appropriate model differs: the tracking number, current status, and update time are essential, while weight may not be needed.
 
-| Ngữ cảnh sử dụng | Đặc điểm thiết yếu | Hành vi/câu hỏi cần trả lời | Chi tiết có thể bỏ qua |
+| Usage context | Essential characteristics | Behavior/question to answer | Details that can be omitted |
 |---|---|---|---|
-| Ước tính phí vận chuyển | Cân nặng, quãng đường, chính sách dịch vụ | “Phí dự kiến bao nhiêu?” | Màu hộp, ảnh chụp kiện hàng |
-| Theo dõi kiện hàng | Mã vận đơn, trạng thái, thời điểm cập nhật | “Hàng đang ở đâu trong quy trình?” | Công thức tính cước |
-| Kiểm tra đóng gói | Kích thước, cân nặng, yêu cầu dễ vỡ | “Có phù hợp quy cách đóng gói?” | Lịch sử thanh toán |
-| Chăm sóc khách hàng | Mã đơn, trạng thái, thông tin liên hệ cần thiết | “Khách đang gặp vấn đề gì?” | Thuật toán nội bộ tối ưu tuyến đường |
+| Shipping fee estimation | Weight, distance, service policy | "What is the estimated fee?" | Box color, parcel photographs |
+| Parcel tracking | Tracking number, status, update time | "Where is the parcel in the process?" | Rate calculation formula |
+| Packaging inspection | Dimensions, weight, fragile-item requirements | "Does the package meet packaging specifications?" | Payment history |
+| Customer support | Order ID, status, necessary contact information | "What problem is the customer experiencing?" | Internal route-optimization algorithm |
 
-Các cột “có thể bỏ qua” là **phụ thuộc yêu cầu đang xét**. Nếu phí vận chuyển thực tế có phụ thu hàng dễ vỡ, đặc điểm `fragile` trở thành đầu vào thiết yếu của tính phí; khi đó mô hình phải được thay đổi theo quy tắc nghiệp vụ.
+The "can be omitted" column **depends on the requirements under consideration**. If actual shipping fees include a surcharge for fragile items, the `fragile` attribute becomes an essential pricing input, and the model must change to reflect that business rule.
 
-### Trừu tượng hóa không phải sao chép toàn bộ thực tế
+### Abstraction Does Not Mean Copying All of Reality
 
-Một lớp `Shipment` chứa mọi dữ liệu mà mọi bộ phận có thể dùng thường trở thành mô hình quá lớn. Thay vào đó, ta có thể xác định **các góc nhìn hoặc hợp đồng riêng cho từng nhu cầu**, rồi chỉ chia sẻ dữ liệu khi có lý do thiết kế.
+A `Shipment` class containing every piece of data that every department might use often becomes an oversized model. Instead, we can define **separate views or contracts for each need** and share data only when the design calls for it.
 
 ```mermaid
 flowchart TD
@@ -63,31 +63,31 @@ flowchart TD
     K1 --> K2["Đánh giá quy cách"]
 ```
 
-Sơ đồ này chỉ diễn tả cách **phân tích yêu cầu để chọn mô hình**, không nhất thiết là sơ đồ kế thừa giữa các lớp Java.
+This diagram illustrates **analyzing requirements to choose a model**; it is not necessarily a Java class inheritance diagram.
 
-## 2. Trừu tượng hóa cần trả lời những câu hỏi nào?
+## 2. What Questions Should Abstraction Answer?
 
-Khi biến một khái niệm trong bài toán thành lớp hoặc interface, nên trả lời theo thứ tự:
+When turning a problem-domain concept into a class or interface, answer these questions in order:
 
-1. **Mục đích là gì?** Chức năng đang cần quyết định hoặc tính toán điều gì?
-2. **Thông tin nào bắt buộc để đưa ra kết quả đúng?** Nếu bỏ trường này, chức năng có còn thực hiện chính xác không?
-3. **Hành vi nào thuộc trách nhiệm của đối tượng?** Ví dụ “báo phí” thuộc chính sách tính cước, không thuộc màu sắc giao diện.
-4. **Quy tắc nào phải luôn đúng?** Cân nặng phải dương, quãng đường không âm, trạng thái phải nằm trong tập cho phép.
-5. **Chi tiết nào có thể thay đổi mà người dùng API không cần biết?** Ví dụ bảng giá, cách tính phụ phí và nguồn cấu hình.
-6. **Có bao nhiêu tình huống thực tế đang được yêu cầu?** Đừng tạo trước hàng loạt kiểu lớp cho những tính năng chưa tồn tại.
+1. **What is the purpose?** What must the feature decide or calculate?
+2. **What information is required for a correct result?** If this field is omitted, can the feature still work correctly?
+3. **Which behaviors belong to the object's responsibilities?** For example, "quoting a fee" belongs to the pricing policy, not the UI color scheme.
+4. **Which rules must always hold?** Weight must be positive, distance nonnegative, and status within the allowed set.
+5. **Which details can change without API consumers needing to know?** Examples include price tables, surcharge calculations, and configuration sources.
+6. **How many real use cases are currently required?** Do not preemptively create numerous class types for features that do not yet exist.
 
-Nếu không thể mô tả rõ **người dùng mô hình cần làm gì** bằng một vài câu, thường vẫn quá sớm để chốt danh sách field và phương thức.
+If you cannot describe **what consumers need to do with the model** clearly in a few sentences, it is usually too early to finalize its fields and methods.
 
-## 3. Ví dụ Java hoàn chỉnh: trừu tượng hóa chức năng báo phí
+## 3. Complete Java Example: Abstracting a Fee-Quotation Feature
 
-Để minh họa, ta thiết kế một API chỉ nhận những dữ liệu cần để **ước tính phí giao hàng**. Hai chính sách tính phí khác nhau sẽ tuân thủ cùng một hợp đồng.
+To illustrate, we design an API that accepts only the data necessary to **estimate a shipping fee**. Two different pricing policies obey the same contract.
 
-Quy tắc minh họa, **không phải bảng giá của hãng vận chuyển**:
+Illustrative rules, **not an actual carrier's rate schedule**:
 
-- Phí cơ bản: 12.000 VND.
-- Mỗi kilomet: 1.000 VND.
-- Mỗi kilogram được tính phí (làm tròn cân nặng lên kilogram tiếp theo): 2.000 VND.
-- Giao nhanh: phụ thu 18.000 VND so với phí tiêu chuẩn.
+- Base fee: 12.000 VND.
+- Per kilometer: 1.000 VND.
+- Per billable kilogram (rounding weight up to the next kilogram): 2.000 VND.
+- Express delivery: a surcharge of 18.000 VND over the standard fee.
 
 File `ShippingAbstractionDemo.java` (Java 17+):
 
@@ -165,38 +165,38 @@ public class ShippingAbstractionDemo {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Tiêu chuẩn: 21000 VND
 Giao nhanh: 39000 VND
 ```
 
-Giải thích phép tính:
+Calculation explained:
 
-- `1_500` gram được làm tròn lên **2 kg tính cước**.
-- Phí tiêu chuẩn = `12_000 + 5 × 1_000 + 2 × 2_000 = 21_000` VND.
-- Phí giao nhanh = `21_000 + 18_000 = 39_000` VND.
+- `1_500` grams is rounded up to **2 billable kg**.
+- Standard fee = `12_000 + 5 × 1_000 + 2 × 2_000 = 21_000` VND.
+- Express fee = `21_000 + 18_000 = 39_000` VND.
 
-### Các quyết định trừu tượng hóa trong ví dụ
+### Abstraction Decisions in the Example
 
-| Thành phần | Vai trò | Vì sao được chọn? |
+| Component | Role | Why was it chosen? |
 |---|---|---|
-| `QuoteInput` | Chứa dữ liệu đầu vào thiết yếu | Thuật toán ví dụ chỉ cần cân nặng và quãng đường |
-| `ShippingPricing` | Hợp đồng tính phí | Nơi gọi yêu cầu kết quả phí, không cần biết thuật toán cụ thể |
-| `StandardPricing` | Một cách thực hiện hợp đồng | Chứa công thức cước tiêu chuẩn |
-| `ExpressPricing` | Một chính sách phụ thu dựa trên chính sách nền | Tái sử dụng hành vi tính phí thay vì sao chép công thức |
-| `printQuote(...)` | Nơi sử dụng hợp đồng | Làm việc với `ShippingPricing` mà không phân biệt lớp triển khai |
+| `QuoteInput` | Holds the essential input data | The example algorithm needs only weight and distance |
+| `ShippingPricing` | Pricing contract | The caller needs a fee result without knowing the specific algorithm |
+| `StandardPricing` | One implementation of the contract | Contains the standard pricing formula |
+| `ExpressPricing` | A surcharge policy based on another policy | Reuses the pricing behavior instead of copying the formula |
+| `printQuote(...)` | Consumer of the contract | Works with `ShippingPricing` regardless of the implementation class |
 
-`ShippingPricing` diễn đạt **đối tượng có thể làm gì**: báo phí từ đầu vào hợp lệ. Công thức chi tiết được đặt trong implementation. Nếu có chính sách giao hàng mới, code gọi `quoteFee` vẫn có thể làm việc với implementation mới, miễn là hợp đồng không đổi.
+`ShippingPricing` expresses **what an object can do**: quote a fee for valid input. The detailed formula lives in an implementation. If a new shipping policy is added, code calling `quoteFee` can still work with the new implementation as long as the contract stays the same.
 
-Ví dụ dùng `long` để biểu diễn **đơn vị VND nguyên**. Trong hệ thống thực, các loại tiền tệ khác nhau, phí có phần thập phân hoặc yêu cầu làm tròn đặc biệt có thể cần kiểu tiền tệ riêng hay `BigDecimal`. Tương tự, tính cước thực tế có thể cần thể tích, vùng giao, giới hạn cân nặng và phụ phí khác; khi yêu cầu đổi, phải điều chỉnh mô hình đầu vào phù hợp.
+The example uses `long` to represent **whole VND units**. In real systems, different currencies, fractional fees, or special rounding requirements may call for a dedicated money type or `BigDecimal`. Likewise, real shipping calculations may require volume, delivery zones, weight limits, and other surcharges; changing requirements should prompt corresponding changes to the input model.
 
-**Ý nghĩa chính không nằm ở công thức vận chuyển**, mà ở cách ta chỉ đưa các yếu tố cần cho hành vi được yêu cầu vào API.
+**The main lesson is not the shipping formula**; it is that the API exposes only what is needed for the required behavior.
 
-## 4. Tại sao không đưa mọi chi tiết vào một lớp?
+## 4. Why Not Put Every Detail in One Class?
 
-Một thiết kế ban đầu có thể trông như sau:
+An initial design might look like this:
 
 ```java
 class EverythingShipment {
@@ -214,9 +214,9 @@ class EverythingShipment {
 }
 ```
 
-Nếu API tính phí nhận toàn bộ `EverythingShipment`, caller phải hiểu và phụ thuộc vào một mô hình lớn ngay cả khi chỉ cần hai con số. Về sau, việc thay đổi thông tin vận hành khác cũng dễ tác động dây chuyền đến code tính cước.
+If the pricing API accepts an entire `EverythingShipment`, callers must understand and depend on a large model even when they only need two numbers. Later changes to unrelated operational information may also cascade into the pricing code.
 
-Để mô hình tốt hơn, có thể tách một dữ liệu đầu vào phục vụ **riêng cho báo phí**:
+A better model can separate input data **specifically for fee quotations**:
 
 ```java
 record QuoteInput(int weightGrams, int distanceKm) {
@@ -228,7 +228,7 @@ record QuoteInput(int weightGrams, int distanceKm) {
 }
 ```
 
-Với chức năng theo dõi, lại có thể chọn những đặc điểm khác:
+For tracking, we can choose a different set of characteristics:
 
 ```java
 import java.time.Instant;
@@ -253,53 +253,53 @@ record TrackingSnapshot(
 }
 ```
 
-Đây là **hai mô hình dữ liệu riêng theo nhu cầu**, không nhất thiết phải là hai lớp con của một lớp `Shipment`. Trong ứng dụng thực, service có thể lấy dữ liệu từ cùng một đối tượng nghiệp vụ hoặc nguồn lưu trữ rồi tạo các góc nhìn phù hợp.
+These are **two separate data models for different needs**; they do not necessarily have to be subclasses of `Shipment`. In a real application, a service may retrieve data from the same business entity or storage source and construct suitable views.
 
-Không nên tách lớp một cách máy móc chỉ để giảm số field. Nếu một thực thể nghiệp vụ thực sự có trách nhiệm quản lý toàn bộ vòng đời giao hàng, lớp domain đó vẫn có thể chứa nhiều thông tin. Điều cần tránh là **ép mọi đối tượng sử dụng phải phụ thuộc vào tất cả chi tiết của nó**.
+Do not split classes mechanically just to reduce the field count. If a domain entity truly manages the entire delivery lifecycle, it may legitimately contain extensive information. What matters is avoiding **forcing every consumer to depend on all of its details**.
 
-## 5. Abstraction khác gì encapsulation?
+## 5. How Does Abstraction Differ from Encapsulation?
 
-Hai khái niệm phối hợp với nhau nhưng không đồng nghĩa:
+These concepts work together but are not synonymous:
 
-| Khía cạnh | Trừu tượng hóa (*abstraction*) | Đóng gói (*encapsulation*) |
+| Aspect | Abstraction (*abstraction*) | Encapsulation (*encapsulation*) |
 |---|---|---|
-| Câu hỏi chính | **Cần nhìn thấy đặc điểm, hành vi nào?** | **Ai được truy cập và thay đổi trạng thái bằng cách nào?** |
-| Trọng tâm | Chọn bản chất phù hợp một mục đích | Bảo vệ dữ liệu, che giấu chi tiết triển khai qua ranh giới API |
-| Ví dụ | `ShippingPricing.quoteFee(input)` | Giữ field nội bộ `private`, kiểm tra đầu vào trước khi lưu |
-| Lợi ích | Giảm độ phức tạp mà caller phải hiểu | Duy trì invariant, ngăn sửa trạng thái không kiểm soát |
+| Main question | **Which characteristics and behaviors should be visible?** | **Who can access or change state, and how?** |
+| Focus | Select what matters for a purpose | Protect data and hide implementation details behind API boundaries |
+| Example | `ShippingPricing.quoteFee(input)` | Keep internal fields `private` and validate input before storing it |
+| Benefit | Reduce the complexity callers must understand | Preserve invariants and prevent uncontrolled state changes |
 
-Một lớp có toàn bộ field là `private` vẫn có thể là **trừu tượng hóa kém** nếu cung cấp 30 getter/setter không liên quan đến trách nhiệm của nó.
+A class whose fields are all `private` can still be a **poor abstraction** if it exposes 30 getters/setters unrelated to its responsibilities.
 
-Ngược lại, một interface nhỏ có thể diễn đạt **trừu tượng hóa tốt**, nhưng implementation bên dưới vẫn cần đóng gói để ngăn trạng thái nội bộ bị thay đổi sai.
+Conversely, a small interface may express a **good abstraction**, but its implementation still needs encapsulation to prevent invalid changes to internal state.
 
-Một cách ghi nhớ thực tế:
+A practical way to remember the difference:
 
-- **Abstraction:** chọn *cái gì quan trọng và hệ thống có thể làm gì*.
-- **Encapsulation:** kiểm soát *làm thế nào để sử dụng đúng những khả năng đó*.
+- **Abstraction:** select *what matters and what the system can do*.
+- **Encapsulation:** control *how those capabilities can be used correctly*.
 
-## 6. Có bắt buộc dùng abstract class hay interface mới là trừu tượng hóa?
+## 6. Must We Use an Abstract Class or Interface to Achieve Abstraction?
 
-**Không.** Trừu tượng hóa là hoạt động **tư duy và thiết kế mô hình**; `abstract class` và `interface` chỉ là các cơ chế ngôn ngữ giúp thể hiện hợp đồng hoặc chia sẻ một phần thiết kế.
+**No.** Abstraction is an activity of **reasoning and model design**; `abstract class` and `interface` are language mechanisms that help express contracts or share parts of a design.
 
-Ví dụ `QuoteInput` ở trên cũng là một trừu tượng hóa: record chỉ giữ thông tin thiết yếu cho việc báo giá. Nó không có từ khóa `abstract`.
+The `QuoteInput` example above is also an abstraction: the record retains only the information essential to a quotation. It does not use the `abstract` keyword.
 
-Trong Java, có thể lựa chọn:
+In Java, the options include:
 
-| Cơ chế | Khi hữu ích | Lưu ý |
+| Mechanism | When useful | Caution |
 |---|---|---|
-| Lớp cụ thể (*concrete class*) | Có một trách nhiệm rõ và implementation trực tiếp | Vẫn là trừu tượng hóa nếu mô hình loại bỏ chi tiết không cần |
-| `record` | Mô hình dữ liệu mang ngữ nghĩa giá trị, giữ tập component gọn | Record không mặc nhiên bất biến sâu nếu chứa field tham chiếu tới object mutable |
-| `interface` | Nhiều implementation cần chung hợp đồng hành vi | Không cần tạo interface cho mọi lớp khi chưa có nhu cầu rõ |
-| `abstract class` | Muốn kết hợp hợp đồng với hành vi/trạng thái chung có chủ đích | Kế thừa lớp tạo ràng buộc mạnh hơn; tránh dùng chỉ để “cho đúng OOP” |
-| Composition | Cấu thành hành vi từ các đối tượng khác | Có thể tránh các hệ phân cấp kế thừa phức tạp |
+| Concrete class (*concrete class*) | Has a clear responsibility and a direct implementation | Still an abstraction when its model omits unnecessary details |
+| `record` | Models value-like data with a compact set of components | Records are not automatically deeply immutable if their fields reference mutable objects |
+| `interface` | Multiple implementations need a common behavioral contract | There is no need to create an interface for every class without a clear reason |
+| `abstract class` | Intentionally combines a contract with shared behavior/state | Class inheritance creates tighter coupling; avoid using it just to "do OOP correctly" |
+| Composition | Builds behavior from other objects | Can avoid complicated inheritance hierarchies |
 
-Ví dụ `ExpressPricing` **chứa một** `ShippingPricing` thay vì sao chép thuật toán hoặc kế thừa `StandardPricing`. Đây là composition: giao nhanh bổ sung chính sách trên một hành vi báo phí đã có.
+For example, `ExpressPricing` **contains a** `ShippingPricing` instead of copying the algorithm or extending `StandardPricing`. This is composition: express delivery adds a policy on top of existing fee-quotation behavior.
 
-**Trừu tượng hóa tốt không được đo bằng số interface hoặc tầng kế thừa**, mà bằng mức độ mô hình phục vụ đúng nhu cầu và giúp code thay đổi dễ dàng.
+**A good abstraction is not measured by the number of interfaces or inheritance layers**, but by how well the model fits the need and supports future code changes.
 
-## 7. Chọn đặc điểm thiết yếu bằng một quy trình có thể áp dụng
+## 7. A Practical Process for Selecting Essential Characteristics
 
-Giả sử cần thiết kế API “Báo phí vận chuyển dự kiến”.
+Suppose we need to design an "Estimated Shipping Fee" API.
 
 ```mermaid
 flowchart TD
@@ -316,24 +316,24 @@ flowchart TD
     I -->|"Rồi"| J["Triển khai và kiểm thử"]
 ```
 
-Có thể dùng bảng kiểm tra nhỏ trong bước phân tích:
+A small checklist can help during analysis:
 
-| Đặc điểm ứng viên | Có tác động đến báo phí trong yêu cầu hiện tại? | Quyết định |
+| Candidate characteristic | Affects the quotation under current requirements? | Decision |
 |---|---|---|
-| Cân nặng | Có, thay đổi phí theo mức kg tính cước | Giữ lại |
-| Quãng đường | Có, quyết định phí theo km | Giữ lại |
-| Màu hộp | Không | Loại khỏi API báo phí |
-| Tên người nhận | Không dùng trong công thức phí | Loại khỏi API báo phí |
-| Chính sách tiêu chuẩn/giao nhanh | Có, tác động mức phí | Thể hiện qua implementation/chọn policy |
-| Vùng giao hàng | Chưa có quy tắc theo vùng | Hoãn; bổ sung khi có yêu cầu được xác nhận |
+| Weight | Yes, changes the fee according to billable kg | Keep |
+| Distance | Yes, determines the fee by km | Keep |
+| Box color | No | Exclude from the quotation API |
+| Recipient name | Not used in the pricing formula | Exclude from the quotation API |
+| Standard/express policy | Yes, affects the fee | Represent through the implementation/policy selection |
+| Delivery zone | No zone-based rule exists yet | Defer; add when a requirement is confirmed |
 
-Cần phân biệt **thiết yếu cho phiên bản bài toán hiện tại** với **có thể quan trọng trong tương lai**. Trừu tượng hóa không yêu cầu dự đoán mọi thay đổi sẽ xảy ra; nếu phát sinh quy tắc mới, mô hình có thể được mở rộng hoặc tái cấu trúc trên cơ sở nhu cầu thực.
+Distinguish **essential for the current version of the problem** from **potentially important in the future**. Abstraction does not require predicting every change; when new rules arise, the model can be extended or refactored based on actual needs.
 
-## 8. Chọn hành vi, không chỉ chọn dữ liệu
+## 8. Select Behavior, Not Just Data
 
-Một lỗi thường gặp là chỉ hỏi “Đối tượng có những thuộc tính gì?” mà quên “Đối tượng chịu trách nhiệm làm gì?”.
+A common mistake is to ask only "What attributes does an object have?" and forget "What is this object responsible for doing?"
 
-Ví dụ mô hình phí kiểu chứa số liệu và để caller tự tính:
+For example, consider a fee model that holds values and lets callers calculate the fee themselves:
 
 ```java
 class RawRate {
@@ -346,9 +346,9 @@ class RawRate {
 // giới hạn đầu vào và logic phụ thu.
 ```
 
-Với kiểu thiết kế đó, nhiều caller có thể tự nhân chia khác nhau, khiến quy tắc bị lặp và dễ sai.
+With that design, different callers may perform calculations differently, duplicating the rules and introducing errors.
 
-Hợp đồng như:
+A contract such as:
 
 ```java
 interface ShippingPricing {
@@ -356,64 +356,64 @@ interface ShippingPricing {
 }
 ```
 
-giữ **hành vi báo phí** ở nơi chịu trách nhiệm. Caller nhận một kết quả theo đơn vị được quy định, thay vì bắt buộc biết thuật toán nội bộ. Đây là một mức trừu tượng hữu ích khi nhiều phần của hệ thống cùng cần báo phí.
+keeps **fee-quotation behavior** with its responsible component. The caller receives a result in the specified unit rather than needing to know the internal algorithm. This is a useful abstraction when several parts of a system need quotations.
 
-Dĩ nhiên nếu ứng dụng chỉ dùng một công thức cố định trong một chỗ, một lớp cụ thể với phương thức `quoteFee` cũng có thể đủ. Interface có ích khi hợp đồng được dùng bởi nhiều implementation, cần thay thế policy hoặc giảm phụ thuộc của caller vào cách tính.
+Of course, if an application uses one fixed formula in one place, a concrete class with a `quoteFee` method may be sufficient. An interface is useful when multiple implementations share the contract, policies must be replaceable, or callers should depend less on the calculation.
 
-## 9. Một trừu tượng hóa cần hợp đồng và giới hạn rõ ràng
+## 9. An Abstraction Needs a Clear Contract and Boundaries
 
-Đặt tên đẹp chưa đủ. API phải giải thích rõ **đầu vào, đầu ra, đơn vị, lỗi và giới hạn**.
+A good name is not enough. An API must clearly specify **inputs, outputs, units, errors, and limitations**.
 
-Với `ShippingPricing.quoteFee(QuoteInput)`:
+For `ShippingPricing.quoteFee(QuoteInput)`:
 
-| Câu hỏi về hợp đồng | Quyết định của ví dụ |
+| Contract question | Decision in this example |
 |---|---|
-| Đầu vào gồm gì? | Cân nặng tính bằng gram và quãng đường tính bằng km |
-| Giá trị hợp lệ? | Cân nặng dương, quãng đường không âm |
-| Đầu ra có nghĩa gì? | Số tiền phí dự kiến tính bằng VND nguyên |
-| Làm tròn ra sao? | Cân nặng tính cước làm tròn lên kg |
-| Hệ thống có cam kết giá thực tế cuối cùng không? | Không; đây chỉ là mô hình ví dụ báo giá |
-| Nếu truyền `null`? | Implementation trong ví dụ từ chối với `NullPointerException` qua `Objects.requireNonNull` |
+| What are the inputs? | Weight in grams and distance in km |
+| Which values are valid? | Positive weight and nonnegative distance |
+| What does the output mean? | Estimated fee in whole VND units |
+| How is rounding performed? | Billable weight is rounded up to kilograms |
+| Does the system guarantee the final actual price? | No; this is only an illustrative quotation model |
+| What if `null` is passed? | The example implementation rejects it with `NullPointerException` via `Objects.requireNonNull` |
 
-Khi hợp đồng mơ hồ, người dùng API có thể hiểu sai: `weight` là gram hay kilogram? `distance` là km hay mét? Phí có bao gồm phụ thu chưa?
+When a contract is ambiguous, API users may misunderstand it: is `weight` in grams or kilograms? Is `distance` in kilometers or meters? Does the fee include surcharges?
 
-Một trừu tượng hóa **quá chung** như `Calculator.calculate(Object input)` có thể khiến caller phải ép kiểu và đoán ý nghĩa. Tên, kiểu dữ liệu và quy tắc nên thể hiện đúng điều người dùng API cần biết.
+An **overly generic** abstraction such as `Calculator.calculate(Object input)` may force callers to cast values and guess their meaning. Names, types, and rules should convey what API users need to know.
 
-Trong ứng dụng lớn, có thể dùng kiểu chuyên biệt (`Weight`, `Distance`, `Money`) nếu đơn vị và phép toán phức tạp. Nhưng việc tạo nhiều kiểu mới cũng có chi phí; chỉ nên thực hiện khi chúng thực sự giúp giảm lỗi hoặc thể hiện quy tắc quan trọng.
+Large applications can use specialized types (`Weight`, `Distance`, `Money`) when units and operations are complex. But introducing many new types also has a cost; do so only when they reduce errors or express important rules.
 
-## 10. Nhận biết mô hình thiếu hoặc thừa trừu tượng
+## 10. Recognizing Too Little or Too Much Abstraction
 
-| Dấu hiệu | Vấn đề | Hướng điều chỉnh |
+| Symptom | Problem | Possible adjustment |
 |---|---|---|
-| Một lớp chứa mọi dữ liệu của nhiều nhóm nghiệp vụ | Quá nhiều trách nhiệm, caller phụ thuộc dư thừa | Phân tích các góc nhìn và hợp đồng theo use case |
-| Hàm nhận cả entity lớn nhưng chỉ dùng hai field | Dữ liệu đầu vào không phản ánh nhu cầu | Xem xét dùng kiểu đầu vào gọn, phù hợp |
-| Lặp công thức tính phí ở nhiều màn hình | Thiếu trừu tượng hành vi chung | Đưa chính sách tính phí vào một API chịu trách nhiệm |
-| `interface` chỉ có một implementation và không có nhu cầu thay thế/hợp đồng rõ | Có thể trừu tượng quá sớm | Cân nhắc bắt đầu từ lớp cụ thể |
-| Có `BaseAbstractManager` cùng nhiều tầng kế thừa chỉ để chia sẻ vài dòng | Kế thừa ràng buộc quá nhiều | Cân nhắc composition hoặc phương thức hỗ trợ |
-| API dùng `Object`, `Map<String,Object>` cho dữ liệu ổn định | Hợp đồng kiểu dữ liệu mờ, lỗi chỉ xuất hiện lúc chạy | Dùng DTO/record có kiểu và validation |
-| Bỏ qua đặc điểm ảnh hưởng trực tiếp tới quy tắc | Mô hình chưa đủ | Bổ sung dữ liệu hoặc hành vi theo yêu cầu đã xác nhận |
+| A class contains all data for several business areas | Too many responsibilities; unnecessary caller dependencies | Identify views and contracts for each use case |
+| A function accepts a large entity but uses only two fields | Input data does not reflect actual needs | Consider a compact, purpose-built input type |
+| Pricing formulas are duplicated across screens | Missing shared behavioral abstraction | Put pricing policy behind a responsible API |
+| `interface` has only one implementation with no clear need for replacement or a contract | Possibly premature abstraction | Consider starting with a concrete class |
+| `BaseAbstractManager` has many inheritance layers just to share a few lines | Inheritance introduces too much coupling | Consider composition or helper methods |
+| An API uses `Object`, `Map<String,Object>` for stable data | Type contract is unclear; errors arise only at runtime | Use typed DTOs/records with validation |
+| A characteristic directly affecting a rule is omitted | Incomplete model | Add data or behavior based on confirmed requirements |
 
-Mục tiêu là **đủ cụ thể để tránh hiểu sai, đủ gọn để loại bỏ chi tiết không cần thiết**. Đây là một quyết định thiết kế theo ngữ cảnh, không phải một công thức cố định.
+The goal is to be **specific enough to avoid misunderstanding and concise enough to eliminate unnecessary details**. This is a context-dependent design choice, not a fixed formula.
 
-## 11. Tự kiểm tra
+## 11. Self-Check
 
-### Bài 1 — Chọn dữ liệu thiết yếu
+### Exercise 1 — Select Essential Data
 
-Một hệ thống cần quyết định **vé xem phim có được giảm giá học sinh hay không** dựa trên hai điều kiện: người mua có tình trạng học sinh hợp lệ và suất chiếu diễn ra vào ngày ưu đãi.
+A system must determine **whether a movie ticket qualifies for a student discount** based on two conditions: the purchaser has valid student status, and the screening is on a discount day.
 
-Dữ liệu ứng viên: họ tên, mã ghế, `isStudent`, ngày suất chiếu, màu giao diện, số điện thoại.
+Candidate data: full name, seat number, `isStudent`, screening date, UI color, phone number.
 
-**Gợi ý đáp án:** `isStudent` và ngày suất chiếu là hai yếu tố cần thiết theo quy tắc được nêu. Mã ghế hay số điện thoại không ảnh hưởng đến quyết định ưu đãi trong bài toán hiện tại. Có thể dùng API như:
+**Suggested answer:** `isStudent` and the screening date are the two necessary factors under the stated rule. Seat number and phone number do not affect the discount decision in the current problem. An API could look like this:
 
 ```java
 boolean eligibleForDiscount(boolean isStudent, java.time.LocalDate showDate);
 ```
 
-Nếu quy tắc sau này yêu cầu kiểm tra hiệu lực thẻ học sinh hoặc loại suất chiếu, cần bổ sung dữ liệu/hành vi tương ứng.
+If a later rule requires checking a student card's validity or screening type, the corresponding data/behavior must be added.
 
-### Bài 2 — Dự đoán kết quả từ hợp đồng
+### Exercise 2 — Predict the Result from the Contract
 
-Với `ShippingAbstractionDemo` ở trên:
+With `ShippingAbstractionDemo` above:
 
 ```java
 QuoteInput input = new QuoteInput(1_001, 0);
@@ -421,11 +421,11 @@ ShippingPricing pricing = new StandardPricing();
 System.out.println(pricing.quoteFee(input));
 ```
 
-**Đáp án: `16000`** vì `1_001` gram được làm tròn lên `2` kg, phí là `12_000 + 0 + 2 × 2_000`. Kết quả cho thấy chính sách làm tròn là một phần quan trọng của hợp đồng, dù caller không cần tự tính.
+**Answer: `16000`** because `1_001` grams is rounded up to `2` kg, so the fee is `12_000 + 0 + 2 × 2_000`. The result shows that the rounding policy is an important part of the contract even though callers do not need to calculate it themselves.
 
-### Bài 3 — Phản biện thiết kế
+### Exercise 3 — Critique the Design
 
-Một lập trình viên đề xuất interface:
+A programmer proposes this interface:
 
 ```java
 interface AnythingService {
@@ -433,70 +433,70 @@ interface AnythingService {
 }
 ```
 
-**Câu hỏi:** Interface này có luôn tốt hơn một class cụ thể vì nó “trừu tượng hơn” không?
+**Question:** Is this interface always better than a concrete class because it is "more abstract"?
 
-**Đáp án:** Không. Đây là hợp đồng quá mơ hồ: không cho biết đầu vào là kiểu nào, thao tác cụ thể là gì, kết quả mang ý nghĩa gì. Trong trường hợp báo phí, `ShippingPricing.quoteFee(QuoteInput)` diễn đạt nhu cầu rõ hơn nhiều và cho phép compiler kiểm tra kiểu.
+**Answer:** No. This contract is too vague: it does not specify the input type, the operation, or the meaning of its result. For quotations, `ShippingPricing.quoteFee(QuoteInput)` expresses the need much more clearly and allows the compiler to check types.
 
-### Bài 4 — Tự thiết kế
+### Exercise 4 — Design It Yourself
 
-Hãy chọn một trong hai use case cho cùng đối tượng “sách thư viện”:
+Choose one of two use cases for the same "library book" object:
 
-- **Tra cứu sách:** tìm theo tên, tác giả và mã ISBN.
-- **Mượn sách:** kiểm tra số bản có thể cho mượn và cập nhật trạng thái mượn.
+- **Book lookup:** search by title, author, and ISBN.
+- **Book borrowing:** check the number of copies available for borrowing and update borrowing status.
 
-Với use case đã chọn, hãy viết danh sách **đặc điểm thiết yếu**, **hành vi** và **invariant**. Sau đó phác thảo một class hoặc record Java có API nhỏ nhất đáp ứng yêu cầu. Giải thích vì sao một số dữ liệu của use case còn lại không cần đặt vào API này.
+For the chosen use case, list the **essential characteristics**, **behaviors**, and **invariants**. Then sketch a Java class or record with the smallest API that meets the requirements. Explain why some data for the other use case need not appear in this API.
 
 ---
 
-**Ghi nhớ:** Trừu tượng hóa là **chọn đúng đặc điểm và hành vi cho một mục đích**, chứ không phải đưa càng nhiều thuộc tính vào lớp càng tốt hoặc dùng thật nhiều `abstract class`. Hãy bắt đầu từ câu hỏi nghiệp vụ, xác định dữ liệu đủ để trả lời, thiết kế hành vi có hợp đồng rõ ràng, rồi giữ các chi tiết triển khai ra khỏi phần API mà caller không cần biết.
+**Remember:** Abstraction means **choosing the right characteristics and behaviors for a purpose**, rather than loading a class with as many attributes as possible or using many `abstract class` declarations. Start with the business question, identify the data needed to answer it, design behavior with a clear contract, and keep implementation details out of the API when callers do not need them.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="abstraction-002">Phân biệt trừu tượng với đóng gói</a>
+## <a id="abstraction-002">Distinguishing Abstraction from Encapsulation</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phân biệt trừu tượng (Abstraction) với đóng gói (Encapsulation) trong Java
+# Distinguishing Abstraction from Encapsulation in Java
 
-**Trừu tượng** và **đóng gói** đều là nguyên lý quan trọng của lập trình hướng đối tượng (OOP), nhưng giải quyết hai vấn đề khác nhau:
+**Abstraction** and **encapsulation** are both important object-oriented programming (OOP) principles, but they address different problems:
 
-- **Trừu tượng (abstraction):** chọn và công bố những **khả năng cần thiết** của một đối tượng, giúp mã sử dụng tập trung vào *đối tượng làm được gì* mà không phải phụ thuộc vào chi tiết thực hiện.
-- **Đóng gói (encapsulation):** tổ chức dữ liệu cùng các thao tác liên quan và **kiểm soát cách trạng thái nội bộ được truy cập hoặc thay đổi**, giúp đối tượng tự bảo vệ các quy tắc của mình.
+- **Abstraction (abstraction):** selects and exposes an object's **essential capabilities**, allowing consuming code to focus on *what the object can do* without depending on implementation details.
+- **Encapsulation (encapsulation):** organizes data with its related operations and **controls how internal state can be accessed or modified**, allowing the object to enforce its own rules.
 
-Ví dụ, hệ thống bán vé cần thao tác `reserve(2)` mà không cần biết số ghế đang lưu trong `HashMap`, cơ sở dữ liệu hay dịch vụ khác: đó là góc nhìn **trừu tượng**. Hệ thống cũng phải ngăn mã bên ngoài tự sửa số ghế thành `-10` hoặc bỏ qua điều kiện còn chỗ: đó là mục tiêu **đóng gói**.
+For example, a ticketing system needs to call `reserve(2)` without knowing whether seats are stored in a `HashMap`, a database, or another service: that is the **abstraction** perspective. The system must also prevent external code from directly changing the seat count to `-10` or bypassing availability checks: that is the goal of **encapsulation**.
 
-Hai nguyên lý thường bổ trợ nhau, nhưng **không đồng nghĩa**. Một lớp có thể dùng `private` để đóng gói tốt mà không cần khai báo `interface`; ngược lại, có `interface` chưa bảo đảm mọi đối tượng triển khai đều bảo vệ trạng thái đúng cách.
+These two principles often complement each other, but they **are not synonymous**. A class can use `private` for sound encapsulation without declaring an `interface`; conversely, declaring an `interface` does not guarantee that all implementations correctly protect their state.
 
-## 1. So sánh từ mục tiêu đến cách thực hiện
+## 1. Comparing Their Goals and Implementation
 
-| Góc nhìn | Trừu tượng (Abstraction) | Đóng gói (Encapsulation) |
+| Perspective | Abstraction | Encapsulation |
 | --- | --- | --- |
-| Câu hỏi chính | “Người dùng cần biết và sử dụng **khả năng nào**?” | “Ai được **đọc/sửa trạng thái** và qua con đường nào?” |
-| Mục tiêu | Giảm phụ thuộc vào chi tiết triển khai; thể hiện hợp đồng dễ hiểu | Bảo vệ tính nhất quán của dữ liệu và các quy tắc nghiệp vụ |
-| Phần được che giấu | Chi tiết thuật toán, cấu trúc lưu trữ, cách triển khai không thuộc hợp đồng | Quyền truy cập trực tiếp vào trường và cấu trúc nội bộ cần kiểm soát |
-| Công cụ Java thường gặp | `interface`, `abstract class`, tham số theo kiểu interface, API công khai được thiết kế gọn | `private`, phương thức có validation, defensive copy, immutable value, giới hạn quyền truy cập |
-| Dấu hiệu ở phía sử dụng | Code gọi `inventory.reserve(2)`, không biết đối tượng lưu kho thế nào | Code không thể tự gán `inventory.remaining = -10` |
-| Lỗi khi thiết kế kém | Code nghiệp vụ phụ thuộc nhiều lớp cụ thể hoặc chi tiết lưu trữ | Caller sửa dữ liệu nội bộ mà không qua kiểm tra |
-| Tiêu chí đánh giá | Hợp đồng có đủ khả năng cần thiết và giấu chi tiết không liên quan không? | Có đường nào từ bên ngoài phá vỡ bất biến (*invariant*) của đối tượng không? |
+| Main question | "Which **capabilities** do consumers need to know about and use?" | "Who may **read or modify state**, and through which operations?" |
+| Goal | Reduce dependence on implementation details; present an understandable contract | Protect data consistency and business rules |
+| What is hidden | Algorithm details, storage structures, and implementation choices outside the contract | Direct access to fields and internal structures requiring control |
+| Common Java mechanisms | `interface`, `abstract class`, interface-typed parameters, compact public APIs | `private`, validated methods, defensive copying, immutable values, restricted access |
+| Effect on consumers | Code calls `inventory.reserve(2)` without knowing how inventory is stored | Code cannot directly assign `inventory.remaining = -10` |
+| Poor-design symptom | Business code depends on multiple concrete classes or storage details | Callers modify internal data without validation |
+| Evaluation criterion | Does the contract expose all necessary capabilities while hiding irrelevant details? | Can external code violate an object's (*invariant*) through any available path? |
 
-Không nên hiểu “trừu tượng chỉ dùng interface” hay “đóng gói chỉ dùng private”. Một lớp thông thường với một số phương thức công khai có thể là một **abstraction tốt**; ngược lại, một trường `private final List<...>` vẫn có thể bị sửa gián tiếp nếu lớp trả ra danh sách mutable đó.
+Avoid the assumptions that "abstraction only uses interfaces" or "encapsulation only uses private". An ordinary class with a few public methods can provide a **good abstraction**. Conversely, a `private final List<...>` field can still be modified indirectly if the class exposes the referenced mutable list.
 
-## 2. Ví dụ hoàn chỉnh: cùng một bài toán, hai nguyên lý
+## 2. Complete Example: Two Principles in the Same Problem
 
-Ta thiết kế một chức năng đặt chỗ:
+We design a seat-booking feature:
 
-- `SeatInventory` mô tả **hợp đồng** tồn kho ghế: xem số chỗ còn lại và yêu cầu giữ chỗ.
-- `InMemorySeatInventory` là một cách thực hiện, giữ số ghế trong trường `private` và kiểm tra trước khi giảm.
-- `SoldOutInventory` là một cách thực hiện khác, luôn thông báo hết vé.
-- `BookingService` chỉ phụ thuộc vào **`SeatInventory`**, nên không phải biết đối tượng cụ thể bên dưới.
+- `SeatInventory` describes the seat-inventory **contract**: check remaining seats and request a reservation.
+- `InMemorySeatInventory` is one implementation that holds the seat count in a `private` field and validates requests before decrementing it.
+- `SoldOutInventory` is another implementation that always reports sold out.
+- `BookingService` depends only on **`SeatInventory`**, so it need not know which concrete object is underneath.
 
-Đặt toàn bộ mã sau trong file **`Main.java`**, chạy với Java 11 trở lên:
+Put all the following code into **`Main.java`** and run it with Java 11 or later:
 
 ```java
 import java.util.ArrayList;
@@ -618,14 +618,14 @@ public class Main {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 true
@@ -637,11 +637,11 @@ Không sửa được lịch sử bên ngoài
 false
 ```
 
-### Phân tích: phần nào là trừu tượng?
+### Analysis: Which Part Is Abstraction?
 
-`SeatInventory` cung cấp hai khả năng rõ ràng là `remaining()` và `reserve(int)`. `BookingService` được viết theo hợp đồng đó và có thể nhận bất kỳ triển khai **tuân thủ cùng ngữ nghĩa**: đối tượng lưu trong bộ nhớ, đối tượng làm việc với kho dữ liệu, hoặc đối tượng phục vụ kiểm thử.
+`SeatInventory` exposes two clear capabilities: `remaining()` and `reserve(int)`. `BookingService` is written against this contract and can receive any implementation that **preserves the same semantics**: an in-memory inventory, a database-backed inventory, or a test double.
 
-Sự phụ thuộc thể hiện như sau:
+The dependency looks like this:
 
 ```mermaid
 flowchart TD
@@ -652,61 +652,61 @@ flowchart TD
     O --> Q["trạng thái luôn hết vé"]
 ```
 
-`BookingService` không cần `instanceof InMemorySeatInventory`, không đọc trường `remaining`, không quyết định cách lưu dữ liệu. Nếu sau này có `DatabaseSeatInventory`, ta có thể truyền một triển khai mới mà giữ nguyên giao diện sử dụng của `BookingService`, miễn là nó đáp ứng hợp đồng.
+`BookingService` does not need `instanceof InMemorySeatInventory`, does not read the `remaining` field, and does not choose how data is stored. If a `DatabaseSeatInventory` is introduced later, we can supply the new implementation without changing the `BookingService` consumer API, as long as it satisfies the contract.
 
-**Có interface không tự động làm mọi thiết kế trở nên trừu tượng tốt.** Nếu interface để lộ chi tiết như `getInternalHashMap()`, `getJdbcConnection()` trong một API đặt vé thông thường, code sử dụng vẫn bị kéo vào chi tiết triển khai. Ngược lại, các phương thức công khai của một lớp cụ thể vẫn có thể tạo một abstraction phù hợp nếu chúng che giấu chi tiết tốt.
+**Having an interface does not automatically make every design a good abstraction.** If an interface exposes details such as `getInternalHashMap()` or `getJdbcConnection()` in an ordinary booking API, consumers still become coupled to implementation details. Conversely, public methods of a concrete class can provide an appropriate abstraction if they hide those details well.
 
-### Phân tích: phần nào là đóng gói?
+### Analysis: Which Part Is Encapsulation?
 
-`InMemorySeatInventory` giữ `remaining` và `successfulReservations` bên trong đối tượng. Caller không thể làm `remaining = -10` hoặc xóa lịch sử trực tiếp. Thay vào đó, caller gọi `reserve(seats)`, nơi lớp tự kiểm tra:
+`InMemorySeatInventory` keeps `remaining` and `successfulReservations` inside the object. Callers cannot set `remaining = -10` or delete the history directly. Instead, they call `reserve(seats)`, where the class validates:
 
-1. Số ghế yêu cầu phải lớn hơn 0.
-2. Không được đặt quá số ghế còn lại.
-3. Chỉ khi hợp lệ mới giảm `remaining` và ghi nhận lịch sử.
+1. The requested number of seats must be greater than 0.
+2. Reservations cannot exceed the remaining seats.
+3. Only a valid request decrements `remaining` and records the reservation.
 
-Các quy tắc đó là **bất biến của đối tượng**: `remaining` không âm, số lượng giữ chỗ ghi lại là số dương và phép đặt quá tồn kho không tự ý làm số dư âm. Constructor thiết lập trạng thái hợp lệ ban đầu, còn phương thức cập nhật tiếp tục duy trì nó.
+These rules are **object invariants**: `remaining` stays nonnegative, recorded reservation counts remain positive, and overbooking does not silently produce a negative balance. The constructor establishes valid initial state, and update methods preserve it.
 
-Dù danh sách lịch sử là `private`, lớp còn trả `List.copyOf(successfulReservations)` để caller không sửa collection nội bộ qua một tham chiếu được chia sẻ. Vì các phần tử là `Integer` bất biến, snapshot này không có vấn đề phần tử mutable.
+Although the history list is `private`, the class also returns `List.copyOf(successfulReservations)` so that callers cannot modify the internal collection through a shared reference. Because `Integer` elements are immutable, the snapshot also avoids mutable-element concerns.
 
-Ví dụ trên giả định sử dụng tuần tự. **`private` không làm thao tác kiểm tra rồi cập nhật trở nên an toàn khi nhiều luồng cùng đặt vé**; hệ thống đồng thời cần đồng bộ hoặc cơ chế nguyên tử thích hợp.
+The example assumes sequential use. **`private` does not make a check-then-update operation safe when multiple threads book concurrently**; concurrent systems require suitable synchronization or atomic operations.
 
-## 3. Vì sao hai nguyên lý thường đi cùng nhau nhưng vẫn khác nhau?
+## 3. Why Do These Principles Usually Go Together Yet Remain Distinct?
 
-Hãy xét hai câu hỏi độc lập với lớp đặt chỗ:
+Consider two independent questions about the booking class:
 
-**Câu hỏi A — API có che được chi tiết không?**
+**Question A — Does the API hide the details?**
 
-Code nghiệp vụ chỉ cần `book(2)` và `availableSeats()`. Nó không cần biết ứng dụng dùng `ArrayList`, JDBC hay hệ thống phân tán. Thiết kế này tập trung vào **trừu tượng** và khả năng thay thế cách thực hiện.
+Business code only needs `book(2)` and `availableSeats()`. It does not need to know whether the application uses `ArrayList`, JDBC, or a distributed system. This design emphasizes **abstraction** and the ability to replace implementations.
 
-**Câu hỏi B — dữ liệu có được bảo vệ không?**
+**Question B — Is the data protected?**
 
-Nếu một phương thức của lớp trả ra `ArrayList` nội bộ rồi code khác gọi `clear()`, trạng thái bị thay đổi ngoài quy trình nghiệp vụ. Thiết kế này tập trung vào **đóng gói** và kiểm soát trạng thái.
+If a class method exposes its internal `ArrayList` and another component calls `clear()`, state changes outside the business workflow. This concerns **encapsulation** and control of state.
 
-Hai vấn đề có thể xảy ra riêng rẽ:
+These problems can occur independently:
 
-| Tình huống | Trừu tượng | Đóng gói |
+| Situation | Abstraction | Encapsulation |
 | --- | --- | --- |
-| Service sử dụng `SeatInventory`; lớp triển khai giữ trường `private`, chỉ sửa qua API có kiểm tra | Tốt | Tốt |
-| Lớp `SimpleCounter` có `private count` và `increment()`, được sử dụng trực tiếp trong một chương trình nhỏ | Vẫn có API trừu tượng ở mức lớp; không có interface riêng | Có thể tốt |
-| Một interface trả ra collection nội bộ mutable để caller sửa tự do | Có biểu hiện interface nhưng hợp đồng có thể rò chi tiết | Kém |
-| Service đọc thẳng trường public của một triển khai cụ thể | Phụ thuộc cách biểu diễn trạng thái | Kém nếu trạng thái cần bảo vệ |
+| A service uses `SeatInventory`; its implementation keeps fields `private` and updates them only through a validated API | Good | Good |
+| A `SimpleCounter` class has `private count` and `increment()` and is used directly in a small program | Still has an abstraction at the class API level; no separate interface | Potentially good |
+| An interface returns an internal mutable collection for callers to modify freely | Uses an interface but may leak implementation details through the contract | Poor |
+| A service reads a public field directly from a concrete implementation | Depends on the representation of state | Poor if state needs protection |
 
-Sự khác biệt có thể gói trong một câu để nhớ: **trừu tượng quyết định đối tượng công bố *khả năng gì*; đóng gói quyết định đối tượng duy trì *quyền kiểm soát trạng thái* như thế nào.**
+The distinction can be summarized in one sentence: **abstraction decides *which capabilities* an object exposes; encapsulation decides how the object maintains *control over its state*.**
 
-Tuy nhiên, cả hai đều có khía cạnh “che giấu chi tiết”. Để không nhầm, hãy xem **mục đích của việc che giấu**: che chi tiết triển khai để khách hàng dùng một hợp đồng rõ ràng, hay chặn đường can thiệp phá vỡ quy tắc nội bộ.
+Both principles involve "hiding details", however. To distinguish them, consider **why details are hidden**: to shield consumers from implementation choices behind a clear contract, or to block modifications that violate internal rules.
 
-## 4. Không bắt buộc có `interface` mới gọi là trừu tượng
+## 4. An `interface` Is Not Required for Abstraction
 
-Trừu tượng là một hoạt động **thiết kế**: chọn những khái niệm quan trọng và bỏ đi chi tiết không cần thiết ở một tầng sử dụng cụ thể. Java có nhiều công cụ hỗ trợ:
+Abstraction is a **design** activity: selecting important concepts and omitting unnecessary details at a particular level of use. Java offers several supporting mechanisms:
 
-| Công cụ | Điều nó giúp diễn đạt | Khi phù hợp |
+| Mechanism | What it helps express | When appropriate |
 | --- | --- | --- |
-| Phương thức `public` trong lớp thường | Một tập hành vi mà caller được phép dùng | Đối tượng đơn giản, không cần nhiều triển khai |
-| `interface` | Hợp đồng chung cho những triển khai khác nhau | Client cần phụ thuộc vào khả năng thay vì lớp cụ thể |
-| `abstract class` | Hợp đồng chung kèm trạng thái/cài đặt chia sẻ cho lớp con | Các triển khai có mối quan hệ kế thừa và quy tắc chung thực sự |
-| Value object / API dịch vụ | Một khái niệm nghiệp vụ rõ ràng | Che thao tác tính toán, kiểm tra, hoặc công nghệ lưu trữ |
+| `public` methods in ordinary classes | A set of behaviors callers are allowed to use | Simple objects that do not need multiple implementations |
+| `interface` | A shared contract for different implementations | Clients should depend on capabilities rather than concrete classes |
+| `abstract class` | A shared contract with common state/implementation for subclasses | Implementations genuinely share an inheritance relationship and rules |
+| Value object / service API | A clearly defined domain concept | Hide calculations, validation, or storage technology |
 
-Ví dụ một lớp cụ thể vẫn có trừu tượng ở API của nó:
+For example, a concrete class can still expose an abstracted API:
 
 ```java
 final class Thermostat {
@@ -725,13 +725,13 @@ final class Thermostat {
 }
 ```
 
-Caller chỉ cần biết `increaseTarget()` và `targetCelsius()`, không cần điều khiển trực tiếp giá trị trường hay hiểu các bước kiểm tra. Đây là một API trừu tượng có ích **ngay cả khi không có interface/abstract class riêng**. Trường `private` và kiểm tra giới hạn đồng thời thực hiện đóng gói.
+The caller only needs to know `increaseTarget()` and `targetCelsius()`, without directly controlling the field or understanding the validation steps. This is a useful abstracted API **even without a separate interface or abstract class**. The `private` field and limit checks also provide encapsulation.
 
-Trong Java, từ khóa `abstract` có ý nghĩa cú pháp riêng: `abstract class` không thể được khởi tạo trực tiếp, và phương thức `abstract` chưa có thân cần được triển khai bởi lớp con cụ thể (trừ trường hợp kế thừa vẫn trừu tượng). **Đừng đồng nhất từ khóa `abstract` với toàn bộ nguyên lý abstraction**.
+In Java, the `abstract` keyword has a specific syntactic meaning: an `abstract class` cannot be instantiated directly, and an `abstract` method without a body must be implemented by a concrete subclass (unless the subclass remains abstract). **Do not confuse the `abstract` keyword with the entire principle of abstraction**.
 
-## 5. Đóng gói không chỉ là thêm `private` và getter/setter
+## 5. Encapsulation Is More Than Adding `private` and Getters/Setters
 
-Kiểu viết sau làm yếu ranh giới kiểm soát:
+The following style weakens the boundary of control:
 
 ```java
 class WeakAccount {
@@ -747,9 +747,9 @@ class WeakAccount {
 }
 ```
 
-`balance` đúng là `private`, nhưng bất kỳ caller nào cũng có thể gọi `setBalance(-1_000)`. Nếu quy tắc nghiệp vụ là số dư không âm, setter tự do khiến lớp không duy trì được invariant.
+`balance` is indeed `private`, but any caller can invoke `setBalance(-1_000)`. If the business rule requires a nonnegative balance, an unrestricted setter prevents the class from maintaining its invariant.
 
-Một API có hành vi phù hợp hơn:
+A more appropriate behavioral API:
 
 ```java
 final class SafeAccount {
@@ -786,33 +786,33 @@ final class SafeAccount {
 }
 ```
 
-`SafeAccount` buộc mọi thay đổi số dư đi qua hành vi có kiểm tra. Trong chương trình thực tế, tiền tệ thường cần mô hình đơn vị/kiểu tiền chính xác hơn; `long` ở đây chỉ minh họa nguyên lý đóng gói trạng thái. Lớp chưa bảo đảm an toàn khi nhiều luồng cùng truy cập.
+`SafeAccount` forces all balance changes through validated behavior. Real applications typically need more precise money units/types; `long` here illustrates only state encapsulation. The class does not guarantee thread safety.
 
-Nguyên tắc là: **cho caller quyền thực hiện thao tác hợp lệ, không trao quyền tự ý phá trạng thái**.
+The principle is: **allow callers to perform valid operations without giving them the ability to corrupt state arbitrarily**.
 
-## 6. Mức truy cập trong Java liên quan gì tới đóng gói?
+## 6. How Do Java Access Levels Relate to Encapsulation?
 
-Java dùng access modifier để thiết lập phạm vi hiển thị của lớp, trường, constructor và phương thức.
+Java uses access modifiers to determine the visibility of classes, fields, constructors, and methods.
 
-| Mức truy cập | Phạm vi chính |
+| Access level | Primary scope |
 | --- | --- |
-| `private` | Chỉ bên trong lớp khai báo (theo các quy tắc truy cập của Java đối với nested classes) |
-| Không ghi modifier (*package-private*) | Trong cùng package |
-| `protected` | Trong cùng package và qua quan hệ lớp con ở những trường hợp truy cập Java cho phép |
-| `public` | Có thể truy cập từ các vị trí phù hợp; còn chịu ảnh hưởng của hệ thống module nếu có |
+| `private` | Within the declaring class (subject to Java's access rules for nested classes) |
+| No explicit modifier (*package-private*) | Within the same package |
+| `protected` | Within the same package and through subclass relationships where Java access rules allow |
+| `public` | Accessible from permitted locations; also subject to the module system when present |
 
-Lựa chọn modifier theo hợp đồng của đối tượng, không phải chỉ để tránh lỗi biên dịch:
+Choose modifiers according to the object's contract, not just to eliminate compilation errors:
 
-- Trường lưu invariant thường nên để `private`.
-- API công khai chỉ cần chứa các thao tác mà bên dùng thực sự được phép thực hiện.
-- Mở `protected` cho trường mutable có thể khiến lớp con can thiệp vào invariant; hãy cân nhắc cung cấp phương thức mở rộng được kiểm soát.
-- `public` không sai: chính các hành vi công khai là bề mặt mà abstraction cần công bố.
+- Fields holding invariants should usually be `private`.
+- The public API should expose only operations that consumers are actually allowed to perform.
+- Exposing a mutable field as `protected` may let subclasses violate an invariant; consider controlled extension methods.
+- `public` is not inherently wrong: public behaviors are precisely what the abstraction needs to expose.
 
-Các modifier là **cơ chế kỹ thuật**. Đóng gói tốt còn phụ thuộc vào thiết kế phương thức, các ràng buộc được thực thi và cách đối tượng tham chiếu đến dữ liệu mutable khác.
+Modifiers are **technical mechanisms**. Good encapsulation also depends on method design, enforced constraints, and how objects reference other mutable data.
 
-## 7. Những lỗi thiết kế dễ nhầm lẫn
+## 7. Common Design Misconceptions
 
-**Lỗi 1: “Có interface là đã đóng gói.”**
+**Mistake 1: "An interface guarantees encapsulation."**
 
 ```java
 interface Basket {
@@ -829,13 +829,13 @@ class LeakyBasket implements Basket {
 }
 ```
 
-Đoạn này là ví dụ minh họa, cần các `import java.util.List;` và `import java.util.ArrayList;` nếu biên dịch riêng. `Basket` cung cấp một giao diện sử dụng, nhưng một caller đang giữ tham chiếu kiểu `LeakyBasket` có thể sửa `internalItems` trực tiếp. Khai báo `final` chỉ chặn gán lại trường, không chặn chỉnh sửa `ArrayList`.
+This is an illustrative snippet; compiling it separately requires `import java.util.List;` and `import java.util.ArrayList;`. `Basket` provides a usage interface, but a caller holding a `LeakyBasket` reference can modify `internalItems` directly. Declaring a field `final` prevents reassignment but does not prevent changes to the `ArrayList`.
 
-**Lỗi 2: “Có `private` thì không cần trừu tượng.”**
+**Mistake 2: "Using `private` means abstraction is unnecessary."**
 
-Một dịch vụ phụ thuộc trực tiếp vào `MySqlSeatInventory` có thể vẫn nhìn thấy API đóng gói tốt, nhưng nếu nhu cầu là chuyển sang PostgreSQL hoặc giả lập khi kiểm thử thì phụ thuộc loại cụ thể có thể gây khó. Tạo `SeatInventory` giúp thể hiện hợp đồng ổn định khi thực sự có nhiều triển khai. Không nên tạo interface chỉ vì quy tắc máy móc “lớp nào cũng cần interface”.
+A service depending directly on `MySqlSeatInventory` may still use a well-encapsulated API, but that concrete dependency can be troublesome if the service needs to switch to PostgreSQL or use a test double. Introducing `SeatInventory` expresses a stable contract when multiple implementations are truly required. Avoid creating an interface solely because of a mechanical rule that "every class needs an interface".
 
-**Lỗi 3: “Getter luôn an toàn vì nó chỉ đọc.”**
+**Mistake 3: "Getters are always safe because they only read."**
 
 ```java
 private final List<String> names = new ArrayList<>();
@@ -845,104 +845,104 @@ List<String> getNames() {
 }
 ```
 
-Caller có thể gọi `getNames().clear()`. Có thể trả `List.copyOf(names)` khi muốn snapshot bất biến về cấu trúc, hoặc dùng read-only view nếu đã chủ đích cho người dùng quan sát danh sách đang thay đổi. Với phần tử mutable, sao chép collection mới chỉ là sao chép nông.
+A caller could invoke `getNames().clear()`. Return `List.copyOf(names)` for a structurally immutable snapshot, or use a read-only view if consumers are intentionally allowed to observe a changing list. For mutable elements, copying the collection is only a shallow copy.
 
-**Lỗi 4: “Giấu hết mọi thứ sẽ tạo API tốt.”**
+**Mistake 4: "Hiding absolutely everything produces a good API."**
 
-Nếu một lớp không cung cấp thao tác mà client cần, client sẽ tìm đường vòng: ép kiểu, dùng reflection, sửa cơ sở dữ liệu trực tiếp hoặc nhân bản logic. Abstraction tốt cần công bố **đủ khả năng có ý nghĩa**; encapsulation tốt cần kiểm soát những thay đổi quan trọng, chứ không phải giấu mọi hành vi.
+If a class does not provide operations its clients need, clients will seek workarounds: casts, reflection, direct database updates, or duplicated logic. A good abstraction must expose **enough meaningful capabilities**; good encapsulation controls important changes rather than hiding all behavior.
 
-**Lỗi 5: “Một tầng abstraction tốt tự động bảo đảm nghiệp vụ đúng.”**
+**Mistake 5: "A good abstraction layer automatically guarantees correct business behavior."**
 
-`SeatInventory` mô tả khả năng đặt ghế nhưng không tự thực thi đồng bộ, lưu bền vững hay tính nguyên tử. Mỗi triển khai phải giữ ngữ nghĩa đã cam kết. Ví dụ dữ liệu bị hai request đồng thời sửa có thể vượt khả năng đặt vé nếu không có transaction/lock thích hợp dù code dùng interface đúng.
+`SeatInventory` describes seat-booking capabilities but does not itself enforce synchronization, persistence, or atomicity. Every implementation must preserve the promised semantics. Two concurrent requests could overbook seats without appropriate transactions or locks, even if the code correctly uses the interface.
 
-## 8. Cách tự đánh giá một thiết kế OOP
+## 8. How to Evaluate an OOP Design
 
-Khi review một lớp, thử trả lời hai nhóm câu hỏi:
+When reviewing a class, answer two groups of questions:
 
-| Câu hỏi về abstraction | Câu hỏi về encapsulation |
+| Abstraction questions | Encapsulation questions |
 | --- | --- |
-| Caller cần khả năng nào? | Những trạng thái nào phải luôn hợp lệ? |
-| Hợp đồng có nói rõ kết quả, lỗi và điều kiện đầu vào? | Những đường cập nhật nào có thể phá invariant? |
-| Có thể đổi cách triển khai mà không sửa code nghiệp vụ? | Có lộ mảng/list/map hoặc object mutable nội bộ không? |
-| API có tránh lộ chi tiết công nghệ không cần thiết? | Constructor và mỗi thao tác sửa có kiểm tra điều kiện không? |
-| Có tạo quá nhiều tầng interface không mang lại giá trị? | Quyền truy cập có được giới hạn đúng mức không? |
+| Which capabilities do callers need? | Which states must always be valid? |
+| Does the contract specify results, errors, and input conditions? | Which update paths could violate an invariant? |
+| Can the implementation change without modifying business code? | Does the class expose internal arrays/lists/maps or mutable objects? |
+| Does the API avoid unnecessary technology details? | Do the constructor and every mutating operation validate their conditions? |
+| Are there too many interface layers with no clear value? | Are access permissions appropriately restricted? |
 
-Nếu lớp chỉ có một cách dùng và một cách triển khai ổn định, một public API rõ ràng trên lớp cụ thể có thể là đủ. Nếu nhiều module cần dùng chung một hợp đồng và có khả năng thay đổi triển khai, interface hoặc abstract class thường giúp cách ly phụ thuộc tốt hơn.
+If a class has one stable usage pattern and implementation, a clear public API on the concrete class may suffice. If several modules share a contract and the implementation may change, an interface or abstract class often isolates dependencies more effectively.
 
-Dù theo cách nào, quy tắc dữ liệu vẫn phải nằm ở nơi có thể kiểm soát nó. Đừng chuyển trách nhiệm kiểm tra số dư, sức chứa hoặc tính nhất quán cho mọi caller bên ngoài chỉ vì đã đặt tên phương thức đẹp.
+Either way, data rules must live where they can be enforced. Do not shift responsibility for validating balances, capacity, or consistency to every external caller just because methods have good names.
 
-## 9. Bài tập nhanh
+## 9. Quick Exercises
 
-**Bài 1.** Một lớp có trường `private List<String> items` và getter trả trực tiếp list đó. Vấn đề chính liên quan đến nguyên lý nào?
+**Exercise 1.** A class has a `private List<String> items` field, and its getter returns that list directly. Which principle is primarily affected?
 
-**Đáp án:** **Đóng gói**: caller có thể sửa nội bộ qua alias. Sửa bằng API chỉ đọc phù hợp hoặc defensive copy, tùy hợp đồng.
+**Answer:** **Encapsulation**: callers can modify internal data through an alias. Fix it with a suitable read-only API or defensive copy, depending on the contract.
 
-**Bài 2.** `BookingService` tự viết SQL `SELECT ... FOR UPDATE` để trừ ghế. Muốn hỗ trợ hai loại kho dữ liệu mà không viết lại nghiệp vụ, nên chú ý nguyên lý nào?
+**Exercise 2.** `BookingService` executes SQL `SELECT ... FOR UPDATE` itself to decrement the seat count. To support two storage systems without rewriting the business logic, which principle matters most?
 
-**Đáp án:** **Trừu tượng**: định nghĩa hợp đồng `SeatInventory`, chuyển xử lý SQL vào triển khai tương ứng. Vẫn phải bảo đảm transaction/tính nguyên tử ở triển khai.
+**Answer:** **Abstraction**: define a `SeatInventory` contract and move SQL handling into the corresponding implementation. The implementation must still ensure transactions and atomicity.
 
-**Bài 3.** Có phải `interface PaymentGateway` chắc chắn đóng gói an toàn dữ liệu thẻ?
+**Exercise 3.** Does `interface PaymentGateway` necessarily protect payment-card data through encapsulation?
 
-**Đáp án:** **Không**. Interface không tự quyết định cách lưu trữ, bảo vệ hay công bố dữ liệu. Việc giữ bí mật và kiểm soát trạng thái phụ thuộc vào thiết kế và triển khai cụ thể.
+**Answer:** **No.** An interface does not determine how data is stored, protected, or exposed. Confidentiality and state control depend on the specific design and implementation.
 
-**Bài 4.** Một lớp `Thermostat` không khai báo interface nhưng có `increaseTarget()` và trường `private targetCelsius`. Nó có thể thể hiện cả hai nguyên lý không?
+**Exercise 4.** A `Thermostat` class declares no interface but has `increaseTarget()` and a `private targetCelsius` field. Can it demonstrate both principles?
 
-**Đáp án:** **Có**. Hai phương thức tạo API ở mức trừu tượng hợp lý; trường riêng tư và kiểm tra giới hạn bảo vệ trạng thái.
+**Answer:** **Yes.** Its two methods form an appropriately abstracted API; the private field and limit checks protect state.
 
-**Bài 5.** Nếu thay `InMemorySeatInventory` bằng `SoldOutInventory` mà `BookingService` không cần đổi, điều gì được minh họa?
+**Exercise 5.** If `InMemorySeatInventory` is replaced with `SoldOutInventory` and `BookingService` requires no changes, what does that illustrate?
 
-**Đáp án:** Code sử dụng được lập trình theo **hợp đồng trừu tượng**. Từng lớp triển khai vẫn phải tự bảo đảm các quy tắc trạng thái và hành vi đã cam kết.
+**Answer:** Consuming code is programmed to an **abstract contract**. Each implementation must still enforce its promised state and behavioral rules.
 
-**Ghi nhớ:** Khi thiết kế OOP, hãy xác định **khả năng cần công bố cho bên sử dụng** (trừu tượng) và **ranh giới kiểm soát trạng thái bên trong** (đóng gói). Hai việc này cùng giúp code dễ hiểu, dễ thay đổi và ít lỗi, nhưng mỗi việc xử lý một loại rủi ro thiết kế khác nhau.
+**Remember:** When designing OOP systems, identify **the capabilities to expose to consumers** (abstraction) and **the boundaries that control internal state** (encapsulation). Together these make code easier to understand, change, and maintain correctly, but each addresses a different design risk.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="abstraction-003">Hợp đồng sử dụng và chi tiết thực hiện</a>
+## <a id="abstraction-003">Usage Contracts and Implementation Details</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Hợp đồng sử dụng và chi tiết thực hiện trong Java OOP
+# Usage Contracts and Implementation Details in Java OOP
 
-Một đối tượng có thể thay đổi thuật toán, cách lưu dữ liệu hay nhà cung cấp bên ngoài mà người sử dụng **không phải đổi cách gọi**. Điều này chỉ an toàn khi ta phân biệt rõ hai thứ:
+An object may change its algorithm, data storage, or external provider without requiring consumers to **change how they call it**. This is safe only when we clearly distinguish two things:
 
-- **Hợp đồng sử dụng (*contract*):** người gọi được yêu cầu hành vi gì, đầu vào nào hợp lệ, nhận loại kết quả nào, lỗi và tác dụng phụ nào có thể xảy ra.
-- **Chi tiết thực hiện (*implementation*):** đối tượng dùng thuật toán, cấu trúc dữ liệu, thư viện hay kết nối bên ngoài nào để thực hiện các cam kết ấy.
+- **Usage contract (*contract*):** which behavior callers may request, which inputs are valid, which types of results they receive, and which errors or side effects can occur.
+- **Implementation details (*implementation*):** the algorithms, data structures, libraries, or external connections the object uses to fulfill those promises.
 
-Trong Java, `interface`, `abstract class` và public API đều có thể thể hiện một phần hợp đồng. Nhưng **chữ ký phương thức không phải toàn bộ hợp đồng hành vi**. Một implementation vẫn có thể biên dịch mà trả kết quả sai ý nghĩa.
+In Java, `interface`, `abstract class`, and public APIs can all express parts of a contract. But **a method signature is not the entire behavioral contract**. An implementation can compile successfully yet return results with the wrong meaning.
 
-Bài này dùng **chính sách đánh giá đơn xin nghỉ phép** để đi từ việc định nghĩa hợp đồng, triển khai hai quy tắc khác nhau, thay thế provider, kiểm thử và quản lý thay đổi. Đây là ví dụ độc lập, không cần Spring Boot.
+This lesson uses a **leave-request evaluation policy** to examine contract definition, two different rule implementations, provider substitution, testing, and change management. It is a standalone example that does not require Spring Boot.
 
-## 1. Nhìn từ phía người gọi: họ thực sự cần biết gì?
+## 1. The Caller's Perspective: What Do They Actually Need to Know?
 
-Một dịch vụ nhân sự cần đánh giá sơ bộ đơn xin nghỉ. Dữ liệu cần cho chính sách minh họa là mã nhân viên, số ngày xin nghỉ và số ngày phép còn lại tại thời điểm kiểm tra. Có hai loại chính sách:
+An HR service needs to perform an initial evaluation of a leave request. The illustrative policy needs an employee ID, the number of leave days requested, and the remaining leave balance at the time of evaluation. There are two policies:
 
-- **Chính sách thông thường:** cho kết quả đủ điều kiện nếu số ngày xin nghỉ không vượt số ngày phép còn lại.
-- **Chính sách thử việc:** ngoài điều kiện số dư, mỗi đơn chỉ được xin tối đa hai ngày.
+- **Standard policy:** returns an eligible decision if the requested days do not exceed the remaining leave balance.
+- **Probationary policy:** in addition to the balance requirement, each request can cover at most two days.
 
-Hai cách thực hiện có thể cho **kết quả khác nhau với cùng đầu vào** mà vẫn tuân thủ cùng một hợp đồng. Người gọi chỉ cần yêu cầu `evaluate(request)` và nhận quyết định có lý do, không cần biết việc xét thử việc đặt trong `if`, bảng quy tắc hay hệ thống HR.
+These implementations can return **different results for the same input** while honoring the same contract. Callers need only invoke `evaluate(request)` and receive a reasoned decision; they need not know whether the probation rule is implemented with an `if`, a rule table, or an HR system.
 
-| Hợp đồng cần công bố | Ví dụ |
+| What the contract must expose | Example |
 | --- | --- |
-| Khả năng | Đánh giá khả năng chấp nhận một yêu cầu nghỉ |
-| Dữ liệu đầu vào | `LeaveRequest` có mã nhân viên, `requestedDays`, `remainingDays` |
-| Miền giá trị | Mã không trắng, số ngày xin > 0, số dư ngày phép >= 0 |
-| Kết quả | `LeaveDecision` với mã quyết định và giải thích |
-| Quy tắc chung | Không được phê duyệt nếu ngày xin vượt số dư |
-| Lỗi | `null` bị từ chối; dữ liệu không hợp lệ bị từ chối lúc tạo request |
-| Tác dụng phụ | Chỉ **đánh giá**, không trừ ngày phép, không ghi cơ sở dữ liệu |
-| Giới hạn | Quyết định dựa trên snapshot; chưa có nghĩa là đơn đã được duyệt/lưu |
+| Capability | Evaluate whether a leave request can be accepted |
+| Input data | `LeaveRequest` with an employee ID, `requestedDays`, and `remainingDays` |
+| Value domain | Nonblank ID, requested days > 0, remaining days >= 0 |
+| Result | `LeaveDecision` with a decision code and explanation |
+| Shared rule | Do not approve when requested days exceed the remaining balance |
+| Errors | `null` is rejected; invalid data is rejected when creating the request |
+| Side effects | **Evaluation only**; do not deduct leave days or write to the database |
+| Limitation | Decision uses a snapshot; it does not mean the request has been approved or persisted |
 
-**Hợp đồng càng rõ thì càng ít chỗ để mỗi implementation tự hiểu một kiểu.** Ví dụ, nếu một lớp trả `null` cho đơn bị từ chối, lớp khác trả đối tượng có mã từ chối, caller buộc phải có nhánh riêng cho từng nhà cung cấp.
+**The clearer the contract, the less room each implementation has to interpret it differently.** For example, if one class returns `null` for a rejected request while another returns an object with a rejection code, callers must branch by provider.
 
-## 2. Ví dụ Java chạy độc lập: hai implementation, một hợp đồng
+## 2. Standalone Java Example: Two Implementations, One Contract
 
-Lưu thành `LeaveContractDemo.java`, biên dịch bằng **JDK 17 trở lên**. `record` là các kiểu giá trị gọn và có constructor kiểm tra dữ liệu. Trong ví dụ này, record chỉ chứa `String`, số nguyên và enum nên không lộ tham chiếu mutable.
+Save as `LeaveContractDemo.java` and compile with **JDK 17 or later**. `record` types are compact value types with constructors that validate data. Here, records contain only `String`, integers, and enums, so they do not expose mutable references.
 
 ~~~java
 import java.util.Objects;
@@ -1054,14 +1054,14 @@ public class LeaveContractDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac LeaveContractDemo.java
 java LeaveContractDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Thông thường: APPROVED - Đủ ngày phép
@@ -1069,17 +1069,17 @@ Thử việc: EXCEEDS_TRIAL_LIMIT - Giới hạn thử việc là 2 ngày
 Thiếu phép: INSUFFICIENT_BALANCE - Số ngày phép còn lại không đủ
 ~~~
 
-**Giải thích theo trình tự:**
+**Step-by-step explanation:**
 
-1. Request đầu có 3 ngày xin, 5 ngày còn lại; đây là đầu vào hợp lệ.
-2. `StandardLeavePolicy` kiểm tra ngày xin không vượt số dư, trả `APPROVED`.
-3. `TrialLeavePolicy` cùng được gọi qua `LeavePolicy.evaluate`, nhưng bổ sung giới hạn 2 ngày, nên trả `EXCEEDS_TRIAL_LIMIT`.
-4. Request thứ hai xin 6 ngày khi còn 5, nên chính sách thường trả `INSUFFICIENT_BALANCE`.
-5. Không có dòng nào trừ số dư. `remainingDays` là **snapshot đầu vào** và `APPROVED` ở đây chỉ có nghĩa “vượt qua bước đánh giá theo chính sách”, chưa phải phê duyệt giao dịch nghỉ phép cuối cùng.
+1. The first request asks for 3 days with 5 remaining; this is valid input.
+2. `StandardLeavePolicy` checks that requested days do not exceed the balance and returns `APPROVED`.
+3. `TrialLeavePolicy` is also called through `LeavePolicy.evaluate`, but applies the additional 2-day limit and therefore returns `EXCEEDS_TRIAL_LIMIT`.
+4. The second request asks for 6 days with 5 remaining, so the standard policy returns `INSUFFICIENT_BALANCE`.
+5. No operation deducts the balance. `remainingDays` is an **input snapshot**, and `APPROVED` here means only "passed policy evaluation", not final approval of a leave transaction.
 
-Khác biệt kết quả không đồng nghĩa vi phạm hợp đồng. Chính sách đã được chủ đích cho phép các tiêu chí bổ sung, nhưng mọi implementation đều phải giữ **quy tắc chung: không phê duyệt khi thiếu số dư**.
+Different results do not imply a contract violation. Individual policies are intentionally allowed to apply additional criteria, but every implementation must preserve the **shared rule: never approve a request exceeding the remaining balance**.
 
-## 3. Bản đồ phụ thuộc và phân vai
+## 3. Dependency Map and Responsibilities
 
 ~~~mermaid
 classDiagram
@@ -1102,34 +1102,34 @@ classDiagram
     LeaveReviewService --> LeavePolicy
 ~~~
 
-**`LeaveReviewService` là client:** nó chỉ biết kiểu `LeavePolicy` và kết quả `LeaveDecision`. Phần tạo đối tượng hay nơi cấu hình quyết định chính sách nào được truyền vào constructor. Interface **không tự chọn** chính sách đúng theo nhân viên.
+**`LeaveReviewService` is the client:** it knows only the `LeavePolicy` type and `LeaveDecision` result. Object construction or configuration decides which policy is passed to the constructor. The interface **does not choose** the appropriate policy for an employee on its own.
 
-**`LeavePolicy` là hợp đồng:** công bố khả năng đánh giá, kiểu đầu vào/đầu ra và lời hứa về hành vi. Nó không nêu chi tiết thuật toán.
+**`LeavePolicy` is the contract:** it exposes the evaluation capability, input/output types, and behavioral promises. It does not specify the algorithm.
 
-**`StandardLeavePolicy` và `TrialLeavePolicy` là implementation:** mỗi lớp tự chịu trách nhiệm thực hiện đúng phần việc của mình, kể cả từ chối `null` và không phê duyệt khi ngày xin vượt số dư.
+**`StandardLeavePolicy` and `TrialLeavePolicy` are implementations:** each class is responsible for satisfying the contract, including rejecting `null` and refusing approval when requested days exceed the balance.
 
-Constructor injection trong ví dụ là cách truyền phụ thuộc từ ngoài vào. Không cần DI container để thực hiện điều này. Nếu thay bằng một implementation mới hợp lệ, `LeaveReviewService.review` vẫn không cần biết tên lớp mới.
+Constructor injection in this example passes a dependency from outside. No DI container is required. When a different valid implementation is provided, `LeaveReviewService.review` still need not know the new class's name.
 
-## 4. Phân biệt chữ ký phương thức với hợp đồng hành vi
+## 4. Distinguishing Method Signatures from Behavioral Contracts
 
-Chữ ký Java:
+The Java signature:
 
 ~~~java
 LeaveDecision evaluate(LeaveRequest request);
 ~~~
 
-giúp trình biên dịch biết tên method, kiểu tham số và kiểu trả về. Nó **không tự cưỡng chế** mọi cam kết như “không trả null”, “không ghi database” hay “không phê duyệt vượt phép”.
+tells the compiler a method's name, parameter types, and return type. It **does not itself enforce** every promise, such as "never return null", "do not write to the database", or "do not approve leave beyond the balance".
 
-| Nội dung | Java compiler kiểm tra được? | Điều còn phải xác minh |
+| Item | Can the Java compiler check it? | What else must be verified |
 | --- | --- | --- |
-| Có method `evaluate(LeaveRequest)` | Có | Ý nghĩa nghiệp vụ |
-| Trả kiểu `LeaveDecision` | Có | Có trả `null` khi không được phép không |
-| Request tạo qua constructor hợp lệ | Constructor runtime kiểm tra | Các đường tạo khác và quy tắc nguồn dữ liệu |
-| Không duyệt khi thiếu phép | Không bằng chữ ký | Kiểm thử với ngày xin > ngày còn |
-| Không gây side effect | Không bằng chữ ký | Review mã/test/tài liệu |
-| Mã quyết định đúng ngữ nghĩa | Không bằng chữ ký | Test tình huống và quy ước chung |
+| Has method `evaluate(LeaveRequest)` | Yes | Business meaning |
+| Returns `LeaveDecision` | Yes | Whether `null` can be returned when prohibited |
+| Request created through a valid constructor | Constructor validates at runtime | Other creation paths and source-data rules |
+| Do not approve when the balance is insufficient | Not through the signature | Test requested days > remaining days |
+| No side effects | Not through the signature | Code review, tests, and documentation |
+| Decision code has the correct meaning | Not through the signature | Scenario tests and shared conventions |
 
-Ví dụ một implementation sai dù vẫn biên dịch:
+For example, this implementation is wrong even though it compiles:
 
 ~~~java
 static final class BrokenLeavePolicy implements LeavePolicy {
@@ -1140,39 +1140,39 @@ static final class BrokenLeavePolicy implements LeavePolicy {
 }
 ~~~
 
-Đoạn này có thể đặt làm lớp lồng trong `LeaveContractDemo` để quan sát. `@Override` chỉ giúp compiler xác minh đang triển khai đúng chữ ký; nó không chứng minh hành vi đã đúng.
+You can place this snippet as a nested class in `LeaveContractDemo` to observe it. `@Override` only helps the compiler verify that a method correctly overrides a signature; it does not prove correct behavior.
 
-### Những điều caller cần biết, không được “giấu” nhầm
+### Things Callers Must Know and Must Not Be Mistakenly Hidden
 
-Một hợp đồng thực tế có thể phải nói rõ thời điểm lấy số dư ngày phép, cách xử lý dữ liệu quá hạn, phân quyền người duyệt, trạng thái lưu trữ, lỗi mạng và điều kiện đồng thời. Nếu một implementation từ chỗ tính trong bộ nhớ chuyển sang gọi API HR, timeout và khả năng dữ liệu không còn mới **có thể quan sát được**. Không nên hứa “hành vi hoàn toàn y hệt” chỉ vì tên method không đổi.
+A real contract may need to specify when leave balances are read, how stale data is handled, approval permissions, persistence state, network errors, and concurrency conditions. If an implementation switches from in-memory evaluation to calling an HR API, timeouts and stale data **may become observable**. Do not promise "identical behavior in every respect" merely because the method name is unchanged.
 
-Trong ví dụ hiện tại, `evaluate` cố ý chỉ đánh giá theo dữ liệu đưa vào. Việc cập nhật ngày phép cần thuộc **một use case/giao dịch khác** có kiểm soát cạnh tranh dữ liệu. Nếu hai nhân viên hoặc hai request sử dụng cùng snapshot số dư, hai kết quả `APPROVED` chưa bảo đảm hệ thống có đủ phép để thực hiện cả hai yêu cầu cùng lúc.
+In this example, `evaluate` deliberately evaluates only the supplied data. Updating leave balances belongs in **a separate use case or transaction** with concurrency control. If two employees or requests use the same balance snapshot, two `APPROVED` decisions do not guarantee that sufficient leave exists to fulfill both requests simultaneously.
 
-## 5. Khả năng thay thế dựa trên hợp đồng, không chỉ interface
+## 5. Substitutability Depends on the Contract, Not Just an Interface
 
-Nguyên tắc thay thế Liskov (LSP) ở đây là: một implementation có thể thay thế implementation khác mà không làm hỏng những **lời hứa chung** client được quyền dựa vào.
+The Liskov Substitution Principle (LSP) here means that one implementation can replace another without breaking the **shared promises** clients are entitled to rely on.
 
-Đừng hiểu sai rằng hai chính sách phải trả cùng quyết định. Bài toán đã quy định chính sách thử việc có thể nghiêm hơn về ngày nghỉ; nhưng không chính sách nào được trả `APPROVED` khi `requestedDays > remainingDays`.
+Do not assume the two policies must return the same decision. The problem explicitly allows the probationary policy to impose a stricter leave limit, but neither policy may return `APPROVED` when `requestedDays > remainingDays`.
 
-| Hành vi implementation | Phù hợp với hợp đồng ví dụ? | Vì sao |
+| Implementation behavior | Complies with the example contract? | Why |
 | --- | --- | --- |
-| Chính sách thường duyệt 3/5 ngày | Có | Quy tắc thông thường cho phép |
-| Chính sách thử việc từ chối 3/5 ngày | Có | Giới hạn 2 ngày của chính sách này |
-| Một implementation trả `APPROVED` cho 6/5 ngày | Không | Phá cam kết chung về số dư |
-| Một implementation trả `null` khi đơn không hợp lệ | Không | Hợp đồng yêu cầu kết quả khác null với request hợp lệ |
-| Một implementation trừ ngày phép ngay khi chỉ đánh giá | Không | Vi phạm cam kết không có side effect |
-| Dùng cấu trúc dữ liệu/thuật toán khác | Có | Chi tiết thực hiện có quyền thay đổi |
-| Thay đổi thông báo giải thích nhưng giữ đúng mã | Thường có | Trừ khi văn bản giải thích chính xác là một phần API đã cam kết |
+| Standard policy approves 3/5 days | Yes | The standard rule permits it |
+| Probationary policy rejects 3/5 days | Yes | This policy imposes a 2-day limit |
+| An implementation returns `APPROVED` for 6/5 days | No | Violates the shared balance guarantee |
+| An implementation returns `null` for an invalid request | No | The contract requires a non-null result for a valid request |
+| An implementation deducts leave days during evaluation | No | Violates the no-side-effects guarantee |
+| Uses a different data structure or algorithm | Yes | Implementation details may change |
+| Changes the explanation while preserving the correct code | Usually yes | Unless the exact explanation text is part of the promised API |
 
-Một quy tắc thực hành khác: implementation không được **siết tiền điều kiện chung** theo cách khiến những lời gọi hợp lệ của contract trở thành lỗi bất ngờ; cũng không được **làm yếu hậu điều kiện chung**. Trong ví dụ, các chính sách được phép *trả kết quả từ chối hợp lệ*, khác với *ném lỗi mới mà contract không mô tả*.
+Another practical rule: an implementation must not **strengthen shared preconditions** so that contract-valid calls unexpectedly fail, nor **weaken shared postconditions**. Here, policies may *return a valid rejection result*, which differs from *throwing a new error not described by the contract*.
 
-LSP không bắt buộc mọi chính sách phải chấp nhận đơn giống nhau; chính **ý nghĩa của các kết quả khác nhau** phải nhất quán.
+LSP does not require every policy to accept the same requests; the **meaning of different outcomes** must remain consistent.
 
-## 6. Kiểm thử hợp đồng và kiểm thử client là hai việc khác nhau
+## 6. Contract Tests and Client Tests Serve Different Purposes
 
-### A. Test chung cho các implementation
+### A. Shared Tests for Implementations
 
-Có thể thêm method sau vào `LeaveContractDemo`:
+You can add the following method to `LeaveContractDemo`:
 
 ~~~java
 static void verifyContract(LeavePolicy policy) {
@@ -1195,13 +1195,13 @@ static void verifyContract(LeavePolicy policy) {
 }
 ~~~
 
-Gọi `verifyContract(new StandardLeavePolicy())` và `verifyContract(new TrialLeavePolicy())` để kiểm tra **cam kết chung**. Không nên viết test chung kiểu “mọi policy luôn duyệt 3 ngày” vì giới hạn thử việc đã quy định ngoại lệ hợp lệ.
+Call `verifyContract(new StandardLeavePolicy())` and `verifyContract(new TrialLeavePolicy())` to check the **shared guarantees**. Do not write a shared test asserting "every policy always approves 3 days", because the probationary limit explicitly allows rejection.
 
-Đây chỉ là test mẫu, không chứng minh đúng với mọi đầu vào. Trong ứng dụng thực, bổ sung các ca biên về số dư bằng 0, thời điểm cập nhật, lỗi provider và kiểm thử tích hợp.
+This is only a sample test; it does not prove correctness for every input. Real applications should add edge cases such as a balance of 0, update timing, provider failures, and integration tests.
 
-### B. Test client bằng implementation giả
+### B. Testing the Client with a Fake Implementation
 
-Nếu chỉ muốn kiểm tra `LeaveReviewService` **chuyển đúng request và nhận đúng kết quả**, ta không cần áp dụng chính sách thật:
+To test only whether `LeaveReviewService` **passes the correct request and receives the correct result**, we do not need the actual policy:
 
 ~~~java
 static final class FixedRejectPolicy implements LeavePolicy {
@@ -1214,31 +1214,31 @@ static final class FixedRejectPolicy implements LeavePolicy {
 }
 ~~~
 
-Đây là một *test double* tuân thủ hợp đồng: từ chối là một kết quả hợp lệ, input vẫn được kiểm tra và không có side effect. Nó giúp kiểm tra client mà không phụ thuộc thuật toán chính sách thật.
+This is a contract-compliant *test double*: rejection is a valid result, the input is still checked, and there are no side effects. It allows testing the client independently of the real policy algorithm.
 
-**Test double không thay thế contract test của provider.** Một client chạy đúng khi dùng fake chưa chứng minh implementation dùng database hay HTTP giữ đúng ngữ nghĩa.
+**A test double does not replace the provider's contract tests.** A client that works with a fake does not establish that its database or HTTP implementation preserves the same semantics.
 
-## 7. Interface, abstract class và public method: mức nào là đủ?
+## 7. Interface, Abstract Class, or Public Method: How Much Is Enough?
 
-Trừu tượng hóa là một quyết định thiết kế, không đồng nghĩa bắt buộc viết `interface`. Một lớp cụ thể công bố `evaluate` rõ ràng, giấu cách tính bên trong cũng có thể cung cấp API tốt.
+Abstraction is a design decision; it does not require an `interface`. A concrete class that clearly exposes `evaluate` and hides its calculation can also offer a good API.
 
-| Khi cần | Gợi ý |
+| When needed | Suggestion |
 | --- | --- |
-| Một chính sách duy nhất, đơn giản và ổn định | Lớp cụ thể với public method có hợp đồng rõ |
-| Nhiều chính sách cùng một tập hành vi; client cần thay chúng độc lập | Interface nhỏ như `LeavePolicy` |
-| Một họ lớp thật sự chia sẻ trạng thái instance, constructor và phần lớn quy trình | Cân nhắc `abstract class` |
-| Chỉ muốn tái sử dụng một phép kiểm tra/thuật toán | Hàm hỗ trợ hoặc composition, chưa chắc cần kế thừa |
-| Nhiều interface chỉ chuyển tiếp y nguyên một lời gọi | Xem xét bỏ tầng không có trách nhiệm |
+| One simple, stable policy | A concrete class with a clearly specified public method |
+| Multiple policies share behavior; the client must replace them independently | A small interface such as `LeavePolicy` |
+| A genuine class family shares instance state, constructors, and most of the workflow | Consider an `abstract class` |
+| Only a validation rule or algorithm must be reused | Helper function or composition; inheritance may be unnecessary |
+| Several interfaces simply forward the same call | Consider removing layers with no responsibility |
 
-`interface` không có constructor hay instance field; `abstract class` có thể giữ trạng thái và phần triển khai chung nhưng Java chỉ cho phép một superclass trực tiếp. Nội dung chi tiết về cú pháp `abstract` được học trong bài dành riêng cho lớp/phương thức trừu tượng; ở đây tiêu chí chính là **client cần phụ thuộc vào hợp đồng nào**.
+An `interface` has no constructors or instance fields; an `abstract class` can hold state and shared implementation, but Java permits only one direct superclass. Detailed syntax for `abstract` belongs to the dedicated abstract classes/methods lesson; here, the main criterion is **which contract clients need to depend on**.
 
-Nguyên tắc đảo ngược phụ thuộc (DIP) gợi ý để module điều phối dựa vào hợp đồng ổn định thay vì tạo cứng nhiều provider cụ thể. Nó **không** đòi mọi lớp nhỏ đều phải tạo một interface tương ứng.
+The Dependency Inversion Principle (DIP) suggests that orchestration modules depend on stable contracts instead of hardcoding concrete providers. It **does not** require every small class to have its own interface.
 
-## 8. Khi implementation nằm sau hệ thống bên ngoài
+## 8. When Implementations Depend on External Systems
 
-Một chính sách thực tế có thể hỏi dịch vụ nhân sự qua REST API hoặc SDK. Không nhất thiết để `LeaveReviewService` phải biết URL, JSON field, HTTP header hay mã lỗi của provider.
+A real policy might query an HR service through a REST API or SDK. `LeaveReviewService` need not know the provider's URL, JSON fields, HTTP headers, or error codes.
 
-Có thể tổ chức theo ranh giới:
+The responsibilities can be organized at these boundaries:
 
 ~~~mermaid
 flowchart LR
@@ -1249,9 +1249,9 @@ flowchart LR
     P --> R["LeaveDecision"]
 ~~~
 
-Một adapter có nhiệm vụ chuyển `LeaveRequest` sang dữ liệu provider, gọi dịch vụ, ánh xạ phản hồi về `LeaveDecision`, và biểu diễn lỗi theo hợp đồng của ứng dụng. Cần phân biệt **bị từ chối theo chính sách** với **không thể kiểm tra do hệ thống gặp lỗi**.
+An adapter maps `LeaveRequest` to provider data, invokes the service, converts its response into `LeaveDecision`, and represents errors using the application's contract. Distinguish **a policy rejection** from **an inability to evaluate because the system failed**.
 
-Ví dụ về ranh giới lỗi (mã minh họa, không phải một file đầy đủ):
+Example of an error boundary (illustrative code, not a complete file):
 
 ~~~java
 try {
@@ -1262,34 +1262,34 @@ try {
 }
 ~~~
 
-`HrPolicyUnavailableException` là kiểu exception ứng dụng phải tự khai báo và quyết định cách xử lý. Đây chỉ là mẫu mô tả; không phải mọi lỗi đều hợp lý để chuyển thành cùng một exception. Trong thực tế cần quy định timeout, retry, idempotency, khả năng trả dữ liệu cũ và những lỗi nào ảnh hưởng đến caller.
+`HrPolicyUnavailableException` is an application exception type that must be declared and given handling rules. This is only a descriptive pattern; mapping every failure to the same exception is not necessarily appropriate. Real systems must specify timeouts, retries, idempotency, stale-data handling, and which failures affect callers.
 
-**Đặc biệt, không được biến lỗi mạng thành `APPROVED` hoặc `INSUFFICIENT_BALANCE`** chỉ để luôn có một kết quả. Như vậy vừa làm sai ngữ nghĩa, vừa tạo cảm giác quy tắc đã được kiểm tra thành công.
+**In particular, never convert a network error into `APPROVED` or `INSUFFICIENT_BALANCE`** simply to always produce a result. That misrepresents the outcome and falsely suggests the policy check succeeded.
 
-## 9. Hợp đồng có thể thay đổi mà vẫn ảnh hưởng client
+## 9. Contract Changes Can Affect Clients
 
-Giữ nguyên tên `evaluate` không có nghĩa không thể phá vỡ hợp đồng.
+Keeping the name `evaluate` does not guarantee the contract remains compatible.
 
-| Thay đổi | Đánh giá |
+| Change | Assessment |
 | --- | --- |
-| Tối ưu private helper nhưng giữ ngữ nghĩa | Thường không ảnh hưởng caller |
-| Đổi thuật toán của một chính sách trong phạm vi đã công bố | Caller không cần sửa cách gọi, nhưng cần kiểm thử nghiệp vụ |
-| Đổi tên `evaluate` hoặc kiểu trả về | Thường gây lỗi biên dịch ở caller/implementation |
-| Thêm abstract method vào `LeavePolicy` | Các implementation cũ phải triển khai |
-| Thêm default method | Có thể tương thích hơn, nhưng phải xét xung đột và ý nghĩa |
-| Đổi `remainingDays` sang giờ nhưng giữ tên trường | Phá ngữ nghĩa/đơn vị dù kiểu vẫn là `int` |
-| Tự động trừ ngày phép trong `evaluate` | Phá cam kết không có side effect |
-| Trả `null` thay cho quyết định từ chối | Phá lời hứa kết quả non-null |
-| Ném exception mới khi input hợp lệ mà trước đây trả từ chối | Có thể phá logic caller |
-| Chuyển từ tính nội bộ sang gọi mạng | Cần xét timeout, lỗi tạm thời và hiệu lực snapshot |
+| Optimize a private helper without changing semantics | Usually invisible to callers |
+| Change a policy's algorithm within its advertised bounds | Callers need not change their calls, but business tests are needed |
+| Rename `evaluate` or change the return type | Usually causes compilation errors for callers/implementations |
+| Add an abstract method to `LeavePolicy` | Existing implementations must implement it |
+| Add a default method | May improve compatibility, but conflicts and semantics must be considered |
+| Change `remainingDays` from days to hours without renaming the field | Breaks semantics/units even if the type remains `int` |
+| Automatically deduct leave in `evaluate` | Breaks the no-side-effects guarantee |
+| Return `null` instead of a rejection decision | Breaks the non-null result promise |
+| Throw a new exception for previously rejected but valid input | May break caller logic |
+| Switch from local computation to a network call | Consider timeouts, transient errors, and snapshot validity |
 
-Nếu bắt buộc đổi hợp đồng, cần phân tích tương thích nguồn, nhị phân và hành vi theo phạm vi ứng dụng, version API nếu cần, nâng cấp caller/implementation và duy trì contract test.
+If a contract must change, assess source, binary, and behavioral compatibility within the application; version the API if needed, update callers and implementations, and retain contract tests.
 
-**Điểm khác biệt với refactor nội bộ:** sửa một công thức private có thể giữ nguyên API; đổi ý nghĩa một tham số, thời điểm cam kết hoặc loại lỗi có thể là **breaking change** dù chữ ký Java trông giống hệt.
+**Difference from internal refactoring:** adjusting a private formula may leave the API unchanged; changing a parameter's meaning, commitment timing, or error type can be a **breaking change** even if the Java signature looks identical.
 
-## 10. Khi nào hợp đồng trở nên quá rộng hoặc rò rỉ triển khai?
+## 10. When Is a Contract Too Broad or Leaking Implementation Details?
 
-Hai thiết kế đều có thể làm người dùng khó hiểu:
+Both of these designs can confuse consumers:
 
 ~~~java
 // Quá mơ hồ: caller phải đoán ngữ nghĩa và ép kiểu.
@@ -1304,123 +1304,123 @@ interface RawHrConnector {
 }
 ~~~
 
-Hợp đồng `LeavePolicy.evaluate(LeaveRequest)` rõ hơn vì công bố đúng hành vi và kiểu dữ liệu cần thiết. Tuy nhiên, nếu ứng dụng cố ý cung cấp thư viện truy vấn JDBC cấp thấp, `ResultSet` có thể chính là hợp đồng phù hợp. “Rò rỉ” phụ thuộc **ai là người sử dụng và họ cần biết gì**.
+The `LeavePolicy.evaluate(LeaveRequest)` contract is clearer because it exposes the required behavior and data types. However, if the application deliberately provides a low-level JDBC query library, `ResultSet` may itself be the appropriate contract. Whether something "leaks" depends on **who consumes the API and what they need to know**.
 
-Khi API phình thành hàng chục phương thức không liên quan, một số implementation phải ném `UnsupportedOperationException` cho các thao tác không hỗ trợ. Đây là dấu hiệu hợp đồng cần được tách theo khả năng có ý nghĩa, thay vì bắt mọi provider giả vờ có cùng mọi chức năng.
+When an API expands to dozens of unrelated methods, some implementations may throw `UnsupportedOperationException` for unsupported operations. That suggests splitting the contract into meaningful capabilities rather than requiring every provider to pretend it supports everything.
 
-Một API tốt không giấu đi **những thuộc tính quan sát được mà caller phải biết**. Đầu vào, kết quả, lỗi, độ mới dữ liệu, thời điểm cam kết, side effect đều có thể là phần thiết yếu. Chi tiết đáng che là quyết định triển khai *không cần thiết cho việc dùng đúng hợp đồng*.
+A good API does not hide **observable properties callers need to know**. Inputs, results, errors, data freshness, commitment timing, and side effects can all be essential. Details worth hiding are implementation choices *unnecessary for using the contract correctly*.
 
-## 11. Luyện tập: tự kiểm tra khả năng đọc hợp đồng
+## 11. Practice: Test Your Ability to Read Contracts
 
-**Câu 1.** `LeaveReviewService` khai báo field `LeavePolicy` thay vì `TrialLeavePolicy`. Lợi ích là gì?
+**Question 1.** `LeaveReviewService` declares a `LeavePolicy` field rather than `TrialLeavePolicy`. What is the benefit?
 
-**Gợi ý:** Client chỉ phụ thuộc khả năng đánh giá, thay policy tại nơi cấu hình mà không phải sửa method `review`.
+**Hint:** The client depends only on the evaluation capability, so the policy can change at configuration time without editing the `review` method.
 
-**Câu 2.** Một `LeavePolicy` trả `null` khi đơn thiếu phép. Code vẫn biên dịch. Đã đúng hợp đồng chưa?
+**Question 2.** A `LeavePolicy` returns `null` when a request exceeds the leave balance. The code still compiles. Does it satisfy the contract?
 
-**Gợi ý:** Chưa. Với request hợp lệ, phải trả `LeaveDecision` không null; thiếu phép là một quyết định từ chối, không phải “không có kết quả”.
+**Hint:** No. A valid request must return a non-null `LeaveDecision`; insufficient balance is a rejection decision, not an absence of a result.
 
-**Câu 3.** Tại sao `StandardLeavePolicy` và `TrialLeavePolicy` được phép trả quyết định khác nhau cho cùng một request?
+**Question 3.** Why may `StandardLeavePolicy` and `TrialLeavePolicy` return different decisions for the same request?
 
-**Gợi ý:** Hợp đồng cho phép chính sách cụ thể áp dụng quy tắc riêng. Chúng vẫn phải giữ quy tắc chung, nhất là không phê duyệt vượt số dư và không sửa input.
+**Hint:** The contract allows specific policies to apply their own rules. They must still respect the shared rules, especially never approving beyond the balance or modifying the input.
 
-**Câu 4.** Provider đổi sang HTTP nhưng vẫn trả `LeaveDecision`. Có cần xét lại hợp đồng?
+**Question 4.** The provider switches to HTTP but still returns `LeaveDecision`. Should the contract be reconsidered?
 
-**Gợi ý:** Có thể có, vì timeout, lỗi tạm thời, độ mới dữ liệu và tính xác định theo thời điểm đều ảnh hưởng người gọi. Chữ ký không tự cam kết những thuộc tính này.
+**Hint:** Possibly: timeouts, transient errors, data freshness, and timing-dependent behavior affect callers. A signature does not itself guarantee these properties.
 
-**Câu 5.** `@Override` chứng minh được số dư phép đã được kiểm tra đúng không?
+**Question 5.** Does `@Override` prove that the leave balance was checked correctly?
 
-**Gợi ý:** Không. Nó chỉ xác nhận quan hệ override ở mức compiler; phải kiểm thử hậu điều kiện và các ngữ nghĩa đã hứa.
+**Hint:** No. It only confirms the override relationship at compile time; promised postconditions and semantics require testing.
 
-**Câu 6.** Có nên thêm `ILeaveReviewService` cho mỗi class để “đạt chuẩn OOP”?
+**Question 6.** Should every class get an `ILeaveReviewService` to "meet OOP standards"?
 
-**Gợi ý:** Không có quy tắc như vậy. Chỉ thêm một tầng hợp đồng khi có ranh giới phụ thuộc, nhu cầu thay thế hoặc nhóm hành vi thực sự độc lập.
+**Hint:** No such rule exists. Introduce a contract layer only when there is a dependency boundary, a need for substitution, or a genuinely independent set of behaviors.
 
-**Câu 7.** Cùng một `LeavePolicy` có được vừa đánh giá vừa trừ quota không?
+**Question 7.** May the same `LeavePolicy` both evaluate a request and deduct the leave quota?
 
-**Gợi ý:** Không theo hợp đồng đang nêu. Muốn thực hiện cấp phép và ghi sổ ngày phép phải thiết kế use case riêng, transaction và kiểm tra đồng thời. Không được âm thầm thay đổi trách nhiệm của `evaluate`.
+**Hint:** Not under the stated contract. Granting leave and recording its balance require a separate use case, a transaction, and concurrency checks. Do not silently change the responsibility of `evaluate`.
 
-## Checklist thiết kế hợp đồng dùng được lâu dài
+## Checklist for Designing Durable Contracts
 
-Trước khi chốt một API, hãy hỏi: **Ai gọi?**; **input/output và đơn vị có rõ không?**; **điều kiện trước/sau nào caller được dựa vào?**; **lỗi, side effect, thời điểm và đồng thời được hứa đến đâu?**; **hai implementation có thay thế hợp lệ không?**; **có contract test chung không?**; **lộ chi tiết hạ tầng nào không cần thiết không?**
+Before finalizing an API, ask: **Who calls it?**; **Are inputs/outputs and units clear?**; **Which preconditions/postconditions may callers rely on?**; **What errors, side effects, timing, and concurrency guarantees are promised?**; **Can two implementations substitute for each other legitimately?**; **Are there shared contract tests?**; **Are unnecessary infrastructure details exposed?**
 
-Hợp đồng là **đường biên tin cậy** giữa code sử dụng và cách thực hiện. Trừu tượng tốt cho phép bên trong được thay đổi có kiểm soát mà không bắt bên ngoài đoán ý nghĩa của mỗi implementation.
+A contract is a **trust boundary** between consuming code and its implementation. Good abstraction allows controlled internal changes without making external consumers guess what each implementation means.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="abstraction-004">Tiền điều kiện, hậu điều kiện và cam kết hành vi</a>
+## <a id="abstraction-004">Preconditions, Postconditions, and Behavioral Guarantees</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tiền điều kiện, hậu điều kiện và cam kết hành vi trong OOP (Java)
+# Preconditions, Postconditions, and Behavioral Guarantees in OOP (Java)
 
-Khi làm việc với một đối tượng, câu hỏi quan trọng không chỉ là **“phương thức này làm gì?”** mà còn là: **“Phải đúng điều gì trước khi gọi, và người gọi được bảo đảm điều gì sau khi gọi?”**. Đây là cách nhìn theo **hợp đồng hành vi** (*behavioral contract*), thường gắn với tư tưởng *Design by Contract*.
+When working with an object, the important question is not only **"What does this method do?"** but also **"What must be true before the call, and what is the caller guaranteed afterward?"**. This is the perspective of a **behavioral contract** (*behavioral contract*), often associated with *Design by Contract*.
 
-Trong thiết kế trừu tượng, người sử dụng một interface nên có thể dựa vào những cam kết đó mà không cần biết bên trong triển khai bằng mảng, database hay bộ đếm. Nếu hai lớp cùng quảng cáo một interface nhưng lại có quy tắc hành vi khác nhau, kiểu dữ liệu có vẻ tương thích vẫn có thể gây lỗi.
+When designing abstractions, users of an interface should be able to rely on these guarantees without knowing whether the implementation uses an array, database, or counter. If two classes advertise the same interface but follow different behavioral rules, apparently compatible types can still produce bugs.
 
-Bài học xây dựng một ví dụ Java về **quản lý số ghế còn trống**. Từ đó phân biệt rõ tiền điều kiện, hậu điều kiện, bất biến và cách kiểm chứng một triển khai có giữ đúng hợp đồng hay không.
+This lesson builds a Java example of **managing available seats**. It distinguishes preconditions, postconditions, invariants, and ways to verify whether an implementation honors its contract.
 
-## 1. Ba khái niệm chính
+## 1. Three Core Concepts
 
-| Khái niệm | Câu hỏi cần trả lời | Ví dụ với thao tác đặt ghế |
+| Concept | Question to answer | Seat-reservation example |
 | --- | --- | --- |
-| **Tiền điều kiện** (*precondition*) | Phải đúng **trước khi** thực hiện thao tác hợp lệ? | Số ghế muốn đặt > 0 và không vượt số ghế còn trống |
-| **Hậu điều kiện** (*postcondition*) | Nếu thao tác **hoàn thành bình thường**, điều gì phải đúng? | Số ghế còn trống giảm đúng bằng số đã đặt |
-| **Bất biến** (*invariant*) | Điều gì phải luôn đúng tại các trạng thái công khai hợp lệ của đối tượng? | `0 <= available <= capacity` |
+| **Precondition** (*precondition*) | What must hold **before** a valid operation? | The requested seat count is > 0 and does not exceed availability |
+| **Postcondition** (*postcondition*) | If an operation **completes normally**, what must be true? | Available seats decrease by exactly the reserved count |
+| **Invariant** (*invariant*) | What must always hold at valid publicly observable object states? | `0 <= available <= capacity` |
 
-Ta có thể diễn đạt bằng ký hiệu gần với logic Hoare:
+We can express this using notation resembling Hoare logic:
 
 ```text
 { P }  operation  { Q }
 ```
 
-Ở đây:
+Here:
 
-- `P` là tiền điều kiện;
-- `operation` là phép toán/phương thức;
-- `Q` là hậu điều kiện khi phép toán kết thúc bình thường.
+- `P` is the precondition;
+- `operation` is the operation/method;
+- `Q` is the postcondition when the operation finishes normally.
 
-Ví dụ, với `reserve(2)`, nếu trước lời gọi còn 5 ghế, tiền điều kiện được đáp ứng thì khi phương thức trả về bình thường phải còn đúng 3 ghế.
+For example, with `reserve(2)`, if 5 seats remain before the call and the precondition holds, exactly 3 seats must remain when the method returns normally.
 
-**Lưu ý:** công thức trên không tự quy định chuyện gì xảy ra khi `P` sai hoặc có ngoại lệ. Nếu muốn caller biết phương thức xử lý lỗi thế nào, phải mô tả thêm **hợp đồng thất bại**: loại ngoại lệ, giá trị trả về và trạng thái đối tượng có thay đổi hay không.
+**Note:** The expression above does not by itself specify what happens when `P` is false or an exception occurs. To inform callers about error handling, also describe the **failure contract**: the exception type, return value, and whether object state may change.
 
-### Bất biến và điều kiện cục bộ khác nhau
+### Invariants Differ from Local Conditions
 
-Bất biến không chỉ là “điều kiện kiểm tra input”. Với một bộ đếm ghế:
+An invariant is more than an "input validation condition". For a seat counter:
 
-- `capacity` là tổng số ghế, cố định và dương.
-- `available` là số ghế có thể đặt, thay đổi sau giao dịch.
-- Bất biến `0 <= available <= capacity` phải được giữ khi đối tượng vừa được tạo và sau mỗi phương thức công khai kết thúc, kể cả đường thất bại được bảo đảm giữ nguyên trạng thái.
+- `capacity` is the total seat count, fixed and positive.
+- `available` is the available seat count, which changes after transactions.
+- The `0 <= available <= capacity` invariant must hold when the object is created and after each public method finishes, including failure paths guaranteed to preserve state.
 
-Một triển khai có thể tạm sử dụng các biến trung gian trong thân phương thức. Điều quan trọng là trạng thái được quan sát qua API tại các điểm hợp lệ luôn tuân thủ bất biến; mô hình đa luồng còn cần quy tắc đồng bộ riêng.
+An implementation may temporarily use intermediate variables inside a method. What matters is that state observable through the API at valid observation points obeys the invariant; multithreaded models also need explicit synchronization rules.
 
-## 2. Từ yêu cầu nghiệp vụ đến hợp đồng
+## 2. From Business Requirements to a Contract
 
-Giả sử một phòng có `capacity = 10` và ban đầu `available = 10`. Người dùng có thể đặt hoặc trả lại ghế.
+Suppose a room has `capacity = 10` and initially `available = 10`. Users can reserve or release seats.
 
-| Thao tác | Tiền điều kiện thành công | Hậu điều kiện khi trả về bình thường |
+| Operation | Preconditions for success | Postconditions on normal return |
 | --- | --- | --- |
-| `new InMemorySeatInventory(capacity)` | `capacity > 0` | `capacity() == capacity` và `available() == capacity` |
-| `reserve(n)` | `n > 0` và `n <= available_before` | `available_after = available_before - n` |
-| `release(n)` | `n > 0` và `n <= capacity - available_before` | `available_after = available_before + n` |
-| `capacity()` | Không có điều kiện đặc biệt | Trả tổng số ghế không đổi |
-| `available()` | Không có điều kiện đặc biệt | Trả số ghế còn trống hiện tại; không tự thay đổi trạng thái |
+| `new InMemorySeatInventory(capacity)` | `capacity > 0` | `capacity() == capacity` and `available() == capacity` |
+| `reserve(n)` | `n > 0` and `n <= available_before` | `available_after = available_before - n` |
+| `release(n)` | `n > 0` and `n <= capacity - available_before` | `available_after = available_before + n` |
+| `capacity()` | No special preconditions | Returns the unchanged total capacity |
+| `available()` | No special preconditions | Returns the current available seat count without changing state |
 
-`available_before` biểu thị số ghế ngay **trước** khi phương thức xử lý; `available_after` là số ghế ngay **sau** khi phương thức trả về bình thường. Java không có cú pháp đặc biệt tên `old(...)` để lấy trạng thái cũ: trong kiểm thử, ta thường lưu giá trị trước lời gọi vào biến.
+`available_before` denotes the seat count **before** processing; `available_after` is the seat count **after** the method returns normally. Java has no special `old(...)` syntax for retrieving old state; tests usually save the pre-call value in a variable.
 
-Đây là mô hình **đếm ghế tổng hợp**; `release(n)` hiểu là trả lại `n` ghế đã được đặt trên hệ thống, không xác thực người nào đã đặt. Muốn kiểm soát quyền hủy từng vé, cần một mô hình có mã đặt chỗ và chủ sở hữu; không nên suy diễn quyền đó chỉ từ bộ đếm.
+This is an **aggregate seat-count model**; `release(n)` means returning `n` seats already reserved in the system, without verifying who originally reserved them. To control cancellation rights for individual tickets, a booking-ID and ownership model is needed; such rights cannot be inferred from the counter alone.
 
-## 3. Đặt cam kết vào interface
+## 3. Put the Guarantees in an Interface
 
-Interface diễn tả **khả năng được cung cấp và những bảo đảm được mong đợi**, thay vì chỉ liệt kê tên phương thức. Java không cưỡng chế mọi tiền/hậu điều kiện ở mức kiểu dữ liệu, vì vậy tài liệu API và kiểm thử hợp đồng rất quan trọng.
+An interface expresses **the capabilities provided and the expected guarantees**, rather than merely listing method names. Java cannot enforce all preconditions and postconditions through types, so API documentation and contract tests are essential.
 
-Tệp `SeatInventory.java`:
+File `SeatInventory.java`:
 
 ```java
 /**
@@ -1471,18 +1471,18 @@ public interface SeatInventory {
 }
 ```
 
-Ví dụ này cố ý **quy định cả kết quả thành công lẫn lỗi thường gặp**. Một caller biết rõ rằng:
+This example deliberately **specifies both successful outcomes and common failure cases**. A caller knows that:
 
-- Gọi `reserve(3)` hợp lệ khi còn ít nhất 3 ghế.
-- Nếu thành công, *đúng 3 ghế* đã bị trừ; không thể chỉ trừ 1 và coi là hoàn thành.
-- Nếu yêu cầu không hợp lệ hoặc thiếu ghế, phương thức ném ngoại lệ đã mô tả, **không trừ ghế một phần**.
-- Tổng sức chứa không thay đổi.
+- Calling `reserve(3)` is valid when at least 3 seats remain.
+- On success, *exactly 3 seats* are deducted; decrementing only 1 does not count as success.
+- If the request is invalid or seats are insufficient, the method throws the specified exception and **does not partially deduct seats**.
+- Total capacity does not change.
 
-Đó chính là ý nghĩa của **cam kết hành vi**. Chỉ khai báo `void reserve(int n);` chưa cho biết những điều trên.
+That is the meaning of a **behavioral guarantee**. A declaration like `void reserve(int n);` does not convey these rules on its own.
 
-## 4. Triển khai Java giữ đúng hợp đồng
+## 4. Java Implementation That Honors the Contract
 
-Tệp `InMemorySeatInventory.java`:
+File `InMemorySeatInventory.java`:
 
 ```java
 public final class InMemorySeatInventory implements SeatInventory {
@@ -1543,15 +1543,15 @@ public final class InMemorySeatInventory implements SeatInventory {
 }
 ```
 
-Vì `capacity > 0`, `0 <= available <= capacity` và `n` đã được kiểm tra, các phép trừ/cộng trong phiên bản **đơn luồng** này đều nằm trong phạm vi `int` hợp lệ:
+Because `capacity > 0`, `0 <= available <= capacity`, and `n` have been validated, subtraction and addition in this **single-threaded** implementation remain within valid `int` bounds:
 
-- `reserve` chỉ trừ khi `n <= available`, nên không tạo số âm.
-- `release` chỉ cộng khi `n <= capacity - available`, nên không vượt `capacity`.
-- Trong các nhánh ném ngoại lệ thông thường, field `available` chưa bị sửa.
+- `reserve` subtracts only when `n <= available`, so the result cannot become negative.
+- `release` adds only when `n <= capacity - available`, so the result cannot exceed `capacity`.
+- In ordinary exception branches, the `available` field has not yet been modified.
 
-### Chạy ví dụ
+### Run the Example
 
-Tệp `Main.java`:
+File `Main.java`:
 
 ```java
 public class Main {
@@ -1576,14 +1576,14 @@ public class Main {
 }
 ```
 
-Chạy bằng JDK 11 trở lên (ví dụ này cũng dùng được với nhiều JDK cũ hơn):
+Run using JDK 11 or later (this example also works on many older JDKs):
 
 ```bash
 javac SeatInventory.java InMemorySeatInventory.java Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 7
@@ -1593,9 +1593,9 @@ Bị từ chối: Không đủ ghế
 10
 ```
 
-Đối tượng `seats` được khai báo với **kiểu interface**, còn kiểu thực tế là `InMemorySeatInventory`. Caller sử dụng **hợp đồng**, không cần biết field `available` được lưu ở đâu.
+The `seats` object is declared using an **interface type**, while its actual type is `InMemorySeatInventory`. Callers use the **contract** without needing to know where the `available` field is stored.
 
-### Sơ đồ kiểm tra khi đặt ghế
+### Seat-Reservation Validation Diagram
 
 ```mermaid
 flowchart TD
@@ -1610,26 +1610,26 @@ Giữ nguyên trạng thái"]
 Đúng hậu điều kiện"]
 ```
 
-Thứ tự kiểm tra **trước khi thay đổi** giúp bảo đảm lỗi thông thường không làm đối tượng ở trạng thái nửa chừng.
+Performing checks **before making changes** ensures that normal failures do not leave an object partially updated.
 
-## 5. Tiền điều kiện: trách nhiệm của caller và kiểm tra của callee
+## 5. Preconditions: Caller Responsibilities and Callee Validation
 
-Một cách nhìn hữu ích:
+A useful way to think about them:
 
-- **Caller** chịu trách nhiệm yêu cầu một hành vi trong miền hợp lệ do hợp đồng công bố.
-- **Callee** (đối tượng triển khai) chịu trách nhiệm đáp ứng hậu điều kiện nếu lời gọi hợp lệ và hoàn thành bình thường.
-- Hợp đồng có thể quy định callee **kiểm tra và từ chối** một số lời gọi sai; không nên mặc định mọi input sai đều ném đúng một loại ngoại lệ nếu tài liệu API chưa hứa điều đó.
+- **Caller** is responsible for requesting behavior within the valid domain advertised by the contract.
+- **Callee** (the implementing object) is responsible for satisfying postconditions when a valid call completes normally.
+- The contract may require the callee to **validate and reject** certain invalid calls; do not assume every invalid input throws a particular exception unless the API documentation promises it.
 
-Ví dụ `reserve(3)` khi còn 5 ghế là lời gọi hợp lệ. Nếu implementation giảm xuống còn 4, đó là **lỗi của implementation** dù không có exception. Ngược lại, `reserve(8)` khi còn 5 ghế vi phạm tiền điều kiện thành công; ở API ví dụ, hợp đồng bổ sung rằng nó phải ném `IllegalStateException` và giữ nguyên trạng thái.
+For example, `reserve(3)` with 5 seats remaining is a valid call. If an implementation leaves 4 seats, that is an **implementation bug** even without an exception. Conversely, `reserve(8)` with 5 seats remaining violates the success precondition; in this example API, the additional contract requires an `IllegalStateException` and unchanged state.
 
-**Không nên dùng `assert` làm cơ chế duy nhất kiểm tra dữ liệu đầu vào công khai:**
+**Do not use `assert` as the sole mechanism for validating public API input:**
 
 ```java
 // Không phù hợp làm bảo vệ duy nhất của API public:
 assert n > 0;
 ```
 
-Java assertions thường **bị tắt mặc định** khi chạy nếu không bật tùy chọn `-ea`. Assertions thích hợp để phát hiện giả định nội bộ trong phát triển/kiểm thử; với đầu vào API quan trọng, dùng kiểm tra chạy ổn định như:
+Java assertions are usually **disabled by default** unless enabled with `-ea`. Assertions are suitable for detecting internal assumptions during development and testing; for important API inputs, use reliable runtime checks such as:
 
 ```java
 if (n <= 0) {
@@ -1637,17 +1637,17 @@ if (n <= 0) {
 }
 ```
 
-Tương tự, `Objects.requireNonNull(value, "value")` hữu ích để bảo đảm tham số tham chiếu không `null`, nhưng bản thân nó không kiểm tra mọi quy tắc nghiệp vụ như “số lượng phải nằm trong khoảng cho phép”.
+Similarly, `Objects.requireNonNull(value, "value")` helps ensure a reference parameter is not `null`, but it does not validate every business rule, such as whether "a quantity falls within the allowed range".
 
-## 6. Hậu điều kiện: phải cụ thể và kiểm chứng được
+## 6. Postconditions Must Be Specific and Verifiable
 
-Xét mô tả mơ hồ:
+Consider this vague description:
 
-> “Đặt ghế thành công thì số ghế được cập nhật.”
+> "When a reservation succeeds, the seat count is updated."
 
-Câu này chưa đủ: tăng hay giảm? Giảm bao nhiêu? Có ảnh hưởng đến sức chứa không?
+This is insufficient: increased or decreased? By how many? Does it affect capacity?
 
-Hợp đồng tốt hơn ghi:
+A better contract states:
 
 ```text
 Trước reserve(n):
@@ -1658,7 +1658,7 @@ Sau khi trả về bình thường:
     capacity_after == capacity_before
 ```
 
-Nếu một phương thức còn trả kết quả, hậu điều kiện có thể mô tả **quan hệ giữa kết quả và trạng thái**:
+If a method also returns a result, postconditions can specify **the relationship between that result and the state**:
 
 ```java
 /**
@@ -1671,55 +1671,55 @@ Nếu một phương thức còn trả kết quả, hậu điều kiện có th�
 boolean tryReserve(int n);
 ```
 
-So với `reserve(n)`, `tryReserve(n)` cho phép trường hợp thiếu ghế như **một kết quả bình thường (`false`)**. Đây là **hợp đồng khác**, không phải cách viết ngẫu nhiên cùng một ý. Việc chọn trả `boolean`, kết quả có kiểu riêng hay ném ngoại lệ tùy ứng dụng; điều cần thiết là nhất quán giữa API, triển khai và caller.
+Compared with `reserve(n)`, `tryReserve(n)` treats insufficient seats as **a normal result (`false`)**. This is a **different contract**, not an arbitrary way to express the same behavior. Whether to return `boolean`, a dedicated result type, or throw an exception depends on the application; the API, implementation, and callers must agree.
 
-### Hậu điều kiện không chỉ là giá trị trả về
+### Postconditions Are More Than Return Values
 
-Ngoài kết quả, cam kết hành vi có thể bao gồm:
+In addition to results, behavioral guarantees may cover:
 
-- Field/đối tượng nào được phép thay đổi và phần nào phải giữ nguyên.
-- Dữ liệu nào được lưu bền vững hoặc sự kiện nào đã được phát ra nếu API quy định.
-- Thứ tự thao tác có thể quan sát (nếu thật sự là một phần của hợp đồng).
-- Ngoại lệ và hiệu ứng phụ khi lỗi.
-- Điều kiện thời gian, thứ tự hoặc thread-safety **nếu đã được ghi rõ**.
+- Which fields/objects may change and which must remain unchanged.
+- Which data is persisted or which events have been emitted, if specified by the API.
+- The observable order of operations (if it is actually part of the contract).
+- Exceptions and side effects on failure.
+- Timing, ordering, or thread-safety conditions **if explicitly documented**.
 
-Không nên hứa những bảo đảm chưa được thiết kế, ví dụ “đã ghi thành công xuống database” khi phương thức thực chất mới chỉ sửa field trong bộ nhớ.
+Do not promise guarantees that were never designed, such as "successfully persisted to the database" when a method has only updated an in-memory field.
 
-## 7. Bất biến đối tượng: cam kết xuyên suốt vòng đời
+## 7. Object Invariants: Guarantees Throughout the Lifecycle
 
-Với `SeatInventory`:
+For `SeatInventory`:
 
 ```text
 I: capacity > 0
    0 <= available <= capacity
 ```
 
-Để giữ `I`, cần xem **cả constructor và mọi phương thức có thể thay đổi trạng thái**.
+To preserve `I`, examine **both the constructor and every state-changing method**.
 
-| Giai đoạn | Điều phải chứng minh |
+| Phase | What must be proved |
 | --- | --- |
-| Constructor | Đối tượng khi tạo xong thỏa `I` |
-| `reserve(n)` thành công | Nếu `I` đúng trước gọi và tiền điều kiện đúng, `I` vẫn đúng sau cập nhật |
-| `release(n)` thành công | Nếu `I` đúng trước gọi và tiền điều kiện đúng, `I` vẫn đúng sau cập nhật |
-| Thao tác bị từ chối | Trạng thái giữ nguyên theo hợp đồng, vì thế vẫn thỏa `I` |
-| Getter | Không gây thay đổi làm hỏng `I` |
+| Constructor | The completed object satisfies `I` |
+| Successful `reserve(n)` | If `I` holds before the call and the precondition is satisfied, `I` still holds afterward |
+| Successful `release(n)` | If `I` holds before the call and the precondition is satisfied, `I` still holds afterward |
+| Rejected operation | State remains unchanged under the contract and therefore still satisfies `I` |
+| Getter | Does not make changes that violate `I` |
 
-Bất biến sẽ trở nên khó đảm bảo nếu cho phép mã ngoài chỉnh trực tiếp field:
+Invariants become difficult to guarantee if external code can modify fields directly:
 
 ```java
 // Thiết kế không nên cho phép:
 inventory.available = -100;
 ```
 
-Vì vậy `private`, constructor có kiểm tra và API có quy tắc cùng hỗ trợ việc bảo vệ bất biến. Đó là một liên hệ trực tiếp giữa **đóng gói** và **trừu tượng**: chi tiết triển khai bị giấu, còn người dùng thấy cam kết ổn định.
+Thus `private`, a validating constructor, and a rule-enforcing API all help protect invariants. This is a direct connection between **encapsulation** and **abstraction**: implementation details are hidden, while consumers see stable guarantees.
 
-## 8. Hợp đồng và tính thay thế (Liskov Substitution Principle)
+## 8. Contracts and Substitutability (Liskov Substitution Principle)
 
-Trừu tượng chỉ hữu ích khi một implementation có thể thay thế implementation khác mà **không làm sai kỳ vọng của client**.
+Abstraction is useful only if one implementation can replace another **without violating client expectations**.
 
-Giả sử `SeatInventory` bảo đảm `reserve(1)` thành công khi còn ít nhất 1 ghế. Một triển khai “chỉ chấp nhận đặt tối thiểu 2 ghế” nhưng vẫn tuyên bố implement `SeatInventory` đã **tăng yêu cầu tiền điều kiện** một cách không được hợp đồng cho phép.
+Suppose `SeatInventory` guarantees that `reserve(1)` succeeds whenever at least 1 seat is available. An implementation that "only accepts reservations of at least 2 seats" while still claiming to implement `SeatInventory` has **strengthened the precondition** beyond what the contract allows.
 
-Ví dụ phản ví dụ (mã Java minh họa lỗi thiết kế):
+Counterexample (Java code illustrating an incorrect design):
 
 ```java
 public final class BatchOnlySeatInventory implements SeatInventory {
@@ -1750,34 +1750,34 @@ public final class BatchOnlySeatInventory implements SeatInventory {
 }
 ```
 
-Nếu người dùng chỉ biết kiểu `SeatInventory`, họ có quyền viết:
+If consumers only know the `SeatInventory` type, they are entitled to write:
 
 ```java
 SeatInventory seats = new BatchOnlySeatInventory(10);
 seats.reserve(1); // Theo hợp đồng interface là hợp lệ.
 ```
 
-Nhưng lớp trên ném ngoại lệ, nên **vi phạm cam kết**, dù mã vẫn biên dịch.
+But the class above throws an exception and therefore **violates the guarantee**, even though the code compiles.
 
-Nguyên tắc trong thiết kế kiểu con:
+Principles for subtype design:
 
-| Khía cạnh | Khi thay thế một implementation bằng kiểu con/implementation khác |
+| Aspect | When replacing an implementation with a subtype or another implementation |
 | --- | --- |
-| Tiền điều kiện | Không được **mạnh hơn** cam kết gốc đối với những lời gọi client hợp lệ |
-| Hậu điều kiện | Không được **yếu hơn** cam kết gốc |
-| Bất biến | Vẫn phải tôn trọng các bất biến quan sát được của hợp đồng |
-| Kết quả lỗi | Phải giữ đúng các bảo đảm lỗi đã công bố |
-| Hiệu ứng phụ | Không phát sinh những tác động trái với những gì hợp đồng đã cam kết |
+| Preconditions | Must not be **stronger** than the original contract for valid client calls |
+| Postconditions | Must not be **weaker** than the original guarantee |
+| Invariants | Must still preserve the contract's observable invariants |
+| Failure results | Must honor the documented failure guarantees |
+| Side effects | Must not introduce effects that conflict with the contract |
 
-Một implementation được phép hỗ trợ **thêm** đầu vào nếu không làm sai lời gọi cũ, hoặc đưa ra **bảo đảm mạnh hơn** khi thành công mà vẫn giữ các bảo đảm chung. Nhưng không được âm thầm từ chối một trường hợp hợp lệ mà interface đã cho phép.
+An implementation may support **additional** inputs if existing calls still work, or provide **stronger guarantees** on success while preserving the common guarantees. It must not silently reject a case that the interface declares valid.
 
-Nếu thực sự có quy tắc “bắt buộc đặt theo lô từ 2 ghế”, hãy thiết kế **hợp đồng khác** rõ ràng hoặc để dịch vụ nghiệp vụ riêng kiểm tra chính sách đó trước khi dùng bộ đếm; không nên áp yêu cầu bổ sung không được công bố lên implementation của cùng interface.
+If a rule genuinely requires "reservations in batches of at least 2 seats", design a clear **separate contract** or have a dedicated business service validate that policy before using the counter. Do not impose undisclosed additional requirements on implementations of the same interface.
 
-## 9. Kiểm thử hợp đồng độc lập với chi tiết triển khai
+## 9. Contract Tests Independent of Implementation Details
 
-Một bài test chỉ kiểm tra “method được gọi” sẽ bỏ lỡ lỗi hậu điều kiện. Cần so sánh **trạng thái trước/sau** và hành vi khi input sai.
+A test that only checks "whether the method was called" will miss postcondition violations. Compare **state before and after** and behavior on invalid input.
 
-Tạo tệp `ContractTest.java` không cần thư viện ngoài:
+Create `ContractTest.java` without any external library:
 
 ```java
 public class ContractTest {
@@ -1848,50 +1848,50 @@ public class ContractTest {
 }
 ```
 
-Biên dịch/chạy:
+Compile and run:
 
 ```bash
 javac SeatInventory.java InMemorySeatInventory.java ContractTest.java
 java ContractTest
 ```
 
-Kết quả:
+Output:
 
 ```text
 PASS: Hợp đồng được giữ
 ```
 
-Trong dự án thực tế, có thể chuyển các kiểm tra này sang **JUnit**, rồi áp dụng cùng một bộ test cho nhiều implementation thông qua factory. Đây được gọi là **contract test**: kiểm tra sự tuân thủ lời hứa từ interface, không phụ thuộc cách lưu dữ liệu.
+In real projects, these checks can be converted to **JUnit** tests and applied to multiple implementations through a factory. These are **contract tests**: they check whether an implementation honors an interface's promises, regardless of data storage.
 
-### Có thể mở rộng kiểm thử thế nào?
+### How Can Tests Be Extended?
 
-- Kiểm tra constructor nhận `capacity = 0` hoặc âm phải bị từ chối.
-- Đặt đúng toàn bộ số ghế còn trống (trường hợp biên), sau đó kiểm tra `available() == 0`.
-- Trả đúng toàn bộ số ghế đã đặt rồi kiểm tra `available() == capacity()`.
-- Tạo nhiều chuỗi đặt/trả hợp lệ và sau mỗi bước kiểm tra bất biến.
-- Chạy chung bộ kiểm tra với implementation mới sử dụng database hoặc dữ liệu phân tán, đồng thời tách những cam kết về lỗi mạng/transaction khỏi mô hình bộ nhớ nếu có khác biệt được công bố.
+- Verify that the constructor rejects `capacity = 0` or negative capacity.
+- Reserve exactly all remaining seats (a boundary case), then verify `available() == 0`.
+- Release all reserved seats and verify `available() == capacity()`.
+- Generate multiple valid reserve/release sequences and check the invariant after each step.
+- Run the same checks against new database-backed or distributed implementations, while separately specifying any documented differences in network errors or transaction guarantees.
 
-Test minh họa trên **không chứng minh đúng với mọi đầu vào**; nó xác nhận một số kịch bản điển hình và biên. Thiết kế có thể kết hợp test sinh dữ liệu (*property-based testing*) hay lập luận từ bất biến để tăng độ tin cậy.
+These sample tests **do not prove correctness for every input**; they cover representative and boundary scenarios. Design can combine generated tests (*property-based testing*) with invariant-based reasoning for greater confidence.
 
-## 10. Những giới hạn quan trọng của hợp đồng
+## 10. Important Limits of Behavioral Contracts
 
-### Ngoại lệ và trạng thái sau khi lỗi
+### Exceptions and State After Failure
 
-Trong ví dụ, yêu cầu không hợp lệ hoặc không đủ ghế phải để nguyên trạng thái. Đây là một cam kết mạnh: **không cập nhật một phần** trong các nhánh thất bại đã biết.
+In this example, invalid requests or insufficient availability must leave state unchanged. This is a strong guarantee: **no partial update** on known failure paths.
 
-Một phương thức khác có thể chỉ hứa “không làm mất tính hợp lệ của đối tượng” khi lỗi, dù trạng thái đã thay đổi một phần. Nếu ứng dụng đòi trạng thái y nguyên sau mọi lỗi, phải ghi rõ và thiết kế để đáp ứng (ví dụ transaction/rollback khi thao tác trải qua nhiều bước). **Không được tự suy ra rằng mọi exception luôn rollback toàn bộ.**
+Another method may promise only that "the object remains valid" after an error, even if some state has changed. If the application requires identical state after every failure, document that requirement and design accordingly (for example, transactions/rollbacks for multistep operations). **Do not assume every exception automatically rolls everything back.**
 
-### Giao diện đồng bộ hay bất đồng bộ
+### Synchronous and Asynchronous Interfaces
 
-Nếu `reserve` chỉ gửi yêu cầu đến hàng đợi, hậu điều kiện “đã giảm số ghế” **không thể mặc nhiên áp dụng ngay khi method trả về**. API bất đồng bộ có thể hứa “yêu cầu đã được chấp nhận để xử lý”, còn cam kết cập nhật số ghế gắn với một kết quả hoàn tất sau đó. Hãy viết hợp đồng phù hợp với thời điểm thực sự bảo đảm được kết quả.
+If `reserve` merely enqueues a request, the postcondition "seats have been decremented" **does not automatically hold when the method returns**. An asynchronous API may promise "the request was accepted for processing", with the actual seat-update guarantee tied to a later completion result. Specify the contract according to when the result can truly be guaranteed.
 
-### Đa luồng: không dùng check-then-act thiếu đồng bộ
+### Multithreading: Avoid Unsynchronized Check-Then-Act
 
-`InMemorySeatInventory` hiện tại **không thread-safe**. Nếu hai luồng cùng gọi `reserve(1)` khi còn một ghế, cả hai có thể cùng qua điều kiện kiểm tra trước khi cập nhật. Bất biến hoặc hậu điều kiện có thể bị phá vỡ do race condition.
+The current `InMemorySeatInventory` is **not thread-safe**. If two threads both call `reserve(1)` with only one seat remaining, both may pass the availability check before updating state. A race condition may violate the invariant or postcondition.
 
-Nếu yêu cầu đặt ghế đồng thời trong một tiến trình, cần bảo vệ **toàn bộ thao tác kiểm tra và thay đổi trạng thái** bằng đồng bộ hóa thích hợp. Trong ví dụ đơn giản, có thể khai báo các phương thức đọc/ghi trạng thái là `synchronized` để bảo vệ cùng một monitor, với phạm vi hợp đồng đa luồng được thiết kế rõ ràng. Với nhiều tiến trình hoặc nhiều máy, `synchronized` ở JVM không thay thế khóa/giao dịch hoặc cơ chế nhất quán ở nơi lưu trữ chung.
+If seats can be reserved concurrently in one process, protect **the entire check-and-update operation** with suitable synchronization. In this simple example, reading and writing methods could be declared `synchronized` to use the same monitor, with the multithreading contract defined explicitly. Across processes or machines, JVM-level `synchronized` does not replace locking, transactions, or consistency mechanisms at shared storage.
 
-Đặc biệt tránh dựa vào:
+In particular, avoid relying on:
 
 ```java
 if (seats.available() >= 1) {
@@ -1899,17 +1899,17 @@ if (seats.available() >= 1) {
 }
 ```
 
-như một bảo đảm thành công trong môi trường đồng thời. Giữa lời gọi `available()` và `reserve(1)`, luồng khác có thể đặt hết ghế. Hãy để **phương thức đặt ghế tự thực hiện kiểm tra và cập nhật nguyên tử** theo mô hình đồng thời đã cam kết.
+as a success guarantee in a concurrent environment. Another thread may book the last seat between `available()` and `reserve(1)`. Let **the reservation method perform validation and updates atomically** under the promised concurrency model.
 
-### Annotation không tự biến tài liệu thành kiểm tra
+### Annotations Do Not Automatically Enforce Documentation
 
-`@NotNull`, các annotation validation hoặc đặc tả hợp đồng có thể hỗ trợ công cụ, framework và static analysis, nhưng **không tự bảo đảm mọi caller luôn được kiểm tra** nếu không có cơ chế thực thi phù hợp. Java cũng không có sẵn cú pháp `requires`/`ensures` áp dụng tự động cho mọi interface.
+`@NotNull`, validation annotations, and contract specifications can help tools, frameworks, and static analyzers, but **they do not automatically ensure that all callers are validated** without suitable enforcement. Java also has no built-in `requires`/`ensures` syntax that automatically applies to every interface.
 
-Với mọi ràng buộc quan trọng, xác định rõ nơi kiểm tra chạy thật (constructor, phương thức, validator, transaction boundary) và nơi ghi tài liệu.
+For every important constraint, identify where checks actually execute (constructor, method, validator, transaction boundary) and where the contract is documented.
 
-## 11. Luyện tập: tìm lỗi vi phạm hợp đồng
+## 11. Practice: Find Contract Violations
 
-**Bài 1 — hậu điều kiện sai**
+**Exercise 1 — Incorrect Postcondition**
 
 ```java
 public void reserve(int n) {
@@ -1923,9 +1923,9 @@ public void reserve(int n) {
 }
 ```
 
-Vì sao sai? Dù `reserve(3)` thành công, số ghế chỉ giảm 1, trái hậu điều kiện `available_after = available_before - 3`. Sửa thành `available -= n`.
+Why is this wrong? Although `reserve(3)` succeeds, the seat count decreases by only 1, violating the `available_after = available_before - 3` postcondition. Correct it to `available -= n`.
 
-**Bài 2 — bất biến bị phá vỡ**
+**Exercise 2 — Broken Invariant**
 
 ```java
 public void release(int n) {
@@ -1936,67 +1936,67 @@ public void release(int n) {
 }
 ```
 
-Nếu chỉ có một ghế đang được đặt nhưng gọi `release(3)`, số ghế trống có thể vượt tổng sức chứa. Hãy bổ sung kiểm tra `n > capacity - available` trước khi cộng và báo `IllegalStateException`.
+If only one seat is reserved but `release(3)` is called, availability may exceed capacity. Add a `n > capacity - available` check before incrementing and report `IllegalStateException`.
 
-**Bài 3 — tiền điều kiện bị siết chặt**
+**Exercise 3 — Strengthened Precondition**
 
-Một lớp triển khai `SeatInventory` lại chỉ cho phép đặt tối thiểu 5 ghế. Khi còn 10 ghế, `reserve(2)` thuộc miền hợp lệ của interface nhưng bị lớp này từ chối. Hãy chỉ ra nguyên tắc bị vi phạm và đề xuất tách quy tắc đặt tối thiểu ra chính sách riêng.
+An implementation of `SeatInventory` allows reservations of at least 5 seats only. With 10 seats remaining, `reserve(2)` is valid under the interface but rejected by this class. Identify the violated principle and propose moving the minimum-reservation rule into a separate policy.
 
-**Bài 4 — thiết kế phương thức mới**
+**Exercise 4 — Designing a New Method**
 
-Bổ sung hợp đồng cho:
+Add a contract for:
 
 ```java
 boolean tryReserve(int n);
 ```
 
-Yêu cầu: `n > 0`; khi đủ ghế trả `true` và giảm đúng `n`; khi thiếu ghế trả `false` và giữ nguyên trạng thái; khi `n <= 0` ném `IllegalArgumentException` và cũng không thay đổi trạng thái. Tự triển khai và viết test cho cả ba đường đi.
+Requirements: `n > 0`; if enough seats remain, return `true` and subtract exactly `n`; if insufficient, return `false` and preserve state; if `n <= 0`, throw `IllegalArgumentException` without changing state. Implement it and test all three paths.
 
-**Bài 5 — thuộc tính không thay đổi**
+**Exercise 5 — A Derived Property**
 
-Thêm phương thức `int reserved()` mà không giữ field mới. Định nghĩa hậu điều kiện cho getter mới bằng công thức `reserved() == capacity() - available()`. Giải thích vì sao đây là giá trị suy ra, và test rằng tổng `reserved() + available()` luôn bằng `capacity()` ở các trạng thái hợp lệ.
+Add `int reserved()` without storing a new field. Define the getter's postcondition as `reserved() == capacity() - available()`. Explain why this value is derived and test that `reserved() + available()` always equals `capacity()` in valid states.
 
-## Checklist khi viết hợp đồng hành vi
+## Checklist for Writing Behavioral Contracts
 
-Trước khi công bố một interface hoặc phương thức quan trọng, hãy tự hỏi:
+Before publishing an interface or important method, ask:
 
-1. **Tiền điều kiện** gồm yêu cầu gì về tham số, trạng thái hiện tại, quyền truy cập hoặc tài nguyên?
-2. **Hậu điều kiện** mô tả được bằng quan hệ cụ thể nào giữa giá trị trước/sau và kết quả trả về?
-3. **Bất biến** nào phải luôn được giữ bởi constructor và các phương thức sửa trạng thái?
-4. Khi tiền điều kiện không đạt hoặc thao tác thất bại, **loại lỗi và trạng thái còn lại** được cam kết đến đâu?
-5. Có implementation nào siết chặt tiền điều kiện hoặc giảm cam kết của interface, làm mất khả năng thay thế không?
-6. Hợp đồng áp dụng khi **method trả về ngay**, khi một tác vụ async hoàn thành, hay sau commit transaction?
-7. Các thuộc tính về thread-safety, độ bền dữ liệu và side effect có được công bố chính xác với thực tế triển khai không?
-8. Có test chạy lại được trên nhiều implementation để bảo vệ các cam kết không?
+1. Which parameter, current-state, permission, or resource requirements are **preconditions**?
+2. Which specific relationships among previous values, subsequent values, and return results express the **postconditions**?
+3. Which **invariants** must constructors and mutating methods always maintain?
+4. When a precondition fails or an operation cannot complete, how far do **error types and remaining-state guarantees** extend?
+5. Does any implementation strengthen the interface's preconditions or weaken its guarantees, undermining substitutability?
+6. Does the contract apply **when the method returns immediately**, when an asynchronous task completes, or after a transaction commits?
+7. Are thread-safety, durability, and side-effect guarantees documented accurately for the implementation?
+8. Are tests reusable across implementations to protect these guarantees?
 
-**Ghi nhớ:** Trừu tượng tốt là một lời hứa có thể kiểm chứng. Tiền điều kiện xác định phạm vi yêu cầu hợp lệ; hậu điều kiện nói rõ kết quả được bảo đảm; bất biến giữ đối tượng nhất quán; hợp đồng lỗi và khả năng thay thế giúp người dùng API dự đoán đúng hành vi mà không cần mở mã nguồn triển khai.
+**Remember:** A good abstraction makes a verifiable promise. Preconditions define valid requests; postconditions specify guaranteed results; invariants keep objects consistent; failure contracts and substitutability let API consumers predict behavior without inspecting implementation source.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="abstraction-005">Lớp trừu tượng và phương thức trừu tượng</a>
+## <a id="abstraction-005">Abstract Classes and Abstract Methods</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Lớp trừu tượng và phương thức trừu tượng trong Java
+# Abstract Classes and Abstract Methods in Java
 
-> **OOP → Trừu tượng.** Khi nhiều đối tượng có chung một bản chất và quy trình xử lý, nhưng một số bước phải khác nhau ở từng loại, Java cho phép định nghĩa **lớp trừu tượng** (`abstract class`) làm nền và **phương thức trừu tượng** (`abstract method`) làm những điểm mà lớp con phải triển khai. Người sử dụng chỉ cần biết hợp đồng chung; mỗi lớp con tự thực hiện phần đặc thù của mình.
+> **OOP → Abstraction.** When several objects share a common nature and workflow but require different steps for each type, Java lets us define an **abstract class** (`abstract class`) as a foundation and **abstract methods** (`abstract method`) as extension points subclasses must implement. Consumers need only know the shared contract; each subclass provides its specific behavior.
 
-## 1. Lớp trừu tượng giải quyết vấn đề gì?
+## 1. What Problem Do Abstract Classes Solve?
 
-Giả sử hệ thống có hai cách vận chuyển: tiết kiệm và hỏa tốc. Cả hai đều phải:
+Suppose a system supports two shipping methods: economy and express. Both must:
 
-- Nhận khoảng cách và khối lượng hợp lệ.
-- Có một khoản phí cơ bản.
-- Tính một khoản phụ phí theo chính sách của từng loại.
-- Trả tổng phí vận chuyển.
+- Accept valid distance and weight inputs.
+- Include a base fee.
+- Calculate a surcharge according to the service's policy.
+- Return the total shipping fee.
 
-Nếu sao chép toàn bộ quy trình vào từng lớp, những bước kiểm tra chung dễ bị viết khác nhau hoặc bỏ sót. Một lớp trừu tượng có thể định nghĩa quy trình thống nhất và chỉ yêu cầu lớp con tính phần phụ phí.
+Duplicating the entire workflow in each class makes shared validation steps prone to inconsistencies or omissions. An abstract class can define a consistent workflow and require subclasses to calculate only the variable surcharge.
 
 ```mermaid
 classDiagram
@@ -2020,13 +2020,13 @@ classDiagram
     ShippingPlan <|-- ExpressShipping
 ```
 
-Trong sơ đồ, dấu `*` đánh dấu các phương thức trừu tượng theo quy ước chú thích của bài này.
+In the diagram, `*` marks abstract methods according to this lesson's annotation convention.
 
-**Lớp trừu tượng** là lớp có từ khóa `abstract`. Không thể tạo instance trực tiếp bằng `new`, nhưng vẫn có thể khai báo biến kiểu lớp trừu tượng để giữ tham chiếu tới instance của lớp con.
+An **abstract class** is declared with the `abstract` keyword. It cannot be instantiated directly with `new`, but variables of the abstract class type can refer to subclass instances.
 
-**Phương thức trừu tượng** chỉ khai báo tên, tham số, kiểu trả về và quy tắc truy cập; nó **không có thân phương thức**. Lớp con cụ thể (`concrete class`) phải cung cấp triển khai thích hợp nếu còn kế thừa phương thức trừu tượng chưa được triển khai.
+An **abstract method** declares only a name, parameters, return type, and access rules; it **has no method body**. A concrete subclass (`concrete class`) must provide an appropriate implementation if it inherits an abstract method that remains unimplemented.
 
-## 2. Cú pháp cơ bản
+## 2. Basic Syntax
 
 ```java
 abstract class Shape {
@@ -2061,7 +2061,7 @@ final class Circle extends Shape {
 }
 ```
 
-Sử dụng:
+Usage:
 
 ```java
 Shape shape = new Circle("Đỏ", 2.0);
@@ -2071,24 +2071,24 @@ System.out.println(shape.area());   // 12.566370614359172
 // Shape invalid = new Shape("Xanh"); // Lỗi biên dịch
 ```
 
-Lớp `Shape` cung cấp trạng thái `color`, constructor, phương thức thường `color()` và một yêu cầu `area()`. `Circle` thừa hưởng phần chung, đồng thời phải viết cách tính diện tích.
+The `Shape` class provides `color` state, a constructor, the concrete `color()` method, and the abstract `area()` requirement. `Circle` inherits the shared behavior and must implement the area calculation.
 
-**Không được nhầm:**
+**Do not confuse the following:**
 
-| Cú pháp | Hợp lệ? | Ý nghĩa |
+| Syntax | Valid? | Meaning |
 |---|---|---|
-| `abstract class Shape { ... }` | Có | Lớp nền không được khởi tạo trực tiếp |
-| `abstract double area();` | Có, trong lớp trừu tượng | Hợp đồng chưa có implementation |
-| `double area() { return 0; }` | Có | Phương thức cụ thể, có thân |
-| `abstract double area() { return 0; }` | Không | `abstract` không được có thân phương thức |
-| `new Shape(...)` khi `Shape` abstract | Không | Không thể tạo trực tiếp instance lớp abstract |
-| `Shape s = new Circle(...)` | Có | Đa hình: tham chiếu kiểu cha trỏ tới đối tượng lớp con |
+| `abstract class Shape { ... }` | Yes | A base class that cannot be instantiated directly |
+| `abstract double area();` | Yes, inside an abstract class | A contract without an implementation |
+| `double area() { return 0; }` | Yes | A concrete method with a body |
+| `abstract double area() { return 0; }` | No | `abstract` methods cannot have bodies |
+| `new Shape(...)` when `Shape` is abstract | No | Cannot instantiate an abstract class directly |
+| `Shape s = new Circle(...)` | Yes | Polymorphism: a parent-typed reference refers to a subclass object |
 
-Một lớp trừu tượng **có thể không chứa phương thức abstract nào**. Khi đó, `abstract` vẫn ngăn tạo instance trực tiếp, thường để thể hiện rằng lớp chỉ nên dùng làm lớp nền.
+An abstract class **may have no abstract methods at all**. The `abstract` keyword still prevents direct instantiation, usually to indicate that the class should only serve as a base class.
 
-## 3. Ví dụ thực tế hoàn chỉnh: tính phí vận chuyển
+## 3. Complete Practical Example: Calculating Shipping Fees
 
-Lưu vào tệp `AbstractClassDemo.java` và chạy bằng **Java 17+**:
+Save as `AbstractClassDemo.java` and run with **Java 17+**:
 
 ```java
 import java.util.List;
@@ -2181,36 +2181,36 @@ public class AbstractClassDemo {
 }
 ```
 
-Chạy trong thư mục chứa file:
+Run in the directory containing the file:
 
 ```bash
 javac AbstractClassDemo.java
 java AbstractClassDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Tiết kiệm: 15000 VND
 Hỏa tốc: 36000 VND
 ```
 
-Phép tính cụ thể:
+The actual calculations:
 
-| Gói | Phí cơ bản | Phụ phí | Tổng |
+| Plan | Base fee | Surcharge | Total |
 |---|---:|---:|---:|
-| Tiết kiệm | 10.000 VND | 5 km × 1.000 = 5.000 VND | **15.000 VND** |
-| Hỏa tốc | 20.000 VND | 5 km × 2.000 + 2 kg × 3.000 = 16.000 VND | **36.000 VND** |
+| Economy | 10.000 VND | 5 km × 1.000 = 5.000 VND | **15.000 VND** |
+| Express | 20.000 VND | 5 km × 2.000 + 2 kg × 3.000 = 16.000 VND | **36.000 VND** |
 
-Khoảng cách và khối lượng được kiểm tra một lần ở lớp nền. Ví dụ gọi `quote(0, 1500)` bị từ chối bằng `IllegalArgumentException` trước khi thực hiện phép tính phụ phí.
+Distance and weight are validated once in the base class. For example, calling `quote(0, 1500)` is rejected with `IllegalArgumentException` before calculating any surcharge.
 
-`Math.multiplyExact` và `Math.addExact` giúp phát hiện tràn kiểu `long` bằng `ArithmeticException`; nhờ vậy không âm thầm xuất ra mức phí vô lý khi số đầu vào quá lớn. Đây là mô hình minh họa phí trong bộ nhớ, không biểu diễn toàn bộ quy tắc định giá thực tế.
+`Math.multiplyExact` and `Math.addExact` detect `long` overflow by throwing `ArithmeticException`, preventing silently nonsensical fees from excessively large inputs. This is an illustrative in-memory pricing model, not a complete representation of actual rate rules.
 
-### Vì sao `abstract` và `final` được dùng cùng nhau ở đây?
+### Why Are `abstract` and `final` Used Together Here?
 
-`ShippingPlan` là lớp `abstract` để các lớp cụ thể kế thừa. Trong lớp đó, `quote(...)` là phương thức **concrete** và được gắn `final`: không lớp con nào được ghi đè toàn bộ quy trình kiểm tra và cộng phí.
+`ShippingPlan` is `abstract` so concrete classes can extend it. Inside it, `quote(...)` is a **concrete** method marked `final`: no subclass can override the entire validation and fee-summing workflow.
 
-Trong khi đó, `extraFee(...)` là **abstract**: mỗi loại vận chuyển bắt buộc cung cấp cách tính riêng.
+In contrast, `extraFee(...)` is **abstract**: each shipping method must implement its own surcharge calculation.
 
 ```mermaid
 flowchart TD
@@ -2228,24 +2228,24 @@ flowchart TD
     I --> J["Trả số tiền"]
 ```
 
-Đây là một dạng **Template Method**: lớp cha giữ bộ khung thuật toán, còn lớp con triển khai một bước thay đổi. Nhờ thế, đoạn mã gọi `plan.quote(...)` không cần biết cách tính nội bộ của từng loại vận chuyển.
+This is a form of the **Template Method** pattern: the parent class retains the algorithm skeleton, while subclasses implement a variable step. Consequently, code calling `plan.quote(...)` need not know the internal pricing algorithm for each shipping method.
 
-## 4. Đa hình với tham chiếu kiểu trừu tượng
+## 4. Polymorphism Through Abstract-Class References
 
 ```java
 ShippingPlan plan = new ExpressShipping();
 long fee = plan.quote(5, 1_500);
 ```
 
-Biến `plan` có **kiểu tham chiếu** là `ShippingPlan`, trong khi instance thực tế là `ExpressShipping`.
+The `plan` variable has the **reference type** `ShippingPlan`, while the actual instance is `ExpressShipping`.
 
-- Mã gọi chỉ được sử dụng các thành viên có thể truy cập qua kiểu `ShippingPlan`.
-- Khi `quote` gọi `extraFee`, Java chọn implementation dựa trên **kiểu thực tế của đối tượng** (`ExpressShipping`), theo cơ chế dynamic dispatch.
-- Nếu thay bằng `new EconomyShipping()`, cùng dòng `quote` chạy phần phụ phí của Economy mà không cần sửa logic phía người dùng.
+- Calling code may use only members accessible through the `ShippingPlan` type.
+- When `quote` calls `extraFee`, Java chooses an implementation based on the **actual object type** (`ExpressShipping`), through dynamic dispatch.
+- Replacing it with `new EconomyShipping()` causes the same `quote` call to use Economy's surcharge logic without changing the consuming code.
 
-Điểm quan trọng: từ khóa `abstract` không tự tạo đa hình; chính **kế thừa và ghi đè phương thức instance** tạo ra hành vi chọn implementation khi chạy. Lớp abstract giúp diễn đạt rõ những hành vi bắt buộc và phần dùng chung.
+The key point: the `abstract` keyword does not create polymorphism by itself; **inheritance and overriding instance methods** enable runtime implementation selection. An abstract class explicitly expresses required behaviors and shared functionality.
 
-Đoạn mã nên phụ thuộc vào hợp đồng:
+Code should depend on the contract:
 
 ```java
 static void printQuote(ShippingPlan plan) {
@@ -2253,13 +2253,13 @@ static void printQuote(ShippingPlan plan) {
 }
 ```
 
-Nếu sau này có `OvernightShipping extends ShippingPlan`, chỉ cần cài đặt những phương thức trừu tượng còn thiếu. Hàm `printQuote` không cần thêm chuỗi `if` hoặc `switch` để kiểm tra tên từng loại.
+If an `OvernightShipping extends ShippingPlan` is introduced later, it only needs to implement any remaining abstract methods. `printQuote` needs no additional `if` or `switch` chain to inspect each plan's name.
 
-## 5. Constructor của lớp trừu tượng vẫn chạy
+## 5. Abstract-Class Constructors Still Run
 
-Lớp trừu tượng không thể được khởi tạo trực tiếp, **nhưng được phép có constructor** để thiết lập phần trạng thái chung khi một lớp con được tạo.
+An abstract class cannot be instantiated directly, **but it may have a constructor** to initialize shared state when a subclass is created.
 
-Trong ví dụ:
+In the example:
 
 ```java
 protected ShippingPlan(long baseFeeVnd) {
@@ -2270,16 +2270,16 @@ protected ShippingPlan(long baseFeeVnd) {
 }
 ```
 
-`EconomyShipping()` gọi `super(10_000)`. Constructor lớp cha khởi tạo `baseFeeVnd`, rồi quá trình khởi tạo lớp con tiếp tục. Nếu constructor lớp cha ném ngoại lệ, việc tạo instance lớp con không hoàn thành thành công.
+`EconomyShipping()` calls `super(10_000)`. The parent constructor initializes `baseFeeVnd`, after which subclass initialization continues. If the parent constructor throws, the subclass instance is not created successfully.
 
-Các quy tắc liên quan:
+Related rules:
 
-1. **Constructor không được khai báo `abstract`** vì constructor phải có phần thân và không được ghi đè như phương thức instance.
-2. Nếu lớp cha không có constructor không tham số, lớp con cần gọi constructor phù hợp bằng `super(...)`.
-3. Constructor của lớp trừu tượng có thể là `protected` để phục vụ các lớp con; không cần công khai constructor chỉ vì lớp có public API.
-4. **Tránh gọi phương thức có thể bị override từ constructor**. Khi constructor lớp cha chạy, các trường riêng của lớp con có thể chưa được khởi tạo đầy đủ; lời gọi đa hình lúc này dễ gây lỗi trạng thái.
+1. **Constructors cannot be declared `abstract`**, because they need bodies and cannot be overridden like instance methods.
+2. If the parent has no no-argument constructor, a subclass must call an appropriate constructor through `super(...)`.
+3. An abstract-class constructor can be `protected` for subclass use; it need not be public just because the class has a public API.
+4. **Avoid calling overridable methods from constructors**. When a parent constructor executes, subclass-specific fields may not yet be fully initialized; such polymorphic calls can produce state errors.
 
-Ví dụ rủi ro:
+Example of a risk:
 
 ```java
 abstract class Base {
@@ -2300,17 +2300,17 @@ final class Child extends Base {
 }
 ```
 
-Hãy để constructor thiết lập trạng thái mà nó sở hữu. Việc gọi các hook mở rộng nên diễn ra sau khi đối tượng đã khởi tạo đầy đủ.
+Let constructors initialize the state they own. Invoke extensibility hooks only after the object has been fully initialized.
 
-## 6. Quy tắc ghi đè phương thức trừu tượng
+## 6. Rules for Overriding Abstract Methods
 
-Một phương thức trừu tượng chỉ có phần khai báo:
+An abstract method has only a declaration:
 
 ```java
 protected abstract long extraFee(int distanceKm, int weightGrams);
 ```
 
-Lớp con cụ thể triển khai:
+A concrete subclass implements it:
 
 ```java
 @Override
@@ -2319,22 +2319,22 @@ protected long extraFee(int distanceKm, int weightGrams) {
 }
 ```
 
-Các quy tắc cốt lõi:
+Core rules:
 
-| Tình huống | Kết quả |
+| Situation | Result |
 |---|---|
-| Lớp concrete kế thừa phương thức abstract mà không cài đặt | Lỗi biên dịch |
-| Lớp con vẫn `abstract` và chưa cài đặt phương thức | Hợp lệ, để lớp cháu tiếp tục triển khai |
-| Ghi đè với cùng tên, tham số và kiểu trả về phù hợp | Hợp lệ |
-| Đổi tham số thành chữ ký khác | Là overload, không thay thế yêu cầu override |
-| Hạ phạm vi từ `protected` xuống `private` | Không hợp lệ |
-| Dùng `@Override` khi chữ ký không thực sự ghi đè | Trình biên dịch báo lỗi, giúp phát hiện sai sót |
+| A concrete class inherits an abstract method without implementing it | Compilation error |
+| The subclass remains `abstract` and does not implement the method | Valid; a further subclass must implement it |
+| Overrides with the same name, parameters, and a compatible return type | Valid |
+| Changes parameters to a different signature | Overloading, not an implementation of the required override |
+| Reduces visibility from `protected` to `private` | Invalid |
+| Uses `@Override` with a signature that does not actually override | The compiler reports an error, helping detect mistakes |
 
-Java cho phép **kiểu trả về hiệp biến (covariant return type)** với các kiểu tham chiếu, ví dụ phương thức lớp cha trả `Animal` còn phương thức override trả `Dog extends Animal`. Không thể tùy tiện đổi kiểu trả về sang một kiểu nguyên thủy khác.
+Java permits **covariant return types (covariant return type)** for reference types: a parent method can return `Animal` while an overriding method returns `Dog extends Animal`. Return types cannot be arbitrarily changed to unrelated primitive types.
 
-Phương thức abstract không được là `private`, `static` hay `final`, vì nó cần được lớp con **ghi đè**. Lớp `abstract` cũng không được đồng thời khai báo `final`: một từ khóa yêu cầu khả năng kế thừa để hoàn thiện hành vi, từ khóa kia cấm kế thừa.
+An abstract method cannot be `private`, `static`, or `final`, because a subclass must **override** it. An `abstract` class also cannot be declared `final`: one modifier requires inheritance to complete behavior, while the other prohibits it.
 
-### Khi lớp con vẫn còn trừu tượng
+### When a Subclass Remains Abstract
 
 ```java
 abstract class Document {
@@ -2356,23 +2356,23 @@ final class Invoice extends PrintableDocument {
 }
 ```
 
-`Invoice` là lớp concrete nên phải hoàn thành `render()`. Lớp trung gian `PrintableDocument` có thể bổ sung hành vi chung mà tiếp tục để lớp cháu quyết định phần render.
+`Invoice` is concrete, so it must implement `render()`. The intermediate `PrintableDocument` class can add shared behavior while leaving rendering to a further subclass.
 
-## 7. Lớp trừu tượng khác gì interface?
+## 7. How Does an Abstract Class Differ from an Interface?
 
-Cả hai đều giúp **ẩn chi tiết triển khai đằng sau một hợp đồng**, nhưng có cách dùng khác nhau.
+Both help **hide implementation details behind a contract**, but their use cases differ.
 
-| Tiêu chí | `abstract class` | `interface` |
+| Criterion | `abstract class` | `interface` |
 |---|---|---|
-| Vai trò thường gặp | Lớp nền chia sẻ trạng thái và implementation | Hợp đồng về khả năng/hành vi |
-| Trường instance | Có thể có, kể cả `private`, mutable hoặc `final` | Không có trường instance; các trường khai báo là hằng `public static final` |
-| Constructor | Có, được gọi qua constructor lớp con | Không có constructor instance |
-| Phương thức có thân | Có | Có thể có `default`, `static` và một số phương thức `private` hỗ trợ triển khai |
-| Phương thức trừu tượng | Có thể có, không bắt buộc | Phương thức instance thông thường không có thân mặc định là `public abstract` |
-| Kế thừa trong một lớp | Một lớp chỉ `extends` trực tiếp một lớp cha | Một lớp có thể `implements` nhiều interface |
-| Khi phù hợp | Cùng họ đối tượng, cùng dữ liệu và quy trình xử lý | Nhiều loại đối tượng khác họ nhưng có chung khả năng |
+| Common role | Base class sharing state and implementation | Capability/behavior contract |
+| Instance fields | Can have them, including `private`, mutable fields, or `final` | No instance fields; declared fields are `public static final` constants |
+| Constructor | Exists and is invoked through subclass constructors | No instance constructors |
+| Methods with bodies | Supported | Can have `default`, `static`, and certain supporting `private` methods |
+| Abstract methods | Optional | Ordinary instance methods without bodies are implicitly `public abstract` |
+| Inheritance in a class | A class directly `extends` only one superclass | A class may `implements` multiple interfaces |
+| Appropriate when | Objects belong to one family and share data and workflows | Different object families share a capability |
 
-Ví dụ một khả năng độc lập với họ lớp:
+Example of a capability independent of class family:
 
 ```java
 interface Trackable {
@@ -2393,13 +2393,13 @@ final class Parcel implements Trackable {
 }
 ```
 
-Nếu chỉ cần nói một đối tượng có khả năng cung cấp mã theo dõi, interface có thể là lựa chọn đơn giản. Nếu các loại vận chuyển thật sự dùng chung phí nền, quy trình kiểm tra, constructor và logic tính tổng, lớp trừu tượng như `ShippingPlan` có cơ sở hợp lý.
+If the goal is only to state that an object can provide a tracking code, an interface is often simpler. If shipping plans genuinely share base fees, validation workflows, constructors, and total-fee logic, an abstract class such as `ShippingPlan` is justified.
 
-Không phải lúc nào cũng cần cả interface lẫn abstract class. Hãy chỉ thêm tầng trừu tượng khi nó diễn đạt một hợp đồng có ích và giảm phụ thuộc vào chi tiết cụ thể.
+An interface and abstract class are not always both needed. Add an abstraction layer only when it expresses a useful contract and reduces dependence on concrete details.
 
-## 8. Những lỗi thường gặp
+## 8. Common Mistakes
 
-**Lỗi 1 — Cố khởi tạo lớp trừu tượng**
+**Mistake 1 — Trying to Instantiate an Abstract Class**
 
 ```java
 abstract class Vehicle {
@@ -2409,7 +2409,7 @@ abstract class Vehicle {
 // Vehicle v = new Vehicle(); // Không thể khởi tạo lớp abstract
 ```
 
-Cần một lớp concrete triển khai hành vi:
+A concrete class is needed to implement the behavior:
 
 ```java
 class Bicycle extends Vehicle {
@@ -2423,7 +2423,7 @@ Vehicle v = new Bicycle(); // Hợp lệ
 v.move();                  // Đạp xe
 ```
 
-**Lỗi 2 — Thiếu `@Override` hoặc viết sai chữ ký**
+**Mistake 2 — Missing `@Override` or Using the Wrong Signature**
 
 ```java
 abstract class Processor {
@@ -2436,13 +2436,13 @@ abstract class Processor {
 // }
 ```
 
-Lớp concrete phải cài đặt **đúng chữ ký** và phạm vi truy cập phù hợp. Dùng `@Override` để được trình biên dịch kiểm tra.
+A concrete class must implement the **exact signature** with appropriate visibility. Use `@Override` for a compiler check.
 
-**Lỗi 3 — Đặt mọi thứ vào lớp cha trừu tượng**
+**Mistake 3 — Putting Everything in the Abstract Base Class**
 
-Nếu hai loại đối tượng chỉ tình cờ có một phương thức giống tên nhưng không chia sẻ ý nghĩa và quy tắc, ép chúng vào cùng một abstract class tạo ra quan hệ kế thừa giả tạo. Ưu tiên quan hệ **“là một loại”** hợp lý; với khả năng độc lập, cân nhắc interface hoặc composition.
+If two object types happen to share a method name but not its meaning or rules, forcing both into one abstract class creates an artificial inheritance relationship. Prefer a meaningful **"is-a" relationship**; for independent capabilities, consider interfaces or composition.
 
-**Lỗi 4 — Lớp nền công khai quá nhiều trạng thái mutable**
+**Mistake 4 — Exposing Too Much Mutable State from the Base Class**
 
 ```java
 abstract class BadPlan {
@@ -2450,56 +2450,56 @@ abstract class BadPlan {
 }
 ```
 
-Nên ưu tiên `private` và cung cấp các phương thức `protected` cần thiết, thay vì để lớp con trực tiếp sửa trường mà lớp nền có trách nhiệm bảo vệ.
+Prefer `private` and provide the necessary `protected` methods, rather than letting subclasses modify fields the base class is responsible for protecting.
 
-**Lỗi 5 — Cho lớp con override cả quy trình chung**
+**Mistake 5 — Allowing Subclasses to Override the Entire Shared Workflow**
 
-Khi lớp cha cần bảo đảm một bước kiểm tra bắt buộc, cân nhắc để phương thức chứa quy trình là `final` và chỉ để các hook phù hợp là `abstract`, như `quote` và `extraFee` trong ví dụ.
+When a parent must enforce a mandatory validation step, consider marking the workflow method `final` and exposing only suitable `abstract` hooks, such as `quote` and `extraFee` in the example.
 
-## 9. Bài tập thực hành
+## 9. Practice Exercises
 
-**Bài 1 — Hệ thống tính lương.** Tạo `abstract class Employee` có `private final String id`, constructor kiểm tra ID, phương thức cụ thể `id()` và `public abstract long monthlyPay()`. Viết `FullTimeEmployee` trả lương cố định và `HourlyEmployee` tính theo giờ. Tạo `List<Employee>`, duyệt và in lương theo đa hình.
+**Exercise 1 — Payroll System.** Create `abstract class Employee` with `private final String id`, a constructor validating the ID, a concrete `id()` method, and `public abstract long monthlyPay()`. Implement `FullTimeEmployee` with fixed pay and `HourlyEmployee` with hourly pay. Create a `List<Employee>`, iterate, and print pay polymorphically.
 
-**Bài 2 — Bảo vệ quy trình.** Đưa bước kiểm tra số giờ làm không âm vào phương thức cụ thể `final` của lớp cha nếu mọi nhân viên đều cần quy tắc này. Xác định bước nào nên trừu tượng, bước nào không cần cho lớp con sửa.
+**Exercise 2 — Protecting the Workflow.** Put the nonnegative-work-hours validation step in a concrete `final` parent method if every employee requires the rule. Decide which step should be abstract and which must not be modified by subclasses.
 
-**Bài 3 — Kế thừa nhiều tầng.** Tạo `abstract class Media` với `abstract int durationSeconds()`; thêm lớp trừu tượng trung gian `AudioMedia`, sau đó tạo lớp concrete `PodcastEpisode`. Xác định lớp nào được phép bỏ qua việc triển khai phương thức và tại sao.
+**Exercise 3 — Multilevel Inheritance.** Create `abstract class Media` with `abstract int durationSeconds()`, add an intermediate abstract class `AudioMedia`, and then create a concrete `PodcastEpisode`. Identify which classes may omit method implementations and explain why.
 
-**Bài 4 — Chọn công cụ phù hợp.** Hệ thống có `Invoice`, `Order`, `Shipment`, đều cần `exportCsv()` nhưng không cùng trạng thái hoặc quy trình xử lý. Bạn sẽ chọn interface hay abstract class? Giải thích dựa trên khả năng chia sẻ trạng thái/implementation và giới hạn đơn kế thừa.
+**Exercise 4 — Choosing an Appropriate Mechanism.** A system has `Invoice`, `Order`, and `Shipment`, all of which need `exportCsv()` but share no state or workflow. Would you choose an interface or abstract class? Explain based on shared state/implementation and the single-inheritance limitation.
 
-**Tự kiểm tra nhanh:**
+**Quick self-check:**
 
-- Có thể khai báo `ShippingPlan plan` không? **Có**, vì đó là kiểu tham chiếu.
-- Có thể viết `new ShippingPlan(...)` không? **Không**, vì lớp abstract.
-- Abstract class có constructor, trường dữ liệu và phương thức có thân không? **Có**.
-- Abstract class có nhất thiết phải khai báo ít nhất một phương thức abstract không? **Không**.
-- Một lớp concrete kế thừa abstract method mà không implement được không? **Không**, trừ khi đã có implementation phù hợp được kế thừa từ lớp khác.
-- `abstract` và `final` có thể cùng dùng trên một phương thức không? **Không**.
+- Can `ShippingPlan plan` be declared? **Yes**, because it is a reference type.
+- Can you write `new ShippingPlan(...)`? **No**, because the class is abstract.
+- Can an abstract class have constructors, fields, and methods with bodies? **Yes**.
+- Must an abstract class declare at least one abstract method? **No**.
+- Can a concrete class inherit an abstract method without implementing it? **No**, unless a suitable implementation is inherited from another class.
+- Can `abstract` and `final` be used together on the same method? **No**.
 
-**Ghi nhớ:** **Lớp trừu tượng** lưu những điểm chung và đặt khung quy tắc cho một họ đối tượng; **phương thức trừu tượng** xác định phần lớp con phải thực hiện. Kết hợp kế thừa, `@Override` và đa hình giúp mã gọi làm việc với một hợp đồng ổn định, trong khi các lớp concrete cung cấp hành vi riêng.
+**Remember:** An **abstract class** holds shared elements and establishes a rule framework for a family of objects; an **abstract method** specifies what subclasses must implement. Inheritance, `@Override`, and polymorphism let callers use a stable contract while concrete subclasses provide their own behaviors.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="abstraction-006">Phân biệt lớp cụ thể với lớp trừu tượng</a>
+## <a id="abstraction-006">Distinguishing Concrete Classes from Abstract Classes</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phân biệt lớp cụ thể với lớp trừu tượng trong Java OOP
+# Distinguishing Concrete Classes from Abstract Classes in Java OOP
 
-Một hệ thống có thể hỗ trợ nhiều cách gửi thông báo: email, SMS, thông báo trong ứng dụng. Chúng đều phải kiểm tra dữ liệu đầu vào, nhưng cách gửi thực tế khác nhau. Trong Java, **lớp trừu tượng (abstract class)** giúp mô tả phần chung và những hành vi mà lớp con phải hoàn thiện; **lớp cụ thể (concrete class)** có đủ triển khai để có thể tạo đối tượng và thực hiện công việc.
+A system may support several notification channels: email, SMS, and in-app notifications. All must validate input, but the actual delivery mechanisms differ. In Java, an **abstract class** describes shared behavior and the parts that subclasses must complete; a **concrete class** provides complete implementations so it can be instantiated and perform its work.
 
-Điều cốt lõi không phải “lớp nào tốt hơn”, mà là **vai trò của từng lớp trong thiết kế**:
+The key is not "which class is better" but **each class's role in the design**:
 
-- Lớp trừu tượng mô tả một kiểu đối tượng còn *chưa hoàn chỉnh để dùng trực tiếp*; nó có thể cung cấp mã nguồn và trạng thái chung.
-- Lớp cụ thể cung cấp triển khai hoàn chỉnh đối với mọi phương thức trừu tượng còn lại và có thể được khởi tạo bằng `new` nếu constructor có thể truy cập.
-- Mã sử dụng có thể lập trình theo kiểu lớp cha trừu tượng, còn đối tượng thực tế là instance của lớp con cụ thể.
+- An abstract class describes an object type that is *not yet complete enough for direct use*; it may provide shared code and state.
+- A concrete class fully implements every remaining abstract method and can be instantiated with `new` if its constructor is accessible.
+- Consuming code can depend on the abstract parent type while actual objects are instances of concrete subclasses.
 
-## 1. Nhận diện nhanh qua cú pháp
+## 1. Identifying Classes by Their Syntax
 
 ~~~java
 // Lớp trừu tượng: không tạo instance trực tiếp bằng new Vehicle().
@@ -2524,27 +2524,27 @@ vehicle.move();                   // In: Đạp xe
 Bicycle bicycle = new Bicycle();  // Hợp lệ
 ~~~
 
-`vehicle` có **kiểu khai báo** là `Vehicle`, nhưng đối tượng được tạo bằng `new Bicycle()` là một **Bicycle cụ thể**. Khi gọi phương thức instance được override, Java chọn cách triển khai thích hợp với kiểu thực tế của đối tượng (đa hình động).
+`vehicle` has the **declared type** `Vehicle`, but the object created by `new Bicycle()` is a **concrete Bicycle**. When an overridden instance method is called, Java selects the implementation based on the object's actual type (dynamic polymorphism).
 
-Không cần có từ khóa `concrete` trong Java. Một lớp **không khai báo `abstract`**, đáp ứng đầy đủ hợp đồng các phương thức trừu tượng mà nó kế thừa và đủ điều kiện tạo instance, được gọi là lớp cụ thể.
+Java has no `concrete` keyword. A class is concrete if it **does not declare `abstract`**, fulfills all inherited abstract-method obligations, and can be instantiated when the access rules allow.
 
-| Tiêu chí | Lớp trừu tượng | Lớp cụ thể |
+| Criterion | Abstract class | Concrete class |
 | --- | --- | --- |
-| Khai báo | Có `abstract class` | `class` không có `abstract` |
-| `new` trực tiếp tên lớp | Không | Có, nếu constructor/phạm vi truy cập cho phép |
-| Có phương thức chưa triển khai (`abstract method`) | Có thể có hoặc không | Không thể còn phương thức abstract chưa triển khai |
-| Có field/constructor/phương thức đã triển khai | Có | Có |
-| Được kế thừa | Có, nếu không bị chặn bởi điều kiện khác | Có thể, trừ khi là `final` |
-| Đóng vai trò kiểu tham chiếu | Có | Có |
-| Dùng làm nền tảng cho đa hình | Thường xuyên | Có thể là lớp cha hoặc lớp con |
+| Declaration | Uses `abstract class` | `class` without `abstract` |
+| Direct `new` of the class | No | Yes, if constructor and access permissions allow |
+| May have unimplemented methods (`abstract method`) | May or may not | Cannot leave any inherited abstract methods unimplemented |
+| May contain fields, constructors, and implemented methods | Yes | Yes |
+| Can be extended | Yes, unless otherwise restricted | Yes, unless declared `final` |
+| Can serve as a reference type | Yes | Yes |
+| Can support polymorphism | Commonly | Can be either parent class or subclass |
 
-**Hai điểm hay bị hiểu sai:** lớp trừu tượng **không bắt buộc** phải chứa một phương thức `abstract`; và lớp cụ thể **không bắt buộc** có phương thức do chính nó khai báo nếu đã kế thừa đủ triển khai cần thiết.
+**Two common misconceptions:** an abstract class **does not have to** contain an `abstract` method, and a concrete class **does not have to** declare its own methods if it inherits all required implementations.
 
-## 2. Ví dụ hoàn chỉnh: chuẩn hóa hành vi gửi thông báo
+## 2. Complete Example: Standardizing Notification Delivery
 
-Bài toán: mỗi kênh đều cần kiểm tra `recipientId` và `content` trước khi gửi. Email và SMS lại có cách xử lý riêng. Ta đặt quy trình chung ở lớp trừu tượng và yêu cầu từng lớp cụ thể cài đặt bước gửi.
+The problem: every channel must validate `recipientId` and `content` before sending. Email and SMS then have different delivery mechanisms. We put the shared process in an abstract class and require each concrete subclass to implement the delivery step.
 
-Lưu vào **`NotificationDemo.java`**. Mã tương thích Java 11+, chỉ dùng thư viện chuẩn:
+Save as **`NotificationDemo.java`**. The code is compatible with Java 11+ and uses only the standard library:
 
 ~~~java
 import java.util.List;
@@ -2631,7 +2631,7 @@ javac NotificationDemo.java
 java NotificationDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Đang dùng: EMAIL
@@ -2640,33 +2640,33 @@ Kết quả:
 [SMS] tới KH-001: Đơn hàng đã xác nhận
 ~~~
 
-Ví dụ mô phỏng bằng console để quan sát OOP; `KH-001` là mã người nhận giả lập, chưa phải email/số điện thoại thực tế. Khi triển khai thật, lớp kênh sẽ ánh xạ mã người nhận sang thông tin liên hệ, gọi nhà cung cấp tương ứng và xử lý lỗi.
+The example simulates delivery in the console to demonstrate OOP; `KH-001` is a sample recipient ID, not an actual email address or phone number. A production channel would map that ID to contact details, invoke the appropriate provider, and handle errors.
 
-Trong đoạn mã, `NotificationChannel` cùng hai lớp con được đặt thành **lớp lồng `static`** để cả ví dụ nằm trong một file. Khi thiết kế dự án, chúng có thể tách thành các file riêng và vẫn giữ nguyên quan hệ kế thừa.
+In the example, `NotificationChannel` and its two subclasses are defined as **nested `static` classes** so everything fits into one file. In a real project, they can be split into separate files while preserving the inheritance relationships.
 
-### Từng thành phần đang đóng vai trò gì?
+### What Role Does Each Component Play?
 
-**`NotificationChannel` là lớp trừu tượng:**
+**`NotificationChannel` is the abstract class:**
 
-- Có field `private final String channelName` và constructor `protected` để lớp con khởi tạo phần chung.
-- Định nghĩa đầy đủ `getChannelName()` và `send(...)`.
-- `send(...)` chứa bước kiểm tra dữ liệu và gọi `deliver(...)`.
-- Khai báo `protected abstract void deliver(...)`: biết *mỗi kênh phải gửi*, nhưng chưa biết *gửi bằng cách nào*.
+- Has a `private final String channelName` field and a `protected` constructor to initialize shared state from subclasses.
+- Fully implements `getChannelName()` and `send(...)`.
+- `send(...)` validates inputs and calls `deliver(...)`.
+- Declares `protected abstract void deliver(...)`: every channel *must deliver*, but the base class does not know *how*.
 
-**`EmailChannel` và `SmsChannel` là các lớp cụ thể:**
+**`EmailChannel` and `SmsChannel` are concrete classes:**
 
-- Kế thừa dữ liệu và quy trình chung từ `NotificationChannel`.
-- Gọi `super("EMAIL")` hoặc `super("SMS")` để khởi tạo phần lớp cha.
-- Dùng `@Override` để triển khai `deliver(...)` theo cách của từng kênh.
-- Có thể được tạo thành instance bằng `new EmailChannel()` và `new SmsChannel()`.
+- Inherit shared data and workflow from `NotificationChannel`.
+- Call `super("EMAIL")` or `super("SMS")` to initialize the parent portion.
+- Use `@Override` to implement `deliver(...)` for each channel.
+- Can be instantiated using `new EmailChannel()` and `new SmsChannel()`.
 
-**`List<NotificationChannel>` thể hiện đa hình:**
+**`List<NotificationChannel>` demonstrates polymorphism:**
 
-- Danh sách giữ các tham chiếu khai báo theo **kiểu lớp cha trừu tượng**.
-- Mỗi phần tử lại trỏ đến một đối tượng thuộc lớp con cụ thể.
-- `channel.send(...)` gọi quy trình chung; bên trong, `deliver(...)` được dispatch tới `EmailChannel` hoặc `SmsChannel` tương ứng.
+- The list holds references declared with the **abstract parent type**.
+- Each element refers to an instance of a concrete subclass.
+- `channel.send(...)` invokes the shared workflow; inside it, `deliver(...)` is dispatched to the corresponding `EmailChannel` or `SmsChannel`.
 
-## 3. Theo dõi lời gọi bằng sequence diagram
+## 3. Tracing the Call with a Sequence Diagram
 
 ~~~mermaid
 sequenceDiagram
@@ -2682,15 +2682,15 @@ sequenceDiagram
     Channel-->>App: hoàn tất
 ~~~
 
-`Channel` trong sơ đồ là **vai trò lớp cha/API của lời gọi**; tại runtime, `send()` thực thi trên một đối tượng `EmailChannel` cụ thể. Không tồn tại một instance độc lập của `NotificationChannel` được tạo bởi `new NotificationChannel()`.
+`Channel` in the diagram represents the **parent-class/API role in the call**; at runtime, `send()` executes on a concrete `EmailChannel` object. No standalone `NotificationChannel` instance is created using `new NotificationChannel()`.
 
-Đây là mẫu thiết kế **Template Method** ở dạng đơn giản: lớp cha sở hữu bộ khung quy trình (`send`), còn lớp con bổ sung một bước thay đổi (`deliver`). Không phải chương trình có lớp trừu tượng nào cũng bắt buộc áp dụng Template Method; đây chỉ là một cách sử dụng phù hợp.
+This is a simple form of the **Template Method** pattern: the parent owns the workflow skeleton (`send`), while subclasses implement a variable step (`deliver`). Not every program using an abstract class must apply Template Method; this is just one appropriate use.
 
-## 4. “Abstract” ở cấp lớp và ở cấp phương thức
+## 4. "Abstract" at the Class and Method Levels
 
-Cần tách hai khái niệm.
+Distinguish the two concepts.
 
-### Lớp abstract
+### Abstract Classes
 
 ~~~java
 abstract class AuditService {
@@ -2700,7 +2700,7 @@ abstract class AuditService {
 }
 ~~~
 
-Lớp này **không có một phương thức abstract nào** nhưng vẫn là abstract vì đã được khai báo như vậy. Ta có thể muốn ngăn tạo một `AuditService` quá chung chung, chỉ cho phép khởi tạo các phiên bản có vai trò rõ ràng:
+This class **has no abstract methods**, yet it is still abstract because it is declared as such. We may want to prevent instantiating an overly general `AuditService`, allowing only versions with a clear purpose:
 
 ~~~java
 class FileAuditService extends AuditService {
@@ -2708,14 +2708,14 @@ class FileAuditService extends AuditService {
 }
 ~~~
 
-`FileAuditService` là concrete dù không override gì:
+`FileAuditService` is concrete even though it overrides nothing:
 
 ~~~java
 AuditService audit = new FileAuditService();
 audit.record("Đăng nhập");
 ~~~
 
-### Phương thức abstract
+### Abstract Methods
 
 ~~~java
 abstract class Report {
@@ -2723,10 +2723,10 @@ abstract class Report {
 }
 ~~~
 
-Một lớp có phương thức instance `abstract` thì **bản thân lớp cũng phải khai báo `abstract`**. Lớp con có hai lựa chọn:
+A class with an `abstract` instance method **must itself be declared `abstract`**. Its subclasses have two choices:
 
-1. Triển khai tất cả phương thức abstract còn thiếu để trở thành lớp cụ thể.
-2. Tiếp tục khai báo `abstract` nếu vẫn chưa triển khai đầy đủ.
+1. Implement all remaining abstract methods to become concrete classes.
+2. Continue to declare themselves `abstract` if they do not yet implement everything.
 
 ~~~java
 abstract class BaseReport {
@@ -2745,11 +2745,11 @@ class SalesReport extends BrandedReport {
 }
 ~~~
 
-Cấp kế thừa có thể dài nhiều tầng; **chỉ những phương thức còn thiếu triển khai** mới là nghĩa vụ đối với lớp con concrete. Nếu một lớp cha khác đã cung cấp implementation hợp lệ, lớp con không phải viết lại bằng mọi giá.
+Inheritance may span many levels; **only methods that still lack implementations** remain obligations for a concrete subclass. If another parent class already provides a valid implementation, a subclass need not rewrite it.
 
-## 5. Constructor và trạng thái chung trong lớp trừu tượng
+## 5. Constructors and Shared State in Abstract Classes
 
-Một hiểu nhầm phổ biến: “abstract class không tạo được đối tượng nên không có constructor”. Thực tế, **abstract class vẫn có constructor**; constructor của nó được gọi như một phần của việc tạo instance lớp con.
+A common misconception is that "abstract classes cannot be instantiated, so they have no constructors". In fact, **abstract classes can have constructors**, which run as part of creating a subclass instance.
 
 ~~~java
 abstract class Employee {
@@ -2785,15 +2785,15 @@ class SalariedEmployee extends Employee {
 }
 ~~~
 
-*Ví dụ này cần `import java.math.BigDecimal;` khi đặt trong file Java thực tế.*
+*This example requires `import java.math.BigDecimal;` when placed in an actual Java file.*
 
-Khi gọi `new SalariedEmployee("E001", ...)`, Java tạo **một đối tượng SalariedEmployee** có phần trạng thái được khai báo ở cả các lớp trong chuỗi kế thừa; constructor lớp cha chạy trước phần thân constructor lớp con. Nó **không tạo ra hai instance độc lập** gồm một `Employee` và một `SalariedEmployee`.
+When calling `new SalariedEmployee("E001", ...)`, Java creates **one SalariedEmployee object** whose state includes fields declared throughout the inheritance chain; the parent constructor runs before the subclass constructor body. It **does not create two independent instances**, one `Employee` and one `SalariedEmployee`.
 
-Field `private` của lớp cha không được lớp con truy cập trực tiếp, nhưng lớp con có thể sử dụng các phương thức `public`/`protected` phù hợp mà lớp cha công khai.
+A subclass cannot directly access its parent's `private` fields, but it can use suitable `public`/`protected` methods exposed by the parent.
 
-### Vì sao không nên gọi phương thức có thể override trong constructor?
+### Why Avoid Calling Overridable Methods from Constructors?
 
-Đối tượng lớp con có thể **chưa được khởi tạo đầy đủ** khi constructor lớp cha đang chạy. Nếu constructor cha gọi một phương thức overridable, Java vẫn có thể dispatch tới override ở lớp con trước khi các field của lớp con có giá trị mong muốn.
+The subclass object **may not yet be fully initialized** while the parent constructor runs. If the parent calls an overridable method, Java can dispatch to the subclass override before the subclass fields have their expected values.
 
 ~~~java
 abstract class Base {
@@ -2805,26 +2805,26 @@ abstract class Base {
 }
 ~~~
 
-Trong thiết kế thực tế, hãy ưu tiên constructor xác lập invariant của phần chung, tránh để `this` thoát ra bên ngoài hoặc gọi hành vi lớp con khi đối tượng chưa hoàn thiện.
+In real designs, have constructors establish the invariants of their own state; avoid allowing `this` to escape or invoking subclass behavior before initialization is complete.
 
-## 6. Các quy tắc Java thường gặp và lỗi biên dịch
+## 6. Common Java Rules and Compilation Errors
 
-| Quy tắc | Ví dụ không hợp lệ hoặc hợp lệ | Giải thích |
+| Rule | Invalid or valid example | Explanation |
 | --- | --- | --- |
-| Không khởi tạo trực tiếp abstract class | `new NotificationChannel(...)` | Không có một lớp cụ thể để tạo instance |
-| Abstract method phải có lớp chứa abstract | `class A { abstract void run(); }` | `A` phải thành `abstract class A` |
-| Concrete class phải cài đặt abstract method còn lại | `class B extends A { }` khi `A.run()` abstract | Thiếu implementation |
-| Abstract method không có body | `abstract void run() { }` | Khai báo abstract dùng dấu `;` |
-| Không kết hợp `abstract` và `final` trên class | `abstract final class A` | Vừa yêu cầu lớp con, vừa ngăn kế thừa |
-| Không kết hợp `abstract` với `private`, `static` hoặc `final` trên method | `private abstract void run();` | Abstract method phải có khả năng được override |
-| Abstract class được có method `final` | `public final void send(...)` | Hợp lệ: cố định quy trình chung |
-| Constructor không thể là abstract | `abstract A();` | Constructor dùng khởi tạo, không được override |
-| Không giảm quyền truy cập khi override | Override `public` bằng `protected` | Bị lỗi vì làm hẹp hợp đồng |
-| Concrete class có thể là `final` | `final class EmailChannel extends NotificationChannel` | Đã hoàn chỉnh và không cho kế thừa tiếp |
+| Do not instantiate an abstract class directly | `new NotificationChannel(...)` | There is no concrete class to instantiate |
+| A class containing an abstract method must itself be abstract | `class A { abstract void run(); }` | `A` must become `abstract class A` |
+| A concrete class must implement remaining abstract methods | `class B extends A { }` when `A.run()` is abstract | Implementation is missing |
+| Abstract methods have no body | `abstract void run() { }` | An abstract declaration ends with `;` |
+| Do not combine `abstract` and `final` on a class | `abstract final class A` | One requires subclasses while the other forbids inheritance |
+| Do not combine `abstract` with `private`, `static`, or `final` on methods | `private abstract void run();` | Abstract methods must be overridable |
+| Abstract classes may have `final` methods | `public final void send(...)` | Valid: fixes the shared workflow |
+| Constructors cannot be abstract | `abstract A();` | Constructors initialize objects; they are not overridden |
+| Do not reduce access visibility when overriding | Override `public` with `protected` | Invalid because it narrows the contract |
+| Concrete classes may be `final` | `final class EmailChannel extends NotificationChannel` | Complete and cannot be extended further |
 
-**Mẹo:** luôn đặt `@Override` trên phương thức định triển khai. Trình biên dịch sẽ phát hiện lỗi gõ sai tên hoặc chữ ký làm phương thức không thực sự override.
+**Tip:** always use `@Override` on methods intended to implement an override. The compiler will detect misspelled names or signatures that fail to override.
 
-Ví dụ:
+Example:
 
 ~~~java
 abstract class Animal {
@@ -2837,7 +2837,7 @@ abstract class Animal {
 // }
 ~~~
 
-Phiên bản đúng:
+Correct version:
 
 ~~~java
 class Cat extends Animal {
@@ -2848,23 +2848,23 @@ class Cat extends Animal {
 }
 ~~~
 
-Cẩn thận: không phải mọi `static` method trong một abstract class đều sai. Abstract class **có thể chứa phương thức static đã triển khai**. Điều không hợp lệ là khai báo một phương thức vừa `static` vừa `abstract`, vì static không tham gia override như phương thức instance.
+Be careful: an abstract class may certainly contain `static` methods. Abstract classes **can have implemented static methods**. What is invalid is a method declared both `static` and `abstract`, because static methods are not overridden like instance methods.
 
-## 7. Abstract class và interface khác nhau thế nào?
+## 7. How Do Abstract Classes and Interfaces Differ?
 
-Để hiểu lý do cần abstract class, đôi khi cần đối chiếu với `interface`. Cả hai có thể mô tả một **hợp đồng** mà các lớp cụ thể phải đáp ứng, nhưng cơ chế kế thừa khác nhau.
+To understand why an abstract class is needed, compare it with an `interface`. Both can express a **contract** that concrete classes must satisfy, but their inheritance mechanisms differ.
 
-| Tiêu chí | Abstract class | Interface |
+| Criterion | Abstract class | Interface |
 | --- | --- | --- |
-| Mục đích thường gặp | Chia sẻ trạng thái/cách triển khai giữa các lớp có quan hệ chặt | Mô tả năng lực mà nhiều lớp có thể cung cấp |
-| Field của instance | Có thể giữ field mutable/immutable | Không có instance field; field khai báo trong interface là `public static final` |
-| Constructor | Có | Không |
-| Method đã triển khai | Có, mọi mức truy cập hợp lệ | Có `default`, `static`, `private` (tùy phiên bản Java) |
-| Quan hệ một lớp Java | `extends` tối đa một class trực tiếp | `implements` nhiều interface |
-| Tạo đối tượng trực tiếp | Không | Không |
-| Khi cần chia sẻ mã chung | Phù hợp nếu có quan hệ kế thừa tự nhiên | Có thể dùng `default method`, hoặc composition với helper/service |
+| Typical purpose | Share state/implementation among closely related classes | Describe a capability that many classes can provide |
+| Instance fields | Can hold mutable/immutable instance fields | No instance fields; interface fields are `public static final` |
+| Constructors | Yes | No |
+| Implemented methods | Yes, at any valid access level | Supports `default`, `static`, and `private` (depending on Java version) |
+| Relationship to a Java class | `extends` at most one immediate class | `implements` multiple interfaces |
+| Direct instantiation | No | No |
+| Sharing common code | Appropriate with a natural inheritance relationship | Can use a `default method`, or composition with a helper/service |
 
-Ví dụ một năng lực độc lập:
+Example of an independent capability:
 
 ~~~java
 interface Trackable {
@@ -2898,24 +2898,24 @@ class ExpressShipment extends Shipment implements Trackable {
 }
 ~~~
 
-`ExpressShipment` vừa kế thừa trạng thái chung của `Shipment`, vừa cam kết cung cấp năng lực `Trackable`. Nếu hai kiểu không thật sự có quan hệ “is-a” hợp lý, việc dùng composition (`has-a`) hoặc interface có thể linh hoạt hơn việc ép chúng kế thừa chung một abstract class.
+`ExpressShipment` both inherits shared state from `Shipment` and promises the `Trackable` capability. If two types lack a meaningful "is-a" relationship, composition (`has-a`) or an interface may be more flexible than forcing inheritance from a shared abstract class.
 
-## 8. Khi nào chọn lớp trừu tượng, khi nào chọn lớp cụ thể?
+## 8. When to Choose an Abstract Class or a Concrete Class
 
-Cách lựa chọn thường đi từ **nhu cầu thật**:
+The choice usually starts with **actual needs**:
 
-- **Lớp cụ thể**: khi kiểu đã mô tả đủ hành vi và hợp lệ để tạo instance ngay. Ví dụ `EmailChannel` biết cách thực hiện `deliver`.
-- **Lớp trừu tượng**: khi có các lớp con cùng bản chất, muốn chia sẻ trạng thái hoặc quy trình nhưng vẫn còn bước phải chuyên biệt hóa. Ví dụ `NotificationChannel` chứa quy trình `send` nhưng chưa biết `deliver`.
-- **Interface**: khi muốn nhiều kiểu không nhất thiết cùng cây kế thừa cùng hỗ trợ một khả năng. Ví dụ `Trackable`.
-- **Composition**: khi các chức năng cần thay đổi độc lập hoặc việc kế thừa dễ làm lớp cha/lớp con bị ràng buộc quá mức. Ví dụ `NotificationService` nhận một `NotificationChannel` qua constructor thay vì tự kế thừa lớp kênh.
+- **Concrete class:** when a type already defines complete behavior and is valid to instantiate directly. For example, `EmailChannel` knows how to implement `deliver`.
+- **Abstract class:** when subclasses belong to the same family and should share state or workflow while specializing some steps. For example, `NotificationChannel` defines `send` but not `deliver`.
+- **Interface:** when unrelated types should support the same capability without necessarily sharing an inheritance tree. For example, `Trackable`.
+- **Composition:** when capabilities need to vary independently, or inheritance would tightly couple parent and child classes. For example, `NotificationService` receives a `NotificationChannel` through its constructor instead of extending a channel class.
 
-Đặt một lớp thành `abstract` chỉ để “trông có vẻ OOP hơn” có thể khiến thiết kế phức tạp vô ích. Ngược lại, nếu nhiều lớp đang sao chép cùng một quy trình và chỉ thay một bước, một lớp trừu tượng rõ trách nhiệm có thể giảm lặp và tập trung quy tắc.
+Marking a class `abstract` just to "make it look more OOP" can add pointless complexity. Conversely, if several classes duplicate a workflow while varying only one step, an abstract class with clear responsibilities can reduce duplication and centralize rules.
 
-Một trường hợp đáng cân nhắc: nếu ứng dụng hiện chỉ có **một** loại thông báo và chưa có nhu cầu thay đổi, một lớp cụ thể đơn giản đôi khi đủ. Khi xuất hiện nhiều cách gửi với phần chung ổn định, mới cân nhắc trích xuất abstraction dựa trên sự giống nhau thực tế.
+Consider also an application that currently has **just one** notification channel with no known need for variation: a simple concrete class may be sufficient. Once multiple delivery methods share a stable workflow, extract an abstraction based on actual commonalities.
 
-### Đa hình không đồng nghĩa “phải dùng abstract class”
+### Polymorphism Does Not Require an Abstract Class
 
-Ví dụ:
+Example:
 
 ~~~java
 class Printer {
@@ -2935,11 +2935,11 @@ Printer p = new ColorPrinter();
 p.print(); // Có màu
 ~~~
 
-`Printer` là lớp **cụ thể**, vẫn là kiểu cha để sử dụng đa hình. `abstract` chỉ thể hiện rằng bản thân lớp cha không được tạo instance trực tiếp hoặc có hợp đồng chưa hoàn chỉnh; không phải điều kiện bắt buộc để có kế thừa/override.
+`Printer` is a **concrete** class but still serves as a parent type for polymorphism. `abstract` only means the parent cannot be instantiated directly or has an incomplete contract; it is not required for inheritance or overriding.
 
-## 9. Bài tập xác định lỗi và giải thích kết quả
+## 9. Exercises: Identify Errors and Explain Results
 
-**Câu 1.** Đoạn sau có biên dịch không?
+**Question 1.** Does the following code compile?
 
 ~~~java
 abstract class A {
@@ -2948,9 +2948,9 @@ abstract class A {
 class B extends A { }
 ~~~
 
-**Đáp án:** Có. `B` kế thừa phương thức có triển khai `hello()` nên không có nghĩa vụ override; `B` là lớp cụ thể. `new B().hello()` in `Hello`.
+**Answer:** Yes. `B` inherits the implemented `hello()` method and need not override it; `B` is concrete. `new B().hello()` prints `Hello`.
 
-**Câu 2.** Đoạn sau có biên dịch không?
+**Question 2.** Does the following code compile?
 
 ~~~java
 abstract class Shape {
@@ -2959,7 +2959,7 @@ abstract class Shape {
 class Square extends Shape { }
 ~~~
 
-**Đáp án:** Không. `Square` chưa triển khai `area()` mà cũng không khai báo `abstract`. Cần override:
+**Answer:** No. `Square` has not implemented `area()` and is not declared `abstract`. It must override the method:
 
 ~~~java
 class Square extends Shape {
@@ -2977,69 +2977,69 @@ class Square extends Shape {
 }
 ~~~
 
-**Câu 3.** Trong `NotificationDemo`, `send()` là `final`. Tại sao `EmailChannel` vẫn thay đổi được cách gửi?
+**Question 3.** In `NotificationDemo`, `send()` is `final`. How can `EmailChannel` still change the delivery behavior?
 
-**Đáp án:** `send()` cố định các bước xử lý chung, nhưng gọi phương thức `deliver()` là abstract và được override ở lớp con. Gọi `deliver()` trên instance cụ thể sẽ dùng phần triển khai của lớp con tương ứng.
+**Answer:** `send()` fixes the shared processing steps but invokes `deliver()`, an abstract method overridden in the subclass. Calling `deliver()` on a concrete instance selects the corresponding subclass implementation.
 
-**Câu 4.** Biến `NotificationChannel channel = new SmsChannel();` có phải đang tạo một instance của lớp trừu tượng?
+**Question 4.** Does `NotificationChannel channel = new SmsChannel();` create an instance of the abstract class?
 
-**Đáp án:** Không. Đối tượng thực tế là `SmsChannel`, còn biến tham chiếu `channel` được khai báo theo kiểu cha trừu tượng để dùng chung hợp đồng.
+**Answer:** No. The actual object is `SmsChannel`, while the `channel` reference is declared with the abstract parent type to use the shared contract.
 
-**Câu 5.** Một abstract class có field `private`, constructor, static method, final method và không có abstract method được không?
+**Question 5.** Can an abstract class have `private` fields, constructors, static methods, final methods, and no abstract methods?
 
-**Đáp án:** Được. `abstract` ở cấp lớp chỉ ngăn khởi tạo trực tiếp và cho phép nó là nền tảng của các lớp con; không bắt buộc phải có một phương thức abstract.
+**Answer:** Yes. `abstract` at the class level only prevents direct instantiation and allows the class to serve as a base for subclasses; it does not require any abstract methods.
 
-**Câu 6.** Thêm `PushChannel` cần thay đổi `NotificationChannel.send()` không?
+**Question 6.** Does adding `PushChannel` require changes to `NotificationChannel.send()`?
 
-**Gợi ý đáp án:** Thường không nếu quy trình chung vẫn đúng. Tạo lớp `PushChannel extends NotificationChannel`, gọi constructor cha và override `deliver()`. Đây là lợi ích của việc tách **phần chung ổn định** và **điểm mở rộng cụ thể**.
+**Suggested answer:** Usually not if the common workflow remains valid. Create `PushChannel extends NotificationChannel`, call the parent constructor, and override `deliver()`. This shows the value of separating **stable shared behavior** from **specific extension points**.
 
-## Ghi nhớ để đọc thiết kế OOP
+## Key Points for Reading OOP Designs
 
-Hãy nhìn vào ba thứ: **`new` đang tạo đối tượng thuộc lớp nào**, **kiểu khai báo của biến tham chiếu là gì**, và **phương thức được gọi đã có implementation chung hay còn chờ override**.
+Focus on three things: **which class the `new` expression instantiates**, **the declared type of the reference variable**, and **whether a called method has a shared implementation or still requires an override**.
 
-Lớp trừu tượng cho phép tái sử dụng phần chung và áp đặt những điểm phải hoàn thiện; lớp cụ thể hiện thực hóa hợp đồng đó thành đối tượng chạy được. Thiết kế hiệu quả là tìm đúng nơi đặt hành vi chung, giữ phần thay đổi ở lớp triển khai và tránh tạo một cây kế thừa khi không có lý do rõ ràng.
+Abstract classes reuse shared behavior and define required extension points; concrete classes turn that contract into functioning objects. Effective design places shared behavior appropriately, keeps variations in implementations, and avoids inheritance hierarchies without a clear purpose.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="abstraction-007">Mức trừu tượng phù hợp với bài toán</a>
+## <a id="abstraction-007">Choosing the Right Level of Abstraction</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Mức trừu tượng phù hợp với bài toán trong Java OOP
+# Choosing the Right Level of Abstraction in Java OOP
 
-Một thiết kế OOP tốt không nhất thiết có nhiều `interface`, `abstract class` hay tầng kế thừa. Giá trị của **trừu tượng hóa (abstraction)** nằm ở việc chọn đúng lượng thông tin và hành vi mà người sử dụng cần biết để giải quyết bài toán.
+A good OOP design does not necessarily have many `interface`, `abstract class`, or inheritance layers. The value of **abstraction** lies in selecting the right amount of information and behavior for consumers to solve the problem.
 
-Nếu trừu tượng **quá ít**, quy tắc nghiệp vụ rải rác ở nhiều nơi, caller phải biết cách tính và chi tiết triển khai. Nếu trừu tượng **quá nhiều**, một yêu cầu đơn giản có thể kéo theo hàng loạt interface, lớp trung gian và cấu hình khó theo dõi.
+With **too little** abstraction, business rules are scattered across the codebase and callers must understand formulas and implementation details. With **too much** abstraction, a simple requirement can bring a maze of interfaces, intermediate classes, and hard-to-follow configuration.
 
-**Mức trừu tượng phù hợp** là mức giúp thể hiện rõ trách nhiệm, che được chi tiết có khả năng thay đổi và giữ luồng sử dụng dễ hiểu, với chi phí thiết kế tương xứng với nhu cầu thực tế.
+The **right level of abstraction** makes responsibilities clear, hides details likely to change, and keeps usage straightforward, while keeping design costs proportional to actual needs.
 
-## 1. Nhận biết ba mức thiết kế
+## 1. Recognizing Three Levels of Design
 
-Giả sử bãi gửi xe tính phí theo quy tắc:
+Suppose a parking lot charges according to these rules:
 
-- Miễn phí 15 phút đầu.
-- Sau 15 phút, mỗi **giờ bắt đầu** được tính 5.000 VND.
-- Thời gian gửi phải không âm; phép tính không được âm thầm tràn số.
+- The first 15 minutes are free.
+- After 15 minutes, every **started hour** costs 5.000 VND.
+- Parking duration must be nonnegative, and calculations must detect overflow instead of silently wrapping.
 
-Cùng một yêu cầu có thể được thể hiện ở những mức khác nhau:
+The same requirement can be modeled at different levels:
 
-| Cách thiết kế | Dấu hiệu | Hệ quả |
+| Design approach | Symptom | Consequence |
 |---|---|---|
-| **Quá thấp** | Mỗi màn hình tự tính `minutes`, làm tròn giờ, nhân tiền | Lặp quy tắc, dễ tính không nhất quán |
-| **Phù hợp lúc đầu** | Một lớp `ParkingFeeCalculator` với phương thức `calculateVnd(...)` | Người dùng API chỉ cần đưa thời gian và nhận tiền |
-| **Quá cao so với nhu cầu** | Tạo `AbstractFeeFactory`, `GenericRateResolver<T>`, hệ phân cấp nhiều tầng cho một công thức cố định | Tăng số khái niệm phải hiểu mà chưa có lợi ích rõ ràng |
+| **Too low** | Every screen calculates `minutes`, rounds hours, and multiplies rates | Duplicated rules and inconsistent calculations |
+| **Appropriate initially** | One `ParkingFeeCalculator` class with a `calculateVnd(...)` method | API users supply time and get a fee |
+| **Too high for the requirement** | Creates `AbstractFeeFactory`, `GenericRateResolver<T>`, and a multilevel hierarchy for one fixed formula | More concepts to understand without a clear benefit |
 
-Trừu tượng hóa ở đây không phải chọn giữa “có class” và “có interface”. Ngay một **class cụ thể với phương thức mang ý nghĩa nghiệp vụ** cũng là một sự trừu tượng hóa hữu ích.
+Abstraction here does not mean choosing between "having a class" and "having an interface". Even a **concrete class with a domain-specific method** provides a useful abstraction.
 
-## 2. Bắt đầu bằng hợp đồng nhỏ, rõ và đủ dùng
+## 2. Start with a Small, Clear, Sufficient Contract
 
-Khi chương trình chỉ có **một chính sách tính phí**, ta có thể bắt đầu bằng một lớp cụ thể.
+When an application has **one pricing policy**, we can start with a concrete class.
 
 File `ParkingFeeCalculator.java`:
 
@@ -3086,26 +3086,26 @@ public final class ParkingFeeCalculator {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac ParkingFeeCalculator.java
 java ParkingFeeCalculator
 ```
 
-Tại sao mức trừu tượng này phù hợp?
+Why is this an appropriate level of abstraction?
 
-1. **Tên phương thức nói lên hành vi**: `calculateVnd` trả phí theo VND.
-2. **Đầu vào vừa đủ**: với chính sách được nêu, chỉ cần thời gian gửi theo phút; không bắt caller cung cấp biển số, chủ xe, màu xe.
-3. **Chi tiết được giữ bên trong**: caller không cần biết thời gian miễn phí, làm tròn giờ hay nhân đơn giá.
-4. **Bất biến được bảo vệ**: thời gian âm bị từ chối, phép nhân dùng `Math.multiplyExact` để phát hiện tràn số qua `ArithmeticException` thay vì trả kết quả sai.
-5. **Không có lớp trung gian thừa**: chưa có nhiều thuật toán cần thay thế nên chưa cần interface.
+1. **The method name communicates behavior**: `calculateVnd` returns a fee in VND.
+2. **Just enough input**: under the stated policy, only parking duration in minutes is needed; callers need not supply license plates, vehicle owners, or colors.
+3. **Details stay inside**: callers need not know the free period, hour rounding, or rate multiplication.
+4. **Invariants are protected**: negative duration is rejected, and calculations use `Math.multiplyExact` to detect overflow through `ArithmeticException` rather than returning an incorrect result.
+5. **No unnecessary intermediaries**: with no competing algorithms to substitute yet, an interface is not needed.
 
-Ở đây `long` là số tiền VND nguyên. Trong hệ thống hỗ trợ nhiều tiền tệ, tỷ giá hoặc quy tắc làm tròn phức tạp, một kiểu `Money` riêng có thể hợp lý hơn; với bài toán một mức phí VND cố định, nó chưa bắt buộc.
+Here, `long` represents whole VND units. A dedicated `Money` type may make sense for systems supporting multiple currencies, exchange rates, or complex rounding rules; for a fixed VND fee it is not yet required.
 
-### Ranh giới hành vi quan trọng hơn số lớp
+### Behavioral Boundaries Matter More Than Class Counts
 
-Một cách viết ít trừu tượng hơn là để caller tự xử lý:
+A less abstract approach leaves the calculations to callers:
 
 ```java
 // Minh họa thiết kế không nên lặp ở nhiều caller.
@@ -3114,17 +3114,17 @@ long hours = chargeable / 60 + (chargeable % 60 == 0 ? 0 : 1);
 long fee = hours * 5_000L;
 ```
 
-Nếu logic này xuất hiện trong UI, API, báo cáo và batch job, mỗi nơi phải tự biết cùng một quy tắc. Chỉ cần thay đổi thời gian miễn phí sẽ có nguy cơ quên cập nhật một chỗ.
+If this logic appears in the UI, API, reports, and batch jobs, each component must know the same rule. Even a change to the free period risks leaving one component outdated.
 
-`ParkingFeeCalculator.calculateVnd(...)` cung cấp **ranh giới trách nhiệm** đúng mức: caller biết *yêu cầu báo phí*, còn lớp tính phí biết *cách tính*.
+`ParkingFeeCalculator.calculateVnd(...)` provides an appropriately scoped **responsibility boundary**: callers know *they request a fee*, while the calculator knows *how to calculate it*.
 
-## 3. Khi bài toán thực sự có nhiều chính sách, nâng mức trừu tượng
+## 3. Raise the Abstraction Level When the Problem Has Multiple Policies
 
-Một thời gian sau, yêu cầu thay đổi: hệ thống quản lý **nhiều bãi**, trong đó có bãi tính phí theo giờ và bãi tính **giá cố định 3.000 VND cho một lượt**. Cùng một chức năng checkout phải hỗ trợ hai chính sách được cấu hình theo từng bãi.
+Later, requirements change: the system manages **multiple parking lots**. Some charge by the hour, while others use **a flat 3.000 VND fee per visit**. The same checkout feature must support policies configured for each lot.
 
-Đây là một **điểm biến thiên có thật**: thuật toán tính phí có thể thay đổi trong khi hành vi checkout vẫn giống nhau. Lúc này, tạo interface chung có mục đích rõ ràng.
+This is a **real variation point**: the pricing algorithm can change while checkout behavior remains the same. Now a shared interface has a clear purpose.
 
-File `ParkingEvolutionDemo.java` (đặt cùng thư mục với `ParkingFeeCalculator.java`):
+File `ParkingEvolutionDemo.java` (in the same directory as `ParkingFeeCalculator.java`):
 
 ```java
 import java.util.Objects;
@@ -3191,14 +3191,14 @@ public class ParkingEvolutionDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac ParkingFeeCalculator.java ParkingEvolutionDemo.java
 java ParkingEvolutionDemo
 ```
 
-Kiến trúc lúc này:
+The resulting architecture:
 
 ```mermaid
 classDiagram
@@ -3228,15 +3228,15 @@ classDiagram
     HourlyPolicy --> ParkingFeeCalculator
 ```
 
-**Điểm đáng chú ý:** `ParkingCheckout` sử dụng hợp đồng `ParkingFeePolicy` mà không biết bãi nào đang áp dụng công thức nào. Chính sách được truyền vào từ ngoài (*dependency injection* ở mức constructor), vì thế có thể cấu hình bãi A, bãi B hoặc thay chính sách mà không sửa logic checkout.
+**Key point:** `ParkingCheckout` uses the `ParkingFeePolicy` contract without knowing which lot uses which formula. The policy is supplied from outside (*constructor-level dependency injection*), so lots A and B can be configured or policies replaced without modifying checkout logic.
 
-Ở phiên bản đầu, interface chưa tạo ra lợi ích rõ. Ở phiên bản có hai chính sách và một luồng checkout dùng chung, interface giảm phụ thuộc vào implementation thực tế.
+In the first version, an interface offered no clear benefit. With two policies and a shared checkout flow, the interface reduces dependence on concrete implementations.
 
-Điều kiện để nâng mức trừu tượng **không phải** “đã có hai lớp thì bắt buộc phải tạo interface”. Câu hỏi cần đặt là: **Có một hợp đồng ổn định mà nhiều cách thực hiện cần tuân theo và có caller hưởng lợi từ việc không biết implementation không?**
+The condition for raising abstraction **is not** "two classes exist, so an interface is mandatory". Ask instead: **Is there a stable contract that multiple implementations must satisfy, with callers benefiting from ignorance of implementation details?**
 
-## 4. Tránh những trừu tượng quá tổng quát
+## 4. Avoid Overly Generic Abstractions
 
-Có thể đẩy bài toán báo phí vào một hệ thống trừu tượng chung như:
+We could turn the fee-quotation problem into a general-purpose abstraction framework such as:
 
 ```java
 // Ví dụ minh họa thiết kế quá tổng quát đối với yêu cầu này:
@@ -3253,9 +3253,9 @@ abstract class AbstractRateEngine<I, C, R> {
 }
 ```
 
-Các định nghĩa trên **không sai về cú pháp**, nhưng nếu chỉ để tính phí gửi xe, chúng buộc người đọc phải hiểu thêm nhiều khái niệm mà không diễn đạt trực tiếp ý nghĩa nghiệp vụ.
+These definitions are **syntactically valid**, but if all we need is parking-fee calculation, they force readers to learn many extra concepts without directly expressing the business meaning.
 
-So với:
+Compare that with:
 
 ```java
 interface ParkingFeePolicy {
@@ -3263,31 +3263,31 @@ interface ParkingFeePolicy {
 }
 ```
 
-hợp đồng thứ hai cho biết rõ:
+the second contract clearly communicates:
 
-- Đối tượng chịu trách nhiệm về **phí gửi xe**.
-- Dữ liệu đầu vào là **số phút gửi**.
-- Kết quả là **số tiền VND**.
-- Caller không cần ép kiểu `Object` hay biết cấu trúc `context` tùy ý.
+- The object is responsible for **parking fees**.
+- The input is the **parking duration in minutes**.
+- The result is the **amount in VND**.
+- Callers need not cast `Object` or understand an arbitrary `context` structure.
 
-**Generic không đồng nghĩa với trừu tượng tốt.** Generic có giá trị khi nhiều bài toán thực sự có cùng cấu trúc thuật toán, cần tái sử dụng kiểu an toàn. Nếu chỉ thấy các trường hợp “có vẻ giống nhau” về tên gọi, một bộ khung quá chung có thể che mờ sự khác biệt nghiệp vụ.
+**Generics do not automatically make a good abstraction.** They are valuable when multiple problems genuinely share an algorithmic structure and safe type reuse is needed. When examples only "look similar" by name, an overly generic framework can obscure real business differences.
 
-### Dấu hiệu “trừu tượng quá cao”
+### Signs That Abstraction Is Too High
 
-- Người đọc phải mở 5–7 file mới tìm thấy công thức báo phí.
-- Để thêm một chính sách đơn giản, phải tạo factory, registry, handler, context và cấu hình mà không có lý do nghiệp vụ.
-- Các hàm nhận `Object`, `Map<String, Object>` hoặc tham số không rõ đơn vị, rồi ép kiểu lúc chạy.
-- Nhiều lớp chỉ chuyển tiếp lời gọi đến lớp tiếp theo mà không kiểm tra, chuyển đổi hoặc bảo vệ trách nhiệm nào.
-- API công khai chứa chi tiết hạ tầng của một framework chung dù chức năng dùng nó không cần biết.
-- Những khái niệm chỉ tồn tại vì “biết đâu tương lai sẽ dùng”.
+- Readers must open 5–7 files just to find the fee calculation.
+- Adding a simple policy requires a factory, registry, handler, context, and configuration without a business justification.
+- Methods accept `Object`, `Map<String, Object>`, or parameters with unclear units, then perform runtime casts.
+- Many classes merely forward calls to the next class without validating, transforming, or protecting any responsibility.
+- The public API exposes infrastructure details from a general framework even though its consumers do not need them.
+- Concepts exist solely because "we might need them someday".
 
-Một mức trừu tượng cao **vẫn có thể hợp lý** nếu hệ thống thật sự là một engine áp dụng quy tắc được cấu hình động cho hàng trăm loại nghiệp vụ. Tuy nhiên, đó là **bài toán khác** và đòi hỏi hợp đồng, dữ liệu và yêu cầu vận hành riêng.
+A high level of abstraction **can still be justified** if the system is genuinely an engine applying dynamically configured rules across hundreds of business cases. But that is **a different problem** requiring its own contracts, data, and operational requirements.
 
-## 5. Tránh mức trừu tượng quá thấp
+## 5. Avoid Abstraction That Is Too Low
 
-Ở chiều ngược lại, mã có thể dính chặt vào chi tiết đến mức caller phải chịu trách nhiệm thay cho domain.
+At the opposite extreme, code can be so tightly coupled to details that callers end up performing the domain's responsibilities.
 
-Ví dụ dịch vụ báo phí trả thông số rồi để caller tự tính:
+For example, a fee-quotation service might return rate parameters and let callers calculate:
 
 ```java
 class ParkingRateData {
@@ -3299,32 +3299,32 @@ class ParkingRateData {
 // tự tính số giờ, tiền, kiểm tra đầu vào...
 ```
 
-Các nơi sử dụng có thể làm tròn khác nhau hoặc bỏ qua kiểm tra tràn số. Khi đó, dù toàn bộ field có đặt `private` và thêm getter, mô hình vẫn **chưa trừu tượng hóa đúng hành vi cần thiết**.
+Consumers may round differently or skip overflow checks. In that case, even if every field is `private` with getters, the model still **fails to abstract the necessary behavior**.
 
-Một thiết kế tốt có xu hướng công khai yêu cầu mang ý nghĩa nghiệp vụ, chẳng hạn `calculateVnd(parkedMinutes)`, thay vì bắt mọi caller thực hiện từng bước thuật toán.
+Good designs tend to expose meaningful business operations, such as `calculateVnd(parkedMinutes)`, instead of requiring every caller to perform each algorithmic step.
 
-Đừng hiểu điều này thành nguyên tắc “mọi phép toán đều phải chuyển vào class mới”. Phép cộng hai giá trị đơn giản không đòi hỏi một `AdditionService`. Hãy trừu tượng hóa khi có **quy tắc nghiệp vụ, trách nhiệm hoặc thay đổi cần gom lại**.
+Do not interpret this as a rule that "every calculation requires a new class". Adding two simple values does not require an `AdditionService`. Introduce an abstraction when **business rules, responsibilities, or changes should be centralized**.
 
-## 6. Những tiêu chí để chọn mức trừu tượng
+## 6. Criteria for Choosing an Abstraction Level
 
-Có thể đánh giá một thiết kế theo các tiêu chí sau.
+Evaluate a design using the following criteria.
 
-| Tiêu chí | Câu hỏi thực hành | Dấu hiệu tốt |
+| Criterion | Practical question | Good sign |
 |---|---|---|
-| **Đúng ngôn ngữ nghiệp vụ** | Tên lớp/phương thức có nói đúng việc nó làm không? | `ParkingFeePolicy`, `quoteVnd` dễ hiểu hơn `UniversalProcessor` |
-| **Một trách nhiệm rõ ràng** | Thay đổi quy tắc nào sẽ khiến lớp cần sửa? | Chính sách tính phí thay đổi trong policy; checkout xử lý checkout |
-| **Số điểm biến thiên thực tế** | Có những implementation nào khác nhau đang được dùng? | Interface xuất hiện khi checkout thực sự cần thay policy |
-| **Độ ổn định của hợp đồng** | Điều gì ít thay đổi hơn: đầu vào/đầu ra hay thuật toán? | `quoteVnd(minutes)` ổn định trong khi công thức có thể đổi |
-| **Chi phí hiểu và điều hướng** | Để sửa một quy tắc phải đọc bao nhiêu lớp? | Có thể tìm điểm sửa từ một tên nghiệp vụ |
-| **Kiểm thử** | Có kiểm tra được quy tắc mà không khởi động toàn hệ thống không? | Gọi trực tiếp calculator/policy bằng input xác định |
-| **Phụ thuộc** | Caller có biết chi tiết implementation không? | Checkout phụ thuộc interface khi cần lựa chọn nhiều policy |
-| **Khả năng mở rộng thực tế** | Thêm một biến thể đã được yêu cầu có cần sửa khắp nơi không? | Thêm implementation mới, thay cấu hình đúng chỗ |
+| **Domain language** | Do class and method names accurately communicate their purpose? | `ParkingFeePolicy` and `quoteVnd` are clearer than `UniversalProcessor` |
+| **One clear responsibility** | Which rule changes would require this class to change? | Pricing policies change in the policy; checkout handles checkout |
+| **Real variation points** | Which different implementations are actually in use? | An interface appears when checkout genuinely needs to switch policies |
+| **Contract stability** | Which changes less: inputs/outputs or the algorithm? | `quoteVnd(minutes)` remains stable while the formula changes |
+| **Cost of understanding and navigation** | How many classes must be read to modify a rule? | The change location can be found from a domain-specific name |
+| **Testability** | Can the rule be checked without starting the whole system? | Call the calculator/policy directly with known inputs |
+| **Dependencies** | Do callers know implementation details? | Checkout depends on an interface when it needs multiple policy options |
+| **Practical extensibility** | Would adding a requested variant require edits everywhere? | Add an implementation and change configuration in the right place |
 
-Không có một thang điểm tuyệt đối. Khi hai thiết kế đều giải quyết đúng bài toán, hãy ưu tiên thiết kế **ít khái niệm hơn** cho đến khi có bằng chứng nhu cầu biến thiên hoặc tái sử dụng mới.
+There is no absolute scoring scale. When two designs both solve the problem, prefer **fewer concepts** until new variation or reuse needs are demonstrated.
 
-## 7. Trừu tượng theo trách nhiệm, không theo tên kỹ thuật
+## 7. Abstract by Responsibility, Not Technical Naming
 
-Một lỗi khác là tạo các tầng chung chỉ vì muốn sơ đồ lớp “đẹp”:
+Another mistake is to add generic layers just to make a class diagram "look good":
 
 ```text
 BaseComponent
@@ -3333,22 +3333,22 @@ BaseComponent
               └── ParkingComponent
 ```
 
-Hệ phân cấp này không nói lên “vì sao các lớp cần kế thừa” hay “hành vi nào chung”. Kế thừa còn tạo ràng buộc: lớp con phụ thuộc hành vi và hợp đồng lớp cha, trong khi nhiều nhu cầu biến thiên có thể dùng composition đơn giản hơn.
+This hierarchy does not explain "why these classes must inherit" or "which behaviors they share". Inheritance also introduces coupling: a subclass depends on its parent's behavior and contract, while many variations can be implemented more simply with composition.
 
-Trong ví dụ tính phí, `ParkingCheckout` **chứa** một `ParkingFeePolicy`. Điều đó phản ánh rõ quan hệ “checkout sử dụng một chính sách”, không ép checkout trở thành một loại policy.
+In the fee example, `ParkingCheckout` **contains** a `ParkingFeePolicy`. This clearly represents "checkout uses a policy" instead of forcing checkout to become a kind of policy.
 
-Cân nhắc **composition** khi muốn lựa chọn hành vi khi chạy, và **kế thừa** khi thật sự có quan hệ *is-a* cùng hợp đồng thay thế được mà hệ phân cấp mang lại lợi ích thiết thực.
+Consider **composition** when behavior needs to be selected at runtime, and **inheritance** when there is a genuine *is-a* relationship with a substitutable contract and tangible benefits from the hierarchy.
 
-Trừu tượng hóa cũng không đồng nhất với **đóng gói**:
+Abstraction is also distinct from **encapsulation**:
 
-- Trừu tượng hóa quyết định **caller cần thấy khả năng nào**.
-- Đóng gói quyết định **trạng thái và chi tiết được kiểm soát thế nào**.
+- Abstraction determines **which capabilities callers need to see**.
+- Encapsulation determines **how state and details are controlled**.
 
-Hai nguyên tắc bổ sung nhau. Đặt mọi field `private` không tự bảo đảm mức trừu tượng phù hợp nếu API vẫn buộc caller biết chi tiết công thức.
+These principles complement each other. Making every field `private` does not automatically provide an appropriate abstraction if the API still requires callers to understand the pricing formula.
 
-## 8. Điều chỉnh mức trừu tượng khi yêu cầu thay đổi
+## 8. Adjusting the Abstraction Level as Requirements Change
 
-Nên tiến hóa thiết kế theo bằng chứng thay vì dự báo mọi tính năng tương lai.
+Let designs evolve based on evidence rather than predicting every future feature.
 
 ```mermaid
 flowchart TD
@@ -3366,98 +3366,98 @@ flowchart TD
     J --> K
 ```
 
-### Một quy trình refactor an toàn
+### A Safe Refactoring Process
 
-1. **Ghi rõ hành vi hiện tại.** Ví dụ 0, 15, 16, 75 và 76 phút phải ra bao nhiêu tiền; đầu vào âm bị từ chối.
-2. **Xác định chỗ lặp hoặc chỗ biến thiên.** Nếu có hai thuật toán cùng được checkout sử dụng, ta có lý do tạo hợp đồng chung.
-3. **Trích xuất interface hẹp.** Chỉ đưa vào những hành vi mà mọi implementation có ý nghĩa tuân theo, tránh phương thức “chưa hỗ trợ” hoặc ép kiểu.
-4. **Di chuyển cách tính sau interface mà giữ kết quả.** Dùng cùng bộ ca kiểm tra nghiệp vụ trước và sau refactor.
-5. **Giảm phụ thuộc tại caller.** Cho checkout nhận policy qua constructor hoặc cấu hình ở composition root.
-6. **Đánh giá lại độ phức tạp.** Nếu tổng số lớp tăng nhiều nhưng code gọi và khả năng thay đổi không tốt hơn, xem xét thu hẹp hoặc loại bớt tầng trung gian.
+1. **Document current behavior.** For example, specify the fees for 0, 15, 16, 75, and 76 minutes, and ensure negative input is rejected.
+2. **Locate duplication or variation.** If checkout uses two different algorithms, there is a reason for a shared contract.
+3. **Extract a narrow interface.** Include only behaviors that every implementation can meaningfully provide; avoid "unsupported" methods or casts.
+4. **Move calculations behind the interface while preserving results.** Run the same business test cases before and after refactoring.
+5. **Reduce caller dependencies.** Inject the policy into checkout through its constructor or configure it at the composition root.
+6. **Reassess complexity.** If the class count increases dramatically without improving caller code or flexibility, consider narrowing or removing intermediate layers.
 
-Các ca thử quan trọng cho `ParkingFeeCalculator`:
+Important test cases for `ParkingFeeCalculator`:
 
-| Phút gửi | Kết quả mong đợi | Ý nghĩa |
+| Parked minutes | Expected result | Meaning |
 |---:|---:|---|
-| 0 | 0 | Không gửi vẫn không âm |
-| 15 | 0 | Đúng giới hạn miễn phí |
-| 16 | 5.000 | Bắt đầu tính giờ đầu |
-| 75 | 5.000 | Đủ 60 phút sau miễn phí |
-| 76 | 10.000 | Bắt đầu giờ tiếp theo |
-| -1 | Exception | Từ chối dữ liệu không hợp lệ |
+| 0 | 0 | No parking time still yields a nonnegative fee |
+| 15 | 0 | Exactly the free-period threshold |
+| 16 | 5.000 | First billable hour begins |
+| 75 | 5.000 | Exactly 60 minutes after the free period |
+| 76 | 10.000 | Next billable hour begins |
+| -1 | Exception | Reject invalid data |
 
-Khi thiết kế thay đổi, các ca này giúp kiểm chứng rằng trừu tượng hóa mới **không làm đổi quy tắc cũ** ngoài ý muốn.
+As the design changes, these tests help verify that the new abstraction **does not unintentionally change the existing rules**.
 
-## 9. Các quyết định dễ gây tranh luận
+## 9. Debatable Design Decisions
 
-**“Một class luôn phải có một interface?”** Không. Interface hữu ích khi có hợp đồng dùng chung, nhiều implementation, API cho bên ngoài, hoặc nhu cầu thay thế/giả lập rõ. Một class cụ thể nhỏ thường đơn giản hơn nếu chỉ có một cách triển khai.
+**"Must every class have an interface?"** No. Interfaces help when there is a shared contract, multiple implementations, an external API, or a clear substitution/testing need. A small concrete class is often simpler if there is only one implementation.
 
-**“Có hai đoạn code giống nhau thì phải gom ngay?”** Không nhất thiết. Hai đoạn giống cú pháp nhưng khác lý do thay đổi có thể thuộc hai trách nhiệm riêng. Gom quá sớm dễ tạo hàm chung đầy điều kiện. Cần phân biệt **trùng lặp thuật toán và quy tắc nghiệp vụ thật sự** với sự tương đồng tình cờ.
+**"Should two similar code snippets always be consolidated immediately?"** Not necessarily. Syntactically similar code may change for different reasons and belong to separate responsibilities. Premature consolidation can create shared functions full of conditionals. Distinguish **actual duplication of algorithms and business rules** from accidental resemblance.
 
-**“Dùng generic càng nhiều thì càng tái sử dụng tốt?”** Không. Generic cải thiện an toàn kiểu khi dùng đúng bài toán, nhưng một interface quá chung có thể khiến ý nghĩa nghiệp vụ bị mất. Tái sử dụng chỉ có giá trị khi làm chi phí thay đổi và hiểu hệ thống thấp hơn.
+**"Do more generics always improve reuse?"** No. Generics improve type safety when suited to the problem, but an overly generic interface can erase domain meaning. Reuse is valuable only when it reduces the cost of understanding and changing the system.
 
-**“Trừu tượng hóa có phải giấu tất cả thông tin?”** Không. Một API vẫn cần thể hiện đầy đủ những gì caller phải biết: đơn vị đầu vào, ràng buộc hợp lệ, ý nghĩa đầu ra, lỗi có thể xảy ra. Che cả những điều này sẽ tạo ra hợp đồng mơ hồ.
+**"Does abstraction mean hiding all information?"** No. An API still needs to express everything callers must know: input units, valid ranges, output meaning, and possible errors. Hiding these produces an ambiguous contract.
 
-**“Không tạo abstraction trước là vi phạm SOLID?”** Không. Các nguyên tắc thiết kế hỗ trợ quyết định theo bối cảnh; chúng không yêu cầu mỗi lớp phải phụ thuộc vào interface riêng ngay từ đầu. Phân tách phần ổn định và phần thay đổi khi có nhu cầu là một cách áp dụng có trách nhiệm.
+**"Does failing to introduce an abstraction early violate SOLID?"** No. Design principles support context-dependent decisions; they do not demand that every class depend on a dedicated interface from day one. Separating stable and variable behavior when needed is a responsible application of these principles.
 
-## 10. Bài tập tự kiểm tra
+## 10. Self-Check Exercises
 
-### Bài 1: Thiết kế đang thiếu hay thừa abstraction?
+### Exercise 1: Is the Design Under- or Over-Abstracted?
 
-Bạn được giao làm chương trình chỉ gửi email nội bộ bằng một nhà cung cấp cố định. Mã nguồn đề xuất có: `EmailProviderFactory`, `AbstractEmailAdapter`, `DefaultEmailAdapter`, `GenericMessageBus` và `EmailBridge`; tất cả chỉ dẫn đến một lời gọi gửi email.
+You are asked to build a program that sends internal email through one fixed provider. The proposed design includes `EmailProviderFactory`, `AbstractEmailAdapter`, `DefaultEmailAdapter`, `GenericMessageBus`, and `EmailBridge`; all lead to a single email-sending call.
 
-**Gợi ý:** Có khả năng đây là mức trừu tượng quá cao cho yêu cầu hiện tại. Hãy bắt đầu từ một API `EmailSender.send(message)` với implementation cụ thể nếu đủ, đồng thời xác định rõ cần xử lý xác thực, retry và lỗi ở đâu. Nếu sau này có nhiều nhà cung cấp và cùng một caller cần thay implementation, khi đó mới cân nhắc hợp đồng đa implementation.
+**Hint:** This is probably excessive abstraction for the current requirements. Start with an `EmailSender.send(message)` API and a concrete implementation if sufficient, and explicitly decide where authentication, retries, and error handling belong. If multiple providers later need to be substituted by the same caller, consider a contract supporting multiple implementations.
 
-### Bài 2: Dự đoán kết quả
+### Exercise 2: Predict the Result
 
-Dùng `ParkingFeeCalculator` ở phần 2:
+Using `ParkingFeeCalculator` from section 2:
 
 ```java
 ParkingFeeCalculator calculator = new ParkingFeeCalculator();
 System.out.println(calculator.calculateVnd(135));
 ```
 
-**Đáp án: `10000`.** Sau 15 phút miễn phí, còn 120 phút tính cước, tương ứng đúng hai giờ. Hợp đồng làm tròn giờ nằm bên trong calculator, caller không tự lặp thuật toán.
+**Answer: `10000`.** After the first 15 free minutes, 120 billable minutes remain, exactly two hours. The hour-rounding contract stays inside the calculator, so callers do not repeat its algorithm.
 
-### Bài 3: Chọn interface khi nào?
+### Exercise 3: When to Choose an Interface
 
-Một hệ thống đăng ký hội nghị mới có duy nhất cách xác nhận vé bằng QR. Sáu tháng sau, khách doanh nghiệp yêu cầu thêm cách xác nhận qua mã OTP, nhưng cả hai đều phải hỗ trợ `verify(ticket, proof)` và trả kết quả xác nhận.
+A new conference-registration system initially verifies tickets only using QR codes. Six months later, corporate clients request OTP verification, while both must support `verify(ticket, proof)` and return a verification result.
 
-Hãy nêu thời điểm thích hợp để cân nhắc hợp đồng `TicketVerifier`, ai sử dụng hợp đồng đó và những thông tin nào cần đưa vào API. Chú ý: nếu QR và OTP có loại chứng cứ khác nhau, hợp đồng đầu vào phải được thiết kế có kiểu rõ ràng; không nên dùng `Object proof` chỉ để giữ vẻ “tổng quát”.
+Explain when to consider a `TicketVerifier` contract, which code would use it, and what information its API should expose. Note that if QR and OTP use different evidence types, design a strongly typed input contract; do not use `Object proof` merely to appear "generic".
 
-### Bài 4: Chọn mô hình vừa đủ
+### Exercise 4: Choose a Sufficient Model
 
-Một ứng dụng nhỏ lưu lịch hẹn, mỗi lịch hẹn chỉ có thời điểm bắt đầu và thời điểm kết thúc. Yêu cầu hiện tại chỉ là kiểm tra `start < end` và hiển thị thời lượng.
+A small scheduling app stores appointments with only start and end timestamps. The current requirements are to validate `start < end` and display the duration.
 
-Hãy đề xuất một `record Appointment(LocalDateTime start, LocalDateTime end)` có compact constructor kiểm tra đầu vào, cùng phương thức `duration()`. Giải thích vì sao chưa cần tạo `IAppointment`, `AbstractAppointment` hay registry chiến lược khi chưa có biến thể nào thật sự cần chúng.
+Propose a `record Appointment(LocalDateTime start, LocalDateTime end)` with a compact constructor that validates its input and a `duration()` method. Explain why `IAppointment`, `AbstractAppointment`, or a strategy registry is unnecessary without genuine variants.
 
 ---
 
-**Ghi nhớ:** Mức trừu tượng phù hợp là mức **đủ để gom trách nhiệm, bảo vệ hợp đồng và giảm phụ thuộc không cần thiết**, đồng thời vẫn dễ đọc và sửa. Hãy bắt đầu từ nhu cầu cụ thể và API nhỏ nhất giải quyết đúng bài toán; nâng mức trừu tượng khi xuất hiện những biến thể hoặc nhu cầu phối hợp thực sự, và kiểm chứng việc nâng cấp không làm thay đổi hành vi nghiệp vụ.
+**Remember:** The right abstraction level is **sufficient to centralize responsibilities, protect contracts, and reduce needless dependencies** while staying easy to read and modify. Start from concrete needs and the smallest API that solves the problem; raise the abstraction level when real variations or coordination needs emerge, and verify that the evolution preserves business behavior.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="abstraction-008">Rò rỉ chi tiết thực hiện qua giao diện sử dụng</a>
+## <a id="abstraction-008">Leaking Implementation Details Through Public Interfaces</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Rò rỉ chi tiết thực hiện qua giao diện sử dụng (Leaky Abstraction) trong Java
+# Leaking Implementation Details Through Public Interfaces (Leaky Abstraction) in Java
 
-Trong OOP, **trừu tượng** giúp người sử dụng một đối tượng tập trung vào **hợp đồng và hành vi cần thiết**, thay vì phải hiểu toàn bộ cách triển khai bên trong. **Rò rỉ chi tiết thực hiện qua giao diện sử dụng** (*leaky abstraction*) xảy ra khi những yếu tố đáng lẽ chỉ thuộc bên trong lớp/module lại xuất hiện trong API hoặc hành vi quan sát được, khiến mã bên ngoài phải hiểu, phụ thuộc hay xử lý chúng.
+In OOP, **abstraction** helps consumers focus on an object's **contract and necessary behavior** instead of understanding its entire implementation. **Leaking implementation details through public interfaces** (*leaky abstraction*) occurs when information that should stay inside a class or module appears in its API or observable behavior, forcing external code to understand, depend on, or handle it.
 
-Ví dụ: nghiệp vụ cần “tìm sách theo mã”, nhưng một API lại bắt bên gọi truy cập `HashMap` chứa sách, nhớ cấu trúc khóa, rồi tự kiểm tra `null`. Khi đổi cách lưu sách sang cơ sở dữ liệu, hợp đồng cũ trở thành vật cản.
+For example, the business needs to "find a book by ID", but an API requires callers to access a book `HashMap`, remember its key structure, and check for `null` themselves. When the storage changes to a database, that old contract becomes an obstacle.
 
-> Không phải mọi chi tiết kỹ thuật đều là “rò rỉ”. Một API xử lý tệp **có thể hợp lý** khi nhận `Path` hoặc ném `IOException`. Cần đánh giá chi tiết nào thuộc **hợp đồng có chủ đích** của người dùng API, chi tiết nào chỉ là quyết định nội bộ không cần thiết.
+> Not every technical detail is a "leak". A file-handling API **may legitimately** accept `Path` or throw `IOException`. The question is which details belong to the API user's **intentional contract** and which are unnecessary internal decisions.
 
-## 1. Nhận diện qua một API rò rỉ
+## 1. Identifying a Leaky API
 
-Giả sử có lớp lưu sách trong bộ nhớ:
+Suppose a class stores books in memory:
 
 ```java
 import java.util.HashMap;
@@ -3478,7 +3478,7 @@ class LeakyBookStore {
 }
 ```
 
-Người sử dụng bị đẩy vào chi tiết nội bộ:
+The consumer is forced to deal with internal details:
 
 ```java
 LeakyBookStore store = new LeakyBookStore();
@@ -3488,12 +3488,12 @@ Book found = store.getInternalBooks().get("J-01");
 store.getInternalBooks().clear(); // Bỏ qua toàn bộ quy tắc của store!
 ```
 
-Ở đây có **hai vấn đề liên quan nhưng khác nhau**:
+There are **two related but distinct problems** here:
 
-1. **Rò rỉ abstraction:** API buộc caller biết rằng dữ liệu nằm trong `HashMap<String, Book>` và phải gọi `get()`. Nếu backend đổi sang truy vấn SQL, caller không còn cách sử dụng phù hợp mà không sửa mã.
-2. **Phá vỡ đóng gói:** Getter trả chính tham chiếu `HashMap` có thể thay đổi; caller có thể `clear()`, `put()` hoặc `remove()` mà không đi qua quy tắc nghiệp vụ.
+1. **Leaky abstraction:** the API requires callers to know the data lives in a `HashMap<String, Book>` and to call `get()`. If the backend changes to SQL queries, callers cannot use the same contract without code changes.
+2. **Broken encapsulation:** the getter returns the actual mutable `HashMap` reference; callers can invoke `clear()`, `put()`, or `remove()` without going through business rules.
 
-Một API có thể rò rỉ chi tiết triển khai **ngay cả khi dữ liệu không sửa được**: ví dụ trả về `HashMap` được copy mỗi lần gọi thì caller vẫn biết kiểu lưu trữ và phải tự thực hiện thao tác tìm kiếm.
+An API can leak implementation details **even when the data cannot be modified**: for example, returning a copy of a `HashMap` on every call still reveals the storage type and makes callers implement lookup themselves.
 
 ```mermaid
 flowchart TD
@@ -3502,13 +3502,13 @@ flowchart TD
     R["Đổi backend sang SQL/API"] -.->|"buộc sửa code dùng API"| C
 ```
 
-Nguyên tắc cần nhớ: **abstraction tốt che được quyết định có thể thay đổi mà caller không cần biết, đồng thời công bố đủ ngữ nghĩa để caller làm đúng công việc**.
+Remember: **good abstraction hides changeable decisions that callers need not know while exposing enough semantics for callers to perform their work correctly**.
 
-## 2. Sửa bằng hợp đồng biểu đạt nghiệp vụ
+## 2. Fixing the API with a Domain-Oriented Contract
 
-Thay vì hỏi “dữ liệu đang nằm trong cấu trúc nào?”, người dùng nên hỏi “tôi có thể tìm sách này không?” và “tôi có thể tìm các sách theo từ khóa nào?”.
+Instead of asking "Which data structure currently holds the data?", consumers should ask "Can I find this book?" and "Which books match this keyword?".
 
-Một hợp đồng rõ ràng có thể là:
+A clear contract might be:
 
 ```java
 interface BookCatalog {
@@ -3517,16 +3517,16 @@ interface BookCatalog {
 }
 ```
 
-Trong đó:
+In this contract:
 
-- `findByIsbn` trả `Optional.empty()` khi không có sách.
-- `searchByTitle` trả tối đa `limit` sách có tên chứa từ khóa; danh sách kết quả chỉ phục vụ đọc.
-- Caller không cần biết việc tìm kiếm sử dụng `Map`, SQL, cache hay HTTP.
-- Các kiểu `Optional` và `List` là kiểu Java tổng quát được chọn theo **ngữ nghĩa kết quả**; API không buộc caller sử dụng một loại collection cụ thể.
+- `findByIsbn` returns `Optional.empty()` when a book is absent.
+- `searchByTitle` returns at most `limit` books whose titles contain the keyword; the result list is intended for reading only.
+- Callers need not know whether the search uses a `Map`, SQL, a cache, or HTTP.
+- `Optional` and `List` are general Java types selected for **result semantics**; the API does not force callers to use a specific collection implementation.
 
-### Ví dụ đầy đủ có thể biên dịch
+### Complete Compilable Example
 
-Lưu toàn bộ vào **`Main.java`** và chạy với Java 17 hoặc Java 21:
+Save everything into **`Main.java`** and run with Java 17 or Java 21:
 
 ```java
 import java.util.ArrayList;
@@ -3651,14 +3651,14 @@ public class Main {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 Spring Data
@@ -3668,7 +3668,7 @@ J-03: Advanced Java
 Kết quả không thể bị sửa từ caller
 ```
 
-### Điều gì được cải thiện?
+### What Has Improved?
 
 ```mermaid
 flowchart TB
@@ -3679,33 +3679,33 @@ flowchart TB
     D --> Q["SQL: chi tiết triển khai"]
 ```
 
-`LibraryService` chỉ dùng hợp đồng `BookCatalog`. Muốn thay thế `InMemoryBookCatalog` bằng triển khai dùng cơ sở dữ liệu, mã nghiệp vụ có thể giữ nguyên **nếu** triển khai mới bảo đảm cùng điều kiện đầu vào, ngữ nghĩa kết quả, thứ tự, giới hạn và chính sách lỗi.
+`LibraryService` depends only on the `BookCatalog` contract. Replacing `InMemoryBookCatalog` with a database-backed implementation can leave business code unchanged **if** the new implementation preserves the same input conditions, result semantics, ordering, limits, and error policy.
 
-Việc trả `List.copyOf(result)` tránh cho caller sửa collection kết quả. Vì `Book` là một record chứa hai `String` bất biến, phần tử không có trạng thái mutable lộ ra ngoài. Với record chứa `List`, mảng hoặc đối tượng mutable, cần phòng vệ thêm; `record` và `List.copyOf` không tự tạo bản sao sâu.
+Returning `List.copyOf(result)` prevents callers from modifying the result collection. Because `Book` is a record containing two immutable `String` values, its elements expose no mutable state. Records containing `List`, arrays, or mutable objects require further protection; neither `record` nor `List.copyOf` automatically performs a deep copy.
 
-Lưu ý: `BookCatalog` là API đọc. Ví dụ chủ ý không định nghĩa thao tác thêm/sửa/xóa sách từ bên ngoài. Nếu có nhu cầu ghi, nên thiết kế các thao tác nghiệp vụ riêng cùng quy tắc bảo toàn dữ liệu thay vì mở một `Map` nội bộ để caller chỉnh sửa tùy ý.
+Note: `BookCatalog` is a read API. The example deliberately exposes no operation to add, modify, or delete books externally. If writes are needed, design separate domain operations with data-integrity rules instead of exposing an internal `Map` for arbitrary caller changes.
 
-## 3. Những kiểu rò rỉ thường gặp trong ứng dụng Java
+## 3. Common Forms of Leakage in Java Applications
 
-Rò rỉ không chỉ xảy ra khi trả collection. Nó có thể xuất hiện ở **kiểu dữ liệu, ngoại lệ, vòng đời tài nguyên, thứ tự thao tác và hành vi ẩn**.
+Leaks are not limited to returning collections. They may appear through **data types, exceptions, resource lifetimes, operation ordering, and hidden behavior**.
 
-| API có dấu hiệu rò rỉ | Caller phải biết gì? | Hợp đồng có thể phù hợp hơn |
+| Potentially leaky API | What must the caller know? | A more suitable contract |
 | --- | --- | --- |
-| `HashMap<String, Book> getBooks()` | Cấu trúc lưu trữ và quy tắc khóa | `Optional<Book> findByIsbn(String)` |
-| `ResultSet findStudent(long id)` | JDBC, con trỏ dòng và kết nối đang mở | `Optional<Student> findById(long)` |
-| `EntityManager getManager()` | Cơ chế persistence của JPA | Phương thức truy vấn/thao tác nghiệp vụ |
-| `boolean createOrder(Map<String,Object> rawRow)` | Tên cột hoặc cấu trúc bản ghi vật lý | `createOrder(CreateOrderCommand command)` |
-| `void updateCacheKey(String redisKey)` | Quy ước khóa Redis | `invalidateProduct(ProductId id)` |
-| `void setBalanceField(long rawValue)` | Chi tiết lưu trạng thái số dư | `deposit(amount)`, `withdraw(amount)` |
-| Trả ORM entity có lazy association cho tầng web | Session còn mở và quy tắc lazy loading | DTO đã materialize hoặc query theo nhu cầu |
-| Ném lỗi truy vấn SQL trực tiếp từ API miền nghiệp vụ | Driver/database và cách diễn giải lỗi | Lỗi có ngữ nghĩa của nghiệp vụ, giữ nguyên nhân gốc |
-| Trả `Stream` đang phụ thuộc kết nối DB chưa đóng | Lifetime của connection và trách nhiệm đóng stream | Trả kết quả đã materialize hoặc tài liệu hóa rõ stream cần đóng |
+| `HashMap<String, Book> getBooks()` | Storage structure and key conventions | `Optional<Book> findByIsbn(String)` |
+| `ResultSet findStudent(long id)` | JDBC, row cursors, and open connections | `Optional<Student> findById(long)` |
+| `EntityManager getManager()` | JPA's persistence mechanism | Domain query/operation methods |
+| `boolean createOrder(Map<String,Object> rawRow)` | Column names or physical record structure | `createOrder(CreateOrderCommand command)` |
+| `void updateCacheKey(String redisKey)` | Redis key conventions | `invalidateProduct(ProductId id)` |
+| `void setBalanceField(long rawValue)` | Balance-state storage details | `deposit(amount)`, `withdraw(amount)` |
+| Returns an ORM entity with a lazy association to the web layer | Session lifetime and lazy-loading rules | A materialized DTO or an appropriate query |
+| Throws raw SQL query errors from a domain API | Driver/database details and error interpretation | Domain-meaningful errors that preserve the original cause |
+| Returns a `Stream` still tied to an open DB connection | Connection lifetime and responsibility for closing the stream | Return materialized results or document that the stream must be closed |
 
-Đây là các **dấu hiệu**, không phải quy tắc cấm tuyệt đối. Nếu đang viết một thư viện JDBC cấp thấp cho nhà phát triển database, trả `ResultSet` hoặc nhận `Connection` có thể là hợp đồng chính đáng. Câu hỏi quan trọng là: *đối tượng sử dụng thực sự cần biết chi tiết đó để thực hiện trách nhiệm của họ không?*
+These are **warning signs**, not absolute prohibitions. If you are building a low-level JDBC library for database developers, returning a `ResultSet` or accepting a `Connection` may be a legitimate contract. The key question is: *Does the consumer genuinely need that detail to fulfill their responsibility?*
 
-## 4. Ví dụ API dữ liệu: khi `SQLException` đi qua sai tầng
+## 4. Data API Example: When `SQLException` Crosses the Wrong Boundary
 
-Giả sử dịch vụ ứng dụng có nhiệm vụ kiểm tra sách tồn tại:
+Suppose an application service needs to check whether a book exists:
 
 ```java
 // Ví dụ thể hiện sự phụ thuộc không cần thiết vào JDBC:
@@ -3714,9 +3714,9 @@ interface LeakyAvailability {
 }
 ```
 
-Một controller hoặc một lớp tính phí sử dụng interface này phải xử lý `SQLException`, mặc dù nó chỉ quan tâm “sách có sẵn không?”. API này tiết lộ rằng hiện tại triển khai có thể dùng cơ sở dữ liệu quan hệ và có thể khiến việc chuyển backend khó khăn hơn.
+A controller or pricing class using this interface must handle `SQLException` even though it only cares whether "the book is available". The API reveals that the implementation may currently use a relational database and makes switching backends harder.
 
-Một hợp đồng miền nghiệp vụ có thể là:
+A domain-oriented contract could be:
 
 ```java
 interface BookAvailability {
@@ -3731,9 +3731,9 @@ class CatalogUnavailableException extends RuntimeException {
 }
 ```
 
-Tầng adapter dùng JDBC có thể bắt `SQLException` rồi ném `CatalogUnavailableException` với **cause gốc** để giữ khả năng chẩn đoán. Caller cần phân biệt được `false` (tra cứu thành công nhưng không có sách) với **thất bại hệ thống** (không thể tra cứu). Không nên biến mọi ngoại lệ thành `false` vì như vậy sai ý nghĩa kết quả.
+A JDBC adapter can catch `SQLException` and throw `CatalogUnavailableException` with the **original cause** for diagnosis. Callers must distinguish `false` (lookup succeeded, but the book is absent) from **system failure** (lookup could not complete). Do not turn every exception into `false` because that distorts the result's meaning.
 
-Mẫu minh họa chuyển lỗi:
+Example error translation:
 
 ```java
 // Trong một JDBC adapter thực tế:
@@ -3745,44 +3745,44 @@ try {
 }
 ```
 
-Đoạn trên mô tả **phần xử lý lỗi**, không phải một class hoàn chỉnh để biên dịch độc lập. Trong code sản xuất, hãy đặt nó trong phương thức adapter thực hiện JDBC và quy định rõ lỗi nào có thể retry, lỗi nào là không hợp lệ, lỗi nào cần trả thông báo cho người dùng.
+This snippet illustrates **error handling**, not a complete, standalone compilable class. In production code, put it inside the JDBC adapter method and specify which errors can be retried, which represent invalid requests, and which should be reported to users.
 
-Cũng không cần che giấu mọi ngoại lệ kỹ thuật bằng một loại ngoại lệ chung. Hợp đồng phải giữ đủ ý nghĩa để caller ra quyết định đúng (ví dụ kiểm tra đầu vào, xung đột, không tồn tại, không truy cập được dịch vụ) mà không bị ép hiểu tên driver hoặc SQL vendor.
+There is also no need to hide every technical exception behind one generic exception. The contract should preserve enough meaning for callers to make correct decisions (for example, invalid input, conflicts, missing data, or unavailable services) without requiring driver names or vendor-specific SQL knowledge.
 
-## 5. Rò rỉ qua thời điểm thực thi và vòng đời tài nguyên
+## 5. Leaks Through Execution Timing and Resource Lifetimes
 
-Giả sử một repository trả về `Stream<Book>` mà việc đọc từng phần tử vẫn cần `ResultSet` và `Connection` mở. Caller tưởng đang làm việc với collection Java thuần, nhưng khi duyệt stream ngoài transaction đã đóng sẽ gặp lỗi. Thứ bị rò rỉ là **điều kiện vòng đời** của chi tiết persistence.
+Suppose a repository returns a `Stream<Book>` that still requires an open `ResultSet` and `Connection` to read each element. Callers think they are working with a plain Java collection, but traversing the stream outside a closed transaction fails. The leaked detail is the **lifecycle requirement** of the persistence mechanism.
 
-Có hai lựa chọn hợp lệ, tùy yêu cầu:
+Two approaches are valid, depending on requirements:
 
-**Đọc số lượng vừa phải và trả kết quả độc lập:**
+**Read a moderate amount and return independent results:**
 
 ```java
 List<Book> findRecentBooks(int limit);
 ```
 
-Implementation truy vấn, chuyển dữ liệu thành `Book`, đóng tài nguyên rồi trả một danh sách với hợp đồng rõ ràng.
+The implementation queries, converts data into `Book` objects, closes resources, and returns a list with a clear contract.
 
-**Xử lý streaming thật sự với dataset lớn:**
+**Use true streaming for large datasets:**
 
 ```java
 // Hợp đồng phải nói rõ caller sở hữu Stream và cần đóng.
 java.util.stream.Stream<Book> streamRecentBooks();
 ```
 
-Nếu dùng phương án streaming, phải tài liệu hóa việc caller sử dụng `try-with-resources` khi stream sở hữu tài nguyên cần đóng; tránh để việc truy cập nguồn dữ liệu phụ thuộc vào một session “tình cờ còn mở”. Trả `Stream` **không tự bảo đảm** nó đóng connection khi duyệt xong; việc đóng phụ thuộc cách adapter triển khai `onClose` và hợp đồng API.
+For streaming, document that callers use `try-with-resources` when the stream owns resources needing closure; avoid access depending on a session that "happens to be open". Returning a `Stream` **does not guarantee** its connection closes after traversal; closure depends on how the adapter implements `onClose` and on the API contract.
 
-Ngoài kiểu dữ liệu, có thể rò rỉ qua những điều kiện thứ tự:
+Beyond data types, order-of-operation constraints can leak:
 
-- Phải gọi `connect()` rồi mới được `find()`, dù trách nhiệm mở kết nối thuộc adapter.
-- Phải gọi `flush()` sau mỗi cập nhật để dữ liệu “thật sự” tồn tại, mặc dù người dùng API chỉ muốn lưu một đơn hàng.
-- Phải biết gọi `initializeLazyFields()` trước khi serialize một DTO.
+- Call `connect()` before `find()`, even though connection setup belongs to the adapter.
+- Call `flush()` after every update to make data "really" persist, though API consumers only need to save an order.
+- Know to call `initializeLazyFields()` before serializing a DTO.
 
-Một API tốt cố gắng **quản lý điều kiện nội bộ trong phạm vi sở hữu của nó** hoặc biến những điều kiện thực sự cần thiết thành một hợp đồng rõ ràng, thay vì để caller phát hiện ngầm qua lỗi runtime.
+A good API attempts to **manage internal constraints within its own responsibility** or make genuinely necessary constraints explicit in a contract, instead of allowing callers to discover them indirectly through runtime failures.
 
-## 6. Thiết kế để không vô tình lộ mô hình dữ liệu
+## 6. Avoid Accidentally Exposing the Data Model
 
-Có những API không lộ `HashMap` hay JDBC nhưng vẫn làm lộ **cấu trúc bảng, tên trường hạ tầng hoặc cách ghép dữ liệu**:
+Some APIs expose neither `HashMap` nor JDBC, yet still reveal **table structure, infrastructure field names, or data-join strategies**:
 
 ```java
 // Hợp đồng buộc caller biết cột storage và giá trị mã hóa:
@@ -3792,15 +3792,15 @@ Map<String, Object> loadRow(String tableName, long primaryKey);
 Optional<OrderSummary> findOrderSummary(OrderId orderId);
 ```
 
-Ví dụ thứ hai sử dụng các kiểu miền nghiệp vụ như `OrderId`, `OrderSummary`. Bên ngoài không cần biết dữ liệu được lấy từ một bảng, nhiều bảng, cache hay HTTP. Mỗi kiểu miền nghiệp vụ cần được định nghĩa rõ: đơn hàng là gì, trường nào có giá trị gì, có được trả kết quả rỗng không.
+The second example uses domain types such as `OrderId` and `OrderSummary`. Consumers need not know whether data comes from one table, several tables, a cache, or HTTP. Each domain type needs a clear definition: what an order represents, what each field means, and whether an empty result is possible.
 
-Trong ứng dụng Spring, repository có thể cần `JpaRepository` ở adapter, nhưng không nhất thiết để mọi service/controller phụ thuộc trực tiếp các entity, lazy proxy và `EntityManager`. Điều này không có nghĩa **luôn phải tạo thêm một interface mới**. Hãy tạo ranh giới abstraction ở nơi có nhu cầu bảo vệ thay đổi hoặc chia trách nhiệm thực tế.
+In Spring applications, the adapter may need `JpaRepository`, but services/controllers need not all depend directly on entities, lazy proxies, and `EntityManager`. This **does not mean an additional interface is always required**. Introduce abstraction boundaries where they protect real changes or divide actual responsibilities.
 
-### `Page` / `Pageable` có phải luôn là rò rỉ?
+### Are `Page` / `Pageable` Always Leaks?
 
-Không. Nếu hợp đồng phục vụ tìm kiếm phân trang và người dùng hiểu rõ thứ tự, trang, số lượng, thì **phân trang là yêu cầu nghiệp vụ hoặc sản phẩm thực sự**. Tuy nhiên, buộc API lõi phụ thuộc vào `org.springframework.data.domain.Page` có thể không cần thiết nếu những caller cần dùng ngoài Spring.
+No. If the contract is for paginated search and consumers understand ordering, page numbers, and page sizes, **pagination is a real business or product requirement**. However, forcing a core API to depend on `org.springframework.data.domain.Page` may be unnecessary when some callers need to work outside Spring.
 
-Có thể chọn một kiểu kết quả độc lập khi ranh giới module thực sự cần:
+An independent result type may be appropriate when the module boundary truly requires it:
 
 ```java
 record SearchPage<T>(
@@ -3814,43 +3814,43 @@ record SearchPage<T>(
 }
 ```
 
-Nhưng không nên tạo `SearchPage` mới chỉ để “tránh dùng Spring” khi cả hệ thống cố ý xây trên Spring Data và hợp đồng hiện tại đã phù hợp. **Trừu tượng là lựa chọn ranh giới có giá trị**, không phải số lượng tầng wrapper.
+But do not introduce a new `SearchPage` solely to "avoid using Spring" when the whole system intentionally uses Spring Data and the existing contract fits. **Abstraction is about choosing valuable boundaries**, not about the number of wrapper layers.
 
-## 7. Rò rỉ chi tiết thực hiện còn biểu hiện ở hành vi
+## 7. Implementation Details Can Also Leak Through Behavior
 
-API được khai báo bằng kiểu tổng quát chưa chắc thực sự độc lập với triển khai. Ví dụ:
+An API declared with general-purpose types is not necessarily independent of its implementation. For example:
 
 ```java
 List<Book> searchByTitle(String keyword);
 ```
 
-Nếu không có hợp đồng bổ sung, caller rất dễ vô tình dựa vào một đặc tính hiện tại:
+Without further contractual guarantees, callers can easily come to rely on incidental current behavior:
 
-- **Thứ tự:** kết quả từ `HashMap.values()` có thứ tự không cam kết. Khi chuyển sang PostgreSQL hoặc đổi cách duyệt, các phần tử đảo vị trí.
-- **Phân biệt hoa/thường:** một backend so khớp `"java"` và `"Java"`, backend khác không so khớp.
-- **Phân trang:** một triển khai tự giới hạn 100 kết quả, triển khai khác trả tất cả.
-- **Độ mới dữ liệu:** cache có độ trễ cập nhật, còn truy vấn trực tiếp có thể phản ánh dữ liệu mới hơn.
-- **Ngoại lệ:** “không tìm thấy” trả `null` ở nơi này nhưng ném lỗi ở nơi khác.
-- **Chi phí:** một thao tác tưởng truy cập bộ nhớ hóa ra gọi HTTP trong mỗi vòng lặp.
+- **Ordering:** results from `HashMap.values()` have no guaranteed order. Switching to PostgreSQL or changing traversal can reorder elements.
+- **Case sensitivity:** one backend matches `"java"` and `"Java"` while another does not.
+- **Pagination:** one implementation silently limits results to 100, while another returns everything.
+- **Data freshness:** a cache may lag behind updates, while a direct query may return newer data.
+- **Exceptions:** "not found" returns `null` in one implementation but throws in another.
+- **Cost:** an operation that looks like an in-memory lookup actually sends HTTP requests in every loop iteration.
 
-Để abstraction thực sự đáng tin, **định nghĩa hành vi quan sát được**: điều kiện đầu vào, kết quả khi không tìm thấy, thứ tự, giới hạn, cách xử lý trùng lặp, lỗi và giới hạn hiệu năng có ý nghĩa. Không cần mô tả mỗi dòng triển khai; chỉ cần những gì caller phải có khả năng dựa vào.
+For an abstraction to be dependable, **define observable behavior**: input conditions, missing-result semantics, ordering, limits, duplicate handling, errors, and meaningful performance constraints. You need not document each implementation step, only what callers must be able to rely on.
 
-Một ví dụ: `searchByTitle("java", 10)` trong bài quy định so khớp không phân biệt hoa/thường và sắp xếp theo ISBN tăng dần. Vì vậy các adapter tương lai phải tuân theo, không thể trả thứ tự tùy ý rồi cho rằng “cùng trả `List<Book>` là đủ”.
+For example, this lesson specifies that `searchByTitle("java", 10)` performs case-insensitive matching and sorts by ISBN in ascending order. Future adapters must preserve that behavior; they cannot return arbitrary ordering and claim that "returning a `List<Book>` is enough".
 
-**Không che giấu vấn đề phân tán:** đọc từ remote service có timeout, lỗi mạng và độ trễ mà một truy cập memory thông thường không có. Một interface không thể xóa các thuộc tính đó. Hợp đồng nên biểu đạt timeout, retry hoặc lỗi sẵn có theo mức độ caller cần hiểu, tránh tạo kỳ vọng sai rằng mọi triển khai có đặc tính giống in-memory.
+**Do not hide distributed-system realities:** a remote service has timeouts, network failures, and latency that an ordinary in-memory access does not. An interface cannot erase these characteristics. Its contract should express timeouts, retries, or possible errors to the extent callers need to know them, avoiding false expectations that all implementations behave like in-memory ones.
 
-## 8. Cách refactor một API đã rò rỉ
+## 8. Refactoring an API That Leaks
 
-Giả sử hệ thống đã có nhiều chỗ gọi `getInternalBooks().get(isbn)`. Có thể cải tiến theo thứ tự:
+Suppose a system has many callers using `getInternalBooks().get(isbn)`. Improve it in the following order:
 
-1. **Liệt kê hành vi caller đang thực sự cần:** tìm theo ISBN, kiểm tra tồn tại, tìm theo tiêu đề, xuất thống kê, có thật sự cần chỉnh trực tiếp dữ liệu không?
-2. **Định nghĩa hợp đồng theo nhu cầu ấy:** `findByIsbn`, `searchByTitle`, `addBook` nếu cập nhật thuộc trách nhiệm của API. Ghi rõ kết quả và lỗi.
-3. **Cài đặt hợp đồng trên cấu trúc hiện tại:** giữ `HashMap` riêng tư; chuyển logic tìm/kiểm tra vào bên trong.
-4. **Di chuyển các caller sang API mới:** để chúng dùng hành vi thay vì thao tác dữ liệu thô.
-5. **Ngừng công bố đường truy cập cũ** khi các caller đã được chuyển và tương thích phiên bản cho phép; với thư viện công khai, có thể cần giai đoạn `@Deprecated` và chính sách nâng cấp.
-6. **Kiểm thử hợp đồng qua nhiều triển khai hoặc một fake độc lập:** caller không nên cần ép kiểu về `InMemoryBookCatalog`.
+1. **List the behaviors callers actually need:** lookup by ISBN, existence checks, title search, statistics, and whether direct data modification is truly necessary.
+2. **Define contracts around those needs:** `findByIsbn`, `searchByTitle`, and `addBook` if updates belong to the API. Specify results and errors.
+3. **Implement the contract over the current structure:** keep the `HashMap` private and move lookup/validation logic inside.
+4. **Migrate callers to the new API:** have them request behaviors instead of manipulating raw data.
+5. **Stop exposing the old access path** once callers have migrated and version compatibility permits; public libraries may need a `@Deprecated` period and migration policy.
+6. **Test the contract across multiple implementations or an independent fake:** callers should not need to cast to `InMemoryBookCatalog`.
 
-Không nên vội thiết kế interface quá tổng quát như:
+Avoid rushing into an overly generic interface such as:
 
 ```java
 interface Repository {
@@ -3858,56 +3858,56 @@ interface Repository {
 }
 ```
 
-API này không còn lộ `HashMap` nhưng lại **mất ngữ nghĩa nghiệp vụ** và chuyển gánh nặng parse, ép kiểu, kiểm tra lỗi sang caller. Đây không phải abstraction tốt. Hợp đồng nên đủ cụ thể để người dùng làm đúng công việc mà không biết chi tiết nội bộ.
+This API no longer exposes `HashMap` but **loses business semantics**, pushing parsing, casting, and error checks onto callers. This is not a good abstraction. A contract should be specific enough for consumers to work correctly without knowing internal details.
 
-Nếu thay đổi cách triển khai là nhu cầu chưa hề tồn tại, một class cụ thể với public API rõ ràng vẫn hoàn toàn có thể là abstraction phù hợp. Không bắt buộc dựng `interface` cho mỗi lớp.
+If there is no actual requirement to change the implementation, a concrete class with a clear public API can still be an entirely appropriate abstraction. An `interface` is not mandatory for every class.
 
-## 9. Checklist khi review giao diện sử dụng
+## 9. Checklist for Reviewing Public Interfaces
 
-| Câu hỏi | Dấu hiệu cần điều chỉnh |
+| Question | Sign that adjustment may be needed |
 | --- | --- |
-| Tên phương thức có mô tả hành vi mà caller cần? | `getRawRows`, `getInternalMap`, `executeSql` trong API miền nghiệp vụ |
-| Kiểu tham số/kết quả có làm lộ framework/backend? | Controller phải cầm `EntityManager` hoặc `ResultSet` |
-| Caller có thể thay đổi trạng thái nội bộ ngoài ý muốn? | Getter trả `List`/mảng mutable đang được lớp giữ |
-| Kết quả “không tìm thấy” hoặc “lỗi hệ thống” có rõ? | Cùng `null` đại diện nhiều tình huống khác nhau |
-| Có điều kiện ẩn về thời điểm hoặc thứ tự gọi? | Phải mở transaction thủ công để đọc DTO tưởng đã hoàn chỉnh |
-| Có hành vi không được cam kết nhưng caller đang dựa vào? | Dựa vào thứ tự duyệt `HashMap` |
-| Thay triển khai có buộc sửa caller? | Bên gọi dùng trực tiếp class/SQL/khóa cache thay vì hợp đồng |
-| API có quá trừu tượng đến mức vô nghĩa không? | `Object execute(...)` và caller phải ép kiểu mọi nơi |
-| API có bảo vệ điều kiện nghiệp vụ? | Caller bỏ qua validation bằng cách sửa dữ liệu thô |
-| Ranh giới này có thật sự cần tách? | Tạo thêm nhiều lớp trung gian chỉ chuyển tiếp y nguyên lời gọi |
+| Does the method name describe behavior the caller needs? | `getRawRows`, `getInternalMap`, or `executeSql` in a domain API |
+| Do parameter/result types expose a framework or backend? | The controller needs an `EntityManager` or `ResultSet` |
+| Can callers unintentionally modify internal state? | A getter exposes a mutable `List` or array owned by the class |
+| Are "not found" and "system error" results unambiguous? | One `null` represents several situations |
+| Are there hidden timing or call-order requirements? | A transaction must be manually opened to read a supposedly complete DTO |
+| Are callers relying on behavior the contract does not promise? | Depending on `HashMap` iteration order |
+| Does changing the implementation require caller changes? | Callers use a concrete class, SQL, or cache key instead of the contract |
+| Is the API too abstract to convey meaning? | `Object execute(...)`, forcing callers to cast everywhere |
+| Does the API enforce business constraints? | Callers bypass validation by modifying raw data |
+| Does this boundary actually need separating? | Extra intermediary classes do nothing but forward the same calls |
 
-**Đừng đánh đồng “ẩn mọi thứ” với abstraction tốt.** Những lựa chọn ảnh hưởng hành vi người dùng (ví dụ thứ tự tìm kiếm, phân trang, thất bại truy vấn, quyền sửa dữ liệu) phải được mô tả rõ. Điều cần ẩn là chi tiết cài đặt không cần thiết để sử dụng hợp đồng.
+**Do not equate "hiding everything" with good abstraction.** Choices that affect consumer behavior (such as search ordering, pagination, query failures, and permissions to change data) must be described clearly. Hide implementation details unnecessary to use the contract.
 
-## 10. Bài tập tự kiểm tra
+## 10. Self-Check Exercises
 
-**Câu 1.** `Map<String, Product> getInternalCache()` trong một service bán hàng có vấn đề gì?
+**Question 1.** What is wrong with `Map<String, Product> getInternalCache()` in a sales service?
 
-**Đáp án:** Caller biết cấu trúc cache, quy tắc khóa và có thể sửa dữ liệu nếu map mutable. Khi thay cache bằng hệ thống khác, caller bị ảnh hưởng. Hãy cân nhắc `Optional<Product> findProduct(String id)` hoặc thao tác nghiệp vụ có ý nghĩa.
+**Answer:** Callers learn the cache structure and key conventions and may modify its contents if the map is mutable. Replacing the cache with a different system then affects callers. Consider `Optional<Product> findProduct(String id)` or a meaningful domain operation.
 
-**Câu 2.** Đổi `HashMap` trả về thành `Collections.unmodifiableMap(internal)` đã xóa hoàn toàn rò rỉ abstraction chưa?
+**Question 2.** Does replacing a returned `HashMap` with `Collections.unmodifiableMap(internal)` completely eliminate abstraction leaks?
 
-**Đáp án:** **Chưa chắc.** View ngăn sửa qua tham chiếu đó nhưng vẫn buộc caller hiểu map/khóa; hơn nữa backing map thay đổi thì view cũng phản ánh. Chặn sửa và che cấu trúc triển khai là hai vấn đề khác nhau.
+**Answer:** **Not necessarily.** The view prevents modification through that reference but still requires callers to understand maps and keys; changes to the backing map are also reflected in the view. Preventing mutation and hiding implementation structure are distinct concerns.
 
-**Câu 3.** Một API `readFile(Path path) throws IOException` có phải là leaky abstraction?
+**Question 3.** Is an API declaring `readFile(Path path) throws IOException` necessarily a leaky abstraction?
 
-**Đáp án:** **Không nhất thiết.** Khi mục đích công khai là thao tác trực tiếp với file, `Path` và `IOException` chính là phần hợp đồng. Nếu API là `getCustomerProfile()` nhưng caller phải biết đường dẫn JSON và xử lý lỗi file thì có thể đó là rò rỉ không cần thiết.
+**Answer:** **Not necessarily.** When the public purpose is direct file operations, `Path` and `IOException` legitimately belong to the contract. But if an API such as `getCustomerProfile()` requires callers to know JSON file paths and handle file errors, that may be an unnecessary leak.
 
-**Câu 4.** Hai triển khai cùng `BookCatalog` nhưng một bên tìm kiếm phân biệt chữ hoa, một bên không. Thay thế cho nhau có an toàn không?
+**Question 4.** Two `BookCatalog` implementations differ in case sensitivity during search. Can they safely substitute for each other?
 
-**Đáp án:** Nếu hợp đồng quy định không phân biệt hoa/thường, triển khai khác đã vi phạm hợp đồng. Trừu tượng tốt đòi hỏi tương thích **hành vi**, không chỉ tương thích chữ ký phương thức.
+**Answer:** If the contract requires case-insensitive matching, the other implementation violates it. Good abstraction requires **behavioral** compatibility, not just compatible method signatures.
 
-**Câu 5.** Dùng một interface `findById()` để bọc `HashMap` có tự bảo đảm an toàn nhiều luồng và transaction không?
+**Question 5.** Does wrapping a `findById()` in an interface with `HashMap` automatically guarantee thread safety and transactions?
 
-**Đáp án:** **Không.** Interface chỉ biểu đạt hợp đồng; tính nguyên tử, visibility và transaction thuộc trách nhiệm triển khai và cần được quy định nếu caller phụ thuộc vào chúng.
+**Answer:** **No.** An interface only expresses a contract; atomicity, visibility, and transactions are implementation responsibilities and must be specified when callers rely on them.
 
-**Câu 6.** Tại sao không nên đổi mọi API thành `Object execute(String command)` để giấu hoàn toàn cách thực hiện?
+**Question 6.** Why shouldn't every API become `Object execute(String command)` in an attempt to hide implementation details completely?
 
-**Đáp án:** Vì caller phải biết chuỗi lệnh, parse dữ liệu và ép kiểu, tức chi tiết bị chuyển sang caller, còn hợp đồng kiểu dữ liệu và ngữ nghĩa trở nên khó kiểm chứng.
+**Answer:** Because callers must then understand command strings, parse data, and cast values, moving the details to consumers while obscuring the type contract and semantics.
 
-**Ghi nhớ:** Đánh giá một abstraction bằng việc code bên ngoài **cần biết những gì để dùng nó đúng**, và **mức độ ảnh hưởng khi cài đặt thay đổi**. API tốt công bố hành vi, dữ liệu và lỗi ở mức phù hợp với người dùng; giữ chi tiết lưu trữ, framework và trạng thái riêng ở nơi sở hữu chúng. Đồng thời, đừng che giấu các thuộc tính quan sát được mà caller thực sự cần dựa vào.
+**Remember:** Evaluate an abstraction by **what external code needs to know to use it correctly** and **how much implementation changes affect that code**. A good API exposes behavior, data, and errors at the level consumers need while keeping storage, framework, and internal state details with their owner. Do not hide observable properties that callers truly need to rely on.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

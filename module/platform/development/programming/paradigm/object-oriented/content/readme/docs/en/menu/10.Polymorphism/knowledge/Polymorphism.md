@@ -1,40 +1,40 @@
 <a id="back-to-top"></a>
 
-# Đa hình
+# Polymorphism
 
 ## Menu
-- [Đa hình và nhiều cách thực hiện cùng một thao tác](#polymorphism-001)
-- [Đa hình kiểu con qua giao diện hoặc lớp cha](#polymorphism-002)
-- [Phân giải phương thức tĩnh và phân giải động](#polymorphism-003)
-- [Ghi đè và lựa chọn phương thức khi chạy](#polymorphism-004)
-- [Phân biệt ghi đè với nạp chồng](#polymorphism-005)
-- [Phân biệt che khuất thành viên với ghi đè](#polymorphism-006)
-- [Phạm vi đa hình của phương thức và thuộc tính](#polymorphism-007)
-- [Duck typing và đa hình theo khả năng](#polymorphism-008)
-- [Đa hình thay cho điều kiện kiểm tra từng loại](#polymorphism-009)
-- [Ví dụ nhiều phương thức thanh toán](#polymorphism-010)
+- [Polymorphism and Multiple Implementations of the Same Operation](#polymorphism-001)
+- [Subtype Polymorphism Through an Interface or Parent Class](#polymorphism-002)
+- [Static Method Resolution and Dynamic Dispatch](#polymorphism-003)
+- [Method Overriding and Runtime Method Selection](#polymorphism-004)
+- [Distinguishing Overriding from Overloading](#polymorphism-005)
+- [Distinguishing Member Hiding from Overriding](#polymorphism-006)
+- [Scope of Polymorphism for Methods and Fields](#polymorphism-007)
+- [Duck Typing and Capability-Based Polymorphism](#polymorphism-008)
+- [Using Polymorphism Instead of Type-Based Conditionals](#polymorphism-009)
+- [Multiple Payment Methods: A Practical Example](#polymorphism-010)
 
-## <a id="polymorphism-001">Đa hình và nhiều cách thực hiện cùng một thao tác</a>
+## <a id="polymorphism-001">Polymorphism and Multiple Implementations of the Same Operation</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đa hình và nhiều cách thực hiện cùng một thao tác trong Java
+# Polymorphism and Multiple Implementations of the Same Operation in Java
 
-Trong lập trình hướng đối tượng (OOP), **đa hình (polymorphism)** cho phép một đoạn mã gửi **cùng một lời gọi phương thức** tới các đối tượng khác nhau, nhưng mỗi đối tượng thực hiện công việc theo cách phù hợp với loại của nó.
+In object-oriented programming (OOP), **polymorphism** allows the same code to issue **the same method call** to different objects while each object performs the operation in a way appropriate to its type.
 
-Ví dụ, một hệ thống bán hàng phải tính phí giao hàng. Đối với cùng một kiện hàng, giao tiêu chuẩn, giao hỏa tốc và giao tiết kiệm sẽ có công thức giá và thời gian giao dự kiến khác nhau. Thay vì để màn hình thanh toán tự kiểm tra `if (loaiGiaoHang == ...)` rồi tính từng công thức, ta định nghĩa một hợp đồng `ShippingPolicy.quote(parcel)` và để **mỗi implementation tự chịu trách nhiệm** cho cách tính của mình.
+For example, an e-commerce system must calculate shipping fees. For the same parcel, standard, express, and economy delivery may have different pricing formulas and estimated delivery times. Instead of having the checkout screen test `if (loaiGiaoHang == ...)` and calculate each formula, we define a `ShippingPolicy.quote(parcel)` contract and let **each implementation take responsibility** for its own calculation.
 
-Điểm cần nắm:
+Key points:
 
-- **Thao tác chung**: `quote(Parcel)` — yêu cầu một báo giá giao hàng.
-- **Các cách thực hiện khác nhau**: `StandardShipping`, `ExpressShipping`, `EconomyShipping`.
-- **Mã sử dụng chung**: chỉ biết `ShippingPolicy`, không cần biết chi tiết công thức.
-- **Khi chạy**: Java gọi implementation thích hợp với **kiểu thực tế của đối tượng** mà tham chiếu đang trỏ tới.
+- **Shared operation**: `quote(Parcel)` — requests a shipping quote.
+- **Different implementations**: `StandardShipping`, `ExpressShipping`, `EconomyShipping`.
+- **Shared consuming code**: depends only on `ShippingPolicy` without knowing the pricing formulas.
+- **At runtime**: Java invokes the implementation appropriate to the **actual type of the object** referenced.
 
-## 1. Một hành động, nhiều hành vi
+## 1. One Operation, Multiple Behaviors
 
-Hợp đồng có thể biểu diễn bằng interface:
+The contract can be expressed as an interface:
 
 ~~~java
 interface ShippingPolicy {
@@ -42,7 +42,7 @@ interface ShippingPolicy {
 }
 ~~~
 
-Ba kiểu giao hàng hiện thực hóa cùng một phương thức:
+Three shipping types implement the same method:
 
 ~~~java
 class StandardShipping implements ShippingPolicy {
@@ -64,30 +64,30 @@ class ExpressShipping implements ShippingPolicy {
 }
 ~~~
 
-Phần mã dùng chung:
+The shared consuming code:
 
 ~~~java
 ShippingPolicy policy = /* một đối tượng triển khai ShippingPolicy */;
 ShippingQuote result = policy.quote(parcel);
 ~~~
 
-Câu lệnh gọi **không đổi** khi thay `policy` từ một đối tượng `StandardShipping` thành `ExpressShipping`. Điều khác nhau nằm ở **implementation** của phương thức được chọn.
+The call **does not change** when `policy` refers to an `StandardShipping` instead of an `ExpressShipping`. The difference lies in **which method implementation** runs.
 
-Đa hình dựa trên phương thức instance được override/implement thường được gọi là **đa hình động** (*runtime polymorphism*). Không phải Java nhìn tên biến `policy` để lựa chọn; nó căn cứ vào **đối tượng thực tế** đang được tham chiếu.
+Polymorphism based on overridden or implemented instance methods is commonly called **dynamic polymorphism** (*runtime polymorphism*). Java does not select behavior by looking at the variable name `policy`; it uses the **actual referenced object**.
 
-## 2. Ví dụ Java hoàn chỉnh: nhiều chiến lược tính phí giao hàng
+## 2. Complete Java Example: Multiple Shipping-Fee Strategies
 
-Giả sử hệ thống hỗ trợ ba gói dịch vụ:
+Suppose the system supports three service plans:
 
-| Gói | Phí cơ bản ở nội thành | Phí cơ bản ở ngoại thành | Phụ phí theo khối lượng | Thời gian dự kiến |
+| Plan | Inner-city base fee | Outer-city base fee | Weight surcharge | Estimated delivery time |
 | --- | ---: | ---: | --- | --- |
-| Tiết kiệm | 18.000đ | 28.000đ | 2.000đ cho mỗi kg bắt đầu **sau kg đầu tiên** | 4–6 ngày |
-| Tiêu chuẩn | 20.000đ | 35.000đ | 5.000đ cho mỗi kg bắt đầu **sau kg đầu tiên** | 2–4 ngày |
-| Hỏa tốc | 50.000đ | 70.000đ | 15.000đ cho mỗi 500 g bắt đầu, **kể cả 500 g đầu** | 1 ngày |
+| Economy | 18.000 VND | 28.000 VND | 2.000 VND for each started kilogram **after the first kilogram** | 4–6 days |
+| Standard | 20.000 VND | 35.000 VND | 5.000 VND for each started kilogram **after the first kilogram** | 2–4 days |
+| Express | 50.000 VND | 70.000 VND | 15.000 VND per started 500 g, **including the first 500 g** | 1 day |
 
-Đây là các **con số giả định** để luyện Java, không phải biểu phí của hãng vận chuyển. Mỗi chính sách hỗ trợ cả hai khu vực để các implementation có thể được sử dụng thay thế nhau theo hợp đồng chung.
+These are **hypothetical figures** for practicing Java, not an actual carrier's rates. Each policy supports both zones so implementations remain substitutable under the shared contract.
 
-Lưu đoạn dưới đây thành **`ShippingPolymorphismDemo.java`**. Mã chạy độc lập với **Java 11+**, chỉ cần JDK.
+Save the following code as **`ShippingPolymorphismDemo.java`**. It runs standalone with **Java 11+** and requires only a JDK.
 
 ~~~java
 import java.math.BigDecimal;
@@ -249,14 +249,14 @@ public class ShippingPolymorphismDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac ShippingPolymorphismDemo.java
 java ShippingPolymorphismDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Tiết kiệm: 20000 VND, dự kiến 4 ngày
@@ -264,21 +264,21 @@ Tiêu chuẩn: 25000 VND, dự kiến 2 ngày
 Hỏa tốc: 95000 VND, dự kiến 1 ngày
 ~~~
 
-### Kiểm tra phép tính
+### Checking the Calculations
 
-Kiện hàng có khối lượng **1.500 g**, khu vực **nội thành**:
+The parcel weighs **1.500 g** and is in the **inner-city** zone:
 
-- **Tiết kiệm**: 18.000 + 1 × 2.000 = **20.000 VND**, vì có 1 kg bắt đầu sau kg đầu.
-- **Tiêu chuẩn**: 20.000 + 1 × 5.000 = **25.000 VND**.
-- **Hỏa tốc**: 50.000 + 3 × 15.000 = **95.000 VND**, vì 1.500 g có ba đơn vị 500 g.
+- **Economy**: 18.000 + 1 × 2.000 = **20.000 VND**, because 1 additional kilogram begins after the first.
+- **Standard**: 20.000 + 1 × 5.000 = **25.000 VND**.
+- **Express**: 50.000 + 3 × 15.000 = **95.000 VND**, because 1.500 g comprises three 500 g units.
 
-Các phương thức cùng trả `ShippingQuote`, nên phần mã thanh toán có thể nhận và hiển thị báo giá mà **không phải đổi cấu trúc dữ liệu** theo từng gói.
+All methods return `ShippingQuote`, so checkout code can receive and display a quote **without changing the data structure** for each plan.
 
-### Tại sao đây là đa hình chứ không chỉ là ba hàm khác nhau?
+### Why Is This Polymorphism Rather Than Just Three Different Functions?
 
-Điểm chung không đơn thuần là cả ba lớp có tên phương thức `quote`. Cả ba **cùng `implements ShippingPolicy`**, tạo ra một hợp đồng kiểu rõ ràng.
+The commonality is not merely that all three classes have a method named `quote`. All three **`implements ShippingPolicy`**, establishing a clear shared type contract.
 
-Trong vòng lặp:
+Inside the loop:
 
 ~~~java
 for (ShippingPolicy policy : policies) {
@@ -286,17 +286,17 @@ for (ShippingPolicy policy : policies) {
 }
 ~~~
 
-Tại mỗi lần lặp:
+On each iteration:
 
-| Lần | Kiểu khai báo của `policy` | Đối tượng thực tế | Implementation của `quote` được chạy |
+| Iteration | Declared type of `policy` | Actual object | `quote` implementation invoked |
 | --- | --- | --- | --- |
 | 1 | `ShippingPolicy` | `EconomyShipping` | `EconomyShipping.quote` |
 | 2 | `ShippingPolicy` | `StandardShipping` | `StandardShipping.quote` |
 | 3 | `ShippingPolicy` | `ExpressShipping` | `ExpressShipping.quote` |
 
-**Một lời gọi ở phía sử dụng, nhiều hành vi ở phía triển khai**: đó là biểu hiện rất điển hình của đa hình động.
+**One call in the consuming code, multiple behaviors in the implementations**: this is a typical example of dynamic polymorphism.
 
-## 3. Quan hệ kiểu và cách Java lựa chọn hành vi
+## 3. Type Relationships and How Java Selects Behavior
 
 ~~~mermaid
 classDiagram
@@ -323,9 +323,9 @@ classDiagram
     CheckoutService --> ShippingPolicy : depends on
 ~~~
 
-Mũi tên tam giác nét đứt biểu diễn quan hệ **implements**. `CheckoutService` giữ một tham chiếu kiểu `ShippingPolicy`; nó không cần giữ riêng ba field cho ba gói.
+The dashed triangle arrows represent **implements** relationships. `CheckoutService` holds a reference of type `ShippingPolicy`; it does not need three separate fields for the three plans.
 
-Khi chạy một lần tính phí:
+When one quote is calculated:
 
 ~~~mermaid
 sequenceDiagram
@@ -343,18 +343,18 @@ sequenceDiagram
     Checkout-->>App: ShippingQuote
 ~~~
 
-Sơ đồ dùng `ShippingPolicy` như một **vai trò hợp đồng**, không ngụ ý rằng Java tạo thêm một instance của interface. Trong lần chạy thực tế, lời gọi được thực hiện trên chính instance `ExpressShipping` mà `CheckoutService.policy` trỏ đến.
+The diagram uses `ShippingPolicy` as a **contract role**; it does not imply that Java creates an instance of the interface. In an actual execution, the call is performed on the `ExpressShipping` instance referenced by `CheckoutService.policy`.
 
-### Phân biệt kiểu tĩnh và kiểu runtime
+### Distinguishing Static Types from Runtime Types
 
 ~~~java
 ShippingPolicy policy = new ExpressShipping();
 ~~~
 
-- Kiểu **tĩnh** của biến `policy` là `ShippingPolicy`: compiler cho phép gọi những phương thức được giao diện khai báo, ví dụ `quote`.
-- Kiểu **thực tế** của object là `ExpressShipping`: khi gọi `policy.quote(...)`, phần triển khai của `ExpressShipping` được sử dụng.
+- The variable `policy` has the **static type** `ShippingPolicy`: the compiler allows calls to methods declared in the interface, such as `quote`.
+- The object's **actual type** is `ExpressShipping`: calling `policy.quote(...)` invokes the `ExpressShipping` implementation.
 
-Nếu lớp cụ thể có phương thức riêng không thuộc interface:
+If a concrete class has a method not declared by the interface:
 
 ~~~java
 class DebugShipping implements ShippingPolicy {
@@ -376,17 +376,17 @@ policy.quote(parcel); // Hợp lệ.
 // policy.resetDebugCounters(); // Lỗi biên dịch: interface không khai báo.
 ~~~
 
-Compiler dựa vào **kiểu tham chiếu** để xác định thao tác có thể gọi; khi đã gọi một phương thức instance được implement/override, **kiểu runtime** quyết định cách thực hiện.
+The compiler uses the **reference type** to determine which operations are callable; once an implemented or overridden instance method is invoked, the **runtime type** determines how it executes.
 
-## 4. Thay câu hỏi “đây là loại gì?” bằng “hãy thực hiện thao tác”
+## 4. Replace "What Type Is This?" with "Perform the Operation"
 
-Nếu phần thanh toán liên tục kiểm tra `"ECONOMY"`, `"STANDARD"`, `"EXPRESS"` để lặp lại cách tính, mỗi chính sách mới làm nhiều nơi phải sửa. Thay vào đó, người sử dụng chỉ yêu cầu:
+If checkout repeatedly checks `"ECONOMY"`, `"STANDARD"`, and `"EXPRESS"` and duplicates their formulas, adding a new policy requires changes in many places. Instead, consuming code simply requests:
 
 ~~~java
 ShippingQuote quote = policy.quote(parcel);
 ~~~
 
-Còn nơi lựa chọn gói giao hàng **vẫn có thể dùng** `switch`, `Map<String,ShippingPolicy>` hoặc cấu hình:
+The location that selects a delivery plan **may still use** `switch`, `Map<String,ShippingPolicy>`, or configuration:
 
 ~~~java
 Map<String, ShippingPolicy> options = Map.of(
@@ -398,11 +398,11 @@ if (selected == null) throw new IllegalArgumentException("Gói không hợp lệ
 ShippingQuote quote = selected.quote(parcel);
 ~~~
 
-Đoạn mã minh họa này cần `import java.util.Map;` và đặt trong phương thức Java phù hợp. **Nhánh chọn chiến lược ở ranh giới** không đồng nghĩa với việc phải dạy lại công thức trong mọi service. Bài *Đa hình thay cho điều kiện kiểm tra từng loại* phân tích từng bước refactor, test hồi quy và các trường hợp một `if/switch` vẫn là lựa chọn tốt.
+This illustration requires `import java.util.Map;` and must be placed in an appropriate Java method. **Selecting a strategy at the boundary** does not mean duplicating its pricing formula in every service. The lesson *Using Polymorphism Instead of Type-Based Conditionals* covers step-by-step refactoring, regression tests, and cases where `if/switch` remains appropriate.
 
-## 5. `@Override` xác nhận mối nối giữa hợp đồng và implementation
+## 5. `@Override` Confirms the Link Between Contract and Implementation
 
-Mỗi `ShippingPolicy` cụ thể phải cung cấp `public ShippingQuote quote(Parcel)`. Annotation `@Override` cho phép trình biên dịch bắt lỗi gõ nhầm hoặc sai danh sách tham số:
+Each concrete `ShippingPolicy` must provide `public ShippingQuote quote(Parcel)`. The `@Override` annotation lets the compiler catch misspellings or incorrect parameter lists:
 
 ~~~java
 class ExampleShipping implements ShippingPolicy {
@@ -413,9 +413,9 @@ class ExampleShipping implements ShippingPolicy {
 }
 ~~~
 
-Ví dụ này đặt lớp `ExampleShipping` **bên trong** `ShippingPolymorphismDemo` để dùng trực tiếp các kiểu lồng từ chương trình chính (và `BigDecimal` đã import); nếu tách ra lớp top-level, cần định danh đúng các kiểu lồng. Nếu đổi `quote(Parcel)` thành `quote(String)`, nó không còn thực hiện chữ ký bắt buộc. Compiler kiểm tra kiểu, phạm vi truy cập, kiểu trả về và checked exception tương thích; **không chứng minh** được quy tắc phí không âm, thời gian hợp lệ, tác dụng phụ hoặc kết quả nghiệp vụ. Bài *Ghi đè và lựa chọn phương thức khi chạy* đi sâu vào điều kiện override, `final` và lời gọi `super`.
+This example places `ExampleShipping` **inside** `ShippingPolymorphismDemo` so it can directly use nested types from the main program (and `BigDecimal` is already imported). If moved to a top-level class, nested type names must be qualified correctly. Changing `quote(Parcel)` to `quote(String)` no longer implements the required signature. The compiler checks compatible types, access, return types, and checked exceptions; it **cannot prove** nonnegative fees, valid delivery times, side effects, or correct business results. The lesson *Method Overriding and Runtime Method Selection* examines overriding rules, `final`, and `super` calls in greater depth.
 
-## 6. Ghi đè không phải là nạp chồng
+## 6. Overriding Is Not Overloading
 
 ~~~java
 class Animal {
@@ -428,17 +428,17 @@ Animal a = new Dog();
 System.out.println(a.sound()); // Gâu
 ~~~
 
-Đây là **override**: cùng chữ ký `sound()`, implementation được chọn theo đối tượng `Dog` lúc chạy. Ngược lại, `print(Object)` và `print(String)` là **overload**, tức hai chữ ký khác tham số; compiler quyết định chọn cái nào bằng kiểu tĩnh ở chỗ gọi. Vì vậy `Object text = "Java"; print(text)` sẽ chọn overload `Object` khi cả hai tồn tại, dù object thực là `String`.
+This is an **override**: the same `sound()` signature is implemented according to the runtime `Dog` object. By contrast, `print(Object)` and `print(String)` are **overloads**, meaning signatures with different parameters; the compiler selects one based on the static types at the call site. Thus `Object text = "Java"; print(text)` selects the `Object` overload when both exist, even though the actual object is a `String`.
 
-Một lời gọi Java có thể cần **hai bước**: chọn overload khi biên dịch, sau đó dispatch tới override của chữ ký đã chọn lúc chạy. Bài *Phân giải phương thức tĩnh và phân giải động* trình bày cơ chế hai bước; bài *Phân biệt ghi đè với nạp chồng* cung cấp các phép thử cụ thể.
+A Java call may involve **two stages**: selecting an overload at compile time and then dispatching to an override of the selected signature at runtime. The lesson *Static Method Resolution and Dynamic Dispatch* explains these two stages; *Distinguishing Overriding from Overloading* offers concrete tests.
 
-## 7. Hợp đồng chung có thể là interface hoặc lớp cha
+## 7. A Shared Contract May Be an Interface or Parent Class
 
-`ShippingPolicy` biểu thị một khả năng nên phù hợp với `interface` trong ví dụ chính. Nếu nhiều kiểu vận chuyển thật sự chia sẻ constructor, trạng thái và một phần công thức chung, có thể thêm abstract class `implements ShippingPolicy` để chia sẻ thuật toán nền. Khi đó class cụ thể có thể chỉ override một hook được chỉ định.
+`ShippingPolicy` represents a capability, so an `interface` is appropriate for the primary example. If several shipping types genuinely share constructors, state, and part of the pricing algorithm, an abstract class that `implements ShippingPolicy` can share the common calculation. Concrete subclasses may then override only a designated hook.
 
-Không cần tạo abstract superclass chỉ để hai phương thức tình cờ có vài dòng giống nhau: kế thừa kéo theo những cam kết giữa cha và con. Với các chiến lược có thể thay thế độc lập, interface kết hợp composition thường dễ bảo trì hơn. Dù cách nào, các lớp vẫn phải giữ cùng hợp đồng `quote(Parcel)`.
+Do not introduce an abstract superclass just because two methods coincidentally share a few lines: inheritance creates obligations between parents and children. For independently replaceable strategies, an interface plus composition is often easier to maintain. Either way, classes must preserve the same `quote(Parcel)` contract.
 
-## 8. Chọn implementation ở nơi lắp ghép ứng dụng
+## 8. Selecting Implementations at the Application Composition Boundary
 
 ~~~java
 CheckoutService standard =
@@ -447,25 +447,25 @@ CheckoutService express =
     new CheckoutService(new ExpressShipping());
 ~~~
 
-Hai đối tượng `CheckoutService` khác nhau cùng sử dụng kiểu dependency `ShippingPolicy`. Mỗi lần gọi `estimate(parcel)` chuyển tới phương thức `quote` của policy đã được cung cấp, nên checkout không phải biết công thức hoặc class cụ thể.
+Two different `CheckoutService` objects depend on the same `ShippingPolicy` type. Every `estimate(parcel)` call forwards to the supplied policy's `quote` method, so checkout needs to know neither the formula nor the concrete class.
 
-Đó là constructor injection đơn giản, có thể thực hiện bằng Java thuần. Nó tạo lợi ích thay thế và kiểm thử khi hợp đồng thực sự rõ ràng; việc thêm một policy mới vẫn có thể đòi hỏi đăng ký ở nơi lựa chọn, cập nhật giao diện và viết test cho công thức mới.
+This is simple constructor injection using plain Java. It supports substitution and testing when the contract is genuinely clear; adding a policy may still require registration at the selection point, UI updates, and tests for the new formula.
 
-## 9. Những hiểu nhầm cần nhận diện trước khi đi sâu
+## 9. Misconceptions to Recognize Before Going Deeper
 
-| Nhận định | Điều đúng trong Java |
+| Claim | What Is True in Java |
 |---|---|
-| Hai class cùng có `quote(Parcel)` tự dùng được như `ShippingPolicy` | Cần quan hệ `implements`/`extends` hợp lệ hoặc adapter; Java nominal typing |
-| Thêm overload `quote(String)` ở class con làm `quote(Parcel)` đổi hành vi | Không; override phải đúng chữ ký |
-| Static method hay public field cùng tên cũng đa hình động | Không; static/field có quy tắc hiding và compile-time lookup |
-| Dùng `instanceof` khắp nơi mới chọn được class cụ thể | Nếu đã có `ShippingPolicy.quote`, gọi trực tiếp phương thức đó |
-| Mọi implementation đều biên dịch thì chắc chắn thay thế an toàn | Còn cần giữ precondition, kết quả, lỗi và tác dụng phụ của hợp đồng |
+| Two classes with the same `quote(Parcel)` automatically work as `ShippingPolicy` | A valid `implements`/`extends` relationship or adapter is required; Java uses nominal typing |
+| Adding an overload `quote(String)` in a subclass changes `quote(Parcel)` behavior | No; an override requires the matching signature |
+| Same-named static methods or public fields are dynamically polymorphic | No; static methods and fields follow hiding and compile-time lookup rules |
+| `instanceof` checks are required everywhere to select a concrete class | If `ShippingPolicy.quote` exists, call that method directly |
+| All implementations compile, so substitution is guaranteed safe | They must also preserve the contract's preconditions, results, errors, and side effects |
 
-Bài về *Phân biệt che khuất thành viên với ghi đè* và *Phạm vi đa hình của phương thức và thuộc tính* minh họa riêng các trường hợp field, static, private và getter. Bài này chỉ cần nhớ quy tắc nền: **đa hình động xảy ra với lời gọi instance method thuộc hợp đồng và có implementation thích hợp theo object runtime**.
+The lessons *Distinguishing Member Hiding from Overriding* and *Scope of Polymorphism for Methods and Fields* separately illustrate fields, static methods, private methods, and getters. For now, remember the basic rule: **dynamic polymorphism applies when a contract's instance method is invoked and an appropriate implementation is selected from the runtime object**.
 
-## 10. Kiểm thử hợp đồng qua nhiều implementation
+## 10. Testing One Contract Across Multiple Implementations
 
-Khi nhiều lớp cùng thực hiện `ShippingPolicy`, thay vì chỉ kiểm thử riêng từng công thức, hãy kiểm tra **hợp đồng chung**. Ví dụ dưới đây dùng **JUnit 5**, cần dependency JUnit Jupiter và test runner phù hợp.
+When several classes implement `ShippingPolicy`, test their **shared contract** in addition to each pricing formula. The following example uses **JUnit 5**, which requires a JUnit Jupiter dependency and suitable test runner.
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -499,80 +499,80 @@ class ShippingPolicyContractTest {
 }
 ~~~
 
-Một test bổ sung nên kiểm tra các **trường hợp biên**: 1 g, 500 g, 501 g, 1.000 g, 1.001 g; nội thành/ngoại thành; `null`; và các con số lớn. Ví dụ đã dùng phép toán `long` trong tính phí để giảm nguy cơ overflow khi cộng đơn vị trọng lượng với số cố định.
+Additional tests should cover **boundary cases**: 1 g, 500 g, 501 g, 1.000 g, 1.001 g, inner-city/outer-city, `null`, and large values. The example uses `long` arithmetic to reduce overflow risk when adding weight units to constants.
 
-Để kiểm thử `CheckoutService` độc lập với công thức giá, tạo một implementation giả của `ShippingPolicy` trả một `ShippingQuote` biết trước. Nếu `CheckoutService.estimate` trả đúng giá trị và gọi chính sách đúng cách, phần điều phối đang hoạt động theo hợp đồng, không phụ thuộc vào lớp `ExpressShipping` cụ thể.
+To test `CheckoutService` independently of the pricing formula, use a fake `ShippingPolicy` implementation that returns a predetermined `ShippingQuote`. If `CheckoutService.estimate` returns the expected value and calls the policy correctly, orchestration honors the contract without depending on `ExpressShipping`.
 
-## 11. Câu hỏi tự luyện có lời giải
+## 11. Self-Check Questions with Answers
 
-**1.** Nếu `ShippingPolicy p = new ExpressShipping();`, câu lệnh `p.quote(parcel)` sử dụng công thức của lớp nào?
+**1.** If `ShippingPolicy p = new ExpressShipping();`, which class supplies the formula for `p.quote(parcel)`?
 
-**Đáp án:** `ExpressShipping`, do object runtime là `ExpressShipping`. Kiểu biến `ShippingPolicy` chỉ xác định API có thể gọi.
+**Answer:** `ExpressShipping`, because the runtime object is `ExpressShipping`. The `ShippingPolicy` variable type only controls which API can be called.
 
-**2.** Thêm `SameDayShipping implements ShippingPolicy` có buộc sửa `CheckoutService.estimate` không?
+**2.** Does adding `SameDayShipping implements ShippingPolicy` require changes to `CheckoutService.estimate`?
 
-**Đáp án:** Thường không nếu implementation mới thực hiện đúng hợp đồng. Cần đăng ký/lựa chọn chiến lược mới ở nơi cấu hình thích hợp; code chỉ gọi `policy.quote(parcel)` vẫn giữ nguyên.
+**Answer:** Usually not, provided the new implementation honors the contract. The new strategy must be registered or selected in the appropriate configuration location; code calling `policy.quote(parcel)` stays unchanged.
 
-**3.** Một lớp `class LegacyShipping` có `quote(Parcel)` cùng chữ ký, nhưng không `implements ShippingPolicy`. Truyền nó vào constructor `CheckoutService(ShippingPolicy)` được không?
+**3.** A `class LegacyShipping` class has the same `quote(Parcel)` signature but does not `implements ShippingPolicy`. Can it be passed to the `CheckoutService(ShippingPolicy)` constructor?
 
-**Đáp án:** Không theo hệ kiểu Java thông thường. Cần cho lớp implements hợp đồng nếu sửa được mã, hoặc dùng adapter phù hợp nếu không sửa được.
+**Answer:** Not under ordinary Java typing rules. Have the class implement the contract if its source can be changed, or use an appropriate adapter otherwise.
 
-**4.** Vì sao đoạn `Printer.print(Object)` và `Printer.print(String)` minh họa overload chứ không phải chọn theo runtime?
+**4.** Why do `Printer.print(Object)` and `Printer.print(String)` illustrate overloading rather than runtime selection?
 
-**Đáp án:** Compiler chọn chữ ký dựa vào **kiểu tĩnh của đối số** ở nơi gọi. Nó không tự chọn `String` overload chỉ vì biến `Object` đang tham chiếu tới một chuỗi.
+**Answer:** The compiler selects a signature based on the **static type of the argument** at the call site. It does not automatically select the `String` overload just because an `Object` reference points to a string.
 
-**5.** Tại sao việc có cùng tên phương thức `quote` chưa chắc đủ để thay thế nhiều implementation trong hệ thống bán hàng?
+**5.** Why might sharing a method name `quote` be insufficient to substitute implementations in an e-commerce system?
 
-**Đáp án:** Phải có quan hệ kiểu hợp lệ và tuân thủ cùng hợp đồng ngữ nghĩa: dữ liệu đầu vào, đơn vị tiền, kết quả, quy tắc lỗi và tác động phụ. Nếu một implementation bất ngờ sửa `Parcel` hay trả giá âm, khả năng thay thế thực tế bị hỏng.
+**Answer:** Valid type relationships and a shared semantic contract are required: input data, currency units, results, error rules, and side effects. If an implementation unexpectedly modifies `Parcel` or returns a negative fee, substitutability is broken.
 
-**6.** Với kiện 1.500 g nội thành, tại sao ví dụ cho ra 20.000đ tiết kiệm, 25.000đ tiêu chuẩn, 95.000đ hỏa tốc?
+**6.** For the 1.500 g inner-city parcel, why does the example quote 20.000 VND for economy, 25.000 VND for standard, and 95.000 VND for express?
 
-**Đáp án:** Mỗi chính sách dùng biểu phí và đơn vị trọng lượng khác nhau, dù cùng nhận một `Parcel` và cùng trả một `ShippingQuote`.
+**Answer:** Each policy uses different rates and weight increments despite accepting the same `Parcel` and returning the same `ShippingQuote`.
 
-**7.** Nếu một phương thức của subclass được đánh dấu `static` trùng tên với static method lớp cha, có phải runtime đa hình không?
+**7.** If a subclass has a `static` method sharing a name with a parent static method, is that runtime polymorphism?
 
-**Đáp án:** Không. Đây là method hiding; cách gọi tĩnh gắn với tên class/kiểu biểu thức, không phải dynamic dispatch cho method instance.
+**Answer:** No. This is method hiding; static calls are bound to the class name or expression type, not dynamically dispatched instance methods.
 
-**8.** Khi muốn chọn chính sách theo lựa chọn trên UI, có được dùng `Map` hoặc `switch` để tạo đúng implementation không?
+**8.** Can a `Map` or `switch` be used to select a policy based on the UI choice?
 
-**Đáp án:** Được. Đó là **bước lựa chọn đối tượng**. Điều nên tránh là lặp lại toàn bộ công thức tính phí cho từng loại ở mọi nơi dùng thay vì ủy quyền cho `quote`.
+**Answer:** Yes. This is **the object-selection step**. Avoid repeating every policy's entire fee formula in every consuming component; delegate to `quote` instead.
 
-## Kết luận
+## Conclusion
 
-Đa hình không làm các đối tượng trở nên giống nhau; nó cho phép **sử dụng chúng thông qua cùng một hợp đồng** trong khi mỗi đối tượng giữ cách thực thi phù hợp với mình.
+Polymorphism does not make objects identical; it allows **using them through the same contract** while each object retains its appropriate implementation.
 
-Với Java, hãy ghi nhớ công thức tư duy:
+For Java, remember this conceptual model:
 
-**Interface hoặc lớp cha định nghĩa “có thể yêu cầu làm gì” → các lớp cụ thể định nghĩa “làm như thế nào” → mã sử dụng chỉ gọi phương thức chung → runtime chọn phần triển khai dựa trên object thực tế.**
+**An interface or parent class defines "what can be requested" → concrete classes define "how to do it" → consuming code calls the shared method → runtime selects the implementation based on the actual object.**
 
-Khi đọc code OOP, tìm một tham chiếu kiểu cha/interface, một lời gọi instance method và nhiều lớp override/implement phương thức đó. Đó thường là nơi đa hình đang loại bỏ những nhánh kiểm tra loại và giúp hệ thống mở rộng linh hoạt hơn.
+When reading OOP code, look for a parent/interface-typed reference, an instance method call, and several classes that override or implement that method. That is often where polymorphism eliminates type-checking branches and makes the system more extensible.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="polymorphism-002">Đa hình kiểu con qua giao diện hoặc lớp cha</a>
+## <a id="polymorphism-002">Subtype Polymorphism Through an Interface or Parent Class</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đa hình kiểu con qua giao diện hoặc lớp cha trong Java
+# Subtype Polymorphism Through Interfaces or Parent Classes in Java
 
-**Đa hình kiểu con (subtype polymorphism)** là khả năng sử dụng nhiều đối tượng thuộc **các kiểu con khác nhau** thông qua **cùng một kiểu cha hoặc giao diện**, trong khi hành vi thực thi có thể khác nhau tùy đối tượng thực tế.
+**Subtype polymorphism (subtype polymorphism)** lets code use multiple objects of **different subtypes** through **the same parent type or interface**, while actual behavior may vary with the runtime object.
 
-Ví dụ, một hệ thống gửi thông báo có thể dùng Email, Push Notification hoặc một kênh khác. Nơi điều phối thông báo chỉ cần yêu cầu “gửi nội dung này” theo một hợp đồng chung, không phải tự viết `if/else` để gọi từng lớp cụ thể.
+For example, a notification system can send messages by email, push notification, or another channel. The coordinator only needs to request "send this content" through a shared contract rather than writing its own `if/else` for every concrete class.
 
-Trong Java, đa hình kiểu con thường dựa trên hai quan hệ:
+In Java, subtype polymorphism commonly relies on two relationships:
 
 - **Implement interface**: `EmailSender implements NotificationSender`.
-- **Kế thừa lớp cha**: `SalesReport extends Report`.
+- **Class inheritance**: `SalesReport extends Report`.
 
-Điểm quan trọng nhất là phân biệt **kiểu khai báo của biến** với **kiểu thực tế của đối tượng**, từ đó hiểu Java kiểm tra lời gọi nào tại thời điểm biên dịch và lựa chọn implementation nào khi chạy.
+The most important distinction is between the **declared type of a variable** and the **actual type of its object**. This explains what calls Java checks at compile time and what implementation it selects at runtime.
 
-## 1. Biến kiểu cha có thể giữ tham chiếu đến đối tượng kiểu con
+## 1. Parent-Typed Variables Can Refer to Subtype Objects
 
 ```java
 interface Animal {
@@ -594,7 +594,7 @@ class Cat implements Animal {
 }
 ```
 
-Cùng một kiểu khai báo `Animal` có thể tham chiếu đến hai đối tượng khác nhau:
+The same declared type `Animal` can refer to two different objects:
 
 ```java
 Animal a = new Dog();
@@ -604,16 +604,16 @@ System.out.println(a.sound()); // Gâu
 System.out.println(b.sound()); // Meo
 ```
 
-Ở đây:
+Here:
 
-| Biến | Kiểu khai báo (*compile-time type*) | Kiểu đối tượng thực tế (*runtime class*) | Phương thức được thực thi |
+| Variable | Declared type (*compile-time type*) | Actual object type (*runtime class*) | Method executed |
 |---|---|---|---|
 | `a` | `Animal` | `Dog` | `Dog.sound()` |
 | `b` | `Animal` | `Cat` | `Cat.sound()` |
 
-Compiler xác nhận cả hai lời gọi `sound()` hợp lệ vì `Animal` khai báo hành vi này. Khi chạy, Java dùng **dynamic dispatch** cho phương thức instance có thể override để chọn implementation tương ứng với đối tượng thực tế.
+The compiler accepts both `sound()` calls because `Animal` declares that behavior. At runtime, Java uses **dynamic dispatch** for overridable instance methods to select the implementation associated with the actual object.
 
-Đây không phải việc biến `a` tự biến thành kiểu `Dog`. Biến vẫn mang kiểu khai báo `Animal`; nó chỉ đang giữ tham chiếu tới một đối tượng `Dog`.
+The variable `a` has not itself become a `Dog`. Its declared type remains `Animal`; it simply refers to a `Dog` object.
 
 ```mermaid
 flowchart LR
@@ -623,17 +623,17 @@ flowchart LR
     C --> CS["sound() -> Meo"]
 ```
 
-Nếu thay `new Dog()` bằng `new Cat()` thì cùng một lời gọi `a.sound()` sẽ cho kết quả khác, miễn là code điều khiển cho phép gán lại biến.
+Replacing `new Dog()` with `new Cat()` makes the same `a.sound()` call behave differently, provided the surrounding code permits reassignment.
 
-## 2. Ví dụ thực tế: giao diện để thay thế các kênh gửi thông báo
+## 2. Practical Example: An Interface for Interchangeable Notification Channels
 
-Giả sử hệ thống cần gửi thông báo tới khách hàng qua Email và Push Notification. Để tập trung vào OOP, ví dụ dưới đây **mô phỏng kết quả gửi**, không thực sự kết nối SMTP hay dịch vụ Push.
+Suppose the system sends customer notifications through email and push notifications. To focus on OOP, the example **simulates delivery results** without connecting to SMTP or a real push service.
 
-Hợp đồng đặt ra:
+The contract states:
 
-- Caller cung cấp một `Notification` hợp lệ, chứa mã khách hàng và nội dung.
-- Mọi implementation của `NotificationSender` đều hỗ trợ `send(notification)` và trả về `DeliveryResult`.
-- Code điều phối không cần biết cách từng kênh hoạt động.
+- Callers provide a valid `Notification` containing a customer ID and message.
+- Every `NotificationSender` implementation supports `send(notification)` and returns a `DeliveryResult`.
+- Orchestration code need not know how each channel works.
 
 File `NotificationPolymorphismDemo.java` (Java 17+):
 
@@ -720,14 +720,14 @@ public class NotificationPolymorphismDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac NotificationPolymorphismDemo.java
 java NotificationPolymorphismDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 EMAIL -> CUS-01
@@ -736,15 +736,15 @@ PUSH -> CUS-01
 Result: PUSH/SIMULATED
 ```
 
-Để ý ba vị trí thể hiện đa hình:
+Notice three places where polymorphism appears:
 
-1. `List<NotificationSender>` chứa đối tượng `EmailSender` và `PushSender` khác nhau.
-2. `NotificationDispatcher` nhận một `NotificationSender` qua constructor. Nó **phụ thuộc vào hợp đồng**, không phụ thuộc trực tiếp lớp Email hay Push.
-3. Khi `sender.send(notification)` chạy, implementation phù hợp được chọn theo đối tượng đang được giữ bởi `sender`.
+1. `List<NotificationSender>` contains different `EmailSender` and `PushSender` objects.
+2. `NotificationDispatcher` receives a `NotificationSender` through its constructor. It **depends on the contract**, not directly on the email or push class.
+3. When `sender.send(notification)` executes, the matching implementation is selected from the object referenced by `sender`.
 
-Nếu thêm `SmsSender implements NotificationSender`, ta có thể truyền nó cho `NotificationDispatcher` mà không cần thay đổi mã nguồn của dispatcher, **nếu** implementation mới thực sự tuân theo hợp đồng `send`.
+If we add `SmsSender implements NotificationSender`, we can pass it to `NotificationDispatcher` without changing the dispatcher's source, **provided** the new implementation actually honors the `send` contract.
 
-### Sơ đồ phụ thuộc
+### Dependency Diagram
 
 ```mermaid
 classDiagram
@@ -771,15 +771,15 @@ classDiagram
     NotificationDispatcher --> NotificationSender
 ```
 
-**Lợi ích thiết kế:** logic chọn kênh được đặt ở nơi cấu hình/khởi tạo đối tượng; dispatcher chỉ cần biết hợp đồng gửi. Thay implementation không buộc dispatcher chứa các nhánh `if (sender instanceof EmailSender)`.
+**Design benefit:** channel selection belongs at object construction or configuration; the dispatcher only knows the sending contract. Swapping implementations does not require `if (sender instanceof EmailSender)` branches inside it.
 
-Trong hệ thống thực, hợp đồng còn phải quy định rõ hành vi khi lỗi, timeout, retry, trạng thái gửi thành công hay mới được chấp nhận. Các implementation không nên tự ý dùng cùng một từ `SUCCESS` với những ý nghĩa khác nhau.
+In a real system, the contract must also define behavior for errors, timeouts, retries, successful delivery, and merely accepted requests. Implementations should not use the same `SUCCESS` label with inconsistent meanings.
 
-## 3. Đa hình qua lớp cha: kế thừa hành vi và ghi đè
+## 3. Polymorphism Through a Parent Class: Inheritance and Overriding
 
-Interface không phải con đường duy nhất. Một biến kiểu superclass cũng có thể tham chiếu đến các đối tượng subclass.
+Interfaces are not the only option. A superclass-typed variable can also refer to subclass objects.
 
-Ví dụ một hệ thống hiển thị báo cáo. Mọi báo cáo có tiêu đề và cùng cách tạo phần preview, nhưng nội dung preview khác nhau.
+Consider a report-display system. Every report has a title and a shared preview workflow, but its preview content differs.
 
 File `ReportPolymorphismDemo.java`:
 
@@ -853,21 +853,21 @@ public class ReportPolymorphismDemo {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 [Doanh thu] 200000 VND
 [Kiểm toán] 3 sự kiện
 ```
 
-Trong ví dụ này:
+In this example:
 
-- `Report` là kiểu cha và giữ trạng thái chung `title`.
-- `SalesReport` và `AuditReport` là hai kiểu con.
-- `Report.preview()` chứa phần xử lý giống nhau, nhưng gọi `content()` là phương thức được override.
-- Khi `preview()` đang chạy trên một đối tượng `SalesReport`, lời gọi `content()` sẽ chuyển tới `SalesReport.content()`; tương tự với `AuditReport`.
+- `Report` is the parent type and holds the shared `title` state.
+- `SalesReport` and `AuditReport` are subtypes.
+- `Report.preview()` contains the shared workflow but calls `content()`, which is overridden.
+- When `preview()` runs on a `SalesReport` object, its `content()` call dispatches to `SalesReport.content()`; the same applies to `AuditReport`.
 
-Điều đó cho thấy **mã được thực thi trong lớp cha vẫn có thể kích hoạt hành vi đặc thù của đối tượng lớp con**.
+This shows that **code executing in a parent class can still trigger behavior specific to the actual subclass object**.
 
 ```mermaid
 sequenceDiagram
@@ -881,17 +881,17 @@ sequenceDiagram
     R-->>C: "[Doanh thu] 200000 VND"
 ```
 
-Sơ đồ mô tả thứ tự lời gọi theo góc nhìn logic. `Report` và `SalesReport` trong trường hợp này là **một đối tượng runtime**, không phải hai đối tượng độc lập giao tiếp qua mạng.
+The diagram shows the logical call order. `Report` and `SalesReport` refer to **one runtime object** in this situation, not two independent objects communicating across a network.
 
-### Vì sao không override mọi phương thức?
+### Why Not Override Every Method?
 
-`preview()` được đánh dấu `final` để các lớp con không thay đổi khung preview; lớp con chỉ tùy biến `content()`. Đây là một lựa chọn thiết kế nhằm bảo vệ quy tắc chung. Không phải mọi phương thức superclass đều cần cho phép override.
+`preview()` is marked `final` so subclasses cannot alter the preview framework; they can customize only `content()`. This design choice protects a shared rule. Not every superclass method needs to be overridable.
 
-Cũng cần tránh gọi phương thức có thể override từ constructor lớp cha, bởi trạng thái của lớp con có thể chưa hoàn tất khởi tạo tại thời điểm ấy.
+Also avoid calling overridable methods from a superclass constructor, because subclass state may not yet be fully initialized.
 
-## 4. Upcasting: từ kiểu con lên kiểu cha
+## 4. Upcasting: From Subtype to Parent Type
 
-**Upcasting** là nhìn một đối tượng kiểu con thông qua tham chiếu có kiểu cha hoặc một interface mà nó thực hiện. Đây là chuyển đổi kiểu hợp lệ và thường được compiler thực hiện ngầm định.
+**Upcasting** means viewing a subtype object through a reference of a parent type or an interface it implements. This is a valid type conversion and is usually performed implicitly by the compiler.
 
 ```java
 class Device {}
@@ -906,25 +906,25 @@ Printer printer = new Printer();
 Device device = printer; // Upcasting ngầm định
 ```
 
-`device` và `printer` trỏ đến **cùng một đối tượng Printer**, không tạo bản sao đối tượng.
+`device` and `printer` refer to **the same Printer object**; no object copy is created.
 
-Vì `device` có kiểu khai báo `Device`, nó không thể gọi phương thức chỉ xuất hiện trong `Printer`:
+Because `device` is declared as `Device`, it cannot invoke methods available only in `Printer`:
 
 ```java
 printer.printPage(); // Hợp lệ
 // device.printPage(); // Lỗi biên dịch
 ```
 
-Điều này không mâu thuẫn với đa hình. Java thực hiện **hai công việc khác nhau**:
+This does not contradict polymorphism. Java performs **two different tasks**:
 
-1. **Kiểm tra lời gọi có hợp lệ không:** dựa vào kiểu khai báo và những thành viên mà kiểu đó cung cấp, cùng những quy tắc truy cập/overload của Java.
-2. **Chọn phần thực thi cho lời gọi instance có thể override:** dựa vào kiểu thực tế của đối tượng lúc chạy.
+1. **Check whether a call is valid:** based on the declared type, available members, Java access rules, and overload rules.
+2. **Select the implementation of an overridable instance call:** based on the actual object type at runtime.
 
-Nếu `Device` khai báo `public void start()` và `Printer` override, thì `device.start()` sẽ chạy phiên bản `Printer`. Nhưng `device.printPage()` không hợp lệ nếu `Device` không có `printPage()`.
+If `Device` declares `public void start()` and `Printer` overrides it, `device.start()` invokes the `Printer` version. But `device.printPage()` is invalid if `Device` does not declare `printPage()`.
 
-## 5. Downcasting và instanceof: chỉ dùng khi thực sự cần
+## 5. Downcasting and instanceof: Use Only When Necessary
 
-**Downcasting** là ép tham chiếu kiểu cha về một kiểu con cụ thể. Vì không phải mọi `Device` đều là `Printer`, Java yêu cầu ép kiểu tường minh và có kiểm tra runtime.
+**Downcasting** converts a parent-typed reference to a particular subtype. Since not every `Device` is a `Printer`, Java requires an explicit cast and performs a runtime check.
 
 ```java
 class Device {}
@@ -945,9 +945,9 @@ printer.printPage();
 // Printer wrong = (Printer) second; // ClassCastException
 ```
 
-Nếu kiểu runtime không tương thích với kiểu ép, Java ném `ClassCastException`.
+If the runtime type is incompatible with the target type, Java throws `ClassCastException`.
 
-Java 16+ hỗ trợ pattern matching với `instanceof`; ví dụ dùng Java 17:
+Java 16+ supports pattern matching with `instanceof`; the following example uses Java 17:
 
 ```java
 static void tryPrinting(Device device) {
@@ -959,7 +959,7 @@ static void tryPrinting(Device device) {
 }
 ```
 
-Mẫu trên hợp lý khi **thao tác thực sự chỉ thuộc một subtype**. Tuy nhiên, nếu logic ứng dụng liên tục có dạng:
+This pattern is appropriate when **an operation truly belongs only to a particular subtype**. However, if application code repeatedly looks like:
 
 ```java
 if (sender instanceof EmailSender) {
@@ -969,11 +969,11 @@ if (sender instanceof EmailSender) {
 }
 ```
 
-thì nên xem xét: hành vi chung có nên được đưa vào `NotificationSender` để caller chỉ gọi `send(...)` hay không? Khi có khả năng biểu diễn bằng một hợp đồng chung rõ ràng, **đa hình thường tốt hơn chuỗi kiểm tra kiểu cụ thể**.
+consider whether the shared behavior belongs in `NotificationSender` so callers can simply invoke `send(...)`. When the capability can be expressed through a clear common contract, **polymorphism is usually preferable to chains of concrete-type checks**.
 
-## 6. Những thành viên không đi theo dynamic dispatch của subtype
+## 6. Members That Do Not Use Subtype Dynamic Dispatch
 
-`Animal a = new Dog()` cho phép gọi `a.sound()` đa hình **khi đó là instance method có thể override**. Điều này không tự áp dụng cho mọi thành viên. Xét các đoạn minh họa sau; đặt các câu lệnh gọi trong một phương thức Java như `main`:
+`Animal a = new Dog()` allows polymorphic `a.sound()` calls **when that method is an overridable instance method**. This does not automatically apply to every member. Consider the snippets below; place the calls inside a Java method such as `main`:
 
 ~~~java
 class Parent {
@@ -992,31 +992,31 @@ System.out.println(value.field);       // Parent field
 System.out.println(Parent.category()); // Parent static
 ~~~
 
-| Thành viên | Quy tắc khi gọi qua kiểu cha |
+| Member | Rule When Accessed Through Parent Type |
 |---|---|
-| Instance method được override | Chọn implementation theo object runtime |
-| Field cùng tên ở cha/con | Chọn field theo kiểu tĩnh của biểu thức |
-| Static method cùng chữ ký | Hiding, chọn bằng tên lớp/kiểu tĩnh |
-| Private/final instance method | Không có override ở class con |
-| Nhiều overload cùng tên | Compiler chọn chữ ký theo kiểu tĩnh; nếu có override, runtime chọn phần thân cho chữ ký ấy |
+| Overridden instance method | Selects implementation by runtime object |
+| Same-named parent/child field | Selects the field by the expression's static type |
+| Same-signature static method | Hiding; selects by class name/static type |
+| Private/final instance method | Cannot be overridden by a subclass |
+| Multiple same-named overloads | Compiler selects the signature by static types; any override of that signature is then selected at runtime |
 
-Phân biệt chi tiết **compile-time overload vs runtime override** nằm ở bài *Phân giải phương thức tĩnh và phân giải động*. Ví dụ đi sâu vào field hiding, static hiding và getter nằm ở hai bài *Phân biệt che khuất thành viên với ghi đè* và *Phạm vi đa hình của phương thức và thuộc tính*.
+The distinction between **compile-time overloading and runtime overriding** is covered in *Static Method Resolution and Dynamic Dispatch*. Field hiding, static hiding, and getters are examined in *Distinguishing Member Hiding from Overriding* and *Scope of Polymorphism for Methods and Fields*.
 
-## 7. Đa hình qua interface và qua lớp cha khác nhau ở đâu?
+## 7. Comparing Interface and Parent-Class Polymorphism
 
-| Tiêu chí | Qua interface | Qua superclass |
+| Criterion | Through an interface | Through a superclass |
 |---|---|---|
-| Quan hệ kiểu | Lớp `implements` interface | Lớp `extends` superclass |
-| Phần mà caller dựa vào | Hợp đồng hành vi do interface công bố | API chung của superclass |
-| Trạng thái instance kế thừa từ kiểu chung | Interface không cung cấp instance field | Superclass có thể quản lý field chung |
-| Constructor chung | Interface không có constructor | Superclass có thể có constructor cho lớp con gọi |
-| Số quan hệ trực tiếp | Class có thể implement nhiều interface | Class chỉ extends trực tiếp một superclass |
-| Mức ràng buộc với implementation | Thường phù hợp cho các kiểu không cùng họ kế thừa | Phù hợp khi có quan hệ is-a và muốn dùng lại cấu trúc/hành vi |
-| Điểm chung | Đều cho phép tham chiếu kiểu chung giữ đối tượng subtype và gọi phương thức override phù hợp | Cùng cơ chế đa hình qua subtype |
+| Type relationship | Class `implements` interface | Class `extends` superclass |
+| What callers depend on | Behavioral contract exposed by the interface | Shared superclass API |
+| Shared instance state inherited from the common type | Interfaces do not provide instance fields | Superclasses can manage shared fields |
+| Shared constructor | Interfaces have no constructors | Superclasses may provide constructors invoked by subclasses |
+| Number of direct relationships | A class may implement multiple interfaces | A class directly extends only one superclass |
+| Coupling to implementation | Often suitable for types from unrelated inheritance families | Suitable when there is an is-a relationship and common structure/behavior |
+| Shared principle | Both allow a common-type reference to hold subtype objects and invoke suitable overridden methods | The same subtype-polymorphism mechanism |
 
-Một lớp có thể **vừa kế thừa superclass vừa implement interface**, nên đây không phải hai lựa chọn loại trừ nhau.
+A class can **both extend a superclass and implement interfaces**; the choices are not mutually exclusive.
 
-Ví dụ:
+For example:
 
 ```java
 interface Identifiable {
@@ -1049,22 +1049,22 @@ System.out.println(a.id()); // C01
 System.out.println(b.id()); // C02
 ```
 
-`Customer` có quan hệ subtype với cả `BaseEntity` và `Identifiable`. Hai kiểu tham chiếu chung này cho các caller khác nhau biết những phần API khác nhau, tùy nhu cầu.
+`Customer` is a subtype of both `BaseEntity` and `Identifiable`. These two common reference types expose different portions of the API to different consumers as needed.
 
-## 8. Hợp đồng chung phải thực sự thay thế được
+## 8. The Shared Contract Must Support Safe Substitution
 
-Chỉ cùng chữ ký phương thức là chưa đủ để đa hình có ích. Khi caller sử dụng kiểu cha, các subtype phải giữ đúng **kỳ vọng từ hợp đồng kiểu cha** (*substitutability*, thường liên hệ tới nguyên tắc Liskov Substitution).
+Matching method signatures alone does not make polymorphism useful. When callers use a parent type, all subtypes must preserve **the expectations of the parent-type contract** (*substitutability*, commonly associated with the Liskov Substitution Principle).
 
-Ví dụ, nếu `NotificationSender.send(notification)` quy định:
+For example, suppose `NotificationSender.send(notification)` specifies:
 
-- `notification` không được `null`.
-- Kết quả trả về không được `null`.
-- `DeliveryResult.status` có ý nghĩa thống nhất.
-- Nếu thất bại, sử dụng quy ước báo lỗi mà các caller có thể xử lý.
+- `notification` must not be `null`.
+- The result must not be `null`.
+- `DeliveryResult.status` has consistent meaning.
+- On failure, a reporting convention must be used that callers can handle.
 
-thì một implementation không nên tự ý trả `null` trong khi các implementation khác luôn trả một đối tượng hợp lệ; cũng không nên dùng `"SIMULATED"` để chỉ vừa gửi yêu cầu ở nơi này nhưng lại chỉ “đã đọc bởi người nhận” ở nơi khác.
+Then one implementation should not arbitrarily return `null` while others return valid objects; nor should `"SIMULATED"` mean "request submitted" in one implementation but "read by recipient" in another.
 
-### Ví dụ phá vỡ kỳ vọng
+### Example of Violating Expectations
 
 ```java
 interface DiscountPolicy {
@@ -1085,19 +1085,19 @@ class InvalidDiscount implements DiscountPolicy {
 }
 ```
 
-Compiler chấp nhận vì `InvalidDiscount` có phương thức đúng chữ ký. Nhưng caller dùng `DiscountPolicy` để tính tiền có thể cho kết quả vô nghĩa.
+The compiler accepts this because `InvalidDiscount` implements the required signature. But a caller using `DiscountPolicy` to calculate monetary amounts may receive nonsense.
 
-Do đó phải kiểm tra cả **ý nghĩa đầu vào/đầu ra, ràng buộc trạng thái và hành vi lỗi**, không chỉ nhìn `implements` hay `extends`.
+Therefore, verify **input/output semantics, state constraints, and failure behavior**, not just `implements` or `extends` declarations.
 
-### Đa hình không tự động làm code dễ mở rộng
+### Polymorphism Does Not Automatically Make Code Extensible
 
-Thêm interface để thay cho một lớp chỉ có một implementation không phải lúc nào cũng hữu ích. Nên dùng đa hình qua subtype khi có **khả năng thay thế implementation thực tế**, một hợp đồng có ích với nhiều loại đối tượng, hoặc API cho thành phần khác cần tránh phụ thuộc lớp cụ thể.
+Adding an interface to replace a class that has only one implementation is not always useful. Apply subtype polymorphism when there is **a genuine need to substitute implementations**, a useful contract shared by multiple object types, or an API boundary that should not depend on concrete classes.
 
-Ngược lại, một abstract class chia sẻ thuật toán ổn định giữa các subtype có thể phù hợp, nhưng kế thừa gây liên kết với API và quá trình thay đổi của lớp cha. Nếu chỉ muốn kết hợp nhiều chức năng độc lập, **composition** thường ít ràng buộc hơn.
+Conversely, an abstract class can appropriately share a stable algorithm among subtypes, but inheritance couples subclasses to the parent API and its changes. When combining independent capabilities, **composition** usually creates less coupling.
 
-## 9. Bộ sưu tập đa hình và lưu ý về generics
+## 9. Polymorphic Collections and Generics
 
-Nhờ một kiểu chung, có thể xử lý các đối tượng khác nhau trong cùng danh sách:
+A common type allows different objects to be processed in the same list:
 
 ```java
 List<NotificationSender> senders = List.of(
@@ -1110,9 +1110,9 @@ for (NotificationSender sender : senders) {
 }
 ```
 
-Trong đoạn này, `EmailSender` và `PushSender` là các class từ ví dụ hoàn chỉnh phía trên. Mỗi vòng lặp giữ một biến `NotificationSender` nhưng dispatch tới implementation tương ứng.
+Here, `EmailSender` and `PushSender` are classes from the complete example above. Each iteration holds a `NotificationSender` variable but dispatches to the appropriate implementation.
 
-Tuy nhiên, cần lưu ý:
+However, note the following:
 
 ```java
 List<EmailSender> emailSenders = new ArrayList<>();
@@ -1120,9 +1120,9 @@ List<EmailSender> emailSenders = new ArrayList<>();
 // List<NotificationSender> all = emailSenders; // Không hợp lệ.
 ```
 
-Java generic **bất biến theo kiểu tham số** (*invariant*): dù `EmailSender` là subtype của `NotificationSender`, `List<EmailSender>` không phải subtype của `List<NotificationSender>`.
+Java generics are **invariant in their type parameters** (*invariant*): although `EmailSender` is a subtype of `NotificationSender`, `List<EmailSender>` is not a subtype of `List<NotificationSender>`.
 
-Nếu chỉ cần đọc danh sách theo hợp đồng, có thể dùng wildcard:
+If the list only needs to be read through the contract, use a wildcard:
 
 ```java
 static void runAll(
@@ -1135,26 +1135,26 @@ static void runAll(
 }
 ```
 
-`List<? extends NotificationSender>` chấp nhận danh sách phần tử thuộc một subtype nào đó của `NotificationSender`. Đổi lại, không thể tùy tiện thêm `new EmailSender()` vào danh sách này vì không biết kiểu tham số cụ thể của list.
+`List<? extends NotificationSender>` accepts a list whose elements belong to some subtype of `NotificationSender`. However, you cannot freely add `new EmailSender()` to it because the list's precise type argument is unknown.
 
-**Subtype polymorphism của đối tượng** và **quy tắc variance của generic collection** là hai khái niệm liên quan nhưng không đồng nhất.
+**Subtype polymorphism of objects** and **variance rules for generic collections** are related but distinct concepts.
 
-## 10. Những lỗi thiết kế dễ gặp
+## 10. Common Design Errors
 
-| Biểu hiện | Nguyên nhân | Hướng xử lý |
+| Symptom | Cause | Remedy |
 |---|---|---|
-| Tưởng biến `Animal a = new Dog()` có thể gọi mọi phương thức riêng của `Dog` | Kiểu khai báo giới hạn API nhìn thấy ở compile time | Công khai hợp đồng chung hoặc kiểm tra/cast khi thật cần |
-| Viết nhiều `if (obj instanceof X)` để tự gọi hành vi từng subtype | Caller phụ thuộc các class cụ thể | Đưa hành vi chung vào interface/superclass và dùng override |
-| Mong field được dispatch như method override | Field hiding và method overriding khác nhau | Giữ field private, biểu diễn hành vi qua method có hợp đồng |
-| Nghĩ overload được chọn theo kiểu runtime của tham số | Overload resolution chủ yếu ở compile time | Phân biệt overload với override |
-| Ép kiểu con vô điều kiện | Không phải đối tượng cha nào cũng là subtype đó | Tránh ép kiểu hoặc dùng `instanceof` khi có lý do |
-| Subtype trả kết quả trái hợp đồng chung | Chỉ đúng chữ ký, sai ngữ nghĩa | Quy định và test contract cho mọi implementation |
-| Tưởng `List<Dog>` là `List<Animal>` | Generic invariant | Dùng wildcard phù hợp hoặc tập hợp khai báo bằng kiểu chung |
-| Đặt thuật toán tùy biến trong constructor superclass | Dynamic dispatch có thể gọi subclass chưa khởi tạo xong | Tránh gọi method override được trong constructor |
+| Assuming `Animal a = new Dog()` can invoke all `Dog`-specific methods | Declared type restricts API available at compile time | Expose a shared contract or cast/check if genuinely necessary |
+| Writing many `if (obj instanceof X)` branches to invoke subtype-specific behavior | Callers depend on concrete classes | Move shared behavior into an interface/superclass and override it |
+| Expecting fields to dispatch like overridden methods | Field hiding differs from method overriding | Keep fields private and expose behavior through contracted methods |
+| Assuming overload selection uses parameter runtime types | Overload resolution occurs primarily at compile time | Distinguish overloading from overriding |
+| Unconditionally casting to a subtype | Not every parent-type object belongs to that subtype | Avoid casting or use `instanceof` when justified |
+| Subtypes returning results that violate the shared contract | Signature matches, but semantics differ | Specify and test the contract for every implementation |
+| Assuming `List<Dog>` is `List<Animal>` | Generic types are invariant | Use an appropriate wildcard or declare the collection with a common element type |
+| Running customizable algorithms in superclass constructors | Dynamic dispatch might call an incompletely initialized subclass | Avoid overridable method calls from constructors |
 
-## 11. Bài tập tự kiểm tra
+## 11. Self-Check Exercises
 
-### Bài 1 — Dự đoán kết quả đa hình
+### Exercise 1 — Predict the Polymorphic Result
 
 ```java
 interface Shape {
@@ -1186,16 +1186,16 @@ System.out.println(first.area());
 System.out.println(second.area());
 ```
 
-**Đáp án:**
+**Answer:**
 
 ```text
 9
 12
 ```
 
-Hai biến có cùng kiểu khai báo `Shape`. Lời gọi `area()` chạy implementation của kiểu thực tế. Phần `Rectangle` chỉ trả giá trị cố định để giữ bài tập ngắn, không phải một mô hình hình học hoàn chỉnh.
+Both variables have the declared type `Shape`. The `area()` call runs the actual object's implementation. `Rectangle` returns a constant value merely to keep the exercise short; it is not a complete geometric model.
 
-### Bài 2 — Gọi phương thức chỉ có ở subtype
+### Exercise 2 — Calling a Subtype-Only Method
 
 ```java
 class Vehicle {
@@ -1215,9 +1215,9 @@ v.move();
 // v.ringBell(); // Có biên dịch không?
 ```
 
-**Đáp án:** `v.ringBell()` không biên dịch vì `Vehicle` không khai báo `ringBell()`. Khi thật sự cần một chức năng chỉ dành cho `Bike`, có thể dùng `if (v instanceof Bike bike) { bike.ringBell(); }` trong Java 17.
+**Answer:** `v.ringBell()` fails compilation because `Vehicle` does not declare `ringBell()`. When a feature genuinely belongs only to `Bike`, Java 17 can use `if (v instanceof Bike bike) { bike.ringBell(); }`.
 
-### Bài 3 — Kiểu khai báo hay kiểu runtime?
+### Exercise 3 — Declared Type or Runtime Type?
 
 ```java
 class Parent {
@@ -1244,54 +1244,54 @@ System.out.println(p.value(item));
 System.out.println(p.value("hello"));
 ```
 
-**Đáp án:**
+**Answer:**
 
 ```text
 Child/Object
 Parent/String
 ```
 
-Ở lời gọi đầu, overload `value(Object)` được chọn vì `item` khai báo là `Object`, sau đó implementation được dispatch tới `Child.value(Object)`. Ở lời gọi thứ hai, overload `value(String)` được chọn và không bị `Child` override nên thực thi implementation của `Parent`.
+In the first call, the `value(Object)` overload is selected because `item` is declared as `Object`, then dispatch reaches `Child.value(Object)`. In the second call, the `value(String)` overload is selected and is not overridden by `Child`, so `Parent` runs.
 
-### Bài 4 — Tự thiết kế
+### Exercise 4 — Design Your Own Solution
 
-Một hệ thống thanh toán có `CardPayment` và `BankTransferPayment`. Hãy thiết kế:
+A payment system supports `CardPayment` and `BankTransferPayment`. Design:
 
-1. Interface `PaymentMethod` với `PaymentReceipt pay(long amountVnd)`.
-2. Hai class triển khai, cùng từ chối `amountVnd <= 0`, trả kết quả theo một hợp đồng thống nhất.
-3. Class `Checkout` nhận `PaymentMethod` trong constructor và gọi `pay` mà không kiểm tra class cụ thể.
-4. Tạo hai đối tượng `Checkout` với implementation khác nhau rồi xác nhận cùng lời gọi `checkout(...)` hoạt động.
+1. An `PaymentMethod` interface exposing `PaymentReceipt pay(long amountVnd)`.
+2. Two implementing classes that both reject `amountVnd <= 0` and return results under one consistent contract.
+3. A `Checkout` class accepting `PaymentMethod` in its constructor and invoking `pay` without checking concrete classes.
+4. Construct two `Checkout` objects with different implementations and verify that the same `checkout(...)` call works.
 
-Để bài giải vững hơn, hãy xác định thế nào là thành công/thất bại, cách phản ánh giao dịch bất đồng bộ và có hay không nghiệp vụ cần idempotency. Đó là **phần hợp đồng** mà đa hình phải giữ nhất quán; chỉ viết chung tên `pay` là chưa đủ.
+For a robust solution, specify what success and failure mean, how asynchronous transactions are represented, and whether idempotency is required. These are **parts of the contract** that polymorphism must keep consistent; sharing a method name `pay` alone is not enough.
 
 ---
 
-**Ghi nhớ:** Đa hình kiểu con cho phép **một tham chiếu interface hoặc lớp cha làm việc với nhiều kiểu đối tượng con**. Compiler kiểm tra lời gọi qua API của **kiểu khai báo**; với phương thức instance override được, JVM lựa chọn implementation theo **kiểu runtime**. Hãy dùng cơ chế này để caller phụ thuộc hợp đồng thay vì biết từng class cụ thể, đồng thời bảo đảm mỗi subtype thực sự giữ đúng hợp đồng chung.
+**Remember:** Subtype polymorphism lets **one interface- or parent-typed reference work with many subtype objects**. The compiler checks calls against the **declared type's API**; for overridable instance methods, the JVM chooses an implementation using the **runtime type**. Use this so callers depend on contracts rather than concrete classes, while ensuring each subtype truly fulfills the shared contract.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="polymorphism-003">Phân giải phương thức tĩnh và phân giải động</a>
+## <a id="polymorphism-003">Static Method Resolution and Dynamic Dispatch</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phân giải phương thức tĩnh và phân giải động trong Java
+# Static Method Resolution and Dynamic Dispatch in Java
 
-Một trong những điểm quan trọng nhất để hiểu **đa hình (polymorphism)** của Java là phân biệt **phương thức nào được chọn khi biên dịch** và **cách triển khai nào được gọi khi chạy**.
+One of the most important aspects of understanding Java **polymorphism** is distinguishing **which method signature is selected at compile time** from **which implementation runs at runtime**.
 
-Trong một biểu thức gọi phương thức, hai câu hỏi này không luôn có cùng đáp án:
+These two questions do not always have the same answer for a method-call expression:
 
-1. **Phân giải tĩnh (*compile-time method resolution*):** dựa vào **kiểu mà trình biên dịch biết**, tên phương thức, số lượng/kiểu đối số, phạm vi truy cập… để xác định một chữ ký phương thức hợp lệ. Đây là bước đặc biệt quan trọng với **overloading**.
-2. **Phân giải động (*runtime method dispatch*):** sau khi chữ ký đã được chọn, đối với **phương thức thể hiện có thể ghi đè**, JVM chọn cách triển khai (*override*) tương ứng với **lớp thực tế của đối tượng nhận lời gọi**.
+1. **Static resolution (*compile-time method resolution*):** uses **types known to the compiler**, method names, argument counts/types, access rules, and other information to select a valid method signature. This matters especially for **overloading**.
+2. **Dynamic resolution (*runtime method dispatch*):** after a signature has been selected, the JVM selects the appropriate (*override*) implementation for an **overridable instance method** based on the **actual class of the receiver object**.
 
-Vì vậy, không nên hiểu “Java luôn chọn phương thức khi biên dịch” hoặc “Java luôn chọn phương thức theo đối tượng lúc chạy”. **Một lời gọi có thể trải qua cả hai bước**, tùy loại phương thức.
+Thus neither "Java always chooses methods at compile time" nor "Java always chooses them by runtime object" is universally correct. **One call may involve both steps**, depending on the kind of method.
 
-## 1. Hai khái niệm qua một ví dụ ngắn
+## 1. Two Concepts in a Short Example
 
 ```java
 class Animal {}
@@ -1321,7 +1321,7 @@ class SpecialHandler extends Handler {
 }
 ```
 
-Giờ xét:
+Now consider:
 
 ```java
 Handler handler = new SpecialHandler();
@@ -1330,24 +1330,24 @@ Animal animal = new Dog();
 System.out.println(handler.process(animal));
 ```
 
-Kết quả là:
+The result is:
 
 ```text
 SpecialHandler/Animal
 ```
 
-**Vì sao không phải `SpecialHandler/Dog`?**
+**Why not `SpecialHandler/Dog`?**
 
-- **Khi biên dịch:** biến `animal` có kiểu khai báo là `Animal`. Trình biên dịch chọn overload **`process(Animal)`** chứ không chọn `process(Dog)`, dù đối tượng thực tế là `Dog`.
-- **Khi chạy:** biến `handler` đang trỏ tới đối tượng `SpecialHandler`. JVM gọi bản override **`SpecialHandler.process(Animal)`**.
+- **At compile time:** `animal` is declared as `Animal`. The compiler selects the **`process(Animal)`** overload rather than `process(Dog)`, even though the actual object is a `Dog`.
+- **At runtime:** `handler` refers to a `SpecialHandler` object. The JVM invokes the **`SpecialHandler.process(Animal)`** override.
 
-Đây là điểm mấu chốt:
+Here is the key idea:
 
-> **Overloading chọn chữ ký theo thông tin kiểu lúc biên dịch; overriding chọn cách triển khai của chữ ký đó theo đối tượng nhận lời gọi lúc chạy.**
+> **Overloading selects a signature using compile-time type information; overriding selects an implementation of that signature based on the runtime receiver object.**
 
-## 2. Ví dụ Java hoàn chỉnh: kết hợp overload và override
+## 2. Complete Java Example: Combining Overloading and Overriding
 
-Lưu toàn bộ đoạn sau thành **`Main.java`**. Ví dụ chạy được trên Java 17 hoặc Java 21, không cần thư viện ngoài.
+Save the entire snippet as **`Main.java`**. It runs with Java 17 or Java 21 and requires no external library.
 
 ```java
 class Event {}
@@ -1414,14 +1414,14 @@ public class Main {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả chính xác:
+Exact output:
 
 ```text
 SmartDispatcher/Event
@@ -1434,24 +1434,24 @@ SmartDispatcher/static
 SmartDispatcher
 ```
 
-### Phân tích từng lời gọi
+### Analyzing Each Call
 
-| Lời gọi | Overload được chọn **khi biên dịch** | Implementation chạy **lúc runtime** |
+| Call | Overload selected **at compile time** | Implementation run **at runtime** |
 | --- | --- | --- |
 | `general.dispatch(emailAsEvent)` | `dispatch(Event)` | `SmartDispatcher.dispatch(Event)` |
 | `general.dispatch(email)` | `dispatch(EmailEvent)` | `SmartDispatcher.dispatch(EmailEvent)` |
-| `general.dispatch(sms)` | `dispatch(Event)` vì kiểu `Dispatcher` không công bố overload `SmsEvent` | `SmartDispatcher.dispatch(Event)` |
+| `general.dispatch(sms)` | `dispatch(Event)` because the `Dispatcher` type does not expose the `SmsEvent` overload | `SmartDispatcher.dispatch(Event)` |
 | `specific.dispatch(sms)` | `dispatch(SmsEvent)` | `SmartDispatcher.dispatch(SmsEvent)` |
-| `((Dispatcher) specific).dispatch(sms)` | `dispatch(Event)` vì kiểu biểu thức sau cast là `Dispatcher` | `SmartDispatcher.dispatch(Event)` |
+| `((Dispatcher) specific).dispatch(sms)` | `dispatch(Event)` because the post-cast expression has type `Dispatcher` | `SmartDispatcher.dispatch(Event)` |
 
-Hãy lưu ý cặp lời gọi này:
+Compare the following two calls:
 
 ```java
 specific.dispatch(sms);                 // SmartDispatcher/SmsEvent
 ((Dispatcher) specific).dispatch(sms); // SmartDispatcher/Event
 ```
 
-**Vẫn là cùng một đối tượng `specific` và cùng một đối số `sms`**. Điều thay đổi là **kiểu tham chiếu của biểu thức nhận lời gọi lúc biên dịch**, nên trình biên dịch nhìn thấy tập overload khác nhau. Sau đó, ở mỗi chữ ký đã được chọn, cơ chế dispatch động mới chọn phần triển khai theo đối tượng thực tế.
+**Both use the same `specific` object and the same `sms` argument**. What changes is **the receiver expression's compile-time reference type**, so the compiler sees a different set of overloads. Dynamic dispatch then selects the implementation based on the actual object for each selected signature.
 
 ```mermaid
 flowchart TD
@@ -1464,9 +1464,9 @@ flowchart TD
     G --> H["SmartDispatcher/Event"]
 ```
 
-## 3. Phân giải tĩnh: Java chọn overload ra sao?
+## 3. Static Resolution: How Does Java Select Overloads?
 
-**Overloading** là nhiều phương thức cùng tên nhưng có **danh sách tham số khác nhau** (khác số lượng hoặc kiểu tham số):
+**Overloading** means multiple methods share a name but have **different parameter lists** (parameter counts or types):
 
 ```java
 class Formatter {
@@ -1484,7 +1484,7 @@ class Formatter {
 }
 ```
 
-Với đoạn mã:
+Given this code:
 
 ```java
 Formatter formatter = new Formatter();
@@ -1497,11 +1497,11 @@ System.out.println(formatter.format(number));  // Number
 System.out.println(formatter.format(object));  // Object
 ```
 
-Dù cả ba biến có thể cùng tham chiếu đến một đối tượng `Integer`, kiểu khai báo của biểu thức đối số khác nhau. Trình biên dịch dùng các kiểu đó để tìm phương thức **áp dụng được và phù hợp nhất** theo quy tắc của Java.
+Although all three variables may refer to the same `Integer` object, their argument expressions have different declared types. The compiler uses those types to find an **applicable, most-specific method** under Java's rules.
 
-### Không đơn thuần là “chọn tham số có tên giống nhất”
+### It Is Not Simply "Pick the Closest-Sounding Parameter"
 
-Java có các quy tắc chi tiết cho phương thức áp dụng được, chuyển đổi kiểu nguyên thủy, boxing/unboxing và varargs. Một ví dụ đáng nhớ:
+Java has detailed rules for applicable methods, primitive conversions, boxing/unboxing, and varargs. Consider this important example:
 
 ```java
 class Choice {
@@ -1521,11 +1521,11 @@ class Choice {
 new Choice().choose(5); // long
 ```
 
-Với đối số literal `5` kiểu `int`, overload `choose(long)` phù hợp nhờ **widening primitive conversion** ngay ở pha tìm kiếm phương thức không boxing. Java không mặc định chọn `choose(Integer)` hay `choose(int...)` chỉ vì chúng cũng nhận được giá trị sau các phép chuyển đổi khác.
+For the literal `5` of type `int`, the `choose(long)` overload applies through **widening primitive conversion** in a method-selection phase that does not require boxing. Java does not automatically choose `choose(Integer)` or `choose(int...)` just because other conversions could make them accept the value.
 
-Có thể ghi nhớ thứ tự xét ở mức khái quát: Java ưu tiên tìm overload không cần boxing/varargs, tiếp đến những trường hợp dùng boxing/unboxing, và cuối cùng mới xét lời gọi theo kiểu varargs nếu chưa chọn được phương thức ở các pha trước. Việc chọn phương thức cụ thể vẫn tuân thủ các quy tắc “most specific”; không phải một bảng ưu tiên duy nhất đúng cho mọi cặp kiểu.
+At a high level, remember that Java first searches for applicable overloads without boxing or varargs, then considers boxing/unboxing cases, and finally variable-arity invocation if earlier phases fail. The final choice still follows "most specific" rules; no single priority table correctly describes every pair of types.
 
-### Overload có thể mơ hồ
+### Overloads Can Be Ambiguous
 
 ```java
 class Ambiguous {
@@ -1536,19 +1536,19 @@ class Ambiguous {
 // new Ambiguous().send(null); // Lỗi biên dịch: ambiguous
 ```
 
-`null` có thể gán cho cả `String` và `Integer`; không kiểu nào là subtype của kiểu kia, nên compiler không thể chọn một overload duy nhất.
+`null` can be assigned to `String` or `Integer`; neither type is a subtype of the other, so the compiler cannot choose one overload.
 
-Có thể chỉ rõ ý định:
+You can make the intent explicit:
 
 ```java
 new Ambiguous().send((String) null);
 ```
 
-**Lưu ý:** dòng ép kiểu giải quyết vấn đề chọn overload, không có nghĩa phương thức bên trong sẽ xử lý `null` an toàn. Hợp đồng của từng phương thức vẫn phải kiểm tra khi cần.
+**Note:** The cast resolves overload selection; it does not mean that the implementation handles `null` safely. Each method's contract must still validate inputs where necessary.
 
-## 4. Phân giải động: ghi đè phương thức theo kiểu đối tượng
+## 4. Dynamic Dispatch: Overriding Methods by Object Type
 
-**Overriding** xảy ra khi lớp con cung cấp cách triển khai mới cho một **phương thức thể hiện có thể ghi đè** được kế thừa từ lớp cha hoặc hợp đồng interface.
+**Overriding** occurs when a subclass supplies a new implementation of an **overridable instance method** inherited from its superclass or defined by an interface contract.
 
 ```java
 class Payment {
@@ -1568,9 +1568,9 @@ Payment p = new CardPayment();
 System.out.println(p.status()); // CardPayment
 ```
 
-Trình biên dịch kiểm tra biến `p` kiểu `Payment` có phương thức `status()`. Đến runtime, JVM biết đối tượng thực tế là `CardPayment` nên chạy `CardPayment.status()`.
+The compiler checks that the `p` variable of type `Payment` has a `status()` method. At runtime, the JVM sees that the actual object is `CardPayment` and invokes `CardPayment.status()`.
 
-Khả năng này cho phép viết logic nhận kiểu cha:
+This lets us write logic accepting a parent type:
 
 ```java
 static void printStatus(Payment payment) {
@@ -1578,9 +1578,9 @@ static void printStatus(Payment payment) {
 }
 ```
 
-Truyền `new Payment()`, `new CardPayment()` hoặc một subtype khác vào `printStatus` mà không cần kiểm tra `instanceof` cho từng loại. Đây chính là **runtime polymorphism**.
+Pass `new Payment()`, `new CardPayment()`, or another subtype to `printStatus` without checking `instanceof` for each type. This is **runtime polymorphism**.
 
-### Lời gọi qua interface cũng có thể dispatch động
+### Calls Through Interfaces Can Also Dispatch Dynamically
 
 ```java
 interface Notifier {
@@ -1607,11 +1607,11 @@ n = new SmsNotifier();
 n.notifyUser(); // SMS
 ```
 
-`Notifier` xác định **khả năng cần gọi**. Đối tượng `EmailNotifier` hay `SmsNotifier` xác định **phần triển khai thực sự**. Việc chọn một interface ở mức thiết kế không xóa các bước kiểm tra kiểu lúc biên dịch: `n` vẫn chỉ được gọi những phương thức công bố phù hợp qua `Notifier` và `Object`.
+`Notifier` defines **the capability being invoked**. `EmailNotifier` or `SmsNotifier` determines **the actual implementation**. Choosing an interface in the design does not remove compile-time type checking: `n` can still call only suitable methods exposed through `Notifier` and `Object`.
 
-## 5. `static` method: hiding, không phải overriding
+## 5. `static` Methods: Hiding, Not Overriding
 
-Một nguồn nhầm lẫn lớn là phương thức được khai báo bằng `static`. Trong Java, phương thức tĩnh **thuộc lớp**, không được ghi đè bằng cơ chế đa hình instance. Khi lớp con khai báo một static method tương ứng, hiện tượng đó gọi là **method hiding**.
+A major source of confusion is methods declared `static`. In Java, static methods **belong to classes** and cannot be overridden through instance polymorphism. A corresponding static method in a subclass causes **method hiding**.
 
 ```java
 class Parent {
@@ -1634,24 +1634,24 @@ System.out.println(Child.typeName());  // Child
 // nhưng nên tránh gọi static qua biến tham chiếu.
 ```
 
-Nếu gọi `ref.typeName()` (Java cho phép cú pháp này nhưng thường có cảnh báo IDE), phương thức được xác định theo **kiểu biểu thức tham chiếu `Parent`**, không theo lớp thực tế `Child`.
+Calling `ref.typeName()` is syntactically allowed (though IDEs often warn against it), but the method is selected using the reference expression's **`Parent` type**, not the object's actual `Child` class.
 
-Bởi vậy hãy gọi `Parent.typeName()` hoặc `Child.typeName()` khi cần static method, để người đọc không nhầm với dispatch động.
+Therefore, use `Parent.typeName()` or `Child.typeName()` for static calls to avoid misleading readers about dynamic dispatch.
 
-| Loại phương thức | Có đa hình override theo runtime object? | Ghi chú |
+| Method Type | Runtime Object-Based Overriding? | Notes |
 | --- | --- | --- |
-| Instance method có thể override | **Có** | Lớp con có thể thay implementation |
-| Instance method `final` | **Không thể override** | Phương thức được chọn không có bản override hợp lệ ở lớp con |
-| Instance method `private` | **Không thể override** | Không được kế thừa theo cơ chế override thông thường |
-| `static` method | **Không** | Có thể bị *hide* bởi static method tương ứng |
-| Constructor | **Không** | Không được kế thừa/override |
-| Lời gọi `super.method()` | Gọi triển khai được chỉ định từ lớp cha | Không chọn bản override của chính lớp con cho lời gọi này |
+| Overridable instance method | **Yes** | A subclass may replace the implementation |
+| `final` instance method | **Cannot override** | No valid subclass override can replace it |
+| `private` instance method | **Cannot override** | Not inherited in the usual overriding sense |
+| `static` method | **No** | May be *hidden* by a corresponding static method |
+| Constructor | **No** | Not inherited or overridden |
+| `super.method()` call | Invokes the designated parent-class implementation | Does not dispatch to the subclass's own override of that call |
 
-**Không nên hiểu rằng “`final` luôn biên dịch thành một loại bytecode gọi tĩnh”.** Ở mức ngôn ngữ, `final` ngăn override; JVM/JIT có thể tối ưu lời gọi phù hợp. Đây là câu chuyện khác với cách Java phân giải overload ở compile time.
+**Do not assume that "`final` always compiles into a static invocation opcode".** At the language level, `final` prevents overriding; the JVM/JIT may optimize calls appropriately. That is different from Java's compile-time overload-resolution process.
 
-## 6. Truy cập trường không giống gọi instance method
+## 6. Field Access Is Not the Same as Calling Instance Methods
 
-Đa hình áp dụng cho phương thức instance được override, **không áp dụng cho trường theo cách tương tự**.
+Polymorphism applies to overridden instance methods, **not to fields in the same way**.
 
 ```java
 class Base {
@@ -1677,13 +1677,13 @@ System.out.println(ref.name);      // Base
 System.out.println(ref.getName()); // Derived
 ```
 
-`ref.name` sử dụng cách truy cập trường được chọn theo **kiểu tham chiếu `Base`**, còn `ref.getName()` gọi override của `Derived` theo đối tượng thực tế.
+`ref.name` uses a field selected by the **`Base` reference type**, whereas `ref.getName()` invokes the `Derived` override on the actual object.
 
-Đây là một lý do nên tránh khai báo lại trường cùng tên giữa cha và con (*field hiding*). Ưu tiên đóng gói trường bằng `private` rồi công bố hành vi/giá trị qua phương thức có hợp đồng rõ ràng.
+This is a reason to avoid redeclaring the same field name in parent and child classes (*field hiding*). Prefer encapsulating fields with `private` and exposing behavior or values through methods with explicit contracts.
 
-## 7. Overload được chọn rồi, override vẫn có thể thực thi
+## 7. Overloads Are Selected First, but Overrides Can Still Execute
 
-Đặt hai giai đoạn cạnh nhau để tránh nhầm:
+Put the two stages side by side to avoid confusion:
 
 ```java
 class Converter {
@@ -1709,7 +1709,7 @@ class LoggingConverter extends Converter {
 }
 ```
 
-Với:
+Given:
 
 ```java
 Converter converter = new LoggingConverter();
@@ -1722,31 +1722,31 @@ System.out.println(converter.convert("hello"));
 // LoggingConverter/String
 ```
 
-**Lời gọi thứ nhất:** tham số có kiểu `Object` nên chọn chữ ký `convert(Object)`; đối tượng nhận lời gọi là `LoggingConverter` nên thực thi override `LoggingConverter.convert(Object)`.
+**First call:** the argument is of type `Object`, so Java selects the `convert(Object)` signature; the receiver is a `LoggingConverter`, so the `LoggingConverter.convert(Object)` override executes.
 
-**Lời gọi thứ hai:** literal `"hello"` có kiểu `String` nên chọn chữ ký `convert(String)`; runtime thực thi bản override `LoggingConverter.convert(String)`.
+**Second call:** the literal `"hello"` has type `String`, so the `convert(String)` signature is selected; runtime executes the `LoggingConverter.convert(String)` override.
 
-Java chủ yếu sử dụng **single dispatch** cho phương thức instance: dispatch động dựa trên đối tượng nhận lời gọi, **không** tự chọn overload mới theo lớp runtime của từng đối số. Nếu thật sự cần hành vi phụ thuộc đồng thời vào nhiều kiểu runtime, có thể xem xét Visitor/double dispatch, pattern matching hoặc bảng xử lý theo loại dữ liệu tùy bài toán — nhưng đó là quyết định thiết kế khác, không phải cơ chế overload mặc định.
+Java primarily uses **single dispatch** for instance methods: dynamic dispatch depends on the receiver, **not** on automatically reselecting an overload using each argument's runtime class. For behavior dependent on multiple runtime types, consider Visitor/double dispatch, pattern matching, or type-based handler tables as appropriate. These are different design decisions, not Java's default overloading mechanism.
 
-## 8. Mối liên hệ với `this`, `super` và lời gọi từ lớp cha
+## 8. How `this`, `super`, and Parent-Class Calls Relate
 
-Khi bên trong một phương thức instance dùng:
+Inside an instance method, when you write:
 
 ```java
 this.run();
 ```
 
-Lời gọi `run()` bình thường vẫn có thể sử dụng dynamic dispatch, vì `this` là đối tượng thực tế đang nhận lời gọi. Nếu đối tượng đó thuộc lớp con có override `run()`, phiên bản lớp con có thể được thực thi.
+A normal `run()` call can still use dynamic dispatch because `this` is the actual receiver object. If it belongs to a subclass overriding `run()`, the subclass implementation can run.
 
-Ngược lại:
+By contrast:
 
 ```java
 super.run();
 ```
 
-được dùng trong lớp con để gọi cách thực hiện tương ứng được truy cập từ lớp cha, thay vì gọi lại chính override của lớp con.
+is used within a subclass to invoke the corresponding accessible parent-class implementation rather than reentering that subclass's own override.
 
-Ví dụ:
+For example:
 
 ```java
 class Parent {
@@ -1767,66 +1767,66 @@ Parent value = new Child();
 value.greet();
 ```
 
-Kết quả:
+Output:
 
 ```text
 Xin chào
 Từ lớp con
 ```
 
-Cơ chế gồm: lời gọi `value.greet()` được dispatch vào `Child.greet()`; sau đó `super.greet()` gọi phần thực hiện của `Parent` trước khi tiếp tục thân `Child.greet()`.
+The sequence is: `value.greet()` dispatches to `Child.greet()`, then `super.greet()` invokes the `Parent` implementation before the remainder of `Child.greet()` executes.
 
-**Cạm bẫy constructor:** không nên gọi phương thức có thể override từ constructor lớp cha, vì nó có thể dispatch vào lớp con **trước khi các trường của lớp con khởi tạo xong**. Dynamic dispatch vẫn tồn tại khi khởi tạo, và đó có thể là nguyên nhân của lỗi `null` hoặc trạng thái chưa hoàn chỉnh.
+**Constructor pitfall:** avoid calling overridable methods from a superclass constructor because they may dispatch to a subclass **before subclass fields have finished initialization**. Dynamic dispatch still applies during construction, which can cause `null` values or incomplete state.
 
-## 9. Liên hệ với JVM bytecode (hiểu đúng ở mức vừa đủ)
+## 9. JVM Bytecode Connections (Just Enough Detail)
 
-Java Virtual Machine có các chỉ thị gọi phương thức với ngữ nghĩa khác nhau. Ở mức khái quát:
+The Java Virtual Machine provides invocation instructions with different semantics. At a high level:
 
-| Chỉ thị JVM | Nhóm lời gọi thường gặp |
+| JVM Instruction | Typical Call Category |
 | --- | --- |
-| `invokestatic` | Gọi phương thức `static` |
-| `invokevirtual` | Gọi phương thức instance thông thường trên đối tượng |
-| `invokeinterface` | Gọi phương thức instance qua hợp đồng interface |
-| `invokespecial` | Một số lời gọi đặc biệt như constructor, `super.method()` và private method |
-| `invokedynamic` | Cơ chế liên kết lời gọi động ở cấp JVM, như một số cách triển khai lambda hoặc string concatenation |
+| `invokestatic` | Invokes `static` methods |
+| `invokevirtual` | Invokes ordinary instance methods on objects |
+| `invokeinterface` | Invokes instance methods through interface contracts |
+| `invokespecial` | Certain special calls, such as constructors, `super.method()`, and private methods |
+| `invokedynamic` | JVM-level dynamic call-site linkage, including some lambda and string-concatenation implementations |
 
-**Cẩn thận với tên gọi:** `invokedynamic` trong bytecode **không đồng nghĩa** với dynamic dispatch OOP của một lời gọi override thông thường. Dynamic dispatch của instance method chủ yếu liên quan các cơ chế như `invokevirtual` hoặc `invokeinterface`; `invokedynamic` phục vụ các điểm liên kết lời gọi có *bootstrap method*.
+**Be careful with names:** `invokedynamic` in bytecode is **not synonymous** with ordinary OOP dynamic dispatch of overridden methods. Instance-method dispatch mainly involves instructions such as `invokevirtual` and `invokeinterface`; `invokedynamic` serves dynamically linked call sites with a *bootstrap method*.
 
-Phương pháp đơn giản để khám phá sau khi biên dịch ví dụ:
+A simple way to inspect a compiled example:
 
 ```bash
 javac Main.java
 javap -c Main
 ```
 
-Lệnh `javap -c` hiển thị bytecode của lớp được yêu cầu. Nếu muốn xem phương thức trong các lớp khác của ví dụ, có thể chỉ định đúng tên lớp tương ứng. Bytecode giúp quan sát cơ chế, nhưng để học và thiết kế OOP, trước tiên hãy nắm vững **chữ ký được chọn lúc biên dịch** và **implementation được gọi lúc chạy**.
+The `javap -c` command displays bytecode for the specified class. To inspect methods in other classes from the example, specify their correct class names. Bytecode helps reveal the mechanism, but for OOP learning and design, first master **signature selection at compile time** and **implementation selection at runtime**.
 
-## 10. Những sai lầm phổ biến
+## 10. Common Mistakes
 
-| Nhận định/đoạn mã dễ sai | Vì sao sai? | Điều cần nhớ |
+| Incorrect Assumption or Code | Why It Is Wrong | What to Remember |
 | --- | --- | --- |
-| “Đối số runtime là `EmailEvent` thì chắc gọi overload `dispatch(EmailEvent)`” | Overload được chọn từ kiểu biểu thức lúc biên dịch | Biến `Event` chọn overload `Event` |
-| “Kiểu biến là `Dispatcher` nên luôn chạy code `Dispatcher`” | Override chạy theo lớp đối tượng thực tế | `new SmartDispatcher()` có thể chạy override |
-| “Static method ở lớp con override static ở lớp cha” | Đó là method hiding | Gọi static qua tên lớp |
-| “Field `name` cũng được dispatch động” | Trường được phân giải theo kiểu tham chiếu | Phân biệt `ref.name` với `ref.getName()` |
-| “Một cast receiver không ảnh hưởng overload” | Kiểu biểu thức receiver có thể thay đổi tập overload nhìn thấy | So sánh `specific.dispatch(sms)` với `((Dispatcher)specific).dispatch(sms)` |
-| “Dùng `@Override` với phương thức khác tham số vẫn được” | Khác danh sách tham số có thể là overload | Thêm `@Override` để trình biên dịch phát hiện |
-| “`send(null)` sẽ tự chọn overload nào cũng được” | Các overload kiểu tham chiếu không liên quan có thể mơ hồ | Cast tường minh khi thật sự cần |
-| “`invokedynamic` chính là override” | Đây là hai khái niệm khác ở mức JVM | Đừng suy luận theo tên opcode |
-| “Phương thức `final` có thể override nhưng không được gọi” | `final` chặn override, không chặn lời gọi thông thường | Dùng `final` để cố định hành vi khi có lý do |
+| "The runtime argument is `EmailEvent`, so Java must choose `dispatch(EmailEvent)`" | Overloads are selected from compile-time expression types | An `Event` variable selects the `Event` overload |
+| "The variable type is `Dispatcher`, so `Dispatcher` code always executes" | Overrides execute based on the actual object class | `new SmartDispatcher()` may invoke an override |
+| "A subclass static method overrides its parent's static method" | This is method hiding | Invoke static methods through class names |
+| "The `name` field dispatches dynamically too" | Fields are resolved from the reference type | Distinguish `ref.name` from `ref.getName()` |
+| "Casting the receiver does not affect overloads" | The receiver expression type can change the available overload set | Compare `specific.dispatch(sms)` with `((Dispatcher)specific).dispatch(sms)` |
+| "A different parameter list still allows `@Override`" | Different parameters may form an overload instead | Add `@Override` to let the compiler detect mistakes |
+| "`send(null)` can choose any overload automatically" | Unrelated reference-type overloads may be ambiguous | Cast explicitly when truly necessary |
+| "`invokedynamic` means overriding" | These are different JVM-level concepts | Do not infer behavior from opcode names |
+| "A `final` method can be overridden but not called" | `final` prevents overriding, not normal calls | Use `final` to fix behavior when justified |
 
-## 11. Khi nào sự phân biệt này có ích?
+## 11. When Is This Distinction Useful?
 
-- **Thiết kế API:** khi có nhiều overload, hãy làm rõ kiểu tham số để caller không vô tình chọn nhầm hàm chỉ vì khai báo biến là supertype.
-- **Debug:** nếu kết quả khác kỳ vọng, xác định trước **chữ ký nào đã được compiler chọn**, sau đó mới kiểm tra **override nào được chạy**.
-- **Dependency injection:** biến kiểu interface vẫn gọi đúng cách triển khai ở runtime; đây là nền tảng của đa hình ở tầng service/adapter.
-- **Refactor:** thêm một overload mới có thể thay đổi việc chọn phương thức tại chỗ gọi khi biên dịch lại, ngay cả khi các bản override cũ không thay đổi.
-- **Kiểm thử:** nên có test cho các tổ hợp kiểu biến, kiểu đối số và lớp thực tế nếu API dùng nhiều overload kết hợp kế thừa.
-- **Performance:** JVM có thể inlining, devirtualization và tối ưu lời gọi phù hợp; đừng cho rằng mọi lời gọi đa hình đều chậm theo một mức cố định. Đo bằng profiling/benchmark nếu hiệu năng là yêu cầu thật.
+- **API design:** with multiple overloads, make parameter types clear so callers do not accidentally select the wrong method merely because a variable is declared as a supertype.
+- **Debugging:** if results differ from expectations, identify **which signature the compiler selected** before checking **which override executed**.
+- **Dependency injection:** interface-typed variables still invoke runtime implementations correctly; this underpins polymorphism in service and adapter layers.
+- **Refactoring:** adding an overload can change the selected method when call sites are recompiled, even if existing overrides remain unchanged.
+- **Testing:** test combinations of reference types, argument types, and actual object classes when an API mixes overloading and inheritance.
+- **Performance:** the JVM can inline, devirtualize, and optimize appropriate calls; do not assume all polymorphic calls incur one fixed performance penalty. Use profiling and benchmarks when performance matters.
 
-## 12. Tự kiểm tra
+## 12. Self-Check
 
-**Câu 1.** Kết quả của đoạn sau là gì?
+**Question 1.** What does the following code print?
 
 ```java
 Dispatcher dispatcher = new SmartDispatcher();
@@ -1834,59 +1834,59 @@ Event event = new EmailEvent();
 System.out.println(dispatcher.dispatch(event));
 ```
 
-**Đáp án:** `SmartDispatcher/Event`. Compiler chọn `dispatch(Event)`, runtime chạy override của `SmartDispatcher`.
+**Answer:** `SmartDispatcher/Event`. The compiler selects `dispatch(Event)`, and runtime executes the override from `SmartDispatcher`.
 
-**Câu 2.** Vì sao `specific.dispatch(sms)` khác `((Dispatcher) specific).dispatch(sms)`?
+**Question 2.** Why does `specific.dispatch(sms)` differ from `((Dispatcher) specific).dispatch(sms)`?
 
-**Đáp án:** Kiểu tham chiếu lúc biên dịch khác nhau. `SmartDispatcher` nhìn thấy overload `dispatch(SmsEvent)`; `Dispatcher` chỉ thấy `dispatch(Event)` và `dispatch(EmailEvent)`, nên với `SmsEvent` sẽ chọn `Event`.
+**Answer:** Their compile-time reference types differ. `SmartDispatcher` exposes `dispatch(SmsEvent)`, while `Dispatcher` only exposes `dispatch(Event)` and `dispatch(EmailEvent)`; with `SmsEvent`, it selects `Event`.
 
-**Câu 3.** `Parent ref = new Child();` rồi gọi `ref.typeName()` với cả hai lớp khai báo phương thức `static` cùng tên thì phương thức nào được dùng?
+**Question 3.** Given `Parent ref = new Child();`, which method is used for `ref.typeName()` when both classes declare same-named `static` methods?
 
-**Đáp án:** Phương thức static theo kiểu `Parent`. Tuy nhiên nên viết `Parent.typeName()` để tránh gây hiểu nhầm.
+**Answer:** The static method associated with type `Parent`. Prefer spelling it `Parent.typeName()` to avoid confusion.
 
-**Câu 4.** Tại sao `format(number)` chọn `format(Number)` khi `number` có kiểu `Number` nhưng đang trỏ tới `Integer`?
+**Question 4.** Why does `format(number)` choose `format(Number)` when `number` has declared type `Number` but points to `Integer`?
 
-**Đáp án:** Overload resolution sử dụng kiểu biểu thức lúc biên dịch, không tự chọn overload theo runtime class của đối số.
+**Answer:** Overload resolution uses the compile-time expression type; it does not automatically choose an overload using the argument's runtime class.
 
-**Câu 5.** Nếu lớp con override `greet()`, lời gọi `super.greet()` trong override có gọi lại chính override của lớp con không?
+**Question 5.** If a subclass overrides `greet()`, does `super.greet()` in the override call the subclass's own override again?
 
-**Đáp án:** Không. Nó gọi cách thực hiện tương ứng từ lớp cha theo ngữ nghĩa của `super`, giúp lớp con tái sử dụng hành vi cha.
+**Answer:** No. It invokes the corresponding parent-class implementation according to `super` semantics, allowing the subclass to reuse parent behavior.
 
-**Câu 6.** `List<Payment>` chứa `new CardPayment()`; gọi `payment.status()` trong vòng lặp sẽ chọn bản nào?
+**Question 6.** A `List<Payment>` contains `new CardPayment()`; which implementation does `payment.status()` invoke in a loop?
 
-**Đáp án:** Với một phần tử là `CardPayment`, nếu `status()` được override, bản `CardPayment.status()` sẽ chạy; kiểu phần tử khai báo `Payment` chỉ quyết định hợp đồng có thể gọi.
+**Answer:** For a `CardPayment` element, if `status()` is overridden, `CardPayment.status()` executes. The declared `Payment` element type only determines the callable contract.
 
-**Ghi nhớ:** Để xác định kết quả lời gọi phương thức Java, hãy đặt hai câu hỏi theo thứ tự: **“Compiler chọn chữ ký nào từ các kiểu đang nhìn thấy?”** và **“Đối tượng thực tế có override chữ ký đó không?”**. Overloading nghiêng về phân giải tĩnh, overriding sử dụng phân giải động; phương thức `static`, trường, constructor và lời gọi `super` có quy tắc riêng. Nắm được ranh giới này giúp hiểu đúng đa hình và tránh những lỗi rất khó phát hiện khi dùng kế thừa.
+**Remember:** To predict a Java method call, ask in order: **"Which signature does the compiler select from visible types?"** and **"Does the actual receiver object override that signature?"** Overloading is primarily static resolution; overriding uses dynamic dispatch. `static` methods, fields, constructors, and `super` calls have separate rules. Understanding this boundary clarifies polymorphism and prevents subtle inheritance bugs.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="polymorphism-004">Ghi đè và lựa chọn phương thức khi chạy</a>
+## <a id="polymorphism-004">Method Overriding and Runtime Method Selection</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Ghi đè và lựa chọn phương thức khi chạy trong Java
+# Method Overriding and Runtime Method Selection in Java
 
-> **OOP → Đa hình (Polymorphism).** Khi một biến có kiểu lớp cha nhưng đang tham chiếu tới đối tượng lớp con, lời gọi một **phương thức instance có thể ghi đè** sẽ chạy implementation phù hợp với **kiểu thực tế của đối tượng**. Cơ chế này gọi là **dynamic dispatch** (lựa chọn phương thức lúc chạy). Nó là nền tảng để cùng một đoạn mã làm việc với nhiều loại đối tượng mà không phải viết `if/else` để nhận diện từng lớp.
+> **OOP → Polymorphism.** When a parent-typed variable refers to a subclass object, a call to an **overridable instance method** runs the implementation appropriate to the object's **actual runtime type**. This is called **dynamic dispatch** (runtime method selection). It lets one piece of code handle multiple object types without `if/else` checks for each class.
 
-## 1. Hai kiểu cần phân biệt trong một lời gọi
+## 1. Two Types to Distinguish in a Method Call
 
 ```java
 Animal animal = new Dog();
 animal.speak();
 ```
 
-Dòng đầu chứa **hai kiểu khác nhau**:
+The first line contains **two different types**:
 
-- **Kiểu khai báo (compile-time type):** `Animal`. Trình biên dịch dùng kiểu này để kiểm tra những phương thức nào được phép gọi và cách chọn lời gọi hợp lệ.
-- **Kiểu thực tế (runtime class):** `Dog`. Khi `Dog` ghi đè `speak()`, JVM gọi implementation của `Dog` cho phương thức instance đó.
+- **Declared type (compile-time type):** `Animal`. The compiler uses it to check which methods are available and how a valid call is selected.
+- **Actual type (runtime class):** `Dog`. When `Dog` overrides `speak()`, the JVM invokes the `Dog` implementation of that instance method.
 
-Ví dụ ngắn:
+A short example:
 
 ```java
 class Animal {
@@ -1907,7 +1907,7 @@ Animal animal = new Dog();
 animal.speak(); // Gâu gâu
 ```
 
-Tuy biến được khai báo là `Animal`, đối tượng thực vẫn là `Dog`. Phương thức `speak()` ở `Dog` **ghi đè (override)** `speak()` được kế thừa từ `Animal`, nên phiên bản `Dog` được chọn lúc chạy.
+Although the variable is declared `Animal`, the actual object is a `Dog`. `speak()` in `Dog` **overrides** the inherited `speak()` from `Animal`, so Java selects the `Dog` implementation at runtime.
 
 ```mermaid
 flowchart LR
@@ -1917,13 +1917,13 @@ flowchart LR
     E --> F["Dog.speak()"]
 ```
 
-**Điểm cốt lõi:** không phải cứ thấy `new Dog()` là trình biên dịch tự thay mọi lời gọi thành lời gọi của `Dog`. Việc chọn **chữ ký** và kiểm tra **quyền truy cập** vẫn diễn ra từ thông tin kiểu tại thời điểm biên dịch. Chỉ những lời gọi phương thức instance đủ điều kiện dispatch động mới chọn implementation theo đối tượng runtime.
+**Key point:** seeing `new Dog()` does not mean the compiler simply rewrites every call to use `Dog`. **Signature selection** and **access checks** still use compile-time type information. Only eligible instance-method calls use the runtime object to choose an implementation.
 
-## 2. Ví dụ hoàn chỉnh: nhiều kế hoạch giao hàng, một lời gọi `quote()`
+## 2. Complete Example: Multiple Delivery Plans, One `quote()` Call
 
-Một hệ thống vận chuyển có hai kế hoạch: thông thường và hỏa tốc. Mỗi kế hoạch đều phải tính tổng phí sau khi kiểm tra khoảng cách, nhưng phần phụ phí khoảng cách có thể khác nhau.
+A shipping system offers standard and express plans. Both calculate the total fee after validating distance, but their distance surcharges may differ.
 
-Lưu toàn bộ mã thành `RuntimeDispatchDemo.java` (**Java 17+**):
+Save all code as `RuntimeDispatchDemo.java` (**Java 17+**):
 
 ```java
 import java.util.List;
@@ -2010,14 +2010,14 @@ public class RuntimeDispatchDemo {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac RuntimeDispatchDemo.java
 java RuntimeDispatchDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Thông thường: 16000 VND
@@ -2025,23 +2025,23 @@ Hỏa tốc: 26000 VND
 Đối tượng thực: ExpressPlan
 ```
 
-Cách tính với 3 km:
+Calculations for 3 km:
 
-| Loại đối tượng thực | Phí cơ bản | Phụ phí | Tổng |
+| Actual Object Type | Base Fee | Surcharge | Total |
 |---|---:|---:|---:|
 | `StandardPlan` | 10.000 VND | 3 × 2.000 = 6.000 VND | **16.000 VND** |
 | `ExpressPlan` | 15.000 VND | 3 × 2.000 + 5.000 = 11.000 VND | **26.000 VND** |
 
-Cùng lời gọi `plan.name()` hoặc `plan.quote(3)` nhưng hành vi được quyết định bởi đối tượng mà `plan` đang giữ:
+The same `plan.name()` or `plan.quote(3)` call behaves according to the object referenced by `plan`:
 
-- `StandardPlan` **ghi đè `name()`**, không ghi đè `distanceFee()`, nên dùng công thức phụ phí của lớp cha.
-- `ExpressPlan` **ghi đè cả `name()` và `distanceFee()`**. Bên trong `distanceFee()`, lời gọi `super.distanceFee(...)` dùng công thức của lớp cha rồi cộng 5.000 VND.
-- `quote()` có `final`, vì thế lớp con không thể override nó. Tuy nhiên, bên trong `quote()` có lời gọi **instance method** `distanceFee()`; lời gọi này **vẫn được dispatch động** đến implementation phù hợp.
-- `getClass()` phản ánh lớp runtime của đối tượng, không phải kiểu khai báo của biến.
+- `StandardPlan` **overrides `name()`** but not `distanceFee()`, so it uses the parent class's distance-surcharge formula.
+- `ExpressPlan` **overrides both `name()` and `distanceFee()`**. Inside `distanceFee()`, the `super.distanceFee(...)` call uses the parent formula before adding 5.000 VND.
+- `quote()` is `final`, so subclasses cannot override it. However, inside `quote()` it invokes the **instance method** `distanceFee()`, which **still dispatches dynamically** to the appropriate implementation.
+- `getClass()` reports the object's runtime class, not the variable's declared type.
 
-Đoạn `for` không cần biết tên lớp con để tính phí. Điều này cho phép thêm một lớp kế hoạch mới khi cần mà ít sửa mã gọi chung.
+The `for` loop needs no subclass-name checks to calculate fees. A new plan type can be added later with minimal changes to shared calling code.
 
-### Phân tích đường gọi
+### Tracing the Call
 
 ```mermaid
 flowchart TD
@@ -2057,11 +2057,11 @@ flowchart TD
     I --> J["Trả tổng phí"]
 ```
 
-Đây là sự kết hợp giữa **ghi đè**, **đa hình** và **phương thức chung**. Không bắt buộc `DeliveryPlan` phải là lớp `abstract` để overriding hoạt động: một lớp concrete vẫn có thể có các phương thức instance được ghi đè.
+This combines **overriding**, **polymorphism**, and **shared methods**. `DeliveryPlan` need not be `abstract` for overriding to work: concrete classes can also have overridable instance methods.
 
-## 3. Ghi đè (overriding) cần thỏa điều kiện gì?
+## 3. What Conditions Must Overriding Satisfy?
 
-Hai phương thức có tên giống nhau **chưa chắc** tạo thành overriding.
+Two methods with the same name **do not necessarily** constitute overriding.
 
 ```java
 class Parent {
@@ -2078,23 +2078,23 @@ class Child extends Parent {
 }
 ```
 
-Đây là ghi đè hợp lệ. `Integer` là kiểu trả về **hiệp biến** so với `Number`: nó là subtype của `Number`. Nếu biến kiểu `Parent` đang giữ `Child`, `value()` vẫn trả về object do implementation `Child` tạo.
+This is valid overriding. The `Integer` return type is **covariant** with `Number` because it is a subtype of `Number`. If a `Parent`-typed variable holds a `Child`, `value()` still returns an object produced by the `Child` implementation.
 
-Các nguyên tắc chính:
+Main rules:
 
-| Khía cạnh | Quy tắc |
+| Aspect | Rule |
 |---|---|
-| Tên và tham số | Phải là chữ ký phù hợp để override; chỉ đổi tham số thường thành **overload** |
-| Kiểu trả về | Giữ tương thích; với reference type có thể dùng kiểu con (covariant return) |
-| Phạm vi truy cập | Không được thu hẹp quyền truy cập, ví dụ `public` thành `protected` |
-| Checked exceptions | Không được mở rộng loại checked exception vượt quá hợp đồng phương thức cha |
-| `final` instance method | Không thể override |
-| `private` method | Không được kế thừa theo cách để override |
-| `static` method | Có thể bị **ẩn (method hiding)**, không được override động |
-| Constructor | Không được kế thừa hoặc override |
-| `@Override` | Nên dùng: trình biên dịch xác nhận lời khai báo thật sự ghi đè/triển khai một phương thức hợp lệ |
+| Name and parameters | Must match a compatible override signature; changing parameters usually creates an **overload** |
+| Return type | Must be compatible; reference types may use a subtype (covariant return) |
+| Access level | Must not be narrowed, such as `public` to `protected` |
+| Checked exceptions | Must not broaden checked exceptions beyond the parent's method contract |
+| `final` instance method | Cannot be overridden |
+| `private` method | Not inherited in a way that permits overriding |
+| `static` method | May be **hidden (method hiding)**, not dynamically overridden |
+| Constructor | Not inherited or overridden |
+| `@Override` | Recommended: the compiler verifies that a declaration truly overrides or implements an eligible method |
 
-Ví dụ sai dễ gặp:
+A common incorrect example:
 
 ```java
 class Parent {
@@ -2107,13 +2107,13 @@ class Child extends Parent {
 }
 ```
 
-`execute(int)` không override `execute(String)`: danh sách tham số khác nhau nên đây là một phương thức **overload**. Khi người dùng gọi `execute("task")`, phương thức `Parent.execute(String)` vẫn được dùng nếu `Child` không ghi đè chữ ký đó.
+`execute(int)` does not override `execute(String)`: their parameter lists differ, so the former is an **overload**. Calling `execute("task")` still uses `Parent.execute(String)` if `Child` has not overridden that signature.
 
-Trong thiết kế API, một phương thức abstract hoặc interface method cũng có thể được lớp triển khai override. Không phải chỉ các phương thức cụ thể trong lớp cha mới có thể được ghi đè.
+An abstract method or interface method may also be overridden by an implementation. Overriding is not limited to concrete parent-class methods.
 
-## 4. Runtime chỉ chọn implementation **sau khi** compiler chọn chữ ký
+## 4. Runtime Selects an Implementation **After** the Compiler Selects a Signature
 
-Nếu class cha có `process(Object)`, class con override phương thức đó và bổ sung overload `process(String)`, hai cách gọi sau có thể khác nhau:
+If the parent class declares `process(Object)`, the child overrides it and adds `process(String)`, these two calls may differ:
 
 ~~~java
 class Parent {
@@ -2131,25 +2131,25 @@ System.out.println(parentView.process("hi")); // Child/Object
 System.out.println(childView.process("hi"));  // Child/String
 ~~~
 
-Trong lời gọi đầu, compiler chỉ thấy `process(Object)` qua kiểu `Parent`, sau đó dispatch tới `Child.process(Object)`. Ở lời gọi sau, compiler thấy overload `process(String)` trên `Child` và chọn chữ ký cụ thể hơn. **Overload dựa vào kiểu tĩnh; override dựa vào receiver runtime**. Cách phân tích chi tiết và các trường hợp `null`/boxing/varargs được đặt ở bài *Phân biệt ghi đè với nạp chồng*.
+For the first call, the compiler sees only `process(Object)` through `Parent`, then dispatches to `Child.process(Object)`. For the second, the compiler sees `process(String)` on `Child` and selects the more specific signature. **Overloading uses static types; overriding uses the runtime receiver**. The lesson *Distinguishing Overriding from Overloading* discusses the full rules, including `null`, boxing, and varargs.
 
-## 5. `static`, `private`, `final` và field có ranh giới khác override
+## 5. `static`, `private`, `final`, and Fields Have Different Rules
 
-| Thành viên | Điều cần nhớ |
+| Member | What to Remember |
 |---|---|
-| Static method | Cùng chữ ký ở lớp con là *hiding*; gọi bằng tên class để rõ ý |
-| Field | Không override; truy cập theo kiểu tĩnh của biểu thức |
-| Private method | Không được kế thừa để override |
-| Final instance method | Không thể override, nhưng **bản thân nó vẫn có thể gọi một hook overridable** |
-| Constructor | Có thể overload; không thể override |
+| Static method | Matching subclass signature causes *hiding*; call via the class name for clarity |
+| Field | Cannot be overridden; access uses the expression's static type |
+| Private method | Not inherited for overriding |
+| Final instance method | Cannot be overridden, but **can still call an overridable hook** |
+| Constructor | Can be overloaded, not overridden |
 
-Đây là lý do `DeliveryPlan.quote()` được `final` mà `distanceFee()` bên trong vẫn dispatch theo subtype. Nếu cần xem kết quả chính xác của field hiding, static hiding và getter, hãy đọc bài *Phân biệt che khuất thành viên với ghi đè* hoặc *Phạm vi đa hình của phương thức và thuộc tính*.
+That is why `DeliveryPlan.quote()` can be `final` while its internal `distanceFee()` call still dispatches by subtype. For precise examples of field hiding, static hiding, and getters, see *Distinguishing Member Hiding from Overriding* and *Scope of Polymorphism for Methods and Fields*.
 
-## 6. `super.method()` có ý nghĩa gì?
+## 6. What Does `super.method()` Mean?
 
-Trong lớp con, `super.method()` là cách gọi implementation được kế thừa từ lớp cha theo quy tắc Java, **không phải** cách “đổi object thành lớp cha”.
+Within a subclass, `super.method()` invokes the corresponding inherited parent-class implementation under Java's rules; it **does not** "turn the object into the parent class".
 
-Ví dụ trong `ExpressPlan.distanceFee()`:
+For example, in `ExpressPlan.distanceFee()`:
 
 ```java
 @Override
@@ -2159,9 +2159,9 @@ protected long distanceFee(int distanceKm) {
 }
 ```
 
-`super.distanceFee(...)` gọi cách tính của `DeliveryPlan`, sau đó lớp con thêm phụ phí. Tham chiếu `this` vẫn là **cùng object `ExpressPlan`**.
+`super.distanceFee(...)` invokes the `DeliveryPlan` calculation, after which the subclass adds its surcharge. The `this` reference is still **the same `ExpressPlan` object**.
 
-Nếu không gọi `super`, lớp con có thể thay thế hoàn toàn hành vi:
+A subclass can also replace the behavior completely without calling `super`:
 
 ```java
 @Override
@@ -2170,11 +2170,11 @@ protected long distanceFee(int distanceKm) {
 }
 ```
 
-Chọn mở rộng hay thay thế phải dựa trên hợp đồng lớp cha. Gọi `super` mù quáng có thể lặp tác động phụ; không gọi `super` khi lớp cha đòi duy trì invariant cũng có thể gây lỗi. Vì vậy lớp nền nên nêu rõ hook nào cho phép override và những điều kiện bắt buộc khi override.
+Whether to extend or replace behavior depends on the parent contract. Blindly calling `super` may duplicate side effects; failing to call `super` when the parent requires invariants can also cause bugs. Base classes should clearly specify which hooks may be overridden and which conditions remain mandatory.
 
-## 7. Kiểm soát rủi ro của dynamic dispatch trong constructor
+## 7. Managing Dynamic-Dispatch Risks in Constructors
 
-Một bẫy thường gặp: constructor lớp cha gọi một phương thức bị lớp con ghi đè.
+A common trap is a superclass constructor calling a method overridden by a subclass.
 
 ```java
 public class ConstructorDispatchTrap {
@@ -2204,48 +2204,48 @@ public class ConstructorDispatchTrap {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Trong Parent(): null
 Sau khi tạo: Sẵn sàng
 ```
 
-Lúc constructor `Parent` chạy, trường instance riêng `name` của `Child` chưa chạy initializer `"Sẵn sàng"`. Dù vậy, Java vẫn dispatch lời gọi `describe()` đến `Child.describe()`. Vì thế phương thức của lớp con quan sát `name == null`.
+When the `Parent` constructor runs, the `name` field in `Child` has not yet received its initializer `"Sẵn sàng"`. Even so, Java dispatches `describe()` to `Child.describe()`, and the subclass observes `name == null`.
 
-**Không nên gọi phương thức có thể override từ constructor**, đặc biệt nếu lớp con cần các trường được khởi tạo đầy đủ. Có thể dùng helper `private` hoặc `final` trong constructor nếu phù hợp, hoặc chuyển các hook mở rộng ra sau khi object khởi tạo xong. Rủi ro không nằm ở cú pháp `@Override`, mà ở thời điểm đối tượng còn đang khởi tạo.
+**Avoid calling overridable methods from constructors**, especially when subclasses need fully initialized fields. Use suitable `private` or `final` helpers during construction, or move extension hooks until after initialization. The problem is not the `@Override` syntax but the timing of object construction.
 
-## 8. Khi nào ghi đè là một thiết kế tốt?
+## 8. When Is Overriding a Good Design?
 
-Lớp con nên giữ đúng **hợp đồng** của lớp cha. Ví dụ tất cả `DeliveryPlan.quote(km)` đều phải trả phí không âm cho khoảng cách dương; một subclass không nên phá quy tắc bằng cách âm thầm trả giá trị âm hoặc thay ý nghĩa của đơn vị `km`.
+Subclasses must preserve the **parent-class contract**. For example, every `DeliveryPlan.quote(km)` should return a nonnegative fee for positive distance; a subclass must not silently produce a negative fee or change the meaning of the `km` unit.
 
-Gợi ý:
+Guidelines:
 
-| Tình huống | Lựa chọn |
+| Situation | Choice |
 |---|---|
-| Các đối tượng thực sự là những biến thể của cùng một loại | Kế thừa + overriding có thể phù hợp |
-| Có quy trình chung bắt buộc, chỉ một bước thay đổi | Lớp nền giữ phương thức `final`, gọi một hook có thể override |
-| Các kiểu không cùng quan hệ is-a nhưng có cùng khả năng | Interface + nhiều implementation |
-| Cần kết hợp nhiều quy tắc độc lập (phụ phí, giảm giá...) | Composition/strategy thường dễ mở rộng hơn cây kế thừa sâu |
-| Lớp con không thể giữ hợp đồng lớp cha | Xem lại quan hệ kế thừa |
+| Objects are genuine variants of the same type | Inheritance plus overriding may fit |
+| A mandatory shared workflow has one variable step | Base class keeps the `final` method and calls an overridable hook |
+| Types are not in an is-a relationship but share a capability | Interface plus separate implementations |
+| Several independent rules must be combined (surcharges, discounts, etc.) | Composition/strategy is often more extensible than deep inheritance |
+| A subclass cannot honor the parent contract | Reconsider the inheritance relationship |
 
-Để bảo vệ quy trình chung, `quote()` trong ví dụ được đánh dấu `final`, còn `distanceFee()` là extension point. Thiết kế này giữ bước kiểm tra khoảng cách và xử lý overflow ở lớp nền, cho phép các lớp con thay đổi cách tính phụ phí.
+To protect the shared workflow, `quote()` is `final` in the example, while `distanceFee()` is the extension point. This preserves distance validation and overflow handling in the base class while allowing subclasses to calculate surcharges differently.
 
-**Một lưu ý hiệu năng:** dynamic dispatch không tự động có nghĩa “mỗi lần gọi đều rất chậm”. JVM/JIT có thể tối ưu và inline nhiều lời gọi ảo khi đủ thông tin. Chi phí thực tế cần đo bằng profiler/benchmark; nên ưu tiên tính đúng đắn và khả năng bảo trì trước khi tối ưu vi mô.
+**Performance note:** dynamic dispatch does not automatically mean "every call is very slow". The JVM/JIT can optimize and inline many virtual calls when it has enough information. Measure actual cost through profiling or benchmarks; prioritize correctness and maintainability over micro-optimization.
 
-## 9. Những lỗi dễ mắc khi thiết kế hook được override
+## 9. Common Errors When Designing Overridable Hooks
 
-- **Gõ sai chữ ký** rồi tưởng subclass đã thay hành vi: thêm `@Override` để compiler phát hiện, kiểm tra tên và kiểu tham số.
-- **Đặt `static` vào điểm mở rộng** rồi mong đa hình động: dùng instance method với hợp đồng rõ.
-- **Mở hook overridable trong constructor** khi subclass chưa hoàn tất khởi tạo: chỉ dùng phương thức không override được trong giai đoạn thiết lập hoặc tách giai đoạn kích hoạt sau construction.
-- **Cho subclass phá invariant**: nếu `quote(km)` đòi khoảng cách dương và phí không âm, hook `distanceFee(km)` của lớp con phải tuân thủ yêu cầu ấy.
-- **Lạm dụng `super`**: gọi phần triển khai lớp cha chỉ khi hợp đồng cho phép kết hợp, tránh thực hiện trùng side effect.
+- **Misspelling the signature** and assuming the subclass replaced behavior: add `@Override` for compiler checks and verify parameter types and names.
+- **Making an extension point `static`** and expecting dynamic polymorphism: use an instance method with a clear contract.
+- **Calling overridable hooks in constructors** before subclasses finish initialization: use non-overridable methods during setup or move activation after construction.
+- **Allowing subclasses to violate invariants**: if `quote(km)` requires positive distance and nonnegative fees, a subclass's `distanceFee(km)` hook must honor those constraints.
+- **Overusing `super`**: invoke parent behavior only when the contract permits combining it; avoid duplicate side effects.
 
-Với Template Method, nên giữ quy trình bất biến trong method `final` và chỉ công khai hook nhỏ nhất cần thay đổi. Cách này giảm rủi ro so với để mọi subclass ghi đè toàn bộ chuỗi kiểm tra và tính phí.
+With Template Method, keep the invariant workflow in a `final` method and expose only the smallest necessary extension hook. This reduces risk compared with letting every subclass override all validation and pricing steps.
 
-## 10. Tự kiểm tra
+## 10. Self-Check
 
-### Bài tập 1: dự đoán đầu ra
+### Exercise 1: Predict the Output
 
 ```java
 class A {
@@ -2265,9 +2265,9 @@ System.out.println(x.message());
 System.out.println(y.message());
 ```
 
-**Đáp án:** hai dòng đều là `C`. Kiểu khai báo của biến khác nhau nhưng đối tượng thực cùng thuộc `C`, và phương thức instance có implementation cuối cùng ở `C`.
+**Answer:** both lines print `C`. Despite the different variable declarations, both refer to actual `C` objects, and the instance-method implementation comes from `C`.
 
-### Bài tập 2: phân biệt hai giai đoạn
+### Exercise 2: Distinguish the Two Stages
 
 ```java
 class Base {
@@ -2289,68 +2289,68 @@ System.out.println(derived.send("Java"));
 System.out.println(derived.send(text));
 ```
 
-**Đáp án:** `Derived:Object`, `Derived:String`, `Derived:Object`. Hãy chỉ ra chữ ký nào được trình biên dịch chọn trong từng lời gọi và lớp runtime nào cung cấp implementation.
+**Answer:** `Derived:Object`, `Derived:String`, `Derived:Object`. Identify the signature chosen by the compiler in each call and the runtime class providing its implementation.
 
-### Bài tập 3: bổ sung loại giao hàng
+### Exercise 3: Add a Delivery Plan
 
-Từ `RuntimeDispatchDemo`, thêm `SameDayPlan extends DeliveryPlan` với phí cơ bản 20.000 VND, phụ phí 4.000 VND mỗi km. Thêm instance vào `List<DeliveryPlan>`. Kiểm tra rằng vòng lặp trong `main` không cần sửa cấu trúc để gọi `name()` và `quote()`.
+Starting from `RuntimeDispatchDemo`, add `SameDayPlan extends DeliveryPlan` with a base fee of 20.000 VND and a surcharge of 4.000 VND per kilometer. Add an instance to `List<DeliveryPlan>`. Verify that the loop in `main` needs no structural changes to call `name()` and `quote()`.
 
-### Bài tập 4: kiểm tra ranh giới
+### Exercise 4: Check an Override Boundary
 
-Thử thêm một `@Override` trước phương thức `quote(int)` của lớp con. Vì sao trình biên dịch từ chối? Giải thích ý nghĩa của `final` trong thiết kế lớp nền.
+Try adding `@Override` before a subclass's `quote(int)` method. Why does the compiler reject it? Explain the purpose of `final` in the base-class design.
 
-### Bài tập 5: phương thức static
+### Exercise 5: Static Methods
 
-Với `StaticHidingDemo`, thay `Parent reference = new Child()` bằng `Child reference = new Child()`. Dự đoán `reference.type()` và `reference.describe()`. Giải thích sự khác biệt giữa method hiding và dynamic dispatch.
+In `StaticHidingDemo`, replace `Parent reference = new Child()` with `Child reference = new Child()`. Predict `reference.type()` and `reference.describe()`. Explain the difference between method hiding and dynamic dispatch.
 
 ---
 
-**Ghi nhớ:** Trong Java, **overloading quyết định chữ ký tại thời điểm biên dịch**, còn **overriding quyết định implementation của phương thức instance theo lớp thực tế của đối tượng khi chạy**. Kiểu khai báo xác định phương thức có thể gọi; kiểu runtime xác định phiên bản ghi đè được thực thi. Nắm rõ ranh giới này giúp đọc đúng mã đa hình và tránh nhầm `static`, field, constructor với phương thức instance.
+**Remember:** In Java, **overloading determines a signature at compile time**, whereas **overriding selects an instance-method implementation based on the actual object class at runtime**. Declared types determine callable methods; runtime types determine which override executes. Understanding this distinction helps read polymorphic code and prevents confusing `static` methods, fields, and constructors with instance methods.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="polymorphism-005">Phân biệt ghi đè với nạp chồng</a>
+## <a id="polymorphism-005">Distinguishing Overriding from Overloading</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phân biệt ghi đè (overriding) với nạp chồng (overloading) trong Java
+# Distinguishing Method Overriding from Overloading in Java
 
-**Ghi đè phương thức (method overriding)** và **nạp chồng phương thức (method overloading)** đều cho phép xuất hiện nhiều phương thức cùng tên, nhưng chúng là **hai cơ chế khác nhau**. Phân biệt đúng hai cơ chế là nền tảng để hiểu đa hình trong Java: *trình biên dịch chọn phương thức nào*, *JVM thực thi phần thân nào*, và *kiểu của biến tham chiếu ảnh hưởng ra sao*.
+**Method overriding** and **method overloading** both allow multiple methods to share a name, but they are **two different mechanisms**. Knowing the distinction is fundamental to Java polymorphism: *which method the compiler selects*, *which body the JVM executes*, and *how reference-variable types affect the outcome*.
 
-Một quy tắc ghi nhớ hữu ích:
+A useful rule of thumb:
 
-- **Overloading:** *Cùng tên, khác danh sách tham số*. Trình biên dịch chọn một chữ ký thích hợp dựa trên **kiểu đối số tại điểm gọi**.
-- **Overriding:** *Lớp con định nghĩa lại một phương thức instance được kế thừa, có chữ ký phù hợp*. Khi gọi, JVM chọn **phần triển khai của đối tượng thực tế**.
+- **Overloading:** *Same name, different parameter lists*. The compiler chooses an applicable signature from the **argument types at the call site**.
+- **Overriding:** *A subclass redefines an inherited instance method with a compatible signature*. The JVM selects **the actual object's implementation** when invoked.
 
-Hai cơ chế có thể xuất hiện **đồng thời trong một lời gọi**, nên việc “nhìn tên phương thức” không đủ để dự đoán kết quả.
+Both mechanisms can occur **within a single call**, so merely looking at a method name is not enough to predict the result.
 
-## 1. So sánh nhanh
+## 1. Quick Comparison
 
-| Đặc điểm | Overloading — nạp chồng | Overriding — ghi đè |
+| Feature | Overloading | Overriding |
 | --- | --- | --- |
-| Mục đích | Cung cấp nhiều cách gọi cùng tên, với dữ liệu vào khác nhau | Cho phép lớp con thay đổi cách triển khai một hành vi được kế thừa |
-| Quan hệ kế thừa | Không bắt buộc; có thể ngay trong một lớp | Liên quan đến kế thừa hoặc thực hiện hợp đồng phương thức của supertype |
-| Tên phương thức | Giống nhau | Giống nhau |
-| Danh sách tham số | **Phải khác** về số lượng hoặc kiểu/thứ tự kiểu | Phải có chữ ký phù hợp để override |
-| Kiểu trả về | Không thể là yếu tố duy nhất tạo overload | Phải tương thích; có thể trả kiểu tham chiếu cụ thể hơn (*covariant return*) |
-| Thời điểm quyết định chủ yếu | **Biên dịch**: chọn chữ ký overload | **Runtime**: chọn implementation của phương thức instance đã được chọn |
-| Vai trò của kiểu biến | Rất quan trọng khi chọn overload | Kiểu tĩnh quyết định method có thể gọi; kiểu runtime quyết định bản override |
-| `@Override` | Không dùng để đánh dấu một overload thuần túy | Nên dùng để trình biên dịch xác minh |
-| `static` | Có thể có các overload static | Static method **không override**; cùng chữ ký ở con là hiding |
-| `private` | Có thể overload trong phạm vi truy cập | Private method không được kế thừa để override |
-| `final` | Có thể overload một tên phương thức đã có final method với tham số khác | Final instance method không được override |
+| Purpose | Offer multiple same-named call forms with different inputs | Allow a subclass to change how an inherited behavior is implemented |
+| Inheritance relationship | Not required; can occur in one class | Involves inheritance or implementing a supertype's method contract |
+| Method name | The same | The same |
+| Parameter list | **Must differ** in number, type, or type order | Must have a signature compatible with overriding |
+| Return type | Cannot alone distinguish overloads | Must be compatible; may return a more specific reference type (*covariant return*) |
+| Primary selection time | **Compile time**: overload signature | **Runtime**: implementation of the selected instance method |
+| Role of variable type | Very important for overload selection | Static type controls available calls; runtime type controls overriding |
+| `@Override` | Not used to mark a pure overload | Recommended for compiler verification |
+| `static` | Static methods can be overloaded | Static methods **cannot override**; same-signature subclass methods hide them |
+| `private` | Can be overloaded within its access scope | Private methods are not inherited for overriding |
+| `final` | A final method name can be overloaded with different parameters | Final instance methods cannot be overridden |
 
-**Điểm chính:** Java không thực hiện “chọn overload theo kiểu runtime của đối số”. Nếu biến được khai báo là `Animal` nhưng đang giữ `Dog`, tại lời gọi overload thông thường, compiler vẫn nhìn thấy biểu thức có kiểu `Animal`.
+**Key point:** Java does not "select overloads by the runtime type of an argument". If a variable is declared `Animal` but holds `Dog`, an ordinary overload call still sees the expression as type `Animal` at compile time.
 
-## 2. Overloading: cùng tên, khác tham số
+## 2. Overloading: Same Name, Different Parameters
 
-Ví dụ một lớp cung cấp hai thao tác tính tổng:
+For example, a class offers two addition operations:
 
 ```java
 public class Calculator {
@@ -2368,7 +2368,7 @@ public class Calculator {
 }
 ```
 
-Dùng lớp:
+Using the class:
 
 ```java
 Calculator calculator = new Calculator();
@@ -2378,13 +2378,13 @@ System.out.println(calculator.add(1.5, 2.25));  // 3.75
 System.out.println(calculator.add(2, 3, 4));    // 9
 ```
 
-Các phương thức tên `add` được phân biệt bởi **danh sách tham số**:
+Methods named `add` are distinguished by their **parameter lists**:
 
 - `add(int, int)`
 - `add(double, double)`
 - `add(int, int, int)`
 
-Trong Java, *method signature* chủ yếu gồm tên và kiểu tham số, không gồm kiểu trả về. Vì vậy ví dụ sau **không hợp lệ**:
+In Java, a *method signature* primarily consists of the name and parameter types, not the return type. Thus this example is **invalid**:
 
 ```java
 class InvalidCalculator {
@@ -2399,13 +2399,13 @@ class InvalidCalculator {
 }
 ```
 
-Tên biến tham số cũng không làm thay đổi chữ ký: `sum(int left)` và `sum(int right)` vẫn trùng chữ ký.
+Parameter variable names do not change a signature either: `sum(int left)` and `sum(int right)` still have identical signatures.
 
-### Compiler chọn overload như thế nào?
+### How Does the Compiler Select an Overload?
 
-Trình biên dịch dựa vào những lời gọi **có thể áp dụng** theo kiểu tại điểm gọi, các quy tắc chuyển kiểu (`widening`, boxing/unboxing, varargs...) và quy tắc chọn phương thức **cụ thể nhất** trong những ứng viên hợp lệ.
+The compiler considers **applicable** calls given the argument types, legal conversions (`widening`, boxing/unboxing, varargs, etc.), and rules for selecting the **most specific** of the applicable candidates.
 
-Ví dụ:
+For example:
 
 ```java
 class Printer {
@@ -2423,13 +2423,13 @@ printer.print(5);   // int: 5
 printer.print(5L);  // long: 5
 ```
 
-Lời gọi `print(5)` khớp chính xác với `print(int)`, còn `print(5L)` có kiểu `long`. Nếu chỉ còn `print(long)`, Java có thể mở rộng `int` sang `long` để gọi được.
+`print(5)` exactly matches `print(int)`, while `print(5L)` has type `long`. If only `print(long)` exists, Java can widen `int` to `long` to make the call valid.
 
-Không nên học thuộc duy nhất một thứ tự ưu tiên đơn giản cho tất cả trường hợp: độ cụ thể, generic, boxing, varargs và kiểu tham số có thể tạo ra các trường hợp phức tạp hoặc **mơ hồ**.
+Do not memorize one simplistic priority order for every situation: specificity, generics, boxing, varargs, and parameter types can interact to create complex or **ambiguous** cases.
 
-## 3. Overriding: lớp con thay đổi implementation của lớp cha
+## 3. Overriding: A Subclass Replaces the Parent Implementation
 
-Giả sử có lớp định nghĩa hành vi in thông báo:
+Suppose a class defines a message-sending behavior:
 
 ```java
 class MessageSender {
@@ -2446,16 +2446,16 @@ class EmailSender extends MessageSender {
 }
 ```
 
-Khi gọi:
+When called:
 
 ```java
 MessageSender sender = new EmailSender();
 System.out.println(sender.send("Xin chào")); // Email: Xin chào
 ```
 
-Tham chiếu `sender` có **kiểu khai báo** là `MessageSender` nhưng chứa đối tượng `EmailSender`. Phương thức `send(String)` được chọn vì kiểu tham chiếu cho phép gọi nó; sau đó JVM sử dụng bản override của `EmailSender`. Đây là **đa hình khi chạy (runtime polymorphism)**.
+The `sender` reference has the **declared type** `MessageSender` but holds an `EmailSender` object. `send(String)` is available through the reference type; then the JVM invokes the `EmailSender` override. This is **runtime polymorphism**.
 
-`@Override` rất có ích khi viết:
+`@Override` is especially helpful when writing:
 
 ```java
 @Override
@@ -2464,24 +2464,24 @@ public String send(String message) {
 }
 ```
 
-Nếu vô tình đổi tham số thành `Object` hoặc gõ sai tên, annotation khiến trình biên dịch báo rằng method đó **không thực sự override** method mong muốn. Nó không thay đổi thuật toán dispatch lúc runtime.
+If you accidentally change the parameter to `Object` or misspell the method name, the annotation makes the compiler report that the method **does not actually override** the intended method. It does not alter runtime dispatch.
 
-### Điều kiện để override đúng
+### Requirements for Valid Overriding
 
-Một số quy tắc cơ bản:
+Some basic rules:
 
-1. Phương thức phải override được một phương thức instance kế thừa hoặc thực hiện một phương thức tương ứng từ supertype; không thể override constructor.
-2. Chữ ký phải tương thích theo quy tắc Java; không chỉ khác tên tham số.
-3. Không được thu hẹp mức truy cập, ví dụ method cha `public` thì method con cũng phải `public`.
-4. Kiểu trả về phải tương thích. Với kiểu tham chiếu có thể **covariant**, như cha trả `Animal` và con trả `Dog`; với kiểu nguyên thủy không thể đổi tùy ý từ `int` sang `long`.
-5. Checked exception được khai báo ở method con không được mở rộng trái quy tắc so với method cha.
-6. Phương thức `final` không thể bị override; `static` và `private` không tham gia overriding thông thường.
+1. A method must override an inherited instance method or implement a corresponding supertype method; constructors cannot be overridden.
+2. Signatures must be compatible under Java's rules; differing parameter names are irrelevant.
+3. Access must not be narrowed; for example, if a parent method is `public`, the child method must also be `public`.
+4. Return types must be compatible. Reference types may be **covariant**, such as a parent returning `Animal` and a child returning `Dog`; primitive returns cannot arbitrarily change from `int` to `long`.
+5. Declared checked exceptions must not be broadened incompatibly relative to the parent method.
+6. A `final` method cannot be overridden; `static` and `private` methods do not participate in ordinary overriding.
 
-Việc một class *extends* class khác không tự động đảm bảo mọi method trùng tên đều là override.
+A class *extending* another does not automatically make every same-named method an override.
 
-## 4. Ví dụ quan trọng nhất: overloading và overriding cùng xuất hiện
+## 4. Most Important Example: Overloading and Overriding Together
 
-Tạo một tệp duy nhất **`DispatchDemo.java`**:
+Create a single file named **`DispatchDemo.java`**:
 
 ```java
 public class DispatchDemo {
@@ -2527,14 +2527,14 @@ public class DispatchDemo {
 }
 ```
 
-Biên dịch/chạy với JDK 11+:
+Compile and run with JDK 11+:
 
 ```bash
 javac DispatchDemo.java
 java DispatchDemo
 ```
 
-Kết quả **chính xác**:
+The **exact** output:
 
 ```text
 SpecialFormatter: Animal
@@ -2544,31 +2544,31 @@ SpecialFormatter: Animal
 Formatter: Dog
 ```
 
-### Phân tích từng lời gọi
+### Analyzing Each Call
 
-| Lời gọi | Kiểu tĩnh của đối số | Overload được compiler chọn | Implementation chạy |
+| Call | Argument Static Type | Compiler-Selected Overload | Executed Implementation |
 | --- | --- | --- | --- |
 | `formatter.format(animalReference)` | `Animal` | `format(Animal)` | `SpecialFormatter.format(Animal)` |
-| `formatter.format(dog)` | `Dog` | `format(Dog)` | `Formatter.format(Dog)` (được kế thừa) |
-| `formatter.format((Animal) dog)` | `Animal` sau ép kiểu | `format(Animal)` | `SpecialFormatter.format(Animal)` |
+| `formatter.format(dog)` | `Dog` | `format(Dog)` | `Formatter.format(Dog)` (inherited) |
+| `formatter.format((Animal) dog)` | `Animal` after casting | `format(Animal)` | `SpecialFormatter.format(Animal)` |
 | `formatter.format(new Animal())` | `Animal` | `format(Animal)` | `SpecialFormatter.format(Animal)` |
 | `base.format(dog)` | `Dog` | `format(Dog)` | `Formatter.format(Dog)` |
 
-Có hai bước liên tiếp:
+There are two successive steps:
 
-1. **Chọn overload:** tên `format` cùng **kiểu tĩnh** của đối số (và tập method nhìn thấy từ kiểu tĩnh của receiver) giúp trình biên dịch chọn một chữ ký, ví dụ `format(Animal)`.
-2. **Chọn override:** tại runtime, với chữ ký đã chọn, JVM xét **kiểu thực tế của đối tượng nhận lời gọi** `formatter`. Vì nó là `SpecialFormatter`, `format(Animal)` chạy bản override của lớp con. Nếu chữ ký được chọn là `format(Dog)` thì lớp con không override, nên sử dụng bản kế thừa từ `Formatter`.
+1. **Select an overload:** the name `format`, the argument's **static type**, and the methods visible through the receiver's static type allow the compiler to select a signature such as `format(Animal)`.
+2. **Select an override:** for the selected signature, the JVM examines **the actual receiver object type** `formatter`. Since it is `SpecialFormatter`, `format(Animal)` executes the subclass override. If `format(Dog)` was selected instead, the subclass does not override it, so Java uses the inherited implementation from `Formatter`.
 
-Chính vì thế:
+This is why:
 
 ```java
 Dog dog = new Dog();
 Animal reference = dog;
 ```
 
-Hai biến có thể tham chiếu **cùng một đối tượng Dog** nhưng `format(dog)` và `format(reference)` chọn **overload khác nhau**. Kiểu runtime của đối số `reference` không khiến compiler tự chuyển qua `format(Dog)`.
+Two variables can refer to **the same Dog object** while `format(dog)` and `format(reference)` select **different overloads**. The runtime type of `reference` does not cause the compiler to switch to `format(Dog)`.
 
-### Sơ đồ phân giải lời gọi
+### Method-Call Resolution Diagram
 
 ```mermaid
 flowchart TD
@@ -2581,11 +2581,11 @@ flowchart TD
     F --> G
 ```
 
-Sơ đồ này tóm tắt trường hợp gọi method thông thường; với `super.method()`, constructor invocation hay method static có các quy tắc riêng.
+This diagram summarizes ordinary method calls. `super.method()`, constructor calls, and static methods have separate rules.
 
-## 5. Kiểu của receiver và kiểu của đối số đều có vai trò
+## 5. Both Receiver and Argument Types Matter
 
-Không chỉ kiểu đối số, **kiểu tham chiếu của đối tượng nhận lời gọi** cũng ảnh hưởng đến những overload có thể nhìn thấy ở thời điểm biên dịch.
+Not only argument types but also **the declared type of the receiver expression** affects which overloads are visible at compile time.
 
 ```java
 class BaseHandler {
@@ -2601,7 +2601,7 @@ class ChildHandler extends BaseHandler {
 }
 ```
 
-Xét:
+Consider:
 
 ```java
 BaseHandler baseRef = new ChildHandler();
@@ -2611,9 +2611,9 @@ baseRef.handle("hi");   // Base: Object
 childRef.handle("hi");  // Child: String
 ```
 
-Với `baseRef`, trình biên dịch chỉ thấy `handle(Object)` theo API của `BaseHandler`; nó không tự phát hiện một overload mới `handle(String)` chỉ có trong `ChildHandler`. `ChildHandler` cũng **không override** `handle(Object)`, vì nó chỉ khai báo `handle(String)`.
+For `baseRef`, the compiler sees only `handle(Object)` through the `BaseHandler` API; it does not discover the new `handle(String)` overload declared only in `ChildHandler`. `ChildHandler` also **does not override** `handle(Object)` because it only declares `handle(String)`.
 
-Nếu một class con muốn biến đổi cách xử lý các lời gọi đã tồn tại qua `BaseHandler`, nó phải override đúng `handle(Object)`:
+If a subclass needs to change how existing `BaseHandler` calls behave, it must override the exact `handle(Object)` method:
 
 ```java
 class AnotherHandler extends BaseHandler {
@@ -2624,11 +2624,11 @@ class AnotherHandler extends BaseHandler {
 }
 ```
 
-Đây là lý do overloading **không phải** một cách thay thế overriding khi cần đa hình qua lớp cha hoặc interface.
+Therefore, overloading is **not** a substitute for overriding when polymorphism through a parent type or interface is needed.
 
-## 6. Overload resolution và trường hợp `null`
+## 6. Overload Resolution and `null`
 
-Một tình huống có thể gây nhầm lẫn:
+A potentially confusing case:
 
 ```java
 class NullExample {
@@ -2644,9 +2644,9 @@ class NullExample {
 new NullExample().show(null); // String
 ```
 
-Cả `Object` lẫn `String` đều có thể nhận `null`, nhưng `String` là kiểu cụ thể hơn `Object`, nên overload `show(String)` được chọn.
+Both `Object` and `String` can accept `null`, but `String` is more specific than `Object`, so `show(String)` is chosen.
 
-Ngược lại:
+By contrast:
 
 ```java
 class AmbiguousExample {
@@ -2660,17 +2660,17 @@ class AmbiguousExample {
 // new AmbiguousExample().show(null); // LỖI: ambiguous
 ```
 
-`String` và `Integer` không có quan hệ subtype với nhau, nên chỉ dùng `null` ở đây không đủ để xác định overload nào cụ thể hơn. Có thể ép kiểu để chỉ rõ ý định:
+`String` and `Integer` are unrelated subtypes, so `null` alone cannot determine which overload is more specific. An explicit cast can disambiguate:
 
 ```java
 new AmbiguousExample().show((String) null);
 ```
 
-**Cẩn thận:** Java cho phép compiler chọn overload nhận `null`, nhưng phần thân method có thể ném `NullPointerException` nếu cố truy cập đối tượng. Lựa chọn overload và an toàn dữ liệu đầu vào là hai vấn đề khác nhau.
+**Caution:** Java may select an overload accepting `null`, but its body may throw `NullPointerException` if it dereferences that argument. Overload selection and input safety are separate concerns.
 
-## 7. Overloading: widening, boxing và varargs
+## 7. Overloading: Widening, Boxing, and Varargs
 
-Ví dụ minh họa mức ưu tiên khi biên dịch:
+An example showing compile-time precedence:
 
 ```java
 class NumberExample {
@@ -2692,19 +2692,19 @@ numbers.show(10);   // long
 numbers.show(10L);  // long
 ```
 
-Với `10` có kiểu `int`, phương thức `show(long)` khả dụng bằng **primitive widening**; compiler ưu tiên lựa chọn ở pha không cần boxing so với `show(Integer)`. `varargs` là một cơ chế khác có thể được xem xét khi các phương thức thích hợp ở pha trước không có.
+For `10` of type `int`, `show(long)` is applicable through **primitive widening**; the compiler prefers a phase without boxing over `show(Integer)`. `varargs` is a separate mechanism considered when no applicable method was selected in earlier phases.
 
-Điều cần nhớ không phải là “`long` luôn thắng `Integer`” trong mọi chương trình, mà là:
+The important point is not that "`long` always beats `Integer`" in every program, but rather:
 
-- Overload được chọn theo **quy tắc tại thời điểm biên dịch**.
-- Các phép chuyển kiểu hợp lệ ảnh hưởng đến ứng viên.
-- Một nhóm overload thiết kế quá nhiều tham số na ná nhau dễ trở nên khó đọc hoặc mơ hồ.
+- Overloads are selected according to **compile-time rules**.
+- Legal type conversions affect candidate methods.
+- Overload sets with too many nearly identical parameter types can become confusing or ambiguous.
 
-**Gợi ý thiết kế:** nếu hai phương thức thực hiện các hành vi khác ý nghĩa, đặt tên khác nhau rõ ràng thường tốt hơn việc tạo overload chỉ để giảm số lượng tên API.
+**Design tip:** when two methods perform semantically different operations, distinct, descriptive names are often better than overloading just to reduce the number of API names.
 
-## 8. `static`, `private`, `final`: đừng nhầm với override
+## 8. `static`, `private`, `final`: Do Not Confuse Them with Overriding
 
-### Static method hiding không phải overriding
+### Static Method Hiding Is Not Overriding
 
 ```java
 class Base {
@@ -2724,9 +2724,9 @@ System.out.println(Base.category());  // Base
 System.out.println(Child.category()); // Child
 ```
 
-`static` method thuộc lớp; khai báo cùng chữ ký ở lớp con là **method hiding**, không phải dynamic dispatch. Nên gọi chúng qua **tên lớp** để tránh hiểu lầm. Không được gắn `@Override` lên `static` method với mục đích ghi đè.
+`static` methods belong to classes. Declaring the same signature in a subclass produces **method hiding**, not dynamic dispatch. Prefer calling them through **class names** for clarity. Do not place `@Override` on `static` methods intending to override.
 
-### Private method không được kế thừa để override
+### Private Methods Are Not Inherited for Overriding
 
 ```java
 class Base {
@@ -2748,9 +2748,9 @@ class Child extends Base {
 System.out.println(new Child().run()); // base internal
 ```
 
-`Child.internal()` là method riêng của lớp con, không override `Base.internal()` do phương thức cha là `private`. Lời gọi trong `Base.run()` vẫn đến `Base.internal()`.
+`Child.internal()` is a method of the subclass, not an override of `Base.internal()` because the parent method is `private`. Calls within `Base.run()` still use `Base.internal()`.
 
-### Final method không thể bị ghi đè
+### Final Methods Cannot Be Overridden
 
 ```java
 class Base {
@@ -2765,9 +2765,9 @@ class Child extends Base {
 }
 ```
 
-Tuy nhiên, lớp con vẫn có thể khai báo một overload `validate(String context)`, vì đó là **chữ ký khác**, không thay đổi bản `validate()` final của cha.
+A subclass may still declare an overload `validate(String context)` because it has a **different signature**, leaving the parent's final `validate()` unchanged.
 
-### Constructor có thể overload nhưng không override
+### Constructors Can Be Overloaded but Not Overridden
 
 ```java
 class Account {
@@ -2781,11 +2781,11 @@ class Account {
 }
 ```
 
-`Account()` và `Account(String)` là hai **constructor overload**. Constructor không được kế thừa như phương thức bình thường, vì vậy không có “override constructor” trong Java. `this(...)` chọn một constructor khác của cùng lớp; `super(...)` gọi constructor cha, không phải override.
+`Account()` and `Account(String)` are **overloaded constructors**. Constructors are not inherited like ordinary methods, so Java has no "constructor overriding". `this(...)` selects another constructor in the same class; `super(...)` invokes a superclass constructor, not an override.
 
-## 9. `@Override` và các quy tắc tương thích
+## 9. `@Override` and Compatibility Rules
 
-Gắn `@Override` khi **thực sự triển khai/ghi đè hợp đồng**:
+Use `@Override` when **actually implementing or overriding a contract**:
 
 ```java
 interface Describable {
@@ -2806,9 +2806,9 @@ class Product implements Describable {
 }
 ```
 
-`describe()` triển khai method interface; `describe(String)` là overload trong cùng lớp. Cả hai đều hợp lệ và có thể tồn tại đồng thời.
+`describe()` implements an interface method; `describe(String)` is an overload in the same class. Both are valid and can coexist.
 
-### Kiểu trả về covariant trong overriding
+### Covariant Return Types in Overriding
 
 ```java
 class Animal {
@@ -2831,37 +2831,37 @@ class CatShelter extends Shelter {
 }
 ```
 
-Method con `adopt()` trả kiểu `Cat` là subtype của `Animal`, nên hợp lệ. Trong khi đó, **chỉ khác kiểu trả về** không bao giờ là đủ để tạo overload mới trong cùng phạm vi chữ ký.
+The child method `adopt()` returns `Cat`, a subtype of `Animal`, which is valid. By contrast, **only changing the return type** can never create a new overload with an otherwise identical signature.
 
-### Quy tắc exception và truy cập
+### Exception and Access Rules
 
-- Nếu method lớp cha là `public`, override ở con không thể thành `protected` hoặc package-private.
-- Nếu method cha khai báo checked exception `IOException`, override có thể khai báo `FileNotFoundException` (một subtype của `IOException`), hoặc không khai báo checked exception; nó không được tự ý mở rộng thành checked exception không phù hợp.
-- Unchecked exceptions có quy tắc khai báo khác, nhưng subtype vẫn cần giữ hợp đồng hành vi mà caller đã dựa vào.
-- Method trả về `void` không thể override bằng method trả về `String` dù tên và tham số giống nhau.
+- If a superclass method is `public`, its override cannot be `protected` or package-private.
+- If the parent declares the checked exception `IOException`, its override can declare `FileNotFoundException` (a subtype of `IOException`) or no checked exception; it cannot arbitrarily broaden that exception to an incompatible checked type.
+- Unchecked exceptions have different declaration rules, but subtypes must still preserve the behavioral contract on which callers rely.
+- A method returning `void` cannot be overridden with a `String` return type when the name and parameters are identical.
 
-Trình biên dịch kiểm tra tương thích cú pháp/kiểu; hợp đồng nghiệp vụ vẫn cần kiểm thử riêng.
+The compiler verifies syntax and type compatibility; business contracts still require separate tests.
 
-## 10. Overriding và nguyên lý thay thế Liskov
+## 10. Overriding and the Liskov Substitution Principle
 
-Ghi đè thường được sử dụng khi mã client giữ tham chiếu kiểu cha:
+Overriding is commonly used when clients hold parent-typed references:
 
 ```java
 AnimalHandler handler = new DogHandler();
 handler.handle();
 ```
 
-Nếu hai kiểu có quan hệ subtype, việc override cần giữ những cam kết của API cha: không siết chặt tiền điều kiện hợp lệ, không làm yếu hậu điều kiện, không phá bất biến và không thêm side effect trái hợp đồng.
+When types are related by subtyping, overrides must preserve the parent API's promises: do not strengthen valid preconditions, weaken postconditions, violate invariants, or introduce side effects contrary to the contract.
 
-Ví dụ, nếu interface `PaymentCalculator` hứa phí không âm cho số tiền hợp lệ, lớp con override `calculate` trả phí âm là vi phạm hành vi dù chữ ký biên dịch được.
+For example, if the `PaymentCalculator` interface promises nonnegative fees for valid monetary amounts, an override of `calculate` returning negative fees violates behavior even if it compiles.
 
-Nạp chồng lại là quyết định **cung cấp thêm cách gọi**, không tự tạo bảo đảm đa hình. Nếu client chỉ biết method `calculate(int)` của lớp cha, việc con thêm `calculate(String)` không khiến lời gọi `calculate(int)` đột nhiên sử dụng phần thân mới.
+Overloading, in contrast, is a decision to **offer an additional calling form**, not a polymorphic guarantee. If a client only knows a parent's `calculate(int)`, adding `calculate(String)` in the child does not suddenly redirect `calculate(int)` calls to the new body.
 
-Do đó khi cần thực sự thay đổi hành vi qua một trừu tượng, hãy ưu tiên override đúng method đã được công bố. Nếu muốn hỗ trợ thêm dạng tham số, overload có thể thích hợp, nhưng cần định nghĩa hành vi từng overload sao cho người dùng không gặp kết quả khó đoán.
+Therefore, to change behavior through an abstraction, override the exact published method. Use an overload to support additional parameter forms, but specify each overload's behavior to avoid surprising results.
 
-## 11. Kiểm thử thực tế: phân biệt hai pha phân giải
+## 11. Practical Test: Distinguish the Two Resolution Phases
 
-Tạo thêm tệp độc lập **`DispatchContractCheck.java`**:
+Create another standalone file, **`DispatchContractCheck.java`**:
 
 ```java
 public class DispatchContractCheck {
@@ -2903,30 +2903,30 @@ public class DispatchContractCheck {
 }
 ```
 
-Biên dịch/chạy:
+Compile and run:
 
 ```bash
 javac DispatchContractCheck.java
 java DispatchContractCheck
 ```
 
-Kết quả:
+Output:
 
 ```text
 PASS: overload và override được phân biệt
 ```
 
-**Lý do:**
+**Reason:**
 
-- `stringAsObject` có kiểu tĩnh `Object` nên compiler chọn `call(Object)`; đối tượng receiver thật là `Child` nên chạy `Child.call(Object)`.
-- `stringAsString` có kiểu tĩnh `String` nên compiler chọn `call(String)`; `Child` không override phương thức này, vì vậy chạy bản kế thừa từ `Parent`.
-- Ép `(Object) stringAsString` thay đổi kiểu biểu thức tại điểm gọi, nên chọn lại overload `call(Object)`, dù đối tượng chuỗi thực tế không đổi.
+- `stringAsObject` has static type `Object`, so the compiler selects `call(Object)`; the actual receiver is `Child`, so `Child.call(Object)` executes.
+- `stringAsString` has static type `String`, so the compiler selects `call(String)`; `Child` does not override this method, so the inherited version from `Parent` runs.
+- Casting `(Object) stringAsString` changes the call-site expression type and selects the `call(Object)` overload, even though the actual string object is unchanged.
 
-Đây là phép kiểm tra dễ nhớ nhất cho quy tắc “**overload trước, override sau**”.
+This is the most memorable test of **"overload first, override second"**.
 
-## 12. Bài tập tự luyện
+## 12. Practice Exercises
 
-**Bài tập 1 — đoán kết quả**
+**Exercise 1 — Predict the Result**
 
 ```java
 class Parent {
@@ -2946,13 +2946,13 @@ System.out.println(p.test(n)); // ?
 System.out.println(p.test(i)); // ?
 ```
 
-**Đáp án:** `Child-Number` và `Parent-Integer`. Overload chọn theo kiểu tĩnh của `n`/`i`; runtime dispatch tới override nếu chữ ký đó đã được override.
+**Answer:** `Child-Number` and `Parent-Integer`. Overloading selects signatures using the static types of `n`/`i`; runtime dispatch executes an override if the selected signature is overridden.
 
-**Bài tập 2 — chỉ đổi kiểu trả về**
+**Exercise 2 — Only Change the Return Type**
 
-Hai method `int calculate(int x)` và `double calculate(int x)` đặt cùng một lớp có hợp lệ không? **Không.** Chúng có cùng chữ ký; kiểu trả về không phân biệt overload.
+Are `int calculate(int x)` and `double calculate(int x)` in the same class valid together? **No.** They have the same signature; return types do not distinguish overloads.
 
-**Bài tập 3 — giải thích một lỗi `@Override`**
+**Exercise 3 — Explain an `@Override` Error**
 
 ```java
 class Base {
@@ -2965,85 +2965,85 @@ class Sub extends Base {
 }
 ```
 
-Vì sao không dùng được `@Override`? `process(Object)` là overload mới, không phải override `process(String)`. Muốn override phải khai báo `void process(String s)`.
+Why is `@Override` invalid here? `process(Object)` is a new overload, not an override of `process(String)`. To override, declare `void process(String s)`.
 
-**Bài tập 4 — static và instance**
+**Exercise 4 — Static and Instance Methods**
 
-Viết hai class cha/con có cùng `static String type()` và một phương thức instance `String describe()` được override. Dùng biến kiểu cha giữ đối tượng con. Dự đoán kết quả của gọi static bằng **tên lớp** và gọi instance qua biến.
+Write parent/child classes with the same `static String type()` and an overridden instance method `String describe()`. Use a parent-typed variable referring to a child object. Predict the result of calling the static method by **class name** and the instance method through the variable.
 
-**Bài tập 5 — thiết kế API**
+**Exercise 5 — API Design**
 
-Bạn có `NotificationSender.send(String text)` và muốn hỗ trợ gửi đến nhiều người nhận:
+You have `NotificationSender.send(String text)` and want to support sending to multiple recipients:
 
-- Nếu thêm `send(String text, String recipient)`, đó là **overload** — mở thêm một chữ ký.
-- Nếu `EmailSender` thay đổi phần gửi của `send(String text)` đã được lớp cha định nghĩa, đó là **override** — thay cách thực hiện hành vi chung.
+- Adding `send(String text, String recipient)` creates an **overload** — another signature.
+- If `EmailSender` changes how the already defined `send(String text)` sends a message, that is an **override** — a different implementation of shared behavior.
 
-Hãy thử lập bảng cho mỗi phương án: kiểu client nhìn thấy, chữ ký được chọn, phần thân được chạy và kỳ vọng hành vi cần giữ.
+Create a comparison table for both approaches: the client-visible type, selected signature, executed body, and behavioral expectations that must remain valid.
 
-## Những lỗi hay gặp
+## Common Mistakes
 
-| Nhầm lẫn | Cách hiểu đúng |
+| Misconception | Correct Understanding |
 | --- | --- |
-| “Overloading chỉ xuất hiện giữa các class kế thừa” | Overload có thể xuất hiện trong cùng một class |
-| “Overriding chỉ cần cùng tên” | Phải có chữ ký và các điều kiện override tương thích |
-| “Khác kiểu trả về là overload” | Sai; không thể chỉ đổi kiểu trả về |
-| “Java tự chọn overload theo lớp runtime của argument” | Sai; chọn theo kiểu tĩnh và quy tắc overload resolution |
-| “Compiler chọn luôn phần thân override cuối cùng” | Compiler chọn chữ ký; dispatch method instance xảy ra lúc chạy |
-| “Method static của con override static cha” | Đó là method hiding |
-| “Private method của cha có thể bị override” | Private method không được kế thừa để override |
-| “`@Override` bắt buộc để JVM dispatch” | Không; annotation hỗ trợ kiểm tra lỗi biên dịch |
-| “Thêm overload ở lớp con làm mọi lời gọi qua biến cha chọn overload mới” | Không; kiểu tĩnh receiver xác định API nhìn thấy |
-| “Constructor override được” | Constructor có thể overload, không override |
+| "Overloading only occurs between inherited classes" | Overloads may exist in the same class |
+| "Overriding requires only the same name" | Signatures and other override conditions must be compatible |
+| "Different return types create overloads" | False; return types alone are insufficient |
+| "Java automatically chooses overloads by runtime argument class" | False; static types and overload-resolution rules determine selection |
+| "The compiler always selects the final override body" | The compiler selects the signature; instance-method dispatch occurs at runtime |
+| "Child static methods override parent static methods" | This is method hiding |
+| "Parent private methods can be overridden" | Private methods are not inherited for overriding |
+| "`@Override` is required for the JVM to dispatch" | No; the annotation provides compile-time checking |
+| "Adding an overload in a child class makes all parent-typed calls select it" | No; receiver static types determine visible APIs |
+| "Constructors can be overridden" | Constructors can be overloaded, not overridden |
 
-**Kết luận:** Để giải một lời gọi Java có nhiều phương thức cùng tên, trước hết hãy hỏi **compiler nhìn thấy những overload nào và chọn chữ ký nào dựa vào kiểu tĩnh**. Sau đó, nếu là phương thức instance có khả năng override, hãy hỏi **đối tượng receiver thực sự thuộc lớp nào** để xác định phần thân chạy. Làm theo hai bước này sẽ tránh được phần lớn nhầm lẫn về đa hình giữa **overloading** và **overriding**.
+**Conclusion:** To resolve a Java call with multiple same-named methods, first ask **which overloads the compiler sees and which signature it selects using static types**. Then, for overridable instance methods, ask **what class the receiver object actually belongs to** to determine the body executed. These two steps prevent most confusion between **overloading** and **overriding**.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="polymorphism-006">Phân biệt che khuất thành viên với ghi đè</a>
+## <a id="polymorphism-006">Distinguishing Member Hiding from Overriding</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phân biệt che khuất thành viên với ghi đè trong Java
+# Distinguishing Member Hiding from Overriding in Java
 
-Khi một lớp con khai báo thành viên có **cùng tên** với lớp cha, Java không phải lúc nào cũng thực hiện **ghi đè (overriding)**. Tùy thành viên là **field**, **phương thức `static`** hay **phương thức instance**, Java dùng những quy tắc khác nhau:
+When a subclass declares a member with **the same name** as its parent, Java does not always perform **overriding**. Whether that member is a **field**, a **`static` method**, or an **instance method** determines which rule applies:
 
-- **Che khuất field (*field hiding*):** Field ở lớp con có cùng tên với field lớp cha. Truy cập `ref.field` chủ yếu được chọn theo **kiểu của biểu thức tham chiếu tại lúc biên dịch**, không theo lớp thực tế của đối tượng.
-- **Che khuất phương thức tĩnh (*static method hiding*):** Lớp con khai báo một static method có chữ ký tương ứng với static method của lớp cha. Lời gọi được phân giải theo **kiểu được dùng tại compile time**, không có đa hình động như instance method.
-- **Ghi đè phương thức (*method overriding*):** Lớp con cung cấp implementation mới cho một **instance method** được phép override từ lớp cha. Với một lời gọi có receiver object, Java chọn implementation tại **runtime** dựa vào kiểu thực tế của object.
+- **Field hiding (*field hiding*):** A subclass field shares a name with a superclass field. Access to `ref.field` primarily depends on **the reference expression's compile-time type**, not the object's runtime class.
+- **Static method hiding (*static method hiding*):** A subclass declares a static method with a signature corresponding to a superclass static method. The call resolves by **the type known at compile time**, without the dynamic polymorphism of instance methods.
+- **Method overriding (*method overriding*):** A subclass supplies a new implementation of an eligible **instance method** from its parent. For a call with a receiver object, Java selects an implementation at **runtime** based on the actual object type.
 
-Sự khác biệt này rất quan trọng khi đọc:
+This distinction is especially important when reading:
 
 ~~~java
 Parent ref = new Child();
 ~~~
 
-Biến `ref` có kiểu khai báo `Parent`, nhưng nó đang tham chiếu tới một đối tượng `Child`. Field, static method và instance method **không nhất thiết được chọn theo cùng một kiểu**.
+`ref` has the declared type `Parent` but refers to a `Child` object. Fields, static methods, and instance methods **do not necessarily resolve using the same type**.
 
-## 1. Bảng đối chiếu nhanh
+## 1. Quick Comparison
 
-| Đặc điểm | Field hiding | Static method hiding | Instance method overriding |
+| Feature | Field Hiding | Static Method Hiding | Instance Method Overriding |
 |---|---|---|---|
-| Điều kiện điển hình | Lớp con khai báo field trùng tên | Lớp con khai báo static method cùng chữ ký hợp lệ | Lớp con khai báo instance method override hợp lệ |
-| Chọn thành viên theo | Kiểu biểu thức tham chiếu lúc biên dịch | Kiểu dùng để gọi/lựa chọn method lúc biên dịch | Kiểu thực tế của receiver object lúc chạy |
-| Có đa hình động? | **Không** | **Không** | **Có** |
-| Dùng `@Override`? | Không | Không, sẽ báo lỗi | Nên dùng |
-| `super` có ích? | `super.field` đọc field lớp cha | `super.method()` với static có quy tắc riêng, nhưng nên gọi `Parent.method()` | `super.method()` gọi implementation superclass |
-| Hai thành viên tồn tại riêng? | Có thể có hai field cùng tên ở phần dữ liệu các lớp | Có hai phương thức static được khai báo ở hai lớp | Có các implementation khác nhau của cùng hợp đồng method |
-| Khuyến nghị | Tránh che khuất field để khỏi gây nhầm | Gọi static method bằng **tên lớp** | Dùng cho hành vi đa hình có hợp đồng rõ ràng |
+| Typical condition | Subclass declares a same-named field | Subclass declares a valid same-signature static method | Subclass declares a valid overriding instance method |
+| Member selection | Reference expression's compile-time type | Call/class type selected at compile time | Actual receiver object type at runtime |
+| Dynamic polymorphism? | **No** | **No** | **Yes** |
+| Use `@Override`? | No | No; compiler error | Recommended |
+| Is `super` useful? | `super.field` accesses the parent field | `super.method()` for static methods follows separate rules; prefer `Parent.method()` | `super.method()` invokes the superclass implementation |
+| Do separate members exist? | Two same-named fields can coexist in superclass and subclass state | Two static methods are declared across the classes | Different implementations of the same method contract can exist |
+| Recommendation | Avoid field hiding to prevent confusion | Call static methods using **class names** | Use it for contracted polymorphic behavior |
 
-**Cách nhớ:** *field và static method phụ thuộc vào kiểu tham chiếu/kiểu dùng tại compile time; instance method được override phụ thuộc vào object ở runtime.*
+**Rule of thumb:** *fields and static methods depend on compile-time reference/class types; overridden instance methods depend on the runtime object.*
 
-Đây là quy tắc cốt lõi, nhưng cách compiler phân giải lời gọi còn chịu ảnh hưởng của overload, khả năng truy cập và kiểu của từng đối số. Ta sẽ tách những cơ chế ấy trong các phần tiếp theo.
+This is the core rule, but the compiler's call resolution also considers overloads, accessibility, and argument types. The following sections separate these mechanisms.
 
-## 2. Ví dụ Java đầy đủ: một object, ba cách phân giải thành viên
+## 2. Complete Java Example: One Object, Three Member-Resolution Rules
 
-Lưu toàn bộ vào **`Demo.java`**, biên dịch/chạy bằng Java 17 trở lên:
+Save everything to **`Demo.java`** and compile/run with Java 17 or later:
 
 ~~~java
 public class Demo {
@@ -3112,14 +3112,14 @@ class Child extends Parent {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac Demo.java
 java Demo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 === Field ===
@@ -3142,7 +3142,7 @@ Method của Parent
 Report: Method của Child
 ~~~
 
-### Phân tích theo từng cơ chế
+### Analyzing Each Mechanism
 
 **Field hiding:**
 
@@ -3153,12 +3153,12 @@ System.out.println(parentView.label);          // Field của Parent
 System.out.println(((Child) parentView).label); // Field của Child
 ~~~
 
-Cả hai biểu thức cùng trỏ tới **một object `Child`**, nhưng field được chọn theo **kiểu tham chiếu** của biểu thức:
+Both expressions refer to **one `Child` object**, yet the field is selected by **the reference type** of each expression:
 
-- `parentView` được khai báo là `Parent` → đọc `Parent.label`.
-- `(Child) parentView` có kiểu `Child` → đọc `Child.label`.
+- `parentView` is declared `Parent` → reads `Parent.label`.
+- `(Child) parentView` has type `Child` → reads `Child.label`.
 
-Phép cast trong trường hợp này **không tạo object khác và không di chuyển giá trị field**; nó làm thay đổi cách compiler nhìn nhận biểu thức.
+In this case, casting **does not create another object or move field values**; it changes how the compiler views the expression.
 
 **Static method hiding:**
 
@@ -3167,7 +3167,7 @@ System.out.println(parentView.kind()); // Static của Parent
 System.out.println(childView.kind());  // Static của Child
 ~~~
 
-Hai lời gọi này được phép nhưng gây hiểu nhầm rằng static method sử dụng đa hình. **Nên viết `Parent.kind()` và `Child.kind()`** để thể hiện rõ static method gắn với lớp.
+Both calls are permitted but misleadingly resemble polymorphic static calls. **Prefer writing `Parent.kind()` and `Child.kind()`** to show that the static methods belong to classes.
 
 **Instance method overriding:**
 
@@ -3175,13 +3175,13 @@ Hai lời gọi này được phép nhưng gây hiểu nhầm rằng static meth
 System.out.println(parentView.describe()); // Method của Child
 ~~~
 
-Compiler xác nhận `Parent` có `describe()`, còn JVM chọn implementation `Child.describe()` của đối tượng thực tế.
+The compiler confirms that `Parent` declares `describe()`, while the JVM chooses the actual object's `Child.describe()` implementation.
 
-Điểm thú vị là `Parent.report()` cũng gọi được `Child.describe()` khi chạy trên object `Child`: phương thức của lớp cha gọi một **instance method có thể override**, và dispatch vẫn diễn ra ở runtime.
+Notably, `Parent.report()` can also invoke `Child.describe()` when executed on a `Child` object: the parent-class method calls an **overridable instance method**, and dispatch still occurs at runtime.
 
-## 3. Field hiding: cùng tên nhưng không phải cùng field
+## 3. Field Hiding: Same Name, Distinct Fields
 
-Khi subclass khai báo lại field cùng tên, có thể hình dung một object lớp con có các phần trạng thái tương ứng với cả superclass lẫn subclass:
+When a subclass redeclares the same field name, think of a subclass object as holding state from both superclass and subclass:
 
 ~~~mermaid
 flowchart TD
@@ -3193,9 +3193,9 @@ flowchart TD
     S -.->|"childView.label"| C
 ~~~
 
-Đây là sơ đồ **logic**, không cam kết vị trí bộ nhớ vật lý hoặc cách JVM tối ưu hóa field.
+This is a **logical** diagram, not a guarantee of physical memory layout or JVM optimization.
 
-Một ví dụ chỉnh sửa cho thấy **hai field độc lập**:
+A modification example demonstrates **two independent fields**:
 
 ~~~java
 class CounterBase {
@@ -3214,13 +3214,13 @@ System.out.println(obj.count);               // 20
 System.out.println(((CounterBase) obj).count); // 2
 ~~~
 
-Phần sử dụng ở cuối cần đặt trong một phương thức Java thích hợp. Gán `obj.count = 20` **không thay đổi** `CounterBase.count`; gán qua cast về `CounterBase` cũng không sửa `CounterChild.count`.
+The usage statements at the end belong inside an appropriate Java method. Assigning `obj.count = 20` **does not modify** `CounterBase.count`; assigning through a cast to `CounterBase` also leaves `CounterChild.count` unchanged.
 
-Điều này dễ gây lỗi khi lớp cha có một invariant dựa vào field của nó, còn lớp con lại khai báo field trùng tên và vô tình làm code đọc dữ liệu không nhất quán.
+This can cause bugs when parent-class invariants depend on its field while a child redeclares that name, causing different code to read inconsistent state.
 
-### Đừng dùng field công khai để tạo đa hình
+### Do Not Use Public Fields for Polymorphism
 
-Thiết kế dễ gây nhầm:
+A misleading design:
 
 ~~~java
 class Configuration {
@@ -3232,14 +3232,14 @@ class ProductionConfiguration extends Configuration {
 }
 ~~~
 
-Code sử dụng:
+Consuming code:
 
 ~~~java
 Configuration config = new ProductionConfiguration();
 System.out.println(config.environment); // default
 ~~~
 
-Nếu muốn kết quả tùy thuộc object thực tế, hãy dùng **phương thức instance**:
+For results depending on the runtime object, use an **instance method**:
 
 ~~~java
 class Configuration {
@@ -3259,11 +3259,11 @@ Configuration config = new ProductionConfiguration();
 System.out.println(config.environment()); // production
 ~~~
 
-Với dữ liệu quan trọng, thường nên giữ field `private` và cung cấp getter hoặc hành vi thể hiện ý định. Nếu getter được override thì client nhận đa hình đúng theo hợp đồng; đồng thời class vẫn có thể kiểm soát invariant.
+For important data, keep fields `private` and expose getters or intention-revealing operations. Overridden getters can provide contract-based polymorphism while classes maintain their invariants.
 
-## 4. Static method hiding: cùng chữ ký, không có dispatch động
+## 4. Static Method Hiding: Same Signature, No Dynamic Dispatch
 
-Trong Java, static method thuộc về **lớp**, không thuộc trạng thái riêng của một instance. Một subclass có thể khai báo static method cùng chữ ký để **hide** static method của superclass, trong những điều kiện hợp lệ.
+In Java, static methods belong to **classes**, not to the per-instance state. A subclass may declare a matching static method to **hide** its superclass method under Java's rules.
 
 ~~~java
 class Formatter {
@@ -3279,7 +3279,7 @@ class JsonFormatter extends Formatter {
 }
 ~~~
 
-Sử dụng:
+Usage:
 
 ~~~java
 Formatter base = new JsonFormatter();
@@ -3289,13 +3289,13 @@ System.out.println(JsonFormatter.format());  // JSON
 System.out.println(base.format());           // BASE
 ~~~
 
-Dòng cuối **được phép** nhưng không nên sử dụng: `base.format()` trông như gọi phương thức của object, nhưng compiler xác định là static method của `Formatter` theo kiểu biểu thức.
+The final line **is allowed** but discouraged: `base.format()` looks like an object-method call, but the compiler selects `Formatter`'s static method from the expression type.
 
-**`@Override` không hợp lệ trên phương thức `JsonFormatter.format()`**, vì static method chỉ hide, không override.
+**`@Override` is invalid on `JsonFormatter.format()`**, because static methods hide rather than override.
 
-### Không thể “đổi” một static method thành instance override
+### A Static Method Cannot Be Turned into an Instance Override
 
-Ví dụ bị Java từ chối:
+Java rejects the following:
 
 ~~~java
 class Parent {
@@ -3308,7 +3308,7 @@ class Child extends Parent {
 }
 ~~~
 
-Chiều ngược lại cũng không hợp lệ:
+The opposite direction is invalid too:
 
 ~~~java
 class Parent {
@@ -3321,11 +3321,11 @@ class Child extends Parent {
 }
 ~~~
 
-Hai phương thức trùng chữ ký trong quan hệ kế thừa không thể hoán đổi giữa static và instance tùy ý.
+Same-signature methods in an inheritance relationship cannot freely switch between static and instance declarations.
 
-### Static method của interface có khác biệt
+### Interface Static Methods Are Different
 
-Java interface cho phép static method:
+Java interfaces can declare static methods:
 
 ~~~java
 interface TextRules {
@@ -3342,9 +3342,9 @@ System.out.println(TextRules.hasText("Java")); // true
 // new TextService().hasText("Java"); // Không hợp lệ.
 ~~~
 
-Static method khai báo trong interface **không được kế thừa sang class implements** như instance/default method. Vì thế, không nên áp dụng máy móc quy tắc class static hiding cho static method của interface.
+Static methods declared in an interface **are not inherited by implementing classes** as instance/default methods are. Do not mechanically apply class static-hiding rules to interface static methods.
 
-## 5. Ghi đè phương thức tạo sự khác biệt với hiding
+## 5. Overriding Instance Methods Differs from Hiding
 
 ~~~java
 class Notification {
@@ -3357,13 +3357,13 @@ Notification item = new EmailNotification();
 System.out.println(item.send()); // Gửi email
 ~~~
 
-`send()` là **instance method có thể override** nên Java dispatch theo object `EmailNotification`, khác hẳn truy cập `item.field` hoặc gọi một static method bị hide. `@Override` giúp compiler kiểm tra chữ ký; một override hợp lệ còn phải giữ kiểu trả về tương thích, không giảm khả năng truy cập, không mở rộng checked exception sai quy tắc và giữ hợp đồng hành vi.
+`send()` is an **overridable instance method**, so Java dispatches it based on the `EmailNotification` object, unlike `item.field` field access or a hidden static call. `@Override` lets the compiler check the signature; valid overrides must also return compatible types, preserve accessibility, obey checked-exception rules, and honor behavioral contracts.
 
-Với cú pháp ghi đè, covariant return, `final`, `super` và tác động của hook trong constructor, bài *Ghi đè và lựa chọn phương thức khi chạy* là nơi hướng dẫn chính.
+For overriding syntax, covariant returns, `final`, `super`, and constructor-hook behavior, see *Method Overriding and Runtime Method Selection*.
 
-## 6. Phương thức private có phải là overridden không?
+## 6. Can Private Methods Be Overridden?
 
-Không. Private instance method của superclass **không được kế thừa để override** bởi subclass.
+No. Private instance methods of superclasses **are not inherited for overriding** by subclasses.
 
 ~~~java
 class SecureBase {
@@ -3384,7 +3384,7 @@ class SecureChild extends SecureBase {
 }
 ~~~
 
-Sử dụng:
+Usage:
 
 ~~~java
 SecureBase ref = new SecureChild();
@@ -3394,13 +3394,13 @@ SecureChild child = new SecureChild();
 System.out.println(child.secretLabel()); // Child public
 ~~~
 
-`SecureBase.audit()` gọi phương thức `private secretLabel()` của chính `SecureBase`; phương thức cùng tên do `SecureChild` khai báo không thay thế nó.
+`SecureBase.audit()` invokes its own `private secretLabel()` method declared by `SecureBase`; `SecureChild` declares a same-named method but does not replace it.
 
-Đây là một điểm rất khác so với `public`/`protected` instance method có thể override.
+This is very different from overridable `public`/`protected` instance methods.
 
-Lưu ý: class lồng nhau (*nestmates*) có thể có quyền truy cập private đặc biệt theo quy tắc Java, nhưng điều đó không biến private method của superclass thành phương thức được override.
+Note that nested classes (*nestmates*) can have special private access under Java's rules, but that does not turn a superclass private method into an overridable method.
 
-### Lớp con không thể truy cập field private qua `super`
+### Subclasses Cannot Access Private Fields Through `super`
 
 ~~~java
 class Parent {
@@ -3419,11 +3419,11 @@ class Child extends Parent {
 }
 ~~~
 
-Từ khóa `super` không cho phép vượt qua mức truy cập `private`; nó chỉ chỉ rõ ngữ cảnh superclass cho những thành viên được phép sử dụng.
+`super` does not bypass `private` access restrictions; it only identifies the superclass context for accessible members.
 
-## 7. Che khuất field và override có thể cùng xuất hiện, dẫn tới trạng thái bất nhất
+## 7. Field Hiding and Overriding Can Coexist and Cause Inconsistent State
 
-Xét:
+Consider:
 
 ~~~java
 class Profile {
@@ -3450,11 +3450,11 @@ System.out.println(profile.displayName); // Base
 System.out.println(profile.summary());   // Tên cao cấp: Premium
 ~~~
 
-Dù cùng tham chiếu tới một object, việc đọc field và gọi method cho kết quả dựa vào **hai quy tắc khác nhau**.
+Although both expressions reference the same object, field access and method calls produce results using **two different rules**.
 
-Đó là lý do **không nên để code ngoài phụ thuộc vào protected/public field trùng tên** giữa các lớp trong cây kế thừa. Khi thật sự cần hành vi khác nhau, ưu tiên method override. Nếu cần trạng thái chung, lớp cha nên giữ một field private và cung cấp các thao tác có kiểm tra.
+That is why **external code should not depend on same-named protected/public fields** across an inheritance hierarchy. Prefer overriding methods for variable behavior. When state is shared, the parent should keep a private field and expose validated operations.
 
-## 8. Overload là một câu hỏi khác: chọn chữ ký nào?
+## 8. Overloading Asks a Different Question: Which Signature?
 
 ~~~java
 class Printer {
@@ -3467,20 +3467,20 @@ printer.print(text);      // Object
 printer.print("hello");   // String
 ~~~
 
-`print(Object)` và `print(String)` là **hai overload**; compiler chọn dựa trên kiểu tĩnh của đối số, không dựa trên object runtime của `text`. Sau khi chọn chữ ký, nếu lời gọi instance có override thì runtime mới chọn implementation tương ứng.
+`print(Object)` and `print(String)` are **two overloads**; the compiler selects one from the argument's static type, not the runtime object referenced by `text`. After choosing the signature, it can dispatch an overridden instance method at runtime.
 
-| Cơ chế | Chọn bằng |
+| Mechanism | Selected By |
 |---|---|
-| Field hiding | Kiểu tĩnh của biểu thức |
-| Static hiding | Kiểu tĩnh/tên lớp |
-| Overload | Kiểu tĩnh của receiver, đối số và quy tắc overload resolution |
-| Instance override | Runtime class của receiver sau khi chữ ký đã xác định |
+| Field hiding | Static type of the expression |
+| Static hiding | Static type or class name |
+| Overloading | Static receiver and argument types plus overload-resolution rules |
+| Instance overriding | Receiver runtime class after the signature is fixed |
 
-Các ví dụ kết hợp overload/override, `null`, boxing và varargs được dạy riêng ở bài *Phân biệt ghi đè với nạp chồng*.
+Combined overloading/overriding examples, `null`, boxing, and varargs are covered separately in *Distinguishing Overriding from Overloading*.
 
-## 9. Cách `super` ảnh hưởng đến các trường hợp
+## 9. How `super` Affects These Cases
 
-`super` được dùng trong instance context để chỉ rõ thao tác với lớp cha, giúp tránh mơ hồ khi cả hai lớp có thành viên cùng tên.
+`super` is used in an instance context to identify superclass operations and avoid ambiguity when both classes declare same-named members.
 
 ~~~java
 class Vehicle {
@@ -3507,17 +3507,17 @@ class Car extends Vehicle {
 }
 ~~~
 
-- `super.label` chọn field `label` được khai báo ở superclass.
-- `super.move()` gọi implementation của superclass (không dùng dynamic dispatch để quay lại `Car.move()` tại đúng lời gọi `super` đó).
-- `this.move()` là lời gọi instance method thông thường trên object hiện tại, nên dùng override của `Car`.
+- `super.label` selects the superclass's `label` field.
+- `super.move()` invokes the superclass implementation (without dynamically redispatching this particular `Car.move()` call to `super`).
+- `this.move()` is an ordinary instance-method call on the current object, so it uses the `Car` override.
 
-`super` không phải một object khác: vẫn đang làm việc trên phần superclass của **cùng đối tượng `Car`**.
+`super` does not refer to another object: we are still working on the superclass part of **the same `Car` object**.
 
-Nếu phương thức lớp cha tự gọi một instance method có thể override, lời gọi bên trong nó vẫn có thể dispatch tới class con. Vì thế, có thể có đường đi như `super.doWork()` → phương thức cha → `this.hook()` → implementation hook của subclass.
+If a superclass method calls an overridable instance method internally, that inner call can still dispatch to a subclass. Thus a path such as `super.doWork()` → parent method → `this.hook()` → subclass hook implementation is possible.
 
-### Cẩn trọng khi constructor gọi phương thức có thể override
+### Beware of Overridable Methods Called from Constructors
 
-Một lỗi thiết kế liên quan đa hình:
+A design error related to polymorphism:
 
 ~~~java
 class Base {
@@ -3542,11 +3542,11 @@ class Derived extends Base {
 new Derived();
 ~~~
 
-Có thể in `null`, vì khi `Base` constructor gọi `initialize()`, quá trình khởi tạo field của `Derived` theo thứ tự thông thường **chưa hoàn tất**. Đây không phải lỗi field hiding; nó là hệ quả của **dynamic dispatch trong lúc xây dựng object**. Đừng gọi những phương thức có thể override từ constructor nếu implementation subclass có thể phụ thuộc vào trạng thái chưa sẵn sàng.
+It may print `null` because, when the `Base` constructor calls `initialize()`, the ordinary initialization of fields in `Derived` **has not completed yet**. This is not field hiding; it results from **dynamic dispatch during object construction**. Avoid calling overridable methods from constructors when subclass implementations may depend on uninitialized state.
 
-## 10. Cùng tên thành viên trong interface có thể gây mơ hồ
+## 10. Same-Named Interface Members Can Cause Ambiguity
 
-Ngoài cây class, Java cho phép triển khai nhiều interface:
+Besides class inheritance, Java supports implementing multiple interfaces:
 
 ~~~java
 interface Left {
@@ -3566,9 +3566,9 @@ class Combined implements Left, Right {
 }
 ~~~
 
-Các field trong interface ngầm là `public static final`. Nếu hai interface khai báo cùng tên field, phải định danh nguồn thích hợp, chẳng hạn `Left.VERSION`.
+Interface fields are implicitly `public static final`. If two interfaces declare fields with the same name, qualify the source, such as `Left.VERSION`.
 
-Với hai interface có **default instance method** trùng chữ ký, class triển khai có thể phải override để giải quyết xung đột:
+When two interfaces expose **default instance methods** with the same signature, the implementing class may have to override the method to resolve the conflict:
 
 ~~~java
 interface LeftAction {
@@ -3592,11 +3592,11 @@ class CombinedAction implements LeftAction, RightAction {
 }
 ~~~
 
-Ở đây có hai default method được cung cấp qua interface, không phải static hiding. Quy tắc giải quyết xung đột default method thuộc cơ chế kế thừa interface và lựa chọn implementation instance method của Java; cần phân biệt với việc field được chọn theo tên/kiểu ở compile time.
+These are two default methods supplied by interfaces, not static hiding. Default-method conflict rules belong to Java's interface-inheritance and instance-method selection mechanisms; distinguish them from compile-time field lookup.
 
-## 11. Trường hợp `final` và mức truy cập
+## 11. `final` and Access Levels
 
-### `final` trên method chặn override/hiding phù hợp
+### `final` on Methods Prevents the Relevant Override or Hiding
 
 ~~~java
 class Service {
@@ -3610,9 +3610,9 @@ class SpecialService extends Service {
 }
 ~~~
 
-Một static method khai báo `final` cũng không thể bị một static method của subclass che khuất với chữ ký tương ứng trong ngữ cảnh kế thừa hợp lệ.
+A `final` static method also cannot be hidden by a matching static method of a subclass in a valid inheritance context.
 
-### `final` trên field không ngăn field hiding
+### `final` on Fields Does Not Prevent Field Hiding
 
 ~~~java
 class Parent {
@@ -3624,7 +3624,7 @@ class Child extends Parent {
 }
 ~~~
 
-Cú pháp này hợp lệ: `final` ngăn **gán lại chính field**, chứ không cấm subclass khai báo một field **khác** cùng tên.
+This declaration is valid: `final` prevents **reassignment of that field**, not a subclass declaring a **different** same-named field.
 
 ~~~java
 Parent view = new Child();
@@ -3632,9 +3632,9 @@ System.out.println(view.code);          // 100
 System.out.println(((Child) view).code); // 200
 ~~~
 
-Trường hợp này càng dễ gây nhầm nếu field được dùng như một dấu hiệu nhận dạng loại object. Tránh thiết kế đa hình dựa vào các field cùng tên.
+This can be especially confusing when a field acts as a type tag. Avoid designs that use same-named fields for polymorphic behavior.
 
-### Override không được giảm quyền truy cập
+### Overrides Must Not Reduce Access
 
 ~~~java
 class Parent {
@@ -3651,37 +3651,37 @@ class Child extends Parent {
 }
 ~~~
 
-Nếu đổi `Child.describe()` thành `protected`, Java sẽ báo lỗi vì phương thức override không được thu hẹp quyền truy cập mà caller đã có trên `Parent`.
+Changing `Child.describe()` to `protected` causes a compilation error: an overriding method cannot narrow the access that callers had through `Parent`.
 
-Với phương thức `protected` của superclass, subclass có thể override bằng `public`, tức **mở rộng** quyền truy cập khi phù hợp.
+A subclass may override a superclass `protected` method as `public`, **widening** access where appropriate.
 
-## 12. Khi nào nên dùng và khi nào nên tránh?
+## 12. When to Use and Avoid These Mechanisms
 
-| Nhu cầu | Nên làm | Tránh |
+| Need | Prefer | Avoid |
 |---|---|---|
-| Hành vi khác nhau theo object thực tế | Instance method + `@Override` | Dùng field cùng tên để “override” |
-| Tiện ích không phụ thuộc instance | `static` method gọi bằng tên class | Gọi static qua object khiến người đọc tưởng có dispatch |
-| Dữ liệu trạng thái riêng cho mỗi instance | `private` field và hành vi kiểm soát | Field công khai trùng tên ở nhiều cấp kế thừa |
-| Mở rộng hành vi của lớp cha | Override và `super.method()` khi cần | Gọi `super` như cơ chế vượt quyền truy cập |
-| Nhiều cách xử lý đầu vào khác kiểu | Overload với hợp đồng rõ ràng | Nhầm overload với runtime override |
-| Cần hỗ trợ subtype mới mà client không đổi | Thiết kế abstraction qua instance method/interface | Chuỗi `if` theo class hoặc đọc field type/name để chọn thuật toán |
+| Behavior that varies with the actual object | Instance methods plus `@Override` | Using same-named fields to "override" |
+| Utility independent of instances | Call `static` methods by class name | Static calls through objects that suggest dispatch |
+| State belonging to each instance | `private` fields and controlled behavior | Same-named public fields across inheritance levels |
+| Extending parent behavior | Override and `super.method()` where appropriate | Treating `super` as a way to bypass access control |
+| Multiple input forms with different types | Overloads with clear contracts | Confusing overloading with runtime overriding |
+| New subtypes without modifying clients | Design abstractions with instance methods/interfaces | Class-based `if` chains or type/name fields driving algorithms |
 
-Lý do thực tế để **tránh field hiding** là khả năng bảo trì: chỉ cần đổi kiểu khai báo của một biến, hoặc thêm một cast, kết quả đọc field có thể thay đổi dù runtime object không thay đổi. Hành vi đa hình qua method được thiết kế để cung cấp một lựa chọn implementation theo object thực tế, phù hợp hơn với nhu cầu OOP.
+The practical reason to **avoid field hiding** is maintainability: changing a variable's declared type or adding a cast may change which field is read even when the runtime object stays the same. Properly designed polymorphic methods select an implementation by the actual object, matching OOP needs more closely.
 
-## 13. Những sai lầm khi suy luận theo tên thành viên
+## 13. Mistakes When Reasoning from Member Names
 
-- **“Trùng tên luôn là override.”** Field trùng tên là field hiding; static method cùng chữ ký là static hiding; method khác tham số thường là overload.
-- **“`new Child()` nghĩa là mọi truy cập đều dùng Child.”** Với `Parent ref = new Child()`, chỉ instance method đủ điều kiện override có dynamic dispatch; field và static method có quy tắc khác.
-- **“`@Override` dùng được cho static method hoặc chỉ đổi return type.”** Không. Static method không override, còn chỉ khác return type không tạo overload.
-- **“Một method getter giống field.”** Getter là lời gọi instance method và có thể override; field lookup không dispatch.
-- **“`super` gọi object cha riêng hay vượt qua `private`.”** Không. `super` chọn thành viên superclass hợp lệ trên cùng object.
-- **“Đặt method cùng tên private của cha là ghi đè.”** Không. Private method của superclass không phải hook được kế thừa để override.
+- **"Same names always mean overriding."** Same-named fields are field hiding; same-signature static methods are static hiding; methods with different parameters are usually overloads.
+- **"`new Child()` means every access uses Child."** With `Parent ref = new Child()`, only eligible overridden instance methods dispatch dynamically; fields and static methods have separate rules.
+- **"`@Override` works on static methods or when only the return type differs."** No. Static methods do not override; changing only a return type does not create an overload.
+- **"A getter is the same as a field."** A getter is an instance-method call and may be overridden; field lookup does not dispatch.
+- **"`super` calls another parent object or bypasses `private`."** No. `super` selects accessible superclass members on the same object.
+- **"A subclass method sharing the parent's private name overrides it."** No. A superclass private method is not an inherited override hook.
 
-Khi debug, xác định trước **member thuộc loại nào** rồi mới hỏi compiler chọn gì và runtime dispatch tới đâu. Bài tập sau cho phép tự kiểm chứng các kết quả khác biệt.
+When debugging, first identify **what kind of member** is involved, then determine compile-time selection and runtime dispatch. The exercises below demonstrate these differences.
 
-## 14. Bài tập kiểm tra
+## 14. Exercises
 
-### Bài 1 — Đoán kết quả field và method
+### Exercise 1 — Predict Field and Method Results
 
 ~~~java
 class A {
@@ -3699,9 +3699,9 @@ System.out.println(obj.value);
 System.out.println(obj.who());
 ~~~
 
-**Đáp án:** `1`, sau đó `B`. Field theo kiểu `A`; instance method override theo object `B`.
+**Answer:** `1`, followed by `B`. Fields use the `A` reference type; overridden instance methods use the `B` object.
 
-### Bài 2 — Đoán kết quả static method
+### Exercise 2 — Predict a Static Method Result
 
 ~~~java
 class A {
@@ -3716,9 +3716,9 @@ A x = new B();
 System.out.println(x.id());
 ~~~
 
-**Đáp án:** `A`. Tuy cú pháp hợp lệ, lời gọi static qua `x` không nên dùng; thay bằng `A.id()` để diễn đạt chính xác.
+**Answer:** `A`. Although legal, invoking a static method through `x` is discouraged; use `A.id()` for clarity.
 
-### Bài 3 — Override hay overload?
+### Exercise 3 — Override or Overload?
 
 ~~~java
 class A {
@@ -3730,9 +3730,9 @@ class B extends A {
 }
 ~~~
 
-**Đáp án:** `B.draw(String)` **overload**, không override `A.draw(Object)`, vì tham số khác nhau. `@Override` trên `B.draw(String)` sẽ báo lỗi.
+**Answer:** `B.draw(String)` is an **overload**, not an override of `A.draw(Object)`, because the parameters differ. `@Override` on `B.draw(String)` produces an error.
 
-### Bài 4 — Có thể override private method không?
+### Exercise 4 — Can Private Methods Be Overridden?
 
 ~~~java
 class A {
@@ -3744,9 +3744,9 @@ class B extends A {
 }
 ~~~
 
-**Đáp án:** Không phải override. `B.save()` là phương thức riêng, không thay implementation private `A.save()`.
+**Answer:** No override occurs. `B.save()` is a separate method; it does not replace the private implementation `A.save()`.
 
-### Bài 5 — `super` sẽ chọn implementation nào?
+### Exercise 5 — Which Implementation Does `super` Select?
 
 ~~~java
 class A {
@@ -3760,15 +3760,15 @@ class B extends A {
 }
 ~~~
 
-**Đáp án:** `new B().message()` trả `"AB"`. `super.message()` gọi implementation của `A`, sau đó `B` nối thêm `"B"`.
+**Answer:** `new B().message()` returns `"AB"`. `super.message()` calls the `A` implementation, then `B` appends `"B"`.
 
-### Bài 6 — Tại sao `report()` của Parent có thể gọi `describe()` của Child?
+### Exercise 6 — Why Can Parent's `report()` Call Child's `describe()`?
 
-**Đáp án:** Vì `Parent.report()` đang chạy trên một receiver là object `Child`. Lời gọi instance `describe()` trong `report()` vẫn sử dụng dynamic dispatch, nên implementation `Child.describe()` được chọn.
+**Answer:** `Parent.report()` runs on a receiver that is a `Child` object. Its internal `describe()` instance call within `report()` still uses dynamic dispatch, selecting `Child.describe()`.
 
-### Bài 7 — Chỉnh thiết kế
+### Exercise 7 — Improve the Design
 
-Một hệ thống dùng:
+A system uses:
 
 ~~~java
 class Payment {
@@ -3779,9 +3779,9 @@ class CardPayment extends Payment {
 }
 ~~~
 
-Nhưng code `Payment p = new CardPayment();` lại in `p.type == "generic"`. Bạn sẽ sửa như thế nào?
+But `Payment p = new CardPayment();` prints `p.type == "generic"`. How would you change the design?
 
-**Gợi ý:** Chuyển `type` thành hành vi truy vấn:
+**Hint:** Make `type` a query behavior:
 
 ~~~java
 class Payment {
@@ -3792,19 +3792,19 @@ class CardPayment extends Payment {
 }
 ~~~
 
-Bây giờ `Payment p = new CardPayment(); p.type()` trả `"card"` nhờ overriding.
+Now `Payment p = new CardPayment(); p.type()` returns `"card"` through overriding.
 
-## 15. Quy trình đọc một lời gọi trong cây kế thừa
+## 15. How to Read a Call in an Inheritance Hierarchy
 
-Khi thấy `ref.member`, hãy kiểm tra lần lượt:
+When you see `ref.member`, check the following in order:
 
-1. **`member` là field hay method?** Nếu là field, không áp dụng dynamic overriding.
-2. **Nếu là method, nó có phải static không?** Static method không sử dụng runtime dispatch.
-3. **Nếu là instance method, compiler chọn chữ ký nào?** Có overload dựa vào kiểu đối số hay không?
-4. **Chữ ký ấy có được override hợp lệ bởi kiểu object thực tế không?** Nếu có, runtime dùng implementation tương ứng.
-5. **Có modifier chặn override không?** `private`, `final`, static hoặc quyền truy cập có thể làm quan hệ khác bạn tưởng.
-6. **Có `super` hoặc cast rõ ràng không?** Chúng có thể ảnh hưởng cách chọn field, phương thức lớp cha hoặc kiểu biểu thức.
-7. **Hành vi có đúng hợp đồng không?** Dù Java chọn đúng implementation về ngôn ngữ, phương thức override vẫn phải giữ điều kiện sử dụng của supertype.
+1. **Is `member` a field or method?** Field access does not use dynamic overriding.
+2. **If it is a method, is it static?** Static methods do not use runtime dispatch.
+3. **If it is an instance method, which signature does the compiler select?** Does overloading depend on argument types?
+4. **Does the actual object type validly override that signature?** If so, runtime selects that implementation.
+5. **Does any modifier prevent overriding?** `private`, `final`, static declarations, or access rules may alter the relationship.
+6. **Is there an explicit `super` or cast?** These can affect field selection, parent methods, or expression types.
+7. **Does behavior satisfy the contract?** Even when Java selects the correct implementation, overrides must still honor the supertype's requirements.
 
 ~~~mermaid
 flowchart TD
@@ -3816,49 +3816,49 @@ flowchart TD
     F --> G["Runtime chọn override theo object thực tế"]
 ~~~
 
-**Kết luận:** Trong Java, **che khuất thành viên** và **ghi đè** khác nhau cả về ý nghĩa OOP lẫn cách Java phân giải lời gọi. Field hiding và static method hiding được quyết định chủ yếu tại compile time; instance method overriding mới đem lại **đa hình động**. Muốn thay đổi hành vi theo loại object, hãy thiết kế một instance method với hợp đồng rõ ràng, ưu tiên `@Override`, giữ state được đóng gói và tránh sử dụng field trùng tên trong cây kế thừa.
+**Conclusion:** In Java, **member hiding** and **overriding** differ in both OOP meaning and call resolution. Field hiding and static method hiding are determined mainly at compile time; overriding instance methods provides **dynamic polymorphism**. To vary behavior by object type, design contracted instance methods, prefer `@Override`, encapsulate state, and avoid same-named fields in inheritance hierarchies.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="polymorphism-007">Phạm vi đa hình của phương thức và thuộc tính</a>
+## <a id="polymorphism-007">Scope of Polymorphism for Methods and Fields</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phạm vi đa hình của phương thức và thuộc tính trong Java
+# Scope of Polymorphism for Methods and Fields in Java
 
-Khi viết:
+Consider this declaration:
 
 ```java
 Parent value = new Child();
 ```
 
-biến `value` có **kiểu khai báo** `Parent` nhưng đang tham chiếu một đối tượng có **kiểu thực tế** `Child`. Nếu lớp `Child` ghi đè (*override*) một phương thức instance hợp lệ, lời gọi qua `value` có thể chạy implementation của `Child`. Đây là **đa hình động (runtime polymorphism)**.
+The variable `value` has the **declared type** `Parent` but refers to an object whose **actual type** is `Child`. If `Child` validly (*overrides*) an instance method, a call through `value` can execute the `Child` implementation. This is **dynamic polymorphism (runtime polymorphism)**.
 
-Tuy nhiên, không phải mọi thành viên của Java đều hoạt động như vậy. **Field (thuộc tính dữ liệu) không được override; static method có thể bị che khuất (*hiding*) nhưng không được dispatch động; overload được lựa chọn theo kiểu tại thời điểm biên dịch.**
+Not every Java member works this way. **Fields cannot be overridden; static methods may be hidden (*hiding*) but do not dispatch dynamically; and overloads are selected using compile-time types.**
 
-Bài này xác định chính xác **đa hình tác động đến thành viên nào**, cách trình biên dịch/JVM chọn hành vi và các bẫy thường gặp khi làm việc với superclass, subclass và interface.
+This lesson establishes exactly **which members participate in polymorphism**, how the compiler and JVM select behavior, and common traps involving superclasses, subclasses, and interfaces.
 
-## 1. Hai thời điểm, hai quyết định
+## 1. Two Stages, Two Decisions
 
-Xem ví dụ:
+Consider:
 
 ```java
 Animal animal = new Dog();
 animal.speak();
 ```
 
-Java cần xử lý hai vấn đề khác nhau:
+Java must handle two separate questions:
 
-1. **Tại thời điểm biên dịch:** Với kiểu của biểu thức `animal` là `Animal`, phương thức `speak()` có được phép gọi không? Nếu có nhiều overload, chữ ký nào phù hợp?
-2. **Tại thời điểm chạy:** Với một phương thức instance có khả năng override, đối tượng thực tế là `Dog` nên implementation được chọn có thể là `Dog.speak()`.
+1. **At compile time:** Given that `animal` has type `Animal`, is calling `speak()` valid? If there are overloads, which signature applies?
+2. **At runtime:** For an overridable instance method, the actual object is `Dog`, so the selected implementation can be `Dog.speak()`.
 
-Nói cách khác: **kiểu khai báo giới hạn những thành viên được phép sử dụng; kiểu thực tế quyết định implementation của phương thức instance được dispatch động.**
+In other words: **the declared type limits which members are accessible; the runtime type determines the implementation of dynamically dispatched instance methods.**
 
 ```mermaid
 flowchart TD
@@ -3871,9 +3871,9 @@ flowchart TD
     F -->|Không| H["Dùng implementation được kế thừa"]
 ```
 
-Sơ đồ áp dụng cho **phương thức instance có thể ghi đè**, không phải quy tắc chung cho mọi field hoặc static method.
+The diagram applies to **overridable instance methods**, not every field or static method.
 
-## 2. Ví dụ Java hoàn chỉnh: cùng đối tượng, kết quả khác nhau
+## 2. Complete Java Example: Same Object, Different Results
 
 File `PolymorphismScopeDemo.java`:
 
@@ -3967,14 +3967,14 @@ public class PolymorphismScopeDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac PolymorphismScopeDemo.java
 java PolymorphismScopeDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 VIP-method
@@ -3990,27 +3990,27 @@ Ticket-field / VIP-field
 Chức năng riêng của VIP
 ```
 
-Cùng một đối tượng `VipTicket`, tại sao kết quả khác nhau?
+Why do results differ for the same `VipTicket` object?
 
-| Biểu thức | Kết quả | Cơ chế |
+| Expression | Result | Mechanism |
 |---|---|---|
 | `ticket.display()` | `VIP-method` | **Override + dynamic dispatch** |
-| `ticket.label` | `Ticket-field` | Field resolution theo kiểu tĩnh `Ticket` |
-| `((VipTicket) ticket).label` | `VIP-field` | Kiểu tĩnh của biểu thức ép kiểu là `VipTicket` |
-| `ticket.code()` | `T-001` | Phương thức instance `final`, không được override |
-| `Ticket.category()` | `Ticket-static` | Gọi static method của lớp được chỉ rõ |
-| `VipTicket.category()` | `VIP-static` | Gọi static method khác, che khuất phương thức cha |
-| `ticket.category()` | `Ticket-static` | Static method được chọn theo kiểu tĩnh của biểu thức `ticket` |
-| `ticket.showInternalNote()` | `Ticket-private` | Phương thức của `Ticket` gọi private method của chính `Ticket` |
-| `ticket.showField()` | `Ticket.showField: Ticket-field` | Implementation `Ticket` truy cập `Ticket.label` |
-| `vip.bothFields()` | `Ticket-field / VIP-field` | `super.label` và `this.label` chỉ hai field riêng |
-| `vip.vipOnly()` | Chức năng riêng | Biểu thức kiểu `VipTicket` gọi được phương thức chỉ có ở lớp con |
+| `ticket.label` | `Ticket-field` | Field resolution using static type `Ticket` |
+| `((VipTicket) ticket).label` | `VIP-field` | The cast expression has static type `VipTicket` |
+| `ticket.code()` | `T-001` | `final` instance method; cannot be overridden |
+| `Ticket.category()` | `Ticket-static` | Static method of the explicitly named class |
+| `VipTicket.category()` | `VIP-static` | Another static method hiding the parent's |
+| `ticket.category()` | `Ticket-static` | Static method selected by expression `ticket`'s static type |
+| `ticket.showInternalNote()` | `Ticket-private` | A method of `Ticket` invokes a private method of `Ticket` |
+| `ticket.showField()` | `Ticket.showField: Ticket-field` | The `Ticket` implementation reads `Ticket.label` |
+| `vip.bothFields()` | `Ticket-field / VIP-field` | `super.label` and `this.label` refer to two separate fields |
+| `vip.vipOnly()` | Subclass-specific feature | A `VipTicket`-typed expression can invoke a method declared only by the subclass |
 
-**Quan sát quan trọng:** `Ticket.label` và `VipTicket.label` là **hai field riêng biệt cùng tồn tại trên một đối tượng lớp con**. Việc lớp con đặt field trùng tên không thay đổi cách truy cập field trong mã của lớp cha và không tạo đa hình cho field.
+**Important observation:** `Ticket.label` and `VipTicket.label` are **two separate fields coexisting in one subclass object**. Redeclaring the field does not alter parent-class field access or create field polymorphism.
 
-Trong thiết kế thực tế, tránh khai báo các field công khai hoặc field trùng tên như ví dụ. Chúng được cố tình dùng ở đây để phơi bày quy tắc ngôn ngữ.
+In production designs, avoid the public or same-named fields used in this deliberately illustrative example. They expose the language rules here but are poor design choices.
 
-## 3. Field không override: thay kiểu tham chiếu có thể thay kết quả đọc
+## 3. Fields Do Not Override: Changing a Reference Type Can Change Which Field Is Read
 
 ~~~java
 class Base {
@@ -4024,18 +4024,18 @@ System.out.println(ref.value);             // base
 System.out.println(((Derived) ref).value); // derived
 ~~~
 
-Một instance `Derived` có **hai field khác nhau**, một thuộc phần `Base`, một thuộc phần `Derived`. Cast hợp lệ chỉ đổi kiểu tĩnh của biểu thức; nó không đổi đối tượng hoặc sao chép giá trị. Vì field không có runtime dispatch, thay `Base` bằng `Derived` ở kiểu biến có thể làm đổi member được chọn dù instance thật vẫn như cũ.
+A `Derived` instance contains **two different fields**, one in the `Base` portion and one in `Derived`. A valid cast changes only the expression's static type; it neither changes the object nor copies a value. Because fields do not dispatch at runtime, changing a variable type from `Base` to `Derived` can select a different member even with the same instance.
 
-Đây là lý do quan trọng để hạn chế public/protected field trùng tên và ưu tiên đóng gói trạng thái. Bài *Phân biệt che khuất thành viên với ghi đè* đi sâu vào field hiding, `super.field`, static hiding và quy tắc truy cập; bài này sẽ tập trung tiếp vào **getter như API đa hình**.
+This is an important reason to avoid same-named public/protected fields and encapsulate state instead. *Distinguishing Member Hiding from Overriding* covers field hiding, `super.field`, static hiding, and access rules in detail; this lesson focuses next on **getters as polymorphic APIs**.
 
-## 4. Getter là phương thức: có thể đa hình dù dữ liệu không đa hình
+## 4. Getters Are Methods: Behavior Can Be Polymorphic Even When Fields Are Not
 
-Trong Java, “thuộc tính” đôi khi được gọi theo nghĩa dữ liệu (field), nhưng nhiều framework hoặc thư viện dùng **JavaBean property** thông qua các phương thức `getXxx()`/`setXxx()`. Cần phân biệt:
+In Java, "property" sometimes means a data field, while many frameworks and libraries use **JavaBean properties** exposed via `getXxx()`/`setXxx()` methods. Distinguish:
 
-- `obj.value`: truy cập **field** — không có dynamic dispatch.
-- `obj.getValue()`: gọi **phương thức** — có thể được override và dispatch động.
+- `obj.value`: accesses a **field** — no dynamic dispatch.
+- `obj.getValue()`: calls a **method** — potentially overridable and dynamically dispatched.
 
-Ví dụ:
+For example:
 
 ```java
 class Person {
@@ -4069,35 +4069,35 @@ Person person = new Employee("An", "Backend");
 System.out.println(person.getDisplayName()); // An (Backend)
 ```
 
-Biến `person` chỉ biết hợp đồng `Person`, nhưng `getDisplayName()` trả kết quả theo implementation của `Employee`.
+The `person` variable knows only the `Person` contract, but `getDisplayName()` returns a value according to the `Employee` implementation.
 
-Điều này **không có nghĩa field `name` bị override**: `name` vẫn là dữ liệu private do `Person` quản lý. Hành vi getter được ghi đè, không phải field.
+This **does not mean the `name` field is overridden**: `name` remains private data managed by `Person`. The getter behavior is overridden, not the field.
 
-### Nên chọn thiết kế nào?
+### Which Design Should You Choose?
 
-Nếu trạng thái phải tuân thủ invariant, ưu tiên field `private` và expose **hành vi có ý nghĩa** hoặc phương thức truy cập được kiểm soát. Nếu subclass cần thay đổi cách trình bày, override một phương thức như `getDisplayName()` thường rõ ràng hơn việc khai báo thêm field `name` cùng tên ở subclass.
+When state must satisfy invariants, favor `private` fields and expose **meaningful behavior** or controlled access methods. If a subclass needs a different presentation, overriding `getDisplayName()` is clearer than declaring another `name` field with the same name.
 
-Tuy vậy, nếu một phương thức getter được đánh dấu `final`, subclass không thể override nó. Đa hình không yêu cầu mọi getter đều phải cho phép override.
+However, if a getter is `final`, subclasses cannot override it. Polymorphism does not require every getter to be overridable.
 
-## 5. Phạm vi đa hình của các loại phương thức
+## 5. Scope of Polymorphism by Member Type
 
-| Loại thành viên | Có dispatch động theo runtime object không? | Diễn giải |
+| Member Type | Dynamic Dispatch by Runtime Object? | Explanation |
 |---|---|---|
-| Phương thức instance có thể override | **Có** | Implementation subclass được chọn khi override đúng hợp đồng |
-| Phương thức `abstract` được implement trong subclass | **Có** | Lời gọi qua kiểu trừu tượng thực thi implementation cụ thể |
-| Phương thức interface được lớp implement | **Có** | Lời gọi qua biến interface chọn implementation phù hợp |
-| Interface `default method` | **Có thể** | Có thể kế thừa, override; phải xử lý xung đột đúng quy tắc |
-| Phương thức instance `final` | Không thể bị subclass override | Không có biến thể implementation do override ở subclass |
-| Phương thức `private` | Không override | Cùng tên ở subclass là phương thức khác |
-| Phương thức `static` | **Không** | Có thể bị hiding; lời gọi được phân giải theo kiểu tĩnh/tên lớp |
-| Constructor | **Không** | Không được kế thừa hay override |
-| Phương thức overload | Chọn overload tại compile time | Sau khi chọn chữ ký, nếu đó là instance method thì implementation vẫn có thể dispatch động |
-| Field instance | **Không** | Field hiding/phân giải theo kiểu tĩnh |
-| Field `static` | **Không** | Là trạng thái của lớp; không có field polymorphism |
+| Overridable instance method | **Yes** | The subclass implementation is selected when overriding satisfies the contract |
+| `abstract` method implemented in a subclass | **Yes** | A call through the abstract type invokes the concrete implementation |
+| Interface method implemented by a class | **Yes** | A call through an interface reference selects the appropriate implementation |
+| Interface `default method` | **Possible** | Can be inherited or overridden; conflicts require correct resolution |
+| `final` instance method | Cannot be overridden by a subclass | No subclass override can provide a different implementation |
+| `private` method | Cannot override | A same-named subclass method is a separate member |
+| `static` method | **No** | Can be hidden; calls resolve by static type/class name |
+| Constructor | **No** | Not inherited or overridden |
+| Overloaded method | Overload selected at compile time | After selecting the signature, an instance-method implementation can still be dispatched |
+| Instance field | **No** | Field hiding/resolution by static type |
+| `static` field | **No** | Class-level state; no field polymorphism |
 
-Lưu ý: `final`, `private` và `static` không phải là “không có hành vi”. Chúng vẫn có thể thực thi mã bình thường. Điểm khác biệt là **chúng không tạo ra lựa chọn runtime giữa nhiều implementation do instance overriding**.
+Note that `final`, `private`, and `static` are not "behaviorless". They can execute ordinary code. The distinction is that **they do not cause runtime selection among instance-method overrides**.
 
-## 6. Đa hình có phạm vi theo **chữ ký phương thức đã chọn**
+## 6. Polymorphism Applies to the **Selected Method Signature**
 
 ~~~java
 class Speaker {
@@ -4111,17 +4111,17 @@ Speaker caller = new DogSpeaker();
 System.out.println(caller.speak("Gâu")); // DogSpeaker/Object
 ~~~
 
-Compiler chỉ nhìn thấy overload `speak(Object)` từ kiểu `Speaker`; sau khi chữ ký được chọn, JVM dispatch đến override `DogSpeaker.speak(Object)`. Overload `speak(String)` chỉ xuất hiện ở class con và không trở thành một phương thức mới trong API tĩnh của biến `caller`.
+The compiler sees only the `speak(Object)` overload through type `Speaker`; after selecting that signature, the JVM dispatches to `DogSpeaker.speak(Object)`. The `speak(String)` overload exists only in the subclass and does not become part of the static API available through `caller`.
 
-Bài này cần ghi nhớ phạm vi: **kiểu của receiver xác định những lời gọi hợp lệ; object thực tế chỉ chọn phần triển khai cho lời gọi instance thích hợp**. Phân tích chi tiết overload/override, `null`, boxing và varargs đã có ở hai bài chuyên biệt trước.
+Remember the scope: **the receiver type determines valid calls; the actual object selects the implementation only for an eligible instance method**. The previous lessons explain overloading/overriding, `null`, boxing, and varargs in detail.
 
-## 7. Static và private không cho một điểm mở rộng runtime tương tự
+## 7. Static and Private Methods Are Not Equivalent Runtime Extension Points
 
-`Base ref = new Derived()` không khiến `ref.staticMethod()` chọn một phương thức static của `Derived`: static method thuộc **class**, nên gọi bằng `Base.staticMethod()` hoặc `Derived.staticMethod()` sẽ rõ nghĩa hơn. Một static method cùng chữ ký ở subclass là **method hiding**.
+`Base ref = new Derived()` does not make `ref.staticMethod()` select a static method from `Derived`: static methods belong to **classes**. Calling `Base.staticMethod()` or `Derived.staticMethod()` is clearer. A matching subclass static method causes **method hiding**.
 
-Tương tự, private method của superclass không được kế thừa để override; phương thức trùng tên của subclass không thay implementation mà mã của superclass đang gọi riêng. Hai quy tắc này đã được minh họa bằng chương trình chạy được trong bài về *Che khuất thành viên với ghi đè*. Chúng giới hạn phạm vi đa hình ở **những instance method thực sự có khả năng override**.
+Similarly, private superclass methods are not inherited for overriding; a same-named subclass method cannot replace the private implementation invoked by parent code. The lesson *Distinguishing Member Hiding from Overriding* provides runnable examples. These rules limit polymorphism to **instance methods that can genuinely be overridden**.
 
-## 8. final method, abstract method và interface
+## 8. Final Methods, Abstract Methods, and Interfaces
 
 ### 8.1. final instance method
 
@@ -4138,9 +4138,9 @@ class SpecialPolicy extends BasePolicy {
 }
 ```
 
-Một biến `BasePolicy p = new SpecialPolicy();` vẫn gọi được `p.isEnabled()`. Nhưng vì lớp con không thể override, không có implementation chuyên biệt được chọn theo lớp con cho phương thức này. `final` hữu ích khi muốn bảo vệ một quy tắc hoặc bước thuật toán không được thay đổi.
+A `BasePolicy p = new SpecialPolicy();` variable can still call `p.isEnabled()`. But because the subclass cannot override it, no subclass-specific implementation is selected for that method. `final` is useful for protecting an invariant rule or algorithmic step.
 
-### 8.2. abstract method và interface đều hỗ trợ dispatch động
+### 8.2. Abstract Methods and Interfaces Support Dynamic Dispatch
 
 ```java
 abstract class Shape {
@@ -4167,9 +4167,9 @@ Shape shape = new Circle(2);
 System.out.println(shape.area()); // Khoảng 12.56637
 ```
 
-`Shape.area()` không có implementation ở lớp trừu tượng, nhưng biến kiểu `Shape` vẫn gọi được phương thức đó. Runtime sẽ dùng `Circle.area()`.
+`Shape.area()` has no implementation in the abstract class, but a `Shape`-typed variable can still call it. At runtime, Java invokes `Circle.area()`.
 
-Tương tự, khi một class implement phương thức của interface, lời gọi qua biến interface dùng implementation phù hợp:
+Likewise, when a class implements an interface method, a call through an interface reference uses the appropriate implementation:
 
 ```java
 interface Formatter {
@@ -4187,7 +4187,7 @@ Formatter formatter = new UpperFormatter();
 System.out.println(formatter.format("java")); // JAVA
 ```
 
-### 8.3. Interface default method có thể tham gia đa hình
+### 8.3. Interface Default Methods Can Participate in Polymorphism
 
 ```java
 interface Greeter {
@@ -4207,9 +4207,9 @@ Greeter greeter = new FriendlyGreeter();
 System.out.println(greeter.hello()); // Xin chào
 ```
 
-`default` cung cấp implementation dùng được nếu lớp không cung cấp phiên bản phù hợp. Khi class override, lời gọi qua kiểu interface vẫn chạy implementation class. Với nhiều default method xung đột, Java có quy tắc ưu tiên phương thức từ class, interface cụ thể hơn, và một số trường hợp yêu cầu override để giải quyết mơ hồ.
+`default` supplies an implementation when a class does not provide a more specific one. An overriding class implementation runs even through an interface-typed reference. For conflicting default methods, Java applies class-method priority, more-specific-interface rules, and sometimes requires explicit overriding to resolve ambiguity.
 
-Ngược lại, **static method của interface không được kế thừa thành phương thức instance** và được gọi bằng tên interface:
+Conversely, **interface static methods are not inherited as instance methods** and are called through their interface names:
 
 ```java
 interface Normalizer {
@@ -4221,9 +4221,9 @@ interface Normalizer {
 System.out.println(Normalizer.normalize(" A ")); // A
 ```
 
-## 9. `super` không làm xuất hiện một object khác
+## 9. `super` Does Not Create Another Object
 
-Nếu `MonthlyReport extends Report`, lời gọi `super.header()` trong subclass yêu cầu implementation của superclass phù hợp, còn `this.header()` là một lời gọi instance thông thường có thể dispatch tới override.
+If `MonthlyReport extends Report`, a `super.header()` call in the subclass invokes the appropriate superclass implementation, while `this.header()` is an ordinary instance call that may dispatch to an override.
 
 ~~~java
 class Report {
@@ -4238,11 +4238,11 @@ Report report = new MonthlyReport();
 System.out.println(report.render()); // [Báo cáo tháng]
 ~~~
 
-Ngay cả khi `render()` chạy trong mã lớp cha, nó đang làm việc trên một instance `MonthlyReport`, nên lời gọi `header()` có thể dispatch động. `super` chỉ thay cách chọn implementation ở lời gọi cụ thể, không tạo `Report` riêng. Trong constructor cha, một lời gọi tới method overridable có thể chạm trạng thái subclass chưa khởi tạo xong, nên tránh thiết kế như vậy.
+Even when `render()` runs in superclass code, the receiver is a `MonthlyReport` instance, so `header()` can dynamically dispatch. `super` only changes the implementation selected for that call; it does not create another `Report` object. Avoid overridable calls in superclass constructors, where subclass state may still be uninitialized.
 
-## 10. Ép kiểu và instanceof có biến field thành đa hình không?
+## 10. Do Casts and instanceof Make Fields Polymorphic?
 
-Không. Ép kiểu ảnh hưởng **kiểu tĩnh của biểu thức** và khả năng compiler cho phép truy cập thành viên, chứ không sửa lớp runtime của đối tượng.
+No. A cast changes **the static type of an expression** and which member accesses the compiler permits; it does not change an object's runtime class.
 
 ```java
 class Base {
@@ -4272,9 +4272,9 @@ System.out.println(ref.code());        // Child-method
 System.out.println(((Child) ref).code); // CHILD
 ```
 
-Bản thân đối tượng không thay đổi; chỉ cách **truy cập field** thay đổi do kiểu tĩnh của biểu thức ép kiểu.
+The object remains unchanged; only **field access** changes due to the cast expression's static type.
 
-Với một biến có thể tham chiếu nhiều subclass, có thể kiểm tra trước:
+For variables that may reference different subclasses, check before casting:
 
 ```java
 if (ref instanceof Child child) {
@@ -4282,11 +4282,11 @@ if (ref instanceof Child child) {
 }
 ```
 
-Đây là pattern matching for `instanceof` (Java 16+, chạy ở Java 17). Nếu cast không hợp lệ, ép kiểu xuống thông thường có thể ném `ClassCastException`. Đặc biệt, biến `Parent` trỏ vào `Child` **không khiến mọi phương thức riêng của `Child` xuất hiện trong API của kiểu `Parent`**.
+This is pattern matching for `instanceof` (Java 16+, runnable with Java 17). An invalid downcast can throw `ClassCastException`. In particular, a `Parent` variable referencing a `Child` object **does not add every `Child`-specific method to the `Parent` API**.
 
-## 11. Đa hình trong code thực tế: ưu tiên hành vi hơn field
+## 11. Real-World Polymorphism: Prefer Behavior to Fields
 
-Một ví dụ thiết kế chưa tốt:
+An example of poor design:
 
 ```java
 class Discount {
@@ -4298,9 +4298,9 @@ class VipDiscount extends Discount {
 }
 ```
 
-Nếu nơi gọi viết `Discount d = new VipDiscount();` rồi đọc `d.percent`, nó nhận field của `Discount` — không phải “tỷ lệ VIP” một cách tự động.
+If a caller declares `Discount d = new VipDiscount();` and reads `d.percent`, it gets `Discount`'s field, not automatically the "VIP percentage".
 
-Cách thiết kế rõ hơn là mô tả khả năng tính giá bằng hành vi:
+A clearer design expresses the fee calculation as behavior:
 
 ```java
 interface DiscountPolicy {
@@ -4329,7 +4329,7 @@ final class TenPercentDiscount implements DiscountPolicy {
 }
 ```
 
-Nơi gọi không cần đọc một field `percent` có thể bị hiding:
+Callers need not read a potentially hidden `percent` field:
 
 ```java
 DiscountPolicy policy = new TenPercentDiscount();
@@ -4339,27 +4339,27 @@ policy = new NoDiscount();
 System.out.println(policy.apply(100_000)); // 100000
 ```
 
-Mỗi implementation kiểm soát quy tắc áp dụng của mình, trong khi caller phụ thuộc vào hợp đồng chung `DiscountPolicy.apply(...)`. Đây là cách sử dụng đa hình thường dễ mở rộng và an toàn hơn việc phụ thuộc vào public field.
+Each implementation manages its own rules while callers depend on the shared `DiscountPolicy.apply(...)` contract. This is generally more extensible and safer than depending on public fields.
 
-## 12. Những hiểu lầm thường gặp
+## 12. Common Misconceptions
 
-| Nhận định | Đánh giá | Giải thích |
+| Claim | Assessment | Explanation |
 |---|---|---|
-| `Parent p = new Child()` rồi `p.method()` luôn chạy phương thức cha | Sai | Với instance method được override, có thể chạy implementation của `Child` |
-| `Parent p = new Child()` rồi `p.field` tự đọc field ở `Child` | Sai | Field được phân giải theo kiểu tĩnh |
-| Khai báo field cùng tên trong subclass là override | Sai | Đó là **field hiding** |
-| Getter có thể override nên nội dung trả về đa hình | Đúng, nếu getter là overridable instance method | Field bên trong vẫn không tự đa hình |
-| Static method được chọn theo kiểu runtime | Sai | Static method hiding, phân giải tĩnh |
-| Private method có thể override | Sai | Phương thức cùng tên ở subclass là thành viên riêng |
-| Final method bị override nếu ép biến sang subclass | Sai | `final` ngăn override |
-| Chọn overload dựa vào runtime class của đối số | Sai | Overload resolution xét kiểu compile-time và quy tắc chuyển đổi |
-| Interface method có thể dispatch tới implementation của class | Đúng | Đây là đa hình qua interface |
-| `super.method()` là gọi trên một đối tượng cha tách biệt | Sai | Vẫn là cùng đối tượng, nhưng chọn implementation của superclass phù hợp |
-| Cast biến khiến kiểu runtime của object thay đổi | Sai | Chỉ thay kiểu tĩnh của biểu thức và có thể kiểm tra runtime type |
+| `Parent p = new Child()` followed by `p.method()` always runs the parent method | False | An overridden instance method can execute `Child`'s implementation |
+| `Parent p = new Child()` followed by `p.field` automatically reads the field in `Child` | False | Fields are resolved using static types |
+| Redeclaring a same-named field in a subclass is overriding | False | This is **field hiding** |
+| A getter can be overridden, making its returned behavior polymorphic | True, if the getter is an overridable instance method | Its underlying field is not automatically polymorphic |
+| Static methods are selected by runtime type | False | Static method hiding uses compile-time resolution |
+| Private methods can be overridden | False | A same-named subclass method is a separate member |
+| A final method can be overridden by casting to a subclass | False | `final` prevents overriding |
+| Overloads are selected using argument runtime classes | False | Overload resolution uses compile-time types and conversion rules |
+| Interface methods can dispatch to a class implementation | True | This is interface polymorphism |
+| `super.method()` calls a separate parent object | False | It is still the same object but selects the appropriate superclass implementation |
+| Casting a variable changes the runtime object type | False | Only the expression's static type changes, with possible runtime type checks |
 
-## 13. Bài tập tự kiểm tra
+## 13. Self-Check Exercises
 
-### Bài 1 — Dự đoán ba kết quả
+### Exercise 1 — Predict Three Results
 
 ```java
 class A {
@@ -4390,9 +4390,9 @@ System.out.println(value.name());
 System.out.println(value.type());
 ```
 
-**Đáp án:** `1`, `B`, `A-static`. Field và static method theo kiểu tĩnh `A`; phương thức instance `name()` dispatch tới override của `B`. Trong code thực tế, nên dùng `A.type()` thay vì gọi static method qua biến.
+**Answer:** `1`, `B`, `A-static`. Fields and static methods use the `A` static type; `name()` instance calls dispatch to the `B` override. In real code, prefer `A.type()` instead of static calls through variables.
 
-### Bài 2 — Overload có đi theo runtime object không?
+### Exercise 2 — Does Overloading Depend on Runtime Objects?
 
 ```java
 class Animal {}
@@ -4409,9 +4409,9 @@ Animal argument = new Dog();
 examine(argument);
 ```
 
-**Đáp án:** `Animal`. Lựa chọn overload dựa trên kiểu tĩnh của biến `argument`. Nếu ép kiểu `examine((Dog) argument)`, compiler sẽ chọn overload `Dog` (giả sử cast tương thích tại runtime).
+**Answer:** `Animal`. Overload selection uses the declared type of `argument`. Casting with `examine((Dog) argument)` makes the compiler select the `Dog` overload (if the cast is runtime-compatible).
 
-### Bài 3 — Getter hay field?
+### Exercise 3 — Getter or Field?
 
 ```java
 class Parent {
@@ -4432,53 +4432,53 @@ class Child extends Parent {
 Parent obj = new Child();
 ```
 
-**Câu hỏi:** `obj.title` và `obj.getTitle()` có kết quả gì?
+**Question:** What results do `obj.title` and `obj.getTitle()` produce?
 
-**Đáp án:** `Parent-field` và `Child-method`. Field không override; getter được override.
+**Answer:** `Parent-field` and `Child-method`. Fields are not overridden; the getter is.
 
-### Bài 4 — Thiết kế lại API
+### Exercise 4 — Redesign the API
 
-Một thư viện dùng `class Notification` có field `public String messageType`. Các subclass `EmailNotification` và `SmsNotification` cùng khai báo lại `messageType`, khiến code dùng kiểu `Notification` đọc sai loại thông báo.
+A library uses `class Notification` with a `public String messageType` field. Subclasses `EmailNotification` and `SmsNotification` both redeclare `messageType`, causing code using `Notification` to read the wrong channel.
 
-Hãy thử refactor:
+Try refactoring:
 
-1. Giữ trạng thái cần thiết ở field `private`.
-2. Khai báo `String channel()` trên lớp cha hoặc một interface `Notification`.
-3. Mỗi implementation cung cấp hành vi `channel()` phù hợp.
-4. Viết `List<Notification>` chứa nhiều subtype và gọi `channel()` mà không truy cập field trực tiếp.
-5. Giải thích vì sao phép gọi phương thức giữ được đa hình, còn field cùng tên không làm được.
+1. Keep essential state in `private` fields.
+2. Declare `String channel()` in the parent class or a `Notification` interface.
+3. Each implementation provides suitable `channel()` behavior.
+4. Create a `List<Notification>` containing multiple subtypes and call `channel()` without reading fields directly.
+5. Explain why method calls preserve polymorphism while same-named fields do not.
 
 ---
 
-**Ghi nhớ:** **Đa hình động của Java chủ yếu áp dụng cho phương thức instance có thể override** — kể cả method từ abstract class và interface. **Field, static method và lựa chọn overload không được phân giải theo runtime object theo cách đó**. Phân biệt **field hiding**, **static method hiding**, **overriding** và **overloading** giúp dự đoán chính xác kết quả và thiết kế API dùng hành vi thay vì truy cập trực tiếp trạng thái.
+**Remember:** **Java's dynamic polymorphism mainly applies to overridable instance methods**, including those defined by abstract classes and interfaces. **Fields, static methods, and overload selection are not resolved by runtime objects in the same way**. Distinguishing **field hiding**, **static method hiding**, **overriding**, and **overloading** helps predict results and design APIs around behavior rather than direct state access.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="polymorphism-008">Duck typing và đa hình theo khả năng</a>
+## <a id="polymorphism-008">Duck Typing and Capability-Based Polymorphism</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Duck typing và đa hình theo khả năng trong Java OOP
+# Duck Typing and Capability-Based Polymorphism in Java OOP
 
-> **Ý tưởng cốt lõi:** Thay vì hỏi “đối tượng này thuộc họ lớp nào?”, nhiều bài toán thực tế chỉ cần hỏi “đối tượng này **làm được việc gì**?”. Một con vịt thật, một con vịt robot hay món đồ chơi phát tiếng vịt có thể khác nhau hoàn toàn về cấu tạo, nhưng đều có khả năng **phát tiếng kêu**. Ta muốn viết một thao tác dùng chung để yêu cầu chúng phát tiếng mà không phải kiểm tra từng loại cụ thể.
+> **Core idea:** Instead of asking "Which class family does this object belong to?", many real problems only require asking "What **can this object do**?" A real duck, a robot duck, and a squeaky duck toy may be built very differently but can all **make a sound**. We want one operation that asks each to make its sound without checking every concrete type.
 
-Tư duy này liên quan đến **duck typing** và **đa hình theo khả năng** (*capability-based polymorphism*). Hai khái niệm gần nhau về cách nhìn hành vi, nhưng cơ chế kiểu của ngôn ngữ **không giống nhau**: Python có thể gọi phương thức phù hợp ngay trên object tại runtime; Java thường cần một **interface hoặc kiểu cha được khai báo rõ**, hay một adapter chuyển đổi đối tượng sang hợp đồng cần dùng.
+This perspective relates to **duck typing** and **capability-based polymorphism** (*capability-based polymorphism*). The concepts share a behavior-oriented viewpoint, but their language **typing mechanisms differ**: Python can invoke a matching method on an object at runtime; Java generally needs an **explicitly declared interface or parent type**, or an adapter that converts the object to the required contract.
 
-Bài này giải thích ranh giới đó, dùng mã Java chạy được để thực hành và chỉ ra khi nào nên lựa chọn interface, kiểm tra khả năng, hoặc adapter.
+This lesson explains that distinction, uses runnable Java examples, and shows when to choose interfaces, capability checks, or adapters.
 
-## 1. Duck typing là gì?
+## 1. What Is Duck Typing?
 
-Cụm từ phổ biến để gợi nhớ duck typing là: *“Nếu một thứ đi như vịt và kêu như vịt, hãy đối xử với nó như một con vịt.”*
+A common phrase illustrating duck typing is: *"If something walks like a duck and quacks like a duck, treat it as a duck."*
 
-Trong lập trình, ý nghĩa không nằm ở việc một đối tượng **có tên lớp `Duck`**, mà nằm ở việc nó **cung cấp hành vi được yêu cầu**.
+In programming, the point is not that an object **has a class named `Duck`**, but that it **provides the required behavior**.
 
-Ví dụ ý tưởng bằng Python:
+A conceptual Python example:
 
 ~~~python
 class RealDuck:
@@ -4496,17 +4496,17 @@ make_sound(RealDuck())
 make_sound(ToyDuck())
 ~~~
 
-`make_sound` không cần biết lớp của `thing` có kế thừa một lớp `Duck` hay không. Khi chạy, Python tìm phương thức `quack` trên đối tượng. Nếu phương thức không tồn tại, hoặc lời gọi không phù hợp, lỗi có thể xuất hiện **tại runtime** (chẳng hạn `AttributeError`).
+`make_sound` does not need to know whether the class of `thing` inherits from `Duck`. At runtime, Python looks up the `quack` method on that object. If it is missing or the call is incompatible, an error can arise **at runtime** (such as `AttributeError`).
 
-Đây là dạng thường gặp của **duck typing động**: sử dụng đối tượng dựa trên khả năng nó cung cấp trong ngữ cảnh hiện tại, không bắt buộc khai báo quan hệ kế thừa trước.
+This is a common form of **dynamic duck typing**: using objects according to what they can do in the current context, without requiring an explicit inheritance relationship beforehand.
 
-**Không nên đồng nhất duck typing với structural typing:** hệ thống kiểu **theo cấu trúc** có thể kiểm tra hình dạng thành viên ngay ở thời điểm biên dịch, còn duck typing động thường để hành vi được thử khi chạy. Cả hai có thể quan tâm đến “đối tượng cung cấp những gì”, nhưng khác nhau ở thời điểm và cách kiểm tra.
+**Do not confuse duck typing with structural typing:** a **structural** type system can check the shape of members at compile time, whereas dynamic duck typing often tries the behavior at runtime. Both care about "what an object offers", but differ in when and how that is checked.
 
-## 2. Java không tự coi hai lớp cùng có `quack()` là tương thích
+## 2. Java Does Not Automatically Treat Two Classes with `quack()` as Compatible
 
-Trong Java, quan hệ kiểu con thông thường giữa các lớp/interface là **nominal**: phải được thiết lập qua `extends`, `implements`, hoặc quan hệ subtype hợp lệ đã có trong hệ phân cấp.
+In Java, ordinary subtype relationships between classes and interfaces are **nominal**: they must be established by `extends`, `implements`, or a valid subtype relationship already present in the hierarchy.
 
-Xét hai lớp:
+Consider two classes:
 
 ~~~java
 class RealDuck {
@@ -4522,7 +4522,7 @@ class ToyDuck {
 }
 ~~~
 
-Dù hai class đều có `public void quack()`, ta **không thể** viết một hàm Java nhận kiểu `RealDuck` rồi truyền `ToyDuck` vào chỉ vì chúng có cùng phương thức:
+Although both classes declare `public void quack()`, you **cannot** write a Java method accepting `RealDuck` and pass it a `ToyDuck` merely because they have the same method:
 
 ~~~java
 static void makeSound(RealDuck duck) {
@@ -4532,7 +4532,7 @@ static void makeSound(RealDuck duck) {
 // makeSound(new ToyDuck()); // LỖI BIÊN DỊCH
 ~~~
 
-Và chỉ khai báo một interface giống chữ ký vẫn chưa đủ:
+Simply declaring an interface with the same signature is not enough either:
 
 ~~~java
 interface Quackable {
@@ -4542,22 +4542,22 @@ interface Quackable {
 // Quackable q = new ToyDuck(); // Vẫn lỗi nếu ToyDuck không implements.
 ~~~
 
-Vì vậy, nói “Java có duck typing giống Python” là **không chính xác**. Java hỗ trợ thiết kế dựa trên **khả năng** rất tốt, nhưng cách thông thường là **biểu đạt khả năng thành interface** và để các lớp chủ động hiện thực hợp đồng đó.
+Therefore, saying "Java has duck typing just like Python" is **incorrect**. Java is very capable of **capability-oriented** designs, but the usual approach is to **represent capabilities as interfaces** and have classes explicitly implement those contracts.
 
-| Câu hỏi | Duck typing động, như ví dụ Python | Java qua interface |
+| Question | Dynamic duck typing, as in Python | Java using interfaces |
 | --- | --- | --- |
-| Đối tượng phải có tên lớp cụ thể? | Không | Không |
-| Cần khai báo `implements` một hợp đồng? | Không trong ví dụ | Có, trực tiếp hoặc qua quan hệ subtype hợp lệ |
-| Chỉ cần cùng tên/chữ ký phương thức? | Có thể dùng khi runtime cung cấp hành vi phù hợp | **Chưa đủ** để thành subtype của interface |
-| Phát hiện thiếu phương thức | Thường khi thực thi lời gọi | Thường khi biên dịch mã dùng kiểu interface |
-| Tách được mã sử dụng khỏi class cụ thể? | Có | Có |
-| Ai chịu trách nhiệm tuân thủ ý nghĩa hành vi? | Người viết/lựa chọn object | Người viết implementation và kiểm thử hợp đồng |
+| Must the object have a particular class name? | No | No |
+| Must an `implements` relationship be declared? | Not in this example | Yes, directly or through a valid subtype relationship |
+| Is a matching method name/signature enough? | Can be used when suitable behavior exists at runtime | **Not enough** to establish an interface subtype |
+| When are missing methods detected? | Usually when the call executes | Usually when compiling interface-typed code |
+| Can callers be decoupled from concrete classes? | Yes | Yes |
+| Who ensures the behavioral meaning is upheld? | Whoever writes/selects the object | Implementers and contract tests |
 
-**Ghi nhớ:** *Java có thể đạt cùng mục đích thiết kế “hãy yêu cầu một khả năng” mà không vận hành theo cùng cơ chế duck typing động.*
+**Remember:** *Java can achieve the same design goal of "request a capability" without using the same mechanism as dynamic duck typing.*
 
-## 3. Đa hình theo khả năng: mỗi interface là một vai trò
+## 3. Capability-Based Polymorphism: Each Interface Is a Role
 
-Ta không cần ép mọi đối tượng vào một cây kế thừa kiểu `Duck`. Thay vào đó, mô hình hóa những khả năng độc lập:
+We do not need to force every object into a `Duck` inheritance tree. Instead, model independent capabilities:
 
 ~~~java
 interface Quackable {
@@ -4573,15 +4573,15 @@ interface Rechargeable {
 }
 ~~~
 
-Một **vịt thật** có thể vừa kêu vừa bơi; một **vịt robot** có thể kêu và sạc pin; một **đồ chơi bóp tay** có thể kêu nhưng không bơi hay sạc.
+A **real duck** can both quack and swim; a **robot duck** can quack and recharge; a **squeaky toy** can quack but neither swim nor recharge.
 
-Tương ứng:
+Accordingly:
 
 - `WildDuck implements Quackable, Swimmable`
 - `RobotDuck implements Quackable, Rechargeable`
-- Một `SqueakyToy` độc lập có phương thức `quack()`; nếu không implements `Quackable`, cần thích nghi nó với hợp đồng Java.
+- An independent `SqueakyToy` has a `quack()` method; if it does not implement `Quackable`, it must be adapted to that Java contract.
 
-Chương trình ghi tiếng kêu chỉ cần `Quackable`. Bể bơi chỉ cần `Swimmable`. Trạm sạc chỉ cần `Rechargeable`. Không thành phần nào buộc phải biết “loại vịt” đầy đủ của đối tượng.
+The sound-recording program only needs `Quackable`. The swimming pool only needs `Swimmable`. The charging station only needs `Rechargeable`. None needs to know the complete "duck type" of an object.
 
 ~~~mermaid
 classDiagram
@@ -4613,11 +4613,11 @@ classDiagram
     Rechargeable <|.. RobotDuck
 ~~~
 
-Sơ đồ là **quan hệ kiểu**, không phải sơ đồ hai “nửa đối tượng”. Một instance `WildDuck` có thể được xem qua cả hai interface mà vẫn là **một đối tượng duy nhất**, chia sẻ cùng trạng thái nội bộ.
+The diagram describes **type relationships**, not two "object halves". A `WildDuck` instance can be viewed through both interfaces while remaining **one object** with the same internal state.
 
-## 4. Ví dụ Java hoàn chỉnh: yêu cầu đúng năng lực
+## 4. Complete Java Example: Request Only the Required Capability
 
-Lưu vào file **`DuckTypingCapabilitiesDemo.java`**. Chạy với Java 11 trở lên, không cần thư viện ngoài.
+Save as **`DuckTypingCapabilitiesDemo.java`**. Run on Java 11 or later with no external libraries.
 
 ~~~java
 import java.util.List;
@@ -4732,14 +4732,14 @@ public class DuckTypingCapabilitiesDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac DuckTypingCapabilitiesDemo.java
 java DuckTypingCapabilitiesDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Vịt thật: cạp cạp
@@ -4749,25 +4749,25 @@ Vịt robot sạc thêm 2 (pin 2)
 Đồ chơi: chíp chíp
 ~~~
 
-### Vì sao kết quả như vậy?
+### Why Does It Produce These Results?
 
-| Phần tử trong `participants` | Đối tượng hoặc adapter thực tế | `quack()` | Khả năng bổ sung được nhận diện |
+| Element in `participants` | Actual object or adapter | `quack()` | Additional capability detected |
 | --- | --- | --- | --- |
-| Phần tử 1 | `WildDuck` | “Cạp cạp” | `Swimmable` → bơi 10 m |
-| Phần tử 2 | `RobotDuck` | “Quack điện tử” | `Rechargeable` → sạc 2 đơn vị |
-| Phần tử 3 | Adapter từ `toy::quack` | “Chíp chíp” | Không yêu cầu có `Swimmable`/`Rechargeable` |
+| Element 1 | `WildDuck` | "Quack, quack" | `Swimmable` → swims 10 m |
+| Element 2 | `RobotDuck` | "Electronic quack" | `Rechargeable` → recharges 2 units |
+| Element 3 | Adapter from `toy::quack` | "Squeak, squeak" | Neither `Swimmable` nor `Rechargeable` is required |
 
-Khi gọi `runActivity(participant)`, biến `participant` có **kiểu tĩnh** là `Quackable`. Nó luôn gọi được `quack()`. Với `WildDuck` và `RobotDuck`, lời gọi đa hình chọn implementation riêng. Ở phần tử thứ ba, implementation của `Quackable` là một **đối tượng chức năng được tạo/biểu diễn từ method reference**, chuyển lời gọi tới `SqueakyToy.quack()`.
+When `runActivity(participant)` is invoked, `participant` has the **static type** `Quackable`, so it can always call `quack()`. For `WildDuck` and `RobotDuck`, polymorphism selects their respective implementations. For the third entry, `Quackable` is implemented by a **functional object created or represented by a method reference**, which delegates to `SqueakyToy.quack()`.
 
-Do đó **không phải** `SqueakyToy` bỗng trở thành subtype của `Quackable`. Ta đã tạo một **giá trị khác** phù hợp với interface để gọi hành vi mà đồ chơi vốn có.
+Thus `SqueakyToy` does **not suddenly become a subtype** of `Quackable`. We have created a **different value** satisfying the interface to invoke the toy's existing behavior.
 
-Các bộ đếm `totalDistanceMeters` và `battery` cho thấy mỗi implementation được tự quản lý trạng thái của mình. Chia sẻ interface **không có nghĩa** chúng cùng cấu trúc field hoặc cùng thuật toán.
+The `totalDistanceMeters` and `battery` counters show that each implementation owns its own state. Sharing an interface **does not imply** identical field layouts or algorithms.
 
-## 5. Phân biệt “hỏi loại” với “yêu cầu khả năng”
+## 5. Distinguishing "Check the Type" from "Request a Capability"
 
-Hai cách tổ chức code dẫn tới khả năng mở rộng khác nhau.
+These two ways of structuring code have different extensibility characteristics.
 
-### Cách dễ phụ thuộc lớp cụ thể
+### Approach Coupled to Concrete Classes
 
 ~~~java
 // Ví dụ minh họa, KHÔNG phải API khuyến nghị:
@@ -4780,9 +4780,9 @@ void makeNoise(Object value) {
 }
 ~~~
 
-Mỗi khi có một lớp mới biết phát tiếng, hàm trên lại phải thêm nhánh, và còn bỏ sót đồ chơi.
+Every time a new class capable of making a sound is added, the function needs another branch and may still overlook the toy.
 
-### Cách theo hợp đồng khả năng
+### Capability-Contract Approach
 
 ~~~java
 void makeNoise(Quackable value) {
@@ -4790,17 +4790,17 @@ void makeNoise(Quackable value) {
 }
 ~~~
 
-Hàm này không phải chỉnh sửa khi có implementation mới, miễn đối tượng được truyền vào có một giá trị tham chiếu hợp lệ của `Quackable`.
+The function needs no changes for a new implementation, provided the supplied object has a valid `Quackable` reference.
 
-Đây là lợi ích của đa hình: **bên gọi yêu cầu hành vi thông qua hợp đồng; bên nhận chọn cách thực hiện**.
+This is the benefit of polymorphism: **callers request behavior through a contract; receivers choose how to perform it**.
 
-Không cần dùng `instanceof` ở mọi chỗ chỉ để thay thế các phương thức đa hình đã có. Khi hành vi chính là `quack()`, **gọi thẳng `participant.quack()`** thay vì hỏi nó có phải `WildDuck` hay `RobotDuck`.
+There is no need to use `instanceof` everywhere just to replace calls already supported by polymorphism. When the behavior is `quack()`, **call `participant.quack()` directly** instead of checking whether it is a `WildDuck` or `RobotDuck`.
 
-Nhưng `instanceof` ở ví dụ `runActivity` có lý do riêng: chương trình đang khám phá **những vai trò tùy chọn** (`Swimmable` hoặc `Rechargeable`) ngoài hợp đồng tối thiểu `Quackable`. Đây là một cách sử dụng hợp lý khi tình huống thực sự tùy chọn, nhưng không nhất thiết là cách tốt nhất cho mọi API.
+However, `instanceof` in `runActivity` serves a different purpose: the program discovers **optional roles** (`Swimmable` or `Rechargeable`) beyond the minimum `Quackable` contract. This is reasonable when capabilities are truly optional, though not necessarily the best API design for every situation.
 
-## 6. Khi nào nên dùng tham số từng interface thay vì kiểm tra `instanceof`?
+## 6. When Should Parameters Use an Interface Instead of `instanceof` Checks?
 
-Nếu một hành động **bắt buộc** đối tượng có khả năng bơi, khai báo ngay kiểu tham số:
+If an operation **requires** an object capable of swimming, declare that capability directly in the parameter type:
 
 ~~~java
 static void swimmingLesson(Swimmable swimmer) {
@@ -4808,7 +4808,7 @@ static void swimmingLesson(Swimmable swimmer) {
 }
 ~~~
 
-Lúc này compiler hỗ trợ phát hiện nơi gọi sai:
+The compiler then helps detect invalid calls:
 
 ~~~java
 WildDuck wild = new WildDuck();
@@ -4817,7 +4817,7 @@ swimmingLesson(wild); // Hợp lệ.
 // swimmingLesson(new RobotDuck()); // Lỗi: không có Swimmable.
 ~~~
 
-Tương tự:
+Similarly:
 
 ~~~java
 static void chargingStation(Rechargeable device) {
@@ -4825,33 +4825,33 @@ static void chargingStation(Rechargeable device) {
 }
 ~~~
 
-Cách này thường tốt hơn API nhận `Object`, rồi tìm hiểu bằng một chuỗi `instanceof` kéo dài.
+This is usually better than an API accepting `Object` and probing it with a long sequence of `instanceof` checks.
 
-Nếu một thao tác **bắt buộc đồng thời** phải có hai năng lực, có thể định nghĩa một interface tổ hợp:
+If an operation **requires two capabilities simultaneously**, define a composite interface:
 
 ~~~java
 interface AmphibiousVoice extends Quackable, Swimmable {
 }
 ~~~
 
-Một class khai báo `implements AmphibiousVoice` sẽ cam kết cả hai khả năng. **Chú ý:** Java nominal typing không tự coi `WildDuck implements Quackable, Swimmable` là subtype của `AmphibiousVoice` chỉ vì nó đã có đủ phương thức. Nếu thực sự cần một kiểu hợp đồng gộp, lớp phải triển khai kiểu gộp (trực tiếp/gián tiếp), hoặc dùng adapter.
+A class declaring `implements AmphibiousVoice` promises both capabilities. **Note:** Java's nominal typing does not automatically treat `WildDuck implements Quackable, Swimmable` as a subtype of `AmphibiousVoice` merely because it has all the methods. If you genuinely need a composite contract type, the class must implement it (directly or indirectly), or you must use an adapter.
 
-So sánh lựa chọn:
+Comparing the options:
 
-| Nhu cầu | Thiết kế thường phù hợp |
+| Requirement | Generally Suitable Design |
 | --- | --- |
-| Mọi đối tượng được truyền đều phải kêu | Tham số `Quackable` |
-| Mọi đối tượng được truyền đều phải bơi | Tham số `Swimmable` |
-| Chức năng bơi chỉ là một bổ sung tùy chọn | Kiểm tra `instanceof Swimmable` ở ranh giới thích hợp |
-| Một đối tượng phải cam kết nhiều năng lực cùng lúc | Interface tổ hợp hoặc abstraction có hợp đồng rõ |
-| Thư viện cũ có phương thức giống hợp đồng nhưng không implements | Adapter hoặc method reference/lambda nếu phù hợp |
-| Chỉ có dữ liệu/chức năng liên quan trong cùng use case | Có thể dùng composition thay vì ép thành cây kế thừa |
+| Every supplied object must quack | `Quackable` parameter |
+| Every supplied object must swim | `Swimmable` parameter |
+| Swimming is only an optional addition | Check `instanceof Swimmable` at an appropriate boundary |
+| An object must promise several capabilities together | Composite interface or another abstraction with an explicit contract |
+| A legacy library has matching methods but does not implement the contract | Adapter or suitable method reference/lambda |
+| Data/behaviors belong to the same use case | Composition may be better than forcing an inheritance tree |
 
-**Tư duy thiết kế:** hãy để kiểu tham số biểu đạt **khả năng thật sự cần thiết**, không nhất thiết biểu đạt tất cả chi tiết của đối tượng.
+**Design perspective:** let parameter types express **the capabilities actually required**, not necessarily every detail about an object.
 
-## 7. Method reference: một cây cầu nhỏ, không phải duck typing tự động
+## 7. Method References: A Small Bridge, Not Automatic Duck Typing
 
-Điểm thú vị ở Java là có thể thích nghi một phương thức tương thích với **functional interface**.
+A useful Java feature is adapting a compatible method to a **functional interface**.
 
 ~~~java
 @FunctionalInterface
@@ -4877,15 +4877,15 @@ Quackable b = toy::quack;
 b.quack();
 ~~~
 
-`Quackable` là **functional interface** vì có một phương thức trừu tượng chức năng duy nhất. Compiler kiểm tra `toy::quack` có thể dùng làm implementation cho phương thức chức năng `void quack()` hay không.
+`Quackable` is a **functional interface** because it has one functional abstract method. The compiler checks whether `toy::quack` can implement the functional method `void quack()`.
 
-Một lambda tương đương về hành vi:
+An equivalent lambda in terms of behavior:
 
 ~~~java
 Quackable c = () -> toy.quack();
 ~~~
 
-Với yêu cầu nhiều phương thức, method reference đơn lẻ không đủ để “tự implements cả interface”. Khi đó có thể viết **adapter class**:
+For a contract requiring several methods, one method reference cannot "automatically implement the entire interface". Instead, write an **adapter class**:
 
 ~~~java
 interface SoundEmitter {
@@ -4912,13 +4912,13 @@ final class ToySoundAdapter implements SoundEmitter {
 }
 ~~~
 
-Ưu điểm của adapter: có thể kết nối API khác tên phương thức, biến đổi dữ liệu, xác thực đầu vào và diễn giải lại lỗi. Nhược điểm là cần thêm một đối tượng/lớp liên kết. Hãy chọn cách đơn giản nhất đáp ứng đúng hợp đồng.
+An adapter can bridge APIs with different method names, transform data, validate input, and translate errors. Its drawback is an additional bridging class/object. Choose the simplest approach that satisfies the contract.
 
-**Không nhầm:** Method reference không biến **class của đối tượng nguồn** thành subtype của interface. Nó tạo ra **một đối tượng chức năng mới** được định kiểu theo interface đích.
+**Do not confuse the mechanisms:** a method reference does not make **the source object's class** an interface subtype. It creates **a new functional object** typed as the target interface.
 
-## 8. Có thể “duck type” bằng reflection trong Java không?
+## 8. Can Java "Duck Type" Through Reflection?
 
-Có thể dùng reflection để **tìm và gọi phương thức khi chạy**, kể cả khi đối tượng không thực hiện một interface chung:
+Reflection can **find and invoke methods at runtime** even when objects do not implement a shared interface:
 
 ~~~java
 import java.lang.reflect.Method;
@@ -4930,25 +4930,25 @@ static void invokeQuackDynamically(Object target)
 }
 ~~~
 
-Ví dụ:
+For example:
 
 ~~~java
 invokeQuackDynamically(new SqueakyToy());
 ~~~
 
-Điều này mô phỏng phần nào ý tưởng “hãy thử gọi phương thức có tên phù hợp”, nhưng cần nhận thức các giới hạn:
+This partially imitates "try invoking a suitably named method", but keep these limitations in mind:
 
-- `getMethod("quack")` tìm phương thức **public** tương ứng (ở đây không có đối số); quy tắc truy cập còn phụ thuộc vào kiểu khai báo và module của Java.
-- Nếu không có phương thức, có thể xảy ra `NoSuchMethodException` tại runtime.
-- Nếu phương thức bên trong ném ngoại lệ, reflection thường bọc ngoại lệ vào `InvocationTargetException`.
-- Sai kiểu tham số, quyền truy cập, hiệu năng và khả năng bảo trì phức tạp hơn lời gọi trực tiếp.
-- Compiler không kiểm tra lời gọi này theo hợp đồng `Quackable` như khi dùng interface.
+- `getMethod("quack")` searches for an appropriate **public** method (with no parameters here); access also depends on Java class and module rules.
+- A missing method can cause `NoSuchMethodException` at runtime.
+- If the invoked method throws, reflection often wraps the cause in `InvocationTargetException`.
+- Parameter mismatches, access control, performance, and maintenance are more complex than with direct calls.
+- The compiler does not validate this invocation against the `Quackable` contract as it does for interface-typed code.
 
-Reflection **không chuyển toàn bộ hệ thống kiểu Java thành structural typing**. Nó là công cụ runtime phù hợp trong một số framework, cơ chế serialization, plugin hoặc tích hợp đặc thù. Trong code ứng dụng bình thường đã biết hợp đồng, interface/adapter rõ ràng hơn và an toàn hơn.
+Reflection **does not turn Java's entire type system into structural typing**. It is a runtime tool useful for some frameworks, serialization mechanisms, plugins, and specialized integrations. For ordinary application code with a known contract, interfaces and adapters are clearer and safer.
 
-## 9. Tư duy “khả năng” khác cây kế thừa danh từ
+## 9. Think in Capabilities, Not Noun-Based Inheritance Trees
 
-Ví dụ nếu tạo:
+Suppose we define:
 
 ~~~java
 abstract class Duck {
@@ -4957,9 +4957,9 @@ abstract class Duck {
 }
 ~~~
 
-rồi yêu cầu `RobotDuck extends Duck`, ta đã bắt mọi thứ mang tên Duck phải biết bơi. Nhưng một robot đồ chơi chỉ phát tiếng kêu có thể **không** biết bơi. Nếu nó override `swim` bằng `throw new UnsupportedOperationException(...)`, ta khiến code nhận `Duck` bất ngờ thất bại khi làm điều mà hợp đồng `Duck` hàm ý.
+and require `RobotDuck extends Duck`. This makes everything named Duck capable of swimming, but a toy robot that quacks may **not** swim. If `swim` overrides `throw new UnsupportedOperationException(...)` by throwing `Duck`, callers accepting `Duck` may unexpectedly fail when performing an operation implied by the contract.
 
-Tách vai trò:
+Separate the roles:
 
 ~~~java
 interface Quackable {
@@ -4971,41 +4971,41 @@ interface Swimmable {
 }
 ~~~
 
-cho phép lựa chọn đúng tập năng lực:
+which lets us choose the right capability set:
 
-- `WildDuck` thực hiện cả hai.
-- `RobotDuck` chỉ thực hiện `Quackable` (và có thể thêm `Rechargeable`).
-- Một `SwimmingRobot` không cần có tên Duck vẫn có thể thực hiện `Swimmable`.
+- `WildDuck` implements both.
+- `RobotDuck` implements only `Quackable` (and perhaps `Rechargeable`).
+- A `SwimmingRobot` need not be named Duck to implement `Swimmable`.
 
-Đây là ứng dụng của **Interface Segregation Principle**: đừng bắt các lớp/client phụ thuộc vào những hành vi chúng không hỗ trợ hoặc không cần dùng.
+This applies the **Interface Segregation Principle**: do not force classes or clients to depend on behaviors they neither support nor need.
 
-Tuy nhiên, không nên chia nhỏ interface một cách máy móc: một hợp đồng cần đủ gắn kết và có ý nghĩa với các client thực tế. Nếu hai hành vi luôn phải đi cùng nhau theo nghiệp vụ, gộp chúng có thể hợp lý hơn.
+Do not mechanically split every interface, however. Contracts must be cohesive and meaningful for real clients. If two behaviors always belong together under business rules, combining them may be more appropriate.
 
-## 10. “Có method đúng tên” chưa bảo đảm “đúng hợp đồng”
+## 10. "Matching Method Names" Do Not Guarantee "Matching Contracts"
 
-Hãy tưởng tượng hai đối tượng cùng có:
+Imagine two objects both offering:
 
 ~~~java
 void send(String target, String message)
 ~~~
 
-Một đối tượng gửi email, đối tượng kia có thể ghi dữ liệu vào một bộ phận kiểm toán. Chữ ký giống nhau chưa đảm bảo:
+One object sends an email while another may write audit data. Identical signatures do not guarantee that:
 
-- Ý nghĩa của `target` giống nhau.
-- Có cùng quy tắc kiểm tra đầu vào.
-- Có cùng cách xử lý lỗi hoặc timeout.
-- Có cùng tác động phụ, tính idempotent hay mức độ an toàn.
-- Có thể sử dụng thay thế trong cùng tình huống nghiệp vụ.
+- `target` means the same thing.
+- The same input-validation rules apply.
+- Errors and timeouts are handled consistently.
+- Side effects, idempotency, and safety guarantees match.
+- The objects are substitutable in the same business situation.
 
-Dù dùng duck typing hay interface Java, **ngữ nghĩa hợp đồng** vẫn phải được định nghĩa và kiểm thử.
+Whether using duck typing or Java interfaces, **contract semantics** must be specified and tested.
 
-Trong ví dụ tiếng kêu, `Quackable.quack()` ngầm có nghĩa phát âm thanh theo một cách hợp lệ. Nếu `RobotDuck.quack()` bí mật xóa dữ liệu hoặc luôn từ chối thao tác trong trạng thái được xem là hợp lệ theo hợp đồng, việc thay thế có thể trở nên không an toàn. Đó là mối quan tâm của **Liskov Substitution Principle (LSP)** và thiết kế API hướng hành vi.
+In the sound example, `Quackable.quack()` implicitly means producing a valid sound. If `RobotDuck.quack()` secretly deletes data or always rejects the operation in a state considered valid by the contract, substitution is unsafe. This is a concern of the **Liskov Substitution Principle (LSP)** and behavior-oriented API design.
 
-## 11. Kiểm thử các implementation theo cùng khả năng
+## 11. Test Implementations Against the Same Capability
 
-Một lợi thế của interface là ta có thể viết **cùng một bộ kiểm tra hợp đồng** dành cho nhiều implementation.
+An interface lets us write **one common contract test suite** for multiple implementations.
 
-Ví dụ kiểm thử **JUnit 5** (cần JUnit Jupiter và test runner phù hợp; chương trình chính ở phần 4 chỉ dùng JDK):
+Example **JUnit 5** test (requires JUnit Jupiter and a suitable test runner; the main program in section 4 uses only the JDK):
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -5046,75 +5046,75 @@ class QuackableContractTest {
 }
 ~~~
 
-Thử nghiệm thứ nhất xác minh tối thiểu rằng các instance thực hiện hợp đồng `Quackable` được gọi thành công trong trạng thái khởi tạo của bài. Trong hệ thống thật, các bài test hợp đồng còn cần kiểm tra **kết quả, trạng thái, lỗi, và điều kiện tiên quyết/hậu điều kiện**, không chỉ kiểm tra “không ném exception”.
+The first test minimally verifies that instances implementing `Quackable` can be invoked successfully in the example's initial state. Real contract tests must also cover **results, state, errors, preconditions, and postconditions**, not merely "does not throw".
 
-Ngoài unit test, các ca đáng kiểm tra gồm: robot hết pin, quãng bơi bằng 0 hoặc âm, giá trị lớn gây overflow, adapter tới phương thức khác chữ ký và object không cung cấp khả năng tùy chọn.
+Other valuable cases include depleted robot batteries, swimming distances of 0 or less, large values causing overflow, adapters to methods with differing signatures, and objects lacking optional capabilities.
 
-## 12. Những hiểu nhầm thường gặp
+## 12. Common Misconceptions
 
-| Nhận định | Đánh giá | Giải thích |
+| Claim | Assessment | Explanation |
 | --- | --- | --- |
-| “Java tự nhận mọi class có `quack()` là `Quackable`” | **Sai** | Quan hệ interface cần được khai báo hoặc thích nghi qua giá trị adapter |
-| “Duck typing bắt buộc object phải là class `Duck`” | **Sai** | Trọng tâm là khả năng được dùng, không phải tên lớp |
-| “Hai object cùng implements interface phải có cùng field” | **Sai** | Mỗi implementation có cấu trúc và thuật toán riêng |
-| “Một object có thể đảm nhận nhiều interface” | **Đúng** | Một class có thể implements nhiều hợp đồng |
-| “`instanceof` phát hiện một method chỉ vì trùng tên” | **Sai** | `instanceof` kiểm tra tương thích kiểu runtime, không dò chữ ký động |
-| “Method reference làm class nguồn tự động implements interface” | **Sai** | Nó cung cấp một giá trị/đối tượng chức năng theo target type |
-| “Reflection giống hệt duck typing của Python” | **Không** | Chỉ có thể mô phỏng vài cách gọi động, với nhiều ràng buộc khác |
-| “Chỉ có interface, không cần kiểm thử nghĩa nghiệp vụ” | **Sai** | Compiler kiểm tra kiểu chứ không bảo đảm hợp đồng nghiệp vụ |
-| “Cứ có khả năng tùy chọn là phải dùng `instanceof` ở mọi nơi” | **Sai** | Có thể thiết kế client nhận interface đúng nhu cầu hoặc dùng composition |
+| "Java automatically treats every class with `quack()` as `Quackable`" | **False** | An interface relationship must be declared or adapted through an adapter value |
+| "Duck typing requires the object to be class `Duck`" | **False** | The focus is the capability used, not the class name |
+| "Two objects implementing the same interface must have identical fields" | **False** | Each implementation has its own data representation and algorithms |
+| "One object can implement several interfaces" | **True** | A class may implement multiple contracts |
+| "`instanceof` detects a method just because its name matches" | **False** | `instanceof` checks runtime type compatibility, not dynamically discovering signatures |
+| "A method reference automatically makes the source class implement an interface" | **False** | It provides a functional object/value of the target type |
+| "Reflection is identical to Python duck typing" | **No** | Only some dynamic calls can be imitated, with different constraints |
+| "An interface eliminates the need to test business semantics" | **False** | The compiler checks types, not business correctness |
+| "Every optional capability requires `instanceof` everywhere" | **False** | Design clients to accept the required interface or use composition |
 
-## 13. Luyện tập nhanh
+## 13. Quick Practice
 
-**Câu 1.** Lớp `ToyDuck` chỉ khai báo `public void quack()` nhưng không `implements Quackable`. Có gán `Quackable q = new ToyDuck();` được không?
+**Question 1.** A `ToyDuck` class declares only `public void quack()` without `implements Quackable`. Can it be assigned to `Quackable q = new ToyDuck();`?
 
-**Đáp án:** Không trong Java, dù chữ ký trùng. Phải khai báo quan hệ interface hoặc dùng adapter/method reference phù hợp.
+**Answer:** Not in Java, despite the matching signature. Declare the interface relationship or provide an appropriate adapter/method reference.
 
-**Câu 2.** `WildDuck` và `RobotDuck` không có cùng lớp cha tự định nghĩa, tại sao vẫn gọi chung qua `Quackable` được?
+**Question 2.** Why can `WildDuck` and `RobotDuck` use `Quackable` without a common custom base class?
 
-**Đáp án:** Cả hai đều công bố `implements Quackable`, nên mỗi instance đều là subtype của hợp đồng `Quackable`. Hàm nhận `Quackable` không cần biết tên lớp cụ thể.
+**Answer:** Both declare `implements Quackable`, so each instance is a subtype of the `Quackable` contract. A function accepting `Quackable` need not know concrete class names.
 
-**Câu 3.** Trong code chính, tại sao `runActivity` có thể gọi `participant.quack()` mà không cần `instanceof Quackable`?
+**Question 3.** Why can `runActivity` invoke `participant.quack()` without `instanceof Quackable` in the main example?
 
-**Đáp án:** Tham số đã được khai báo là `Quackable`, compiler bảo đảm lời gọi tồn tại. `instanceof` chỉ cần khi truy cập một **khả năng khác** có thể không được hỗ trợ.
+**Answer:** The parameter already has type `Quackable`, so the compiler guarantees the method is available. `instanceof` is only needed when checking **a different capability** that may not be supported.
 
-**Câu 4.** Một hàm luôn cần đối tượng biết bơi. Nên khai báo `void exercise(Object obj)` rồi cast, hay `void exercise(Swimmable swimmer)`?
+**Question 4.** A function always requires a swimmer. Should it accept `void exercise(Object obj)` and cast, or declare `void exercise(Swimmable swimmer)`?
 
-**Đáp án:** Ưu tiên `Swimmable` vì biểu đạt ngay năng lực bắt buộc và để compiler kiểm tra nơi gọi.
+**Answer:** Prefer `Swimmable` because it expresses the mandatory capability directly and lets the compiler validate call sites.
 
-**Câu 5.** `WildDuck implements Quackable, Swimmable` có tự trở thành subtype của `interface AmphibiousVoice extends Quackable, Swimmable` không?
+**Question 5.** Does `WildDuck implements Quackable, Swimmable` automatically become a subtype of `interface AmphibiousVoice extends Quackable, Swimmable`?
 
-**Đáp án:** Không. Java dùng quan hệ kiểu được khai báo; đáp ứng cấu trúc hai interface không tự tạo một quan hệ nominal mới với interface hợp nhất.
+**Answer:** No. Java relies on declared type relationships; structurally satisfying two interfaces does not automatically create a new nominal relationship with their composite interface.
 
-**Câu 6.** Điều gì khác biệt giữa `Quackable q = toy::quack;` và `Quackable q = toy;`?
+**Question 6.** What is the difference between `Quackable q = toy::quack;` and `Quackable q = toy;`?
 
-**Đáp án:** Câu đầu là chuyển đổi method reference theo functional interface, tạo giá trị có hành vi gọi tới `toy.quack()`; câu sau yêu cầu chính đối tượng `toy` đã là subtype của `Quackable`, điều không đúng nếu class không implements.
+**Answer:** The first adapts a method reference to a functional interface, creating a value that invokes `toy.quack()`; the second requires the `toy` object itself to be a subtype of `Quackable`, which is false unless its class implements the interface.
 
-**Câu 7.** Khi nào không nên dùng mô hình “mọi Duck đều bơi được”?
+**Question 7.** When should we avoid modeling "every Duck can swim"?
 
-**Đáp án:** Khi có những đối tượng có thể phát tiếng vịt nhưng không bơi được. Ép chúng override `swim` rồi ném lỗi phá kỳ vọng của bên dùng. Hãy tách `Quackable` và `Swimmable` theo khả năng thực sự.
+**Answer:** When some duck-sounding objects cannot swim. Forcing them to override `swim` just to throw an exception breaks caller expectations. Split `Quackable` and `Swimmable` into their actual capabilities.
 
-## Ghi nhớ
+## Key Takeaways
 
-**Duck typing** nhấn mạnh “đối tượng **có thể làm gì**” thay vì “đối tượng **mang tên kiểu gì**”. Java không tự gán subtype dựa trên hình dạng phương thức như duck typing động; để xây dựng **đa hình theo khả năng** trong Java, hãy mô hình hóa năng lực bằng interface, để các lớp hiện thực đúng những interface chúng hỗ trợ, và dùng adapter/method reference khi tích hợp đối tượng đã có.
+**Duck typing** emphasizes "what an object **can do**" instead of "what its **type is named**". Java does not infer subtype relationships from method shapes as dynamic duck typing does. For **capability-based polymorphism** in Java, model capabilities with interfaces, let classes implement the capabilities they actually support, and adapt existing objects through adapters or method references.
 
-Khi thiết kế API, hãy đặt câu hỏi: **“Đối tượng cần cung cấp năng lực tối thiểu nào để tác vụ này thực hiện đúng?”** Khai báo kiểu tham số theo năng lực đó thường mang lại code rõ hợp đồng, dễ mở rộng và ít phải phân nhánh theo tên lớp.
+When designing an API, ask **"What minimum capability must an object provide for this task to work correctly?"** Declaring parameter types by that capability usually produces clear contracts, extensible code, and fewer class-name-based branches.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="polymorphism-009">Đa hình thay cho điều kiện kiểm tra từng loại</a>
+## <a id="polymorphism-009">Using Polymorphism Instead of Type-Based Conditionals</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đa hình thay cho điều kiện kiểm tra từng loại trong Java
+# Using Polymorphism Instead of Type-Based Conditionals in Java
 
-Khi một chương trình hỗ trợ nhiều loại đối tượng, cách viết dễ nghĩ đến đầu tiên là liên tục hỏi: **“Đây là loại nào?”**, rồi dùng `if/else`, `switch` hoặc `instanceof` để chọn hành vi.
+When a program supports multiple object types, the most obvious first approach is to repeatedly ask **"What kind of object is this?"**, then use `if/else`, `switch`, or `instanceof` to select behavior.
 
 ```java
 if (shippingType.equals("STANDARD")) {
@@ -5126,15 +5126,15 @@ if (shippingType.equals("STANDARD")) {
 }
 ```
 
-Một vài nhánh ở ranh giới nhận dữ liệu là bình thường. Vấn đề xuất hiện khi **cùng một chuỗi kiểm tra loại** bị lặp lại trong nhiều phần của hệ thống: tính phí, mô tả dịch vụ, tính thời gian dự kiến, xuất hóa đơn... Mỗi khi xuất hiện loại mới, nhiều nơi phải sửa; rất dễ quên một nhánh hoặc tạo ra hành vi không nhất quán.
+A few branches at an input boundary are normal. The problem arises when **the same type-checking chain** is repeated across many system components: pricing, service descriptions, delivery estimates, invoicing, and more. Adding a new type then requires changes in many places, making it easy to miss a branch or introduce inconsistent behavior.
 
-**Đa hình (polymorphism)** đưa hành vi thay đổi theo loại vào chính các lớp cung cấp hành vi đó. Thay vì hỏi *“đối tượng thuộc loại gì?”*, mã sử dụng gọi *“hãy thực hiện việc này theo hợp đồng chung”*.
+**Polymorphism** moves type-specific behavior into the classes providing it. Instead of asking *"What type of object is this?"*, consuming code requests *"Perform this operation through our shared contract"*.
 
-> Mục tiêu không phải xóa sạch mọi câu lệnh `if` và `switch`. Mục tiêu là tránh dùng **kiểm tra loại đối tượng để điều khiển cùng một nhóm hành vi nghiệp vụ ở nhiều nơi** khi hành vi ấy có thể được biểu diễn tự nhiên bằng phương thức đa hình.
+> The goal is not to eliminate every `if` or `switch` statement. The goal is to avoid **repeated object-type tests controlling the same domain behaviors across many locations** when those behaviors can naturally be represented by polymorphic methods.
 
-## 1. Dấu hiệu một chuỗi điều kiện đang thay thế đa hình
+## 1. Recognizing Conditionals That Substitute for Polymorphism
 
-Giả sử có ba phương án vận chuyển: `STANDARD`, `EXPRESS`, `ECO`. Cách triển khai ban đầu:
+Suppose there are three shipping options: `STANDARD`, `EXPRESS`, and `ECO`. An initial implementation:
 
 ```java
 final class ShippingCalculator {
@@ -5151,19 +5151,19 @@ final class ShippingCalculator {
 }
 ```
 
-Đoạn mã có thể phù hợp khi bài toán thật sự nhỏ và số lựa chọn cố định. Nhưng hãy để ý những thay đổi trong tương lai:
+This code may suit a small problem with a fixed set of choices. But consider future changes:
 
-- Thêm dịch vụ `SAME_DAY`: sửa `calculate` và mọi `if/switch` tương tự.
-- Loại `EXPRESS` có công thức theo trọng lượng riêng: nhánh dài thêm.
-- Một module khác muốn hiển thị tên phương án: lại kiểm tra `type`.
-- Gõ nhầm `"EXPREES"`: lỗi chỉ xuất hiện khi chạy.
-- Nếu nhánh mặc định trả `0` thay vì báo lỗi, phần mềm có thể âm thầm tính sai phí.
+- Add a `SAME_DAY` service: update `calculate` and every similar `if/switch`.
+- The `EXPRESS` service acquires a different weight-based formula: its branch grows longer.
+- Another module needs to display a plan name: it must inspect `type` again.
+- A typo such as `"EXPREES"`: the error appears only at runtime.
+- If the default branch returns `0` rather than reporting an error, the software may silently calculate the wrong fee.
 
-Nếu hành vi theo từng loại **có thể thay đổi độc lập**, đây là dấu hiệu cần cân nhắc một hợp đồng chung và các implementation chuyên trách.
+If behavior for each type **can evolve independently**, consider a shared contract and dedicated implementations.
 
-## 2. Ý tưởng: gọi hành vi chung, để đối tượng quyết định cách thực hiện
+## 2. Ask for Shared Behavior; Let Objects Choose How to Implement It
 
-Ta chuyển từ:
+We move from:
 
 ```java
 long fee;
@@ -5184,7 +5184,7 @@ ShippingPolicy policy = ...; // Một implementation phù hợp
 long fee = policy.quote(parcel);
 ```
 
-Trong đó:
+Here:
 
 ```java
 interface ShippingPolicy {
@@ -5193,7 +5193,7 @@ interface ShippingPolicy {
 }
 ```
 
-Mỗi loại giao hàng triển khai `quote()` theo quy tắc của nó. Mã gọi chỉ phụ thuộc vào **`ShippingPolicy`**, không cần chuỗi điều kiện phân biệt lớp cụ thể.
+Each shipping type implements `quote()` under its own rules. Calling code only depends on **`ShippingPolicy`**, not on a series of checks for concrete classes.
 
 ```mermaid
 flowchart TD
@@ -5206,11 +5206,11 @@ flowchart TD
     C --> R3["Công thức tiết kiệm"]
 ```
 
-Đa hình nằm ở việc `policy.quote(parcel)` có **cùng chữ ký phương thức** nhưng thực thi **cách cài đặt khác nhau**, tùy đối tượng mà `policy` đang tham chiếu.
+Polymorphism means `policy.quote(parcel)` retains **the same method signature** while executing **different implementations** based on which object `policy` refers to.
 
-## 3. Ví dụ Java hoàn chỉnh: chuyển từ phân nhánh sang đa hình
+## 3. Complete Java Example: Refactor Branching into Polymorphism
 
-Đặt toàn bộ đoạn mã sau trong file **`Main.java`**. Ví dụ chạy bằng Java 17 hoặc Java 21, không cần thư viện bên ngoài.
+Put the following code in a single **`Main.java`** file. It runs with Java 17 or Java 21 without external libraries.
 
 ```java
 import java.util.List;
@@ -5328,14 +5328,14 @@ public class Main {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 STANDARD: 18000 VND
@@ -5344,58 +5344,58 @@ ECO: 12500 VND
 Đã chọn: 41000 VND
 ```
 
-### Giải thích kết quả
+### Explaining the Output
 
-Kiện hàng có trọng lượng 1.500 gram, được tính cước **2 kg**, quãng đường **3 km**:
+The parcel weighs 1.500 grams, billed as **2 kg**, and travels **3 km**:
 
-| Policy | Phí cố định | Theo quãng đường | Theo kg tính cước | Tổng |
+| Policy | Fixed Fee | Distance Charge | Billable-Kg Charge | Total |
 | --- | ---: | ---: | ---: | ---: |
 | `STANDARD` | 10.000 | 2.000 × 3 = 6.000 | 1.000 × 2 = 2.000 | **18.000 VND** |
 | `EXPRESS` | 25.000 | 4.000 × 3 = 12.000 | 2.000 × 2 = 4.000 | **41.000 VND** |
 | `ECO` | 7.000 | 1.500 × 3 = 4.500 | 500 × 2 = 1.000 | **12.500 VND** |
 
-Điểm quan trọng không nằm ở công thức mà nằm ở **mối quan hệ phụ thuộc**:
+What matters is not the formula but **the dependency relationship**:
 
-- `QuoteService` chỉ khai báo trường `ShippingPolicy`.
-- `Main` có thể cung cấp bất kỳ đối tượng nào thực hiện interface ấy.
-- Khi gọi `policy.quote(parcel)`, phương thức tương ứng của `StandardShipping`, `ExpressShipping` hay `EcoShipping` được thực thi.
-- Thêm một loại vận chuyển không nhất thiết yêu cầu sửa `QuoteService`; ta tạo implementation mới và đăng ký nó ở nơi lựa chọn policy.
-- `Parcel` bảo vệ điều kiện đầu vào chung. `Math.addExact`/`Math.multiplyExact` giúp báo tràn số thay vì âm thầm tạo kết quả không đúng.
+- `QuoteService` declares only a `ShippingPolicy` field.
+- `Main` can provide any object implementing the interface.
+- Calling `policy.quote(parcel)` executes the appropriate method from `StandardShipping`, `ExpressShipping`, or `EcoShipping`.
+- Adding a shipping type does not necessarily require modifying `QuoteService`; create a new implementation and register it at the policy-selection boundary.
+- `Parcel` enforces shared input requirements. `Math.addExact`/`Math.multiplyExact` detect overflow instead of silently producing incorrect results.
 
-**Đây là ví dụ công thức minh họa, không phải bảng giá của nhà vận chuyển thực tế.**
+**These formulas are illustrative, not actual carrier rates.**
 
-## 4. Vì sao đây là đa hình ở thời điểm chạy?
+## 4. Why Is This Runtime Polymorphism?
 
-Xét:
+Consider:
 
 ```java
 ShippingPolicy policy = new ExpressShipping();
 long fee = policy.quote(new Parcel(1_500, 3));
 ```
 
-Có hai góc nhìn về cùng biến:
+The same variable has two perspectives:
 
-| Thành phần | Giá trị |
+| Component | Value |
 | --- | --- |
-| **Kiểu khai báo** của biến `policy` | `ShippingPolicy` |
-| **Đối tượng thực tế** | `ExpressShipping` |
-| Phương thức mà trình biên dịch cho phép gọi | `quote(Parcel)` thuộc hợp đồng `ShippingPolicy` |
-| Cách thực hiện được chọn lúc chạy | `ExpressShipping.quote(Parcel)` |
+| Variable `policy`'s **declared type** | `ShippingPolicy` |
+| **Actual object** | `ExpressShipping` |
+| Method permitted by the compiler | `quote(Parcel)` from the `ShippingPolicy` contract |
+| Implementation chosen at runtime | `ExpressShipping.quote(Parcel)` |
 
-Trong Java, một lời gọi phương thức **instance** được ghi đè qua interface hoặc lớp cha thường được dispatch theo đối tượng thực tế. Đó là cơ sở để `QuoteService` dùng một phương thức chung mà không phải kiểm tra `instanceof ExpressShipping`.
+In Java, an overridden **instance** method from an interface or parent class usually dispatches according to the actual object. This lets `QuoteService` invoke a shared method without checking `instanceof ExpressShipping`.
 
-Điều này khác với overload:
+This differs from overloading:
 
 ```java
 void print(Object value) {}
 void print(String value) {}
 ```
 
-Việc chọn `print(Object)` hay `print(String)` chủ yếu dựa vào **kiểu đối số được trình biên dịch nhìn thấy**, không tự kiểm tra runtime class để chọn overload. Bài toán loại bỏ `if/else` ở đây dựa vào **overriding / dynamic dispatch**, không phải chỉ tạo thêm nhiều phương thức overload.
+Choosing `print(Object)` or `print(String)` depends primarily on **argument types visible to the compiler**, not runtime classes used to pick an overload. Replacing `if/else` checks here relies on **overriding and dynamic dispatch**, not merely adding more overloads.
 
-## 5. Vấn đề rõ nhất: `instanceof` lặp đi lặp lại
+## 5. The Clearest Smell: Repeated `instanceof` Checks
 
-Giả sử code cũ nhận một đối tượng:
+Suppose legacy code accepts an object:
 
 ```java
 static long fee(Object strategy, Parcel parcel) {
@@ -5410,9 +5410,9 @@ static long fee(Object strategy, Parcel parcel) {
 }
 ```
 
-Ví dụ trên chỉ minh họa khung điều kiện, không phải một phương thức hoàn chỉnh có thể biên dịch, vì các nhánh chưa có lệnh `return`.
+This snippet only illustrates the conditional pattern; it is not a complete compilable method because the branches have no `return` statements.
 
-Nếu thay bằng:
+Replace it with:
 
 ```java
 static long fee(ShippingPolicy strategy, Parcel parcel) {
@@ -5420,23 +5420,23 @@ static long fee(ShippingPolicy strategy, Parcel parcel) {
 }
 ```
 
-ta nhận được những cải thiện sau:
+This yields the following improvements:
 
-| Khi dùng kiểm tra từng loại | Khi dùng đa hình |
+| With Type-Based Checks | With Polymorphism |
 | --- | --- |
-| Mã gọi phải biết `StandardShipping`, `ExpressShipping`, `EcoShipping` | Mã gọi chỉ cần biết `ShippingPolicy` |
-| Loại mới thường phải thêm nhánh tại mọi nơi xử lý loại | Loại mới bổ sung implementation có cùng hợp đồng |
-| Rủi ro bỏ sót nhánh hoặc `else` mặc định nguy hiểm | Trình biên dịch bắt implementation cụ thể phải có phương thức bắt buộc |
-| Công thức của các loại nằm xen kẽ trong một khối dài | Mỗi implementation giữ quy tắc riêng |
-| Mock/fake khó nếu logic gắn chặt với kiểm tra lớp cụ thể | Có thể đưa vào một implementation dùng riêng trong kiểm thử |
+| Calling code must know `StandardShipping`, `ExpressShipping`, `EcoShipping` | Calling code only needs `ShippingPolicy` |
+| New types usually require branches at every type-handling location | New types add another implementation of the same contract |
+| Missing branches or dangerous default `else` branches | Compiler requires concrete implementations to provide mandatory methods |
+| Formulas for different types are interleaved in one long block | Each implementation owns its own rules |
+| Mocking/faking is difficult when logic is tightly coupled to concrete-class checks | Supply a dedicated test implementation |
 
-Tuy nhiên, **interface không bảo đảm mọi implementation đều đúng nghiệp vụ**. Ví dụ một implementation `quote()` trả phí âm vẫn biên dịch. Cần định nghĩa hợp đồng rõ và có kiểm thử để các implementation tuân thủ cùng ngữ nghĩa.
+However, **an interface does not guarantee business correctness**. An implementation of `quote()` that returns a negative fee still compiles. A clear contract and tests must enforce consistent semantics across implementations.
 
-## 6. Vậy việc chọn loại ban đầu vẫn cần `switch` thì sao?
+## 6. What If Initial Selection Still Needs a `switch`?
 
-Đa hình không làm biến mất nhu cầu chọn phương án từ dữ liệu ngoài: người dùng có thể gửi chuỗi `"express"`, cấu hình có thể ghi mã `"eco"`, hoặc ứng dụng có danh sách tùy chọn.
+Polymorphism does not eliminate the need to choose options from external data: users may submit `"express"`, configuration may specify `"eco"`, or an application may provide a selection list.
 
-Một nhánh ở **ranh giới tạo đối tượng** vẫn hoàn toàn hợp lý:
+A branch at the **object-construction boundary** is perfectly reasonable:
 
 ```java
 static ShippingPolicy selectPolicy(String code) {
@@ -5454,15 +5454,15 @@ static ShippingPolicy selectPolicy(String code) {
 }
 ```
 
-Đoạn trên có thể đặt làm phương thức `static` trong `Main` của ví dụ. Với Java 17, cú pháp **switch expression** này hợp lệ.
+This can be a `static` method of `Main` in the example. The **switch expression** syntax is valid in Java 17.
 
-Sự khác biệt là **điều kiện chỉ tập trung ở bước lựa chọn**; sau đó mọi luồng xử lý qua `ShippingPolicy`. Khi thêm loại mới, có thể phải cập nhật factory/registry này, nhưng không phải sửa tất cả service gọi `quote()`.
+The difference is that **conditions are centralized in the selection step**; subsequent workflows use `ShippingPolicy`. Adding a new type may require updating this factory/registry, but not every service that invokes `quote()`.
 
-Nếu số implementation lớn hoặc được nạp qua dependency injection/plugin, một **registry** như `Map<String, ShippingPolicy>` có thể thay factory có `switch`. Tuy nhiên, registry không phải lúc nào cũng tốt hơn: nếu có đúng hai lựa chọn ổn định, một `switch` rõ ràng có thể đơn giản và dễ bảo trì.
+For many implementations loaded through dependency injection or plugins, a **registry** such as `Map<String, ShippingPolicy>` can replace a `switch` factory. A registry is not inherently better: with two stable choices, a clear `switch` may be simpler and easier to maintain.
 
-## 7. Thêm loại mới mà không sửa service
+## 7. Adding a New Type Without Modifying the Service
 
-Giả sử xuất hiện `SameDayShipping`, tính phí cố định 40.000 VND cộng 6.000 VND mỗi km. Ta chỉ cần triển khai cùng hợp đồng:
+Suppose `SameDayShipping` is introduced with a fixed fee of 40.000 VND plus 6.000 VND per kilometer. We only need another implementation of the shared contract:
 
 ```java
 final class SameDayShipping implements ShippingPolicy {
@@ -5482,7 +5482,7 @@ final class SameDayShipping implements ShippingPolicy {
 }
 ```
 
-Đặt lớp này cùng các lớp trong ví dụ chính, sau đó:
+Place this class alongside the main example's classes, then:
 
 ```java
 QuoteService service = new QuoteService(new SameDayShipping());
@@ -5490,20 +5490,20 @@ System.out.println(service.calculate(new Parcel(1_500, 3)));
 // 58000
 ```
 
-**`QuoteService` không thay đổi.** Điều có thể cần sửa là màn hình hoặc thành phần chọn lựa để hiển thị `SAME_DAY`, cùng kiểm thử và cấu hình liên quan. Đây là ý nghĩa thực tế của việc “mở rộng mà hạn chế sửa code đang dùng”, không phải cam kết rằng việc thêm tính năng sẽ không cần sửa bất kỳ dòng nào trong toàn hệ thống.
+**`QuoteService` does not change.** The UI or selection component may still need updates to expose `SAME_DAY`, along with related configuration and tests. That is what "extend while minimizing changes to existing clients" means; it does not promise zero changes anywhere in the system.
 
-## 8. Quy tắc chung phải thuộc về đâu?
+## 8. Where Do Shared Rules Belong?
 
-Một rủi ro khi đưa hành vi vào từng lớp là **lặp lại hoặc làm lệch quy tắc chung**.
+One danger of moving behavior into classes is **duplicating or drifting shared rules**.
 
-Trong ví dụ:
+In this example:
 
-- `Parcel` kiểm tra `weightGrams > 0` và `distanceKm > 0`.
-- Mỗi `ShippingPolicy` chọn **công thức riêng**.
-- `QuoteService` chỉ phối hợp lời gọi và không hiểu công thức.
-- Phần chọn policy chịu trách nhiệm chuyển mã dịch vụ thành implementation.
+- `Parcel` validates `weightGrams > 0` and `distanceKm > 0`.
+- Each `ShippingPolicy` selects its **own formula**.
+- `QuoteService` only coordinates calls without knowing formulas.
+- The policy-selection component maps a service code to an implementation.
 
-Nếu mọi policy phải có kết quả không âm, có thể diễn đạt trong hợp đồng và kiểm tra tại ranh giới trả kết quả:
+If all policies must return nonnegative amounts, specify that in the contract and check it at the result boundary:
 
 ```java
 static long validatedQuote(ShippingPolicy policy, Parcel parcel) {
@@ -5515,26 +5515,26 @@ static long validatedQuote(ShippingPolicy policy, Parcel parcel) {
 }
 ```
 
-Điều này không có nghĩa mọi service phải lặp lại kiểm tra. Tùy yêu cầu hệ thống, ta có thể dùng một decorator, một giá trị `Money` bất biến, hoặc một service điều phối chung để đảm bảo invariant.
+This does not mean every service must duplicate validation. Depending on requirements, use a decorator, immutable `Money` value, or shared coordinating service to enforce invariants.
 
-**Cẩn trọng với kế thừa lớp cha dùng Template Method:** nó cũng có thể gom kiểm tra chung và để lớp con override công thức, nhưng sẽ tạo một cây kế thừa mà Java chỉ cho một lớp cha. Khi chỉ cần một khả năng có thể thay thế, interface + composition thường linh hoạt hơn.
+**Be careful with Template Method inheritance:** it can centralize validation while letting subclasses override pricing hooks, but introduces a single-superclass inheritance hierarchy. When you only need a replaceable capability, interfaces plus composition are often more flexible.
 
-## 9. Khi nào nên — và không nên — thay điều kiện bằng đa hình?
+## 9. When Should You—or Should You Not—Replace Conditions with Polymorphism?
 
-| Tình huống | Cách tiếp cận thường hợp lý |
+| Situation | Generally Appropriate Approach |
 | --- | --- |
-| Nhiều loại đối tượng có cùng khả năng nhưng thuật toán khác nhau | Interface/abstract class với override |
-| Nhiều service đều có `if (x instanceof TypeA)` / `TypeB` để quyết định cùng một nhóm hành vi | Xem xét chuyển hành vi vào kiểu hoặc strategy |
-| Loại dịch vụ được chọn từ request/config | Factory, `switch`, registry hoặc DI ở ranh giới |
-| Một điều kiện nghiệp vụ đơn giản, không phụ thuộc kiểu đối tượng | `if` trực tiếp thường rõ ràng hơn |
-| Trạng thái đơn giản như `active`, `expired` | Dùng điều kiện khi nó phản ánh trạng thái, không cần tạo lớp con cho mỗi trạng thái |
-| Một tập biến thể nhỏ, cố định và cần xử lý đầy đủ theo từng loại | `enum` hoặc `sealed` hierarchy cùng pattern matching có thể phù hợp |
-| Cần thêm hành vi mà loại không nên tự biết (ví dụ serialize sang rất nhiều định dạng bên ngoài) | Cân nhắc Visitor/adapter/service riêng thay vì nhồi tất cả vào domain object |
-| Hành vi cần phụ thuộc nhiều yếu tố độc lập (phương thức thanh toán, quốc gia, khuyến mãi…) | Composition/Strategy có thể tránh bùng nổ số lớp con theo tổ hợp |
+| Many object types share a capability but use different algorithms | Interface/abstract class with overrides |
+| Many services repeatedly use `if (x instanceof TypeA)` / `TypeB` for the same behaviors | Consider moving behavior into the type or a strategy |
+| Service types selected from requests/configuration | Factory, `switch`, registry, or DI at the boundary |
+| A simple business condition not tied to object type | An ordinary `if` is usually clearer |
+| Simple states such as `active`, `expired` | Use conditions when they represent states; do not invent a subclass for every state |
+| A small, fixed set of variants requiring exhaustive treatment | An `enum` or `sealed` hierarchy with pattern matching may fit |
+| New behavior that a type should not know about (for example, serializing to many external formats) | Consider a separate Visitor, adapter, or service instead of overloading domain objects with responsibilities |
+| Behavior depends on several independent dimensions (payment method, country, promotion, etc.) | Composition/Strategy can avoid a combinatorial explosion of subclasses |
 
-### Ví dụ `instanceof` không phải lúc nào cũng sai
+### An `instanceof` Check Is Not Always Wrong
 
-Một `instanceof` duy nhất khi nhận dữ liệu chưa được phân loại hoặc khi tích hợp thư viện có sẵn **không nhất thiết là thiết kế kém**. Trên Java 17, pattern matching giúp viết rõ hơn:
+One `instanceof` check at an unclassified-input or existing-library integration boundary **is not necessarily bad design**. In Java 17, pattern matching can make it clearer:
 
 ```java
 static String describe(Object value) {
@@ -5548,47 +5548,47 @@ static String describe(Object value) {
 }
 ```
 
-Đoạn mã này có thể thích hợp ở một ranh giới xử lý dữ liệu hỗn hợp. Nhưng nếu nghiệp vụ liên tục phân loại các lớp `ShippingPolicy` bằng `instanceof` để tính phí, dù tất cả có thể cung cấp `quote()`, đa hình là thiết kế đáng cân nhắc hơn.
+This can be suitable at a mixed-input processing boundary. But if domain code repeatedly classifies `ShippingPolicy` implementations using `instanceof` just to calculate fees, despite all implementing `quote()`, consider polymorphism instead.
 
-Cũng cần ghi nhớ: trong Java 21, `switch` có pattern matching cho kiểu đối tượng; nó giúp biểu đạt nhánh rõ ràng, nhưng **không tự giải quyết vấn đề phụ thuộc vào danh sách loại cụ thể**. Nếu bài toán vốn là duyệt đầy đủ một tập loại đóng (*closed set*), `sealed` class/interface và `switch` exhaustive có thể là chủ ý hợp lý.
+Also remember that Java 21 supports pattern matching in `switch` over object types. This improves the expression of branches but **does not by itself remove dependence on lists of concrete types**. For a truly exhaustive *closed set* of types, a `sealed` class/interface and exhaustive `switch` may be intentional.
 
-## 10. Đa hình và nguyên lý thiết kế
+## 10. Polymorphism and Design Principles
 
 ### Open/Closed Principle (OCP)
 
-Một module nên có khả năng **mở rộng hành vi mới** mà hạn chế thay đổi phần logic ổn định đang sử dụng. `QuoteService` đáp ứng điều này ở phạm vi thiết kế của nó: nhận `ShippingPolicy` và gọi `quote()` mà không liệt kê từng loại.
+A module should be **extensible with new behavior** while minimizing edits to stable consuming logic. `QuoteService` achieves that within its design scope by accepting `ShippingPolicy` and calling `quote()` without enumerating concrete types.
 
 ### Dependency Inversion Principle (DIP)
 
-`QuoteService` phụ thuộc vào hợp đồng `ShippingPolicy`, không phụ thuộc trực tiếp vào `StandardShipping` hay `ExpressShipping`. Một thành phần bên ngoài cung cấp implementation cụ thể khi tạo service — đó là **dependency injection qua constructor**.
+`QuoteService` depends on the `ShippingPolicy` contract, not directly on `StandardShipping` or `ExpressShipping`. An external component provides the concrete implementation when constructing the service—**constructor-based dependency injection**.
 
 ### Liskov Substitution Principle (LSP)
 
-Mọi implementation phải tuân thủ hợp đồng: dữ liệu hợp lệ được nhận, kết quả có ý nghĩa đúng, ngoại lệ có chính sách nhất quán. Nếu một implementation tự ý đổi đơn vị từ VND sang USD hoặc trả phí âm không được định nghĩa, việc thay thế có thể gây lỗi dù interface giống hệt.
+Every implementation must satisfy its contract: valid input is accepted, results have the correct meaning, and errors follow a consistent policy. If an implementation silently changes the currency from VND to USD or returns an undefined negative fee, substitution can fail even with identical interfaces.
 
 ### Single Responsibility Principle (SRP)
 
-Mỗi policy tập trung vào công thức riêng; `QuoteService` tập trung vào điều phối; factory tập trung vào chọn implementation. Việc chia trách nhiệm này giảm các khối điều kiện dài và phân tán.
+Each policy owns its pricing rules; `QuoteService` coordinates calls; the factory selects implementations. This separation of concerns reduces long, dispersed conditional blocks.
 
-Các nguyên lý trên hỗ trợ việc dùng đa hình, nhưng **không có nghĩa luôn phải tạo nhiều interface/lớp**. Mức trừu tượng nên tương xứng với nhu cầu thay đổi của hệ thống.
+These principles support polymorphism but **do not require creating many interfaces or classes**. Abstraction levels should match the system's actual need to change.
 
-## 11. Cách refactor chuỗi `if/else` đang có
+## 11. Refactoring an Existing `if/else` Chain
 
-Với hệ thống thực tế, nên chuyển từng bước để tránh thay đổi kết quả ngoài ý muốn:
+In real systems, proceed incrementally to avoid unintentionally changing results:
 
-1. **Đánh dấu những nhánh thay đổi theo loại.** Xác định đúng nhóm hành vi đang bị phân tán, ví dụ tính phí, tính khuyến mãi, kiểm tra điều kiện.
-2. **Viết kiểm thử hiện trạng.** Đầu vào hợp lệ, không hợp lệ, trường hợp biên, loại chưa biết và công thức từng loại phải có expected result.
-3. **Thiết kế hợp đồng chung.** Ví dụ `ShippingPolicy.quote(Parcel)` với quy tắc về đơn vị tiền, phí không âm và ngoại lệ.
-4. **Chuyển từng nhánh sang implementation.** Giữ nguyên công thức và so sánh kết quả trước/sau refactor.
-5. **Tập trung việc chọn implementation.** Factory hoặc registry tạo/trả đối tượng phù hợp từ mã cấu hình, thay vì để mỗi service tự chọn.
-6. **Thay điều kiện ở client bằng một lời gọi đa hình.** Client dùng `ShippingPolicy`; xóa nhánh cũ khi xác nhận tương đương.
-7. **Bổ sung test hợp đồng cho mọi implementation.** Các lớp mới có thể khác công thức nhưng vẫn phải đáp ứng các điều kiện chung.
+1. **Identify branches that vary by type.** Find the behaviors currently scattered across the system, such as fee calculation, discounts, and eligibility checks.
+2. **Write characterization tests.** Record expected outputs for valid and invalid input, boundary cases, unknown types, and each formula.
+3. **Design a shared contract.** For example, `ShippingPolicy.quote(Parcel)` specifying units, nonnegative fees, and exceptions.
+4. **Move each branch into an implementation.** Preserve calculations and compare outputs before and after refactoring.
+5. **Centralize implementation selection.** A factory or registry maps configuration codes to the appropriate object instead of making each service decide independently.
+6. **Replace client conditions with one polymorphic call.** Clients use `ShippingPolicy`; remove old branches after checking equivalence.
+7. **Add contract tests for every implementation.** Classes can differ in formulas while satisfying shared requirements.
 
-Tránh refactor “đại trà” toàn hệ thống trong một lần khi có logic tài chính hoặc giao dịch: giữ các phép tính, chính sách làm tròn, lỗi và thứ tự tác động được kiểm chứng trước khi thay cấu trúc.
+Avoid a sweeping refactor across financial or transactional logic: verify calculations, rounding rules, errors, and effect ordering before changing structures.
 
-## 12. Kiểm thử hành vi chung và hành vi đặc thù
+## 12. Testing Shared and Specialized Behavior
 
-Có thể kiểm tra kết quả của từng policy theo dạng bảng:
+You can tabulate each policy's expected results:
 
 | Input `Parcel(1500, 3)` | Expected `quote()` |
 | --- | ---: |
@@ -5596,7 +5596,7 @@ Có thể kiểm tra kết quả của từng policy theo dạng bảng:
 | `new ExpressShipping()` | `41000` |
 | `new EcoShipping()` | `12500` |
 
-Một phép kiểm thử đơn giản không cần framework, đặt trong một phương thức của lớp `Main` khi các lớp trên đã tồn tại:
+A simple framework-free test inside a method of `Main`, after the example's classes are defined:
 
 ```java
 static void assertFee(ShippingPolicy policy, Parcel parcel, long expected) {
@@ -5609,7 +5609,7 @@ static void assertFee(ShippingPolicy policy, Parcel parcel, long expected) {
 }
 ```
 
-Gọi:
+Invoke:
 
 ```java
 Parcel input = new Parcel(1_500, 3);
@@ -5618,70 +5618,70 @@ assertFee(new ExpressShipping(), input, 41_000);
 assertFee(new EcoShipping(), input, 12_500);
 ```
 
-Trong dự án, dùng JUnit có thể tổ chức bài test dạng tham số và test riêng các trường hợp lỗi. Việc các implementation cùng tuân thủ một hợp đồng giúp tạo **bộ kiểm thử chung**; tuy nhiên mỗi chính sách có thêm quy tắc đặc thù cũng cần test riêng.
+In real projects, JUnit can organize parameterized tests and dedicated failure tests. Shared contracts allow **common test suites**; each policy's specialized rules also need their own tests.
 
-## 13. Lỗi thường gặp khi áp dụng đa hình
+## 13. Common Mistakes When Applying Polymorphism
 
-| Sai lầm | Hệ quả | Cách sửa |
+| Mistake | Consequence | Correction |
 | --- | --- | --- |
-| Thay `if/else` bằng interface nhưng service vẫn dùng `instanceof` | Vẫn phụ thuộc lớp cụ thể, mất lợi ích đa hình | Đặt hành vi biến thiên vào phương thức hợp đồng |
-| Mỗi lựa chọn đều tạo một lớp dù logic chỉ là điều kiện nhỏ ổn định | Nhiều file/lớp không mang lại giá trị | Giữ `if` hoặc `enum` nếu đơn giản hơn |
-| Interface quá lớn, mọi lớp phải implement phương thức không hỗ trợ | Nhiều `UnsupportedOperationException` | Phân tách interface theo vai trò |
-| Mỗi implementation tự đặt đơn vị đo và lỗi khác nhau | Vi phạm hợp đồng thay thế | Ghi rõ invariant và test chung |
-| Tạo factory `switch` rồi sao chép cùng switch vào các service | Các điểm sửa vẫn phân tán | Tập trung lựa chọn tại ranh giới; xử lý qua interface |
-| Dùng kế thừa nhiều tầng chỉ để tái sử dụng vài dòng | Cây lớp phức tạp, dễ ảnh hưởng lẫn nhau | Cân nhắc composition/delegation |
-| Bỏ hết kiểm tra đầu vào vì nghĩ đa hình tự bảo vệ dữ liệu | Runtime có thể cho kết quả không hợp lệ | Kiểm tra ở value object/service và từng policy theo hợp đồng |
-| Dùng đối tượng có trạng thái chung giữa nhiều luồng mà không đồng bộ | Race condition dù có interface | Quản lý tính đồng thời riêng; đa hình không phải cơ chế khóa |
+| Replacing `if/else` with an interface but still using `instanceof` inside services | Still coupled to concrete classes; loses polymorphism benefits | Put variation behind contract methods |
+| Creating a class for each choice even when logic is a small, stable condition | Many files/classes without value | Keep `if` or `enum` when simpler |
+| Overly large interfaces requiring unsupported methods | Many `UnsupportedOperationException` failures | Separate interfaces by role |
+| Every implementation invents its own units and error rules | Violates substitutability | Document invariants and test the contract |
+| Introducing a `switch` factory then copying the switch across services | Change points remain dispersed | Centralize selection at the boundary; use the interface for behavior |
+| Deep inheritance just to reuse a few lines | Complex class tree and fragile coupling | Consider composition/delegation |
+| Skipping input validation because "polymorphism handles it" | Runtime may produce invalid results | Validate in value objects/services and policies under their contracts |
+| Sharing mutable objects among threads without synchronization | Race conditions despite interfaces | Manage concurrency separately; polymorphism is not a locking mechanism |
 
-## 14. Bài tập tự kiểm tra
+## 14. Self-Check Exercises
 
-**Câu 1.** Tại sao `QuoteService` vẫn tính được phí `SameDayShipping` mà không cần biết tên lớp ấy?
+**Question 1.** Why can `QuoteService` calculate fees for `SameDayShipping` without knowing its class name?
 
-**Đáp án:** `SameDayShipping` thực hiện `ShippingPolicy`. `QuoteService` chỉ gọi `policy.quote(parcel)`; dynamic dispatch chọn phần triển khai của đối tượng cụ thể.
+**Answer:** `SameDayShipping` implements `ShippingPolicy`. `QuoteService` only calls `policy.quote(parcel)`; dynamic dispatch selects the concrete object's implementation.
 
-**Câu 2.** Có phải đoạn `switch (serviceCode)` ở factory là dấu hiệu vi phạm đa hình?
+**Question 2.** Does `switch (serviceCode)` in the factory violate polymorphism?
 
-**Đáp án:** Không. Factory cần đổi mã đầu vào thành một implementation. Vấn đề là lặp `switch` theo từng loại trong nhiều nơi xử lý hành vi mà mỗi implementation có thể tự cung cấp.
+**Answer:** No. The factory translates input codes into implementations. The problem is repeating `switch` per type across components where each implementation can provide the behavior itself.
 
-**Câu 3.** Một lớp `ExpressShipping` implements `ShippingPolicy` nhưng luôn trả `-100`. Nó có tuân thủ hợp đồng không?
+**Question 3.** A `ExpressShipping` class implements `ShippingPolicy` but always returns `-100`. Does it satisfy the contract?
 
-**Đáp án:** Không nếu hợp đồng quy định phí không âm. `implements` chỉ bảo đảm tương thích chữ ký, không tự bảo đảm đúng nghiệp vụ.
+**Answer:** No, if nonnegative fees are required. `implements` only enforces signature compatibility, not business correctness.
 
-**Câu 4.** Nếu một yêu cầu chỉ có trạng thái `isGift = true/false` và một dòng điều kiện nhỏ, có cần hai lớp `GiftOrder` và `RegularOrder` không?
+**Question 4.** If a requirement only has the state `isGift = true/false` and a small conditional, does it need `GiftOrder` and `RegularOrder` subclasses?
 
-**Đáp án:** Không nhất thiết. Một điều kiện trực tiếp có thể đơn giản hơn. Chỉ tách chiến lược khi thực sự có **hành vi biến thiên có ý nghĩa** và nhu cầu mở rộng/kiểm thử độc lập.
+**Answer:** Not necessarily. A direct condition can be simpler. Extract strategies when there is **meaningful behavioral variation** and a genuine need for independent extension or testing.
 
-**Câu 5.** Dùng `instanceof` để phân biệt đối tượng dữ liệu hỗn hợp khi parse đầu vào có luôn sai không?
+**Question 5.** Is `instanceof` always wrong for distinguishing mixed data objects while parsing input?
 
-**Đáp án:** Không. Đây có thể là lựa chọn hợp lý tại ranh giới xử lý dữ liệu. Nên xem liệu hành vi đang được phân nhánh có thể và nên chuyển về chính kiểu đối tượng hay không.
+**Answer:** No. It may be appropriate at a data-processing boundary. Consider whether the branched behavior can and should live with the object type instead.
 
-**Câu 6.** Vì sao phải test tất cả implementation sau khi thay chuỗi `if/else`?
+**Question 6.** Why test all implementations after replacing an `if/else` chain?
 
-**Đáp án:** Refactor cấu trúc không được làm thay đổi các kết quả vốn được yêu cầu. Hợp đồng chung vẫn cần được bảo đảm; từng loại còn có công thức và điều kiện biên riêng.
+**Answer:** Structural refactoring must preserve required existing outputs. Shared contracts must still hold, and each type also has its own formula and boundary conditions.
 
-**Ghi nhớ:** Khi cùng một loại đối tượng bị kiểm tra lặp đi lặp lại để lựa chọn *cách thực hiện một hành vi*, hãy cân nhắc **đưa hành vi đó vào hợp đồng chung và để các implementation trả lời bằng đa hình**. Câu lệnh điều kiện vẫn có chỗ đứng ở ranh giới lựa chọn, kiểm tra trạng thái và các tập loại đóng; mục tiêu là giảm phụ thuộc vào danh sách lớp cụ thể ở mã nghiệp vụ.
+**Remember:** When an object's type is checked repeatedly to choose *how a behavior is performed*, consider **moving that behavior behind a shared contract and letting implementations respond polymorphically**. Conditionals still belong at selection boundaries, state checks, and closed type sets; the goal is to reduce concrete-type dependencies in domain code.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="polymorphism-010">Ví dụ nhiều phương thức thanh toán</a>
+## <a id="polymorphism-010">Multiple Payment Methods: A Practical Example</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Ví dụ nhiều phương thức thanh toán bằng đa hình trong Java
+# Multiple Payment Methods Using Polymorphism in Java
 
-> **Chủ đề:** OOP → Đa hình (Polymorphism) → Ví dụ nhiều phương thức thanh toán.
+> **Topic:** OOP → Polymorphism → Multiple Payment Methods Example.
 >
-> Một hệ thống bán hàng có thể cho khách chọn **thẻ**, **ví điện tử** hoặc **chuyển khoản**. Mỗi phương thức có cách xử lý riêng, nhưng phần thanh toán của ứng dụng nên gọi chúng qua **một hợp đồng chung**. Đây là ứng dụng điển hình của đa hình: **cùng lời gọi, các đối tượng khác loại thực hiện hành vi khác nhau**.
+> A sales system can let customers choose **cards**, **digital wallets**, or **bank transfers**. Each method processes payments differently, but the application's checkout logic should invoke them through **a shared contract**. This illustrates polymorphism: **one call, different object types performing different implementations**.
 
-## 1. Vấn đề nếu kiểm tra từng loại bằng `if/else`
+## 1. The Problem with Checking Every Type Using `if/else`
 
-Giả sử mã thanh toán được viết như sau:
+Suppose payment processing is written like this:
 
 ```java
 // Minh họa cách thiết kế khó mở rộng, không phải API hoàn chỉnh.
@@ -5696,9 +5696,9 @@ if ("CARD".equals(method)) {
 }
 ```
 
-Khi thêm một phương thức mới, bạn phải sửa chuỗi điều kiện trong mã điều phối. Nếu logic này nằm rải rác ở nhiều service, càng dễ xuất hiện những nơi bị bỏ quên. Bên cạnh đó, thanh toán thẻ, trừ tiền ví và chờ chuyển khoản có vòng đời rất khác nhau; dồn hết vào một phương thức lớn khiến việc kiểm thử và sửa lỗi khó hơn.
+Adding a new payment method requires editing the coordinator's conditional chain. If that logic is scattered across multiple services, missed updates become more likely. Card charges, wallet debits, and pending bank transfers also have very different lifecycles; squeezing everything into one large method makes testing and debugging harder.
 
-Giải pháp OOP là thống nhất **đầu vào và đầu ra**, nhưng để từng lớp tự định nghĩa **cách thực hiện**.
+The OOP solution is to standardize **inputs and outputs** while letting each class decide **how to implement the operation**.
 
 ```mermaid
 classDiagram
@@ -5730,11 +5730,11 @@ classDiagram
     CheckoutService --> PaymentMethod : sử dụng
 ```
 
-Trong sơ đồ, `CheckoutService` chỉ phụ thuộc vào `PaymentMethod`, còn ba lớp cụ thể **implements** giao diện đó.
+In the diagram, `CheckoutService` depends only on `PaymentMethod`, and the three concrete classes **implement** that interface.
 
-## 2. Hợp đồng chung gồm những gì?
+## 2. What Does the Shared Contract Include?
 
-Một hợp đồng gọn cho ví dụ:
+A compact contract for this example:
 
 ```java
 interface PaymentMethod {
@@ -5743,26 +5743,26 @@ interface PaymentMethod {
 }
 ```
 
-Ở đây:
+Here:
 
-- `name()`: tên hiển thị của phương thức thanh toán.
-- `pay(request)`: nhận yêu cầu thanh toán và trả một kết quả có cấu trúc.
-- Mỗi lớp triển khai phải cung cấp hai phương thức trên theo đúng chữ ký và hợp đồng.
-- Người sử dụng interface không cần biết lớp triển khai dùng thẻ, ví hay chuyển khoản.
+- `name()`: display name of the payment method.
+- `pay(request)`: accepts a payment request and returns a structured result.
+- Every implementation must provide both methods with the required signatures and behavior.
+- Interface consumers need not know whether the implementation handles cards, wallets, or transfers.
 
-Ta định nghĩa ba trạng thái kết quả:
+We define three result statuses:
 
-| Trạng thái | Ý nghĩa trong ví dụ | Có thể coi đơn hàng đã thanh toán? |
+| Status | Meaning in This Example | May the Order Be Marked Paid? |
 |---|---|---|
-| `PAID` | Phương thức mô phỏng đã xác nhận thành công | Có, **trong phạm vi mô phỏng** |
-| `DECLINED` | Yêu cầu bị từ chối | Không |
-| `PENDING` | Đã tạo hướng dẫn hoặc yêu cầu, đang đợi xác nhận | **Không** |
+| `PAID` | The simulated method has confirmed success | Yes, **within the simulation** |
+| `DECLINED` | The request was declined | No |
+| `PENDING` | Instructions or a request were created; confirmation is still pending | **No** |
 
-**Quan trọng:** `PENDING` không phải `PAID`. Ví dụ chuyển khoản chỉ trả hướng dẫn chuyển tiền, không được tự ghi nhận rằng ngân hàng đã nhận được tiền.
+**Important:** `PENDING` is not `PAID`. The transfer example only returns transfer instructions; it must not record payment as received by the bank.
 
-## 3. Mã Java hoàn chỉnh: ba phương thức, một CheckoutService
+## 3. Complete Java Example: Three Methods, One CheckoutService
 
-Lưu toàn bộ mã dưới đây thành **`MultiPaymentDemo.java`**. Ví dụ chạy bằng **Java 17+**, không cần thư viện bên ngoài, không xử lý tiền thật và không lưu thông tin thẻ nhạy cảm.
+Save all the following code as **`MultiPaymentDemo.java`**. It runs with **Java 17+**, needs no third-party libraries, does not process real money, and stores no sensitive card data.
 
 ```java
 import java.util.List;
@@ -5955,14 +5955,14 @@ public class MultiPaymentDemo {
 }
 ```
 
-Biên dịch và chạy trong thư mục chứa tệp:
+Compile and run from the file's directory:
 
 ```bash
 javac MultiPaymentDemo.java
 java MultiPaymentDemo
 ```
 
-Kết quả mong đợi:
+Expected output:
 
 ```text
 Thẻ **** 4242 -> PAID
@@ -5976,24 +5976,24 @@ Ví thanh toán lần nữa -> DECLINED
 Số dư ví cuối: 30000
 ```
 
-Ba lần lặp ban đầu tương ứng **ba đơn hàng khác nhau** (`ORD-1`, `ORD-2`, `ORD-3`) để thể hiện ba implementation. Trong quy trình mua hàng thật, **khách chọn một phương thức cho một lần thanh toán**; không được tự động gọi tất cả phương thức để thu tiền cùng một đơn.
+The first three iterations represent **three distinct orders** (`ORD-1`, `ORD-2`, `ORD-3`) to demonstrate three implementations. In a real purchase, **the customer selects one payment method for one payment attempt**; do not automatically invoke every method to charge a single order.
 
-## 4. Đa hình diễn ra ở dòng nào?
+## 4. Which Line Demonstrates Polymorphism?
 
-Trọng tâm là:
+The key is:
 
 ```java
 PaymentMethod method = methods.get(i);
 PaymentResult result = checkout.checkout(method, request);
 ```
 
-Và trong `CheckoutService`:
+And inside `CheckoutService`:
 
 ```java
 return method.pay(request);
 ```
 
-Mã nguồn của service chỉ có một lời gọi `pay`. Tuy nhiên, kết quả khác nhau theo đối tượng được cung cấp:
+The service code contains just one `pay` call. Its result varies according to the supplied object:
 
 ```mermaid
 flowchart TD
@@ -6008,19 +6008,19 @@ flowchart TD
     G --> H["CheckoutService trả kết quả"]
 ```
 
-Đó là **runtime polymorphism** hay đa hình lúc chạy.
+That is **runtime polymorphism**.
 
-| Đặc điểm | Ở mã sử dụng | Ở đối tượng thực |
+| Aspect | In Calling Code | In the Actual Object |
 |---|---|---|
-| Kiểu biến `method` | `PaymentMethod` | Có thể là bất kỳ lớp implements hợp đồng |
-| Phương thức được phép gọi | `name()`, `pay(...)` từ interface | Implementation có thể có thêm API riêng |
-| Chữ ký `pay` | Được kiểm tra khi biên dịch | Phải được lớp triển khai tuân thủ |
-| Thân `pay` chạy | Không cố định trong service | Chọn theo lớp runtime |
-| Kết quả | Cùng kiểu `PaymentResult` | Có thể là PAID, DECLINED hoặc PENDING |
+| Declared variable `method` | `PaymentMethod` | Any class implementing the contract |
+| Callable methods | `name()`, `pay(...)` exposed by the interface | Implementations may expose additional APIs |
+| `pay` signature | Checked at compile time | Must be honored by implementing classes |
+| Executed `pay` body | Not fixed in the service | Selected from runtime class |
+| Result | Same `PaymentResult` type | May be PAID, DECLINED, or PENDING |
 
-**Đối tượng runtime quyết định implementation**, không phải chuỗi trả về từ `name()`, không phải tên biến và cũng không phải một phép ép kiểu trong `CheckoutService`.
+**The runtime object selects the implementation**, not the string returned by `name()`, not the variable name, and not a cast inside `CheckoutService`.
 
-Lưu ý: `PaymentMethod` là interface, không thể viết `new PaymentMethod()`. Có thể khai báo **biến có kiểu interface** và gán một instance của lớp triển khai:
+Note that `PaymentMethod` is an interface and cannot be directly instantiated with `new PaymentMethod()`. You can declare an **interface-typed variable** and assign an instance of an implementation class:
 
 ```java
 PaymentMethod selected = new WalletPayment(100_000);
@@ -6030,9 +6030,9 @@ PaymentResult result = selected.pay(
 System.out.println(result.status()); // PAID
 ```
 
-## 5. `@Override`, chữ ký và giới hạn của interface
+## 5. `@Override`, Signatures, and Interface Constraints
 
-Khi một class `implements PaymentMethod`, các phương thức instance được khai báo trong interface phải được triển khai với phạm vi truy cập phù hợp:
+When a class `implements PaymentMethod`, it must implement the interface's instance methods with appropriate accessibility:
 
 ```java
 @Override
@@ -6041,9 +6041,9 @@ public PaymentResult pay(PaymentRequest request) {
 }
 ```
 
-Vì `pay` trong interface là `public`, triển khai không được thu hẹp thành `protected`, package-private hoặc `private`.
+Because `pay` in the interface is `public`, its implementation cannot narrow access to `protected`, package-private, or `private`.
 
-Một lỗi dễ mắc:
+A common mistake:
 
 ```java
 class IncorrectPayment implements PaymentMethod {
@@ -6060,18 +6060,18 @@ class IncorrectPayment implements PaymentMethod {
 }
 ```
 
-Lớp trên không biên dịch: `pay(long)` có tham số khác, không triển khai `pay(PaymentRequest)`; `@Override` giúp phát hiện ngay.
+The class above fails compilation: `pay(long)` has different parameters and does not implement `pay(PaymentRequest)`; `@Override` helps detect this immediately.
 
-**Đừng nhầm overriding với overloading:**
+**Do not confuse overriding with overloading:**
 
-- `pay(PaymentRequest)` trong các lớp triển khai là **override** một hợp đồng có cùng chữ ký; implementation được chọn động.
-- Nếu thêm `pay(String orderId, long amount)` bên cạnh `pay(PaymentRequest)`, đó là **overload** (cùng tên, khác tham số). Chữ ký overload được chọn dựa trên kiểu tại thời điểm biên dịch; bản thân nó không phải ví dụ về chọn lớp thanh toán theo runtime.
+- `pay(PaymentRequest)` in the implementing classes **overrides** a contract with the same signature; the implementation is dynamically selected.
+- Adding `pay(String orderId, long amount)` alongside `pay(PaymentRequest)` creates an **overload** (same name, different parameters). Its signature is selected using compile-time types; it does not itself select a payment class at runtime.
 
-`static` method cũng không được dispatch động giống instance method; không nên đặt xử lý nhiều phương thức thanh toán dưới dạng các phương thức static cùng tên và kỳ vọng JVM chọn theo object.
+`static` methods also do not dispatch dynamically like instance methods; do not model multiple payment implementations as same-named static methods and expect the JVM to select one based on an object.
 
-## 6. Thêm cách thanh toán mới mà không sửa CheckoutService
+## 6. Add a Payment Method Without Modifying CheckoutService
 
-Giả sử bổ sung **thanh toán khi nhận hàng (COD)**. Ta tạo thêm một lớp `implements PaymentMethod`:
+Suppose we add **cash on delivery (COD)**. Create another class `implements PaymentMethod`:
 
 ```java
 // Thêm vào bên trong MultiPaymentDemo nếu muốn chạy cùng ví dụ:
@@ -6092,7 +6092,7 @@ static final class CashOnDeliveryPayment implements PaymentMethod {
 }
 ```
 
-Sau đó dùng trực tiếp với service đã có:
+Then use it with the existing service:
 
 ```java
 PaymentMethod cod = new CashOnDeliveryPayment();
@@ -6103,20 +6103,20 @@ PaymentResult result = new CheckoutService().checkout(
 System.out.println(result.status()); // PENDING
 ```
 
-`CheckoutService` không phải thêm nhánh `if ("COD")` hay `instanceof CashOnDeliveryPayment`. Đây là lợi ích rõ ràng của tính mở rộng dựa trên hợp đồng.
+`CheckoutService` needs no new `if ("COD")` or `instanceof CashOnDeliveryPayment` branch. This is a clear benefit of contract-based extensibility.
 
-Tuy nhiên, có thể vẫn cần cập nhật phần **giao diện người dùng hoặc cấu hình đăng ký phương thức** để cho phép chọn COD. “Không sửa `CheckoutService`” không có nghĩa không sửa bất kỳ mã nào trong toàn hệ thống.
+However, the **user interface or payment-method registration configuration** may still need updating to make COD selectable. "No changes to `CheckoutService`" does not mean no code anywhere needs to change.
 
-## 7. Kết quả trả về có ý nghĩa hơn một `boolean`
+## 7. Return Values Express More Than a `boolean`
 
-Nếu `pay` chỉ trả `boolean`, ta khó phân biệt:
+If `pay` returns only a `boolean`, it is hard to distinguish:
 
-- Thanh toán bị từ chối.
-- Khách chưa hoàn tất chuyển khoản.
-- Nhà cung cấp phản hồi chậm.
-- Đã thu tiền thành công.
+- Payment was declined.
+- The customer has not completed the transfer.
+- The provider is slow to respond.
+- Funds were successfully collected.
 
-Một kiểu trả về như `PaymentResult` với `PaymentStatus` làm các trạng thái rõ ràng hơn. Ví dụ phần nghiệp vụ sau thanh toán có thể phân nhánh **trên kết quả nghiệp vụ**, thay vì phân nhánh **trên lớp implementation**:
+A `PaymentResult` result with `PaymentStatus` makes these states explicit. Post-payment domain logic can branch **on a business result** rather than **on an implementation class**:
 
 ```java
 PaymentResult result = checkout.checkout(selected, request);
@@ -6128,15 +6128,15 @@ switch (result.status()) {
 }
 ```
 
-Đây là sự phân nhánh **hợp lý**: trạng thái thanh toán là thông tin mà mọi implementation công khai qua hợp đồng. Điều nên tránh là hỏi `selected instanceof CardPayment` rồi sao chép lại logic riêng của thẻ vào service.
+This is **appropriate branching**: payment state is information exposed by every implementation through its contract. Avoid checking `selected instanceof CardPayment` and duplicating card-specific logic in the service.
 
-Trong ứng dụng thật, nên có thêm trạng thái hoặc dữ liệu cho tình huống **không biết thanh toán đã thành công hay chưa**. Không được coi timeout mạng đồng nghĩa chắc chắn chưa bị trừ tiền. Mô hình ba trạng thái của bài chỉ nhằm minh họa đa hình, chưa đầy đủ cho một payment system thực tế.
+A real application also needs a state or information for cases where **payment success is unknown**. A network timeout does not prove that no funds were debited. The three-status model is only for illustrating polymorphism and is not a complete production payment system.
 
-## 8. Kiểm thử đa hình bằng một phương thức thanh toán giả
+## 8. Test Polymorphism with a Fake Payment Method
 
-Có thể kiểm tra rằng `CheckoutService` thực sự gọi `PaymentMethod.pay` và chuyển kết quả cho người gọi mà không kết nối dịch vụ thanh toán.
+You can verify that `CheckoutService` calls `PaymentMethod.pay` and forwards results without connecting to a real payment provider.
 
-Bổ sung lớp sau **bên trong** `MultiPaymentDemo`:
+Add the following class **inside** `MultiPaymentDemo`:
 
 ```java
 static final class RecordingPayment implements PaymentMethod {
@@ -6157,7 +6157,7 @@ static final class RecordingPayment implements PaymentMethod {
 }
 ```
 
-Một đoạn kiểm tra có thể đặt trong `main`:
+You can place a check in `main`:
 
 ```java
 RecordingPayment fake = new RecordingPayment();
@@ -6174,44 +6174,44 @@ if (fake.calls != 1
 System.out.println("PASS");
 ```
 
-Fake cho phép xác định **đúng implementation được gọi** và **đúng request được truyền**, không phụ thuộc ngân hàng hoặc ví điện tử. Kiểm thử này không chứng minh một cổng thanh toán thật an toàn: mỗi adapter tích hợp thật vẫn phải được kiểm thử theo hợp đồng tương ứng.
+The fake verifies **which implementation was invoked** and **which request was passed**, independently of banks or wallets. This test does not prove the security of a real payment gateway; production adapters require their own contract and integration tests.
 
-## 9. Lợi ích và giới hạn của cách thiết kế
+## 9. Benefits and Limits of This Design
 
-| Lợi ích | Biểu hiện trong ví dụ |
+| Benefit | Demonstration |
 |---|---|
-| Đa hình | Một lời gọi `pay` chạy ba implementation khác nhau |
-| Mở rộng | Thêm `CashOnDeliveryPayment` không phải đổi mã checkout |
-| Tách trách nhiệm | Mỗi class chỉ quản lý cách thanh toán của mình |
-| Dễ kiểm thử | Dùng `RecordingPayment` thay dịch vụ thật |
-| Giảm phụ thuộc | `CheckoutService` chỉ biết `PaymentMethod` |
-| Bảo trì thuận tiện | Chỉnh quy tắc ví không cần chỉnh quy tắc thẻ |
+| Polymorphism | One `pay` call invokes three different implementations |
+| Extensibility | Adding `CashOnDeliveryPayment` requires no checkout-code changes |
+| Separation of responsibilities | Each class manages its own payment processing |
+| Testability | Use `RecordingPayment` instead of a real service |
+| Reduced coupling | `CheckoutService` only knows `PaymentMethod` |
+| Maintainability | Wallet rules can change without changing card rules |
 
-Nhưng đa hình **không tự giải quyết** các vấn đề vận hành của thanh toán thật:
+But polymorphism **does not automatically solve** production payment concerns:
 
-1. **Gọi lặp/idempotency:** nếu khách gửi lại cùng yêu cầu do mạng lỗi, không được thu tiền hai lần. Cần ID giao dịch và hợp đồng chống trùng ở hệ thống thực hiện thanh toán.
-2. **Dữ liệu bền vững:** ví trong ví dụ chỉ lưu số dư ở RAM. Khởi động lại chương trình là mất dữ liệu; hệ thống thật phải có lưu trữ và transaction thích hợp.
-3. **Đồng thời:** `synchronized` trong `WalletPayment` bảo vệ một instance trong một JVM, không điều phối được nhiều instance hay nhiều máy cùng truy cập một tài khoản.
-4. **Bảo mật:** không lưu số thẻ đầy đủ, CVV hoặc khóa bí mật trong mã ví dụ/log; tích hợp thật phải tuân thủ yêu cầu của nhà cung cấp và quy định liên quan.
-5. **Xử lý lỗi:** kết quả `PENDING` phải có luồng xác nhận riêng (webhook, truy vấn trạng thái, đối soát...) trước khi coi giao dịch hoàn tất.
+1. **Retries/idempotency:** if a customer retries a request after a network failure, do not charge twice. Real payment processors require transaction IDs and a deduplication contract.
+2. **Persistence:** the example wallet stores its balance only in RAM. Restarting loses it; real systems need durable storage and appropriate transactions.
+3. **Concurrency:** `synchronized` in `WalletPayment` protects one instance within one JVM, not multiple instances or machines concurrently accessing the same account.
+4. **Security:** never store full card numbers, CVV, or secret keys in example code/logs; production integrations must meet provider requirements and applicable regulations.
+5. **Failure handling:** a `PENDING` result needs a separate confirmation flow (webhook, status query, reconciliation, etc.) before the transaction is considered complete.
 
-Những vấn đề này là trách nhiệm của kiến trúc thanh toán và hợp đồng tích hợp, **không phải tính năng tự sinh ra khi dùng interface**.
+These are responsibilities of payment architecture and integration contracts, **not features that appear automatically when using interfaces**.
 
-## 10. Bài tập thực hành
+## 10. Practice Exercises
 
-**Bài 1 — Dự đoán kết quả.** Dùng `PaymentMethod method = new BankTransferPayment("DEMO-02")` rồi gọi `method.pay(new PaymentRequest("ORD-7", 90_000))`. Kết quả là `PAID` hay `PENDING`? Tại sao Java không cần xét tên lớp trong `CheckoutService`?
+**Exercise 1 — Predict the Result.** Use `PaymentMethod method = new BankTransferPayment("DEMO-02")` and call `method.pay(new PaymentRequest("ORD-7", 90_000))`. Is the result `PAID` or `PENDING`? Why does Java not need the class name in `CheckoutService`?
 
-**Bài 2 — Thêm phương thức.** Triển khai `CashOnDeliveryPayment` từ mục 6, thêm instance vào danh sách lựa chọn và kiểm tra chương trình vẫn dùng `method.pay(...)` qua interface.
+**Exercise 2 — Add a Method.** Implement `CashOnDeliveryPayment` from section 6, add an instance to the selection list, and verify the program still calls `method.pay(...)` through the interface.
 
-**Bài 3 — Kiểm thử từ chối.** Tạo `WalletPayment(20_000)`, yêu cầu trả `30_000` VND và khẳng định kết quả `DECLINED` cùng số dư còn `20_000`. Sau đó thử yêu cầu `10_000` và kiểm tra số dư mới.
+**Exercise 3 — Test a Decline.** Create `WalletPayment(20_000)`, request `30_000` VND, and assert `DECLINED` with a remaining balance of `20_000`. Then request `10_000` and verify the new balance.
 
-**Bài 4 — Phân biệt trạng thái.** Giải thích tại sao với chuyển khoản và COD, `PENDING` đúng hơn `PAID` khi chưa nhận được xác nhận tiền đã được thu.
+**Exercise 4 — Distinguish Statuses.** Explain why `PENDING` is more accurate than `PAID` for transfers and COD before confirmation that money was collected.
 
-**Bài 5 — Xác định mức trừu tượng.** Nếu mỗi phương thức thanh toán có cách hiển thị hướng dẫn khác nhau, bạn nên mở rộng hợp đồng `PaymentResult`, bổ sung interface cho phần hiển thị, hay để UI tự quyết định? Hãy nêu những dữ liệu mà tầng nghiệp vụ thật sự cần và tránh để UI phụ thuộc vào `instanceof` của từng lớp thanh toán.
+**Exercise 5 — Choose the Abstraction Level.** If each payment method displays different instructions, should you extend `PaymentResult`, add a UI-specific interface, or let the UI decide? Identify the data the domain layer truly needs and avoid making the UI depend on `instanceof` of each payment class.
 
-**Ghi nhớ:** Đa hình cho phép `CardPayment`, `WalletPayment` và `BankTransferPayment` **cùng tuân theo `PaymentMethod` nhưng xử lý `pay()` khác nhau**. Khi service phụ thuộc vào giao diện chung, Java chọn implementation theo **đối tượng thực tại runtime**, còn mã điều phối vẫn gọn, dễ mở rộng và dễ kiểm thử.
+**Remember:** Polymorphism lets `CardPayment`, `WalletPayment`, and `BankTransferPayment` **all honor `PaymentMethod` but implement `pay()` differently**. When a service depends on the shared interface, Java selects the implementation by **the actual runtime object**, while orchestration stays compact, extensible, and testable.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

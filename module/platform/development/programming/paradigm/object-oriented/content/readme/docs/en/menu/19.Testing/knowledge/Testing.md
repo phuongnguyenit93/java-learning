@@ -1,34 +1,34 @@
 <a id="back-to-top"></a>
 
-# Kiểm thử
+# Testing
 
 ## Menu
-- [Kiểm thử hành vi công khai và hợp đồng đối tượng](#testing-001)
-- [Kiểm thử hàm khởi tạo và trạng thái không hợp lệ](#testing-002)
-- [Kiểm thử điều kiện bất biến và chuyển trạng thái](#testing-003)
-- [Kiểm thử các cách thực hiện cùng một giao diện](#testing-004)
-- [Kiểm thử tính thay thế của kiểu con](#testing-005)
-- [Fake, stub, mock và đối tượng cộng tác](#testing-006)
-- [Thiết kế để thay thế phụ thuộc khi kiểm thử](#testing-007)
-- [Tránh kiểm thử phụ thuộc quá chặt vào chi tiết bên trong](#testing-008)
-- [Kiểm thử hồi quy khi thay đổi thiết kế](#testing-009)
-- [Kiểm thử tương tác giữa nhiều đối tượng](#testing-010)
+- [Testing Public Behavior and Object Contracts](#testing-001)
+- [Testing Constructors and Invalid States](#testing-002)
+- [Testing Invariants and State Transitions](#testing-003)
+- [Testing Multiple Implementations of the Same Interface](#testing-004)
+- [Testing Subtype Substitutability](#testing-005)
+- [Fakes, Stubs, Mocks, and Collaborating Objects](#testing-006)
+- [Designing for Dependency Substitution in Tests](#testing-007)
+- [Avoiding Tests That Are Overly Coupled to Internals](#testing-008)
+- [Regression Testing When Designs Change](#testing-009)
+- [Testing Interactions Among Multiple Objects](#testing-010)
 
-## <a id="testing-001">Kiểm thử hành vi công khai và hợp đồng đối tượng</a>
+## <a id="testing-001">Testing Public Behavior and Object Contracts</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kiểm thử hành vi công khai và hợp đồng đối tượng trong Java OOP
+# Testing Public Behavior and Object Contracts in Java OOP
 
-> **Chủ đề:** OOP → Kiểm thử → Kiểm thử hành vi công khai và hợp đồng đối tượng.  
-> **Mục tiêu:** Viết kiểm thử theo những gì client thực sự nhìn thấy và được phép yêu cầu, thay vì bám vào field/private method; mô tả hợp đồng bằng tiền điều kiện, hậu điều kiện, bất biến và cách xử lý lỗi; dùng cùng một bộ test để kiểm tra nhiều implementation của một interface; phát hiện lỗi khi thay implementation mà vẫn biên dịch được.
+> **Topic:** OOP → Testing → Testing public behavior and object contracts.  
+> **Objective:** Write tests against what clients can actually observe and legitimately request, rather than coupling tests to fields/private methods; specify contracts through preconditions, postconditions, invariants, and error handling; reuse a single test suite across multiple implementations of an interface; detect regressions when a replacement implementation still compiles.
 
-## 1. Kiểm thử đối tượng là kiểm thử điều gì?
+## 1. What Does It Mean to Test an Object?
 
-Một đối tượng không đơn thuần là tập hợp field. Nó đưa ra một **giao diện hành vi** cho bên ngoài: những thao tác có thể gọi, dữ liệu trả về, tác dụng phụ, trạng thái sau mỗi thao tác và trường hợp bị từ chối.
+An object is more than a collection of fields. It exposes a **behavioral interface**: callable operations, return values, side effects, state after each operation, and conditions under which an operation is rejected.
 
-Giả sử một kho vé còn 10 chỗ. Client yêu cầu:
+Suppose a seat inventory has 10 available seats. A client requests:
 
 ~~~text
 Kho vé sức chứa 10
@@ -37,70 +37,70 @@ Kho vé sức chứa 10
     └─ cancel(2)      → thành công → đã đặt 2, còn 8
 ~~~
 
-Đây là **hành vi quan sát được**. Một bài test tốt không cần biết kho vé dùng `int reserved`, `AtomicInteger`, `HashMap` hay database; test cần xác nhận **kết quả và các quy tắc mà API đã cam kết**.
+This is **observable behavior**. A good test need not know whether the inventory uses `int reserved`, `AtomicInteger`, `HashMap`, or a database; it should verify **the results and rules promised by the API**.
 
-**Hợp đồng đối tượng (object contract)** mô tả nghĩa của API chứ không chỉ chữ ký Java. Ví dụ chữ ký `boolean tryReserve(int count)` chưa đủ để biết:
+An **object contract** describes API semantics, not merely Java signatures. For instance, `boolean tryReserve(int count)` does not establish:
 
-- `count = 0` có hợp lệ không?
-- Không đủ chỗ thì trả `false` hay ném exception?
-- Thất bại có làm thay đổi state không?
-- Khi thành công, số vé đã đặt tăng chính xác bao nhiêu?
-- Có cho phép nhiều thread đặt đồng thời không?
-- Nếu một implementation mới thay cho implementation cũ, điều gì phải giữ nguyên?
+- Is `count = 0` valid?
+- Does insufficient capacity return `false` or throw an exception?
+- Does a failed operation change state?
+- After success, by exactly how many seats does the reservation count increase?
+- Are concurrent reservations by multiple threads permitted?
+- What must remain unchanged when a new implementation replaces an existing one?
 
-Kiểm thử hợp đồng biến những cam kết này thành **các ví dụ có thể thực thi** và giúp phát hiện thay đổi phá vỡ tính thay thế (*substitutability*).
+Contract tests turn these guarantees into **executable examples** and help detect changes that break *substitutability*.
 
-## 2. Public behavior khác implementation detail
+## 2. Public Behavior Versus Implementation Details
 
-| Nên kiểm thử qua hành vi công khai | Không nên phụ thuộc nếu không có lý do đặc biệt |
+| Test Through Public Behavior | Avoid Depending On Without a Specific Reason |
 |---|---|
-| `tryReserve(4)` trả `true` và snapshot phản ánh đúng 4 vé | Tên field nội bộ là `reserved` hay `taken` |
-| `tryReserve(7)` trả `false` và không đổi trạng thái | Có gọi private method `hasEnoughSeats()` không |
-| `cancel(2)` giảm số vé đã đặt từ 4 còn 2 | Cấu trúc source dùng một hay hai private helpers |
-| Input không hợp lệ bị từ chối theo exception đã hứa | Dòng source nào ném exception |
-| Hai implementation cùng thoả một bộ contract | Có dùng `synchronized`, CAS hay lock cụ thể trong nội bộ |
-| Event/cộng tác viên bên ngoài được gọi theo hợp đồng, nếu đó là observable effect | Số lần một private helper bị gọi khi không ảnh hưởng kết quả |
+| `tryReserve(4)` returns `true`, and the snapshot correctly reports 4 reserved seats | Whether the internal field is named `reserved` or `taken` |
+| `tryReserve(7)` returns `false` without changing state | Whether private method `hasEnoughSeats()` was invoked |
+| `cancel(2)` reduces reserved seats from 4 to 2 | Whether source code uses one or two private helpers |
+| Invalid input is rejected using the promised exception | Which source-code line throws it |
+| Two implementations meet the same contract suite | Whether the internal mechanism specifically uses `synchronized`, CAS, or a lock |
+| External events/collaborators are invoked as contracted, if that is observable behavior | How often a private helper runs when the count has no effect on outcomes |
 
-Một phép refactor chỉ đổi `int reserved` thành `AtomicInteger reserved` mà **không đổi hành vi** đáng lẽ không làm phần lớn unit test thất bại. Nếu test luôn thất bại mỗi khi đổi cấu trúc nội bộ, chúng đang **couple với implementation** quá chặt.
+Refactoring `int reserved` into `AtomicInteger reserved` without **changing behavior** should not cause most unit tests to fail. If tests constantly break whenever the internal structure changes, they are **too tightly coupled to the implementation**.
 
-**Không có nghĩa mọi test đều phải black-box tuyệt đối.** Unit test cho một thuật toán thuần hoặc adapter nội bộ vẫn hợp lý; integration test có thể xác nhận tương tác DB/HTTP. Nhưng test cho **hợp đồng đối tượng** nên dùng API mà client thật dùng và chỉ xác nhận những cam kết cần giữ ổn định.
+**This does not mean every test must be strictly black-box.** Unit tests for a pure algorithm or an internal adapter can be appropriate; integration tests may verify DB/HTTP interactions. But tests of an **object contract** should use the API real clients use and assert only the guarantees that must remain stable.
 
-## 3. Bốn phần của một hợp đồng có thể kiểm thử
+## 3. Four Parts of a Testable Contract
 
-Một hợp đồng thường được mô tả qua:
+A contract is often described through:
 
-| Phần | Câu hỏi | Kho vé |
+| Part | Question | Seat Inventory |
 |---|---|---|
-| **Precondition** | Người gọi cần đáp ứng điều gì? | Số lượng đặt/hủy phải dương |
-| **Postcondition thành công** | Sau lời gọi thành công, điều gì đúng? | Đặt 3 vé thì số đã đặt tăng đúng 3 |
-| **Postcondition thất bại** | Khi bị từ chối/lỗi, đối tượng còn hợp lệ thế nào? | Thiếu chỗ trả `false`, state không đổi |
-| **Invariant** | Điều kiện nào phải luôn đúng ở ranh giới quan sát? | `0 ≤ reserved ≤ capacity` |
+| **Precondition** | What must the caller satisfy? | Reservation/cancellation quantities must be positive |
+| **Successful postcondition** | What must hold after a successful call? | Reserving 3 seats increases the reserved count by exactly 3 |
+| **Failure postcondition** | How does the object remain valid after a rejection/error? | Insufficient capacity returns `false` without changing state |
+| **Invariant** | What condition must always hold at an observable boundary? | `0 ≤ reserved ≤ capacity` |
 
-Trong chương trình thực tế còn có những **bảo đảm phi chức năng** cần chỉ rõ theo nhu cầu: thread safety, độ trễ, tính nhất quán khi ghi dữ liệu, idempotency, thứ tự callback hoặc ràng buộc quyền truy cập. Không phải mọi interface tự động cam kết mọi tính chất đó.
+Real programs may also require **nonfunctional guarantees** that must be stated as needed: thread safety, latency, data-write consistency, idempotency, callback ordering, or access-control constraints. No interface automatically promises all these properties.
 
-### Ví dụ đặc tả hợp đồng
+### Example Contract Specification
 
-Định nghĩa một interface quản lý số vé, với quy tắc như sau:
+Define an interface for managing seat reservations with these rules:
 
-- Constructor của implementation yêu cầu `capacity > 0`.
-- Ban đầu số vé đã đặt bằng `0`.
-- `tryReserve(n)`: nếu `n <= 0`, ném `IllegalArgumentException`; nếu đủ chỗ, tăng số đã đặt lên `n` và trả `true`; nếu không đủ, trả `false` và giữ nguyên state.
-- `cancel(n)`: yêu cầu `n > 0` và `n <= reserved`; nếu không đúng, ném `IllegalArgumentException` **không sửa state**; nếu đúng, trừ `n`.
-- `snapshot()` trả ảnh chụp bất biến, nhất quán của `capacity` và `reserved` tại thời điểm method thực hiện.
-- Mọi implementation có thể được gọi từ nhiều thread trong cùng JVM; mỗi lời gọi đặt/hủy phải hoạt động như một thay đổi nguyên tử trên **một instance**.
+- The implementation constructor requires `capacity > 0`.
+- Initially, the reserved seat count is `0`.
+- `tryReserve(n)`: if `n <= 0`, throw `IllegalArgumentException`; if capacity permits, increase the reserved count by `n` and return `true`; otherwise, return `false` without changing state.
+- `cancel(n)`: requires `n > 0` and `n <= reserved`; otherwise, throw `IllegalArgumentException` **without modifying state**; if valid, subtract `n`.
+- `snapshot()` returns an immutable, consistent snapshot of `capacity` and `reserved` at the moment the method executes.
+- Every implementation supports calls from multiple threads in the same JVM; each reservation/cancellation call must act as one atomic change to **a single instance**.
 
-**Lưu ý:** Đây là hợp đồng được lựa chọn cho ví dụ, không phải luật bắt buộc của mọi hệ thống đặt vé. Có hệ thống chọn trả đối tượng `Result` thay vì boolean, hoặc xử lý hủy vượt số lượng như lỗi domain khác. Test phải theo hợp đồng thật, không theo sở thích tùy tiện của người viết test.
+**Note:** This contract is chosen for the example, not prescribed for every ticket-reservation system. Another system might return a `Result` object instead of a boolean, or model excess cancellation as a different domain error. Tests must follow the real contract, not arbitrary preferences of the test author.
 
-## 4. Java 17 hoàn chỉnh: một interface, hai implementation
+## 4. Complete Java 17 Example: One Interface, Two Implementations
 
-Để thấy giá trị của contract test, ta xây dựng hai implementation có **cơ chế lưu state khác nhau**, nhưng dùng **cùng API công khai**:
+To demonstrate the value of contract testing, we build two implementations with **different state-storage mechanisms** but **the same public API**:
 
-- `MonitorSeatInventory` sử dụng `synchronized`.
-- `AtomicSeatInventory` sử dụng `AtomicInteger` và vòng lặp compare-and-set (CAS).
+- `MonitorSeatInventory` uses `synchronized`.
+- `AtomicSeatInventory` uses `AtomicInteger` and a compare-and-set (CAS) loop.
 
-Cả hai phải giữ được cùng quy tắc nghiệp vụ, bất kể cách đồng bộ.
+Both must preserve the same business rules regardless of synchronization technique.
 
-Tạo tệp **`SeatInventoryDemo.java`**, chỉ dùng JDK 17+:
+Create **`SeatInventoryDemo.java`** using only JDK 17+:
 
 ~~~java
 import java.util.concurrent.atomic.AtomicInteger;
@@ -255,14 +255,14 @@ public class SeatInventoryDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac SeatInventoryDemo.java
 java SeatInventoryDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Start: SeatSnapshot[capacity=10, reserved=0]
@@ -274,9 +274,9 @@ Atomic reserve 4: true
 Atomic snapshot: SeatSnapshot[capacity=10, reserved=4]
 ~~~
 
-**Điều quan trọng không nằm ở việc thuật toán lock hay CAS tốt hơn.** Ví dụ có hai giải pháp kỹ thuật khác nhau để test xác minh **một hành vi được cam kết duy nhất**.
+**The important question is not whether locking or CAS is better.** The example provides two technical approaches, while tests verify **one shared set of promised behaviors**.
 
-### Sơ đồ nhìn từ phía client
+### Class Diagram from the Client's Perspective
 
 ~~~mermaid
 classDiagram
@@ -310,13 +310,13 @@ classDiagram
     SeatInventory ..> SeatSnapshot : công bố
 ~~~
 
-## 5. Viết test từ hợp đồng trước, rồi áp dụng cho cả hai lớp
+## 5. Write Tests from the Contract First, Then Apply Them to Both Classes
 
-Nếu viết hai bộ test tách rời hoàn toàn, một implementation dễ bị bỏ quên test đường lỗi. Cách đáng học là viết **một bộ contract tests tái sử dụng**: test chỉ biết interface `SeatInventory`, còn lớp con của test cung cấp cách tạo implementation.
+Writing completely separate test suites risks forgetting failure-path tests for one implementation. A useful approach is **one reusable suite of contract tests**: tests know only the `SeatInventory` interface, while test subclasses provide a way to create each implementation.
 
-Trong JUnit Jupiter 5, các phương thức `@Test` ở lớp cha có thể được kế thừa bởi test subclass. Chúng ta tận dụng tính năng này để chạy cùng bộ luật cho cả Monitor và Atomic.
+In JUnit Jupiter 5, subclasses can inherit `@Test` methods from a test superclass. We use this feature to run the same rules against both Monitor and Atomic.
 
-Tạo tệp **`SeatInventoryContractTest.java`** trong test source set, cùng package với `SeatInventoryDemo.java`:
+Create **`SeatInventoryContractTest.java`** in the test source set, in the same package as `SeatInventoryDemo.java`:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -429,13 +429,13 @@ class AtomicSeatInventoryTest extends SeatInventoryContractTest {
 }
 ~~~
 
-**Kết quả mong muốn:** JUnit chạy cùng các test được kế thừa cho cả hai lớp con. Mỗi implementation phải đáp ứng toàn bộ contract. Lớp cha abstract chỉ mô tả các yêu cầu quan sát được; không kiểm tra `reserved` có là `int` hay `AtomicInteger`.
+**Expected result:** JUnit runs the same inherited tests for both concrete test subclasses. Every implementation must satisfy the full contract. The abstract superclass specifies observable requirements only; it never checks whether `reserved` is an `int` or an `AtomicInteger`.
 
-Để chạy cần thêm JUnit Jupiter vào test dependencies và dùng test runner của Maven/Gradle/IDE. Hai class test cụ thể là **package-private**, hợp lệ trong JUnit Jupiter 5; tùy cấu hình discovery của công cụ build, bảo đảm source nằm trong test source set và được nhận diện đúng tên `*Test`.
+To run these tests, add JUnit Jupiter to the test dependencies and use a Maven/Gradle/IDE test runner. Both concrete test classes are **package-private**, which JUnit Jupiter 5 permits; depending on the build tool's discovery configuration, ensure the source is in the test source set and the `*Test` class names are detected.
 
-### Vì sao test “đường lỗi không đổi trạng thái” quan trọng?
+### Why Is the “Failure Leaves State Unchanged” Test Important?
 
-Một implementation sai có thể làm:
+An incorrect implementation might do this:
 
 ~~~java
 // CỐ Ý SAI: tăng reserved trước rồi mới kiểm tra.
@@ -445,17 +445,17 @@ if (reserved > capacity) {
 }
 ~~~
 
-Test chỉ xác nhận `tryReserve(7) == false` **sẽ pass**, dù `reserved` đã bị làm hỏng. Khi kiểm tra **snapshot trước và sau**, contract test phát hiện lỗi đó. Tương tự, hủy quá số lượng phải ném exception **mà không để lại state nửa vời**.
+A test asserting only `tryReserve(7) == false` **would pass**, even though `reserved` has been corrupted. Comparing **snapshots before and after** detects the contract violation. Similarly, canceling more seats than reserved must throw an exception **without leaving a partially changed state**.
 
-## 6. Tổ chức test theo Given–When–Then
+## 6. Structure Tests Using Given–When–Then
 
-Một test về hành vi sẽ dễ đọc hơn nếu có ba phần rõ ràng:
+A behavioral test is easier to read when it has three clear parts:
 
-- **Given:** trạng thái ban đầu và dữ liệu dùng để tạo đối tượng.
-- **When:** một lời gọi công khai được thực hiện.
-- **Then:** kết quả, exception, observable state hoặc side effect đúng hợp đồng.
+- **Given:** the initial state and data needed to construct the object.
+- **When:** a public operation is invoked.
+- **Then:** the result, exception, observable state, or side effect matches the contract.
 
-Ví dụ:
+Example:
 
 ~~~java
 @Test
@@ -474,11 +474,11 @@ void rejectedReservationKeepsPreviousState() {
 }
 ~~~
 
-Cách đặt tên `rejectedReservationKeepsPreviousState` nói rõ **quy tắc** bị kiểm chứng hơn tên `testReserve` hay `test1`. Phần “Then” nên dùng API quan sát hợp lệ. Không cần tạo setter chỉ để test được; làm vậy có thể làm yếu encapsulation.
+The name `rejectedReservationKeepsPreviousState` describes **the rule** under test better than `testReserve` or `test1`. The “Then” section should use a legitimate observable API. Do not add setters merely to make tests convenient; that may weaken encapsulation.
 
-## 7. Kiểm thử chuỗi trạng thái, không chỉ từng method đơn lẻ
+## 7. Test State Sequences, Not Just Individual Methods
 
-Một đối tượng có trạng thái thường có **nhiều đường đi hợp lệ**. Test từng method độc lập có thể bỏ qua bug chỉ xuất hiện sau một chuỗi thao tác.
+A stateful object often has **multiple valid paths**. Testing each method independently can miss bugs that appear only after a sequence of operations.
 
 ~~~mermaid
 stateDiagram-v2
@@ -491,26 +491,26 @@ stateDiagram-v2
     Full --> Empty : cancel(all)
 ~~~
 
-Sơ đồ minh họa với sức chứa 10: sau khi đặt 4 rồi hủy 2 thì còn đặt 2, tiếp tục đặt 8 sẽ đầy. Đó là **hành vi nhiều bước** chứ không phải một method isolated.
+The diagram uses a capacity of 10: after reserving 4 and canceling 2, 2 reservations remain; reserving 8 fills the capacity. This is **multi-step behavior**, not an isolated method.
 
-### Kiểm thử theo bảng trạng thái
+### State Table Testing
 
-| Trạng thái trước | Lệnh | Kết quả | Trạng thái sau |
+| State Before | Command | Result | State After |
 |---|---|---|---|
 | capacity=10, reserved=0 | `tryReserve(4)` | `true` | reserved=4 |
 | capacity=10, reserved=4 | `tryReserve(7)` | `false` | reserved=4 |
-| capacity=10, reserved=4 | `cancel(2)` | Thành công | reserved=2 |
+| capacity=10, reserved=4 | `cancel(2)` | Success | reserved=2 |
 | capacity=10, reserved=2 | `tryReserve(8)` | `true` | reserved=10 |
 | capacity=10, reserved=10 | `tryReserve(1)` | `false` | reserved=10 |
-| capacity=10, reserved=10 | `cancel(10)` | Thành công | reserved=0 |
+| capacity=10, reserved=10 | `cancel(10)` | Success | reserved=0 |
 
-Dữ liệu biên `0`, `1`, `capacity`, `capacity + 1` và số âm cũng đáng kiểm thử. Khi có nhiều trạng thái/đường đi, lập bảng giúp tránh việc một test chỉ kiểm tra “happy path” rồi bỏ quên quy tắc từ chối.
+Boundary inputs `0`, `1`, `capacity`, `capacity + 1`, and negative values also deserve tests. For objects with many states and paths, a table avoids covering only the happy path while forgetting rejection rules.
 
-### Kiểm thử bằng mô hình tham chiếu đơn giản
+### Testing Against a Simple Reference Model
 
-Với loại API có state, có thể viết một **model trong test** chỉ lưu giá trị mong đợi và thử nhiều chuỗi thao tác. Model nên đơn giản hơn implementation thật và không dùng cùng thuật toán tối ưu, để tránh copy chung lỗi.
+For a stateful API, a test can maintain a simple **reference model** of expected values and exercise many operation sequences. The reference model should be simpler than the real implementation and should avoid reusing its optimized algorithm, so both do not reproduce the same bug.
 
-Đoạn sau là một test bổ sung, dùng các class và import JUnit ở phần trước; thêm `import java.util.Random;`:
+The following is an additional test using the earlier classes and JUnit imports; add `import java.util.Random;`:
 
 ~~~java
 @Test
@@ -547,15 +547,15 @@ void sequenceOfOperationsAlwaysMatchesSimpleModel() {
 }
 ~~~
 
-**Ưu điểm:** một seed cố định tạo một chuỗi dễ tái hiện; các trạng thái khác nhau được đi qua mà không phải viết tay 500 test case. **Giới hạn:** một seed và 500 bước không phải bằng chứng hình thức cho mọi chuỗi; cần kết hợp các boundary cases, nhiều seed hoặc property-based testing khi rủi ro cao.
+**Benefit:** a fixed seed yields a reproducible sequence that explores varied states without hand-writing 500 test cases. **Limit:** one seed and 500 steps are not formal proof of all sequences; combine them with boundary cases, additional seeds, or property-based testing when risks are higher.
 
-**Lưu ý:** Nếu phương thức có tác dụng phụ khác (ghi DB, gửi sự kiện), model phải mô tả những observable effects đó; chỉ so sánh state trong memory sẽ chưa đủ.
+**Note:** If methods have other side effects (DB writes, event publication), the reference model must describe those observable effects as well; comparing only in-memory state is insufficient.
 
-## 8. Kiểm thử tính thay thế của implementation (LSP)
+## 8. Testing Implementation Substitutability (LSP)
 
-**Liskov Substitution Principle (LSP)** yêu cầu implementation có thể được dùng ở nơi mong đợi abstraction mà **không làm sai điều client dựa vào**. Test contract là một bằng chứng thực nghiệm rất hữu ích: cùng một test được chạy trên mọi implementation.
+The **Liskov Substitution Principle (LSP)** requires an implementation to be usable where its abstraction is expected **without violating client assumptions**. Contract testing provides useful empirical evidence: run the same tests against every implementation.
 
-Giả sử một implementation mới quyết định:
+Suppose a new implementation decides to do this:
 
 ~~~java
 // Vi phạm hợp đồng ví dụ:
@@ -567,27 +567,27 @@ boolean tryReserve(int count) {
 }
 ~~~
 
-Compiler **không báo lỗi** vì chữ ký vẫn đúng. Nhưng contract test `invalidArgumentsThrowAndDoNotChangeState` sẽ thất bại. Tương tự, nếu thiếu chỗ mà implementation ném `IllegalStateException` thay vì trả `false`, client đang dựa vào boolean sẽ hoạt động khác.
+The compiler **does not complain** because method signatures still match. But the contract test `invalidArgumentsThrowAndDoNotChangeState` fails. Likewise, throwing `IllegalStateException` on insufficient capacity rather than returning `false` changes behavior for clients that rely on the boolean result.
 
-Một interface **không tự bảo đảm LSP**. Chữ ký là một phần hợp đồng; ngữ nghĩa đầu vào, đầu ra, exception, tính nhất quán và bảo đảm side effect cũng quan trọng.
+An interface **does not guarantee LSP by itself**. The signature is only part of the contract; input/output semantics, exceptions, consistency, and side-effect guarantees also matter.
 
-Một số nguyên tắc thực hành:
+Practical principles include:
 
-- Implementation không nên đột ngột **siết tiền điều kiện** nếu abstraction cho phép nhiều input hơn.
-- Implementation không nên **làm yếu hậu điều kiện** mà client được hứa.
-- Mọi invariant cần bảo toàn khi client sử dụng qua abstraction.
-- Với exception, phân biệt lỗi lập trình của caller, lỗi nghiệp vụ dự kiến và lỗi hạ tầng; không tự ý đổi failure mode mà không cập nhật hợp đồng.
+- An implementation should not unexpectedly **strengthen preconditions** if the abstraction permits more inputs.
+- An implementation should not **weaken promised postconditions**.
+- All invariants must remain true when clients access an object through its abstraction.
+- For exceptions, distinguish caller programming errors, expected business failures, and infrastructure failures; do not change failure modes without updating the contract.
 
-**Contract tests không chứng minh toán học LSP hoàn toàn.** Chúng kiểm tra một tập tình huống được chọn. Review thiết kế vẫn cần xem quan hệ subtype và những bảo đảm chưa được test, đặc biệt các khía cạnh hiệu năng, concurrency, transactional behavior và bảo mật.
+**Contract tests cannot mathematically prove complete LSP compliance.** They exercise selected scenarios. Design reviews must also examine the subtype relationship and untested guarantees, especially performance, concurrency, transaction behavior, and security.
 
-## 9. Kiểm thử bất biến của value object: `equals`, `hashCode` và `toString`
+## 9. Testing Value Object Contracts: `equals`, `hashCode`, and `toString`
 
-Trong Java, các phương thức kế thừa từ `Object` cũng có những hợp đồng đáng quan tâm. Tuy nhiên không phải class nào cũng override chúng. Hai nhóm test khác nhau:
+In Java, methods inherited from `Object` also have contracts worth considering. Not every class overrides them, however. Two types of tests are distinct:
 
-1. **Hợp đồng nghiệp vụ:** `SeatInventory` giữ `0 ≤ reserved ≤ capacity`.
-2. **Hợp đồng về giá trị:** một value object có `equals`/`hashCode` đúng và biểu diễn chẩn đoán phù hợp.
+1. **Business contract:** `SeatInventory` maintains `0 ≤ reserved ≤ capacity`.
+2. **Value contract:** a value object implements `equals`/`hashCode` correctly and provides an appropriate diagnostic representation.
 
-Trong ví dụ, `SeatSnapshot` là một `record` chứa primitive, Java tự cung cấp `equals` và `hashCode` theo các component. Ta có thể kiểm thử qua API công khai:
+In this example, `SeatSnapshot` is a `record` containing primitives. Java supplies `equals` and `hashCode` based on its components. We can test them through the public API:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -622,26 +622,26 @@ class SeatSnapshotValueTest {
 }
 ~~~
 
-Đây là kiểm thử hợp đồng **giá trị**. Đối với entity có **identity**, hai object khác nhau nhưng cùng dữ liệu hiển thị có thể không được xem là bằng nhau; cần xác định rõ quan hệ `equals` mong muốn trước khi viết test.
+This tests the **value** contract. For an entity with **identity**, two different objects containing the same display data may not be considered equal; define the intended `equals` semantics before writing tests.
 
-### Những quy tắc `equals` thường cần biết
+### Common `equals` Rules
 
-| Quy tắc | Diễn đạt | Test đơn giản |
+| Rule | Meaning | Simple Test |
 |---|---|---|
-| Phản xạ | `x.equals(x) == true` | `assertEquals(x, x)` |
-| Đối xứng | `x.equals(y) == y.equals(x)` | So sánh cả hai chiều |
-| Bắc cầu | Nếu `x==y` và `y==z`, thì `x==z` theo `equals` | Tạo ba instance tương đương |
-| Nhất quán | Không thay dữ liệu dùng để so sánh thì kết quả không tự đổi | Gọi lặp lại trên state ổn định |
-| Không bằng null | `x.equals(null) == false` | `assertNotEquals(null, x)` |
-| Tương thích hash | Nếu `x.equals(y)` thì `x.hashCode()==y.hashCode()` | So sánh hash và dùng `HashSet` |
+| Reflexive | `x.equals(x) == true` | `assertEquals(x, x)` |
+| Symmetric | `x.equals(y) == y.equals(x)` | Compare in both directions |
+| Transitive | If `x==y` and `y==z`, then `x==z` according to `equals` | Create three equivalent instances |
+| Consistent | With no changes to comparison-relevant data, the outcome remains unchanged | Repeat the call on stable state |
+| Not equal to null | `x.equals(null) == false` | `assertNotEquals(null, x)` |
+| Compatible hash codes | If `x.equals(y)`, then `x.hashCode()==y.hashCode()` | Compare hashes and use a `HashSet` |
 
-Không được suy luận ngược rằng **hash code bằng nhau ⇒ object bằng nhau**. Hai đối tượng khác nhau vẫn có thể có cùng hash.
+Do not infer the reverse: **equal hash codes do not imply equal objects**. Different objects may legitimately have the same hash.
 
-`toString()` thường dùng để quan sát/debug, không phải định dạng API ổn định trừ khi class công bố hợp đồng cụ thể. Đừng tạo test khớp toàn bộ dấu câu của `toString()` nếu tài liệu không hứa format ấy. Với dữ liệu nhạy cảm, nên kiểm thử những thông tin **không được lộ**, đồng thời xem xét các đường log khác.
+`toString()` is generally for observation/debugging, not a stable API format unless the class explicitly promises one. Avoid tests that match every punctuation mark in `toString()` when its format is not part of the contract. For sensitive data, test what **must not be disclosed**, and consider other logging paths as well.
 
-## 10. Không mở private field hay thêm setter chỉ để “test được”
+## 10. Do Not Expose Private Fields or Add Setters Just to Make Testing Easier
 
-Một kiểu test dễ gây hại:
+An example of a harmful test:
 
 ~~~java
 // Ý tưởng KHÔNG NÊN làm mặc định:
@@ -651,9 +651,9 @@ field.setAccessible(true);
 field.setInt(inventory, 4);
 ~~~
 
-Nếu test biết tên field và dùng reflection để thay đổi nó, bản thân test đã vượt qua ranh giới mà class cần bảo vệ. Refactor tên field hoặc chuyển sang `AtomicInteger` khiến test hỏng, dù client không bị ảnh hưởng.
+If a test knows a field's name and uses reflection to change it, the test bypasses the boundary that the class is supposed to protect. Renaming the field or switching to `AtomicInteger` then breaks the test even when clients are unaffected.
 
-Tương tự, thêm `setReserved(int)` chỉ để dựng trạng thái nhanh có thể làm API production yếu đi, cho phép client bỏ qua quy tắc đặt chỗ. Thay vào đó, dựng trạng thái hợp lệ bằng **public operations**:
+Similarly, adding `setReserved(int)` merely to construct test states quickly can weaken the production API by allowing clients to bypass reservation rules. Instead, create valid states through **public operations**:
 
 ~~~java
 SeatInventory inventory = new MonitorSeatInventory(10);
@@ -661,44 +661,44 @@ assertTrue(inventory.tryReserve(4));
 // Bây giờ có trạng thái reserved = 4, hợp lệ và tạo qua API thật.
 ~~~
 
-Nếu setup quá dài vì mỗi test phải chạy qua nhiều hệ thống ngoài, cân nhắc **test fixture/builder** để tạo dependency hoặc dữ liệu phù hợp. Fixture không nên tạo ra những trạng thái bất khả thi mà hành vi thực không thể đạt được, trừ khi đang cố ý kiểm thử khả năng hồi phục từ dữ liệu legacy hỏng.
+If setup becomes excessive because every test must traverse several external systems, consider **test fixtures/builders** for constructing suitable dependencies or data. Fixtures should not create impossible states that legitimate operations cannot reach, unless explicitly testing recovery from corrupted legacy data.
 
-### Không bám quá mức vào số lần gọi nội bộ
+### Avoid Over-Specifying Internal Call Counts
 
-Mock có ích khi một tương tác với dependency **là phần của hợp đồng**, chẳng hạn chỉ phát một sự kiện sau khi thanh toán thành công. Nhưng nếu chỉ kiểm tra `verify(calculator).calculate(...)` mà không khẳng định kết quả hoặc hệ quả quan sát được, test có thể pass ngay cả khi business result sai.
+Mocks are valuable when interaction with a dependency **is part of the contract**, such as publishing exactly one event after a successful payment. But a test checking only `verify(calculator).calculate(...)` without asserting a result or observable consequence may pass even when the business outcome is wrong.
 
-Phân biệt:
+Distinguish among:
 
-- **State-based test:** kiểm tra state/result được công bố.
-- **Interaction-based test:** kiểm tra những tương tác với cộng tác viên có ý nghĩa ra bên ngoài, như gửi thông báo đúng một lần.
-- **Implementation-coupled test:** kiểm tra thứ tự private helper hoặc số lần gọi một thuật toán thuần mà caller không biết tới.
+- **State-based test:** verifies publicly exposed state or results.
+- **Interaction-based test:** verifies meaningful externally observable interactions with collaborators, such as sending exactly one notification.
+- **Implementation-coupled test:** checks the order of private helpers or call counts of a pure algorithm that callers cannot observe.
 
-Không phải interaction test luôn kém. Điều quan trọng là tương tác ấy **được hợp đồng yêu cầu hay chỉ là cách triển khai hiện tại**.
+Interaction tests are not inherently inferior. What matters is whether an interaction **is required by the contract or merely reflects the current implementation**.
 
-## 11. Kiểm thử lỗi và exception: kết quả thất bại cũng là hành vi
+## 11. Testing Errors and Exceptions: Failure Is Also Behavior
 
-Một hợp đồng công khai tốt cần nói rõ input sai sẽ được xử lý thế nào:
+A well-defined public contract explains how invalid inputs are handled:
 
-| Tình huống | Hành vi theo ví dụ | Điều test cần xác nhận |
+| Scenario | Example Behavior | What the Test Must Verify |
 |---|---|---|
-| Tạo kho `capacity = 0` | Ném `IllegalArgumentException` | Không tạo đối tượng hợp lệ giả |
-| Đặt `0` hoặc số âm | Ném `IllegalArgumentException` | State không đổi |
-| Đặt vượt số chỗ còn | Trả `false` | State không đổi |
-| Hủy nhiều hơn số đã đặt | Ném `IllegalArgumentException` | State không đổi |
-| Hủy đúng số đã đặt | Thành công | State quay về reserved=0 |
-| Chuyển implementation Monitor sang Atomic | Giữ toàn bộ ngữ nghĩa công khai | Bộ contract test vẫn pass |
+| Construct inventory with `capacity = 0` | Throws `IllegalArgumentException` | No falsely valid object is created |
+| Reserve `0` or a negative number | Throws `IllegalArgumentException` | State remains unchanged |
+| Request more seats than available | Returns `false` | State remains unchanged |
+| Cancel more than the reserved count | Throws `IllegalArgumentException` | State remains unchanged |
+| Cancel exactly the reserved count | Succeeds | State returns to reserved=0 |
+| Replace the Monitor implementation with Atomic | Preserve all public semantics | The contract test suite still passes |
 
-`assertThrows` kiểm tra đúng loại exception trong trường hợp contract hứa. Nếu exception message không được coi là API ổn định, không nên khóa cứng nguyên văn message trong test. Nếu mã lỗi là một phần hợp đồng giao tiếp, hãy kiểm tra mã lỗi có cấu trúc thay vì phụ thuộc câu chữ.
+Use `assertThrows` to check the promised exception type. If the exception message is not a stable API guarantee, avoid hardcoding its exact text in tests. If an error code is part of an external contract, assert the structured code rather than the wording of a message.
 
-### Phạm vi nguyên tử của đường lỗi
+### Atomicity of Failure Paths
 
-Trong ví dụ, exception được ném **trước khi** state bị cập nhật khi số lượng không hợp lệ. Với các thao tác phức tạp hơn, nếu đã ghi database rồi mới ném exception do gửi email thất bại, "throw exception" không đồng nghĩa "mọi side effect đều rollback". Test cần định nghĩa trạng thái sau lỗi theo tính nhất quán thực tế: transaction, outbox, retry hoặc compensation.
+In the example, invalid quantities cause an exception **before** state is updated. In more complex operations, if a database write succeeds and an email later fails, throwing an exception does not mean that every side effect has been rolled back. Tests must specify post-failure state according to actual consistency mechanisms: transactions, outbox, retries, or compensation.
 
-## 12. Contract test và kiểm thử đồng thời
+## 12. Contract Tests and Concurrency Testing
 
-Nếu abstraction công bố rằng hai thread có thể gọi `tryReserve(1)` trên cùng instance, tính nguyên tử cũng là **một phần hợp đồng**, không chỉ chi tiết implement.
+If an abstraction promises that two threads may call `tryReserve(1)` on the same instance, atomicity is **part of the contract**, not merely an implementation detail.
 
-Ví dụ JUnit Jupiter 5 kiểm tra **một implementation bất kỳ** qua interface. Có thể đặt đoạn này trong `SeatInventoryContractTest` và thêm các import cần thiết:
+A JUnit Jupiter 5 example tests **any implementation** through the interface. This can be placed in `SeatInventoryContractTest` with the necessary imports:
 
 ~~~java
 import java.util.ArrayList;
@@ -750,30 +750,30 @@ void concurrentReservationsNeverOversellOneInstance()
 }
 ~~~
 
-Điều này kiểm tra **kết quả cuối cùng** sau khi mọi lời gọi hoàn tất và hai thread/nhóm thread cùng tranh chỗ. `CountDownLatch` giúp bắt đầu gần nhau, nhưng **không tạo bằng chứng toán học về mọi lịch thực thi**. Nếu rủi ro concurrency cao, cần kết hợp stress test, review memory model, công cụ kiểm thử concurrency chuyên biệt và/hoặc mô hình hóa.
+This verifies **the final result** after every call completes while two threads/groups of threads contend for seats. `CountDownLatch` helps them start at roughly the same time but **does not mathematically prove correctness for all possible thread schedules**. High-risk concurrency requires stress tests, memory-model review, specialized concurrency testing tools, and/or formal modeling.
 
-Không nên dùng `Thread.sleep` với khoảng chờ tùy ý để quyết định test pass/fail. Cũng không nên kiểm tra `reserved + available == capacity` bằng **hai lời gọi snapshot ở hai thời điểm khác nhau** trong khi các thread còn đang cập nhật; hãy lấy **một snapshot nhất quán**, rồi tính từ dữ liệu của snapshot ấy.
+Avoid `Thread.sleep` with arbitrary time delays to decide whether tests pass or fail. Do not check `reserved + available == capacity` using **two different snapshot calls at different moments** while threads are still updating; obtain **one consistent snapshot** and calculate using its fields.
 
-### Giới hạn một JVM
+### One-JVM Limitation
 
-Một contract về thread safety trên một Java object không tự bảo đảm điều kiện bán vé khi hai JVM cùng cập nhật **một bản ghi trong database**. Khi API triển khai trên nhiều node, contract ở cấp service cần được xác minh bằng transaction, update có điều kiện hoặc optimistic locking ở tầng persistence. Unit test của `AtomicSeatInventory` không thay thế integration test DB.
+A thread-safety contract for one Java object does not automatically prevent overselling seats when two JVMs update **the same database record**. In a multi-node deployment, a service-level contract needs verification through transactions, conditional updates, or optimistic locking in persistence. Unit tests of `AtomicSeatInventory` cannot replace DB integration tests.
 
-## 13. Các tầng kiểm thử: cùng một hợp đồng, bằng chứng khác nhau
+## 13. Test Layers: One Contract, Different Forms of Evidence
 
-| Tầng | Mục tiêu | Ví dụ |
+| Layer | Objective | Example |
 |---|---|---|
-| **Unit test đối tượng** | Hợp đồng hành vi công khai của một object | `tryReserve`, `cancel`, `snapshot` |
-| **Contract test cho interface** | Mọi implementation giữ cùng ngữ nghĩa | Monitor và Atomic chạy chung bộ test |
-| **Component/integration test** | Tương tác giữa nhiều class hoặc hệ thống thực | Kho vé lưu trong repository/JDBC |
-| **API test** | Hợp đồng HTTP/JSON/status code | Hết vé trả mã lỗi nghiệp vụ phù hợp |
-| **Concurrency test** | Tính nhất quán khi thao tác đan xen | Nhiều yêu cầu không thể cùng chiếm một chỗ |
-| **End-to-end test** | Luồng người dùng qua nhiều thành phần | Chọn vé → đặt → xác nhận hiển thị |
+| **Object unit test** | Public behavioral contract of one object | `tryReserve`, `cancel`, `snapshot` |
+| **Interface contract test** | All implementations preserve shared semantics | Monitor and Atomic run the same suite |
+| **Component/integration test** | Interaction among classes or real systems | Seat inventory persisted through repository/JDBC |
+| **API test** | HTTP/JSON/status-code contract | Sold-out inventory returns an appropriate business error code |
+| **Concurrency test** | Consistency under interleaved operations | Concurrent requests cannot reserve the same seat twice |
+| **End-to-end test** | User workflow across components | Select a seat → reserve it → confirm the displayed result |
 
-Một bài unit test nhanh có thể chứng minh `SeatInventory` đúng logic trong memory, nhưng không chứng minh DB lock, rollback, API serializer hay trải nghiệm người dùng cuối đúng. Hãy chọn **mức kiểm thử tương ứng với ranh giới hợp đồng**.
+A fast unit test may establish correct in-memory `SeatInventory` logic, but it cannot establish correctness of DB locks, rollback, API serialization, or end-user experience. Choose **a test level appropriate to the contract boundary**.
 
-## 14. Các lỗi thiết kế test thường làm giảm giá trị kiểm thử
+## 14. Test Design Mistakes That Reduce Test Value
 
-### Lỗi A: Test implementation thay vì contract
+### Mistake A: Testing an Implementation Instead of Its Contract
 
 ~~~java
 // Đáng ngờ:
@@ -784,35 +784,35 @@ assertEquals("java.util.concurrent.atomic.AtomicInteger",
                 .getName());
 ~~~
 
-Test này không nói kho vé có đúng hay không, chỉ khóa lựa chọn triển khai. Đổi state từ atomic sang lock có thể là refactor hợp lý nhưng test sẽ hỏng vô ích.
+This test says nothing about whether the inventory behaves correctly; it merely locks in an implementation choice. Switching from atomic state to locks may be a valid refactor, but the test would fail unnecessarily.
 
-### Lỗi B: Chỉ assert kết quả trả về, bỏ qua state
+### Mistake B: Asserting Only the Return Value and Ignoring State
 
 ~~~java
 assertFalse(inventory.tryReserve(100));
 ~~~
 
-Nếu implementation vẫn tăng `reserved` rồi trả `false`, test sẽ không phát hiện. Nên lấy snapshot trước/sau và xác minh invariant.
+If an implementation still increments `reserved` before returning `false`, this test misses the bug. Capture snapshots before and after and verify the invariant.
 
-### Lỗi C: Thử đường lỗi bằng cách làm hỏng private state
+### Mistake C: Testing Failure by Corrupting Private State
 
-Nếu test đặt `reserved = -5` bằng reflection rồi yêu cầu `tryReserve` tự sửa, test đang áp đặt một trường hợp **không đi qua API hợp lệ**. Trừ khi yêu cầu thật là phục hồi dữ liệu cũ bị hỏng, tốt hơn nên kiểm tra tất cả **đường thay đổi công khai** không bao giờ tạo được trạng thái ấy.
+If a test uses reflection to set `reserved = -5` and then expects `tryReserve` to repair it, the test imposes a state **not reachable through the valid API**. Unless the real requirement is recovery from corrupted legacy data, test instead that all **public mutation paths** never create such a state.
 
-### Lỗi D: Các test phụ thuộc thứ tự hoặc state chung
+### Mistake D: Tests Depend on Execution Order or Shared State
 
-Một `static SeatInventory shared` được mọi test mutate khiến kết quả thay đổi khi JUnit chạy song song hoặc đổi thứ tự. Mỗi test nên có **fixture độc lập**, dựng một instance mới. Khi cần DB chung, phải có chiến lược cô lập/cleanup rõ ràng.
+Having every test mutate a `static SeatInventory shared` causes results to vary when JUnit runs tests in parallel or changes their order. Give each test an **independent fixture** with a fresh instance. Shared databases require an explicit isolation/cleanup strategy.
 
-### Lỗi E: Mock chính đối tượng đang muốn kiểm chứng
+### Mistake E: Mocking the Very Object Under Test
 
-Nếu mock toàn bộ `SeatInventory` và cấu hình `when(tryReserve(4)).thenReturn(true)`, ta chỉ kiểm tra hành vi do test **tự cài đặt**, chứ không kiểm tra implementation thật. Dùng mock/fake cho collaborator ngoài phạm vi test, không thay thế system under test khi mục tiêu là contract của chính nó.
+If you mock all of `SeatInventory` and configure `when(tryReserve(4)).thenReturn(true)`, you test only behavior **programmed into the mock**, not the real implementation. Use mocks/fakes for collaborators outside the test scope; do not replace the system under test when verifying its contract.
 
-### Lỗi F: Quá phụ thuộc implementation của logger, thời gian hay ngẫu nhiên
+### Mistake F: Overcoupling Tests to Logger Implementations, Time, or Randomness
 
-Nếu hợp đồng không yêu cầu ghi log một câu cụ thể, test nên xác nhận kết quả quan sát được thay vì nguyên văn log. Với đồng hồ/ngẫu nhiên thực sự là đầu vào nghiệp vụ, inject `Clock` hoặc random generator/fake có kiểm soát để test không flaky.
+If the contract does not require an exact log message, verify observable outcomes rather than matching log text verbatim. When the clock or randomness is a genuine business input, inject a `Clock` or controlled random generator/fake so the test is not flaky.
 
-## 15. Viết contract tests cho adapter thực tế
+## 15. Writing Contract Tests for Real Adapters
 
-Mẫu kiểm thử chung không chỉ áp dụng cho hai kiểu lưu state trong bộ nhớ. Ví dụ một `DocumentStore` có implementation dùng file hoặc database:
+The shared testing pattern applies beyond two in-memory state mechanisms. For example, `DocumentStore` may have file-based and database implementations:
 
 ~~~java
 interface DocumentStore {
@@ -821,39 +821,39 @@ interface DocumentStore {
 }
 ~~~
 
-Một hợp đồng có thể yêu cầu:
+A contract might require:
 
-- Không nhận ID null hoặc rỗng.
-- Lưu dữ liệu rồi tìm lại được cùng **nội dung byte**.
-- Khi không có ID thì trả `Optional.empty()`.
-- Sửa `byte[]` truyền vào sau `save` không được âm thầm sửa dữ liệu đã lưu.
-- Sửa `byte[]` trả ra từ `find` không được âm thầm sửa dữ liệu được lưu, nếu API cam kết snapshot.
-- Khi lưu trùng ID, phải có quy tắc rõ là **overwrite** hay **reject**; cả hai implementation phải thống nhất.
+- Reject null or empty IDs.
+- Saving data and reading it back returns identical **byte content**.
+- A missing ID returns `Optional.empty()`.
+- Modifying the `byte[]` argument after `save` must not silently modify stored data.
+- Modifying the `byte[]` returned by `find` must not silently change stored data when the API promises snapshots.
+- Duplicate IDs must follow an explicit **overwrite** or **reject** policy, consistently implemented by both implementations.
 
-Với mảng `byte[]` mutable, cần **defensive copy** ở cả đường vào và đường ra nếu đó là cam kết của API. Một `InMemoryDocumentStore` giữ tham chiếu byte array gốc sẽ dễ vi phạm hợp đồng dù method có đúng chữ ký.
+Because `byte[]` arrays are mutable, **defensive copies** are necessary at input and output boundaries if promised by the API. An `InMemoryDocumentStore` that retains the original byte array's reference can violate the contract despite having the correct method signature.
 
-Đây là ví dụ vì sao **contract test chứa giá trị lớn hơn việc test có đúng số method**: nó giữ cả hành vi mà Java type system không biểu diễn trực tiếp, như **ownership của mutable buffer** và thất bại khi lưu trùng.
+This shows why **contract tests provide more value than counting methods**: they preserve behavior the Java type system cannot directly express, such as **ownership of a mutable buffer** and duplicate-save failure semantics.
 
-## 16. Checklist thiết kế kiểm thử hành vi công khai
+## 16. Checklist for Designing Public Behavior Tests
 
-Trước khi viết test, trả lời:
+Before writing tests, answer:
 
-1. **Đối tượng hứa điều gì?** Viết precondition, postcondition, invariant, failure mode.
-2. **API nào là public contract?** Đừng mở private field chỉ vì test setup khó.
-3. **Trạng thái ban đầu là gì?** Mỗi test phải dựng fixture nhất quán, độc lập.
-4. **Những observable results nào cần so sánh?** Return value, snapshot, exception, event, persisted data.
-5. **Có đường từ chối không?** Khi thất bại, state và side effect phải ra sao?
-6. **Đâu là trường hợp biên?** Zero, negative, max, empty, null, trùng lặp, overflow, chuyển trạng thái.
-7. **Có nhiều implementation không?** Dùng cùng contract suite để kiểm tra khả năng thay thế.
-8. **Có yếu tố thời gian/concurrency/I/O?** Dùng clock/fake/test fixture, integration tests và synchronization đúng phạm vi.
-9. **Test có giòn khi refactor nội bộ không?** Xóa assert không thuộc hợp đồng, giữ những gì client cần.
-10. **Thay đổi hợp đồng đã được phê duyệt chưa?** Khi business rule đổi, cập nhật đặc tả và test có chủ đích, không sửa test chỉ để đèn xanh.
+1. **What does the object promise?** Specify preconditions, postconditions, invariants, and failure modes.
+2. **Which API is the public contract?** Do not expose private fields merely because setup is difficult.
+3. **What is the initial state?** Every test should construct a consistent, independent fixture.
+4. **Which observable results should be compared?** Return values, snapshots, exceptions, events, or persisted data.
+5. **Are there rejection paths?** What should happen to state and side effects on failure?
+6. **What are the boundary cases?** Zero, negative, maximum, empty, null, duplicates, overflow, and state transitions.
+7. **Are multiple implementations present?** Use the same contract suite to verify substitutability.
+8. **Are time/concurrency/I/O involved?** Use a clock, fakes, fixtures, integration tests, and properly scoped synchronization.
+9. **Will tests become brittle after internal refactoring?** Remove assertions outside the contract and retain those clients need.
+10. **Has the contract change been approved?** When business rules evolve, intentionally update the specification and tests; do not change tests merely to make them green.
 
-Một kỹ thuật hữu ích là viết tên test thành câu **“Khi X, hệ thống phải Y”** rồi yêu cầu một reviewer không biết implementation vẫn hiểu được câu ấy. Nếu tên test chỉ nói `testPrivateHelperA`, có lẽ chưa nhắm đúng hành vi client quan tâm.
+A useful technique is naming tests as sentences of the form **“When X, the system must Y”** so even a reviewer unfamiliar with the implementation understands them. A name like `testPrivateHelperA` likely misses the behavior clients care about.
 
-## 17. Bài tập thực hành: hợp đồng ví điện tử
+## 17. Practical Exercise: Digital Wallet Contract
 
-Thiết kế một interface:
+Design an interface:
 
 ~~~java
 interface Wallet {
@@ -863,93 +863,93 @@ interface Wallet {
 }
 ~~~
 
-Các quy tắc giả định:
+Assumed rules:
 
-- Ví khởi tạo với số dư không âm.
-- `deposit(n)` yêu cầu `n > 0`; khi thành công tăng đúng `n`.
-- `tryWithdraw(n)` yêu cầu `n > 0`; khi đủ tiền, trừ đúng `n` và trả `true`; khi không đủ tiền, trả `false` và giữ nguyên số dư.
-- Không bao giờ có số dư âm; xử lý overflow khi nạp tiền (`Math.addExact` hoặc kiểm tra trước).
-- Các thao tác trên **một instance** hỗ trợ nhiều thread; hai lệnh rút tiền không thể cùng dùng một số dư cũ để đều thành công.
-- Test nên dùng số nguyên biểu diễn **đơn vị tiền nhỏ nhất** để tránh sai số nhị phân trong phạm vi ví dụ.
+- A wallet starts with a nonnegative balance.
+- `deposit(n)` requires `n > 0`; on success it increases the balance by exactly `n`.
+- `tryWithdraw(n)` requires `n > 0`; with sufficient funds, it subtracts exactly `n` and returns `true`; otherwise it returns `false` without changing the balance.
+- The balance never becomes negative; handle deposit overflow (`Math.addExact` or pre-checks).
+- Operations on **one instance** support multiple threads; two withdrawals cannot both succeed using the same stale balance.
+- Tests should use integers representing **the smallest monetary unit** to avoid binary floating-point errors in this example.
 
-Yêu cầu:
+Requirements:
 
-1. Viết `SynchronizedWallet` và `AtomicWallet`.
-2. Viết một abstract contract test dùng cùng `@Test` cho cả hai implementation.
-3. Có test cho `deposit(0)`, rút âm, rút vượt số dư, nạp tràn `long`, và xác nhận state giữ nguyên sau lỗi.
-4. Có test cho chuỗi `deposit(100) → withdraw(30) → withdraw(80 bị từ chối)`.
-5. Có test hai thread cùng rút 80 từ ví có 100; **chỉ một thành công**.
-6. Giải thích tại sao unit test này chưa chứng minh tính đúng đắn của giao dịch tiền thật trên database hoặc dịch vụ thanh toán.
+1. Implement `SynchronizedWallet` and `AtomicWallet`.
+2. Write one abstract contract test that runs the same `@Test` methods for both implementations.
+3. Test `deposit(0)`, negative withdrawals, withdrawals exceeding the balance, overflowing a `long` deposit, and unchanged state after errors.
+4. Test the sequence `deposit(100) → withdraw(30) → withdraw(80 bị từ chối)`.
+5. Test two threads each withdrawing 80 from a wallet with 100; **only one succeeds**.
+6. Explain why these unit tests do not establish correctness of real-money transactions in a database or payment service.
 
-### Câu hỏi tự kiểm tra
+### Self-Check Questions
 
-1. “Kiểm thử hành vi công khai” khác kiểm tra private field ra sao?
-2. Vì sao cùng một method signature không bảo đảm hai implementation có thể thay thế nhau?
-3. Tiền điều kiện, hậu điều kiện và invariant khác nhau thế nào?
-4. Tại sao chỉ assert `tryReserve(7) == false` là chưa đủ?
-5. Vì sao nên chạy cùng contract suite cho mọi implementation của một interface?
-6. Khi nào test `equals/hashCode` cần thiết, và vì sao không suy ra `hashCode` bằng nhau là object bằng nhau?
-7. Có nên dùng reflection để thay private state chỉ nhằm rút ngắn test setup không?
-8. Vì sao assert chính xác thông điệp log dễ làm test giòn nếu log không thuộc hợp đồng?
-9. Test concurrency cùng JVM có đủ để chứng minh không bán quá số vé trong môi trường nhiều node không?
-10. Những observable effects nào cần kiểm tra khi method vừa cập nhật DB vừa phát sự kiện?
+1. How does “testing public behavior” differ from inspecting private fields?
+2. Why does matching a method signature not guarantee that two implementations are interchangeable?
+3. How do preconditions, postconditions, and invariants differ?
+4. Why is asserting only `tryReserve(7) == false` insufficient?
+5. Why run the same contract suite for every implementation of an interface?
+6. When should you test `equals/hashCode`, and why do equal `hashCode` values not imply equal objects?
+7. Should reflection be used to change private state merely to shorten test setup?
+8. Why do exact log-message assertions make tests brittle when logs are not contractual?
+9. Is a one-JVM concurrency test enough to prove that tickets cannot be oversold across multiple nodes?
+10. What observable effects matter when a method both updates a DB and publishes an event?
 
-**Ghi nhớ:** Kiểm thử tốt cho OOP trả lời câu hỏi **“Đối tượng có giữ lời hứa với client không?”**. Hãy mô tả hợp đồng một cách quan sát được, kiểm tra cả thành công lẫn thất bại, dùng state snapshots và test chuỗi thao tác, rồi áp dụng cùng bộ test cho những implementation thay thế. Việc tách test khỏi chi tiết nội bộ làm refactor dễ hơn **mà không giảm tiêu chuẩn đúng đắn của hành vi**.
+**Remember:** Good OOP tests answer **“Does the object fulfill its promises to clients?”** Specify contracts in observable terms, test success and failure, use state snapshots and operation sequences, and apply one suite to substitutable implementations. Decoupling tests from internals makes refactoring easier **without lowering the correctness bar for behavior**.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="testing-002">Kiểm thử hàm khởi tạo và trạng thái không hợp lệ</a>
+## <a id="testing-002">Testing Constructors and Invalid States</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kiểm thử hàm khởi tạo và trạng thái không hợp lệ trong OOP
+# Testing Constructors and Invalid States in OOP
 
-**Chủ đề:** OOP → Kiểm thử → **Kiểm thử hàm khởi tạo và trạng thái không hợp lệ**  
-**Môi trường ví dụ:** Java 17+, JUnit Jupiter 5 (và `junit-jupiter-params` cho parameterized tests).
+**Topic:** OOP → Testing → **Testing constructors and invalid states**  
+**Example environment:** Java 17+, JUnit Jupiter 5 (and `junit-jupiter-params` for parameterized tests).
 
-## 1. Vì sao cần kiểm thử constructor, khi nó “chỉ gán field”?
+## 1. Why Test a Constructor That “Only Assigns Fields”?
 
-Xét một class biểu diễn hóa đơn. Để một hóa đơn có nghĩa, ta cần bảo đảm:
+Consider a class representing an invoice. For an invoice to be meaningful, it must guarantee:
 
-- Có **mã khách hàng không rỗng**.
-- Có **ít nhất một dòng hàng**.
-- Từng dòng có mã sản phẩm hợp lệ, đơn giá không âm và số lượng dương.
-- **Tổng tiền hàng** được tính không tràn kiểu `long`.
-- **Giảm giá** không âm và không vượt tổng tiền hàng.
-- Sau khi tạo, người gọi không thể sửa danh sách đầu vào rồi làm thay đổi hóa đơn đã tạo.
+- A **nonblank customer ID**.
+- **At least one line item**.
+- Every line item has a valid product ID, nonnegative unit price, and positive quantity.
+- **Merchandise subtotal** is calculated without overflowing `long`.
+- **Discount** is nonnegative and does not exceed the merchandise subtotal.
+- After creation, the caller cannot mutate the original list and thereby change the constructed invoice.
 
-Nếu constructor nhận mọi giá trị mà không kiểm tra, ta có thể tạo một object có `discountVnd > subtotalVnd`, danh sách hàng rỗng, thậm chí số tiền cuối cùng âm. Lỗi thường không xuất hiện ngay lúc `new`, mà lan tới bước lưu database, tính thuế hoặc hoàn tiền.
+If a constructor accepts everything without validation, it can create an object with `discountVnd > subtotalVnd`, no line items, or even a negative payable amount. The error may not surface when `new` runs, but later during database persistence, tax calculation, or refunds.
 
-**Constructor là một ranh giới bảo vệ bất biến (invariant) của object.** Khi constructor trả về bình thường, caller có quyền tin object được tạo thỏa các bảo đảm đã công bố. Nếu dữ liệu không hợp lệ, constructor nên **từ chối tạo object** bằng một cơ chế lỗi rõ ràng.
+**A constructor is a boundary that protects an object's invariants.** When a constructor returns normally, callers may trust that the resulting object satisfies its published guarantees. Invalid data should cause the constructor to **reject object creation** through a clear error mechanism.
 
-Không phải constructor nào cũng phải làm nhiều việc: một value object có hai field đơn giản có thể cần rất ít validation. Nhưng một khi class công bố bất biến, **kiểm thử constructor chính là kiểm thử khả năng duy trì hợp đồng khi object bắt đầu tồn tại**.
+Not every constructor needs elaborate logic: a simple value object with two fields may require very little validation. But once a class declares invariants, **testing its constructor verifies that the contract holds from the moment the object exists**.
 
-### Ba câu hỏi cốt lõi
+### Three Core Questions
 
-1. **Trường hợp hợp lệ:** tạo xong, các field đã đúng chưa; giá trị mặc định và chuẩn hóa có đúng không?
-2. **Trường hợp không hợp lệ:** input nào phải bị từ chối; ngoại lệ thuộc loại nào; có tạo ra trạng thái quan sát được bị sai không?
-3. **Sau khởi tạo:** object có tiếp tục hợp lệ khi input mutable hoặc reference được chia sẻ bị sửa không?
+1. **Valid case:** Are fields correct after creation? Are defaults and normalization applied correctly?
+2. **Invalid case:** Which inputs must be rejected? What exception type applies? Can an incorrect observable state escape?
+3. **After initialization:** Does the object remain valid if mutable input or a shared reference changes?
 
-Một test chỉ kiểm tra `new Invoice(...)` “không ném exception” là chưa đủ nếu constructor còn có trách nhiệm tính tổng, chuẩn hóa hoặc chụp lại dữ liệu.
+A test asserting that `new Invoice(...)` merely “does not throw” is insufficient when construction also calculates totals, normalizes values, or snapshots inputs.
 
-## 2. Phân biệt tiền điều kiện, hậu điều kiện và bất biến
+## 2. Distinguishing Preconditions, Postconditions, and Invariants
 
-| Khái niệm | Câu hỏi cần hỏi | Ví dụ |
+| Concept | Question to Ask | Example |
 | --- | --- | --- |
-| **Precondition** | Đầu vào hợp lệ khi gọi constructor không? | `quantity > 0`; `customerId` không blank |
-| **Postcondition** | Khi constructor thành công, object được thiết lập đúng chưa? | `total = subtotal - discount` |
-| **Invariant** | Điều kiện nào phải luôn đúng khi object quan sát được? | `0 <= discount <= subtotal`, `total >= 0` |
-| **Ownership/aliasing** | Object giữ một bản dữ liệu riêng hay dùng chung mutable reference? | Sửa `ArrayList` của caller không đổi hóa đơn |
-| **Failure contract** | Khi vi phạm, constructor phản hồi thế nào? | `IllegalArgumentException` cho dữ liệu sai, `NullPointerException` cho tham chiếu bắt buộc null (nếu contract chọn vậy) |
-| **Failure atomicity** | Nếu constructor thất bại, có side effect nào tồn tại không? | Không gửi email/ghi dữ liệu ngoài chỉ vì thử `new` |
+| **Precondition** | Is the input valid when invoking the constructor? | `quantity > 0`; `customerId` is not blank |
+| **Postcondition** | After successful construction, is the object initialized correctly? | `total = subtotal - discount` |
+| **Invariant** | What must always hold whenever the object is observable? | `0 <= discount <= subtotal`, `total >= 0` |
+| **Ownership/aliasing** | Does the object own its data or share mutable references? | Mutating the caller's `ArrayList` does not change the invoice |
+| **Failure contract** | How does construction respond to violations? | `IllegalArgumentException` for invalid values, `NullPointerException` for required null references (if the contract chooses this) |
+| **Failure atomicity** | Can side effects remain when construction fails? | Do not send email or write external data merely because `new` was attempted |
 
-Đặt ba tình huống cạnh nhau:
+Compare these three cases:
 
 ~~~text
 Input hợp lệ:
@@ -965,33 +965,33 @@ Trạng thái bị phá sau tạo nếu thiết kế sai:
   → caller.clear() → hóa đơn trở thành rỗng
 ~~~
 
-**“Không trả object” không đồng nghĩa Java tự rollback mọi side effect** đã xảy ra trong constructor. Nếu constructor đăng ký `this` với listener, phát event hoặc ghi DB trước khi validate xong, tác dụng phụ có thể còn tồn tại. Ta nên tránh làm như vậy và kiểm thử các ranh giới có side effect khi chúng thực sự cần thiết.
+**“No object is returned” does not mean Java automatically rolls back every side effect** performed inside a constructor. If construction registers `this` with a listener, publishes an event, or writes to a DB before validation finishes, those effects may persist. Avoid such designs, and test side-effect boundaries when genuinely necessary.
 
-## 3. Lập ma trận kiểm thử trước khi viết test
+## 3. Build a Test Matrix Before Writing Tests
 
-Một ma trận tốt ghi rõ **điểm hợp lệ, điểm biên, trường hợp bị từ chối và kết quả sau lời gọi**:
+A good matrix specifies **valid cases, boundaries, rejected inputs, and post-call outcomes**:
 
-| Nhóm | Đầu vào | Kỳ vọng |
+| Group | Input | Expected Outcome |
 | --- | --- | --- |
-| Bình thường | ID hợp lệ, một/nhiều dòng hợp lệ | Tạo thành công, giữ đúng dữ liệu |
-| Chuẩn hóa | ID `"  CUS-01  "` | Giá trị `customerId()` là `"CUS-01"` |
-| ID sai | `null`, `""`, toàn khoảng trắng | `IllegalArgumentException` |
-| Danh sách sai | `null` hoặc rỗng | Từ chối theo hợp đồng (ví dụ `NullPointerException`, `IllegalArgumentException`) |
-| Phần tử sai | Danh sách có `null` | Từ chối; không tạo hóa đơn |
-| Giá trị dòng hàng sai | Số lượng 0/âm, giá âm, SKU rỗng | `LineItem` từ chối |
-| Giảm giá biên dưới | `discount = 0` | Hợp lệ |
-| Giảm giá biên trên | `discount = subtotal` | Hợp lệ; tổng cuối = 0 |
-| Giảm giá vượt biên | `discount = subtotal + 1` | `IllegalArgumentException` |
-| Tính toán tràn số | `unitPrice × quantity` vượt `long` | `ArithmeticException` |
-| Aliasing | Sửa danh sách nguồn sau tạo | Hóa đơn không thay đổi |
-| Bảo vệ accessor | Gọi `invoice.lines().clear()` | `UnsupportedOperationException` |
-| Trạng thái sau lỗi | Constructor thất bại hoặc operation bị từ chối | Không có object lỗi được trả về; state hiện có vẫn phù hợp hợp đồng |
+| Normal | Valid ID and one or more valid items | Construction succeeds, preserving correct data |
+| Normalization | ID `"  CUS-01  "` | `customerId()` returns `"CUS-01"` |
+| Invalid ID | `null`, `""`, or whitespace only | `IllegalArgumentException` |
+| Invalid list | `null` or empty list | Rejected by contract (e.g., `NullPointerException`, `IllegalArgumentException`) |
+| Invalid element | List contains `null` | Rejected; no invoice created |
+| Invalid line item | 0/negative quantity, negative price, blank SKU | Rejected by `LineItem` |
+| Lower discount boundary | `discount = 0` | Valid |
+| Upper discount boundary | `discount = subtotal` | Valid; final total = 0 |
+| Discount beyond boundary | `discount = subtotal + 1` | `IllegalArgumentException` |
+| Arithmetic overflow | `unitPrice × quantity` exceeds `long` | `ArithmeticException` |
+| Aliasing | Modify source list after construction | Invoice does not change |
+| Accessor protection | Call `invoice.lines().clear()` | `UnsupportedOperationException` |
+| State after failure | Construction fails or an operation is rejected | No invalid object is returned; existing state still obeys the contract |
 
-**Chọn ngoại lệ theo hợp đồng**, không bắt buộc tất cả dữ liệu sai phải ném cùng một exception. Ví dụ `Objects.requireNonNull(...)` ném `NullPointerException`, còn số lượng âm thường được báo bằng `IllegalArgumentException`.
+**Select exception types according to the contract**; all invalid inputs need not produce the same exception. For example, `Objects.requireNonNull(...)` throws `NullPointerException`, while negative quantity is typically reported with `IllegalArgumentException`.
 
-## 4. Ví dụ Java 17 hoàn chỉnh: constructor bảo vệ bất biến
+## 4. Complete Java 17 Example: Constructor-Enforced Invariants
 
-Tạo file **ConstructorInvariantDemo.java**. Ví dụ dùng `record` cho một dòng hàng bất biến, một class `Invoice` có constructor kiểm soát các điều kiện liên trường, `Math.addExact/multiplyExact` để không tràn số âm thầm và `List.copyOf` để tách khỏi danh sách mutable của caller.
+Create **ConstructorInvariantDemo.java**. This example uses a `record` for an immutable line item, an `Invoice` class whose constructor validates cross-field constraints, `Math.addExact/multiplyExact` to prevent silent overflow, and `List.copyOf` to separate the invoice from the caller's mutable list.
 
 ~~~java
 import java.util.List;
@@ -1117,14 +1117,14 @@ public class ConstructorInvariantDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac ConstructorInvariantDemo.java
 java ConstructorInvariantDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 CUS-01
@@ -1133,17 +1133,17 @@ CUS-01
 2
 ~~~
 
-### Vì sao đặt validation trước các phép gán field?
+### Why Validate Before Assigning Fields?
 
-Trong `Invoice`, mã khách hàng được chuẩn hóa; danh sách được kiểm tra và sao chép; tổng tiền được tính; sau đó mới gán các field `final`. Nếu thiếu một dòng hàng hoặc giảm giá vượt tổng, không có `Invoice` được trả ra cho client.
+In `Invoice`, the customer ID is normalized, the list validated and copied, and the subtotal calculated before assigning the `final` fields. If an item is missing or a discount exceeds the subtotal, no `Invoice` is returned to the client.
 
-Java không bắt buộc constructor phải gán field `final` đúng thứ tự minh họa, nhưng cách **tính và kiểm tra trên biến cục bộ trước khi publish object** giúp người đọc dễ kiểm chứng invariants và giảm nguy cơ để `this` thoát ra giữa quá trình khởi tạo. Không nên gọi virtual method overrideable, đăng ký listener hoặc chuyển `this` sang thread khác trong constructor.
+Java does not require the constructor to assign `final` fields in the exact sequence shown, but **calculating and validating with local variables before publishing the object** makes invariants easier to inspect and reduces the risk of leaking `this` during initialization. Avoid calling overridable virtual methods, registering listeners, or passing `this` to another thread from a constructor.
 
-Đối với các data structure mutable, `List.copyOf` tạo một danh sách không thể sửa qua reference được trả về và không giữ kết nối tới `ArrayList` mutable ban đầu. Đây là **bản sao nông về phần tử**: nếu `LineItem` chứa một object mutable, người gọi vẫn có thể sửa trạng thái phần tử đó qua reference khác. Trong ví dụ, `LineItem` dùng `String`, `long`, `int` nên không có vấn đề mutable element.
+For mutable data structures, `List.copyOf` creates a list that cannot be modified through the returned reference and is detached from the caller's original mutable `ArrayList`. This is a **shallow copy of the elements**: if a `LineItem` contains a mutable object, a caller holding another reference to that element may still modify it. Here, `LineItem` uses `String`, `long`, and `int`, so the example has no mutable-element problem.
 
-### Tại sao không chỉ dùng setter để hoàn tất?
+### Why Not Use Setters to Complete Construction?
 
-Mẫu sau cho phép trạng thái trung gian sai:
+The following approach allows invalid intermediate states:
 
 ~~~java
 // Chỉ minh họa anti-pattern: không có validation tại ranh giới tạo.
@@ -1153,11 +1153,11 @@ invoice.setDiscountVnd(500_000L);
 // Ở đây chưa chắc tồn tại dòng hàng nào!
 ~~~
 
-Lớp `Invoice` trong ví dụ hoàn chỉnh **không có constructor rỗng hay setter**; caller chỉ có thể nhận object khi đã đủ dữ liệu hợp lệ. Những object UI form hoặc entity do framework quản lý có thể cần lifecycle khác, nhưng khi đó trạng thái **chưa hoàn chỉnh** cần được tách khỏi trạng thái domain **đã hợp lệ**, không bị xem là tương đương.
+The complete example's `Invoice` **has no no-argument constructor or setters**; clients receive an object only after providing all required valid data. UI form objects and framework-managed entities may have different lifecycles, but their **incomplete** states should then be distinguished from **valid domain** states, not treated as equivalent.
 
-## 5. JUnit 5: kiểm thử đường hợp lệ và giá trị biên
+## 5. JUnit 5: Testing Valid Paths and Boundary Values
 
-Tạo file **ConstructorInvariantDemoTest.java** (cùng package với class trên). Các test sử dụng JUnit Jupiter và module `junit-jupiter-params`.
+Create **ConstructorInvariantDemoTest.java** (in the same package as the class above). The tests use JUnit Jupiter and the `junit-jupiter-params` module.
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1284,25 +1284,25 @@ class ConstructorInvariantDemoTest {
 }
 ~~~
 
-Các test được đặt tên theo **hành vi**, không theo tên field nội bộ. Ví dụ `discountBoundariesAreClear` giúp nhận ra ngay quy tắc “0 và subtotal hợp lệ, ngoài khoảng thì từ chối”, thay vì chỉ là `testConstructor3`.
+Tests are named after **behavior**, not internal field names. For example, `discountBoundariesAreClear` immediately communicates the rule “0 and subtotal are valid; values outside this range are rejected,” unlike a generic name such as `testConstructor3`.
 
-### Giải thích vì sao từng kiểu test quan trọng
+### Why Each Test Type Matters
 
-- **Happy path:** kiểm tra output và chuẩn hóa, không chỉ “không ném”.
-- **Null/empty/blank:** phân biệt null reference, chuỗi rỗng và chỉ có whitespace.
-- **Boundary:** test chính xác ranh giới `0`, `subtotal`, `-1`, `subtotal + 1`, vì lỗi `<`/`<=` dễ xảy ra.
-- **Nested invalid input:** một `Invoice` chỉ hợp lệ nếu `LineItem` hợp lệ. Validate ở từng lớp tạo nên một chuỗi hợp đồng.
-- **Overflow:** `Math.multiplyExact` hoặc `Math.addExact` làm rõ điều mà phép số học `long` thông thường không bảo đảm.
-- **Aliasing:** chứng minh object không bị thay đổi khi caller sửa danh sách nguồn.
-- **Accessor:** chứng minh reference trả về không cho caller phá bất biến bằng thao tác trên list.
+- **Happy path:** verify outputs and normalization, not merely “does not throw.”
+- **Null/empty/blank:** distinguish null references, empty strings, and whitespace-only strings.
+- **Boundary:** test the exact edges `0`, `subtotal`, `-1`, and `subtotal + 1`; mistakes involving `<`/`<=` are easy to make.
+- **Nested invalid input:** an `Invoice` is valid only when its `LineItem` instances are valid. Validation at each level forms a chain of contracts.
+- **Overflow:** `Math.multiplyExact` or `Math.addExact` explicitly handles a guarantee that ordinary `long` arithmetic does not provide.
+- **Aliasing:** prove the object does not change when callers modify the source list.
+- **Accessor:** prove the returned reference cannot let callers break invariants by manipulating the list.
 
-**Lưu ý:** unit test cho ví dụ chỉ cần JUnit Jupiter. JUnit không được JDK cung cấp mặc định, nên cần dependency test của dự án. Các file demo và test có thể đặt trong cùng package; nếu dùng package khác, cần điều chỉnh visibility/import.
+**Note:** The example's unit tests require only JUnit Jupiter. JUnit is not included in the JDK by default, so add it as a test dependency. Demo and test files may share a package; if they use different packages, visibility/imports must be adjusted.
 
-## 6. Kiểm thử trạng thái không hợp lệ *sau* khi constructor thành công
+## 6. Testing Invalid States *After* Successful Construction
 
-Không chỉ constructor: nhiều object hợp lệ lúc đầu nhưng có thể bị sửa sai qua một method. Nếu object mutable, các phép cập nhật cũng phải giữ invariant.
+Constructors are not the only concern: an initially valid object can later be corrupted through a method. For mutable objects, update operations must also preserve invariants.
 
-Ví dụ lớp quản lý hạn mức đã có thể được tạo với số dư hợp lệ, nhưng một lệnh trừ quá hạn mức phải bị từ chối mà **không làm thay đổi số dư**:
+For example, a wallet/limit-management class may be created with a valid balance, but an operation that deducts more than the available amount must be rejected **without changing the balance**:
 
 ~~~java
 public final class Wallet {
@@ -1335,7 +1335,7 @@ public final class Wallet {
 }
 ~~~
 
-Đây là một class riêng, lưu trong **Wallet.java** nếu chạy độc lập. Để minh họa kiểm thử:
+This is a separate class, saved as **Wallet.java** if run independently. To illustrate testing:
 
 ~~~java
 @Test
@@ -1355,17 +1355,17 @@ void constructorRejectsNegativeInitialBalance() {
 }
 ~~~
 
-Hai test trên là method đặt trong một JUnit test class có `import static org.junit.jupiter.api.Assertions.*;` và `import org.junit.jupiter.api.Test;`.
+The two tests above are methods in a JUnit test class with `import static org.junit.jupiter.api.Assertions.*;` and `import org.junit.jupiter.api.Test;`.
 
-**Ý nghĩa:** thay vì ép một `Wallet` hợp lệ thành trạng thái âm bằng reflection rồi kiểm tra method khác, ta test **đường sử dụng công khai có khả năng tạo ra lỗi**. Nếu bất biến được bảo vệ đúng, không có public API nào tạo ra trạng thái âm.
+**Meaning:** Instead of forcing a valid `Wallet` into a negative state through reflection and then testing a different method, test **the public usage path capable of producing the error**. If invariants are protected correctly, no public API can create a negative balance.
 
-Ví dụ Wallet chưa thread-safe; hai thao tác đồng thời có thể cạnh tranh trên `balanceVnd`. Đối với hệ thống tiền thật, phải có thêm cơ chế transaction, idempotency và quyền truy cập phù hợp. “Constructor test PASS” không chứng minh cả vòng đời object an toàn trước concurrency.
+The Wallet example is not thread-safe; concurrent operations may race on `balanceVnd`. Real-money systems also need appropriate transactions, idempotency, and authorization. A passing constructor test does not establish that the object's entire lifecycle is safe under concurrency.
 
-## 7. Không kiểm thử bằng cách phá bất biến một cách tùy tiện
+## 7. Do Not Test by Arbitrarily Breaking Invariants
 
-Đôi khi ta muốn “tạo một object invalid rồi đưa vào service” để kiểm tra service có xử lý không. Nhưng nếu constructor từ chối object invalid, điều này là **thiết kế đúng**.
+Sometimes we want to “create an invalid object and pass it to a service” to see how the service responds. But if the constructor rejects invalid objects, that is **correct design**.
 
-Ví dụ không nên làm trong unit test business thông thường:
+An example to avoid in ordinary business unit tests:
 
 ~~~java
 // Không nên dùng reflection chỉ để vượt constructor:
@@ -1374,20 +1374,20 @@ Ví dụ không nên làm trong unit test business thông thường:
 // f.setLong(invoice, -99L);
 ~~~
 
-Cách đó buộc test phụ thuộc cấu trúc private và làm hỏng chính bất biến mà class hứa bảo vệ. Sau refactor đổi tên field, test có thể gãy dù hành vi công khai không đổi.
+That approach ties the test to private structure and violates the invariant that the class promises to protect. Renaming the field during refactoring can break the test even though public behavior is unchanged.
 
-**Thay vào đó, đặt lỗi tại đúng ranh giới:**
+**Instead, introduce failures at the right boundary:**
 
-- Nếu người dùng gửi JSON sai, test bộ **request validation/deserialization**.
-- Nếu database chứa dữ liệu cũ sai, test **persistence mapping/migration** hoặc adapter phục hồi trạng thái.
-- Nếu service nhận một dependency có thể lỗi, dùng fake hoặc mock trả lỗi từ dependency theo contract.
-- Nếu cần test logic khôi phục từ snapshot cũ, tạo **test fixture ở API nội bộ có kiểm soát** thay vì khai mở setter public trên domain object.
+- If a user submits invalid JSON, test **request validation/deserialization**.
+- If the database contains invalid legacy data, test **persistence mapping/migration** or a state-recovery adapter.
+- If a service depends on a collaborator that may fail, use a fake or mock that returns errors according to the dependency contract.
+- If testing recovery from old snapshots, use **a controlled internal test fixture API** rather than exposing public setters on domain objects.
 
-Điều quan trọng là **test đúng vị trí xuất hiện lỗi**, không phải cố tạo trạng thái mà API đã cấm.
+The key is **testing where an error can actually arise**, instead of manufacturing a state the API forbids.
 
-## 8. Constructor có nhiều bước: bảo đảm lỗi không để lại tác dụng phụ
+## 8. Multistep Constructors: Ensure Failures Leave No Side Effects
 
-Một constructor nguy hiểm có thể làm việc ngoài phạm vi thiết lập state:
+A dangerous constructor may perform work beyond initializing state:
 
 ~~~java
 // Anti-pattern minh họa: side effect trước khi validate xong.
@@ -1401,16 +1401,16 @@ class BadRegistration {
 }
 ~~~
 
-Nếu email sai, caller không nhận được `BadRegistration` hợp lệ, **nhưng event có thể đã phát**. Một listener có thể đã ghi dữ liệu, gửi mail hoặc tạo log nghiệp vụ sai.
+With an invalid email, the caller never receives a valid `BadRegistration`, **but the event may already have been published**. A listener may have persisted data, sent email, or created an incorrect business log.
 
-Hướng thiết kế rõ hơn:
+A clearer design:
 
-1. Constructor/factory tạo một value object **hợp lệ** và hạn chế side effect.
-2. Application service phối hợp transaction, persistence, event/outbox theo nhu cầu.
-3. Nếu thất bại ở bất cứ bước nào, thiết kế cách xử lý/rollback/compensation riêng.
-4. Test side effect qua fake để xác nhận trường hợp input sai **không gọi collaborator**.
+1. Constructors/factories create **valid** value objects with minimal side effects.
+2. An application service coordinates transactions, persistence, and events/outbox according to the requirements.
+3. If any step fails, define separate handling, rollback, or compensation.
+4. Test side effects through fakes to verify invalid input **does not invoke collaborators**.
 
-Ví dụ một service tạo yêu cầu đăng ký:
+Example service that creates a registration request:
 
 ~~~java
 record RegistrationRequest(String email) {
@@ -1440,11 +1440,11 @@ final class RegistrationService {
 }
 ~~~
 
-Bây giờ `RegistrationRequest` từ chối đầu vào trước khi `submit()` chạy. Kiểm thử có thể dùng fake đếm số lần gateway được gọi để bảo đảm input sai không tạo side effect. Tuy nhiên, code còn cần xử lý lỗi gateway và retry theo hợp đồng; việc chỉ validate trước chưa tự tạo transaction xuyên mạng.
+Now `RegistrationRequest` rejects invalid input before `submit()` executes. Tests can use a fake to count gateway calls and verify invalid input produces no side effects. The implementation still needs gateway-error handling and contract-based retries; validation alone does not create cross-network transactions.
 
-## 9. Một ví dụ fake để kiểm tra “không gọi dependency khi input sai”
+## 9. A Fake for Verifying “No Dependency Call on Invalid Input”
 
-Các type ở phần trên có thể đặt chung package. JUnit test minh họa:
+The types above can share a package. An illustrative JUnit test:
 
 ~~~java
 @Test
@@ -1468,13 +1468,13 @@ void invalidRegistrationDoesNotCallGateway() {
 }
 ~~~
 
-Đoạn này nằm trong class test có JUnit import tương ứng. Nó đo **hành vi bên ngoài** (không gửi lệnh khi input sai), không test một field private chỉ vì field đó tồn tại.
+This snippet belongs inside a test class with the corresponding JUnit imports. It verifies **external behavior** (no request sent for invalid input), not a private field merely because that field exists.
 
-## 10. Record, Builder và inheritance: không chỉ constructor thông thường
+## 10. Records, Builders, and Inheritance: Beyond Ordinary Constructors
 
-### 10.1. Compact constructor của record
+### 10.1. Compact Record Constructors
 
-Java `record` tự tạo canonical constructor, có thể thêm kiểm tra trong **compact constructor**:
+Java `record` generates a canonical constructor automatically; validation can be added through a **compact constructor**:
 
 ~~~java
 record Age(int years) {
@@ -1486,9 +1486,9 @@ record Age(int years) {
 }
 ~~~
 
-Test cần bao gồm `0`, `150` là hợp lệ; `-1`, `151` bị từ chối. Record **không tự validation** nếu không có code kiểm tra. Record cũng chỉ **shallowly immutable**: component chứa một `List` hoặc mảng mutable có thể làm biến đổi trạng thái quan sát được nếu không phòng vệ.
+Tests should accept `0` and `150`, while rejecting `-1` and `151`. Records **do not validate automatically** without explicit validation code. They are also only **shallowly immutable**: components holding a mutable `List` or array can expose mutable observable state without defensive handling.
 
-### 10.2. Builder không được bỏ qua invariant của Product
+### 10.2. A Builder Must Not Bypass Product Invariants
 
 ~~~java
 Invoice invoice = Invoice.builder()
@@ -1498,11 +1498,11 @@ Invoice invoice = Invoice.builder()
         .build();
 ~~~
 
-Đây là **minh họa API Builder giả định**, không phải API hiện có của `ConstructorInvariantDemo.Invoice`. Nếu Builder tạo object, điều kiện `discount <= subtotal` vẫn phải được thực thi ở `build()` hoặc constructor/factory của Product. Test cả việc thiếu field, áp dụng default và các tổ hợp không hợp lệ; đừng tin Builder hợp lệ chỉ vì mỗi setter riêng lẻ hợp lệ.
+This is a **hypothetical Builder API illustration**, not an API currently present in `ConstructorInvariantDemo.Invoice`. When a Builder creates an object, `discount <= subtotal` must still be enforced in `build()` or by the Product constructor/factory. Test missing fields, defaults, and invalid combinations; individual valid setters do not imply a valid Builder result.
 
-### 10.3. Kế thừa và lời gọi phương thức có thể override
+### 10.3. Inheritance and Overridable Method Calls
 
-Gọi một method có thể override trong constructor có thể dẫn tới việc thực thi method của subclass **trước khi field riêng của subclass được khởi tạo đầy đủ**:
+Calling an overridable method from a constructor may run the subclass implementation **before the subclass's own fields are fully initialized**:
 
 ~~~java
 class Base {
@@ -1524,37 +1524,37 @@ class Child extends Base {
 }
 ~~~
 
-Vì vậy, không nên thiết kế constructor dựa vào override của subclass để hoàn thiện invariant. Test object subclass có thể bắt lỗi đó, nhưng **giải pháp thiết kế tốt hơn** là giữ logic khởi tạo trong constructor/factory không cần virtual dispatch, rồi thực hiện các bước phụ thuộc subtype khi trạng thái đã hoàn chỉnh.
+Therefore, avoid relying on subclass overrides to complete constructor invariants. Tests of a subclass can catch this bug, but **a better design** keeps initialization inside constructors/factories without virtual dispatch and performs subtype-dependent steps after the object is fully initialized.
 
-Đừng tạo object trong constructor rồi đăng ký `this` vào callback hoặc một thread: đối tượng có thể bị quan sát quá sớm, trước khi các field được thiết lập an toàn.
+Do not register `this` with a callback or thread inside a constructor: other code may observe the object too early, before its fields are safely initialized.
 
-## 11. Kiểm thử tổ hợp trạng thái không hợp lệ
+## 11. Testing Invalid Combinations of State
 
-Một object có thể có từng field hợp lệ nhưng **tổ hợp** không hợp lệ. Ví dụ lịch hẹn:
+Individual fields can be valid while **their combination** is invalid. Consider an appointment:
 
-- `start` và `end` khác null;
-- `end` phải sau `start`;
-- nếu chọn `REMOTE`, phải có liên kết họp;
-- nếu chọn `ONSITE`, phải có địa điểm.
+- `start` and `end` must not be null;
+- `end` must be after `start`;
+- for `REMOTE`, a meeting link is required;
+- for `ONSITE`, a physical location is required.
 
-Một ma trận nhỏ:
+A small matrix:
 
-| Hình thức | Link họp | Địa điểm | Kết quả |
+| Mode | Meeting Link | Location | Result |
 | --- | --- | --- | --- |
-| REMOTE | Có | Không | Hợp lệ |
-| REMOTE | Không | Không | Sai: thiếu link |
-| ONSITE | Không | Có | Hợp lệ |
-| ONSITE | Không | Không | Sai: thiếu địa điểm |
-| Bất kỳ | Có | Có | Tùy hợp đồng: có cho phép dữ liệu dư không? |
-| Bất kỳ | Ngày kết thúc trước bắt đầu | Bất kỳ | Sai |
+| REMOTE | Yes | No | Valid |
+| REMOTE | No | No | Invalid: missing link |
+| ONSITE | No | Yes | Valid |
+| ONSITE | No | No | Invalid: missing location |
+| Either | Yes | Yes | Contract-dependent: are extra details allowed? |
+| Either | End before start | Either | Invalid |
 
-**Kiểm thử theo từng field đơn lẻ sẽ không phát hiện mọi vi phạm liên trường.** Đây là nơi nên phân loại equivalence classes và dùng parameterized tests hoặc test table-driven để giảm lặp, bảo đảm mọi tổ hợp quan trọng được thử.
+**Testing fields in isolation will not reveal every cross-field violation.** This is a good place to identify equivalence classes and use parameterized or table-driven tests to reduce duplication while covering important combinations.
 
-Tuy nhiên, đừng cố kiểm thử mọi tích Descartes của 20 field nếu không có cơ sở rủi ro. Ưu tiên những tổ hợp ảnh hưởng invariant thật; dùng property-based testing khi miền giá trị lớn và có công cụ phù hợp.
+However, do not attempt the full Cartesian product of 20 fields without a risk-based reason. Prioritize combinations affecting real invariants; use property-based testing for large value domains when suitable tools are available.
 
-## 12. Kiểm thử lỗi như một phần hợp đồng, không phụ thuộc câu chữ
+## 12. Testing Errors as Part of a Contract, Not Exact Wording
 
-Ví dụ:
+Example:
 
 ~~~java
 IllegalArgumentException failure =
@@ -1563,17 +1563,17 @@ IllegalArgumentException failure =
                         "SKU", -1L, 1));
 ~~~
 
-Test có thể kiểm tra `failure.getMessage()` nếu thông điệp là **hợp đồng công khai được thống nhất**, nhưng đừng đóng băng mọi câu chữ nội bộ chỉ để tăng assertion. Thay đổi ngôn ngữ, thêm ngữ cảnh hoặc chỉnh cách diễn đạt thường không phải lỗi domain.
+You may assert `failure.getMessage()` if the message is **an agreed public contract**, but do not freeze all internal wording merely to add assertions. Changing language, adding context, or improving phrasing is usually not a domain failure.
 
-Nếu caller phải phân biệt lỗi “giảm giá vượt tổng” với “mã khách hàng thiếu”, nên có **error code**, result type hoặc exception có ngữ nghĩa cụ thể. Không nên để caller parse chuỗi message để ra quyết định.
+If a caller must distinguish “discount exceeds subtotal” from “customer ID is missing,” expose an **error code**, result type, or semantically specific exception. Do not make callers parse message strings to decide what to do.
 
-### `assertThrows` và `assertDoesNotThrow`
+### `assertThrows` and `assertDoesNotThrow`
 
-- `assertThrows(Expected.class, executable)` chấp nhận exception thuộc class mong đợi **hoặc subclass**. Nếu hợp đồng đòi **đúng loại** exception, có thể dùng `assertThrowsExactly` trong JUnit 5 hỗ trợ.
-- `assertDoesNotThrow` hữu ích để chứng minh giá trị biên hợp lệ, nhưng thường nên **kiểm tra kết quả** của object được tạo, thay vì chỉ khẳng định không lỗi.
-- `assertAll` gom một số khẳng định về cùng một object để người học nhìn rõ các postcondition; không dùng nó để che một phép khởi tạo thất bại.
+- `assertThrows(Expected.class, executable)` accepts the expected exception class **or a subclass**. If a contract requires the **exact type**, use `assertThrowsExactly` in a supporting JUnit 5 version.
+- `assertDoesNotThrow` is useful for showing boundary values are valid, but generally also **verify the properties** of the constructed object instead of merely asserting no exception.
+- `assertAll` groups related assertions about one object so its postconditions are clear; do not use it to conceal failed construction.
 
-Ví dụ:
+Example:
 
 ~~~java
 var invoice = assertDoesNotThrow(() ->
@@ -1586,185 +1586,185 @@ var invoice = assertDoesNotThrow(() ->
 assertEquals(0L, invoice.totalVnd());
 ~~~
 
-## 13. Đối tượng bất biến và trạng thái không hợp lệ dưới tải đồng thời
+## 13. Immutable Objects and Invalid States Under Concurrent Load
 
-Một object có field `private final`, thành phần immutable và không escape khỏi constructor thường dễ dùng an toàn hơn khi chia sẻ giữa thread. Nhưng **`final` không biến mọi object tham chiếu thành bất biến** và không thay thế được thiết kế đồng bộ cho mutable state.
+An object whose fields are `private final`, whose components are immutable, and which does not escape its constructor is generally safer to share across threads. But **`final` does not make every referenced object immutable**, nor does it replace synchronization design for mutable state.
 
-Ví dụ `Wallet` trong phần trước không thread-safe. Hai thread cùng kiểm tra số dư 100 rồi mỗi thread trừ 80 có thể dẫn tới kết quả mất cập nhật hoặc khác mong muốn, tùy cách interleave. Constructor test không kiểm tra hiện tượng này.
+The earlier `Wallet` example is not thread-safe. Two threads may each observe a balance of 100 and attempt to subtract 80, leading to lost updates or unexpected outcomes depending on interleaving. Constructor tests do not exercise that behavior.
 
-Với entity lưu database, còn cần **transaction/locking/version** để tránh hai request đồng thời ghi đè nhau. Nhiều class có invariant hợp lệ trong RAM vẫn có thể sai khi persistence mapper bỏ qua constructor, hoặc dữ liệu DB chứa giá trị từ phiên bản cũ.
+Database-backed entities also need **transactions/locking/versioning** to prevent simultaneous requests from overwriting each other. A class with valid in-memory invariants can still behave incorrectly when a persistence mapper bypasses its constructor or a database contains old-version data.
 
-Phân tách trách nhiệm kiểm thử:
+Separate testing responsibilities:
 
-| Ranh giới | Nên chứng minh gì? |
+| Boundary | What to Verify |
 | --- | --- |
-| Constructor/record/builder | Input hợp lệ sinh object hợp lệ; invalid input bị từ chối |
-| Public mutator | Thao tác sai không phá invariant; phép cập nhật đúng giữ hậu điều kiện |
-| Serialization/deserialization | Dữ liệu từ JSON được xác thực/khôi phục đúng theo contract |
-| Persistence mapper/ORM | Dữ liệu lưu và tải lại bảo toàn invariant, xử lý dữ liệu cũ sai |
-| Application service | Trước lỗi không gửi side effect ngoài ý muốn, có phân quyền và state đúng |
-| Concurrent/transaction boundary | Nhiều lệnh đồng thời không phá điều kiện bảo toàn ở nguồn dữ liệu thật |
+| Constructor/record/builder | Valid input yields a valid object; invalid input is rejected |
+| Public mutator | Invalid actions preserve invariants; successful updates satisfy postconditions |
+| Serialization/deserialization | JSON input is validated/restored according to the contract |
+| Persistence mapper/ORM | Stored and reloaded data preserve invariants; invalid legacy data is handled |
+| Application service | Failures do not trigger unintended external side effects; authorization and state are correct |
+| Concurrency/transaction boundary | Concurrent commands preserve constraints in the actual source of truth |
 
-Không cần chạy các integration test đắt cho từng điều kiện nhỏ đã được unit test; nhưng cũng không được dùng chỉ một unit test constructor để tuyên bố an toàn toàn hệ thống.
+Do not rerun expensive integration tests for every small condition already unit-tested; equally, do not claim system-wide safety from one constructor unit test.
 
-## 14. Những lỗi thường gặp khi viết test constructor
+## 14. Common Mistakes in Constructor Tests
 
-| Sai lầm | Vấn đề | Thay bằng |
+| Mistake | Problem | Better Approach |
 | --- | --- | --- |
-| Chỉ kiểm tra `assertNotNull(new Object(...))` | Không chứng minh giá trị, invariant hay failure | Assert các postcondition có ý nghĩa |
-| Chỉ test happy path | Không phát hiện giá trị biên/không hợp lệ | Bảng valid, invalid và boundary |
-| Mong mọi null đều trả cùng exception tùy ý | Không bám hợp đồng thực | Quy định rõ null policy và assert đúng |
-| Tạo object invalid bằng reflection | Test bám implementation private | Test qua public constructor/mutator và boundary dữ liệu ngoài |
-| Dùng `assertThrows(Exception.class, ...)` | Quá rộng, sai exception vẫn PASS | Kiểm tra loại exception dự kiến |
-| Assert nguyên văn mọi message | Test dễ gãy vì wording | Chỉ assert message khi là API contract |
-| Tin `final List` là immutable | Caller vẫn có thể sửa nội dung list | Defensive copy và test aliasing |
-| Không kiểm tra `total` khi discount sát biên | Lỗi off-by-one dễ lọt | Test `0`, `subtotal`, `subtotal+1` |
-| Để constructor làm I/O không cần thiết | Side effect khó rollback khi validation fail | Validate trước, phối hợp I/O tại service |
-| Test riêng các setter nhưng không test tổ hợp | Các field đơn lẻ hợp lệ nhưng cùng nhau sai | Test invariant liên trường |
-| Chỉ test một thread cho object mutable chia sẻ | Không bắt race/mất cập nhật | Test concurrency và bảo vệ ở đúng boundary nếu cần |
+| Only checking `assertNotNull(new Object(...))` | Does not establish values, invariants, or failure behavior | Assert meaningful postconditions |
+| Testing only the happy path | Misses boundary and invalid values | Test valid, invalid, and boundary cases |
+| Expecting every null to throw an arbitrarily chosen exception | Does not reflect the actual contract | Specify the null policy and assert it |
+| Using reflection to construct invalid objects | Couples tests to private internals | Test public constructors/mutators and external input boundaries |
+| Using `assertThrows(Exception.class, ...)` | Too broad; an incorrect exception still passes | Assert the expected exception type |
+| Asserting exact wording of every message | Brittle tests when wording changes | Assert messages only when contractually required |
+| Assuming `final List` means immutable | Callers may still change list contents | Defensive copying and aliasing tests |
+| Not checking `total` near discount limits | Off-by-one errors can slip through | Test `0`, `subtotal`, `subtotal+1` |
+| Unnecessary I/O inside constructors | Side effects are hard to roll back after validation fails | Validate first; coordinate I/O in a service |
+| Testing setters individually but not combinations | Individually valid fields may be invalid together | Test cross-field invariants |
+| Testing only one thread for a shared mutable object | Misses races and lost updates | Concurrency tests and protection at the correct boundary when needed |
 
-## 15. Checklist khi review một constructor
+## 15. Constructor Review Checklist
 
-Dùng checklist này trước khi chốt test:
+Use this checklist before finalizing tests:
 
-- [ ] Các tham số bắt buộc có được kiểm tra null/blank/range không?
-- [ ] Các giới hạn **đúng biên** được test chưa (0, 1, max, max+1)?
-- [ ] Có quy tắc **liên quan nhiều field** phải được xác nhận cùng nhau không?
-- [ ] Có phép tính tràn số hoặc mất độ chính xác cần kiểm soát không?
-- [ ] Khi thành công, các field được chuẩn hóa và derived values đúng chưa?
-- [ ] Collection và các reference mutable có được sao chép hoặc bảo vệ phù hợp không?
-- [ ] Có đường nào caller sửa object vượt qua validation không?
-- [ ] Constructor có gọi code overrideable, publish `this` hoặc tạo side effect sớm không?
-- [ ] Kiểu exception/result có rõ nghĩa với người dùng API không?
-- [ ] ORM, serializer hay framework có thể xây dựng object bằng đường khác không?
-- [ ] Với mutable object, các thao tác bị từ chối có giữ nguyên state hợp lệ không?
+- [ ] Are required parameters checked for null/blank/range violations?
+- [ ] Have **exact boundaries** been tested (0, 1, max, max+1)?
+- [ ] Are there **cross-field rules** that must be verified together?
+- [ ] Are overflow or precision-loss cases handled?
+- [ ] After success, are fields normalized and derived values correct?
+- [ ] Are collections and mutable references copied or protected appropriately?
+- [ ] Can any caller mutate the object in ways that bypass validation?
+- [ ] Does construction call overridable code, publish `this`, or create side effects too early?
+- [ ] Are exception/result types meaningful to API consumers?
+- [ ] Can an ORM, serializer, or framework construct the object through a different path?
+- [ ] For mutable objects, do rejected operations preserve valid state?
 
-Checklist không thay thế suy luận về domain: test tốt nhất phải được rút từ những invariant thật, không phải từ một template chung.
+This checklist does not replace domain reasoning: the strongest tests derive from real invariants, not a generic template.
 
-## 16. Bài tập: tạo lịch hẹn an toàn
+## 16. Exercise: Creating Valid Appointments
 
-Thiết kế class `Appointment` trong Java với các trường:
+Design a Java `Appointment` class with these fields:
 
-- `appointmentId`: không được blank.
-- `start` và `end`: kiểu `LocalDateTime`, không null và `end.isAfter(start)`.
-- `channel`: enum `ONLINE` hoặc `OFFLINE`.
-- `meetingLink`: bắt buộc khi `ONLINE`.
-- `location`: bắt buộc khi `OFFLINE`.
-- `participants`: danh sách mã người tham gia, phải có ít nhất một phần tử, không phần tử nào null/blank, không có mã trùng sau khi chuẩn hóa.
-- Khi tạo thành công, đối tượng được dùng như một cấu hình bất biến.
+- `appointmentId`: must not be blank.
+- `start` and `end`: `LocalDateTime`, non-null, and `end.isAfter(start)`.
+- `channel`: an enum, either `ONLINE` or `OFFLINE`.
+- `meetingLink`: required for `ONLINE`.
+- `location`: required for `OFFLINE`.
+- `participants`: a list of participant IDs with at least one entry, no null/blank entries, and no duplicate IDs after normalization.
+- After construction, the object is used as immutable configuration.
 
-**Yêu cầu thực hành:**
+**Exercise requirements:**
 
-1. Thiết kế constructor (hoặc static factory) không cho tạo trạng thái sai.
-2. Vẽ bảng các tổ hợp hợp lệ/không hợp lệ của `channel`, `meetingLink`, `location`.
-3. Viết JUnit 5 parameterized tests cho null/blank ID; giá trị biên của `start/end`; thiếu trường theo loại `channel`.
-4. Kiểm thử cả `participants` rỗng, có null, blank, trùng sau trim.
-5. Kiểm thử sửa danh sách nguồn sau khi tạo không làm object thay đổi; accessor không trả danh sách mutable nội bộ.
-6. Nếu app nhận dữ liệu từ JSON, giải thích boundary validation nào xảy ra trước khi gọi domain constructor.
-7. Nếu lịch hẹn có phương thức `reschedule(newStart, newEnd)`, nên trả một object mới bất biến hay dùng mutation có kiểm soát? Chứng minh rằng input sai không để lại trạng thái bị phá.
+1. Design a constructor (or static factory) that cannot produce invalid states.
+2. Draw a table of valid/invalid combinations of `channel`, `meetingLink`, and `location`.
+3. Write JUnit 5 parameterized tests for null/blank IDs, boundary `start/end` values, and missing fields for each `channel`.
+4. Test empty `participants`, null entries, blank entries, and duplicates after trimming.
+5. Verify that editing the source list after creation does not change the object and that accessors do not expose a mutable internal list.
+6. If the app receives JSON data, explain which boundary validation occurs before invoking the domain constructor.
+7. If an appointment has `reschedule(newStart, newEnd)`, should it return a new immutable object or mutate state in a controlled way? Prove invalid input leaves no corrupted state.
 
-**Tiêu chí đạt:** mọi đường xây dựng object đều bảo vệ invariant; test khẳng định cả kết quả hợp lệ và cách từ chối không hợp lệ; khi một tham số/tổ hợp bị lỗi, không có object sai được công bố; dữ liệu mutable bên ngoài không phá được đối tượng đã tạo.
+**Acceptance criteria:** every construction path protects invariants; tests assert both valid results and invalid-input rejection behavior; failing parameters/combinations never expose invalid objects; external mutable data cannot corrupt created objects.
 
 ---
 
-**Ghi nhớ:** constructor không chỉ “đổ dữ liệu vào field” khi object mang bất biến nghiệp vụ. Kiểm thử constructor là kiểm thử lời hứa rằng **một object được tạo thành công đã ở trạng thái hợp lệ**; kiểm thử trạng thái không hợp lệ là chứng minh các con đường tạo hoặc sửa object **không thể âm thầm phá lời hứa đó**.
+**Remember:** Constructors do more than “copy data into fields” when objects have business invariants. Constructor testing verifies the promise that **a successfully created object is already valid**; invalid-state testing proves construction and mutation paths **cannot silently violate that promise**.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="testing-003">Kiểm thử điều kiện bất biến và chuyển trạng thái</a>
+## <a id="testing-003">Testing Invariants and State Transitions</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kiểm thử điều kiện bất biến và chuyển trạng thái trong OOP
+# Testing Invariants and State Transitions in OOP
 
-> **Mục tiêu học tập:** Thiết kế kiểm thử cho những đối tượng **có trạng thái thay đổi theo thời gian**; phân biệt *invariant*, *precondition*, *postcondition* và *state transition*; kiểm tra cả hành vi thành công lẫn hành vi bị từ chối; chứng minh sau lỗi đối tượng vẫn hợp lệ. Ví dụ dùng Java 17 và JUnit 5, không cần Spring.
+> **Learning objective:** Design tests for objects **whose state changes over time**; distinguish *invariants*, *preconditions*, *postconditions*, and *state transitions*; verify both successful and rejected operations; prove that objects remain valid after failures. Examples use Java 17 and JUnit 5 without Spring.
 
-## 1. Vì sao chỉ kiểm tra kết quả của một phương thức là chưa đủ?
+## 1. Why Is Checking One Method's Return Value Insufficient?
 
-Một bài kiểm thử đơn giản có thể xác nhận:
+A simple test might assert:
 
 ```java
 wallet.deposit(100_000);
 assertEquals(100_000, wallet.balanceVnd());
 ```
 
-Nhưng một đối tượng quản lý tiền còn nhiều điều phải bảo đảm:
+But an object managing money must guarantee much more:
 
-- Số dư có được âm không?
-- Có thể rút tiền nhiều hơn số dư không?
-- Khi ví đã **đóng**, có thể nạp tiền lại không?
-- Khi một thao tác bị từ chối, trạng thái có giữ nguyên không?
-- Nếu cộng tiền bị tràn kiểu `long`, số dư có bị hỏng không?
-- Hai lần gọi liên tiếp có tạo ra một chuỗi trạng thái hợp lệ không?
+- Can the balance become negative?
+- Can a withdrawal exceed the balance?
+- After the wallet is **closed**, can more money be deposited?
+- Does the state remain unchanged after a rejected operation?
+- If addition overflows `long`, is the balance corrupted?
+- Do successive calls produce a valid sequence of states?
 
-Một test chỉ xác nhận giá trị trả về của một lời gọi có thể bỏ sót cả **quy tắc của đối tượng qua nhiều lần tương tác**.
+A test checking the return value of a single call can miss **rules governing the object across multiple interactions**.
 
-Trong OOP, một object không chỉ là dữ liệu + hàm. Nhiều object còn chịu trách nhiệm bảo vệ **những điều kiện luôn đúng** và điều khiển **cách trạng thái được phép thay đổi**. Kiểm thử phải nhìn vào các trách nhiệm đó.
+In OOP, an object is more than data plus functions. Many objects are responsible for preserving **conditions that must always hold** and controlling **how their state is allowed to change**. Tests must account for both responsibilities.
 
-**Tư duy quan trọng:** Không chỉ hỏi “phương thức có chạy đúng không?”, mà hỏi “trước, trong và sau từng hành động, object có luôn nằm trong các trạng thái được phép không?”.
+**Key mindset:** Do not ask only “did the method run correctly?” Ask also “before, during, and after each action, does the object remain within its permitted states?”
 
-## 2. Bốn khái niệm cần phân biệt
+## 2. Four Concepts to Distinguish
 
-| Khái niệm | Ý nghĩa | Ví dụ với ví điện tử |
+| Concept | Meaning | Digital Wallet Example |
 |---|---|---|
-| **Invariant – điều kiện bất biến** | Điều phải đúng trong mọi trạng thái hợp lệ **có thể quan sát** của object | `balanceVnd >= 0` |
-| **Precondition – điều kiện trước** | Điều kiện để một hành động được phép thực hiện | Rút tiền chỉ khi ví `ACTIVE` và số rút không vượt số dư |
-| **Postcondition – điều kiện sau** | Điều phải đúng sau khi thao tác thành công | Nạp `x` làm số dư tăng đúng `x`, trạng thái vẫn `ACTIVE` |
-| **Transition rule – quy tắc chuyển trạng thái** | Cạnh được phép giữa các trạng thái và điều kiện để đi qua cạnh | `ACTIVE → FROZEN`, `FROZEN → ACTIVE` |
+| **Invariant – persistent condition** | A condition true in every **observable valid** object state | `balanceVnd >= 0` |
+| **Precondition – requirement before an action** | A condition for permitting an operation | Withdrawals require `ACTIVE` and an amount not exceeding the balance |
+| **Postcondition – requirement after an action** | A condition that must hold after a successful operation | Depositing `x` increases balance by exactly `x` while state remains `ACTIVE` |
+| **Transition rule – allowed state change** | An allowed edge between states and its guard conditions | `ACTIVE → FROZEN`, `FROZEN → ACTIVE` |
 
-**Invariant** không đơn thuần là “một field có `final`”. Một object có thể mutable nhưng luôn duy trì `balance >= 0`. Ngược lại, một field `final` chỉ ngăn gán lại tham chiếu hoặc primitive; nó không bảo đảm các object nằm phía sau tham chiếu là bất biến.
+An **invariant** is not merely “a field marked `final`.” A mutable object can still maintain `balance >= 0` throughout its lifetime. Conversely, `final` prevents reassignment of a reference or primitive field but does not make referenced objects immutable.
 
-### State invariant khác quy tắc theo thời gian
+### State Invariants Versus Temporal Rules
 
-- **State invariant:** nhìn vào *một snapshot* là đủ để kiểm tra, ví dụ `CLOSED ⇒ balance == 0`.
-- **Temporal/transition property:** cần nhìn *hai trạng thái hoặc một chuỗi sự kiện*, ví dụ “khi ví `FROZEN`, thao tác rút tiền không làm thay đổi số dư”.
+- **State invariant:** one *snapshot* suffices to check it, such as `CLOSED ⇒ balance == 0`.
+- **Temporal/transition property:** requires *two states or an event sequence*, such as “while the wallet is `FROZEN`, withdrawing does not change its balance.”
 
-Một snapshot `FROZEN, balance=100000` **tự nó không vi phạm**. Lỗi chỉ xuất hiện nếu phương thức `withdraw` trong trạng thái `FROZEN` vẫn trừ tiền.
+A snapshot of `FROZEN, balance=100000` **is not itself a violation**. A violation occurs only if `withdraw` deducts money while the wallet is `FROZEN`.
 
-Vì vậy kiểm thử cần kết hợp **assert các điều kiện trên snapshot** và **assert hành vi của từng transition**.
+Tests should therefore combine **assertions about snapshot properties** with **assertions about each transition's behavior**.
 
-## 3. Ví dụ nghiệp vụ xuyên suốt: Ví điện tử có trạng thái
+## 3. Running Business Example: A Stateful Digital Wallet
 
-Để tập trung vào OOP, ta xây một mô hình đơn giản, không kết nối ngân hàng hay database.
+To focus on OOP, we construct a simple model without bank or database connections.
 
-### Các trạng thái
+### States
 
-- `ACTIVE`: ví hoạt động, cho phép `deposit` và `withdraw`.
-- `FROZEN`: ví tạm khóa, không cho phép nạp/rút tiền.
-- `CLOSED`: ví kết thúc vĩnh viễn, không cho phép nạp/rút, đóng băng hoặc mở khóa.
+- `ACTIVE`: the wallet is operational and permits `deposit` and `withdraw`.
+- `FROZEN`: temporarily locked; neither deposits nor withdrawals are allowed.
+- `CLOSED`: permanently closed; deposits, withdrawals, freezing, and resuming are forbidden.
 
-Ví mới được tạo ở trạng thái `ACTIVE` với số dư bằng 0. Chỉ cho **đóng ví đang ACTIVE khi số dư bằng 0**.
+A new wallet begins in `ACTIVE` state with a balance of 0. **Only an ACTIVE wallet with a balance of 0 may be closed**.
 
-### Hành vi được phép
+### Allowed Behavior
 
-| Hành động | Trạng thái trước | Điều kiện khác | Trạng thái sau | Số dư sau |
+| Action | State Before | Other Conditions | State After | Balance After |
 |---|---|---|---|---|
-| `deposit(x)` | ACTIVE | `x > 0`, không tràn `long` | ACTIVE | `balance + x` |
-| `withdraw(x)` | ACTIVE | `x > 0` và `x <= balance` | ACTIVE | `balance - x` |
-| `freeze()` | ACTIVE | Không | FROZEN | Không đổi |
-| `resume()` | FROZEN | Không | ACTIVE | Không đổi |
+| `deposit(x)` | ACTIVE | `x > 0`, no `long` overflow | ACTIVE | `balance + x` |
+| `withdraw(x)` | ACTIVE | `x > 0` and `x <= balance` | ACTIVE | `balance - x` |
+| `freeze()` | ACTIVE | None | FROZEN | Unchanged |
+| `resume()` | FROZEN | None | ACTIVE | Unchanged |
 | `close()` | ACTIVE | `balance == 0` | CLOSED | 0 |
 
-Mọi trường hợp không khớp hàng tương ứng **bị từ chối**. Trong bài này, việc gọi `close()` hai lần là **lỗi trạng thái**, không phải no-op; đây là một lựa chọn hợp đồng rõ ràng. Một hệ thống khác có thể quy định đóng lại là thao tác idempotent, nhưng phải viết lại bảng và test theo quyết định đó.
+Any case outside the relevant row **is rejected**. In this lesson, calling `close()` twice **is a state error**, not a no-op; that is an explicit contract choice. Another system might define repeat close requests as idempotent, but its table and tests must then reflect that choice.
 
-### Các điều kiện bất biến
+### Invariants
 
-1. `id` phải tồn tại, không rỗng và không bị đổi sau khi tạo.
-2. `status` luôn thuộc tập `ACTIVE`, `FROZEN`, `CLOSED` và không null.
+1. `id` must exist, be nonblank, and remain unchanged after construction.
+2. `status` is always one of `ACTIVE`, `FROZEN`, or `CLOSED`, and never null.
 3. `balanceVnd >= 0`.
 4. `status == CLOSED ⇒ balanceVnd == 0`.
-5. Các thao tác bị từ chối **không làm thay đổi snapshot**.
+5. Rejected operations **do not modify the snapshot**.
 
-Điều kiện số 5 chính xác hơn là một **postcondition khi thất bại** hoặc một quy tắc về chuyển trạng thái, không phải state invariant đơn thuần. Chúng ta cố ý tách nó ra khi thiết kế test.
+Condition 5 is more precisely a **failure postcondition** or a transition rule, not simply a state invariant. We deliberately distinguish it when designing tests.
 
-Các quy tắc trên là **giả định dạy học**. Ví thật còn có ledger, giao dịch, hạn mức, quyền truy cập, chống gian lận, đồng thời và quy định tài chính.
+These rules are **teaching assumptions**. Real wallets also require ledgers, transactions, limits, access controls, fraud prevention, concurrency, and financial compliance.
 
-## 4. Vẽ máy trạng thái trước khi viết test
+## 4. Draw the State Machine Before Writing Tests
 
 ```mermaid
 stateDiagram-v2
@@ -1784,17 +1784,17 @@ stateDiagram-v2
     end note
 ```
 
-Từ sơ đồ này, lập test theo ba nhóm:
+Derive tests from the diagram in three groups:
 
-- **Cạnh hợp lệ:** chứng minh từng transition hợp lệ có thể xảy ra khi thỏa điều kiện.
-- **Cạnh bị cấm:** chứng minh những transition không xuất hiện trên sơ đồ bị từ chối.
-- **Điều kiện biên:** ví dụ `close()` được phép khi số dư 0, bị cấm khi số dư 1; `withdraw(balance)` được phép, `withdraw(balance + 1)` bị cấm.
+- **Valid edges:** prove every allowed transition can occur when its guard is satisfied.
+- **Forbidden edges:** prove transitions absent from the diagram are rejected.
+- **Boundary conditions:** for example, `close()` is allowed at balance 0 but not at balance 1; `withdraw(balance)` is allowed while `withdraw(balance + 1)` is forbidden.
 
-Một state machine nhỏ giúp lộ những câu hỏi dễ bị quên, chẳng hạn “Có thể `resume()` từ `ACTIVE` không?” hoặc “`CLOSED` có mở lại được không?”.
+A small state machine exposes easily overlooked questions: “Can `resume()` run from `ACTIVE`?” or “Can a `CLOSED` wallet reopen?”
 
-## 5. Java 17 hoàn chỉnh: object tự bảo vệ trạng thái
+## 5. Complete Java 17 Example: An Object Protecting Its Own State
 
-Tạo file `WalletDemo.java`:
+Create `WalletDemo.java`:
 
 ```java
 import java.util.Objects;
@@ -1911,32 +1911,32 @@ public final class WalletDemo {
 }
 ```
 
-Chạy với JDK 17:
+Run with JDK 17:
 
 ```bash
 javac WalletDemo.java
 java WalletDemo
 ```
 
-### Các quyết định thiết kế đáng chú ý
+### Notable Design Decisions
 
-**Không có `setBalance` và `setStatus`.** Client không được tự đặt `balance=-1` hoặc `status=CLOSED` khi còn tiền. Các hành vi công khai đều diễn đạt một ý nghĩa nghiệp vụ.
+**There are no `setBalance` or `setStatus` methods.** Clients cannot assign `balance=-1` or `status=CLOSED` while funds remain. Public operations express meaningful business actions.
 
-**Validation trước mutation.** `withdraw` kiểm tra trạng thái, số tiền và số dư **trước khi** trừ. `close` kiểm tra số dư trước khi đặt `CLOSED`.
+**Validate before mutation.** `withdraw` checks state, amount, and available balance **before** deducting funds. `close` checks the balance before transitioning to `CLOSED`.
 
-**Tràn số được kiểm soát.** Với `deposit`, `Math.addExact` ném `ArithmeticException` nếu tổng vượt giới hạn `long`. Vì vế phải được tính xong trước khi gán, lỗi tràn không làm thay đổi `balanceVnd`.
+**Overflow is controlled.** For `deposit`, `Math.addExact` throws `ArithmeticException` when the total exceeds the `long` limit. Since the right-hand expression is evaluated before assignment, overflow leaves `balanceVnd` unchanged.
 
-**Snapshot tách quan sát khỏi thay đổi.** `Snapshot` là record chứa enum và primitive, nên giá trị trả về không cho client sửa trạng thái nội bộ thông qua một reference mutable. Đây là một quan sát không có side effect.
+**Snapshots separate observation from mutation.** `Snapshot` is a record containing an enum and primitives, so clients cannot modify internal state through a mutable reference returned by the API. Snapshotting has no side effects.
 
-**Trạng thái kết thúc được kiểm tra tại điểm đổi.** `CLOSED ⇒ balance == 0` không cần được kiểm tra lại trong từng getter nếu mọi đường thay đổi hợp lệ đều bảo đảm nó, nhưng test vẫn phải xác nhận invariant để chống lỗi khi refactor.
+**Terminal-state rules are enforced at transitions.** `CLOSED ⇒ balance == 0` need not be checked again in every getter if all valid mutation paths enforce it, but tests should still verify the invariant against regressions.
 
-**Hợp đồng lỗi là cụ thể.** `IllegalArgumentException` cho số tiền không dương/ID không hợp lệ; `IllegalStateException` cho trạng thái không cho phép hoặc số dư không đủ; `ArithmeticException` khi tràn số. Production có thể dùng mã lỗi nghiệp vụ riêng, nhưng test phải rõ điều gì được hứa.
+**Failure contracts are explicit.** `IllegalArgumentException` covers nonpositive amounts/invalid IDs; `IllegalStateException` covers disallowed states or insufficient funds; `ArithmeticException` covers overflow. Production APIs may use their own business error codes, but tests must state which behavior is promised.
 
-**Giới hạn ví dụ:** đây là object trong bộ nhớ, được sử dụng tuần tự. `Wallet` không thread-safe và không đại diện cho hệ thống tiền thật có ledger, transaction hay kiểm soát gian lận.
+**Example limitation:** this is a sequentially used in-memory object. `Wallet` is not thread-safe and is not a model of real money systems with ledgers, transactions, or fraud controls.
 
-## 6. Chiến lược kiểm thử: nhìn trạng thái trước và sau
+## 6. Testing Strategy: Observe State Before and After
 
-Với mỗi hành động, mô tả:
+For each action, specify:
 
 ```text
 Given: trạng thái và dữ liệu trước thao tác
@@ -1944,7 +1944,7 @@ When:  một hành động (hoặc chuỗi hành động)
 Then:  trạng thái sau và bất biến cần bảo đảm
 ```
 
-Ví dụ:
+Example:
 
 ```text
 Given: Wallet ACTIVE, balance = 100_000
@@ -1961,32 +1961,32 @@ When:  deposit(10_000)
 Then:  bị từ chối, snapshot giữ nguyên
 ```
 
-**Điểm cần nhấn mạnh:** Test thất bại không chỉ dùng `assertThrows`. Nếu object đã bị sửa một phần rồi mới ném exception, `assertThrows` vẫn PASS. Vì vậy hãy assert **snapshot trước = snapshot sau** khi hợp đồng yêu cầu không có tác dụng phụ khi thất bại.
+**Key point:** Failure tests should not rely solely on `assertThrows`. If an object is partially mutated before throwing, `assertThrows` still passes. Also assert **snapshot before = snapshot after** when the contract promises no side effects on failure.
 
-### Bảng test gợi ý
+### Suggested Test Matrix
 
-| Tình huống | Trạng thái đầu | Hành động | Mong đợi |
+| Scenario | Initial State | Action | Expected Outcome |
 |---|---|---|---|
-| Nạp hợp lệ | ACTIVE, 0 | `deposit(100)` | ACTIVE, 100 |
-| Rút một phần | ACTIVE, 100 | `withdraw(30)` | ACTIVE, 70 |
-| Rút đúng số dư | ACTIVE, 100 | `withdraw(100)` | ACTIVE, 0 |
-| Rút quá số dư | ACTIVE, 100 | `withdraw(101)` | Exception; ACTIVE, 100 |
-| Rút số 0/âm | ACTIVE, 100 | `withdraw(0)`/`withdraw(-1)` | Exception; không đổi |
-| Nạp tràn | ACTIVE, MAX | `deposit(1)` | Exception; MAX không đổi |
-| Khóa ví | ACTIVE, 100 | `freeze()` | FROZEN, 100 |
-| Nạp/rút khi khóa | FROZEN, 100 | `deposit/withdraw` | Exception; không đổi |
-| Mở lại ví | FROZEN, 100 | `resume()` | ACTIVE, 100 |
-| Resume khi đang active | ACTIVE, 100 | `resume()` | Exception; không đổi |
-| Đóng khi còn tiền | ACTIVE, 100 | `close()` | Exception; không đổi |
-| Đóng khi hết tiền | ACTIVE, 0 | `close()` | CLOSED, 0 |
-| Bất kỳ lệnh tiền sau đóng | CLOSED, 0 | `deposit/withdraw` | Exception; CLOSED, 0 |
-| Mở lại sau đóng | CLOSED, 0 | `resume()` | Exception; CLOSED, 0 |
+| Valid deposit | ACTIVE, 0 | `deposit(100)` | ACTIVE, 100 |
+| Partial withdrawal | ACTIVE, 100 | `withdraw(30)` | ACTIVE, 70 |
+| Withdraw full balance | ACTIVE, 100 | `withdraw(100)` | ACTIVE, 0 |
+| Withdraw too much | ACTIVE, 100 | `withdraw(101)` | Exception; ACTIVE, 100 |
+| Withdraw 0/negative | ACTIVE, 100 | `withdraw(0)`/`withdraw(-1)` | Exception; unchanged |
+| Deposit overflow | ACTIVE, MAX | `deposit(1)` | Exception; MAX unchanged |
+| Freeze wallet | ACTIVE, 100 | `freeze()` | FROZEN, 100 |
+| Deposit/withdraw while frozen | FROZEN, 100 | `deposit/withdraw` | Exception; unchanged |
+| Resume wallet | FROZEN, 100 | `resume()` | ACTIVE, 100 |
+| Resume when already active | ACTIVE, 100 | `resume()` | Exception; unchanged |
+| Close with remaining funds | ACTIVE, 100 | `close()` | Exception; unchanged |
+| Close with zero balance | ACTIVE, 0 | `close()` | CLOSED, 0 |
+| Money operation after closing | CLOSED, 0 | `deposit/withdraw` | Exception; CLOSED, 0 |
+| Resume after closing | CLOSED, 0 | `resume()` | Exception; CLOSED, 0 |
 
-Không nhất thiết phải viết **một hàm test cho từng dòng**, nhưng các quan hệ khác nhau phải được kiểm tra một cách dễ nhận diện.
+You need not write **one test method per row**, but each distinct rule should be covered in a recognizable way.
 
-## 7. Bộ kiểm thử JUnit 5 có thể chạy
+## 7. Runnable JUnit 5 Test Suite
 
-Tạo `WalletDemoTest.java` cùng package với `WalletDemo.java` và dùng dependency JUnit Jupiter của dự án. Các method/package-private class lồng của `WalletDemo` có thể được truy cập từ test cùng package.
+Create `WalletDemoTest.java` in the same package as `WalletDemo.java`, using the project's JUnit Jupiter dependency. The nested methods/package-private classes of `WalletDemo` are accessible to tests in the same package.
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -2128,11 +2128,11 @@ class WalletDemoTest {
 }
 ```
 
-Bộ test trên cố ý kết hợp **test trạng thái đơn lẻ** và **test một chuỗi hành động**. Nó kiểm tra những nhánh quan trọng, nhưng chưa phải bằng chứng hình thức cho mọi chuỗi vô hạn hay mọi trường hợp đồng thời.
+The suite intentionally combines **tests of individual states** with **tests of action sequences**. It covers important branches but is not formal proof for every possible unbounded sequence or concurrent interleaving.
 
-## 8. Tại sao phải kiểm cả “sau khi thất bại”?
+## 8. Why Verify the State “After Failure”?
 
-Xem một implementation nguy hiểm:
+Consider a dangerous implementation:
 
 ```java
 // Phản ví dụ: mutate trước khi kiểm tra.
@@ -2144,16 +2144,16 @@ void withdrawWrong(long amountVnd) {
 }
 ```
 
-Với `balance=100` và `withdrawWrong(120)`, method ném exception nhưng để lại `balance=-20`. Nếu test chỉ có:
+With `balance=100` and `withdrawWrong(120)`, the method throws but leaves `balance=-20`. If the test only contains:
 
 ```java
 assertThrows(IllegalStateException.class,
         () -> wallet.withdraw(120));
 ```
 
-thì test **không phát hiện object đã bị phá invariant**.
+then it **fails to detect the broken invariant**.
 
-Thay vào đó:
+Instead, assert:
 
 ```java
 var before = wallet.snapshot();
@@ -2162,64 +2162,64 @@ assertThrows(IllegalStateException.class,
 assertEquals(before, wallet.snapshot());
 ```
 
-**Thông điệp quan trọng:** Kiểm thử lỗi không chỉ kiểm exception type; còn kiểm **postcondition của thất bại**.
+**Core message:** Failure tests must assert more than an exception type: also assert **the failure postcondition**.
 
-Tuy nhiên, điều kiện “lỗi thì hoàn toàn không thay đổi” phải xuất phát từ **hợp đồng nghiệp vụ**. Một workflow có thể cố ý lưu trạng thái `FAILED` hoặc thêm bản ghi audit khi thao tác không thành công. Khi đó test phải xác nhận *những thay đổi được phép khi lỗi*, không áp quy tắc no-mutation lên mọi chức năng một cách máy móc.
+However, the rule that “a failed action changes nothing” must come from **the business contract**. A workflow may deliberately record `FAILED` state or append an audit record after an unsuccessful operation. Tests should then verify *allowed failure-side effects*, not mechanically require every feature to be mutation-free on failure.
 
-## 9. Kiểm thử ranh giới: những giá trị nằm ngay sát điều kiện
+## 9. Testing Boundaries: Values Adjacent to Conditions
 
-Khi các quy tắc dùng dấu `>`, `>=`, `<`, `<=`, kiểm thử tại giá trị gần ranh giới dễ phát hiện off-by-one.
+When rules use `>`, `>=`, `<`, or `<=`, checking values next to their boundaries helps catch off-by-one errors.
 
-Với `withdraw(amount)` ở số dư 100:
+For `withdraw(amount)` with a balance of 100:
 
-| Giá trị rút | Mong đợi |
+| Withdrawal Amount | Expected Outcome |
 |---:|---|
-| -1 | Từ chối vì âm |
-| 0 | Từ chối vì không dương |
-| 1 | Thành công, còn 99 |
-| 99 | Thành công, còn 1 |
-| 100 | Thành công, còn 0 |
-| 101 | Từ chối vì vượt số dư |
+| -1 | Reject as negative |
+| 0 | Reject as nonpositive |
+| 1 | Succeeds; 99 remains |
+| 99 | Succeeds; 1 remains |
+| 100 | Succeeds; 0 remains |
+| 101 | Reject for insufficient funds |
 
-Với `close()`:
-- Balance = 0 → hợp lệ.
-- Balance = 1 → bị từ chối.
-- Balance âm → **không bao giờ phải xuất hiện** nếu invariant được bảo vệ bởi các operation công khai.
+For `close()`:
+- Balance = 0 → valid.
+- Balance = 1 → rejected.
+- Negative balance → **must never occur** if public operations enforce the invariant.
 
-Với `deposit`:
-- `Long.MAX_VALUE - 1` cộng 1 → hợp lệ.
-- `Long.MAX_VALUE` cộng 1 → tràn số và phải bị từ chối mà không thay đổi số dư.
+For `deposit`:
+- `Long.MAX_VALUE - 1` plus 1 → valid.
+- `Long.MAX_VALUE` plus 1 → overflows and must be rejected without changing the balance.
 
-**Không tạo trạng thái bất hợp lệ chỉ để test method khác bằng cách dùng reflection sửa field private**, trừ khi bạn đang cố tình kiểm tra cơ chế phục hồi dữ liệu cũ. Thông thường nên tạo đối tượng qua API công khai và duy trì invariant trong toàn bộ quá trình sắp đặt test.
+**Do not use reflection to alter private fields and manufacture an invalid state merely to test another method**, unless intentionally testing recovery from corrupt legacy data. Normally, construct objects through public APIs and preserve invariants throughout fixture setup.
 
-## 10. Bao phủ trạng thái khác với bao phủ chuyển trạng thái
+## 10. State Coverage Is Different from Transition Coverage
 
-Giả sử test đã tạo được cả ba trạng thái `ACTIVE`, `FROZEN`, `CLOSED`. Điều đó **không có nghĩa** đã kiểm được mọi hành vi chuyển giữa chúng.
+Suppose tests reach all three states: `ACTIVE`, `FROZEN`, and `CLOSED`. That **does not mean** every transition behavior among them has been tested.
 
 ### State coverage
 
-Từng trạng thái xuất hiện ít nhất một lần trong các test. Ví dụ test `new Wallet` cho ACTIVE, test `freeze` cho FROZEN, test `close` cho CLOSED.
+Each state appears in at least one test. For example, `new Wallet` creates ACTIVE, `freeze` produces FROZEN, and `close` produces CLOSED.
 
 ### Transition coverage
 
-Từng **cạnh hợp lệ** trong sơ đồ được thực hiện ít nhất một lần:
+Every **valid edge** in the diagram is exercised at least once:
 - ACTIVE → FROZEN;
 - FROZEN → ACTIVE;
 - ACTIVE → CLOSED;
-- ACTIVE → ACTIVE với nạp/rút hợp lệ.
+- ACTIVE → ACTIVE for valid deposits/withdrawals.
 
 ### Invalid-transition coverage
 
-Chọn các hành động bị cấm đáng quan tâm:
-- `resume` từ ACTIVE;
-- `freeze` từ FROZEN;
-- `deposit`/`withdraw` từ FROZEN;
-- mọi thao tác đổi trạng thái từ CLOSED;
-- `close` từ ACTIVE khi số dư khác 0.
+Select meaningful forbidden operations:
+- `resume` from ACTIVE;
+- `freeze` from FROZEN;
+- `deposit`/`withdraw` from FROZEN;
+- any state-changing operation from CLOSED;
+- `close` from ACTIVE when the balance is not equal to 0.
 
 ### Transition-pair / sequence coverage
 
-Một số lỗi chỉ xuất hiện theo chuỗi: ACTIVE → FROZEN → ACTIVE rồi rút tiền; hoặc nạp → rút hết → đóng → thử nạp lại. Test hai thao tác riêng lẻ có thể không phát hiện lỗi lưu/khôi phục trạng thái liên quan đến chuỗi.
+Some bugs arise only from sequences: ACTIVE → FROZEN → ACTIVE followed by a withdrawal, or deposit → withdraw all → close → try depositing again. Two isolated tests may miss defects in saving/restoring state across a sequence.
 
 ```mermaid
 flowchart LR
@@ -2232,31 +2232,31 @@ flowchart LR
     S5 -->|"deposit(1): rejected"| S5
 ```
 
-Ký hiệu mũi tên vòng lại với nhãn *rejected* biểu thị **không đổi trạng thái sau khi thao tác bị từ chối**, không phải một transition nghiệp vụ thành công.
+A self-loop arrow labeled *rejected* means **the state does not change after a rejected operation**, not that a successful business transition occurred.
 
-### Không chạy mọi tổ hợp một cách vô hạn
+### Do Not Exhaustively Generate Infinite Combinations
 
-Nếu có `n` trạng thái, `m` lệnh và vô số tham số, số chuỗi kiểm thử có thể tăng rất nhanh. Hãy ưu tiên:
+With `n` states, `m` commands, and many possible parameters, the number of test sequences grows rapidly. Prioritize:
 
-- Những trạng thái/cạnh có rủi ro cao.
-- Các giá trị biên.
-- Các lệnh lặp, lệnh trái thứ tự, hành động sau trạng thái cuối.
-- Những chuỗi có mutation và rollback.
-- Những quy tắc dễ đổi trong sản phẩm thật.
+- High-risk states and transitions.
+- Boundary values.
+- Repeated commands, out-of-order commands, and actions after terminal states.
+- Sequences involving mutation and rollback.
+- Rules likely to evolve in the real product.
 
-Đo được state/branch coverage rất hữu ích, nhưng **tỷ lệ coverage cao không tự chứng minh invariant đúng** nếu assertions kém.
+Measuring state/branch coverage is useful, but **a high coverage percentage does not prove invariants hold** if assertions are weak.
 
-## 11. Model-based testing: dùng mô hình đơn giản để đối chiếu
+## 11. Model-Based Testing: Comparing Against a Simple Model
 
-Với nhiều trạng thái hoặc nhiều chuỗi lệnh, viết test thủ công cho từng đường đi rất tốn công. Một hướng là tạo **mô hình tham chiếu (reference model)** đơn giản, có luật tường minh, rồi phát sinh chuỗi lệnh và so sánh kết quả.
+With numerous states and command sequences, manually writing tests for every path is expensive. One approach is to create a simple **reference model** with explicit rules, generate command sequences, and compare outcomes.
 
-Ý tưởng:
+The idea:
 
-1. **Reference model** lưu `status` và `balance`, xác định lệnh nào được phép và trạng thái dự kiến.
-2. **System Under Test (SUT)** là `Wallet` thật.
-3. Bộ sinh lệnh tạo các chuỗi như `deposit(100)`, `freeze()`, `withdraw(10)`, `resume()`, `close()`.
-4. Sau mỗi lệnh, so sánh snapshot SUT với model; cả khi lệnh bị từ chối cũng phải kiểm tra không đổi nếu hợp đồng yêu cầu.
-5. Nếu tìm thấy chuỗi làm sai, lưu seed/chuỗi và thu nhỏ (*shrinking*) để tạo test hồi quy ngắn.
+1. A **reference model** stores `status` and `balance`, determines permitted commands, and predicts state.
+2. The **System Under Test (SUT)** is the real `Wallet`.
+3. A command generator creates sequences such as `deposit(100)`, `freeze()`, `withdraw(10)`, `resume()`, and `close()`.
+4. After each command, compare the SUT snapshot with the model; even rejected commands must leave state unchanged if the contract requires it.
+5. When a failing sequence is found, record its seed/sequence and minimize it through *shrinking* to create a short regression test.
 
 ```mermaid
 flowchart TD
@@ -2270,49 +2270,49 @@ flowchart TD
     F -- "Không" --> H["Ghi seed + chuỗi tái hiện + thu nhỏ lỗi"]
 ```
 
-**Quan trọng:** Reference model cần đủ **độc lập về cách cài đặt** để không chép nguyên lỗi của SUT. Nếu model copy y nguyên từng dòng code từ `Wallet`, cả hai có thể cùng mắc một lỗi và bài test vẫn PASS.
+**Important:** The reference model should be sufficiently **implementation-independent** to avoid copying the SUT's bugs. If the model duplicates every line of `Wallet`, the same defect could occur in both and the test would still pass.
 
-### Một mô hình test rất nhỏ bằng bảng
+### A Tiny Table-Driven Reference Model
 
-Với trạng thái ACTIVE:
-- `freeze` luôn đến FROZEN.
-- `resume` luôn bị từ chối.
-- `close` thành công iff balance = 0.
-- `withdraw(x)` thành công iff `x > 0 && x <= balance`.
+In ACTIVE:
+- `freeze` always transitions to FROZEN.
+- `resume` is always rejected.
+- `close` succeeds if and only if the balance is 0.
+- `withdraw(x)` succeeds if and only if `x > 0 && x <= balance`.
 
-Với FROZEN:
-- Chỉ `resume` được phép trong các lệnh đã định nghĩa.
+In FROZEN:
+- Only `resume` is allowed among the defined commands.
 
-Với CLOSED:
-- Không lệnh nào thay đổi được trạng thái.
+In CLOSED:
+- No command can change state.
 
-Mô hình này có thể được mã hóa thành một bảng transition độc lập, sau đó cho test chạy qua nhiều chuỗi khác nhau.
+This model can be represented as an independent transition table, then exercised across many distinct sequences.
 
-## 12. Property-based testing: kiểm các tính chất thay vì chỉ ví dụ đơn
+## 12. Property-Based Testing: Verify Properties, Not Only Individual Examples
 
-JUnit test truyền thống chỉ gọi vài input đã chọn. Với property-based testing, một thư viện như jqwik hoặc QuickTheories có thể tạo nhiều chuỗi giá trị hợp lệ và thử các tính chất tổng quát.
+Traditional JUnit tests invoke a few selected inputs. In property-based testing, a library such as jqwik or QuickTheories can generate numerous valid input sequences and check general properties.
 
-Các property phù hợp với `Wallet`:
+Properties appropriate for `Wallet` include:
 
-**P1 – Số dư không âm:** sau mọi chuỗi lệnh hợp lệ, `balance >= 0`.
+**P1 – Nonnegative balance:** after any valid command sequence, `balance >= 0`.
 
-**P2 – Trạng thái kết thúc:** nếu `status == CLOSED` thì `balance == 0`, và không có thao tác nào làm trạng thái thoát khỏi CLOSED.
+**P2 – Terminal state:** if `status == CLOSED`, then `balance == 0`, and no operation can move the wallet out of CLOSED.
 
-**P3 – Bảo toàn khi bị từ chối:** nếu thao tác bị từ chối theo hợp đồng demo, snapshot trước và sau phải bằng nhau.
+**P3 – No mutation on rejection:** if the demo contract rejects an operation, before and after snapshots must be equal.
 
-**P4 – Nạp rồi rút cùng lượng:** từ ví ACTIVE có số dư `b`, với `x > 0` và `b+x` không tràn, nếu nạp `x` rồi rút `x` liên tiếp, số dư quay về `b` và status không đổi.
+**P4 – Deposit then withdraw the same amount:** starting from an ACTIVE wallet with balance `b`, where `x > 0` and `b+x` does not overflow, depositing `x` and immediately withdrawing `x` restores balance `b` without changing status.
 
-**P5 – Freeze/resume không đổi số dư:** từ ACTIVE, chuỗi `freeze(); resume();` trả về ACTIVE với balance không đổi.
+**P5 – Freeze/resume preserves balance:** from ACTIVE, `freeze(); resume();` returns to ACTIVE with the same balance.
 
-**P6 – Rút luôn có giới hạn:** với `x > balance`, `withdraw(x)` bị từ chối và balance giữ nguyên.
+**P6 – Withdrawal is bounded:** when `x > balance`, `withdraw(x)` is rejected without changing balance.
 
-Các property này cần **điều kiện đầu vào rõ**. Chẳng hạn P4 sai nếu ví đang FROZEN hoặc phép cộng tràn số; test property phải chỉ phát sinh trường hợp thỏa tiền đề hoặc xác nhận rằng khi tiền đề không thỏa thì thao tác bị từ chối đúng.
+These properties require **explicit input preconditions**. P4, for example, is false if the wallet is FROZEN or addition overflows. A property test must generate cases meeting its assumptions, or assert the correct rejection behavior when assumptions are unmet.
 
-Không bắt buộc cài thêm thư viện cho ví dụ chính; bạn có thể bắt đầu bằng JUnit 5 và bảng trường hợp. Khi state space lớn, property-based testing giúp tìm các chuỗi khó đoán, nhưng vẫn cần test mẫu cụ thể để tài liệu hóa nghiệp vụ.
+The main example does not require another library; start with JUnit 5 and a case table. With a large state space, property-based testing helps discover unexpected sequences, but specific example tests are still needed to document business rules.
 
-## 13. Precondition, invariant và postcondition trong một phương thức
+## 13. Preconditions, Invariants, and Postconditions in One Method
 
-Hãy phân tích `withdraw`:
+Analyze `withdraw`:
 
 ```java
 void withdraw(long amountVnd) {
@@ -2327,59 +2327,59 @@ void withdraw(long amountVnd) {
 }
 ```
 
-Các test nên đặt theo ba lớp:
+Tests should address three layers:
 
-| Lớp | Test hỏi điều gì? | Assert |
+| Layer | What Does the Test Ask? | Assertion |
 |---|---|---|
-| Precondition | `amount<=0` hoặc trạng thái không ACTIVE? | Bị từ chối và không đổi |
-| Postcondition | Rút 30 từ số dư 100? | Số dư 70, trạng thái ACTIVE |
-| Invariant | Sau bất kỳ rút hợp lệ nào? | Số dư không âm |
+| Precondition | `amount<=0` or state is not ACTIVE? | Rejected without change |
+| Postcondition | Withdraw 30 from balance 100? | Balance 70; state ACTIVE |
+| Invariant | After any valid withdrawal? | Nonnegative balance |
 
-Nếu chỉ assert “rút 30 còn 70” thì chưa kiểm boundary và failed operation. Nếu chỉ assert số dư không âm thì có thể bỏ sót lỗi rút ít tiền hơn yêu cầu. Nếu chỉ assert exception thì có thể bỏ sót object bị sửa một phần.
+Asserting only “withdraw 30 leaves 70” misses boundaries and failures. Asserting only a nonnegative balance may miss an incorrect deduction amount. Asserting only an exception may miss partial mutation.
 
-**Phối hợp cả ba** mới tạo bộ kiểm thử có ý nghĩa.
+**Combining all three** produces meaningful coverage.
 
-## 14. Test double và ranh giới nghiệp vụ
+## 14. Test Doubles and Business Boundaries
 
-Ví dụ `Wallet` không có dependency ngoài; test có thể tạo một Wallet thật trực tiếp. Đừng mock chính đối tượng đang cần kiểm tra invariant. Nếu dùng mock cho `Wallet` rồi kiểm `deposit` được gọi một lần, bạn chưa kiểm chứng `balance` thay đổi đúng.
+The `Wallet` example has no external dependencies; tests can instantiate a real Wallet directly. Do not mock the domain object whose invariants you are testing. Mocking `Wallet` and verifying one `deposit` call does not verify that `balance` changed correctly.
 
-Khi object nghiệp vụ cần cộng tác với dependency ngoài:
+When a business object collaborates with external dependencies:
 
-- Fake `Clock` để kiểm quy tắc hết hạn theo thời gian.
-- Fake `ExchangeRateProvider` để kiểm cách chọn tỷ giá.
-- Mock `NotificationGateway` để xác nhận ứng dụng gửi yêu cầu sau một chuyển trạng thái thành công.
-- Repository in-memory hoặc transaction test để xác nhận state được lưu và đọc lại đúng.
+- Fake `Clock` to test time-based expiration rules.
+- Fake `ExchangeRateProvider` to test exchange-rate selection.
+- Mock `NotificationGateway` to verify the application sends a request after a successful state transition.
+- Use an in-memory repository or transaction test to verify that state persists and reloads correctly.
 
-**Phân biệt:** Unit test object kiểm tra quy tắc cục bộ. Integration test kiểm tra nhiều thành phần phối hợp (DB, transaction, message queue...). Không nên để thông báo/email quyết định trực tiếp trạng thái nội bộ của Wallet nếu không phải một phần invariant.
+**Distinguish responsibilities:** Object unit tests verify local rules. Integration tests verify collaboration among components (DB, transactions, message queues, etc.). Notifications/email should not directly dictate Wallet's internal state unless they are actually part of its invariants.
 
-## 15. Test bất biến với object có collection nội bộ
+## 15. Testing Invariants in Objects with Internal Collections
 
-Không phải invariant nào cũng chỉ liên quan một con số. Ví dụ giỏ hàng:
+Invariants can concern more than one number. Consider a shopping cart:
 
-- Mỗi dòng hàng có quantity dương.
-- Không được có dòng trùng SKU nếu nghiệp vụ quy định như vậy.
-- Tổng tiền bằng tổng `unitPrice * quantity` của các dòng.
-- Khi đơn đã xác nhận, không được thêm/xóa dòng.
+- Every line item has a positive quantity.
+- Duplicate SKUs are forbidden when the business requires uniqueness.
+- The total equals the sum of `unitPrice * quantity` across lines.
+- After an order is confirmed, lines cannot be added or removed.
 
-Nếu API trả trực tiếp một `ArrayList` mutable:
+If an API directly returns a mutable `ArrayList`:
 
 ```java
 List<Line> lines = order.getLines();
 lines.clear(); // Có thể qua mặt phương thức domain.
 ```
 
-thì các test gọi `order.addLine` có thể PASS nhưng invariant vẫn bị phá qua đường getter. Vì vậy nên test thêm:
+then tests of `order.addLine` might pass while invariants can still be broken through the getter. Also test that:
 
-1. Client không thể sửa collection nội bộ qua giá trị trả về.
-2. Constructor/setter không giữ tham chiếu tới mutable collection từ caller mà không phòng vệ.
-3. Nếu trả record chứa list, danh sách và phần tử cần được bảo vệ đúng mức.
-4. Những thay đổi hợp lệ phải đi qua phương thức có kiểm tra quy tắc.
+1. Clients cannot modify the internal collection through a returned value.
+2. Constructors/setters do not retain unprotected references to mutable collections supplied by callers.
+3. If a returned record contains a list, protect both the list and its elements as necessary.
+4. Legitimate changes must go through methods that enforce the rules.
 
-`List.copyOf` bảo vệ **một snapshot nông**; nếu phần tử bên trong mutable, việc sao chép danh sách vẫn chưa bảo đảm invariant. Test các đường “escape reference” là một phần của kiểm thử bảo toàn trạng thái.
+`List.copyOf` provides **a shallow snapshot**; if elements are mutable, copying the list alone does not guarantee invariants. Tests for escaped references are part of verifying state integrity.
 
-## 16. Điều kiện bất biến của hai đối tượng có liên hệ
+## 16. Invariants Across Two Related Objects
 
-Một object tự bảo đảm `balance >= 0` chưa đủ cho một nghiệp vụ **chuyển tiền giữa hai ví**:
+One object maintaining `balance >= 0` is insufficient for a business operation that **transfers money between two wallets**:
 
 ```text
 Nguồn: 100   Đích: 20
@@ -2388,49 +2388,49 @@ Sau thành công: Nguồn 70   Đích 50
 Tổng hệ thống trước/sau: 120
 ```
 
-Bất biến liên quan nhiều đối tượng có thể là **tổng tiền được bảo toàn** trong một phép chuyển nội bộ (không tính phí, không tạo/hủy tiền).
+A cross-object invariant may require **preservation of the total amount** during an internal transfer (ignoring fees and creation/destruction of money).
 
-Nếu implementation gọi `source.withdraw(30)` thành công nhưng `target.deposit(30)` thất bại, ta có **mất cập nhật liên đối tượng** dù từng object riêng lẻ vẫn có số dư không âm.
+If an implementation successfully invokes `source.withdraw(30)` but fails on `target.deposit(30)`, **cross-object consistency is broken** even though both individual wallets may still have nonnegative balances.
 
-Kiểm thử ở cấp use case phải kiểm:
-- Cả hai ví cập nhật, hoặc không ví nào thay đổi theo hợp đồng atomicity.
-- Chuyển tiền hai lần với cùng request ID được xử lý theo chính sách idempotency.
-- Retry sau timeout không tạo chuyển tiền trùng.
-- DB transaction/locking hoặc phương án phân tán tương ứng được sử dụng đúng.
+Use-case-level tests must verify:
+- Either both wallets update or neither does, according to the atomicity contract.
+- Repeating the transfer with the same request ID follows the idempotency policy.
+- Retrying after a timeout does not create a duplicate transfer.
+- DB transactions/locking or equivalent distributed mechanisms are applied correctly.
 
-**Tính nguyên tử của một thay đổi object không đồng nghĩa tính nguyên tử của cả workflow.** Nếu các ví nằm ở hai hệ thống khác nhau, cần thiết kế transaction/saga/ledger/compensation tùy yêu cầu thay vì mong một unit test object giải quyết được.
+**Atomic mutation of one object does not imply atomicity of an entire workflow.** If wallets reside in different systems, design suitable transactions, sagas, ledgers, or compensation rather than expecting an object unit test to solve distributed consistency.
 
-## 17. Concurrency: chuỗi test tuần tự không chứng minh thread-safe
+## 17. Concurrency: Sequential Tests Do Not Prove Thread Safety
 
-Trong ví dụ, `balanceVnd` là một field `long` và thao tác nạp thực hiện:
+In this example, `balanceVnd` is a `long` field, and a deposit executes:
 `balanceVnd = Math.addExact(balanceVnd, amountVnd)`.
 
-Nếu hai thread cùng chạy, mỗi thread có thể đọc cùng số dư cũ và ghi lại kết quả khác nhau, gây **lost update**. Các precondition nhìn đúng trong từng thread nhưng trạng thái cuối vẫn sai.
+If two threads run simultaneously, both may read the same old balance and write conflicting results, causing a **lost update**. Each thread may observe valid preconditions, yet the final state can still be wrong.
 
-Tương tự:
-- Hai request cùng rút 80 từ số dư 100 có thể đều đọc 100 trước khi ghi.
-- Hai request cùng cố chuyển trạng thái từ ACTIVE sang FROZEN có thể cùng thấy tiền đề đúng.
-- Một luồng đóng ví khi luồng khác đang nạp/rút có thể tạo trạng thái không nhất quán.
+Likewise:
+- Two requests each withdrawing 80 from a balance of 100 may both read 100 before either writes.
+- Two requests attempting to transition ACTIVE to FROZEN may both observe a satisfied precondition.
+- One thread closing a wallet while another deposits or withdraws may produce inconsistent state.
 
-Test concurrency cần thêm cơ chế điều phối thử nghiệm:
-- `CountDownLatch`/`CyclicBarrier` để tạo tình huống cạnh tranh có kiểm soát.
-- Chạy nhiều lần với dữ liệu và kỳ vọng rõ ràng; không dựa vào `Thread.sleep` để “đợi đủ lâu”.
-- Với DB, kiểm thử transaction isolation, row locks, optimistic locking/version và retry logic.
-- Có thể dùng công cụ concurrency testing chuyên biệt cho các cấu trúc low-level khi phù hợp.
+Concurrency tests require coordinated execution:
+- Use `CountDownLatch`/`CyclicBarrier` to induce controlled contention.
+- Repeat tests with explicit inputs and expectations; do not rely on `Thread.sleep` to “wait long enough.”
+- For DB-backed code, test transaction isolation, row locks, optimistic locking/versions, and retry logic.
+- Where appropriate, use specialized concurrency testing tools for low-level structures.
 
-**Quan trọng:** Một concurrency test PASS một lần không chứng minh không tồn tại race. Test giúp tìm lỗi, còn thiết kế cần cung cấp cơ chế đồng bộ hoặc transaction thực sự.
+**Important:** One passing concurrency run does not prove a race condition is absent. Tests help uncover defects; correctness requires an actual synchronization or transaction mechanism.
 
-Với ví tiền thật, đơn vị thao tác cập nhật phải nằm trong một ranh giới đồng thời rõ ràng; ví dụ dạy học **không nên được dùng nguyên xi trong hệ thống tài chính**.
+For real-money wallets, updates need a clear concurrency boundary; this teaching example **must not be copied directly into financial systems**.
 
-## 18. Không ép test vào chi tiết triển khai
+## 18. Do Not Couple Tests to Implementation Details
 
-Một bộ test dễ vỡ có thể kiểm:
-- Method đã gọi helper `validateBalance` bao nhiêu lần.
-- Field `status` được gán đúng ở dòng nào.
-- Internal collection là `ArrayList` hay `LinkedList`.
-- Exception có đúng từng ký tự message không, dù message không phải public contract.
+A brittle test suite might check:
+- How often a method invokes helper `validateBalance`.
+- The exact line where field `status` is assigned.
+- Whether an internal collection is an `ArrayList` or `LinkedList`.
+- The exact characters of an exception message, even when not part of the public contract.
 
-Những điều này thường không phải kết quả người dùng cần. Test nên kiểm hành vi qua API quan sát được:
+These are usually not user-visible outcomes. Test observable behavior through public APIs:
 
 ```java
 WalletDemo.Snapshot before = wallet.snapshot();
@@ -2438,157 +2438,157 @@ assertThrows(IllegalStateException.class, wallet::close);
 assertEquals(before, wallet.snapshot());
 ```
 
-Nếu sau này đổi cách lưu trạng thái, tối ưu việc tính số dư hoặc tách private helper, test vẫn bảo vệ quy tắc nghiệp vụ. Tuy nhiên nếu text lỗi/cấu trúc lỗi là **contract public** của một API, test chính xác mã lỗi và schema có thể cần thiết.
+Future changes in state storage, balance-calculation optimizations, or private helper extraction will then preserve the business-rule tests. However, if the exact error text/structure **is a public API contract**, assertions about error codes and schemas may be necessary.
 
-### Lựa chọn assertion đúng
+### Choosing the Right Assertions
 
-| Nhu cầu | Assertion JUnit phù hợp |
+| Need | Appropriate JUnit Assertion |
 |---|---|
-| Giá trị số dư đúng | `assertEquals(expected, actual)` |
-| Trạng thái enum đúng | `assertEquals(Status.ACTIVE, snapshot.status())` |
-| Operation ném đúng loại lỗi | `assertThrows(ExpectedException.class, executable)` |
-| Sau lỗi object không thay đổi | Lưu snapshot, rồi `assertEquals(before, after)` |
-| Nhiều kết quả phải đồng thời đúng | `assertAll(...)` khi giúp chẩn đoán |
-| Không ném lỗi với lệnh hợp lệ | `assertDoesNotThrow(...)` nếu có ích |
-| So đúng instance | `assertSame(...)` – chỉ khi identity là contract |
-| Danh sách/collection | Assert nội dung theo semantics của List/Set/Map |
+| Correct balance | `assertEquals(expected, actual)` |
+| Correct enum state | `assertEquals(Status.ACTIVE, snapshot.status())` |
+| Operation throws expected error type | `assertThrows(ExpectedException.class, executable)` |
+| Object unchanged after failure | Capture a snapshot, then `assertEquals(before, after)` |
+| Several outcomes must hold | `assertAll(...)` when helpful for diagnosis |
+| No exception for a valid operation | `assertDoesNotThrow(...)` when useful |
+| Exact instance identity | `assertSame(...)` – only when identity is contractual |
+| Lists/collections | Assert contents according to List/Set/Map semantics |
 
-**Đừng kiểm `==` trên những value objects khác instance** nếu domain muốn so sánh bằng giá trị; hãy dùng equality phù hợp.
+**Do not use `==` for distinct value-object instances** when the domain requires value equality; use appropriate equality semantics.
 
-## 19. Một chiến lược phủ từ mức nhỏ tới lớn
+## 19. A Layered Testing Strategy from Small to Large
 
-Có thể tổ chức các lớp kiểm thử theo chi phí và mục tiêu:
+Organize testing levels by cost and purpose:
 
-| Cấp kiểm thử | Chủ thể | Điều cần chứng minh | Rủi ro còn lại |
+| Test Level | Subject | What It Establishes | Remaining Risk |
 |---|---|---|---|
-| Unit | `Wallet` thực trong bộ nhớ | Invariant, transition, lỗi và trạng thái sau lỗi | Không chứng minh DB/concurrency |
-| Unit property/model-based | Nhiều chuỗi command | Tìm chuỗi mutation khó đoán | Model có thể sai hoặc chưa đủ |
-| Integration | Repository + transaction | Tải/lưu trạng thái, version, rollback | Hệ thống ngoài vẫn có thể lỗi |
-| Contract | API/port giữa module | Semantics lỗi, tính hợp lệ khi thay implementation | Chưa kiểm tất cả path end-to-end |
-| End-to-end | Một luồng nghiệp vụ chính | Khách hàng thực hiện được tác vụ qua toàn hệ thống | Chậm, khó cô lập nguyên nhân |
+| Unit | Real in-memory `Wallet` | Invariants, transitions, errors, and post-error state | Does not prove DB/concurrency correctness |
+| Unit property/model-based | Many command sequences | Find unexpected mutation paths | The reference model may be incorrect/incomplete |
+| Integration | Repository + transaction | State persistence/reloading, versioning, rollback | External systems may still fail |
+| Contract | API/port between modules | Error semantics and substitutability | Does not cover every end-to-end path |
+| End-to-end | One primary business workflow | Users can complete the task through the entire system | Slow, difficult to isolate root causes |
 
-Không nên bỏ unit test trạng thái chỉ vì đã có end-to-end tests. E2E thường tốn kém và khó phủ hết những chuyển trạng thái bị cấm. Ngược lại, chỉ có unit test Wallet không chứng minh rằng hai người dùng sửa cùng một record trong DB được xử lý đúng.
+Do not omit state unit tests because end-to-end tests exist: E2E is costly and rarely covers all forbidden transitions. Conversely, Wallet unit tests alone cannot establish correctness when two users modify the same database record.
 
-## 20. Những sai lầm kiểm thử thường gặp
+## 20. Common Testing Mistakes
 
-| Sai lầm | Vì sao nguy hiểm | Cách cải thiện |
+| Mistake | Why It Is Dangerous | Improvement |
 |---|---|---|
-| Chỉ test “happy path” | Bỏ sót trạng thái và input bị cấm | Bảng transition hợp lệ/bất hợp lệ |
-| Chỉ dùng `assertThrows` | Object có thể đã mutate một phần | Assert snapshot trước = sau khi lỗi |
-| Kiểm trạng thái mà không kiểm invariant | Có thể tạo trạng thái mới nhưng số dư âm | Assert toàn bộ invariant liên quan |
-| Chỉ test từng method độc lập | Bỏ sót lỗi do chuỗi thao tác | Test transition pairs và scenario |
-| Dùng reflection để tự đặt field thành giá trị sai trong mọi test | Bỏ qua cơ chế bảo vệ domain, test không giống sử dụng thực | Tạo state qua API hợp lệ; dành reflection cho test phục hồi dữ liệu đặc biệt |
-| Mock chính object domain | Không kiểm logic thật | Dùng domain object thật, fake dependency ngoài |
-| Assert quá nhiều private call | Refactor hợp lệ làm test vỡ | Assert behavior và public contract |
-| Bỏ qua overflow/biên số | Trạng thái có thể sai ở số rất lớn | Kiểm `0`, âm, balance, balance+1, MAX |
-| Test giả định mọi exception phải rollback toàn bộ workflow | Bỏ qua hành vi audit/FAILED state hợp lệ | Xác định contract lỗi rõ theo tầng |
-| Hiểu “invariant” là field `final` | Không phát hiện object mutable nhưng hợp lệ/sai quy tắc | Viết invariant thành điều kiện logic |
-| Test không dùng version/lock nhưng kết luận thread-safe | Có thể lost update khi chạy thật | Bổ sung concurrency integration tests |
-| Chỉ đo coverage % | Coverage cao vẫn có thể không assert điều quan trọng | Mapping invariant/transition → test |
-| Copy cùng thuật toán vào model test | Test và production có thể cùng lỗi | Reference model độc lập, dựa trên spec |
-| Quá nhiều chuỗi ngẫu nhiên không lưu seed | Lỗi khó tái hiện | Lưu seed, command sequence và shrink |
+| Testing only the happy path | Misses forbidden inputs/states | Valid/invalid transition matrix |
+| Using only `assertThrows` | An object may have been partially mutated | Compare snapshots before and after errors |
+| Checking state without invariants | The transition occurs but the balance may become negative | Assert all relevant invariants |
+| Testing each method in isolation | Misses bugs in operation sequences | Test transition pairs and scenarios |
+| Using reflection to assign invalid fields in every test | Bypasses domain safeguards; unrealistic usage | Create states through valid APIs; reserve reflection for special recovery tests |
+| Mocking the domain object itself | Does not test real behavior | Use real domain objects and fake external dependencies |
+| Asserting excessive private calls | Valid refactors break tests | Assert behavior and public contracts |
+| Ignoring overflow/numeric boundaries | Large values can corrupt state | Test `0`, negatives, balance, balance+1, MAX |
+| Assuming every exception rolls back an entire workflow | Ignores legitimate audit/FAILED-state behavior | Define layer-specific failure contracts |
+| Treating “invariant” as a `final` field | Misses mutable objects that violate or preserve rules | Express invariants as logical conditions |
+| Declaring thread safety based on tests without versioning/locks | Real execution may lose updates | Add concurrency integration tests |
+| Measuring only coverage percentage | High coverage can miss important assertions | Map each invariant/transition to a test |
+| Copying production algorithms into the test model | Tests and production may share bugs | Independent reference model based on the specification |
+| Many random sequences with no recorded seed | Failures cannot be reproduced | Record seed, command sequence, and minimize it |
 
-## 21. Quy trình thực hành khi nhận một lớp có trạng thái
+## 21. Practical Workflow When Testing a Stateful Class
 
-1. **Liệt kê state variables**: `status`, `balance`, các dòng hàng, version, thời gian hết hạn…
-2. **Viết invariant** thành công thức kiểm được, ví dụ `balance >= 0` và `CLOSED ⇒ balance == 0`.
-3. **Liệt kê commands và queries**: command làm thay đổi trạng thái; query chỉ quan sát.
-4. **Vẽ state diagram**, ghi các guard trên cạnh.
-5. **Lập bảng transition** gồm trạng thái trước, input biên, thành công/thất bại và trạng thái sau.
-6. **Chọn ca test ưu tiên**: từng cạnh hợp lệ, mỗi loại lỗi, các giá trị biên, ít nhất một chuỗi nhiều bước.
-7. **Test no-mutation khi lỗi** nếu đó là hợp đồng, không chỉ assert exception.
-8. **Bổ sung property/model-based tests** khi số chuỗi tăng và có nhiều biến đổi trạng thái.
-9. **Xem xét reference escape**: getter có trả mutable collection/array khiến client vượt validation không?
-10. **Kiểm tra riêng concurrency, persistence và transaction**: unit test tuần tự chưa đủ.
-11. **Gắn từng invariant/transition với ít nhất một test** để nhìn ra vùng chưa được bảo vệ.
-12. **Cập nhật bảng và test khi nghiệp vụ đổi**; đừng chỉ sửa code mà quên sửa contract.
+1. **List state variables:** `status`, `balance`, line items, version, expiration times, etc.
+2. **Express invariants** as testable formulas, such as `balance >= 0` and `CLOSED ⇒ balance == 0`.
+3. **List commands and queries:** commands change state; queries only observe it.
+4. **Draw a state diagram** with guards on transitions.
+5. **Create a transition table** covering prior state, boundary input, success/failure, and resulting state.
+6. **Prioritize tests:** every valid edge, each error category, boundary values, and at least one multistep sequence.
+7. **Verify no mutation on failure** if promised by the contract, not merely exception type.
+8. **Add property/model-based tests** when sequences proliferate and state changes are complex.
+9. **Check for escaped references:** can a getter return mutable collections/arrays that bypass validation?
+10. **Test concurrency, persistence, and transactions separately:** sequential unit tests are insufficient.
+11. **Associate every invariant/transition with at least one test** to identify gaps.
+12. **Update tables and tests as business rules change**; never change only the implementation while leaving the contract outdated.
 
-## 22. Bài tập tự luyện
+## 22. Exercises
 
-### Bài 1 – Đơn hàng
+### Exercise 1 – Orders
 
-Thiết kế `Order` với `DRAFT`, `CONFIRMED`, `SHIPPED`, `CANCELLED`. Cho phép thêm dòng hàng khi DRAFT, xác nhận khi có sản phẩm, gửi khi CONFIRMED và cấm hủy khi SHIPPED. Vẽ sơ đồ trạng thái, viết ba invariant và ít nhất sáu test cho các chuyển trạng thái hợp lệ/bất hợp lệ.
+Design `Order` with `DRAFT`, `CONFIRMED`, `SHIPPED`, and `CANCELLED`. Allow adding items in DRAFT, confirming when items exist, shipping from CONFIRMED, and prohibit cancellation after SHIPPED. Draw a state diagram, specify three invariants, and write at least six tests for valid and invalid transitions.
 
-### Bài 2 – Tài khoản có hạn mức
+### Exercise 2 – Account with a Balance Limit
 
-Bổ sung hạn mức số dư tối đa cho Wallet: `balance <= limit`, với `limit > 0` không đổi. Viết test cho nạp tới đúng limit và nạp vượt một đơn vị; khi từ chối, snapshot không đổi. Nếu limit có thể được giảm, cần quy định hành vi khi balance hiện tại đang cao hơn limit mới.
+Add a maximum balance to Wallet: `balance <= limit`, where `limit > 0` is fixed. Test deposits that reach the limit exactly and exceed it by one unit; rejected operations must preserve the snapshot. If the limit may decrease, specify behavior when the current balance exceeds the new limit.
 
-### Bài 3 – Làm lộ mutable state
+### Exercise 3 – Exposing Mutable State
 
-Tạo `Order` với getter trả `List<OrderLine>` mutable và một invariant “đơn CONFIRMED không được sửa dòng hàng”. Viết test làm lộ bug qua getter, sau đó refactor dùng snapshot/unmodifiable API cùng domain method an toàn.
+Create `Order` with a getter returning mutable `List<OrderLine>` and an invariant that “CONFIRMED orders cannot have their lines edited.” Write a test exposing the getter-based bug, then refactor to snapshots/unmodifiable APIs and safe domain methods.
 
-### Bài 4 – Sinh chuỗi lệnh
+### Exercise 4 – Generating Command Sequences
 
-Viết mô hình trạng thái đơn giản cho Wallet và tạo ngẫu nhiên chuỗi dài tối đa 20 lệnh `deposit`/`withdraw`/`freeze`/`resume`/`close`. Sau mỗi lệnh đối chiếu status, số dư, loại lỗi với model. Lưu chuỗi lệnh khi phát hiện khác biệt. Không sao chép nguyên implementation của Wallet vào model.
+Implement a simple state model for Wallet and randomly generate sequences of up to 20 `deposit`/`withdraw`/`freeze`/`resume`/`close` commands. After each, compare status, balance, and error type with the model. Record failing command sequences. Do not duplicate the Wallet implementation inside the model.
 
-### Bài 5 – Lỗi sau khi rút tiền
+### Exercise 5 – Failure After Withdrawing Money
 
-Phân tích một quy trình chuyển 100 VND từ ví A sang ví B. Nếu A đã rút nhưng B không nạp được, thiết kế test ở cấp application/transaction để bảo đảm nguyên tắc tổng tiền được bảo toàn hoặc workflow ghi rõ trạng thái chờ khắc phục. Giải thích vì sao hai ví riêng lẻ có thể đều thỏa invariant nhưng toàn bộ nghiệp vụ vẫn sai.
+Analyze a workflow transferring 100 VND from wallet A to wallet B. If A is debited but B cannot be credited, design application/transaction-level tests to preserve the total amount or explicitly record a pending-recovery workflow state. Explain why each wallet can satisfy its individual invariants while the overall operation is still wrong.
 
-### Bài 6 – Hai request đồng thời
+### Exercise 6 – Two Concurrent Requests
 
-Hai thread cùng gọi `withdraw(80)` với balance ban đầu 100. Viết kỳ vọng nghiệp vụ (“chỉ một lần rút thành công, còn 20”) và phác thảo cách dùng transaction/optimistic locking để đạt kết quả; không coi test tuần tự hay một `Thread.sleep` là bằng chứng an toàn đồng thời.
+Two threads each invoke `withdraw(80)` with an initial balance of 100. State the business expectation (“only one withdrawal succeeds, leaving 20”) and outline transaction/optimistic-locking approaches to achieve it; do not treat sequential tests or a `Thread.sleep` as evidence of concurrency safety.
 
-## 23. Checklist trước khi kết luận test đã đủ
+## 23. Checklist Before Declaring Tests Sufficient
 
-- [ ] Tôi phân biệt invariant, precondition, postcondition và transition rule.
-- [ ] Tôi đã xác định các trạng thái hợp lệ và những cạnh chuyển trạng thái được phép.
-- [ ] Có test cho **đúng trạng thái sau khi thao tác thành công**.
-- [ ] Có test cho **thao tác bị cấm**, không chỉ đường đi bình thường.
-- [ ] Sau lỗi, test kiểm tra **đối tượng không thay đổi** hoặc chỉ thay đổi theo contract.
-- [ ] Các giá trị 0, âm, đúng ngưỡng, vượt ngưỡng và overflow được kiểm tra khi liên quan.
-- [ ] Có test cho ít nhất một chuỗi nhiều bước dẫn tới trạng thái kết thúc.
-- [ ] Không có đường mutation qua getter/reference khiến client phá invariant.
-- [ ] Các assertion kiểm tra hành vi public thay vì chỉ chi tiết triển khai.
-- [ ] Tôi biết phần nào còn cần integration/concurrency testing.
-- [ ] Những hành vi có side effect xuyên nhiều object được kiểm thử ở đúng boundary.
-- [ ] Test được cập nhật khi bảng chuyển trạng thái hoặc quy tắc nghiệp vụ thay đổi.
+- [ ] I distinguish invariants, preconditions, postconditions, and transition rules.
+- [ ] I have identified valid states and permitted transition edges.
+- [ ] There are tests for **correct state after successful operations**.
+- [ ] There are tests for **forbidden operations**, not only normal paths.
+- [ ] After errors, tests check that **the object remains unchanged** or changes only according to its contract.
+- [ ] Boundary values 0, negatives, exact limits, exceeded limits, and overflow are tested when relevant.
+- [ ] At least one multistep sequence reaching a terminal state is tested.
+- [ ] No getter or escaped mutable reference lets clients break invariants.
+- [ ] Assertions verify public behavior rather than only implementation details.
+- [ ] I know which behavior still requires integration/concurrency tests.
+- [ ] Side effects crossing multiple objects are tested at the appropriate boundary.
+- [ ] Tests are updated when transitions or business rules change.
 
-**Ghi nhớ:** Kiểm thử OOP có trạng thái không kết thúc ở việc “một phương thức trả đúng số”. Giá trị của test nằm ở việc chứng minh **đối tượng không đi vào trạng thái bất hợp lệ**, **mọi thay đổi phải tuân các cạnh chuyển trạng thái**, và **khi thao tác thất bại, hợp đồng về trạng thái sau lỗi vẫn được giữ**.
+**Remember:** Testing stateful OOP objects goes beyond “a method returned the right number.” Tests should establish that **objects never enter invalid states**, **every change respects allowed transitions**, and **failure-state guarantees remain intact after rejected operations**.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="testing-004">Kiểm thử các cách thực hiện cùng một giao diện</a>
+## <a id="testing-004">Testing Different Implementations of the Same Interface</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kiểm thử các cách thực hiện cùng một giao diện trong Java
+# Testing Different Implementations of the Same Interface in Java
 
-## 1. Vấn đề cần giải quyết
+## 1. The Problem to Solve
 
-Trong lập trình hướng đối tượng, một **interface** có thể có nhiều lớp triển khai. Ví dụ, giao diện tập hợp số nguyên có thể được triển khai bằng HashSet, TreeSet hoặc một cấu trúc dữ liệu tự viết. Các lớp đó dùng thuật toán khác nhau, nhưng người gọi phải nhận được **cùng hành vi đã cam kết** qua interface.
+In object-oriented programming, an **interface** may have multiple implementations. For example, an integer-set interface might be implemented using HashSet, TreeSet, or a custom data structure. These classes use different algorithms, but callers must observe **the same promised behavior** through the interface.
 
-Nếu chỉ kiểm thử từng lớp bằng những bộ test viết riêng, ta dễ bỏ sót một trường hợp ở một implementation hoặc vô tình chấp nhận hai cách xử lý mâu thuẫn nhau. **Contract test (kiểm thử hợp đồng)** giải quyết vấn đề đó: định nghĩa một bộ kiểm thử hành vi chung rồi chạy nguyên bộ trên mọi implementation.
+If each class has a completely separate test suite, it is easy to omit a case for one implementation or accidentally accept conflicting semantics. **Contract testing** addresses this by defining a shared behavioral test suite and running it unchanged against every implementation.
 
-Mục tiêu của bài:
-- Phân biệt **hợp đồng quan sát được** với chi tiết hiện thực bên trong.
-- Viết test dùng chung qua một **factory** tạo implementation.
-- Kiểm thử trạng thái, kết quả trả về, ca biên và sự độc lập giữa các đối tượng.
-- Biết nơi cần thêm test riêng, ngoài bộ test hợp đồng chung.
+Lesson objectives:
+- Distinguish **observable contracts** from internal implementation details.
+- Write shared tests using a **factory** that creates implementations.
+- Test state, return values, boundary cases, and independence between objects.
+- Recognize where implementation-specific tests are needed in addition to the common contract suite.
 
-## 2. Xác định hợp đồng trước khi viết test
+## 2. Define the Contract Before Writing Tests
 
-Ta tạo giao diện IntSet lưu các số nguyên, không cho phần tử trùng. Hợp đồng được quyết định ở cấp giao diện, nên HashIntSet và TreeIntSet đều phải tuân thủ.
+We define an IntSet interface that stores integers without duplicates. The contract is defined at the interface level, so HashIntSet and TreeIntSet must both comply.
 
-| Thao tác | Hợp đồng chung có thể kiểm thử |
+| Operation | Testable Shared Contract |
 | --- | --- |
-| new IntSet | Tập hợp ban đầu rỗng; size() = 0. |
-| add(x) | Trả true nếu thêm mới; trả false nếu x đã tồn tại; không tăng size khi thêm trùng. |
-| contains(x) | Cho biết x hiện có trong tập hay không, không thay đổi trạng thái. |
-| remove(x) | Trả true nếu x đã bị xóa; trả false nếu không tìm thấy; cập nhật size chính xác. |
-| size() | Luôn bằng số phần tử **phân biệt** hiện có; không âm. |
-| Miền giá trị | Cho phép mọi giá trị int, kể cả số âm, 0, MIN_VALUE và MAX_VALUE. |
-| Độc lập đối tượng | Thao tác trên một đối tượng không làm thay đổi đối tượng mới khác. |
+| new IntSet | Initially empty; size() = 0. |
+| add(x) | Returns true for a newly added element, false if x already exists; duplicate adds do not increase size. |
+| contains(x) | Reports whether x is currently present without changing state. |
+| remove(x) | Returns true if x was removed, false if not found; updates size correctly. |
+| size() | Always equals the count of **distinct** elements and is never negative. |
+| Value domain | Supports every int value, including negatives, 0, MIN_VALUE, and MAX_VALUE. |
+| Instance independence | Operations on one object do not affect another newly created object. |
 
-**Không đưa vào hợp đồng** thứ tự duyệt phần tử, loại cây/bảng băm, thời gian thực thi hay chi tiết bộ nhớ vì interface hiện tại không công bố các đặc tính đó. Không viết assert dựa trên những điều chưa được cam kết.
+**Do not add** iteration order, tree/hash-table choice, execution time, or memory details to this contract because the interface does not promise them. Do not assert unpromised properties.
 
-Luồng kiểm thử:
+Testing flow:
 
 ~~~mermaid
 flowchart TD
@@ -2602,9 +2602,9 @@ flowchart TD
   F -->|Không| H["Xác định implementation và ca vi phạm"]
 ~~~
 
-## 3. Ví dụ chạy được: Java 17 + Maven + JUnit 5
+## 3. Runnable Example: Java 17 + Maven + JUnit 5
 
-Cấu trúc dự án:
+Project structure:
 
 ~~~text
 oop-contract-test/
@@ -2722,7 +2722,7 @@ final class TreeIntSet implements IntSet {
 }
 ~~~
 
-Để ví dụ gọn và biên dịch được từ một tệp, hai lớp triển khai ở đây có phạm vi package-private (không khai báo public). Trong ứng dụng thực tế, có thể tách mỗi lớp sang một tệp.
+To keep the example compact and compilable from one file, both concrete classes here are package-private (not declared public). In real applications, each could be moved to its own file.
 
 ### 3.3. src/test/java/example/IntSetContractTest.java
 
@@ -2823,23 +2823,23 @@ class IntSetContractTest {
 }
 ~~~
 
-Lưu ý cách vận hành:
-1. Phương thức variants() liệt kê **tên implementation + Supplier**.
-2. JUnit 5 gọi **mỗi phương thức @ParameterizedTest một lần cho từng dòng dữ liệu** từ @MethodSource.
-3. Trong mỗi lần gọi, factory.get() sinh **đối tượng mới**; tránh việc test trước làm bẩn trạng thái test sau.
-4. Cùng 5 trường hợp chạy trên 2 implementation: dự kiến **10 lượt kiểm thử**. Tên implementation xuất hiện trong kết quả khi một trường hợp thất bại.
+How the tests run:
+1. The variants() method enumerates **implementation names + Suppliers**.
+2. JUnit 5 invokes **each @ParameterizedTest method once per data row** from @MethodSource.
+3. Each invocation calls factory.get() to create **a fresh object**, preventing earlier tests from contaminating later ones.
+4. The same 5 cases run against 2 implementations, for **10 expected test invocations**. The implementation name appears in failure output.
 
-Chạy tại thư mục chứa pom.xml:
+Run from the directory containing pom.xml:
 
 ~~~bash
 mvn test
 ~~~
 
-Với các lớp như mã nguồn trên, Maven Surefire phải kết thúc thành công với 10 lượt test không thất bại. Nếu một implementation trả kết quả khác hợp đồng, JUnit chỉ ra ca và biến thể liên quan.
+With the classes above, Maven Surefire should complete successfully with 10 passing test invocations. If an implementation violates the contract, JUnit identifies the failing case and variant.
 
-## 4. Vì sao bộ test chung có giá trị?
+## 4. Why Is a Shared Test Suite Valuable?
 
-Giả sử một implementation lỗi viết add như sau:
+Suppose a faulty implementation defines add as follows:
 
 ~~~java
 @Override
@@ -2849,26 +2849,26 @@ public boolean add(int value) {
 }
 ~~~
 
-Bộ kiểm thử addIsIdempotent sẽ thất bại ở lần add(7) thứ hai, dù size vẫn bằng 1. Đây là lỗi **hợp đồng về giá trị trả về**, không phải lỗi cấu trúc lưu trữ.
+The addIsIdempotent test fails on the second add(7), even though size remains 1. This violates the **return-value contract**, not the storage structure.
 
-Một lỗi khác: dùng chung biến static để lưu tập hợp giữa các đối tượng. Kiểm thử independentInstances sẽ bắt được việc hai đối tượng tác động lẫn nhau. Viết test chỉ cho từng thao tác riêng lẻ có thể bỏ sót lỗi dạng này.
+Another defect is using a shared static variable to store elements across instances. The independentInstances test detects interference between two objects. Testing each operation in isolation might miss this behavior.
 
-| Trường hợp | Chỉ kiểm tra kết quả cuối | Contract test tốt hơn |
+| Scenario | Checking Only the Final Result | Better Contract Testing |
 | --- | --- | --- |
-| add cùng giá trị hai lần | Có thể vẫn thấy size = 1. | Kiểm tra cả hai giá trị boolean và size. |
-| remove phần tử không tồn tại | Có thể không phát hiện lỗi trả về. | Yêu cầu false và trạng thái không đổi. |
-| Thêm MIN_VALUE | Dễ bị quên trong bộ test thông thường. | Kiểm tra miền int đã công bố. |
-| Hai instance cùng tồn tại | Dễ bỏ qua nếu chỉ tạo một object. | Bảo đảm không dùng trạng thái chia sẻ ngoài hợp đồng. |
+| Adding the same value twice | size may still be 1. | Assert both boolean results and size. |
+| Removing a missing element | An incorrect return value may go unnoticed. | Require false and unchanged state. |
+| Adding MIN_VALUE | Easily forgotten in ordinary tests. | Cover the declared int domain. |
+| Two instances exist simultaneously | Easy to miss when only one object is created. | Ensure no unpromised shared state. |
 
-## 5. Phân biệt contract test với test riêng
+## 5. Contract Tests Versus Implementation-Specific Tests
 
-**Contract test** bảo vệ những gì mọi implementation đều phải làm: đầu vào hợp lệ, kết quả, ngoại lệ đã cam kết, bất biến trạng thái, hành vi khi gọi nhiều lần.
+**Contract tests** protect requirements common to every implementation: valid inputs, outputs, promised exceptions, state invariants, and repeated-call behavior.
 
-**Implementation-specific test** kiểm tra những yêu cầu chỉ một implementation có. Chẳng hạn một lớp dùng cơ sở dữ liệu còn cần test transaction, rollback, mapping và kết nối thật. Một lớp cache còn cần test TTL, eviction và thread-safety **nếu những đặc tính này thuộc yêu cầu của lớp**.
+**Implementation-specific tests** verify requirements unique to an implementation. A database-backed class may need real connection, transaction, rollback, and mapping tests. A cache may require TTL, eviction, and thread-safety tests **when these are class requirements**.
 
-**Integration test** dùng cấu hình thật của hệ thống để kiểm chứng adapter kết nối tài nguyên bên ngoài. Contract test chạy trên fake hoặc bộ nhớ không đủ để khẳng định JDBC implementation hoạt động với database thật.
+**Integration tests** use real system configuration to verify adapters interacting with external resources. Passing contract tests against a fake or in-memory implementation cannot establish that a JDBC implementation works with the real database.
 
-Ví dụ nếu giao diện Repository có các triển khai InMemoryRepository và JdbcRepository, có thể tái sử dụng bộ contract test bằng factory:
+For example, if Repository has InMemoryRepository and JdbcRepository implementations, the contract suite can be reused through factories:
 
 ~~~java
 // Ý tưởng tổ chức, không phải mã độc lập của dự án IntSet.
@@ -2880,58 +2880,58 @@ abstract class RepositoryContractTest {
 }
 ~~~
 
-Cần bảo đảm setup/cleanup tài nguyên (tạo schema, seed dữ liệu, rollback hoặc xóa theo test), không để test chạy song song cùng đụng dữ liệu. Dùng implementation thật trong CI để tránh tình huống fake vượt qua test nhưng SQL có hành vi khác.
+Ensure resource setup/cleanup (schema creation, seed data, rollback, or per-test deletion) and prevent parallel tests from conflicting over the same data. Exercise real implementations in CI so a fake passing tests cannot hide different SQL behavior.
 
-## 6. Nguyên tắc viết hợp đồng đáng tin cậy
+## 6. Principles for Writing Trustworthy Contracts
 
-- **Xác định hành vi trước:** tài liệu interface/Javadoc và yêu cầu nghiệp vụ là nguồn quyết định. Hai implementation cùng trả một kết quả sai không làm kết quả đó thành đúng.
-- **Kiểm tra từ góc nhìn người gọi:** gọi hàm public qua biến kiểu interface; tránh đọc các trường private hoặc ép kiểu về implementation chỉ để xác nhận cấu trúc nội bộ.
-- **Giữ mỗi test độc lập:** tạo fixture mới cho từng ca, kiểm soát đồng hồ, random seed, thứ tự test và tài nguyên bên ngoài khi có liên quan.
-- **Kiểm thử chuỗi thao tác:** thêm → tìm → thêm trùng → xóa → thêm lại thường phát hiện lỗi trạng thái tốt hơn chỉ kiểm thử một lệnh.
-- **Bao phủ phân vùng và biên:** rỗng, tồn tại/không tồn tại, trùng, số âm, MIN_VALUE/MAX_VALUE; đối với interface nhận tham chiếu còn phải định nghĩa xử lý null.
-- **Kiểm tra ngoại lệ có chủ đích:** nếu hợp đồng yêu cầu IllegalArgumentException cho đầu vào không hợp lệ, dùng assertThrows trên *mọi* implementation; không tự suy đoán ngoại lệ từ một lớp cụ thể.
-- **Tránh assert chi tiết không hứa hẹn:** không so sánh thứ tự duyệt HashSet với TreeSet; nếu thứ tự là yêu cầu, phải ghi vào interface rồi test đúng yêu cầu đó.
-- **Không lạm dụng mock:** mock hữu ích để cô lập dependency khi test một consumer; nó không thay thế được việc kiểm chứng implementation thật có thỏa hợp đồng.
-- **Thêm implementation mới = đăng ký vào cùng test:** với ví dụ này, có thể tạo LinkedHashIntSet và bổ sung một Arguments.of vào variants(); không cần nhân bản năm phương thức test.
-- **Hiểu giới hạn:** bộ test chung chứng minh những ca đã kiểm được đáp ứng, không phải chứng minh mọi đầu vào và mọi đặc tính phi chức năng đều đúng.
+- **Specify behavior first:** interface documentation/Javadoc and business requirements define correctness. Two implementations returning the same wrong result do not make that result correct.
+- **Test from the caller's perspective:** invoke public operations through an interface-typed variable; avoid reading private fields or downcasting merely to assert internal structure.
+- **Keep tests independent:** create fresh fixtures per case; control clocks, random seeds, test order, and external resources when relevant.
+- **Test operation sequences:** add → find → duplicate add → remove → add again often catches state bugs that single-operation tests miss.
+- **Cover partitions and boundaries:** empty, present/absent, duplicate, negative, MIN_VALUE/MAX_VALUE; for interfaces accepting references, specify null handling too.
+- **Assert exceptions deliberately:** if the contract requires IllegalArgumentException for invalid input, use assertThrows for *every* implementation; do not infer error behavior from one concrete class.
+- **Avoid asserting unpromised details:** do not compare HashSet iteration order to TreeSet; if ordering is a requirement, document it on the interface and test that requirement.
+- **Do not overuse mocks:** mocks help isolate a dependency while testing its consumer, but cannot replace verification that actual implementations satisfy the contract.
+- **A new implementation belongs in the same suite:** for example, add LinkedHashIntSet and one Arguments.of entry to variants(); do not duplicate the five test methods.
+- **Understand limitations:** a shared suite establishes that selected cases pass, not that every input and every nonfunctional property is correct.
 
-## 7. Thực hành tự kiểm tra
+## 7. Self-Practice
 
-1. Thêm implementation LinkedHashIntSet dùng LinkedHashSet<Integer>, khai báo implements IntSet. Đăng ký factory vào variants() và chạy lại. Dự kiến 15 lượt test.
-2. Cố tình sửa remove() để luôn trả false, chạy test xem trường hợp nào bắt lỗi; khôi phục mã đúng.
-3. Bổ sung contract test cho chuỗi add(3), add(4), remove(3), add(3); xác nhận size và contains ở từng bước.
-4. Nếu bổ sung phương thức values() trả Collection<Integer>, hãy quyết định rõ có cam kết thứ tự không. Sau đó viết test đúng hợp đồng, tránh phụ thuộc ngẫu nhiên vào cấu trúc dữ liệu.
+1. Add LinkedHashIntSet using LinkedHashSet<Integer> and declare implements IntSet. Register its factory in variants() and rerun; expect 15 test invocations.
+2. Deliberately change remove() to always return false, run the tests to identify the detecting cases, then restore the correct code.
+3. Add a contract test for add(3), add(4), remove(3), add(3), checking size and contains at each step.
+4. If you add values() returning Collection<Integer>, explicitly decide whether ordering is promised. Write tests for the stated contract, not accidental data-structure behavior.
 
-**Tiêu chí hoàn thành:** bất cứ lớp nào khai báo implements IntSet đều có thể chạy cùng bộ test, và mỗi thất bại phải chỉ ra được hành vi nào của hợp đồng bị vi phạm.
+**Completion criterion:** Every class declaring implements IntSet should run the same test suite, and every failure should identify the violated contractual behavior.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="testing-005">Kiểm thử tính thay thế của kiểu con</a>
+## <a id="testing-005">Testing Subtype Substitutability</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kiểm thử tính thay thế của kiểu con (Liskov Substitution Principle — LSP)
+# Testing Subtype Substitutability (Liskov Substitution Principle — LSP)
 
-> **Bối cảnh:** OOP → Kiểm thử. Bài học này tập trung vào cách **chứng minh bằng kiểm thử rằng mọi kiểu con có thể thay thế kiểu cha/interface tại nơi sử dụng** mà không làm sai hành vi đã được cam kết.
+> **Context:** OOP → Testing. This lesson focuses on **testing that every subtype can replace a superclass/interface at its use sites** without violating promised behavior.
 
-## 1. Kết quả cần đạt
+## 1. Learning Outcomes
 
-Sau bài này, bạn có thể:
+After this lesson, you can:
 
-- Diễn giải LSP bằng **hợp đồng hành vi** (behavioral contract), thay vì chỉ dựa vào quan hệ `extends`/`implements`.
-- Tách các điều kiện cần kiểm tra thành **tiền điều kiện**, **hậu điều kiện**, **bất biến**, **ngoại lệ** và **tác dụng phụ**.
-- Thiết kế **một bộ kiểm thử hợp đồng dùng chung** cho mọi implementation của cùng một abstraction.
-- Tạo ca kiểm thử ở **biên miền dữ liệu**, kết hợp trường hợp đại diện và dữ liệu sinh có seed cố định.
-- Phát hiện implementation vi phạm LSP; phân biệt **test pass** với việc đã chứng minh đúng cho mọi dữ liệu.
+- Explain LSP through **behavioral contracts**, not only `extends`/`implements` relationships.
+- Separate testable requirements into **preconditions**, **postconditions**, **invariants**, **exceptions**, and **side effects**.
+- Design **one reusable contract test suite** for every implementation of an abstraction.
+- Test **input-domain boundaries**, combining representative cases with reproducibly seeded generated data.
+- Detect LSP violations and distinguish **passing tests** from proving correctness for all possible inputs.
 
-## 2. Thay thế kiểu con nghĩa là gì?
+## 2. What Does Subtype Substitution Mean?
 
-Giả sử mã khách hàng sử dụng kiểu trừu tượng `T`. Nếu `S` là kiểu con của `T`, thay một đối tượng `T` bằng đối tượng `S` **không được làm hỏng các kỳ vọng được ghi trong hợp đồng của `T`**.
+Suppose client code depends on abstract type `T`. If `S` is a subtype of `T`, replacing an object of `T` with an `S` **must not break expectations documented in `T`'s contract**.
 
 ~~~java
 DiscountPolicy policy = new TenPercentDiscount(); // dùng qua interface
@@ -2939,39 +2939,39 @@ Checkout checkout = new Checkout(policy);
 long payable = checkout.amountToPay(50_000);
 ~~~
 
-`Checkout` chỉ phụ thuộc vào `DiscountPolicy`, nên mọi lớp triển khai interface phải giữ các cam kết chung của interface.
+`Checkout` depends only on `DiscountPolicy`, so every implementing class must honor that interface's shared guarantees.
 
-**Quan hệ kiểu trong Java chưa đủ để bảo đảm LSP.** Trình biên dịch xác nhận chữ ký phương thức và các ràng buộc kiểu; nó không thể tự xác nhận implementation trả kết quả đúng, tuân thủ bất biến, không phát sinh ngoại lệ trái hợp đồng hay không gây tác dụng phụ ngoài dự kiến.
+**Java's type relationship alone cannot guarantee LSP.** The compiler checks method signatures and type constraints; it cannot prove implementations produce correct results, preserve invariants, avoid undocumented exceptions, or prevent unexpected side effects.
 
-| Thành phần hợp đồng | Kiểu con được phép | Dấu hiệu vi phạm cần kiểm thử |
+| Contract Element | What a Subtype May Do | Violation to Test For |
 |---|---|---|
-| Tiền điều kiện (`precondition`) | Giữ nguyên hoặc **nới lỏng** | Yêu cầu thêm điều kiện cho đầu vào vốn hợp lệ ở kiểu cha |
-| Hậu điều kiện (`postcondition`) | Giữ nguyên hoặc **mạnh hơn** | Trả kết quả ngoài miền cho phép, bỏ cam kết về giá trị |
-| Bất biến (`invariant`) | Luôn giữ các bất biến chung | Để đối tượng rơi vào trạng thái mà abstraction cấm |
-| Ngoại lệ | Chỉ phát sinh theo hợp đồng đã công bố | Ném lỗi mới trên dữ liệu hợp lệ, thay đổi ý nghĩa thất bại |
-| Tác dụng phụ | Không phá các bảo đảm quan sát được | Tự thay đổi trạng thái, ghi dữ liệu hoặc gây hiệu ứng bị cấm |
-| Quan sát của client | Giữ hành vi mà client có quyền trông đợi | Client phải `instanceof` rồi xử lý riêng một kiểu con |
+| Preconditions (`precondition`) | Preserve or **weaken** them | Add requirements to inputs valid for the supertype |
+| Postconditions (`postcondition`) | Preserve or **strengthen** them | Return out-of-range results or drop promised guarantees |
+| Invariants (`invariant`) | Preserve all shared invariants | Enter states forbidden by the abstraction |
+| Exceptions | Throw only as promised by the contract | Throw new errors on valid inputs or alter failure semantics |
+| Side effects | Preserve observable guarantees | Mutate state, write data, or perform forbidden effects |
+| Client observations | Preserve behavior clients legitimately expect | Force clients to use `instanceof` for subtype-specific handling |
 
-Ví dụ: nếu kiểu cha chấp nhận mọi số tiền từ 0 đến 1.000.000 đồng xu (cent), kiểu con không được tự ý từ chối các đơn dưới 50.000 cent. Đó là **siết chặt tiền điều kiện**, dù chương trình vẫn biên dịch.
+For example, if the supertype accepts all amounts from 0 through 1.000.000 cents, a subtype must not arbitrarily reject orders below 50.000 cents. That would **strengthen the precondition** even though compilation still succeeds.
 
-## 3. Chọn một hợp đồng có thể kiểm thử
+## 3. Choose a Testable Contract
 
-Ta xây dựng chức năng tính giảm giá dùng đơn vị **cent** và `long` để minh họa mà không phải xử lý sai số dấu phẩy động.
+We implement discount calculation in **cents** using `long` to avoid floating-point precision issues in this example.
 
-Hợp đồng của `DiscountPolicy.discountCents(subtotalCents)`:
+Contract for `DiscountPolicy.discountCents(subtotalCents)`:
 
-1. **Miền đầu vào hợp lệ:** `0 <= subtotalCents <= 1_000_000`.
-2. **Hậu điều kiện:** `0 <= discountCents <= subtotalCents`.
-3. Với đầu vào `0`, kết quả phải bằng `0`.
-4. Cùng một đối tượng, cùng một đầu vào hợp lệ thì kết quả phải nhất quán; ví dụ này quy định policy **không có trạng thái thay đổi**.
-5. Không ném `RuntimeException` cho bất kỳ đầu vào hợp lệ nào.
-6. `Checkout` phải tính `payable = subtotal - discount` và giữ `payable` trong đoạn `[0, subtotal]`.
+1. **Valid input domain:** `0 <= subtotalCents <= 1_000_000`.
+2. **Postcondition:** `0 <= discountCents <= subtotalCents`.
+3. Input `0` must produce `0`.
+4. For the same object and valid input, results remain consistent; this example requires the policy to have **no mutable state**.
+5. No `RuntimeException` is thrown for valid inputs.
+6. `Checkout` computes `payable = subtotal - discount` and keeps `payable` within `[0, subtotal]`.
 
-**Phạm vi hợp đồng phải rõ ràng.** Chúng ta không yêu cầu hành vi nào cho đầu vào âm hoặc vượt 1.000.000; kiểu con có thể từ chối hoặc hỗ trợ thêm các giá trị đó. Cũng không được tự thêm quy tắc “giảm giá luôn tăng khi subtotal tăng”, vì các chính sách giảm giá hợp lệ chưa hứa điều đó.
+**Contract scope must be explicit.** We make no guarantee for negative inputs or values above 1.000.000; subtypes may reject or additionally support them. Do not invent a rule that “the discount always increases with subtotal,” since valid discount policies have not promised that.
 
-## 4. Ví dụ Java chạy được: một bộ kiểm thử, nhiều kiểu con
+## 4. Runnable Java Example: One Test Suite, Multiple Subtypes
 
-Yêu cầu: **JDK 17 trở lên**, không dùng thư viện ngoài. Tạo tệp `LspContractDemo.java` với toàn bộ mã sau:
+**Requirement: JDK 17 or newer**, without external libraries. Create `LspContractDemo.java` containing all the code below:
 
 ~~~java
 import java.util.List;
@@ -3125,14 +3125,14 @@ public class LspContractDemo {
 }
 ~~~
 
-Mở terminal tại thư mục chứa tệp:
+Open a terminal in the file's directory:
 
 ~~~powershell
 javac LspContractDemo.java
 java LspContractDemo
 ~~~
 
-Kết quả kỳ vọng (rút gọn):
+Expected output (abbreviated):
 
 ~~~text
 PASS: NoDiscount
@@ -3142,13 +3142,13 @@ EXPECTED FAIL: MinimumOnlyDiscount: threw exception for valid subtotal 0
 DONE: contract tests detected the LSP violation
 ~~~
 
-**Vì sao đây là kiểm thử tính thay thế?** Bộ kiểm thử gọi mọi implementation **thông qua `DiscountPolicy`**, áp cùng tập kỳ vọng của interface và dùng chúng trong một client thật (`Checkout`). `MinimumOnlyDiscount` tuy khai báo `implements DiscountPolicy` nhưng ném ngoại lệ với `0`, một đầu vào hợp lệ theo hợp đồng. Vì vậy nó không thể thay thế kiểu cha một cách an toàn.
+**Why does this test substitutability?** The suite invokes every implementation **through `DiscountPolicy`**, applies the same interface expectations, and exercises them in a real client (`Checkout`). Although `MinimumOnlyDiscount` declares `implements DiscountPolicy`, it throws for `0`, which is valid under the contract. Therefore it cannot safely substitute for the supertype.
 
-Việc bắt `AssertionError` ở cuối `main` chỉ để trình diễn một trường hợp **cố ý sai**. Trong CI và bộ kiểm thử của dự án, hãy để test thực tế báo **FAIL** khi implementation bất kỳ vi phạm; đừng nuốt lỗi và báo thành công.
+The `AssertionError` catch at the end of `main` merely demonstrates an **intentionally incorrect** implementation. In CI and actual project tests, report **FAIL** whenever an implementation violates the contract; do not swallow the failure and report success.
 
-## 5. Từ ví dụ sang bộ kiểm thử của dự án
+## 5. From the Example to a Project Test Suite
 
-Một thiết kế kiểm thử có thể tái sử dụng:
+A reusable testing design:
 
 ~~~mermaid
 flowchart TD
@@ -3162,7 +3162,7 @@ flowchart TD
     G -->|Không| I["Phát hiện vi phạm hợp đồng"]
 ~~~
 
-Trong dự án dùng **JUnit 5**, có thể đưa `verifyContract` thành hàm trợ giúp và chạy cùng bộ assertion qua các `@TestFactory`/`@ParameterizedTest`. Ví dụ sau đặt trong cùng package với `LspContractDemo` (đã cài JUnit Jupiter):
+In a project using **JUnit 5**, put `verifyContract` in a helper and run the same assertions using `@TestFactory`/`@ParameterizedTest`. The following example belongs in the same package as `LspContractDemo` with JUnit Jupiter installed:
 
 ~~~java
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -3187,84 +3187,84 @@ class DiscountPolicyContractTest {
 }
 ~~~
 
-Khi thêm implementation mới, thêm **factory** tương ứng vào danh sách kiểm thử. Nếu interface được sử dụng bởi các hệ thống khác, bổ sung kiểm thử tích hợp tại ranh giới API/storage/network để xác nhận behavior quan sát được thực sự phù hợp; mock thuần túy có thể bỏ sót sai khác quan trọng.
+When adding an implementation, register its **factory** in the test list. When external systems also use the interface, add integration tests at API/storage/network boundaries to check real observable behavior; pure mocks may conceal important differences.
 
-## 6. Thiết kế bộ ca kiểm thử LSP đầy đủ hơn
+## 6. Designing a More Complete LSP Test Suite
 
-| Nhóm ca | Ví dụ nên kiểm tra | Lỗi LSP có thể lộ ra |
+| Case Category | Examples to Verify | Potential LSP Defect |
 |---|---|---|
-| Giá trị biên | `0`, `1`, giá trị tối đa, ngay trước/sau ngưỡng | Kiểu con từ chối input hợp lệ, lỗi off-by-one |
-| Hậu điều kiện | `discount >= 0` và `discount <= subtotal` | Trả số âm hoặc giảm nhiều hơn tiền hàng |
-| Ngoại lệ | Mọi giá trị thuộc miền hợp lệ | Ném `IllegalArgumentException` trái hợp đồng |
-| Chuỗi thao tác | Gọi cùng input 2 lần; gọi A–B–A | State ẩn làm kết quả phụ thuộc thứ tự |
-| Bất biến trạng thái | Trước/sau từng thao tác; sau exception | Tổng tiền hoặc trạng thái trở nên không hợp lệ |
-| Quan sát từ client | Dùng implementation qua interface trong `Checkout` | Client phải phân nhánh theo subtype |
-| Tính độc lập | Tạo object mới cho từng test khi có state | Test rò rỉ trạng thái giữa các implementation |
-| Tính mở rộng | Đăng ký mọi implementation có thể dùng khi runtime | Một kiểu con mới bỏ sót contract suite |
+| Boundary values | `0`, `1`, maximum value, just below/above limits | Subtype rejects valid input; off-by-one error |
+| Postconditions | `discount >= 0` and `discount <= subtotal` | Negative discount or discount exceeding total |
+| Exceptions | Every input in the valid domain | Throws undocumented `IllegalArgumentException` |
+| Operation sequences | Repeat one input 2 times; invoke A–B–A | Hidden state makes results depend on call order |
+| State invariants | Before/after each operation and after exceptions | Total or state becomes invalid |
+| Client observations | Use implementation through interface in `Checkout` | Client must branch on subtype |
+| Independence | Create a new object per test when stateful | Test state leaks among implementations |
+| Extensibility | Register every implementation selectable at runtime | A new subtype is omitted from the shared suite |
 
-Cụ thể với abstraction **có thể thay đổi trạng thái**, cần kiểm tra thêm chuỗi lệnh và trạng thái sau lỗi. Ví dụ, nếu `Account.withdraw(x)` hứa rằng khi rút thất bại thì số dư không đổi, một subtype trừ tiền trước rồi mới ném lỗi là vi phạm bất biến/hậu điều kiện, dù chữ ký phương thức không khác.
+For a **stateful abstraction**, also test operation sequences and post-error state. For example, if `Account.withdraw(x)` promises unchanged balance when withdrawal fails, a subtype that deducts first and then throws violates invariants/postconditions even when its signature matches.
 
-Các ca kiểm thử không được yêu cầu hành vi **ngoài hợp đồng**. Ví dụ, không thể khẳng định mọi `DiscountPolicy` phải giảm 10%, hay kết quả của hai subtype phải bằng nhau. Cần kiểm tra từng kiểu con thỏa **cùng các bảo đảm** chứ không tạo ra **cùng kết quả cụ thể**.
+Tests must not require behavior **outside the contract**. For example, they cannot demand that every `DiscountPolicy` give a 10% discount or that two subtypes return identical amounts. Assert that each satisfies **the same guarantees**, not **the same exact results**.
 
-## 7. Những lỗi phổ biến khi kiểm thử tính thay thế
+## 7. Common Mistakes in Substitutability Testing
 
-**1. Chỉ kiểm tra `instanceof` hoặc ép kiểu.** Điều này chứng minh quan hệ kiểu, không chứng minh hành vi. Hãy kiểm tra qua biến `DiscountPolicy` và cùng assertion.
+**1. Only checking `instanceof` or using a cast.** This proves a type relationship, not behavioral compatibility. Test through `DiscountPolicy` variables and the same assertions.
 
-**2. Viết test riêng, khác chuẩn cho từng implementation.** Các test riêng có thể hữu ích cho quy tắc đặc thù, nhưng không thể thay thế **contract suite chung**. Nếu mọi loại có bộ điều kiện chấp nhận khác nhau, có thể bạn đã đánh mất abstraction chung.
+**2. Separate, inconsistent standards for each implementation.** Specialized tests are useful for implementation-specific rules but do not replace **the shared contract suite**. If every subtype accepts a different input domain, the abstraction may no longer express a valid shared contract.
 
-**3. Nhầm input không hợp lệ của subtype với input không hợp lệ của kiểu cha.** Một kiểu con không thể bổ sung điều kiện tối thiểu 50.000 nếu hợp đồng chung chấp nhận cả 0.
+**3. Confusing invalid subtype input with invalid supertype input.** A subtype cannot introduce a 50.000 minimum when the shared contract accepts 0.
 
-**4. Test giá trị trả về nhưng quên ngoại lệ và trạng thái.** Một subclass có thể trả đúng trên đường đi thành công nhưng thay đổi dữ liệu sau lỗi hoặc phát sinh ngoại lệ ở nơi client không dự kiến.
+**4. Checking return values while ignoring exceptions and state.** A subclass may produce correct success results yet mutate data after failure or throw where the client expects success.
 
-**5. Kiểm thử ngẫu nhiên không cố định seed.** Lỗi khó tái lập. Dùng seed cố định cho CI, lưu lại input khi fail và kết hợp test biên có chủ đích. `500` input mẫu **không phải chứng minh toán học** cho tất cả đầu vào.
+**5. Random testing without fixed seeds.** Failures become hard to reproduce. Use fixed seeds in CI, record failing inputs, and include intentional boundary tests. `500` sample inputs **are not mathematical proof** for all inputs.
 
-**6. Thay hợp đồng bằng chi tiết implementation.** Nếu test yêu cầu nội bộ phải dùng cấu trúc dữ liệu, thuật toán hoặc chính xác một mức giảm giá, bạn đang làm mất tính thay thế dù client không có quyền yêu cầu những điều đó.
+**6. Replacing contracts with implementation details.** If tests demand an internal data structure, algorithm, or exact discount percentage not promised by the API, they undermine substitutability without a legitimate client requirement.
 
-**7. Làm yếu interface để hợp thức hóa subtype lỗi.** Đôi khi giải pháp đúng là **tách abstraction**: chẳng hạn một API bắt buộc có khả năng ghi không nên nhận subtype chỉ đọc rồi để nó ném `UnsupportedOperationException` với mọi lệnh ghi hợp lệ. Có thể dùng hai interface `ReadableRepository` và `WritableRepository` thay cho một hợp đồng mâu thuẫn.
+**7. Weakening an interface to justify a broken subtype.** Sometimes the right solution is to **split the abstraction**: a mandatory writable API should not receive a read-only subtype that throws `UnsupportedOperationException` for every valid write. Consider separate `ReadableRepository` and `WritableRepository` interfaces instead of a contradictory contract.
 
-## 8. Cách áp dụng trong code review và CI
+## 8. Applying This in Code Review and CI
 
-1. **Viết hợp đồng bằng câu có thể kiểm chứng.** Mô tả chính xác miền input, output, ngoại lệ, bất biến, state và tác dụng phụ mà client trông đợi.
-2. **Đưa các assertion chung vào một test suite.** Dùng interface hoặc lớp cha trong chữ ký helper, cung cấp factory cho từng implementation.
-3. **Bao phủ giá trị biên và chuỗi thao tác.** Với lớp stateful, sử dụng từng đối tượng mới và kiểm tra cả khi thao tác thất bại.
-4. **Chạy test khi thêm/sửa subtype.** Nếu test chung fail, điều tra subtype và hợp đồng, không tự động sửa assertion theo hành vi mới.
-5. **Bổ sung kiểm thử tích hợp ở client tiêu biểu.** Đặc biệt khi vấn đề liên quan transaction, IO, cache, concurrency hoặc external API.
-6. **Kiểm tra giới hạn của lời khẳng định.** Một bộ test pass chỉ cho biết những ca và thuộc tính đã đo được đều đạt; review thiết kế và phương pháp kiểm chứng khác vẫn cần thiết.
+1. **Write verifiable contract statements.** Define valid inputs, outputs, exceptions, invariants, states, and side effects expected by clients.
+2. **Put shared assertions in one suite.** Use an interface or superclass in helper signatures, with a factory for each implementation.
+3. **Cover boundaries and operation sequences.** For stateful classes, create fresh objects and check rejected operations too.
+4. **Run tests when adding/changing subtypes.** When shared tests fail, investigate the subtype and contract rather than automatically rewriting assertions.
+5. **Add integration tests for representative clients.** Particularly for transactions, I/O, caches, concurrency, and external APIs.
+6. **Acknowledge limits of test claims.** Passing tests establishes only the measured cases/properties; design review and other verification methods remain necessary.
 
-### Bài tập thực hành
+### Practical Exercises
 
-- Thêm `NegativeDiscount` trả `-1`: xác định assertion hậu điều kiện nào fail.
-- Thêm `MoreThanTotalDiscount` trả `subtotalCents + 1`: chỉ ra hậu điều kiện và hệ quả trong `Checkout`.
-- Thêm policy dùng bộ đếm số lần gọi rồi thay đổi kết quả: xác định phép thử tính nhất quán nào bắt được lỗi.
-- Sửa `MinimumOnlyDiscount` để chấp nhận mọi đầu vào hợp lệ mà vẫn không giảm cho các đơn nhỏ; chạy lại bộ contract test để thấy subtype đã phù hợp.
-- Chọn một interface thực tế (repository, thanh toán, bộ đọc dữ liệu), viết các cam kết quan sát được và chạy cùng bộ test với ít nhất hai implementation khác nhau.
+- Add `NegativeDiscount` returning `-1`: identify which postcondition assertion fails.
+- Add `MoreThanTotalDiscount` returning `subtotalCents + 1`: identify the violated postcondition and its impact on `Checkout`.
+- Add a policy that counts invocations and changes results: identify the consistency test that catches it.
+- Modify `MinimumOnlyDiscount` to accept all valid inputs while still giving no discount on small orders; rerun the contract suite to confirm the subtype now complies.
+- Choose a real interface (repository, payment gateway, data reader), specify its observable guarantees, and run the same suite against at least two different implementations.
 
-**Tiêu chí hoàn thành:** Bạn có thể thêm một subtype mới, đăng ký nó với bộ kiểm thử hợp đồng hiện có và biết chính xác điều kiện hành vi nào sẽ khiến nó bị từ chối, kể cả khi chữ ký Java vẫn hoàn toàn hợp lệ.
+**Completion criterion:** You can add a subtype to the existing contract suite and identify exactly which behavioral conditions would reject it, even if its Java signatures remain entirely valid.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="testing-006">Fake, stub, mock và đối tượng cộng tác</a>
+## <a id="testing-006">Fakes, Stubs, Mocks, and Collaborating Objects</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Fake, stub, mock và đối tượng cộng tác trong kiểm thử OOP (Java)
+# Fakes, Stubs, Mocks, and Collaborators in OOP Testing (Java)
 
-## 1. Bối cảnh: vì sao cần đối tượng thay thế?
+## 1. Context: Why Replace Collaborating Objects?
 
-Một đối tượng trong OOP thường không làm việc một mình. Ví dụ **CheckoutService** xử lý đơn hàng bằng cách cộng tác với:
-- **Inventory**: kiểm tra và trừ tồn kho.
-- **PaymentGateway**: yêu cầu thanh toán.
-- **ReceiptSender**: gửi biên nhận cho khách.
+An OOP object rarely works alone. For example, **CheckoutService** processes orders by collaborating with:
+- **Inventory**: checking and decrementing stock.
+- **PaymentGateway**: requesting payment.
+- **ReceiptSender**: sending receipts to customers.
 
-Ba thành phần này là **đối tượng cộng tác (collaborators)** của CheckoutService. Trong môi trường thật, chúng có thể dùng cơ sở dữ liệu, cổng thanh toán hoặc dịch vụ email. Nếu bài kiểm thử logic của CheckoutService trực tiếp gọi các dịch vụ đó, kết quả dễ phụ thuộc mạng, dữ liệu, phí giao dịch và cấu hình môi trường.
+These three components are **collaborators** of CheckoutService. In production, they may access a database, payment processor, or email service. If tests of CheckoutService's business logic call those services directly, results may depend on networks, data, transaction fees, and environment configuration.
 
-Một **test double** là đối tượng thay thế collaborator trong bài kiểm thử. Ta truyền nó vào đối tượng cần kiểm thử (**SUT — System Under Test**) thông qua constructor hoặc phương thức, nhờ đó có thể chủ động tạo tình huống và quan sát hành vi.
+A **test double** replaces a collaborator during testing. Supply it to the **SUT — System Under Test** through a constructor or method to control scenarios and observe behavior.
 
 ~~~mermaid
 flowchart LR
@@ -3277,29 +3277,29 @@ flowchart LR
     R -. "trong test" .-> M["MockReceiptSender"]
 ~~~
 
-Điểm mấu chốt: **collaborator** chỉ vai trò phụ thuộc trong thiết kế; **fake/stub/mock** chỉ cách đối tượng thay thế phục vụ mục đích kiểm thử. Một collaborator có thể được thay bằng đối tượng thật trong integration test, fake trong unit test hoặc mock khi cần kiểm tra tương tác.
+The key distinction: **collaborator** describes a dependency's design role; **fake/stub/mock** describes the purpose of its test replacement. A collaborator may be real in integration tests, fake in unit tests, or mocked to verify interactions.
 
-## 2. Phân biệt fake, stub, mock, spy, dummy
+## 2. Distinguishing Fakes, Stubs, Mocks, Spies, and Dummies
 
-| Loại | Đặc trưng | Dùng khi nào? | Ví dụ |
+| Type | Characteristic | When to Use | Example |
 |---|---|---|---|
-| **Dummy** | Chỉ truyền vào để thỏa tham số, bài test không dùng đến | Tham số bắt buộc nhưng không liên quan tình huống | Đối tượng Logger rỗng khi nhánh test không ghi log |
-| **Stub** | Trả dữ liệu/kết quả đã lập trình trước cho lời gọi | Muốn chủ động điều khiển đầu vào gián tiếp của SUT | PaymentGateway luôn trả **true** hoặc **false** |
-| **Fake** | Có logic hoạt động đơn giản nhưng thực sự dùng được, thường lưu trong bộ nhớ | Muốn kiểm tra trạng thái mà không dùng hạ tầng thật | Kho hàng Map trong RAM hỗ trợ đọc/trừ số lượng |
-| **Mock** | Ghi nhận và/hoặc xác minh SUT đã gọi collaborator đúng cách | Cần khẳng định hiệu ứng bên ngoài đã được yêu cầu | Xác minh ReceiptSender được gọi đúng **một lần**, đúng người và số tiền |
-| **Spy** | Quan sát lời gọi tới đối tượng thật hoặc đối tượng được bọc, có thể giữ hành vi thật | Muốn theo dõi tương tác mà vẫn chạy triển khai gốc | Spy bọc một repository in-memory và đếm lần gọi |
+| **Dummy** | Passed only to satisfy a parameter; the test never uses it | Required but irrelevant argument | Empty Logger object in a test path that does not log |
+| **Stub** | Returns predetermined values/results for calls | Control indirect inputs to the SUT | PaymentGateway always returns **true** or **false** |
+| **Fake** | Simplified but working implementation, often using in-memory storage | Verify state without real infrastructure | RAM-based Map inventory supporting reads and stock decrements |
+| **Mock** | Records and/or verifies how the SUT invoked a collaborator | Assert requested external effects | Verify ReceiptSender was called exactly **once**, with the right recipient and amount |
+| **Spy** | Observes calls to a real or wrapped object, potentially preserving real behavior | Observe interactions while retaining the original implementation | Spy wraps an in-memory repository and counts calls |
 
-**Phân biệt theo mục đích, không theo tên class hay framework.** Chẳng hạn đối tượng tạo bằng Mockito.mock(...) có thể vừa trả giá trị đã cấu hình (**stubbing**), vừa được kiểm tra bằng verify(...) (**mock-style verification**). Một fake cũng có thể ghi lịch sử gọi và đảm nhiệm vai trò spy. Trong thuật ngữ kinh điển, **stub giúp định hình trạng thái/đầu ra**, còn **mock giúp khẳng định tương tác mong đợi**.
+**Classify by purpose, not class names or frameworks.** An object created through Mockito.mock(...) can supply configured values (**stubbing**) and be checked through verify(...) (**mock-style verification**). A fake can also record call history and act as a spy. In classical terminology, **stubs control state/outputs**, while **mocks assert expected interactions**.
 
-Hai cách khẳng định kết quả thường gặp:
-- **State verification:** sau khi checkout thành công, tồn kho từ 3 còn 1.
-- **Interaction verification:** biên nhận được yêu cầu gửi chính xác một lần với orderId, email và tổng tiền đúng.
+Two common ways to assert outcomes:
+- **State verification:** after checkout succeeds, inventory falls from 3 to 1.
+- **Interaction verification:** a receipt is requested exactly once with the correct orderId, email, and total amount.
 
-Không phải test nào cũng cần mock. Kiểm tra kết quả hoặc trạng thái quan sát được thường ít gắn với chi tiết cài đặt hơn kiểm tra mọi lời gọi nội bộ.
+Not every test needs mocks. Verifying results or observable state is often less coupled to implementation than checking every internal call.
 
-## 3. Ví dụ Java hoàn chỉnh, chạy không cần thư viện kiểm thử
+## 3. Complete Runnable Java Example Without Test Libraries
 
-Ví dụ sau dùng Java 11 trở lên, một file duy nhất **CheckoutDemo.java**. Các interface mô tả hợp đồng collaborator; CheckoutService chỉ biết interface. Ba test double minh họa ba mục tiêu riêng: fake lưu kho trong RAM, stub quyết định thanh toán, mock ghi nhận yêu cầu gửi biên nhận.
+The example uses Java 11 or newer in a single file, **CheckoutDemo.java**. Interfaces define collaborator contracts, while CheckoutService depends only on those interfaces. Three test doubles illustrate separate goals: an in-memory inventory fake, a payment-result stub, and a mock recording receipt requests.
 
 ~~~java
 import java.util.ArrayList;
@@ -3513,34 +3513,34 @@ public class CheckoutDemo {
 }
 ~~~
 
-Chạy tại thư mục chứa file:
+Run from the directory containing the file:
 
 ~~~bash
 javac CheckoutDemo.java
 java CheckoutDemo
 ~~~
 
-Kết quả khi cả ba tình huống đạt yêu cầu:
+Output when all three scenarios pass:
 
 ~~~text
 3 scenarios PASS
 ~~~
 
-Chỉ cần sửa sai một điều kiện, ví dụ gửi email trước khi thanh toán được chấp thuận, bài test **declinedPayment** sẽ ném AssertionError. Không có email thật, giao dịch thật hay database thật nào được gọi.
+Making one condition incorrect—for example, sending email before payment approval—causes the **declinedPayment** test to throw AssertionError. No real email, transaction, or database is invoked.
 
-### Điều đang được kiểm chứng
+### What Is Being Verified
 
-| Tình huống | Stub thanh toán | Trạng thái fake sau gọi | Mock gửi biên nhận | Kết quả |
+| Scenario | Payment Stub | Fake State After Call | Receipt Mock | Result |
 |---|---|---|---|---|
-| Còn 3 sản phẩm, mua 2 | Chấp thuận | Còn 1 | Đúng 1 lần, 500.000 VND | SUCCESS |
-| Còn 3 sản phẩm, mua 2 | Từ chối | Vẫn 3 | Không gọi | PAYMENT_DECLINED |
-| Chỉ còn 1, mua 2 | Không quyết định kết quả | Vẫn 1 | Không gọi | OUT_OF_STOCK |
+| 3 items available, buy 2 | Approved | 1 remains | Exactly 1 call, 500.000 VND | SUCCESS |
+| 3 items available, buy 2 | Declined | Still 3 | Not invoked | PAYMENT_DECLINED |
+| Only 1 available, buy 2 | No payment decision needed | Still 1 | Not invoked | OUT_OF_STOCK |
 
-Ở tình huống hết hàng, checkout trả về trước khi yêu cầu thanh toán; bài test hiện tại chỉ kiểm tra trạng thái kho và email. Nếu yêu cầu nghiệp vụ cần **chứng minh gateway tuyệt đối không được gọi**, hãy dùng một test double ghi số lần gọi hoặc Mockito.verifyNoInteractions(...), rồi xác minh riêng điều đó.
+In the out-of-stock scenario, checkout returns before requesting payment; the current test checks only inventory state and email. If the business requires **proof that the gateway is never called**, use a call-counting test double or Mockito.verifyNoInteractions(...), and assert it separately.
 
-## 4. Cùng ý tưởng với JUnit 5 và Mockito
+## 4. The Same Approach with JUnit 5 and Mockito
 
-Khi dự án đã dùng **JUnit Jupiter** và **Mockito**, không nhất thiết phải tự viết MockReceiptSender. Ví dụ dưới đây giả định class CheckoutDemo ở phần trên có mặt trong cùng package và project đã khai báo dependency test của JUnit Jupiter + Mockito.
+When a project already uses **JUnit Jupiter** and **Mockito**, you need not implement MockReceiptSender manually. The next example assumes CheckoutDemo from the previous section is in the same package and that the project declares JUnit Jupiter and Mockito test dependencies.
 
 ~~~java
 import org.junit.jupiter.api.Test;
@@ -3602,18 +3602,18 @@ class CheckoutServiceTest {
 }
 ~~~
 
-Chú ý: **verify(inventory).decrease(...) không chứng minh dữ liệu trong kho đã thực sự thay đổi**, vì Mockito mock mặc định không lưu trạng thái của Inventory. Muốn kiểm chứng số lượng thực còn lại, dùng FakeInventory hoặc bài integration test với repository thật. Đây là điểm khác nhau quan trọng giữa **tương tác** và **kết quả quan sát được**.
+Note: **verify(inventory).decrease(...) does not prove stock quantities actually changed**, because a default Mockito mock of Inventory stores no state. To verify remaining stock, use FakeInventory or an integration test with a real repository. This is the key distinction between **interactions** and **observable results**.
 
-Các thao tác phổ biến trong Mockito:
-- **when(...).thenReturn(...)**: định nghĩa đầu ra của stub.
-- **verify(mock).method(...)**: xác minh có lời gọi phù hợp, mặc định đúng 1 lần.
-- **times(n)**, **never()**, **verifyNoInteractions(...)**: kiểm tra số lần/không gọi.
-- **ArgumentCaptor**: bắt tham số để kiểm tra nội dung khi cần.
-- **spy(realObject)**: quan sát đối tượng có hành vi thật; cân nhắc tác dụng phụ và không mặc định coi spy an toàn.
+Common Mockito operations:
+- **when(...).thenReturn(...)**: configures stub output.
+- **verify(mock).method(...)**: asserts a matching invocation; defaults to exactly 1 call.
+- **times(n)**, **never()**, **verifyNoInteractions(...)**: verify counts and absent calls.
+- **ArgumentCaptor**: captures arguments for content assertions when needed.
+- **spy(realObject)**: observes an object with real behavior; consider side effects and do not assume spies are always safe.
 
-## 5. Thiết kế đối tượng cộng tác để dễ kiểm thử
+## 5. Designing Collaborators for Testability
 
-### Phụ thuộc vào hợp đồng, đưa dependency từ bên ngoài vào
+### Depend on Contracts and Inject Dependencies Externally
 
 ~~~java
 // Khó cô lập: tự tạo phụ thuộc trong hàm nghiệp vụ
@@ -3624,71 +3624,71 @@ CheckoutDemo.CheckoutService service =
         new CheckoutDemo.CheckoutService(inventory, gateway, sender);
 ~~~
 
-Đây là **dependency injection** kết hợp **programming to an interface**. Mục đích không phải tạo interface cho mọi class, mà là tách những ranh giới có hành vi cần hoán đổi hoặc kiểm soát: dữ liệu, thời gian, mạng, hàng đợi thông điệp và dịch vụ bên ngoài.
+This combines **dependency injection** with **programming to an interface**. The goal is not an interface for every class, but clear boundaries where behavior must be replaceable or controlled: data, time, networks, message queues, and external services.
 
-### Nên kiểm thử điều gì?
+### What Should Tests Verify?
 
-1. **Quy tắc nghiệp vụ:** kết quả trả về, tồn kho, số tiền, tính hợp lệ của dữ liệu.
-2. **Tương tác mang ý nghĩa nghiệp vụ:** khi thanh toán thành công, yêu cầu gửi biên nhận đúng thông tin; khi thất bại không gửi.
-3. **Đường lỗi:** hết hàng, từ chối thanh toán, dữ liệu sai, lỗi ngoại vi.
-4. **Hợp đồng giữa các thành phần:** fake có tuân thủ giả định của repository thật? Chữ ký phương thức và trường hợp lỗi có nhất quán?
+1. **Business rules:** returned outcomes, inventory, amounts, and data validity.
+2. **Business-significant interactions:** after successful payment, request the correct receipt; after failure, do not send it.
+3. **Failure paths:** out of stock, payment declined, invalid input, and external failures.
+4. **Component contracts:** does the fake honor assumptions of the real repository? Are method signatures and error cases consistent?
 
-Không nên xác minh mọi lời gọi getter, thứ tự các bước nội bộ hay cấu trúc private chỉ vì Mockito cho phép. Nếu refactor giữ nguyên hành vi mà hàng loạt unit test vô cớ thất bại, nhiều khả năng test đã phụ thuộc quá sâu vào implementation.
+Do not verify every getter call, internal step ordering, or private structure merely because Mockito allows it. If behavior-preserving refactoring breaks many unit tests unnecessarily, those tests likely depend too closely on implementation details.
 
-## 6. Sai lầm thường gặp và cách sửa
+## 6. Common Mistakes and Fixes
 
-| Sai lầm | Hậu quả | Cách làm phù hợp |
+| Mistake | Consequence | Better Approach |
 |---|---|---|
-| Dùng mock cho mọi object, kể cả value object thuần | Test dài, khó đọc, giòn khi refactor | Dùng object thật cho DTO/value object đơn giản |
-| Stub trả kết quả mặc định nhưng quên nhánh lỗi | Thiếu coverage cho từ chối, timeout, hết hàng | Viết test riêng cho nhánh lỗi quan trọng |
-| Chỉ verify lời gọi repository rồi kết luận trạng thái đã lưu đúng | Nhầm interaction với state | Dùng fake có lưu trạng thái hoặc integration test |
-| Fake không giống ràng buộc của storage thật | Unit test xanh nhưng production lỗi | Contract/integration test các quy tắc: trùng khóa, transaction, concurrency |
-| Mock chi tiết nội bộ như số lần gọi từng helper | Test gắn chặt cách triển khai | Verify đầu ra và hiệu ứng ngoài hệ thống |
-| Dùng spy cho dịch vụ thật có side effect | Có thể thực thi thanh toán, gửi mail, ghi DB ngoài ý muốn | Chỉ spy đối tượng an toàn, không có side effect bất ngờ |
-| Dùng unit test double thay cho toàn bộ kiểm thử tích hợp | Không phát hiện lỗi cấu hình, mạng, schema, giao thức | Bổ sung integration test cho adapter và luồng quan trọng |
+| Mocking every object, even pure value objects | Long, unreadable tests brittle under refactoring | Use real instances for simple DTOs/value objects |
+| Stubbing only default results and omitting failures | No coverage for declines, timeouts, or out-of-stock cases | Write explicit tests for important failure branches |
+| Verifying repository calls and assuming persistence is correct | Confuses interactions with state | Use a stateful fake or integration tests |
+| Fake ignores real storage constraints | Unit tests pass but production fails | Contract/integration tests for unique keys, transactions, and concurrency |
+| Mocking internal details such as helper call counts | Tests tightly coupled to implementation | Verify outputs and externally visible effects |
+| Spying on real side-effectful services | May unintentionally charge payments, send mail, or write to DB | Spy only on safe objects without unexpected side effects |
+| Using unit-test doubles instead of all integration tests | Misses configuration, network, schema, or protocol failures | Add integration tests for adapters and important workflows |
 
-**Giới hạn cố ý của ví dụ:** CheckoutService minh họa logic tuần tự. Hệ thống thật phải xử lý tính nguyên tử giữa thanh toán, tồn kho và gửi biên nhận (transaction, idempotency, outbox/saga, retry), đồng thời kiểm tra tranh chấp tồn kho khi có nhiều yêu cầu. FakeInventory trong RAM không tự mô phỏng những tính chất đó. Test double giúp cô lập trách nhiệm của SUT, không thay thế kiểm thử tích hợp/end-to-end.
+**Intentional limitation of the example:** CheckoutService illustrates sequential logic. Real systems must handle consistency across payment, inventory, and receipts (transactions, idempotency, outbox/sagas, retries), and inventory contention under concurrent requests. The in-memory FakeInventory does not automatically simulate these properties. Test doubles isolate SUT responsibilities but do not replace integration/end-to-end testing.
 
-## 7. Bài luyện tập
+## 7. Practice Exercises
 
-- Bổ sung tình huống **quantity = 0**: kỳ vọng IllegalArgumentException, không có biên nhận; cân nhắc cách chứng minh không gọi cổng thanh toán.
-- Tạo **SpyPaymentGateway** bọc một StubPaymentGateway, đếm số lần charge và lưu orderId/amountVnd. Xác minh tình huống OUT_OF_STOCK có **0 lần charge**.
-- Cố tình thay **inventory.decrease(sku, quantity)** bằng trừ 1 và kiểm tra test thành công phát hiện lỗi qua state verification.
-- Bổ sung một bài integration test của Inventory thật (nếu dự án có database) để so sánh hợp đồng với FakeInventory.
+- Add a **quantity = 0** scenario: expect IllegalArgumentException and no receipt; consider how to establish that no payment-gateway call occurred.
+- Create **SpyPaymentGateway** around a StubPaymentGateway, count charge calls, and record orderId/amountVnd. Verify **0 charge calls** in the OUT_OF_STOCK case.
+- Deliberately replace **inventory.decrease(sku, quantity)** with a subtraction of 1, then verify that the successful-case test detects the incorrect state.
+- Add an integration test for a real Inventory implementation (if the project uses a database) and compare its contract with FakeInventory.
 
-**Ghi nhớ:** Fake trả lời “trạng thái thay đổi thế nào?”, Stub trả lời “collaborator sẽ trả gì?”, Mock trả lời “collaborator đã được gọi ra sao?”. Chọn test double theo điều thực sự cần chứng minh, giữ SUT phụ thuộc vào hợp đồng rõ ràng, và dùng integration test để xác nhận phần mà đối tượng thay thế không mô phỏng.
+**Remember:** A Fake answers “how does state change?”; a Stub answers “what does the collaborator return?”; a Mock answers “how was the collaborator invoked?”. Choose a test double based on what must actually be established, keep the SUT dependent on clear contracts, and use integration tests for what replacements do not simulate.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="testing-007">Thiết kế để thay thế phụ thuộc khi kiểm thử</a>
+## <a id="testing-007">Designing for Dependency Substitution in Tests</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thiết kế để thay thế phụ thuộc khi kiểm thử (Java OOP)
+# Designing for Dependency Substitution in Tests (Java OOP)
 
-## 1. Vì sao một lớp khó kiểm thử?
+## 1. Why Is a Class Hard to Test?
 
-Giả sử CheckoutService xử lý thanh toán. Nếu bên trong lớp này tự tạo HTTP client, kết nối cổng thanh toán, gửi email và lấy thời gian hệ thống, mỗi lần chạy unit test có thể phải truy cập mạng, cần tài khoản thật hoặc phụ thuộc vào đồng hồ máy. Test vì vậy chậm, khó lặp lại và có thể tạo tác dụng phụ.
+Suppose CheckoutService processes payments. If it constructs an HTTP client internally, connects to a payment provider, sends email, and reads the system clock, every unit-test run may require network access, real credentials, or the machine's current time. Such tests are slow, difficult to reproduce, and potentially side-effectful.
 
-Giải pháp là thiết kế **điểm thay thế phụ thuộc (test seam)**: CheckoutService chỉ biết các **hợp đồng** mà nó cần, còn đối tượng cụ thể được truyền từ bên ngoài. Khi chạy thật, ứng dụng gắn adapter thực; khi kiểm thử, test gắn đối tượng giả có hành vi kiểm soát được.
+The solution is to design **a test seam for replacing dependencies**: CheckoutService knows only the **contracts** it needs, while concrete collaborators are supplied externally. Production wiring provides real adapters; tests supply doubles with controlled behavior.
 
-Trong Java, cách thông dụng là **Dependency Injection (DI) qua constructor**, kết hợp **Dependency Inversion Principle (DIP)**. Interface giúp mô tả khả năng, còn constructor cho phép quyết định implementation lúc khởi tạo đối tượng. Không nhất thiết phải dùng Spring hay thư viện DI để áp dụng thiết kế này.
+In Java, the usual technique is **constructor Dependency Injection (DI)** combined with the **Dependency Inversion Principle (DIP)**. Interfaces express capabilities, and constructors allow implementation selection when objects are created. Spring or another DI framework is not required.
 
-### Ranh giới cần tách
+### Boundaries to Isolate
 
-| Phụ thuộc | Khi chạy ứng dụng | Khi unit test | Lý do thay thế |
+| Dependency | Production Runtime | Unit Test | Reason for Substitution |
 | --- | --- | --- | --- |
-| Cổng thanh toán | Adapter gọi API bên ngoài | Stub trả thành công/thất bại/lỗi có chủ đích | Không gọi dịch vụ thật, kiểm soát kịch bản |
-| Gửi thông báo | SMTP hoặc dịch vụ email | Spy ghi nhận các lần gửi | Kiểm chứng tương tác, tránh email thật |
-| Đồng hồ | Clock.systemUTC() | Clock.fixed(...) | Thời điểm cố định, assert chính xác |
-| Kho dữ liệu | JDBC/ORM | In-memory fake khi phù hợp | Cô lập business rule, chạy nhanh |
+| Payment gateway | Adapter invokes external API | Stub returns planned success/failure/errors | Avoid real service calls; control scenarios |
+| Notification sender | SMTP or email service | Spy records send requests | Verify interactions; avoid real email |
+| Clock | Clock.systemUTC() | Clock.fixed(...) | Deterministic time, exact assertions |
+| Data repository | JDBC/ORM | In-memory fake when appropriate | Isolate business rules and run quickly |
 
-Cần phân biệt **hợp đồng của phụ thuộc** với **implementation cụ thể**. CheckoutService phải biết rằng PaymentGateway có thể charge, nhưng không cần biết nó dùng REST, gRPC hay một fake do test cung cấp.
+Distinguish **the dependency contract** from **its implementation**. CheckoutService needs to know that PaymentGateway can charge, not whether it uses REST, gRPC, or a test fake.
 
 ~~~mermaid
 flowchart LR
@@ -3703,18 +3703,18 @@ flowchart LR
     C -. "trong test" .-> FC["Clock.fixed"]
 ~~~
 
-## 2. Thiết kế ví dụ: dịch vụ checkout
+## 2. Example Design: Checkout Service
 
-Hợp đồng nghiệp vụ được chọn cho bài:
-1. Mã đơn hàng phải khác null và không chỉ chứa khoảng trắng; số tiền VND phải lớn hơn 0.
-2. Dữ liệu không hợp lệ gây IllegalArgumentException **trước khi** gọi bất cứ phụ thuộc nào.
-3. Cổng thanh toán trả true thì gửi một thông báo; trả false thì không gửi.
-4. Kết quả chứa trạng thái được chấp nhận và thời điểm lấy từ Clock đã tiêm vào.
-5. Nếu cổng thanh toán ném exception, lỗi được truyền ra và không gửi thông báo.
+Business contract chosen for this lesson:
+1. Order IDs must be non-null and not whitespace-only; VND amounts must be greater than 0.
+2. Invalid data throws IllegalArgumentException **before** invoking any dependencies.
+3. When the gateway returns true, send one notification; when false, send none.
+4. The result contains the approval status and the time obtained from the injected Clock.
+5. If the payment gateway throws an exception, propagate it without sending a notification.
 
-Đây là ví dụ dạy kỹ thuật kiểm thử; một hệ thống thanh toán thật phải giải quyết thêm tính idempotent, giao dịch, retry, và gửi thông báo đáng tin cậy để tránh tình huống thanh toán thành công nhưng gửi thông báo thất bại.
+This example teaches testing techniques. Real payment systems also require idempotency, transactions, retries, and reliable notifications to avoid an approved charge followed by a lost receipt.
 
-Ta xây dựng dự án **Java 17 + Maven + JUnit 5** với cấu trúc:
+Build a **Java 17 + Maven + JUnit 5** project with this structure:
 
 ~~~text
 replaceable-dependencies/
@@ -3763,7 +3763,7 @@ replaceable-dependencies/
 </project>
 ~~~
 
-### 2.2. Định nghĩa các hợp đồng (ports)
+### 2.2. Define the Contracts (Ports)
 
 **src/main/java/vn/example/PaymentGateway.java**
 
@@ -3791,9 +3791,9 @@ public interface ReceiptSender {
 }
 ~~~
 
-Đặt interface gần **nhu cầu của lớp sử dụng** thay vì để lớp nghiệp vụ import trực tiếp SDK của bên thứ ba. Chúng ta vẫn có thể viết adapter thật triển khai PaymentGateway/ReceiptSender ở lớp hạ tầng.
+Place interfaces near **the needs of their consumers**, rather than importing third-party SDKs directly into business classes. Real adapters can implement PaymentGateway/ReceiptSender in the infrastructure layer.
 
-### 2.3. Tiêm phụ thuộc qua constructor
+### 2.3. Inject Dependencies Through the Constructor
 
 **src/main/java/vn/example/CheckoutService.java**
 
@@ -3840,16 +3840,16 @@ public final class CheckoutService {
 }
 ~~~
 
-Ba trường là final: dependency của một đối tượng được xác định khi khởi tạo. Objects.requireNonNull khiến lỗi lắp ghép xuất hiện sớm, không đợi đến lúc checkout thực sự được gọi. Clock là abstraction có sẵn trong Java; ta không cần tự thiết kế TimeProvider chỉ để thay thế Instant.now().
+All three fields are final: each object's dependencies are fixed when constructed. Objects.requireNonNull reports wiring errors early rather than waiting until checkout is actually called. Clock is an existing Java abstraction; there is no need to invent TimeProvider solely to replace Instant.now().
 
-Điểm then chốt: CheckoutService **không gọi new đối với adapter**, không chọn môi trường trong mã nghiệp vụ và không tự tạo Clock.systemUTC(). Thành phần khởi tạo ứng dụng (**composition root**) sẽ cung cấp chúng. Chẳng hạn ở production, nơi dựng đối tượng truyền vào một PaymentGateway thật, ReceiptSender thật và Clock.systemUTC(); test có thể truyền các lớp giả ở dưới.
+The key: CheckoutService **does not construct adapters with new**, select environments inside business logic, or instantiate Clock.systemUTC() itself. The **composition root** supplies these dependencies. Production wiring might provide a real PaymentGateway, ReceiptSender, and Clock.systemUTC(); tests can inject the doubles below.
 
-## 3. Viết unit test không cần mạng hay email thật
+## 3. Writing Unit Tests Without Network or Real Email
 
-Ta dùng hai test double:
-- **StubGateway**: cung cấp kết quả định trước (true/false/exception), đồng thời ghi nhận tham số và số lần gọi để kiểm tra.
-- **RecordingSender**: spy tối giản lưu lại mã đơn hàng được yêu cầu gửi.
-- **Clock.fixed(...)**: thay đồng hồ hệ thống bằng một thời điểm cố định.
+We use two test doubles:
+- **StubGateway**: returns predetermined results (true/false/exceptions) and records arguments and call counts.
+- **RecordingSender**: a minimal spy recording order IDs for requested sends.
+- **Clock.fixed(...)**: replaces the system clock with a fixed instant.
 
 **src/test/java/vn/example/CheckoutServiceTest.java**
 
@@ -3981,47 +3981,47 @@ class CheckoutServiceTest {
 }
 ~~~
 
-### 3.1. Chạy thử
+### 3.1. Run the Tests
 
-Cài JDK 17 và Maven, mở terminal tại thư mục có pom.xml, chạy:
+Install JDK 17 and Maven, open a terminal in the directory containing pom.xml, then run:
 
 ~~~bash
 mvn test
 ~~~
 
-Bộ mã trên có **5 phương thức @Test**; nếu biên dịch và chạy đúng, Maven báo 5 tests, 0 failures, 0 errors. Tất cả trường hợp thực hiện trong bộ nhớ, không có HTTP request hay email thật.
+The code contains **5 @Test methods**; with correct compilation and execution, Maven reports 5 tests, 0 failures, and 0 errors. All scenarios run in memory without actual HTTP requests or email.
 
-JUnit Jupiter mặc định tạo instance mới của lớp test cho từng phương thức @Test. Vì vậy StubGateway và RecordingSender được khởi tạo sạch giữa các ca; không phụ thuộc vào thứ tự thực thi.
+By default, JUnit Jupiter creates a fresh test-class instance for each @Test method. StubGateway and RecordingSender are therefore reinitialized for each case; no ordering dependency exists.
 
-### 3.2. Những gì test thực sự chứng minh
+### 3.2. What the Tests Actually Establish
 
-| Kiểm thử | Hành vi cần bảo vệ | Lỗi ví dụ mà test phát hiện |
+| Test | Behavior to Protect | Example Defect Detected |
 | --- | --- | --- |
-| successChargesOnceAndSendsOneReceipt | Lệnh charge đúng dữ liệu; chỉ gửi khi được chấp nhận; ghi đúng thời điểm | Gọi thanh toán hai lần; truyền sai số tiền; quên gửi |
-| declinedPaymentDoesNotSendReceipt | Không gửi thông báo khi cổng từ chối | Gửi email bất kể kết quả |
-| invalidInputNeverCallsDependencies | Xác thực đầu vào trước khi có tác dụng phụ | Gọi API với đơn hàng rỗng hoặc tiền âm |
-| gatewayFailurePropagatesWithoutSending | Không tiếp tục gửi khi charge lỗi | Nuốt exception rồi gửi thông báo thành công |
-| constructorRejectsMissingDependencies | Các cộng tác viên bắt buộc tồn tại | Lắp ghép đối tượng thiếu dependency |
+| successChargesOnceAndSendsOneReceipt | Correct charge parameters; receipt only after approval; correct timestamp | Duplicate charges, wrong amount, missing receipt |
+| declinedPaymentDoesNotSendReceipt | No notification when the gateway declines | Sends email regardless of outcome |
+| invalidInputNeverCallsDependencies | Validate before any side effects | Calls API with blank ID or negative amount |
+| gatewayFailurePropagatesWithoutSending | Do not send after a charge failure | Swallows exception and reports successful notification |
+| constructorRejectsMissingDependencies | Required collaborators must exist | Constructs an object without a required dependency |
 
-Không nên viết test bằng cách truy cập trường private của CheckoutService qua reflection. Các assertion hiện tại quan sát kết quả public và tương tác được ghi bởi test double, nên không buộc code phải sử dụng một thuật toán nội bộ cụ thể.
+Do not use reflection to read CheckoutService's private fields in tests. These assertions observe public outcomes and interactions recorded by doubles, without prescribing a particular internal algorithm.
 
-## 4. Nhận diện các loại test double
+## 4. Identifying Test Double Types
 
-| Loại | Công dụng | Ví dụ |
+| Type | Purpose | Example |
 | --- | --- | --- |
-| Dummy | Được truyền vào để thỏa chữ ký nhưng không được sử dụng trong test đó | Một sender rỗng khi kiểm tra validation |
-| Stub | Cung cấp dữ liệu hoặc kết quả cố định/có cấu hình | StubGateway.approved = false |
-| Fake | Implementation đơn giản nhưng hoạt động được, thường lưu dữ liệu trong bộ nhớ | InMemoryUserRepository |
-| Spy | Ghi lại lời gọi để kiểm chứng sau khi chạy | RecordingSender.sentOrderIds |
-| Mock | Đối tượng với kỳ vọng tương tác được định nghĩa và xác minh, thường do thư viện tạo | Mockito mock(PaymentGateway.class) và verify(...) |
+| Dummy | Supplied to satisfy a signature but not used in that test | Empty sender when validating input |
+| Stub | Supplies fixed/configurable values or outcomes | StubGateway.approved = false |
+| Fake | Simple but functional implementation, often storing data in memory | InMemoryUserRepository |
+| Spy | Records calls for later verification | RecordingSender.sentOrderIds |
+| Mock | Object with specified and verified interaction expectations, often library-generated | Mockito mock(PaymentGateway.class) and verify(...) |
 
-Một test double có thể mang nhiều đặc tính. StubGateway vừa cung cấp kết quả định trước vừa ghi nhận số lần gọi. Đừng cố ép mọi đối tượng giả vào một nhãn cố định; hãy chọn công cụ giúp test thể hiện rõ hợp đồng cần kiểm chứng.
+A test double can serve more than one role. StubGateway both supplies predetermined results and records call counts. Avoid forcing every double into a fixed label; choose tools that clearly express the contract under test.
 
-**Mock không đồng nghĩa với unit test.** Ví dụ trên dùng fake/spy viết tay, đủ để kiểm chứng các tương tác đơn giản mà không cần thêm Mockito. Với nhiều phương thức hay tương tác phức tạp, thư viện mocking có thể giảm mã lặp; nhưng lạm dụng verify cho từng lời gọi nội bộ sẽ khiến test dễ hỏng khi refactor hợp lệ.
+**Mocks are not synonymous with unit tests.** The example uses hand-written fakes/spies, which suffice for simple interactions without Mockito. For many methods or complex interactions, a mocking library can reduce boilerplate, but verifying every internal call makes tests brittle under legitimate refactoring.
 
-## 5. Các điểm thay thế phụ thuộc trong thiết kế OOP
+## 5. Dependency Substitution Points in OOP Design
 
-### Constructor injection (ưu tiên với dependency bắt buộc)
+### Constructor Injection (Preferred for Required Dependencies)
 
 ~~~java
 // Ví dụ mẫu về cú pháp; các interface tương ứng phải được khai báo.
@@ -4034,9 +4034,9 @@ final class ReportService {
 }
 ~~~
 
-Lợi ích: rõ dependency bắt buộc; khó tạo đối tượng ở trạng thái chưa hợp lệ; dễ truyền implementation thật/fake; phù hợp với immutable collaborator. Constructor injection là lựa chọn tốt khi các phụ thuộc tồn tại suốt vòng đời đối tượng.
+Benefits: required dependencies are explicit; incomplete objects are harder to create; real and fake implementations are easy to supply; immutable collaborators fit naturally. Constructor injection works well for dependencies shared throughout an object's lifecycle.
 
-### Method injection (hữu ích khi dependency thay đổi theo từng lời gọi)
+### Method Injection (Useful for Per-Call Dependencies)
 
 ~~~java
 import java.time.Clock;
@@ -4048,32 +4048,32 @@ final class DeadlinePolicy {
 }
 ~~~
 
-Một policy nhỏ có thể nhận Clock như tham số vì thời gian là input cho thao tác. Tránh đẩy quá nhiều dependency xuống mọi phương thức nếu chúng thực sự thuộc về vòng đời lớp; khi đó constructor injection rõ ràng hơn.
+A small policy can receive Clock as a parameter because time is an input to the operation. Avoid passing a long list of dependencies through every method when they truly belong to the class lifecycle; constructor injection is then clearer.
 
 ### Adapter / Ports and Adapters
 
-Trong kiến trúc hexagonal, interface PaymentGateway là **port** do nghiệp vụ cần; HTTP client thật và stub trong test đều là **adapter** cung cấp port đó. Luồng phụ thuộc ở cấp mã nguồn hướng về abstraction; lúc chạy có thể kết nối adapter phù hợp.
+In hexagonal architecture, PaymentGateway is a **port** required by the business; both the real HTTP client and a test stub are **adapters** satisfying that port. Source-code dependencies point toward the abstraction; the appropriate adapter is wired at runtime.
 
-Điều này cũng giúp thay đổi nhà cung cấp dịch vụ mà không cần viết lại quy tắc checkout. Tuy nhiên, không phải mọi lớp đều cần interface riêng: nếu một phép tính thuần túy không có I/O và không có nhiều cách cung cấp hợp lý, việc trích xuất interface chỉ để mock thường làm thiết kế phức tạp hơn.
+This also allows provider changes without rewriting checkout rules. Not every class needs its own interface, however: extracting an interface solely to mock a pure calculation with no I/O and no meaningful alternate provider usually makes the design more complex.
 
-## 6. Các kiểu thiết kế làm test khó và cách cải thiện
+## 6. Designs That Make Tests Difficult and How to Improve Them
 
-| Dấu hiệu khó kiểm thử | Hậu quả | Cách chỉnh sửa |
+| Testability Problem | Consequence | Improvement |
 | --- | --- | --- |
-| Tự new HTTP client, repository hoặc SMTP client ngay trong lớp nghiệp vụ | Test buộc truy cập hệ thống thật hoặc hack thay object | Nhận port/interface qua constructor |
-| Gọi Instant.now() / LocalDate.now() trực tiếp trong business rule | Kết quả không ổn định theo thời điểm | Nhận Clock và gọi clock.instant() / LocalDate.now(clock) |
-| Gọi System.getenv() ở nhiều nhánh nghiệp vụ | Test lệ thuộc cấu hình máy | Đọc cấu hình tại composition root, truyền value/config bất biến |
-| Dùng static mutable state hoặc singleton toàn cục | Test ảnh hưởng lẫn nhau, khó chạy song song | Giới hạn trạng thái theo instance, có lifecycle và cách reset rõ |
-| Luồng nghiệp vụ gọi sâu nhiều API ngoài trong cùng một phương thức | Khó xác định đâu là nguyên nhân lỗi | Chia trách nhiệm, tách adapter và orchestration |
-| Mock toàn bộ object nội bộ | Test gắn chặt thứ tự gọi và chi tiết implementation | Kiểm chứng kết quả quan sát được; mock tại ranh giới thực sự |
+| Constructs HTTP client, repository, or SMTP client inside business code | Tests require real systems or hacks to replace objects | Inject port/interface through constructor |
+| Calls Instant.now() / LocalDate.now() directly in business rules | Results vary with time | Inject Clock and call clock.instant() / LocalDate.now(clock) |
+| Calls System.getenv() throughout business branches | Tests depend on machine configuration | Read configuration at the composition root; inject immutable values/config |
+| Uses global singleton or static mutable state | Tests interfere with one another and parallel execution | Limit state to instances; define clear lifecycles/reset rules |
+| One business method deeply invokes numerous external APIs | Failures are difficult to localize | Split responsibilities; isolate adapters and orchestration |
+| Mocks every internal object | Tests depend on call order and implementation details | Verify observable outcomes; mock genuine boundaries |
 
-Đừng dùng interface để che giấu thiết kế có vấn đề. Nếu test phải dựng hàng chục mock mới gọi được một phương thức nhỏ, lớp có thể đang ôm quá nhiều trách nhiệm (vi phạm Single Responsibility Principle).
+Do not use interfaces to conceal a design problem. If testing one small method requires dozens of mocks, the class may have too many responsibilities (violating the Single Responsibility Principle).
 
-## 7. Phân biệt unit test và integration test
+## 7. Unit Tests Versus Integration Tests
 
-Các kiểm thử bên trên chứng minh CheckoutService ra quyết định đúng **khi các dependency tuân theo hợp đồng được giả lập**. Chúng chưa chứng minh adapter thanh toán thật định dạng payload đúng, email thật đến nơi, timeout được xử lý đúng hoặc hệ thống khôi phục được sau sự cố.
+The tests above establish CheckoutService's decisions **assuming dependencies honor their simulated contracts**. They do not prove that the real payment adapter formats requests correctly, email arrives, timeouts are handled, or the system recovers from outages.
 
-Phân tầng hữu ích:
+Useful testing layers:
 
 ~~~mermaid
 flowchart TD
@@ -4082,74 +4082,74 @@ flowchart TD
     E["End-to-end test: luồng ứng dụng thực"] --> H["Cấu hình và phối hợp toàn hệ thống"]
 ~~~
 
-Một PaymentGateway thực cần integration/contract test cho API của nhà cung cấp, nhất là mã lỗi, retry và timeout. Unit test vẫn có vai trò riêng là đưa ra phản hồi nhanh, tái lập được về các nhánh nghiệp vụ. Không nên dùng fake để kết luận adapter thực đã vận hành chính xác.
+A real PaymentGateway needs integration/contract tests against the provider API, especially error codes, retries, and timeouts. Unit tests remain useful for fast, reproducible feedback on business branches. Do not infer real-adapter correctness from a fake.
 
-## 8. Những nguyên tắc quan trọng khi thay thế phụ thuộc
+## 8. Key Principles for Replacing Dependencies
 
-1. **Kiểm soát tính bất định:** đồng hồ, mạng, random, file, database là những ứng viên cần tách nếu ảnh hưởng tới test. Với random, có thể tiêm một Random hoặc nguồn sinh số với seed cố định nếu hợp đồng yêu cầu.
-2. **Kiểm soát trạng thái:** mỗi test dùng đối tượng giả sạch; tránh chia sẻ static mutable fixture giữa test.
-3. **Giữ fake khớp hợp đồng:** fake trả kết quả dễ dãi hơn API thật có thể khiến test xanh nhưng production lỗi. Hãy kiểm tra adapter bằng integration test và cập nhật fake khi hợp đồng thay đổi.
-4. **Kiểm tra nhánh lỗi:** từ chối, exception, dữ liệu thiếu, timeout là những kịch bản không thể bỏ qua chỉ vì happy path đã chạy đúng.
-5. **Không làm giả chính đối tượng cần kiểm thử:** muốn test CheckoutService thì tạo CheckoutService thật rồi thay các cộng tác viên phía ngoài.
-6. **Ưu tiên assertion có ý nghĩa nghiệp vụ:** ví dụ không gửi biên nhận cho thanh toán bị từ chối; đừng mặc định verify mọi getter, setter hoặc thứ tự gọi nội bộ.
-7. **Tách nơi dựng ứng dụng khỏi nghiệp vụ:** composition root giữ quyết định triển khai, cấu hình và vòng đời; service chỉ xử lý việc của mình.
-8. **Không coi dependency injection framework là bắt buộc:** thao tác new CheckoutService(fakeGateway, recordingSender, fixedClock) đã là DI hợp lệ.
+1. **Control nondeterminism:** clocks, networks, randomness, files, and databases are good seam candidates when they affect tests. For randomness, inject a Random or a seeded generator if required by the contract.
+2. **Control state:** every test uses clean doubles; avoid shared static mutable fixtures.
+3. **Match fake behavior to the contract:** a fake that accepts more than the real API may make tests pass while production fails. Use integration tests for adapters and update fakes when contracts change.
+4. **Test failure paths:** rejection, exceptions, missing data, and timeouts remain important even when the happy path passes.
+5. **Do not fake the SUT itself:** to test CheckoutService, construct the real CheckoutService and replace external collaborators.
+6. **Prefer business-significant assertions:** for example, do not send receipts after declined payments; do not verify every getter, setter, or internal call sequence by default.
+7. **Separate application assembly from business logic:** the composition root chooses implementations, configuration, and lifecycles; services perform their own responsibilities.
+8. **Do not require a DI framework:** creating new CheckoutService(fakeGateway, recordingSender, fixedClock) is already valid dependency injection.
 
-## 9. Bài tập ứng dụng
+## 9. Applied Exercises
 
-**Bài 1 — Thêm bước lưu giao dịch.** Tạo interface TransactionRepository với phương thức save(...); tiêm qua constructor. Dùng RecordingRepository trong test để xác nhận chỉ lưu khi gateway trả true. Quyết định rõ hành vi nếu lưu thất bại và test theo quy tắc đó.
+**Exercise 1 — Persisting transactions.** Define TransactionRepository with save(...), injected through the constructor. Use RecordingRepository in tests to verify persistence occurs only when the gateway returns true. Specify what happens on persistence failures and test that behavior.
 
-**Bài 2 — Thời gian hết hạn.** Bổ sung giới hạn checkout chỉ được phép trước một hạn chót truyền vào. Dùng Clock.fixed(...) để kiểm tra thời điểm trước, bằng và sau hạn chót, làm rõ biên đúng/sai trong tài liệu.
+**Exercise 2 — Expiration time.** Add a checkout deadline. Use Clock.fixed(...) to test instants before, at, and after it; document which boundary is valid.
 
-**Bài 3 — Lỗi gửi thông báo.** Cho RecordingSender ném một exception. Quan sát trạng thái thanh toán có thể đã thành công dù checkout ném lỗi. Đề xuất thiết kế lưu trạng thái giao dịch và phát sự kiện hoặc transactional outbox để gửi lại an toàn, tránh charge thêm lần nữa.
+**Exercise 3 — Notification failure.** Make RecordingSender throw an exception. Observe that a payment may have succeeded despite checkout throwing. Propose persisting transaction state and publishing events or using a transactional outbox for safe resends, avoiding an additional charge.
 
-**Tự đánh giá:** Nếu có thể dựng lớp nghiệp vụ bằng các dependency kiểm soát được, chạy được cả nhánh thành công/thất bại mà không cần dịch vụ thật, và vẫn dành kiểm thử riêng cho adapter thật, bạn đã tạo được điểm thay thế phụ thuộc đúng mục đích trong OOP.
+**Self-assessment:** If you can construct a business class with controlled dependencies, exercise success/failure paths without real services, and still test real adapters separately, you have created a useful OOP test seam.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="testing-008">Tránh kiểm thử phụ thuộc quá chặt vào chi tiết bên trong</a>
+## <a id="testing-008">Avoiding Tests Overcoupled to Internal Details</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tránh kiểm thử phụ thuộc quá chặt vào chi tiết bên trong
+# Avoiding Tests Overcoupled to Internal Details
 
-> **Bối cảnh:** OOP → Kiểm thử. Mục tiêu là viết test phát hiện lỗi nghiệp vụ nhưng vẫn cho phép refactor implementation khi hành vi công khai không đổi.
+> **Context:** OOP → Testing. The goal is to catch business defects while allowing implementation refactoring when public behavior remains unchanged.
 
-## 1. Vấn đề: bài test có thể đúng hôm nay nhưng cản trở thay đổi ngày mai
+## 1. The Problem: A Test Can Be Right Today but Block Tomorrow's Changes
 
-Khi lớp được kiểm thử (SUT — System Under Test) dùng đối tượng cộng tác, những thứ ta *có thể* quan sát rất nhiều: giá trị trả về, exception, trạng thái, email được gửi, số lần gọi dependency, thứ tự gọi helper, tên private field, kiểu collection. Nhưng không phải điều nào cũng là **hợp đồng** với client.
+When a class under test (SUT — System Under Test) uses collaborators, many details are *observable*: return values, exceptions, state, emails sent, dependency call counts, helper call order, private field names, and collection types. But not all are **client contracts**.
 
-Một test **gắn chặt chi tiết triển khai** (implementation-coupled test) thất bại khi lập trình viên đổi thuật toán, tách/gộp helper, thêm cache hoặc thay cấu trúc dữ liệu, dù kết quả được hứa với client vẫn đúng. Tình trạng đó gọi là *brittle test*.
+An **implementation-coupled test** fails when developers change algorithms, split or combine helpers, add caching, or replace data structures even though promised client behavior remains correct. This is a *brittle test*.
 
-Một test đáng tin nên hỏi: **Đầu vào này dẫn đến kết quả/tác dụng phụ nào theo yêu cầu?** Chỉ khi yêu cầu thật sự giới hạn một tương tác thì mới xác minh tương tác đó.
+A reliable test asks: **Given this input, which required outcome or side effect follows?** Verify interactions only when actual requirements constrain those interactions.
 
-| Test quá chặt | Test bám hợp đồng |
+| Overcoupled Test | Contract-Oriented Test |
 |---|---|
-| Dùng reflection gọi helper private calculateSubtotal | Gọi API báo giá rồi assert tổng tiền |
-| Verify catalog.priceOf được gọi đúng 2 lần | Assert cùng SKU trên nhiều dòng vẫn được tính đúng |
-| Assert implementation sử dụng HashMap | Assert kết quả nghiệp vụ với các bộ dữ liệu |
-| Verify 5 helper được gọi theo thứ tự | Assert trạng thái cuối và tác dụng phụ có ý nghĩa |
-| Assert thông điệp lỗi gắn số dòng/stack trace | Assert loại lỗi và thông tin đã được cam kết |
+| Uses reflection to invoke private calculateSubtotal helper | Calls the public quote API and asserts the total |
+| Verifies catalog.priceOf is called exactly 2 times | Asserts repeated SKUs are priced correctly across line items |
+| Asserts the implementation uses HashMap | Asserts business results across data sets |
+| Verifies 5 helper calls in a particular order | Asserts final state and meaningful side effects |
+| Asserts error messages including line numbers/stack traces | Asserts promised error types and information |
 
-**Ngoại lệ quan trọng:** gửi mail, ghi database, trừ tiền, xuất event có thể là **tác dụng phụ quan sát được**. Verify rằng *không gửi mail sau khi thanh toán thất bại* hoàn toàn hợp lý, vì đó là quy tắc nghiệp vụ. Tương tác nội bộ chỉ là implementation detail khi nó không được cam kết.
+**Important exception:** sending mail, writing databases, charging payments, and publishing events can be **observable side effects**. Verifying *no mail is sent after a failed payment* is entirely valid because that is a business rule. An internal interaction is merely an implementation detail when no contract promises it.
 
-## 2. Ví dụ tự chạy: hai thuật toán, một hợp đồng
+## 2. Standalone Example: Two Algorithms, One Contract
 
-Yêu cầu ứng dụng báo giá:
-- Mỗi dòng có SKU và số lượng nguyên dương; giỏ hàng không rỗng.
-- Thành tiền = tổng đơn giá nhân số lượng.
-- Phí vận chuyển 30.000 VND khi thành tiền dưới 500.000 VND; từ 500.000 VND trở lên miễn phí.
-- Trả ra thành tiền, phí giao hàng và tổng; số lần tra giá SKU **không phải** hợp đồng công khai.
+Quote-service requirements:
+- Every line has an SKU and a positive integer quantity; the cart is nonempty.
+- Merchandise subtotal equals unit prices multiplied by quantities and summed.
+- Shipping costs 30.000 VND below a 500.000 VND subtotal and is free at 500.000 VND or above.
+- Return merchandise subtotal, shipping, and total; the number of SKU price lookups **is not** part of the public contract.
 
-Bản A tra giá mỗi dòng; bản B gộp số lượng cùng SKU trước, rồi tra giá. Refactor này có thể giảm số lần gọi collaborator **PriceCatalog** nhưng không làm thay đổi kết quả. Ta viết một bộ test chạy trên cả hai.
+Implementation A looks up the price of each line; implementation B groups quantities by SKU first, then looks up prices. This refactor may reduce calls to collaborator **PriceCatalog** without changing results. We write one suite for both.
 
-Lưu mã sau vào file **QuoteContractDemo.java**, dùng Java 11 trở lên, không cần JUnit:
+Save the following as **QuoteContractDemo.java**; it uses Java 11 or newer and requires no JUnit:
 
 ~~~java
 import java.util.LinkedHashMap;
@@ -4331,14 +4331,14 @@ public class QuoteContractDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac QuoteContractDemo.java
 java QuoteContractDemo
 ~~~
 
-Kết quả dự kiến:
+Expected output:
 
 ~~~text
 Both implementations PASS
@@ -4346,13 +4346,13 @@ Per-line lookups: 6
 Grouped lookups: 4
 ~~~
 
-Bộ test **PASS ở cả hai implementation**. Bộ đếm tra giá minh họa khác biệt implementation (6 so với 4 lần sau ba giỏ hợp lệ), không phải điều kiện PASS. Nếu buộc một test assert đúng bốn lần tra giá, test đó đỏ sau refactor dù giá tiền vẫn chính xác.
+The suite **PASSES for both implementations**. The price-lookup counters illustrate an implementation difference (6 versus 4 calls for three valid carts), not a pass condition. A test insisting on exactly four lookups would fail after a refactor even when prices remained correct.
 
-Các case được cố tình chọn để bắt lỗi nghiệp vụ thực sự: giỏ có SKU lặp, ngưỡng miễn phí **đúng bằng 500.000**, giỏ dưới ngưỡng, input rỗng, số lượng bằng 0 và tổng quantity vượt `int` nhưng tiền vẫn nằm trong `long`. Đổi điều kiện từ >= thành > sẽ khiến case ngưỡng đỏ: đây là regression có ý nghĩa.
+The cases deliberately detect real business defects: duplicate SKUs, free shipping at **exactly 500.000**, below-threshold carts, empty input, quantity 0, and total quantities beyond `int` while money totals still fit `long`. Changing the comparison from >= to > makes the boundary case fail: a meaningful regression.
 
-## 3. Bài test Mockito dễ vỡ và bản thay thế
+## 3. A Brittle Mockito Test and Its Replacement
 
-Ví dụ anti-pattern dưới đây giả định các lớp ở mục 2 nằm trong phạm vi import phù hợp và dự án có Mockito:
+This anti-pattern assumes the section 2 classes are imported appropriately and Mockito is available:
 
 ~~~java
 PriceCatalog catalog = mock(PriceCatalog.class);
@@ -4369,9 +4369,9 @@ verify(catalog, times(2)).priceOf("BOOK");
 verify(catalog, times(1)).priceOf("PEN");
 ~~~
 
-Nếu thay PerLineService bằng GroupedService, lần gọi BOOK giảm từ 2 còn 1. Test hỏng dù hợp đồng không đổi.
+Replacing PerLineService with GroupedService reduces BOOK lookups from 2 to 1. The test fails even though the contract is unchanged.
 
-Kiểu kiểm thử bền hơn (JUnit 5, trong cùng package với lớp mẫu):
+A more durable test (JUnit 5, in the same package as the sample classes):
 
 ~~~java
 import java.util.List;
@@ -4401,13 +4401,13 @@ class QuoteBehaviorTest {
 }
 ~~~
 
-Với PerLineService thay GroupedService, test này vẫn xanh. Cần cấu hình dependency JUnit Jupiter và chạy bằng test runner (Maven/Gradle/IDE); ví dụ standalone ở mục 2 là lựa chọn không cần dependency.
+This test remains green whether PerLineService or GroupedService is used. Add JUnit Jupiter dependencies and run with a Maven/Gradle/IDE test runner; section 2's standalone example needs no dependencies.
 
-**Vì sao không verify lời gọi PriceCatalog?** Ở ví dụ này, lookup chỉ phục vụ tính giá. Nếu yêu cầu mới được bổ sung: "mỗi SKU được tra giá tối đa một lần trong mỗi lần báo giá", giới hạn lookup lập tức trở thành **hợp đồng có thể kiểm thử**. Chuyển assertion cũ thành test riêng có tên diễn đạt ràng buộc mới; khi đó implementation A không thỏa, B thỏa.
+**Why not verify PriceCatalog calls?** Here lookup is only a means to calculate prices. If a new requirement states “look up each SKU at most once per quote,” the lookup limit becomes **a testable contract**. Add a separately named assertion for that new constraint; implementation A then fails while B passes.
 
-## 4. Khi interaction verification thực sự đúng
+## 4. When Interaction Verification Is Truly Appropriate
 
-Các đối tượng cộng tác ở ranh giới ngoại vi như gửi mail, thanh toán, ghi event, database có thể mang **side effect**. Nếu quy tắc là "không gửi hóa đơn khi thanh toán bị từ chối", nên verify không có yêu cầu gửi hóa đơn sau thất bại. Ví dụ phác thảo Mockito (các kiểu này do ứng dụng định nghĩa):
+Collaborators at external boundaries—mail, payments, event publication, databases—may have **side effects**. If the rule is “do not send an invoice after payment is declined,” verify that no invoice send was requested on failure. Illustrative Mockito snippet (types are application-defined):
 
 ~~~java
 when(gateway.charge(orderId, totalVnd)).thenReturn(false);
@@ -4418,7 +4418,7 @@ assertEquals(CheckoutResult.PAYMENT_DECLINED, result);
 verifyNoInteractions(receiptSender);
 ~~~
 
-Trong trường hợp này, **không gọi ReceiptSender** là yêu cầu có ý nghĩa, khác với kiểm tra số lần helper private chạy. Tương tự, thứ tự xác thực trước thao tác nhạy cảm hoặc chỉ publish event sau commit có thể là hợp đồng. Không có quy tắc "tuyệt đối tránh mọi verify(mock)".
+Here, **not calling ReceiptSender** is a meaningful requirement, unlike a private helper's call count. Likewise, authentication before sensitive actions or publishing events only after commit can be contractual. There is no absolute rule to “avoid all verify(mock) calls.”
 
 ~~~mermaid
 flowchart TD
@@ -4432,128 +4432,128 @@ flowchart TD
     F --> G
 ~~~
 
-## 5. Những dạng phụ thuộc quá chặt thường gặp
+## 5. Common Forms of Excessive Coupling
 
-**Reflection để gọi private method.** Khi đổi tên, gộp hoặc tách helper, test hỏng dù API vẫn đúng. Hãy test qua public API. Nếu logic quá lớn và độc lập, tách thành một thành phần có hợp đồng riêng và kiểm thử qua interface của nó.
+**Reflection to invoke private methods.** Renaming, merging, or splitting helpers breaks tests despite an intact API. Test through public APIs. If substantial logic is genuinely independent, extract it into a component with its own contract and test via that interface.
 
-**Assert private field hoặc cấu trúc collection.** Ví dụ mở trường cache qua reflection rồi kiểm tra HashMap có 3 phần tử. Chuyển cache thành LRU sẽ làm test đỏ. Nếu yêu cầu là TTL hoặc tránh gọi API quá ngưỡng, hãy kiểm tra yêu cầu bằng Clock giả và adapter có thể đếm cuộc gọi, không đóng băng loại Map.
+**Asserting private fields or collection structure.** For example, reflection exposes a cache field and checks that a HashMap holds 3 elements. Changing the cache to LRU breaks the test. If TTL or lookup limits matter, use a fake Clock and a call-counting adapter to verify the requirement without freezing the Map type.
 
-**Mock mọi value object.** Đối với Money, Address, OrderLine, thường nên dùng đối tượng thật. Mock quá nhiều khiến phần lớn test chỉ xác minh những stub do chính test tạo ra.
+**Mocking every value object.** For Money, Address, and OrderLine, real objects are usually preferable. Excessive mocking means tests mostly verify stubs the tests themselves created.
 
-**Verify toàn bộ thứ tự gọi.** Mockito InOrder nên dành cho thứ tự được cam kết (xác thực trước khi thanh toán; publish sau commit). Không nên verify mọi bước validate, parse, calculate, format nếu chúng chỉ là helper.
+**Verifying the entire call order.** Reserve Mockito InOrder for promised ordering, such as authentication before charging or publishing only after commit. Do not verify each validate/parse/calculate/format helper when those are internal steps.
 
-**Snapshot dữ liệu quá rộng.** ID ngẫu nhiên, timestamp, debug metadata và thứ tự thuộc tính JSON không được công bố có thể thay đổi. Assert các trường công khai quan trọng; chỉ snapshot nguyên cấu trúc nếu đó chính là hợp đồng của API.
+**Oversized data snapshots.** Random IDs, timestamps, debug metadata, and unspecified JSON property ordering may change. Assert important public fields; snapshot the entire structure only when that structure is itself the API contract.
 
-**Dùng đồng hồ và số ngẫu nhiên thật.** Nếu quy tắc phụ thuộc thời gian, inject java.time.Clock; nếu phụ thuộc ID ngẫu nhiên, inject Supplier<UUID> hoặc generator interface. Chốt dữ liệu đầu vào phi xác định trong test, rồi assert kết quả nghiệp vụ. Đừng assert số lần gọi Instant.now() trong private helper.
+**Using real clocks and randomness.** When a rule depends on time, inject java.time.Clock; for random IDs, inject Supplier<UUID> or a generator interface. Make nondeterministic inputs reproducible in tests and assert business outcomes. Do not assert how often Instant.now() is invoked in a private helper.
 
-**Chỉ dùng double mà không test tích hợp.** Fake catalog không mô phỏng timeout, cache consistency hoặc thay đổi schema. Unit test chứng minh logic ứng dụng khi collaborator đáp ứng giả định; integration test chứng minh adapter thực tế có thực hiện đúng hợp đồng đó.
+**Using doubles without integration tests.** Fake catalogs do not simulate timeouts, cache consistency, or schema changes. Unit tests establish application logic assuming collaborator contracts hold; integration tests establish whether real adapters actually satisfy those contracts.
 
-## 6. Chọn cấp test đúng trách nhiệm
+## 6. Choose a Test Level for Each Responsibility
 
-| Cấp | Điều cần chứng minh | Test double | Hạn chế |
+| Level | What to Establish | Test Double | Limitation |
 |---|---|---|---|
-| Unit | Hành vi một SUT | Có thể thay collaborator để kiểm soát đầu vào | Dễ bị over-mocking |
-| Component | Quy tắc của nhiều lớp phối hợp | Dùng chọn lọc | Fake có thể thiếu transaction |
-| Integration | API, SQL, mapping, giao dịch thật | Ít dùng ở ranh giới chính đang test | Chậm và cần môi trường |
-| End-to-end | Luồng cuối cùng từ góc nhìn người dùng | Môi trường có kiểm soát | Đắt, dễ không ổn định nếu ôm quá nhiều ca |
+| Unit | Behavior of one SUT | Substitute collaborators to control inputs | Prone to over-mocking |
+| Component | Rules across collaborating classes | Selective use | Fakes may omit transaction behavior |
+| Integration | Real APIs, SQL, mapping, and transactions | Fewer at the primary boundary under test | Slow and requires an environment |
+| End-to-end | Final workflow from the user's perspective | Controlled environment | Expensive and unstable if too many cases are combined |
 
-Cũng cần phân biệt **hợp đồng công khai** với lựa chọn cài đặt: API có thể quy định thứ tự, tính idempotent, giới hạn số lần gọi, kiểu ngoại lệ, độ chính xác tiền tệ. Nếu những điều đó thực sự được cam kết, vẫn phải test. Private/public modifier tự nó không quyết định mọi thứ có phải chi tiết nội bộ hay không.
+Also distinguish **public contracts** from implementation choices: an API may specify ordering, idempotency, call limits, exception types, or monetary precision. If these properties are promised, test them. Private/public modifiers alone do not determine which properties are internal details.
 
 ## 7. Checklist khi review test
 
-1. Tên test diễn đạt yêu cầu (ví dụ: freeShippingAppliesAtThreshold) thay vì tên helper (testCallsPriceOfTwice).
-2. Arrange chỉ tạo dữ liệu, stub và dependency thật sự liên quan.
-3. Act gọi API công khai hoặc giao diện hợp đồng thích hợp.
-4. Assert đúng outcome, trạng thái, lỗi và hiệu ứng ngoài đã được quy định.
-5. Không ép implementation giữ số lời gọi, tên helper, kiểu collection hay thứ tự xử lý tùy ý.
-6. Thêm ca bình thường, ca lỗi, boundary và integration test cho đường nối quan trọng.
-7. Sau refactor, nếu test đỏ, xác định **hợp đồng thay đổi** hay test chỉ đang bắt chi tiết nội bộ.
+1. Test names express requirements (e.g., freeShippingAppliesAtThreshold), not helpers (testCallsPriceOfTwice).
+2. Arrange constructs only relevant data, stubs, and dependencies.
+3. Act invokes the public API or appropriate contractual interface.
+4. Assert required outcomes, state, errors, and external effects.
+5. Do not force implementations to retain arbitrary call counts, helper names, collection types, or processing order.
+6. Add normal, failure, boundary, and integration cases for important connections.
+7. When tests fail after refactoring, determine whether **the contract changed** or the test was merely asserting internals.
 
-## 8. Bài tập và cách tự đánh giá
+## 8. Exercises and Self-Assessment
 
-**Bài 1:** Thay vòng lặp tính tổng trong PerLineService bằng Stream, giữ nguyên các assertion trong runContract. Kỳ vọng toàn bộ PASS.
+**Exercise 1:** Replace PerLineService's total-calculation loop with a Stream while retaining runContract assertions. All cases should still pass.
 
-**Bài 2:** Đổi điều kiện miễn phí giao hàng thành subtotal > 500_000. Ca bằng đúng 500.000 phải FAIL — một regression thật.
+**Exercise 2:** Change the free-shipping condition to subtotal > 500_000. The exactly-500.000 case must FAIL: a genuine regression.
 
-**Bài 3:** Viết verify(catalog, times(2)).priceOf("BOOK"), rồi đổi sang GroupedService. Giải thích vì sao đó là false alarm khi chưa có yêu cầu giới hạn số lần lookup.
+**Exercise 3:** Write verify(catalog, times(2)).priceOf("BOOK"), then switch to GroupedService. Explain why the failure is a false alarm without a lookup-count requirement.
 
-**Bài 4:** Thêm yêu cầu "mỗi SKU chỉ được tra giá tối đa một lần cho mỗi báo giá". Viết test riêng cho ràng buộc mới; A không đạt, B đạt. Số lượt gọi lúc này đã trở thành điều kiện hợp đồng.
+**Exercise 4:** Add the requirement “look up each SKU at most once per quote.” Write a dedicated test; implementation A fails and B passes. Lookup count is now a contractual condition.
 
-**Bài 5:** Bổ sung trường hợp SKU không tồn tại, Line null, số lượng âm và tổng tiền vượt long. Xác định loại exception nào cần cam kết, và tránh assert thông điệp/stack trace nội bộ nếu không được quy định.
+**Exercise 5:** Cover a missing SKU, null Line, negative quantity, and money totals exceeding long. Specify promised exception types and avoid asserting undocumented internal messages/stack traces.
 
-**Ghi nhớ:** Một bộ test chất lượng nên cho phép refactor hợp lệ, đồng thời báo đỏ khi hành vi đã hứa bị phá vỡ. Hãy kiểm tra **kết quả và hiệu ứng có ý nghĩa**, dùng test double để cô lập phụ thuộc, và dành các assertion về tương tác cho những lời gọi thực sự thuộc yêu cầu.
+**Remember:** A quality test suite permits valid refactoring while failing when promised behavior is broken. Verify **meaningful outcomes and effects**, use test doubles to isolate dependencies, and reserve interaction assertions for calls required by the specification.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="testing-009">Kiểm thử hồi quy khi thay đổi thiết kế</a>
+## <a id="testing-009">Regression Testing When Designs Change</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kiểm thử hồi quy khi thay đổi thiết kế trong OOP
+# Regression Testing When OOP Designs Change
 
-## 1. Vấn đề: đổi cấu trúc mã, giữ nguyên hành vi
+## 1. The Problem: Changing Code Structure While Preserving Behavior
 
-Trong OOP, thiết kế có thể thay đổi từ một lớp lớn sang nhiều lớp nhỏ, tách interface, chuyển sang **Strategy**, thêm **Dependency Injection (DI)** hoặc đổi cách các đối tượng phối hợp. Những thay đổi này thường là **refactoring**: cải thiện cấu trúc nội bộ mà không chủ định đổi hành vi bên ngoài.
+In OOP, a design might evolve from one large class to several smaller classes, extract interfaces, adopt **Strategy**, add **Dependency Injection (DI)**, or change object collaboration. Such changes are often **refactoring**: improving internal structure without intending to change external behavior.
 
-**Kiểm thử hồi quy (regression testing)** là chạy lại những kiểm thử đã có và bổ sung các ca cần thiết để phát hiện hành vi bị hỏng sau thay đổi. Câu hỏi cốt lõi:
+**Regression testing** reruns existing tests and adds necessary cases to detect broken behavior after a change. The core question is:
 
-> Sau khi đổi thiết kế, cùng một đầu vào và trạng thái hợp lệ có còn tạo ra kết quả, lỗi và tác dụng phụ đúng như hợp đồng đã công bố không?
+> After changing the design, do the same valid inputs and states still produce the results, failures, and side effects promised by the contract?
 
-Ví dụ, mã ban đầu dùng một phương thức tính tổng đơn hàng. Sau refactor, mã áp dụng mẫu thiết kế Strategy để tính phí vận chuyển. Client vẫn phải nhận đúng hóa đơn; đơn vừa chạm ngưỡng miễn phí phải được tính miễn phí; dữ liệu sai vẫn phải bị từ chối theo hợp đồng.
+For example, an initial implementation may calculate order totals in one method. After refactoring, it uses Strategy to calculate shipping. Clients must still receive the correct invoice; an order exactly at the free-shipping threshold must ship free; invalid data must still be rejected as contracted.
 
-**Đạt mục tiêu bài học:**
+**Learning outcomes:**
 
-- Xác định những **hành vi quan sát được** phải được giữ ổn định khi thay đổi thiết kế.
-- Viết regression test dựa trên yêu cầu nghiệp vụ, với input/expected output rõ ràng.
-- Chạy cùng bộ kiểm thử cho **thiết kế cũ và thiết kế mới** thông qua một interface.
-- Phát hiện lỗi ở biên, ngoại lệ, trạng thái và tương tác giữa các đối tượng.
-- Phân biệt **kiểm thử so sánh hai phiên bản** với **nguồn sự thật độc lập** là hợp đồng nghiệp vụ.
-- Xây quy trình kiểm thử hồi quy trong review/CI trước và sau refactor.
+- Identify **observable behavior** that must remain stable when changing a design.
+- Write requirement-based regression tests with explicit inputs and expected outputs.
+- Run the same suite against **old and new designs** through a shared interface.
+- Detect boundary, exception, state, and object-interaction defects.
+- Distinguish **comparing two versions** from an **independent source of truth** in the business contract.
+- Establish regression-testing practices in reviews/CI before and after refactoring.
 
-## 2. Điều gì phải được giữ nguyên?
+## 2. What Must Remain Unchanged?
 
-Giả sử một hệ thống báo giá đơn hàng có yêu cầu:
+Suppose an order-quoting system has these requirements:
 
-1. `subtotalCents` là số nguyên cent từ **0 đến 1.000.000**, tính cả hai đầu.
-2. Khách hàng thành viên luôn được **miễn phí giao hàng**.
-3. Khách thường có `subtotalCents >= 100_000` được miễn phí giao hàng; nhỏ hơn ngưỡng phải trả **15.000 cent**.
+1. `subtotalCents` is an integer number of cents between **0 and 1.000.000**, inclusive.
+2. Members always receive **free shipping**.
+3. Nonmembers with `subtotalCents >= 100_000` get free shipping; below the threshold, shipping costs **15.000 cents**.
 4. `totalCents = subtotalCents + shippingCents`.
-5. Giá trị tiền hàng ngoài miền hợp lệ phải ném `IllegalArgumentException`.
-6. Việc báo giá không thay đổi đơn hàng hoặc dữ liệu hệ thống.
+5. An out-of-range merchandise subtotal throws `IllegalArgumentException`.
+6. Quoting does not mutate the order or system data.
 
-Ở đây, cách tổ chức class là chi tiết triển khai. **Kết quả `Invoice`, lỗi và tác dụng phụ** mới là hành vi mà client trông đợi.
+Class organization is an implementation detail. **The returned `Invoice`, failures, and side effects** are what clients legitimately expect.
 
-| Thành phần | Có thể thay đổi khi refactor | Hợp đồng phải giữ |
+| Element | May Change During Refactoring | Must Remain Contractually Stable |
 |---|---|---|
-| Thiết kế class | Tách `Checkout` và `ShippingRule`, đổi tên class nội bộ | Client vẫn gọi dịch vụ báo giá được công bố |
-| Thuật toán bên trong | Tách điều kiện, thay bằng Strategy | Quy tắc giá và phí vận chuyển không đổi |
-| Phụ thuộc | Tiêm dependency qua constructor | Đầu vào hợp lệ vẫn xử lý thành công |
-| Giá trị trả về | Cách dựng object | Các trường tiền trong `Invoice` đúng |
-| Ngoại lệ | Nơi thực hiện validation | Input ngoài miền vẫn bị từ chối đúng hợp đồng |
-| Trạng thái/tác dụng phụ | Cách lưu hoặc phối hợp component | Không phát sinh ghi dữ liệu bất ngờ |
-| Hiệu năng | Tối ưu cache, thuật toán | Không phá SLA nếu SLA là phần yêu cầu |
+| Class design | Split `Checkout` and `ShippingRule`, rename internal classes | Clients can still invoke the published quoting service |
+| Internal algorithm | Extract conditions, replace with Strategy | Pricing and shipping rules remain the same |
+| Dependencies | Introduce constructor injection | Valid inputs still succeed |
+| Return value | Object construction process | Monetary fields in `Invoice` are correct |
+| Exceptions | Where validation occurs | Out-of-domain inputs are rejected as promised |
+| State/side effects | Storage or component collaboration | No unexpected data writes occur |
+| Performance | Cache or algorithm optimization | Any contractual SLA remains satisfied |
 
-**Lưu ý:** Không nhất thiết mọi chi tiết đều bất biến. Nếu yêu cầu nghiệp vụ cố ý thay đổi, test tương ứng cần được cập nhật có chủ đích và được review; đó không còn là refactor thuần túy.
+**Note:** Not every detail must remain unchanged. If business requirements deliberately change, affected tests should be updated intentionally and reviewed; this is no longer pure refactoring.
 
-## 3. Ba lớp bằng chứng cho regression test
+## 3. Three Types of Evidence for Regression Tests
 
-Một bộ kiểm thử tốt không chỉ so sánh `before` và `after`:
+A good suite does more than compare `before` and `after`:
 
-- **Specification examples:** ca kiểm thử với kết quả kỳ vọng lấy từ yêu cầu nghiệp vụ. Các ví dụ này là oracle độc lập, giúp tránh sao chép lỗi cũ.
-- **Differential testing:** chạy cùng input trên phiên bản cũ và mới, so sánh kết quả quan sát được. Cách này phát hiện chênh lệch ngoài các ví dụ cố định.
-- **Invariant/contract tests:** kiểm tra các tính chất luôn đúng, chẳng hạn `total = subtotal + shipping`, tổng không âm, lỗi input nhất quán.
+- **Specification examples:** cases with expected outcomes derived from business requirements. These provide independent oracles to avoid copying preexisting defects.
+- **Differential testing:** run the same inputs against old and new versions and compare observable outcomes. This detects differences beyond a fixed example set.
+- **Invariant/contract tests:** verify persistent properties such as `total = subtotal + shipping`, nonnegative totals, and consistent input-error behavior.
 
-Không có cách nào riêng lẻ bảo đảm tuyệt đối. Chẳng hạn, nếu logic cũ tính sai ngay từ đầu thì việc hai phiên bản trả cùng một kết quả sai vẫn khiến phép so sánh `before/after` đi qua. Hãy ưu tiên **hợp đồng đã xác nhận** để quyết định đúng/sai.
+No single approach gives absolute assurance. If old code is wrong, both versions can return the same wrong result and still pass a `before/after` comparison. Prefer **validated contracts** as the correctness oracle.
 
-## 4. Ví dụ Java chạy được: refactor Checkout sang Strategy
+## 4. Runnable Java Example: Refactoring Checkout to Strategy
 
-Dùng **JDK 17 trở lên**. Tạo tệp duy nhất `DesignRegressionDemo.java`, dán toàn bộ mã sau và chạy mà không cần thư viện ngoài:
+Use **JDK 17 or newer**. Create one file, `DesignRegressionDemo.java`, paste the complete code below, and run it without external libraries:
 
 ~~~java
 import java.util.Random;
@@ -4727,14 +4727,14 @@ public final class DesignRegressionDemo {
 }
 ~~~
 
-Chạy bằng terminal:
+Run from a terminal:
 
 ~~~bash
 javac DesignRegressionDemo.java
 java DesignRegressionDemo
 ~~~
 
-Đầu ra kỳ vọng (các dòng có thể dài hơn tùy `toString()` của record):
+Expected output (lines may be longer depending on the record's `toString()`):
 
 ~~~text
 PASS specification: LegacyCheckout
@@ -4744,13 +4744,13 @@ EXPECTED FAIL: BrokenShippingRule: wrong quote at subtotal=100000, member=false,
 DONE: regression tests caught the design-change bug
 ~~~
 
-**Giải thích lỗi:** `BrokenShippingRule` dùng `subtotalCents > 100_000`. Khi tổng tiền **đúng bằng** 100.000 và không phải thành viên, nó tính phí 15.000 mặc dù hợp đồng yêu cầu miễn phí. Đây là lỗi **off-by-one ở ranh giới điều kiện**. Cả class cũ và mới đều implement `PriceQuoteService`, nhưng chỉ thiết kế mới đúng mới duy trì kết quả.
+**Defect explanation:** `BrokenShippingRule` uses `subtotalCents > 100_000`. When the subtotal is **exactly** 100.000 for a nonmember, it charges 15.000 even though the contract requires free shipping. This is an **off-by-one boundary defect**. Both the old and new classes implement `PriceQuoteService`, but only the correctly refactored design preserves behavior.
 
-Trong ví dụ này, `main` bắt `AssertionError` của một implementation **cố tình sai** để minh họa. Ở bộ kiểm thử thực tế, regression phải làm job CI **FAIL**; không chuyển lỗi thành một kết quả PASS.
+In this example, `main` catches `AssertionError` from an **intentionally broken** implementation for demonstration. In actual regression suites, the CI job must **FAIL**; do not convert errors into passing results.
 
-## 5. Vì sao phép kiểm thử này đáng tin hơn test chỉ kiểm tra nội bộ?
+## 5. Why Is This More Reliable Than Testing Internals?
 
-Nhìn vào quan hệ các lớp sau refactor:
+Consider the class relationships after refactoring:
 
 ~~~mermaid
 classDiagram
@@ -4773,29 +4773,29 @@ classDiagram
     ShippingRule <|.. BrokenShippingRule
 ~~~
 
-Bộ test gọi `quote()` thông qua **`PriceQuoteService`**, quan sát đối tượng `Invoice` trả về và các ngoại lệ công khai. Vì vậy, test tiếp tục có ý nghĩa khi code chuyển từ điều kiện `if` trong một class sang một Strategy được inject qua constructor.
+The suite invokes `quote()` through **`PriceQuoteService`**, observes the returned `Invoice` and public exceptions, and therefore remains meaningful when an internal `if` becomes a constructor-injected Strategy.
 
-**Không nên** khẳng định trong regression test rằng một lớp nhất định bắt buộc phải gọi `shippingRule.shippingFor()` đúng một lần, hoặc rằng implementation phải có một phương thức `private` cụ thể. Đó là chi tiết thiết kế có thể thay đổi mà không làm sai kết quả cuối. Chỉ xác nhận số lần gọi hoặc thứ tự tương tác khi nó **thực sự là một cam kết** (ví dụ không được charge thẻ hai lần).
+**Do not** require a particular class to invoke `shippingRule.shippingFor()` exactly once, or to contain a specific `private` method, in a regression test. These design details may change while results stay correct. Assert call counts or interaction order only when **actually promised**, such as never charging a card twice.
 
-## 6. Lập ma trận hồi quy trước khi refactor
+## 6. Build a Regression Matrix Before Refactoring
 
-| Nhóm kiểm thử | Ca mẫu | Sai sót thường bị phát hiện |
+| Test Category | Example Case | Typical Defect Detected |
 |---|---|---|
-| Trường hợp thường | Thành viên/không thành viên, đơn nhỏ/đơn lớn | Nhánh logic bị đổi khi tách class |
-| Giá trị biên | 0; 99.999; **100.000**; 100.001; 1.000.000 | `>`/`>=`, sai mức phí, tràn giá trị |
-| Đầu vào không hợp lệ | -1; 1.000.001 | Validation bị bỏ sót hoặc đổi loại lỗi |
-| Contract output | Tổng = subtotal + shipping | Kết quả không nhất quán giữa component |
-| Trạng thái | Gọi nhiều lần, kiểm tra dữ liệu trước/sau | State bị thay đổi khi tách trách nhiệm |
-| Side effect | Tạo báo giá không ghi DB, không charge tiền | Refactor gọi nhầm command có tác dụng phụ |
-| Tích hợp | API → service → repository/payment gateway giả lập | Wiring/DI sai, transaction không đúng |
-| Cạnh tranh | Nhiều request đồng thời trên đối tượng dùng chung | Cache hoặc shared mutable state gây race |
-| Phi chức năng | Thời gian đáp ứng trong ngưỡng đã cam kết | Tăng truy vấn/IO ngoài dự kiến |
+| Normal cases | Member/nonmember, small/large orders | Branch logic changes during extraction |
+| Boundary values | 0; 99.999; **100.000**; 100.001; 1.000.000 | `>`/`>=`, incorrect shipping fees, overflow |
+| Invalid inputs | -1; 1.000.001 | Missing validation or changed error type |
+| Output contract | Total = subtotal + shipping | Inconsistent results across components |
+| State | Repeated calls; data before and after | State changes during responsibility extraction |
+| Side effects | Quoting does not write to DB or charge money | Refactor inadvertently invokes a side-effectful command |
+| Integration | API → service → simulated repository/payment gateway | Incorrect wiring/DI or transaction behavior |
+| Contention | Concurrent requests against a shared object | Cache or shared mutable state creates races |
+| Nonfunctional | Response time within a promised threshold | Unexpected query/I/O increases |
 
-**Chọn ca theo rủi ro.** Nếu thay đổi chủ yếu ở tầng domain thuần Java, ưu tiên unit + contract + boundary tests. Nếu thay đổi wiring, transaction, dữ liệu hoặc serialization, thêm integration test. Nếu thay đổi giao diện API, thêm contract test theo payload hoặc kiểm tra tương thích ngược.
+**Select cases based on risk.** For changes mainly within pure Java domain logic, prioritize unit, contract, and boundary tests. For wiring, transaction, data, or serialization changes, add integration tests. For API surface changes, include payload contract or backward-compatibility tests.
 
-## 7. Áp dụng JUnit 5 vào dự án thực tế
+## 7. Applying JUnit 5 in a Real Project
 
-Trong dự án Maven/Gradle đã khai báo phụ thuộc **JUnit Jupiter** và có class `DesignRegressionDemo` trong cùng package với test, có thể chuyển các kiểm tra sang `@Test`/`@TestFactory`. Ví dụ:
+In a Maven/Gradle project with **JUnit Jupiter** configured and `DesignRegressionDemo` in the same package as tests, move checks into `@Test`/`@TestFactory`. Example:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -4843,20 +4843,20 @@ class CheckoutRegressionTest {
 }
 ~~~
 
-Trong `src/test/java`, đặt test cùng package để truy cập các nested type không khai báo `public` trong ví dụ. Với ứng dụng production, thường tách mỗi type thành tệp và sử dụng modifier truy cập phù hợp với API công khai.
+Put tests in `src/test/java` under the same package to access non-`public` nested types from this example. Production applications usually split types into files and choose access modifiers appropriate to the public API.
 
-Khi chuyển sang JUnit, **đừng đưa implementation cố ý sai vào danh sách test phải PASS**. Nếu muốn khẳng định test bắt được lỗi mẫu thì dùng mutation testing hoặc một test minh họa riêng có điều khiển. Khi pipeline đang chạy, thất bại của implementation thật phải được giữ nguyên để chặn thay đổi lỗi.
+When moving to JUnit, **do not put an intentionally broken implementation among tests expected to PASS**. To demonstrate that tests detect the sample defect, use mutation testing or a separate controlled example. Genuine production failures must remain failures that block the pipeline.
 
-## 8. Cách triển khai kiểm thử hồi quy theo từng bước
+## 8. Implementing Regression Tests Step by Step
 
-1. **Chốt hợp đồng hiện tại.** Viết yêu cầu, trường hợp mẫu, ranh giới, lỗi được phép, bất biến và side effect. Review với người hiểu nghiệp vụ khi hợp đồng chưa rõ.
-2. **Tạo baseline trước khi đổi thiết kế.** Chạy bộ test trên mã hiện tại; ghi nhận những ca pass/fail và lỗi đã biết. Không coi kết quả của mã cũ là đúng tuyệt đối.
-3. **Bổ sung test biên và test từng luồng quan trọng.** Mức độ ưu tiên phụ thuộc những đoạn code có nguy cơ thay đổi hành vi.
-4. **Refactor từng phần nhỏ.** Tách abstraction, chuyển dependency, đổi cách khởi tạo object; giữ test chạy sau mỗi thay đổi.
-5. **So sánh cả hợp đồng và hai phiên bản.** Dùng example-based tests độc lập trước, sau đó differential tests cho dải input rộng hơn.
-6. **Chạy đúng tầng kiểm thử.** Unit test bắt lỗi logic; integration test xác nhận wiring, transaction và tác dụng phụ; end-to-end test kiểm tra luồng người dùng chính.
-7. **Đưa vào CI và review.** Job chạy test tự động, báo tên ca/input gây lỗi; không bỏ qua test fail bằng cách sửa expected value tùy tiện.
-8. **Xóa thiết kế cũ theo kế hoạch.** Sau khi refactor đã ổn định và được xác nhận, loại đường đi cũ; giữ **các test đặc tả** làm regression suite lâu dài. Differential test chỉ dựa vào implementation cũ có thể được bỏ khi không còn nhu cầu so sánh.
+1. **Establish the current contract.** Document requirements, examples, boundaries, allowed errors, invariants, and side effects. Review ambiguities with a domain expert.
+2. **Create a baseline before changing the design.** Run tests on current code; record passes, failures, and known defects. Do not assume old behavior is automatically correct.
+3. **Add boundary and critical-flow cases.** Prioritize code areas most likely to change behavior.
+4. **Refactor in small increments.** Extract abstractions, move dependencies, or change object construction, rerunning tests after each change.
+5. **Compare both contracts and versions.** Use independent example-based tests first, then differential tests over a wider input range.
+6. **Run the right test layers.** Unit tests catch logic defects; integration tests verify wiring, transactions, and side effects; end-to-end tests check main user workflows.
+7. **Integrate with CI and review.** Run automated test jobs reporting failing cases/inputs; never hide failures by arbitrarily modifying expected values.
+8. **Remove the old design deliberately.** Once the refactor is stable and verified, retire old paths; retain **specification tests** as a long-term regression suite. Differential tests tied solely to old code may be retired when comparison is no longer needed.
 
 ~~~mermaid
 flowchart TD
@@ -4872,81 +4872,81 @@ flowchart TD
     H -->|Rồi| I["Merge và giữ regression suite trong CI"]
 ~~~
 
-## 9. Những sai lầm cần tránh
+## 9. Mistakes to Avoid
 
-**Chỉ chạy test của lớp mới.** Nếu refactor ảnh hưởng đến luồng ở nhiều nơi, một lớp mới pass unit test vẫn có thể làm hỏng transaction, serialization hoặc lỗi truyền lên API. Hãy chạy test ở các ranh giới mà client quan sát được.
+**Running only the new class's tests.** A new class passing its unit suite may still break transactions, serialization, or API error propagation. Run tests at all relevant client-visible boundaries.
 
-**Chỉ test input “đẹp”.** Các lỗi dễ phát sinh ngay tại 0, ngưỡng, giá trị cực đại, object rỗng, `null` hoặc thứ tự thao tác bất thường. Chọn rõ miền input và kiểm tra ranh giới bên trong và ngoài.
+**Testing only “nice” inputs.** Defects often occur at 0, thresholds, maximum values, empty objects, `null`, or unusual operation orders. Specify the input domain and check boundaries inside and outside it.
 
-**Lấy kết quả của implementation cũ làm đặc tả duy nhất.** Nếu mã cũ có bug, new code sao chép bug vẫn pass so sánh. Hãy bổ sung các ví dụ được chốt độc lập từ yêu cầu.
+**Treating the old implementation as the only specification.** Old code may have bugs; copying them still passes differential tests. Add independently agreed requirement-based examples.
 
-**Bắt test phụ thuộc cấu trúc class.** Refactor hợp lệ thường đổi số class, thứ tự lời gọi nội bộ hoặc mô hình injection. Nên kiểm tra giá trị, state, exception và hiệu ứng có ý nghĩa bên ngoài.
+**Coupling tests to class structure.** Legitimate refactoring changes class counts, internal call order, or injection style. Test values, state, exceptions, and meaningful external effects.
 
-**Lạm dụng mock.** Mock mọi dependency theo đúng từng lời gọi khiến test dễ vỡ khi thay cách phối hợp lớp. Mock tại ranh giới IO không muốn thực thi thật, kết hợp integration test với cấu hình đại diện.
+**Overusing mocks.** Mocking every dependency and call sequence makes tests brittle when object collaboration changes. Mock at I/O boundaries that should not execute for real, alongside integration tests using representative configuration.
 
-**Dùng dữ liệu ngẫu nhiên khó tái lập.** Với differential/property tests, sử dụng seed cố định, in input khi fail, thêm trường hợp sai vào bộ regression cố định; đừng phụ thuộc duy nhất vào dữ liệu random.
+**Using irreproducible random data.** For differential/property tests, use fixed seeds, print failing inputs, and add failures to a deterministic regression suite; do not rely only on random cases.
 
-**Thấy xanh là coi như đã chứng minh không có regression.** Test chỉ đo những ca và thuộc tính đã mã hóa; coverage cao cũng không tự bảo đảm oracle đúng. Code review, test tích hợp và kiểm tra rủi ro còn cần thiết.
+**Treating all-green tests as proof no regressions exist.** Tests measure only encoded cases/properties; high coverage does not guarantee a valid oracle. Code reviews, integration tests, and risk assessments remain important.
 
-## 10. Bài tập thực hành
+## 10. Practical Exercises
 
-1. Thay `>=` thành `>` trong `StandardShippingRule`; dự đoán và chạy để xem test nào fail.
-2. Chuyển validation từ `RefactoredCheckout` sang `ShippingRule` rồi cố ý quên một nhánh. Kiểm tra các input -1 và 1.000.001.
-3. Tạo `PromotionShippingRule` mới: với giả định **yêu cầu nghiệp vụ không đổi**, viết cùng một bộ test và xác định implementation mới có tuân thủ hợp đồng hay không.
-4. Bổ sung trường `discountCents` vào `Invoice` theo một **yêu cầu mới**; viết hợp đồng mới và cập nhật test có chủ đích, phân biệt thay đổi chức năng với refactor.
-5. Áp dụng vào một repository hoặc service thật: chọn một public method, mô tả input/output/error/side effect, viết test đặc tả rồi refactor ít nhất hai class mà vẫn giữ test pass.
+1. Change `>=` to `>` in `StandardShippingRule`; predict and run the affected test.
+2. Move validation from `RefactoredCheckout` into `ShippingRule` and deliberately omit one branch. Test inputs -1 and 1.000.001.
+3. Add a new `PromotionShippingRule`: assuming **business requirements remain unchanged**, run the same suite to see whether it satisfies the contract.
+4. Add `discountCents` to `Invoice` under a **new requirement**; specify the new contract and intentionally update tests, distinguishing a functional change from refactoring.
+5. Apply this to a real repository or service: choose a public method, specify inputs/outputs/errors/side effects, write specification tests, then refactor at least two classes while keeping those tests green.
 
-**Tiêu chí đạt:** Bạn thực hiện được một thay đổi thiết kế OOP, chứng minh kết quả từ client vẫn đúng qua test đặc tả, dữ liệu biên và ít nhất một phép so sánh trước/sau; nếu thay đổi gây regression, test phải chỉ ra input và cam kết nào bị phá vỡ.
+**Acceptance criterion:** You can change an OOP design and verify correct client-visible behavior using specification tests, boundary inputs, and at least one before/after comparison. A regression must cause a test to identify the specific broken input and promise.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="testing-010">Kiểm thử tương tác giữa nhiều đối tượng</a>
+## <a id="testing-010">Testing Interactions Among Multiple Objects</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kiểm thử tương tác giữa nhiều đối tượng trong Java OOP
+# Testing Interactions Among Multiple Objects in Java OOP
 
-## 1. Vì sao phải kiểm thử sự phối hợp?
+## 1. Why Test Collaboration?
 
-Một phương thức hướng đối tượng thường không tự làm mọi việc. Nó nhận yêu cầu, gọi nhiều đối tượng cộng tác, xử lý kết quả rồi quyết định bước tiếp theo. Trong ứng dụng bán hàng, dịch vụ checkout có thể phối hợp:
+An object-oriented method rarely performs everything itself. It receives requests, invokes collaborators, processes their results, and decides the next steps. In a sales application, a checkout service may coordinate:
 
-1. **Inventory** để giữ hàng.
-2. **PaymentGateway** để thu tiền.
-3. **ReceiptSender** để gửi biên nhận.
+1. **Inventory** to reserve stock.
+2. **PaymentGateway** to charge payments.
+3. **ReceiptSender** to send receipts.
 
-Từng lớp có thể hoạt động đúng khi kiểm thử riêng, nhưng cả quy trình vẫn sai: gửi biên nhận trước khi thanh toán, thu tiền khi không đủ hàng, quên trả lại hàng khi bị từ chối, hoặc gọi thu tiền hai lần. Đây là các lỗi **tương tác giữa đối tượng**.
+Each class can pass independent tests while the overall workflow is still wrong: a receipt is sent before payment, money is charged without stock, inventory is not released after payment rejection, or a charge is attempted twice. These are **object-interaction defects**.
 
-**Kiểm thử tương tác (interaction testing)** xem các đối tượng có gọi cộng tác viên đúng điều kiện, đúng tham số, đúng số lần và đúng thứ tự cần thiết hay không. **Kiểm thử trạng thái/kết quả (state-based testing)** quan sát dữ liệu và kết quả cuối. Hai cách thường bổ sung cho nhau; không nên chỉ đếm lời gọi mà bỏ qua hành vi nghiệp vụ.
+**Interaction testing** verifies that objects invoke collaborators under the right conditions, with correct parameters and necessary call counts and ordering. **State-based testing** checks resulting data and state. These approaches complement each other; counting calls alone is not a substitute for verifying business outcomes.
 
-Sau bài này, bạn có thể:
-- Nhận ra ranh giới đối tượng cần kiểm thử.
-- Viết các test cho nhánh thành công, từ chối và lỗi.
-- Dùng Mockito verify, never, verifyNoInteractions và InOrder.
-- Viết một kiểm thử phối hợp bằng các đối tượng thật trong bộ nhớ.
-- Hiểu lúc nào thứ tự gọi là yêu cầu nghiệp vụ, lúc nào nó chỉ là chi tiết hiện thực.
+After this lesson, you can:
+- Identify object boundaries that need testing.
+- Write tests for success, rejection, and failure paths.
+- Use Mockito verify, never, verifyNoInteractions, and InOrder.
+- Write collaboration tests with real in-memory objects.
+- Distinguish ordering required by business rules from mere implementation details.
 
-## 2. Đặt hợp đồng nghiệp vụ trước
+## 2. Define the Business Contract First
 
-Ta xây dựng CheckoutService. Mỗi đơn hàng có mã, mã sản phẩm, số lượng và tổng tiền VND dương. Các quy tắc:
+We implement CheckoutService. Each order has an ID, SKU, quantity, and positive VND amount. Rules:
 
-| Tình huống | Các lời gọi phải xảy ra | Kết quả |
+| Scenario | Required Calls | Outcome |
 | --- | --- | --- |
-| Không đủ hàng | inventory.reserve trả false; **không** gọi payment hoặc sender | OUT_OF_STOCK |
-| Giữ hàng thành công, thanh toán thành công | reserve → charge → send, mỗi bước đúng một lần | PAID |
-| Cổng thanh toán từ chối | reserve → charge → release; không gửi biên nhận | DECLINED |
-| Cổng thanh toán ném RuntimeException | reserve → charge → release; không gửi; truyền lỗi lên | Exception |
-| Đơn hàng null | Không gọi bất kỳ cộng tác viên nào | NullPointerException |
-| Gửi biên nhận thất bại sau khi thu tiền | Exception được truyền lên; không tự thu tiền lại, không tự release | Exception (cần cơ chế gửi lại trong hệ thống thật) |
+| Insufficient stock | inventory.reserve returns false; **do not** invoke payment or sender | OUT_OF_STOCK |
+| Reservation and payment succeed | reserve → charge → send, each exactly once | PAID |
+| Gateway declines payment | reserve → charge → release; no receipt | DECLINED |
+| Gateway throws RuntimeException | reserve → charge → release; no receipt; propagate error | Exception |
+| Null order | Do not call any collaborator | NullPointerException |
+| Receipt sending fails after a charge | Propagate exception; do not charge again or release automatically | Exception (requires safe resend mechanism in real systems) |
 
-Điều kiện quan trọng: **không gọi charge nếu reserve thất bại**; **không gửi biên nhận nếu charge chưa được xác nhận thành công**.
+The crucial conditions are **do not charge when reservation fails** and **do not send a receipt until payment is confirmed successful**.
 
-Một mô tả trình tự:
+Sequence overview:
 
 ~~~mermaid
 sequenceDiagram
@@ -4975,11 +4975,11 @@ sequenceDiagram
     end
 ~~~
 
-Sơ đồ diễn tả luồng bình thường. Trường hợp ngoại lệ cần kiểm thử riêng vì mỗi phụ thuộc có thể thất bại theo cách khác.
+The diagram shows the normal path. Test exceptional paths separately because each dependency can fail differently.
 
-## 3. Dự án Java 17 + Maven + JUnit 5 + Mockito
+## 3. Java 17 + Maven + JUnit 5 + Mockito Project
 
-Dự án dùng Java 17 để có record, JUnit Jupiter để viết test, Mockito để xác minh lời gọi. Không cần Spring.
+The project uses Java 17 for records, JUnit Jupiter for tests, and Mockito for verifying calls. Spring is not required.
 
 ~~~text
 oop-collaboration-tests/
@@ -5036,7 +5036,7 @@ oop-collaboration-tests/
 </project>
 ~~~
 
-### 3.2. Ba giao diện của các cộng tác viên
+### 3.2. Three Collaborator Interfaces
 
 **src/main/java/vn/example/Inventory.java**
 
@@ -5073,9 +5073,9 @@ public interface ReceiptSender {
 }
 ~~~
 
-Bộ interface này chỉ thể hiện các khả năng CheckoutService cần. Lớp sử dụng không cần biết kho hàng nằm ở SQL hay bộ nhớ, cổng thanh toán dùng HTTP hay hệ thống giả, sender dùng SMTP hay hàng đợi.
+These interfaces expose only the capabilities CheckoutService needs. The consumer does not care whether stock is stored in SQL or memory, the payment gateway uses HTTP or a fake, or the sender uses SMTP or a queue.
 
-### 3.3. Lớp điều phối thật
+### 3.3. Real Orchestrating Class
 
 **src/main/java/vn/example/CheckoutService.java**
 
@@ -5144,20 +5144,20 @@ public final class CheckoutService {
 }
 ~~~
 
-Các điểm cần chú ý:
+Notable points:
 
-- **CheckoutService là đối tượng thật cần kiểm thử**. Nó chỉ được tiêm ba cộng tác viên qua constructor.
-- Đối tượng Order tự bảo vệ bất biến dữ liệu của mình; test không thể đưa số lượng âm vào một Order hợp lệ.
-- Nếu hết hàng, trả kết quả ngay, nên PaymentGateway và ReceiptSender tuyệt đối không được gọi.
-- Khi gateway từ chối, release xảy ra **sau** charge. Khi gateway ném RuntimeException, release cũng xảy ra rồi lỗi được truyền ra.
-- Khối try chỉ bao quanh charge. Vì thế một exception từ release không bị bắt lại để release lần thứ hai.
-- Một lỗi từ sender sau khi charge thành công được truyền ra; dịch vụ **không** cố hoàn tác thanh toán. Đây là sự giới hạn có chủ đích để bài tập làm rõ tính nhất quán giữa các hệ thống.
+- **CheckoutService is the real system under test**. Its three collaborators are constructor-injected.
+- The Order object protects its own data invariants; tests cannot put a negative quantity into a valid Order.
+- On insufficient stock, return immediately, so PaymentGateway and ReceiptSender must never be invoked.
+- If the gateway declines, release occurs **after** charge. If the gateway throws RuntimeException, release also occurs before propagating the error.
+- The try block surrounds only charge, so an exception from release is not caught again to trigger a second release.
+- Sender failures after successful charging propagate; the service **does not** try to reverse the payment. This is an intentional simplification to clarify cross-system consistency.
 
-**Lưu ý nghiệp vụ thật:** sự cố mạng tại gateway không cho biết chắc chắn tiền đã bị trừ hay chưa. Quy tắc release khi gateway ném lỗi ở ví dụ là giả định đơn giản cho bài học, không phải quy trình thanh toán an toàn cho production. Hệ thống thực cần mã giao dịch idempotent, tra cứu trạng thái, xử lý bù và phối hợp trạng thái đơn hàng một cách đáng tin cậy.
+**Real-world payment caveat:** a gateway network failure may leave uncertainty about whether funds were charged. The demo's rule of releasing inventory when the gateway throws is a simplified teaching assumption, not a safe production payment workflow. Real systems need idempotency keys, status reconciliation, compensation, and reliable coordination of order state.
 
-## 4. Unit test tương tác bằng Mockito
+## 4. Interaction Unit Tests with Mockito
 
-Mockito tạo các cộng tác viên có thể điều khiển phản hồi và ghi nhận lời gọi. Test sẽ khởi tạo **CheckoutService thật**; không mock chính CheckoutService.
+Mockito creates collaborators whose responses can be controlled and calls recorded. Tests instantiate a **real CheckoutService**, never mock CheckoutService itself.
 
 **src/test/java/vn/example/CheckoutServiceTest.java**
 
@@ -5292,26 +5292,26 @@ class CheckoutServiceTest {
 }
 ~~~
 
-### Giải thích các lời xác minh
+### Understanding Verification Calls
 
-| API kiểm thử | Ý nghĩa | Khi dùng |
+| Testing API | Meaning | When to Use |
 | --- | --- | --- |
-| when(...).thenReturn(...) | Cho mock phản hồi theo kịch bản | Kho còn/hết hàng; thanh toán chấp nhận/từ chối |
-| when(...).thenThrow(...) | Giả lập exception từ cộng tác viên | Dịch vụ thanh toán gặp sự cố |
-| doThrow(...).when(sender).send(...) | Giả lập lỗi từ phương thức trả void | Gửi thông báo thất bại |
-| verify(mock).method(args) | Mặc định yêu cầu lời gọi khớp đúng một lần | Tham số truyền sang kho và gateway |
-| verify(mock, never()).method(...) | Xác minh lời gọi nhất định không xuất hiện | Không release khi đã thu tiền và chỉ lỗi gửi email |
-| verifyNoInteractions(mock) | Không có lời gọi nào với mock | Nhánh thiếu hàng không chạm gateway/sender |
-| inOrder(a, b, c) | Xác minh thứ tự những lời gọi nghiệp vụ cần thiết | Phải giữ hàng trước khi thu tiền, thu tiền trước khi gửi |
-| assertEquals / assertThrows | Kiểm tra kết quả và ngoại lệ công khai | Tránh test chỉ có verify mà quên nghiệp vụ |
+| when(...).thenReturn(...) | Configure mock response for a scenario | Stock available/unavailable; payment approved/declined |
+| when(...).thenThrow(...) | Simulate collaborator exception | Payment provider failure |
+| doThrow(...).when(sender).send(...) | Simulate an exception from a void method | Receipt notification failure |
+| verify(mock).method(args) | By default, require exactly one matching call | Parameters passed to inventory and gateway |
+| verify(mock, never()).method(...) | Verify a particular call never occurs | No release after a successful charge followed only by email failure |
+| verifyNoInteractions(mock) | No interactions with a mock | Out-of-stock branch never touches gateway/sender |
+| inOrder(a, b, c) | Verify order of required business calls | Reserve before charging, charge before sending |
+| assertEquals / assertThrows | Verify public results and exceptions | Avoid tests containing only verify calls |
 
-**Chú ý:** Mockito trả false mặc định cho boolean chưa stub. Vì vậy case kho hết hàng cũng sẽ xảy ra nếu quên stub Inventory, khiến test dễ xanh do vô tình. Hãy khai báo rõ phản hồi cần thiết của từng nhánh như trong ví dụ.
+**Caution:** Mockito defaults unstubbed booleans to false. Thus the out-of-stock case could run when Inventory is accidentally left unstubbed, producing a misleading green test. Explicitly configure each branch's necessary responses as in the example.
 
-**Thứ tự xác minh là một quyết định thiết kế.** Nếu hai thao tác độc lập và không có hợp đồng về thứ tự, dùng verify thông thường thay vì InOrder. Chỉ ghim thứ tự cho các bước mà đổi thứ tự sẽ phá vỡ quy tắc nghiệp vụ.
+**Interaction order is a design decision.** If operations are independent with no promised ordering, use ordinary verify rather than InOrder. Fix ordering only for steps where reordering would violate business rules.
 
-## 5. Kiểm thử phối hợp với các đối tượng thật trong bộ nhớ
+## 5. Collaboration Tests with Real In-Memory Objects
 
-Mock có thể chứng minh CheckoutService **đã gọi** release, nhưng không chứng minh hàng tồn kho thật sự được hoàn lại. Để kiểm tra cả trạng thái sau một chuỗi lời gọi, ta có thể kết hợp các đối tượng thật và implementation bộ nhớ có hành vi rõ ràng.
+Mocks can establish that CheckoutService **called** release, but cannot establish that stock was actually returned. To test state after a call sequence, combine real objects and in-memory implementations with explicit behavior.
 
 **src/test/java/vn/example/CheckoutCollaborationTest.java**
 
@@ -5400,84 +5400,84 @@ class CheckoutCollaborationTest {
 }
 ~~~
 
-Ở ví dụ này, InMemoryInventory là một fake có hành vi lưu trữ; RecordingSender là spy ghi nhận tác dụng phụ. Không cần Mockito cho hai test này: state của kho và danh sách gửi là bằng chứng cuối cùng về sự phối hợp. Các test này vẫn không kết nối kho hàng thật hoặc cổng thanh toán thật, nên chưa phải integration test đầy đủ với hạ tầng production.
+Here, InMemoryInventory is a stateful fake, while RecordingSender is a spy recording side effects. These two tests need no Mockito: inventory state and sent-record lists provide evidence of collaboration outcomes. They still do not connect to production inventory or payment systems, so they are not full infrastructure integration tests.
 
-### 5.1. Chạy toàn bộ bài học
+### 5.1. Run the Entire Lesson
 
-Trong thư mục chứa pom.xml, dùng JDK 17 hoặc mới hơn tương thích Maven:
+In the directory containing pom.xml, use JDK 17 or a newer version compatible with Maven:
 
 ~~~bash
 mvn test
 ~~~
 
-Hai lớp test gồm **9 phương thức @Test**: 7 kiểm thử tương tác mock và 2 kiểm thử phối hợp trong bộ nhớ. Khi nhập mã chính xác như trên và có các dependency Maven tương ứng, kỳ vọng 9 test qua, không failures/errors. Mỗi test được tạo với fixture riêng để không phụ thuộc vào thứ tự chạy.
+The two test classes contain **9 @Test methods**: 7 mock-interaction tests and 2 in-memory collaboration tests. With the code entered as shown and appropriate Maven dependencies, expect 9 passes, with no failures/errors. Every test uses its own fixture to avoid order dependencies.
 
-## 6. Những mức kiểm thử cần phân biệt
+## 6. Distinguishing Test Levels
 
-| Cấp độ | Đối tượng được chạy thật | Phụ thuộc thay thế | Bảo đảm chính |
+| Level | Real Components Executed | Dependencies Replaced | Main Guarantee |
 | --- | --- | --- | --- |
-| Unit + interaction test | CheckoutService | Mock Inventory, Gateway, Sender | Điều kiện gọi, tham số, thứ tự, số lần, ngoại lệ |
-| Unit/collaboration test | CheckoutService, InMemoryInventory, RecordingSender | Gateway trả kết quả cố định | Thay đổi trạng thái qua nhiều đối tượng trong bộ nhớ |
-| Integration test | Adapter JDBC/API và dịch vụ test | Chỉ một số hệ thống ngoài | Mapping, transaction, cấu hình, hợp đồng với hạ tầng |
-| End-to-end test | Luồng ứng dụng gần môi trường thật | Có thể dùng sandbox để tránh thu tiền thật | Các thành phần phối hợp từ đầu vào tới kết quả cuối |
+| Unit + interaction test | CheckoutService | Mock Inventory, Gateway, Sender | Conditions, parameters, ordering, counts, and exceptions |
+| Unit/collaboration test | CheckoutService, InMemoryInventory, RecordingSender | Gateway returns fixed result | In-memory state changes across objects |
+| Integration test | JDBC/API adapters and test services | Only some external systems | Mapping, transactions, configuration, infrastructure contracts |
+| End-to-end test | Application workflow close to reality | May use a sandbox to avoid real charges | End-to-end component coordination |
 
-Lưu ý: cách đặt tên cấp độ có thể khác nhau giữa các nhóm. Điều quan trọng hơn nhãn gọi là nói rõ test đã chạy thành phần nào thật, đã giả lập thành phần nào và không kiểm chứng được điều gì.
+Test-level terminology can vary across teams. More important than the label is documenting which components actually ran, which were simulated, and what the test did not establish.
 
-Trong sản phẩm thật, bạn còn phải kiểm thử adapter kho hàng trước cạnh tranh cập nhật, thanh toán khi timeout và hệ thống gửi thông báo khi hàng đợi chậm hoặc trùng. Mockito không thể tự chứng minh các hệ thống thật tuân theo hợp đồng.
+Production systems also need tests for inventory adapters under concurrent updates, payments with timeouts, and notification systems with slow or duplicate queue delivery. Mockito alone cannot establish that real systems satisfy their contracts.
 
-## 7. Lỗi phổ biến khi kiểm thử nhiều đối tượng
+## 7. Common Multi-Object Testing Mistakes
 
-### 7.1. Chỉ kiểm tra gọi phương thức, không kiểm tra kết quả
+### 7.1. Checking Calls but Not Results
 
 ~~~java
 // Chưa đủ: chỉ biết charge đã được gọi.
 verify(gateway).charge("O-1", 100_000);
 ~~~
 
-Cần kết hợp assertion của kết quả (PAID/DECLINED) và trạng thái còn lại (ví dụ tồn kho). Một lời gọi đúng tham số có thể vẫn dẫn đến kết quả sai nếu lớp điều phối bỏ qua giá trị trả về.
+Combine result assertions (PAID/DECLINED) with resulting state, such as inventory. Correct call parameters can still yield wrong outcomes if an orchestrator ignores return values.
 
-### 7.2. Mock cả đối tượng đang kiểm thử
+### 7.2. Mocking the Object Under Test
 
-Nếu mock CheckoutService rồi tự quy định checkout trả PAID, test sẽ kiểm chứng Mockito làm theo cấu hình, chứ không thực thi nhánh xử lý nghiệp vụ. Hãy tạo CheckoutService thật và thay thế các cộng tác viên bên ngoài ranh giới cần cô lập.
+Mocking CheckoutService and making checkout return PAID only verifies Mockito's configuration, not the business branch. Instantiate a real CheckoutService and substitute collaborators outside the boundary under test.
 
-### 7.3. Xác minh mọi chi tiết nội bộ
+### 7.3. Verifying Every Internal Detail
 
-Test quá chi tiết có thể gãy sau một lần refactor đúng. Ví dụ, nếu hệ thống thêm bước ghi log, việc yêu cầu mọi lời gọi xảy ra theo danh sách cứng có thể gây false alarm. Chỉ xác minh những tương tác thuộc **hợp đồng nghiệp vụ** hoặc những tương tác tránh hậu quả nguy hiểm như charge hai lần.
+Overly detailed tests can break after valid refactoring. For example, adding a logging step may cause a hardcoded list of calls to produce false alarms. Verify only interactions belonging to **business contracts** or those preventing dangerous effects such as duplicate charges.
 
-### 7.4. Test phụ thuộc dữ liệu dùng chung
+### 7.4. Tests Depend on Shared Data
 
-Nếu kho fake là singleton chia sẻ trạng thái giữa nhiều test, test đầu sẽ giảm tồn kho của test sau. Khởi tạo fake mới cho từng test; ở integration test dùng database thật thì tách dữ liệu hoặc rollback/cleanup phù hợp.
+If a fake inventory is a singleton shared across tests, an earlier test's stock reduction affects later tests. Create a fresh fake per test; real-DB integration tests need suitable data isolation or rollback/cleanup.
 
-### 7.5. Xử lý lỗi từ nhiều đối tượng một cách mơ hồ
+### 7.5. Ambiguous Handling of Failures Across Objects
 
-PaymentGateway ném lỗi chưa chắc giao dịch bị từ chối: đôi khi gateway đã nhận tiền nhưng phản hồi bị mất. Không được suy luận nghiệp vụ từ một exception kỹ thuật nếu hợp đồng chưa định nghĩa rõ trạng thái. Với hệ thống thanh toán thật, cần cơ chế reconciliation, idempotency key, lưu tiến độ và retry an toàn.
+PaymentGateway throwing does not necessarily mean payment was declined: the gateway may have received the charge but lost its response. Do not infer business outcomes from technical exceptions without a defined contract. Real payment systems need reconciliation, idempotency keys, durable progress records, and safe retries.
 
-Gửi biên nhận thất bại cũng không phải là lý do tự động thu tiền lại. Có thể cần transactional outbox hoặc sự kiện bền vững để gửi lại. Các quyết định đó phải được nêu thành hợp đồng rồi kiểm thử bằng kịch bản tương ứng.
+Failure to send a receipt is also not a reason to charge again automatically. Transactional outbox or durable events may be needed for safe resend. Specify those decisions as contracts and test matching scenarios.
 
-## 8. Cách thiết kế để dễ kiểm thử tương tác
+## 8. Designing for Testable Interactions
 
-1. **Giao diện nhỏ theo vai trò**: Inventory, PaymentGateway, ReceiptSender chỉ khai báo thao tác mà quy trình cần.
-2. **Constructor injection**: truyền cộng tác viên từ bên ngoài thay vì tự new hoặc tìm qua singleton toàn cục.
-3. **Tách orchestration khỏi I/O**: CheckoutService quyết định thứ tự, adapter chịu trách nhiệm giao tiếp bên ngoài.
-4. **Thiết kế kết quả rõ ràng**: enum Outcome giúp các nhánh thành công, hết hàng, từ chối khác nhau và test không phải đoán từ null.
-5. **Phân biệt trả false với exception**: nhánh nghiệp vụ từ chối khác với lỗi kỹ thuật; cách phục hồi có thể khác.
-6. **Nhìn vào ranh giới tác dụng phụ**: charge, release và send là các tương tác đặc biệt cần test tỉ mỉ vì thay đổi thế giới bên ngoài.
-7. **Có test trạng thái ngoài test thứ tự**: phối hợp nhiều đối tượng chỉ thực sự đúng khi kết quả cuối cũng đúng.
-8. **Dùng fake/mocks có chủ đích**: mock phù hợp để đo tương tác; fake hữu ích để mô phỏng thay đổi trạng thái; adapter thật cần integration test riêng.
+1. **Small role-specific interfaces:** Inventory, PaymentGateway, and ReceiptSender expose only operations needed by the workflow.
+2. **Constructor injection:** receive collaborators from outside rather than constructing them internally or accessing global singletons.
+3. **Separate orchestration from I/O:** CheckoutService chooses ordering while adapters handle external communication.
+4. **Explicit outcome models:** the Outcome enum distinguishes success, out-of-stock, and payment-declined branches so tests do not infer outcomes from null.
+5. **Distinguish false results from exceptions:** business rejection differs from technical failure; recovery policies may differ.
+6. **Recognize side-effect boundaries:** charge, release, and send are sensitive interactions requiring careful tests because they change the outside world.
+7. **Combine state and ordering tests:** collaboration is correct only when final results are correct too.
+8. **Use fakes/mocks deliberately:** mocks verify interactions, fakes model state changes, and real adapters need separate integration tests.
 
-## 9. Bài tập thực hành
+## 9. Practice Exercises
 
-**Bài 1 — Bắt lỗi thứ tự.** Cố tình chuyển dòng sender.send(...) lên trước gateway.charge(...). Chạy lại unit test và xác định ca nào thất bại. Khôi phục vị trí đúng và giải thích vì sao thứ tự này mang ý nghĩa nghiệp vụ.
+**Exercise 1 — Catch ordering errors.** Deliberately move sender.send(...) before gateway.charge(...). Rerun tests and identify the failing cases. Restore the correct order and explain its business significance.
 
-**Bài 2 — Bắt lỗi số lần gọi.** Cố ý gọi gateway.charge(...) hai lần trên đường thành công. Kiểm tra InOrder/verifyNoMoreInteractions phát hiện lời gọi dư, rồi trả mã về đúng.
+**Exercise 2 — Catch duplicate calls.** Deliberately invoke gateway.charge(...) twice on the successful path. Verify that InOrder/verifyNoMoreInteractions detects the extra call, then restore correct code.
 
-**Bài 3 — Thêm nhánh hết hàng trong test trạng thái.** Thêm test vào CheckoutCollaborationTest với đơn yêu cầu 6 sản phẩm khi kho chỉ còn 5. Kỳ vọng OUT_OF_STOCK, số lượng kho giữ nguyên 5 và không có biên nhận.
+**Exercise 3 — Add an out-of-stock collaboration test.** Add a test to CheckoutCollaborationTest for an order requesting 6 items when inventory contains only 5. Expect OUT_OF_STOCK, unchanged stock of 5, and no receipt.
 
-**Bài 4 — Thêm sự kiện bền vững.** Giả lập EventPublisher và mở rộng quy trình để công bố OrderPaid sau thanh toán thành công. Quy định rõ thứ tự giữa lưu trạng thái thanh toán và phát sự kiện; dùng mock để xác minh thứ tự, sau đó dùng fake repository để xác minh trạng thái cuối.
+**Exercise 4 — Add a durable event.** Simulate EventPublisher and extend the workflow to publish OrderPaid after successful payment. Specify ordering between persisted payment state and event publication; use mocks to verify order and a fake repository to check final state.
 
-**Tiêu chí tự đánh giá:** Một test tốt về tương tác nhiều đối tượng chỉ ra được **ai gọi ai, khi nào, với dữ liệu gì, tác dụng phụ nào phải xảy ra hoặc bị cấm**, đồng thời chứng minh kết quả quan sát được từ phía người dùng hoặc trạng thái nghiệp vụ.
+**Self-assessment criterion:** A good multi-object interaction test makes clear **who calls whom, when, with which data, and which side effects must occur or be prohibited**, while also proving observable user-facing results or business state.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

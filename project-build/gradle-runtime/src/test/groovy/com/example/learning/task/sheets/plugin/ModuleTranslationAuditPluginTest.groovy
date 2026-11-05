@@ -1,6 +1,7 @@
 package com.example.learning.task.sheets.plugin
 
 import com.example.learning.task.sheets.task.ModuleTranslationAuditTask
+import com.example.learning.task.sheets.task.ModuleTranslationProgressTask
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Test
 
@@ -22,5 +23,12 @@ class ModuleTranslationAuditPluginTest {
             assertEquals('', task.workerCount.get())
             assertEquals('sheets', task.group)
         }
+        def tracking = project.tasks.named('trackModuleTranslation',
+                ModuleTranslationProgressTask).get()
+        assertEquals('SHOW', tracking.action.get())
+        assertEquals('', tracking.workerId.get())
+        assertEquals('', tracking.jobId.get())
+        assertEquals('', tracking.revision.get())
+        assertEquals('sheets', tracking.group)
     }
 }

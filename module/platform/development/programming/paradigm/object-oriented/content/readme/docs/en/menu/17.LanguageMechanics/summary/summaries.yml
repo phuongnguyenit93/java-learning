@@ -1,320 +1,320 @@
 summaries:
 - id: language-mechanics-001
-  title: Kiểu tổng quát và lớp có tham số kiểu
+  title: Generic Types and Parameterized Classes
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Kiểu tổng quát và lớp có tham số kiểu**
+    **Generic Types and Parameterized Classes**
 
-    Hiểu vai trò của **Java generics** trong hợp đồng kiểu và tái sử dụng lớp/phương thức. Từ `Box<T>`, `Pair<K,V>` và `InMemoryRepository<ID,T>`, phân biệt generic declaration, type parameter, type argument, inference và generic method; nhận diện giới hạn về invariance, wildcard, type erasure và rủi ro raw type.
+    Understand the role of **Java generics** in type contracts and class/method reuse. Using `Box<T>`, `Pair<K,V>`, and `InMemoryRepository<ID,T>`, distinguish generic declarations, type parameters, type arguments, inference, and generic methods; recognize the limitations of invariance, wildcards, type erasure, and the risks of raw types.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Cấu trúc và sử dụng generic type
+    ### Structure and Use of Generic Types
 
-    1. Trong `Box<T>`, `Box<String>` và `new Box<>("Java")`, đâu là khai báo tham số kiểu, đâu là đối số kiểu và compiler suy luận gì?
-    2. Vì sao `Pair<K,V>` biểu diễn hai kiểu độc lập, còn `InMemoryRepository<ID,T>.findById(ID)` giữ được kết quả `Optional<T>`?
-    3. Phương thức `<R> Box<R> map(...)` khác gì `T` của class và vì sao static method phải khai báo type parameter riêng?
+    1. In `Box<T>`, `Box<String>`, and `new Box<>("Java")`, which is a type parameter declaration, which is a type argument, and what does the compiler infer?
+    2. Why does `Pair<K,V>` represent two independent types, while `InMemoryRepository<ID,T>.findById(ID)` preserves the `Optional<T>` result type?
+    3. How does the method `<R> Box<R> map(...)` differ from the class's `T`, and why must a static method declare its own type parameter?
 
-    ### An toàn kiểu và giới hạn
+    ### Type Safety and Limitations
 
-    1. Vì sao `List<Integer>` không gán được cho `List<Number>` và `Box<Integer>` không phải `Box<Number>`?
-    2. `List<? extends Number>` và `List<? super Integer>` cho phép đọc/ghi theo kiểu nào, và PECS hỗ trợ thiết kế `copyAll` ra sao?
-    3. Type erasure ảnh hưởng `new T()`, `instanceof List<String>`, overload và `static T` thế nào?
-    4. Raw `List` thêm `Integer` vào `List<String>` có thể gây heap pollution và `ClassCastException` ở đâu?
+    1. Why can't `List<Integer>` be assigned to `List<Number>`, and why is `Box<Integer>` not a `Box<Number>`?
+    2. What types can be read or written through `List<? extends Number>` and `List<? super Integer>`, and how does PECS guide the design of `copyAll`?
+    3. How does type erasure affect `new T()`, `instanceof List<String>`, overloading, and `static T`?
+    4. How can a raw `List` add an `Integer` to a `List<String>`, and where could this cause heap pollution and a `ClassCastException`?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Khai báo cấu trúc tổng quát | Viết `Box<T>`, `Pair<K,V>` và repository typed sao cho getter/setter/query bảo toàn type argument. |
-    | Tổ chức generic method | Sử dụng `<R>`, static `<T>` và diamond inference mà không cần cast thủ công. |
-    | Chọn API đúng kiểu | Chỉ ra nơi cần bound hoặc wildcard; giải thích phép gán bị từ chối bởi invariance. |
-    | Nhận diện ranh giới erasure | Giải thích các thao tác generic không được biên dịch, thay `new T()` bằng factory/Supplier phù hợp. |
-    | Kiểm chứng hợp đồng | Xác định compile-time error, unchecked warning, null policy và runtime behavior trong ví dụ. |
+    | Declaring generic structures | Write `Box<T>`, `Pair<K,V>`, and typed repositories whose getters, setters, and queries preserve type arguments. |
+    | Organizing generic methods | Use `<R>`, static `<T>`, and diamond inference without manual casts. |
+    | Choosing type-safe APIs | Identify where bounds or wildcards are needed and explain assignments rejected due to invariance. |
+    | Recognizing erasure boundaries | Explain generic operations that cannot compile and replace `new T()` with a suitable factory/Supplier. |
+    | Verifying contracts | Identify compile-time errors, unchecked warnings, null policies, and runtime behavior in the examples. |
 - id: language-mechanics-002
-  title: Ràng buộc tham số kiểu
+  title: Type Parameter Bounds
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Ràng buộc tham số kiểu**
+    **Type Parameter Bounds**
 
-    Khai báo **bounded type parameter** để thuật toán chỉ nhận các kiểu có năng lực cần dùng. Bài đào sâu `<T extends Number>`, intersection `&`, `Comparable<? super T>`, ràng buộc đệ quy `<E extends Enum<E>>` và ảnh hưởng của erasure, đồng thời phân biệt bound của `T` với wildcard tại nơi sử dụng.
+    Declare **bounded type parameters** so algorithms accept only types with the required capabilities. The lesson examines `<T extends Number>`, intersection `&`, `Comparable<? super T>`, the recursive bound `<E extends Enum<E>>`, and the effects of erasure while distinguishing bounds on `T` from use-site wildcards.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Upper bound và thuật toán generic
+    ### Upper Bounds and Generic Algorithms
 
-    1. Vì sao `NumberBox<T extends Number>` gọi được `doubleValue()` nhưng `Box<T>` không gọi được?
-    2. Vì sao class bound phải đứng trước interface trong `<T extends Number & Comparable<? super T>>`, còn dấu phẩy chỉ phân cách những type parameter khác nhau?
-    3. Tại sao `Comparable<? super T>` cho phép `Employee` kế thừa `Comparable<Person>` được dùng trong hàm `max`?
-    4. Vì sao bound kiểu `Number` không tự cung cấp toán tử `+` cho `T` hay bảo đảm tiền chính xác và non-null?
+    1. Why can `NumberBox<T extends Number>` call `doubleValue()` while `Box<T>` cannot?
+    2. Why must a class bound precede interfaces in `<T extends Number & Comparable<? super T>>`, while commas separate distinct type parameters?
+    3. Why does `Comparable<? super T>` allow `Employee`, which inherits `Comparable<Person>`, to be used with the `max` function?
+    4. Why does a `Number` bound not automatically provide the `+` operator for `T` or guarantee exact monetary calculations and non-null values?
 
-    ### Wildcard, đệ quy và runtime
+    ### Wildcards, Recursive Bounds, and Runtime
 
-    1. Khi kết quả phải giữ nguyên `T`, chọn bounded generic method hay wildcard `? extends Number` và vì sao?
-    2. Trường hợp nào dùng `? super Integer` như đích ghi và vì sao Java không cho `<T super Integer>`?
-    3. `<E extends Enum<E>>` mô tả điều gì; sai tên enum constant được phát hiện lúc biên dịch hay chạy?
-    4. Erasure của intersection bound chọn bound nào, và vì sao `new T()` hoặc `instanceof T` bị hạn chế?
+    1. When the result must preserve `T`, should a bounded generic method or the wildcard `? extends Number` be used, and why?
+    2. When is `? super Integer` appropriate for a write destination, and why does Java disallow `<T super Integer>`?
+    3. What does `<E extends Enum<E>>` express, and is an incorrect enum constant name detected at compile time or runtime?
+    4. Which bound does erasure select from an intersection bound, and why are `new T()` and `instanceof T` restricted?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Thiết kế bound hợp lệ | Khai báo `<T extends Number & Comparable<? super T>>` cho `NumericRange` và kiểm tra tính hợp lệ. |
-    | Giữ subtype hợp lệ | Giải thích và chạy `max(List<Employee>)` khi Employee so sánh thông qua Person. |
-    | Chọn giữa T và wildcard | Viết chữ ký phù hợp cho hàm trả đúng element type và hàm chỉ đọc số. |
-    | Nhận diện lỗi hệ thống kiểu | Phân biệt lỗi compile time, erasure, dữ liệu null và kiểm tra invariant runtime. |
+    | Designing valid bounds | Declare `<T extends Number & Comparable<? super T>>` for `NumericRange` and validate it. |
+    | Supporting valid subtypes | Explain and run `max(List<Employee>)` when Employee compares through Person. |
+    | Choosing between T and wildcards | Write appropriate signatures for a function returning the exact element type and one that only reads numbers. |
+    | Recognizing type-system errors | Distinguish compile-time errors, erasure, null data, and runtime invariant checks. |
 - id: language-mechanics-003
-  title: Quan hệ kiểu của các cấu trúc tổng quát
+  title: Type Relationships in Generic Constructs
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Quan hệ kiểu của các cấu trúc tổng quát**
+    **Type Relationships in Generic Constructs**
 
-    Hiểu **quan hệ kiểu giữa generic declarations và parameterized types**: Java dùng invariance đối với type argument cụ thể nhưng cho phép use-site variance qua `?`, `? extends`, `? super`. Qua `GenericTypeRelationsDemo`, suy ra phép gán hợp lệ, khả năng đọc/ghi, PECS, wildcard capture, generic inheritance và khác biệt với array covariance.
+    Understand **type relationships between generic declarations and parameterized types**: Java uses invariance for concrete type arguments but supports use-site variance through `?`, `? extends`, and `? super`. Through `GenericTypeRelationsDemo`, determine valid assignments, read/write capabilities, PECS, wildcard capture, generic inheritance, and the differences from array covariance.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Subtype, invariance và wildcard
+    ### Subtypes, Invariance, and Wildcards
 
-    1. Vì sao `ArrayList<Integer>` là `List<Integer>` nhưng `List<Integer>` không là `List<Number>`?
-    2. Khi tham chiếu là `List<?>`, `List<? extends Number>` hoặc `List<? super Integer>`, compiler bảo đảm kiểu đọc và phép `add` nào?
-    3. Vì sao `List<?>` không đồng nghĩa `List<Object>` và wildcard không làm collection immutable?
+    1. Why is `ArrayList<Integer>` a `List<Integer>`, while `List<Integer>` is not a `List<Number>`?
+    2. When a reference has type `List<?>`, `List<? extends Number>`, or `List<? super Integer>`, which read types and `add` operations does the compiler guarantee?
+    3. Why is `List<?>` not equivalent to `List<Object>`, and why does a wildcard not make a collection immutable?
 
-    ### Thiết kế và kiểm chứng type relationships
+    ### Designing and Verifying Type Relationships
 
-    1. Vì sao `<T> copy(List<? super T> dst, List<? extends T> src)` cho phép `Integer` sang `Number`?
-    2. Vì sao `StringStore extends MemoryStore<String>` triển khai `Store<String>` nhưng không thành `Store<Object>`?
-    3. Trong `swapFirstTwo(List<?>)`, helper `<T>` giải quyết vấn đề wildcard capture như thế nào?
-    4. Array covariance có thể gây `ArrayStoreException` lúc chạy, còn generic invariance chặn loại phép gán tương đương ở giai đoạn nào?
-    5. Type erasure và raw types gây ra name clash hoặc heap pollution ra sao?
+    1. Why does `<T> copy(List<? super T> dst, List<? extends T> src)` allow copying from `Integer` to `Number`?
+    2. Why does `StringStore extends MemoryStore<String>` implement `Store<String>` but not become a `Store<Object>`?
+    3. In `swapFirstTwo(List<?>)`, how does the `<T>` helper solve wildcard capture?
+    4. Array covariance can cause an `ArrayStoreException` at runtime; at what stage does generic invariance reject the analogous assignment?
+    5. How can type erasure and raw types cause name clashes or heap pollution?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Dự đoán tính hợp lệ | Phân loại đúng phép gán `List<Integer>`, `List<Number>`, các wildcard và `Store<T>`. |
-    | Chọn chữ ký producer/consumer | Sửa các API sum/copy/seed theo vai trò đọc và ghi dữ liệu. |
-    | Xử lý wildcard capture | Dùng helper generic để hoán đổi giá trị cùng element type mà không cast thiếu kiểm chứng. |
-    | Giải thích lỗi kiểu | Phân biệt compile error, `ArrayStoreException`, heap pollution và mutability của danh sách. |
+    | Predicting type validity | Correctly classify assignments involving `List<Integer>`, `List<Number>`, wildcards, and `Store<T>`. |
+    | Choosing producer/consumer signatures | Refine sum/copy/seed APIs according to their data-reading and data-writing roles. |
+    | Handling wildcard capture | Use a generic helper to swap values of the same element type without unchecked casts. |
+    | Explaining type errors | Distinguish compile-time errors, `ArrayStoreException`, heap pollution, and list mutability. |
 - id: language-mechanics-004
-  title: Kiểu tĩnh, kiểu động và kiểm tra kiểu
+  title: Static Types, Runtime Types, and Type Checking
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Kiểu tĩnh, kiểu động và kiểm tra kiểu**
+    **Static Types, Runtime Types, and Type Checking**
 
-    Phân biệt **statically typed language** với runtime polymorphism trong Java. Qua `Notification`, người học phân biệt static type của biến và class thực tế của object, giải thích overload chọn theo kiểu tĩnh, override dispatch theo object, `var` là suy luận kiểu, đồng thời đặt runtime validation tại ranh giới dữ liệu/JSON/reflection thay cho cast mù.
+    Distinguish a **statically typed language** from runtime polymorphism in Java. Through `Notification`, learners distinguish a variable's static type from the object's actual class, explain how overloads are selected by static types and overrides dispatched by runtime objects, recognize `var` as type inference, and apply runtime validation at data/JSON/reflection boundaries instead of unchecked casts.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Kiểu tĩnh và hành vi động
+    ### Static Types and Dynamic Behavior
 
-    1. Với `Notification n = new EmailNotification()`, compiler thấy kiểu gì, JVM gọi implementation `format()` nào?
-    2. Vì sao `describe(Object)` được chọn khi biến có kiểu `Object` dù đang chứa `String`, nhưng `describe((String)value)` chọn overload khác?
-    3. `var count = 10` có cho phép gán tiếp chuỗi không; điều đó khác dynamic typing như thế nào?
-    4. Static method hiding khác runtime dispatch của instance override ra sao?
+    1. With `Notification n = new EmailNotification()`, what type does the compiler see, and which `format()` implementation does the JVM invoke?
+    2. Why is `describe(Object)` selected when a variable has type `Object` despite holding a `String`, while `describe((String)value)` selects a different overload?
+    3. Can a string later be assigned to `var count = 10`, and how does this differ from dynamic typing?
+    4. How does static method hiding differ from runtime dispatch of overridden instance methods?
 
-    ### Kiểm tra khi chạy và thiết kế API
+    ### Runtime Checks and API Design
 
-    1. Vì sao `(String) Integer.valueOf(42)` có thể dẫn đến `ClassCastException`, còn `instanceof` pattern xử lý input không biết kiểu an toàn hơn?
-    2. Generics kiểm tra type argument tại compile time nhưng vì sao không thể `instanceof List<String>` khi nhận JSON?
-    3. Class<T>.isInstance/cast xác nhận điều gì và vì sao vẫn phải kiểm tra email trống, amount âm hoặc quyền nghiệp vụ?
-    4. Khi nào `instanceof` là phân loại ở boundary, khi nào thay bằng interface và polymorphism?
+    1. Why can `(String) Integer.valueOf(42)` lead to a `ClassCastException`, while pattern matching with `instanceof` handles inputs of unknown type more safely?
+    2. Generics check type arguments at compile time, so why can't `instanceof List<String>` be used when receiving JSON?
+    3. What does Class<T>.isInstance/cast validate, and why must empty emails, negative amounts, and business authorization still be checked?
+    4. When is `instanceof` appropriate for classification at a boundary, and when should interfaces and polymorphism be used instead?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Phân biệt hệ thống kiểu | Giải thích Java kiểu tĩnh vẫn có dynamic dispatch và phân biệt với Python/JavaScript. |
-    | Dự đoán dispatch | Đọc đúng kết quả overload(Object/String), override `format()` và static hiding. |
-    | Dùng kiểm tra kiểu an toàn | Phân loại `Object` bằng pattern `instanceof`/`Class.cast`, không downcast thiếu kiểm chứng. |
-    | Kiểm tra dữ liệu ngoài | Chuyển `List<?>` sang `List<String>` được kiểm tra từng phần tử và vẫn xác thực quy tắc nghiệp vụ. |
+    | Distinguishing type systems | Explain how statically typed Java supports dynamic dispatch and how it differs from Python/JavaScript. |
+    | Predicting dispatch | Interpret overload(Object/String) results, overridden `format()`, and static method hiding correctly. |
+    | Using safe type checks | Classify `Object` with pattern matching via `instanceof`/`Class.cast`, without unchecked downcasts. |
+    | Validating external data | Convert `List<?>` to `List<String>` with per-element checks while still validating business rules. |
 - id: language-mechanics-005
-  title: Toán tử, thuộc tính và quy ước của ngôn ngữ
+  title: Operators, Properties, and Language Conventions
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Toán tử, thuộc tính và quy ước của ngôn ngữ**
+    **Operators, Properties, and Language Conventions**
 
-    Sử dụng toán tử, numeric promotion, short-circuit, field/accessor và quy ước Java để xây API OOP rõ nghĩa, tránh sai số, overflow và rò rỉ trạng thái. Bài phân biệt `==` với value equality, JavaBeans property với field, `record` accessor với getter, cũng như `final`, `static`, `var` và tính bất biến thực sự.
+    Use operators, numeric promotion, short-circuit evaluation, fields/accessors, and Java conventions to build meaningful OOP APIs while avoiding calculation errors, overflow, and state leaks. The lesson distinguishes `==` from value equality, JavaBeans properties from fields, `record` accessors from getters, and `final`, `static`, and `var` from genuine immutability.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Toán tử và đánh giá biểu thức
+    ### Operators and Expression Evaluation
 
-    1. Vì sao `5 / 2` nhận 2 trước khi gán vào double và `(double)5/2` ra 2.5?
-    2. Precedence, associativity và evaluation order là ba khái niệm khác nhau ra sao trong `"Tổng: " + 1 + 2` và `x = y = z`?
-    3. Vì sao `byte value = 127; value += 1` có thể âm, còn `Math.addExact` ném khi tràn số quan trọng?
-    4. Vì sao `&&` giữ được null guard nhưng `&` vẫn đánh giá vế phải; `>>` khác `>>>` khi dịch số âm?
+    1. Why does `5 / 2` evaluate to 2 before assignment to a double, while `(double)5/2` yields 2.5?
+    2. How do precedence, associativity, and evaluation order differ in `"Tổng: " + 1 + 2` and `x = y = z`?
+    3. Why can `byte value = 127; value += 1` become negative, while `Math.addExact` throws on overflow when it matters?
+    4. Why does `&&` preserve a null guard while `&` still evaluates the right operand, and how do `>>` and `>>>` differ when shifting negative numbers?
 
-    ### Field, property và hành vi
+    ### Fields, Properties, and Behavior
 
-    1. Với String, array và record, khi nào dùng `==`, `equals`, `Arrays.equals` và so sánh BigDecimal bằng `compareTo`?
-    2. Field, JavaBeans property (`getX/isX`), local variable và record component accessor `x()` khác nhau thế nào?
-    3. Vì sao `final List` vẫn mutable và khi nào cần `List.copyOf`/hành vi nghiệp vụ thay setter?
-    4. `Product` record cùng `CartLine.increaseQuantity()` kiểm soát đơn giá và quantity như thế nào?
+    1. For String, arrays, and records, when should `==`, `equals`, `Arrays.equals`, or BigDecimal's `compareTo` be used?
+    2. How do fields, JavaBeans properties (`getX/isX`), local variables, and record component accessors `x()` differ?
+    3. Why does a `final List` remain mutable, and when are `List.copyOf` or domain behaviors needed instead of setters?
+    4. How do the `Product` record and `CartLine.increaseQuantity()` control unit prices and quantities?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Tính biểu thức đúng | Dự đoán chia nguyên, promotion, short-circuit, bit shift, `?:` và `+=` narrowing. |
-    | Bảo vệ phép tính | Áp dụng Math.addExact/multiplyExact, đơn vị VND và số thập phân thích hợp. |
-    | Thiết kế đóng gói | Phân biệt field, getter/setter, record accessor, `final` và dữ liệu mutable. |
-    | Kiểm chứng tác động | Viết API tăng quantity có validate và test state giữ nguyên khi lỗi. |
+    | Evaluating expressions correctly | Predict integer division, numeric promotion, short-circuiting, bit shifts, `?:`, and narrowing with `+=`. |
+    | Protecting calculations | Apply Math.addExact/multiplyExact, VND currency units, and appropriate decimal representations. |
+    | Designing encapsulation | Distinguish fields, getters/setters, record accessors, `final`, and mutable data. |
+    | Verifying effects | Write a quantity-increase API with validation and test that failures leave state unchanged. |
 - id: language-mechanics-006
-  title: Hợp đồng so sánh bằng và mã băm
+  title: Equality and Hash Code Contracts
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Hợp đồng so sánh bằng và mã băm**
+    **Equality and Hash Code Contracts**
 
-    Định nghĩa **value equality** hoặc identity có chủ đích qua `equals(Object)` và `hashCode()` để `HashSet`/`HashMap` nhận biết key đúng. Bài làm rõ phản xạ/đối xứng/bắc cầu, hash collision, key bất biến, field tham gia equality, array/record/BigDecimal và bẫy inheritance hoặc entity JPA generated ID.
+    Define **value equality** or identity deliberately through `equals(Object)` and `hashCode()` so `HashSet`/`HashMap` recognize keys correctly. The lesson covers reflexivity, symmetry, transitivity, hash collisions, immutable keys, fields participating in equality, arrays/records/BigDecimal, and pitfalls involving inheritance or JPA entities with generated IDs.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Hợp đồng equals và hash
+    ### Equals and Hash Contracts
 
-    1. `==` giữa hai reference khác gì `equals` của `CustomerId` và comparison `Comparable` trả 0?
-    2. Năm tính chất của `equals(Object)` là gì; tại sao `equals(a,b)` true buộc hash bằng nhau nhưng hash bằng nhau không chứng minh equals?
-    3. Vì sao `HashSet.add`, `HashMap.get` cần cả `hashCode` và `equals` để xử lý collision?
-    4. Tại sao equality theo `tenantId` + `customerId` phải có hash nhất quán với đúng ngữ nghĩa định danh?
+    1. How does `==` between references differ from `equals` on `CustomerId` and a `Comparable` comparison returning 0?
+    2. What are the five properties of `equals(Object)`, and why does `equals(a,b)` being true require equal hash codes while equal hash codes do not prove equality?
+    3. Why do `HashSet.add` and `HashMap.get` need both `hashCode` and `equals` to handle collisions?
+    4. Why must equality based on `tenantId` + `customerId` have a hash consistent with the same identity semantics?
 
-    ### Các bẫy vòng đời và cấu trúc dữ liệu
+    ### Lifecycle and Data Structure Pitfalls
 
-    1. Điều gì xảy ra nếu thay `username` của key sau `Map.put`, dù equals/hashCode được tính từ cùng field?
-    2. Vì sao `Point.equals(ColoredPoint)` có thể không đối xứng và `final`/composition giúp hạn chế lỗi?
-    3. Record chứa array có tự `deepEquals` không và khi nào cần `Arrays.equals` + `Arrays.hashCode` cùng defensive copy?
-    4. Tại sao `BigDecimal("1.0")` khác `BigDecimal("1.00")` trong HashSet nhưng có thể được TreeSet xem là một giá trị?
-    5. Với JPA entity có ID do DB cấp và proxy, tại sao không có một công thức equals/hashCode dùng cho mọi lifecycle?
+    1. What happens if a key's `username` changes after `Map.put`, even when equals/hashCode use the same field?
+    2. Why can `Point.equals(ColoredPoint)` violate symmetry, and how can `final`/composition help avoid the problem?
+    3. Does a record containing an array automatically use `deepEquals`, and when are `Arrays.equals` + `Arrays.hashCode` and defensive copying needed?
+    4. Why do `BigDecimal("1.0")` and `BigDecimal("1.00")` differ in a HashSet but potentially count as one value in a TreeSet?
+    5. For a JPA entity with a database-generated ID and proxy, why is there no single equals/hashCode formula for every lifecycle?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Viết value object an toàn | Cài `CustomerId`/`ProductKey` bất biến với equals/hashCode theo tập field định danh nhất quán. |
-    | Kiểm chứng hash collection | Chứng minh key mới nhưng bằng giá trị tra được `HashMap`, thêm vào `HashSet` không tăng số phần tử. |
-    | Phát hiện rủi ro | Chỉ ra mutable key, hash collision, lỗi symmetry do inheritance và sự khác biệt comparator. |
-    | Xử lý kiểu đặc biệt | Chọn đúng equality/hash cho array, record, BigDecimal và đánh giá entity ORM theo lifecycle. |
-    | Kiểm thử hợp đồng | Lập test reflexive/symmetric/transitive/null/hash consistency và key stability. |
+    | Writing safe value objects | Implement immutable `CustomerId`/`ProductKey` values with equals/hashCode based on a consistent set of identity fields. |
+    | Verifying hash collections | Show that an equal-valued new key can retrieve an entry from `HashMap` and adding it to `HashSet` does not increase the element count. |
+    | Detecting risks | Identify mutable keys, hash collisions, symmetry violations caused by inheritance, and comparator differences. |
+    | Handling special types | Choose appropriate equality/hash behavior for arrays, records, and BigDecimal, and evaluate ORM entities across their lifecycles. |
+    | Testing contracts | Design tests for reflexivity, symmetry, transitivity, null handling, hash consistency, and key stability. |
 - id: language-mechanics-007
-  title: Biểu diễn chuỗi và thông tin chẩn đoán của đối tượng
+  title: Object String Representations and Diagnostics
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Biểu diễn chuỗi và thông tin chẩn đoán của đối tượng**
+    **Object String Representations and Diagnostics**
 
-    Thiết kế **`toString()` như biểu diễn chẩn đoán** giúp người phát triển theo dõi ID/trạng thái nhưng tránh lộ bí mật và chi phí I/O. Qua `Order` và `OrderDiagnostic`, bài phân biệt chuỗi cho developer với DTO/API/customer message, tìm hiểu `Object.toString`, record/array/collection, logging, stack trace và lỗi đệ quy do quan hệ hai chiều.
+    Design **`toString()` as a diagnostic representation** to help developers track IDs and state without exposing secrets or incurring I/O costs. Through `Order` and `OrderDiagnostic`, the lesson distinguishes developer-facing strings from DTOs, APIs, and customer messages, and examines `Object.toString`, records/arrays/collections, logging, stack traces, and recursion errors caused by bidirectional relationships.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Biểu diễn đối tượng và dữ liệu an toàn
+    ### Object Representations and Safe Data
 
-    1. Vì sao `ClassName@hexHash` của Object không phải địa chỉ bộ nhớ hay ID nghiệp vụ đáng tin?
-    2. `println(order)` hoặc `String.valueOf(order)` dùng `toString` ra sao và khác gọi trực tiếp `nullRef.toString()` như thế nào?
-    3. Trong `Order.toString`, tại sao nên giữ `orderId`, `status`, `itemCount`, `traceId` mà không ghi email/token?
-    4. Vì sao `record Credentials` tự sinh toString có thể lộ password và array cần `Arrays.toString/deepToString`?
+    1. Why is Object's `ClassName@hexHash` neither a reliable memory address nor a business ID?
+    2. How do `println(order)` and `String.valueOf(order)` use `toString`, and how does that differ from directly calling `nullRef.toString()`?
+    3. Why should `Order.toString` include `orderId`, `status`, `itemCount`, and `traceId` but omit email addresses and tokens?
+    4. Why might the automatically generated toString of `record Credentials` expose passwords, and why do arrays need `Arrays.toString/deepToString`?
 
-    ### Chẩn đoán và tác dụng phụ
+    ### Diagnostics and Side Effects
 
-    1. Vì sao hai object `Parent`/`Child` tự in nhau có thể gây `StackOverflowError`, và cách hiển thị quan hệ bằng ID giúp gì?
-    2. Tại sao `toString` không nên query repository, duyệt graph lớn hoặc trở thành định dạng JSON/schema của API?
-    3. Logging có level, supplier/placeholder và truyền Throwable khác gì chỉ nối chuỗi message?
-    4. Test nào xác nhận chẩn đoán đủ trường hữu ích nhưng không lộ secret, ngay cả khi format thay đổi?
+    1. Why can `Parent`/`Child` objects printing each other cause `StackOverflowError`, and how does representing relationships by ID help?
+    2. Why shouldn't `toString` query a repository, traverse a large graph, or become an API's JSON/schema format?
+    3. How does logging with levels, suppliers/placeholders, and a passed Throwable differ from simply concatenating message strings?
+    4. Which tests confirm that diagnostics include useful fields without exposing secrets, even as formatting changes?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Override toString có chủ đích | Tạo diagnostic gọn, không null, không side effect với allowlist field phù hợp. |
-    | Kiểm soát dữ liệu nhạy cảm | Phân biệt trường được phép log và email/token cần loại bỏ; viết test không rò rỉ. |
-    | Nhận diện recursion và hiệu năng | Chỉ ra vòng tham chiếu, lazy loading, list lớn và biện pháp snapshot cạn. |
-    | Phân biệt đích biểu diễn | Thiết kế DTO/public view/structured log riêng thay vì parse hoặc serialize `toString`. |
+    | Overriding toString deliberately | Create concise, non-null, side-effect-free diagnostics with an appropriate allowlist of fields. |
+    | Controlling sensitive data | Distinguish fields safe to log from email addresses/tokens that must be omitted and write leak-prevention tests. |
+    | Recognizing recursion and performance costs | Identify reference cycles, lazy loading, large lists, and shallow-snapshot mitigations. |
+    | Separating representation purposes | Design separate DTOs, public views, and structured logs instead of parsing or serializing `toString`. |
 - id: language-mechanics-008
-  title: Ngoại lệ, trạng thái lỗi và hợp đồng phương thức
+  title: Exceptions, Failure States, and Method Contracts
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Ngoại lệ, trạng thái lỗi và hợp đồng phương thức**
+    **Exceptions, Failure States, and Method Contracts**
 
-    Thiết kế **method contract** bao gồm tiền/hậu điều kiện, invariant, side effect và failure semantics. Qua `StockService.reserve`, phân biệt `Reserved/Rejected` cho kết quả nghiệp vụ dự kiến, `IllegalArgumentException` cho đầu vào sai, exception hạ tầng cho sự cố; hiểu checked/unchecked, propagation/cause, try-with-resources và bảo vệ trạng thái khi lỗi/đồng thời.
+    Design **method contracts** covering preconditions, postconditions, invariants, side effects, and failure semantics. Through `StockService.reserve`, distinguish `Reserved/Rejected` for expected business outcomes, `IllegalArgumentException` for invalid inputs, and infrastructure exceptions for failures; understand checked/unchecked exceptions, propagation/causes, try-with-resources, and state protection during failures and concurrent operations.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Kết quả, ngoại lệ và hợp đồng
+    ### Results, Exceptions, and Contracts
 
-    1. Vì sao OUT_OF_STOCK, quantity âm và database unavailable cần kết quả hoặc exception có ý nghĩa khác nhau?
-    2. Precondition, postcondition, invariant, failure contract và atomicity nói gì về trạng thái sau `reserve`?
-    3. Khi nào nên chọn `boolean`, `Optional`, sealed `ReserveResult` hoặc domain exception?
-    4. Checked exception khác unchecked ở quy tắc compile-time nào và `throw` khác `throws` ra sao?
+    1. Why do OUT_OF_STOCK, negative quantities, and unavailable databases require results or exceptions with different meanings?
+    2. What do preconditions, postconditions, invariants, failure contracts, and atomicity say about the state after `reserve`?
+    3. When should `boolean`, `Optional`, a sealed `ReserveResult`, or a domain exception be chosen?
+    4. Which compile-time rules distinguish checked from unchecked exceptions, and how do `throw` and `throws` differ?
 
-    ### Propagation, nguyên tử và thay thế
+    ### Propagation, Atomicity, and Substitution
 
-    1. Vì sao `new RuntimeException(e.getMessage())` mất cause và nên translate exception ở tầng nào?
-    2. Try-with-resources giữ primary/suppressed exception thế nào và vì sao cleanup không đồng nghĩa rollback?
-    3. Nếu đã trừ balance rồi email ném lỗi, bắt exception có tự hoàn tác không; transaction/outbox/idempotency cần giải quyết điều gì?
-    4. Trong override theo LSP, việc thêm checked exception hoặc đổi nghĩa Optional.empty có thể phá hợp đồng như thế nào?
-    5. Vì sao timeout không luôn retry an toàn và `InterruptedException` cần xử lý/khôi phục interrupt ra sao?
+    1. Why does `new RuntimeException(e.getMessage())` lose the cause, and at which layer should exceptions be translated?
+    2. How does try-with-resources preserve primary and suppressed exceptions, and why is cleanup not the same as rollback?
+    3. If a balance has already been debited before sending email throws an exception, does catching the exception undo the debit, and what must transactions/outboxes/idempotency address?
+    4. Under LSP, how can adding a checked exception or changing the meaning of Optional.empty in an override break a contract?
+    5. Why is retrying after a timeout not always safe, and how should `InterruptedException` be handled or the interrupt status restored?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | Viết hợp đồng rõ ràng | Mô tả đầu vào, kết quả, từ chối và trạng thái giữ nguyên khi thất bại. |
-    | Phân loại lỗi đúng tầng | Thiết kế Result/Optional hoặc exception có lý do; không che DB failure thành kết quả không tồn tại. |
-    | Giữ nguyên nhân và tài nguyên | Wrap exception có cause, dùng try-with-resources và phân biệt suppressed exceptions. |
-    | Bảo đảm trạng thái | Viết test thành công/từ chối/đối số sai, xác minh không thay đổi state ngoài ý muốn. |
-    | Đánh giá rủi ro phân tán | Nêu transaction, optimistic lock, retry và idempotency khi có side effect. |
+    | Writing clear contracts | Describe inputs, results, rejection behavior, and state that remains unchanged after failure. |
+    | Classifying failures at the right layer | Design meaningful Result/Optional values or exceptions without masking database failures as missing data. |
+    | Preserving causes and resources | Wrap exceptions with their causes, use try-with-resources, and distinguish suppressed exceptions. |
+    | Preserving state | Test success, rejection, and invalid arguments, verifying that no unintended state changes occur. |
+    | Evaluating distributed-system risks | Explain transactions, optimistic locking, retries, and idempotency when side effects are involved. |
 - id: language-mechanics-009
-  title: Khác biệt ngôn ngữ khi hiện thực cùng một thiết kế OOP
+  title: Language Differences When Implementing the Same OOP Design
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Khác biệt ngôn ngữ khi hiện thực cùng một thiết kế OOP**
+    **Language Differences When Implementing the Same OOP Design**
 
-    So sánh cách **cùng một mô hình `ShippingPolicy`** được thể hiện bằng Java, Kotlin, Python, TypeScript và C#, nhận diện khác biệt nominal/structural typing, record/data class/protocol/interface, semantics equality/nullability, số nguyên/decimal và runtime validation. Trọng tâm là giữ hợp đồng phí vận chuyển đúng khi port code thay vì sao chép từng class.
+    Compare how **the same `ShippingPolicy` model** is represented in Java, Kotlin, Python, TypeScript, and C#, identifying differences in nominal/structural typing, records/data classes/protocols/interfaces, equality/nullability semantics, integers/decimals, and runtime validation. The focus is on preserving the shipping-fee contract when porting code rather than copying classes one by one.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Cùng yêu cầu qua năm ngôn ngữ
+    ### The Same Requirements Across Five Languages
 
-    1. Quy tắc `standard = 20.000 VND`, `express = 35.000 + 8.000 × ceil(grams/1000)` được biểu diễn bằng cùng những vai trò nào?
-    2. Java/Kotlin/C# khai báo hợp đồng interface theo kiểu nominal thế nào, khác Python Protocol và TypeScript structural typing ra sao?
-    3. Java record, Kotlin data class, Python frozen dataclass, TypeScript Readonly, C# readonly record struct khác nhau về reference/value và bất biến sâu như thế nào?
-    4. Vì sao Python `bool` cần kiểm tra riêng dù kế thừa int, còn TypeScript JSON/number cần runtime validation?
+    1. Which shared roles represent the rules `standard = 20.000 VND` and `express = 35.000 + 8.000 × ceil(grams/1000)`?
+    2. How do Java/Kotlin/C# declare nominal interface contracts, and how does this differ from Python Protocol and TypeScript structural typing?
+    3. How do Java records, Kotlin data classes, Python frozen dataclasses, TypeScript Readonly, and C# readonly record structs differ in reference/value behavior and deep immutability?
+    4. Why does Python `bool` require a separate check despite inheriting from int, while TypeScript JSON/number values require runtime validation?
 
-    ### Port thiết kế và giữ tính đúng đắn
+    ### Porting Designs While Preserving Correctness
 
-    1. Vì sao Java/Kotlin/C# dùng chia nguyên, Python dùng `//`, TypeScript dùng `Math.ceil` trong bài tính trọng lượng dương?
-    2. Vì sao Java record `equals`, Kotlin `==`/`===`, Python `==`/`is`, JS `===` và C# record equality không được dịch máy móc?
-    3. Những test nào bảo đảm mức 1, 1000, 1001, 1200, 100000 gram cùng trường hợp lỗi giữ nguyên hành vi giữa các triển khai?
-    4. Khi nào thay interface một-method bằng function type/callable mà vẫn giữ đúng ranh giới policy và service?
+    1. Why do Java/Kotlin/C# use integer division, Python use `//`, and TypeScript use `Math.ceil` when calculating fees for positive weights?
+    2. Why should Java record `equals`, Kotlin `==`/`===`, Python `==`/`is`, JS `===`, and C# record equality not be translated mechanically?
+    3. Which tests ensure that 1, 1000, 1001, 1200, and 100000 grams and error cases behave consistently across implementations?
+    4. When can a single-method interface be replaced with a function type/callable while preserving the policy/service boundary?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected outcome |
     | --- | --- |
-    | So sánh cơ chế ngôn ngữ | Nêu được nominal/structural typing, nullability và runtime checks của năm ngôn ngữ. |
-    | Giữ hợp đồng phí vận chuyển | Viết/kiểm thử công thức standard/express và từ chối gram ngoài 1–100000. |
-    | Phân biệt equality và mutability | Chỉ ra khác biệt reference/value, readonly/final và collection mutable khi chuyển code. |
-    | Port có kiểm chứng | Lập bảng ca parity cho các trọng lượng biên, mã không hỗ trợ và dữ liệu JSON sai kiểu. |
+    | Comparing language mechanisms | Explain nominal/structural typing, nullability, and runtime checks across all five languages. |
+    | Preserving shipping-fee contracts | Implement/test the standard/express formulas and reject weights outside 1–100000 grams. |
+    | Distinguishing equality and mutability | Identify differences in reference/value semantics, readonly/final, and mutable collections when porting code. |
+    | Porting with verification | Build a parity-test matrix for boundary weights, unsupported codes, and JSON data with incorrect types. |

@@ -1,54 +1,54 @@
 <a id="back-to-top"></a>
 
-# Lỗi thiết kế
+# Design Pitfalls
 
 ## Menu
-- [Lớp ôm quá nhiều trách nhiệm](#design-pitfalls-001)
-- [Trạng thái công khai và mất điều kiện bất biến](#design-pitfalls-002)
-- [Getter, setter tràn lan nhưng thiếu hành vi](#design-pitfalls-003)
-- [Kế thừa chỉ để dùng lại vài phương thức](#design-pitfalls-004)
-- [Lạm dụng ép kiểu và kiểm tra kiểu](#design-pitfalls-005)
-- [Giao diện quá lớn hoặc quá nhiều lớp trừu tượng](#design-pitfalls-006)
-- [Phụ thuộc vòng và truy cập sâu vào đối tượng](#design-pitfalls-007)
-- [Trạng thái dùng chung khó kiểm soát](#design-pitfalls-008)
-- [Đối tượng có thể thay đổi làm sai phép so sánh hoặc mã băm](#design-pitfalls-009)
-- [Lạm dụng mẫu thiết kế và trừu tượng hóa quá sớm](#design-pitfalls-010)
+- [Classes with too many responsibilities](#design-pitfalls-001)
+- [Exposed state and broken invariants](#design-pitfalls-002)
+- [Excessive getters and setters without behavior](#design-pitfalls-003)
+- [Inheritance solely to reuse a few methods](#design-pitfalls-004)
+- [Overusing casts and type checks](#design-pitfalls-005)
+- [Oversized interfaces or too many abstraction layers](#design-pitfalls-006)
+- [Circular dependencies and deep object navigation](#design-pitfalls-007)
+- [Hard-to-control shared state](#design-pitfalls-008)
+- [Mutable objects breaking equality or hash codes](#design-pitfalls-009)
+- [Overusing design patterns and premature abstraction](#design-pitfalls-010)
 
-## <a id="design-pitfalls-001">Lớp ôm quá nhiều trách nhiệm</a>
+## <a id="design-pitfalls-001">Classes with too many responsibilities</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Lớp ôm quá nhiều trách nhiệm (God Class): nhận biết và refactor đúng cách
+# Classes with too many responsibilities (God Class): recognizing and refactoring them correctly
 
-> **Chủ đề:** OOP → Lỗi thiết kế → Lớp ôm quá nhiều trách nhiệm.  
-> **Mục tiêu:** Hiểu vì sao một lớp có thể trở thành điểm nghẽn bảo trì, phân biệt “lớp dài” với “lớp nhiều trách nhiệm”, phát hiện các dấu hiệu qua lý do thay đổi và mức liên kết giữa các phương thức, rồi refactor bằng Java thành các phần có ranh giới rõ mà vẫn giữ nguyên hành vi nghiệp vụ.
+> **Topic:** OOP → Design Pitfalls → Classes with too many responsibilities.  
+> **Objective:** Understand why a class can become a maintenance bottleneck, distinguish a "long class" from a "class with too many responsibilities," identify warning signs through reasons to change and cohesion among methods, and refactor into well-defined parts in Java while preserving business behavior.
 
-## 1. “Lớp ôm quá nhiều trách nhiệm” nghĩa là gì?
+## 1. What does "a class with too many responsibilities" mean?
 
-**God Class** (đôi khi gọi *Blob*, *Large Class* hoặc *Bloaters* trong các phân loại code smell) là một dấu hiệu thiết kế: một lớp gom quá nhiều việc đáng lẽ cần thay đổi, kiểm thử và phát triển tương đối độc lập. Nó có thể biết quá nhiều về các phần còn lại của hệ thống, chứa lượng lớn trạng thái không liên quan và điều phối mọi thay đổi thông qua chính mình.
+**God Class** (sometimes called *Blob*, *Large Class*, or *Bloaters* in code-smell taxonomies) describes a design smell: one class combines too many concerns that should be able to change, be tested, and evolve relatively independently. It may know too much about the rest of the system, hold a large amount of unrelated state, and channel every change through itself.
 
-Ví dụ một `OrderManager` vừa:
+For example, an `OrderManager` might simultaneously:
 
-- xác thực dữ liệu đơn hàng;
-- tính giá, thuế và khuyến mãi;
-- lưu đơn vào database;
-- gọi cổng thanh toán;
-- gửi email thông báo;
-- tạo PDF hóa đơn;
-- định dạng dữ liệu cho REST API.
+- validate order data;
+- calculate prices, taxes, and discounts;
+- persist orders to a database;
+- call a payment gateway;
+- send notification emails;
+- generate invoice PDFs;
+- format data for a REST API.
 
-Chỉ cần đổi công thức thuế, đổi hệ quản trị cơ sở dữ liệu hoặc sửa template email đều có thể phải mở cùng file `OrderManager.java`. Những thay đổi có **nguyên nhân khác nhau** va chạm trong một lớp.
+Changing a tax formula, switching database management systems, or updating an email template may all require editing the same `OrderManager.java` file. Changes arising for **different reasons** collide within one class.
 
-Vấn đề chính không phải “bao nhiêu dòng là quá nhiều?”. **Một lớp 500 dòng xử lý một thuật toán có tính gắn kết cao có thể hợp lý**, trong khi một lớp 100 dòng vừa tính thuế, gửi email và gọi HTTP có thể đã có quá nhiều trách nhiệm.
+The central question is not "how many lines are too many?" **A 500-line class implementing one highly cohesive algorithm can be reasonable**, while a 100-line class that calculates taxes, sends emails, and makes HTTP calls may already have too many responsibilities.
 
-Một tiêu chí thực tế là **lý do để thay đổi**: lớp có đang phải thay đổi vì nhiều quyết định nghiệp vụ hoặc nhiều nhóm người/phần hệ thống khác nhau hay không?
+A practical criterion is the **reason to change**: must the class change because of multiple business decisions or the needs of different groups of people or parts of the system?
 
-## 2. Vì sao kiểu thiết kế này xuất hiện?
+## 2. Why does this design arise?
 
-Lúc ban đầu, để hoàn thành nhanh một chức năng, người viết thường đặt validation, tính toán, persistence và notification vào một phương thức. Khi có yêu cầu mới, họ bổ sung thêm một nhánh `if` hoặc một dependency vào cùng lớp vì “mọi thứ liên quan đơn hàng đã ở đây”.
+Initially, to deliver a feature quickly, developers often put validation, calculations, persistence, and notifications into one method. When new requirements arrive, they add another `if` branch or dependency to the same class because "everything related to orders is already here."
 
-Qua thời gian, lớp dần trở thành điểm tập trung kiến thức:
+Over time, the class becomes a central repository of knowledge:
 
 ~~~mermaid
 flowchart LR
@@ -62,48 +62,48 @@ flowchart LR
     C --> T["Payment gateway"]
 ~~~
 
-Các trách nhiệm này cùng liên quan đến **đơn hàng**, nhưng không nhất thiết cùng một **lý do để thay đổi**. Chỉ dùng một tên miền nghiệp vụ chung như `Order` không chứng minh rằng chúng phải nằm trong một lớp.
+These responsibilities all concern **orders**, but they do not necessarily share the same **reason to change**. A common business domain name such as `Order` does not prove they belong in the same class.
 
-Một số nguyên nhân phổ biến là thiếu ranh giới module, sợ tạo thêm lớp, copy-paste, sự phụ thuộc trực tiếp vào framework hoặc SDK, deadline gấp, và quá ít kiểm thử để refactor an toàn.
+Common causes include missing module boundaries, reluctance to add classes, copy-paste, direct dependencies on frameworks or SDKs, tight deadlines, and too few tests to refactor safely.
 
-### Phân biệt thuật ngữ
+### Distinguishing the terms
 
-| Thuật ngữ | Trọng tâm | Quan hệ với God Class |
+| Term | Main concern | Relationship to God Class |
 |---|---|---|
-| **God Class / Blob** | Biết và làm quá nhiều việc, thường ảnh hưởng rộng | Dạng điển hình của lớp ôm nhiều trách nhiệm |
-| **Large Class** | Kích thước lớn: nhiều dòng, field, method | Một dấu hiệu để điều tra, **chưa đủ** kết luận |
-| **Low Cohesion** | Các field/method không cùng phục vụ một mục đích nhất quán | Bằng chứng khá mạnh nếu đi kèm nhiều lý do thay đổi |
-| **High Coupling** | Phụ thuộc trực tiếp vào nhiều class hoặc module khác | Làm phạm vi ảnh hưởng của thay đổi lớn hơn |
-| **SRP violation** | Một module phục vụ nhiều actor/lý do thay đổi độc lập | Cách diễn giải nguyên lý thiết kế đằng sau nhiều God Class |
-| **Anemic Domain Model** | Domain object ít hành vi nghiệp vụ, logic dồn vào service | Có thể đi cùng God Service, nhưng là vấn đề khác |
+| **God Class / Blob** | Knows and does too much, often with broad impact | A typical example of a class with too many responsibilities |
+| **Large Class** | Large size: many lines, fields, or methods | A warning sign worth investigating, **not sufficient** for a diagnosis |
+| **Low Cohesion** | Fields/methods do not serve a consistent shared purpose | Fairly strong evidence when combined with multiple reasons to change |
+| **High Coupling** | Depends directly on many other classes or modules | Widens the impact of changes |
+| **SRP violation** | One module serves multiple independent actors/reasons to change | The design-principle interpretation behind many God Classes |
+| **Anemic Domain Model** | Domain objects have little business behavior; services hold most logic | May coexist with a God Service, but is a different issue |
 
-Một class dài **không đương nhiên** là God Class. Ngược lại, một lớp “manager” rất ngắn nhưng chuyển hàng chục yêu cầu cho các API khác nhau cũng có thể là trung tâm phụ thuộc quá rộng.
+A long class is **not necessarily** a God Class. Conversely, a very short "manager" class that forwards dozens of requests to different APIs may still be a hub with excessively broad dependencies.
 
-## 3. Dấu hiệu nhận biết qua code và lịch sử thay đổi
+## 3. Warning signs in code and change history
 
-Quan sát mã nguồn và hỏi:
+Inspect the source code and ask:
 
-| Dấu hiệu | Ví dụ | Hệ quả |
+| Sign | Example | Consequence |
 |---|---|---|
-| Nhiều lý do sửa cùng một file | Đổi thuế, SQL, email đều sửa `OrderManager` | Merge conflict, review khó, regression khó khoanh vùng |
-| Field thành từng nhóm tách biệt | `dbConnection`, `mailClient`, `pdfWriter`, `taxRate` | Trạng thái của lớp có thể không cùng phục vụ một mục đích |
-| Phương thức không dùng chung dữ liệu | `sendEmail()` không dùng dữ liệu của `calculateTax()` | Tính gắn kết thấp |
-| Public API phình to | `createOrder`, `exportCsv`, `resetPassword`, `syncWarehouse` | Client phải nhìn thấy nhiều năng lực không cần thiết |
-| Branch và side effect trộn lẫn | Tính giá giữa các lệnh gọi DB và HTTP | Test chậm, khó tái hiện lỗi |
-| Khó khởi tạo trong unit test | Muốn test phép cộng phải cấu hình DB/mail/SDK | Trách nhiệm chưa được cô lập |
-| Thay đổi nhỏ gây ảnh hưởng rộng | Sửa email template làm test tính giá lỗi | Ranh giới giữa các việc yếu |
+| Many reasons to edit the same file | Tax, SQL, and email changes all modify `OrderManager` | Merge conflicts, difficult reviews, and regressions that are hard to isolate |
+| Fields form distinct clusters | `dbConnection`, `mailClient`, `pdfWriter`, `taxRate` | The class's state may not serve a common purpose |
+| Methods do not share data | `sendEmail()` does not use data from `calculateTax()` | Low cohesion |
+| An inflated public API | `createOrder`, `exportCsv`, `resetPassword`, `syncWarehouse` | Clients must see capabilities they do not need |
+| Branches mixed with side effects | Price calculations interleaved with DB and HTTP calls | Slow tests and failures that are difficult to reproduce |
+| Difficult setup in unit tests | Testing arithmetic requires DB/mail/SDK configuration | Responsibilities have not been isolated |
+| Small changes have a wide impact | Updating an email template breaks pricing tests | Weak boundaries between concerns |
 
-Dấu hiệu mạnh nhất thường là **nhiều thay đổi không liên quan liên tục chạm cùng một lớp**. Khi audit, nên xem lịch sử thay đổi, các use case thực tế và dependency graph; không vội đoán chỉ từ tên `*Manager` hoặc `*Service`.
+The strongest sign is often **repeated unrelated changes touching the same class**. During an audit, inspect change history, actual use cases, and the dependency graph; avoid judging solely by names such as `*Manager` or `*Service`.
 
-### “Một trách nhiệm” không đồng nghĩa “một phương thức”
+### "One responsibility" does not mean "one method"
 
-Theo **Single Responsibility Principle (SRP)**, một module nên có một lý do thay đổi có tính nhất quán. Một `PriceCalculator` vẫn có thể có các phương thức `calculateSubtotal`, `calculateDiscount`, `calculateTax` nếu chúng cùng thuộc **chính sách tính giá** và thực sự thay đổi cùng nhau.
+According to the **Single Responsibility Principle (SRP)**, a module should have one coherent reason to change. A `PriceCalculator` can still provide `calculateSubtotal`, `calculateDiscount`, and `calculateTax` if they all belong to the **pricing policy** and really do change together.
 
-Ngược lại, chia một method 100 dòng thành 10 private methods **không tự giải quyết God Class** nếu cùng một lớp vẫn làm cả tính tiền, SQL và SMTP.
+Conversely, splitting a 100-line method into 10 private methods **does not, by itself, fix a God Class** if that class still handles payment calculations, SQL, and SMTP.
 
-## 4. Mã có mùi thiết kế: tất cả trong một lớp
+## 4. A design smell: everything in one class
 
-Đoạn sau là **ví dụ cố ý chưa tốt**, minh họa một ứng dụng đặt hàng:
+The following is an **intentionally flawed example** of an ordering application:
 
 ~~~java
 import java.math.BigDecimal;
@@ -143,15 +143,15 @@ final class AllInOneOrderService {
 }
 ~~~
 
-Đây là một snippet minh họa *code smell*, **không phải triển khai production**: nó chưa validate `items`, số lượng, đơn giá, trùng mã đơn và lỗi khi gửi thông báo. Những thiếu sót đó cũng thể hiện một vấn đề: càng nhiều việc nằm trong cùng hàm, càng dễ bỏ sót hợp đồng ở các ranh giới.
+This snippet illustrates a *code smell*; it is **not a production implementation**. It does not validate `items`, quantities, unit prices, duplicate order IDs, or notification failures. These omissions also illustrate the problem: the more concerns one function handles, the easier it is to overlook contracts at the boundaries.
 
-Giả sử cần đổi email sang SMS. Ta phải sửa chính lớp chứa công thức tính giá. Nếu thay `HashMap` bằng JPA, vẫn sửa cùng lớp. Nếu muốn unit test giá của hai mặt hàng mà không sinh thông báo, test phải tìm cách né side effect.
+Suppose email must be replaced with SMS. We would have to edit the class containing the pricing formula. Replacing `HashMap` with JPA would again modify that class. To unit-test the price of two items without sending a notification, the test would have to avoid the side effect.
 
-Có thể thêm hàng loạt private method, nhưng **các nguyên nhân thay đổi vẫn sống chung trong `AllInOneOrderService`**.
+We could add many private methods, but **the reasons to change would still coexist in `AllInOneOrderService`**.
 
-## 5. Thiết kế lại: chia theo ranh giới trách nhiệm
+## 5. Redesign: split along responsibility boundaries
 
-Một hướng refactor là giữ một **use case điều phối** tương đối mỏng, còn các chính sách và tích hợp độc lập được đặt ở đúng nơi:
+One refactoring approach is to keep a relatively thin **orchestrating use case** and put independent policies and integrations in the appropriate places:
 
 ~~~mermaid
 flowchart TD
@@ -164,21 +164,21 @@ flowchart TD
     DB["Adapter DB thật sau này"] -.->|"implements"| REPO
 ~~~
 
-Cách chia này có ý nghĩa cụ thể:
+This separation has a concrete purpose:
 
-- **`PriceCalculator`:** tính số tiền từ các mặt hàng, không biết database hoặc người nhận email.
-- **`OrderRepository`:** hợp đồng lưu kết quả đơn hàng; adapter quyết định lưu vào đâu.
-- **`OrderNotifier`:** hợp đồng phát thông báo; adapter quyết định dùng email/SMS/log demo.
-- **`PlaceOrderUseCase`:** chịu trách nhiệm **quy trình đặt hàng**: nhận yêu cầu hợp lệ → tính tiền → tạo kết quả → yêu cầu lưu → yêu cầu thông báo.
-- **Composition root:** tạo và nối các đối tượng; đây là nơi được phép biết implementation hạ tầng.
+- **`PriceCalculator`:** calculates amounts from order items without knowing about the database or email recipient.
+- **`OrderRepository`:** defines a contract for saving order results; an adapter decides where to persist them.
+- **`OrderNotifier`:** defines a notification contract; an adapter chooses email, SMS, or demo logging.
+- **`PlaceOrderUseCase`:** owns the **order-placement workflow**: accept a valid request → calculate the amount → create the result → request persistence → request notification.
+- **Composition root:** creates and connects objects; this is where knowledge of infrastructure implementations belongs.
 
-**Lưu ý:** Việc use case gọi nhiều cộng tác viên không tự động khiến nó thành God Class. **Điều phối các bước của một use case** có thể là **một trách nhiệm gắn kết**. Vấn đề xuất hiện khi use case tự chứa logic SQL, quy tắc giá, SMTP, PDF và vô số use case không liên quan.
+**Note:** Calling several collaborators does not automatically make a use case a God Class. **Orchestrating the steps of one use case** can be **one cohesive responsibility**. Problems arise when the use case itself contains SQL logic, pricing rules, SMTP, PDF generation, and numerous unrelated use cases.
 
-## 6. Ví dụ Java 17 hoàn chỉnh, chạy độc lập
+## 6. Complete, standalone Java 17 example
 
-Ví dụ này dùng đơn vị tiền có hai chữ số thập phân để dễ quan sát phép tính; **quy ước làm tròn và đơn vị tiền** trong ứng dụng thật phải do yêu cầu nghiệp vụ xác định. Các adapter là mô phỏng tại bộ nhớ/console, không có tác vụ gửi email hoặc ghi database thật.
+This example uses monetary amounts with two decimal places to make calculations easy to follow; in a real application, **rounding rules and currency units** must follow business requirements. The adapters simulate in-memory/console operations; they do not send real email or write to a real database.
 
-Lưu vào **`ResponsibilityDemo.java`**:
+Save as **`ResponsibilityDemo.java`**:
 
 ~~~java
 import java.math.BigDecimal;
@@ -356,14 +356,14 @@ public class ResponsibilityDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac ResponsibilityDemo.java
 java ResponsibilityDemo
 ~~~
 
-Kết quả dự kiến:
+Expected output:
 
 ~~~text
 [DEMO] Created ORD-42, total=125.50
@@ -371,42 +371,42 @@ Receipt: OrderReceipt[orderId=ORD-42, total=125.50]
 Saved: 125.50
 ~~~
 
-Ví dụ dùng `record` của Java 17 để thể hiện dữ liệu có giá trị và ranh giới đơn giản; **record không tự bảo đảm mọi bất biến**, vì thế constructor kiểm tra điều kiện cần thiết. `List.copyOf` tạo một snapshot cấu trúc danh sách và từ chối phần tử null; `OrderItem` là record với các component bất biến, do đó dữ liệu ví dụ không có phần tử có thể thay đổi trạng thái.
+The example uses Java 17 `record` types to represent value data and simple boundaries; **records do not automatically enforce all invariants**, so constructors check the required conditions. `List.copyOf` creates a structural snapshot of the list and rejects null elements; `OrderItem` is a record whose components are immutable, so the example contains no state-mutable elements.
 
-Một số quyết định của bản demo được cố ý giới hạn:
+Several demo decisions are intentionally limited in scope:
 
-- `customerEmail` chỉ kiểm tra không rỗng, **chưa phải validation email hoàn chỉnh**. Trong thực tế cần chính sách kiểm tra và xác minh riêng.
-- `InMemoryOrderRepository` không lưu xuống đĩa, không thread-safe và chưa có transaction.
-- `ConsoleOrderNotifier` **không gửi email**. Nó chỉ mô phỏng side effect để chứng minh ranh giới.
-- `OrderReceipt` là kết quả use case đơn giản; với ứng dụng có trạng thái đơn hàng, thanh toán, vận chuyển, cần domain model phù hợp.
-- Đặt tên class và module sao cho sự phụ thuộc hướng tới những hợp đồng ổn định. Không nhất thiết mỗi triển khai đều phải có một interface nếu không có nhu cầu thay thế.
+- `customerEmail` is checked only for nonblank content; this is **not complete email validation**. Real systems need separate validation and verification policies.
+- `InMemoryOrderRepository` does not persist to disk, is not thread-safe, and has no transaction support.
+- `ConsoleOrderNotifier` **does not send email**. It only simulates a side effect to demonstrate the boundary.
+- `OrderReceipt` is a simple use-case result; an application with order, payment, and shipping states needs an appropriate domain model.
+- Name classes and modules so dependencies point toward stable contracts. Not every implementation needs an interface if no replacement is required.
 
-### Trước và sau refactor: điều gì thực sự thay đổi?
+### Before and after refactoring: what actually changes?
 
-| Thay đổi của hệ thống | Khi dồn vào `AllInOneOrderService` | Sau refactor |
+| System change | With everything in `AllInOneOrderService` | After refactoring |
 |---|---|---|
-| Đổi công thức giá | Sửa trong cùng lớp chứa DB/email | Sửa `PriceCalculator` và test giá |
-| Đổi nơi lưu dữ liệu | Sửa logic truy cập DB trong lớp nghiệp vụ | Thay adapter của `OrderRepository` |
-| Chuyển từ email sang SMS | Sửa logic thông báo ở cùng lớp nghiệp vụ | Thay adapter của `OrderNotifier` |
-| Kiểm tra mặt hàng không hợp lệ | Nằm lẫn trong một hàm lớn | Thể hiện invariant ở `OrderItem` |
-| Thay thứ tự nghiệp vụ: lưu trước thông báo | Dễ nằm lẫn side effect | Xem rõ trong `PlaceOrderUseCase.execute` |
-| Unit test riêng công thức giá | Có thể vướng khởi tạo DB/mail | Tạo trực tiếp `new PriceCalculator()` |
+| Change the pricing formula | Edit the same class that handles DB/email | Update `PriceCalculator` and pricing tests |
+| Change the persistence mechanism | Edit DB access logic inside a business class | Replace the `OrderRepository` adapter |
+| Switch from email to SMS | Edit notification logic inside the business class | Replace the `OrderNotifier` adapter |
+| Validate an invalid order item | Validation is buried in a large function | Express the invariant in `OrderItem` |
+| Change workflow order: persist before notifying | Side effects are easy to interleave | The order is explicit in `PlaceOrderUseCase.execute` |
+| Unit-test the pricing formula alone | DB/mail setup may get in the way | Directly create `new PriceCalculator()` |
 
-**Điểm cần nhớ:** Refactor **không chỉ là chia file**. Ta phải tạo ra các ranh giới mà tại đó *mỗi phần sở hữu một quyết định*, và các phần còn lại sử dụng nó qua hợp đồng rõ ràng.
+**Key point:** Refactoring is **more than splitting files**. We must establish boundaries where *each part owns a decision* and other parts interact with it through clear contracts.
 
-## 7. Trách nhiệm của lớp khác trách nhiệm của use case
+## 7. Class responsibilities versus use-case responsibilities
 
-Đến đây có thể xuất hiện một câu hỏi: “`PlaceOrderUseCase` gọi ba dependency, vậy nó có quá nhiều trách nhiệm không?”
+At this point, you might ask: "`PlaceOrderUseCase` calls three dependencies, so does it have too many responsibilities?"
 
-**Chưa chắc.** Đặt một đơn hàng **bản thân nó là một quy trình** bao gồm tính tiền, lưu và thông báo. Use case có thể chịu trách nhiệm thực thi **một kịch bản nghiệp vụ có trình tự**, còn từng cộng tác viên chịu trách nhiệm cho chi tiết chuyên biệt.
+**Not necessarily.** Placing an order **is itself a workflow** involving pricing, persistence, and notification. A use case may be responsible for executing **one ordered business scenario**, while each collaborator handles a specialized detail.
 
-Nhưng nếu cùng `PlaceOrderUseCase` bắt đầu có `cancelOrder`, `refund`, `generateMonthlyReport`, `syncWarehouse`, `createPromoCampaign` và hàng chục field trạng thái khác nhau, nó có thể đang thành **God Service**. Cần xem các yêu cầu có cùng lý do thay đổi hay thuộc nhiều luồng khác nhau.
+However, if `PlaceOrderUseCase` also acquires `cancelOrder`, `refund`, `generateMonthlyReport`, `syncWarehouse`, `createPromoCampaign`, and dozens of unrelated state fields, it may be turning into a **God Service**. Examine whether these requirements have the same reason to change or belong to different workflows.
 
-Không nên hiểu SRP như một quy tắc máy móc “mỗi class chỉ có một method”, “mỗi class tối đa 100 dòng”, hay “mỗi method tối đa ba dependency”. Đó là các chỉ dấu tham khảo, không phải định nghĩa trách nhiệm.
+Do not interpret SRP as a mechanical rule such as "one method per class," "at most 100 lines per class," or "at most three dependencies per method." These are heuristics, not definitions of responsibility.
 
-### Domain object nên giữ hành vi nào?
+### What behavior should a domain object retain?
 
-Tách hết mọi hành vi khỏi entity có thể làm xuất hiện mô hình thiếu hành vi (*anemic domain model*), nơi mọi ràng buộc và thay đổi trạng thái bị dồn vào service khác. Ví dụ, một `BankAccount` có thể tự bảo vệ quy tắc rút tiền hợp lệ vì đó là **trách nhiệm liên kết chặt với trạng thái của tài khoản**:
+Removing every behavior from entities can produce an *anemic domain model*, where all constraints and state changes are pushed into other services. For example, a `BankAccount` can enforce valid withdrawal rules itself because that is **a responsibility closely tied to the account's state**:
 
 ~~~java
 import java.math.BigDecimal;
@@ -437,13 +437,13 @@ final class BankAccount {
 }
 ~~~
 
-Đây là **hành vi hợp lý bên trong domain object**, không phải dấu hiệu lớp ôm quá nhiều việc. `BankAccount` sẽ bắt đầu đáng ngờ nếu tự gọi SMTP, xây báo cáo CSV hoặc tự biết mật khẩu kết nối database.
+This is **appropriate behavior inside a domain object**, not evidence of a class doing too much. `BankAccount` would become suspicious if it started invoking SMTP, generating CSV reports, or knowing the database connection password.
 
-## 8. Những lỗi khi refactor God Class
+## 8. Common mistakes when refactoring a God Class
 
-### 8.1. Chia lớp nhưng chỉ chuyển lời gọi qua lại
+### 8.1. Splitting classes but only forwarding calls
 
-Ví dụ không giải quyết vấn đề:
+Example that does not solve the problem:
 
 ~~~java
 class OrderFacade {
@@ -455,13 +455,13 @@ class OrderFacade {
 }
 ~~~
 
-Một wrapper đẹp tên không tách policy và side effect nếu `LegacyOrderManager` vẫn làm tất cả. Hãy xác định **logic nào thật sự được chuyển giao quyền sở hữu** và kiểm tra dependency sau thay đổi.
+A well-named wrapper does not separate policy from side effects if `LegacyOrderManager` still does everything. Identify **which logic actually changes ownership** and inspect dependencies afterward.
 
-### 8.2. Tách nhỏ đến mức mất khả năng đọc luồng nghiệp vụ
+### 8.2. Splitting so finely that the business workflow becomes hard to read
 
-Nếu mỗi dòng tính giá tạo thành một class (`AddItemService`, `MultiplyQuantityService`, `RoundTotalService`...) mà không có lý do thay đổi riêng, số lượng abstraction có thể làm việc đọc code chậm hơn. Hãy gom các bước có cùng mục đích vào một đối tượng gắn kết.
+If each pricing step becomes a separate class (`AddItemService`, `MultiplyQuantityService`, `RoundTotalService`...) without its own reason to change, the extra abstractions can make code harder to follow. Group steps that serve the same purpose in a cohesive object.
 
-### 8.3. Dời tất cả sang một “Utils” tĩnh
+### 8.3. Moving everything into a static "Utils" class
 
 ~~~java
 OrderUtils.validate(...);
@@ -470,32 +470,32 @@ OrderUtils.save(...);
 OrderUtils.sendMail(...);
 ~~~
 
-Đổi `OrderManager` thành `OrderUtils` vẫn tập trung trách nhiệm, thậm chí khó inject dependency hoặc kiểm thử side effect. Method `static` hợp lý cho hàm thuần nhỏ, nhưng “utils” không nên là nơi chứa mọi chính sách và adapter.
+Renaming `OrderManager` to `OrderUtils` still concentrates responsibilities and may even make dependency injection or side-effect testing harder. `static` methods are suitable for small pure functions, but "utils" should not become a dumping ground for every policy and adapter.
 
-### 8.4. Tạo interface cho mọi class
+### 8.4. Creating an interface for every class
 
-Một interface chỉ có đúng một implementation không tự tạo giá trị nếu nó không phân tách ranh giới ổn định/biến động hoặc giúp kiểm thử. `PriceCalculator` trong ví dụ là class thường vì tính giá là phần cần kiểm thử trực tiếp, chưa cần nhiều thuật toán. `OrderRepository` và `OrderNotifier` là abstraction có ý nghĩa do ngăn use case phụ thuộc vào cơ chế lưu/gửi cụ thể.
+An interface with exactly one implementation does not automatically add value unless it separates stable and changing boundaries or helps testing. `PriceCalculator` in this example is an ordinary class because its pricing logic can be tested directly and does not yet need multiple algorithms. `OrderRepository` and `OrderNotifier` are meaningful abstractions because they prevent the use case from depending on a particular persistence or notification mechanism.
 
-### 8.5. Bỏ sót ranh giới giao dịch khi di chuyển code
+### 8.5. Overlooking transaction boundaries while moving code
 
-Ví dụ chạy lần lượt:
+For example, consider these sequential calls:
 
 ~~~java
 repository.save(receipt);
 notifier.orderPlaced(email, receipt);
 ~~~
 
-Nếu `save` thành công rồi `orderPlaced` ném exception, **đơn đã được lưu nhưng thông báo chưa được gửi**. Việc chia class không tự giải quyết atomicity, retry hay idempotency.
+If `save` succeeds and `orderPlaced` throws an exception, **the order has been saved but the notification has not been sent**. Splitting classes does not automatically solve atomicity, retries, or idempotency.
 
-Trong hệ thống thực, có thể dùng **transactional outbox**: lưu đơn hàng và sự kiện cần phát trong cùng một giao dịch database, rồi một worker gửi sự kiện có khả năng retry và xử lý trùng. Thiết kế chi tiết tùy yêu cầu nhất quán; không nên giả định transaction DB có thể bao trùm email hoặc mọi HTTP side effect.
+In a real system, a **transactional outbox** can persist the order and an event to be published in the same database transaction, after which a worker publishes the event with retry and duplicate-handling capabilities. The details depend on consistency requirements; do not assume a DB transaction can encompass email or every HTTP side effect.
 
-Tương tự, nếu giá đang được tính từ dữ liệu có thể thay đổi, phải xác định phiên bản bảng giá/tỷ lệ thuế tại thời điểm tạo đơn, tránh làm lệch kết quả sau refactor.
+Similarly, if pricing depends on mutable data, establish which price-list/tax-rate version applies when the order is created so refactoring does not change the result.
 
-## 9. Kiểm thử để refactor an toàn
+## 9. Testing for safe refactoring
 
-Trước khi sửa lớp lớn, cần biết **hành vi nào phải được bảo toàn**. Với code legacy chưa có test, có thể dùng *characterization tests* (kiểm thử ghi nhận hành vi hiện hữu) để khóa các quy tắc cần giữ, sau đó viết test cô lập cho phần được tách ra.
+Before changing a large class, identify **which behavior must be preserved**. For legacy code without tests, *characterization tests* can capture existing behavior and lock down rules that must remain stable; then write isolated tests for extracted components.
 
-Ví dụ sau dùng JUnit Jupiter 5 và các class từ `ResponsibilityDemo.java`. Đặt trong `ResponsibilityDemoTest.java` cùng package, thêm dependency `org.junit.jupiter:junit-jupiter` và test runner phù hợp:
+The following example uses JUnit Jupiter 5 and classes from `ResponsibilityDemo.java`. Place it in `ResponsibilityDemoTest.java` in the same package, add the `org.junit.jupiter:junit-jupiter` dependency and an appropriate test runner:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -581,31 +581,31 @@ class ResponsibilityDemoTest {
 }
 ~~~
 
-**Giá trị của các test:**
+**What these tests demonstrate:**
 
-- `PriceCalculator` được test **không cần** giả lập DB hay email.
-- Test orchestration xác nhận **thứ tự** yêu cầu lưu rồi mới thông báo.
-- Nếu repository thất bại, notifier chưa được gọi, nên lỗi luồng dễ nhận thấy.
-- Bất biến của `OrderItem` được kiểm tra ở đúng nơi tạo value object.
+- `PriceCalculator` is tested **without** mocking a database or email.
+- The orchestration test confirms the **order**: persistence is requested before notification.
+- If the repository fails, the notifier has not been called, making workflow errors easier to detect.
+- `OrderItem` invariants are tested where the value object is created.
 
-Những test này không chứng minh lưu trữ thật hay gửi email thật đã hoạt động. Adapter dùng JDBC/JPA/HTTP/SMTP cần integration test ở ranh giới tương ứng. Với thay đổi giao dịch, cần thêm test cho retry, race condition, thông báo trùng và yêu cầu idempotency.
+These tests do not demonstrate that actual persistence or email delivery works. Adapters using JDBC/JPA/HTTP/SMTP need integration tests at the corresponding boundaries. Changes to transaction handling also require tests for retries, race conditions, duplicate notifications, and idempotency requirements.
 
-## 10. Cách refactor từng bước, giảm nguy cơ thay đổi hành vi
+## 10. Step-by-step refactoring to reduce the risk of behavior changes
 
-Một quy trình thực tế khi gặp lớp lớn đang chạy production:
+A practical process for a large class already running in production:
 
-1. **Xác định các chức năng và client:** Ai gọi method nào? Dữ liệu/side effect đi đâu? Đánh dấu các quy tắc có rủi ro cao (tiền, trạng thái, phân quyền, transaction).
-2. **Ghi nhận hành vi hiện tại:** Characterization tests hoặc test tích hợp cho các luồng quan trọng; phân biệt bug cần sửa riêng với hành vi đang được phụ thuộc.
-3. **Phân nhóm lý do thay đổi:** Pricing, persistence, notification, validation, presentation...; dùng dependency và field usage để xác nhận thay vì dựa vào tên class.
-4. **Trích xuất logic thuần trước:** Chuyển phép tính xác định (pure logic) thành class/phương thức có test độc lập. Ít rủi ro hơn dịch chuyển transaction hoặc network call.
-5. **Tách cổng giao tiếp ra khỏi use case:** Mô tả `OrderRepository`, `OrderNotifier` đúng theo nhu cầu của caller; tạo adapter cho code cũ khi cần.
-6. **Di chuyển side effect có kiểm soát:** Giữ thứ tự tác vụ, điều kiện lỗi và chính sách retry như hợp đồng, tránh phát thông báo hai lần.
-7. **Thu gọn lớp cũ:** Cho nó chỉ còn trách nhiệm thực sự của use case hoặc chuyển caller sang API mới; xóa luồng cũ khi không còn ai dùng.
-8. **Kiểm tra thay đổi:** Chạy test module/unit/integration phù hợp, so sánh kết quả nghiệp vụ, đo log và truy vấn. Chỉ tối ưu hiệu năng khi có bằng chứng.
+1. **Identify features and clients:** Who calls which methods? Where do the data and side effects go? Flag high-risk rules (money, state, authorization, transactions).
+2. **Capture current behavior:** Use characterization tests or integration tests for important flows; distinguish bugs that need separate fixes from behavior clients currently depend on.
+3. **Group reasons to change:** Pricing, persistence, notification, validation, presentation, etc.; confirm the groupings through dependencies and field usage rather than class names.
+4. **Extract pure logic first:** Move deterministic calculations (pure logic) into independently tested classes/methods. This is less risky than moving transactions or network calls.
+5. **Separate communication ports from the use case:** Define `OrderRepository` and `OrderNotifier` around the caller's needs; add an adapter for old code when necessary.
+6. **Move side effects carefully:** Preserve operation order, failure conditions, and retry policies defined by the contract; avoid sending duplicate notifications.
+7. **Reduce the old class:** Leave it with only its genuine use-case responsibility or migrate callers to the new API; remove old paths when no one uses them.
+8. **Verify changes:** Run appropriate module/unit/integration tests, compare business results, and inspect logs and queries. Optimize performance only when evidence supports it.
 
-Refactor an toàn thường gồm **nhiều thay đổi nhỏ có thể review**, thay vì viết lại toàn bộ lớp hàng nghìn dòng một lần. Nếu có ràng buộc tương thích API, có thể giữ một adapter chuyển tiếp tạm thời và lên kế hoạch loại bỏ nó sau khi caller đã chuyển.
+Safe refactoring usually consists of **many small, reviewable changes** instead of rewriting a thousand-line class at once. If API compatibility is required, a temporary forwarding adapter can remain until callers migrate, with a plan to remove it.
 
-### Sơ đồ luồng sau khi tách
+### Workflow diagram after extraction
 
 ~~~mermaid
 sequenceDiagram
@@ -625,21 +625,21 @@ sequenceDiagram
     Note over U,N: Nếu notify lỗi sau save, cần chính sách nhất quán/retry riêng
 ~~~
 
-## 11. Khi nào KHÔNG cần chia lớp?
+## 11. When is splitting a class NOT necessary?
 
-Các dấu hiệu gợi ý **nên giữ lại** một lớp:
+Signs that you **should retain** a class include:
 
-- Mọi method thực sự phục vụ một invariant/thuật toán gắn kết, thay đổi theo cùng chính sách.
-- Việc chia thêm lớp chỉ tạo nhiều đối tượng chuyển lời gọi qua lại mà không giảm coupling hay làm test dễ hơn.
-- Thành phần là một value object hoặc aggregate có quy tắc nghiệp vụ bao quanh cùng một trạng thái.
-- Bài toán rất nhỏ, thuật toán rõ ràng và chưa có trục biến thiên thực tế; refactor chưa đem lại lợi ích tương xứng.
-- Một class có nhiều method vì triển khai giao thức đầy đủ, nhưng vẫn có ranh giới trách nhiệm rõ.
+- All methods genuinely support one cohesive invariant/algorithm and change under the same policy.
+- Splitting it would only create more forwarding objects without reducing coupling or making tests easier.
+- The component is a value object or aggregate whose business rules surround the same state.
+- The problem is small, the algorithm is clear, and no real variation axis exists yet; refactoring offers too little benefit.
+- A class has many methods because it implements a complete protocol, yet retains a clear responsibility boundary.
 
-Đừng ra quyết định chỉ bằng **LOC (lines of code), số method, cyclomatic complexity hoặc tên `Manager`**. Chúng giúp tìm nơi cần xem xét; quyết định thiết kế phải dựa trên cohesion, coupling, nguyên nhân thay đổi, khả năng kiểm thử và ảnh hưởng tới nghiệp vụ.
+Do not decide based only on **LOC (lines of code), method count, cyclomatic complexity, or the name `Manager`**. Those help identify areas worth investigating; design decisions should consider cohesion, coupling, reasons to change, testability, and business impact.
 
-## 12. Bài tập thực hành: tách lớp UserManager
+## 12. Practice exercise: extracting classes from UserManager
 
-Cho một lớp giả định:
+Consider this hypothetical class:
 
 ~~~java
 class UserManager {
@@ -651,59 +651,59 @@ class UserManager {
 }
 ~~~
 
-Đừng lập tức biến năm method thành năm class. Hãy phân tích:
+Do not immediately turn five methods into five classes. Analyze:
 
-- Quy tắc đăng ký và xác thực thuộc cùng chính sách nào, có trường hợp cần tách không?
-- Password hashing, mật khẩu và session/token cần ranh giới bảo mật nào?
-- Email và CSV là trách nhiệm nghiệp vụ hay adapter của hệ thống?
-- Xóa user không hoạt động có phải batch job riêng với transaction/audit yêu cầu khác?
-- Những actor/nhóm yêu cầu nào khiến `UserManager` phải thay đổi?
+- Which policies govern registration and authentication, and might they need to be separated?
+- What security boundaries are required for password hashing, passwords, and sessions/tokens?
+- Are email and CSV business responsibilities or system adapters?
+- Should deleting inactive users be a separate batch job with different transaction/audit requirements?
+- Which actors or requirement groups cause `UserManager` to change?
 
-**Yêu cầu:** Vẽ sơ đồ quan hệ sau khi tách, tạo interface chỉ tại ranh giới cần thay thế, đặt tên use case phù hợp, và viết ít nhất ba bài test: dữ liệu đăng ký sai, thành công lưu user, email thất bại sau lưu. Xác định rõ chính sách nghiệp vụ cho trường hợp email thất bại (đăng ký có được coi là thành công không? có retry/outbox không?).
+**Task:** Draw the relationship diagram after extraction, create interfaces only at replaceable boundaries, choose appropriate use-case names, and write at least three tests: invalid registration data, successful user persistence, and email failure after saving. Explicitly define the business policy for email failures (is registration still successful? are retries/an outbox used?).
 
-### Câu hỏi tự kiểm tra
+### Self-check questions
 
-1. Vì sao “class nhiều dòng” chỉ là dấu hiệu, chưa phải bằng chứng God Class?
-2. Nếu đổi SQL và công thức khuyến mãi đều sửa `OrderManager`, điều đó nói gì về lý do thay đổi?
-3. Chia một method lớn thành 10 private methods có tự bảo đảm SRP không?
-4. Lớp `PlaceOrderUseCase` gọi ba dependency có nhất thiết là God Class không? Vì sao?
-5. Vì sao không nên tách cả phép kiểm tra số dư và rút tiền ra khỏi `BankAccount` nếu invariant thuộc chính account?
-6. Interface và DI giúp gì khi chuyển database/mail adapter? Chúng có tự giải quyết transaction không?
-7. Vì sao `repository.save` thành công nhưng `notifier.orderPlaced` thất bại cần một chính sách riêng?
-8. Khi nào nên dừng refactor để tránh sinh hàng chục lớp chuyển tiếp không mang trách nhiệm thật?
+1. Why is a "class with many lines" only a warning sign rather than proof of a God Class?
+2. What does it reveal about reasons to change if both SQL and discount formulas require editing `OrderManager`?
+3. Does splitting one large method into 10 private methods automatically ensure SRP?
+4. Is `PlaceOrderUseCase` necessarily a God Class because it calls three dependencies? Why?
+5. Why avoid moving both balance validation and withdrawals out of `BankAccount` when the invariant belongs to the account?
+6. How do interfaces and DI help when switching database/mail adapters? Do they automatically solve transaction handling?
+7. Why does `repository.save` succeeding while `notifier.orderPlaced` fails require a separate policy?
+8. When should refactoring stop to avoid creating dozens of forwarding classes without real responsibilities?
 
-**Kết luận:** Lớp ôm quá nhiều trách nhiệm làm các quyết định độc lập dính chặt vào nhau, khiến sửa một nơi gây ảnh hưởng nhiều nơi. Refactor tốt là **tìm các ranh giới thay đổi thực sự**, đặt logic và side effect đúng nơi, giữ use case điều phối gắn kết, đồng thời dùng kiểm thử và hợp đồng nghiệp vụ để bảo toàn kết quả. **Số class không phải chỉ số chất lượng**; khả năng hiểu, sửa và kiểm chứng hành vi mới là điều quan trọng.
+**Conclusion:** A class with too many responsibilities tightly couples independent decisions, so changing one concern affects many others. Effective refactoring means **finding real change boundaries**, placing logic and side effects where they belong, keeping use-case orchestration cohesive, and relying on tests and business contracts to preserve results. **Class count is not a quality metric**; the ability to understand, change, and verify behavior is what matters.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-pitfalls-002">Trạng thái công khai và mất điều kiện bất biến</a>
+## <a id="design-pitfalls-002">Exposed state and broken invariants</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Trạng thái công khai và mất điều kiện bất biến trong OOP
+# Exposed state and broken invariants in OOP
 
-> **Chủ đề:** OOP → Lỗi thiết kế → Trạng thái công khai và mất điều kiện bất biến.  
-> **Mục tiêu:** Nhận diện các đường dữ liệu bên ngoài có thể phá hỏng trạng thái đối tượng; hiểu invariant khác với kiểm tra đầu vào; dùng encapsulation, thao tác nghiệp vụ, defensive copy và kiểm thử để bảo vệ đối tượng trong Java.
+> **Topic:** OOP → Design Pitfalls → Exposed state and broken invariants.  
+> **Objective:** Recognize how external data paths can corrupt an object's state; understand how invariants differ from input validation; and use encapsulation, domain operations, defensive copies, and tests to protect Java objects.
 
-## 1. Vấn đề: đối tượng có thể “tự mâu thuẫn” dù khởi tạo hợp lệ
+## 1. The problem: objects can become "self-contradictory" even after valid construction
 
-Giả sử hệ thống bán vé có một kho chỗ ngồi: **sức chứa 10**, đã đặt **4**, còn **6**. Các con số đó phải tuân thủ quy tắc:
+Suppose a ticketing system has a seat inventory with **capacity 10**, **4** reserved seats, and **6** available. These numbers must satisfy:
 
 \[
 0 \le \text{reserved} \le \text{capacity}
 \]
 
-và \(\text{available}=\text{capacity}-\text{reserved}\).
+and \(\text{available}=\text{capacity}-\text{reserved}\).
 
-Đây là **điều kiện bất biến của đối tượng (object invariant)**: một điều kiện phải đúng tại những thời điểm trạng thái của đối tượng được phép quan sát từ bên ngoài, đặc biệt **sau khi khởi tạo thành công** và **sau mỗi thao tác công khai hoàn tất**.
+This is an **object invariant**: a condition that must hold whenever an object's state can be observed externally, especially **after successful construction** and **after each public operation completes**.
 
-Một thiết kế có thể khởi tạo trạng thái đúng nhưng cho phép code bên ngoài làm sai:
+A design can initialize valid state yet allow external code to invalidate it:
 
 ~~~java
 // Ví dụ CỐ Ý SAI để thấy lỗi thiết kế.
@@ -726,70 +726,70 @@ inventory.reserved = 12; // Java cho phép: trường public.
 System.out.println(inventory.available()); // -2
 ~~~
 
-Chỉ một phép gán hợp lệ về mặt **kiểu `int`** đã phá quy tắc nghiệp vụ. Trình biên dịch không thể suy ra “`reserved` không được vượt `capacity`” từ hai trường `int`.
+A single assignment valid for the **`int` type** has broken a business rule. The compiler cannot infer "`reserved` must not exceed `capacity`" from two `int` fields.
 
-**Lỗi không chỉ là “để field ở `public`”**. Vấn đề sâu hơn là đối tượng **không kiểm soát được mọi con đường thay đổi trạng thái của chính nó**. Trạng thái có thể bị thay trực tiếp qua field, qua getter trả về collection mutable, qua một object được truyền vào constructor rồi bị sửa bên ngoài, hoặc qua setter cho phép các field liên quan biến đổi độc lập.
+**The issue is more than "making a field `public`."** The deeper problem is that the object **cannot control every path through which its own state changes**. State can be modified directly through a field, through a getter returning a mutable collection, through an object passed to a constructor and later modified externally, or through setters that let related fields change independently.
 
-## 2. Invariant là gì và khác validation như thế nào?
+## 2. What is an invariant, and how does it differ from validation?
 
-Ba khái niệm thường đi cùng nhưng giải quyết ba câu hỏi khác nhau:
+Three concepts often appear together but answer different questions:
 
-| Khái niệm | Câu hỏi | Ví dụ với kho chỗ |
+| Concept | Question | Seat-inventory example |
 |---|---|---|
-| **Tiền điều kiện (precondition)** | Người gọi phải truyền gì để thao tác hợp lệ? | `reserve(seats)` yêu cầu `seats > 0` |
-| **Hậu điều kiện (postcondition)** | Nếu thao tác thành công, kết quả phải thế nào? | Đặt 3 chỗ thành công thì số chỗ đã đặt tăng đúng 3 |
-| **Bất biến (invariant)** | Quy tắc nào luôn phải được bảo toàn ở ranh giới quan sát trạng thái? | `0 ≤ reserved ≤ capacity` |
+| **Precondition** | What must the caller supply for an operation to be valid? | `reserve(seats)` requires `seats > 0` |
+| **Postcondition** | What must be true if the operation succeeds? | Successfully reserving 3 seats increases the reserved count by exactly 3 |
+| **Invariant** | Which rule must hold at boundaries where state can be observed? | `0 ≤ reserved ≤ capacity` |
 
-Một invariant có thể liên quan **nhiều trường**:
+An invariant can involve **multiple fields**:
 
-- Tài khoản: `balance >= 0` nếu nghiệp vụ không cho thấu chi.
-- Kho hàng: `0 <= reserved <= stock`.
-- Khoảng thời gian: `start.isBefore(end)`.
-- Đơn hàng: `status == PAID` chỉ khi một số điều kiện thanh toán đã đạt.
-- Nhóm người dùng: quyền sở hữu và thành viên phải nhất quán theo quy tắc hệ thống.
+- Account: `balance >= 0` when overdrafts are prohibited by business policy.
+- Inventory: `0 <= reserved <= stock`.
+- Time interval: `start.isBefore(end)`.
+- Order: `status == PAID` only after specific payment conditions are met.
+- User group: ownership and membership must remain consistent with system rules.
 
-Không phải mọi đối tượng đều có invariant phức tạp. Ví dụ một DTO đọc dữ liệu chưa kiểm chứng có thể cố ý chứa trạng thái chưa hợp lệ để trả lỗi validation. Ngược lại, **domain object** được kỳ vọng biểu diễn trạng thái hợp lệ thì cần giữ quy tắc của nó trong các thao tác công khai.
+Not every object needs complex invariants. For example, a DTO holding unverified input may deliberately contain invalid state so validation errors can be reported. In contrast, **domain objects** expected to represent valid state must preserve their rules across public operations.
 
-### “Luôn đúng” có nghĩa đến mức nào?
+### How far does "always true" extend?
 
-Một method có thể thay đổi nhiều field qua các bước nội bộ; một trạng thái trung gian **không được lộ ra** có thể chưa thỏa invariant tạm thời. Thiết kế tốt vẫn cố gắng cập nhật theo một bước nhất quán và chỉ công bố trạng thái hợp lệ. Trong chương trình nhiều luồng, điều này còn đòi hỏi đồng bộ hóa nếu các thread cùng đọc/ghi.
+A method may modify several fields in internal steps; an intermediate state **that is never exposed** may temporarily violate the invariant. Good designs still aim to make consistent updates and expose only valid state. In multithreaded programs, synchronization is also needed if threads read and write the same state.
 
-Không nên coi lời hứa “chỉ gọi setter theo đúng thứ tự” là bảo vệ invariant. Người dùng API, lớp con, serializer, framework hay một lần refactor có thể gọi theo thứ tự khác.
+Do not treat a promise to "call setters in the correct order" as invariant protection. API clients, subclasses, serializers, frameworks, or a future refactoring may invoke them in another order.
 
-## 3. Vì sao `private` là cần nhưng chưa đủ?
+## 3. Why is `private` necessary but insufficient?
 
-**Encapsulation (đóng gói)** không chỉ là thay `public` thành `private`. Nó là việc đối tượng **giữ quyền kiểm soát trạng thái và bảo đảm các quy tắc hợp lệ** khi nhận yêu cầu thay đổi.
+**Encapsulation** means more than changing `public` to `private`. It means an object **retains control over its state and enforces validity rules** when receiving requests for changes.
 
-Một thiết kế tốt thường có ba tầng bảo vệ:
+A sound design typically has three layers of protection:
 
-1. **Ẩn cách lưu trạng thái:** không cho client ghi thẳng các field quan trọng.
-2. **Đặt thao tác theo ngôn ngữ nghiệp vụ:** `reserve(3)`, `cancel(2)` thay vì `setReserved(7)`.
-3. **Bảo vệ mọi đường tham chiếu mutable:** constructor, getter, setter, collection, array, object lồng nhau và luồng truy cập đồng thời.
+1. **Hide state representation:** prevent clients from writing directly to important fields.
+2. **Expose operations in domain language:** `reserve(3)` and `cancel(2)` rather than `setReserved(7)`.
+3. **Protect all mutable reference paths:** constructors, getters, setters, collections, arrays, nested objects, and concurrent access.
 
-Bảng sau tóm tắt những sai lầm phổ biến:
+The following table summarizes common mistakes:
 
-| Cách viết | Rủi ro | Hướng sửa |
+| Approach | Risk | Remedy |
 |---|---|---|
-| `public int reserved` | Mọi client gán giá trị tùy ý | `private` + method `reserve`/`cancel` có điều kiện |
-| `setReserved(x)`, `setCapacity(y)` riêng biệt | Có thể gây tổ hợp trạng thái không hợp lệ | Thao tác nghiệp vụ hoặc cập nhật một bộ dữ liệu nguyên tử |
-| `getItems() { return items; }` | Trả tham chiếu tới collection mutable nội bộ | Trả snapshot/read-only view phù hợp |
-| `this.items = items` nhận `List` từ ngoài | Caller còn giữ alias và sửa dữ liệu về sau | Copy dữ liệu đầu vào theo chính sách |
-| `private final List<X> items` | `final` chỉ cố định tham chiếu, không ngăn `add/remove` | Kiểm soát mutation và không rò rỉ tham chiếu |
-| `record User(List<Role> roles)` | Record không tự tạo deep copy của component | Chuẩn hóa/copy trong compact constructor |
-| Kiểm tra lúc tạo nhưng không ở lúc sửa | Đối tượng hợp lệ ban đầu, sau đó không hợp lệ | Xác nhận invariant trên mọi mutator |
+| `public int reserved` | Any client can assign an arbitrary value | Use `private` and guarded `reserve`/`cancel` methods |
+| Separate `setReserved(x)` and `setCapacity(y)` | Can produce invalid combinations of state | Use a domain operation or update related data atomically |
+| `getItems() { return items; }` | Exposes a reference to an internal mutable collection | Return a suitable snapshot/read-only view |
+| `this.items = items` receiving an external `List` | Caller retains an alias and can later modify the data | Copy input data according to policy |
+| `private final List<X> items` | `final` fixes the reference but does not prevent `add/remove` | Control mutations and prevent reference leaks |
+| `record User(List<Role> roles)` | A record does not deep-copy its components automatically | Normalize/copy in the compact constructor |
+| Validation on construction but not on updates | An initially valid object becomes invalid later | Enforce invariants in every mutator |
 
-## 4. Ví dụ Java 17 hoàn chỉnh: kho chỗ ngồi bảo toàn invariant
+## 4. Complete Java 17 example: a seat inventory that preserves its invariant
 
-Thay vì công khai `capacity` và `reserved`, ta tạo một đối tượng có trạng thái đóng kín:
+Instead of exposing `capacity` and `reserved`, we create an object with encapsulated state:
 
-- Sức chứa được đặt một lần trong constructor và không thay đổi.
-- Đặt chỗ chỉ có thể thông qua `reserve(int seats)`.
-- Hủy chỗ chỉ có thể thông qua `cancel(int seats)`.
-- Không có API nào cho phép tự ý gán số chỗ đã đặt.
-- Khi không đủ chỗ, `reserve` trả `false` và **không thay đổi trạng thái**.
-- Số chỗ hợp lệ của thao tác phải dương; `cancel` không được hủy vượt số đã đặt.
+- Capacity is set once in the constructor and never changes.
+- Seats can only be reserved through `reserve(int seats)`.
+- Reservations can only be canceled through `cancel(int seats)`.
+- No API allows arbitrary assignments to the reserved-seat count.
+- When too few seats remain, `reserve` returns `false` and **does not change state**.
+- Operation seat counts must be positive; `cancel` cannot cancel more seats than have been reserved.
 
-Tạo tệp **`InvariantDemo.java`**:
+Create **`InvariantDemo.java`**:
 
 ~~~java
 import java.util.HashSet;
@@ -911,14 +911,14 @@ public class InvariantDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac InvariantDemo.java
 java InvariantDemo
 ~~~
 
-Kết quả dự kiến:
+Expected output:
 
 ~~~text
 Broken available = -2
@@ -930,40 +930,40 @@ Policy has ADMIN = false
 Permissions cannot be mutated externally
 ~~~
 
-### Phân tích trạng thái từng bước
+### Step-by-step state analysis
 
-| Bước | Thao tác | `reserved` | `available` | Invariant |
+| Step | Operation | `reserved` | `available` | Invariant |
 |---|---|---:|---:|---|
-| Khởi tạo | `new SeatInventory(10)` | 0 | 10 | Đúng |
-| Đặt 4 | `reserve(4)` trả `true` | 4 | 6 | Đúng |
-| Đặt thêm 7 | `reserve(7)` trả `false` | 4 | 6 | Đúng, trạng thái giữ nguyên |
-| Hủy 2 | `cancel(2)` | 2 | 8 | Đúng |
-| Hủy 5 | `cancel(5)` ném exception | 2 | 8 | Đúng, trạng thái giữ nguyên |
+| Initialize | `new SeatInventory(10)` | 0 | 10 | Holds |
+| Reserve 4 | `reserve(4)` returns `true` | 4 | 6 | Holds |
+| Reserve 7 more | `reserve(7)` returns `false` | 4 | 6 | Holds; state unchanged |
+| Cancel 2 | `cancel(2)` | 2 | 8 | Holds |
+| Cancel 5 | `cancel(5)` throws an exception | 2 | 8 | Holds; state unchanged |
 
-**Điểm quan trọng:** `SeatInventory` không có setter dạng `setReserved`; nó chỉ có những hành vi gắn với **ý nghĩa nghiệp vụ**. Constructor đảm bảo trạng thái ban đầu hợp lệ, còn mọi public mutator hợp lệ đều giữ được:
+**Key point:** `SeatInventory` has no `setReserved` setter; it exposes only behaviors with **business meaning**. Its constructor establishes a valid initial state, and every valid public mutator preserves:
 
 \[
 0 \le \text{reserved} \le \text{capacity}
 \]
 
-Đây là một lập luận theo kiểu **quy nạp**:
+This is an **inductive** argument:
 
-1. **Cơ sở:** sau constructor, `reserved = 0` và `capacity > 0`.
-2. **Bước đặt chỗ:** chỉ cộng khi `seats > 0` và `seats <= capacity - reserved`; vì vậy không vượt capacity.
-3. **Bước hủy:** chỉ trừ khi `0 < seats <= reserved`; vì vậy không âm.
-4. **Bảo toàn:** nếu trạng thái trước thao tác hợp lệ, trạng thái sau thao tác thành công vẫn hợp lệ. Đường lỗi không sửa state.
+1. **Base case:** after construction, `reserved = 0` and `capacity > 0`.
+2. **Reservation step:** add only when `seats > 0` and `seats <= capacity - reserved`; capacity is therefore never exceeded.
+3. **Cancellation step:** subtract only when `0 < seats <= reserved`; the result cannot become negative.
+4. **Preservation:** if the state before an operation is valid, the state after a successful operation remains valid. Failure paths do not modify state.
 
-Lập luận đúng trong phạm vi các method được định nghĩa, với giả định không có code nào dùng reflection/native access để sửa field bất hợp lệ và không bỏ qua cơ chế đồng bộ của các method. Trong Java bình thường, quyền truy cập private giúp chặn các phép gán trực tiếp từ client.
+This argument applies to the defined methods, assuming no code uses reflection/native access to alter fields illegally or bypasses the methods' synchronization. Under normal Java access rules, private access prevents direct assignment by clients.
 
-### Vì sao lại có `synchronized`?
+### Why use `synchronized`?
 
-Nếu hai thread cùng đọc `reserved = 4` và cùng muốn đặt 4 chỗ, thao tác “kiểm tra rồi cộng” phải được xem như **một đơn vị**. Nếu thiếu đồng bộ, hai thread có thể đều thấy đủ chỗ, trả `true`, nhưng kết quả lưu lại và số booking thực tế có thể không nhất quán.
+If two threads both read `reserved = 4` and each tries to reserve 4 seats, the "check then add" action must be treated as **one unit**. Without synchronization, both might observe enough capacity and return `true`, while the stored result and actual bookings become inconsistent.
 
-`synchronized` trên `reserve`, `cancel` và các phép đọc khiến chúng cùng dùng một monitor cho object, tạo quan hệ happens-before thích hợp trong phạm vi class. Đây là một minh họa quản lý concurrency **trong bộ nhớ một JVM**; nếu kho chỗ được lưu trong database và có nhiều instance ứng dụng, vẫn cần transaction/optimistic lock hoặc điều kiện cập nhật nguyên tử ở tầng lưu trữ. Không thể chỉ thêm `synchronized` ở một service instance rồi bảo đảm hết vấn đề race giữa nhiều node.
+Using `synchronized` on `reserve`, `cancel`, and reads makes them use the same object monitor, establishing suitable happens-before relationships within the class. This demonstrates concurrency control **in the memory of one JVM**. If seats are stored in a database and multiple application instances run, transactions, optimistic locking, or conditional atomic updates are still needed at the storage layer. Adding `synchronized` to one service instance cannot eliminate races across nodes.
 
-## 5. Lỗi khó thấy: field private nhưng trả về collection gốc
+## 5. A subtle bug: a private field that returns the original collection
 
-Xét một giỏ hàng:
+Consider a shopping cart:
 
 ~~~java
 import java.util.ArrayList;
@@ -985,9 +985,9 @@ LeakyCart cart = new LeakyCart();
 cart.getItems().clear(); // Xóa trạng thái nội bộ từ ngoài class!
 ~~~
 
-Đổi `items` thành `private final` **không giải quyết được** vì `final` chỉ ngăn đổi đối tượng `List` đang được tham chiếu, không ngăn việc sửa nội dung của nó.
+Making `items` a `private final` field **does not fix the issue**: `final` prevents the `List` reference from being reassigned, but does not stop its contents from changing.
 
-Một cách sửa với phần tử `String` bất biến:
+One fix, when elements are immutable `String` values:
 
 ~~~java
 final class SafeCart {
@@ -1010,7 +1010,7 @@ final class SafeCart {
 }
 ~~~
 
-Giờ các đoạn sau sẽ không thể sửa giỏ hàng thông qua snapshot:
+Now the following code cannot modify the cart through the snapshot:
 
 ~~~java
 SafeCart cart = new SafeCart();
@@ -1024,11 +1024,11 @@ System.out.println(readOnly);          // Vẫn chỉ [SKU-1].
 System.out.println(cart.itemsSnapshot()); // [SKU-1, SKU-2].
 ~~~
 
-Một snapshot cũng giúp phân biệt rõ **ảnh chụp tại thời điểm gọi** với **view có thể thay đổi theo dữ liệu gốc**. Nếu API thực sự cần live view, phải nêu rõ hợp đồng về thời điểm và concurrency, chứ không trả ngẫu nhiên một reference mutable.
+A snapshot also clearly distinguishes **a copy captured at call time** from **a view that changes along with its source**. If the API truly needs a live view, its timing and concurrency contract should be explicit, rather than exposing an arbitrary mutable reference.
 
-## 6. Defensive copy trong constructor: chặn sửa thông qua alias
+## 6. Defensive copying in constructors: preventing mutations through aliases
 
-Một lớp có thể không lộ getter mà vẫn bị thay đổi thông qua object bên ngoài đã truyền vào:
+A class can leak state through an externally supplied object even without exposing a getter:
 
 ~~~java
 import java.util.List;
@@ -1046,7 +1046,7 @@ class BrokenTeam {
 }
 ~~~
 
-Client còn giữ reference:
+The client still holds a reference:
 
 ~~~java
 List<String> external = new java.util.ArrayList<>(
@@ -1058,7 +1058,7 @@ external.clear();
 System.out.println(team.size()); // 0, dù Team không có mutator.
 ~~~
 
-Nếu invariant là “nhóm phải có ít nhất một thành viên”, việc kiểm tra `!members.isEmpty()` trong constructor **không bảo đảm điều đó về sau**. Ta cần sao chép cấu trúc đầu vào và chỉ giữ một representation không sửa được:
+If the invariant is "a team must have at least one member," checking `!members.isEmpty()` in the constructor **does not guarantee it later**. We must copy the input structure and retain only a representation that cannot be modified:
 
 ~~~java
 final class Team {
@@ -1090,9 +1090,9 @@ final class Team {
 }
 ~~~
 
-Trong `Team` này, cả constructor lẫn getter đã bảo vệ được invariant dựa trên **cấu trúc danh sách và giá trị String bất biến**. Nếu phần tử là object mutable thì `List.copyOf` **không phải deep copy**: các object bên trong vẫn có thể bị sửa qua alias khác.
+In this `Team`, both the constructor and getter protect the invariant based on **list structure and immutable String values**. If elements are mutable objects, `List.copyOf` **is not a deep copy**: those objects may still be modified through other aliases.
 
-### Bẫy `Collections.unmodifiableList`
+### The `Collections.unmodifiableList` pitfall
 
 ~~~java
 List<String> external = new java.util.ArrayList<>(List.of("A"));
@@ -1102,22 +1102,22 @@ external.add("B");
 System.out.println(view); // [A, B]
 ~~~
 
-`unmodifiableList` chỉ ngăn sửa **thông qua view**, không ngăn chủ sở hữu của list gốc sửa nó. Ngược lại, `List.copyOf(external)` tạo snapshot cấu trúc (nếu collection phù hợp), nên các thao tác `add/remove` về sau trên `external` không đổi snapshot.
+`unmodifiableList` prevents mutation **through the view** but does not prevent the original list's owner from changing it. In contrast, `List.copyOf(external)` creates a structural snapshot (for a suitable collection), so later `add/remove` operations on `external` do not modify the snapshot.
 
-| Cách bảo vệ | Chặn sửa qua giá trị trả về? | Tách khỏi thay đổi của collection gốc? | Chặn sửa object phần tử mutable? |
+| Protection method | Prevent mutation through returned value? | Independent of source collection changes? | Prevent mutation of mutable element objects? |
 |---|---|---|---|
-| Trả trực tiếp `items` | Không | Không | Không |
-| `Collections.unmodifiableList(items)` | Có | Không, đây là view | Không |
-| `List.copyOf(items)` | Có | Có, với thay đổi cấu trúc của source | Không |
-| Copy sâu có kiểm soát | Tùy API | Có | Có, nếu mọi phần tử mutable liên quan được copy đúng |
+| Return `items` directly | No | No | No |
+| `Collections.unmodifiableList(items)` | Yes | No, this is a view | No |
+| `List.copyOf(items)` | Yes | Yes, for structural changes in the source | No |
+| Controlled deep copy | Depends on the API | Yes | Yes, if all relevant mutable elements are copied correctly |
 
-**Vì vậy:** `private + final + getter` chưa đủ để kết luận object được đóng gói an toàn. Hãy vẽ **đồ thị tham chiếu**, xem ai còn có thể sửa vật thể nào.
+**Therefore:** `private + final + getter` does not by itself prove an object is safely encapsulated. Draw the **reference graph** and check who can still mutate which objects.
 
-## 7. Lớp con, record và getter/setter có thể phá invariant theo cách khác
+## 7. How subclasses, records, and getters/setters can break invariants in other ways
 
-### 7.1. Setter độc lập làm hỏng quy tắc liên quan nhiều field
+### 7.1. Independent setters break rules involving multiple fields
 
-Xét cửa sổ đặt lịch với `start < end`:
+Consider a booking window with `start < end`:
 
 ~~~java
 import java.time.Instant;
@@ -1141,9 +1141,9 @@ class MutableWindow {
 }
 ~~~
 
-Constructor gọi setter nhưng không kiểm tra quan hệ. Dù ta thêm validation ở mỗi setter, thay đổi một khoảng hợp lệ từ `10:00–11:00` sang `12:00–13:00` bằng `setStart(12:00)` trước có thể tạo trạng thái trung gian vô hiệu. Nếu kiểm tra chặt và ném exception, đôi khi client **không thể đổi theo thứ tự mong muốn**, dù trạng thái đích hợp lệ.
+The constructor calls setters without validating the relationship. Even with validation in each setter, changing a valid interval from `10:00–11:00` to `12:00–13:00` by calling `setStart(12:00)` first could create an invalid intermediate state. With strict checks and an exception, the client may **be unable to update in the desired order**, even though the intended final state is valid.
 
-Thay vì hai setter, hãy chọn thao tác cập nhật cả hai trường cùng lúc, với kiểm tra trước khi ghi:
+Instead of two setters, provide an operation that updates both fields together, validating before assignment:
 
 ~~~java
 import java.time.Instant;
@@ -1177,7 +1177,7 @@ final class BookingWindow {
 }
 ~~~
 
-`BookingWindow` trong demo giữ hai field mutable để dạy về method cập nhật cặp. Đối với một value object không cần thay đổi sau tạo, thiết kế **immutable** còn đơn giản hơn:
+`BookingWindow` in the demo keeps two mutable fields to teach paired updates. For a value object that does not need to change after construction, an **immutable** design is simpler:
 
 ~~~java
 import java.time.Instant;
@@ -1196,7 +1196,7 @@ record ImmutableWindow(Instant start, Instant end) {
 // Thay đổi => tạo một ImmutableWindow mới hợp lệ.
 ~~~
 
-### 7.2. Record không tự bảo đảm deep immutability
+### 7.2. Records do not guarantee deep immutability
 
 ~~~java
 record AccountRoles(java.util.List<String> roles) {}
@@ -1208,7 +1208,7 @@ external.add("ADMIN");
 System.out.println(roles.roles()); // [READ, ADMIN]
 ~~~
 
-`record` sinh constructor, accessor, `equals` và `toString` dựa trên các component, nhưng không tự copy một `List` mutable. Nếu muốn giữ snapshot:
+A `record` generates a constructor, accessors, `equals`, and `toString` based on its components, but does not automatically copy a mutable `List`. To retain a snapshot:
 
 ~~~java
 record SafeAccountRoles(java.util.List<String> roles) {
@@ -1219,11 +1219,11 @@ record SafeAccountRoles(java.util.List<String> roles) {
 }
 ~~~
 
-Trong compact constructor, phép gán `roles = ...` thay đổi tham số dùng để khởi tạo field record; với list chứa `String` immutable, đây là cách bảo vệ hợp lý.
+In a compact constructor, assigning `roles = ...` replaces the parameter used to initialize the record field; with immutable `String` elements, this is a reasonable safeguard.
 
-### 7.3. Kế thừa mở thêm đường thay đổi
+### 7.3. Inheritance opens additional mutation paths
 
-Nếu lớp cha có field `protected` mutable:
+If the superclass has a mutable `protected` field:
 
 ~~~java
 class InventoryBase {
@@ -1231,11 +1231,11 @@ class InventoryBase {
 }
 ~~~
 
-Một subclass có thể trực tiếp tăng/giảm và phá invariant của lớp cha. Nếu một lớp sở hữu invariant chặt, có thể dùng `private` state, các method kiểm soát thay đổi, và cân nhắc `final class` hoặc API kế thừa có hợp đồng rõ ràng. **`protected` không đồng nghĩa “chỉ dùng nội bộ trong chính lớp này”**.
+A subclass can directly increment or decrement it and violate the superclass's invariant. If a class owns a strict invariant, use `private` state, controlled mutation methods, and consider a `final class` or an inheritance API with a clear contract. **`protected` does not mean "usable only inside this class."**
 
-Một override của method được gọi trong quá trình khởi tạo cũng có thể quan sát trạng thái subclass chưa hoàn tất. Tránh gọi method có thể override từ constructor khi invariant của lớp con chưa được thiết lập.
+An overridden method called during construction can also observe a subclass whose state is not fully initialized. Avoid calling overridable methods from constructors before subclass invariants are established.
 
-## 8. Sơ đồ luồng kiểm soát trạng thái
+## 8. State-control flow diagram
 
 ~~~mermaid
 flowchart TD
@@ -1248,20 +1248,20 @@ flowchart TD
     Mutate --> Done["Trả true<br/>Invariant được bảo toàn"]
 ~~~
 
-Sơ đồ thể hiện đúng ranh giới: **Client gửi yêu cầu**, không trực tiếp ghi `reserved`. Chỉ đối tượng sở hữu trạng thái mới quyết định có được thay đổi hay không.
+The diagram shows the correct boundary: **the client sends a request** rather than writing `reserved` directly. Only the object owning the state decides whether a change is allowed.
 
-Khi một thao tác liên quan nhiều aggregate hoặc database, invariant cần được phân thành hai mức:
+When an operation spans multiple aggregates or a database, invariants must be considered at two levels:
 
-- **Invariant trong một object/aggregate:** có thể giữ bằng API, state riêng và đồng bộ thích hợp.
-- **Invariant liên quan nhiều bản ghi hoặc nhiều hệ thống:** thường cần transaction, optimistic locking, unique constraint, outbox, idempotency hoặc những cơ chế nhất quán khác.
+- **Invariant within one object/aggregate:** can be enforced using the API, private state, and suitable synchronization.
+- **Invariant across multiple records or systems:** typically needs transactions, optimistic locking, unique constraints, an outbox, idempotency, or other consistency mechanisms.
 
-Encapsulation trong Java không thay thế database constraint. Ví dụ “không bán quá số vé” phải được bảo vệ cả khi hai node ứng dụng cùng đặt vé trên một database.
+Java encapsulation does not replace database constraints. For example, "never sell more tickets than exist" must still hold when two application nodes reserve seats in the same database.
 
-## 9. Kiểm thử invariant: phải thử cả đường thất bại và đường đi vòng
+## 9. Testing invariants: include failure paths and alternate mutation paths
 
-Nếu test chỉ kiểm tra `reserve(4)` trả `true`, ta chưa chứng minh được object an toàn. Cần kiểm tra **trạng thái không đổi sau yêu cầu bị từ chối**, đường mutation gián tiếp và các điều kiện biên.
+A test that only checks `reserve(4)` returning `true` does not establish that an object is safe. Also check **unchanged state after rejected requests**, indirect mutation paths, and boundary conditions.
 
-Các test sau dùng JUnit Jupiter (JUnit 5), đặt cùng package với **`InvariantDemo.java`**:
+The following tests use JUnit Jupiter (JUnit 5) in the same package as **`InvariantDemo.java`**:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1323,11 +1323,11 @@ class InvariantDemoTest {
 }
 ~~~
 
-Đối với generic collection, nên bổ sung test khi phần tử là **object mutable**, không chỉ String. Đối với `BookingWindow`, hãy thử cập nhật một khoảng hợp lệ mới, cập nhật sai thứ tự và xác nhận trường cũ vẫn giữ nguyên sau exception.
+For generic collections, add tests with **mutable object** elements, not only strings. For `BookingWindow`, test replacing the interval with another valid interval and an invalid one, confirming that the old fields remain unchanged after an exception.
 
-**Cần test cả ranh giới concurrency khi có yêu cầu:** nhiều thread cùng đặt chỗ, nhưng không chỉ dựa vào một vài lần chạy để “chứng minh thread-safe”. Có thể dùng test đồng bộ với latch, stress test, kiểm tra race bằng công cụ chuyên dụng và xác minh transaction ở tầng lưu trữ.
+**Test concurrency boundaries too, when required:** let multiple threads reserve seats, but do not rely on a few executions to "prove thread safety." Synchronize tests with latches, use stress tests or specialized race-detection tools, and verify transactions at the persistence layer.
 
-### Một test chuyên biệt cho atomic update
+### A dedicated test for atomic updates
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1353,55 +1353,55 @@ class BookingWindowTest {
 }
 ~~~
 
-Test này xác minh cả **hậu điều kiện của đường lỗi**: một lệnh cập nhật bị từ chối không được để lại trạng thái một nửa. Lưu ý `Instant` không mang múi giờ địa phương, còn chuỗi `Z` là UTC; giá trị ngày giờ ở đây chỉ dùng làm dữ liệu ví dụ.
+This test also verifies the **postcondition on failure**: a rejected update must not leave state half-modified. Note that `Instant` contains no local time zone, while `Z` denotes UTC; the date-time values are sample data only.
 
-## 10. Phân biệt invariant, immutability và thread safety
+## 10. Distinguishing invariants, immutability, and thread safety
 
-Ba thuộc tính hỗ trợ nhau nhưng **không đồng nghĩa**:
+These three properties reinforce each other but **are not equivalent**:
 
-| Thuộc tính | Ý nghĩa | Ví dụ |
+| Property | Meaning | Example |
 |---|---|---|
-| **Invariant** | Quy tắc trạng thái phải đúng | `0 <= reserved <= capacity` |
-| **Encapsulation** | Kiểm soát ai được đọc/ghi và qua API nào | `reserved` là private, thay đổi qua `reserve` |
-| **Immutability** | Trạng thái quan sát được không đổi sau khởi tạo | `ImmutableWindow` với hai `Instant` |
-| **Thread safety** | Hành vi đúng khi nhiều thread cùng sử dụng theo hợp đồng | `SeatInventory` bảo vệ cả check và update bằng `synchronized` |
+| **Invariant** | State rule that must hold | `0 <= reserved <= capacity` |
+| **Encapsulation** | Controls who can read/write and through which API | `reserved` is private and changes through `reserve` |
+| **Immutability** | Observable state never changes after construction | `ImmutableWindow` with two `Instant` values |
+| **Thread safety** | Correct behavior under concurrent use, according to the contract | `SeatInventory` protects both checks and updates with `synchronized` |
 
-Một object mutable vẫn có thể luôn giữ invariant; `SeatInventory` chính là ví dụ. Một object immutable được tạo với dữ liệu sai vẫn **có thể vi phạm invariant mãi mãi** nếu constructor không validation. Và một class có các method kiểm tra invariant đúng khi gọi tuần tự vẫn có thể gặp race condition nếu gọi đồng thời mà không có bảo vệ.
+A mutable object can always preserve its invariant; `SeatInventory` is an example. An immutable object created with invalid data can **violate an invariant forever** if its constructor does not validate. And a class whose methods preserve invariants when called sequentially can still encounter race conditions when invoked concurrently without protection.
 
-`private` là công cụ **ẩn dữ liệu khỏi mã bên ngoài**, không phải cơ chế đồng bộ bộ nhớ. `final` trên reference là một phần của thiết kế bất biến, nhưng không biến collection mutable thành immutable.
+`private` is a mechanism for **hiding data from external code**, not for synchronizing memory. Applying `final` to a reference can support immutability, but does not make a mutable collection immutable.
 
-## 11. Khi nào cần getter/setter, khi nào nên dùng hành vi nghiệp vụ?
+## 11. When are getters/setters appropriate, and when should domain behavior be used?
 
-Không phải setter nào cũng xấu. Với DTO, JavaBeans, form binding hay cấu hình, getter/setter có thể là lựa chọn thực dụng. Nhưng khi object **sở hữu invariant hoặc hành vi nghiệp vụ**, setter “đưa gì cũng nhận” thường là dấu hiệu nên xem xét lại API.
+Not every setter is bad. For DTOs, JavaBeans, form binding, or configuration, getters/setters may be practical. But when an object **owns invariants or business behavior**, a setter that accepts anything is often a signal to reconsider the API.
 
-| Mô hình | API thường hợp lý | Ghi chú |
+| Model | Typically appropriate API | Notes |
 |---|---|---|
-| DTO nhập liệu chưa xác thực | Field/bean properties theo framework | Validation thực hiện tại boundary trước khi tạo domain object |
-| Domain entity có quy tắc trạng thái | `pay()`, `cancel()`, `reserve(n)` | Thao tác diễn đạt nghiệp vụ, giữ invariant |
-| Value object | Constructor/factory validation, không có mutator | Giá trị mới thường tạo object mới |
-| Collection nội bộ | `addItem`, `removeItem`, snapshot | Không rò rỉ mutable collection gốc |
-| Cặp field phải cập nhật cùng nhau | `replaceWindow(start,end)` | Kiểm tra tổ hợp trước khi công bố state |
+| Unvalidated input DTO | Fields/bean properties as required by the framework | Validate at the boundary before creating a domain object |
+| Domain entity with state rules | `pay()`, `cancel()`, `reserve(n)` | Operations express business intent and preserve invariants |
+| Value object | Constructor/factory validation, no mutator | A new value usually means a new object |
+| Internal collection | `addItem`, `removeItem`, snapshot | Do not expose the original mutable collection |
+| Field pair that must change together | `replaceWindow(start,end)` | Validate the combination before exposing state |
 
-Trước khi thêm `setStatus(String status)` vào một entity, hãy hỏi **những chuyển trạng thái nào thực sự hợp lệ?** Chẳng hạn đơn hàng từ `PAID` không thể tùy ý trở lại `CREATED` chỉ vì một setter nhận chuỗi đó.
+Before adding `setStatus(String status)` to an entity, ask **which state transitions are actually valid?** For example, an order in `PAID` state cannot arbitrarily return to `CREATED` merely because a setter accepts that string.
 
-## 12. Checklist review mã nguồn: tìm mọi đường phá invariant
+## 12. Code-review checklist: identify every path that could break an invariant
 
-Khi đánh giá một class có state, hãy lần lượt kiểm tra:
+When reviewing a class with state, check these points in order:
 
-1. **Viết invariant thành câu hoặc biểu thức cụ thể.** Nếu chưa nói được “trạng thái hợp lệ” là gì, rất khó bảo vệ.
-2. **Constructor/factory:** Có từ chối giá trị sai? Có copy những object mutable do caller truyền vào?
-3. **Field:** Có mutable field `public`/`protected`? `final` chỉ áp dụng cho tham chiếu hay cho toàn bộ giá trị?
-4. **Getter:** Có trả collection, array, `Date` hoặc mutable object nội bộ không?
-5. **Setter/mutator:** Có thể sửa một field làm mâu thuẫn với field khác? Có kiểm tra *trước* khi ghi?
-6. **Method override:** Subclass có thể bỏ qua validation hoặc truy cập state bằng một con đường khác không?
-7. **Serialization/ORM/framework:** Framework có thể tạo và khôi phục đối tượng qua reflection hay persistence mapping không? Nếu có, validation phải được áp dụng ở boundary/hook thích hợp mà không phá hợp đồng framework.
-8. **Concurrency:** Có thể nhiều thread truy cập cùng instance? Nếu có, kiểm tra check-then-act, memory visibility và atomicity.
-9. **Đa hệ thống:** Invariant có phụ thuộc DB, cache hoặc một service khác không? Thiết kế constraint và cơ chế nhất quán ở đúng tầng.
-10. **Test:** Có kiểm tra đường lỗi giữ nguyên state, mutation thông qua alias, phần tử mutable và các trạng thái biên chưa?
+1. **Express the invariant as a concrete statement or formula.** Without defining "valid state," it is hard to protect it.
+2. **Constructor/factory:** Does it reject invalid values? Does it copy mutable objects supplied by the caller?
+3. **Fields:** Are mutable fields `public`/`protected`? Does `final` apply only to the reference or to the entire value?
+4. **Getter:** Does it return an internal collection, array, `Date`, or other mutable object?
+5. **Setter/mutator:** Can changing one field contradict another? Does it validate *before* assignment?
+6. **Method override:** Can subclasses bypass validation or access state through another path?
+7. **Serialization/ORM/framework:** Can a framework instantiate or restore objects via reflection or persistence mapping? If so, apply validation at appropriate boundaries/hooks without violating framework contracts.
+8. **Concurrency:** Can multiple threads access one instance? If so, examine check-then-act, memory visibility, and atomicity.
+9. **Across systems:** Does the invariant depend on a DB, cache, or another service? Put constraints and consistency mechanisms at the right layer.
+10. **Tests:** Do they cover state preservation on failure, alias-based mutations, mutable elements, and boundary states?
 
-### Đừng “sửa” bằng cách khóa mọi trường thành private rồi bỏ hết hành vi
+### Do not "fix" it by making every field private and stripping away all behavior
 
-Nếu chỉ thay field public bằng setter/getter bọc quanh field:
+Merely replacing public fields with getters and setters that wrap those fields:
 
 ~~~java
 class WeakInventory {
@@ -1417,104 +1417,104 @@ class WeakInventory {
 }
 ~~~
 
-thiết kế vẫn cho phép truyền `-50` hay `1_000_000`. Tốt hơn là xác định **trạng thái hợp lệ** và **những thao tác được phép**. Đóng gói không có nghĩa “mỗi field đều có getter/setter”; nó là **giữ quyền quyết định về invariant trong chính object**.
+still allows values such as `-50` or `1_000_000`. Instead, define **valid state** and **allowed operations**. Encapsulation does not mean "every field has a getter/setter"; it means **keeping decisions about invariants inside the object itself**.
 
-## 13. Bài tập thực hành: số lượng tồn kho và đặt hàng
+## 13. Practice exercise: stock quantities and reservations
 
-Hãy thiết kế một lớp `StockItem` có:
+Design a `StockItem` class with:
 
-- `sku` là chuỗi ID không rỗng, không thay đổi sau khởi tạo.
-- `onHand` là số lượng hàng hiện có, không âm.
-- `reserved` là số lượng đang giữ cho đơn, không âm và không vượt `onHand`.
-- Không công khai các field mutable.
-- Có `reserve(n)`, `release(n)`, `receive(n)` và `shipReserved(n)`.
+- `sku` as a nonblank ID string that never changes after construction.
+- `onHand` as the nonnegative quantity of stock available.
+- `reserved` as a nonnegative quantity held for orders, never exceeding `onHand`.
+- No publicly exposed mutable fields.
+- Methods `reserve(n)`, `release(n)`, `receive(n)`, and `shipReserved(n)`.
 
-**Yêu cầu về trạng thái:**
+**State requirements:**
 
 \[
 0 \le \text{reserved} \le \text{onHand}
 \]
 
-`shipReserved(n)` cần giảm **cả** `reserved` và `onHand` sau khi xác minh yêu cầu hợp lệ; không được giảm một trường rồi thất bại ở trường kia. `receive(n)` tăng số hàng hiện có và cần xử lý tràn số nguyên nếu dùng `int` (có thể dùng `Math.addExact` hoặc kiểm tra trước). `reserve(n)` không được giữ vượt hàng khả dụng `onHand - reserved`.
+`shipReserved(n)` must decrease **both** `reserved` and `onHand` after validating the request; it must not update one field and then fail on the other. `receive(n)` increases stock on hand and must handle integer overflow when using `int` (for example, with `Math.addExact` or prior validation). `reserve(n)` must not reserve more than the available quantity `onHand - reserved`.
 
-Viết unit tests cho ít nhất:
+Write unit tests for at least:
 
-- Khởi tạo với `onHand < 0` bị từ chối.
-- Đặt số lượng lớn hơn khả dụng bị từ chối, state không đổi.
-- Xuất hàng từ lượng reserved cập nhật cả hai số đúng.
-- Xuất vượt reserved không làm thay đổi bất kỳ field nào.
-- Hai lệnh đặt đồng thời không được cùng tiêu thụ một đơn vị cuối cùng trong một kho chung.
-- Nếu lưu kho trên DB, mô tả cách bảo vệ invariant khi nhiều ứng dụng chạy ở các node khác nhau.
+- Reject construction with `onHand < 0`.
+- Reject reservations exceeding available stock without changing state.
+- Shipping reserved stock updates both counts correctly.
+- Shipping more than reserved changes no fields.
+- Two concurrent reservations cannot both consume the final unit in a shared inventory.
+- If inventory is stored in a DB, describe how to enforce the invariant across application nodes.
 
-### Câu hỏi tự kiểm tra
+### Self-check questions
 
-1. Vì sao việc `inventory.reserved = 12` biên dịch được chưa chứng minh trạng thái hợp lệ?
-2. Khác nhau giữa tiền điều kiện `seats > 0` và invariant `reserved <= capacity`?
-3. Vì sao `private final List<?>` vẫn có thể bị sửa từ bên ngoài?
-4. `Collections.unmodifiableList(source)` khác `List.copyOf(source)` ở điểm nào?
-5. Nếu `List.copyOf` chứa phần tử là object mutable, object có được deep immutable không?
-6. Vì sao hai setter `setStart` và `setEnd` có thể gây trạng thái trung gian sai?
-7. Khi nào record vẫn để rò rỉ reference mutable?
-8. `synchronized` trên một object Java có bảo đảm kho vé trên nhiều JVM không?
-9. Với một entity nghiệp vụ, khi nào `reserve(n)` tốt hơn `setReserved(n)`?
+1. Why does compiling `inventory.reserved = 12` not prove that the resulting state is valid?
+2. How does the precondition `seats > 0` differ from the invariant `reserved <= capacity`?
+3. Why can `private final List<?>` still be modified externally?
+4. How does `Collections.unmodifiableList(source)` differ from `List.copyOf(source)`?
+5. If `List.copyOf` contains mutable object elements, is the object deeply immutable?
+6. Why can the two setters `setStart` and `setEnd` create an invalid intermediate state?
+7. When can a record still leak a mutable reference?
+8. Does `synchronized` on one Java object protect ticket inventory across JVMs?
+9. For a domain entity, when is `reserve(n)` better than `setReserved(n)`?
 
-**Kết luận:** **Invariant là lời cam kết rằng đối tượng không bị đẩy vào trạng thái mâu thuẫn qua những API được công bố.** Để giữ lời cam kết ấy, không chỉ giấu field mà còn phải kiểm soát **mọi đường thay đổi và mọi tham chiếu mutable**: constructor, getter, mutator, subclass và concurrency. Hãy thiết kế thao tác theo nghiệp vụ, xác thực trước khi cập nhật, bảo vệ alias và kiểm thử rằng cả thành công lẫn thất bại đều để đối tượng trong trạng thái hợp lệ.
+**Conclusion:** **An invariant is a promise that an object's published APIs cannot put it into a contradictory state.** Keeping this promise takes more than hiding fields: control **every mutation path and mutable reference**, including constructors, getters, mutators, subclasses, and concurrency. Design operations around business intent, validate before updating, protect aliases, and test that both successes and failures leave the object in a valid state.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-pitfalls-003">Getter, setter tràn lan nhưng thiếu hành vi</a>
+## <a id="design-pitfalls-003">Excessive getters and setters without behavior</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Getter, setter tràn lan nhưng thiếu hành vi: nhận diện và sửa lỗi thiết kế OOP
+# Excessive getters and setters without behavior: recognizing and fixing an OOP design pitfall
 
-> **Chủ đề:** Lỗi thiết kế trong lập trình hướng đối tượng – các đối tượng được tạo ra chủ yếu để chứa dữ liệu, trong khi mọi quyết định nghiệp vụ bị đẩy ra ngoài. Mục tiêu là phân biệt getter/setter hợp lý với **Anemic Domain Model**, hiểu vì sao **đóng gói** không chỉ là đặt field `private`, và biết refactor sang các phương thức diễn đạt hành vi mà vẫn giữ đúng quy tắc nghiệp vụ.
+> **Topic:** A design pitfall in object-oriented programming: objects are created mainly to hold data while business decisions are pushed outside them. The goal is to distinguish appropriate getters/setters from an **Anemic Domain Model**, understand why **encapsulation** means more than declaring fields `private`, and refactor toward behavior-oriented methods while preserving business rules.
 
-## 1. Vấn đề thật sự nằm ở đâu?
+## 1. Where is the real problem?
 
-Hãy xem một class `Order` có các field `status`, `totalVnd`, `items` và các phương thức `getStatus()`, `setStatus()`, `getTotalVnd()`, `setTotalVnd()`, `getItems()`, `setItems()`. Về cú pháp, đây vẫn là một **class Java hợp lệ**. Nhưng nếu mọi quyết định như “được xác nhận đơn khi nào”, “có thể hủy đơn đã gửi chưa”, “tổng tiền tính ra sao” đều đặt ở controller hay service khác thì đối tượng `Order` chỉ còn là **túi dữ liệu**.
+Consider an `Order` class with fields `status`, `totalVnd`, and `items`, and methods `getStatus()`, `setStatus()`, `getTotalVnd()`, `setTotalVnd()`, `getItems()`, and `setItems()`. Syntactically this is still a **valid Java class**. But if decisions such as "when may an order be confirmed," "can a shipped order be canceled," and "how is the total calculated" all live in a controller or another service, the `Order` object is merely a **data bag**.
 
-Vấn đề không phải tên phương thức bắt đầu bằng `get` hay `set`. Vấn đề là **quyền thay đổi trạng thái và trách nhiệm bảo vệ quy tắc nghiệp vụ** nằm sai chỗ.
+The issue is not whether a method name starts with `get` or `set`. It is that **authority over state changes and responsibility for enforcing business rules** reside in the wrong place.
 
-Hai kiểu thiết kế cần phân biệt:
+Distinguish these two design styles:
 
-- **Anemic Domain Model (mô hình miền thiếu hành vi):** entity/domain object chứa dữ liệu và các thao tác truy cập đơn giản; service bên ngoài sở hữu hầu hết quy tắc nghiệp vụ liên quan đến dữ liệu đó.
-- **Rich Domain Model (mô hình miền có hành vi):** đối tượng chứa hoặc cộng tác với những hành vi và bất biến thuộc trách nhiệm của chính nó; những thay đổi có ý nghĩa được diễn đạt bằng ngôn ngữ nghiệp vụ.
+- **Anemic Domain Model:** entities/domain objects contain data and simple accessors; external services own most of the business rules governing that data.
+- **Rich Domain Model:** objects contain or collaborate on behaviors and invariants they own; meaningful changes are expressed in domain language.
 
-Không nên hiểu “rich” là **một class phải chứa mọi business logic**. Một số quy tắc liên quan nhiều entity hoặc gọi hệ thống ngoài thích hợp ở domain service, application service hay workflow. Thiết kế tốt là **phân bổ trách nhiệm đúng**, không phải nhét tất cả code vào entity.
+Do not take "rich" to mean **one class must contain all business logic**. Rules spanning multiple entities or external systems may belong in a domain service, application service, or workflow. Good design means **assigning responsibilities appropriately**, not stuffing all code into an entity.
 
-### Triệu chứng dễ nhận thấy
+### Easily recognized symptoms
 
-| Dấu hiệu | Vì sao đáng xem lại? |
+| Symptom | Why reconsider it? |
 |---|---|
-| Class domain có hàng chục getter/setter, gần như không có phương thức nghiệp vụ | Client phải tự biết cách thay đổi trạng thái hợp lệ |
-| Service viết `if (order.getStatus() == ...)` rồi `order.setStatus(...)` ở nhiều nơi | Quy tắc chuyển trạng thái bị phân tán, dễ sửa thiếu |
-| `setTotalVnd` cho phép client nhập tổng tiền tùy ý | Dữ liệu tính toán có thể lệch với các dòng hàng |
-| `getItems()` trả trực tiếp `ArrayList` bên trong | Client có thể thêm/xóa dòng hàng, vượt qua validation |
-| Mỗi controller tự quyết khi nào hủy, xác nhận, vận chuyển | Một use case có thể áp dụng luật khác use case còn lại |
-| Mọi field `private` nhưng setter lại `public` vô điều kiện | Encapsulation về mặt cú pháp không bảo vệ invariant |
-| Unit test chỉ kiểm `setX` xong `getX` trả X | Chưa kiểm tra quy tắc nghiệp vụ và các trạng thái bị cấm |
+| Domain class with dozens of getters/setters and almost no domain methods | Clients must know how to make valid state changes themselves |
+| A service uses `if (order.getStatus() == ...)` then `order.setStatus(...)` in many places | State-transition rules are scattered and easy to update inconsistently |
+| `setTotalVnd` lets callers assign an arbitrary total | Computed data may disagree with line items |
+| `getItems()` directly returns an internal `ArrayList` | Clients can add/remove order lines, bypassing validation |
+| Each controller decides independently when to cancel, confirm, or ship | One use case may enforce different rules from another |
+| All fields are `private`, but setters are unconditionally `public` | Syntactic encapsulation does not protect invariants |
+| Unit tests call `setX` then merely check that `getX` returns X | Business rules and forbidden states remain untested |
 
-**Đóng gói (encapsulation)** có nghĩa là gom **trạng thái cùng hành vi quản lý trạng thái** phía sau một hợp đồng rõ ràng, giới hạn những thao tác mà code bên ngoài có quyền thực hiện. Đặt field `private` rồi phát hành setter cho tất cả field có thể chỉ chuyển cách truy cập từ `order.status = ...` sang `order.setStatus(...)` mà không thay đổi quyền lực thực sự của client.
+**Encapsulation** places **state and the behavior managing that state** behind a clear contract, limiting the actions external code is allowed to perform. Declaring fields `private` and exposing setters for every field may merely change access from `order.status = ...` to `order.setStatus(...)` without actually restricting clients.
 
-## 2. Phản ví dụ: “OOP” chỉ có getter/setter
+## 2. Counterexample: "OOP" with only getters/setters
 
-Giả sử đơn hàng có các trạng thái:
+Suppose orders have these states:
 
-- `DRAFT`: đang tạo, có thể thêm sản phẩm.
-- `CONFIRMED`: đã xác nhận, không được sửa dòng hàng.
-- `SHIPPED`: đã gửi đi, không thể hủy theo quy tắc ví dụ.
-- `CANCELLED`: đã hủy, không thể xác nhận/gửi đi.
+- `DRAFT`: being created; products may be added.
+- `CONFIRMED`: confirmed; order lines may no longer change.
+- `SHIPPED`: shipped; cannot be canceled under this example's rules.
+- `CANCELLED`: canceled; cannot be confirmed or shipped.
 
-Mỗi dòng hàng có mã SKU, đơn giá VND nguyên và số lượng dương.
+Each order line has an SKU, an integer VND unit price, and a positive quantity.
 
-Một mô hình thiếu hành vi thường như sau (minh họa, các import/getter còn lại đã lược bỏ):
+An anemic model often looks like this (illustrative; remaining imports/getters omitted):
 
 ```java
 class Order {
@@ -1536,7 +1536,7 @@ class Order {
 }
 ```
 
-Một controller có thể tự làm:
+A controller might perform this logic itself:
 
 ```java
 // Phác họa service dùng model ở trên.
@@ -1545,7 +1545,7 @@ if ("DRAFT".equals(order.getStatus())) {
 }
 ```
 
-Trong khi nơi khác có thể gọi:
+While another location might call:
 
 ```java
 order.setStatus("SHIPPED");    // Bỏ qua bước CONFIRMED?
@@ -1553,45 +1553,45 @@ order.setTotalVnd(-100_000L);  // Tổng tiền âm?
 order.getLines().clear();      // Xóa hàng mà không cập nhật tổng?
 ```
 
-Các lời gọi trên thể hiện **API quá rộng**: class công khai cho client thao tác mà đáng ra phải bị hạn chế theo trạng thái và quy tắc nghiệp vụ. Chỗ nguy hiểm là đối tượng có thể đi vào trạng thái sai **mà không có điểm kiểm soát thống nhất**.
+These calls demonstrate **an overly broad API**: the class exposes operations that should be restricted by state and business rules. The danger is that an object can enter an invalid state **without a single enforcement point**.
 
-Chỉ thêm `if` ở controller hiện tại chưa đủ. Một tác vụ batch, consumer message hoặc API thứ hai có thể quên đúng cùng điều kiện đó. Cách thiết kế bền hơn là khiến **thao tác bất hợp lệ không có đường đi công khai hợp lệ**, hoặc ít nhất phải bị chính đối tượng từ chối.
+Adding an `if` to the current controller is insufficient. A batch job, message consumer, or second API may forget the same condition. A more robust design makes **invalid operations unavailable through any legitimate public path**, or at least has the object reject them.
 
-## 3. Tư duy lại API: từ “cho thay field” đến “yêu cầu thực hiện hành vi”
+## 3. Rethinking the API: from "change this field" to "perform this behavior"
 
-Thay:
+Replace:
 
-- `setStatus(CONFIRMED)` bằng `confirm()`.
-- `setStatus(SHIPPED)` bằng `ship()`.
-- `setStatus(CANCELLED)` bằng `cancel()`.
-- `getLines().add(line)` bằng `addLine(sku, unitPriceVnd, quantity)`.
-- `setTotalVnd(...)` bằng `totalVnd()` **tính từ dữ liệu nguồn**.
+- `setStatus(CONFIRMED)` with `confirm()`.
+- `setStatus(SHIPPED)` with `ship()`.
+- `setStatus(CANCELLED)` with `cancel()`.
+- `getLines().add(line)` with `addLine(sku, unitPriceVnd, quantity)`.
+- `setTotalVnd(...)` with `totalVnd()` **computed from source data**.
 
-Mỗi hành vi có thể:
-1. Kiểm tra điều kiện trước (*precondition*).
-2. Từ chối những chuyển đổi sai.
-3. Thay đổi trạng thái theo một quy tắc duy nhất.
-4. Bảo toàn những điều kiện luôn đúng (*invariants*).
-5. Trả về kết quả hoặc phát sinh lỗi có ý nghĩa.
+Each behavior can:
+1. Check preconditions (*precondition*).
+2. Reject invalid transitions.
+3. Change state according to one consistent rule.
+4. Preserve conditions that must always hold (*invariants*).
+5. Return a meaningful result or raise a meaningful error.
 
-Đây là tư tưởng thường được gọi là **Tell, Don't Ask**: thay vì bên ngoài hỏi trạng thái rồi tự sửa dữ liệu, hãy **yêu cầu đối tượng thực hiện một hành động có nghĩa**.
+This principle is often called **Tell, Don't Ask**: instead of external code querying state and then modifying data itself, **ask the object to perform a meaningful action**.
 
-Tuy nhiên, Tell, Don't Ask **không cấm truy vấn trạng thái**. UI cần hiển thị tổng tiền, API cần serialize thông tin, báo cáo cần đọc trạng thái. Getter chỉ đọc và query method là hoàn toàn bình thường khi phù hợp yêu cầu.
+However, Tell, Don't Ask **does not prohibit state queries**. UIs must show totals, APIs must serialize information, and reports must read state. Read-only getters and query methods are perfectly reasonable when required.
 
-### Hợp đồng mới theo ngôn ngữ nghiệp vụ
+### A new contract in domain language
 
-| API dạng dữ liệu | API diễn đạt hành vi | Quy tắc bảo vệ |
+| Data-oriented API | Behavior-oriented API | Protected rule |
 |---|---|---|
-| `setStatus(CONFIRMED)` | `confirm()` | Chỉ xác nhận đơn `DRAFT` có ít nhất một dòng |
-| `setStatus(SHIPPED)` | `ship()` | Chỉ gửi đơn `CONFIRMED` |
-| `setStatus(CANCELLED)` | `cancel()` | Không hủy đơn đã gửi; hủy lại có thể là no-op |
-| `getLines().add(...)` | `addLine(...)` | Chỉ sửa dòng hàng trong `DRAFT`; giá/số lượng hợp lệ |
-| `setTotalVnd(x)` | `totalVnd()` | Tổng được tính từ từng dòng hàng, không nhập tùy ý |
-| `getLines()` trả mutable list | `lines()` trả snapshot không sửa được | Client không thay dữ liệu bên trong qua tham chiếu |
+| `setStatus(CONFIRMED)` | `confirm()` | Confirm only `DRAFT` orders with at least one line |
+| `setStatus(SHIPPED)` | `ship()` | Ship only `CONFIRMED` orders |
+| `setStatus(CANCELLED)` | `cancel()` | Do not cancel shipped orders; repeated cancellation may be a no-op |
+| `getLines().add(...)` | `addLine(...)` | Modify lines only in `DRAFT`; prices/quantities must be valid |
+| `setTotalVnd(x)` | `totalVnd()` | Compute totals from line items instead of accepting arbitrary values |
+| `getLines()` returns a mutable list | `lines()` returns an unmodifiable snapshot | Clients cannot mutate internal data through a reference |
 
-Một API hướng hành vi có thể dễ đọc hơn: `order.confirm()` là **một quyết định nghiệp vụ**, khác với `order.setStatus(OrderStatus.CONFIRMED)` chỉ diễn đạt **một phép gán dữ liệu**.
+A behavior-oriented API is often clearer: `order.confirm()` expresses **a business decision**, whereas `order.setStatus(OrderStatus.CONFIRMED)` merely expresses **a data assignment**.
 
-## 4. Sơ đồ: một đối tượng tự kiểm soát vòng đời
+## 4. Diagram: an object controls its own lifecycle
 
 ```mermaid
 stateDiagram-v2
@@ -1607,19 +1607,19 @@ stateDiagram-v2
     end note
 ```
 
-Các mũi tên là **các chuyển trạng thái được phép**, không phải tất cả đường có thể tạo bằng setter. Trong ví dụ:
+The arrows represent **allowed state transitions**, not every transition that a setter could create. In this example:
 
-- Không được `ship()` khi đơn còn `DRAFT`.
-- Không được `confirm()` hai lần.
-- Không được thêm dòng hàng sau khi đã `CONFIRMED`.
-- Không được `cancel()` nếu đã `SHIPPED`.
-- Hủy một đơn đã `CANCELLED` được thiết kế là no-op (*idempotent*) để thao tác lặp lại không gây hại.
+- `ship()` is forbidden while the order is `DRAFT`.
+- `confirm()` cannot be called twice.
+- Order lines cannot be added after reaching `CONFIRMED`.
+- `cancel()` is forbidden after `SHIPPED`.
+- Canceling an already `CANCELLED` order is designed as a no-op (*idempotent*) so repetition is harmless.
 
-Quy tắc “không hủy sau khi gửi” là một **giả định của ví dụ**, không phải luật áp dụng cho tất cả hệ thống thương mại. Một sản phẩm khác có thể cho phép return/refund sau giao hàng, nhưng khi đó cần hành vi và trạng thái riêng chứ không chỉ mở lại setter.
+The "no cancellation after shipping" rule is **an assumption of this example**, not a universal rule for commerce systems. Another product might allow returns/refunds after delivery, but those need their own behaviors and states rather than reopening a setter.
 
-## 5. Ví dụ Java 17 hoàn chỉnh: đặt bất biến vào `Order`
+## 5. Complete Java 17 example: keeping invariants in `Order`
 
-Lưu đoạn sau thành `BehaviorRichOrderDemo.java`. Có thể biên dịch/chạy không cần thư viện ngoài JDK:
+Save the following as `BehaviorRichOrderDemo.java`. It compiles and runs with only the JDK:
 
 ```bash
 javac BehaviorRichOrderDemo.java
@@ -1765,31 +1765,31 @@ public final class BehaviorRichOrderDemo {
 }
 ```
 
-### Giải thích thiết kế
+### Design explanation
 
-**1. Trạng thái không bị gán tự do.** Field `status` là `private` và **không có `setStatus`**. Chỉ `confirm()`, `ship()` và `cancel()` được đổi trạng thái, mỗi method tự kiểm tra điều kiện.
+**1. State cannot be assigned freely.** The `status` field is `private` and **has no `setStatus`**. Only `confirm()`, `ship()`, and `cancel()` change state, and each method validates its own preconditions.
 
-**2. Quy tắc không bị phân tán.** Nếu một REST controller, một tác vụ batch và một consumer muốn xác nhận đơn, chúng đều gọi `order.confirm()`. Không cần chép lại điều kiện `DRAFT` và “không trống” ở cả ba nơi.
+**2. Rules are not scattered.** When a REST controller, batch job, or consumer wants to confirm an order, all call `order.confirm()`. They do not need to duplicate the `DRAFT` and "nonempty" checks in three places.
 
-**3. Danh sách nội bộ không bị lộ.** `lines()` trả `List.copyOf(lines)`. Vì `OrderLine` là record với các component bất biến (`String`, `long`, `int`), caller không thể âm thầm sửa phần tử và phá trạng thái của `Order`. `List.copyOf` là snapshot *shallow*; nếu phần tử bên trong là object mutable, cần thiết kế thêm.
+**3. Internal lists are not exposed.** `lines()` returns `List.copyOf(lines)`. Since `OrderLine` is a record with immutable components (`String`, `long`, `int`), callers cannot silently mutate an element and corrupt the `Order` state. `List.copyOf` creates a *shallow* snapshot; more design work is needed for mutable elements.
 
-**4. Tổng tiền có một nguồn sự thật.** Không lưu thêm field `totalVnd` để client tự sửa, nên tránh tình trạng “dòng hàng có tổng 320.000 nhưng total ghi 100.000”. Trong ứng dụng có danh sách rất lớn và cần cache tổng, có thể lưu tổng **nội bộ** rồi cập nhật nhất quán qua mọi thao tác; đó là tối ưu có điều kiện chứ không phải lý do mở `setTotalVnd`.
+**4. There is one source of truth for the total.** Without a `totalVnd` field that clients can set directly, we avoid cases where "order lines total 320.000 but the stored total says 100.000." Applications with very large lists may cache the total **internally**, updating it consistently through every operation; this is a conditional optimization, not a reason to expose `setTotalVnd`.
 
-**5. Không chấp nhận tràn số một cách im lặng.** `Math.multiplyExact` và `Math.addExact` ném `ArithmeticException` khi vượt giới hạn kiểu `long`. Phương thức `addLine` tính trước tổng mới rồi mới thêm dòng hàng, nên nếu phép tính thất bại vì overflow thì dữ liệu chưa bị thêm nửa chừng.
+**5. Integer overflow is never silently accepted.** `Math.multiplyExact` and `Math.addExact` throw `ArithmeticException` on overflow of `long`. `addLine` calculates the new total before appending a line, so a calculation failure cannot leave partially added data.
 
-**6. Đối tượng không tự làm mọi việc.** Demo chỉ quản lý quy tắc nội bộ một đơn. Nó không gọi database, REST API, thanh toán hay tạo shipping label. Những side effect bên ngoài thuộc trách nhiệm application service hoặc adapter thích hợp.
+**6. The object does not do everything.** The demo manages only the internal rules of one order. It does not call a database, a REST API, a payment system, or a shipping-label generator. Those external side effects belong in an appropriate application service or adapter.
 
-### Những điều ví dụ cố tình không giải quyết
+### What the example deliberately leaves out
 
-- Giá thực tế có thể theo tiền tệ, thuế, coupon, phí giao, tỷ giá hoặc thời điểm báo giá; ví dụ giả định VND nguyên và giá được cung cấp hợp lệ.
-- `Order` không tự xác thực caller có được phép sửa đơn hay không; authorization cần được bảo vệ ở ranh giới ứng dụng thích hợp.
-- Ví dụ dùng `ArrayList` và object mutable không được bảo vệ cho truy cập đa luồng đồng thời.
-- Không có lưu trữ lâu bền hoặc lock khi hai request cùng thay đổi một đơn.
-- Không xử lý thanh toán, giữ hàng, hoàn tiền, hay tính nhất quán xuyên nhiều dịch vụ.
+- Real pricing may depend on currency, taxes, coupons, delivery charges, exchange rates, or quote time; the example assumes integer VND values and valid supplied prices.
+- `Order` does not authenticate whether a caller may modify an order; authorization needs enforcement at a suitable application boundary.
+- The example uses `ArrayList` and a mutable object without protection against concurrent multithreaded access.
+- There is no durable storage or locking when two requests modify the same order.
+- Payment, inventory reservation, refunds, and consistency across services are not addressed.
 
-Một bài học OOP tốt không đánh đồng **đóng gói trạng thái đúng** với việc đã giải quyết **transaction, concurrency và distributed consistency**.
+An OOP lesson should not equate **proper state encapsulation** with having solved **transactions, concurrency, and distributed consistency**.
 
-## 6. Từ “anemic model” sang “rich model”: so sánh trách nhiệm
+## 6. From an "anemic model" to a "rich model": comparing responsibilities
 
 ```mermaid
 flowchart LR
@@ -1803,24 +1803,24 @@ flowchart LR
     end
 ```
 
-| Khía cạnh | Getter/setter tràn lan | Đối tượng có hành vi phù hợp |
+| Aspect | Excessive getters/setters | An object with appropriate behavior |
 |---|---|---|
-| Ai quyết được đổi `status`? | Bất kỳ nơi nào có setter | Chỉ phương thức nghiệp vụ kiểm tra điều kiện |
-| Ai bảo vệ tổng tiền? | Từng client hoặc một service rời | Dựa trên các dòng hàng và invariant chung |
-| Thêm một entry point mới | Có nguy cơ chép lại validation | Gọi API hành vi đã định nghĩa |
-| Mã đọc trong use case | Nhiều bước hỏi rồi sửa field | Thường là một yêu cầu có tên rõ ràng |
-| Khả năng test quy tắc | Phải đi qua service/controller tương ứng | Có thể test trực tiếp `Order` |
-| Nguy cơ dữ liệu không hợp lệ | Cao nếu có nhiều setter hoặc mutable references | Giảm, nếu mọi đường thay đổi đều qua API an toàn |
-| Chi phí | Ban đầu viết class đơn giản | Cần thiết kế ranh giới và kiểm thử hành vi |
-| Hạn chế | Logic nghiệp vụ phân tán | Không giải quyết các dependency hạ tầng tự động |
+| Who may change `status`? | Any code with access to the setter | Only guarded domain methods |
+| Who enforces the total? | Each client or a separate service | Order lines and shared invariants |
+| Adding a new entry point | Risks duplicating validation | Calls the established behavior API |
+| Code readability in use cases | Many steps that query and then change fields | Usually one clearly named request |
+| Ability to test rules | Requires the corresponding service/controller | Can test `Order` directly |
+| Risk of invalid data | High with many setters or mutable references | Reduced when all mutation paths use safe APIs |
+| Cost | Simple classes initially | Requires boundary design and behavior tests |
+| Limitation | Business logic is scattered | Does not automatically solve infrastructure dependencies |
 
-Một đối tượng có nhiều **query method** không nhất thiết anemic. Nếu các thao tác thay đổi được kiểm soát và đối tượng đáp ứng hợp đồng của nó, việc cung cấp `status()`, `totalVnd()` hoặc `lines()` chỉ đọc hoàn toàn phù hợp với encapsulation.
+An object with many **query methods** is not necessarily anemic. If its mutations are controlled and it fulfills its contract, read-only accessors such as `status()`, `totalVnd()`, and `lines()` are entirely consistent with encapsulation.
 
-## 7. Viết test cho hành vi và các trạng thái bị cấm
+## 7. Testing behavior and forbidden states
 
-Kiểm thử `setStatus(CONFIRMED)` rồi `getStatus()` trả về `CONFIRMED` chỉ chứng minh phép gán hoạt động, **chưa chứng minh đơn hàng hợp lệ**. Kiểm thử tốt phải kiểm cả những hành vi bị từ chối.
+Testing that `setStatus(CONFIRMED)` followed by `getStatus()` returns `CONFIRMED` only proves that assignment works; it **does not establish that the order is valid**. Good tests must also exercise rejected operations.
 
-JUnit 5, đặt `BehaviorRichOrderDemoTest.java` cùng package với file demo:
+With JUnit 5, place `BehaviorRichOrderDemoTest.java` in the same package as the demo:
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1906,40 +1906,40 @@ class BehaviorRichOrderDemoTest {
 }
 ```
 
-Các test này đánh giá **quy tắc quan sát được**, không phụ thuộc vào việc bên trong dùng `ArrayList` hay kiểu lưu trữ khác. Nếu refactor lưu total dưới dạng cached field nội bộ, bộ test hành vi vẫn có thể giữ nguyên.
+These tests check **observable rules**, not whether the implementation uses `ArrayList` or another storage type. If a refactoring caches the total internally, the behavior tests can remain unchanged.
 
-### Kiểm tra cả đường lỗi
+### Test failure paths too
 
-Khi một thao tác thất bại, đối tượng thường cần giữ nguyên trạng thái. Thứ tự **validate trước, mutate sau** giúp thực hiện điều này với logic trong bộ nhớ. Nhưng nếu một phương thức thực hiện nhiều side effect ngoài object (gửi HTTP, ghi file, thay nhiều aggregate), cần transaction hoặc workflow thích hợp; một method có tên “confirm” không tự bảo đảm tính nguyên tử trên mọi hệ thống.
+When an operation fails, the object should generally retain its state. **Validate first, mutate second** helps achieve this for in-memory logic. But if a method performs external side effects (HTTP calls, file writes, or updates across aggregates), appropriate transactions or workflows are required; naming a method "confirm" does not guarantee atomicity across systems.
 
-## 8. Getter và setter có khi nào hoàn toàn hợp lý?
+## 8. Are getters and setters ever entirely appropriate?
 
-**Có.** Không nên rút ra quy tắc cực đoan “OOP tốt là không có getter/setter”.
+**Yes.** Avoid the extreme rule that "good OOP has no getters/setters."
 
-| Loại đối tượng / ngữ cảnh | Getter/setter có phù hợp? | Lưu ý |
+| Object type / context | Are getters/setters appropriate? | Notes |
 |---|---|---|
-| **Request/Response DTO** | Thường có | Chủ yếu truyền dữ liệu, có thể dùng `record`, không bắt buộc giàu hành vi |
-| **Cấu hình (configuration properties)** | Có thể có | Framework binding, validate input, tránh mutable config ngoài kiểm soát |
-| **JavaBeans phục vụ framework** | Có thể cần theo convention | Giữ setter package/protected hoặc cơ chế mapping phù hợp khi có thể |
-| **JPA entity** | Tùy chiến lược mapping | JPA có thể truy cập field; không có yêu cầu chung rằng mọi setter phải public |
-| **View model / UI form** | Có thể cần để bind dữ liệu | Phân biệt trạng thái hiển thị/nhập liệu với invariant domain |
-| **Immutable value object** | Getter chỉ đọc thường đúng | Không mở setter làm thay đổi định danh/giá trị sau tạo |
-| **Domain entity nhiều invariant** | Setter public cho mọi field thường đáng nghi | Ưu tiên `confirm()`, `changeAddress()`, `allocateStock()` theo nghiệp vụ |
-| **Thư viện API thuần dữ liệu** | Có thể chủ ý data-oriented | Đánh giá theo contract, không ép đối tượng luôn phải chứa thuật toán |
+| **Request/Response DTO** | Usually | Mainly carries data; may use `record`; rich behavior is optional |
+| **Configuration properties** | Possibly | Framework binding, input validation, and control of mutable configuration |
+| **JavaBeans used by frameworks** | May be required by convention | Prefer package/protected setters or suitable mapping mechanisms where possible |
+| **JPA entity** | Depends on mapping strategy | JPA can use field access; there is no general requirement for public setters everywhere |
+| **View model / UI form** | May be needed for data binding | Distinguish display/input state from domain invariants |
+| **Immutable value object** | Read-only getters are usually appropriate | Do not expose setters that change identity/value after construction |
+| **Domain entity with many invariants** | Public setters for every field are suspicious | Prefer domain actions such as `confirm()`, `changeAddress()`, `allocateStock()` |
+| **Data-oriented API library** | May intentionally expose data | Judge by its contract; not every object needs algorithms |
 
-Ví dụ một **DTO** hợp lý:
+For example, a suitable **DTO**:
 
 ```java
 record ChangeEmailRequest(String newEmail) {}
 ```
 
-Đây là dữ liệu nhận từ HTTP; việc record không có `confirmEmailChange()` **không phải lỗi thiết kế**. Ở ranh giới ứng dụng, input DTO được validate, kiểm tra quyền, rồi chuyển thành yêu cầu nghiệp vụ đến object hoặc service phù hợp.
+This is HTTP request data; a record without `confirmEmailChange()` **is not a design flaw**. At the application boundary, validate the input DTO, check permissions, and turn it into a business request handled by the appropriate object or service.
 
-**Tách biệt domain model với DTO** giúp tránh lộ cả graph entity ra API và tránh cho client điều khiển các field nội bộ qua JSON binding. “Getter/setter tràn lan” chỉ là dấu hiệu xấu khi đối tượng được kỳ vọng **quản lý trạng thái và quy tắc** nhưng lại không làm điều đó.
+**Separating domain models from DTOs** avoids exposing an entire entity graph through APIs and letting clients control internal fields through JSON binding. "Excessive getters/setters" is a smell only when an object expected to **manage state and rules** does not do so.
 
-## 9. Phương thức mang tên nghiệp vụ vẫn có thể là setter trá hình
+## 9. Domain-named methods can still be disguised setters
 
-Một tên đẹp không tự bảo đảm đóng gói tốt:
+A meaningful name does not guarantee good encapsulation:
 
 ```java
 void changeStatus(Status status) {
@@ -1947,7 +1947,7 @@ void changeStatus(Status status) {
 }
 ```
 
-Dù đặt tên là `changeStatus`, đây vẫn là setter mở nếu mọi trạng thái đều gán tùy ý. Một phương thức tốt phải bảo vệ quy tắc khi cần:
+Despite its name, `changeStatus` is still an unrestricted setter if it assigns any state. A good method enforces relevant rules:
 
 ```java
 void confirm() {
@@ -1961,17 +1961,17 @@ void confirm() {
 }
 ```
 
-Ngược lại, cũng không phải tất cả `setX` đều xấu. Ví dụ `setDisplayName(String)` có thể là hành vi hợp lệ nếu domain cho phép sửa tên hiển thị tùy lúc và method kiểm tra giá trị/truy cập phù hợp. Vấn đề nằm ở **hợp đồng thao tác**, không phải tiền tố `set`.
+Conversely, not every `setX` is bad. `setDisplayName(String)` may be valid behavior if the domain allows changing display names at any time and the method checks values/authorization appropriately. The issue is the **operation contract**, not the `set` prefix.
 
-## 10. Tell, Don't Ask không có nghĩa bỏ mọi truy vấn
+## 10. Tell, Don't Ask does not mean eliminating every query
 
-Một mệnh lệnh nên đặt cạnh dữ liệu mà nó làm thay đổi nếu quy tắc thuộc trách nhiệm của object đó. Ví dụ tốt:
+A command should live close to the data it changes when the rule belongs to that object. For example:
 
 ```java
 order.confirm();
 ```
 
-So với:
+Compare with:
 
 ```java
 if (order.status() == Status.DRAFT && !order.lines().isEmpty()) {
@@ -1979,118 +1979,118 @@ if (order.status() == Status.DRAFT && !order.lines().isEmpty()) {
 }
 ```
 
-Nhưng các truy vấn thuần túy sau vẫn có vai trò:
+But these pure queries still have a role:
 
 ```java
 Status status = order.status();
 long total = order.totalVnd();
 ```
 
-UI cần hiển thị, báo cáo cần đọc, application service cần ra quyết định **liên quan nhiều aggregate**. Nếu ép mọi câu hỏi thành method vô lý, bạn có thể tạo ra object gánh quá nhiều trách nhiệm. Hãy hỏi: “**Ai sở hữu quy tắc này?**” chứ không hỏi “Trong code có xuất hiện `get` hay không?”.
+UIs must display data, reports must read it, and application services must make decisions **spanning multiple aggregates**. Forcing every query into an unnatural method can produce an object with too many responsibilities. Ask "**Who owns this rule?**" rather than "Does the code contain `get`?"
 
-### Phân biệt hành vi nội bộ và điều phối bên ngoài
+### Distinguishing internal behavior from external orchestration
 
-| Việc cần làm | Nơi thường phù hợp |
+| Task | Typically appropriate owner |
 |---|---|
-| Đơn trống không được xác nhận | `Order.confirm()` |
-| Không thêm dòng hàng sau khi xác nhận | `Order.addLine()` |
-| Tính tổng dựa trên các dòng hàng | `Order.totalVnd()` hoặc value/policy domain liên quan |
-| Kiểm tra người dùng hiện tại có quyền thao tác | Application/security boundary; không tùy tiện nhét HTTP principal vào entity |
-| Load/save đơn hàng từ database | Repository/adapter hạ tầng |
-| Thu tiền qua cổng thanh toán | Application workflow và payment gateway |
-| Gửi email sau xác nhận | Workflow/event handling theo mức độ tin cậy |
-| Giữ tính nhất quán giữa nhiều aggregate | Application service + transaction phù hợp |
+| Prevent confirmation of an empty order | `Order.confirm()` |
+| Prevent adding lines after confirmation | `Order.addLine()` |
+| Calculate totals from order lines | `Order.totalVnd()` or a related domain value/policy |
+| Check whether the current user is authorized | Application/security boundary; do not put an HTTP principal into the entity casually |
+| Load/save orders from a database | Infrastructure repository/adapter |
+| Charge through a payment gateway | Application workflow and payment gateway |
+| Send email after confirmation | Workflow/event handling according to reliability requirements |
+| Maintain consistency across aggregates | Application service plus an appropriate transaction |
 
-Một **rich domain model** tốt không trở thành “God Object” vừa xử lý nghiệp vụ, SQL, HTTP, logging, email, retry, caching. Đối tượng nên giữ **quy tắc thuộc về chính trạng thái của nó** và cộng tác với các dịch vụ khác khi nhiệm vụ vượt ranh giới.
+A good **rich domain model** does not become a "God Object" handling business logic, SQL, HTTP, logging, email, retries, and caching. Objects should preserve **the rules governing their own state** and collaborate with other services when work crosses those boundaries.
 
-## 11. Kiểm tra invariant theo API nghiệp vụ của Order
+## 11. Checking invariants through the Order domain API
 
-Trong demo ở mục 5, đối tượng `Order` phải giữ những quy tắc: ID không rỗng; SKU hợp lệ, giá không âm và số lượng dương; tổng không tràn `long`; chỉ `DRAFT` được thêm dòng; đơn không trống mới được xác nhận; chỉ `CONFIRMED` được gửi; `SHIPPED` không được hủy.
+In section 5's demo, the `Order` must enforce these rules: nonblank ID; valid SKU, nonnegative price, and positive quantity; no overflow of `long` totals; only `DRAFT` can accept new lines; only a nonempty order can be confirmed; only `CONFIRMED` can be shipped; `SHIPPED` cannot be canceled.
 
-Điểm khác biệt so với việc tạo getter/setter là **mỗi thao tác có tên bảo vệ đúng phần invariant của nó**. `addLine()` kiểm tra trạng thái, dữ liệu và tổng trước khi thêm; `confirm()` kiểm tra đơn có dòng; `ship()` và `cancel()` kiểm tra chuyển trạng thái. `totalVnd()` là query từ dữ liệu nguồn, không phải một setter cho số tổng tùy ý.
+Unlike exposing getters/setters, **each named behavior protects the relevant part of its invariants**. `addLine()` validates state, data, and total before appending; `confirm()` checks that lines exist; `ship()` and `cancel()` validate state transitions. `totalVnd()` is a source-data query, not a setter for an arbitrary total.
 
-| Lối đi vòng cần chặn | Cách giải quyết trong demo |
+| Path to block | How the demo blocks it |
 |---|---|
-| Client gọi `setStatus(SHIPPED)` dù chưa xác nhận | Không mở setter; chỉ có `ship()` kiểm tra `CONFIRMED` |
-| Client sửa `getLines().clear()` sau khi xác nhận | `lines()` trả snapshot `List.copyOf`, phần tử `OrderLine` bất biến |
-| Client tự gán tổng tiền trái với các dòng | `totalVnd()` tính lại, không có `setTotalVnd` |
-| Một phép tính vượt giới hạn số | `Math.addExact`/`Math.multiplyExact` thất bại trước khi thêm dòng |
+| Client calls `setStatus(SHIPPED)` without confirmation | No setter; only `ship()` checks for `CONFIRMED` |
+| Client calls `getLines().clear()` after confirmation | `lines()` returns a `List.copyOf` snapshot with immutable `OrderLine` elements |
+| Client assigns a total contradicting the lines | `totalVnd()` recalculates it; no `setTotalVnd` |
+| A calculation exceeds numeric limits | `Math.addExact`/`Math.multiplyExact` fails before appending a line |
 
-Đây là phép đối chiếu **hành vi với quyền thay đổi**, không phải một bài học mới về sao chép collection. Phân tích đầy đủ alias từ constructor/getter, shallow versus deep copy và các cách phá invariant nằm ở bài *Trạng thái công khai và mất điều kiện bất biến*. Một bản sao collection không thể thay thế kiểm soát hành vi miền.
+This comparison is about **behavior and authority to mutate**, not another lesson on copying collections. The detailed analysis of constructor/getter aliases, shallow versus deep copies, and ways to break invariants is in *Exposed state and broken invariants*. Copying a collection cannot replace control over domain behavior.
 
-## 12. Anemic domain model và Transaction Script: không phải lúc nào cũng sai
+## 12. Anemic Domain Model and Transaction Script are not always wrong
 
-Một chương trình CRUD nhỏ chỉ hiển thị và cập nhật dữ liệu, rất ít quy tắc nghiệp vụ, có thể dùng **transaction script** trong service với DTO/entity tương đối mỏng và vẫn phù hợp yêu cầu. Tạo rich domain model cho mọi bảng database có thể là **overengineering**.
+A small CRUD application that only displays and updates data, with few business rules, can reasonably use **transaction scripts** in services with relatively thin DTOs/entities. Creating a rich domain model for every database table can be **overengineering**.
 
-Điều nên xem xét là mức độ phức tạp và tần suất thay đổi:
+What matters is complexity and frequency of change:
 
-| Bối cảnh | Hướng thường hợp lý |
+| Context | Typically suitable approach |
 |---|---|
-| Trang quản trị CRUD đơn giản, không có quy tắc chéo field | DTO/validation ở ranh giới, service cập nhật có kiểm soát |
-| Nhiều trạng thái, nhiều chuyển đổi bị cấm | Domain object/state machine có hành vi rõ |
-| Nhiều entry point (API, batch, queue) tác động cùng quy tắc | Tập trung invariant ở model hoặc domain service |
-| Workflow xuyên DB/payment/email | Application service/saga/outbox phối hợp; object không làm tất cả |
-| Tích hợp bên ngoài với request/response cố định | Data carrier mỏng là đúng nhiệm vụ |
-| Bài toán thuật toán thuần, không có object state | Hàm thuần túy có thể đơn giản và dễ test hơn |
+| Simple admin CRUD with no cross-field rules | DTO/boundary validation and controlled service updates |
+| Many states with forbidden transitions | Domain object/state machine with explicit behavior |
+| Several entry points (API, batch, queue) enforce the same rules | Centralize invariants in a model or domain service |
+| Workflow spanning DB/payment/email | Coordinate through application service/saga/outbox; objects need not do everything |
+| External integration with a fixed request/response | A thin data carrier fulfills its role |
+| Pure algorithmic task without object state | Pure functions may be simpler and easier to test |
 
-Nguyên tắc cân bằng: **đừng đưa behavior vào object chỉ để “trông OOP”**, và cũng đừng phân tán những invariant quan trọng ra mọi client chỉ để entity “đơn giản”.
+A balanced rule: **do not add behavior to objects just to "look OOP"**, and do not scatter critical invariants among clients just to keep entities "simple."
 
-## 13. Refactor từ getter/setter sang hành vi mà không phá hệ thống
+## 13. Refactoring getters/setters into behavior without breaking the system
 
-Một quá trình an toàn có thể đi theo trình tự:
+A safe process can proceed in this order:
 
-1. **Tìm các setter nhạy cảm:** ví dụ `setStatus`, `setBalance`, `setTotal`, `setItems`. Không phải tất cả setter đều cần xóa ngay.
-2. **Tìm tất cả nơi gọi:** controller, scheduled job, message listener, mapping framework, serialization, test và lệnh quản trị.
-3. **Viết quy tắc nghiệp vụ hiện tại:** mô tả trạng thái hợp lệ, chuyển trạng thái được phép, lỗi được trả và side effect bắt buộc.
-4. **Đóng băng hành vi bằng test:** bao gồm ca thành công, thất bại và trạng thái không được thay đổi sau lỗi.
-5. **Tạo phương thức giàu ý nghĩa:** `confirm`, `ship`, `cancel`, `addLine`…; giữ một nơi kiểm tra invariant.
-6. **Chuyển caller từng nhóm:** business code gọi hành vi; tránh xóa setter khiến framework còn phụ thuộc bị hỏng trong cùng thay đổi chưa được kiểm soát.
-7. **Thu hẹp API công khai:** đổi setter sang `private`/package-private hoặc loại bỏ khi chắc chắn không còn đường truy cập hợp lệ; dùng constructor/mapper cho dữ liệu khởi tạo.
-8. **Bảo vệ mutable fields:** trả snapshot, không để client giữ và sửa collection nội bộ.
-9. **Kiểm tra persistence boundary:** ORM có thể tái tạo object qua field access hoặc constructor phù hợp; validate đầu vào và dữ liệu cũ khi nạp/di trú.
-10. **Chạy lại kiểm thử và đo ảnh hưởng:** unit, integration, API contract, mapping/serialization, concurrency nếu có.
+1. **Identify sensitive setters:** for example, `setStatus`, `setBalance`, `setTotal`, and `setItems`. Not all setters need immediate removal.
+2. **Find every caller:** controllers, scheduled jobs, message listeners, mapping frameworks, serialization, tests, and administrative commands.
+3. **Document current business rules:** describe valid states, allowed transitions, returned errors, and required side effects.
+4. **Freeze behavior with tests:** include success, failure, and unchanged-state checks after errors.
+5. **Introduce meaningful methods:** `confirm`, `ship`, `cancel`, `addLine`, etc.; keep invariant checks in one place.
+6. **Migrate callers in groups:** business code calls behaviors; avoid breaking framework-dependent setters in the same uncontrolled change.
+7. **Narrow the public API:** make setters `private`/package-private or remove them once no legitimate access paths remain; initialize data through constructors/mappers.
+8. **Protect mutable fields:** return snapshots and prevent clients from holding and mutating internal collections.
+9. **Review persistence boundaries:** an ORM may reconstruct objects through field access or appropriate constructors; validate input and legacy data during loading/migration.
+10. **Rerun tests and assess impact:** unit, integration, API contract, mapping/serialization, and concurrency tests where applicable.
 
-### Thận trọng với JPA/Hibernate
+### Special care with JPA/Hibernate
 
-JPA có thể hỗ trợ **field access** hoặc **property access** tùy cách khai báo mapping; không có quy tắc chung bắt entity **public setter cho mọi field**. Tuy vậy, ORM thường cần constructor phù hợp, proxy và quản lý lifecycle.
+JPA may use **field access** or **property access** depending on mapping declarations; there is no universal requirement for entities to expose **public setters for every field**. However, ORMs often require suitable constructors, proxies, and lifecycle handling.
 
-Một cách tiếp cận là:
-- Domain chỉ công khai các hành vi hợp lệ.
-- Mapping JPA dùng cơ chế truy cập trường hoặc accessor có phạm vi thích hợp theo framework.
-- Lớp application không gọi setter nhạy cảm chỉ vì persistence layer có đường gán nội bộ.
-- Có integration test cho việc lưu/tải entity, lazy loading, optimistic locking và chuyển trạng thái.
+One approach:
+- Expose only valid domain behaviors publicly.
+- Use field access or suitably scoped accessors for JPA mapping as supported by the framework.
+- Application code should not call sensitive setters merely because the persistence layer has an internal assignment path.
+- Add integration tests for entity save/load, lazy loading, optimistic locking, and state transitions.
 
-**Không thể giải quyết đồng thời mọi vấn đề bằng cách tự động chuyển toàn bộ setter sang `private`** nếu serialization, mapper hoặc framework hiện hành dựa trên convention; cần điều tra dependency thực tế trước khi refactor.
+**Automatically converting every setter to `private` cannot solve every problem** when current serializers, mappers, or frameworks depend on conventions; investigate real dependencies before refactoring.
 
-## 14. Trạng thái đa luồng: đóng gói đúng vẫn có thể race condition
+## 14. Concurrent state: proper encapsulation can still leave race conditions
 
-Một đơn hàng trong RAM được phép cập nhật qua `confirm()` vẫn không tự trở thành thread-safe nếu hai thread thao tác cùng instance. Ví dụ:
+An in-memory order updated through `confirm()` is not automatically thread-safe when two threads act on the same instance. For example:
 
-- Thread A đọc `status == DRAFT`.
-- Thread B cũng đọc `status == DRAFT`.
-- Cả hai cùng chạy kiểm tra và đổi status; sự kiện hoặc side effect có thể bị thực hiện lặp.
+- Thread A reads `status == DRAFT`.
+- Thread B also reads `status == DRAFT`.
+- Both pass the check and update status; events or side effects may occur twice.
 
-Trong hệ thống dùng database, thường phải chọn một trong các cơ chế phù hợp như **optimistic locking** (version column), row-level lock hoặc transaction isolation cần thiết. Với object chia sẻ giữa thread trong một process, có thể dùng synchronization/CAS hoặc thiết kế tránh chia sẻ mutable state.
+Database-backed systems usually need an appropriate mechanism such as **optimistic locking** (a version column), row-level locking, or the required transaction isolation. For objects shared among threads within one process, use synchronization/CAS or avoid shared mutable state.
 
-**Encapsulation bảo vệ đường đi của quy tắc**, còn **concurrency control bảo vệ việc nhiều thao tác thực hiện đồng thời**. Cả hai cần thiết khi có concurrent writers.
+**Encapsulation protects the paths through which rules are enforced**, while **concurrency control protects simultaneous operations**. Both matter when there are concurrent writers.
 
-Nếu nghiệp vụ cần “chỉ tính tiền một lần”, các phương thức domain đúng chưa đủ; cần idempotency key, transaction và kiểm soát tác dụng phụ ở những ranh giới có liên quan.
+If the business requires "charge only once," correct domain methods alone are insufficient; use idempotency keys, transactions, and side-effect controls at the relevant boundaries.
 
-## 15. Ngoại lệ và kết quả nghiệp vụ
+## 15. Exceptions and business results
 
-Trong ví dụ, lời gọi không hợp lệ ném `IllegalStateException` hoặc `IllegalArgumentException` để code minh bạch. Trong sản phẩm thật, có thể dùng:
+The example throws `IllegalStateException` or `IllegalArgumentException` on invalid operations to keep the code explicit. Real applications may use:
 
-- Exception nghiệp vụ như `InvalidOrderTransitionException` có mã lỗi ổn định.
-- Kiểu kết quả `Result<Success, DomainError>` nếu team chọn phong cách explicit error.
-- Validation errors ở API được dịch sang phản hồi phù hợp, không lộ stack trace hoặc dữ liệu nhạy cảm.
+- Domain exceptions such as `InvalidOrderTransitionException` with stable error codes.
+- A result type `Result<Success, DomainError>` if the team prefers explicit error handling.
+- API validation errors translated into appropriate responses without leaking stack traces or sensitive data.
 
-**Dù chọn cơ chế nào**, không nên sửa trạng thái một phần rồi mới phát hiện lỗi: validate trước mutate, hoặc dùng transaction/compensation cho những thao tác phức tạp.
+**Whatever mechanism you choose**, do not partially mutate state and only then discover an error: validate before mutation, or use transactions/compensation for complex operations.
 
-Không cho phép client tự `setStatus` **không có nghĩa cấm mọi “admin override”**. Nếu nghiệp vụ cần sửa thủ công để khôi phục sự cố, tạo một **hành vi chuyên biệt có kiểm soát, audit và authorization**, không mở setter chung cho mọi caller.
+Preventing callers from directly invoking `setStatus` **does not rule out every "admin override."** If operations need manual incident recovery, provide **a dedicated controlled behavior with auditing and authorization**, not a generic setter for every caller.
 
-## 16. Phân biệt Entity, Value Object, DTO và Application Service
+## 16. Distinguishing Entity, Value Object, DTO, and Application Service
 
-Một hệ thống có thể có nhiều loại object với mức độ hành vi khác nhau:
+A system can contain several object types with different levels of behavior:
 
 ```mermaid
 flowchart TD
@@ -2102,27 +2102,27 @@ flowchart TD
     PORT --> INFRA["Infrastructure adapter"]
 ```
 
-**Entity/aggregate:** có identity và vòng đời; những thao tác thay đổi state hợp lệ thường được diễn đạt bằng hành vi. Ví dụ `Order`.
+**Entity/aggregate:** has an identity and lifecycle; valid state changes are usually expressed through behaviors. Example: `Order`.
 
-**Value object:** được xác định bằng giá trị; thường immutable, có thể chứa validation và hành vi tính toán. Ví dụ `OrderLine.amountVnd()`.
+**Value object:** defined by its value, typically immutable, and may contain validation and calculation behavior. Example: `OrderLine.amountVnd()`.
 
-**DTO:** mang dữ liệu qua ranh giới hệ thống; getters, constructor hoặc setters phục vụ serialization không phải dấu hiệu xấu tự động.
+**DTO:** carries data across system boundaries; getters, constructors, or setters for serialization are not inherently bad.
 
-**Application Service:** phối hợp tải entity, gọi domain operation, commit qua repository, gửi command/event, không cần nhắc lại mọi `if` nội bộ của Order.
+**Application Service:** coordinates loading entities, invoking domain operations, committing through repositories, and sending commands/events without repeating every internal `if` from Order.
 
-Không ép một class kiêm tất cả bốn vai trò. Một object càng đảm nhiệm nhiều trách nhiệm không liên quan thì càng khó bảo trì.
+Do not force a class to perform all four roles. An object becomes harder to maintain as it takes on unrelated responsibilities.
 
-## 17. Khi nào cần trả giá trị thay vì cho sửa đối tượng?
+## 17. When should a method return a new value instead of mutating an object?
 
-Đối với thao tác như đổi địa chỉ giao hàng, có nhiều lựa chọn tùy mô hình:
+For an operation such as changing a shipping address, there are several choices depending on the model:
 
-1. **Mutable entity có hành vi:** `order.changeShippingAddress(newAddress)` kiểm tra trạng thái và cập nhật an toàn.
-2. **Immutable aggregate:** `Order updated = order.withShippingAddress(newAddress)` trả về instance mới sau validation; lớp repository/workflow chịu trách nhiệm lưu đúng version.
-3. **Domain event/command:** `ChangeAddress` được đưa vào workflow nếu có nhiều điều kiện và tác dụng phụ bất đồng bộ.
+1. **Mutable entity with behavior:** `order.changeShippingAddress(newAddress)` validates state and updates safely.
+2. **Immutable aggregate:** `Order updated = order.withShippingAddress(newAddress)` returns a new instance after validation; the repository/workflow ensures the correct version is persisted.
+3. **Domain event/command:** `ChangeAddress` enters a workflow when multiple conditions and asynchronous side effects are involved.
 
-Không có lựa chọn duy nhất cho mọi hệ thống. Câu hỏi vẫn là **ai sở hữu và kiểm soát bất biến**, không phải object có nhất thiết mutable hay không.
+No single choice suits every system. The question remains **who owns and enforces the invariant**, not whether the object must be mutable.
 
-Với value object (ví dụ `Address`), nên cân nhắc constructor/record bất biến:
+For a value object (such as `Address`), consider an immutable constructor/record:
 
 ```java
 record Address(String street, String city) {
@@ -2135,82 +2135,82 @@ record Address(String street, String city) {
 }
 ```
 
-Một method `changeShippingAddress(Address)` có nghĩa hơn mở hai setter riêng `setStreet`, `setCity` vì tránh trạng thái cập nhật nửa chừng.
+A `changeShippingAddress(Address)` method is more meaningful than two independent setters `setStreet` and `setCity` because it avoids half-completed updates.
 
-## 18. Những sai lầm dễ mắc trong quá trình sửa
+## 18. Common mistakes during refactoring
 
-| Cách sửa sai | Vì sao chưa ổn | Hướng cải thiện |
+| Wrong fix | Why it falls short | Better approach |
 |---|---|---|
-| Chỉ đổi tên `setStatus` thành `changeStatus` | Vẫn cho gán trạng thái tùy ý | Mô tả hành vi và kiểm tra precondition |
-| Xóa tất cả getters | UI/serialization/báo cáo mất cách đọc hợp lệ | Giữ query/read-only views cần thiết |
-| Nhét SQL, email, thanh toán vào entity | Biến model thành God Object, tăng coupling hạ tầng | Để orchestration/I/O ở application và adapter |
-| Để controller validate thay cho entity | Entry point khác có thể bỏ qua invariant | Domain operation bảo vệ quy tắc cuối cùng |
-| Getter trả trực tiếp `List` mutable | Client qua mặt API và sửa dữ liệu | Snapshot, unmodifiable view phù hợp, immutable elements |
-| Setter public cho field derived như total | Dữ liệu mất một nguồn sự thật | Tính từ dữ liệu nguồn hoặc cập nhật nội bộ nhất quán |
-| Domain ném lỗi nhưng đã đổi một nửa state | Thất bại để lại object không nhất quán | Validate trước mutate, transaction khi cần |
-| Cho rằng record tự động bảo vệ mọi quan hệ dữ liệu | Record chỉ đảm bảo bất biến nông, không bảo vệ logic aggregate | Validation/copy và hành vi ở đúng mức |
-| Bắt mọi lỗi và bỏ qua | Client tưởng thao tác đã thành công | Error contract, logs và rollback phù hợp |
-| Tự động tạo method nghiệp vụ cho mọi table | Overengineering với CRUD đơn giản | Chọn kiến trúc theo độ phức tạp thật |
-| Coi private fields đồng nghĩa thread-safe | Race khi hai thread cập nhật | Concurrency control độc lập với access modifiers |
+| Only rename `setStatus` to `changeStatus` | Still allows arbitrary state assignment | Define behavior and validate preconditions |
+| Remove every getter | UI/serialization/reports lose valid read access | Keep necessary queries/read-only views |
+| Put SQL, email, and payment logic in the entity | Turns the model into a God Object and adds infrastructure coupling | Keep orchestration/I/O in application services and adapters |
+| Let controllers validate in place of entities | Another entry point can bypass invariants | Domain operations enforce the final rule |
+| Getter directly returns a mutable `List` | Clients bypass the API and mutate data | Suitable snapshots, unmodifiable views, and immutable elements |
+| Expose a public setter for derived fields such as totals | Data loses its single source of truth | Compute from source data or update internally and consistently |
+| Domain throws an error after partially modifying state | Failure leaves objects inconsistent | Validate before mutation; use transactions when needed |
+| Assume records automatically enforce all data relationships | Records only provide shallow immutability, not aggregate rules | Validate/copy and assign behavior at the appropriate level |
+| Catch every error and ignore it | Clients believe an operation succeeded | Proper error contracts, logs, and rollback |
+| Automatically create domain methods for every table | Overengineering for simple CRUD | Choose architecture based on actual complexity |
+| Treat private fields as thread-safe | Concurrent updates still race | Control concurrency independently of access modifiers |
 
-## 19. Bài tập áp dụng
+## 19. Practical exercises
 
-### Bài 1 – Tài khoản ngân hàng
+### Exercise 1 – Bank account
 
-Một class `BankAccount` có `getBalance`/`setBalance`. Thiết kế `deposit(amount)` và `withdraw(amount)` với các quy tắc: số tiền dương, rút không vượt số dư, không tràn kiểu. Nêu rõ nếu hai thao tác đến cùng lúc cần biện pháp đồng thời nào. Viết test số dư không đổi khi rút thất bại.
+A `BankAccount` class exposes `getBalance`/`setBalance`. Design `deposit(amount)` and `withdraw(amount)` with these rules: amounts must be positive, withdrawals must not exceed the balance, and arithmetic must not overflow. Explain what concurrency safeguards are needed if two operations arrive simultaneously. Test that failed withdrawals leave the balance unchanged.
 
-### Bài 2 – Giỏ hàng
+### Exercise 2 – Shopping cart
 
-`ShoppingCart` có getter trả `ArrayList<CartItem>`. Refactor để client chỉ được `addItem`, `removeItem`, `changeQuantity` và `items()` trả danh sách an toàn. Đặt test cho số lượng âm, SKU không tồn tại và danh sách sau trả về không sửa trực tiếp được.
+`ShoppingCart` has a getter returning `ArrayList<CartItem>`. Refactor it so clients only use `addItem`, `removeItem`, and `changeQuantity`, while `items()` returns a safe list. Test negative quantities, unknown SKUs, and that the returned list cannot be modified directly.
 
-### Bài 3 – Trạng thái đơn
+### Exercise 3 – Order states
 
-Dựa trên `Order` ở ví dụ, thêm trạng thái `RETURNED` theo giả định “chỉ đơn `SHIPPED` mới được yêu cầu trả hàng”. Thiết kế `requestReturn()` và giải thích tại sao `setStatus(RETURNED)` cho mọi caller là không đủ. Nếu nghiệp vụ hoàn tiền cần API khác, xác định phần nào nằm ở Order, phần nào ở workflow.
+Using the example `Order`, add a `RETURNED` state with the assumption "only `SHIPPED` orders can request a return." Design `requestReturn()` and explain why giving every caller `setStatus(RETURNED)` is insufficient. If refunds need another API, explain what belongs in Order and what belongs in the workflow.
 
-### Bài 4 – DTO hay domain model?
+### Exercise 4 – DTO or domain model?
 
-Xét ba class: `CreateOrderRequest`, `Order`, `MonthlySalesReportRow`. Chọn class nào có thể chỉ chứa dữ liệu; class nào cần hành vi quản lý invariant. Giải thích không dựa vào số getter/setter mà dựa vào **mục đích, vòng đời và rủi ro sai trạng thái**.
+Consider three classes: `CreateOrderRequest`, `Order`, and `MonthlySalesReportRow`. Choose which can be pure data holders and which need invariant-preserving behavior. Explain based on **purpose, lifecycle, and risk of invalid state**, not getter/setter counts.
 
-### Bài 5 – Refactor hệ thống có ORM
+### Exercise 5 – Refactoring a system with ORM
 
-Một JPA entity có setter public cho `status` và `total`, có 12 caller. Đề xuất kế hoạch refactor từng bước, test mapping, transaction và rollback; làm cách nào để framework tiếp tục nạp/lưu entity mà application layer không được tự gán hai field đó?
+A JPA entity has public setters for `status` and `total`, with 12 callers. Propose a stepwise refactoring plan with tests for mapping, transactions, and rollback; how can the framework continue loading/saving the entity without allowing the application layer to assign those two fields freely?
 
-## 20. Checklist review code
+## 20. Code-review checklist
 
-- [ ] Tôi xác định được **bất biến nghiệp vụ** nào đối tượng cần tự giữ.
-- [ ] Không có setter public cho phép bỏ qua các invariant đó.
-- [ ] Các trạng thái chuyển đổi bằng phương thức tên **nghiệp vụ**, không chỉ bằng phép gán field.
-- [ ] Mọi phương thức cập nhật validate trước khi mutate khi có thể.
-- [ ] Các field suy ra có một nguồn sự thật rõ ràng.
-- [ ] Không lộ collection/mutable reference để caller sửa trái phép.
-- [ ] Có unit test cho luồng thành công **và trạng thái bị cấm**, kể cả trạng thái không đổi sau lỗi.
-- [ ] Getter chỉ đọc và DTO vẫn được sử dụng khi chúng có vai trò chính đáng.
-- [ ] Service bên ngoài điều phối I/O, còn object/domain service giữ quy tắc thuộc trách nhiệm của mình.
-- [ ] Tôi đã xem xét concurrency, transaction và persistence boundary khi cần.
-- [ ] Việc refactor không phá framework mapping hay API đã có caller.
-- [ ] Thiết kế mới giúp code diễn đạt **được phép làm gì** chứ không chỉ **đang có dữ liệu gì**.
+- [ ] I have identified the **business invariants** the object must enforce itself.
+- [ ] No public setter allows callers to bypass those invariants.
+- [ ] State transitions use methods named for **domain behavior**, not merely field assignments.
+- [ ] Every update method validates before mutation when possible.
+- [ ] Derived fields have a clear single source of truth.
+- [ ] No collection or mutable reference leaks so clients can make unauthorized changes.
+- [ ] Unit tests cover successful flows **and forbidden states**, including state preservation after errors.
+- [ ] Read-only getters and DTOs are retained where they serve legitimate roles.
+- [ ] External services orchestrate I/O, while objects/domain services enforce the rules they own.
+- [ ] I have considered concurrency, transactions, and persistence boundaries where needed.
+- [ ] Refactoring preserves framework mappings and existing API callers.
+- [ ] The new design expresses **what actions are allowed**, not merely **what data exists**.
 
-**Ghi nhớ:** **OOP không chỉ là đặt dữ liệu trong class rồi tạo getter/setter**. Đối tượng có ích nhất khi nó biết cách tự bảo vệ trạng thái có ý nghĩa của mình, công khai những hành vi hợp lệ và không buộc mỗi caller phải học lại toàn bộ quy tắc nghiệp vụ. Tuy vậy, hãy giữ DTO và những mô hình dữ liệu đơn giản ở dạng đơn giản khi bối cảnh thực sự chỉ cần như vậy.
+**Remember:** **OOP is more than putting data in a class and generating getters/setters**. Objects are most useful when they can protect their meaningful state, expose valid behaviors, and avoid forcing each caller to relearn every business rule. However, keep DTOs and simple data models simple when that is all the context requires.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-pitfalls-004">Kế thừa chỉ để dùng lại vài phương thức</a>
+## <a id="design-pitfalls-004">Inheritance solely to reuse a few methods</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kế thừa chỉ để dùng lại vài phương thức: một lỗi thiết kế OOP
+# Inheritance solely to reuse a few methods: an OOP design pitfall
 
-> **Bài học:** Không nên tạo quan hệ `extends` giữa hai lớp chỉ vì lớp con muốn dùng lại vài phương thức của lớp cha. Hãy đánh giá quan hệ kiểu, hợp đồng hành vi và những API vô tình bị kế thừa; khi đối tượng chỉ **sử dụng** một khả năng, composition/delegation thường biểu diễn đúng hơn.
+> **Lesson:** Do not create an `extends` relationship between two classes merely because a subclass wants to reuse a few superclass methods. Evaluate the type relationship, behavioral contract, and APIs inherited unintentionally; when an object merely **uses** a capability, composition/delegation usually expresses that relationship better.
 
-## 1. Vì sao quyết định này dễ xảy ra?
+## 1. Why is this choice so tempting?
 
-Khi học Java, ta thấy một lớp có thể dùng `extends` để kế thừa các phương thức `public` hoặc `protected` có thể truy cập của lớp cha:
+When learning Java, we see that `extends` lets a class inherit accessible `public` or `protected` methods from its superclass:
 
 ~~~java
 class TextFormatter {
@@ -2226,47 +2226,47 @@ class RegistrationService extends TextFormatter {
 }
 ~~~
 
-Mã này có thể biên dịch, nhưng `RegistrationService` trở thành một subtype của `TextFormatter` dù chức năng của dịch vụ đăng ký chỉ **cần dùng** thao tác định dạng. Từ bên ngoài, người ta có thể đối xử với dịch vụ đăng ký như một bộ định dạng:
+This code compiles, but `RegistrationService` becomes a subtype of `TextFormatter` even though a registration service merely **needs to use** formatting. External code can treat the registration service as a formatter:
 
 ~~~java
 TextFormatter formatter = new RegistrationService();
 System.out.println(formatter.format("  An  "));
 ~~~
 
-Câu lệnh hợp lệ về kiểu nhưng quan hệ nghiệp vụ rất kỳ lạ. Nếu `TextFormatter` được sửa để lưu bộ đệm, hỗ trợ `close()` hay thay đổi thuật toán, `RegistrationService` có thể chịu ảnh hưởng chỉ vì một phương thức tiện dụng.
+The statement is type-correct, but the domain relationship is strange. If `TextFormatter` changes to cache data, support `close()`, or use a different algorithm, `RegistrationService` may be affected just because it reused a convenience method.
 
-Lợi ích tiết kiệm một ít mã ban đầu đã tạo ra **quan hệ phụ thuộc dài hạn**.
+A small initial saving in code creates a **long-term dependency**.
 
-Đây là một dạng **implementation inheritance for convenience**: dùng kế thừa như đường tắt tái sử dụng code, dù đối tượng con không thực sự đại diện cho một trường hợp của abstraction cha.
+This is **implementation inheritance for convenience**: using inheritance as a shortcut for code reuse even though the child object does not actually represent a case of the parent abstraction.
 
-## 2. Kế thừa mang ý nghĩa mạnh hơn “dùng được phương thức”
+## 2. Inheritance means more than "can call a method"
 
-Trong OOP, `B extends A` là một quan hệ kiểu. Nếu Java cho phép coi `B` như `A`, thì code sử dụng `A` được quyền kỳ vọng những cam kết mà `A` công bố.
+In OOP, `B extends A` represents a type relationship. If Java allows a `B` to be treated as an `A`, code expecting an `A` can rely on the guarantees published by `A`.
 
-Ví dụ: khi `EmailNotificationSender` thực sự đáp ứng toàn bộ hợp đồng của `NotificationSender`, một caller chỉ cần biết hợp đồng chung có thể sử dụng nó. Nhưng nếu `InventoryService extends HashMap<String, Integer>` chỉ vì muốn gọi `put()` và `get()`, ta đang tuyên bố dịch vụ tồn kho có thể được sử dụng như **mọi HashMap thông thường**.
+For example, `EmailNotificationSender` may genuinely fulfill the entire `NotificationSender` contract, so callers need only know the shared contract. But if `InventoryService extends HashMap<String, Integer>` merely to call `put()` and `get()`, we are claiming an inventory service can be used as **any ordinary HashMap**.
 
-Câu hỏi thiết kế nên đặt trước khi dùng `extends`:
+Ask these design questions before using `extends`:
 
-- **Quan hệ “là một” (is-a) có thật không?** Mọi `B` có thực sự là một `A` theo domain và hợp đồng đã định nghĩa không?
-- **Caller có thể thay thế không?** Bất kỳ nơi nào cần `A` có dùng được `B` mà không phá kỳ vọng đã công bố không?
-- **API kế thừa có đúng không?** Có phương thức của `A` mà `B` không nên cho phép không?
-- **Có đang dùng lại implementation thay vì abstraction?** Nếu chỉ cần một khả năng nhỏ, sở hữu một collaborator có thể rõ hơn không?
-- **Thay đổi sẽ lan tới đâu?** Khi lớp cha thay cấu trúc, constructor hoặc method, lớp con có bị ảnh hưởng ngoài dự kiến không?
+- **Is there a real "is-a" relationship?** Is every `B` truly an `A` under the domain and its defined contract?
+- **Can callers substitute it?** Can any caller expecting `A` use `B` without violating published expectations?
+- **Is the inherited API appropriate?** Does `A` expose methods that `B` should not allow?
+- **Are we reusing an implementation instead of an abstraction?** If we need only a small capability, would owning a collaborator be clearer?
+- **How far will changes propagate?** Could superclass changes to structure, constructors, or methods unexpectedly affect subclasses?
 
-Khái niệm **Liskov Substitution Principle (LSP)** liên quan chặt chẽ: subtype phải duy trì những bảo đảm hành vi mà client của supertype có quyền trông đợi. Việc code biên dịch được chưa chứng minh tuân thủ LSP.
+The **Liskov Substitution Principle (LSP)** is closely related: a subtype must preserve the behavioral guarantees clients can expect from the supertype. Compiling successfully does not prove LSP compliance.
 
-Cần phân biệt: kế thừa để chia sẻ implementation **không tự động sai**. Một abstraction nền được thiết kế để kế thừa, có hợp đồng ổn định và các subtype đúng nghĩa có thể dùng chung code rất tốt. Vấn đề là chọn `extends` **chỉ vì vài method có sẵn**, không xem xét toàn bộ hợp đồng.
+Importantly, implementation inheritance is **not inherently wrong**. A base abstraction designed for extension, with a stable contract and genuine subtypes, can share code effectively. The problem is choosing `extends` **solely because a few methods are available**, without considering the full contract.
 
-## 3. Tình huống nguy hiểm: Inventory kế thừa HashMap
+## 3. A dangerous case: Inventory inherits from HashMap
 
-Giả sử ta muốn quản lý số lượng hàng tồn, luôn thỏa các bất biến:
+Suppose we manage inventory quantities while preserving these invariants:
 
-1. SKU không rỗng.
-2. Số lượng của mỗi SKU không âm.
-3. Chỉ tăng kho qua `restock` và giảm kho qua `reserve` sau khi kiểm tra.
-4. Khi `reserve` bị từ chối, tồn kho không đổi.
+1. SKUs must be nonblank.
+2. The quantity of each SKU must be nonnegative.
+3. Stock can increase only through `restock` and decrease only through `reserve` after validation.
+4. When `reserve` is rejected, inventory remains unchanged.
 
-Một cách làm sai là kế thừa một collection mutable chỉ để có các hàm truy cập:
+A flawed solution inherits a mutable collection just to get its access methods:
 
 ~~~java
 import java.util.HashMap;
@@ -2281,7 +2281,7 @@ class UnsafeInventory extends HashMap<String, Integer> {
 }
 ~~~
 
-Cách gọi này phá được bất biến mà không cần sửa `restock()`:
+This call can break an invariant without changing `restock()`:
 
 ~~~java
 UnsafeInventory inventory = new UnsafeInventory();
@@ -2295,9 +2295,9 @@ inventory.clear();
 System.out.println(inventory.get("BOOK")); // null
 ~~~
 
-`UnsafeInventory` không chỉ kế thừa `get` và `put`; nó còn kế thừa hàng loạt khả năng sửa dữ liệu như `remove`, `replace`, `compute`, `merge`, `putAll`, `clear`, cùng các view collection có thể sửa. Người dùng API có thể đi vòng qua validation và quy tắc nghiệp vụ.
+`UnsafeInventory` inherits not only `get` and `put` but also mutation capabilities including `remove`, `replace`, `compute`, `merge`, `putAll`, and `clear`, along with mutable collection views. API clients can bypass validation and business rules.
 
-Sơ đồ sự cố:
+Failure diagram:
 
 ~~~mermaid
 flowchart TD
@@ -2307,13 +2307,13 @@ flowchart TD
     Inventory --> Broken["Bất biến tồn kho có thể bị phá"]
 ~~~
 
-Vấn đề nằm ở **ranh giới cho phép sửa trạng thái**. Ngay cả khi ta override `put()` để kiểm tra, vẫn phải xem xét mọi đường cập nhật khác, cả hành vi kế thừa và các API thêm mới trong tương lai. Đó là chi phí lớn chỉ vì muốn dùng lại vài phương thức của collection.
+The problem is the **boundary controlling state mutation**. Even overriding `put()` to validate would require examining every other mutation path, including inherited behavior and APIs added in the future. That is a steep cost for reusing a few collection methods.
 
-## 4. Sửa bằng composition: Inventory sở hữu Map
+## 4. Fixing it with composition: Inventory owns a Map
 
-Một đối tượng tồn kho **có một cấu trúc lưu trữ** chứ không cần **là một HashMap**. Dùng một field `private` để giữ Map, rồi công khai những thao tác có ý nghĩa nghiệp vụ.
+An inventory object **has a storage structure**; it does not need to **be a HashMap**. Keep the Map in a `private` field and expose meaningful domain operations.
 
-Dưới đây là file **InheritanceReuseDemo.java**, chạy độc lập trên Java 17 trở lên:
+The following **InheritanceReuseDemo.java** file runs independently on Java 17 or later:
 
 ~~~java
 import java.util.HashMap;
@@ -2404,14 +2404,14 @@ public class InheritanceReuseDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac InheritanceReuseDemo.java
 java InheritanceReuseDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 RESERVED BOOK x3
@@ -2420,18 +2420,18 @@ REJECTED: insufficient stock
 2
 ~~~
 
-**Cơ chế bảo vệ:**
+**Protective mechanisms:**
 
-- `Inventory` giữ `Map` dưới dạng `private final`; client không gọi được `put()`, `clear()` hoặc `compute()` trên đối tượng Inventory.
-- Các phương thức công khai diễn đạt nghiệp vụ: `restock`, `reserve`, `available`.
-- `reserve` kiểm tra trước khi giảm số lượng. Khi thiếu hàng, nó trả `false` và không cập nhật state.
-- `Math.addExact` phát hiện overflow trong phép cộng số lượng, tránh một kết quả âm ngoài chủ đích.
-- `snapshot()` trả một Map không sửa được qua reference trả về. Vì key và value của ví dụ là `String` và `Integer`, không có phần tử mutable bên trong.
-- `CheckoutService` **sử dụng** `Inventory` thông qua dependency đưa vào constructor; không trở thành subtype của Inventory hay Map.
+- `Inventory` holds its `Map` as `private final`; clients cannot call `put()`, `clear()`, or `compute()` on an Inventory object.
+- Public methods express domain intent: `restock`, `reserve`, and `available`.
+- `reserve` validates before subtracting quantities. On insufficient stock, it returns `false` without updating state.
+- `Math.addExact` detects integer overflow while adding stock and prevents unintended negative results.
+- `snapshot()` returns a Map that cannot be mutated through its returned reference. Because the example's keys and values are `String` and `Integer`, no mutable elements remain inside.
+- `CheckoutService` **uses** `Inventory` through a constructor-injected dependency; it does not become a subtype of Inventory or Map.
 
-Ví dụ chạy trong **một luồng** để giải thích ranh giới và bất biến. `HashMap` và các thao tác kiểm tra–cập nhật trên không thread-safe nếu có nhiều thread cùng sửa. Với dữ liệu thực ở database, cần kiểm soát transaction, locking hoặc cập nhật có điều kiện để tránh tranh chấp. Composition giải quyết quan hệ kiểu và kiểm soát API, không tự động cung cấp đồng bộ.
+The example runs in **one thread** to illustrate boundaries and invariants. `HashMap` and the check/update operations shown are not thread-safe under concurrent writes. Real database-backed data needs transactions, locking, or conditional updates to prevent races. Composition fixes the type relationship and API control, not synchronization automatically.
 
-### Sơ đồ thiết kế sau khi sửa
+### Design diagram after the fix
 
 ~~~mermaid
 classDiagram
@@ -2456,27 +2456,27 @@ classDiagram
     Inventory *-- Map : sở hữu nội bộ
 ~~~
 
-Mã giả theo sơ đồ: một đối tượng CheckoutService có tham chiếu tới Inventory; Inventory giữ một Map ở bên trong. **Interface Map không trở thành API nghiệp vụ công khai của Inventory**.
+In the diagram's pseudocode, CheckoutService references Inventory, and Inventory internally owns a Map. **The Map interface does not become Inventory's public domain API**.
 
-## 5. Cái giá ẩn của việc kế thừa chỉ để tái sử dụng code
+## 5. Hidden costs of inheritance used only for code reuse
 
-| Rủi ro | Hậu quả cụ thể | Dấu hiệu |
+| Risk | Concrete consequence | Warning sign |
 | --- | --- | --- |
-| **API bị phình ra** | Subclass công khai những phương thức nó không thực sự muốn cung cấp | Class nghiệp vụ thừa hưởng `clear()`, `putAll()` từ collection |
-| **Phá bất biến** | Caller thay đổi state qua một đường không kiểm tra | `put("BOOK", -1)` bỏ qua `restock()` |
-| **Sai quan hệ is-a / LSP** | Một dịch vụ bị đối xử như một bộ tiện ích hay container tổng quát | `SomeService extends Formatter` chỉ để lấy `format()` |
-| **Phụ thuộc chặt vào lớp cha** | Sửa tên, kiểu trả về, constructor hoặc chi tiết `protected` có thể làm nhiều subclass lỗi | Một thay đổi nhỏ trong base class lan nhiều lớp |
-| **Fragile base class** | Thêm phương thức hoặc thay cách base class gọi nội bộ có thể thay đổi hành vi của subclass | Override phụ thuộc vào thứ tự gọi implementation |
-| **Khó thay implementation** | Muốn đổi `HashMap` sang cache/database buộc thay cả quan hệ kiểu | Mã nghiệp vụ bị gắn với collection concrete |
-| **Hierarchy explosion** | Tổ hợp nhiều khả năng sinh ra nhiều biến thể lớp con | `CachedLoggedValidatedService`… |
-| **Test khó cô lập** | Test subtype phải dựng state/cấu hình không liên quan của cha | Subclass chỉ cần hai hàm nhưng phụ thuộc resource cha |
-| **Tính truy cập bị hiểu sai** | `protected` bị lạm dụng làm API cho mọi subclass | Field nội bộ bị các subclass sửa tùy ý |
+| **Inflated API** | A subclass exposes methods it does not actually want to provide | Domain class inherits `clear()` and `putAll()` from a collection |
+| **Broken invariants** | Callers change state through unvalidated paths | `put("BOOK", -1)` bypasses `restock()` |
+| **Incorrect is-a relationship / LSP** | A service is treated like a general-purpose utility or container | `SomeService extends Formatter` solely for `format()` |
+| **Tight coupling to the superclass** | Changes to names, return types, constructors, or `protected` details can break subclasses | A small base-class change propagates widely |
+| **Fragile base class** | Adding a method or changing internal dispatch can alter subclass behavior | Overrides depend on implementation call order |
+| **Hard-to-replace implementation** | Switching `HashMap` to a cache/database forces a change in the type relationship | Business code is tied to a concrete collection |
+| **Hierarchy explosion** | Combining capabilities creates many subclass variants | `CachedLoggedValidatedService`… |
+| **Difficult isolated tests** | Subtype tests must set up irrelevant parent state/configuration | Subclass needs two functions but depends on parent resources |
+| **Misunderstood access** | `protected` is misused as an API for all subclasses | Subclasses can arbitrarily modify internal fields |
 
-Những điều này là **rủi ro**, không phải tất yếu cho mọi quan hệ kế thừa. Nhưng nếu lợi ích chỉ là “khỏi viết 5 dòng ủy quyền”, lợi ích thường không đủ để bù chi phí ràng buộc.
+These are **risks**, not inevitable consequences of every inheritance relationship. But if the only benefit is "avoiding 5 lines of delegation," it rarely justifies the extra commitments.
 
-### Một lỗi còn tinh vi hơn: base class tự gọi phương thức có thể override
+### A subtler bug: the base class calls an overridable method
 
-Ví dụ:
+For example:
 
 ~~~java
 class BaseProcessor {
@@ -2500,18 +2500,18 @@ class CsvProcessor extends BaseProcessor {
 }
 ~~~
 
-Khi tạo `new CsvProcessor()`, constructor của base class chạy **trước khi các field initializer của subclass hoàn tất**. Lời gọi `initialize()` là virtual dispatch và có thể gọi override ở subclass; ở thời điểm đó `delimiter` vẫn là giá trị mặc định `null`, dẫn đến `NullPointerException`.
+When constructing `new CsvProcessor()`, the base-class constructor runs **before the subclass's field initializers finish**. A call to `initialize()` uses virtual dispatch and may invoke the subclass override; at that moment `delimiter` is still `null`, causing a `NullPointerException`.
 
-Đây là lý do tránh gọi phương thức có thể override từ constructor của superclass. Khi buộc dùng inheritance, cần hiểu rõ lifecycle của object và hợp đồng dành cho subclass; thường dùng phương thức `final`, factory hoặc bước khởi tạo tường minh thay vì gọi hook quá sớm.
+This is why overridable methods should not be called from superclass constructors. When using inheritance, understand the object's lifecycle and the subclass contract; `final` methods, factories, or explicit initialization steps are often safer than invoking hooks prematurely.
 
-## 6. Composition và delegation khác nhau thế nào?
+## 6. How do composition and delegation differ?
 
-- **Composition:** một object quản lý hoặc sử dụng các đối tượng thành phần để hoàn thành trách nhiệm. Trong ví dụ, `Inventory` sở hữu cấu trúc dữ liệu.
-- **Delegation:** một object chuyển một phần công việc cho collaborator. `CheckoutService` gọi `inventory.reserve(...)` thay vì tự sửa kho.
+- **Composition:** an object manages or uses component objects to fulfill its responsibility. Here, `Inventory` owns the data structure.
+- **Delegation:** an object passes part of its work to a collaborator. `CheckoutService` calls `inventory.reserve(...)` rather than modifying stock itself.
 
-Hai khái niệm thường đi cùng nhau, nhưng không phải từ đồng nghĩa. Một object có thể chứa một dependency mà không ủy quyền nguyên vẹn mọi lời gọi; nó có thể phối hợp nhiều collaborator và thêm điều kiện nghiệp vụ.
+The two concepts often work together, but they are not synonyms. An object may contain a dependency without forwarding every call unchanged; it can coordinate several collaborators and enforce business conditions.
 
-Ví dụ nhỏ, một dịch vụ cần chuẩn hóa mã:
+A small example: a service needs to normalize identifiers:
 
 ~~~java
 final class SkuNormalizer {
@@ -2538,15 +2538,15 @@ final class ImportService {
 }
 ~~~
 
-`ImportService` **cần** chuẩn hóa mã; nó không cần `extends SkuNormalizer`. Bằng composition, `SkuNormalizer` có thể được tái sử dụng ở nhiều nơi mà không ép các client trở thành subtype của bộ chuẩn hóa.
+`ImportService` **needs** normalized identifiers; it does not need to `extends SkuNormalizer`. With composition, `SkuNormalizer` can be reused in multiple locations without forcing clients to become subtypes of the normalizer.
 
-Tuy vậy, đừng tạo một lớp helper cho mọi dòng code đơn giản. Nếu một thuật toán ngắn chỉ thuộc một class, `private static method` hoặc một phương thức private là đủ. Tách collaborator khi có trách nhiệm dùng chung, có thuật toán độc lập, có nhu cầu test/thay thế hoặc một ranh giới rõ ràng.
+Still, do not create a helper class for every trivial line of code. For a short algorithm belonging to one class, a `private static method` or private method is sufficient. Extract collaborators for shared responsibility, independent algorithms, testing/replacement needs, or clear boundaries.
 
-## 7. Khi nào kế thừa vẫn là lựa chọn hợp lý?
+## 7. When is inheritance still a good choice?
 
-Một thiết kế có thể chọn kế thừa khi cả **ngữ nghĩa subtype** và **hợp đồng** đều phù hợp. Chẳng hạn framework cung cấp base class với extension points được thiết kế rõ ràng, hoặc mô hình có phân loại chuyên biệt thật sự.
+Inheritance can be appropriate when both **subtype semantics** and **contracts** fit. For example, a framework may provide a base class with well-defined extension points, or the model may have genuine specialized subtypes.
 
-Ví dụ về kế thừa hướng tới hợp đồng:
+Example of contract-oriented inheritance:
 
 ~~~java
 abstract class Shape {
@@ -2574,9 +2574,9 @@ static double areaOf(Shape shape) {
 }
 ~~~
 
-Ở đây `Circle` thực sự là một `Shape` theo abstraction đang được sử dụng; caller nhận `Shape` có thể lấy diện tích từ `Circle` mà không cần biết loại hình cụ thể. Đoạn `areaOf` minh họa phương thức static có thể đặt trong một lớp tiện ích; nếu đặt tất cả snippet vào một file Java để thử, cần thêm lớp bao ngoài cho method đó.
+Here, `Circle` truly is a `Shape` under the abstraction in use; a caller given a `Shape` can obtain a `Circle`'s area without knowing its concrete shape type. The `areaOf` snippet illustrates a static method that could live in a utility class; putting all snippets into one Java file to experiment requires an enclosing class for that method.
 
-Có thể chọn **interface** thay vì abstract class khi chỉ muốn định nghĩa năng lực:
+You may choose an **interface** instead of an abstract class when only a capability must be defined:
 
 ~~~java
 interface Drawable {
@@ -2591,38 +2591,38 @@ final class SvgCircle implements Drawable {
 }
 ~~~
 
-Một class có thể triển khai nhiều interface, nhưng Java chỉ cho kế thừa trực tiếp một class. Interface có `default method` đôi khi chia sẻ một hành vi mặc định gắn chặt với hợp đồng, **không nên bị lạm dụng thành kho các tiện ích không liên quan**.
+A class can implement multiple interfaces, but Java supports direct inheritance from only one class. An interface `default method` can sometimes share a default behavior tightly tied to its contract, but **must not become a dumping ground for unrelated utilities**.
 
-### Khi dùng inheritance để tái sử dụng implementation là hợp lệ
+### When reusing an implementation through inheritance is valid
 
-Có những abstraction được xây dựng riêng cho việc mở rộng:
+Some abstractions are intentionally built for extension:
 
-- Một base class có invariant và vòng đời được tài liệu hóa đầy đủ.
-- Subclass đáp ứng mọi hành vi công khai của base class.
-- Các điểm mở rộng `protected` và quy tắc override được thiết kế ổn định.
-- Thay đổi implementation cha có test hợp đồng bảo vệ các subtype quan trọng.
-- Quan hệ phân cấp giúp đơn giản mô hình so với việc tạo thêm nhiều wrapper.
+- A base class has fully documented invariants and lifecycle.
+- Subclasses fulfill all public behavior of the base class.
+- `protected` extension points and override rules are designed for stability.
+- Contract tests for important subtypes guard superclass implementation changes.
+- The class hierarchy simplifies the model compared with many additional wrappers.
 
-Ví dụ `AbstractList<E>` trong JDK là một *skeletal implementation*: nó được thiết kế cho việc triển khai các kiểu List phù hợp hợp đồng. Đó là chuyện khác với việc cho `Inventory` kế thừa `HashMap` chỉ để lấy `get/put`. Nếu một subtype cố ý tuân thủ mọi semantics của Map/List thì sử dụng base collection phù hợp có thể hợp lý.
+The JDK's `AbstractList<E>` is a *skeletal implementation* specifically designed for implementing Lists that fulfill its contract. This differs from making `Inventory` inherit `HashMap` just for `get/put`. If a subtype intentionally fulfills every Map/List semantic guarantee, an appropriate collection superclass may be reasonable.
 
-## 8. So sánh các lựa chọn tái sử dụng
+## 8. Comparing reuse options
 
-| Lựa chọn | Nên chọn khi | Điều phải chú ý |
+| Option | When to choose it | Important consideration |
 | --- | --- | --- |
-| `private method` | Logic nhỏ chỉ dùng trong một lớp | Không trừu tượng hóa quá sớm |
-| `static utility method` | Thuật toán thuần, không cần trạng thái | Giữ API có tên rõ, đừng tạo “God Utils” |
-| **Composition** | Một đối tượng **có/sử dụng** collaborator | Chọn ownership và lifecycle rõ ràng |
-| **Delegation** | Muốn chuyển một nhiệm vụ cụ thể sang cộng tác viên | Không phơi bày toàn bộ API nội bộ |
-| **Interface + implementation** | Cần nhiều cách đáp ứng cùng hợp đồng, dependency boundary rõ | Mỗi implementation phải giữ đúng contract |
-| **Abstract class** | Có họ subtype thật sự, chung invariant hoặc template được thiết kế để mở rộng | `protected`, constructor, override và LSP |
-| **Decorator** | Cần chồng lớp hành vi quanh một hợp đồng | Thứ tự các wrapper và side effect |
-| **Inheritance từ class concrete** | Chỉ khi class cha có thiết kế mở rộng và subtype đáp ứng đúng contract | Rủi ro phụ thuộc vào chi tiết implementation |
+| `private method` | Small logic used within a single class | Avoid premature abstraction |
+| `static utility method` | Pure algorithm with no state | Keep a clearly named API; avoid "God Utils" |
+| **Composition** | An object **has/uses** a collaborator | Define ownership and lifecycle clearly |
+| **Delegation** | Transfer a specific task to a collaborator | Do not expose its entire internal API |
+| **Interface + implementation** | Multiple implementations fulfill one contract and form a clear dependency boundary | Every implementation must honor the contract |
+| **Abstract class** | Genuine subtype family sharing an invariant or extension template | Consider `protected`, constructors, overrides, and LSP |
+| **Decorator** | Layer behavior around a contract | Consider wrapper order and side effects |
+| **Inheritance from a concrete class** | Only when the superclass is designed for extension and the subtype honors its contract | Risk of coupling to implementation details |
 
-**Composition over inheritance** là một nguyên tắc ưu tiên có điều kiện, không phải luật cấm kế thừa. Nên chọn cách diễn đạt đúng domain và giảm coupling lâu dài.
+**Composition over inheritance** is a conditional preference, not a ban on inheritance. Choose the form that correctly expresses the domain and reduces long-term coupling.
 
-## 9. Refactor từ inheritance sang composition
+## 9. Refactoring inheritance into composition
 
-Giả sử codebase đang có:
+Suppose the codebase currently contains:
 
 ~~~java
 class PricingService extends SharedStringUtil {
@@ -2630,16 +2630,16 @@ class PricingService extends SharedStringUtil {
 }
 ~~~
 
-Đừng sửa thành một hệ thống interface/factory phức tạp nếu thực tế chỉ cần một helper nhỏ. Quy trình refactor an toàn:
+Do not build an elaborate interface/factory system if a small helper is all that is needed. A safe refactoring sequence:
 
-1. **Đọc toàn bộ API công khai của lớp cha** và nơi sử dụng subtype. Đặc biệt kiểm tra nơi truyền `PricingService` dưới kiểu `SharedStringUtil`.
-2. **Xác định phương thức thực sự cần dùng** và hợp đồng của nó. Nếu logic nhỏ, cân nhắc helper; nếu là thành phần có trách nhiệm riêng, tạo collaborator.
-3. **Đưa dependency vào constructor** hoặc giữ một thành phần private phù hợp. Thay `super.someMethod()` bằng `collaborator.someMethod()` ở chỗ cần.
-4. **Gỡ `extends`**, chỉ sau khi caller không còn dựa vào quan hệ kiểu cũ. Nếu đây là public API, thay đổi có thể phá tính tương thích và cần kế hoạch migration.
-5. **Giữ test hành vi** của nghiệp vụ và bổ sung test xác nhận invariant hoặc đường truy cập trước đây gây lỗi.
-6. **Dọn những phương thức dư thừa** chỉ dùng để “giả làm” subtype, giữ một API nhỏ có ý nghĩa.
+1. **Read the entire public superclass API** and every use of the subtype. In particular, find places where `PricingService` is passed as `SharedStringUtil`.
+2. **Identify the methods actually needed** and their contracts. Use a helper for small logic; use a collaborator for an independently owned responsibility.
+3. **Inject the dependency through a constructor** or retain a suitable private component. Replace `super.someMethod()` with `collaborator.someMethod()` where needed.
+4. **Remove `extends`** only after callers stop depending on the old type relationship. For a public API, this can break compatibility and requires a migration plan.
+5. **Preserve behavior tests** for business rules and add tests for invariants or previously unsafe access paths.
+6. **Remove redundant methods** that merely impersonate a subtype, leaving a small, meaningful API.
 
-Trước và sau:
+Before and after:
 
 ~~~mermaid
 flowchart LR
@@ -2651,11 +2651,11 @@ flowchart LR
     end
 ~~~
 
-**Không thực hiện refactor một cách cơ học** nếu base class chứa hook lifecycle, template method, protected state hoặc caller phụ thuộc mạnh vào polymorphism. Khi đó cần thiết kế lại ranh giới, không chỉ chuyển `extends` thành một field.
+**Do not refactor mechanically** when the base class contains lifecycle hooks, template methods, protected state, or callers strongly depend on polymorphism. Such cases require redesigning boundaries, not just turning `extends` into a field.
 
-## 10. Kiểm thử để chứng minh việc đổi thiết kế có ích
+## 10. Testing that the design change is beneficial
 
-Với ví dụ `InheritanceReuseDemo.java` ở trên, JUnit 5 có thể xác nhận chính các bất biến mà inheritance từ HashMap làm khó kiểm soát:
+For the `InheritanceReuseDemo.java` example above, JUnit 5 can verify precisely the invariants that inheriting from HashMap makes harder to enforce:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -2709,43 +2709,43 @@ class InheritanceReuseDemoTest {
 }
 ~~~
 
-Các test này cần JUnit Jupiter trong classpath. Phần `InheritanceReuseDemo.java` không cần JUnit và chạy trực tiếp bằng JDK 17.
+These tests need JUnit Jupiter on the classpath. `InheritanceReuseDemo.java` itself requires no JUnit and runs directly on JDK 17.
 
-Phần quan trọng hơn test riêng từng hàm là **contract của Inventory**: sau mọi lệnh hợp lệ, giá trị tồn kho không âm; lỗi đầu vào không phá state; client không thể sửa dữ liệu mà bỏ qua phương thức nghiệp vụ. Nếu logic chuyển sang DB, các test tích hợp cần kiểm chứng tranh chấp đồng thời và transaction.
+More important than testing each individual function is **the Inventory contract**: after every valid operation, stock quantities are nonnegative; invalid inputs do not corrupt state; clients cannot mutate data while bypassing domain methods. If logic moves to a DB, integration tests must check concurrent contention and transactions.
 
-## 11. Những ngộ nhận dễ gặp
+## 11. Common misconceptions
 
-**“Cứ có mã giống nhau thì đưa vào superclass.”** Hai đoạn mã có thể giống nhau tạm thời nhưng có lý do thay đổi khác nhau. Kéo chúng vào cha chung có thể ép hai module thay đổi cùng nhau. Ưu tiên chia sẻ *tri thức và trách nhiệm thực sự chung*, không chỉ những dòng giống cú pháp.
+**"Whenever code looks similar, move it into a superclass."** Two code fragments may temporarily look alike but have different reasons to change. Forcing them into a shared parent can couple changes across modules. Share *truly common knowledge and responsibilities*, not just syntactically similar lines.
 
-**“Dùng `protected` là đã đóng gói.”** `protected` mở một bề mặt mở rộng cho subclass; nó tạo cam kết khó đổi trong hệ thống có kế thừa. Một field mutable `protected` có thể cho lớp con phá invariant mà lớp cha dự định bảo vệ.
+**"Using `protected` means encapsulation."** `protected` exposes an extension surface to subclasses, creating a commitment that is hard to change in an inheritance hierarchy. A mutable `protected` field may let subclasses violate invariants the superclass intended to enforce.
 
-**“Composition luôn cần interface.”** Không. Nếu chỉ có một collaborator cụ thể với API rõ và không có lý do thay thế, một field `private final SomeHelper` là đủ. Tạo interface trùng khít class chỉ để có DI có thể thêm boilerplate.
+**"Composition always requires an interface."** No. With one concrete collaborator and no reason to swap it, a `private final SomeHelper` field is enough. Defining an interface that mirrors a class solely for DI adds boilerplate.
 
-**“Đổi inheritance sang composition là xong mọi vấn đề.”** Cấu trúc dependency chỉ là một phần. Một collaborator chứa mutable state dùng chung sai cách vẫn có thể phá bất biến hoặc gây race. Phải thiết kế ownership, dữ liệu và transaction độc lập.
+**"Switching inheritance to composition fixes everything."** Dependency structure is only part of the problem. A collaborator with improperly shared mutable state can still break invariants or cause races. Design ownership, data, and transaction handling separately.
 
-**“Mọi quan hệ is-a đều phải là inheritance từ class.”** Không. Nhiều hợp đồng thích hợp với interface, `sealed interface` hoặc các kiểu dữ liệu khác. Việc có chung một khả năng có thể diễn đạt bằng `implements` mà không ép dùng chung implementation.
+**"Every is-a relationship requires class inheritance."** No. Many contracts fit an interface, `sealed interface`, or other data types. Shared capabilities can be expressed with `implements` without requiring shared implementation.
 
-**“Không bao giờ được dùng kế thừa.”** Đó cũng là một quy tắc quá cực đoan. Kế thừa có ích khi quan hệ subtype thật, các cam kết có thể được thực hiện, và extension points được thiết kế có chủ ý.
+**"Inheritance must never be used."** That is also too extreme. Inheritance is useful for genuine subtype relationships where contracts can be upheld and extension points are intentional.
 
-## 12. Checklist trước khi viết `extends`
+## 12. Checklist before writing `extends`
 
-Trả lời các câu hỏi này trong code review:
+Answer these questions during code review:
 
-| Câu hỏi | Nếu câu trả lời là “không” |
+| Question | If the answer is "no" |
 | --- | --- |
-| Có thể nói “mọi B đều là A” theo nghĩa hợp đồng, không chỉ tên gọi? | Xem lại composition hoặc interface |
-| B có cần **toàn bộ** hành vi public kế thừa từ A không? | Tránh API phình và khả năng sửa state trái ý |
-| B có thể được truyền cho một caller chỉ biết A mà giữ nguyên hậu điều kiện không? | Có nguy cơ vi phạm LSP |
-| A đã được thiết kế hoặc tài liệu hóa để subclass mở rộng chưa? | Cẩn thận fragile base class và lifecycle |
-| Có test hợp đồng cho các subtype chính không? | Khó phát hiện thay đổi phá polymorphism |
-| Nếu A thay đổi implementation, B có vẫn đúng không? | Coupling vào chi tiết `protected`/override |
-| Có cách đơn giản hơn như helper private hoặc collaborator không? | Ưu tiên mô hình dễ hiểu và có ít cam kết hơn |
+| Can you say "every B is an A" in terms of contract, not just names? | Reconsider composition or interfaces |
+| Does B need **all** public behavior inherited from A? | Avoid bloated APIs and unintended state mutations |
+| Can B be passed to a caller that only knows A while preserving postconditions? | Risk of violating LSP |
+| Was A designed or documented for subclass extension? | Beware fragile base classes and lifecycle pitfalls |
+| Are there contract tests for major subtypes? | Changes that break polymorphism may go unnoticed |
+| If A's implementation changes, does B remain correct? | Coupling to `protected`/override details |
+| Is a simpler private helper or collaborator possible? | Prefer the clearer model with fewer commitments |
 
-Một dấu hiệu cảnh báo rất mạnh: **subclass chỉ dùng một hoặc hai phương thức của superclass và phần còn lại không có ý nghĩa với nó**. Khi gặp trường hợp này, trước hết hãy thử biểu diễn quan hệ **“B sử dụng A”** thay vì **“B là A”**.
+A strong warning sign is **a subclass that uses only one or two superclass methods while the rest are meaningless to it**. In that situation, first try expressing **"B uses A"** rather than **"B is an A"**.
 
-## 13. Bài tập: lỗi tái sử dụng trong hệ thống khuyến mãi
+## 13. Exercise: faulty reuse in a discount system
 
-Một lập trình viên thiết kế:
+A developer writes:
 
 ~~~java
 class DiscountRule extends java.util.ArrayList<Integer> {
@@ -2759,39 +2759,39 @@ class DiscountRule extends java.util.ArrayList<Integer> {
 }
 ~~~
 
-Yêu cầu nghiệp vụ lại là: mỗi khoản giảm giá phải không âm, tổng giảm không được vượt giá trị đơn hàng, và chỉ application service hợp lệ mới được thêm hoặc xóa khoản giảm.
+The business requirement is that each discount must be nonnegative, total discounts cannot exceed the order amount, and only authorized application services may add or remove discounts.
 
-Hãy thực hiện:
+Complete these tasks:
 
-1. Liệt kê ít nhất **ba đường đi từ API được kế thừa** khiến dữ liệu sai mà không qua kiểm tra.
-2. Tách `DiscountRule` thành một lớp sở hữu `List<Integer>` private, cung cấp các phương thức có ý nghĩa nghiệp vụ (ví dụ `addDiscount`, `totalDiscount`) và kiểm tra hạn mức.
-3. Phân biệt quy tắc thuộc đối tượng (một khoản giảm không âm) với quy tắc cần dữ liệu đơn hàng (tổng giảm không vượt giá trị đơn) để đặt validation ở đúng nơi.
-4. Viết unit test chứng minh đối tượng không cho sửa danh sách từ bên ngoài và không bị overflow âm thầm.
-5. Nếu cần nhiều thuật toán giảm giá độc lập, cân nhắc một `DiscountPolicy` interface; giải thích tại sao đây là một quan hệ hợp đồng có ý nghĩa, khác với `DiscountRule extends ArrayList`.
+1. List at least **three inherited API paths** that can create invalid data without validation.
+2. Refactor `DiscountRule` into a class owning a private `List<Integer>` and exposing meaningful domain methods (such as `addDiscount` and `totalDiscount`) with limit checks.
+3. Distinguish rules belonging to one discount (nonnegative amount) from rules requiring order data (total discounts cannot exceed the order amount) so validation occurs in the correct place.
+4. Write unit tests proving external code cannot modify the list and that overflow is detected.
+5. If multiple independent discount algorithms are needed, consider a `DiscountPolicy` interface; explain why that represents a meaningful contract unlike `DiscountRule extends ArrayList`.
 
-**Tự đánh giá:** class sau refactor có còn vô tình bị dùng như một `List<Integer>` không? Có phương thức công khai nào cho phép bỏ qua invariant không? Nếu đổi cấu trúc lưu trữ từ list sang một loại khác, client có phải sửa không?
+**Self-assessment:** Can the refactored class still accidentally be used as a `List<Integer>`? Are there public methods that bypass invariants? Would clients need to change if the underlying storage moved from a list to another structure?
 
-**Điều cần ghi nhớ:** `extends` tạo ra **một cam kết quan hệ kiểu và hành vi**, không chỉ “mượn code”. Khi nhu cầu là sử dụng vài phương thức của đối tượng khác, hãy xem xét helper, composition và delegation. Chọn kế thừa khi subtype thực sự thay thế được supertype và toàn bộ hợp đồng kế thừa đều có ý nghĩa.
+**Remember:** `extends` creates **a type and behavioral commitment**, not just a way to "borrow code." If all you need is a few methods from another object, consider helpers, composition, and delegation. Use inheritance when the subtype can truly substitute for the supertype and the entire inherited contract makes sense.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-pitfalls-005">Lạm dụng ép kiểu và kiểm tra kiểu</a>
+## <a id="design-pitfalls-005">Overusing casts and type checks</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Lạm dụng ép kiểu và kiểm tra kiểu trong OOP: khi nào nên dùng đa hình?
+# Overusing casts and type checks in OOP: when should you use polymorphism?
 
-> **Chủ đề:** OOP → Lỗi thiết kế → Lạm dụng ép kiểu và kiểm tra kiểu.  
-> **Mục tiêu:** Nhận diện code smell do lặp lại `instanceof`, downcast hoặc so sánh tên class; phân biệt những kiểm tra kiểu cần thiết với thiết kế phụ thuộc lớp cụ thể; biết refactor sang polymorphism/composition, bảo vệ ranh giới dữ liệu bằng Java 17 và kiểm thử để không đổi sai hành vi.
+> **Topic:** OOP → Design Pitfalls → Overusing casts and type checks.  
+> **Objective:** Recognize code smells caused by repeated `instanceof`, downcasts, or class-name comparisons; distinguish necessary type validation from designs coupled to concrete classes; learn to refactor toward polymorphism/composition, validate data boundaries in Java 17, and test without unintentionally changing behavior.
 
-## 1. Một đoạn mã “biết quá nhiều” về loại đối tượng
+## 1. Code that "knows too much" about object types
 
-Giả sử ứng dụng tính phí vận chuyển theo hai hình thức: tiết kiệm và hỏa tốc. Cả hai đều là lựa chọn vận chuyển, nhưng lớp xử lý đơn hàng lại đi hỏi **đối tượng thực tế thuộc class nào**:
+Suppose an application calculates shipping fees for two options: economy and express. Both represent shipping choices, but the order-processing class asks **which concrete class the object belongs to**:
 
 ~~~java
 // Minh họa lỗi thiết kế; các lớp EconomyOption/ExpressOption
@@ -2808,30 +2808,30 @@ long fee(DeliveryOption option, DeliveryRequest request) {
 }
 ~~~
 
-Đoạn này thể hiện *type-checking conditional*: thuật toán nghiệp vụ được chọn bằng cách hỏi subtype của đối tượng rồi thực hiện công thức ngay tại caller. Các biến `economy`/`express` còn không được dùng — phép ép kiểu thực tế không cần thiết.
+This is a *type-checking conditional*: the caller chooses the business algorithm by examining the object's subtype and then implements the formula itself. The `economy`/`express` variables are not even used; the casts are unnecessary.
 
-Nếu sau đó một màn hình dự toán, controller và batch job đều viết lại nhánh tương tự, mỗi lần thêm loại vận chuyển thứ ba phải sửa nhiều nơi. Khả năng “thêm loại mới” phụ thuộc vào việc tìm hết các câu `instanceof` rải rác. **Đó là mùi thiết kế**, không phải vì toán tử `instanceof` bị cấm.
+If a quotation screen, controller, and batch job all repeat the same branches, adding a third shipping type requires modifying multiple places. Extensibility depends on finding every scattered `instanceof`. **That is the design smell**; the `instanceof` operator itself is not forbidden.
 
-Một câu hỏi hữu ích khi review:
+A useful code-review question:
 
-> *Caller đang cần biết đối tượng thuộc lớp nào để quyết định hành vi mà chính đối tượng ấy hoàn toàn có thể chịu trách nhiệm không?*
+> *Does the caller need to know an object's concrete class to choose behavior that the object itself could own?*
 
-Nếu câu trả lời là “có”, nên xem xét đưa hành vi vào abstraction và sử dụng **đa hình (polymorphism)**.
+If the answer is "yes," consider moving that behavior into an abstraction and using **polymorphism**.
 
-## 2. Hiểu đúng ép kiểu và kiểm tra kiểu trong Java
+## 2. Understanding casts and type checks in Java
 
-Java là ngôn ngữ **kiểm tra kiểu tĩnh**, nhưng tham chiếu ở kiểu cha/interface có thể trỏ đến đối tượng thuộc subtype cụ thể. Cần phân biệt:
+Java is a **statically typed** language, but a reference typed as a superclass/interface can point to a concrete subtype object. Distinguish:
 
-| Khái niệm | Ý nghĩa | Ví dụ |
+| Concept | Meaning | Example |
 |---|---|---|
-| **Kiểu tĩnh** | Kiểu của biểu thức/biến mà compiler biết | `Animal animal` |
-| **Lớp thực tế lúc chạy** | Class của đối tượng đang được tham chiếu | `new Dog()` |
-| **Upcasting** | Dùng subtype ở vị trí supertype (thường không cần viết cast) | `Animal a = new Dog();` |
-| **Downcasting** | Yêu cầu xem tham chiếu kiểu rộng như kiểu hẹp hơn | `Dog d = (Dog) a;` |
-| **`instanceof`** | Kiểm tra tham chiếu có phù hợp một kiểu/pattern tại runtime không | `a instanceof Dog` |
-| **Dynamic dispatch** | Chọn implementation của instance method được override lúc chạy | `a.sound()` gọi `Dog.sound()` |
+| **Static type** | Expression/variable type known to the compiler | `Animal animal` |
+| **Runtime class** | The class of the referenced object | `new Dog()` |
+| **Upcasting** | Using a subtype where a supertype is expected (often with no explicit cast) | `Animal a = new Dog();` |
+| **Downcasting** | Asking to treat a broadly typed reference as a narrower type | `Dog d = (Dog) a;` |
+| **`instanceof`** | Tests whether a reference matches a type/pattern at runtime | `a instanceof Dog` |
+| **Dynamic dispatch** | Chooses the overridden instance-method implementation at runtime | `a.sound()` invokes `Dog.sound()` |
 
-Ví dụ Java 17:
+Java 17 example:
 
 ~~~java
 interface Animal {
@@ -2859,9 +2859,9 @@ if (animal instanceof Dog dog) {
 }
 ~~~
 
-`animal` vẫn có **kiểu tĩnh `Animal`**, đối tượng thực tế là `Dog`. Upcasting không “cắt” phần Dog ra khỏi object. Nhưng không thể truy cập method riêng của Dog nếu chỉ biết interface Animal, trừ khi thực hiện thu hẹp kiểu có kiểm tra hoặc thiết kế API khác.
+`animal` still has **static type `Animal`**, while the actual object is a `Dog`. Upcasting does not cut the Dog portion off an object. But code knowing only the Animal interface cannot call Dog-specific methods unless it checks and narrows the type or redesigns the API.
 
-### Downcast có thể đúng cú pháp nhưng sai tại runtime
+### A downcast can be syntactically valid but fail at runtime
 
 ~~~java
 Animal animal = new Cat();
@@ -2871,25 +2871,25 @@ Animal animal = new Cat();
 Dog dog = (Dog) animal; // ClassCastException khi chạy.
 ~~~
 
-`(Dog) animal` không biến `Cat` thành `Dog`. Phép cast tham chiếu chỉ yêu cầu JVM kiểm tra rằng đối tượng đã có phù hợp với kiểu đích không. `instanceof Dog` giúp kiểm tra trước khi dùng một hành vi đặc thù, nhưng **việc kiểm tra thành công cũng không tự tạo ra thiết kế tốt**.
+`(Dog) animal` does not turn a `Cat` into a `Dog`. A reference cast merely asks the JVM to check whether the existing object matches the target type. `instanceof Dog` can guard subtype-specific behavior, but **a successful type check does not itself imply good design**.
 
-## 3. Những kiểu lạm dụng thường gặp
+## 3. Common forms of overuse
 
-| Dấu hiệu | Vì sao đáng ngờ | Hướng xử lý |
+| Symptom | Why it is suspicious | Better direction |
 |---|---|---|
-| `if (animal instanceof Dog) ... else if (animal instanceof Cat)` xuất hiện ở nhiều nơi | Caller tự quyết định hành vi thay cho các subtype | Đưa hành vi chung vào interface rồi override |
-| `((ConcreteRepo) repository).specialSave(...)` | Caller phụ thuộc lớp triển khai bị che sau interface | Xem lại hợp đồng cần thiết hoặc tách capability rõ ràng |
-| So sánh `obj.getClass() == Dog.class` để chọn logic | Gắn chặt với đúng class, không nhận subclass/proxy | Ưu tiên polymorphism; chỉ kiểm tra exact class khi đặc tả đòi hỏi |
-| Cast từ `Object` liên tục trong service nghiệp vụ | Dữ liệu bị mất hợp đồng kiểu quá sớm | Generic types, typed DTO, adapter ở boundary |
-| `@SuppressWarnings("unchecked")` tràn lan | Che mất bằng chứng kiểm tra kiểu không được bảo đảm | Cô lập API legacy, validate hoặc chuyển sang typed API |
-| `switch(typeCode)` lặp lại nhiều lần với các công thức của từng loại | Type code quyết định mọi hành vi thay vì object | Strategy/polymorphism hoặc tổ chức theo capability |
-| `catch (ClassCastException)` để thử từng subtype | Dùng exception thay cho mô hình kiểu | Kiểm tra ở boundary, tránh downcast đoán mò |
+| `if (animal instanceof Dog) ... else if (animal instanceof Cat)` repeated in many places | Callers decide behavior instead of the subtypes | Move shared behavior into an interface and override it |
+| `((ConcreteRepo) repository).specialSave(...)` | Caller depends on a concrete implementation hidden behind an interface | Revisit the necessary contract or separate a clear capability |
+| Comparing `obj.getClass() == Dog.class` to select logic | Coupled to an exact class; excludes subclasses/proxies | Prefer polymorphism; require an exact class only when specified |
+| Repeated casts from `Object` in business services | Type contracts were discarded too early | Generics, typed DTOs, and boundary adapters |
+| Widespread `@SuppressWarnings("unchecked")` | Hides evidence of unchecked type safety | Isolate legacy APIs, validate, or move to typed APIs |
+| Repeated `switch(typeCode)` with per-type formulas | Type codes control behavior instead of objects | Strategy/polymorphism or capability-based organization |
+| `catch (ClassCastException)` to try subtypes | Exceptions substitute for type modeling | Check at boundaries and avoid speculative downcasts |
 
-**Chưa phải mọi trường hợp trong bảng đều là lỗi.** Một `switch` duy nhất để chọn implementation theo cấu hình có thể rất rõ ràng; một `instanceof` để xác thực dữ liệu đầu vào không đáng tin cậy là hợp lý. Vấn đề là **tần suất, vị trí và trách nhiệm** của phép kiểm tra kiểu.
+**Not every example in the table is necessarily wrong.** A single `switch` selecting an implementation from configuration may be quite clear; using `instanceof` to validate untrusted input is reasonable. The issue is the **frequency, location, and responsibility** of type checks.
 
-## 4. Refactor đúng trọng tâm: đa hình cho các thuật toán vận chuyển
+## 4. Focused refactoring: polymorphism for shipping algorithms
 
-Thay vì để `Checkout` kiểm tra subtype và chứa công thức từng loại vận chuyển, ta dùng một interface mô tả hành vi cần thiết:
+Instead of making `Checkout` inspect subtypes and contain every shipping formula, use an interface describing the necessary behavior:
 
 ~~~mermaid
 flowchart LR
@@ -2901,19 +2901,19 @@ flowchart LR
     caller -.->|chọn implementation| express
 ~~~
 
-Hướng phụ thuộc đáng chú ý: **`ShippingCheckout → ShippingPolicy ← Concrete Shipping`**. Caller chọn strategy khi dựng đối tượng; code tính phí của Checkout không cần biết tên các subtype. Việc chọn strategy có thể nằm ở cấu hình, DI container hoặc một nơi chọn chính sách theo yêu cầu.
+The dependency direction matters: **`ShippingCheckout → ShippingPolicy ← Concrete Shipping`**. The caller selects a strategy when constructing objects; the Checkout pricing code need not know subtype names. Strategy selection can belong in configuration, a DI container, or a dedicated policy-selection point.
 
-### Ví dụ Java 17 đầy đủ, biên dịch và chạy được
+### Complete Java 17 example that compiles and runs
 
-Giả định nghiệp vụ demo:
+Assumptions for the demo:
 
-- Mã đơn hàng chỉ gồm `A-Z`, số và dấu gạch ngang.
-- Quãng đường nguyên trong khoảng **1–1000 km**.
-- Trọng lượng nguyên trong khoảng **1–20.000 g**.
-- Tính phí theo **số kilogram làm tròn lên**, không dùng số thập phân tiền tệ để giữ ví dụ tập trung vào thiết kế.
-- Đơn vị phí là **VND nguyên**; hai công thức dưới đây chỉ là dữ liệu giả lập, không phải bảng giá vận chuyển thực.
+- Order IDs consist only of `A-Z`, digits, and hyphens.
+- Integer distances range from **1–1000 km**.
+- Integer weights range from **1–20.000 g**.
+- Fees use **kilograms rounded up**, avoiding decimal money values to keep the example focused on design.
+- Fee amounts are **integer VND**; the formulas below are simulated values, not real shipping tariffs.
 
-Đặt toàn bộ mã trong **`CastRefactorDemo.java`**:
+Save all the code in **`CastRefactorDemo.java`**:
 
 ~~~java
 import java.util.Map;
@@ -3020,42 +3020,42 @@ public class CastRefactorDemo {
 }
 ~~~
 
-Chạy bằng JDK 17 trở lên:
+Run with JDK 17 or later:
 
 ~~~bash
 javac CastRefactorDemo.java
 java CastRefactorDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 ECONOMY -> 26000 VND
 EXPRESS -> 53000 VND
 ~~~
 
-Kiểm tra tay với khoảng cách **4 km**, trọng lượng **1.500 g** (làm tròn thành **2 kg**):
+Manually verify a distance of **4 km** and a weight of **1.500 g** (rounded up to **2 kg**):
 
-| Chính sách | Công thức ví dụ | Phí |
+| Policy | Example formula | Fee |
 |---|---|---:|
 | Economy | 12.000 + 2.500 × 4 + 2.000 × 2 | 26.000 VND |
 | Express | 25.000 + 4.500 × 4 + 5.000 × 2 | 53.000 VND |
 
-Lưu ý `DeliveryRequest` **giới hạn khoảng dữ liệu** để các phép nhân/cộng `long` trên không overflow trong phạm vi demo. Trong ứng dụng có biên độ số lớn hoặc công thức từ dữ liệu ngoài, cần kiểm soát overflow rõ ràng (`Math.multiplyExact`, `Math.addExact` hoặc kiểu tiền tệ phù hợp).
+Note that `DeliveryRequest` **restricts input ranges** so the `long` multiplication/addition operations cannot overflow within the demo. Real applications with larger ranges or externally supplied formulas must explicitly guard against overflow (for example with `Math.multiplyExact`, `Math.addExact`, or a suitable money type).
 
-### Vì sao việc refactor thực sự giải quyết vấn đề?
+### Why does this refactoring actually solve the problem?
 
-Ở phiên bản ban đầu, **caller sở hữu toàn bộ lựa chọn subtype và công thức tính tiền**. Sau refactor:
+Initially, **the caller owns both the subtype selection and every pricing formula**. After refactoring:
 
-1. `ShippingPolicy` nói rõ **một khả năng chung**: tính phí cho `DeliveryRequest`.
-2. Mỗi implementation tự sở hữu **công thức riêng**.
-3. `ShippingCheckout` giữ vai trò điều phối: hỏi policy và tạo kết quả. Không cần `instanceof`, cast, `getClass()` hoặc `switch` trên class.
-4. `Map<DeliveryTier, ShippingPolicy>` trong `main` chỉ là **điểm lựa chọn chính sách**, không dàn logic ra toàn ứng dụng.
-5. Nếu thêm chính sách `SameDayShipping`, chủ yếu phải thêm implementation và đăng ký nó; `ShippingCheckout.quote()` không bị sửa.
+1. `ShippingPolicy` defines **one shared capability**: calculating a fee for a `DeliveryRequest`.
+2. Each implementation owns **its own formula**.
+3. `ShippingCheckout` orchestrates policy calls and returns results. It needs no `instanceof`, casts, `getClass()`, or `switch` on classes.
+4. The `Map<DeliveryTier, ShippingPolicy>` in `main` is merely **the policy-selection point**, not business logic scattered throughout the application.
+5. Adding `SameDayShipping` mostly requires implementing and registering it; `ShippingCheckout.quote()` stays unchanged.
 
-**Đổi sang polymorphism không tự bảo đảm kết quả đúng.** Mỗi implementation vẫn phải tuân thủ hợp đồng: trả phí không âm và không có side effect bất ngờ nếu đây là hàm báo giá thuần. `ShippingQuote` từ chối phí âm; test cần kiểm tra cả công thức.
+**Switching to polymorphism does not guarantee correct results.** Each implementation must still honor its contract, such as returning a nonnegative fee without surprising side effects for a pure quotation operation. `ShippingQuote` rejects negative fees; tests must also verify formulas.
 
-## 5. So sánh đường đi trước và sau refactor
+## 5. Comparing the execution paths before and after refactoring
 
 ~~~mermaid
 flowchart TB
@@ -3073,15 +3073,15 @@ flowchart TB
     end
 ~~~
 
-Khi nhiều nơi đều cần “làm X khác nhau theo loại Y”, lặp `instanceof` có thể là dấu hiệu **hợp đồng Y còn thiếu hành vi X**. Song không phải cứ thấy nhánh thì bắt buộc thêm một method vào base class: cần xét liệu hành vi có thực sự thuộc trách nhiệm của Y, hay thuộc một dịch vụ/cấu trúc khác.
+When many places need to "do X differently for each Y type," repeated `instanceof` may indicate **a missing behavior X in Y's contract**. Yet every branch need not become a base-class method: decide whether the behavior truly belongs to Y or to a different service or structure.
 
-## 6. `instanceof` khi nào là lựa chọn đúng?
+## 6. When is `instanceof` the right choice?
 
-### 6.1. Kiểm tra dữ liệu tại ranh giới không tin cậy
+### 6.1. Validating data at an untrusted boundary
 
-Nếu một thư viện legacy hoặc API nhận dữ liệu cho ta `Object` hoặc `List<?>`, **cần xác nhận hình dạng dữ liệu trước khi chuyển sang miền có kiểu rõ ràng**. Đây là kiểm tra kiểu để bảo vệ hợp đồng, không phải vòng phân nhánh nghiệp vụ rải rác.
+If a legacy library or API supplies `Object` or `List<?>` values, **validate the data shape before entering a strongly typed domain**. This protects a type contract; it is different from scattering business branches.
 
-Ví dụ cần lấy danh sách nhãn kiểu chuỗi từ một đối tượng không chắc chắn:
+For example, extract a list of string labels from an uncertain object:
 
 ~~~java
 import java.util.ArrayList;
@@ -3109,7 +3109,7 @@ final class InputParser {
 }
 ~~~
 
-Ví dụ sử dụng:
+Example usage:
 
 ~~~java
 List<String> tags = InputParser.requireTags(
@@ -3119,9 +3119,9 @@ List<String> tags = InputParser.requireTags(
 // Ném IllegalArgumentException, không cố ép cả List thành List<String>.
 ~~~
 
-Đây là một bước chuyển đổi *Object → typed value*. Sau bước này, phần nghiệp vụ nhận `List<String>` và **không cần kiểm tra từng phần tử thêm lần nữa** nếu không có raw/unchecked operation phá hợp đồng. Lưu ý `List.copyOf` trả một collection không thể sửa qua API và không thay đổi theo nguồn, nhưng không phải deep copy cho phần tử mutable; ở đây `String` là immutable.
+This converts an *Object → typed value*. Afterward, business logic accepts `List<String>` and **does not need to recheck each element** unless raw/unchecked operations violate the contract. `List.copyOf` returns a collection that cannot be mutated through its API and does not follow changes in the source, but it is not a deep copy for mutable elements; here, `String` is immutable.
 
-### 6.2. Một subtype có năng lực đặc biệt thực sự cần thiết
+### 6.2. A subtype truly offers an optional capability
 
 ~~~java
 interface Printable {
@@ -3141,11 +3141,11 @@ void useDevice(Printable device) {
 }
 ~~~
 
-Trong ví dụ giả lập này, scan là một **khả năng tùy chọn** khác với print. Kiểm tra capability `Scannable` có thể phù hợp hơn ép mọi `Printable` phải có `scan()` rồi ném `UnsupportedOperationException`. Đây không nhất thiết là code smell nếu hành vi tùy chọn được yêu cầu thực sự. Ngược lại, nếu mọi nơi đều liên tục kiểm tra `Scannable`, hãy xem ranh giới API có nên yêu cầu đối tượng `Scannable` ngay từ đầu hay không.
+In this simulated example, scanning is an **optional capability** distinct from printing. Checking for `Scannable` may be more appropriate than requiring every `Printable` to implement `scan()` and throw `UnsupportedOperationException`. This need not be a design smell if the optional behavior is genuinely required. Conversely, if callers constantly check for `Scannable`, consider requesting a `Scannable` object in the API from the outset.
 
-### 6.3. Loại dữ liệu đóng, cần xử lý từ bên ngoài
+### 6.3. A closed data family processed externally
 
-Một thao tác như **render báo cáo** cho một cấu trúc AST/biểu thức có nhiều biến thể dữ liệu có thể cần phân loại node ở một điểm tập trung. Nếu tập subtype được **cố định và kiểm soát**, Java 17 hỗ trợ `sealed interface` và `instanceof` pattern; đây là lựa chọn hợp lý khi không muốn các node phải biết mọi dạng đầu ra.
+An operation such as **rendering reports** for an AST/expression structure with several variants may need to classify nodes in one centralized place. When the set of subtypes is **closed and controlled**, Java 17 offers `sealed interface` and `instanceof` patterns; this can be reasonable if nodes should not know about every output format.
 
 ~~~java
 sealed interface Expr permits Literal, Sum {}
@@ -3166,15 +3166,15 @@ static int evaluate(Expr expr) {
 }
 ~~~
 
-Đây là minh họa cho Java 17 trong một lớp khai báo phương thức `evaluate`. `Sum` cho phép cây biểu thức phức tạp; `Math.addExact` báo overflow nếu kết quả vượt `int`. Việc loại biểu thức bị giới hạn bởi `sealed` khiến nhánh xử lý tập trung và có thể được kiểm thử đầy đủ.
+This illustrates Java 17 with an `evaluate` method declared inside a class. `Sum` supports complex expression trees; `Math.addExact` reports overflow beyond `int`. A `sealed` hierarchy limits expression types, keeping dispatch centralized and testable.
 
-Lưu ý quan trọng: **pattern matching trong `switch` trên kiểu ở Java 17 còn là preview feature**, không nên trình bày nó như một tính năng không cần cờ của Java 17. Đoạn trên chỉ dùng `instanceof` pattern matching, có thể biên dịch bằng JDK 17 thông thường. Với các Java version mới hơn, có thêm lựa chọn về pattern switch.
+Crucially, **type patterns in `switch` were still a preview feature in Java 17**, and should not be presented as an unflagged Java 17 feature. This code uses only `instanceof` pattern matching and compiles with a standard JDK 17. Newer Java versions offer other pattern-switch options.
 
-**Trade-off của visitor/type dispatch:** Khi liên tục thêm *loại dữ liệu*, hành vi phương thức trên interface/subclass thường dễ mở rộng hơn; khi liên tục thêm *phép toán* trên một họ dữ liệu tương đối đóng, một visitor hoặc bộ xử lý riêng có thể phù hợp. Chọn theo chiều thay đổi thực tế, không loại bỏ mọi kiểm tra kiểu bằng mọi giá.
+**Visitor/type-dispatch trade-off:** If new *data types* are added frequently, methods on interfaces/subclasses may be easier to extend; if new *operations* are regularly added to a relatively closed data family, a visitor or separate processor may fit better. Choose based on real change patterns rather than eliminating every type check at all costs.
 
-## 7. Ép kiểu xuống implementation: vì sao dễ phá abstraction?
+## 7. Downcasting to implementations: why it undermines abstraction
 
-Xét service nhận một repository qua interface:
+Consider a service receiving a repository through an interface:
 
 ~~~java
 interface OrderRepository {
@@ -3196,20 +3196,20 @@ void process(OrderRepository repository) {
 }
 ~~~
 
-Nếu truyền một repository dùng bộ nhớ hoặc mock, `process` có thể ném `ClassCastException`. Dù có thêm `if (repository instanceof JdbcOrderRepository jdbc)`, service vẫn biết chi tiết JDBC và hành vi giữa các adapter trở nên không nhất quán.
+Passing an in-memory repository or mock could make `process` throw `ClassCastException`. Even with `if (repository instanceof JdbcOrderRepository jdbc)`, the service knows JDBC details and behavior becomes inconsistent across adapters.
 
-Các hướng giải quyết phụ thuộc mục đích:
+Possible fixes depend on intent:
 
-- Nếu `flush` là một phần hợp đồng mà **mọi repository cần bảo đảm**, cân nhắc đưa nó vào abstraction một cách có chủ đích.
-- Nếu flush chỉ là chi tiết tối ưu của JDBC, **giữ bên trong adapter**; người gọi không cần biết.
-- Nếu có một **khả năng tùy chọn**, định nghĩa interface capability riêng và chỉ yêu cầu nó tại nơi thực sự cần.
-- Nếu workflow chỉ hỗ trợ JDBC một cách có chủ ý, khai báo rõ `JdbcOrderRepository` tại boundary thay vì quảng cáo một interface đa hình không đúng sự thật.
+- If `flush` belongs in the contract **every repository must honor**, add it to the abstraction deliberately.
+- If flushing is merely a JDBC optimization, **keep it inside the adapter** so callers need not know.
+- For an **optional capability**, define a separate capability interface and require it only where appropriate.
+- If a workflow intentionally supports only JDBC, declare `JdbcOrderRepository` explicitly at the boundary instead of advertising a false polymorphic interface.
 
-**Không** thêm method vào interface chỉ để tránh viết `instanceof` khi method ấy không phù hợp với các implementation khác: cách đó dễ vi phạm Interface Segregation Principle hoặc Liskov Substitution Principle.
+**Do not** add a method to an interface merely to avoid `instanceof` when it is inappropriate for other implementations; that can violate the Interface Segregation Principle or Liskov Substitution Principle.
 
-## 8. Lạm dụng cast trong generics và collection
+## 8. Overusing casts in generics and collections
 
-Java generics giúp ngăn nhiều lỗi tại compile time. Hãy giữ thông tin kiểu đi qua API:
+Java generics prevent many compile-time errors. Preserve type information through APIs:
 
 ~~~java
 import java.util.ArrayList;
@@ -3222,7 +3222,7 @@ codes.add("ORD-1");
 String first = codes.get(0);
 ~~~
 
-Khi dùng raw type, việc bảo vệ có thể bị vô hiệu:
+Raw types can bypass these protections:
 
 ~~~java
 List<String> codes = new ArrayList<>();
@@ -3233,26 +3233,26 @@ raw.add(123);     // Unchecked call, không an toàn.
 String code = codes.get(0);
 ~~~
 
-Một kiểu “sửa lỗi” sai thường gặp là:
+A commonly attempted but incorrect "fix" is:
 
 ~~~java
 // KHÔNG NÊN: Cast này không kiểm tra từng phần tử của list.
 // List<String> names = (List<String>) (List<?>) unknownList;
 ~~~
 
-Do **type erasure**, Java không thể kiểm tra runtime object là `List<String>` bằng `instanceof List<String>`. `instanceof List<?>` chỉ xác nhận “đây là một List với type argument không biết”; muốn xác thực từng phần tử phải duyệt dữ liệu như `InputParser.requireTags`.
+Due to **type erasure**, Java cannot check at runtime that an object is `List<String>` using `instanceof List<String>`. `instanceof List<?>` only establishes "this is a List with unknown type arguments"; validate its elements by iterating as in `InputParser.requireTags`.
 
-| Tình huống | Cách làm tốt hơn |
+| Situation | Better approach |
 |---|---|
-| Method trả `Object` nhưng thực chất luôn trả `User` | Sửa chữ ký trả `User`, hoặc `Optional<User>` nếu có thể vắng |
-| Một registry chứa nhiều kiểu object | Dùng typed key/`Class<T>` API có kiểm tra tập trung |
-| Legacy API buộc trả raw `List` | Chuyển đổi/validate một lần ở adapter; đẩy phần còn lại thành typed API |
-| Dùng cast xuống subtype để truy cập method lặp lại | Đưa hành vi chung vào interface hoặc capability phù hợp |
-| Cast “cho compiler im lặng” | Tìm lý do mất thông tin kiểu; không bọc warning tràn lan |
+| Method returns `Object` but always contains `User` | Return `User` in its signature, or `Optional<User>` if absence is possible |
+| Registry stores objects of multiple types | Use a checked typed-key/`Class<T>` API |
+| Legacy API requires raw `List` | Convert/validate once in an adapter; expose typed APIs thereafter |
+| Repeated subtype casts to access methods | Move common behavior into an interface or suitable capability |
+| Cast merely "to silence the compiler" | Find why type information was lost instead of hiding warnings |
 
-### Khi `Class<T>.cast` là công cụ đúng
+### When `Class<T>.cast` is appropriate
 
-Một adapter có thể biết `Class<T>` từ cấu hình nhưng chỉ nhận `Object` từ một API động. Có thể kiểm tra theo token loại:
+An adapter may know `Class<T>` from configuration but receive only `Object` from a dynamic API. It can check the provided type token:
 
 ~~~java
 final class TypedBoundary {
@@ -3268,11 +3268,11 @@ final class TypedBoundary {
 String text = TypedBoundary.require("hello", String.class);
 ~~~
 
-`Class.cast` chỉ kiểm tra **runtime class tương thích**. Nó không biến `List.class` thành một bộ xác nhận phần tử kiểu `String`, và không bảo đảm giá trị đáp ứng quy tắc nghiệp vụ (ví dụ chuỗi không rỗng, ID hợp lệ, quyền được cấp).
+`Class.cast` only checks **compatible runtime classes**. It cannot turn `List.class` into a validator for `String` elements and cannot guarantee values obey domain rules (nonempty strings, valid IDs, authorization).
 
-## 9. Nhầm lẫn giữa kiểm tra kiểu và kiểm tra trạng thái
+## 9. Confusing type checks with state checks
 
-Nhiều nhánh `instanceof` thực chất đang cố trả lời câu hỏi về **trạng thái** thay vì kiểu class. Ví dụ:
+Many `instanceof` branches actually try to answer a **state** question, not a class-type question. For example:
 
 ~~~java
 if (order instanceof PaidOrder) {
@@ -3280,26 +3280,26 @@ if (order instanceof PaidOrder) {
 }
 ~~~
 
-Điều này có thể hợp lý nếu `PaidOrder` là một kiểu riêng và toàn bộ hệ thống thực sự dùng *typestate* an toàn, nhưng thường trạng thái là một thuộc tính hoặc invariant nghiệp vụ như `OrderStatus.PAID`. Đừng tạo subtype `CreatedOrder`, `PaidOrder`, `CancelledOrder` chỉ để thay mọi enum, nếu các đối tượng có vòng đời thay đổi trạng thái và hệ thống phải cast qua lại khó quản lý.
+This can be reasonable if `PaidOrder` is a distinct type and the entire system implements safe *typestate*. More often, state is a business attribute or invariant such as `OrderStatus.PAID`. Do not create `CreatedOrder`, `PaidOrder`, and `CancelledOrder` subtypes solely to replace every enum if objects change state during their lifecycle and the application then requires difficult cross-casting.
 
-Câu hỏi cần phân biệt:
+Distinguish these questions:
 
-| Câu hỏi thực sự | Công cụ ưu tiên |
+| Real question | Preferred technique |
 |---|---|
-| Đối tượng biết thực hiện hành vi của mình thế nào? | Polymorphism/Strategy |
-| Dữ liệu chưa tin cậy có kiểu phù hợp không? | `instanceof`/type token/validation tại boundary |
-| Đơn hàng đang ở trạng thái nghiệp vụ nào? | State model, domain method, enum có điều kiện chuyển |
-| Client cần một khả năng tùy chọn? | Capability interface hoặc hợp đồng rõ |
-| Framework cần nạp plugin được chỉ định runtime? | Registry/factory và kiểm tra kiểu tập trung |
-| Cần xử lý một cấu trúc dữ liệu đóng theo nhiều phép toán? | Visitor/central dispatch/sealed hierarchy tùy chiều thay đổi |
+| How does an object perform its own behavior? | Polymorphism/Strategy |
+| Does untrusted data have the expected type? | `instanceof`/type token/validation at the boundary |
+| What business state is an order in? | State model, domain methods, or an enum with guarded transitions |
+| Does the client need an optional capability? | Capability interface or clear contract |
+| Must a framework load a plugin selected at runtime? | Registry/factory and centralized type checking |
+| Are multiple operations needed over a closed data family? | Visitor/central dispatch/sealed hierarchy based on change patterns |
 
-Lạm dụng ép kiểu thường bắt nguồn từ **API chưa diễn đạt đúng điều caller cần**, không chỉ từ một lỗi cú pháp.
+Casting is often overused because **the API does not express what callers really need**, not merely due to a syntax problem.
 
-## 10. Kiểm thử sau refactor: hợp đồng quan trọng hơn tên class
+## 10. Testing after refactoring: contracts matter more than class names
 
-Mục tiêu kiểm thử: khi chọn implementation khác, `ShippingCheckout` vẫn dùng cùng một hợp đồng; không có nhánh phụ thuộc class cụ thể.
+Test that `ShippingCheckout` uses the same contract with any implementation, without branching on concrete classes.
 
-Ví dụ với JUnit Jupiter 5, cùng package với `CastRefactorDemo.java`:
+JUnit Jupiter 5 example in the same package as `CastRefactorDemo.java`:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -3350,60 +3350,60 @@ class ShippingCheckoutTest {
 }
 ~~~
 
-Các test cần dependency `org.junit.jupiter:junit-jupiter` và JUnit test runner phù hợp. Test thứ hai dùng **lambda** vì `ShippingPolicy` là functional interface (chỉ có một abstract method), cho thấy Context không quan tâm object có phải `EconomyShipping`/`ExpressShipping` hay không.
+These tests need the `org.junit.jupiter:junit-jupiter` dependency and a suitable JUnit runner. The second test uses a **lambda** because `ShippingPolicy` is a functional interface (one abstract method), showing that the Context does not care whether the object is `EconomyShipping`/`ExpressShipping`.
 
-### Bổ sung kiểm thử contract dùng chung
+### Additional shared contract tests
 
-Khi số implementation tăng, nên chạy một bộ kiểm thử hợp đồng cho mọi policy:
+As implementation counts grow, apply the same contract-test suite to every policy:
 
-- Với request hợp lệ, kết quả không âm, không gây tác dụng phụ ngoài mong đợi.
-- Với cùng đầu vào và cấu hình ổn định, kết quả dự đoán được theo contract.
-- Biên của khoảng cách và trọng lượng, gồm thời điểm làm tròn lên kg.
-- Mỗi biến thể có giá trị mong đợi cụ thể, không chỉ kiểm tra `fee >= 0`.
+- For valid requests, results are nonnegative and there are no unexpected side effects.
+- Given the same input and stable configuration, results are predictable under the contract.
+- Test distance and weight boundaries, including kilogram rounding.
+- Each variant has specific expected values, not just `fee >= 0`.
 
-**Đừng nhầm:** unit test passing chưa chứng minh mọi tình huống thực tế; nếu chính sách tính tiền còn dựa vào database, tỷ giá, chính sách thời gian hay mạng, hãy có integration test phù hợp.
+**Do not confuse these claims:** passing unit tests does not prove all real-world cases. If fee policies depend on databases, exchange rates, time-dependent rules, or networks, add appropriate integration tests.
 
-## 11. Chọn kỹ thuật refactor theo mức độ thay đổi
+## 11. Choosing a refactoring technique according to change patterns
 
-Không có một giải pháp duy nhất cho mọi cây `if (x instanceof Y)`:
+There is no single solution for every `if (x instanceof Y)` tree:
 
-| Hiện trạng | Hướng refactor | Lý do |
+| Current design | Refactoring approach | Reason |
 |---|---|---|
-| Caller có nhiều nhánh chọn **cùng một hành vi** tùy subtype | **Replace Conditional with Polymorphism** | Hành vi nằm tại object chịu trách nhiệm |
-| Mỗi loại có một thuật toán và cần chọn trong runtime | **Strategy + DI/composition** | Hoán đổi hành vi mà Context không biết class cụ thể |
-| Chỉ một nơi phân nhánh để dựng implementation | Factory/registry hoặc một `switch` ở composition root | Lựa chọn tập trung không lan vào nghiệp vụ |
-| Khối `Object` từ API legacy | **Boundary parser/adapter** | Kiểm tra một lần rồi dùng typed value |
-| Nhiều thao tác trên một tập loại dữ liệu đóng | Visitor/central dispatch | Tránh nhồi hành vi không tự nhiên vào data type |
-| Cần gọi khả năng bổ sung không phải mọi subtype có | Tách capability interface | Không ép mọi implementation hỗ trợ method vô nghĩa |
+| Callers branch on subtypes to perform **the same behavior** | **Replace Conditional with Polymorphism** | Behavior belongs to the responsible object |
+| Each type has its own algorithm, selected at runtime | **Strategy + DI/composition** | Swap behavior without exposing concrete classes to Context |
+| Only one place branches to construct an implementation | Factory/registry or a `switch` at the composition root | Centralized selection stays out of business logic |
+| An `Object` block from a legacy API | **Boundary parser/adapter** | Validate once, then use typed values |
+| Many operations on a closed set of data types | Visitor/central dispatch | Avoid putting unnatural behaviors into the data type |
+| An extra capability is not supported by every subtype | Separate capability interface | Do not force implementations to provide meaningless methods |
 
-**Lưu ý về SOLID:** Đổi conditional thành polymorphism có thể giúp OCP và DIP, nhưng phải tôn trọng **LSP**: mọi implementation phải thực hiện đúng hợp đồng chung. Một interface mà một implementation liên tục ném `UnsupportedOperationException` có thể chỉ là che giấu conditional bằng abstraction kém.
+**SOLID note:** Replacing conditionals with polymorphism may support OCP and DIP, but **LSP** still matters: every implementation must satisfy the shared contract. An interface whose implementation repeatedly throws `UnsupportedOperationException` may only hide a conditional behind poor abstraction.
 
-### Quy trình sửa mã đang vận hành
+### Refactoring a running codebase
 
-1. **Liệt kê nơi kiểm tra kiểu**: tìm `instanceof`, cast xuống implementation, `getClass()`, các `switch` theo type code. Xem chúng đang kiểm tra type, capability, state hay format.
-2. **Ghi nhận hành vi**: test giá trị, đường lỗi, side effect, thứ tự xử lý và trường hợp “loại không hỗ trợ” trước khi sửa. Đừng vô tình bỏ exception cần thiết.
-3. **Xác định một hợp đồng thực sự chung**: chọn tên method theo nhu cầu nghiệp vụ, quy định input/output, null policy và failure mode.
-4. **Đưa hành vi về nơi sở hữu**: override ở subtype hoặc bọc các thuật toán trong Strategy độc lập; tránh nhập logic hạ tầng vào domain object.
-5. **Giới hạn điểm lựa chọn**: composition root/registry nhận type code từ config và tạo/cấp implementation.
-6. **Dọn branch/cast dư thừa**: xóa các nhánh đã được thay bằng dispatch; nếu còn cast thì nêu rõ vì sao cần.
-7. **Kiểm tra thay đổi với test**: chạy cả unit test lẫn integration test liên quan; theo dõi hiệu năng/GC nếu đổi cơ chế dispatch trong hot path.
-8. **Đánh giá lại độ đơn giản**: nếu refactor tạo nhiều lớp hơn lợi ích đạt được, một conditional nhỏ, tập trung và ổn định có thể thích hợp hơn.
+1. **List type-check sites:** locate `instanceof`, downcasts, `getClass()`, and `switch` statements driven by type codes. Decide whether they check a type, capability, state, or format.
+2. **Capture behavior:** test values, failure paths, side effects, ordering, and "unsupported type" cases before editing. Preserve required exceptions.
+3. **Define a genuine shared contract:** name methods for domain needs and specify inputs/outputs, null policies, and failure modes.
+4. **Move behavior to its owner:** override in subtypes or wrap algorithms in independent Strategies; keep infrastructure concerns out of domain objects.
+5. **Limit selection points:** let a composition root/registry receive type codes from configuration and supply implementations.
+6. **Remove redundant branches/casts:** delete branches replaced by dispatch; explain any remaining casts.
+7. **Verify changes with tests:** run relevant unit and integration tests; monitor performance/GC if dispatch changes on hot paths.
+8. **Reevaluate simplicity:** if new classes cost more than the refactoring helps, a small, centralized, stable conditional may be preferable.
 
-## 12. Khi nào KHÔNG cần refactor mọi phép `instanceof`?
+## 12. When should you NOT refactor every `instanceof`?
 
-Không nên áp dụng mệnh đề “mã OOP tốt tuyệt đối không có `instanceof`”. Những tình huống sau có thể rất chính đáng:
+Do not insist that "good OOP contains absolutely no `instanceof`." These scenarios can be legitimate:
 
-- Đọc dữ liệu không đáng tin từ plugin/JSON/legacy API và kiểm tra type trước khi tạo domain object.
-- Dùng pattern matching cho một `sealed` hierarchy ở **một** bộ phân tích/diễn giải có chủ đích.
-- Phát hiện capability tùy chọn mà interface cơ sở không có lý do phải hỗ trợ.
-- Viết infrastructure code như serializer, persistence adapter, middleware, debugger, nơi phân loại dữ liệu là công việc chính.
-- Tại composition root, quyết định một implementation từ enum/config. Dùng `switch` để chọn một lần không đồng nghĩa với vi phạm OOP.
+- Parse untrusted plugin/JSON/legacy API data and validate its type before constructing domain objects.
+- Use pattern matching over a `sealed` hierarchy in **one** intentional parser/interpreter.
+- Detect optional capabilities the base interface should not be forced to support.
+- Implement infrastructure such as serializers, persistence adapters, middleware, or debuggers, where classifying data is the primary task.
+- Select an implementation once from enum/config at the composition root; one `switch` does not violate OOP.
 
-Ngược lại, nếu 15 nơi trong hệ thống phải biết `Dog`, `Cat`, `Bird` chỉ để gọi hành vi “phát âm thanh”, đó là vấn đề cần giải quyết. **Đánh giá nên dựa trên mức phụ thuộc và rủi ro thay đổi**, không dựa vào một luật cấm cú pháp.
+Conversely, if 15 places must know `Dog`, `Cat`, and `Bird` just to invoke "make sound," there is a real design problem. **Evaluate coupling and change risk** rather than enforcing a syntactic ban.
 
-## 13. Bài tập thực hành: thay type-checking bằng polymorphism
+## 13. Practice exercise: replacing type checks with polymorphism
 
-Một hệ thống có các loại tài liệu:
+A system supports these document types:
 
 ~~~java
 interface Document {}
@@ -3431,65 +3431,65 @@ class DocumentAnalyzer {
 }
 ~~~
 
-Yêu cầu:
+Requirements:
 
-1. Xác định **nhánh type-checking** và lý do lớp `DocumentAnalyzer` phụ thuộc hai implementation.
-2. Đưa hành vi hợp lý vào hợp đồng `Document.workload()` hoặc tạo `WorkloadStrategy`, giải thích vì sao chọn cách đó.
-3. Thêm `SpreadsheetDocument` với cách tính workload mới mà không sửa caller hiện có.
-4. Bổ sung validation cho `pages` và `characters`; tránh overflow khi nhân `pages * 5` nếu input quá lớn.
-5. Viết unit test cho ba loại và một test thực hiện `analyzer.workload(document)` qua interface chung.
-6. Mở rộng yêu cầu: nếu thêm 10 phép phân tích độc lập khác trên ba loại tài liệu, cân nhắc tại sao một visitor/operation riêng có thể hợp lý hơn nhồi 10 method vào `Document`.
-7. Chỉ ra một trường hợp `instanceof` vẫn hợp lệ trong cùng hệ thống, chẳng hạn kiểm tra object đến từ plugin không tin cậy trước khi chuyển sang `Document` có hợp đồng.
+1. Identify the **type-checking branches** and explain why `DocumentAnalyzer` depends on two implementations.
+2. Move appropriate behavior to the `Document.workload()` contract or introduce a `WorkloadStrategy`; explain the choice.
+3. Add `SpreadsheetDocument` with a new workload calculation without changing the existing caller.
+4. Validate `pages` and `characters`; avoid overflow in `pages * 5` when input is large.
+5. Write unit tests for all three types and one test calling `analyzer.workload(document)` through the shared interface.
+6. Extend the problem: if 10 more independent analyses are added for three document types, explain why a visitor/separate operation might be better than adding 10 methods to `Document`.
+7. Give a case where `instanceof` remains valid in the same system, such as checking objects from an untrusted plugin before adapting them to `Document` contracts.
 
-### Tự kiểm tra kiến thức
+### Knowledge self-check
 
-1. Vì sao `Animal a = new Dog()` không làm `Dog` mất những method riêng?
-2. Lệnh `(Dog) a` có thay class thực tế của object không?
-3. `instanceof` lặp khắp các use case thường tiết lộ điều gì về hợp đồng của chúng?
-4. Khi nào kiểm tra `Class.isInstance(...)` là an toàn và có ích?
-5. Vì sao `(List<String>) someRawList` không chứng minh mọi phần tử là `String`?
-6. Khác nhau giữa `getClass() == T.class` và `instanceof T` khi có subclass?
-7. `sealed interface` và mô hình visitor thích hợp khi nào?
-8. Thay conditional bằng polymorphism có tự loại bỏ lỗi nghiệp vụ và vi phạm LSP không?
-9. Tại sao một `switch` duy nhất ở composition root có thể tốt hơn một hệ thống factory class quá phức tạp?
+1. Why does `Animal a = new Dog()` not remove methods specific to `Dog`?
+2. Does `(Dog) a` change the object's runtime class?
+3. What do repeated `instanceof` checks across use cases reveal about their contracts?
+4. When is `Class.isInstance(...)` safe and useful?
+5. Why does `(List<String>) someRawList` not prove every element is a `String`?
+6. How do `getClass() == T.class` and `instanceof T` differ in the presence of subclasses?
+7. When are `sealed interface` and the visitor pattern appropriate?
+8. Does replacing conditionals with polymorphism automatically eliminate business errors or LSP violations?
+9. Why might one `switch` at the composition root be better than an elaborate factory-class hierarchy?
 
-**Kết luận:** Lạm dụng ép kiểu và kiểm tra kiểu là dấu hiệu **caller phải biết quá nhiều về class cụ thể để ra quyết định nghiệp vụ**. Với hành vi có hợp đồng chung, hãy đặt hành vi ở đối tượng/strategy và dùng polymorphism; với dữ liệu chưa biết kiểu, hãy **kiểm tra tập trung tại boundary**, rồi chuyển sớm về những kiểu rõ ràng. Không cấm `instanceof` hay cast theo khẩu hiệu — hãy dùng chúng ở **đúng trách nhiệm, đúng tầng và đúng phạm vi**.
+**Conclusion:** Excessive casting and type checking indicate that **callers know too much about concrete classes to make business decisions**. Where behaviors share a real contract, put them in objects/strategies and use polymorphism; for uncertain data, **validate centrally at the boundary** and convert early to well-defined types. Do not ban `instanceof` or casts by slogan; use them at **the correct responsibility, layer, and scope**.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-pitfalls-006">Giao diện quá lớn hoặc quá nhiều lớp trừu tượng</a>
+## <a id="design-pitfalls-006">Oversized interfaces or too many abstraction layers</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Giao diện quá lớn hoặc quá nhiều lớp trừu tượng: nhận diện và sửa lỗi thiết kế OOP
+# Oversized interfaces or too many abstraction layers: recognizing and fixing OOP design problems
 
-> **Chủ đề:** Lỗi thiết kế trong OOP – khi một interface bắt client phụ thuộc vào quá nhiều thao tác, hoặc khi việc thêm interface, factory, facade, provider và adapter chỉ làm tăng số lớp phải đọc mà không tạo lợi ích thật. Mục tiêu của bài là biết phát hiện vấn đề, phân tích trách nhiệm của từng client, áp dụng **Interface Segregation Principle (ISP)** hợp lý và tránh **over-abstraction**.
+> **Topic:** OOP design pitfalls: an interface that forces clients to depend on too many operations, or a proliferation of interfaces, factories, facades, providers, and adapters that increases the number of classes to read without a real benefit. The lesson aims to identify both problems, examine each client's responsibilities, apply the **Interface Segregation Principle (ISP)** appropriately, and avoid **over-abstraction**.
 
-## 1. Hai vấn đề khác nhau nhưng dễ xuất hiện cùng nhau
+## 1. Two different problems that often appear together
 
-Có hai kiểu phức tạp hóa thường bị nhầm thành một:
+Two kinds of unnecessary complexity are often confused:
 
-**Giao diện quá lớn (*fat interface*, *bloated interface*)** là một hợp đồng công khai quá nhiều khả năng không liên quan đến nhau. Một client chỉ cần một phần rất nhỏ nhưng phải nhìn thấy hoặc phụ thuộc toàn bộ hợp đồng; một implementation cũng có thể bị buộc khai báo những thao tác mà nó không hỗ trợ.
+**Oversized interfaces (*fat interface*, *bloated interface*)** expose a contract with too many unrelated capabilities. A client needs only a small subset but must see or depend on the full contract; implementations may also be required to declare operations they cannot support.
 
-**Quá nhiều lớp trừu tượng (*over-abstraction*, *needless indirection*)** là việc thêm các lớp/interface/tầng trung gian mà không có ranh giới trách nhiệm, khả năng thay thế hoặc quy tắc riêng đáng giá. Một request phải đi qua nhiều object chỉ để chuyển tiếp dữ liệu y hệt.
+**Too many abstraction layers (*over-abstraction*, *needless indirection*)** arise when classes/interfaces/intermediate layers add no worthwhile responsibility boundary, substitutability, or rule. A request passes through several objects that merely forward identical data.
 
-Hai lỗi này có thể xuất hiện riêng rẽ:
+These problems can occur separately:
 
-- Một `DocumentManager` có 20 phương thức: **interface quá lớn**, dù chỉ có một interface.
-- Một thao tác `readDocument(id)` đi qua `ReaderFactory → ReaderProvider → ReaderFacade → ReaderAdapter → Store`: **quá nhiều abstraction**, dù mỗi interface chỉ có một phương thức.
-- Hệ thống có cả `IDocumentManager` khổng lồ và năm tầng decorator/provider: mắc **cả hai**.
+- A `DocumentManager` with 20 methods has **an oversized interface**, even if there is only one interface.
+- A `readDocument(id)` call passes through `ReaderFactory → ReaderProvider → ReaderFacade → ReaderAdapter → Store`: **too many abstractions**, even if each interface has just one method.
+- A system with one enormous `IDocumentManager` and five decorator/provider layers has **both problems**.
 
-**Điểm cốt lõi:** số lượng phương thức ít hay số lượng lớp ít không tự quyết định chất lượng. Chất lượng phụ thuộc vào **trách nhiệm có mạch lạc không**, **client cần biết gì**, **hợp đồng có được mọi implementation tuân thủ không** và **điểm trừu tượng có bảo vệ được thay đổi thật nào không**.
+**Core point:** neither a small method count nor a small class count determines quality. What matters is **whether responsibilities are coherent**, **what clients need to know**, **whether every implementation honors the contract**, and **which real changes an abstraction protects against**.
 
-### Một ví dụ quen thuộc
+### A familiar example
 
-Ứng dụng quản lý tài liệu có người chỉ **xem tài liệu** và người **chỉnh sửa tài liệu**. Một nhóm định nghĩa interface:
+A document-management application has users who only **view documents** and others who **edit documents**. One team defines an interface:
 
 ```java
 interface DocumentManager {
@@ -3502,17 +3502,17 @@ interface DocumentManager {
 }
 ```
 
-Người xem chỉ cần `findById` nhưng bị buộc phụ thuộc hợp đồng còn gồm ghi/xóa/xuất PDF/gửi email/đồng bộ đám mây. Một nguồn dữ liệu chỉ đọc muốn implement `DocumentManager` lại phải viết hàng loạt phương thức ném `UnsupportedOperationException`. Đó là tín hiệu thiết kế hợp đồng sai theo **nhu cầu client**, không đơn giản là interface “nhiều dòng”.
+Viewers need only `findById` but depend on a contract that also exposes writes, deletes, PDF exports, emails, and cloud sync. A read-only source implementing `DocumentManager` must instead define many methods that throw `UnsupportedOperationException`. That signals a contract poorly aligned with **client needs**, rather than merely an interface with "too many lines."
 
-## 2. Tại sao interface quá lớn có hại?
+## 2. Why are oversized interfaces harmful?
 
-### 2.1. Client phụ thuộc nhiều hơn mức cần thiết
+### 2.1. Clients depend on more than they need
 
-Giả sử `DocumentPreviewService` chỉ làm nhiệm vụ hiển thị nội dung. Nếu constructor nhận `DocumentManager`, việc đổi API gửi email hoặc xóa tài liệu vẫn có thể tác động đến kiểu hợp đồng chung, các stub/mock dùng trong test, hoặc các module phụ thuộc interface đó.
+Suppose `DocumentPreviewService` only displays document content. If its constructor accepts `DocumentManager`, changes to email or delete APIs can still affect the shared contract, test stubs/mocks, or modules depending on that interface.
 
-Trong một codebase lớn, một interface “thượng đế” có thể khiến những nhóm chức năng không liên quan phải cùng cập nhật. Tốc độ thay đổi của hệ thống chậm dần vì bất cứ ai sửa interface chung đều lo ảnh hưởng nhiều consumer.
+In a large codebase, a "god interface" can force unrelated feature teams to update together. Change velocity slows because editing the common interface risks affecting many consumers.
 
-### 2.2. Implementation bị ép nói dối
+### 2.2. Implementations are forced to lie
 
 ```java
 // Phản ví dụ, không phải thiết kế nên làm:
@@ -3541,27 +3541,27 @@ class ReadOnlyDocumentSource implements DocumentManager {
 }
 ```
 
-Ở ví dụ phác họa này, `findById` chưa có logic và đang trả `null` để biểu diễn cấu trúc; **không phải bản cài đặt dùng trong sản phẩm**. Vấn đề là các thao tác mà hợp đồng **hứa hỗ trợ** lại luôn thất bại với một implementation hợp lệ theo khai báo. Điều đó có thể vi phạm khả năng thay thế theo **Liskov Substitution Principle (LSP)** nếu client được phép kỳ vọng những phương thức này hoạt động.
+In this sketch, `findById` has no implementation and returns `null` only to illustrate the structure; it is **not production code**. The problem is that operations the contract **promises to support** always fail in an otherwise valid implementation. That may violate the **Liskov Substitution Principle (LSP)** if clients are entitled to expect these methods to work.
 
-`UnsupportedOperationException` không phải lúc nào cũng sai trong Java: có các collection không hỗ trợ thao tác tùy chọn theo hợp đồng của Java Collections Framework. Nhưng nếu use case yêu cầu `save` và interface không nói rõ đó là hành vi tùy chọn, việc để một nguồn chỉ đọc implement giao diện vừa đọc vừa ghi là **thiết kế dễ gây bất ngờ**.
+`UnsupportedOperationException` is not universally wrong in Java: some collections have optional operations in the Java Collections Framework contract. But if a use case needs `save` and the interface does not document it as optional, making a read-only source implement a combined read/write interface is **a surprising design**.
 
-### 2.3. Quyền truy cập và trách nhiệm bị lẫn
+### 2.3. Access rights and responsibilities are mixed
 
-Nếu code hiển thị tài liệu được truyền một object có khả năng `delete` hoặc `syncToCloud`, code này có thể vô tình sử dụng thao tác ngoài nhiệm vụ. Tách hợp đồng **giảm bề mặt API mà client thấy**, nhưng **không thay thế bảo mật**: phân quyền vẫn phải được kiểm tra ở các ranh giới đáng tin cậy, không dựa vào tên interface để ngăn một người dùng gọi API khác.
+If document-display code receives an object capable of `delete` or `syncToCloud`, it may inadvertently perform actions outside its purpose. Segregating contracts **reduces the API surface visible to a client** but **does not replace security**: enforce authorization at trusted boundaries, rather than relying on interface names to stop a user from calling another API.
 
-### 2.4. Test dựng mock khó hơn
+### 2.4. Tests become harder to mock
 
-Nếu constructor cần một interface 20 phương thức, mock framework có thể vẫn dễ tạo mock, nhưng contract và fixtures dễ phình to. Test đọc tài liệu có thể phải hiểu những phương thức không liên quan hoặc bị vỡ vì thay đổi mock interface chung. Dấu hiệu cần để ý là test phụ thuộc **cấu trúc không phục vụ hành vi đang kiểm thử**.
+Even if a mock framework easily mocks a 20-method interface, its contract and fixtures may expand unnecessarily. Reading tests may need to understand unrelated methods or break when shared mock interfaces change. Watch for tests coupled to **structure unrelated to the behavior under test**.
 
-## 3. Interface Segregation Principle (ISP) giải quyết phần nào?
+## 3. What does the Interface Segregation Principle (ISP) address?
 
-**ISP** trong SOLID thường được phát biểu:
+**ISP** in SOLID is often stated as:
 
-> Client không nên bị buộc phụ thuộc vào những phương thức mà chúng không sử dụng.
+> Clients should not be forced to depend on methods they do not use.
 
-Thay vì tạo một hợp đồng chung chứa mọi thao tác có thể có, hãy xác định **nhóm khả năng mạch lạc mà từng loại client thực sự cần**.
+Rather than one contract encompassing every imaginable operation, identify **coherent capability groups that each client actually needs**.
 
-Từ interface `DocumentManager` ở trên, một thiết kế có thể bắt đầu bằng:
+Starting from the `DocumentManager` interface above, a design might define:
 
 ```java
 interface DocumentReader {
@@ -3573,9 +3573,9 @@ interface DocumentWriter {
 }
 ```
 
-Dịch vụ xem tài liệu chỉ cần `DocumentReader`. Dịch vụ chỉnh sửa có thể cần **cả** `DocumentReader` và `DocumentWriter`. Nếu ứng dụng thực sự có quy trình xuất PDF và gửi email, hãy xác định những ranh giới tương ứng sau khi hiểu use case; không nhất thiết mỗi phương thức mới phải có một interface riêng.
+A document-preview service needs only `DocumentReader`. An editing service may need **both** `DocumentReader` and `DocumentWriter`. If PDF export and email are real workflows, establish their boundaries after understanding the use cases; not every method needs its own interface.
 
-### Mũi tên phụ thuộc thay đổi ra sao?
+### How do dependency arrows change?
 
 ```mermaid
 flowchart TD
@@ -3594,18 +3594,18 @@ flowchart TD
     end
 ```
 
-**Mấu chốt:** hai interface ở ví dụ **không bắt buộc tạo hai object lưu trữ**. Một `InMemoryDocumentStore` hoặc adapter cơ sở dữ liệu có thể triển khai **cả hai**, nhưng client chỉ nhìn thấy phần hợp đồng được phép dùng.
+**The key:** the two interfaces **do not require separate storage objects**. An `InMemoryDocumentStore` or database adapter may implement **both**, while each client sees only its permitted portion of the contract.
 
-## 4. Java 17 hoàn chỉnh: hợp đồng nhỏ, implementation đúng khả năng
+## 4. Complete Java 17 example: small contracts and implementations with real capabilities
 
-Ví dụ minh họa hai nhu cầu:
+The example demonstrates two needs:
 
-1. `PreviewService` chỉ đọc và tạo một đoạn xem trước.
-2. `EditorialService` đọc tài liệu hiện tại rồi thay nội dung.
+1. `PreviewService` only reads documents and creates previews.
+2. `EditorialService` reads existing documents and replaces content.
 
-Một kho dữ liệu trong bộ nhớ thực hiện cả đọc và ghi; một nguồn tài liệu hướng dẫn chỉ thực hiện đọc. Không implementation nào phải khai báo thao tác không hỗ trợ.
+An in-memory store supports both reading and writing; a static documentation source only supports reading. Neither implementation is forced to declare unsupported operations.
 
-Tạo file `InterfaceDesignDemo.java`:
+Create `InterfaceDesignDemo.java`:
 
 ```java
 import java.util.HashMap;
@@ -3738,29 +3738,29 @@ public class InterfaceDesignDemo {
 }
 ```
 
-Chạy bằng JDK 17 trở lên:
+Run with JDK 17 or later:
 
 ```bash
 javac InterfaceDesignDemo.java
 java InterfaceDesignDemo
 ```
 
-### Vì sao ví dụ này giải quyết đúng lỗi?
+### Why does this example fix the actual problem?
 
-- `PreviewService` **không có** API `save` trong kiểu dependency của mình; nó chỉ biết tìm tài liệu.
-- `StaticDocumentReader` triển khai đúng khả năng đọc; không có phương thức ném `UnsupportedOperationException` để lấp chỗ trống.
-- `EditorialService` công khai nhu cầu thực: vừa tìm tài liệu, vừa lưu; constructor cho thấy chính xác hai hợp đồng nó sử dụng.
-- `InMemoryDocumentStore` có thể thực hiện cả hai capability mà không bắt các client nhận cùng một “siêu giao diện”.
-- `Document` là record bất biến nông với component `String` bất biến; dữ liệu trả về không cho caller sửa trực tiếp kho.
-- Khi việc xem trước đổi cách trình bày, `PreviewService` thay đổi. Khi kho lưu trữ đổi sang DB, thay adapter được inject; không cần đưa SQL vào dịch vụ xem trước.
+- `PreviewService` **does not have** a `save` API in its dependency type; it only knows how to find documents.
+- `StaticDocumentReader` implements its real read capability, without methods that throw `UnsupportedOperationException` to fill gaps.
+- `EditorialService` declares its actual needs: reading and saving documents; its constructor shows precisely which two contracts it uses.
+- `InMemoryDocumentStore` can implement both capabilities without forcing clients to depend on the same "super-interface."
+- `Document` is a shallowly immutable record with immutable `String` components; returned data cannot directly mutate the store.
+- If preview presentation changes, `PreviewService` changes. If the store moves to a DB, replace the injected adapter; SQL does not belong in the preview service.
 
-**Giới hạn demo:** `HashMap` không thread-safe; chuỗi “kiểm tra tồn tại → ghi tài liệu” của `EditorialService` không có transaction và có thể race khi nhiều người cùng chỉnh sửa. Trong sản phẩm thật, có thể cần repository operation nguyên tử như `replaceIfVersionMatches` cùng optimistic locking. Việc tách interface **không tự giải quyết consistency hoặc authorization**.
+**Demo limitations:** `HashMap` is not thread-safe; `EditorialService`'s "check existence → write document" sequence has no transaction and may race under concurrent edits. A production system might need an atomic repository operation such as `replaceIfVersionMatches` with optimistic locking. Splitting interfaces **does not automatically solve consistency or authorization**.
 
-Phần `substring` minh họa API đơn giản và giới hạn theo **UTF-16 code units**; nếu cần cắt an toàn theo Unicode code point, grapheme cluster hoặc quy tắc hiển thị, phải thiết kế formatter đúng yêu cầu. Không nên suy diễn rằng một độ dài ký tự bất kỳ sẽ luôn không tách emoji hoặc ký tự ghép.
+The `substring` example uses simple API logic and operates in **UTF-16 code units**; safely truncating by Unicode code points, grapheme clusters, or display rules requires an appropriately designed formatter. Do not assume every arbitrary character length avoids splitting emoji or combining characters.
 
-## 5. Tách theo client, không theo “mỗi phương thức một interface”
+## 5. Segregate by client, not "one interface per method"
 
-ISP rất dễ bị đẩy sang cực đoan khác:
+ISP can easily be taken to the opposite extreme:
 
 ```java
 interface FindDocumentByIdUseCase {
@@ -3780,19 +3780,19 @@ interface FindDocumentAuthorUseCase {
 }
 ```
 
-Nếu mọi client thực tế **luôn cần cả tiêu đề, nội dung và tác giả trong cùng thao tác đọc**, tách bốn interface nhỏ như trên có thể chỉ làm tăng số dependency, lượt gọi và cấu hình. Đặc biệt, nếu mỗi interface có một adapter độc lập phải truy vấn DB riêng, có thể làm tăng chi phí I/O và gây trạng thái đọc không nhất quán.
+If real clients **always need a title, content, and author together in one read operation**, splitting them into four tiny interfaces may only increase dependencies, calls, and configuration. In particular, if each interface has a separate adapter querying the DB, I/O costs and inconsistent snapshots may increase.
 
-**Tách interface theo những vai trò khách hàng cần**, không theo số phương thức:
+**Split interfaces around the roles clients need**, not around method counts:
 
-- Client **chỉ đọc** cần contract mô tả truy vấn.
-- Client **chỉ ghi** cần contract mô tả lệnh ghi.
-- Client **đọc + ghi** có thể nhận hai interface hoặc một contract ghép có nghĩa nếu luôn phải đi cùng.
-- Một chức năng xuất PDF phức tạp có thể là application service riêng; chưa chắc nên đặt trong repository.
-- Một adapter cơ sở dữ liệu vẫn có thể triển khai nhiều interface tương ứng.
+- A **read-only** client needs a query contract.
+- A **write-only** client needs a command contract.
+- A **read/write** client may accept two interfaces or a meaningful composite contract if they always belong together.
+- Complex PDF export might deserve a separate application service rather than living in a repository.
+- A database adapter can still implement multiple relevant interfaces.
 
-### Khi nào hợp đồng ghép vẫn tốt?
+### When is a composite contract useful?
 
-Nếu một client thường xuyên cần cả đọc và ghi trong **một giao dịch nhất quán**, có thể có API như:
+If a client frequently needs reading and writing within **one consistent transaction**, an API might expose:
 
 ```java
 interface DocumentRepository
@@ -3800,7 +3800,7 @@ interface DocumentRepository
 }
 ```
 
-Hoặc tốt hơn, nếu nhu cầu thật là một thao tác có tính nguyên tử, diễn đạt trực tiếp:
+Or, better yet, if the actual requirement is an atomic operation, express that directly:
 
 ```java
 interface VersionedDocumentStore {
@@ -3809,11 +3809,11 @@ interface VersionedDocumentStore {
 }
 ```
 
-Không nên ghép chỉ vì “ít tham số constructor hơn”, và cũng không nên tách chỉ vì “interface càng nhỏ càng SOLID”. Chọn theo **contract và loại thay đổi** cần bảo vệ.
+Do not combine interfaces just to have "fewer constructor parameters," or split them because "smaller interfaces are always more SOLID." Choose according to **contracts and types of change** that must be protected.
 
-## 6. Quá nhiều lớp trừu tượng có hại như thế nào?
+## 6. How can too many abstraction layers cause harm?
 
-Nhìn vào một luồng đọc tài liệu:
+Consider this document-reading flow:
 
 ```text
 Controller
@@ -3825,7 +3825,7 @@ Controller
             → DatabaseDocumentReader
 ```
 
-Nếu mỗi lớp chỉ làm:
+If each layer only does:
 
 ```java
 String preview(String id) {
@@ -3833,9 +3833,9 @@ String preview(String id) {
 }
 ```
 
-mà không thêm ranh giới bảo mật, giao dịch, cache, tracing, chuyển đổi kiểu, chính sách lỗi hay lựa chọn implementation thực sự cần thiết thì đó là **indirection không tạo giá trị**.
+and adds no necessary security, transaction, caching, tracing, type conversion, error policy, or implementation selection boundary, that is **indirection without value**.
 
-Một luồng hợp lý hơn có thể là:
+A more reasonable flow might be:
 
 ```text
 Controller
@@ -3844,15 +3844,15 @@ Controller
       → JdbcDocumentReader (adapter)
 ```
 
-Ở đây mỗi thành phần có thể có trách nhiệm rõ:
-- Controller giải quyết HTTP input/output.
-- PreviewService thực hiện use case trình bày.
-- DocumentReader diễn đạt nhu cầu truy vấn của ứng dụng.
-- JdbcDocumentReader hiện thực truy vấn và mapping dữ liệu.
+Each component now has a clear responsibility:
+- The controller handles HTTP input/output.
+- PreviewService implements the presentation use case.
+- DocumentReader expresses the application's query needs.
+- JdbcDocumentReader implements queries and data mapping.
 
-**Đừng đánh giá chỉ bằng độ sâu call stack.** Proxy có thể bảo đảm quyền truy cập, decorator có thể thêm metrics, factory có thể quản lý vòng đời và adapter có thể che API vendor. Nếu từng tầng có **hợp đồng, lý do thay đổi và kiểm thử riêng**, nhiều tầng có thể là thiết kế đúng. Nhưng nếu phần lớn chỉ ủy quyền vô nghĩa, hãy xem lại.
+**Do not judge only by call-stack depth.** A proxy may enforce access rights, a decorator may add metrics, a factory may manage lifecycles, and an adapter may hide a vendor API. Multiple layers are appropriate when each has **its own contract, reason to change, and tests**. But if most layers only forward calls without purpose, reconsider them.
 
-### Sơ đồ điểm quyết định
+### Decision-point diagram
 
 ```mermaid
 flowchart TD
@@ -3867,47 +3867,47 @@ flowchart TD
     G -- "Không" --> E
 ```
 
-## 7. Số interface có phải thước đo SOLID không?
+## 7. Is the number of interfaces a measure of SOLID?
 
-**Không.** SOLID không yêu cầu cứ có một class là phải tạo `IClass`, hay cứ có một method là phải có một interface.
+**No.** SOLID does not require an `IClass` for every class or an interface for every method.
 
-Phân biệt:
+Distinguish these cases:
 
-| Tình huống | Đánh giá hợp lý |
+| Situation | Reasonable assessment |
 |---|---|
-| `PaymentGateway` có một implementation thật nhưng che SDK ngân hàng khỏi ứng dụng | Interface có giá trị vì là ranh giới hạ tầng và hỗ trợ fake/test |
-| `PriceCalculator` chỉ tính hai số cố định, không có nguồn phụ thuộc biến động | Class/hàm trực tiếp có thể đơn giản hơn một interface |
-| `DocumentManager` có 30 method, client xem tài liệu chỉ cần một method | Nên kiểm tra ISP, tách theo năng lực cần dùng |
-| Ba interface khác nhau nhưng đều được **mọi** client dùng cùng nhau, một implementation, không có khác biệt lifecycle | Có thể đang tách quá mức |
-| Một class Java có nhiều method cùng phục vụ một abstraction mạch lạc | Không tự nhiên vi phạm ISP chỉ do nhiều phương thức |
-| Một interface có một method nhưng mọi caller phải đi qua factory/provider/service locator không cần thiết | Có thể đang over-abstraction |
-| Module application cần cấu hình implementation theo môi trường | Composition root/DI có thể là ranh giới chính đáng |
+| `PaymentGateway` has one real implementation but hides a bank SDK from the application | The interface provides a valuable infrastructure boundary and supports fakes/tests |
+| `PriceCalculator` calculates only two fixed numbers, without changing dependencies | A direct class/function may be simpler than an interface |
+| `DocumentManager` has 30 methods, but document viewers only need one | Review ISP and split by needed capabilities |
+| Three interfaces are always used together by **every** client, have one implementation, and have identical lifecycles | They may be over-segregated |
+| A Java class has many methods serving one coherent abstraction | Method count alone does not violate ISP |
+| One-method interface forces callers through unnecessary factories/providers/service locators | This may be over-abstraction |
+| An application module must select implementations by environment | A composition root/DI can be a legitimate boundary |
 
-Một chỉ số hữu ích hơn “số interface” là **mức độ thay đổi lan rộng**: khi bổ sung một tính năng, có phải sửa hàng loạt client không liên quan, tạo thêm nhiều adapter rỗng hay đi qua nhiều tầng chỉ chuyển tiếp không?
+A better indicator than "interface count" is **change propagation**: does adding a feature force updates to unrelated clients, more empty adapters, or layers that simply forward calls?
 
-## 8. Liên hệ ISP với SRP, LSP và DIP
+## 8. How ISP relates to SRP, LSP, and DIP
 
-### ISP — từng client chỉ phụ thuộc phần nó sử dụng
+### ISP — each client depends only on what it uses
 
-`PreviewService` phụ thuộc `DocumentReader` thay vì `DocumentManager` tổng hợp. Đây là trọng tâm bài toán giao diện quá lớn.
+`PreviewService` depends on `DocumentReader` instead of the combined `DocumentManager`. That is the core oversized-interface problem.
 
-### SRP — các phần có lý do thay đổi riêng không bị ép chung
+### SRP — concerns with different reasons to change are not forced together
 
-Đọc tài liệu, gửi email và xuất PDF có thể thay đổi bởi các tác nhân khác nhau. Nhét chúng vào một interface chung **có thể** làm coupling về nguồn thay đổi tăng lên. Tuy nhiên, SRP áp dụng cho trách nhiệm của module/class, không phải quy tắc rằng mọi method phải nằm interface khác nhau.
+Document reading, email delivery, and PDF export may change for different actors. Combining them in one interface **may** increase coupling across reasons for change. However, SRP concerns module/class responsibilities; it does not require every method to live in a different interface.
 
-### LSP — implementation không được phá lời hứa
+### LSP — implementations must honor their promises
 
-Một nguồn chỉ đọc implement interface buộc hỗ trợ `save` rồi luôn ném `UnsupportedOperationException` khiến client khó thay thế implementation an toàn. Tách `DocumentReader` giúp nguồn chỉ đọc thực hiện đúng toàn bộ contract của nó.
+If a read-only source implements an interface requiring `save` but always throws `UnsupportedOperationException`, clients cannot safely substitute implementations. Separating `DocumentReader` lets the read-only source honor its entire contract.
 
-### DIP — policy cấp cao không phụ thuộc chi tiết hạ tầng
+### DIP — high-level policy does not depend on infrastructure details
 
-Ứng dụng đọc tài liệu có thể phụ thuộc `DocumentReader`; `JdbcDocumentReader` implement interface đó. Nhưng **DIP không buộc phải thêm nhiều tầng**. Một interface có mục đích rõ đã có thể là ranh giới cần thiết.
+A document-reading application can depend on `DocumentReader`, implemented by `JdbcDocumentReader`. But **DIP does not require additional layers**. One purpose-built interface may provide the necessary boundary.
 
-**Sự kết hợp lành mạnh:** dùng số abstraction **đủ** để bảo vệ những trách nhiệm độc lập và những thay đổi có thật; không tăng số lượng chỉ để “đạt SOLID”.
+**A healthy combination:** use **enough** abstractions to protect independent responsibilities and real changes; avoid adding them merely to "meet SOLID."
 
-## 9. Một vấn đề nguy hiểm: hợp đồng mơ hồ và phương thức “không hỗ trợ”
+## 9. A dangerous problem: vague contracts and "unsupported" methods
 
-Ngoài kích thước, độ chất lượng của interface phụ thuộc **ngữ nghĩa**:
+Interface quality depends on **semantics**, not just size:
 
 ```java
 interface Storage {
@@ -3915,14 +3915,14 @@ interface Storage {
 }
 ```
 
-Dù interface này chỉ có **một phương thức**, nó có thể tệ hơn một hợp đồng có vài method rõ ràng:
+Even with **one method**, this interface can be worse than a contract with several well-defined methods:
 
-- Client phải nhớ “operation” nào hợp lệ.
-- Sai type chỉ được phát hiện runtime.
-- Không có hướng dẫn về lỗi, null, tính nguyên tử hoặc side effect.
-- Dễ tạo `if/switch` và cast trải rộng.
+- Clients must remember which "operation" values are valid.
+- Incorrect types are only detected at runtime.
+- Errors, null policies, atomicity, and side effects are unspecified.
+- Widespread `if/switch` statements and casts become likely.
 
-Thay vì gom mọi thứ vào một method đa năng, chọn hợp đồng có kiểu và ý nghĩa rõ:
+Instead of one multipurpose method, choose a typed contract with clear meaning:
 
 ```java
 interface DocumentReader {
@@ -3930,9 +3930,9 @@ interface DocumentReader {
 }
 ```
 
-**ISP không đồng nghĩa tối thiểu hóa số method bằng mọi giá.** Một API một phương thức nhưng mang vô hạn ý nghĩa vẫn có thể là **giao diện khổng lồ bị giấu trong tham số**.
+**ISP does not mean minimizing method count at all costs.** A single-method API with unlimited meanings may be **an enormous interface hidden inside its parameters**.
 
-### Dấu hiệu API mang quá nhiều cờ
+### Warning signs of APIs with too many flags
 
 ```java
 // Khó hiểu, nhiều nhánh theo cờ:
@@ -3944,11 +3944,11 @@ Document process(
         boolean forceSync);
 ```
 
-Cùng một method đang nắm nhiều use case với tác dụng phụ khác nhau. Thay bằng các operation theo nghiệp vụ, giữ phần trùng lặp thật sự ở các collaborator phù hợp và không tạo một method chung với rất nhiều cờ.
+One method handles multiple use cases with different side effects. Replace it with domain operations, keep genuine shared logic in appropriate collaborators, and avoid one generic method with many flags.
 
-## 10. Đừng dùng inheritance để ép mọi object chung một năng lực
+## 10. Do not use inheritance to force every object to share a capability
 
-Một lỗi liên quan là đặt quá nhiều thao tác vào **abstract base class** để mọi subclass “tiện dùng”:
+A related mistake is stuffing operations into an **abstract base class** so every subclass can use them:
 
 ```java
 abstract class ContentHandler {
@@ -3959,13 +3959,13 @@ abstract class ContentHandler {
 }
 ```
 
-Nếu handler chỉ đọc phải override ba method rồi ném lỗi thì inheritance hierarchy đang mô tả **quan hệ sai**. Có thể dùng interface năng lực như `DocumentReader`, `DocumentWriter` để các loại chỉ thực hiện những gì chúng làm được.
+If read-only handlers must override three methods just to throw errors, the inheritance hierarchy describes **the wrong relationship**. Use capability interfaces such as `DocumentReader` and `DocumentWriter` so implementations support only what they can do.
 
-Tuy nhiên, cũng không nên tạo các interface kiểu `CanRead`, `CanOpen`, `CanClose`, `CanWrite`, `CanDelete` cho mọi object mà không có client thực sự khác biệt. Nhóm năng lực dựa trên **cohesion** và **use case**.
+But do not automatically create `CanRead`, `CanOpen`, `CanClose`, `CanWrite`, and `CanDelete` interfaces for every object without genuinely different clients. Group capabilities by **cohesion** and **use case**.
 
-### Interface kế thừa interface
+### Interfaces extending interfaces
 
-Java cho phép ghép một hợp đồng rộng hơn từ những contract nhỏ:
+Java allows broader contracts to be composed from smaller ones:
 
 ```java
 interface ReadWriteDocuments
@@ -3973,13 +3973,13 @@ interface ReadWriteDocuments
 }
 ```
 
-Nếu thật sự có client yêu cầu toàn bộ đọc/ghi, contract tổng hợp này có thể tiện lợi. Nhưng chỉ nên công khai nó ở nơi hợp lý, tránh để tất cả client quay trở lại phụ thuộc contract lớn.
+If clients genuinely need complete read/write capabilities, this combined contract may help. Expose it only where appropriate so every client does not end up depending on the large contract again.
 
-## 11. Java default methods có giải quyết fat interface không?
+## 11. Do Java default methods fix fat interfaces?
 
-Không nhất thiết.
+Not necessarily.
 
-Ví dụ:
+For example:
 
 ```java
 interface DocumentManager {
@@ -3991,21 +3991,21 @@ interface DocumentManager {
 }
 ```
 
-`default` method có thể giúp tiến hóa API mà không buộc mọi class hiện có phải bổ sung code, nhưng **không tự sửa thiết kế sai về trách nhiệm**. Client vẫn nhìn thấy `delete` và có thể gọi mà không biết implementation hỗ trợ hay không.
+A `default` method can help evolve an API without forcing existing implementations to add code, but **it does not automatically correct misplaced responsibilities**. Clients still see `delete` and may call it without knowing whether the implementation supports it.
 
-**Default method là công cụ ngôn ngữ, không phải cách tránh thiết kế contract.**
+**A default method is a language feature, not a substitute for contract design.**
 
-Nếu chức năng là tùy chọn thực sự, hãy cân nhắc:
-- Tách thành capability interface.
-- Đưa operation vào một service riêng.
-- Dùng mô hình capability negotiation rõ ràng nếu domain thật sự yêu cầu kiểm tra hỗ trợ động.
-- Quy định và kiểm thử lỗi không hỗ trợ trong hợp đồng nếu API có chủ đích cho phép optional operations.
+For truly optional features, consider:
+- Splitting out a capability interface.
+- Moving the operation to a separate service.
+- Using explicit capability negotiation when the domain genuinely needs dynamic support checks.
+- Documenting and testing unsupported-operation failures if the API intentionally permits optional operations.
 
-Không nên tạo hàng loạt default no-op trả về “thành công” giả để mọi implementation qua compiler.
+Avoid adding default no-ops that report fake "success" merely to make every implementation compile.
 
-## 12. Kiểm thử API nhỏ: lợi ích là kiểm tra hành vi, không chỉ mock dễ hơn
+## 12. Testing small APIs: verify behavior, not only easier mocking
 
-Đây là ví dụ JUnit 5 cho `InterfaceDesignDemo` ở mục 4. Đặt file `InterfaceDesignDemoTest.java` cùng package:
+Here is a JUnit 5 example for `InterfaceDesignDemo` from section 4. Put `InterfaceDesignDemoTest.java` in the same package:
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -4068,13 +4068,13 @@ class InterfaceDesignDemoTest {
 }
 ```
 
-Điểm đáng học: test của `PreviewService` có thể tạo một **lambda** `DocumentReader`, không cần giả lập save/delete/export/email. `StaticDocumentReader` không cần viết các phương thức trống. Đây là dấu hiệu contract sát nhu cầu.
+The lesson: `PreviewService` tests can use a **lambda** `DocumentReader` without mocking save/delete/export/email. `StaticDocumentReader` need not implement empty methods. The contract closely reflects actual needs.
 
-Tuy nhiên, có một ranh giới cần thiết phải kiểm thử thực tế: nếu production dùng JDBC, REST hoặc cloud storage, test với fake không bảo đảm SQL, transaction, timeout hoặc permissions là đúng. Vẫn cần integration/contract tests cho adapter. Không thể suy ra rằng “có interface” thì mọi lỗi runtime đã được giải quyết.
+A real integration boundary still needs testing: when production uses JDBC, REST, or cloud storage, fakes cannot guarantee SQL, transactions, timeouts, or permissions behave correctly. Adapter integration/contract tests are still required. Having an interface does not eliminate runtime failures.
 
-## 13. Khi nào nên giữ một class cụ thể thay vì tạo interface?
+## 13. When should a concrete class be kept instead of adding an interface?
 
-Một lớp chứa thuật toán ngắn gọn, chỉ có một cách thực hiện, không rò rỉ hạ tầng và không đóng vai trò API công khai có thể được sử dụng trực tiếp:
+A class with a short algorithm, one implementation, no infrastructure leakage, and no role as a public API can be used directly:
 
 ```java
 final class TitleFormatter {
@@ -4087,88 +4087,88 @@ final class TitleFormatter {
 }
 ```
 
-Tạo đủ bộ `ITitleFormatter`, `DefaultTitleFormatter`, `TitleFormatterFactory` và `TitleFormatterProvider` cho hàm này thường không mang lợi ích thực tế.
+Creating `ITitleFormatter`, `DefaultTitleFormatter`, `TitleFormatterFactory`, and `TitleFormatterProvider` for this function usually adds no practical benefit.
 
-Khi nào interface lại đáng dùng?
+When is an interface worthwhile?
 
-- Cần **tách business logic khỏi SDK/DB/network**.
-- Có nhiều implementation với contract thật sự giống nhau.
-- Một module cung cấp extension point có chủ đích cho các nhóm khác.
-- Một client cần giới hạn quyền nhìn thấy một tập capability.
-- Test cần cô lập phụ thuộc chậm/không ổn định; interface phản ánh khả năng độc lập có ý nghĩa.
-- Phương án thay thế đã có kế hoạch rõ hoặc thay đổi một công nghệ ở quy mô lớn rất tốn kém.
+- To **separate business logic from SDK/DB/network dependencies**.
+- When multiple implementations honor the same real contract.
+- When a module deliberately provides an extension point to other teams.
+- When a client must see only a constrained set of capabilities.
+- When tests must isolate slow/unreliable dependencies and the interface represents a meaningful independent capability.
+- When a replacement is planned or changing a widely used technology would be costly.
 
-Không cần đủ tất cả dấu hiệu; chỉ cần **một lý do mạnh** cũng có thể biện minh interface. Ngược lại, “để sau này dễ mở rộng” mà không chỉ ra **mở rộng cái gì và ai sẽ làm** là lý do yếu.
+Not all criteria are required; **one compelling reason** can justify an interface. Conversely, "future extensibility" is weak unless **what will change and who will change it** are identified.
 
-## 14. So sánh hai loại chi phí thiết kế
+## 14. Comparing two kinds of design cost
 
-| Tiêu chí | Giao diện quá lớn | Quá nhiều abstraction |
+| Criterion | Oversized interface | Too many abstractions |
 |---|---|---|
-| Vấn đề chính | Client phụ thuộc các capability không dùng | Một nhiệm vụ đi qua quá nhiều lớp gián tiếp |
-| Dấu hiệu | `UnsupportedOperationException` ở nhiều implementation; interface sửa liên tục | Lớp chỉ delegate; factory chỉ gọi `new`; wiring phức tạp |
-| Hậu quả | Coupling lan rộng, khó thay thế, có thể vi phạm LSP | Chi phí đọc/debug/cấu hình, vòng phụ thuộc và hidden control flow |
-| Sửa thường dùng | Tách contract theo client/capability | Bỏ lớp chuyển tiếp thừa, dùng class hoặc port trực tiếp |
-| Nguy cơ khi sửa quá đà | Hàng chục interface một method thiếu cohesion | Gom mọi thứ vào một God Class |
-| Tiêu chí thành công | Client chỉ thấy điều cần, implementation thực hiện trọn contract | Mỗi lớp còn lại có trách nhiệm/ranh giới rõ, luồng dễ theo dõi |
+| Main issue | Clients depend on unused capabilities | Tasks traverse too many indirect layers |
+| Warning signs | `UnsupportedOperationException` in many implementations; frequently changed interface | Classes only delegate; factories only call `new`; complicated wiring |
+| Consequences | Widespread coupling, difficult substitution, potential LSP violations | Reading/debugging/configuration costs, circular dependencies, and hidden control flow |
+| Typical fix | Segregate contracts by client/capability | Remove redundant forwarding layers; use classes or ports directly |
+| Risk of going too far | Dozens of one-method interfaces without cohesion | Consolidating everything into a God Class |
+| Success criterion | Clients see only what they need; implementations fulfill the complete contract | Remaining classes have clear responsibilities/boundaries and workflows are easy to follow |
 
-**Nhìn từ client** là cách chẩn đoán có hiệu quả: vẽ xem service sử dụng phương thức nào, kết quả nào, loại lỗi nào, và cần biết tới những class nào để chạy được một use case.
+**Look from the client's perspective** to diagnose effectively: map which service methods, results, and error types are used, and which classes a use case must know about.
 
-## 15. Làm sao đo được “quá lớn” và “quá nhiều”?
+## 15. How can "too large" and "too many" be measured?
 
-Không có con số cố định như “interface không quá 5 methods” hoặc “luồng không quá 3 tầng”. Những con số đó không phản ánh trách nhiệm.
+There is no fixed rule such as "no more than 5 interface methods" or "no more than 3 layers." Those numbers do not measure responsibility.
 
-Thử dùng các chỉ dấu có thể quan sát:
+Use observable indicators:
 
-1. **Client usage matrix:** với từng client, liệt kê những method của interface thực sự được gọi. Nếu phần lớn client chỉ dùng một nhóm con khác nhau, có thể cần tách theo nhóm.
-2. **Implementation support matrix:** implementation nào phải viết stub, no-op hoặc ném lỗi không hỗ trợ?
-3. **Change ripple:** sửa một khả năng có khiến code hoặc test không liên quan phải sửa?
-4. **Indirection audit:** có bao nhiêu tầng chỉ `return delegate.call(args)` mà không có ý nghĩa riêng?
-5. **Wiring complexity:** khó xác định bean/adapter nào đang chạy không?
-6. **Behavior testability:** có viết test ở boundary công khai mà không dựng hàng loạt service không liên quan?
-7. **Vận hành:** lỗi ở tầng nào, timeout được áp ở đâu, tracing có phân biệt các bước không?
-8. **Ownership:** một interface đại diện cho một nhóm capability có cùng chủ sở hữu/lý do thay đổi hay nhiều nhóm chức năng tách biệt?
+1. **Client usage matrix:** list the interface methods each client actually calls. If most clients use different subsets, splitting by capability group may help.
+2. **Implementation support matrix:** which implementations require stubs, no-ops, or unsupported-operation errors?
+3. **Change ripple:** does updating one capability require unrelated code or tests to change?
+4. **Indirection audit:** how many layers merely call `return delegate.call(args)` without adding value?
+5. **Wiring complexity:** is it difficult to determine which bean/adapter executes?
+6. **Behavior testability:** can public-boundary tests run without constructing unrelated services?
+7. **Operations:** which layer fails, where are timeouts applied, and can tracing distinguish steps?
+8. **Ownership:** does one interface represent a capability group with a shared owner/reason to change or several unrelated feature groups?
 
-Đây là **dữ liệu hỗ trợ quyết định**, không phải thước đo “đạt/chưa đạt” máy móc. Ví dụ interface có 12 method cùng mô tả một bộ thao tác nhất quán của parser có thể hoàn toàn phù hợp; một interface với hai method không liên quan vẫn có thể sai.
+These are **decision-support data**, not a mechanical pass/fail score. For example, an interface with 12 methods describing a coherent parser API may be entirely appropriate, while two unrelated methods may be too many.
 
-### Ma trận sử dụng đơn giản
+### Simple usage matrix
 
 | Client | Read | Save | Delete | Export PDF | Email |
 |---|---:|---:|---:|---:|---:|
-| Preview page | Có | — | — | — | — |
-| Content editor | Có | Có | — | — | — |
-| Admin cleanup | Có | — | Có | — | — |
-| Report exporter | Có | — | — | Có | — |
+| Preview page | Yes | — | — | — | — |
+| Content editor | Yes | Yes | — | — | — |
+| Admin cleanup | Yes | — | Yes | — | — |
+| Report exporter | Yes | — | — | Yes | — |
 
-Nếu tất cả cùng phụ thuộc `DocumentManager`, giao diện chung bị ép vào những client chỉ dùng mảnh nhỏ. Tách **Read**, **Write** và các thao tác use case khác có thể giảm coupling. Nhưng đừng tự động tạo năm microinterfaces: nhóm theo trách nhiệm, bảo đảm data/transaction semantics và mức chi phí hợp lý.
+If all these clients depend on `DocumentManager`, the combined interface burdens clients using only small subsets. Separating **Read**, **Write**, and other use-case operations may reduce coupling. But do not automatically create five microinterfaces: group by responsibilities and preserve data/transaction semantics at a reasonable cost.
 
-## 16. Refactor interface lớn mà không phá người sử dụng
+## 16. Refactoring a large interface without breaking its users
 
-Một kế hoạch refactor thực tế:
+A practical refactoring plan:
 
-1. **Kiểm kê client và implementation.** Xác định ai dùng method nào, phần nào public API hoặc được bên ngoài biên dịch dựa vào.
-2. **Lập ma trận use case–capability.** Gộp những method thật sự thuộc cùng hợp đồng. Kiểm tra các implementation chỉ hỗ trợ một phần.
-3. **Viết test hành vi trước.** Dùng unit test và contract test cho tình huống đang chạy; kiểm tra cả lỗi.
-4. **Giới thiệu contract nhỏ hơn.** Tạo `DocumentReader` và `DocumentWriter` phù hợp với nhu cầu; tránh tái tạo “God Interface” nhỏ hơn một chút.
-5. **Cho implementation cũ thực hiện contract mới.** Cập nhật adapter một cách có kiểm soát; không đổi semantics lỗi hoặc dữ liệu.
-6. **Chuyển client từng bước.** Preview chỉ inject reader, editor nhận các capability thật sự cần. Xóa setter/stub không còn hợp đồng.
-7. **Giữ tương thích nếu cần.** Với thư viện công khai, có thể phải tạm giữ adapter/interface cũ được đánh dấu deprecation, lên kế hoạch phiên bản và migration.
-8. **Đánh giá transaction.** Nếu hai operation phải nguyên tử, tách interface không được biến một transaction thành hai call có race; thiết kế method atomic khi phù hợp.
-9. **Kiểm lại kiến trúc.** Xóa các provider/factory/delegate không còn mục đích; giữ composition root đủ rõ.
-10. **Đo lại kết quả.** Số client bị ảnh hưởng khi đổi một feature, khả năng thay implementation và chi phí đọc/debug đã được cải thiện chưa?
+1. **Inventory clients and implementations.** Identify who calls which methods, and which parts are public APIs or external compilation dependencies.
+2. **Build a use-case–capability matrix.** Group methods that genuinely belong in one contract. Identify implementations that support only a subset.
+3. **Write behavior tests first.** Cover current scenarios with unit and contract tests, including failure cases.
+4. **Introduce smaller contracts.** Create `DocumentReader` and `DocumentWriter` around actual needs; avoid creating a slightly smaller "God Interface."
+5. **Make existing implementations fulfill new contracts.** Update adapters carefully without changing error or data semantics.
+6. **Migrate clients incrementally.** Inject only the reader into previews and the actual capabilities into editors. Remove setters/stubs no longer required by contracts.
+7. **Preserve compatibility if needed.** Public libraries may temporarily retain deprecated old interfaces/adapters with a versioning and migration plan.
+8. **Review transactions.** If two operations must be atomic, splitting an interface must not turn one transaction into two racy calls; design atomic methods where appropriate.
+9. **Review the architecture.** Remove purposeless providers/factories/delegates while keeping the composition root understandable.
+10. **Measure outcomes.** Did unrelated client changes, implementation replacement, and reading/debugging costs improve?
 
-**Chú ý quan trọng:** thay đổi hoặc tách một public interface có thể là **breaking change ở source/binary compatibility** cho implementer và caller bên ngoài. Nếu ứng dụng phát hành thư viện, cần chiến lược versioning/migration. Không nên xóa ngay một interface chỉ vì nó hiện chưa hợp lý nếu nhiều hệ thống đã tích hợp.
+**Important:** splitting or changing a public interface can be **a source/binary breaking change** for external implementers and callers. Published libraries need versioning/migration strategies. Do not delete a widely integrated interface immediately just because its design is currently weak.
 
-## 17. Thận trọng với một số “giải pháp” tưởng hợp lý
+## 17. Beware seemingly reasonable "solutions"
 
-### 17.1. Tạo interface mỗi khi muốn unit test
+### 17.1. Create an interface for every unit test
 
-Nếu một class thuần tính toán ổn định và không có side effect, test trực tiếp class đó thường đơn giản. Interface có ích khi đại diện một collaborator cần thay thế/cô lập, không phải vật trang trí cho mọi class.
+A stable, pure calculation class without side effects is often easiest to test directly. An interface is useful for a collaborator worth replacing/isolating, not as decoration for every class.
 
-### 17.2. Chẻ một interface thành hàng chục method-level interfaces
+### 17.2. Split an interface into dozens of method-level interfaces
 
-Có thể làm consumer constructor nhận 12 dependency thay vì 1, cấu hình phức tạp hơn mà không thay đổi khả năng phát triển thực tế. Đôi khi một hợp đồng `DocumentReader` với vài truy vấn liên quan lại vừa đủ.
+A consumer constructor might receive 12 dependencies instead of 1, complicating wiring without improving real extensibility. A cohesive `DocumentReader` contract with related queries may suffice.
 
-### 17.3. Cho tất cả interface kế thừa một base interface
+### 17.3. Make every interface extend a common base interface
 
 ```java
 interface BaseService {
@@ -4178,13 +4178,13 @@ interface BaseService {
 }
 ```
 
-Nếu service thuần xử lý chuỗi không cần `close`, còn adapter network phải `close`, việc ép cả hai kế thừa `BaseService` lại tạo **fat interface** ở tầng nền. Dùng `AutoCloseable` hoặc ranh giới vòng đời khi thật sự cần; không tạo base universal chỉ để mọi class “đồng nhất”.
+If a pure string service needs no `close` but a network adapter requires `close`, forcing both to extend `BaseService` creates a **fat interface** at the base. Use `AutoCloseable` or explicit lifecycle boundaries when needed; avoid a universal base for superficial uniformity.
 
-### 17.4. Dùng generic repository cho mọi use case
+### 17.4. Use generic repositories for every use case
 
-`GenericRepository<T>` với nhiều phép query tùy biến có thể khiến application phụ thuộc một API quá rộng. Một port theo nhu cầu (ví dụ `FindActiveOrders`) có thể rõ ràng hơn khi nghiệp vụ cần truy vấn rất đặc thù. Nhưng trong CRUD thật sự đơn giản, một repository tiêu chuẩn cũng có thể là lựa chọn tiết kiệm; không nên bắt buộc tạo một interface riêng cho mỗi query.
+A `GenericRepository<T>` with many customizable queries may expose too broad an API. A use-case-specific port (such as `FindActiveOrders`) can better express specialized business queries. But for simple CRUD, a standard repository can be economical; do not mandate an interface for every query.
 
-### 17.5. Giấu thao tác không hỗ trợ sau runtime flag
+### 17.5. Hide unsupported operations behind runtime flags
 
 ```java
 if (documentManager.supportsDelete()) {
@@ -4192,15 +4192,15 @@ if (documentManager.supportsDelete()) {
 }
 ```
 
-Nếu các loại client/implementation có khả năng riêng rõ ràng, thiết kế capability interface có thể được type-check tốt hơn. Tuy nhiên, có hệ thống plugin mà capability thay đổi động; lúc đó flag/negotiation có thể là yêu cầu thật. Cần **nói rõ hợp đồng**, không áp một quy tắc duy nhất cho mọi kiến trúc.
+When client/implementation types have distinct capabilities, capability interfaces may provide stronger compile-time checking. But plugin systems can have dynamically changing capabilities, where flags/negotiation are genuine requirements. **Specify the contract** rather than applying one rule to every architecture.
 
-### 17.6. Tưởng chia interface sẽ tự tạo bảo mật
+### 17.6. Assume interface segregation provides security automatically
 
-Một biến có kiểu `DocumentReader` giúp code không gọi `save` trực tiếp qua biến đó, nhưng kẻ gọi không đáng tin cậy vẫn có thể truy cập endpoint khác. Phân quyền cần thực thi ở boundary với xác thực, ủy quyền và kiểm soát quyền dữ liệu.
+A variable typed `DocumentReader` prevents code from calling `save` through that variable, but an untrusted caller may still access another endpoint. Enforce permissions at the boundary with authentication, authorization, and data-access controls.
 
-## 18. Ghi quyết định thiết kế ngắn gọn
+## 18. Record design decisions briefly
 
-Khi tranh luận “tách thêm interface hay giữ nguyên?”, hãy viết vài dòng như một **Architecture Decision Record (ADR)**:
+When debating "split the interface or keep it?", document a few lines in an **Architecture Decision Record (ADR)**:
 
 ```markdown
 # ADR: Tách hợp đồng đọc/ghi tài liệu
@@ -4232,60 +4232,60 @@ Xem xét lại khi:
   hoặc persistence/transaction boundary thay đổi.
 ```
 
-Quyết định tốt có **lý do và điều kiện xem xét lại**, không phải một khẩu hiệu “ISP nói mỗi interface phải nhỏ”.
+A good decision has **reasons and review conditions**, not merely the slogan that "ISP requires every interface to be small."
 
-## 19. Bài tập phân tích
+## 19. Analysis exercises
 
-**Bài 1 – Tìm fat interface.** Cho `EmployeeSystem` có `findEmployee`, `updateSalary`, `sendBirthdayEmail`, `exportPayrollCsv` và `deleteEmployee`. Liệt kê client HR, payroll, employee self-service và email scheduler, xác định từng client thực sự cần thao tác nào. Đề xuất bộ hợp đồng không tạo ra 5 interface chỉ để “mỗi method một interface”.
+**Exercise 1 – Find the fat interface.** Given `EmployeeSystem` with `findEmployee`, `updateSalary`, `sendBirthdayEmail`, `exportPayrollCsv`, and `deleteEmployee`, list HR, payroll, employee self-service, and email-scheduler clients and determine their actual method needs. Propose contracts without creating 5 interfaces merely to have "one method per interface."
 
-**Bài 2 – Refactor một nguồn chỉ đọc.** Có `ReportRepository` với `load`, `save`, `delete`; adapter `RemoteReportArchive` chỉ được quyền tải báo cáo và ném lỗi khi ghi. Tách một contract phù hợp, sửa dependency của báo cáo dashboard và viết test chứng minh không cần mock hai method ghi/xóa.
+**Exercise 2 – Refactor a read-only source.** `ReportRepository` exposes `load`, `save`, and `delete`, but `RemoteReportArchive` may only fetch reports and throws on writes. Extract a suitable contract, update the dashboard report dependency, and test that neither write/delete method needs mocking.
 
-**Bài 3 – Audit lớp trung gian.** Một request đi qua `PriceFacade → PriceProvider → PriceFactory → PriceCalculator`. Viết rõ mục đích từng tầng. Xóa tầng không có nhiệm vụ riêng, giữ nguyên behavior và test; chỉ ra trường hợp factory là cần thiết (nhiều implementation theo runtime config).
+**Exercise 3 – Audit forwarding layers.** A request traverses `PriceFacade → PriceProvider → PriceFactory → PriceCalculator`. Explain the purpose of each layer. Remove layers without unique responsibilities while preserving behavior and tests; give a case where a factory is needed (multiple implementations chosen by runtime configuration).
 
-**Bài 4 – Điều kiện nguyên tử.** Một editor dùng `DocumentReader` và `DocumentWriter`: đọc phiên bản 2 rồi ghi đè phiên bản 3, đồng thời người khác cũng sửa. Đề xuất `replaceIfVersionMatches` hoặc transaction/locking. Giải thích vì sao tách interface không tự tạo concurrency safety.
+**Exercise 4 – Atomicity requirement.** An editor uses `DocumentReader` and `DocumentWriter`, reads version 2, and overwrites it with version 3 while another user edits concurrently. Propose `replaceIfVersionMatches` or transactions/locking; explain why interface segregation does not ensure concurrency safety.
 
-**Bài 5 – Cân bằng giữa ISP và độ phức tạp.** Một ứng dụng có ba interface `ReadTitle`, `ReadContent`, `ReadAuthor`; mọi caller luôn dùng cả ba và implementation giống nhau. Đề xuất hợp đồng mạch lạc hơn, đánh giá số lớp giảm và tác động test.
+**Exercise 5 – Balance ISP with complexity.** An application has three interfaces `ReadTitle`, `ReadContent`, and `ReadAuthor`; every caller uses all three and their implementation is identical. Propose a more cohesive contract and assess reduced class count and testing impact.
 
-## 20. Checklist review trước khi thêm hoặc tách abstraction
+## 20. Review checklist before adding or splitting abstractions
 
-- [ ] Tôi nêu được client nào **không cần** một phần interface hiện tại.
-- [ ] Không implementation nào bị buộc tạo method giả hoặc làm trái hợp đồng.
-- [ ] Mỗi interface diễn đạt một nhóm capability **có ý nghĩa với client**.
-- [ ] Tôi không tách “một method một interface” theo công thức cố định.
-- [ ] Tôi nhận diện được tầng chỉ forwarding và có lý do rõ để giữ hoặc bỏ.
-- [ ] Tôi biết thay đổi công nghệ/use case nào sẽ được abstraction bảo vệ.
-- [ ] Tôi không kéo SQL/HTTP/SDK vào phần nghiệp vụ chỉ để giảm số class.
-- [ ] Tôi xem xét giao dịch, lỗi, authorization, lifecycle và vận hành riêng biệt.
-- [ ] Tôi có test hành vi, integration test khi cần và migration plan cho public API.
-- [ ] Tôi không dùng số lượng interface/lớp làm thước đo chất lượng OOP.
+- [ ] I can identify clients that **do not need** part of the current interface.
+- [ ] No implementation is forced to create fake methods or violate its contract.
+- [ ] Every interface expresses capabilities **meaningful to its clients**.
+- [ ] I do not split into "one method per interface" by a fixed formula.
+- [ ] I identify forwarding-only layers and have a clear reason to keep or remove them.
+- [ ] I know which technology/use-case changes the abstraction will protect.
+- [ ] I do not pull SQL/HTTP/SDK into business code merely to reduce class count.
+- [ ] I consider transactions, errors, authorization, lifecycle, and operations separately.
+- [ ] I have behavior tests, integration tests where needed, and migration plans for public APIs.
+- [ ] I do not use interface/class count as an OOP quality metric.
 
-**Ghi nhớ:** một interface tốt không nhất thiết ngắn nhất, mà là interface **đúng khả năng và đúng người sử dụng**. Một abstraction tốt không nhất thiết xuất hiện ở mọi nơi, mà phải tạo một ranh giới có ích. Hãy **tách thứ client không cần**, **giữ cùng những thao tác thật sự thuộc một hợp đồng**, và **loại bỏ tầng trung gian không mang lại trách nhiệm hay khả năng thay đổi rõ ràng**.
+**Remember:** a good interface need not be the shortest; it must offer **the right capabilities to the right clients**. A useful abstraction creates a meaningful boundary without appearing everywhere. **Separate what clients do not need**, **group operations belonging to one real contract**, and **remove intermediary layers lacking clear responsibilities or adaptation value**.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-pitfalls-007">Phụ thuộc vòng và truy cập sâu vào đối tượng</a>
+## <a id="design-pitfalls-007">Circular dependencies and deep object navigation</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phụ thuộc vòng và truy cập sâu vào đối tượng trong thiết kế OOP
+# Circular dependencies and deep object navigation in OOP design
 
-**Chủ đề:** OOP → Lỗi thiết kế  
-**Trọng tâm:** nhận diện hai mùi thiết kế thường xuất hiện cùng nhau — **phụ thuộc vòng (circular dependency)** và **truy cập sâu vào cấu trúc đối tượng (deep object navigation / message chain)** — rồi refactor mà không phá vỡ hành vi nghiệp vụ.
+**Topic:** OOP → Design Pitfalls  
+**Focus:** Recognize two design smells that often coexist — **circular dependencies** and **deep object navigation / message chains** — and refactor without breaking business behavior.
 
-## 1. Một thay đổi nhỏ có thể kéo theo cả hệ thống
+## 1. A small change can affect the entire system
 
-Giả sử ứng dụng bán hàng có hai dịch vụ:
+Suppose a sales application has two services:
 
-- `OrderService` tiếp nhận đơn hàng và gọi `ShippingService` để gửi hàng.
-- `ShippingService` cần địa chỉ giao hàng, nên gọi ngược `OrderService` để lấy thông tin đơn.
+- `OrderService` accepts orders and calls `ShippingService` to arrange shipping.
+- `ShippingService` needs a delivery address, so it calls back into `OrderService` for order details.
 
-Đồ thị phụ thuộc:
+Dependency graph:
 
 ~~~mermaid
 flowchart LR
@@ -4293,7 +4293,7 @@ flowchart LR
     S -->|gọi findOrder / findAddress| O
 ~~~
 
-Trong code, ta dễ gặp:
+In code, we might see:
 
 ~~~java
 // Phác thảo mùi thiết kế — KHÔNG phải chương trình hoàn chỉnh.
@@ -4323,9 +4323,9 @@ final class ShippingService {
 }
 ~~~
 
-Hai đối tượng phải biết và có tham chiếu tới nhau. Nếu dùng constructor injection để tạo chúng, không thể đơn giản xây dựng `OrderService` trước khi có `ShippingService`, nhưng cũng không thể tạo `ShippingService` trước khi có `OrderService`.
+The two objects must know and reference each other. With constructor injection, we cannot construct `OrderService` without `ShippingService`, but cannot construct `ShippingService` without `OrderService` either.
 
-Ở một nơi khác, mã tính phí giao hàng viết:
+Elsewhere, shipping-fee code contains:
 
 ~~~java
 // Phác thảo truy cập sâu — tên getter chỉ mang tính minh họa.
@@ -4335,37 +4335,37 @@ String city = order.getCustomer()
                    .getCity();
 ~~~
 
-Bên gọi phải hiểu cách dữ liệu nằm trong `Order → Customer → ContactInfo → DeliveryAddress`. Nếu mô hình thay đổi từ `getContactInfo()` sang một thực thể địa chỉ khác, nhiều nơi dùng chuỗi truy cập đó có thể phải sửa.
+The caller must know how data is nested in `Order → Customer → ContactInfo → DeliveryAddress`. If the model replaces `getContactInfo()` with another address representation, many callers following that chain may need changes.
 
-**Hai vấn đề có liên hệ nhưng không đồng nhất:** phụ thuộc vòng là **quan hệ phụ thuộc quay trở lại** giữa các thành phần; truy cập sâu là **phơi bày đường đi qua nhiều cấu trúc nội bộ**. Một hệ thống có thể mắc một lỗi mà không mắc lỗi còn lại.
+**Related but distinct problems:** circular dependency is **a dependency path that returns to an earlier component**; deep navigation **exposes paths through internal object structures**. A system can exhibit either one without the other.
 
-## 2. Phụ thuộc vòng (Circular Dependency) là gì?
+## 2. What is a circular dependency?
 
-Xét một đồ thị có hướng: mỗi đỉnh là class, service, package hoặc module; cạnh `A → B` nghĩa là `A` **phụ thuộc vào** `B` theo tiêu chí đang xét (tham chiếu kiểu, gọi phương thức, import, cấu hình DI, phụ thuộc build...).
+In a directed graph, each vertex represents a class, service, package, or module; an edge `A → B` means `A` **depends on** `B` according to the chosen criterion (type reference, method call, import, DI configuration, build dependency, etc.).
 
-**Có chu trình** nếu tồn tại đường từ một thành phần quay lại chính nó qua các cạnh phụ thuộc, chẳng hạn:
+**A cycle exists** when a path of dependency edges returns to its starting component, for example:
 
 ~~~text
 A → B → C → A
 ~~~
 
-| Cấp độ | Ví dụ | Tác động có thể thấy |
+| Level | Example | Possible impact |
 | --- | --- | --- |
-| Object/service | `OrderService → ShippingService → OrderService` | Khó khởi tạo, unit test và xác định chủ trách nhiệm |
-| Package | `order → shipping → customer → order` | Ranh giới package không rõ, đổi một nơi lan sang nhiều nơi |
-| Module/build | `module-a → module-b → module-a` | Một số hệ thống module/build không thể chấp nhận chu trình; tổ chức triển khai trở nên khó |
-| Lớp ứng dụng | `controller → service → controller` | Đảo chiều trách nhiệm, khó hiểu kiến trúc |
-| Chuỗi gọi runtime | `A.foo() → B.bar() → A.foo()` không có điểm dừng | Có thể gây đệ quy vô hạn/`StackOverflowError` |
+| Object/service | `OrderService → ShippingService → OrderService` | Harder initialization, unit tests, and responsibility ownership |
+| Package | `order → shipping → customer → order` | Unclear package boundaries; changes spread widely |
+| Module/build | `module-a → module-b → module-a` | Some module/build systems reject cycles; deployment organization becomes difficult |
+| Application layer | `controller → service → controller` | Responsibility direction is reversed; architecture becomes confusing |
+| Runtime call chain | `A.foo() → B.bar() → A.foo()` without a stopping condition | Can cause infinite recursion/`StackOverflowError` |
 
-**Phân biệt:** đồ thị phụ thuộc vòng không nhất thiết có lời gọi đệ quy vô hạn. Hai object có thể tham chiếu nhau mà chỉ tương tác một chiều trong một kịch bản cụ thể. Ngược lại, một hàm có thể tự đệ quy vô hạn mà không cần hai service phụ thuộc vòng.
+**Distinction:** a circular dependency graph does not necessarily imply infinite recursion. Two objects can reference each other but interact only one way in a particular scenario. Conversely, a function can recurse forever without a cycle between two services.
 
-Một số quan hệ hai chiều ở mô hình domain hoặc object graph có lý do hợp lệ (ví dụ parent/child có tham chiếu ngược), nhưng vẫn cần đánh giá ownership, vòng đời, serialization, equality và khả năng bảo trì. **Không phải mọi reference hai chiều đều tự động là một lỗi kiến trúc.**
+Some bidirectional references in domain models or object graphs are legitimate (for example, parent/child back-references), but still require careful ownership, lifecycle, serialization, equality, and maintenance analysis. **Not every bidirectional reference is automatically an architectural flaw.**
 
-## 3. Vì sao vòng phụ thuộc gây khó khăn?
+## 3. Why do dependency cycles cause problems?
 
-### 3.1. Khởi tạo bằng dependency injection
+### 3.1. Initialization with dependency injection
 
-Với constructor injection:
+With constructor injection:
 
 ~~~java
 // Phác thảo Spring beans.
@@ -4380,29 +4380,29 @@ class ShippingService {
 }
 ~~~
 
-Mỗi bean đòi bean kia trước khi constructor chạy xong. Các cấu hình Spring/Spring Boot thông dụng phát hiện và từ chối vòng constructor như vậy trong quá trình khởi tạo context.
+Each bean requires the other before either constructor completes. Typical Spring/Spring Boot configurations detect and reject such constructor cycles during context initialization.
 
-Có thể bắt gặp cách né như setter injection, `@Lazy` hoặc `ObjectProvider`. Chúng có thể trì hoãn việc lấy bean hay cho phép một số tình huống khởi tạo, nhưng **không tự sửa vấn đề trách nhiệm và hướng phụ thuộc**. Nếu thực sự cần dùng một workaround, phải hiểu vòng đời, lỗi chỉ xuất hiện khi gọi runtime và lý do kiến trúc; đừng coi việc ứng dụng khởi động thành công là bằng chứng thiết kế tốt.
+Workarounds such as setter injection, `@Lazy`, and `ObjectProvider` may defer bean resolution or allow some initialization scenarios, but **do not fix responsibility boundaries or dependency direction**. If a workaround is truly necessary, understand lifecycle, possible runtime failures, and architectural reasons; successful startup is not proof of sound design.
 
-### 3.2. Test và thay đổi lan truyền
+### 3.2. Tests and change propagation
 
-Muốn test riêng `OrderService` có thể phải dựng một `ShippingService`; muốn dựng `ShippingService` lại cần `OrderService`. Người viết test bị lôi vào mock lồng nhau hoặc cấu hình container phức tạp thay vì kiểm tra một hợp đồng rõ ràng.
+Testing `OrderService` may require `ShippingService`; constructing `ShippingService` in turn requires `OrderService`. Tests become nested mocks or complicated containers instead of verification of a clear contract.
 
-Về bảo trì, khi hai service đều biết cấu trúc và chính sách của nhau, không rõ nơi nào sở hữu quyết định cuối cùng. Việc sửa hợp đồng nhỏ có thể làm hỏng cả hai chiều. Đặc biệt, vòng package/module dễ khiến thay đổi và phát hành độc lập trở nên tốn kém.
+When both services know each other's structure and policies, ownership of decisions becomes ambiguous. Small contract changes can break both directions. Package/module cycles especially make independent evolution and releases costly.
 
-### 3.3. Không xác định rõ ranh giới nghiệp vụ
+### 3.3. Unclear business boundaries
 
-Vòng `Order ↔ Shipping` đôi khi là dấu hiệu hai thành phần cùng cố điều phối một quy trình. Hãy hỏi:
+An `Order ↔ Shipping` cycle sometimes means two components are trying to orchestrate the same workflow. Ask:
 
-- Ai **ra quyết định** khi đơn đủ điều kiện bàn giao?
-- Ai **sở hữu dữ liệu** địa chỉ giao?
-- Ai **thực hiện** việc gọi nhà vận chuyển?
-- Ai **điều phối** quy trình gồm nhiều bước?
-- Thành phần nào chỉ cần dữ liệu giá trị mà không cần biết cả service kia?
+- Who **decides** when an order is ready for handoff?
+- Who **owns** delivery-address data?
+- Who **performs** the carrier call?
+- Who **orchestrates** the multi-step process?
+- Which component needs only values rather than knowing the other service?
 
-Không có một công thức “tách interface là xong”. Ta cần xác định trách nhiệm thực sự trước khi đổi sơ đồ phụ thuộc.
+There is no formula that "extracting an interface fixes it." Determine genuine responsibilities before redrawing dependency arrows.
 
-## 4. Nhận diện vòng phụ thuộc từ đồ thị
+## 4. Detecting dependency cycles in graphs
 
 ~~~mermaid
 flowchart LR
@@ -4417,9 +4417,9 @@ flowchart LR
     end
 ~~~
 
-**Cách đọc:** ở phía “sau”, quy trình cấp trên phụ thuộc vào các khả năng cấp dưới; không có mũi tên từ `ShippingService` quay lại `OrderWorkflow`. Đây là ví dụ định hướng, không phải khẳng định mọi dự án phải có lớp tên `OrderWorkflow`.
+**Reading the diagram:** on the "after" side, the higher-level workflow depends on lower-level capabilities; no arrow returns from `ShippingService` to `OrderWorkflow`. This illustrates a direction, not a requirement that every project have a class named `OrderWorkflow`.
 
-Nếu biểu diễn đồ thị bằng danh sách cạnh:
+If the graph is written as an edge list:
 
 ~~~text
 Trước: OrderService -> ShippingService
@@ -4430,22 +4430,22 @@ Sau:   OrderWorkflow -> OrderRepository
        ShippingService -> DeliveryGateway
 ~~~
 
-Một chu trình hình thành **strongly connected component** (thành phần liên thông mạnh) có nhiều đỉnh: từ bất kỳ thành phần nào trong nhóm có đường tới thành phần khác qua các phụ thuộc. Công cụ phân tích static có thể phát hiện chu trình ở cấp package/module bằng đồ thị import hoặc class reference. Nhưng một công cụ chỉ xem import **không nhất thiết tìm được mọi vòng** hình thành qua cấu hình DI, reflection hay lời gọi runtime.
+A cycle forms a **strongly connected component** containing multiple vertices: every component in the group can reach the others through dependency paths. Static analysis can detect package/module cycles by examining imports or class references. But tools that only inspect imports **may miss cycles** introduced through DI configuration, reflection, or runtime calls.
 
-Khi review, trước hết xác định rõ đang phân tích **dependency compile-time**, **bean runtime** hay **workflow nghiệp vụ**, bởi mỗi đồ thị trả lời câu hỏi khác nhau.
+During review, clarify whether the graph represents **compile-time dependencies**, **runtime beans**, or **business workflows**, because each answers a different question.
 
-## 5. Các chiến lược phá vòng phụ thuộc
+## 5. Strategies for breaking dependency cycles
 
-| Chiến lược | Khi phù hợp | Điều cần giữ |
+| Strategy | When appropriate | What to preserve |
 | --- | --- | --- |
-| **Chuyển dữ liệu cần thiết thành tham số** | B gọi A chỉ để lấy vài giá trị đã biết ở bước điều phối | Dữ liệu cần đúng, đủ, không lộ toàn bộ nội bộ |
-| **Trích xuất service có trách nhiệm riêng** | Hai service cùng sử dụng một quy tắc chung | Service mới phải sở hữu một năng lực có ý nghĩa, không chỉ thành “GodService” thứ ba |
-| **Orchestrator/application service** | Nhiều hoạt động cần phối hợp theo thứ tự | Quyền quyết định quy trình nằm ở một chỗ |
-| **Đảo chiều phụ thuộc qua interface/port** | Logic lõi đang phụ thuộc trực tiếp hạ tầng/nhà cung cấp | Đặt abstraction ở ranh giới phù hợp, không chỉ thay class bằng interface cùng chiều |
-| **Domain event** | Thành phần khác cần phản ứng sau một sự kiện đã xảy ra | Phải hiểu timing, thất bại, delivery semantics và eventual consistency |
-| **Tách module/ownership** | Vòng xuất hiện vì các module chia sẻ cùng khái niệm | Định nghĩa lại trách nhiệm và hướng phụ thuộc, không chỉ đổi tên package |
+| **Pass required data as arguments** | B calls A only to retrieve a few values already available during orchestration | Pass sufficient correct data without exposing entire internals |
+| **Extract a service with its own responsibility** | Two services rely on a genuinely shared rule | The new service must own a meaningful capability, not become a third "GodService" |
+| **Orchestrator/application service** | Several operations must be coordinated in order | Keep workflow decisions in one place |
+| **Invert dependency using an interface/port** | Core logic directly depends on infrastructure/providers | Place abstractions at the right boundary, not merely replace a class with an interface pointing the same way |
+| **Domain event** | Other components need to react after an event | Understand timing, failures, delivery semantics, and eventual consistency |
+| **Split modules/ownership** | The cycle stems from shared concepts spanning modules | Redefine responsibility and dependency direction, not only package names |
 
-Ví dụ **truyền dữ liệu thay cho gọi ngược**:
+Example of **passing data instead of calling back**:
 
 ~~~java
 // Trước: ShippingService tự tìm đơn thông qua OrderService.
@@ -4456,13 +4456,13 @@ shippingService.ship(
         new ShipmentRequest(order.id(), order.shippingDestination()));
 ~~~
 
-`ShippingService` lúc này không cần biết `OrderService`; nó chỉ biết một **request** chứa mã đơn và đích giao.
+`ShippingService` no longer needs to know `OrderService`; it only knows a **request** containing the order ID and destination.
 
-**Chú ý:** truyền cả object `Order` khổng lồ cũng có thể phá vòng, nhưng khiến ShippingService bị phụ thuộc vào aggregate phức tạp. Chọn dữ liệu tối thiểu phù hợp với trách nhiệm: thường một value object như `ShipmentRequest` hoặc `DeliveryAddress` tốt hơn.
+**Note:** passing an entire `Order` object may break a cycle while coupling ShippingService to a complex aggregate. Choose the minimal data that fits the responsibility, often a value object such as `ShipmentRequest` or `DeliveryAddress`.
 
-## 6. Truy cập sâu (Deep Object Navigation) là gì?
+## 6. What is Deep Object Navigation?
 
-Một đoạn mã như:
+Consider this code:
 
 ~~~java
 String city = order.getCustomer()
@@ -4471,36 +4471,36 @@ String city = order.getCustomer()
                    .getCity();
 ~~~
 
-thường được gọi là **message chain** hoặc **train wreck** khi bên gọi lần theo nhiều đối tượng chỉ để thực hiện một quyết định.
+This is often called a **message chain** or **train wreck** when a caller navigates multiple objects to make a decision.
 
-Vấn đề chính không phải **có bao nhiêu dấu chấm**. Các câu như `Math.max(a, b)`, `stream.map(...).filter(...).toList()` hoặc `builder.address(...).build()` cũng có nhiều dấu chấm mà có thể vẫn rất rõ ràng. Mùi thiết kế xuất hiện khi bên gọi **biết quá nhiều về cấu trúc, quan hệ và dữ liệu nội bộ của đối tượng cộng tác**.
+The issue is not **the number of dots**. Expressions such as `Math.max(a, b)`, `stream.map(...).filter(...).toList()`, and `builder.address(...).build()` have multiple dots and may be perfectly clear. A design smell arises when callers **know too much about the structure, relationships, and internal data of collaborators**.
 
-Ba loại rủi ro:
+Three risks arise:
 
-1. **Coupling cấu trúc:** nếu đường `Order → Customer → ContactInfo → Address` thay đổi, các caller dùng đường này đều phải sửa.
-2. **Nhiều điểm null/thiếu dữ liệu:** nếu một mắt xích có thể null, việc truy cập thẳng gây `NullPointerException`; thêm kiểm tra null dọc đường thường làm code rối.
-3. **Sai ranh giới trách nhiệm:** nhiều caller tự quyết định thông tin giao hàng dựa vào cùng cấu trúc có thể dẫn tới diễn giải nghiệp vụ khác nhau.
+1. **Structural coupling:** when `Order → Customer → ContactInfo → Address` changes, every caller following that path must change.
+2. **Many null/missing-data points:** any nullable link can cause `NullPointerException`; repeated null checks along the chain make code unwieldy.
+3. **Misplaced responsibility:** multiple callers deriving shipping decisions from the same structure may interpret business rules inconsistently.
 
-### Law of Demeter — “chỉ nói với cộng tác viên gần mình”
+### Law of Demeter — "talk only to close collaborators"
 
-Một cách diễn đạt thực dụng của **Law of Demeter (LoD)**: một phương thức nên hạn chế giao tiếp với những đối tượng mà nó biết trực tiếp, thay vì liên tục gọi phương thức của object nhận được từ object khác.
+A practical interpretation of the **Law of Demeter (LoD)** is to interact primarily with objects a method knows directly, instead of repeatedly calling methods on objects returned by other objects.
 
-Quy tắc trực giác cho một method là ưu tiên tương tác với:
+As a rule of thumb, prefer interacting with:
 
-- Chính đối tượng hiện tại (`this`).
-- Tham số được truyền vào.
-- Field/thành phần cộng tác trực tiếp của mình.
-- Object được tạo ra hoặc thuộc trách nhiệm trực tiếp của method.
+- The current object (`this`).
+- Parameters passed to the method.
+- Fields/direct collaborators.
+- Objects created by the method or directly under its responsibility.
 
-Đây là **nguyên tắc gợi ý về coupling**, không phải luật compiler và không cấm mọi lời gọi nối chuỗi. Trong thực tế, object value/DTO, các builder, `Stream`, những API traversal có chủ đích và query projection có thể khiến một chuỗi method rất rõ ràng và hợp lý.
+This is a **heuristic for coupling**, not a compiler rule or ban on chaining. Value objects/DTOs, builders, `Stream`, deliberate traversal APIs, and query projections can make method chains clear and appropriate.
 
-**Đừng chữa LoD bằng cách giấu traversal vào một lớp tiện ích tùy tiện**, ví dụ `DeepGetterUtil.getCity(order)`: caller có thể ít dấu chấm hơn, nhưng phụ thuộc cấu trúc vẫn nằm nguyên trong utility và lan rộng theo cách khác.
+**Do not "fix" LoD by hiding traversal in an arbitrary utility**, such as `DeepGetterUtil.getCity(order)`: callers may use fewer dots, but the structural dependency remains in the utility and can spread elsewhere.
 
-## 7. Refactor truy cập sâu theo ý định nghiệp vụ
+## 7. Refactoring deep navigation around business intent
 
-### Cách 1: đặt câu hỏi ở object sở hữu tri thức
+### Approach 1: ask the object that owns the knowledge
 
-Thay vì bên gọi cần biết quan hệ customer/contact/address:
+Instead of callers knowing the customer/contact/address graph:
 
 ~~~java
 // Dễ phụ thuộc sâu vào mô hình.
@@ -4510,20 +4510,20 @@ String city = order.getCustomer()
                    .getCity();
 ~~~
 
-ta có thể cung cấp một API rõ ngữ nghĩa:
+provide an API with clear meaning:
 
 ~~~java
 // Order công bố thông tin tối thiểu bên ngoài cần.
 DeliveryAddress destination = order.shippingDestination();
 ~~~
 
-`Order` vẫn biết cách truy cập dữ liệu bên trong của chính nó. Nhưng caller không bị buộc theo cùng sơ đồ object. Nếu cách lưu địa chỉ đổi, thay đổi được cô lập gần nơi sở hữu.
+`Order` still knows how to access its own internal data. Callers no longer depend on that object graph. If address representation changes, the change is localized near its owner.
 
-**Cảnh báo:** không thêm vào `Order` hàng trăm phương thức kiểu `getCustomerContactAddressCityCountryCode...`. Hãy đặt tên theo ý nghĩa nghiệp vụ (**shippingDestination**, **billingContact**, **eligibleForCancellation**) và chỉ giữ những trách nhiệm thuộc về aggregate đó.
+**Warning:** do not give `Order` hundreds of `getCustomerContactAddressCityCountryCode...` methods. Name APIs by business meaning (**shippingDestination**, **billingContact**, **eligibleForCancellation**) and keep only responsibilities owned by that aggregate.
 
-### Cách 2: dùng Value Object/DTO hẹp
+### Approach 2: use a narrow Value Object/DTO
 
-Nếu bên vận chuyển chỉ cần mã đơn và địa chỉ, truyền:
+If shipping only needs an order ID and address, pass:
 
 ~~~java
 record ShipmentRequest(
@@ -4532,11 +4532,11 @@ record ShipmentRequest(
 ) {}
 ~~~
 
-Hợp đồng này giúp dịch vụ vận chuyển không cần biết `Customer`, `Order` hoặc nhiều lớp trung gian. Nếu cần chuẩn hóa dữ liệu, triển khai trong boundary/assembler thích hợp.
+This contract frees shipping services from knowing `Customer`, `Order`, or intermediate classes. Normalize data in a suitable boundary/assembler when needed.
 
-### Cách 3: “Tell, Don't Ask” khi có hành vi
+### Approach 3: "Tell, Don't Ask" for behavior
 
-Khi object sở hữu trạng thái liên quan tới quyết định nghiệp vụ, có thể yêu cầu nó thực hiện hành vi:
+When an object owns state involved in a business decision, ask it to perform the behavior:
 
 ~~~java
 // Mùi thiết kế nếu logic kiểm tra bị lặp ở nhiều nơi:
@@ -4549,15 +4549,15 @@ if (order.getStatus() == PAID
 order.markShipped(); // tự xác nhận precondition phù hợp
 ~~~
 
-Đây là ví dụ phác thảo; `markShipped()` cần được thiết kế trong aggregate thực tế. Điều quan trọng là **bên ngoài không tự đọc các field rồi gán trạng thái tùy ý**, vượt qua bất biến của domain.
+This is a sketch; `markShipped()` must be designed for the actual aggregate. The key is that **external code does not arbitrarily read fields and assign state**, bypassing domain invariants.
 
-Tuy nhiên, không phải mọi dữ liệu đều cần biến thành behavior của object. Nếu UI chỉ hiển thị `city` từ một immutable DTO, truy cập `dto.address().city()` có thể hoàn toàn rõ và phù hợp.
+Not every value needs to become object behavior. If a UI only shows `city` from an immutable DTO, accessing `dto.address().city()` can be clear and appropriate.
 
-## 8. Java 17 hoàn chỉnh: luồng giao hàng không có phụ thuộc vòng
+## 8. Complete Java 17 example: shipping workflow without circular dependencies
 
-Ví dụ này mô phỏng tạo yêu cầu giao hàng trong bộ nhớ. **Order** biết địa chỉ thuộc đơn, **OrderService** điều phối, **ShippingService** chỉ xử lý request và phụ thuộc vào **DeliveryGateway**. Không có một mũi tên từ `ShippingService` quay ngược về `OrderService`.
+This example simulates creating a shipment request in memory. **Order** owns its order address, **OrderService** orchestrates, and **ShippingService** handles requests and depends only on **DeliveryGateway**. No arrow returns from `ShippingService` to `OrderService`.
 
-Lưu thành **DependencyRefactorDemo.java**:
+Save as **DependencyRefactorDemo.java**:
 
 ~~~java
 import java.util.Objects;
@@ -4683,23 +4683,23 @@ public class DependencyRefactorDemo {
 }
 ~~~
 
-Chạy với JDK 17 trở lên:
+Run with JDK 17 or later:
 
 ~~~bash
 javac DependencyRefactorDemo.java
 java DependencyRefactorDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Hà Nội
 TRACK-ORD-42
 ~~~
 
-### Vì sao ví dụ này cải thiện cả hai mùi thiết kế?
+### Why does this example improve both design smells?
 
-**Về phụ thuộc:**
+**Dependencies:**
 
 ~~~text
 OrderService → ShippingService → DeliveryGateway
@@ -4707,19 +4707,19 @@ OrderService → Order (dữ liệu)
 ShippingService → ShipmentRequest (dữ liệu)
 ~~~
 
-Không có `ShippingService → OrderService`. Chính `OrderService` tạo **ShipmentRequest** và truyền xuống; `ShippingService` không phải gọi ngược để tải địa chỉ.
+There is no `ShippingService → OrderService`. `OrderService` builds a **ShipmentRequest** and passes it downstream; `ShippingService` does not call back to load an address.
 
-**Về truy cập sâu:** trước kia ShippingService có thể truy cập `Order.Customer.Address`. Sau refactor, nó chỉ biết **ShipmentRequest.destination()**. Nếu `Order` chuyển dữ liệu khách hàng sang cấu trúc khác, giao diện ShippingService không nhất thiết đổi.
+**Deep navigation:** previously, ShippingService could traverse `Order.Customer.Address`. After refactoring, it only knows **ShipmentRequest.destination()**. If `Order` changes how it stores customer details, ShippingService's API need not change.
 
-**Về interface:** `DeliveryGateway` có vai trò thực tế: nó phân cách logic giao hàng với adapter gửi tới hệ thống bên ngoài. Đây không phải mẹo tạo một interface cho mọi class; chỉ tạo abstraction ở nơi có một phụ thuộc hạ tầng rõ.
+**Interfaces:** `DeliveryGateway` has a real purpose: it separates shipping logic from adapters calling external systems. It is not a trick to create an interface for each class; abstraction belongs at an actual infrastructure boundary.
 
-**Về trách nhiệm:** `OrderService` được dùng như tầng điều phối trong ví dụ. Nếu hệ thống có nhiều bước phối hợp giữa kho, thanh toán và giao hàng, có thể đổi sang một `OrderWorkflow` hoặc application service phù hợp mà không cần cho các service chuyên biệt gọi vòng qua nhau.
+**Responsibilities:** `OrderService` acts as the orchestrator in this example. If more steps span inventory, payment, and shipping, an `OrderWorkflow` or suitable application service can coordinate them without circular calls among specialized services.
 
-**Giới hạn:** code chưa có database, quyền người dùng, giao dịch hoặc nhà vận chuyển thật. `TRACK-ORD-42` chỉ là mã giả; không có bảo đảm hàng đã được bàn giao. Khi tích hợp thật, phải định nghĩa trạng thái thành công và cơ chế xác nhận, retry/idempotency.
+**Limitations:** there is no database, user authorization, transaction, or real carrier integration. `TRACK-ORD-42` is a dummy identifier; shipment handoff is not guaranteed. Real integration requires success-state definitions, acknowledgments, and retry/idempotency policies.
 
-## 9. Unit test chứng minh đã giảm coupling
+## 9. Unit tests demonstrating reduced coupling
 
-Khi `ShippingService` chỉ phụ thuộc vào interface `DeliveryGateway`, test không cần dựng `OrderService` để kiểm tra việc giao dữ liệu. Một fake ghi lại lời gọi đủ dùng:
+With `ShippingService` depending only on `DeliveryGateway`, tests need no `OrderService` to verify request handoff. A recording fake is sufficient:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -4792,109 +4792,109 @@ class DependencyRefactorDemoTest {
 }
 ~~~
 
-Test dùng **JUnit Jupiter 5** và được đặt trong **DependencyRefactorDemoTest.java**. File Java demo chính chạy độc lập, không cần JUnit. Test đo kết quả nghiệp vụ tại boundary thay vì phụ thuộc vào cấu trúc bên trong của `Order`.
+The tests use **JUnit Jupiter 5** and belong in **DependencyRefactorDemoTest.java**. The standalone Java demo needs no JUnit. Tests verify business results at the boundary rather than depending on `Order` internals.
 
-Sau khi refactor code thật, nên bổ sung test tích hợp cho phần nghiệp vụ từng có trước đó: địa chỉ thiếu, đơn không đủ điều kiện gửi, sự cố gateway, timeout và nhiều lần gửi yêu cầu.
+After refactoring production code, add integration tests for existing business cases: missing addresses, orders ineligible for shipping, gateway failures, timeouts, and duplicate requests.
 
-## 10. Trường hợp truy cập sâu không nhất thiết xấu
+## 10. Deep navigation is not always bad
 
-Một nguyên tắc hữu ích phải giúp **ra quyết định**, không chỉ tăng số lượng wrapper và method.
+A useful principle should help **make decisions**, not merely increase wrapper and method counts.
 
-| Đoạn mã | Có đáng lo? | Lý do |
+| Code | Concern? | Reason |
 | --- | --- | --- |
-| `order.customer().address().city()` trong nhiều service nghiệp vụ | **Có thể có** | Nhiều caller biết cấu trúc aggregate, dễ thay đổi dây chuyền |
-| `order.shippingDestination()` | Thường rõ hơn | API dựa trên ý định nghiệp vụ, giảm tri thức nội bộ của caller |
-| `dto.customer().address().city()` trong mapper/view | Tùy ngữ cảnh | DTO được thiết kế để đọc dữ liệu; các lớp mapping thường có trách nhiệm traversal |
-| `stream.filter(...).map(...).toList()` | Không tự động | Đây là pipeline của một API có chủ đích |
-| `builder.address(...).note(...).build()` | Không tự động | Chaining thể hiện quy trình dựng object |
-| `config.getDb().getPool().getMaxConnections()` rải nhiều module | Đáng xem lại | Coupling tới chi tiết cấu hình qua nhiều tầng |
-| `apiResponse.data().items()` ở boundary adapter | Thường chấp nhận được | Adapter vốn có trách nhiệm chuyển từ cấu trúc API ngoài sang kiểu nội bộ |
+| `order.customer().address().city()` in many business services | **Possibly** | Many callers know the aggregate structure, causing cascading changes |
+| `order.shippingDestination()` | Usually clearer | Business-intent API reduces callers' knowledge of internals |
+| `dto.customer().address().city()` in a mapper/view | Context-dependent | DTOs are designed for data reading; mappers often own traversal |
+| `stream.filter(...).map(...).toList()` | Not automatically | An intentional API pipeline |
+| `builder.address(...).note(...).build()` | Not automatically | Chaining represents object construction |
+| `config.getDb().getPool().getMaxConnections()` scattered across modules | Worth reviewing | Couples many modules to deeply nested configuration |
+| `apiResponse.data().items()` in a boundary adapter | Usually acceptable | Adapters map external API structures to internal types |
 
-**Không đếm số dấu chấm rồi kết luận.** Hỏi: “Nếu cấu trúc bên trong đổi mà ý nghĩa nghiệp vụ giữ nguyên, bao nhiêu caller phải thay đổi?” Nếu câu trả lời là rất nhiều và những caller đó không thực sự sở hữu cấu trúc ấy, đây là dấu hiệu cần refactor.
+**Do not count dots to decide.** Ask: "If the internal structure changes but business meaning stays the same, how many callers must change?" If the answer is many and they do not own that structure, refactoring may help.
 
-Đừng “giấu” traversal bằng cách đặt mọi thao tác vào một **God object**. Mỗi method mới nên phản ánh trách nhiệm rõ và có khả năng bảo trì độc lập.
+Do not "hide" traversal by putting everything in a **God object**. New methods should represent clear responsibilities that can be maintained independently.
 
-## 11. Bẫy thường gặp khi refactor vòng phụ thuộc
+## 11. Common pitfalls when refactoring circular dependencies
 
-### 11.1. Trích interface nhưng vòng vẫn còn
+### 11.1. Extract an interface but retain the cycle
 
-Trước:
+Before:
 
 ~~~text
 AService → BService → AService
 ~~~
 
-Sau khi chỉ thay class bằng interface:
+After merely replacing a class with an interface:
 
 ~~~text
 AService → BPort → BService → APort → AService
 ~~~
 
-Nếu đồ thị thực tế vẫn quay lại theo hướng này, phụ thuộc vòng không biến mất. Sửa đúng nghĩa cần **đổi vị trí trách nhiệm hoặc hướng thông tin**, không chỉ đổi tên phụ thuộc. Interface là công cụ biểu diễn ranh giới, không phải thuốc trị mọi vòng.
+If the real graph still points back along this path, the cycle remains. Proper refactoring requires **changing where responsibility or information flows**, not just renaming dependencies. Interfaces express boundaries; they do not cure every cycle.
 
-### 11.2. Đưa mọi thứ vào “CommonService”
+### 11.2. Move everything to "CommonService"
 
-Nếu hai service gọi lẫn nhau vì có logic chung, trích logic chung sang lớp thứ ba chỉ tốt khi lớp thứ ba có **trách nhiệm hẹp và độc lập**. Nếu nó chứa cả order, shipping, payment, persistence và notification, ta đã đổi một vòng phụ thuộc thành một **God Service** khó bảo trì.
+Extracting shared logic from mutually dependent services works only if the third service has **a narrow, independent responsibility**. If it handles orders, shipping, payments, persistence, and notifications, the cycle has merely become a hard-to-maintain **God Service**.
 
-### 11.3. Dùng event để né gọi trực tiếp nhưng mất hợp đồng thời gian
+### 11.3. Replace direct calls with events but lose timing contracts
 
-Một event như `OrderPaid` có thể khiến Shipping phản ứng mà không cần OrderService gọi trực tiếp. Nhưng phải trả lời: giao hàng có thể đến sau không? Nếu consumer thất bại thì làm gì? Có thể nhận event trùng không? Transaction nào xác nhận sự kiện được phát?
+An `OrderPaid` event may trigger Shipping without a direct call from OrderService. But ask: can shipping happen later? What if the consumer fails? Can events be duplicated? Which transaction guarantees publication?
 
-Event giúp **tách giao tiếp** nhưng không tự đảm bảo transaction, exactly-once hay sự nhất quán tức thời. Những vấn đề này có thể quan trọng hơn vòng phụ thuộc ban đầu.
+Events **decouple communication** but do not automatically guarantee transactions, exactly-once delivery, or immediate consistency. These concerns may matter more than the original dependency cycle.
 
-### 11.4. Lưu trạng thái trùng nhau ở nhiều nơi
+### 11.4. Duplicate state across components
 
-Để phá deep navigation, có người sao chép toàn bộ dữ liệu `Customer` vào `Order`, rồi tiếp tục cho tất cả lớp sửa cả hai bản. Điều đó tạo rủi ro đồng bộ.
+To avoid deep navigation, developers sometimes copy every `Customer` field into `Order` and then let every class modify both copies, creating synchronization risks.
 
-Hãy phân biệt:
+Distinguish:
 
-- **Snapshot có chủ đích:** địa chỉ giao hàng tại thời điểm đặt đơn được cố định, dù khách đổi địa chỉ tài khoản sau đó — có thể là yêu cầu nghiệp vụ đúng.
-- **Duplication vô tình:** hai bản cùng đại diện một sự thật hiện tại và phải sửa đồng thời — dễ lỗi.
+- **Intentional snapshot:** the delivery address at order placement remains fixed even if a customer later updates their account address; that may be a valid business rule.
+- **Accidental duplication:** two copies represent the same current fact and must change together; errors are likely.
 
-Value object hoặc read model có thể trùng dữ liệu theo mục đích rõ ràng, nhưng cần biết bản nào có thẩm quyền và khi nào cập nhật.
+Value objects or read models may intentionally duplicate data, but their authoritative source and update timing must be explicit.
 
-## 12. Chẩn đoán trong dự án Java/Spring
+## 12. Diagnosing Java/Spring projects
 
-Dấu hiệu từ code, test và vận hành:
+Signs in code, tests, and operations:
 
-- Spring bean tạo lỗi về circular reference hoặc lớp A yêu cầu B, B yêu cầu A.
-- Nhiều lớp dùng `@Lazy` để vòng bean “đỡ lỗi” mà không giải thích được trách nhiệm.
-- Unit test một service phải dựng sâu chuỗi service khác.
-- Một thay đổi field trong object buộc sửa nhiều service dùng `getA().getB().getC()`.
-- Rất nhiều helper làm thay việc đọc dữ liệu xuyên tầng nhưng không có tên nghiệp vụ.
-- Module cao tầng import module hạ tầng, còn module hạ tầng lại import ngược package của module cao tầng.
-- Debug phải nhảy giữa nhiều service mới biết nơi nào quyết định và nơi nào thực hiện.
+- Spring reports circular bean references, or class A requires B while B requires A.
+- Many classes use `@Lazy` to hide bean cycles without explaining responsibilities.
+- Unit-testing one service requires constructing a deep chain of others.
+- Changing one object's field forces edits in services using `getA().getB().getC()`.
+- Many helpers read data across layers but have no domain-oriented names.
+- Higher-level modules import infrastructure, while infrastructure imports packages back from those modules.
+- Debugging requires jumping among services to locate decisions and execution points.
 
-### Quy trình kiểm tra
+### Diagnostic procedure
 
-1. **Khoanh vùng triệu chứng:** bean cycle, compile/build cycle, vòng gọi runtime hay message chain?
-2. **Vẽ cạnh phụ thuộc hiện tại:** `A → B` nghĩa gì; có vòng quay lại thật không?
-3. **Xác định chủ sở hữu dữ liệu và hành vi:** object nào phải bảo vệ invariant? Service nào có quyền điều phối?
-4. **Đo dữ liệu tối thiểu:** caller thực sự cần một value object, một quyết định, hay toàn bộ domain object?
-5. **Chọn refactor nhỏ:** truyền tham số, chuyển hành vi, tách port hoặc thêm orchestrator; tránh thay toàn bộ kiến trúc chỉ để sửa một getter.
-6. **Viết test behavior trước:** lưu lại kết quả và đường lỗi cũ; kiểm tra sau refactor vẫn giữ.
-7. **Kiểm tra lại đồ thị:** đảm bảo cạnh gây vòng đã bị loại, không chỉ đổi thành tên interface khác.
-8. **Kiểm tra thay đổi xuyên module:** một thay đổi nội bộ không nên kéo theo hàng loạt nơi chỉ vì truy cập sâu.
+1. **Classify the symptom:** is it a bean cycle, compile/build cycle, runtime call cycle, or message chain?
+2. **Draw current dependency edges:** what does `A → B` mean, and does a real cycle exist?
+3. **Identify owners of data and behavior:** which object enforces invariants? Which service orchestrates?
+4. **Determine minimal data needs:** does a caller need a value object, a decision, or an entire domain object?
+5. **Choose a small refactoring:** pass parameters, move behavior, extract ports, or add an orchestrator; do not redesign everything over one getter.
+6. **Write behavior tests first:** capture existing results and error paths; verify they survive refactoring.
+7. **Recheck the graph:** confirm the cycle-causing edge is gone, not merely renamed to another interface.
+8. **Check change propagation across modules:** internal changes should not force unrelated edits merely because of deep navigation.
 
-Có thể sử dụng IDE call hierarchy/dependency graph và công cụ static architecture testing (ví dụ các bài test dependency theo package) nếu dự án có sẵn. Công cụ hỗ trợ tìm cạnh; **quyết định ranh giới trách nhiệm vẫn cần phân tích domain**.
+IDE call hierarchies, dependency graphs, and static architecture tests (such as package-dependency tests) can help. Tools discover edges; **domain analysis still determines responsibility boundaries**.
 
-## 13. Khi nào *không* nên áp dụng máy móc?
+## 13. When should these principles *not* be applied mechanically?
 
-### Với vòng phụ thuộc
+### Circular dependencies
 
-Trong một mô hình dữ liệu graph/tree có tham chiếu ngược (ví dụ một node có parent và children), vòng tham chiếu có thể hữu ích và được quản lý bằng invariant rõ ràng. Vấn đề lớn hơn thường nằm ở **lifecycle, ownership, serialization/recursion và phụ thuộc module** chứ không phải chỉ nhìn thấy hai mũi tên.
+In graph/tree data models with back-references (for example, a node with parent and children), reference cycles can be useful and controlled by clear invariants. The larger concerns often involve **lifecycle, ownership, serialization/recursion, and module dependencies**, not merely two arrows.
 
-Với code nghiệp vụ hay DI, vẫn cần cảnh giác khi hai service điều phối ngược nhau. Nhưng không nhất thiết phải tạo bốn interface, một event bus và hai adapter chỉ để thay một dependency đơn giản.
+For business logic or DI, remain cautious when services orchestrate each other. Still, four interfaces, an event bus, and two adapters are not always justified for replacing one simple dependency.
 
-### Với truy cập sâu
+### Deep navigation
 
-Nếu đang chuyển một JSON response/DTO sang cấu trúc view, đường truy cập `response.data().user().name()` có thể là trách nhiệm bình thường của mapper. Dùng `Stream` hoặc fluent API cũng không tự vi phạm tinh thần Law of Demeter.
+Mapping a JSON response/DTO into a view may legitimately involve `response.data().user().name()`. Using `Stream` or a fluent API is not inherently contrary to the Law of Demeter.
 
-Câu hỏi chính là **bên gọi có đang phụ thuộc vào một cấu trúc nội bộ không thuộc trách nhiệm của nó?** Nếu chỉ truy cập một public data contract được thiết kế để đọc, mức coupling có thể đã nằm trong giới hạn chấp nhận được.
+Ask whether **the caller depends on internal structure outside its responsibility**. Reading a public data contract designed for traversal may produce acceptable coupling.
 
-## 14. Bài tập refactor
+## 14. Refactoring exercise
 
-Một hệ thống mượn sách có các thành phần:
+A book-lending system has these components:
 
 ~~~text
 LoanService → MemberService
@@ -4902,75 +4902,75 @@ MemberService → NotificationService
 NotificationService → LoanService
 ~~~
 
-`NotificationService` gọi ngược `LoanService` để lấy ngày đến hạn và địa chỉ liên hệ. Đồng thời trong giao diện quản trị có nhiều đoạn:
+`NotificationService` calls back into `LoanService` for the due date and contact address. The administration UI also contains many chains like:
 
 ~~~java
 loan.getMember().getProfile().getContact().getEmail();
 ~~~
 
-**Yêu cầu thực hành:**
+**Exercise requirements:**
 
-1. Vẽ đồ thị phụ thuộc, chỉ ra chu trình và những phần code truy cập sâu.
-2. Giải thích `LoanService` cần gì từ `MemberService`; `NotificationService` thực sự cần dữ liệu gì để gửi thông báo.
-3. Thiết kế `ReminderRequest(loanId, dueDate, email)` hoặc value object thích hợp để thành phần điều phối truyền dữ liệu **theo nhu cầu** cho NotificationService.
-4. Quyết định nơi quản lý trạng thái mượn, nơi lấy thông tin hội viên và nơi gửi email. Không đưa tất cả vào một service.
-5. Viết interface cho cổng gửi thông báo nếu cần phân cách nhà cung cấp bên ngoài; không tạo interface cho mọi class theo phản xạ.
-6. Viết unit test cho việc tạo reminder đúng dữ liệu, thiếu email, lỗi gateway và không lặp thông báo nếu nghiệp vụ yêu cầu idempotency.
-7. Vẽ lại đồ thị, chứng minh không còn chu trình ở tầng service.
-8. Trả lời: truy cập chuỗi `loan.member().profile().contact().email()` trong một DTO mapper có nhất thiết cần refactor không? Vì sao?
+1. Draw the dependency graph, identify its cycle, and locate deep-navigation code.
+2. Explain what `LoanService` needs from `MemberService` and what data `NotificationService` actually requires to send notifications.
+3. Design `ReminderRequest(loanId, dueDate, email)` or a suitable value object so orchestration passes data **according to need** into NotificationService.
+4. Decide who owns loan states, member information, and email delivery. Do not combine everything into one service.
+5. Define an interface for notification delivery if external provider separation is needed; do not reflexively create an interface for every class.
+6. Unit-test correct reminder data, missing email, gateway errors, and duplicate suppression when idempotency is required.
+7. Redraw the graph to demonstrate no service-layer cycles remain.
+8. Explain whether `loan.member().profile().contact().email()` in a DTO mapper necessarily needs refactoring, and why.
 
-**Tiêu chí đánh giá:** luồng phụ thuộc một chiều dễ đọc; mỗi nơi giữ đúng trách nhiệm; bên gửi thông báo không cần hiểu cấu trúc sâu của đối tượng mượn; lỗi và kết quả nghiệp vụ không bị thay đổi vô ý; test có thể thiết lập các dịch vụ riêng biệt mà không phải dựng một vòng bean.
+**Assessment criteria:** easy-to-follow one-way dependencies, correct responsibility ownership, notification delivery without knowing the loan object's internal structure, unchanged error and business-result semantics, and independently constructible tests without a bean cycle.
 
 ---
 
-**Kết luận:** *phụ thuộc vòng* làm các thành phần khó tạo, kiểm thử và phát triển độc lập; *truy cập sâu* khiến bên gọi hiểu quá nhiều về cấu trúc nội bộ của đối tượng. Hướng cải thiện không phải “thêm interface” hoặc “xóa dấu chấm” cho đủ hình thức. Hãy tìm đúng nơi sở hữu dữ liệu, hành vi và điều phối; truyền hợp đồng dữ liệu hẹp, đóng gói quyết định nghiệp vụ và giữ hướng phụ thuộc rõ ràng.
+**Conclusion:** *Circular dependencies* make components difficult to construct, test, and evolve independently; *deep navigation* exposes too much of the object model to callers. Improvements are not about adding interfaces or removing dots for appearances. Identify who owns data, behavior, and orchestration; pass narrow data contracts, encapsulate business decisions, and maintain clear dependency direction.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-pitfalls-008">Trạng thái dùng chung khó kiểm soát</a>
+## <a id="design-pitfalls-008">Hard-to-control shared state</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Trạng thái dùng chung khó kiểm soát: nhận diện, cô lập và bảo vệ trong Java OOP
+# Hard-to-control shared state: recognizing, isolating, and protecting it in Java OOP
 
-> **Chủ đề:** OOP → Lỗi thiết kế → Trạng thái dùng chung khó kiểm soát.  
-> **Mục tiêu:** Hiểu *shared mutable state* là gì và vì sao nó làm đối tượng khó dự đoán; phân biệt chia sẻ dữ liệu với chia sẻ quyền sửa dữ liệu; nhận diện rò rỉ tham chiếu, `static` mutable, singleton có trạng thái và race condition; lựa chọn encapsulation, immutable snapshot, stateless service, đồng bộ hoặc transaction đúng phạm vi.
+> **Topic:** OOP → Design Pitfalls → Hard-to-control shared state.  
+> **Objective:** Understand *shared mutable state* and why it makes objects unpredictable; distinguish sharing data from sharing mutation rights; identify reference leaks, mutable `static` fields, stateful singletons, and race conditions; and choose appropriately scoped encapsulation, immutable snapshots, stateless services, synchronization, or transactions.
 
-## 1. Vấn đề thực sự: cùng một trạng thái, nhiều nơi có quyền sửa
+## 1. The real issue: one state with multiple writers
 
-Giả sử hệ thống bán vé còn **1 chỗ trống**. Hai yêu cầu đặt vé xuất hiện gần như cùng lúc:
+Suppose a ticketing system has **1 seat remaining**. Two booking requests arrive nearly simultaneously:
 
-1. Yêu cầu A đọc: còn 1 chỗ.
-2. Yêu cầu B cũng đọc: còn 1 chỗ.
-3. A quyết định đặt thành công.
-4. B cũng quyết định đặt thành công.
+1. Request A reads: 1 seat remains.
+2. Request B also reads: 1 seat remains.
+3. A decides the booking succeeds.
+4. B also decides the booking succeeds.
 
-Hệ thống có thể thông báo **hai lượt đặt thành công cho cùng một chỗ**, dù biến `reserved` cuối cùng chỉ lưu giá trị `1`. Đây không chỉ là lỗi phép cộng; quyết định kinh doanh đã dựa trên **trạng thái dùng chung mà không kiểm soát việc đọc–sửa–ghi**.
+The system may report **two successful bookings for the same seat**, even if `reserved` eventually holds only `1`. This is more than a bad increment: business decisions relied on **shared state without controlling read–modify–write operations**.
 
-Một ví dụ khác không cần nhiều thread: lớp `Team` lưu `List<Member>` do caller truyền vào. Caller sau đó gọi `members.clear()`, khiến số thành viên của `Team` thay đổi **mà không gọi bất kỳ method nghiệp vụ nào của `Team`**. Đây cũng là shared mutable state, nhưng nguyên nhân là **aliasing** (nhiều tham chiếu cùng trỏ đến một object có thể thay đổi).
+Another example needs no threads: a `Team` stores the `List<Member>` provided by its caller. The caller later invokes `members.clear()`, changing the `Team` membership **without any domain method on `Team`**. This is also shared mutable state, caused by **aliasing** (multiple references to the same mutable object).
 
-**Shared mutable state** là trạng thái có thể thay đổi và được nhiều chủ thể truy cập. Chủ thể có thể là nhiều object, nhiều module, nhiều request, nhiều thread hoặc nhiều tiến trình cùng đọc/ghi một bản ghi lưu trữ. Bản thân việc chia sẻ **không luôn xấu**; mùi thiết kế xuất hiện khi **không rõ ai sở hữu, ai được phép sửa, thao tác nào được xem là nguyên tử và các quy tắc nào cần giữ**.
+**Shared mutable state** is state that can change and is accessible to multiple parties: objects, modules, requests, threads, or processes reading/writing shared storage. Sharing itself **is not always bad**. The design smell appears when **ownership, mutation authority, atomic operations, and required invariants are unclear**.
 
-### Phân biệt bốn tình huống
+### Four situations to distinguish
 
-| Dữ liệu | Có chia sẻ? | Có thể đổi? | Nguy cơ chính |
+| Data | Shared? | Mutable? | Main risk |
 |---|---|---|---|
-| Hằng số `static final String APP_NAME` | Có | Không, nếu giá trị immutable | Thấp |
-| `List.copyOf(...)` chứa `String` | Có thể | Không qua API của list; phần tử `String` bất biến | Thấp, nếu dữ liệu được phép chia sẻ |
-| Một `ArrayList` được nhiều class cùng giữ tham chiếu | Có | Có | Sửa ngoài ý muốn, mất invariant |
-| `int remaining` dùng chung cho nhiều thread | Có | Có | Lost update, stale read, check-then-act |
-| Hàng tồn kho trong database dùng chung bởi nhiều ứng dụng | Có | Có | Ghi đè cạnh tranh, overselling, transaction không nhất quán |
+| Constant `static final String APP_NAME` | Yes | No, when the value is immutable | Low |
+| `List.copyOf(...)` containing `String` | Possibly | Not via the list API; `String` elements are immutable | Low if sharing is authorized |
+| One `ArrayList` referenced by many classes | Yes | Yes | Unexpected edits and violated invariants |
+| `int remaining` shared among threads | Yes | Yes | Lost updates, stale reads, check-then-act |
+| Database inventory shared by applications | Yes | Yes | Conflicting writes, overselling, inconsistent transactions |
 
-**Hai câu hỏi then chốt:** *Trạng thái có thể đổi qua những con đường nào?* Và *mọi thay đổi có được kiểm soát theo cùng hợp đồng hay không?*
+**Two key questions:** *Through which paths can the state change?* And *does every change follow the same contract?*
 
-## 2. Vì sao lỗi này nguy hiểm trong OOP?
+## 2. Why is this dangerous in OOP?
 
-OOP cho phép nhiều đối tượng cùng tham chiếu một object:
+OOP lets several objects reference the same object:
 
 ~~~java
 import java.util.ArrayList;
@@ -4985,9 +4985,9 @@ referenceA.add("WRITE");
 System.out.println(referenceB); // [READ, WRITE]
 ~~~
 
-`referenceA` và `referenceB` không phải hai danh sách độc lập; chúng là **hai biến trỏ đến cùng một instance**. Không cần sử dụng `static` hay đa luồng mới có tác động từ xa.
+`referenceA` and `referenceB` are **two variables pointing to one instance**, not separate lists. This remote effect needs neither `static` nor multithreading.
 
-Nếu class công bố tham chiếu mutable nội bộ, client sẽ trở thành một người có quyền sửa trạng thái:
+When a class publishes an internal mutable reference, clients gain the ability to change state:
 
 ~~~java
 final class UnsafeGroup {
@@ -5003,7 +5003,7 @@ final class UnsafeGroup {
 }
 ~~~
 
-Các lệnh sau làm object thay đổi ngoài kiểm soát:
+These statements mutate the object outside its control:
 
 ~~~java
 List<String> external = new ArrayList<>(List.of("Lan"));
@@ -5013,23 +5013,23 @@ external.clear();           // Thay đổi từ đầu vào đã truyền.
 group.members().add("Nam"); // Thay đổi qua getter.
 ~~~
 
-Dù field `members` là `private final`, **nội dung của List vẫn sửa được**. `final` chỉ ngăn gán lại tham chiếu field, không biến đối tượng mà nó trỏ tới thành immutable.
+Even if `members` is `private final`, **the List contents remain mutable**. `final` prevents reassignment of the field reference, not mutation of the referenced object.
 
-### Các hậu quả thường gặp
+### Common consequences
 
-- **Invariant bị phá vỡ:** `reserved > capacity`, số dư âm, collection thiếu dữ liệu bắt buộc.
-- **Hành vi phụ thuộc thứ tự gọi:** kết quả thay đổi khi một method vô tình được gọi sớm hơn.
-- **Bug khó tái hiện:** race chỉ xảy ra ở một lịch thực thi, khi tải cao.
-- **Test ảnh hưởng nhau:** singleton/static state bị giữ từ test trước.
-- **Rò rỉ giữa request hoặc người dùng:** field của service giữ thông tin request A rồi bị request B ghi đè.
-- **Khó quan sát nguyên nhân:** nhiều nơi có khả năng ghi, không biết ai gây ra trạng thái bất hợp lệ.
-- **Khó mở rộng nhiều node:** khóa trong một JVM không bảo vệ bản ghi được chia sẻ qua database.
+- **Broken invariants:** `reserved > capacity`, negative balances, or collections missing required data.
+- **Call-order-dependent behavior:** results change when a method happens to run earlier.
+- **Hard-to-reproduce bugs:** races occur only under certain schedules or load levels.
+- **Interfering tests:** singleton/static state persists across test cases.
+- **Leaks between requests or users:** a service field stores request A's data, then request B overwrites it.
+- **Difficult root-cause analysis:** too many writers can produce invalid state.
+- **Difficult scaling across nodes:** a JVM-local lock cannot protect shared database records.
 
-Chỉ tăng số lượng unit test không giải quyết hết vấn đề nếu thiết kế vẫn cho phép sửa state từ mọi nơi.
+Increasing unit-test counts alone does not solve a design that still permits arbitrary state mutations.
 
-## 3. Quy tắc sở hữu trạng thái và ranh giới thay đổi
+## 3. State ownership and mutation boundaries
 
-Một đối tượng hoặc module nên có **chủ sở hữu trạng thái rõ ràng**. Bên ngoài yêu cầu một thao tác nghiệp vụ, còn chủ sở hữu quyết định xem thay đổi có hợp lệ:
+An object or module should have **a clear state owner**. Callers request domain operations; the owner decides whether changes are valid:
 
 ~~~mermaid
 flowchart LR
@@ -5043,24 +5043,24 @@ flowchart LR
     Snapshot --> C2
 ~~~
 
-Đừng biến quy tắc “chỉ một nơi có quyền sửa” thành cấm mọi class khác **sử dụng** trạng thái. Client vẫn cần đọc một số thông tin, nhưng có thể đọc dưới dạng **snapshot bất biến**, getter có hợp đồng hoặc những query method phù hợp.
+Do not interpret "one place controls mutation" as forbidding other classes from **using** state. Clients may still need read access, but through **immutable snapshots**, well-defined getters, or appropriate query methods.
 
-Một thiết kế tốt cho trạng thái quan trọng thường có:
+A good design for important state usually has:
 
-1. **Representation private**: client không gán trực tiếp vào field nội bộ.
-2. **Thao tác theo nghiệp vụ**: `reserve(1)` thay cho `setReserved(7)`.
-3. **Hợp đồng và invariant rõ**: ví dụ `0 ≤ reserved ≤ capacity`.
-4. **Tính nguyên tử đúng phạm vi**: check và update phải đi cùng nhau khi có truy cập đồng thời.
-5. **Không rò rỉ alias mutable**: kiểm tra cả đường constructor, getter và phần tử lồng nhau.
-6. **Kiểm thử đường từ chối**: khi thao tác không hợp lệ, state không được cập nhật một nửa.
+1. **Private representation:** clients cannot directly assign internal fields.
+2. **Domain operations:** `reserve(1)` instead of `setReserved(7)`.
+3. **Clear contracts and invariants:** for example, `0 ≤ reserved ≤ capacity`.
+4. **Atomicity at the correct scope:** checks and updates must be coordinated under concurrency.
+5. **No mutable alias leaks:** guard constructor input, getters, and nested elements.
+6. **Failure-path tests:** invalid operations must not leave partially updated state.
 
-## 4. Race condition: ví dụ Java 17 chạy độc lập và có thể tái hiện
+## 4. Reproducible standalone Java 17 race-condition example
 
-Thay vì phụ thuộc may rủi của scheduler, ví dụ dùng `CountDownLatch` để **cố ý ép hai thread đọc cùng một state trước khi ghi**. Như vậy người học có thể nhìn thấy lỗi *lost update* rõ ràng.
+Instead of relying on scheduler timing, the example uses `CountDownLatch` to **deliberately make two threads read the same state before either writes**. This reveals the *lost update* bug consistently.
 
-### 4.1. Một implementation cố ý sai
+### 4.1. An intentionally incorrect implementation
 
-Một chỗ trống, hai người cùng đặt. Ở thiết kế sai, cả hai thread cùng đọc `reserved = 0`, rồi mỗi thread ghi lại `observed + 1`:
+One seat remains and two customers try to book it. In the flawed design, both threads read `reserved = 0` and then write `observed + 1`:
 
 ~~~java
 import java.util.concurrent.CountDownLatch;
@@ -5098,11 +5098,11 @@ final class UnsafeSeatGate {
 }
 ~~~
 
-Đây là class **mô phỏng lỗi**, không dùng trong production. `CountDownLatch` không gây lỗi; nó chỉ cho ta tái hiện đúng lịch thực thi nguy hiểm.
+This class **demonstrates a bug** and must not be used in production. `CountDownLatch` does not create the bug; it reproduces a dangerous execution schedule.
 
-### 4.2. Class bảo vệ invariant
+### 4.2. A class that preserves its invariant
 
-Phần đúng phải biến “kiểm tra rồi cập nhật” thành **một thao tác không bị xen ngang bởi thread khác**:
+A correct solution makes "check then update" **one operation that another thread cannot interleave**:
 
 ~~~java
 record SeatSnapshot(int capacity, int reserved) {
@@ -5143,11 +5143,11 @@ final class SeatInventory {
 }
 ~~~
 
-Ở đây `SeatInventory` giữ `reserved` là `private`, không công bố setter và trả về **`SeatSnapshot` immutable**. `synchronized` trên cả `reserveOne()` và `snapshot()` giúp việc đọc/ghi nhất quán với monitor của chính instance đó.
+Here `SeatInventory` keeps `reserved` `private`, exposes no setter, and returns an **immutable `SeatSnapshot`**. Using `synchronized` on both `reserveOne()` and `snapshot()` makes reads/writes consistent through that instance's monitor.
 
-### 4.3. Chương trình hoàn chỉnh để chạy
+### 4.3. Complete runnable program
 
-Gộp **cả ba đoạn dưới đây** vào **một tệp `SharedStateDemo.java`** theo thứ tự: import, hai class `UnsafeSeatGate`/`SeatInventory` cùng `SeatSnapshot` ở trên, rồi class `SharedStateDemo` bên dưới. Mỗi tệp Java chỉ có một class `public` mang tên tệp:
+Combine **all three snippets below** in **one `SharedStateDemo.java` file** in order: imports; the two classes `UnsafeSeatGate`/`SeatInventory` with `SeatSnapshot` shown above; then the `SharedStateDemo` class below. Each Java file has only one `public` class matching its filename:
 
 ~~~java
 import java.util.concurrent.ExecutorService;
@@ -5185,7 +5185,7 @@ public class SharedStateDemo {
 }
 ~~~
 
-**Khi tạo file thực**, đặt tất cả dòng `import` ở **đầu tệp** (không đặt import giữa các class). Vì các snippet trên chia theo khái niệm, phần `import java.util.concurrent.CountDownLatch;` và ba import trong `SharedStateDemo` cần được gom lên đầu tệp:
+**When creating the actual file**, put all `import` statements **at the top** (not between classes). Because the snippets are separated conceptually, gather `import java.util.concurrent.CountDownLatch;` and the three imports in `SharedStateDemo` at the beginning:
 
 ~~~java
 import java.util.concurrent.CountDownLatch;
@@ -5194,16 +5194,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 ~~~
 
-Sau đó là `UnsafeSeatGate`, `SeatSnapshot`, `SeatInventory` và `public class SharedStateDemo`, **không lặp import ở giữa**.
+Then declare `UnsafeSeatGate`, `SeatSnapshot`, `SeatInventory`, and `public class SharedStateDemo`, **without repeating imports between classes**.
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac SharedStateDemo.java
 java SharedStateDemo
 ~~~
 
-Kết quả có chủ đích:
+Intentional output:
 
 ~~~text
 Unsafe accepted = 2
@@ -5212,13 +5212,13 @@ Safe accepted = 1
 Safe reserved = 1
 ~~~
 
-**Điều đáng chú ý:** Kết quả sai **không nhất thiết biểu hiện bằng `reserved > capacity`**. Ở đây `reserved` vẫn là `1`, nhưng hai yêu cầu đều nhận **thành công**. Bản ghi trạng thái không còn tương ứng với các quyết định nghiệp vụ đã công bố: lỗi *lost update*.
+**Key observation:** the incorrect result **does not have to be `reserved > capacity`**. Here `reserved` is still `1`, but both requests report **success**. Recorded state no longer agrees with the announced business decisions: a *lost update*.
 
-Với bản đúng, cùng một lúc chỉ một thread có thể chạy bên trong `reserveOne()` của **cùng instance `SeatInventory`**, nên request còn lại nhìn thấy `reserved = 1` và bị từ chối. `SeatSnapshot` cho phép đọc cặp `capacity/reserved` từ một thời điểm dưới khóa.
+In the correct version, only one thread at a time can execute `reserveOne()` on **the same `SeatInventory` instance**, so the second sees `reserved = 1` and is rejected. `SeatSnapshot` captures the `capacity/reserved` pair from one instant under the lock.
 
-## 5. `volatile`, `synchronized` và atomic: khác nhau ở đâu?
+## 5. How do `volatile`, `synchronized`, and atomics differ?
 
-Một hiểu lầm nguy hiểm là “thêm `volatile` vào `int` sẽ làm `count++` an toàn”.
+A dangerous misconception is that "adding `volatile` to an `int` makes `count++` safe."
 
 ~~~java
 class WrongCounter {
@@ -5234,21 +5234,21 @@ class WrongCounter {
 }
 ~~~
 
-`volatile` trong Java tạo những bảo đảm về **visibility và ordering** theo Java Memory Model cho việc truy cập biến được đánh dấu; nó không biến chuỗi thao tác **đọc–sửa–ghi** thành một hành động nguyên tử. Hai thread vẫn có thể cùng đọc một giá trị cũ rồi ghi đè kết quả của nhau.
+In Java, `volatile` provides **visibility and ordering guarantees** for designated variables under the Java Memory Model. It does not make a **read–modify–write** sequence atomic. Two threads can still read one old value and overwrite each other's results.
 
-So sánh:
+Comparison:
 
-| Công cụ | Bảo đảm chính | Phù hợp | Chưa đủ cho |
+| Tool | Main guarantee | Suitable for | Insufficient for |
 |---|---|---|---|
-| `private` | Hạn chế đường truy cập state ở mức ngôn ngữ | Encapsulation | Tự động thread-safe |
-| `final` | Không gán lại field; có quy tắc công bố field đặc biệt trong JMM | Thiết kế state ổn định | Làm mutable object thành immutable |
-| `volatile` | Visibility/order cho một biến; đọc/ghi của biến được truy cập volatile theo quy tắc JMM | Cờ dừng, trạng thái đơn giản | `count++`, check-then-act nhiều bước |
-| `synchronized` | Mutual exclusion và happens-before qua cùng monitor | Bảo vệ một tập state và invariant có quan hệ | Nhiều JVM/DB hoặc hệ thống phân tán |
-| `AtomicInteger` | Các thao tác nguyên tử như `incrementAndGet`, `compareAndSet` trên **một** giá trị | Bộ đếm, single-value state, CAS | Tự động giữ invariant qua nhiều object/bản ghi |
-| `ReentrantLock` | Lock tường minh, `tryLock`, điều kiện chờ | Quy trình cần tính năng khóa nâng cao | Mọi bất biến nếu có đường truy cập không dùng cùng lock |
-| Transaction/constraint DB | Kiểm soát nhất quán của dữ liệu lưu trữ theo DB/isolation | Nhiều request/node cùng sửa bản ghi | Tự bảo đảm mọi side effect ở hệ thống ngoài DB |
+| `private` | Restricts state access at language level | Encapsulation | Automatic thread safety |
+| `final` | Prevents field reassignment; special JMM final-field publication semantics | Stable state design | Making mutable objects immutable |
+| `volatile` | Visibility/ordering for one variable; volatile accesses follow JMM rules | Stop flags, simple state | `count++` and multi-step check-then-act |
+| `synchronized` | Mutual exclusion and happens-before through one monitor | Related state and invariants | Multiple JVMs/DBs/distributed systems |
+| `AtomicInteger` | Atomic operations such as `incrementAndGet` and `compareAndSet` on **one** value | Counters, single-value state, CAS | Enforcing cross-object/record invariants automatically |
+| `ReentrantLock` | Explicit locking, `tryLock`, wait conditions | Workflows needing advanced lock capabilities | Any invariant whose access paths bypass the same lock |
+| DB transaction/constraint | Controls stored-data consistency per DB/isolation | Concurrent updates across requests/nodes | Guaranteeing all side effects in external systems |
 
-### AtomicInteger: đúng cho counter, chưa chắc đúng cho mọi điều kiện
+### AtomicInteger: good for counters, insufficient for every constraint
 
 ~~~java
 import java.util.concurrent.atomic.AtomicInteger;
@@ -5266,7 +5266,7 @@ final class RequestCounter {
 }
 ~~~
 
-Đây là một bộ đếm đơn giản an toàn cho phép tăng nguyên tử, không cần tạo một lock riêng. Nhưng nếu có quy tắc “số vé đã đặt không vượt sức chứa”, làm:
+This simple counter supports atomic increments without a separate lock. But if the rule is "reserved seats must not exceed capacity," the following approach:
 
 ~~~java
 // KHÔNG AN TOÀN: check và increment là hai thao tác tách rời.
@@ -5275,7 +5275,7 @@ if (reserved.get() < capacity) {
 }
 ~~~
 
-vẫn có race condition. Có thể dùng **CAS loop** kiểm tra và cập nhật như một thao tác compare-and-set:
+still contains a race. A **CAS loop** can combine checking and updating through compare-and-set:
 
 ~~~java
 final class AtomicSeatInventory {
@@ -5309,13 +5309,13 @@ final class AtomicSeatInventory {
 }
 ~~~
 
-Code trên bảo vệ một ràng buộc đơn giản trên **một giá trị `reserved`** với `capacity` bất biến. Nếu còn phải cập nhật `reserved`, `revenue` và lịch sử booking cùng lúc, không thể chỉ dùng ba AtomicInteger rồi mặc định chúng tạo một transaction nguyên tử. Cần xem **đơn vị nhất quán** thực sự gồm bao nhiêu trường/đối tượng.
+The code protects a simple constraint on **one `reserved` value** with immutable `capacity`. If `reserved`, `revenue`, and booking history must be updated together, three AtomicInteger instances do not magically form one atomic transaction. Identify the real **unit of consistency**, which may span several fields/objects.
 
-## 6. Aliasing cũng là shared mutable state, ngay cả khi chỉ có một thread
+## 6. Aliasing is shared mutable state even with only one thread
 
-Hai biến có thể trỏ đến **cùng một collection**, khiến một nơi thay đổi dữ liệu mà nơi khác không hề gọi phương thức nghiệp vụ. Bài này tập trung vào *quyền sở hữu của state dùng chung*; phân tích chi tiết các đường rò rỉ getter/constructor và defensive copy đã có ở bài *Trạng thái công khai và mất điều kiện bất biến*.
+Two variables may reference **the same collection**, allowing one party to modify data without invoking the other object's domain methods. This lesson focuses on *shared-state ownership*; detailed constructor/getter leaks and defensive copying are covered under *Exposed state and broken invariants*.
 
-Xét một tập quyền của nhóm, dữ liệu được truyền từ caller:
+Consider a group permission set supplied by a caller:
 
 ~~~java
 // Sai: nhóm giữ cùng List mà caller còn được sửa.
@@ -5338,7 +5338,7 @@ external.add("ADMIN");
 System.out.println(unsafe.has("ADMIN")); // true ngoài ý muốn
 ~~~
 
-Ở đây không cần race condition: **alias đã mở một đường sửa state ngoài chủ sở hữu**. Sửa thiết kế bằng snapshot không sửa được khi nhận dữ liệu:
+No race condition is needed here: **an alias exposes a mutation path beyond the owner**. Fix the design by taking an unmodifiable snapshot at input:
 
 ~~~java
 final class SafePermissionGroup {
@@ -5359,11 +5359,11 @@ final class SafePermissionGroup {
 }
 ~~~
 
-`List.copyOf` bảo vệ **cấu trúc List** khỏi caller và ngăn sửa thông qua kết quả `snapshot()`; do phần tử là `String` bất biến nên đủ cho demo. Nếu phần tử mutable, snapshot này vẫn nông, phải xem lại ownership của từng phần tử. Shared immutable object hoặc snapshot an toàn không phải lỗi thiết kế: cái cần kiểm soát là **những ai còn quyền mutate cùng dữ liệu**.
+`List.copyOf` protects **List structure** from callers and stops mutations through `snapshot()`; because its elements are immutable `String` values, this is enough for the demo. With mutable elements, this remains a shallow snapshot and element ownership must be examined. Sharing immutable objects or safe snapshots is not itself a flaw: control **who can mutate the shared data**.
 
-## 7. `static` và Singleton: phạm vi chia sẻ rộng hơn ý muốn
+## 7. `static` and Singleton: wider sharing than intended
 
-Trong Java, field `static` thuộc về **class tương ứng trong phạm vi class loader**, không thuộc riêng từng instance. Nếu field đó mutable, nhiều đối tượng sử dụng class có thể cùng thấy và sửa nó:
+In Java, a `static` field belongs to **its class in a class-loader scope**, rather than to any instance. If mutable, it can be seen and modified by many objects using that class:
 
 ~~~java
 final class GlobalFlags {
@@ -5375,13 +5375,13 @@ GlobalFlags.maintenanceMode = true;
 // Phần khác đọc cùng biến trong cùng class-loader context.
 ~~~
 
-Trong ứng dụng nhiều thread, field ở ví dụ trên còn thiếu bảo đảm visibility khi ghi/đọc không đồng bộ. Nếu chỉ là một cờ bật/tắt cần visibility giữa thread, có thể cân nhắc `volatile` hoặc `AtomicBoolean`, nhưng còn phải xác định quyền sửa và phạm vi tồn tại của cờ. Với cấu hình dùng chung bất biến, `static final` thường đơn giản hơn.
+In multithreaded applications, the example's field also lacks visibility guarantees for unsynchronized reads/writes. If it is simply a flag needing cross-thread visibility, consider `volatile` or `AtomicBoolean`, while also defining mutation rights and lifetime. For immutable shared configuration, `static final` is often simpler.
 
-**`static` không đồng nghĩa “có một bản trên toàn bộ cluster”**. Nhiều JVM, nhiều class loader hoặc nhiều tiến trình có trạng thái tách biệt.
+**`static` does not mean "one copy throughout the cluster."** Separate JVMs, class loaders, and processes have distinct state.
 
-### Một singleton không tự động thread-safe
+### A singleton is not automatically thread-safe
 
-Singleton chỉ nói về cách quản lý instance trong một phạm vi, **không tự đồng bộ hóa field bên trong**.
+A singleton defines instance management within a scope; it **does not synchronize internal fields**.
 
 ~~~java
 final class SessionTracker {
@@ -5402,15 +5402,15 @@ final class SessionTracker {
 }
 ~~~
 
-Nếu nhiều request gọi `record` đồng thời, giá trị `lastUserId` liên tục bị ghi đè và không thuộc về request nào cụ thể. `volatile` có thể giúp nhìn thấy cập nhật mới, nhưng không làm dữ liệu “thuộc đúng user” — **đây trước hết là lỗi mô hình sở hữu**.
+If concurrent requests call `record`, `lastUserId` is overwritten repeatedly and belongs to no particular request. `volatile` can improve visibility but cannot make the data belong to "the right user"; **the fundamental flaw is state ownership**.
 
-Thay vì dùng singleton mutable để giữ thông tin request, hãy truyền `userId` như tham số hoặc tạo **request-scoped state** có vòng đời đúng.
+Instead of keeping request information in a mutable singleton, pass `userId` as an argument or use properly scoped **request state**.
 
-## 8. Spring singleton service và rò rỉ trạng thái giữa request
+## 8. Spring singleton services and cross-request state leakage
 
-Trong Spring, bean `@Service` thường có scope **singleton theo mặc định trong mỗi application context**. Nhiều HTTP request có thể gọi vào **cùng một instance** từ các thread khác nhau.
+In Spring, `@Service` beans generally have **singleton scope by default within one application context**. Different HTTP requests may execute on **the same instance** from separate threads.
 
-Ví dụ có vấn đề:
+Problematic example:
 
 ~~~java
 // Ví dụ minh họa cho ứng dụng Spring, không thuộc JDK trần.
@@ -5427,9 +5427,9 @@ class UnsafeCheckoutService {
 }
 ~~~
 
-Hai request A/B có thể xen kẽ làm A đọc `orderId` của B. Đây là lỗi ngay cả khi field `currentOrderId` là `volatile` hoặc getter/setter được synchronized riêng, vì vấn đề là **nhiều request dùng chung một slot trạng thái**.
+Requests A/B may interleave, causing A to read B's `orderId`. The bug persists even when `currentOrderId` is `volatile` or getters/setters are synchronized separately: **multiple requests share one state slot**.
 
-Thiết kế stateless đơn giản hơn:
+A stateless design is simpler:
 
 ~~~java
 @org.springframework.stereotype.Service
@@ -5445,13 +5445,13 @@ class CheckoutService {
 }
 ~~~
 
-Biến local thuộc lần gọi method, không phải field mutable dùng chung của service. Một Spring singleton **có thể an toàn khi giữ các dependency thread-safe hoặc immutable**; không phải cứ singleton thì sai. Nếu service dùng shared cache, repository hoặc scheduler có state, tính đúng đắn vẫn phụ thuộc vào hợp đồng concurrency của chính các đối tượng cộng tác đó.
+A local variable belongs to a method invocation, not a service-wide mutable field. A Spring singleton **can be safe with thread-safe or immutable dependencies**; being a singleton is not inherently wrong. Shared caches, repositories, or schedulers still need correct concurrency contracts.
 
-**Lưu ý về `ThreadLocal`:** Nó có thể giữ context theo thread nhưng không phải lựa chọn mặc định cho dữ liệu request. Thread pool tái sử dụng thread; nếu không dọn `remove()` ở đúng vòng đời, context có thể rò rỉ giữa tác vụ. Với xử lý bất đồng bộ, reactive hoặc virtual threads, cách truyền context cần phù hợp framework. Khi có thể, truyền context tường minh sẽ dễ kiểm soát hơn.
+**`ThreadLocal` note:** It can store context per thread, but should not be the default for request state. Thread pools reuse threads; failing to call `remove()` at the correct lifecycle boundary can leak context across tasks. Asynchronous, reactive, and virtual-thread systems require framework-appropriate context propagation. Explicitly passing context is easier to control when possible.
 
-## 9. `ConcurrentHashMap` không tự biến mọi nghiệp vụ thành nguyên tử
+## 9. `ConcurrentHashMap` does not make every business operation atomic
 
-Một collection concurrent bảo vệ một số thao tác, nhưng không bảo đảm một chuỗi thao tác của caller là nguyên tử.
+A concurrent collection protects some operations, but does not make a caller's sequence of operations atomic.
 
 ~~~java
 import java.util.concurrent.ConcurrentHashMap;
@@ -5463,15 +5463,15 @@ int oldValue = counts.getOrDefault("ORD-1", 0);
 counts.put("ORD-1", oldValue + 1);
 ~~~
 
-Hai thread có thể cùng đọc cùng `oldValue` và một update bị mất. Nếu thao tác chỉ cần cập nhật **một key** dựa trên giá trị hiện tại:
+Two threads may read the same `oldValue` and lose an update. If the required operation modifies **one key** based on its current value:
 
 ~~~java
 counts.merge("ORD-1", 1, Integer::sum);
 ~~~
 
-`ConcurrentHashMap.merge` thực hiện cập nhật nguyên tử cho mapping của key theo hợp đồng của collection. Nhưng không có nghĩa một phép cập nhật **nhiều key** hay cả database và email được thực hiện như một transaction.
+`ConcurrentHashMap.merge` performs an atomic update to that key's mapping according to the collection contract. It does not make updates across **multiple keys**, a database, and email into one transaction.
 
-Đồng thời, nếu value của map là `ArrayList` mutable, việc map thread-safe **không biến nội dung ArrayList thành thread-safe**. Rủi ro aliasing còn nguyên:
+Likewise, if map values are mutable `ArrayList` instances, a thread-safe map **does not make the ArrayList contents thread-safe**. Aliasing risk remains:
 
 ~~~java
 // Một ConcurrentHashMap<String, List<String>> có thể
@@ -5479,19 +5479,19 @@ counts.merge("ORD-1", 1, Integer::sum);
 // cần hợp đồng cập nhật riêng hoặc thay bằng giá trị bất biến.
 ~~~
 
-Đừng chỉ hỏi “dùng collection concurrent chưa?”; hãy hỏi “**đơn vị thay đổi cần giữ invariant** là một key, nhiều key hay nhiều resource?”.
+Ask more than "are we using a concurrent collection?": **what is the invariant-preserving unit of change** — one key, multiple keys, or multiple resources?
 
-## 10. Phạm vi một JVM và phạm vi database/cluster khác nhau
+## 10. A single JVM and a database/cluster have different scopes
 
-Giả sử mỗi instance ứng dụng có:
+Suppose each application instance has:
 
 ~~~java
 private final SeatInventory inventory = new SeatInventory(100);
 ~~~
 
-Nếu hai node ứng dụng được triển khai độc lập, mỗi node có **SeatInventory riêng**. Các lock của node A không khóa node B. Nếu sức chứa thật là một tài nguyên chung lưu ở database, bộ đếm local chỉ là cache/ước lượng nếu không có cơ chế đồng bộ với nguồn sự thật.
+With two separately deployed application nodes, each has **its own SeatInventory**. Node A's locks do not block node B. If capacity is actually stored in a shared database, a local counter is only a cache/estimate unless synchronized with the source of truth.
 
-Một hướng xử lý ở database là cập nhật có điều kiện và kiểm tra số bản ghi ảnh hưởng:
+A database-side solution is a conditional update followed by checking the affected-row count:
 
 ~~~sql
 -- Pseudocode SQL, cú pháp điều chỉnh theo cơ sở dữ liệu.
@@ -5502,15 +5502,15 @@ WHERE id = :inventory_id
   AND reserved <= capacity - :quantity;
 ~~~
 
-Nếu lệnh update ảnh hưởng **một** bản ghi, đặt chỗ thành công; nếu ảnh hưởng **không** bản ghi nào, có thể là không tồn tại hàng, thiếu sức chứa hoặc điều kiện không thỏa. Caller phải phân biệt các trường hợp theo hợp đồng. Cần constraint cho `0 <= reserved <= capacity` và lưu ý overflow/kiểu số, isolation level, retry và idempotency theo môi trường thực tế.
+If the update affects **one** row, the reservation succeeds; if it affects **no** rows, the record may be absent, capacity insufficient, or conditions unmet. The caller must distinguish these outcomes under its contract. Add a constraint for `0 <= reserved <= capacity` and consider numeric overflow/types, isolation levels, retries, and idempotency.
 
-Khi nhiều bản ghi phải thay đổi cùng nhau (giữ vé, tạo booking, trừ ví...), cần **transaction** với isolation phù hợp hoặc cơ chế phối hợp khác. Khi có hệ thống ngoài như email, transaction của database thường không bao trùm việc gửi thành công: có thể cần transactional outbox, idempotent consumer hoặc chính sách bù trừ.
+When multiple rows must change together (reserve tickets, create bookings, debit wallets, etc.), use an appropriate **transaction** isolation level or another coordination mechanism. Database transactions usually cannot encompass successful email delivery; transactional outbox, idempotent consumers, or compensation policies may be needed.
 
-**Giới hạn phạm vi** là một phần của thiết kế. `synchronized` bảo vệ trạng thái trên **một Java object trong một JVM**, không phải bằng chứng rằng cả cụm hệ thống đã tránh overselling.
+**Scope matters.** `synchronized` protects **one Java object in one JVM**, not the whole cluster against overselling.
 
-## 11. Phân tích nguyên nhân với mô hình “ai giữ tham chiếu?”
+## 11. Root-cause analysis using "who holds the reference?"
 
-Một cách hiệu quả để review là vẽ sơ đồ chủ sở hữu và các đường mutate:
+Review ownership and mutation paths with a diagram:
 
 ~~~mermaid
 flowchart TD
@@ -5522,24 +5522,24 @@ flowchart TD
     Fix["Defensive copy + controlled methods"] --> Safe["Snapshot bất biến"]
 ~~~
 
-Ở thiết kế sai, caller có thể thay đổi state qua đường constructor hoặc getter, không cần gọi mutator của class sở hữu. Ở thiết kế đúng, class **chuyển quyền sở hữu bằng cách copy** hoặc chia sẻ các giá trị immutable theo hợp đồng.
+In the flawed design, a caller modifies state through constructor/getter references without invoking the owning class's mutator. A sound design **transfers ownership by copying** or safely shares immutable values according to a contract.
 
-Các câu hỏi review cụ thể:
+Specific review questions:
 
-- Object được tạo từ đâu? Ai còn giữ tham chiếu mutable?
-- Có phương thức nào trả về collection/array hoặc object con mutable?
-- `final` chỉ khóa field reference hay còn khóa nội dung?
-- Một singleton có giữ dữ liệu riêng của request/user/tenant không?
-- Những bước nào phải được xem như một thay đổi nguyên tử?
-- Những thread hoặc node nào có thể đọc/ghi cùng dữ liệu?
-- Khi update thất bại, state có bị thay đổi một nửa không?
-- Có cách nào từ bỏ shared mutable state mà vẫn đáp ứng nghiệp vụ không?
+- Where was the object created? Who else keeps mutable references?
+- Do methods return collections, arrays, or mutable nested objects?
+- Does `final` fix only the field reference or the contents too?
+- Does a singleton retain request/user/tenant-specific data?
+- Which steps must execute as one atomic change?
+- Which threads or nodes can read/write the same data?
+- Does failure leave a partially modified state?
+- Can shared mutable state be avoided while satisfying the requirements?
 
-## 12. Kiểm thử concurrency mà không dựa vào may rủi
+## 12. Testing concurrency without relying on luck
 
-Một bài test ngủ `Thread.sleep(100)` rồi kỳ vọng race xảy ra là **không ổn định**. Thay vào đó, dùng `CountDownLatch` hoặc các primitive đồng bộ để điều khiển điểm bắt đầu/điểm dừng và dùng `Future.get()` hoặc `Thread.join()` để quan sát kết quả.
+A test that sleeps with `Thread.sleep(100)` hoping to trigger a race is **unreliable**. Instead, use `CountDownLatch` or synchronization primitives to control start/stop points and `Future.get()` or `Thread.join()` to collect results.
 
-Ví dụ JUnit Jupiter 5 kiểm tra implementation **đúng** `SeatInventory`; đặt trong `SeatInventoryTest.java` cùng package với các class Java ở phần 4:
+This JUnit Jupiter 5 example tests the **correct** `SeatInventory` implementation. Put `SeatInventoryTest.java` in the same package as the Java classes in section 4:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -5604,11 +5604,11 @@ class SeatInventoryTest {
 }
 ~~~
 
-Các test cần JUnit Jupiter và test runner tương thích. `start` giúp hai task có cơ hội bắt đầu cùng một thời điểm, nhưng **không bảo đảm một lịch chạy giống nhau**. Test đáng tin nhờ bất biến được kiểm tra sau khi các task đã kết thúc; lỗi race nghiêm trọng có thể cần stress test có hệ thống hoặc mô hình hóa concurrency. Timeout giúp phát hiện treo thay vì làm suite chờ vô hạn.
+The tests need JUnit Jupiter and a compatible runner. `start` lets tasks begin at roughly the same time, but **does not guarantee identical scheduling**. Reliability comes from checking invariants after the tasks finish; serious races may need systematic stress tests or concurrency models. Timeouts reveal hangs rather than letting the suite wait indefinitely.
 
-### Kiểm thử aliasing
+### Testing aliasing
 
-Một test rất nhanh có thể chứng minh snapshot không bị sửa từ bên ngoài:
+A quick test can prove snapshots cannot be modified externally:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -5633,81 +5633,81 @@ class PermissionGroupTest {
 }
 ~~~
 
-Test này kiểm tra cả **đường input** lẫn **đường output**. Với danh sách chứa object mutable, phải bổ sung test rằng bản thân các phần tử không làm lộ state hoặc quyền truy cập ngoài dự kiến.
+The test checks **input paths** and **output paths**. For lists of mutable objects, add tests ensuring that elements do not leak internal state or unintended mutation authority.
 
-## 13. Lựa chọn giải pháp theo bản chất shared state
+## 13. Choosing remedies according to shared-state behavior
 
-| Tình huống | Hướng tiếp cận | Điểm cần kiểm tra |
+| Scenario | Approach | What to check |
 |---|---|---|
-| Configuration dùng chung, không đổi sau khởi động | Immutable config/`static final` phù hợp | Không chứa nested mutable object bị rò rỉ |
-| Dữ liệu riêng từng request | Method parameters, local variables, request context có vòng đời rõ | Không lưu trong field của singleton chung |
-| Danh sách do caller truyền vào | Defensive copy + immutable elements | Shallow vs deep copy |
-| Một bộ đếm chung | `AtomicInteger`, `LongAdder` tùy nhu cầu | Đếm gần đúng hay cần snapshot/atomic read; reset/aggregate |
-| Check-then-act trên một object | `synchronized`/lock/CAS | Check và update cùng vùng bảo vệ |
-| Nhiều field phải luôn đồng bộ | Một lock hoặc immutable aggregate thay toàn bộ | Không lộ trạng thái trung gian |
-| Mutable collection concurrent | `ConcurrentHashMap`/concurrent collection + hợp đồng thao tác đúng | Compound actions, giá trị bên trong mutable |
-| Bản ghi chung nhiều node | DB transaction/conditional update/optimistic lock | Isolation, retry, idempotency |
-| Cache dùng chung | Library cache đã kiểm nghiệm + immutable value | TTL, eviction, stale reads, stampede |
-| Eventual consistency được phép | Sự kiện, outbox, worker, reconciliation | Định nghĩa rõ trạng thái tạm thời và kết quả cuối |
+| Shared configuration, unchanged after startup | Immutable config/`static final` | No leaked nested mutable objects |
+| Per-request data | Method parameters, locals, correctly scoped request context | Never stored in fields of shared singletons |
+| Caller-supplied list | Defensive copy + immutable elements | Shallow versus deep copying |
+| Shared counter | `AtomicInteger` or `LongAdder` according to requirements | Approximate count versus snapshot/atomic read; resetting/aggregation |
+| Check-then-act on one object | `synchronized`/lock/CAS | Check and update under the same protection |
+| Several fields that must remain consistent | One lock or a wholesale immutable-aggregate replacement | Do not expose intermediate states |
+| Mutable concurrent collection | `ConcurrentHashMap`/concurrent collection with an appropriate operation contract | Compound actions and mutable values |
+| Multi-node shared record | DB transaction/conditional update/optimistic lock | Isolation, retries, idempotency |
+| Shared cache | Proven caching library with immutable values | TTL, eviction, stale reads, stampedes |
+| Eventual consistency is acceptable | Events, outbox, workers, reconciliation | Define temporary and final states |
 
-Không có “một từ khóa chữa mọi shared state”. `volatile`, `synchronized`, atomic và transaction giải quyết **các phạm vi và loại ràng buộc khác nhau**. Biện pháp tốt nhất đôi khi đơn giản là **không chia sẻ trạng thái mutable**.
+No single keyword "cures" all shared state. `volatile`, `synchronized`, atomics, and transactions solve **different constraints at different scopes**. Often the best option is **not sharing mutable state**.
 
-## 14. Bài tập: quản lý hạn mức sử dụng một mã giảm giá
+## 14. Exercise: managing a coupon usage limit
 
-Một coupon cho phép **tối đa 100 lượt sử dụng**. API xử lý nhiều request đồng thời.
+A coupon allows **at most 100 uses**. Its API handles concurrent requests.
 
-### Yêu cầu
+### Requirements
 
-Thiết kế `CouponQuota` với:
+Design `CouponQuota` with:
 
-- `maxUses` bất biến và lớn hơn 0.
-- `used` không âm và không vượt `maxUses`.
-- Method `boolean tryUse()` chỉ trả `true` khi ghi nhận **chính xác một** lượt sử dụng.
-- Method `snapshot()` trả bộ dữ liệu bất biến về `used`/`remaining`.
-- Không public setter và không để caller tự tăng `used`.
-- Có test gửi ít nhất 500 yêu cầu `tryUse()` đồng thời, cuối cùng **đúng 100 thành công**, số đã dùng bằng 100.
-- Mở rộng sang nhiều node: mô tả cách cập nhật có điều kiện hoặc dùng version/constraint trong database; đừng dựa vào lock của một instance Java.
+- Immutable `maxUses` greater than 0.
+- Nonnegative `used` that never exceeds `maxUses`.
+- A `boolean tryUse()` method returning `true` only when **exactly one** use is recorded.
+- A `snapshot()` method returning an immutable `used`/`remaining` pair.
+- No public setters and no direct increment of `used` by callers.
+- Tests issuing at least 500 concurrent `tryUse()` requests and ending with **exactly 100 successes** and usage of 100.
+- A multi-node extension describing conditional updates or DB versions/constraints instead of relying on one Java instance's lock.
 
-Có thể triển khai bản đầu bằng `synchronized`, sau đó bản thứ hai bằng `AtomicInteger.compareAndSet`. So sánh độ dễ hiểu, lượng code và phạm vi invariant mà mỗi bản bảo vệ.
+Implement an initial version with `synchronized`, then another with `AtomicInteger.compareAndSet`. Compare clarity, amount of code, and the scope of invariants each protects.
 
-### Tự kiểm tra
+### Self-check
 
-1. Vì sao có một field `private final List<String>` vẫn chưa đủ bảo vệ trạng thái?
-2. Nếu hai biến trỏ đến cùng `ArrayList`, thay đổi qua biến này ảnh hưởng biến kia thế nào?
-3. Vì sao `volatile int count; count++` vẫn bị mất cập nhật?
-4. Trong ví dụ bán vé, tại sao `reserved == 1` vẫn có thể là **kết quả nghiệp vụ sai** khi hai yêu cầu đều được chấp nhận?
-5. Một Spring singleton có field `currentOrderId` gặp nguy cơ gì dưới tải đồng thời?
-6. `Collections.unmodifiableList(source)` khác snapshot `List.copyOf(source)` ở điểm nào?
-7. Khi nào `AtomicInteger` đủ, khi nào cần một lock bảo vệ nhiều field?
-8. Một `ConcurrentHashMap` có làm các value `ArrayList` bên trong thread-safe không?
-9. Vì sao `synchronized` của node A không bảo vệ việc bán vé trên node B?
-10. Có thể bỏ hẳn mutable shared state ở đâu bằng local variable, immutable snapshot hoặc truyền tham số?
+1. Why is a `private final List<String>` field insufficient by itself?
+2. If two variables reference one `ArrayList`, how do changes through one affect the other?
+3. Why can `volatile int count; count++` still lose updates?
+4. In the ticket example, why can `reserved == 1` be a **wrong business outcome** even though both requests are accepted?
+5. What risks arise from a `currentOrderId` field in a Spring singleton under concurrent load?
+6. How does `Collections.unmodifiableList(source)` differ from the `List.copyOf(source)` snapshot?
+7. When is `AtomicInteger` sufficient versus a lock guarding several fields?
+8. Does `ConcurrentHashMap` make its `ArrayList` values thread-safe?
+9. Why can node A's `synchronized` not protect ticket sales on node B?
+10. Where can local variables, immutable snapshots, or explicit parameters eliminate mutable shared state?
 
-**Kết luận:** “Trạng thái dùng chung khó kiểm soát” không đơn thuần là có nhiều biến toàn cục hay dùng nhiều thread. Đó là tình trạng **quyền sở hữu, quyền thay đổi, thời điểm quan sát và đơn vị nhất quán không được quy định rõ**. Thiết kế OOP bền vững ưu tiên **ẩn state, cung cấp thao tác nghiệp vụ, giới hạn alias mutable, dùng dữ liệu bất biến khi có thể**, và chọn cơ chế đồng bộ/transaction theo đúng phạm vi chia sẻ thực tế.
+**Conclusion:** "Hard-to-control shared state" means more than global variables or multiple threads. The underlying problem is **unclear ownership, mutation rights, observation timing, and consistency boundaries**. Robust OOP designs **encapsulate state, expose domain operations, restrict mutable aliases, and prefer immutable data**, then choose synchronization/transactions according to the actual scope of sharing.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-pitfalls-009">Đối tượng có thể thay đổi làm sai phép so sánh hoặc mã băm</a>
+## <a id="design-pitfalls-009">Mutable objects breaking equality or hash codes</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Đối tượng có thể thay đổi làm sai phép so sánh hoặc mã băm
+# Mutable objects breaking equality or hash codes
 
-> **Chủ đề:** Lỗi thiết kế OOP khi một đối tượng thay đổi trạng thái ảnh hưởng đến `equals()`, `hashCode()` hoặc thứ tự so sánh. Bài học tập trung vào Java 17, các collection dựa trên hash/sắp xếp, cách chọn định danh ổn định và các biện pháp ngăn lỗi không dễ phát hiện này.
+> **Topic:** An OOP design pitfall where changes to object state affect `equals()`, `hashCode()`, or comparison ordering. This Java 17 lesson examines hash-based and sorted collections, stable identity, and safeguards against subtle bugs.
 
-## 1. Vấn đề thực tế: tại sao khóa “vẫn ở đó” nhưng không tìm thấy?
+## 1. The practical issue: why is a key "still there" but not found?
 
-Bạn đưa một đối tượng `CustomerKey` vào `HashMap` rồi thay đổi trường `code` của chính đối tượng đó. Sau đó `map.get(key)` có thể trả `null`, dù bạn đang giữ **chính tham chiếu đã dùng lúc thêm**.
+You insert a `CustomerKey` into a `HashMap` and then change that object's `code` field. Later, `map.get(key)` can return `null` even though you still hold **the very same reference used during insertion**.
 
-Thoạt nghe điều này vô lý: “Tôi đâu tạo object mới; sao Map không tìm thấy?”
+At first this seems impossible: "I did not create a new object, so why can't the Map find it?"
 
-Vấn đề là cách một cấu trúc dữ liệu dựa trên hash sử dụng **mã băm để định vị**, rồi mới sử dụng **so sánh bằng nhau để nhận diện khóa**. Nếu mã băm của khóa thay đổi trong lúc khóa đang được lưu, phép tìm kiếm về sau có thể tìm ở vị trí khác vị trí chèn ban đầu.
+A hash-based data structure first uses **a hash to locate candidates**, then **equality to identify a key**. If a stored key's hash changes, later lookups may search a different location from where the entry was inserted.
 
 ```mermaid
 flowchart TD
@@ -5720,33 +5720,33 @@ flowchart TD
     F -- "Có" --> H["Có thể tìm thấy; không được dựa vào may mắn này"]
 ```
 
-**Kết luận trọng tâm:** Đừng thay đổi những thông tin quyết định `equals()` hoặc `hashCode()` của một object **trong thời gian object đó được dùng làm phần tử `HashSet` hoặc key `HashMap`**.
+**Central rule:** Do not mutate information determining an object's `equals()` or `hashCode()` **while that object is an element of a `HashSet` or a key in a `HashMap`**.
 
-Đây không nhất thiết là trường hợp phương thức `hashCode()` “được viết sai công thức”. Công thức có thể đúng trên mỗi trạng thái, nhưng **cách sử dụng một key không ổn định đã phá giả định của collection**.
+The `hashCode()` formula is not necessarily "wrong." It may be valid for each state, but **using an unstable key violates the collection's assumptions**.
 
-## 2. Nhắc lại hợp đồng `equals()` và `hashCode()`
+## 2. Revisiting the `equals()` and `hashCode()` contracts
 
-### `equals(Object)` xác định thế nào là bằng nhau
+### What `equals(Object)` means
 
-Với các object khác `null`, hợp đồng equality gồm:
+For non-`null` objects, equality must satisfy:
 
-| Tính chất | Yêu cầu | Rủi ro khi thiết kế |
+| Property | Requirement | Design risk |
 |---|---|---|
-| Phản xạ (*reflexive*) | `x.equals(x)` luôn `true` | Phép so sánh phụ thuộc điều kiện không phù hợp |
-| Đối xứng (*symmetric*) | `x.equals(y)` và `y.equals(x)` cho cùng kết quả | Kế thừa và so sánh hai chiều sai |
-| Bắc cầu (*transitive*) | `x = y`, `y = z` thì `x = z` | Chọn tiêu chí equality không nhất quán |
-| Nhất quán (*consistent*) | Kết quả ổn định **nếu thông tin dùng để so sánh không đổi** | Dùng clock, random, biến không ổn định |
-| Khác `null` | `x.equals(null)` là `false` | Không kiểm tra đầu vào null |
+| Reflexivity (*reflexive*) | `x.equals(x)` is always `true` | Comparison depends on inappropriate conditions |
+| Symmetry (*symmetric*) | `x.equals(y)` and `y.equals(x)` agree | Inheritance causes asymmetric comparisons |
+| Transitivity (*transitive*) | If `x = y` and `y = z`, then `x = z` | Inconsistent equality criteria |
+| Consistency (*consistent*) | Results remain stable **while comparison-relevant information is unchanged** | Clock, randomness, or unstable fields |
+| Non-`null` | `x.equals(null)` is `false` | Failure to handle null |
 
-Điều kiện in đậm rất quan trọng: **hợp đồng `equals` không yêu cầu kết quả giữ nguyên sau khi bạn cố ý sửa trạng thái có liên quan đến phép so sánh**. Sự thay đổi có thể hợp lệ đối với một object mutable nói chung, nhưng có thể **không hợp lệ trong vai trò khóa collection**.
+The bold condition matters: **`equals` need not return the same result after you deliberately mutate comparison-relevant state**. Such mutation may be valid for mutable objects generally, but **invalid while they serve as collection keys**.
 
-### `hashCode()` cần tương thích với `equals()`
+### `hashCode()` must be compatible with `equals()`
 
-- Nếu `a.equals(b)` là `true`, thì `a.hashCode() == b.hashCode()` **bắt buộc**.
-- Trong khoảng thời gian các thông tin dùng cho `equals()` không đổi, các lần gọi `hashCode()` phải nhất quán trong cùng một lần chạy ứng dụng.
-- Nếu hai object **không bằng nhau**, chúng **vẫn có thể có cùng mã băm**. Hash collision là bình thường.
-- Không có đảm bảo rằng cùng một object có mã băm giống nhau qua nhiều lần chạy JVM.
-- `hashCode` không phải ID duy nhất, không phải checksum bảo mật và không dùng thay khóa database.
+- If `a.equals(b)` is `true`, `a.hashCode() == b.hashCode()` **must also be true**.
+- While data used by `equals()` remains unchanged, repeated calls to `hashCode()` must be consistent within one application execution.
+- Two **unequal objects** may **have identical hashes**. Hash collisions are normal.
+- An object is not guaranteed the same hash across JVM runs.
+- `hashCode` is not a unique ID or security checksum and cannot substitute for a database key.
 
 ```text
 a.equals(b) == true  =>  a.hashCode() == b.hashCode()   [BẮT BUỘC]
@@ -5754,11 +5754,11 @@ a.hashCode() != b.hashCode()  =>  a.equals(b) == false  [SUY RA]
 a.hashCode() == b.hashCode()  =>  CHƯA THỂ KẾT LUẬN a.equals(b)
 ```
 
-Một sai lầm liên quan nhưng **khác lỗi mutable key** là override `equals` theo nội dung mà quên override `hashCode`, khiến các object bằng nhau không có mã băm tương đương. Hai lỗi cần được kiểm tra riêng.
+A related but **different error from mutable keys** is overriding `equals` based on content but forgetting `hashCode`, producing unequal hashes for objects considered equal. Test the two problems separately.
 
-## 3. Phản ví dụ Java: một field mutable được dùng trong cả equality và hash
+## 3. Java counterexample: a mutable field used for equality and hashing
 
-Hãy xem `MutableCustomerKey` với field `code` được cho phép chỉnh sửa:
+Consider `MutableCustomerKey` with an editable `code` field:
 
 ```java
 import java.util.HashMap;
@@ -5812,58 +5812,58 @@ class BadKeyExample {
 }
 ```
 
-`"A".hashCode()` là `65`, còn `"B".hashCode()` là `66`. Trong cách triển khai `HashMap` thông dụng của JDK 17, hai giá trị này đưa entry vào các nhóm ứng viên khác nhau khi kích thước bảng phù hợp; sau khi đổi, `get(key)` thường trả `null`.
+`"A".hashCode()` is `65`, while `"B".hashCode()` is `66`. In typical JDK 17 `HashMap` implementations, these hashes place entries in different candidate groups at suitable table sizes, so `get(key)` often returns `null` after mutation.
 
-**Điều được API bảo đảm không phải** “mọi lần sửa key thì `get` nhất định trả `null`”. Tùy mã băm cũ/mới, collision và cách triển khai, một số lần tra cứu có thể tình cờ vẫn thành công. Không được dựa vào chuyện đó để xem thiết kế an toàn.
+**The API does not guarantee** that "every mutated key makes `get` return `null`." With particular old/new hashes, collisions, or implementations, lookups may occasionally succeed. That does not make the design safe.
 
-### Vì sao chính tham chiếu cũng có thể thất bại?
+### Why can lookup fail even with the identical reference?
 
-Một số người cho rằng `map.get(key)` sẽ nhận ra object bằng so sánh `==`. Nhưng `HashMap` **không quét toàn bộ Map để tìm tham chiếu** trong mọi lần gọi; trước hết nó xác định tập entry ứng viên từ hash của key được cung cấp. Nếu bucket đang tìm không chứa entry cũ, việc hai biến giữ cùng tham chiếu cũng không giúp ích.
+One might assume `map.get(key)` recognizes identity using `==`. But `HashMap` **does not scan the entire Map for that reference** on every lookup; it first determines candidate entries using the supplied key's hash. If the old entry is outside that bucket, identical references cannot help.
 
-### Đổi tên lại có sửa được không?
+### Can changing the name back fix it?
 
-Trong một tình huống cụ thể, đặt `code` về giá trị cũ khiến `hashCode` trở lại giá trị cũ, nên tra cứu có thể hoạt động lại. Nhưng đó không phải một cơ chế phục hồi được thiết kế; nếu đã xảy ra nhiều thao tác `put`/`remove`/`rehash` trong thời gian key bị thay đổi, cấu trúc và ngữ nghĩa dữ liệu có thể đã khác.
+In a particular case, restoring `code` to its previous value may restore `hashCode` and make lookup succeed again. But this is not a designed recovery mechanism; after `put`/`remove`/`rehash` operations while the key was mutated, the structure and data semantics may already have changed.
 
-**Không dùng việc đổi về giá trị cũ làm chiến lược sửa lỗi.**
+**Never rely on restoring the old value as a repair strategy.**
 
-## 4. Các hậu quả cụ thể trong từng collection
+## 4. Concrete consequences in different collections
 
-| Collection/cơ chế | Trường được thay đổi | Hậu quả có thể thấy |
+| Collection/mechanism | Modified field | Possible consequence |
 |---|---|---|
-| `HashMap<K,V>` | Field của **key** tham gia hash | `get`/`containsKey`/`remove` có thể không tìm được key |
-| `HashSet<E>` | Field của **element** tham gia hash | `contains`/`remove` sai kỳ vọng; có thể thêm một phần tử bằng nhau lần nữa |
-| `LinkedHashMap`, `LinkedHashSet` | Field tham gia hash/equality | Có thể lỗi tra cứu tương tự; thứ tự chèn không sửa được vấn đề |
-| `ConcurrentHashMap` | Field key tham gia hash | Đồng bộ cơ chế map **không** bảo vệ việc thay đổi key ở bên ngoài |
-| `WeakHashMap` | Key mutable | Weak reference liên quan GC, **không** xóa yêu cầu về hash/equality phù hợp |
-| `TreeMap`/`TreeSet` | Field tham gia `compareTo`/`Comparator` | Thứ tự sắp xếp đã xây dựng không còn khớp thứ tự mới, tìm kiếm/sắp xếp có thể sai |
-| `ArrayList` | Field tham gia `equals` | `contains`/`indexOf` thường quét theo trạng thái mới; không có bucket cũ, nhưng ngữ nghĩa tập dữ liệu vẫn có thể đổi |
-| `HashMap<K,V>` | Field của **value** không tham gia key | Không trực tiếp làm sai tìm kiếm key; vẫn cần xem logic ứng dụng và thread safety |
+| `HashMap<K,V>` | A **key** field involved in hashing | `get`/`containsKey`/`remove` may fail to locate the key |
+| `HashSet<E>` | An **element** field involved in hashing | Unexpected `contains`/`remove` results; adding an equal element again may be possible |
+| `LinkedHashMap`, `LinkedHashSet` | Hash/equality-relevant field | Similar lookup failures; insertion order does not fix them |
+| `ConcurrentHashMap` | Hash-relevant key field | Map concurrency control **does not protect external key mutations** |
+| `WeakHashMap` | Mutable key | Weak references affect GC but **do not eliminate hash/equality requirements** |
+| `TreeMap`/`TreeSet` | Field used by `compareTo`/`Comparator` | Stored sort order no longer matches updated ordering, breaking lookups/traversal |
+| `ArrayList` | Field used by `equals` | `contains`/`indexOf` generally scan current values; no stale bucket, though collection semantics change |
+| `HashMap<K,V>` | **Value** field unrelated to the key | Does not directly break key lookup; application semantics/thread safety still matter |
 
-**Phân biệt:** Một object có thể mutable nhưng vẫn làm key được nếu những dữ liệu quyết định equality/hash **không đổi** trong thời gian lưu. Rủi ro không đến từ từ khóa `mutable` nói chung, mà từ **những field liên quan tới danh tính hoặc phép so sánh** bị thay đổi.
+**Distinction:** an object may be mutable and still serve as a key if equality/hash-relevant data **stays unchanged** while it is stored. The issue is not the label `mutable` itself, but mutations to **fields defining identity or comparisons**.
 
-### `HashSet` có thể chứa “hai lần cùng một object”?
+### Can a `HashSet` hold "the same object twice"?
 
-Về mặt quan sát, có thể xảy ra hiện tượng khó hiểu:
+A surprising behavior may occur:
 
-1. Thêm `key` vào Set khi nó có hash A.
-2. Thay field thành hash B.
-3. Gọi `set.add(key)` lần nữa.
-4. Nếu Set không tìm thấy entry cũ trong nhóm ứng viên B, nó có thể thêm một entry nữa mang **cùng tham chiếu object**.
+1. Add `key` to the Set while its hash is A.
+2. Change a field so its hash becomes B.
+3. Call `set.add(key)` again.
+4. If the Set cannot locate the original entry among B's candidates, it may add another entry holding **the same object reference**.
 
-Sau đó `set.size()` có thể lớn hơn số phần tử thực sự phân biệt theo equality hiện tại. Set không trở thành “cho phép duplicate” theo hợp đồng của nó; **người dùng đã thay đổi khóa làm hỏng tiền đề sử dụng cấu trúc hash**.
+Then `set.size()` can exceed the count of objects distinct under current equality. This does not mean the Set contract permits duplicates; **mutating the key violated the assumptions of the hash structure**.
 
-Vì hành vi phụ thuộc trạng thái nội bộ và mã băm, không dùng ví dụ này làm “tính năng” để lưu cùng object nhiều lần.
+As behavior depends on internal state and hash codes, do not treat this as a feature for storing one object more than once.
 
-## 5. Ví dụ chạy được: khóa bất biến và hồ sơ có thể thay đổi
+## 5. Runnable example: immutable keys and mutable profiles
 
-Giải pháp phổ biến trong OOP là **tách định danh ổn định khỏi các thuộc tính có thể đổi**.
+A common OOP solution is to **separate stable identity from mutable attributes**.
 
-- `CustomerId`: value object bất biến, dùng làm key.
-- `CustomerProfile`: object có dữ liệu được phép sửa như `displayName`, nhưng `id` được giữ cố định.
-- Equality của profile nếu được định nghĩa nên dựa vào định danh đã được chọn, **không** trộn các field thay đổi thường xuyên một cách tùy tiện.
-- `Map<CustomerId, CustomerProfile>`: lookup dựa trên `CustomerId`, việc sửa tên hiển thị không ảnh hưởng bucket.
+- `CustomerId`: immutable value object used as the key.
+- `CustomerProfile`: object with editable data such as `displayName`, but a fixed `id`.
+- Profile equality, if defined, should use the chosen identity rather than **arbitrarily incorporating frequently changing fields**.
+- `Map<CustomerId, CustomerProfile>`: lookup uses `CustomerId`, so changing display names does not alter buckets.
 
-Lưu đoạn sau thành `StableKeyDemo.java`, chạy với JDK 17:
+Save the following as `StableKeyDemo.java` and run with JDK 17:
 
 ```bash
 javac StableKeyDemo.java
@@ -5959,29 +5959,29 @@ public final class StableKeyDemo {
 }
 ```
 
-### Vì sao thiết kế này giữ được hợp đồng?
+### Why does this design preserve the contract?
 
-**`CustomerId` là một record chứa `String` bất biến.** Java tạo `equals`/`hashCode` từ component `value`, và dữ liệu đó không bị thay đổi sau khởi tạo. Hai instance `CustomerId("KH-001")` có cùng value sẽ được Map coi là cùng key.
+**`CustomerId` is a record containing an immutable `String`.** Java generates `equals`/`hashCode` based on the `value` component, which cannot change after construction. Two `CustomerId("KH-001")` instances with the same value are treated as one key by the Map.
 
-**`CustomerProfile` tách field định danh khỏi field hiển thị.** `changeDisplayName` là thao tác hợp lệ, nhưng không đụng `id`; vì vậy trong ví dụ, equality và hash của profile ổn định qua những lần sửa tên.
+**`CustomerProfile` separates identity fields from display fields.** `changeDisplayName` is allowed but does not change `id`; therefore, profile equality/hash remain stable when names change.
 
-**Không dùng danh tính con người theo tên hiển thị.** Hai người có thể trùng tên, hoặc một người thay tên. Chọn `displayName` làm key dễ gây xung đột nghiệp vụ và lỗi mutable hash.
+**Do not identify people by display names.** Different people may share names, and one person may change theirs. Using `displayName` as the key invites business collisions and mutable-hash failures.
 
-**Giới hạn:** Equality của `CustomerProfile` dựa trên ID là **một quyết định domain**; không phải mọi entity cần override equality theo ID. Nếu ID mới được sinh khi lưu DB, cần xem xét trạng thái trước/sau persist và ORM proxy. Trong ví dụ, ID được xác định ngay khi tạo đối tượng.
+**Limitations:** `CustomerProfile` equality based on ID is **a domain decision**; not every entity needs ID-based equality overrides. If IDs are generated during persistence, consider states before/after saving and ORM proxies. The example assigns IDs at object creation.
 
-### Entity có thể sửa trạng thái, nhưng key không nhất thiết phải sửa
+### An entity can mutate while its key remains stable
 
-Một quy tắc thực dụng:
+A practical rule:
 
-> **Cho phép đối tượng có hành vi thay đổi hợp lệ, nhưng khóa nhận diện object phải ổn định theo vòng đời mà collection đang quản lý.**
+> **Let objects perform valid state changes, but keep their identity key stable throughout the collection-managed lifecycle.**
 
-Bạn không cần biến toàn bộ ứng dụng thành immutable. Cần bảo vệ những phần tham gia identity/equality.
+The whole application need not be immutable. Protect identity/equality-related information.
 
-## 6. Bẫy tinh vi: record không đồng nghĩa “bất biến sâu”
+## 6. Subtle pitfall: records do not imply deep immutability
 
-Record trong Java làm các **component field không gán lại được**, nhưng không tự biến object bên trong thành immutable.
+Java records prevent **component fields from reassignment**, but do not automatically make referenced objects immutable.
 
-Ví dụ:
+For example:
 
 ```java
 import java.util.ArrayList;
@@ -6000,9 +6000,9 @@ System.out.println(before == after);
 // Giá trị có thể thay đổi vì List.hashCode phụ thuộc phần tử.
 ```
 
-`FilterKey` là record nhưng component `tags` vẫn tham chiếu tới **cùng một ArrayList mutable**. Record-generated `equals`/`hashCode` dùng equality/hash của `List`, mà hai phương thức đó phụ thuộc nội dung phần tử. Vậy “record nên làm key” chỉ đúng nếu **các component tham gia equality/hash cũng có trạng thái ổn định**.
+`FilterKey` is a record, but its `tags` component still points to **the same mutable ArrayList**. Record-generated `equals`/`hashCode` use the `List`'s content-based equality/hash. Thus "records make good keys" holds only when **their equality/hash-relevant components also remain stable**.
 
-### Phòng vệ bằng `List.copyOf`
+### Protecting state with `List.copyOf`
 
 ```java
 import java.util.List;
@@ -6016,7 +6016,7 @@ record SafeFilterKey(List<String> tags) {
 }
 ```
 
-Compact constructor gán lại tham số `tags` trước khi hệ thống gán component, bảo đảm record giữ snapshot list không thể sửa qua API collection thông thường. Vì `String` bất biến, những phần tử trong ví dụ cũng ổn định.
+The compact constructor reassigns the `tags` parameter before component initialization, ensuring the record stores a list snapshot that cannot be mutated through ordinary collection APIs. Since `String` is immutable, the example's elements are stable too.
 
 ```java
 List<String> callerTags = new java.util.ArrayList<>(List.of("java"));
@@ -6028,13 +6028,13 @@ System.out.println(key.tags()); // [java]
 // key.tags().add("spring"); // UnsupportedOperationException
 ```
 
-**Lưu ý:** `List.copyOf` là snapshot **nông**. Nếu list chứa một class mutable như `Address` với setter, việc sửa chính phần tử vẫn có thể làm thay đổi equality/hash. Khi đó cần làm phần tử bất biến, tạo bản sao sâu phù hợp hoặc chọn khóa khác.
+**Note:** `List.copyOf` takes a **shallow** snapshot. If the list contains a mutable class such as `Address` with setters, mutating an element can still change equality/hash. Use immutable elements, suitable deep copies, or a different key.
 
-**Lưu ý thứ hai:** `List.copyOf` từ chối phần tử `null`. Nếu domain cho phép null, phải định nghĩa cách chuẩn hóa hoặc lựa chọn cấu trúc khác, không tự động sao chép rồi chấp nhận lỗi bất ngờ.
+**Another note:** `List.copyOf` rejects `null` elements. If null is valid in the domain, define a normalization policy or another structure instead of blindly copying and encountering unexpected errors.
 
-## 7. Bẫy array trong value object
+## 7. The array pitfall in value objects
 
-Một ví dụ tương tự nhưng nguy hiểm hơn: `byte[]` là mutable, và `record` có component kiểu array **không tự sinh equality theo nội dung phần tử**:
+A similar but more subtle issue: `byte[]` is mutable, and a `record` with an array component **does not automatically generate element-wise equality**:
 
 ```java
 record RawToken(byte[] bytes) {}
@@ -6045,9 +6045,9 @@ RawToken b = new RawToken(new byte[]{1, 2});
 System.out.println(a.equals(b)); // false, khác array reference
 ```
 
-Nếu nghiệp vụ cần “hai token có cùng dãy byte là bằng nhau”, cần **tự định nghĩa equality/hash theo nội dung** và **sao chép phòng vệ** để key không bị đổi.
+If the business defines "tokens with identical byte sequences are equal," implement **content-based equality/hash** and **defensive copying** so the key stays stable.
 
-Ví dụ class `BinaryKey`:
+Example `BinaryKey` class:
 
 ```java
 import java.util.Arrays;
@@ -6079,13 +6079,13 @@ final class BinaryKey {
 }
 ```
 
-Chọn `class final` ở đây giúp tránh bất ngờ với default record equality trên array; cả constructor lẫn getter đều sao chép. `Arrays.equals`/`Arrays.hashCode` cùng dựa trên nội dung byte, nên hợp đồng nhất quán.
+Choosing `class final` here avoids surprises from default record equality for arrays; both the constructor and getter copy the bytes. `Arrays.equals` and `Arrays.hashCode` use byte contents, keeping the contract consistent.
 
-Một lưu ý an toàn: nếu byte array chứa secret, việc so sánh bằng `Arrays.equals` có thể không phù hợp yêu cầu chống *timing side channel*. Thiết kế key/hash không thay thế các giao thức bảo mật chuyên dụng.
+Security note: if the byte array contains secrets, `Arrays.equals` may be inappropriate for defending against *timing side channels*. Key/hash design does not replace dedicated security protocols.
 
-## 8. Không phải mọi mutation đều nguy hiểm như nhau
+## 8. Not all mutations are equally dangerous
 
-Ví dụ dưới đây **không thay đổi** mã băm vì `equals`/`hashCode` chỉ dùng `id`:
+The following example **does not change** the hash because `equals`/`hashCode` only use `id`:
 
 ```java
 final class UserKey {
@@ -6114,17 +6114,17 @@ final class UserKey {
 }
 ```
 
-Việc đổi `displayName` không ảnh hưởng điều kiện equality của kiểu này, nên **về mặt ổn định hash key**, nó an toàn hơn việc thay `id`. Tuy nhiên vẫn phải xét:
-- Dữ liệu mutable có được chia sẻ giữa threads không?
-- Đổi tên có cần validation/audit/authorization không?
-- Client dùng tên để sort/filter thì trạng thái tập kết quả có cần cập nhật không?
-- `id` có thực sự duy nhất trong phạm vi nghiệp vụ (tenant, tổ chức, phân vùng dữ liệu) không?
+Changing `displayName` does not affect this type's equality, making it **safer for hash-key stability** than changing `id`. Still ask:
+- Is mutable data shared among threads?
+- Does renaming require validation/auditing/authorization?
+- If clients sort/filter by name, must the result set be refreshed?
+- Is `id` actually unique within the business scope (tenant, organization, data partition)?
 
-**Bài học:** Bất biến (*immutability*) là công cụ mạnh để bảo vệ key, nhưng điều kiện bắt buộc chính xác là **tính ổn định của các thuộc tính dùng trong equality, hash và comparator khi object đang nằm trong cấu trúc tương ứng**.
+**Lesson:** *Immutability* is a powerful tool for protecting keys, but the precise requirement is **stability of attributes used by equality, hashing, and comparators while an object belongs to the relevant structure**.
 
-## 9. Đổi `equals` nhưng để `hashCode` khác trường cũng là lỗi
+## 9. Changing `equals` while using different fields in `hashCode` is also a bug
 
-Đây là một lỗi độc lập cần tránh khi sửa mã:
+This is an independent problem to avoid during refactoring:
 
 ```java
 final class BrokenProduct {
@@ -6144,27 +6144,27 @@ final class BrokenProduct {
 }
 ```
 
-Hai sản phẩm có cùng `sku` nhưng `description` khác nhau sẽ `equals() == true`, trong khi `hashCode` có thể khác. Điều đó **vi phạm hợp đồng ngay cả khi object không bị thay đổi**.
+Two products with the same `sku` but different `description` values satisfy `equals() == true` while their `hashCode` values may differ. That **violates the contract even for immutable objects**.
 
-Nếu chỉ `sku` là định danh, `hashCode` phải chỉ phụ thuộc những dữ liệu bảo đảm hai object bằng nhau sẽ cùng giá trị hash, ví dụ `Objects.hashCode(sku)`. Tính hash từ **một tập con** các field trong equality có thể vẫn hợp lệ nhưng dễ tạo collision; tính hash từ field **không thuộc equality** có nguy cơ phá hợp đồng.
+If only `sku` identifies products, `hashCode` must depend only on information guaranteed equal for equal objects, such as `Objects.hashCode(sku)`. Hashing **a subset** of equality fields can be valid but may cause more collisions; hashing fields **outside equality** risks breaking the contract.
 
-Phân biệt rõ:
+Distinguish:
 
-| Trường hợp | Vấn đề |
+| Situation | Problem |
 |---|---|
-| `equals` theo `sku` nhưng `hashCode` theo `sku + description` | Lỗi hợp đồng thiết kế ngay từ đầu |
-| `equals` và `hashCode` cùng theo `sku`, nhưng `sku` được sửa sau khi vào Map | Hợp đồng theo trạng thái có thể đúng; **key không ổn định** khi dùng trong Map |
-| `equals`/`hashCode` cùng theo `id final`, còn `displayName` được sửa | Về hash/equality, có thể an toàn |
-| `hashCode` trả hằng số, `equals` đúng | Hợp đồng có thể đúng nhưng nhiều collision, hiệu năng có thể xấu |
-| `equals` đúng nhưng `hashCode` kế thừa từ `Object` | Có thể vi phạm yêu cầu object bằng nhau phải có hash bằng nhau |
+| `equals` uses `sku` while `hashCode` uses `sku + description` | An immediate equality/hash contract violation |
+| `equals` and `hashCode` both use `sku`, but `sku` changes after insertion into Map | State-based contract may be valid, but the **stored key is unstable** |
+| `equals`/`hashCode` use `id final` while `displayName` changes | Potentially safe for hash/equality |
+| `hashCode` returns a constant and `equals` is correct | Contract may hold, but collisions and performance may suffer |
+| `equals` is correct but `hashCode` is inherited from `Object` | Equal objects may have different hashes, violating the contract |
 
-Không nên kết luận mọi mã băm thay đổi là “bản thân Java sai”, cũng không nên coi hash bằng nhau là đủ để xác nhận equality.
+Do not assume every changing hash means "Java itself is wrong," or that matching hashes establish equality.
 
-## 10. Collection sắp xếp còn có một dạng lỗi tương tự
+## 10. Sorted collections have a related failure mode
 
-`TreeSet` và `TreeMap` dựa trên **`compareTo` hoặc `Comparator`**, không dùng bucket hash để xác định thứ tự tìm kiếm.
+`TreeSet` and `TreeMap` use **`compareTo` or `Comparator`**, not hash buckets, to determine search order.
 
-Ví dụ:
+For example:
 
 ```java
 import java.util.Comparator;
@@ -6197,12 +6197,12 @@ class TreeSetProblem {
 }
 ```
 
-Có hai vấn đề:
+Two problems arise:
 
-1. **Thứ tự không còn khớp comparator** sau khi thay trường `priority` của object đang nằm trong tree.
-2. Comparator trong demo **chỉ so priority**. Hai item khác `id` nhưng cùng priority sẽ được TreeSet coi như tương đương (`compare == 0`), dù chúng không nhất thiết là cùng entity.
+1. **Ordering no longer matches the comparator** after changing the `priority` field of an object already stored in the tree.
+2. The demo comparator **only compares priority**. Different `id` values with equal priority are treated as equivalent by TreeSet (`compare == 0`), even if they are distinct entities.
 
-Nếu thực sự cần sắp xếp cả `priority` và `id`, có thể dùng:
+To sort by both `priority` and `id`, use:
 
 ```java
 Comparator<RankedItem> ordering =
@@ -6210,36 +6210,36 @@ Comparator<RankedItem> ordering =
                   .thenComparing(item -> item.id);
 ```
 
-Nhưng **thêm tie-breaker chưa chữa được lỗi mutable comparator key**. Khi `priority` cần đổi, một hướng an toàn là remove object **trước** khi sửa rồi add lại, trong điều kiện transaction/đồng bộ thích hợp. Hoặc lưu các **snapshot bất biến** để sắp xếp; khi thay đổi, xây một tập/snapshot mới.
+But **adding a tie-breaker does not fix a mutable comparator key**. When `priority` must change, remove the object **before** editing it and reinsert under appropriate transaction/synchronization. Or sort **immutable snapshots** and rebuild the set/snapshot when needed.
 
-### Hash-based và sorted collections bảo vệ những gì?
+### What must stay stable in hash-based and sorted collections?
 
-| Cấu trúc | Thuộc tính phải ổn định khi lưu key |
+| Structure | Attributes that must stay stable while storing keys |
 |---|---|
-| `HashMap`/`HashSet` | Những dữ liệu dùng để tính hash và xác định equality |
-| `TreeMap`/`TreeSet` | Những dữ liệu dùng để tính comparator/order và xác định equivalence theo comparator |
-| `PriorityQueue` | Thay priority của element đã enqueue không tự cấu trúc lại heap; cần remove/reinsert hoặc phương án cập nhật phù hợp |
+| `HashMap`/`HashSet` | Data used for hashing and determining equality |
+| `TreeMap`/`TreeSet` | Data used for comparator/order and comparator-based equivalence |
+| `PriorityQueue` | Mutating an enqueued element's priority does not rebuild the heap; remove/reinsert or use a suitable update strategy |
 
-Không nên dùng `PriorityQueue` như một queue “tự cập nhật thứ tự” khi nội dung object bị sửa ngoài cấu trúc.
+Do not treat `PriorityQueue` as a queue that automatically reorders itself when an object changes externally.
 
-## 11. Sửa chữa dữ liệu đã bị lưu bằng key mutable
+## 11. Repairing data already stored under mutable keys
 
-Nếu object đã nằm trong Map/Set rồi mới bị thay đổi, **đừng** chỉ gọi `map.remove(mutatedKey)` và hy vọng tìm được: chính cơ chế định vị đã có thể bị phá.
+If an object was modified after insertion into a Map/Set, **do not** merely call `map.remove(mutatedKey)` and assume it works: hash-based lookup may already be broken.
 
-Các phương án phụ thuộc phạm vi dữ liệu:
+Recovery depends on data scope:
 
-- **Biết trước giá trị cũ:** remove bằng key khi **chưa thay đổi**, sau đó tạo key mới và put lại; phải chú ý atomicity/concurrency.
-- **Chỉ giữ key đã bị sửa:** nếu có thể lấy entry qua iterator, bạn có thể **thu thập lại dữ liệu rồi xây một collection mới** dùng các key bất biến. Cần xác định chính sách khi các key hiện tại trở thành bằng nhau.
-- **Lớp dữ liệu có nguồn thật khác:** tải lại từ DB hoặc nguồn sự thật, tạo key mới đúng ngữ nghĩa, sau đó xây lại index/cache.
-- **Cache trong nhiều node:** sửa key cục bộ chưa chắc sửa các bản sao cache khác; cần chiến lược invalidation/snapshot/version thích hợp.
+- **Original value still known:** remove the key **before mutation**, then create and insert a new key, respecting concurrency and atomicity.
+- **Only mutated keys remain:** if entries can be reached through an iterator, **collect data and rebuild a collection** with immutable keys. Define how to resolve keys that now compare equal.
+- **Another authoritative source exists:** reload from the DB/source of truth, construct semantically correct keys, and rebuild indexes/caches.
+- **Cache replicated across nodes:** local key repair may not update other caches; use appropriate invalidation, snapshots, or versions.
 
-**Ví dụ tư duy:** Nếu `map` chứa entry lúc mã `"A"` rồi key đã đổi thành `"B"`, quét `entrySet()` có thể vẫn cho thấy entry. Nhưng đây không phải lý do giữ thiết kế: Map hiện có thể ở trạng thái vi phạm kỳ vọng tra cứu; hãy xây lại từ trạng thái nhất quán thay vì tiếp tục sửa lẻ từng lookup.
+**Thought experiment:** Suppose `map` stored an entry with code `"A"`, then the key became `"B"`. Iterating `entrySet()` may still show it. But that does not justify the design: lookups may now violate expectations, so rebuild from a consistent state instead of patching individual lookups.
 
-Quan trọng: nếu hai key trước đây khác nhau nay **đều thành `"B"`** và bạn xây lại map, cần quyết định nghiệp vụ xem entry nào thắng hoặc liệu đó là lỗi xung đột cần từ chối. Không thể chữa bằng một phép hash.
+If two previously distinct keys **both become `"B"`** when rebuilding the map, the business must decide which entry wins or whether to reject a collision. Hashing cannot determine that policy.
 
-## 12. Java ORM/JPA: khóa được sinh sau khi persist
+## 12. Java ORM/JPA: IDs generated after persistence
 
-Một bối cảnh rất hay gặp là entity JPA có trường ID được database cấp khi lưu:
+A common case is a JPA entity whose ID comes from the database during persistence:
 
 ```java
 // Phác họa về lifecycle, không phải entity JPA hoàn chỉnh.
@@ -6249,67 +6249,67 @@ class OrderEntity {
 }
 ```
 
-Nếu `hashCode()` phụ thuộc trực tiếp `id` thì mã băm có thể thay đổi từ lúc transient (id = null) sang persisted (id được gán), gây lỗi nếu entity đang nằm trong `HashSet`.
+If `hashCode()` depends directly on `id`, the hash may change between transient (ID null) and persisted (ID assigned) states, breaking lookup if the entity is already in a `HashSet`.
 
-Nhưng cũng không thể kết luận “mọi entity phải dùng `getClass()` và hash hằng số”:
+But this does not mean "every entity must use `getClass()` and constant hashes":
 
-- **Transient objects:** hai entity mới cùng `id == null` không nhất thiết bằng nhau.
-- **Proxy:** ORM có thể trả proxy subclass; so sánh loại bằng `getClass()` máy móc có thể loại nhầm hai đối tượng đại diện cùng hàng DB.
-- **Business key:** nếu có mã nghiệp vụ bất biến và duy nhất, có thể dùng làm equality trong một mô hình phù hợp.
-- **Lifecycle:** entity managed, detached, merged cần test equality qua các trạng thái này.
-- **Collection:** nếu entity nằm trong hash collection qua lần persist, hash phải ổn định hoặc collection cần được quản lý lại.
+- **Transient objects:** two new entities with `id == null` are not necessarily equal.
+- **Proxies:** ORMs may return proxy subclasses; blindly comparing `getClass()` can reject two objects representing one database row.
+- **Business keys:** immutable, unique business identifiers may provide equality in an appropriate model.
+- **Lifecycle:** test equality across managed, detached, and merged states.
+- **Collections:** if an entity remains in a hash collection during persistence, its hash must stay stable or the collection must be rebuilt.
 
-Một số chiến lược dùng identity theo reference cho object chưa persist và ID cho object đã persist; một số tránh dùng entity làm map key và chỉ dùng `EntityId` immutable; một số dùng phương án hash ổn định đặc thù ORM. **Không có công thức duy nhất đúng cho mọi JPA model**.
+Some strategies use reference identity before persistence and ID identity afterward; others avoid using entities as Map keys and use immutable `EntityId` values; others choose ORM-specific stable hashing. **No single formula works for every JPA model**.
 
-Cách giảm rủi ro rõ ràng: lưu `Map<OrderId, OrderData>` với `OrderId` bất biến thay vì dùng chính managed entity làm key, khi ngữ nghĩa ứng dụng cho phép.
+One clear risk reduction is storing `Map<OrderId, OrderData>` with immutable `OrderId` instead of managed entities as keys when application semantics allow.
 
-## 13. Lombok, generated methods và dữ liệu liên kết
+## 13. Lombok, generated methods, and linked data
 
-Annotation tạo mã như `@Data` hoặc `@EqualsAndHashCode` có thể tự động đưa field mutable/quan hệ hai chiều vào equality/hash tùy cấu hình.
+Code-generating annotations such as `@Data` and `@EqualsAndHashCode` may include mutable fields or bidirectional associations in equality/hash depending on configuration.
 
-Trước khi dựa vào code sinh:
-1. Xác nhận **field nào** được chọn.
-2. Kiểm tra field đó có đổi sau khi object được cho vào collection không.
-3. Xem có association nào lazy-loaded hoặc cyclic không.
-4. Kiểm tra subclass/ORM proxy ảnh hưởng symmetry và equality ra sao.
-5. Viết test cho object trước/sau mutation và trước/sau persist.
+Before relying on generated code:
+1. Confirm **which fields** are selected.
+2. Check whether those fields change after insertion into a collection.
+3. Check for lazy-loaded or cyclic associations.
+4. Examine how subclasses/ORM proxies affect symmetry and equality.
+5. Test objects before/after mutations and before/after persistence.
 
-**Code generator chỉ sinh phép so sánh từ cấu hình. Nó không thể tự quyết ý nghĩa “cùng một entity” theo domain.**
+**Generators only create comparisons from configuration; they cannot decide domain semantics for "the same entity."**
 
-Trường hợp record có `List` mutable và Lombok sinh `hashCode` từ field mutable cùng chung gốc lỗi: **giá trị tham gia phép so sánh không ổn định**.
+Records holding mutable `List` data and Lombok generating `hashCode` from mutable fields share the same root cause: **unstable values used in comparisons**.
 
-## 14. Cache mã băm: nên hay không?
+## 14. Should hash codes be cached?
 
-Với value object lớn và bất biến, có thể cân nhắc lưu kết quả `hashCode` để tránh tính lại, nhưng có các điều kiện:
+For large immutable value objects, caching `hashCode` results can save work, subject to conditions:
 
-- Các field dùng để tính hash phải **bất biến về ngữ nghĩa**.
-- Cache phải được khởi tạo/đọc an toàn dưới mô hình concurrency nếu có nhiều threads.
-- Không tự gán “0 nghĩa là chưa tính” mà không tính tới khả năng hash thật bằng 0 hoặc cách tính lại chấp nhận được.
-- Phải đo lợi ích bằng benchmark thực tế; tính hash của một string ngắn hay record nhỏ thường không phải bottleneck.
+- Hash-related fields must remain **semantically immutable**.
+- Cache initialization/reads must be concurrency-safe when multiple threads are involved.
+- Do not assume "0 means not computed" without considering legitimate hash 0 values or acceptable recomputation.
+- Benchmark actual benefit; hashing a short string or small record is rarely the bottleneck.
 
-**Tuyệt đối không xem “cache lại hashCode” là cách làm một mutable key an toàn.** Khi field dùng trong `equals` đổi nhưng hash vẫn cố định, hai object có thể trở nên bằng nhau mà hash không bằng nhau, vi phạm hợp đồng. Hoặc hai object trước đây bằng nhau rồi không còn bằng nhau trong khi collection đã lưu trạng thái cũ.
+**Never assume "caching hashCode" makes a mutable key safe.** When fields used by `equals` change but hashes remain fixed, formerly unequal objects may become equal with different hashes, violating the contract. Or previously equal objects can become unequal while collections retain old state.
 
-Cách xử lý đúng là **chọn định danh ổn định hoặc bất biến hóa dữ liệu dùng cho equality**, không che sự thay đổi bằng caching.
+The proper fix is **a stable identity or immutable equality-relevant data**, not hiding mutations through caching.
 
-## 15. Concurrency: `ConcurrentHashMap` không tự cứu key mutable
+## 15. Concurrency: `ConcurrentHashMap` does not rescue mutable keys
 
-`ConcurrentHashMap` hỗ trợ nhiều thao tác map đồng thời theo hợp đồng riêng, nhưng nếu một thread đang đổi field nội bộ của key trong khi thread khác gọi `get`:
-- Hash của key có thể đổi giữa các thao tác.
-- Có thể có vấn đề visibility và race nếu field không được đồng bộ.
-- `equals` có thể thấy trạng thái không nhất quán khi đọc nhiều field mutable.
-- Kết quả lookup/insert có thể khác dự kiến, kể cả khi bản thân data structure không bị hỏng vì đồng thời.
+`ConcurrentHashMap` supports concurrent Map operations under its contract, but if one thread mutates key fields while another calls `get`:
+- The key's hash may change between operations.
+- Unsynchronized fields can introduce visibility bugs and races.
+- `equals` may observe inconsistent state when reading multiple mutable fields.
+- Lookups/inserts may surprise users even if the collection's concurrent structure remains sound.
 
-**An toàn đồng thời của collection khác với an toàn ngữ nghĩa của key.**
+**Collection thread safety differs from key semantic safety.**
 
-Nếu cần đổi dữ liệu của entity, hãy giữ key immutable và đặt thông tin mutable ở **value** hoặc trong object do lifecycle/service phù hợp quản lý. Với state cần cập nhật nguyên tử, dùng transaction, lock hoặc compare-and-set theo bài toán; đừng trông chờ vào việc đổi container.
+When entity data must change, retain immutable keys and store mutable details in **values** or objects managed by appropriate services/lifecycles. For atomic updates, apply transactions, locks, or compare-and-set as needed; swapping containers alone cannot fix the problem.
 
-## 16. Kiểm thử lỗi và thiết kế khắc phục
+## 16. Testing the flaw and its remedy
 
-Nên có cả test về **hợp đồng equality/hash** và test về **việc sử dụng key trong collection**.
+Include tests for **the equality/hash contract** and **collection-key usage**.
 
-### JUnit 5 với mô hình an toàn
+### JUnit 5 with the safe model
 
-Đặt test cùng package với `StableKeyDemo.java`:
+Place tests in the same package as `StableKeyDemo.java`:
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -6364,19 +6364,19 @@ class StableKeyDemoTest {
 }
 ```
 
-### Kiểm thử phản ví dụ thế nào cho đúng?
+### How should the counterexample be tested?
 
-Đừng viết một bài test “chuẩn Java” bắt buộc `map.get(mutatedKey) == null` trong **mọi** JDK và mọi trạng thái hash: đó không phải hợp đồng API. Thay vào đó:
+Do not write a universal Java test asserting `map.get(mutatedKey) == null` on **every** JDK and hash state; that is not the API contract. Instead:
 
-- Dùng chương trình `BadKeyExample` để **minh họa** nguy cơ trên một JDK cụ thể.
-- Xác nhận field thay đổi khiến `hashCode` thay đổi trong ví dụ (mã `"A"` → `"B"`).
-- Thiết kế lớp thật sao cho **key không có setter đối với field định danh**.
-- Test dương: object có thể sửa những dữ liệu không thuộc key, nhưng lookup với `CustomerId` bất biến vẫn chính xác.
-- Nếu cần test ràng buộc kiến trúc, có thể dùng kiểm tra access modifier, code review hoặc static analysis để ngăn khai báo setter không mong muốn.
+- Use `BadKeyExample` to **demonstrate** the risk on a particular JDK.
+- Confirm in the example that mutating the field changes `hashCode` (code `"A"` → `"B"`).
+- Design real keys with **no setters for identity fields**.
+- Positive test: allow non-key data changes while lookup by immutable `CustomerId` stays correct.
+- For architecture enforcement, check access modifiers, perform code reviews, or apply static analysis to prohibit unwanted setters.
 
-Tương tự với một `HashSet` đang giữ phần tử mutable: một test may mắn “contains vẫn true sau mutation” **không chứng minh** thiết kế an toàn.
+Likewise, a `HashSet` may happen to find a mutated element; a passing contains test **does not prove** the design is safe.
 
-## 17. Quy trình refactor thiết kế đang sử dụng key mutable
+## 17. Refactoring a design that uses mutable keys
 
 ```mermaid
 flowchart TD
@@ -6391,19 +6391,19 @@ flowchart TD
     H --> I["Kiểm tra concurrency, ORM lifecycle, deploy"]
 ```
 
-Thực hiện có kiểm soát:
+Proceed carefully:
 
-1. **Xác định mọi nơi dùng `equals`/`hashCode`/`Comparator`**: Map, Set, cache, dedup, ORM, serializer.
-2. **Liệt kê field tham gia so sánh.** Bao gồm trường trong object con, collection, array và trường được Lombok/code generator tự chọn.
-3. **Xem các đường mutation.** Setter, chỉnh sửa trực tiếp qua getter, reflection/framework, ORM gán ID, sự kiện async, concurrency.
-4. **Định nghĩa identity domain.** Một mã theo `tenantId + customerId`, hay một số ID duy nhất? Không chọn tên hiển thị hoặc field thường xuyên cập nhật.
-5. **Thiết kế value object bất biến.** Dùng record với component bất biến; hoặc final class có defensive copy khi chứa mutable data.
-6. **Di chuyển map/set sang khóa mới.** Với dữ liệu đã bị lưu sai, xác định lại từ nguồn đúng, không chỉ thay class rồi coi xong.
-7. **Kiểm thử hồi quy.** Equality/hash properties, get/contains/remove, duplicate prevention, biên null/empty và concurrency nếu cần.
-8. **Rà soát external API và persistence.** Thay kiểu key có thể ảnh hưởng JSON, cache key, database indexing, message schema và tính tương thích.
-9. **Quan sát sau triển khai.** Log số key trùng, cache misses bất thường, mapping conflicts; tránh log trực tiếp dữ liệu nhạy cảm.
+1. **Locate all uses of `equals`/`hashCode`/`Comparator`:** Maps, Sets, caches, deduplication, ORM, serializers.
+2. **List compared fields:** include fields in nested objects, collections, arrays, and those auto-selected by Lombok/generators.
+3. **Find mutation paths:** setters, direct changes through getters, reflection/frameworks, ORM-generated IDs, asynchronous events, and concurrency.
+4. **Define domain identity:** an ID scoped by `tenantId + customerId`, or globally unique? Avoid display names and frequently updated fields.
+5. **Design immutable value objects:** records with immutable components or final classes with defensive copies for mutable data.
+6. **Migrate maps/sets to new keys:** rebuild incorrectly stored data from authoritative sources instead of merely replacing a class.
+7. **Regression-test.** Equality/hash properties, get/contains/remove, duplicate prevention, null/empty boundaries, and concurrency when required.
+8. **Review external APIs and persistence:** key-type changes can affect JSON, cache keys, DB indexing, message schemas, and compatibility.
+9. **Monitor post-deployment:** log duplicate key counts, abnormal cache misses, and mapping conflicts while avoiding sensitive data exposure.
 
-### Một quyết định có thể ghi thành ADR ngắn
+### A decision can be captured in a short ADR
 
 ```markdown
 # ADR: Không dùng CustomerProfile mutable làm HashMap key
@@ -6428,78 +6428,78 @@ Xem xét lại khi:
 - Quy tắc định danh khách hàng hoặc phạm vi tenant thay đổi.
 ```
 
-## 18. Các lỗi hiểu sai thường gặp
+## 18. Common misconceptions
 
-| Nhận định sai | Cách hiểu đúng |
+| Mistaken belief | Correct interpretation |
 |---|---|
-| “`equals` phải giữ nguyên mãi mãi với mọi mutable object.” | Hợp đồng yêu cầu nhất quán **khi dữ liệu liên quan không đổi**; nhưng dùng mutable equality làm key có thể không an toàn. |
-| “`HashMap` so sánh bằng `==` nên cùng object chắc chắn tìm được.” | Nó dựa vào hash để tìm ứng viên trước khi xét equality/identity phù hợp. |
-| “Hash bằng nhau nghĩa là cùng object.” | Collision có thể xảy ra, cần `equals` xác nhận. |
-| “Muốn sửa key thì chỉ cần gọi `remove` sau khi sửa.” | `remove` có thể không tìm thấy key đã đổi hash; nên remove trước hoặc xây lại. |
-| “Record luôn bất biến sâu.” | Record có thể chứa collection/mảng/object mutable. |
-| “`List.copyOf` làm mọi phần tử cũng immutable.” | Chỉ snapshot/shallow copy; cần bảo vệ phần tử mutable. |
-| “Đổi field value trong Map làm hỏng hash key.” | Chỉ thay value không trực tiếp đổi hash của key, nhưng vẫn xét concurrency/nghiệp vụ. |
-| “`ConcurrentHashMap` sẽ sửa vấn đề mutable key.” | Cấu trúc thread-safe không bảo đảm key ngoài nó ổn định. |
-| “Cache hashCode là giải pháp.” | Cache hash trên object còn đổi equality có thể phá hợp đồng. |
-| “TreeSet không dùng hash nên đổi field tùy ý.” | Comparator/order có thể mất tính đúng khi field sort key thay đổi. |
-| “JPA entity có id sinh tự động thì cứ dùng `Objects.hash(id)`.” | ID từ null sang có giá trị có thể làm hash đổi; phải xét lifecycle/proxy. |
-| “HashCode càng phức tạp càng ít lỗi.” | Điều thiết yếu là **hợp đồng đúng và dữ liệu ổn định**; phân phối hash là mối quan tâm riêng. |
+| "`equals` must remain unchanged forever for every mutable object." | The contract requires consistency **while relevant data is unchanged**; mutable equality may be unsafe for keys. |
+| "`HashMap` uses `==`, so the same object will always be found." | It uses a hash to find candidates before relevant equality/identity checks. |
+| "Equal hashes mean the same object." | Collisions happen; `equals` must confirm equality. |
+| "To modify a key, call `remove` after changing it." | `remove` may fail after the hash changes; remove first or rebuild. |
+| "Records are always deeply immutable." | Records can contain mutable collections, arrays, and objects. |
+| "`List.copyOf` makes every element immutable too." | It makes a shallow snapshot; mutable elements still need protection. |
+| "Changing a Map value field breaks key hashes." | Changing values does not directly change key hashes, though concurrency/business rules still matter. |
+| "`ConcurrentHashMap` fixes mutable keys." | A thread-safe collection cannot guarantee that external keys stay stable. |
+| "Caching hashCode solves the problem." | Caching hashes while equality changes can violate the contract. |
+| "TreeSet uses no hashes so any field can change." | Comparator/order consistency breaks when sort keys mutate. |
+| "For generated JPA IDs, always use `Objects.hash(id)`." | IDs changing from null to assigned may change hashes; lifecycle/proxies matter. |
+| "More elaborate hashCode means fewer bugs." | **Correct contracts and stable data** matter most; hash distribution is separate. |
 
-## 19. Bài tập thực hành
+## 19. Practice exercises
 
-**Bài 1 – Tìm lỗi trong `HashSet`.** Tạo `Student` có `studentCode` và `name`, cả hai mutable, `equals`/`hashCode` dùng cả hai. Thêm vào `HashSet`, đổi `name` rồi quan sát `contains`. Giải thích vì sao kết quả có thể sai và refactor equality chỉ theo mã ổn định hoặc dùng `StudentId`.
+**Exercise 1 – Find the `HashSet` bug.** Create `Student` with mutable `studentCode` and `name`, both used by `equals`/`hashCode`. Insert into `HashSet`, rename via `name`, and examine `contains`. Explain the possible failure and refactor to stable-code equality or `StudentId`.
 
-**Bài 2 – Snapshot an toàn.** Tạo `SearchFilterKey(List<String> tags)`, lưu vào Map. Dùng `List.copyOf` trong constructor và test sau khi caller sửa list nguồn. Nếu phần tử là `MutableTag`, giải thích vì sao snapshot list chưa đủ.
+**Exercise 2 – Safe snapshot.** Create `SearchFilterKey(List<String> tags)`, store it in Map, apply `List.copyOf` in its constructor, and test after the caller edits the source list. If elements are `MutableTag`, explain why the snapshot is insufficient.
 
-**Bài 3 – Binary key.** Tạo `BinaryKey(byte[])` bất biến; dùng `Arrays.equals` và `Arrays.hashCode`, copy trong constructor và getter. Viết test: sửa array input hoặc array do getter trả về **không làm đổi** hash của key.
+**Exercise 3 – Binary key.** Create immutable `BinaryKey(byte[])` using `Arrays.equals`, `Arrays.hashCode`, and copies in constructor/getter. Test that editing the input array or an array returned from the getter **does not change** the key's hash.
 
-**Bài 4 – TreeSet thứ tự.** Một `Task` được xếp theo `priority`; người dùng có thể đổi ưu tiên trong lúc nằm trong `TreeSet`. Thiết kế thao tác đổi ưu tiên an toàn bằng remove/reinsert hoặc cập nhật snapshot; test thứ tự sau sửa và tác động khi hai task có cùng ưu tiên.
+**Exercise 4 – TreeSet ordering.** A `Task` is sorted by `priority`, which users may change while it resides in a `TreeSet`. Design a safe priority update using removal/reinsertion or snapshots, and test ordering after edits and equal-priority tasks.
 
-**Bài 5 – JPA generated ID.** Phác họa entity từ transient → persisted → detached. So sánh cách dùng ID sinh sau persist và business key bất biến. Với mỗi cách, nêu test: hai entity mới, ID null, cùng ID sau tải, proxy, `HashSet.contains` trước/sau persist.
+**Exercise 5 – JPA-generated ID.** Sketch an entity through transient → persisted → detached states. Compare post-persist generated IDs with immutable business keys. Test new entities, null IDs, matching IDs after loading, proxies, and `HashSet.contains` before/after persistence.
 
-**Bài 6 – Concurrency.** Một Map có khóa theo `tenantId + customerId`. Cách nào bảo đảm key ổn định? Cách nào bảo đảm profile update không bị race? Trình bày vì sao đây là hai vấn đề khác nhau và đề xuất locking/version phù hợp.
+**Exercise 6 – Concurrency.** A Map uses keys based on `tenantId + customerId`. What keeps keys stable? What prevents races in profile updates? Explain why these are distinct problems and recommend locking/versioning.
 
-## 20. Checklist review nhanh
+## 20. Quick review checklist
 
-- [ ] Tôi xác định rõ **ngữ nghĩa equality** của kiểu domain, không dựa vào tên field mơ hồ.
-- [ ] Mọi field tham gia hash và equality **ổn định khi object đóng vai trò key/Set element**.
-- [ ] Hai object bằng nhau luôn có cùng hash; không kỳ vọng chiều ngược lại.
-- [ ] Khóa bất biến không chứa tham chiếu mutable chưa được phòng vệ.
-- [ ] Record chứa list/array được kiểm tra về shallow immutability và equality mặc định.
-- [ ] Getter không trả mutable state phá key; array và collection có defensive copy phù hợp.
-- [ ] Mutation của value không bị nhầm với mutation của key.
-- [ ] Nếu dùng `TreeSet`/`TreeMap`, các thuộc tính comparator cũng không đổi ngoài sự kiểm soát của collection.
-- [ ] Nếu có JPA/ORM, kiểm tra ID trước/sau persist, proxy và lifecycle.
-- [ ] Nếu có đa luồng, thiết kế riêng thread safety cho dữ liệu mutable.
-- [ ] Có unit test trên các thuộc tính hợp đồng và test lookup bằng khóa tương đương.
-- [ ] Với dữ liệu đã bị lưu sai, có kế hoạch xây lại Map/Set/cache từ nguồn đúng.
+- [ ] I have defined **equality semantics** for the domain type without relying on vague field names.
+- [ ] All fields used in hashing/equality **remain stable while objects serve as keys or Set elements**.
+- [ ] Equal objects always have equal hashes; I do not assume the reverse.
+- [ ] Immutable keys contain no unprotected mutable references.
+- [ ] Records containing lists/arrays have been checked for shallow immutability and default equality.
+- [ ] Getters do not leak mutable state that can invalidate keys; arrays/collections use suitable defensive copies.
+- [ ] Value mutation is not confused with key mutation.
+- [ ] With `TreeSet`/`TreeMap`, comparator fields cannot change outside the collection's control.
+- [ ] With JPA/ORM, IDs before/after persistence, proxies, and lifecycles are tested.
+- [ ] With concurrency, mutable data has an independent thread-safety design.
+- [ ] Unit tests cover contract properties and lookup by equivalent keys.
+- [ ] Corrupted Map/Set/cache data has a rebuild plan using authoritative sources.
 
-**Ghi nhớ:** một object **được phép thay đổi** không có nghĩa nó **được phép thay đổi mọi thuộc tính trong mọi vai trò**. Trong `HashMap`/`HashSet`, các dữ liệu quyết định `equals` và `hashCode` phải ổn định suốt thời gian object là key hoặc phần tử. Hãy chọn **định danh bất biến**, bảo vệ dữ liệu tham chiếu và kiểm thử việc tra cứu sau các cập nhật nghiệp vụ để tránh lỗi xuất hiện âm thầm.
+**Remember:** an object **may be mutable**, but it **must not change every attribute in every role**. In `HashMap`/`HashSet`, information determining `equals` and `hashCode` must remain stable while the object is a key or element. Choose **immutable identity**, protect referenced data, and test lookups after domain updates to prevent silent failures.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-pitfalls-010">Lạm dụng mẫu thiết kế và trừu tượng hóa quá sớm</a>
+## <a id="design-pitfalls-010">Overusing design patterns and premature abstraction</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Lạm dụng mẫu thiết kế và trừu tượng hóa quá sớm
+# Overusing design patterns and premature abstraction
 
-**Chủ đề:** OOP → Lỗi thiết kế  
-**Mục tiêu:** nhận ra khi nào một Design Pattern hoặc abstraction đang giải quyết vấn đề thật và khi nào nó chỉ làm tăng độ phức tạp; biết bắt đầu từ thiết kế đơn giản, phát hiện áp lực thay đổi, refactor an toàn bằng Java và kiểm thử, thay vì thiết kế cho những giả định chưa được xác nhận.
+**Topic:** OOP → Design Pitfalls  
+**Objective:** Recognize when a Design Pattern or abstraction solves a real problem and when it only adds complexity; start with a simple design, identify change pressure, and refactor safely with Java and tests instead of engineering for unverified assumptions.
 
-## 1. “Thiết kế tốt” có nhất thiết phải nhiều lớp và interface?
+## 1. Does "good design" necessarily require many classes and interfaces?
 
-Hãy tưởng tượng yêu cầu đầu tiên của một cửa hàng:
+Imagine a store's initial requirement:
 
-> Đơn hàng dưới 500.000 VND có phí vận chuyển 30.000 VND; từ 500.000 VND trở lên thì miễn phí.
+> Orders below 500.000 VND incur 30.000 VND in shipping fees; orders of at least 500.000 VND ship free.
 
-Một cách triển khai:
+One implementation:
 
 ~~~java
 static long shippingFeeVnd(long goodsTotalVnd) {
@@ -6510,60 +6510,60 @@ static long shippingFeeVnd(long goodsTotalVnd) {
 }
 ~~~
 
-Đối với quy tắc này, một phương thức ngắn, có tên rõ, được kiểm thử có thể là **thiết kế tốt nhất ở hiện tại**. Nó không thiếu tính hướng đối tượng chỉ vì chưa có Strategy, Abstract Factory, một interface hoặc dependency injection.
+For this rule, a short, well-named, tested method may be **the best current design**. It is not less object-oriented simply because it lacks Strategy, Abstract Factory, an interface, or dependency injection.
 
-Thế nhưng người lập trình có thể nghĩ:
+Yet a developer might think:
 
-> “Sau này chắc sẽ có nhiều chính sách giao hàng. Hãy tạo trước `ShippingPolicy`, `AbstractShippingPolicy`, `PolicyFactory`, `PolicyRegistry`, `PolicyResolver`, `ShippingPolicyConfiguration` và một plugin framework.”
+> "There will surely be many shipping policies later. Let's prebuild `ShippingPolicy`, `AbstractShippingPolicy`, `PolicyFactory`, `PolicyRegistry`, `PolicyResolver`, `ShippingPolicyConfiguration`, and a plugin framework."
 
-Khi chỉ có một công thức duy nhất, người đọc phải đi qua nhiều file để hiểu một câu lệnh `if`. Mỗi kiểu mới là một cam kết cần bảo trì, đặt tên, viết test và giải thích.
+With only one formula, readers must open many files to understand a single `if`. Every new type becomes a maintenance, naming, testing, and documentation commitment.
 
-Đó là **lạm dụng mẫu thiết kế (pattern overuse)** và có thể là **trừu tượng hóa quá sớm (premature abstraction)**: trả giá cho tính linh hoạt mà dự án chưa chứng minh rằng mình cần.
+This is **pattern overuse** and may also be **premature abstraction**: paying for flexibility the project has not demonstrated it needs.
 
-Điểm quan trọng: **không phải pattern nào cũng xấu**, và **không phải cứ ít lớp hơn là tốt**. Một abstraction ở ranh giới thanh toán, quyền truy cập hoặc nhà cung cấp ngoài có thể rất đáng giá từ đầu nếu đã có yêu cầu rõ. Điều cần đánh giá là **lợi ích so với chi phí trong bối cảnh cụ thể**, chứ không phải số lượng pattern.
+Crucially, **patterns are not inherently bad**, and **fewer classes are not always better**. An abstraction around payments, authorization, or external providers can be valuable immediately when requirements justify it. Evaluate **benefits against costs in the actual context**, not the number of patterns.
 
-## 2. Hai mùi thiết kế gần nhau nhưng không giống hệt
+## 2. Two related but distinct design smells
 
-### Lạm dụng mẫu thiết kế
+### Pattern overuse
 
-Đây là việc đưa một pattern vào **không đúng bài toán**, **không đúng quy mô** hoặc **không đúng thời điểm**, khiến hành vi bị chia nhỏ qua nhiều thành phần mà không nhận được lợi ích tương xứng.
+Applying a pattern **to the wrong problem**, **at the wrong scale**, or **at the wrong time** can scatter behavior across many components without proportional benefits.
 
-Ví dụ:
+Examples:
 
-- Dùng **Singleton** cho mọi service mặc dù ứng dụng cần kiểm thử tách biệt và nhiều cấu hình.
-- Dùng **Abstract Factory** cho một loại object chỉ cần constructor.
-- Dùng **Observer/Event Bus** cho lời gọi nghiệp vụ đồng bộ, làm luồng điều khiển trở nên khó truy vết dù không có nhu cầu phát cho nhiều bên.
-- Dùng **Decorator** nhiều tầng cho một phép kiểm tra cố định, khiến thứ tự xử lý và lỗi trở nên khó hiểu.
-- Dùng **Strategy + Registry** cho hai nhánh điều kiện rất ngắn và gần như không thay đổi.
+- Using **Singleton** for every service despite needing isolated tests and different configurations.
+- Using **Abstract Factory** for one object type that only needs a constructor.
+- Using **Observer/Event Bus** for one synchronous domain call, making control flow harder to trace without multiple subscribers.
+- Layering **Decorators** around one fixed check, obscuring processing order and errors.
+- Using **Strategy + Registry** for two very short, rarely changing conditional branches.
 
-Pattern là tên gọi của một cách phối hợp đối tượng. Không phải chứng nhận chất lượng kiến trúc.
+A pattern describes a way for objects to collaborate; it does not certify architectural quality.
 
-### Trừu tượng hóa quá sớm
+### Premature abstraction
 
-Đây là việc khái quát một hoặc vài trường hợp hiện tại thành API tổng quát khi **chưa hiểu chính xác điều gì thay đổi và điều gì không thay đổi**.
+Generalizing one or a few current cases into a reusable API **before understanding what changes and what stays stable**.
 
-Ví dụ hai chức năng hiện cùng gửi email nhưng về sau có mục đích khác nhau:
+For example, two features both send emails today but may have different purposes later:
 
-- `sendPasswordResetEmail(...)`: có hạn sử dụng, tính bảo mật, chống lạm dụng.
-- `sendMarketingEmail(...)`: có unsubscribe, consent, chiến dịch, tần suất.
+- `sendPasswordResetEmail(...)`: expiration, security, and abuse prevention.
+- `sendMarketingEmail(...)`: unsubscribe, consent, campaigns, and frequency.
 
-Nếu gom cả hai vào một abstraction `UniversalEmailWorkflow<T, Context, Policy>` chỉ vì cả hai đều gọi SMTP, rất dễ khiến hai trách nhiệm bị ràng buộc bởi nhau. **Giống mã không nhất thiết đồng nghĩa cùng tri thức nghiệp vụ.**
+Combining them under `UniversalEmailWorkflow<T, Context, Policy>` solely because both use SMTP can force different responsibilities together. **Similar code does not necessarily mean shared domain knowledge.**
 
-### So sánh
+### Comparison
 
-| Tiêu chí | Lạm dụng pattern | Trừu tượng hóa quá sớm |
+| Criterion | Pattern overuse | Premature abstraction |
 | --- | --- | --- |
-| Sai lầm cốt lõi | Chọn một cơ chế thiết kế lớn hơn nhu cầu | Đoán trước điểm biến thiên mà chưa đủ bằng chứng |
-| Ví dụ | Factory để `return new User(...)` | Generic `BaseRepository<T, K, V>` cho một entity |
-| Chi phí | Nhiều kiểu, tầng chuyển tiếp, cấu hình và tracing | Hợp đồng mơ hồ, phải thêm cờ/nhánh khi nhu cầu thật xuất hiện |
-| Hệ quả | Code nhìn “có kiến trúc” nhưng khó đọc | Các trường hợp mới phải bẻ cong abstraction cũ |
-| Cách khắc phục | Bỏ tầng trung gian không đem lại giá trị | Học từ các use case thật rồi trích abstraction đúng trách nhiệm |
+| Core mistake | Choose a design mechanism larger than required | Predict variation points without enough evidence |
+| Example | Factory for `return new User(...)` | Generic `BaseRepository<T, K, V>` for one entity |
+| Cost | Many types, forwarding layers, configuration, and tracing | Vague contracts needing flags/branches as real needs arise |
+| Consequence | Code looks "architected" but is difficult to read | New cases have to distort old abstractions |
+| Remedy | Remove intermediate layers without value | Learn from real use cases, then extract the correct responsibility |
 
-Hai vấn đề thường cùng xuất hiện. Ví dụ cố dự đoán một tương lai có 20 cách tính phí, rồi triển khai Factory + Strategy + plugin architecture khi hiện tại chỉ có một cách tính.
+Both problems often appear together: someone predicts 20 future fee algorithms and builds Factory + Strategy + plugin architecture when there is currently one.
 
-## 3. Chi phí thực sự của một abstraction
+## 3. The true cost of an abstraction
 
-Một interface rất ngắn có vẻ không tốn gì:
+A tiny interface may look nearly free:
 
 ~~~java
 interface FeePolicy {
@@ -6571,54 +6571,54 @@ interface FeePolicy {
 }
 ~~~
 
-Nhưng **chi phí thiết kế** không nằm riêng trong ba dòng này:
+But **design costs** extend beyond these three lines:
 
-| Loại chi phí | Điều cần tính |
+| Cost type | What to consider |
 | --- | --- |
-| **Đọc hiểu** | Phải mở bao nhiêu kiểu và lớp cấu hình để hiểu một thao tác? |
-| **Thay đổi** | Khi một yêu cầu thay đổi, có phải sửa cả interface, implementation, factory, registry và test fixture? |
-| **Tính tương thích** | Interface đã công khai cho module khác chưa? Có khó thay đổi không? |
-| **Định hướng domain** | Abstraction mang tên nghiệp vụ thật hay chỉ tên chung chung như `Manager`, `Handler`, `Provider`? |
-| **Kiểm thử** | Có giảm phụ thuộc ngoài và tăng khả năng test, hay chỉ sinh ra hàng chục mock vô nghĩa? |
-| **Vận hành** | Cấu hình DI, chọn implementation, phát hiện lỗi, log/tracing có phức tạp thêm không? |
-| **Nâng cấp** | Khi giả định tương lai sai, API mới có phải phá bỏ hoặc đổi lớn không? |
+| **Comprehension** | How many types and configuration classes must be opened to understand one operation? |
+| **Change** | Does one new requirement force edits to interfaces, implementations, factories, registries, and test fixtures? |
+| **Compatibility** | Is the interface public to other modules, making it hard to change? |
+| **Domain language** | Is the abstraction named for a real domain concept rather than generic `Manager`, `Handler`, `Provider`? |
+| **Testing** | Does it isolate external dependencies and improve tests, or create dozens of pointless mocks? |
+| **Operations** | Does DI setup, implementation selection, diagnosis, logging, or tracing become more complex? |
+| **Evolution** | If future assumptions prove false, must the API be removed or heavily changed? |
 
-**Abstraction có giá trị khi nó che giấu một quyết định có khả năng thay đổi và cung cấp một hợp đồng ổn định, dễ hiểu.** Nếu chỉ chuyển tiếp một lời gọi mà không tách được trách nhiệm hoặc giảm được ảnh hưởng của thay đổi, đó có thể là một tầng trung gian không cần thiết.
+**An abstraction is valuable when it hides a changeable decision behind a stable, understandable contract.** If it merely forwards a call without dividing responsibility or containing change, it may be unnecessary indirection.
 
-Điều ngược lại cũng đúng: một object không phải đắt vì có nhiều dòng code, và một abstraction không phải vô ích chỉ vì hiện có **một implementation**. Ví dụ tách port giao tiếp ngân hàng khỏi domain có thể bảo vệ một ranh giới quan trọng dù hiện chỉ dùng một ngân hàng.
+The converse matters too: an object is not expensive merely because it has many lines, and an abstraction is not worthless merely because **one implementation** currently exists. Separating a bank integration port from domain logic may protect an important boundary with just one bank.
 
-## 4. KISS, YAGNI, DRY và SOLID: hiểu đúng để tránh cực đoan
+## 4. KISS, YAGNI, DRY, and SOLID: avoid extremes
 
-| Nguyên tắc | Ý nghĩa thực tế | Hiểu sai thường gặp |
+| Principle | Practical meaning | Common misinterpretation |
 | --- | --- | --- |
-| **KISS** | Chọn giải pháp đơn giản nhất đáp ứng đúng yêu cầu và đủ dễ thay đổi | “Càng ít file càng tốt” |
-| **YAGNI** (*You Aren't Gonna Need It*) | Không triển khai khả năng chưa có nhu cầu đủ rõ | “Không được thiết kế trước bất kỳ ranh giới nào” |
-| **DRY** (*Don't Repeat Yourself*) | Tránh lặp **tri thức/quy tắc** mà khi thay đổi phải cập nhật nhất quán | “Hai khối code nhìn giống nhau phải gộp” |
-| **SRP** | Một module có nhóm trách nhiệm/lý do thay đổi nhất quán | “Mỗi lớp chỉ được có một phương thức” |
-| **OCP** | Giảm tác động sửa mã ổn định khi thêm biến thể ở điểm mở rộng thích hợp | “Không được phép chỉnh sửa class đã viết” |
-| **DIP** | Logic quan trọng không bị khóa chặt bởi chi tiết biến động | “Mọi class phải có interface tương ứng” |
+| **KISS** | Choose the simplest correct solution that meets requirements and remains maintainable | "The fewer files, the better" |
+| **YAGNI** (*You Aren't Gonna Need It*) | Do not build capabilities without a sufficiently clear need | "Never design any boundaries in advance" |
+| **DRY** (*Don't Repeat Yourself*) | Avoid duplicating **knowledge/rules** that must change consistently | "Merge any two similar-looking code blocks" |
+| **SRP** | A module has coherent responsibilities and reasons to change | "One method per class" |
+| **OCP** | Reduce modifications to stable code when adding variation at suitable extension points | "Never modify an existing class" |
+| **DIP** | Keep important logic independent from unstable details | "Every class must have a corresponding interface" |
 
-Không có mâu thuẫn tất yếu giữa các nguyên tắc này. Chúng trả lời những câu hỏi khác nhau.
+These principles are not inherently contradictory; they address different questions.
 
-Ví dụ **DIP** có thể gợi ý một interface cho cổng thanh toán bên ngoài vì đó là ranh giới biến động quan trọng. Nhưng **YAGNI** ngăn ta xây thêm một hệ thống auto-discovery 20 loại cổng thanh toán nếu không có nhu cầu.
+For example, **DIP** may suggest an interface for an external payment gateway because it is an important changing boundary. But **YAGNI** discourages building auto-discovery for 20 gateways without a real requirement.
 
-**DRY cần xét ngữ nghĩa.** Hai hàm cùng gồm 8 dòng không nên tự động gộp thành một hàm có 6 tham số boolean; nếu mỗi hàm phục vụ quy tắc thuộc nhóm nghiệp vụ độc lập, việc tách riêng có thể giúp mỗi bên tiến hóa đúng.
+**DRY is about meaning.** Two functions with 8 lines each should not automatically be merged into one with 6 boolean parameters; if they implement independent domain policies, keeping them separate may support correct evolution.
 
-### Đừng biến “Rule of Three” thành luật
+### Do not turn the "Rule of Three" into law
 
-Một lời nhắc thực dụng là quan sát vài trường hợp trùng nhau trước khi trích abstraction. Nhưng con số 2, 3 hay 4 **không tự chứng minh** điều gì.
+A practical heuristic is to observe a few similar cases before extracting abstractions. But the numbers 2, 3, and 4 **do not prove** anything by themselves.
 
-Nếu hai client đã được xác nhận cần cùng một hợp đồng ổn định, abstraction có thể đáng tạo ngay. Nếu ba đoạn code trông giống nhau nhưng có chủ sở hữu và lý do thay đổi khác nhau, trích chúng thành một interface chung có thể là sai.
+If two confirmed clients require one stable contract, an abstraction may be worthwhile immediately. If three code fragments look alike but have separate owners and reasons to change, extracting a shared interface may be wrong.
 
-**Tiêu chí quan trọng hơn số lần lặp: những chỗ này có thật sự phải thay đổi cùng nhau không?**
+**A better criterion than repetition count: must these cases genuinely change together?**
 
-## 5. Ví dụ tiến hóa: từ một điều kiện tới điểm mở rộng có căn cứ
+## 5. Evolving from one condition to a justified extension point
 
-### Giai đoạn 1 — yêu cầu chỉ có một chính sách
+### Stage 1 — only one shipping policy is required
 
-Giả sử cửa hàng chỉ có giao hàng **STANDARD**, miễn phí từ 500.000 VND, còn lại tính 30.000 VND.
+Suppose a store initially offers only **STANDARD** shipping, free from 500.000 VND, otherwise 30.000 VND.
 
-Một phiên bản đơn giản, có validation và kiểm soát overflow:
+A simple version with validation and overflow protection:
 
 ~~~java
 static long checkoutTotalVnd(long goodsTotalVnd) {
@@ -6630,21 +6630,21 @@ static long checkoutTotalVnd(long goodsTotalVnd) {
 }
 ~~~
 
-**Không có gì sai** khi bắt đầu từ phương thức này. API dễ đọc, kết quả hiển nhiên, test nhanh. Tạo trước `PolicyFactory` sẽ không làm phép tính chính xác hơn.
+**There is nothing wrong** with starting here. The API is readable, results are obvious, and tests are quick. Prebuilding `PolicyFactory` does not improve the arithmetic.
 
-### Giai đoạn 2 — xuất hiện biến thể thật
+### Stage 2 — a real variant appears
 
-Sau một thời gian, yêu cầu được xác nhận:
+Later, confirmed requirements arise:
 
-- **STANDARD:** quy tắc cũ.
-- **EXPRESS:** phí cố định 50.000 VND, cộng 5.000 VND cho mỗi kilogram, phần lẻ kilogram làm tròn lên.
-- Hai chính sách do các nhóm nghiệp vụ khác nhau quản lý và có thể thay đổi độc lập.
+- **STANDARD:** the existing rule.
+- **EXPRESS:** a fixed 50.000 VND fee plus 5.000 VND per kilogram, rounding partial kilograms up.
+- Separate business groups own the two policies, which may evolve independently.
 
-Đến đây có ít nhất hai hướng hợp lý:
+At least two approaches now make sense:
 
-**Hướng A — vẫn dùng `switch`:** nếu hai công thức ngắn, cùng nơi sở hữu, ít thay đổi, một `switch` có test vẫn dễ đọc.
+**Option A — keep a `switch`:** if the formulas are short, share an owner, and rarely change, a tested `switch` can be clear.
 
-**Hướng B — tách `FeePolicy`:** nếu mỗi thuật toán dần lớn, được test/deploy độc lập hoặc sẽ có nhà cung cấp phí riêng, Strategy trở nên hữu ích. Ta đã nhìn thấy **điểm biến thiên thật**, thay vì chỉ đoán.
+**Option B — extract `FeePolicy`:** if algorithms grow, are tested/deployed independently, or gain separate fee providers, Strategy becomes useful. We can now see a **real variation point** instead of guessing.
 
 ~~~mermaid
 flowchart TD
@@ -6659,17 +6659,17 @@ flowchart TD
     G --> H["Refactor khi có bằng chứng mới"]
 ~~~
 
-Đây là **quy trình ra quyết định**, không phải công thức máy móc. Cấu trúc tối ưu phụ thuộc rủi ro và vòng đời của code.
+This is **a decision process**, not a mechanical formula. Good structure depends on change risks and code lifecycle.
 
-## 6. Java 17 chạy độc lập: so sánh thiết kế đơn giản và phiên bản có Strategy
+## 6. Standalone Java 17 example: comparing a simple design and Strategy
 
-Lưu thành **AbstractionTimingDemo.java**. Trong cùng file có:
+Save as **AbstractionTimingDemo.java**. The file contains:
 
-1. `SimpleCheckout` cho giai đoạn ban đầu;
-2. `FeePolicy`, `StandardFee`, `ExpressFee` và `PolicyCheckout` cho giai đoạn có biến thể;
-3. `Shipment` là dữ liệu đầu vào được validate.
+1. `SimpleCheckout` for the initial stage;
+2. `FeePolicy`, `StandardFee`, `ExpressFee`, and `PolicyCheckout` for the variant stage;
+3. `Shipment` for validated input data.
 
-Mục tiêu của ví dụ **không phải chứng minh Strategy luôn tốt hơn**. Mục tiêu là nhìn rõ lúc nào một abstraction bắt đầu có nhiệm vụ thực tế.
+The example does **not claim that Strategy is always better**. It shows when an abstraction starts serving a real purpose.
 
 ~~~java
 import java.util.Map;
@@ -6779,14 +6779,14 @@ public class AbstractionTimingDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac AbstractionTimingDemo.java
 java AbstractionTimingDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Initial: 600000
@@ -6794,25 +6794,25 @@ Standard: 600000
 Express: 660000
 ~~~
 
-**Kiểm tra công thức:** đơn giá trị 600.000 VND miễn phí STANDARD. Với EXPRESS, trọng lượng 1.500 g được làm tròn lên **2 kg**, nên phí = 50.000 + 2 × 5.000 = **60.000 VND**, tổng = 660.000 VND.
+**Formula check:** a 600.000 VND order gets free STANDARD shipping. For EXPRESS, 1.500 g rounds up to **2 kg**, giving a fee of 50.000 + 2 × 5.000 = **60.000 VND**, and a total of 660.000 VND.
 
-### Điều gì thay đổi giữa hai giai đoạn?
+### What changes between the two stages?
 
-| Trước có biến thể | Sau có biến thể được xác nhận |
+| Before confirmed variation | After confirmed variation |
 | --- | --- |
-| Một công thức, một nơi sửa | Hai thuật toán có thể thay đổi độc lập |
-| Không cần chọn implementation | `Mode`/composition root chọn chính sách |
-| Hàm đơn giản là đủ | `FeePolicy` trở thành hợp đồng có ý nghĩa |
-| Một số test trực tiếp | Test riêng cho từng policy và test điều phối |
-| Ít tầng chuyển hướng | Có thêm tầng trừu tượng để giảm coupling giữa thuật toán |
+| One formula, one place to edit | Two algorithms can evolve independently |
+| No implementation selection required | `Mode`/composition root chooses the policy |
+| A simple function is enough | `FeePolicy` becomes a meaningful contract |
+| A few direct tests | Separate policy tests and orchestration tests |
+| Fewer forwarding layers | An abstraction reduces coupling among algorithms |
 
-**Không phải mọi lần có thêm mode đều cần Strategy.** Nếu tổng logic vẫn chỉ vài câu lệnh và cùng một nhóm sở hữu, dùng `switch` có thể là lựa chọn kinh tế hơn. Trong ví dụ, Strategy được giới thiệu vì giả định **quy tắc thay đổi độc lập**, không chỉ vì `enum` có hai giá trị.
+**Not every additional mode needs Strategy.** If the logic remains a few statements owned by one team, a `switch` may cost less. Here, Strategy appears because the policies are assumed to **change independently**, not merely because an `enum` has two values.
 
-Tính mở rộng vẫn có giới hạn: thêm chế độ giao hàng mới có thể phải cập nhật `Mode` và cấu hình `Map`. OCP không phải lời hứa “sẽ không bao giờ sửa file nào” — nó khuyến khích đặt thay đổi ở đúng điểm mở rộng.
+Extensibility has limits: adding a new shipping mode may still require updating `Mode` and a `Map` configuration. OCP does not promise "never edit any file"; it encourages changes at appropriate extension points.
 
-## 7. Kiểm thử: bằng chứng giúp refactor mà không làm đổi hành vi cũ
+## 7. Testing preserves behavior during refactoring
 
-Khi tách một hàm thành các policy, không nên dựa vào cảm giác rằng code mới “trông chuẩn hơn”. Hãy giữ **hành vi ban đầu** bằng test rồi kiểm tra nhánh mới:
+When extracting policies from a function, do not assume the new code is "more correct" just because it looks architecturally sophisticated. Capture **existing behavior** in tests and then verify the new branch:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -6879,22 +6879,22 @@ class AbstractionTimingDemoTest {
 }
 ~~~
 
-File test là **AbstractionTimingDemoTest.java**, cần JUnit Jupiter 5 trong classpath. File demo chính chỉ dùng JDK 17.
+The test file is **AbstractionTimingDemoTest.java**, requiring JUnit Jupiter 5 on the classpath. The demo itself only requires JDK 17.
 
-Các test chứng minh điều gì?
+What do these tests establish?
 
-- Công thức STANDARD **không đổi** khi chuyển từ hàm đơn giản sang implementation của interface.
-- EXPRESS làm tròn trọng lượng theo quy tắc đã viết.
-- Registry thiếu implementation báo lỗi rõ.
-- Dữ liệu đầu vào sai bị từ chối trước khi tính toán.
+- The STANDARD formula **does not change** when extracted from a function into an interface implementation.
+- EXPRESS rounds weights according to the documented rule.
+- Missing registry implementations produce clear errors.
+- Invalid input is rejected before calculation.
 
-**Không thể dùng số test thành công để kết luận mọi kiến trúc tốt.** Test chủ yếu giúp thay đổi an toàn; độ phức tạp và khả năng hiểu cần được review riêng. Không nên mock mọi helper chỉ để “có thể kiểm thử”: một hàm thuần túy đã có thể test trực tiếp rất tốt.
+**A passing test count cannot prove architectural quality.** Tests primarily support safe changes; complexity and readability need separate review. Do not mock every helper merely for "testability": pure functions are already easy to test directly.
 
-## 8. Dấu hiệu nhận biết abstraction đã đi quá xa
+## 8. Signs that abstraction has gone too far
 
-### 8.1. Một interface cho mỗi class mà không có ranh giới rõ
+### 8.1. An interface per class without a clear boundary
 
-Ví dụ:
+For example:
 
 ~~~text
 UserController
@@ -6906,38 +6906,38 @@ UserController
   → UserRepositoryImpl
 ~~~
 
-Chuỗi này **không tự động xấu**: một service có business rule và một repository tách hạ tầng có thể rất hợp lý. Nhưng nếu mọi lớp chỉ chuyển tiếp lời gọi và không có trách nhiệm, chính sách hay điểm thay thế độc lập, số tầng này có thể chỉ gây thêm công việc.
+This chain is **not automatically bad**: a service with business rules and a repository separating infrastructure can be appropriate. But if each layer merely forwards calls without distinct responsibilities, policies, or replacement points, the layers add work without value.
 
-**Hãy hỏi:** bỏ một interface/tầng trung gian có làm mất khả năng thực tế (ranh giới module, hợp đồng công khai, thay adapter, test độc lập, phân quyền) không? Nếu không, cân nhắc đơn giản hóa.
+**Ask:** would removing an interface/intermediary lose a real capability (module boundary, public contract, adapter replacement, isolated testing, authorization)? If not, simplify.
 
-Trong Java, interface không phải điều kiện bắt buộc để unit test. Có thể test class cụ thể trực tiếp; hoặc dùng fake ở những ranh giới có phụ thuộc ngoài thực sự.
+Java does not require interfaces for unit tests. Test concrete classes directly, or use fakes for real external-dependency boundaries.
 
-### 8.2. Generic framework cho đúng một bài toán
+### 8.2. A generic framework for one problem
 
 ~~~java
 // Ý tưởng đáng ngờ nếu chỉ dùng với đúng một màn hình CRUD:
 // AbstractWorkflowCoordinator<T, ID, META, POLICY, CONTEXT>
 ~~~
 
-Một bộ generic như vậy đặt nhiều gánh nặng lên người dùng API: type parameters, factory, converter, hook, cấu hình và lifecycle. Nếu không có nhiều workflow thực sự chung về hợp đồng, ta có thể đang đóng gói **sự chưa hiểu bài toán** vào generic parameters.
+This generic framework burdens API users with type parameters, factories, converters, hooks, configuration, and lifecycle concerns. Without several workflows genuinely sharing one contract, its parameters may simply encode **an incomplete understanding of the problem**.
 
-Một abstraction mạnh không nhất thiết là abstraction rộng. Một interface `PaymentGateway` có hai phương thức được thiết kế kỹ có thể hữu ích hơn một framework “universal” với hai mươi điểm mở rộng.
+A powerful abstraction need not be broad. A carefully designed two-method `PaymentGateway` interface can be more valuable than a "universal" framework with twenty extension points.
 
-### 8.3. Hệ thống cấu hình thay cho một nhánh điều kiện
+### 8.3. A configuration system replaces one condition
 
-Nếu để thay một ngưỡng miễn phí giao hàng phải sửa YAML, registry key, factory mapping và một bean profile, có thể abstraction đã **chuyển độ phức tạp từ Java sang cấu hình** chứ không giảm nó.
+If changing a free-shipping threshold requires edits to YAML, registry keys, factory mappings, and bean profiles, abstraction may have **moved complexity from Java to configuration** without reducing it.
 
-Cấu hình động hữu ích khi **thực sự cần đổi chính sách mà không phát hành code**, phân quyền cấu hình theo tenant, hoặc chọn implementation tùy môi trường. Nếu không có các yêu cầu ấy, hằng số/domain setting rõ ràng có thể phù hợp hơn.
+Dynamic configuration is useful when policies **must change without a code release**, differ by tenant, or select implementations by environment. Otherwise a clear constant/domain setting may suffice.
 
-### 8.4. Abstraction rò rỉ chi tiết
+### 8.4. Abstractions that leak implementation details
 
-Một `StoragePort` được thiết kế để tách business khỏi database nhưng lộ `JdbcConnection`, tên cột SQL và transaction driver trong API thì chưa che được hạ tầng. Một `NotificationSender` nhận trực tiếp object riêng của nhà cung cấp cũng làm business code bị khóa vào SDK.
+A `StoragePort` meant to separate business code from the database fails to hide infrastructure if its API exposes `JdbcConnection`, SQL column names, and transaction drivers. A `NotificationSender` that accepts vendor-specific objects also couples business logic to an SDK.
 
-**Đúng hướng** thường là biểu diễn năng lực cần thiết theo domain ở phía client, rồi adapter chuyển sang API kỹ thuật bên ngoài.
+**The better direction** is to express capabilities in client-side domain terms and let adapters translate them to external APIs.
 
-## 9. Phân biệt “lặp code” và “lặp tri thức”
+## 9. Distinguish "duplicated code" from "duplicated knowledge"
 
-Xem hai quy tắc đang giống nhau hôm nay:
+Consider two policies with identical formulas today:
 
 ~~~java
 long loyaltyDiscount(long amountVnd) {
@@ -6949,76 +6949,76 @@ long seasonalDiscount(long amountVnd) {
 }
 ~~~
 
-Chúng cùng công thức 5% nhưng có thể **khác lý do thay đổi**:
+Both currently use 5% but may have **different reasons to change**:
 
-- Giảm giá thành viên thay đổi theo chính sách duy trì khách hàng.
-- Giảm theo mùa thay đổi theo chiến dịch marketing.
+- Loyalty discounts change with retention policy.
+- Seasonal discounts change with marketing campaigns.
 
-Nếu gộp vào `universalDiscount(amount, isLoyalty, isSeasonal, ...)`, các chính sách khác nhau sẽ bị ràng buộc trong cùng một hàm. Đây là **sự giống nhau ngẫu nhiên về cú pháp**, chưa chắc là một tri thức cần được chia sẻ.
+Combining them into `universalDiscount(amount, isLoyalty, isSeasonal, ...)` couples unrelated policies in one function. This is **accidental syntactic similarity**, not necessarily shared knowledge.
 
-Ngược lại, nếu cả hai đều phải dùng một **quy tắc làm tròn tiền chuẩn của công ty**, việc trích riêng một helper nhỏ về rounding có thể là đúng: tri thức **quy tắc làm tròn** thật sự chung và cần nhất quán.
+Conversely, if both follow a **company-wide money-rounding rule**, extracting a small rounding helper may be right: the **rounding policy** genuinely is shared and must remain consistent.
 
-**Một số câu hỏi kiểm tra:**
+**Questions to investigate:**
 
-1. Khi yêu cầu A thay đổi, yêu cầu B có cần thay đổi cùng lúc không?
-2. Hai chỗ có cùng chủ sở hữu/ngôn ngữ nghiệp vụ không?
-3. Có bất biến hoặc hợp đồng chung thực sự cần giữ không?
-4. Abstraction mới có tên phản ánh khái niệm domain không?
-5. Có bao nhiêu biến cờ/nhánh cần thêm để nó xử lý được cả A và B?
+1. When requirement A changes, should requirement B change too?
+2. Do the cases share an owner and domain vocabulary?
+3. Is there a genuine shared invariant or contract?
+4. Does the new abstraction's name reflect a domain concept?
+5. How many flags/branches are required for both A and B?
 
-Nếu một abstraction liên tục được mở rộng bởi các cờ như `isSpecial`, `skipValidation`, `useLegacyMode`, rất có thể các trường hợp không còn chia sẻ một hợp đồng lành mạnh.
+If an abstraction repeatedly acquires flags such as `isSpecial`, `skipValidation`, and `useLegacyMode`, its cases may no longer share a healthy contract.
 
-## 10. Những câu hỏi nên trả lời trước khi chọn Design Pattern
+## 10. Questions to answer before choosing a Design Pattern
 
-| Pattern hoặc cơ chế | Bằng chứng nên có | Cảnh báo lạm dụng |
+| Pattern or mechanism | Evidence to look for | Overuse warning |
 | --- | --- | --- |
-| **Strategy** | Các thuật toán cùng vai trò cần thay thế/biến thiên độc lập | Chỉ có một phép tính ngắn |
-| **Factory Method/Abstract Factory** | Quá trình chọn/tạo object có logic thật; nhiều họ object tương ứng | Factory chỉ gọi một constructor |
-| **Builder** | Nhiều tham số tùy chọn, tổ hợp cần kiểm tra, quá trình dựng có bước | Object có 2–3 field rõ ràng |
-| **Decorator** | Cần ghép các hành vi quanh nhiều object cùng interface | Một wrapper chỉ forward `return next.call()` |
-| **Observer/Event** | Có nhiều bên phản ứng độc lập, cần tách publish/subscribe | Lời gọi đồng bộ một chiều đã đủ |
-| **State** | Nhiều hành vi thay đổi theo vòng đời và bảng chuyển trạng thái phức tạp | Hai trạng thái với một câu lệnh `if` |
-| **Repository/Port** | Business cần cách ly lưu trữ, hạ tầng hoặc public contract | Interface sao chép 1:1 toàn bộ API của class mà không tách được gì |
-| **Dependency Injection** | Cần cấu hình vòng đời và cung cấp phụ thuộc rõ ràng | Bean container cho phép tính thuần không có phụ thuộc |
-| **Inheritance** | Thực sự có quan hệ subtype giữ hợp đồng LSP | Chỉ muốn tái sử dụng 5 dòng code |
+| **Strategy** | Algorithms fulfilling one role need interchangeable, independently changing implementations | Only one short formula |
+| **Factory Method/Abstract Factory** | Object selection/construction has real logic; several related object families | Factory only invokes a constructor |
+| **Builder** | Numerous optional arguments, validated combinations, or staged construction | Object with 2–3 straightforward fields |
+| **Decorator** | Compose behaviors around objects under a shared interface | Wrapper merely forwards `return next.call()` |
+| **Observer/Event** | Independent subscribers react; publish/subscribe decoupling is needed | A direct synchronous call would suffice |
+| **State** | Complex lifecycle-dependent behavior and transition tables | Two states and one `if` |
+| **Repository/Port** | Business code requires isolation from storage, infrastructure, or a public contract | Interface copies a class API 1:1 without adding a boundary |
+| **Dependency Injection** | Explicit dependency supply and lifecycle configuration are needed | Bean container for pure calculations without dependencies |
+| **Inheritance** | Genuine subtype relationship preserving the LSP contract | Merely reusing 5 lines of code |
 
-Bảng này không phải luật chọn pattern. Nó giúp tránh chọn từ **tên pattern** trước khi hiểu **áp lực thay đổi**.
+This table is not a mechanical pattern-selection rule. It guards against choosing **pattern names** before understanding **change pressure**.
 
-## 11. Một quy trình refactor dựa trên bằng chứng
+## 11. Evidence-based refactoring process
 
-### Bước 1 — mô tả hành vi hiện tại
+### Step 1 — describe existing behavior
 
-Đầu tiên viết rõ input, output, tiền điều kiện, hậu điều kiện và ca biên. Ví dụ với phí giao hàng: đúng ngưỡng 500.000, thấp hơn 1 VND, miễn phí, weight = 0, làm tròn phần lẻ kilogram.
+Document inputs, outputs, preconditions, postconditions, and boundaries first. For shipping, test the 500.000 threshold, 1 VND below it, free shipping, weight = 0, and fractional-kilogram rounding.
 
-### Bước 2 — ghi nhận thay đổi thật
+### Step 2 — record actual changes
 
-Một dấu hiệu tốt là nhiều lần chỉnh sửa cùng một điểm biến thiên: thêm cách tính phí, thay nhà cung cấp thanh toán, thêm mô hình phân quyền, hoặc hai đội cần phát triển cùng một khả năng khác nhau.
+Repeated edits to one variation point are good evidence: adding fee algorithms, switching payment providers, adding authorization models, or two teams needing different versions of a capability.
 
-Không cần đợi sản phẩm gặp sự cố mới refactor. Nhưng cũng không cần dựng plugin engine cho một tính năng không nằm trong roadmap đã xác thực.
+There is no need to wait for production incidents before refactoring, but neither should we build a plugin engine for a feature absent from an approved roadmap.
 
-### Bước 3 — xác định điều ổn định và điều biến thiên
+### Step 3 — identify what stays stable and what varies
 
-Ví dụ:
+For example:
 
-- Ổn định: `checkout` cần một **số tiền phí hợp lệ**.
-- Biến thiên: **cách tính phí** theo chính sách.
-- Tách `FeePolicy` đúng ranh giới, thay vì trích cả một “ShippingFramework” quản lý giá, địa chỉ, kho, voucher và vận chuyển cùng lúc.
+- Stable: `checkout` requires **a valid fee amount**.
+- Variable: the **fee calculation** for each policy.
+- Extract `FeePolicy` at this boundary rather than an oversized "ShippingFramework" managing prices, addresses, warehouses, vouchers, and carriers.
 
-### Bước 4 — refactor từng bước, có kiểm thử hồi quy
+### Step 4 — refactor incrementally with regression tests
 
-Giữ test cho hành vi cũ, trích một hợp đồng nhỏ, chuyển implementation cũ sang hợp đồng ấy, thêm biến thể mới và chạy test. Không đổi đồng thời toàn bộ tên API, persistence, giao thức và business rule nếu không cần.
+Preserve existing behavior tests, extract a small contract, migrate the original implementation, add the variant, and rerun tests. Avoid simultaneously renaming every API, persistence layer, protocol, and business rule without reason.
 
-### Bước 5 — đánh giá “mức độ ma sát” sau thay đổi
+### Step 5 — assess friction after the change
 
-Đừng chỉ hỏi “đã áp dụng SOLID chưa?”. Hãy hỏi:
+Do not merely ask "did we apply SOLID?" Ask:
 
-- Muốn thêm biến thể, **cần sửa bao nhiêu nơi và bao nhiêu hợp đồng công khai?**
-- Người mới có cần mở nhiều file để lần ra một công thức không?
-- Test logic có cần dựng một graph mock quá lớn không?
-- Lỗi runtime do cấu hình hoặc thứ tự decorator có tăng không?
-- Có abstraction nào không còn khách hàng hoặc không còn ý nghĩa?
+- To add a variant, **how many places and public contracts require editing?**
+- Must new developers open many files to follow one formula?
+- Do logic tests require huge mock graphs?
+- Have runtime failures from configuration or decorator order increased?
+- Are there abstractions with no clients or remaining purpose?
 
-Nếu refactor chỉ chuyển mọi dòng `if` thành các lớp trống mà không cải thiện tình huống thay đổi cụ thể, hãy cân nhắc đơn giản hóa lại.
+If refactoring only turns each `if` into an empty class without improving the actual change scenario, reconsider and simplify.
 
 ~~~mermaid
 flowchart LR
@@ -7033,63 +7033,63 @@ flowchart LR
     H --> D
 ~~~
 
-## 12. Những trường hợp nên trừu tượng hóa sớm có chủ đích
+## 12. Cases where early abstraction is intentional and worthwhile
 
-**YAGNI không có nghĩa “không thiết kế”**. Có những ranh giới đáng đầu tư từ sớm vì nhu cầu hoặc rủi ro đã được xác nhận:
+**YAGNI does not mean "no design."** Some boundaries justify early investment because requirements/risks are already established:
 
-- **API công khai:** nhiều client sẽ phụ thuộc vào hợp đồng, nên khó thay đổi phá tương thích.
-- **Tích hợp nhà cung cấp:** SDK bên thứ ba dễ đổi, có timeout, lỗi mạng, chính sách retry hoặc giới hạn quyền; port theo nhu cầu business giúp cô lập.
-- **Bảo mật và phân quyền:** có ranh giới truy cập rõ để tránh các đường đi bỏ qua kiểm tra bắt buộc.
-- **Tiền, giao dịch và dữ liệu quan trọng:** thiết kế kiểu giá trị, invariant, transaction boundary rõ ngay từ đầu thường rẻ hơn xử lý sai lệch về sau.
-- **Tính khả kiểm thử của nghiệp vụ cốt lõi:** tách đồng hồ (`Clock`), nguồn ngẫu nhiên hoặc API mạng ra khỏi logic khi tính xác định của test thực sự bị ảnh hưởng.
-- **Nhiều nhóm hoặc module độc lập:** cần hợp đồng ổn định đã xác định, không chỉ là giả định sẽ có “vô số module”.
+- **Public APIs:** many clients will depend on the contract, making breaking changes costly.
+- **Provider integrations:** third-party SDKs change and have network timeouts, retry policies, and permissions; business-oriented ports isolate them.
+- **Security and authorization:** clear trust boundaries prevent paths bypassing mandatory checks.
+- **Money, transactions, and critical data:** early value types, invariants, and transaction boundaries can prevent costly inconsistencies.
+- **Core-domain testability:** isolate clocks (`Clock`), randomness, or network APIs when they genuinely undermine deterministic tests.
+- **Independent teams or modules:** define verified stable contracts rather than assuming "countless future modules."
 
-Điểm chung: **có bằng chứng về chi phí thay đổi hoặc rủi ro**. Không nên suy diễn từ ví dụ nhỏ rằng tất cả abstraction trong kiến trúc ứng dụng đều là thừa.
+The shared feature is **evidence of change costs or risks**. A small example does not imply every abstraction in application architecture is wasteful.
 
-## 13. Overengineering trong Java và Spring
+## 13. Overengineering in Java and Spring
 
-Một số trường hợp cụ thể:
+Concrete examples:
 
-**Tạo interface cho mỗi `@Service` chỉ để Spring inject được** là không cần thiết: Spring có thể inject class cụ thể qua constructor. Interface nên thể hiện một hợp đồng cần bảo vệ, nhiều implementation hoặc ranh giới module/hạ tầng, không đơn thuần là vật trang trí.
+**Creating an interface for every `@Service` solely for Spring injection** is unnecessary: Spring can constructor-inject concrete classes. Interfaces should represent meaningful contracts, multiple implementations, or module/infrastructure boundaries, not decoration.
 
-**Đưa mọi helper thành bean** làm tăng phụ thuộc vào container, trong khi một phương thức thuần hoặc một value object có thể được tạo và test trực tiếp. Không phải toàn bộ code Java cần được “quản lý bởi Spring”.
+**Making every helper a bean** increases container coupling when a pure method or value object could be created and tested directly. Not all Java code needs to be "managed by Spring."
 
-**Dùng `@Lazy` để né circular dependency** có thể làm ứng dụng khởi động nhưng chưa giải quyết vòng trách nhiệm giữa service. Nên xem lại hướng phụ thuộc và nơi điều phối thay vì coi việc hoãn khởi tạo là sửa kiến trúc.
+**Using `@Lazy` to bypass circular dependencies** may allow startup without fixing responsibility cycles among services. Revisit dependency direction and orchestration rather than treating deferred initialization as an architectural repair.
 
-**Dùng AOP cho một chỗ gọi duy nhất** có thể khó theo dõi hơn lời gọi rõ. AOP có ích ở cross-cutting concern áp dụng có hệ thống, nhưng phải hiểu join point, thứ tự advice, proxy và giới hạn self-invocation.
+**Using AOP for one isolated call** may be harder to follow than an explicit call. AOP serves cross-cutting concerns applied consistently, but requires understanding join points, advice ordering, proxies, and self-invocation limitations.
 
-**Tạo event bus cho mọi lời gọi trong cùng một transaction** có thể làm việc xác định khi nào hoàn thành, khi nào lỗi và lúc nào dữ liệu đã commit trở nên khó hơn. Event hợp lý khi cần nhiều subscriber hoặc xử lý bất đồng bộ; nó không tự cung cấp exactly-once hay transaction.
+**Using an event bus for every call inside one transaction** can obscure completion, failure, and commit timing. Events suit independent subscribers or asynchronous workflows; they do not automatically provide exactly-once semantics or transactions.
 
-Với các ví dụ trên, tiêu chí là **mục tiêu vận hành và ranh giới nghiệp vụ**, không phải “framework làm được nên dùng”.
+Evaluate these cases by **operational goals and domain boundaries**, not because a framework provides the feature.
 
-## 14. Bài tập tự đánh giá thiết kế
+## 14. Design self-assessment exercise
 
-Giả sử một ứng dụng quản lý lịch học cần chức năng:
+Suppose a class-scheduling application requires:
 
-- Mỗi lớp có `startTime`, `endTime`, `teacherId`.
-- Không chấp nhận `endTime` trước hoặc bằng `startTime`.
-- Ban đầu chỉ có một quy tắc tính số buổi: mỗi lịch được tạo đại diện một buổi.
-- Sau khi nhận yêu cầu thật, có thêm buổi lặp hằng tuần và buổi đặc biệt.
-- Các trường hợp mới có quy tắc kiểm tra khác nhau.
+- Every class has `startTime`, `endTime`, and `teacherId`.
+- `endTime` must be after `startTime`.
+- Initially, each created schedule represents one session under one counting rule.
+- Later, verified requirements add weekly recurring and special sessions.
+- The new cases have distinct validation rules.
 
-**Thực hành:**
+**Exercises:**
 
-1. Viết một `record ClassSession` hoặc class bất biến đơn giản với validation, không cần Factory cho bản đầu tiên.
-2. Viết test cho thời gian bắt đầu/kết thúc, trường hợp bằng nhau và dữ liệu null.
-3. Thiết kế phiên bản thứ hai khi xuất hiện lịch lặp: trước tiên thử một API nhỏ có tên rõ; nếu quy tắc mỗi loại trở nên độc lập, cân nhắc Strategy hoặc các domain type riêng.
-4. Vẽ sơ đồ phụ thuộc trước và sau, chỉ ra nơi đặt các quy tắc thay đổi.
-5. So sánh phương án `switch` với interface: phương án nào khiến thêm kiểu lịch mới dễ test, ít sửa nơi khác và đọc dễ hơn?
-6. Xem có abstraction nào chỉ forward lời gọi và không bảo vệ hợp đồng nào không; thử bỏ nó.
-7. Giải thích vì sao **hai kiểu lịch có vài đoạn code giống nhau** chưa đủ chứng minh chúng phải chung một lớp cơ sở.
+1. Implement a `record ClassSession` or simple immutable class with validation and no Factory initially.
+2. Test start/end times, equality boundaries, and null input.
+3. Design a second version when recurring schedules appear: first try a small, well-named API; consider Strategy or specialized domain types if policies diverge.
+4. Draw before/after dependency diagrams showing where changing rules belong.
+5. Compare a `switch` with an interface: which better supports testing new schedule types, limiting unrelated edits, and readability?
+6. Identify abstractions that merely forward calls without protecting contracts; try removing them.
+7. Explain why **two schedule types sharing some similar code** does not prove they need a common superclass.
 
-**Tiêu chí đạt:** thiết kế đáp ứng đúng yêu cầu hiện tại; không có bước truy cập hoặc factory thừa vô lý; các ràng buộc được kiểm thử; mỗi abstraction mới có lý do tạo cụ thể; và khi có yêu cầu mới, refactor giữ nguyên hành vi cũ.
+**Success criteria:** meets current requirements; no pointless navigation or factories; tested invariants; every new abstraction has a concrete reason; new changes preserve existing behavior.
 
-## 15. Kết luận: abstraction tốt phải “trả được tiền thuê”
+## 15. Conclusion: good abstractions must earn their keep
 
-Một mẫu thiết kế chỉ có giá trị khi nó giúp hệ thống **đúng hơn, dễ đọc hơn, dễ kiểm thử hơn hoặc thay đổi an toàn hơn** trong một bối cảnh xác định. Thiết kế quá sớm thường biến dự đoán chưa chắc đúng thành hợp đồng phải bảo trì.
+A design pattern matters when it makes the system **more correct, readable, testable, or safer to change** in a particular context. Premature design turns uncertain predictions into contracts that must be maintained.
 
-**Cách tư duy hữu ích:** bắt đầu với giải pháp đơn giản, đặt tên theo domain, bảo vệ invariant và test; sau đó quan sát các thay đổi thực tế để trích **abstraction nhỏ nhất giải quyết đúng loại thay đổi**. Đừng tối ưu số lớp ít nhất, cũng đừng tối ưu số pattern nhiều nhất. Hãy tối ưu khả năng một người hiểu và sửa hệ thống mà không làm hỏng điều đã chạy đúng.
+**Useful approach:** start simply, name concepts in domain language, preserve invariants and tests, then observe actual change and extract **the smallest abstraction addressing the real variation**. Neither minimizing class count nor maximizing pattern count is the goal. Optimize how easily people can understand and safely change a working system.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

@@ -1,75 +1,75 @@
 version: 1
 type: LEARNING_ROADMAP
-title: TÁI CẤU TRÚC — LIÊN KẾT BÀI HỌC
-roadmapHeading: Mạch liên kết bài học
+title: REFACTORING — LESSON CONNECTIONS
+roadmapHeading: Learning Path Connections
 roadmap:
 - id: refactoring-001
   order: 1
-  title: Nhận diện dấu hiệu cần cải thiện thiết kế
-  description: 'Xác lập khi nào mã gây chi phí sửa đổi: code smell là dấu hiệu để điều tra, cần bằng chứng từ thay đổi thực và kiểm thử trước khi chọn kỹ thuật.'
+  title: Identifying Signs That Design Needs Improvement
+  description: 'Determine when code makes changes costly: a code smell is a reason to investigate, and evidence from actual changes and tests is needed before choosing a technique.'
   transition:
     to: refactoring-002
-    description: '**Từ chẩn đoán vấn đề → chọn phép biến đổi nhỏ nhất: đổi tên đúng ý định**'
+    description: '**From diagnosing a problem → choosing the smallest transformation: renaming to express intent**'
 - id: refactoring-002
   order: 2
-  title: Đổi tên để làm rõ ý định
-  description: Tên tốt biểu đạt hành động và đơn vị ở nơi sử dụng. Rename cần giữ nguyên số tiền, ngoại lệ và rà soát tên được framework hoặc API bên ngoài sử dụng.
+  title: Renaming to Clarify Intent
+  description: Good names convey actions and units at the point of use. Renaming must preserve monetary amounts and exceptions, while checking names used by frameworks or external APIs.
   transition:
     to: refactoring-003
-    description: '**Từ tên rõ ràng → tách các bước đang chen chúc trong một method/class**'
+    description: '**From clear names → extracting steps crowded into one method or class**'
 - id: refactoring-003
   order: 3
-  title: Tách phương thức và tách lớp
-  description: Extract Method làm rõ bước xử lý; Extract Class tách các lý do thay đổi. Bài dùng checkout để chứng minh định giá và định dạng có thể thay đổi độc lập.
+  title: Extracting Methods and Classes
+  description: Extract Method clarifies processing steps; Extract Class separates reasons to change. A checkout example shows that pricing and formatting can evolve independently.
   transition:
     to: refactoring-004
-    description: '**Từ tách trách nhiệm → đặt phép xử lý ở chính object sở hữu dữ liệu**'
+    description: '**From separating responsibilities → placing behavior on the object that owns the data**'
 - id: refactoring-004
   order: 4
-  title: Di chuyển hành vi về đối tượng chịu trách nhiệm
-  description: Move Method đưa phép tính thành tiền vào OrderLine, tổng đơn/ưu đãi vào Order và giữ payment gateway ở service. Trách nhiệm đi theo thông tin và quy tắc sở hữu.
+  title: Moving Behavior to the Responsible Object
+  description: Move Method puts line-total calculations in OrderLine, order totals and discounts in Order, and the payment gateway in the service. Responsibility follows information and ownership rules.
   transition:
     to: refactoring-005
-    description: '**Từ chuyển trách nhiệm → bảo vệ dữ liệu bên trong đối tượng đã nhận trách nhiệm**'
+    description: '**From moving responsibilities → protecting the data inside the object that now owns them**'
 - id: refactoring-005
   order: 5
-  title: Đóng gói trường dữ liệu và cấu trúc nội bộ
-  description: Encapsulate Field và Collection chặn client sửa cấu trúc lưu trữ, chuyển mọi mutation sang API có kiểm tra và bảo vệ snapshot đọc.
+  title: Encapsulating Fields and Internal Structures
+  description: Encapsulate Field and Collection prevent clients from modifying storage structures directly, route all mutations through validated APIs, and protect read snapshots.
   transition:
     to: refactoring-006
-    description: '**Từ API đóng gói → gom các nhánh theo loại vào hành vi đa hình khi thật sự cần**'
+    description: '**From encapsulated APIs → replacing type-specific branches with polymorphic behavior when justified**'
 - id: refactoring-006
   order: 6
-  title: Thay điều kiện theo loại bằng đa hình
-  description: Khi nhiều nhánh theo loại lặp, DeliveryPolicy phân phối hành vi giao hàng; service chỉ chọn policy rồi gọi cùng hợp đồng, không cần giữ công thức mỗi loại.
+  title: Replacing Type Conditionals with Polymorphism
+  description: When type-specific branches recur, DeliveryPolicy dispatches delivery behavior; the service selects a policy and calls a common contract without retaining each type's formula.
   transition:
     to: refactoring-007
-    description: '**Từ lựa chọn hành vi đa hình → sử dụng collaborator qua composition thay vì extends để tái dùng**'
+    description: '**From selecting polymorphic behavior → reusing collaborators through composition rather than extends**'
 - id: refactoring-007
   order: 7
-  title: Thay kế thừa bằng kết hợp
-  description: Composition biến quan hệ mượn chức năng qua extends thành hợp tác MessageChannel, có thể thay Email/SMS và bọc retry mà không làm AlertService kế thừa adapter.
+  title: Replacing Inheritance with Composition
+  description: Composition replaces inheritance used solely to borrow behavior with collaboration through MessageChannel, allowing Email/SMS substitution and retry wrappers without making AlertService inherit an adapter.
   transition:
     to: refactoring-008
-    description: '**Từ thêm trừu tượng hợp lý → cân nhắc loại bỏ tầng chuyển tiếp thiếu giá trị**'
+    description: '**From introducing useful abstractions → considering the removal of forwarding layers that add no value**'
 - id: refactoring-008
   order: 8
-  title: Gộp hoặc loại bỏ trừu tượng không cần thiết
-  description: Gộp tầng middle man hoặc hierarchy thừa khi không thêm trách nhiệm; giữ interface ở ranh giới DB, thời gian, thanh toán hoặc plugin có hợp đồng thật.
+  title: Consolidating or Removing Unnecessary Abstractions
+  description: Consolidate redundant middlemen or hierarchies that add no responsibility, while retaining interfaces at database, time, payment, or plugin boundaries with real contracts.
   transition:
     to: refactoring-009
-    description: '**Từ chọn cấu trúc phù hợp → bảo đảm mọi refactor bằng vòng lặp kiểm thử bảo vệ**'
+    description: '**From choosing the right structure → safeguarding every refactoring with a protective testing loop**'
 - id: refactoring-009
   order: 9
-  title: Cải thiện thiết kế từng bước với kiểm thử bảo vệ
-  description: Bài kết thúc chương bằng vòng lặp thay đổi nhỏ có safety-net tests, bảo toàn public behavior, exception và side effect; dùng ngưỡng pricing để bắt regression cụ thể.
+  title: Improving Design Incrementally with Safety-Net Tests
+  description: The chapter concludes with small changes backed by safety-net tests that preserve public behavior, exceptions, and side effects; pricing thresholds expose specific regressions.
   transition: null
 comparisonMarkdown: |-
-  ## 2. Bảng đối chiếu các bài học
+  ## 2. Lesson Comparison Table
 
-  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | Criterion | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 | Lesson 6 | Lesson 7 | Lesson 8 | Lesson 9 |
   | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-  | Tên | Nhận diện dấu hiệu cần cải thiện thiết kế | Đổi tên để làm rõ ý định | Tách phương thức và tách lớp | Di chuyển hành vi về đối tượng chịu trách nhiệm | Đóng gói trường dữ liệu và cấu trúc nội bộ | Thay điều kiện theo loại bằng đa hình | Thay kế thừa bằng kết hợp | Gộp hoặc loại bỏ trừu tượng không cần thiết | Cải thiện thiết kế từng bước với kiểm thử bảo vệ |
-  | Vấn đề cần hiểu | Những dấu hiệu nào thực sự gây chi phí bảo trì? | Làm sao đặt tên diễn tả đúng ý định/hợp đồng? | Khi nào tách method hay class để tăng cohesion? | Hành vi thuộc về object nào? | Các đường nào làm lộ và phá trạng thái nội bộ? | Các nhánh theo loại nào nên thay bằng polymorphism? | Quan hệ nào nên chuyển từ extends sang collaborator? | Những abstraction nào là tầng chuyển tiếp thừa? | Refactor từng bước thế nào để hành vi không đổi? |
-  | Giá trị đối với OOP/module | Phân loại smell từ bằng chứng thay đổi | Đổi tên đúng ý định và kiểm tra compatibility | Trích các bước pricing và format với contract giữ nguyên | Phân bố OrderLine/Order/CheckoutService đúng trách nhiệm | Bảo vệ invariant qua encapsulation và snapshot | Chiến lược DeliveryPolicy và dynamic dispatch | Kết hợp AlertService/MessageChannel và Decorator | Loại middle man nhưng giữ IO boundaries | Safety-net tests cho ngưỡng, lỗi và hiệu ứng |
-  | Tư duy hình thành | Đo lường chi phí trước khi thay thiết kế | Diễn đạt mục đích tại nơi sử dụng | Tách theo lý do thay đổi thực tế | Đưa quy tắc về nơi sở hữu thông tin | Giới hạn quyền sửa state | Thay điều kiện lặp bằng hợp đồng | Chọn has-a khi is-a không đúng | Xét giá trị abstraction, tránh đếm lớp | Mỗi vòng đổi nhỏ đều có bằng chứng |
+  | Name | Identifying Signs That Design Needs Improvement | Renaming to Clarify Intent | Extracting Methods and Classes | Moving Behavior to the Responsible Object | Encapsulating Fields and Internal Structures | Replacing Type Conditionals with Polymorphism | Replacing Inheritance with Composition | Consolidating or Removing Unnecessary Abstractions | Improving Design Incrementally with Safety-Net Tests |
+  | Key question | Which signs actually indicate maintenance costs? | How should names express intent and contracts accurately? | When should a method or class be extracted to improve cohesion? | Which object should own a behavior? | Which access paths expose and corrupt internal state? | Which type-specific branches should be replaced with polymorphism? | Which relationships should change from extends to collaboration? | Which abstractions are redundant forwarding layers? | How can code be refactored incrementally without changing behavior? |
+  | Value for OOP/the module | Classify smells using evidence from changes | Rename to express intent and verify compatibility | Extract pricing and formatting steps while preserving contracts | Assign responsibilities correctly across OrderLine, Order, and CheckoutService | Protect invariants through encapsulation and snapshots | Use DeliveryPolicy strategies and dynamic dispatch | Compose AlertService/MessageChannel with Decorator | Remove middlemen while retaining I/O boundaries | Provide safety-net tests for thresholds, failures, and effects |
+  | Mindset developed | Measure costs before changing design | Express purpose at the point of use | Separate by genuine reasons to change | Move rules to the owner of the relevant information | Restrict permission to modify state | Replace repeated conditionals with contracts | Choose has-a when is-a is incorrect | Assess the value of abstractions rather than counting classes | Support every small change with evidence |

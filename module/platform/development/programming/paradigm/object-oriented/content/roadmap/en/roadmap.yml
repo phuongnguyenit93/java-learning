@@ -43,50 +43,50 @@
 
 roadmap:
   - id: tu-duy-oop
-    title: Tư duy OOP
-    purpose: Hiểu cách mô hình hóa bài toán bằng các đối tượng tương tác.
+    title: Object-Oriented Thinking
+    purpose: Understand how to model a problem using interacting objects.
     objectives:
-      - Nhận diện đối tượng và trách nhiệm.
-      - Mô tả tương tác giữa các đối tượng.
+      - Identify objects and their responsibilities.
+      - Describe interactions between objects.
   - id: lop-va-doi-tuong
-    title: Lớp và đối tượng
-    purpose: Nắm mối quan hệ giữa khuôn mẫu và đối tượng cụ thể.
+    title: Classes and Objects
+    purpose: Understand the relationship between a class as a template and a specific object.
     objectives:
-      - Phân biệt lớp với đối tượng.
-      - Xác định trạng thái và hành vi.
+      - Distinguish classes from objects.
+      - Identify state and behavior.
   - id: dong-goi
-    title: Đóng gói
-    purpose: Bảo vệ trạng thái và cung cấp cách sử dụng đối tượng rõ ràng.
+    title: Encapsulation
+    purpose: Protect state and provide a clear way to work with an object.
     objectives:
-      - Ẩn chi tiết bên trong.
-      - Kiểm soát việc đọc và thay đổi trạng thái.
+      - Hide internal details.
+      - Control how state is read and changed.
   - id: truu-tuong
-    title: Trừu tượng
-    purpose: Biểu diễn điều cần sử dụng mà không phụ thuộc chi tiết thực hiện.
+    title: Abstraction
+    purpose: Represent what is needed without depending on implementation details.
     objectives:
-      - Chọn đặc điểm thiết yếu.
-      - Phân biệt giao diện sử dụng với cách thực hiện.
+      - Select essential characteristics.
+      - Distinguish the interface for using an object from how it is implemented.
   - id: ke-thua-va-ket-hop
-    title: Kế thừa và kết hợp
-    purpose: Hiểu cách tạo quan hệ giữa các lớp và ghép các đối tượng.
+    title: Inheritance and Composition
+    purpose: Understand how to establish relationships between classes and compose objects.
     objectives:
-      - Phân biệt quan hệ “là một” và “có một”.
-      - Chọn kế thừa hoặc kết hợp phù hợp.
+      - Distinguish “is-a” and “has-a” relationships.
+      - Choose appropriately between inheritance and composition.
   - id: da-hinh
-    title: Đa hình
-    purpose: Cho phép cùng một thao tác có cách thực hiện khác nhau.
+    title: Polymorphism
+    purpose: Allow the same operation to have different implementations.
     objectives:
-      - Nhận biết các cách thực hiện chung một giao diện.
-      - Sử dụng đối tượng thông qua kiểu trừu tượng.
+      - Recognize different implementations of a shared interface.
+      - Use objects through an abstract type.
   - id: thiet-ke-doi-tuong
-    title: Thiết kế đối tượng
-    purpose: Phân chia trách nhiệm để thiết kế dễ hiểu và dễ thay đổi.
+    title: Object Design
+    purpose: Assign responsibilities so the design is easy to understand and change.
     objectives:
-      - Giao trách nhiệm phù hợp cho từng đối tượng.
-      - Giảm phụ thuộc giữa các đối tượng.
+      - Assign appropriate responsibilities to each object.
+      - Reduce dependencies between objects.
   - id: thuc-hanh-tong-hop
-    title: Thực hành tổng hợp
-    purpose: Vận dụng các khái niệm vào một bài toán nhỏ.
+    title: Integrated Practice
+    purpose: Apply the concepts to a small problem.
     objectives:
-      - Xây dựng mô hình và hiện thực hóa đối tượng.
-      - Kiểm tra hành vi và cải thiện thiết kế.
+      - Build a model and implement objects.
+      - Test behavior and improve the design.

@@ -1,337 +1,337 @@
 summaries:
 - id: inheritance-001
-  title: Lớp cha, lớp con và quan hệ kế thừa
+  title: Superclasses, Subclasses, and Inheritance Relationships
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Lớp cha, lớp con và quan hệ kế thừa**
+    **Superclasses, Subclasses, and Inheritance Relationships**
 
-    Bài học đặt nền tảng để nhận biết khi nào một loại đối tượng thực sự là phiên bản chuyên biệt của loại khác. Qua ví dụ nhân viên và phiếu lương, người học học cách phân định hợp đồng chung ở superclass với dữ liệu, cách tính riêng ở subclass; từ đó dùng đa hình mà vẫn giữ đúng kỳ vọng của client. Quan hệ is-a phải được kiểm chứng bằng hành vi thay thế được, không chỉ bằng việc hai lớp có mã giống nhau.
+    This lesson establishes how to recognize when one type of object is genuinely a specialization of another. Through employee and payslip examples, learners distinguish the shared contract in the superclass from data and calculation rules specific to each subclass, allowing polymorphism without violating client expectations. An is-a relationship must be validated through substitutable behavior, not merely similar code in two classes.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Bản chất quan hệ kế thừa
+    ### The Nature of Inheritance Relationships
 
-    1. Trong một cặp lớp, dấu hiệu nào cho thấy lớp con thỏa quan hệ is-a với lớp cha?
-    2. Một lần tạo đối tượng lớp con có tạo hai đối tượng độc lập cha và con hay không, và vì sao?
-    3. Vì sao có thể gán đối tượng lớp con cho biến kiểu lớp cha nhưng không gọi tùy tiện phương thức chỉ riêng lớp con?
+    1. For a pair of classes, what indicates that the subclass satisfies an is-a relationship with the superclass?
+    2. Does creating one subclass instance create two independent superclass and subclass objects, and why?
+    3. Why can a subclass object be assigned to a superclass-typed variable without allowing arbitrary calls to methods that only the subclass defines?
 
-    ### Thiết kế và kiểm chứng
+    ### Design and Validation
 
-    1. Trong ví dụ tính lương, phần nào thuộc Employee và phần nào thuộc mỗi loại nhân viên cụ thể?
-    2. Khi gọi phương thức tính lương qua tham chiếu Employee, điều gì quyết định implementation chạy?
-    3. Làm sao phát hiện một mô hình kế thừa sai hợp đồng và nên cân nhắc composition trong trường hợp nào?
+    1. In the payroll example, which parts belong in Employee, and which belong to each specific employee type?
+    2. When a payroll method is called through an Employee reference, what determines which implementation executes?
+    3. How can you detect an inheritance model that violates its contract, and when should composition be considered?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Nhận diện quan hệ is-a | Giải thích đúng lớp cha, lớp con và chiều extends trong sơ đồ Vehicle/Car hoặc Employee và hai loại nhân viên. |
-    | Phân định trách nhiệm lớp | Chỉ ra trạng thái, hành vi chung và công thức tính lương riêng cần đặt tại superclass/subclass. |
-    | Dự đoán đa hình | Dự đoán phương thức thực thi khi gọi qua biến kiểu Employee trỏ tới SalariedEmployee hoặc HourlyEmployee. |
-    | Đánh giá hợp đồng kế thừa | Phân tích ví dụ Bird/Penguin hoặc trường hợp is-a giả và đề xuất composition khi subclass phá kỳ vọng của client. |
+    | Identify is-a relationships | Correctly explain superclass, subclass, and the direction of extends in a Vehicle/Car diagram or an Employee example with two employee types. |
+    | Assign class responsibilities | Identify shared state, shared behavior, and distinct payroll formulas that belong in superclasses or subclasses. |
+    | Predict polymorphism | Predict the method executed when an Employee-typed variable refers to a SalariedEmployee or HourlyEmployee. |
+    | Evaluate inheritance contracts | Analyze a Bird/Penguin example or a false is-a relationship and propose composition when a subclass violates client expectations. |
 - id: inheritance-002
-  title: Kế thừa trạng thái và hành vi
+  title: Inheriting State and Behavior
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Kế thừa trạng thái và hành vi**
+    **Inheriting State and Behavior**
 
-    Bài học giải thích một đối tượng lớp con chứa phần trạng thái do superclass định nghĩa nhưng lớp con không nhất thiết được truy cập trực tiếp từng field. Người học phân biệt việc dùng nguyên hành vi, bổ sung hành vi và override; đồng thời hiểu vì sao method được phân phối động còn field hiding dựa theo kiểu biểu thức. Đây là cơ sở để thiết kế API giữ invariant thay vì phơi bày dữ liệu cho subclass sửa tùy ý.
+    This lesson explains how a subclass object contains state defined by its superclass even though subclass code cannot necessarily access every field directly. Learners distinguish reusing behavior unchanged, adding behavior, and overriding; they also learn why method dispatch is dynamic while field hiding depends on the expression's type. This provides a foundation for designing APIs that preserve invariants instead of exposing data for subclasses to modify arbitrarily.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Trạng thái và hành vi
+    ### State and Behavior
 
-    1. Vì sao field private của lớp cha vẫn là một phần trạng thái đối tượng lớp con dù mã lớp con không được đọc trực tiếp?
-    2. Trong ví dụ Employee/SalesEmployee, phương thức nào được dùng nguyên, phương thức nào được override, và phương thức nào được bổ sung?
-    3. Điểm khác nhau giữa field hiding và method overriding khi biến kiểu Parent tham chiếu object Child là gì?
+    1. Why is a superclass's private field still part of a subclass object's state even though subclass code cannot read it directly?
+    2. In the Employee/SalesEmployee example, which methods are reused unchanged, which are overridden, and which are added?
+    3. What is the difference between field hiding and method overriding when a Parent-typed variable refers to a Child object?
 
-    ### Bảo vệ hợp đồng và triển khai
+    ### Protecting Contracts and Implementations
 
-    1. Vì sao không nên chuyển mọi field chung thành protected chỉ để subclass tiện sử dụng?
-    2. Điều kiện nào cho phép override hợp lệ mà vẫn giữ hợp đồng hành vi lớp cha?
-    3. Thiết kế Account và lớp con thế nào để phép cập nhật trạng thái luôn qua kiểm tra hợp lệ?
+    1. Why shouldn't all shared fields be made protected merely for subclass convenience?
+    2. Under what conditions is an override valid while still honoring the superclass's behavioral contract?
+    3. How should Account and its subclasses be designed so that state updates always undergo validation?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Giải thích cấu trúc object | Vẽ hoặc mô tả đúng phần field của lớp cha và phần field riêng lớp con trong một object duy nhất. |
-    | Phân loại hành vi | Phân loại các method của subclass thành kế thừa nguyên, bổ sung, override dựa trên code. |
-    | Dự đoán truy cập và dispatch | Dự đoán kết quả ví dụ Parent/Child có field trùng tên và phương thức cùng tên. |
-    | Giữ invariant | Đề xuất API có kiểm tra thay cho truy cập trực tiếp protected mutable field. |
+    | Explain object structure | Draw or accurately describe superclass fields and subclass-specific fields within a single object. |
+    | Classify behaviors | Classify subclass methods as inherited unchanged, added, or overridden based on the code. |
+    | Predict access and dispatch | Predict results in a Parent/Child example with same-named fields and methods. |
+    | Preserve invariants | Propose a validating API instead of direct access to protected mutable fields. |
 - id: inheritance-003
-  title: Mở rộng hành vi của lớp cha
+  title: Extending Superclass Behavior
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Mở rộng hành vi của lớp cha**
+    **Extending Superclass Behavior**
 
-    Bài học chuyển từ nhận biết kế thừa sang thực hành mở rộng hành vi lớp cha cho một biến thể cụ thể. Ví dụ giao hàng ưu tiên cho thấy khi nào subclass dùng lại phần tính phí nền qua super, khi nào bổ sung quy tắc và khi nào cần giữ một quy trình cố định bằng Template Method. Người học còn xem xét rủi ro khi thay thế logic cha hoặc mở rộng một quan hệ is-a không phù hợp.
+    This lesson moves from recognizing inheritance to extending superclass behavior for a specific variant. A priority-shipping example illustrates when a subclass reuses base fee calculations through super, when it adds new rules, and when Template Method should preserve a fixed process. Learners also examine the risks of replacing superclass logic or extending an unsuitable is-a relationship.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Cơ chế mở rộng
+    ### Extension Mechanisms
 
-    1. Khi ExpressShippingFee kế thừa ShippingFee, hành vi nào được tái sử dụng qua super.calculate(distanceKm) và phụ phí nào do lớp con bổ sung?
-    2. Khác nhau giữa kế thừa nguyên method, override, overload và static hiding trong ví dụ của bài là gì?
-    3. super.method() giúp mở rộng hành vi ra sao, và super(...) phục vụ mục đích nào khác?
+    1. When ExpressShippingFee extends ShippingFee, which behavior is reused through super.calculate(distanceKm), and what surcharge does the subclass add?
+    2. In the lesson's example, how do inheriting a method unchanged, overriding, overloading, and static hiding differ?
+    3. How does super.method() help extend behavior, and what different purpose does super(...) serve?
 
-    ### Thiết kế an toàn
+    ### Safe Design
 
-    1. Khi nào nên gọi super.method(), khi nào override thay thế hoàn toàn hợp lý, và cần giữ hợp đồng nào?
-    2. Template Method cố định trình tự chung trong lớp cha nhưng vẫn cho phép subclass tùy biến những điểm nào?
-    3. Vì sao nên tránh gọi method có thể override từ constructor lớp cha?
+    1. When should super.method() be called, when is a complete replacement by an override appropriate, and which contracts must be preserved?
+    2. Which extension points can a subclass customize when Template Method fixes the common sequence in the superclass?
+    3. Why should superclass constructors avoid calling overridable methods?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Mở rộng một hành vi | Viết hoặc phân tích override dùng super để cộng thêm phí ưu tiên mà không làm mất tính toán chung. |
-    | Phân biệt các cơ chế | Xác định đúng override, overload, static hiding và lời gọi super trong mã minh họa. |
-    | Thiết kế điểm mở rộng | Đề xuất một quy trình Template Method có bước bất biến và hook chuyên biệt cho lớp con. |
-    | Đánh giá an toàn | Chỉ ra nguy cơ phá hợp đồng hay gọi method của subclass quá sớm khi khởi tạo. |
+    | Extend a behavior | Write or analyze an override that uses super to add a priority surcharge without losing the shared calculation. |
+    | Distinguish mechanisms | Correctly identify overriding, overloading, static hiding, and super calls in sample code. |
+    | Design extension points | Propose a Template Method process with invariant steps and subclass-specific hooks. |
+    | Evaluate safety | Identify risks of breaking a contract or calling subclass methods too early during initialization. |
 - id: inheritance-004
-  title: Ghi đè phương thức và gọi hành vi lớp cha
+  title: Method Overriding and Invoking Superclass Behavior
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Ghi đè phương thức và gọi hành vi lớp cha**
+    **Method Overriding and Invoking Superclass Behavior**
 
-    Bài học đi sâu vào quy tắc ghi đè phương thức instance, cách Java chọn implementation theo kiểu đối tượng thực tế và ý nghĩa chính xác của super.method(). Các ví dụ tính phí nhiều tầng cho phép người học lần theo chuỗi gọi, kiểm tra mức truy cập, kiểu trả về, checked exception và @Override. Mục tiêu thực hành là mở rộng logic lớp cha nhưng vẫn giữ hợp đồng nghiệp vụ và tránh lỗi đệ quy hay hành vi sai trong constructor.
+    This lesson examines the rules for overriding instance methods, how Java selects an implementation based on the actual object type, and the precise meaning of super.method(). Multilevel fee-calculation examples let learners trace call chains and check access levels, return types, checked exceptions, and @Override. The practical goal is to extend superclass logic while preserving business contracts and avoiding recursion errors or incorrect constructor behavior.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Quy tắc override và dispatch
+    ### Overriding and Dispatch Rules
 
-    1. Một phương thức mới được coi là override khi nào, và @Override giúp phát hiện sai chữ ký như thế nào?
-    2. Java lựa chọn phương thức nào khi biến kiểu A thực tế trỏ tới C trong chuỗi A → B → C?
-    3. Vì sao method static, private và final không tuân theo overriding instance thông thường?
+    1. When does a newly declared method count as an override, and how does @Override help detect signature errors?
+    2. Which method does Java select when a variable of type A actually refers to C in the A → B → C chain?
+    3. Why don't static, private, and final methods follow ordinary instance-method overriding?
 
-    ### super và hợp đồng hành vi
+    ### super and Behavioral Contracts
 
-    1. Điều gì xảy ra khi gọi super.fee(...) trong override, và vì sao lời gọi này khác super(...)?
-    2. Vì sao gọi method() thay cho super.method() từ chính override có thể gây đệ quy?
-    3. Những giới hạn về quyền truy cập, kiểu trả về và checked exception nào phải giữ khi override?
-    4. Constructor lớp cha gọi phương thức override có thể quan sát trạng thái subclass nào chưa sẵn sàng?
+    1. What happens when an override calls super.fee(...), and why is that different from super(...)?
+    2. Why can calling method() instead of super.method() inside an override cause recursion?
+    3. Which restrictions on accessibility, return types, and checked exceptions must an override respect?
+    4. What uninitialized subclass state might be observed when a superclass constructor calls an overridden method?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Kiểm tra override hợp lệ | Chỉ ra lỗi chữ ký, giảm visibility hoặc khai báo checked exception không hợp lệ trong ví dụ Java. |
-    | Truy vết lời gọi | Dự đoán kết quả chương trình A/B/C khi override từng cấp gọi super. |
-    | Bảo toàn quy tắc nghiệp vụ | Phân tích override có gọi super và kiểm tra các điều kiện biên mà chỉ đúng cú pháp chưa bảo đảm. |
-    | Phát hiện rủi ro khởi tạo | Giải thích lỗi khi constructor superclass dispatch đến method của subclass trước khi field initializer chạy. |
+    | Check valid overrides | Identify signature errors, reduced visibility, or invalid checked-exception declarations in Java examples. |
+    | Trace calls | Predict the output of an A/B/C program when overrides at each level call super. |
+    | Preserve business rules | Analyze overrides that call super and check boundary conditions that syntactically valid code alone cannot guarantee. |
+    | Detect initialization risks | Explain failures caused when a superclass constructor dispatches to a subclass method before field initializers run. |
 - id: inheritance-005
-  title: Khả năng truy cập thành viên được kế thừa
+  title: Access to Inherited Members
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Khả năng truy cập thành viên được kế thừa**
+    **Access to Inherited Members**
 
-    Bài học giúp đọc và viết mã kế thừa đúng luật truy cập thành viên trong Java, đặc biệt với subclass nằm ở package khác. Trọng tâm là phân biệt thành viên thuộc trạng thái đối tượng với quyền truy cập hợp lệ từ từng vị trí mã; protected không cho phép subclass ngoài package truy cập member trên mọi biến kiểu superclass. Người học vận dụng quy tắc này để chọn public/protected/private vừa đủ và tránh phá invariant của lớp cha.
+    This lesson helps learners read and write inheritance code that follows Java's member-access rules, especially for subclasses in different packages. The focus is on distinguishing members that form part of an object's state from the legal right to access them at a particular code location; protected does not let a subclass in another package access members through every superclass-typed variable. Learners use these rules to choose appropriately narrow public/protected/private access and avoid violating superclass invariants.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Quy tắc truy cập trong Java
+    ### Java Access Rules
 
-    1. public, protected, package-private và private khác nhau thế nào khi lớp con ở cùng package hoặc khác package?
-    2. Vì sao trong subclass khác package, this.number và b.number hợp lệ nhưng a.number với a kiểu superclass lại không hợp lệ?
-    3. Field private của superclass có còn trong object subclass, và vì sao subclass không thể truy cập trực tiếp?
+    1. How do public, protected, package-private, and private differ when a subclass is in the same package versus a different package?
+    2. Why are this.number and b.number valid in a subclass in another package, while a.number is invalid when a is superclass-typed?
+    3. Is a superclass's private field still present in a subclass object, and why can't subclass code access it directly?
 
-    ### Thiết kế và lỗi biên dịch
+    ### Design and Compilation Errors
 
-    1. Khi override, subclass có thể mở rộng visibility hoặc thu hẹp visibility được không?
-    2. Constructor được gọi từ subclass theo điều kiện truy cập nào, và vì sao nó không phải member được kế thừa?
-    3. Vì sao protected field dễ làm lộ invariant, và thiết kế API thao tác trạng thái thay thế ra sao?
-    4. Package con và JPMS exports ảnh hưởng khả năng dùng public API như thế nào?
+    1. Can a subclass widen or narrow visibility when overriding a method?
+    2. Under what access conditions can a subclass invoke a constructor, and why are constructors not inherited members?
+    3. Why can protected fields expose invariants to violations, and how should an alternative API for state changes be designed?
+    4. How do subpackages and JPMS exports affect the usability of public APIs?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Xác định quyền truy cập | Đánh giá một biểu thức truy cập member có biên dịch không từ modifier, package, subclass và kiểu của qualifier. |
-    | Giải thích protected qua package | Phân tích ví dụ Document/ManagedDocument hoặc A/B và chỉ ra chính xác dòng hợp lệ, không hợp lệ. |
-    | Kiểm tra hợp đồng override | Sửa ví dụ subclass giảm visibility thành quyền truy cập cho phép. |
-    | Bảo vệ trạng thái | Thiết kế private field và public/protected operation có validation thay cho protected mutable field. |
+    | Determine access rights | Decide whether a member-access expression compiles based on modifiers, packages, subclass relationships, and qualifier types. |
+    | Explain protected access across packages | Analyze a Document/ManagedDocument or A/B example and identify precisely which lines are valid or invalid. |
+    | Check overriding contracts | Correct an example in which a subclass reduces visibility to an allowed access level. |
+    | Protect state | Design private fields and validated public/protected operations in place of protected mutable fields. |
 - id: inheritance-006
-  title: Khởi tạo lớp con và chuỗi khởi tạo lớp cha
+  title: Subclass Initialization and Superclass Constructor Chaining
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Khởi tạo lớp con và chuỗi khởi tạo lớp cha**
+    **Subclass Initialization and Superclass Constructor Chaining**
 
-    Bài học mô tả đầy đủ quá trình tạo một đối tượng lớp con: chọn constructor bằng this/super, khởi tạo class theo static khi cần, thiết lập giá trị mặc định và chạy initializer/constructor từ superclass đến subclass. Qua chương trình in thứ tự, người học phân biệt constructor chaining với overriding và nhận ra tình huống method override bị gọi trước khi trạng thái lớp con hoàn tất. Việc hiểu thứ tự này giúp duy trì invariant và xử lý lỗi khởi tạo đúng chỗ.
+    This lesson explains the full process of creating a subclass object: selecting constructors with this/super, performing static class initialization when needed, assigning default values, and executing initializers and constructors from superclass to subclass. By tracing a program that prints its execution order, learners distinguish constructor chaining from overriding and recognize when an overridden method is called before subclass state is complete. Understanding this order helps preserve invariants and handle initialization failures at the correct point.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Luồng khởi tạo
+    ### Initialization Flow
 
-    1. super(args), this(args) và lời gọi super() ngầm định khác nhau thế nào?
-    2. Nếu lớp cha chỉ có constructor nhận tham số mà con không gọi super(args), chương trình mắc lỗi gì?
-    3. Khi lần đầu tạo Child trong chuỗi Parent → Middle → Child, các bước static initialization, instance field initializer, instance block và constructor chạy theo thứ tự nào?
+    1. How do super(args), this(args), and the implicit super() call differ?
+    2. If the superclass has only a parameterized constructor and the subclass does not call super(args), what error occurs?
+    3. When Child is first instantiated in the Parent → Middle → Child chain, in what order do static initialization, instance field initializers, instance blocks, and constructors run?
 
-    ### Các tình huống cần kiểm chứng
+    ### Scenarios to Verify
 
-    1. Giá trị field của Child là gì khi constructor Parent gọi một method override trước khi initializer Child chạy?
-    2. this(...) có khiến instance initializer của Child chạy lại nhiều lần không, vì sao?
-    3. Nếu constructor cha ném exception, quá trình tạo object và phần khởi tạo của con tiếp tục ra sao?
+    1. What are Child's field values when a Parent constructor invokes an overridden method before Child's initializers execute?
+    2. Does this(...) make Child's instance initializers run multiple times, and why?
+    3. If a superclass constructor throws an exception, what happens to object creation and the remaining subclass initialization steps?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Truy vết constructor | Dự đoán thứ tự log của ví dụ Parent/Middle/Child khi new Child(). |
-    | Sửa lỗi khởi tạo | Thêm lời gọi super(args) đúng trong subclass khi superclass không có constructor không tham số. |
-    | Phân tích trạng thái sớm | Giải thích tại sao method override gọi từ constructor cha có thể thấy null hoặc 0. |
-    | Bảo toàn invariant | Đề xuất constructor kiểm tra dữ liệu theo trách nhiệm từng lớp và tránh gọi hook override quá sớm. |
+    | Trace constructors | Predict log order in a Parent/Middle/Child example when new Child() executes. |
+    | Fix initialization errors | Add an appropriate super(args) call in a subclass when the superclass lacks a no-arg constructor. |
+    | Analyze early state | Explain why an overridden method invoked by a superclass constructor may observe null or 0. |
+    | Preserve invariants | Propose constructors that validate data according to each class's responsibilities and avoid calling overridable hooks too early. |
 - id: inheritance-007
-  title: Thành viên không thể ghi đè và lớp không thể kế thừa
+  title: Non-Overridable Members and Non-Inheritable Classes
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Thành viên không thể ghi đè và lớp không thể kế thừa**
+    **Non-Overridable Members and Non-Inheritable Classes**
 
-    Bài học làm rõ ba nghĩa của final khi gắn lên class, instance method và biến, tập trung vào ảnh hưởng của class/method đối với kế thừa. Ví dụ xử lý thanh toán cố định phần kiểm tra chung và chỉ mở hook charge cho subclass chứng minh cách khóa quy trình nhưng vẫn cho phép chuyên biệt hóa. Người học cũng biết khi nào final là rào chắn cần thiết, khi nào sealed hay composition phù hợp hơn để không đóng API quá sớm.
+    This lesson clarifies the three meanings of final when applied to classes, instance methods, and variables, with particular attention to how final classes and methods affect inheritance. A payment-processing example fixes the shared validation steps while exposing only a charge hook for subclasses, demonstrating how to lock down a process while still allowing specialization. Learners also consider when final is a necessary safeguard and when sealed or composition is more appropriate to avoid closing an API to extension prematurely.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Ngữ nghĩa final
+    ### Meaning of final
 
-    1. final method có được lớp con sử dụng không, và vì sao không thể override?
-    2. final class ngăn hành động nào nhưng vẫn cho phép khởi tạo đối tượng hoặc implements interface ra sao?
-    3. Khác nhau giữa final trên class, method và biến tham chiếu là gì?
-    4. Vì sao private/static method không phải điểm override dù không viết final?
+    1. Can a subclass use a final method, and why can't it override that method?
+    2. What does a final class prevent while still allowing object creation or interface implementation?
+    3. How does final differ when applied to a class, a method, and a reference variable?
+    4. Why are private/static methods not override points even without an explicit final modifier?
 
-    ### Quyết định thiết kế
+    ### Design Decisions
 
-    1. Trong PaymentProcessor, vì sao nên khóa process() và mở charge() cho từng kênh thanh toán?
-    2. abstract và final xung đột như thế nào khi áp vào cùng class hoặc method?
-    3. Khi nào một sealed class với permits phù hợp hơn final class, và cần cân nhắc gì khi đóng khả năng kế thừa?
+    1. In PaymentProcessor, why should process() be locked down while charge() remains extensible for each payment channel?
+    2. How do abstract and final conflict when applied to the same class or method?
+    3. When is a sealed class with permits more appropriate than a final class, and what must be considered before restricting inheritance?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Xác định lỗi biên dịch | Nhận diện class extends final class hoặc override final method và nêu lý do bị từ chối. |
-    | Phân biệt vị trí final | Giải thích đúng ý nghĩa của final class, final method và final variable trong code. |
-    | Thiết kế điểm cố định/mở | Phân định process() bất biến và charge() chuyên biệt trong luồng PaymentProcessor. |
-    | Lựa chọn mức mở rộng | So sánh final class với sealed và composition theo nhu cầu đóng/mở API. |
+    | Identify compilation errors | Detect attempts to extend a final class or override a final method and explain why they are rejected. |
+    | Distinguish uses of final | Explain the meanings of final classes, final methods, and final variables in code. |
+    | Design fixed and extensible steps | Separate the unchangeable process() step from specialized charge() behavior in the PaymentProcessor flow. |
+    | Choose an extension policy | Compare final classes, sealed classes, and composition according to the API's extension requirements. |
 - id: inheritance-008
-  title: Kế thừa đơn, kế thừa đa và xung đột hành vi
+  title: Single Inheritance, Multiple Inheritance, and Behavior Conflicts
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Kế thừa đơn, kế thừa đa và xung đột hành vi**
+    **Single Inheritance, Multiple Inheritance, and Behavior Conflicts**
 
-    Bài học giải thích vì sao một Java class chỉ có một superclass trực tiếp nhưng có thể thực thi nhiều interface. Người học phân biệt việc kế thừa state/implementation từ class với việc ghép các hợp đồng và default method từ interface. Qua các tình huống trùng default method, bài cung cấp thứ tự ưu tiên class → interface cụ thể hơn → override giải quyết xung đột; đồng thời cảnh báo xung đột hợp đồng ngữ nghĩa dù chữ ký biên dịch được.
+    This lesson explains why a Java class can have only one direct superclass but can implement multiple interfaces. Learners distinguish inheriting state and implementation from a class from combining contracts and default methods from interfaces. Through conflicting default-method scenarios, the lesson presents the precedence rules of class → more specific interface → conflict-resolving override, while also warning that semantic contract conflicts can occur even when method signatures compile.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Một superclass, nhiều interface
+    ### One Superclass, Multiple Interfaces
 
-    1. Vì sao Java không cho phép class extends hai superclass và chuyện state/constructor chung gây khó ở đâu?
-    2. implements nhiều interface khác với đa kế thừa class ở khía cạnh trạng thái và hợp đồng ra sao?
-    3. Default method trong interface cung cấp hành vi gì nhưng không làm interface thành superclass chứa state instance?
+    1. Why doesn't Java allow a class to extend two superclasses, and what complications arise from shared state and constructors?
+    2. How does implementing multiple interfaces differ from multiple class inheritance in terms of state and contracts?
+    3. What behavior can an interface default method provide without turning the interface into a superclass that holds instance state?
 
-    ### Giải quyết xung đột
+    ### Resolving Conflicts
 
-    1. Khi class có method cùng chữ ký với interface default method, implementation nào được ưu tiên?
-    2. Khi interface con cung cấp default method cụ thể hơn interface cha, bản nào được chọn?
-    3. Hai default method độc lập trùng chữ ký buộc lớp implement xử lý thế nào bằng override hoặc Interface.super.method()?
-    4. Vì sao hai interface cùng chữ ký nhưng khác đơn vị trả về có thể sai thiết kế dù Java không báo xung đột?
+    1. When a class has a method with the same signature as an interface default method, which implementation takes precedence?
+    2. When a subinterface provides a more specific default method than its parent interface, which version is selected?
+    3. When two unrelated default methods share a signature, how must the implementing class resolve the conflict using an override or Interface.super.method()?
+    4. Why can two interfaces with identical method signatures but different units for their returned values represent a flawed design even when Java reports no conflict?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Mô hình hóa giới hạn Java | Phân loại cú pháp extends nhiều class và implements nhiều interface thành hợp lệ hoặc lỗi. |
-    | Dự đoán default method | Dự đoán kết quả các ví dụ class wins và most specific interface. |
-    | Khắc phục xung đột | Viết override rõ ràng khi hai interface độc lập cung cấp default method trùng tên. |
-    | Đánh giá kết hợp API | Phân tích xung đột tên, hằng số và ý nghĩa hợp đồng; đề xuất composition khi phù hợp. |
+    | Model Java's restrictions | Classify syntax that extends multiple classes or implements multiple interfaces as valid or erroneous. |
+    | Predict default-method selection | Predict the results of class-wins and most-specific-interface examples. |
+    | Resolve conflicts | Write an explicit override when two unrelated interfaces provide default methods with the same name. |
+    | Evaluate API combinations | Analyze name, constant, and semantic-contract conflicts; propose composition where appropriate. |
 - id: inheritance-009
-  title: Mixin, trait và tái sử dụng hành vi tùy ngôn ngữ
+  title: Mixins, Traits, and Language-Specific Behavior Reuse
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Mixin, trait và tái sử dụng hành vi tùy ngôn ngữ**
+    **Mixins, Traits, and Language-Specific Behavior Reuse**
 
-    Bài học mở rộng góc nhìn tái sử dụng hành vi cho các lớp không cùng nhánh kế thừa nghiệp vụ. Trong Java, ví dụ Article và SupportTicket cùng implements Taggable cho thấy default method có thể tái sử dụng một quy trình bằng cách gọi thao tác cốt lõi do mỗi lớp tự thực hiện. Bài cũng so sánh khái niệm mixin và trait trong nhiều ngôn ngữ, nhấn mạnh không suy diễn tính năng lưu state hay quy tắc xung đột của ngôn ngữ khác sang Java.
+    This lesson broadens the view of behavior reuse to classes that do not belong to the same business inheritance branch. In Java, an example in which Article and SupportTicket both implement Taggable shows how a default method can reuse a process by calling a core operation implemented by each class. The lesson also compares mixin and trait concepts across languages, emphasizing that state-storage capabilities and conflict rules from other languages must not be assumed to apply to Java.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Dùng chung hành vi bằng interface
+    ### Sharing Behavior Through Interfaces
 
-    1. Vì sao Article và SupportTicket cùng dùng Taggable.addTags() dù không chung superclass nghiệp vụ?
-    2. Một interface default method có thể chứa kiểu state nào và vì sao không tự lưu field instance cho từng object?
-    3. Vì sao gọi addTag() lặp trong addTags() có nguy cơ cập nhật dở dang khi dữ liệu giữa chừng không hợp lệ?
+    1. Why can Article and SupportTicket both use Taggable.addTags() despite having no common business superclass?
+    2. What kinds of state can an interface default method contain, and why doesn't it store instance fields for each object?
+    3. Why can repeated calls to addTag() within addTags() lead to a partial update if an element partway through the input is invalid?
 
-    ### Lựa chọn và giới hạn
+    ### Choices and Limitations
 
-    1. Khi hai interface độc lập có default greet(), lớp implement giải quyết xung đột bằng cách nào?
-    2. Mixin và trait trong các ngôn ngữ khác có phải lúc nào cũng có cùng khả năng lưu state, ghép hành vi và xử lý xung đột không?
-    3. Khi nào Java nên chọn default method, abstract superclass hoặc composition/delegate để tái sử dụng hành vi?
-    4. Làm sao thiết kế default method chỉ dựa vào hợp đồng đã khai báo, không giả định trạng thái nội bộ của lớp implement?
+    1. When two unrelated interfaces provide default greet(), how does the implementing class resolve the conflict?
+    2. Do mixins and traits in other languages always have the same capabilities for storing state, combining behavior, and resolving conflicts?
+    3. When should Java use a default method, an abstract superclass, or composition/delegation to reuse behavior?
+    4. How can a default method be designed to rely only on its declared contract without assuming the implementing class's internal state?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Thiết kế hành vi chia sẻ | Giải thích và tái hiện mô hình Taggable.addTag/addTags cho hai lớp nghiệp vụ khác nhau. |
-    | Phân tích tính nguyên tử | Dự đoán trạng thái sau khi addTags() thất bại ở phần tử thứ ba và đề xuất validation hoặc rollback ở lớp thực thi. |
-    | Xử lý va chạm default | Viết override giải quyết hai interface độc lập có default method cùng chữ ký. |
-    | So sánh kỹ thuật | Chọn default method, abstract class hoặc composition và nêu giới hạn state, coupling tương ứng. |
+    | Design shared behavior | Explain and reproduce the Taggable.addTag/addTags pattern for two different business classes. |
+    | Analyze atomicity | Predict the state after addTags() fails on the third element and propose validation or rollback in the implementing class. |
+    | Resolve default-method conflicts | Write an override to resolve identical default-method signatures from two unrelated interfaces. |
+    | Compare techniques | Choose a default method, abstract class, or composition and explain the associated limits on state and coupling. |
 - id: inheritance-010
-  title: Giới hạn và chi phí của cây kế thừa sâu
+  title: Limits and Costs of Deep Inheritance Hierarchies
   summary: |-
-    # 0. Định hướng học tập
+    # 0. Learning Orientation
 
-    ## 1. Mục đích của bài học
+    ## 1. Lesson Purpose
 
-    **Giới hạn và chi phí của cây kế thừa sâu**
+    **Limits and Costs of Deep Inheritance Hierarchies**
 
-    Bài học đánh giá chi phí thực tế của nhiều tầng kế thừa, từ đọc hiểu chuỗi override đến sự phụ thuộc ngầm khi superclass thay đổi. Ví dụ tính phí giao hàng minh họa cách một đổi nhỏ ở base class ảnh hưởng nhánh sâu; bài đồng thời phân biệt chi phí bảo trì/kiểm thử với kết luận thiếu căn cứ về hiệu năng runtime. Người học luyện cách đo mức ảnh hưởng, giữ contract quan sát được và chuyển sang composition/strategy khi các biến thể độc lập làm cây lớp phình to.
+    This lesson assesses the practical costs of multiple inheritance levels, from understanding chains of overrides to hidden dependencies when a superclass changes. A delivery-fee example shows how a small change in a base class can affect a deep branch. The lesson also distinguishes maintenance and testing costs from unsupported claims about runtime performance. Learners practice assessing impact, preserving observable contracts, and switching to composition/strategy when independent variants cause class hierarchies to expand excessively.
 
-    ## 2. Những câu hỏi người học phải tự trả lời được
+    ## 2. Questions Learners Should Be Able to Answer
 
-    ### Phụ thuộc qua cây lớp
+    ### Dependencies Across Class Hierarchies
 
-    1. Trong cây StandardDelivery → CityDelivery → PriorityCityDelivery, làm sao truy vết kết quả quote() qua các tầng override?
-    2. Fragile base class phát sinh thế nào khi lớp cha thay đổi cách gọi một protected hook?
-    3. Vì sao constructor lớp tổ tiên gọi method override ở lớp lá có thể nhìn thấy trạng thái chưa khởi tạo?
+    1. In the StandardDelivery → CityDelivery → PriorityCityDelivery hierarchy, how can you trace the result of quote() through multiple overrides?
+    2. How does the fragile base class problem arise when a superclass changes how it calls a protected hook?
+    3. Why can an ancestor's constructor calling an overridden method in a leaf class observe uninitialized state?
 
-    ### Chi phí và tái cấu trúc
+    ### Costs and Refactoring
 
-    1. Những chi phí bảo trì, kiểm thử và kết hợp biến thể nào thường tăng theo độ sâu cây kế thừa?
-    2. Vì sao không thể khẳng định cứ nhiều tầng extends thì JVM tự động chạy chậm hơn?
-    3. Khi nào mô hình is-a/LSP vẫn biện minh cho kế thừa, và dấu hiệu nào gợi ý chuyển sang strategy hoặc composition?
-    4. Muốn giảm chiều sâu mà không làm đổi hành vi quan sát được, cần lập danh sách và kiểm tra những trường hợp nào?
+    1. Which maintenance, testing, and variant-combination costs typically increase with inheritance depth?
+    2. Why is it unjustified to claim that more levels of extends automatically make the JVM run more slowly?
+    3. When does an is-a/LSP model still justify inheritance, and what signs suggest switching to strategy or composition?
+    4. To reduce hierarchy depth without changing observable behavior, which scenarios must be listed and verified?
 
-    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    ## 3. Expected Learning Outcomes
 
-    | Năng lực | Kết quả mong đợi |
+    | Competency | Expected Outcome |
     | --- | --- |
-    | Truy vết luồng override | Vẽ chuỗi lời gọi và tính kết quả cho DepthCostDemo hoặc biến thể HolidayPriorityDelivery. |
-    | Nhận diện coupling | Giải thích một thay đổi base class có thể tạo hồi quy tại subclass nào và tại sao. |
-    | Đánh giá chi phí chính xác | Phân biệt rủi ro bảo trì/kiểm thử với đo hiệu năng runtime cần benchmark. |
-    | Đề xuất refactor an toàn | Lập danh sách hành vi, exception và side effect cần giữ rồi đề xuất composition/strategy thay cho cây biến thể sâu. |
+    | Trace override chains | Draw call chains and calculate results for DepthCostDemo or the HolidayPriorityDelivery variant. |
+    | Identify coupling | Explain which subclasses could regress after a base-class change and why. |
+    | Assess costs accurately | Distinguish maintenance/testing risks from runtime-performance measurements that require benchmarks. |
+    | Propose safe refactoring | List the behaviors, exceptions, and side effects that must be preserved, then propose composition/strategy in place of a deep variant hierarchy. |

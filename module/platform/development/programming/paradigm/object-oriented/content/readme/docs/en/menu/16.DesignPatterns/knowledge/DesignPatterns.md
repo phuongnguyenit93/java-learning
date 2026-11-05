@@ -1,97 +1,97 @@
 <a id="back-to-top"></a>
 
-# Mẫu thiết kế
+# Design Patterns
 
 ## Menu
-- [Mẫu thiết kế: vấn đề, bối cảnh và đánh đổi](#design-patterns-001)
-- [Factory Method và Abstract Factory](#design-patterns-002)
-- [Builder và việc tạo đối tượng phức tạp](#design-patterns-003)
-- [Singleton và rủi ro trạng thái dùng chung](#design-patterns-004)
-- [Adapter và tích hợp giao diện khác nhau](#design-patterns-005)
-- [Decorator và bổ sung hành vi](#design-patterns-006)
-- [Facade và đơn giản hóa cách sử dụng](#design-patterns-007)
-- [Strategy và thay thế thuật toán](#design-patterns-008)
-- [State và hành vi theo trạng thái](#design-patterns-009)
-- [Observer và thông báo thay đổi](#design-patterns-010)
-- [Template Method và khung thuật toán](#design-patterns-011)
-- [Command và đóng gói yêu cầu](#design-patterns-012)
-- [Khi mẫu thiết kế làm hệ thống phức tạp hơn cần thiết](#design-patterns-013)
+- [Design Patterns: Problems, Context, and Trade-offs](#design-patterns-001)
+- [Factory Method and Abstract Factory](#design-patterns-002)
+- [Builder and Creating Complex Objects](#design-patterns-003)
+- [Singleton and the Risks of Shared State](#design-patterns-004)
+- [Adapter and Integrating Different Interfaces](#design-patterns-005)
+- [Decorator and Adding Behavior](#design-patterns-006)
+- [Facade and Simplifying Usage](#design-patterns-007)
+- [Strategy and Interchangeable Algorithms](#design-patterns-008)
+- [State and State-Dependent Behavior](#design-patterns-009)
+- [Observer and Change Notifications](#design-patterns-010)
+- [Template Method and the Algorithm Skeleton](#design-patterns-011)
+- [Command and Encapsulating Requests](#design-patterns-012)
+- [When Design Patterns Make a System More Complex Than Necessary](#design-patterns-013)
 
-## <a id="design-patterns-001">Mẫu thiết kế: vấn đề, bối cảnh và đánh đổi</a>
+## <a id="design-patterns-001">Design Patterns: Problems, Context, and Trade-offs</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Mẫu thiết kế: vấn đề, bối cảnh và đánh đổi
+# Design Patterns: Problems, Context, and Trade-offs
 
-> **Mục tiêu học tập:** Không chỉ nhớ tên các Design Pattern, mà biết phân tích vấn đề đang gặp, đọc bối cảnh và ràng buộc, so sánh các phương án, lựa chọn mẫu thiết kế phù hợp rồi đo tác động thực tế của lựa chọn đó bằng mã Java và kiểm thử.
+> **Learning objective:** Go beyond memorizing Design Pattern names: analyze the problem at hand, understand its context and constraints, compare alternatives, choose an appropriate design pattern, and measure the actual impact of that choice through Java code and tests.
 
-## 1. Mẫu thiết kế giải quyết điều gì?
+## 1. What Problems Do Design Patterns Solve?
 
-**Design Pattern (mẫu thiết kế)** là một cách tổ chức sự cộng tác giữa các đối tượng hoặc thành phần đã được đúc kết để giải quyết **một vấn đề thiết kế lặp lại trong một bối cảnh nhất định**.
+**Design Pattern** refers to an established way of organizing collaboration among objects or components to address **a recurring design problem in a particular context**.
 
-Mẫu thiết kế **không phải**:
-- Một class, thư viện hoặc đoạn mã có thể chép nguyên xi vào mọi dự án.
-- Một yêu cầu bắt buộc khi lập trình hướng đối tượng.
-- Bằng chứng tự động rằng kiến trúc tốt, hiệu năng cao hay dễ bảo trì.
-- Thay thế cho hiểu biết về domain, thiết kế dữ liệu, bảo mật, transaction và kiểm thử.
+A design pattern **is not**:
+- A class, library, or code snippet that can be copied unchanged into every project.
+- A mandatory requirement for object-oriented programming.
+- Automatic proof of good architecture, high performance, or maintainability.
+- A substitute for understanding the domain, data design, security, transactions, and testing.
 
-Một cách đọc đầy đủ một pattern thường gồm:
+A thorough description of a pattern typically covers:
 
-| Thành phần | Câu hỏi cần trả lời |
+| Element | Question to answer |
 |---|---|
-| **Tên / ý định (intent)** | Mẫu này giải quyết loại vấn đề nào? |
-| **Vấn đề (problem)** | Điều gì hiện tại gây khó sửa, khó thay thế, dễ lỗi hoặc lặp mã? |
-| **Bối cảnh (context)** | Hệ thống có bao nhiêu biến thể, thay đổi thường xuyên đến đâu, ai dùng, có ràng buộc gì? |
-| **Lực kéo / mâu thuẫn (forces)** | Những mục tiêu nào đang cạnh tranh: linh hoạt với đơn giản, tái sử dụng với cô lập, hiệu năng với dễ hiểu? |
-| **Giải pháp (solution)** | Đối tượng nào đảm nhiệm vai trò gì; quan hệ và điểm thay đổi nằm ở đâu? |
-| **Hệ quả (consequences)** | Giảm coupling ở đâu, thêm abstraction gì, chi phí runtime và kiểm thử thế nào? |
-| **Điều kiện áp dụng** | Tín hiệu nào cho thấy pattern phù hợp, và tình huống nào nên chọn cách đơn giản hơn? |
+| **Name / intent** | What kind of problem does this pattern address? |
+| **Problem** | What currently makes changes or replacements difficult, introduces errors, or duplicates code? |
+| **Context** | How many variants does the system have, how often do they change, who uses them, and what constraints apply? |
+| **Forces / tensions** | Which goals compete: flexibility versus simplicity, reuse versus isolation, performance versus comprehensibility? |
+| **Solution** | Which objects fulfill which roles, and where are the relationships and variation points? |
+| **Consequences** | Where is coupling reduced, which abstractions are added, and what are the runtime and testing costs? |
+| **Applicability** | What signals indicate a suitable pattern, and when would a simpler approach be preferable? |
 
-**Công thức tư duy:** vấn đề cụ thể + bối cảnh thực tế + các đánh đổi chấp nhận được → **quyết định thiết kế**. Tên pattern chỉ là ngôn ngữ ngắn gọn để trao đổi sau khi đã hiểu quyết định.
+**Decision framework:** concrete problem + real-world context + acceptable trade-offs → **design decision**. The pattern name is merely shorthand for discussing an already understood decision.
 
-### Ví dụ về phát biểu vấn đề
+### Example Problem Statements
 
-Phát biểu mơ hồ: “Module tính chiết khấu của chúng ta cần Strategy Pattern.”
+Vague statement: “Our discount calculation module needs the Strategy Pattern.”
 
-Phát biểu có thể kiểm chứng:
+Testable statement:
 
-> “Có bốn nhóm quy tắc chiết khấu độc lập, dự kiến thêm theo từng chiến dịch. Mỗi quy tắc đang làm phải sửa lại `CheckoutService` qua một nhánh `if/else`. Chúng ta muốn thêm quy tắc mới mà không thay đổi thuật toán chốt đơn và có thể thử nghiệm từng quy tắc độc lập.”
+> “We have four independent groups of discount rules, with more planned for each campaign. Each new rule currently requires changing `CheckoutService` by adding an `if/else` branch. We want to add rules without changing the checkout algorithm and to test each rule independently.”
 
-Phát biểu thứ hai làm rõ **nỗi đau**, **động lực thay đổi** và **tiêu chí thành công**. Lúc đó Strategy mới trở thành một phương án đáng cân nhắc.
+The second statement clarifies the **pain point**, **motivation for change**, and **success criteria**. Only then does Strategy become an option worth considering.
 
-## 2. Bối cảnh quyết định mẫu nào phù hợp
+## 2. Context Determines Which Pattern Fits
 
-Hai chương trình trông giống nhau trên biểu đồ lớp chưa chắc nên dùng cùng một pattern. Trước khi lựa chọn, hãy hỏi:
+Two programs may look alike in a class diagram yet warrant different patterns. Before choosing, ask:
 
-1. **Điều gì thay đổi?** Số loại xử lý, thuật toán, định dạng, trạng thái, API bên ngoài hay vòng đời đối tượng?
-2. **Tần suất và chủ sở hữu thay đổi?** Một quy tắc đổi vài lần một năm hay có nhiều đội bổ sung biến thể mỗi tuần?
-3. **Cái gì phải ổn định?** Hợp đồng public, kết quả tính tiền, schema, latency, cách kiểm soát lỗi hay tiến trình release?
-4. **Đường đi của lời gọi?** Xử lý đồng bộ hay bất đồng bộ; có đa luồng, transaction hoặc network không?
-5. **Chi phí tổ chức?** Đội ngũ có dễ tra cứu luồng xử lý qua interface/DI registry không? Người trực vận hành có xác định được implementation chạy thật không?
-6. **Khả năng quan sát và kiểm thử?** Có test cho quy tắc cũ, kiểm thử hợp đồng cho implementation mới, logging/metrics đủ để điều tra lỗi không?
-7. **Bài toán nào chưa cần giải?** Tránh tạo điểm mở rộng cho hàng chục khả năng chỉ mới tưởng tượng.
+1. **What changes?** The number of processing types, algorithms, formats, states, external APIs, or object lifecycles?
+2. **How often does it change, and who owns it?** Does one rule change a few times per year, or do multiple teams add variants every week?
+3. **What must stay stable?** The public contract, payment calculation results, schema, latency, error handling, or release process?
+4. **What is the call path?** Is processing synchronous or asynchronous; are threads, transactions, or networks involved?
+5. **What is the organizational cost?** Can the team easily trace execution through an interface/DI registry? Can an operator identify the implementation actually running?
+6. **How observable and testable is it?** Are there tests for existing rules, contract tests for new implementations, and sufficient logging/metrics for troubleshooting?
+7. **Which problems do not yet need solving?** Avoid adding extension points for dozens of merely imagined possibilities.
 
-Bốn tín hiệu thường gợi ý cân nhắc pattern:
+Four signals often suggest considering a pattern:
 
-- Một nhánh lựa chọn hành vi liên tục tăng và mỗi nhánh là **quy tắc độc lập** → xem xét **Strategy**.
-- Có nhiều cách tạo object phức tạp, không muốn client phụ thuộc lớp cụ thể → cân nhắc **Factory Method / Abstract Factory**.
-- Cần nói chuyện với API không cùng hợp đồng hoặc phải bọc thêm hành vi → cân nhắc **Adapter / Decorator** tùy mục tiêu.
-- Nhiều thành phần phải phản ứng khi một sự kiện/trạng thái đổi → cân nhắc **Observer** hoặc một cơ chế thông báo sự kiện phù hợp.
+- A behavior-selection branch keeps growing, and each branch represents an **independent rule** → consider **Strategy**.
+- Complex objects can be created in several ways, and clients should not depend on concrete classes → consider **Factory Method / Abstract Factory**.
+- You must interact with an API that exposes a different contract or wrap additional behavior around an object → consider **Adapter / Decorator**, depending on the goal.
+- Several components must react when an event or state changes → consider **Observer** or an appropriate event-notification mechanism.
 
-Đây là **gợi ý chẩn đoán**, không phải luật cứng. Cùng một vấn đề vẫn có thể giải quyết đơn giản bằng một hàm thuần túy, một `switch`, một bảng dữ liệu, composition thông thường hoặc một module riêng.
+These are **diagnostic clues**, not rigid rules. The same problem might be solved more simply with a pure function, a `switch`, a data table, ordinary composition, or a separate module.
 
-## 3. Một ví dụ xuyên suốt: tính chiết khấu trong checkout
+## 3. A Running Example: Calculating Checkout Discounts
 
-Giả sử hệ thống bán hàng có ba lựa chọn:
+Suppose a sales system offers three options:
 
-- Không chiết khấu.
-- Thành viên nhận **5% giá trị giỏ hàng**.
-- Mã khuyến mãi cố định **30.000 VND**, không vượt giá trị giỏ hàng.
+- No discount.
+- Members receive **5% of the cart value** as a discount.
+- A fixed voucher of **30.000 VND**, capped at the cart value.
 
-Trong ví dụ, giỏ hàng được biểu diễn bằng tổng tiền VND nguyên; quy tắc làm tròn phần trăm là `HALF_UP` tới đơn vị VND. Mỗi checkout áp dụng **một chính sách** đã chọn. Đây là giả định nghiệp vụ để ví dụ rõ ràng, không phải khẳng định mọi hệ thống thương mại chỉ được dùng một khuyến mãi.
+In this example, the cart is represented by a whole-number total in VND; percentage discounts are rounded to the nearest VND using `HALF_UP`. Each checkout applies **one selected policy**. This is a business assumption that keeps the example clear, not a claim that every commerce system permits only one promotion.
 
-### 3.1. Cách đơn giản, phù hợp khi biến thể ít và ổn định
+### 3.1. A Simple Approach for Few, Stable Variants
 
 ```java
 enum DiscountKind { NONE, MEMBER, VOUCHER }
@@ -113,11 +113,11 @@ static long discountVnd(long subtotalVnd, DiscountKind kind) {
 }
 ```
 
-`switch` ở đây **không sai**. Nếu ba lựa chọn ổn định, được sở hữu bởi cùng một nhóm và toàn bộ quy tắc ngắn gọn, đây có thể là thiết kế tốt nhất: ít lớp, dễ lần theo luồng, ít nơi phải cấu hình. Đừng tự động đổi mọi `switch` thành Strategy.
+A `switch` here **is not wrong**. If the three options are stable, owned by one team, and all rules are concise, this may be the best design: fewer classes, easier call tracing, and fewer configuration points. Do not automatically replace every `switch` with Strategy.
 
-### 3.2. Khi biến thể là một trục thay đổi thật: Strategy
+### 3.2. When Variants Represent a Real Axis of Change: Strategy
 
-Khi nhiều đội bổ sung các hình thức chiết khấu và mỗi loại có kiểm thử riêng, có thể tách thành các chính sách thống nhất bởi một hợp đồng.
+When several teams add discount types and each type has its own tests, the rules can be separated into policies that share a contract.
 
 ```mermaid
 flowchart LR
@@ -129,7 +129,7 @@ flowchart LR
     X["Chiến dịch mới"] -. implements .-> P
 ```
 
-Ví dụ **Java 17 độc lập**, lưu thành `PatternDecisionDemo.java`, chạy bằng `javac PatternDecisionDemo.java` và `java PatternDecisionDemo`:
+A **standalone Java 17** example: save it as `PatternDecisionDemo.java`, then run `javac PatternDecisionDemo.java` and `java PatternDecisionDemo`:
 
 ```java
 import java.math.BigDecimal;
@@ -233,70 +233,70 @@ public class PatternDecisionDemo {
 }
 ```
 
-**Vai trò trong mẫu Strategy:**
+**Roles in the Strategy pattern:**
 
-| Thành phần | Vai trò | Lý do |
+| Element | Role | Rationale |
 |---|---|---|
-| `DiscountPolicy` | Strategy interface | Định nghĩa thao tác chung và kỳ vọng đầu vào/đầu ra |
-| `MemberDiscount`, `FixedVoucher`, `NoDiscount` | Concrete strategies | Mỗi loại giữ một công thức độc lập |
-| `CheckoutService` | Context | Chỉ điều phối checkout, gọi strategy và kiểm tra invariant |
-| `main` | Composition root | Chọn strategy được sử dụng tại thời điểm lắp ráp |
+| `DiscountPolicy` | Strategy interface | Defines the shared operation and input/output expectations |
+| `MemberDiscount`, `FixedVoucher`, `NoDiscount` | Concrete strategies | Each encapsulates an independent formula |
+| `CheckoutService` | Context | Coordinates checkout, invokes the strategy, and enforces invariants |
+| `main` | Composition root | Selects which strategy to use when assembling objects |
 
-**Mở rộng hành vi:** bổ sung `SeasonalDiscount implements DiscountPolicy` mà không phải thêm nhánh mới trong `CheckoutService`. Nếu có giao diện cho người dùng chọn loại chiết khấu, phần **wiring** vẫn phải biết ánh xạ mã chiến dịch sang strategy hoặc nhận qua cơ chế đăng ký phù hợp; sự thay đổi này là bình thường.
+**Extending behavior:** add `SeasonalDiscount implements DiscountPolicy` without adding another branch to `CheckoutService`. If users can choose a discount type through a UI, the **wiring** must still map campaign codes to strategies or obtain them through an appropriate registration mechanism; this change is expected.
 
-**Đánh đổi thật sự:** tăng số lớp, thêm interface, cấu hình lựa chọn strategy và đòi hỏi hợp đồng chặt chẽ giữa các implementation. Lợi ích chủ yếu là tách rời biến thể, giảm sửa phần điều phối và kiểm thử chiến lược độc lập; không phải tăng tốc độ chạy chương trình.
+**Actual trade-off:** more classes, an additional interface, strategy-selection configuration, and the need for a strict contract across implementations. The principal benefits are separating variants, reducing changes to orchestration code, and testing strategies independently; this does not inherently make the program faster.
 
-### 3.3. So sánh trước khi quyết định
+### 3.3. Compare Before Deciding
 
-| Tiêu chí | `switch` tập trung | Strategy |
+| Criterion | Centralized `switch` | Strategy |
 |---|---|---|
-| Ba quy tắc ngắn, hiếm đổi | Thường đơn giản và rõ hơn | Có thể dư abstraction |
-| Thêm quy tắc mới thường xuyên | Phải sửa `switch` | Thêm implementation và wiring |
-| Kiểm thử từng quy tắc | Có thể làm được, thường chung một đơn vị mã | Dễ cô lập từng strategy |
-| Theo dõi luồng | Đọc một hàm | Theo interface, implementation, lắp ráp |
-| Hỗ trợ plugin/đội khác bổ sung quy tắc | Khó tách quyền sở hữu | Phù hợp hơn nếu có contract rõ |
-| Chi phí nhận thức | Thấp lúc ban đầu, có thể tăng theo nhánh | Cao hơn lúc ban đầu, ổn định hơn khi nhiều biến thể |
-| Rủi ro hệ thống | Hàm lớn, thêm nhánh dễ ảnh hưởng nhánh khác | Cấu hình nhầm strategy, implementation vi phạm hợp đồng |
+| Three short rules that rarely change | Usually simpler and clearer | May introduce unnecessary abstraction |
+| Adding new rules frequently | Requires changing the `switch` | Add an implementation and wiring |
+| Testing each rule | Possible, usually within the same code unit | Easier to isolate each strategy |
+| Tracing execution | Read one function | Follow the interface, implementation, and assembly |
+| Supporting plugins/other teams adding rules | Harder to separate ownership | Better suited when the contract is clear |
+| Cognitive cost | Low initially, but may grow with the number of branches | Higher initially, more stable with many variants |
+| System risks | Large function; a new branch may affect others | Wrong strategy configuration or implementations violating the contract |
 
-Không nên chọn Strategy chỉ vì nhìn thấy `if`. Cần chứng minh rằng **cách xử lý là trục biến thiên** có tần suất và độc lập đủ lớn.
+Do not choose Strategy simply because you see an `if`. Show that **the processing approach is an axis of variation** with sufficient frequency and independence.
 
-## 4. Cơ chế đánh đổi: pattern giải quyết một lực kéo và tạo lực kéo khác
+## 4. Trade-offs: A Pattern Resolves One Tension and Creates Another
 
-Các nguyên tắc thiết kế thường xung đột:
+Design principles often conflict:
 
-- **Ít coupling** với implementation ↔ **nhiều indirection** (thêm lớp trung gian khi điều hướng).
-- **Mở rộng bằng lớp mới** ↔ **nhiều loại object và cấu hình** cần quản lý.
-- **Ẩn chi tiết hạ tầng** ↔ **khó thấy implementation thực tế** nếu DI/registry thiếu minh bạch.
-- **Composition linh hoạt** ↔ **thứ tự ghép thành phần** có thể ảnh hưởng hành vi.
-- **Thông báo sự kiện tách rời** ↔ **khó xác định thứ tự, lỗi và tính nhất quán**.
-- **Tạo object qua factory** ↔ **logic lựa chọn loại object tập trung thêm tại factory**.
+- **Less coupling** to implementations ↔ **more indirection** (extra layers to navigate).
+- **Extension through new classes** ↔ **more object types and configuration** to maintain.
+- **Hiding infrastructure details** ↔ **less visibility into the actual implementation** when DI/registry configuration is opaque.
+- **Flexible composition** ↔ **component assembly order** may affect behavior.
+- **Decoupled event notifications** ↔ **harder to determine ordering, failures, and consistency**.
+- **Object creation through a factory** ↔ **additional concentration of object-selection logic in the factory**.
 
-Một pattern thành công khi những chi phí mới **được chủ động chấp nhận** và nhỏ hơn nỗi đau nó giải quyết. Trong review thiết kế, hỏi “Pattern này chuyển trách nhiệm và chi phí sang đâu?” thường hữu ích hơn hỏi “Pattern này thuộc nhóm nào?”.
+A pattern succeeds when its new costs are **consciously accepted** and outweighed by the pain it addresses. In a design review, asking “Where does this pattern move responsibility and cost?” is often more useful than asking “Which category does this pattern belong to?”
 
-## 5. Những nhóm pattern thường gặp
+## 5. Common Pattern Categories
 
-Danh mục kinh điển **Gang of Four (GoF)** chia 23 mẫu thành ba nhóm theo ý định. Bảng dưới đây chỉ chọn một số mẫu điển hình; phân nhóm không thay thế việc phân tích tình huống cụ thể.
+The classic **Gang of Four (GoF)** catalog groups 23 patterns into three categories by intent. The table below selects representative patterns only; classification cannot replace analysis of the specific situation.
 
-| Nhóm | Pattern | Khi nào cân nhắc | Đánh đổi cần nhớ |
+| Category | Pattern | When to consider it | Trade-off to remember |
 |---|---|---|---|
-| **Creational** | Factory Method | Cần hoãn việc quyết định class cụ thể cho lớp con/điểm mở rộng tạo object | Tăng phân cấp và gián tiếp hóa |
-| **Creational** | Abstract Factory | Tạo **họ** đối tượng liên quan nhất quán (ví dụ bộ UI Windows/Mac) | Khó bổ sung một *loại sản phẩm mới* vào mọi factory |
-| **Creational** | Builder | Object có nhiều tùy chọn hoặc quá trình tạo phức tạp, cần xây dựng dễ đọc | Thêm builder/state và bước validate |
-| **Creational** | Singleton | Thật sự cần một instance duy nhất trong phạm vi xác định | Trạng thái toàn cục, coupling và khó kiểm thử; DI singleton scope có ý nghĩa khác với constructor private |
-| **Structural** | Adapter | Bên gọi cần một interface nhưng thư viện bên ngoài có API khác | Thêm lớp chuyển đổi, có thể mất thông tin/ngữ nghĩa |
-| **Structural** | Decorator | Cần thêm hành vi quanh object mà vẫn giữ cùng interface | Thứ tự bọc quan trọng, khó theo dõi nhiều lớp |
-| **Structural** | Facade | Nhiều API con phức tạp, muốn một điểm tiếp cận đơn giản | Facade có thể phình to và che mất các khả năng đặc thù |
-| **Behavioral** | Strategy | Nhiều thuật toán có thể hoán đổi theo ngữ cảnh | Nhiều implementation, cần cơ chế chọn phù hợp |
-| **Behavioral** | Observer | Một thay đổi cần thông báo nhiều đối tượng quan sát | Thứ tự, vòng đời đăng ký, lỗi callback và backpressure |
-| **Behavioral** | Command | Cần biểu diễn một yêu cầu như object để queue, log, undo hoặc retry | Thêm object/cấu trúc dữ liệu, quản lý idempotency khi retry |
-| **Behavioral** | State | Hành vi phụ thuộc trạng thái, chuyển trạng thái phức tạp | Nhiều lớp trạng thái, cần kiểm soát transition hợp lệ |
-| **Behavioral** | Template Method | Khung thuật toán cố định, vài bước được chuyên biệt bằng kế thừa | Coupling qua inheritance, thay thế khó hơn composition |
+| **Creational** | Factory Method | Defer concrete class selection to subclasses or an object-creation extension point | Adds hierarchy and indirection |
+| **Creational** | Abstract Factory | Create consistent **families** of related objects (for example, a Windows/Mac UI suite) | Hard to add a *new product type* to every factory |
+| **Creational** | Builder | An object has many options or a complex construction process that should remain readable | Adds a builder/state and validation step |
+| **Creational** | Singleton | A single instance is truly required within a defined scope | Global state, coupling, and testing difficulty; a DI singleton scope differs from a private constructor |
+| **Structural** | Adapter | A caller needs one interface while an external library exposes another API | Adds a conversion layer and may lose information or semantics |
+| **Structural** | Decorator | Add behavior around an object while keeping the same interface | Wrapping order matters; multiple layers are harder to trace |
+| **Structural** | Facade | Several complex subsystem APIs should have one simple entry point | A facade can grow too large and hide specialized capabilities |
+| **Behavioral** | Strategy | Several algorithms need to be interchangeable by context | Multiple implementations and a suitable selection mechanism |
+| **Behavioral** | Observer | One change must notify multiple observers | Ordering, subscription lifecycle, callback failures, and backpressure |
+| **Behavioral** | Command | Represent a request as an object for queuing, logging, undo, or retry | Adds objects/data structures; retries require idempotency management |
+| **Behavioral** | State | Behavior depends on state, and transitions are complex | Multiple state classes; valid transitions must be controlled |
+| **Behavioral** | Template Method | A fixed algorithm skeleton has steps specialized through inheritance | Inheritance coupling; substitution is harder than composition |
 
-**Phân biệt mức độ:** Design Pattern dạng GoF thường nói về cộng tác giữa các đối tượng; **architectural pattern** (ví dụ Layered Architecture, Hexagonal Architecture) tác động đến ranh giới toàn hệ thống. **Idiom** là lối viết theo ngôn ngữ (ví dụ `try-with-resources` trong Java). Không nên áp một pattern ở mọi cấp độ chỉ vì chúng có tên quen thuộc.
+**Distinguish the scope:** GoF Design Patterns generally describe collaboration among objects; **architectural patterns** (such as Layered Architecture and Hexagonal Architecture) affect boundaries across an entire system. An **idiom** is a language-specific coding convention (such as `try-with-resources` in Java). Do not apply a pattern at every level merely because its name is familiar.
 
-## 6. Cùng một yêu cầu, chọn đúng pattern theo mục tiêu
+## 6. Choosing the Right Pattern for the Same Requirement
 
-Ví dụ cần tích hợp dịch vụ gửi tin nhắn của nhà cung cấp mới. Nếu mục tiêu là đổi giao diện từ SDK sang hợp đồng nội bộ:
+Suppose you need to integrate a new provider's messaging service. If the goal is adapting its SDK interface to an internal contract:
 
 ```java
 interface SmsSender {
@@ -325,9 +325,9 @@ final class VendorSmsAdapter implements SmsSender {
 }
 ```
 
-Đây là **Adapter**: đổi *hình thức hợp đồng*, đồng thời che API vendor. Nó không tự động xử lý retry, cước tin nhắn, bảo mật hay tính đúng đắn của số điện thoại.
+This is an **Adapter**: it changes the *contract's shape* while hiding the vendor API. It does not automatically handle retries, SMS charges, security, or phone-number validity.
 
-Nếu hợp đồng `SmsSender` đã ổn, nhưng muốn **bổ sung metric** cho mọi lần gửi:
+If the `SmsSender` contract is already suitable but you want to **add metrics** to every send operation:
 
 ```java
 interface SendMetrics {
@@ -357,21 +357,21 @@ final class MeteredSmsSender implements SmsSender {
 }
 ```
 
-Đây là **Decorator**: giữ cùng interface và bọc thêm chức năng trước/sau khi delegate xử lý. Các đoạn Java ở mục này là **mẫu tách file/ghép theo package** để giải thích cấu trúc; phần `main` hoàn chỉnh có thể biên dịch độc lập nằm ở mục 3.
+This is a **Decorator**: it preserves the same interface and wraps extra behavior around the delegate's processing. The Java snippets in this section are **examples intended for separate files or assembly within a package** to illustrate the structure; the complete standalone, compilable `main` appears in section 3.
 
-**Vấn đề khác nhau, pattern khác nhau:**
+**Different problems call for different patterns:**
 
-| Điều cần thay đổi | Phương án có thể xét | Vì sao |
+| What needs to change | Option to consider | Why |
 |---|---|---|
-| Thay API vendor bằng cùng hợp đồng ứng dụng | Adapter | Chuyển đổi interface |
-| Thêm metrics, tracing hoặc hành vi bao quanh | Decorator | Bọc đối tượng giữ nguyên interface |
-| Có nhiều cách chọn kênh SMS/email/push | Strategy | Hoán đổi thuật toán/cách gửi |
-| Nhiều hệ thống muốn phản ứng sau khi đơn hàng được duyệt | Observer hoặc event messaging | Thông báo bên quan tâm |
-| Cần gói yêu cầu gửi lại vào job có thể queue/retry | Command/job object | Biểu diễn yêu cầu thành dữ liệu có thể chuyển giao |
+| Replace a vendor API with the application's shared contract | Adapter | Converts the interface |
+| Add metrics, tracing, or surrounding behavior | Decorator | Wraps an object while retaining its interface |
+| Choose among SMS/email/push channels | Strategy | Interchanges algorithms or sending approaches |
+| Several systems need to react after an order is approved | Observer or event messaging | Notifies interested consumers |
+| Package a resend request as a queueable/retryable job | Command/job object | Represents the request as transferable data |
 
-Nếu thông báo phải đảm bảo giao dịch và giao hàng tin cậy qua mạng, **Observer in-process** không đủ: cần xử lý message broker, outbox, retry, idempotency và các trường hợp partial failure. Pattern không thay thế các yêu cầu phân tán.
+If notifications require transactional guarantees and reliable network delivery, **in-process Observer** is insufficient: message brokers, outboxes, retries, idempotency, and partial failures must be addressed. A pattern does not replace distributed-systems requirements.
 
-### Thứ tự bọc thay đổi kết quả
+### Wrapping Order Changes the Result
 
 ```text
 new RetrySender(new MeteredSmsSender(actual, metrics))
@@ -381,9 +381,9 @@ new MeteredSmsSender(new RetrySender(actual), metrics)
     → metrics ghi nhận một lần gửi logic sau retry
 ```
 
-Hai cách ghép đều có thể hợp lệ; chọn theo yêu cầu đo lường. Đây là ví dụ minh họa về hệ quả của **Decorator/composition**, không phải code hoàn chỉnh của `RetrySender`.
+Both compositions can be valid; choose according to the measurement requirements. This illustrates a **Decorator/composition** consequence, rather than complete `RetrySender` code.
 
-## 7. Quy trình lựa chọn mẫu từ tình huống thực tế
+## 7. A Process for Choosing Patterns in Real Situations
 
 ```mermaid
 flowchart TD
@@ -398,18 +398,18 @@ flowchart TD
     H -- "Có" --> I["Ghi rõ quyết định,\ntrade-off và tiêu chí xem xét lại"]
 ```
 
-Thực hiện bằng một tình huống cụ thể:
+Apply the process to a concrete situation:
 
-1. **Ghi nhận thay đổi gần đây:** đếm số lần sửa module trong 3–6 tháng, số branch độc lập và số lỗi hồi quy (đừng dựa hoàn toàn vào cảm giác).
-2. **Tách “what” khỏi “how”:** chính sách nghiệp vụ cần hành vi gì và implementation thực hiện bằng kỹ thuật nào?
-3. **Nêu ràng buộc bắt buộc:** độ đúng, bảo mật, độ trễ, thread-safety, transaction, backward compatibility.
-4. **So sánh baseline với ứng viên:** trước tiên thử cải thiện tên hàm, tách phương thức hoặc mapping dữ liệu; chỉ nâng lên Strategy/Factory/Observer khi có lợi.
-5. **Dựng spike nhỏ:** có thể thử thêm một biến thể hoàn toàn mới mà ít sửa phần lõi không? Luồng debug có bị khó quá mức không?
-6. **Định nghĩa contract và test:** xác định kết quả, ngoại lệ, bất biến, giới hạn và concurrency.
-7. **Viết một quyết định thiết kế ngắn:** bối cảnh, phương án đã xem, lý do chọn, hệ quả và tình huống cần xét lại.
-8. **Đánh giá sau khi có dữ liệu:** pattern được giữ, thu gọn hoặc thay thế khi bối cảnh thay đổi.
+1. **Record recent changes:** count modifications to the module over the past 3–6 months, independent branches, and regressions (rather than relying entirely on intuition).
+2. **Separate the “what” from the “how”:** what behavior does the business policy require, and which techniques does the implementation use?
+3. **State mandatory constraints:** correctness, security, latency, thread safety, transactions, and backward compatibility.
+4. **Compare the baseline with candidates:** first try better naming, method extraction, or data mappings; introduce Strategy/Factory/Observer only when beneficial.
+5. **Build a small spike:** can a completely new variant be added with few changes to the core? Does debugging become unreasonably difficult?
+6. **Define the contract and tests:** specify results, exceptions, invariants, limits, and concurrency.
+7. **Write a short design decision:** include context, alternatives considered, reasons for selection, consequences, and conditions for reconsideration.
+8. **Reassess with evidence:** retain, simplify, or replace the pattern as the context changes.
 
-### Một bản ghi quyết định kiến trúc (ADR) mẫu
+### Example Architecture Decision Record (ADR)
 
 ```markdown
 # ADR: Tách chính sách chiết khấu khỏi CheckoutService
@@ -441,17 +441,17 @@ Xem xét lại khi:
   hoặc số chiến dịch giảm và rất hiếm thay đổi.
 ```
 
-## 8. Kiểm thử pattern theo hành vi và hợp đồng
+## 8. Test Patterns Through Behavior and Contracts
 
-Pattern tốt phải giúp **kiểm soát thay đổi** mà không phá invariant. Với ví dụ Strategy, các test sau nên được ưu tiên:
+A good pattern should help **control change** without breaking invariants. In the Strategy example, prioritize these tests:
 
-- Khi `subtotalVnd = 400000`, thành viên được giảm 20000 VND.
-- Khi giỏ hàng 20000 VND, voucher 30000 VND chỉ giảm tối đa 20000 VND; payable bằng 0.
-- Với `subtotalVnd = 0`, payable bằng 0 cho mọi chính sách hợp lệ.
-- Một implementation mới trả chiết khấu âm, vượt giỏ hàng hoặc `null` phải bị từ chối.
-- Nếu có dynamic registry/DI: mã chính sách không tồn tại phải trả lỗi rõ ràng, không âm thầm chọn chính sách khác.
+- When `subtotalVnd = 400000`, a member receives a 20000 VND discount.
+- For a cart worth 20000 VND, a 30000 VND voucher discounts at most 20000 VND; the payable amount is 0.
+- With `subtotalVnd = 0`, the payable amount is 0 for every valid policy.
+- Reject a new implementation that returns a negative discount, one larger than the cart total, or `null`.
+- With a dynamic registry/DI, an unknown policy code must produce a clear error instead of silently selecting another policy.
 
-Ví dụ JUnit 5, đặt lớp test cùng package với `PatternDecisionDemo`:
+JUnit 5 example: put the test class in the same package as `PatternDecisionDemo`:
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -497,93 +497,93 @@ class PatternDecisionDemoTest {
 }
 ```
 
-Các test này chứng minh tính đúng đắn của **hành vi đang sử dụng**. Chúng chưa chứng minh mọi chiến dịch trong tương lai đều đúng; cần contract test chung, test ranh giới và test riêng với những thuật toán mới. Nếu hệ thống áp dụng đồng thời nhiều loại voucher, cần định nghĩa thêm thứ tự, khả năng kết hợp và các quy tắc khóa chéo. **Không tự ý áp dụng nhiều Strategy liên tiếp** nếu hợp đồng chưa cho phép.
+These tests demonstrate the correctness of **behavior currently in use**. They do not prove that all future campaigns will be correct; add shared contract tests, boundary tests, and specific tests for new algorithms. If the system combines multiple voucher types, define their order, compatibility, and mutually exclusive rules. **Do not arbitrarily apply multiple Strategies in sequence** unless the contract permits it.
 
-## 9. Những lỗi tư duy thường gặp khi học Design Pattern
+## 9. Common Mistakes When Learning Design Patterns
 
-| Lỗi | Vì sao gây hại | Cách sửa |
+| Mistake | Why it causes harm | How to fix it |
 |---|---|---|
-| Nhớ tên rồi tìm chỗ áp dụng | Tăng code và abstraction nhưng không giải quyết vấn đề | Bắt đầu từ rủi ro thay đổi thực tế |
-| Coi `if/switch/new` là code smell tuyệt đối | Làm mất giải pháp ngắn gọn vốn đang đúng | Đánh giá tần suất biến thể, độ phức tạp và ownership |
-| Đặt nhiều interface cho một trường hợp cố định | Tạo thêm indirection và chi phí điều hướng | Giữ thiết kế đơn giản cho đến khi xuất hiện nhu cầu |
-| Dùng Singleton để chia sẻ dữ liệu mutable | Tăng coupling toàn cục, race condition, test phụ thuộc nhau | Quản lý vòng đời rõ ràng, ưu tiên immutable/dependency injection |
-| Adapter chỉ đổi tên hàm nhưng làm mất lỗi/ngữ nghĩa | Client hiểu sai hợp đồng của bên thứ ba | Xác định mapping dữ liệu, timeout, exception và giới hạn rõ |
-| Decorator có thứ tự bọc không được kiểm tra | Metrics, retry, cache hoặc transaction có nghĩa khác nhau | Test thứ tự composition và hiệu ứng biên |
-| Observer mặc định callback luôn an toàn | Lỗi một observer có thể ảnh hưởng publisher, unsubscribe bị quên | Thiết kế policy lỗi, vòng đời, ordering và backpressure |
-| Factory trả object không tương thích hợp đồng | Lỗi chỉ xuất hiện ở runtime | Kiểm tra type, invariant và tính tương thích |
-| Pattern kết hợp tạo vòng phụ thuộc | Khó khởi tạo, khó sửa, vòng đời không rõ | Sơ đồ hóa dependency; tách ranh giới |
-| Đo “chất lượng” bằng số pattern | Khó bảo trì hơn dù nhìn có vẻ kiến trúc | Đo bằng thời gian sửa lỗi, test, coupling, khả năng debug |
+| Memorizing names and then looking for places to apply them | Adds code and abstractions without solving a problem | Start with actual risks from change |
+| Treating `if/switch/new` as an absolute code smell | Discards an already correct, concise solution | Evaluate variant frequency, complexity, and ownership |
+| Adding multiple interfaces for one fixed case | Adds indirection and navigation costs | Keep the design simple until a need emerges |
+| Using Singleton to share mutable data | Increases global coupling, race conditions, and interdependent tests | Manage lifecycles explicitly; prefer immutable data/dependency injection |
+| Adapting APIs by renaming methods but losing errors or semantics | Misleads clients about the third-party contract | Define data mapping, timeouts, exceptions, and limits explicitly |
+| Failing to test Decorator wrapping order | Metrics, retries, caches, or transactions take on different meanings | Test composition order and side effects |
+| Assuming Observer callbacks are always safe | One observer's failure may affect the publisher; unsubscribe may be forgotten | Design error, lifecycle, ordering, and backpressure policies |
+| Having factories return objects incompatible with the contract | Errors only surface at runtime | Validate types, invariants, and compatibility |
+| Combining patterns into dependency cycles | Complicates initialization and maintenance, obscures lifecycles | Diagram dependencies; separate boundaries |
+| Measuring “quality” by pattern count | Makes code harder to maintain despite its architectural appearance | Measure bug-fix time, tests, coupling, and debuggability |
 
-**Một câu hỏi quan trọng:** Nếu ngày mai loại thay đổi mà pattern được thiết kế để hỗ trợ **không còn xảy ra**, liệu kiến trúc có còn hợp lý không? Nếu câu trả lời là không, hãy xem lại chi phí abstraction.
+**One important question:** If the kind of change a pattern supports **stopped occurring** tomorrow, would the architecture still make sense? If not, revisit the cost of the abstraction.
 
-## 10. Những câu hỏi phân biệt pattern
+## 10. Questions That Distinguish Similar Patterns
 
-**Strategy hay State?** Cả hai đều có thể dùng interface và composition, nhưng ý định khác nhau. Strategy hoán đổi **thuật toán/chính sách**; State biểu diễn **trạng thái hiện tại và chuyển trạng thái hợp lệ**, nơi hành vi của đối tượng phụ thuộc state machine. Việc đổi class lúc chạy chưa đủ để gọi là State.
+**Strategy or State?** Both may use interfaces and composition, but their purposes differ. Strategy interchanges **algorithms/policies**; State represents the **current state and valid transitions**, where an object's behavior depends on a state machine. Switching classes at runtime alone does not make something State.
 
-**Adapter hay Decorator?** Adapter làm cho hai interface không tương thích nói chuyện được. Decorator thường giữ **cùng interface** và thêm chức năng quanh đối tượng được bọc. Trong hệ thống thật có thể cần cả hai.
+**Adapter or Decorator?** Adapter enables communication between incompatible interfaces. Decorator generally retains the **same interface** while adding behavior around the wrapped object. A real system may need both.
 
-**Factory Method hay một hàm factory?** Factory Method theo GoF dựa vào phương thức tạo object có thể được lớp con chuyên biệt hóa; một **static factory method** trong Java (ví dụ `Color.of(...)`) không tự động là mẫu GoF Factory Method. Tránh lẫn thuật ngữ khi review thiết kế.
+**Factory Method or a factory function?** The GoF Factory Method relies on an object-creation method that subclasses can specialize; a **static factory method** in Java (such as `Color.of(...)`) is not automatically the GoF Factory Method pattern. Avoid conflating the terms in design reviews.
 
-**Observer hay event bus?** Observer là mô hình quan hệ publisher–subscriber trong phạm vi ứng dụng hoặc object. Event bus/message broker có thể mang ý tưởng publish–subscribe nhưng phải giải quyết thêm delivery, retry, ordering, phân tán và idempotency.
+**Observer or event bus?** Observer models a publisher–subscriber relationship within an application or among objects. An event bus/message broker may use publish–subscribe concepts but must also address delivery, retries, ordering, distribution, and idempotency.
 
-**Builder hay constructor?** Builder phù hợp khi nhiều tham số tùy chọn hoặc quá trình xây dựng cần kiểm tra theo bước. Với record có hai tham số bắt buộc rõ ràng, constructor có thể dễ hiểu hơn.
+**Builder or constructor?** Builder suits numerous optional parameters or a multistep construction process requiring validation. For a record with two clear required parameters, a constructor may be easier to understand.
 
-## 11. Bài tập ứng dụng
+## 11. Applied Exercises
 
-### Bài 1 – Chọn hay không chọn Strategy
+### Exercise 1 – Choose Strategy or Do Without It
 
-Hệ thống tính phí dịch vụ có hai quy tắc cố định, chỉ sửa mỗi năm một lần. Hãy viết hai phương án: một bằng `switch`, một bằng Strategy. Ước tính số class, số điểm thay đổi và tình huống nào sẽ làm phương án thứ hai hữu ích hơn. Giải thích lựa chọn cuối cùng.
+A service-pricing system has two fixed rules that change only once a year. Implement two alternatives: one using a `switch` and one using Strategy. Estimate their class counts, change points, and situations in which the second approach would become more useful. Explain your final choice.
 
-### Bài 2 – Adapter theo contract
+### Exercise 2 – Adapter by Contract
 
-Bên ngoài trả thông tin nhiệt độ Fahrenheit, còn domain cần Celsius. Thiết kế `TemperatureProvider` trả độ C, một adapter cho SDK ngoài và quy tắc xử lý giá trị lỗi. Viết test cho ngưỡng 32°F → 0°C và 212°F → 100°C; phân biệt adapter chuyển đơn vị với quy tắc cảnh báo nhiệt.
+An external provider returns temperatures in Fahrenheit, but the domain needs Celsius. Design a `TemperatureProvider` that returns degrees Celsius, an adapter for the external SDK, and a rule for handling invalid values. Test the boundaries 32°F → 0°C and 212°F → 100°C; distinguish unit conversion in the adapter from temperature-alert rules.
 
-### Bài 3 – Decorator và thứ tự
+### Exercise 3 – Decorator and Ordering
 
-Thiết kế `Notifier` có bọc retry và metrics. Giải thích cách đặt `RetryNotifier` **ngoài** hay **trong** `MetricsNotifier` ảnh hưởng số lần đếm. Nếu một lần gửi thất bại cuối cùng, cách nào phản ánh số lần thử, cách nào phản ánh một yêu cầu nghiệp vụ?
+Design a `Notifier` wrapped with retries and metrics. Explain how placing `RetryNotifier` **outside** versus **inside** `MetricsNotifier` affects the counts. If a send operation ultimately fails, which composition counts attempts and which counts a single business request?
 
-### Bài 4 – Chẩn đoán bối cảnh
+### Exercise 4 – Diagnose the Context
 
-Một nhóm muốn dùng Observer cho hành vi “gửi email sau khi thanh toán thành công”. Phân tích nếu thanh toán và email nằm ở các tiến trình khác nhau, có sự cố mạng, yêu cầu không gửi trùng, cần lưu bền và có retry. Chỉ ra vì sao Observer đồng bộ trong bộ nhớ chưa đủ; đề xuất những cơ chế cần bổ sung.
+A team wants Observer to “send an email after successful payment.” Analyze a system where payments and emails run in separate processes, networks can fail, duplicate sends are forbidden, durable storage is required, and retries are necessary. Explain why an in-memory synchronous Observer is insufficient and propose additional mechanisms.
 
-### Bài 5 – Viết ADR
+### Exercise 5 – Write an ADR
 
-Chọn một đoạn Java hiện có dùng nhiều điều kiện. Viết một ADR ngắn nêu: vấn đề thực tế, bối cảnh, hai lựa chọn (trong đó có một lựa chọn đơn giản), phương án quyết định, lợi ích, rủi ro và điều kiện xem xét lại. Không được kết luận chỉ bằng “vì SOLID”.
+Choose an existing Java code fragment with many conditionals. Write a brief ADR covering the actual problem, context, two options (including a simple one), decision, benefits, risks, and conditions for review. Do not conclude merely with “because SOLID”.
 
-## 12. Checklist trước khi đưa pattern vào mã sản phẩm
+## 12. Checklist Before Introducing a Pattern into Production Code
 
-- [ ] Có **vấn đề đo hoặc quan sát được**, không chỉ là mong muốn dùng pattern.
-- [ ] Bối cảnh, tần suất thay đổi và giới hạn hiệu năng/bảo mật đã rõ.
-- [ ] Có **phương án đơn giản** để so sánh.
-- [ ] Phân biệt **điểm ổn định** với **điểm cần mở rộng**.
-- [ ] Lợi ích của pattern lớn hơn số lớp, cấu hình và chi phí debug tăng thêm.
-- [ ] Interface/contract nói rõ giá trị hợp lệ, lỗi và tác dụng phụ.
-- [ ] Có test cho hành vi hiện tại, điều kiện biên và các implementation.
-- [ ] Có kế hoạch đăng ký, khởi tạo, quản lý vòng đời và theo dõi object.
-- [ ] Review có thể giải thích **tại sao chọn** và **khi nào bỏ** pattern.
+- [ ] There is a **measurable or observable problem**, beyond merely wanting to use a pattern.
+- [ ] The context, change frequency, and performance/security limits are understood.
+- [ ] There is a **simple alternative** for comparison.
+- [ ] **Stable points** are distinguished from **extension points**.
+- [ ] The pattern's benefits outweigh the additional classes, configuration, and debugging costs.
+- [ ] The interface/contract specifies valid values, errors, and side effects.
+- [ ] Tests cover current behavior, edge cases, and implementations.
+- [ ] Registration, initialization, lifecycle management, and object tracking are planned.
+- [ ] The review can explain **why to choose** the pattern and **when to remove** it.
 
-**Ghi nhớ:** một thiết kế tốt không phải là thiết kế dùng nhiều mẫu nhất. Mẫu thiết kế đáng dùng khi nó xử lý một vấn đề **đang tồn tại trong bối cảnh cụ thể**, mang lại lợi ích dài hạn đủ lớn và có các đánh đổi được hiểu, kiểm thử và chấp nhận rõ ràng.
+**Remember:** good design does not mean using the greatest number of patterns. A pattern is worthwhile when it addresses a problem **that exists in a specific context**, offers enough long-term benefit, and has trade-offs that are understood, tested, and explicitly accepted.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-002">Factory Method và Abstract Factory</a>
+## <a id="design-patterns-002">Factory Method and Abstract Factory</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Factory Method và Abstract Factory trong Java
+# Factory Method and Abstract Factory in Java
 
-> **Nhóm:** Mẫu thiết kế (Design Patterns) → *Creational patterns* (nhóm mẫu khởi tạo).  
-> **Mục tiêu:** Biết vì sao cần tách việc tạo đối tượng khỏi mã sử dụng, triển khai đúng cấu trúc **Factory Method** và **Abstract Factory**, nhận biết khác biệt, lựa chọn theo bài toán, và tránh nhầm với hàm tạo đối tượng thông thường.
+> **Category:** Design Patterns → *Creational patterns* (patterns for object creation).  
+> **Goal:** Understand why object creation should be separated from consuming code, implement the correct **Factory Method** and **Abstract Factory** structures, recognize their differences, choose based on the problem, and avoid confusing them with ordinary object-creation functions.
 
-## 1. Vấn đề chung: mã nghiệp vụ bị ràng buộc vào cách tạo đối tượng
+## 1. The Shared Problem: Business Code Is Coupled to Object Creation
 
-Xét một ứng dụng có thể gửi thông báo qua email hoặc SMS. Nếu lớp nghiệp vụ tự quyết định implementation:
+Consider an application that sends notifications by email or SMS. If the business class chooses the implementation itself:
 
 ~~~java
 void notifyCustomer(String channel, String customerId, String message) {
@@ -597,33 +597,33 @@ void notifyCustomer(String channel, String customerId, String message) {
 }
 ~~~
 
-Khi thêm kênh mới, phải sửa `if/else` ở nơi đang sử dụng. Mã tạo đối tượng và logic điều phối thông báo bị trộn chung. Nếu nhiều nơi cùng chọn kênh, các nhánh dễ bị lặp.
+Adding a new channel requires modifying an `if/else` branch at the call site. Object-creation code is mixed with notification orchestration. If multiple places choose channels, the conditionals are easily duplicated.
 
-Hai mẫu dưới đây cùng sử dụng **abstraction** để giảm coupling nhưng có trọng tâm khác nhau:
+Both patterns below use **abstraction** to reduce coupling, but they focus on different concerns:
 
-- **Factory Method** để **class cha định nghĩa một điểm mở rộng tạo sản phẩm**, còn class con quyết định tạo loại sản phẩm nào.
-- **Abstract Factory** để client sử dụng **một đối tượng factory** tạo ra **một họ sản phẩm liên quan**, mà không biết các class cụ thể của họ đó.
+- **Factory Method** lets a **base class define an extension point for product creation**, while subclasses decide which product type to instantiate.
+- **Abstract Factory** lets clients use **a factory object** to create **a family of related products** without knowing the family's concrete classes.
 
-Đừng vội thêm factory khi chỉ có một `new` đơn giản, ít khả năng thay đổi. Factory trở nên hữu ích khi việc tạo đối tượng là một **điểm biến thiên có chủ đích**.
+Do not rush to introduce a factory when you only have one simple `new` with little chance of change. A factory becomes useful when object creation is an **intentional variation point**.
 
-## 2. Factory Method — trì hoãn quyết định tạo sản phẩm cho lớp con
+## 2. Factory Method — Deferring Product Creation to Subclasses
 
-**Định nghĩa theo GoF:** Định nghĩa interface cho việc tạo một đối tượng; để subclass quyết định class nào được khởi tạo. Factory Method cho phép class hoãn việc khởi tạo sản phẩm cụ thể cho các subclass.
+**GoF definition:** Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation of concrete products to subclasses.
 
-Các vai trò điển hình:
+Typical roles:
 
-| Vai trò | Chức năng | Ví dụ |
+| Role | Responsibility | Example |
 |---|---|---|
-| **Product** | Hợp đồng của đối tượng được tạo | `Sender` |
-| **Concrete Product** | Các implementation của Product | `EmailSender`, `SmsSender` |
-| **Creator** | Chứa luồng xử lý chung và khai báo factory method | `NotificationCampaign` |
-| **Concrete Creator** | Ghi đè factory method để trả sản phẩm cụ thể | `EmailCampaign`, `SmsCampaign` |
+| **Product** | Contract of the created object | `Sender` |
+| **Concrete Product** | Implementations of Product | `EmailSender`, `SmsSender` |
+| **Creator** | Contains the common processing flow and declares the factory method | `NotificationCampaign` |
+| **Concrete Creator** | Overrides the factory method to return a concrete product | `EmailCampaign`, `SmsCampaign` |
 
-Điểm quan trọng: **Creator không nhất thiết chỉ là một “lớp nhà máy”**. Nó thường chứa logic xử lý thật, gọi factory method để lấy cộng tác viên phù hợp. Trong ví dụ dưới đây, `notifyCustomer` là luồng chung; `createSender` là factory method.
+Key point: **a Creator is not necessarily just a “factory class”**. It often implements real processing logic and calls the factory method to obtain an appropriate collaborator. In the example below, `notifyCustomer` is the shared flow; `createSender` is the factory method.
 
-### 2.1. Java chạy độc lập: tạo kênh gửi thông báo
+### 2.1. Standalone Java Example: Creating a Notification Channel
 
-Tạo tệp `FactoryMethodDemo.java`. Mã chạy bằng Java 17+ và không gọi dịch vụ email/SMS thật.
+Create `FactoryMethodDemo.java`. The code runs on Java 17+ without contacting real email or SMS services.
 
 ~~~java
 import java.util.List;
@@ -697,31 +697,31 @@ public class FactoryMethodDemo {
 }
 ~~~
 
-Chạy từ thư mục chứa tệp:
+Run from the directory containing the file:
 
 ~~~bash
 javac FactoryMethodDemo.java
 java FactoryMethodDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 [EMAIL] CUST-42: Don hang da xac nhan
 [SMS] CUST-42: Don hang da xac nhan
 ~~~
 
-**Điều đang diễn ra:**
+**What happens:**
 
-1. Client chọn `EmailCampaign` hoặc `SmsCampaign` tại điểm lắp ghép (ví dụ ở `main`).
-2. Client gọi **cùng API** `notifyCustomer(customerId, message)`.
-3. Creator thực hiện kiểm tra đầu vào rồi gọi `createSender()`.
-4. Phương thức được dispatch động tới subclass; subclass tạo `EmailSender` hoặc `SmsSender`.
-5. Luồng xử lý chung không cần `if (sender instanceof EmailSender)` hay sửa khi có một Concrete Creator mới.
+1. The client chooses `EmailCampaign` or `SmsCampaign` at the assembly point (for example, in `main`).
+2. The client calls the **same API**, `notifyCustomer(customerId, message)`.
+3. The Creator validates the input and calls `createSender()`.
+4. The method is dynamically dispatched to the subclass; the subclass creates an `EmailSender` or `SmsSender`.
+5. The common processing flow does not require `if (sender instanceof EmailSender)` or modification when another Concrete Creator is added.
 
-Trong hệ thống thật, `EmailSender` có thể gọi provider email và `SmsSender` gọi gateway SMS. `customerId` ở đây là ID chung, không phải địa chỉ email hay số điện thoại; các adapter thật sẽ cần cơ chế tra thông tin liên hệ và quy tắc xử lý lỗi phù hợp.
+In a real system, `EmailSender` might call an email provider while `SmsSender` calls an SMS gateway. Here `customerId` is a general identifier, not an email address or phone number; real adapters would need contact-information lookup and appropriate error-handling rules.
 
-### 2.2. Sơ đồ quan hệ
+### 2.2. Relationship Diagram
 
 ~~~mermaid
 classDiagram
@@ -756,30 +756,30 @@ classDiagram
     SmsCampaign ..> SmsSender : tạo
 ~~~
 
-Đây là **Factory Method đúng cấu trúc GoF**, vì **subclass ghi đè một phương thức tạo sản phẩm của Creator**. Nó không chỉ là một hàm có chữ “factory” trong tên.
+This is the **GoF Factory Method structure**, because **a subclass overrides a product-creation method declared by the Creator**. It is not simply a function with “factory” in its name.
 
-### 2.3. Khi nào nên dùng?
+### 2.3. When Should You Use It?
 
-Factory Method hữu ích khi có một **quy trình ổn định ở Creator** nhưng thành phần cần tạo trong quy trình khác nhau theo loại Creator: xuất báo cáo bằng renderer phù hợp, tạo message sender cho từng chiến dịch, tạo parser chuyên biệt trong một pipeline, tạo document trong một editor.
+Factory Method is useful when the **Creator has a stable workflow** but the component created within that workflow varies by Creator type: rendering reports with suitable renderers, creating message senders for campaigns, creating specialized parsers in a pipeline, or creating documents in an editor.
 
-Đánh đổi: mỗi biến thể có thể cần một Concrete Creator, tăng số class và sử dụng kế thừa. Nếu đối tượng chỉ khác nhau qua cấu hình runtime hoặc Creator không thực sự chứa hành vi chung, truyền một factory hoặc chiến lược bằng composition có thể ngắn gọn hơn.
+Trade-off: each variant may require a Concrete Creator, increasing the number of classes and the use of inheritance. If objects differ only by runtime configuration or the Creator has no genuine shared behavior, passing a factory or strategy through composition may be more concise.
 
-## 3. Abstract Factory — tạo một họ sản phẩm đồng bộ
+## 3. Abstract Factory — Creating a Consistent Product Family
 
-**Định nghĩa theo GoF:** Cung cấp interface để tạo ra **các họ đối tượng liên quan hoặc phụ thuộc lẫn nhau** mà client không cần chỉ ra các class cụ thể.
+**GoF definition:** Provide an interface for creating **families of related or dependent objects** without specifying their concrete classes.
 
-Ví dụ: một ứng dụng desktop hỗ trợ giao diện **Light** và **Dark**. Mỗi theme gồm nhiều thành phần: `Button` và `Checkbox`. Client mong muốn các thành phần được tạo **đồng bộ trong cùng theme**.
+Example: a desktop application supports **Light** and **Dark** interfaces. Each theme has multiple components: `Button` and `Checkbox`. Clients expect those components to be created **consistently within one theme**.
 
-| Họ sản phẩm | Button | Checkbox |
+| Product family | Button | Checkbox |
 |---|---|---|
 | **Light** | `LightButton` | `LightCheckbox` |
 | **Dark** | `DarkButton` | `DarkCheckbox` |
 
-Nếu client khởi tạo riêng lẻ từng class ở mọi nơi, có thể vô tình phối `LightButton` với `DarkCheckbox`. Abstract Factory gom việc lựa chọn cả họ vào một nơi.
+If clients instantiate each class separately throughout the code, they may accidentally mix `LightButton` with `DarkCheckbox`. Abstract Factory centralizes the choice of the entire family.
 
-### 3.1. Java chạy độc lập: Light/Dark UI
+### 3.1. Standalone Java Example: Light/Dark UI
 
-Tạo tệp **riêng** `AbstractFactoryDemo.java`, biên dịch và chạy độc lập với ví dụ Factory Method.
+Create a **separate** file, `AbstractFactoryDemo.java`, and compile and run it independently of the Factory Method example.
 
 ~~~java
 import java.util.Objects;
@@ -884,25 +884,25 @@ public class AbstractFactoryDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac AbstractFactoryDemo.java
 java AbstractFactoryDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Button[LIGHT] | Checkbox[LIGHT]
 Button[DARK] | Checkbox[DARK]
 ~~~
 
-`SettingsScreen` chỉ biết **Abstract Products** (`Button`, `Checkbox`) và **Abstract Factory** (`UiFactory`). Nó không khởi tạo hoặc import `DarkButton` / `LightCheckbox`.
+`SettingsScreen` knows only the **Abstract Products** (`Button`, `Checkbox`) and the **Abstract Factory** (`UiFactory`). It neither instantiates nor imports `DarkButton` / `LightCheckbox`.
 
-Một concrete factory tạo ra **cùng họ** các sản phẩm; chỉ cần thay `UiFactory` ở **composition root** là chuyển cả bộ giao diện. Nếu factory cụ thể trả về các sản phẩm lẫn theme, đó là lỗi implementation/hợp đồng họ sản phẩm; interface Java không tự kiểm tra được tính đồng bộ này.
+A concrete factory creates products from **the same family**; replacing `UiFactory` at the **composition root** switches the entire UI suite. If a concrete factory mixes products from different themes, that is an implementation/product-family contract error; the Java interface alone cannot enforce this consistency.
 
-### 3.2. Sơ đồ Abstract Factory
+### 3.2. Abstract Factory Diagram
 
 ~~~mermaid
 flowchart TD
@@ -921,36 +921,36 @@ flowchart TD
     DC -.->|"implements"| CP
 ~~~
 
-Đặc trưng dễ nhận biết: **một factory có nhiều phương thức tạo các loại Product khác nhau** như `createButton()` và `createCheckbox()`; mỗi Concrete Factory triển khai toàn bộ phương thức để sản xuất **một biến thể nhất quán**.
+The defining feature is **a factory with multiple methods that create different Product types**, such as `createButton()` and `createCheckbox()`. Each Concrete Factory implements all those methods to produce **one consistent variant**.
 
-### 3.3. Khi nào nên dùng?
+### 3.3. When Should You Use It?
 
-- Có **nhiều loại sản phẩm liên quan** và cần chọn đồng thời một họ: Light/Dark UI, bộ connector cloud của AWS/Azure (storage, queue, notification), các thành phần xuất tài liệu theo định dạng, adapter cho nhiều nhà cung cấp cùng hệ sinh thái.
-- Cần đổi họ sản phẩm trong cấu hình khởi động hoặc trong lúc dựng một phiên làm việc mà client không phụ thuộc vào class cụ thể.
-- Cần cô lập các quy tắc tạo bộ sản phẩm và kiểm thử tính tương thích của sản phẩm trong cùng họ.
+- There are **multiple related product types** that must be selected together as a family: Light/Dark UI, AWS/Azure cloud connector suites (storage, queues, notifications), document-export components by format, or adapters for multiple providers in the same ecosystem.
+- You need to switch product families at startup or when constructing a session, without making clients depend on concrete classes.
+- You need to isolate the rules for constructing product suites and test compatibility among products in the same family.
 
-**Đánh đổi quan trọng:** Thêm **họ mới** thường chỉ cần thêm một Concrete Factory và các Concrete Product. Nhưng thêm **loại sản phẩm mới** vào interface (ví dụ `createSlider()`) có thể đòi sửa tất cả Concrete Factory. Abstract Factory phù hợp khi danh sách loại sản phẩm tương đối ổn định, còn số họ thay đổi.
+**Important trade-off:** Adding a **new family** usually requires only a new Concrete Factory and its Concrete Products. But adding a **new product type** to the interface (such as `createSlider()`) may require changing every Concrete Factory. Abstract Factory fits when the set of product types is relatively stable but the number of families changes.
 
-## 4. So sánh trực diện
+## 4. Side-by-Side Comparison
 
-| Tiêu chí | Factory Method | Abstract Factory |
+| Criterion | Factory Method | Abstract Factory |
 |---|---|---|
-| Bài toán cốt lõi | Thay cách tạo **một loại Product** trong thuật toán của Creator | Tạo **một họ các Product liên quan** |
-| Cơ chế biến thiên đặc trưng | **Kế thừa + override** một factory method | **Composition**: truyền đối tượng factory vào client |
-| Giao diện sáng tạo | `protected Sender createSender()` trong Creator | `UiFactory` có `createButton()` và `createCheckbox()` |
-| Khi thêm biến thể | Thêm Concrete Creator + Product tương ứng | Thêm Concrete Factory + các Product thuộc họ mới |
-| Khi thêm loại sản phẩm hoàn toàn mới | Có thể cần thêm abstraction/quy trình Creator mới | Thường phải bổ sung API và cập nhật mọi concrete factory |
-| Client chính | Làm việc qua Creator (hoặc gọi operation chung của Creator) | Làm việc qua Abstract Factory và Abstract Products |
-| Ví dụ ở trên | `EmailCampaign` chọn `EmailSender` | `DarkUiFactory` tạo cả `DarkButton` + `DarkCheckbox` |
-| Điểm cần chú ý | Dễ sinh nhiều subclass chỉ để chọn một sản phẩm | Khó mở rộng theo chiều thêm loại sản phẩm |
+| Core problem | Vary how **one Product type** is created within a Creator's algorithm | Create **a family of related Products** |
+| Characteristic variation mechanism | **Inheritance + overriding** a factory method | **Composition**: pass a factory object to the client |
+| Creation interface | `protected Sender createSender()` in the Creator | `UiFactory` exposes `createButton()` and `createCheckbox()` |
+| Adding a variant | Add a Concrete Creator and corresponding Product | Add a Concrete Factory and the Products of the new family |
+| Adding an entirely new product type | May require a new Creator abstraction/workflow | Usually requires extending the API and updating every concrete factory |
+| Primary client | Uses the Creator (or invokes its shared operation) | Uses the Abstract Factory and Abstract Products |
+| Example above | `EmailCampaign` selects `EmailSender` | `DarkUiFactory` creates both `DarkButton` + `DarkCheckbox` |
+| Main concern | Many subclasses may exist just to choose a single product | Hard to extend by adding product types |
 
-**Hai mẫu không loại trừ nhau.** Một concrete factory trong Abstract Factory có thể dùng các factory method bên trong để tạo mỗi loại sản phẩm. Sự khác biệt nằm ở **ý đồ thiết kế và cấu trúc client sử dụng**, không nằm ở tên phương thức.
+**The two patterns are not mutually exclusive.** A concrete Abstract Factory may internally use factory methods to create each product type. The distinction lies in **design intent and the client's usage structure**, not in method names.
 
-## 5. Phân biệt với Simple Factory và static factory method
+## 5. Distinguishing Simple Factory and Static Factory Methods
 
-Nhiều tài liệu gọi mọi hàm trả về object là “Factory Method”, dẫn đến nhầm lẫn.
+Many resources call every function that returns an object a “Factory Method,” which creates confusion.
 
-**Simple Factory** thường là một class hoặc hàm tập trung việc chọn implementation bằng tham số:
+A **Simple Factory** is usually a class or function that selects an implementation centrally based on a parameter:
 
 ~~~java
 enum Channel { EMAIL, SMS }
@@ -968,32 +968,32 @@ final class SenderFactory {
 Sender sender = SenderFactory.create(Channel.EMAIL);
 ~~~
 
-Đoạn trên giả sử dùng lại các class `Sender`, `EmailSender`, `SmsSender` từ ví dụ `FactoryMethodDemo.java` (nếu đặt trong cùng package). Đây là **simple factory** theo cách gọi thông dụng: một hàm tự quyết định theo enum, **không có Creator/subclass ghi đè factory method**. Khi thêm enum mới, phải sửa `switch`; simple factory vẫn có thể hoàn toàn phù hợp với hệ thống nhỏ.
+The snippet above assumes the `Sender`, `EmailSender`, and `SmsSender` classes from `FactoryMethodDemo.java` are reused (when placed in the same package). This is commonly called a **simple factory**: one function makes a selection based on an enum, with **no Creator subclass overriding a factory method**. Adding an enum value requires changing the `switch`; a simple factory may still be entirely appropriate for a small system.
 
-**Static factory method** là một phương thức `static` tạo hoặc trả về object, ví dụ `List.of(...)` và `LocalDate.of(...)` trong Java. Đây là một cách thiết kế API, **không đồng nghĩa** với pattern **Factory Method** GoF. Static factory có thể trả object mới, object được lưu đệm hoặc một implementation ẩn tùy hợp đồng API.
+A **Static factory method** is a `static` method that creates or returns an object, such as `List.of(...)` and `LocalDate.of(...)` in Java. It is an API-design technique and **does not imply** the GoF **Factory Method** pattern. Depending on its API contract, a static factory may return a new object, a cached object, or a hidden implementation.
 
-Tên gọi không quyết định pattern. Hãy hỏi **điểm biến thiên nằm ở subclass nào, hay ở đối tượng factory nào, hay đơn giản chỉ ở tham số truyền vào?**
+The name does not determine the pattern. Ask **whether the variation point is in a subclass, in a factory object, or simply in an argument passed to the method**.
 
-## 6. Factory khác DI và Strategy ở đâu?
+## 6. How Do Factories Differ from DI and Strategy?
 
-**Dependency Injection (DI)** là kỹ thuật **cấp dependency từ ngoài vào đối tượng**. Trong `new SettingsScreen(new DarkUiFactory())`, ta có constructor injection cho `UiFactory`; Abstract Factory là loại dependency đang được cấp. DI không tự động là Factory Method/Abstract Factory.
+**Dependency Injection (DI)** is the technique of **supplying an object's dependencies from outside**. With `new SettingsScreen(new DarkUiFactory())`, constructor injection supplies `UiFactory`; Abstract Factory is the kind of dependency being injected. DI itself is not automatically Factory Method or Abstract Factory.
 
-**Strategy** đóng gói một **thuật toán/hành vi có thể thay thế**. Factory tạo ra **đối tượng**. Chúng có thể kết hợp: factory tạo hoặc chọn `PricingStrategy`; service dùng Strategy để tính giá.
+**Strategy** encapsulates an **interchangeable algorithm/behavior**. A factory creates **objects**. They can work together: a factory creates or selects a `PricingStrategy`, while a service uses Strategy to calculate a price.
 
-Một quy tắc thực dụng:
+A practical rule:
 
-- Nếu khác biệt nằm ở **cách vận hành hàm hiện có**, ưu tiên xét Strategy.
-- Nếu khác biệt nằm ở **class được tạo trong một quy trình chung mà subclass có quyền quyết định**, xét Factory Method.
-- Nếu cần tạo **bộ sản phẩm cùng biến thể** (nhiều interface liên quan), xét Abstract Factory.
-- Nếu chỉ cần chọn một implementation tại khởi động và ít biến thể, DI bằng constructor ở composition root có thể đã đủ.
+- If the variation concerns **how an existing operation behaves**, consider Strategy first.
+- If the variation concerns **which class is created within a shared process, as chosen by a subclass**, consider Factory Method.
+- If you must create a **set of products in the same variant** (several related interfaces), consider Abstract Factory.
+- If only one implementation needs to be selected at startup with few variants, constructor DI at the composition root may already suffice.
 
-Trong Spring, `@Bean` và DI container giải quyết khởi tạo, wiring và vòng đời bean, nhưng **không tự động** làm mọi đoạn `@Bean` thành Factory Method/Abstract Factory theo GoF. Khi chỉ cần cấu hình một `Sender`, có thể inject trực tiếp; không phải lúc nào cũng cần thêm một lớp factory.
+In Spring, `@Bean` and the DI container handle bean creation, wiring, and lifecycle, but **do not automatically** turn every `@Bean` into a GoF Factory Method/Abstract Factory. If the only requirement is configuring a `Sender`, direct injection may suffice; a separate factory class is not always needed.
 
-## 7. Thiết kế sạch khi dùng factory trong ứng dụng thực tế
+## 7. Clean Factory Design in Real Applications
 
-### 7.1. Tách nơi lựa chọn biến thể khỏi client
+### 7.1. Separate Variant Selection from Client Code
 
-Cả hai ví dụ đều có điểm **composition root**:
+Both examples have a **composition root**:
 
 ~~~java
 // Factory Method:
@@ -1004,37 +1004,37 @@ UiFactory uiFactory = new DarkUiFactory();
 SettingsScreen screen = new SettingsScreen(uiFactory);
 ~~~
 
-Với cấu hình runtime, quyết định biến thể có thể nằm ở `main`, module bootstrap hoặc cấu hình DI. Client chính không nên rải `new DarkButton()` hay `if (factory instanceof DarkUiFactory)` khắp logic.
+With runtime configuration, variant selection may occur in `main`, a bootstrap module, or DI configuration. The main client should not scatter `new DarkButton()` or `if (factory instanceof DarkUiFactory)` throughout its logic.
 
-Cần phân biệt **đổi cấu hình giữa các lần khởi động** với **đổi biến thể cho từng request**. Nếu mỗi HTTP request cần nhà cung cấp khác nhau, một singleton factory cố định từ startup không đủ; có thể cần registry/selector kiểm soát quyền chọn, hoặc truyền factory phù hợp vào từng request. Lựa chọn này phụ thuộc ngữ cảnh vận hành, không phải bản thân mẫu tự cung cấp.
+Distinguish **changing configuration between startups** from **selecting variants per request**. If each HTTP request requires a different provider, a fixed singleton factory chosen at startup is insufficient; you may need a registry/selector that governs selection permissions, or to pass the appropriate factory with each request. This choice depends on the operating context; the pattern itself does not provide it.
 
-### 7.2. Không lộ class cụ thể trong API trừ khi có lý do chính đáng
+### 7.2. Avoid Exposing Concrete Classes in the API Without Good Reason
 
-Nếu `UiFactory.createButton()` trả về `DarkButton` và client phải ép kiểu để gọi hành vi độc quyền, mục tiêu tách concrete product sẽ suy yếu. Interface sản phẩm nên thể hiện các thao tác **thực sự cần cho client**, tránh nhét phương thức chỉ phù hợp với một họ.
+If `UiFactory.createButton()` returns `DarkButton` and clients must cast to access special behavior, the goal of decoupling concrete products is weakened. A product interface should provide operations **that clients actually need**, without adding methods relevant to only one family.
 
-Không nên tạo một interface với hàng chục phương thức mà đa số implementation chỉ ném `UnsupportedOperationException`. Xem lại việc chia interface, giới hạn hỗ trợ hoặc cách biểu diễn capability.
+Avoid an interface with dozens of methods where most implementations merely throw `UnsupportedOperationException`. Reconsider how interfaces are split, which capabilities are supported, or how capabilities are represented.
 
-### 7.3. Xác định thời điểm tạo, quyền sở hữu và vòng đời
+### 7.3. Specify Creation Time, Ownership, and Lifecycle
 
-Hai demo dùng `new` nên mỗi lần gọi factory method có thể tạo đối tượng mới. Trong thực tế, các dependency đắt tiền như HTTP client, connection pool hoặc SDK có thể cần tái sử dụng. Factory **có thể** trả object đã tạo trước, object từ pool hoặc object mới, miễn hợp đồng cho phép.
+Both demos use `new`, so each factory-method call can create a new object. In production, expensive dependencies such as HTTP clients, connection pools, or SDKs may need reuse. A factory **may** return an existing, pooled, or new object, provided its contract permits that.
 
-Cần mô tả rõ:
-- Object do factory trả về có giữ trạng thái riêng của request không?
-- Có an toàn khi chia sẻ giữa nhiều thread không?
-- Ai chịu trách nhiệm đóng `AutoCloseable` và quản lý vòng đời tài nguyên?
-- Client có được thay đổi trạng thái sản phẩm sau khi tạo không?
+Specify clearly:
+- Does the factory-produced object contain request-specific state?
+- Is it safe to share across threads?
+- Who is responsible for closing `AutoCloseable` instances and managing resource lifecycles?
+- May the client mutate product state after creation?
 
-Đừng dùng cache/singleton mặc định chỉ vì một factory gọi nhiều lần; nhất là với sản phẩm giữ dữ liệu người dùng hoặc ngữ cảnh giao dịch.
+Do not default to caching/singletons merely because a factory is called repeatedly, especially if the product contains user data or transaction context.
 
-### 7.4. Xử lý lỗi tạo đối tượng
+### 7.4. Handle Object-Creation Failures
 
-Khởi tạo có thể thất bại vì cấu hình sai, thiếu thông tin xác thực, provider không khả dụng hoặc tài nguyên cạn. Phân biệt **lỗi cấu hình khi khởi động** và **lỗi xử lý khi gọi operation**. Contract nên nói rõ factory có thể trả `null` hay phải ném exception; mặc định trả về object hợp lệ hoặc ném exception có ngữ nghĩa rõ ràng giúp client đơn giản hơn.
+Initialization may fail because of invalid configuration, missing credentials, unavailable providers, or exhausted resources. Distinguish **startup configuration errors** from **operational errors while invoking a method**. The contract should specify whether a factory may return `null` or must throw an exception; returning a valid object or throwing a meaningful exception by default simplifies client code.
 
-## 8. Kiểm thử theo đúng mục tiêu mẫu
+## 8. Test Each Pattern Against Its Purpose
 
-### Factory Method: kiểm tra thuật toán chung thực sự dùng sản phẩm được tạo
+### Factory Method: Verify That the Shared Algorithm Uses the Created Product
 
-Vì `Sender` chỉ in console trong demo, một bài kiểm thử có thể tạo Creator trả một fake Sender và ghi nhận lời gọi. Đoạn sau dùng các class `NotificationCampaign`/`Sender` từ ví dụ Factory Method; test chạy với JUnit Jupiter:
+Because `Sender` only prints to the console in the demo, a test can create a Creator that returns a fake Sender and records the invocation. The following uses `NotificationCampaign`/`Sender` from the Factory Method example and runs with JUnit Jupiter:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1079,9 +1079,9 @@ class FactoryMethodContractTest {
 }
 ~~~
 
-### Abstract Factory: kiểm tra một họ sản phẩm nhất quán
+### Abstract Factory: Verify a Consistent Product Family
 
-Test có thể tạo từng concrete factory, kiểm tra nó tạo đủ các sản phẩm không `null`, thực hiện được thao tác theo interface và tuân thủ quy ước theme. Ví dụ JUnit Jupiter, sử dụng class trong `AbstractFactoryDemo.java`:
+A test can instantiate each concrete factory, verify that it creates all required non-`null` products, exercise their interface operations, and verify theme conventions. This JUnit Jupiter example uses classes from `AbstractFactoryDemo.java`:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1103,61 +1103,61 @@ class AbstractFactoryContractTest {
 }
 ~~~
 
-Kiểm thử bên trên dùng output demo làm tín hiệu kiểm tra theme. Trong ứng dụng UI thật, có thể kiểm tra qua thuộc tính theme/token được công bố trên abstraction hoặc dùng screenshot/visual tests ở cấp tích hợp. Test này không đủ chứng minh giao diện hiển thị đúng trong mọi môi trường.
+The test above uses demo output as a signal of theme consistency. In a real UI application, you could inspect exposed theme/token properties on the abstraction or perform screenshot/visual tests at the integration level. This test alone does not prove that the interface renders correctly in every environment.
 
-**Lưu ý khi thực thi:** Mỗi ví dụ chính là một tệp `.java` riêng; đặt test cùng package/source set thích hợp và thêm dependency `org.junit.jupiter:junit-jupiter` cùng JUnit test runner. Các đoạn test cần class của ví dụ tương ứng trên classpath.
+**Execution note:** Each main example is a separate `.java` file; place tests in the appropriate package/source set and add the `org.junit.jupiter:junit-jupiter` dependency and a JUnit test runner. The corresponding example classes must be on the classpath.
 
-## 9. Câu hỏi ra quyết định và bài tập
+## 9. Decision Questions and Exercises
 
-### Bảng tình huống
+### Scenario Table
 
-| Tình huống | Lựa chọn cân nhắc | Vì sao |
+| Scenario | Option to consider | Rationale |
 |---|---|---|
-| Một công cụ import chung, subclass XML/JSON tạo parser phù hợp | **Factory Method** | Creator giữ quy trình import, subclass chọn parser |
-| App tạo cả Button, Checkbox, Dialog theo Light/Dark | **Abstract Factory** | Chọn một **họ sản phẩm** đồng bộ |
-| Một hàm trả Sender theo enum EMAIL/SMS | **Simple Factory** | Tập trung việc tạo bằng tham số, không dùng subclass Creator |
-| Service chỉ cần một `EmailSender` đã cấu hình tại startup | **Constructor DI** | Có thể đủ đơn giản, tránh factory không cần thiết |
-| Thay đổi thuật toán giảm giá trên cùng đối tượng đơn hàng | **Strategy** | Biến thiên là hành vi/thuật toán |
-| Cần tạo các adapter Storage + Queue + Email theo AWS/Azure | **Abstract Factory** (nếu cần một họ nhất quán) | Nhiều product cùng provider, cần tránh cấu hình pha trộn |
+| One shared import tool where XML/JSON subclasses create suitable parsers | **Factory Method** | The Creator retains the import workflow; subclasses choose parsers |
+| An app creates Button, Checkbox, and Dialog in Light/Dark themes | **Abstract Factory** | Selects one consistent **product family** |
+| One function returns a Sender based on an EMAIL/SMS enum | **Simple Factory** | Centralizes parameter-based creation without Creator subclasses |
+| A service only needs one `EmailSender` configured at startup | **Constructor DI** | May be sufficiently simple without an extra factory |
+| Changing the discount algorithm on the same order object | **Strategy** | The variable aspect is behavior/algorithm |
+| Creating Storage + Queue + Email adapters for AWS/Azure | **Abstract Factory** (if a consistent family is required) | Multiple products belong to one provider; avoid mixed configurations |
 
-### Bài tập 1 — Factory Method
+### Exercise 1 — Factory Method
 
-Thiết kế một quy trình `DocumentExporter.export(Document)` cố định gồm kiểm tra đầu vào, tạo `Renderer` và gọi `render(Document)`. Viết hai subclass `PdfExporter` và `HtmlExporter` ghi đè `createRenderer()`. Kiểm tra rằng lớp Creator không import `PdfRenderer`/`HtmlRenderer`; khi thêm `MarkdownExporter`, thuật toán chung không đổi. Có thể triển khai renderer demo trả `String` để không cần thư viện PDF thật.
+Design a fixed `DocumentExporter.export(Document)` process that validates input, creates a `Renderer`, and calls `render(Document)`. Implement two subclasses, `PdfExporter` and `HtmlExporter`, that override `createRenderer()`. Verify that the Creator does not import `PdfRenderer`/`HtmlRenderer`; adding `MarkdownExporter` must not change the shared algorithm. You can implement demo renderers returning `String` values without a real PDF library.
 
-### Bài tập 2 — Abstract Factory
+### Exercise 2 — Abstract Factory
 
-Thiết kế `CloudFactory` có `createObjectStorage()` và `createMessageQueue()`. Cài đặt `AwsFactory` và `AzureFactory`, mỗi factory cung cấp đúng hai adapter tương ứng. Một `BackupWorkflow` chỉ nhận `CloudFactory`. Viết unit test dùng factory giả để kiểm tra workflow; sau đó kiểm tra lỗi thiết kế nếu người triển khai vô tình tạo Storage của AWS và Queue của Azure trong cùng factory.
+Design `CloudFactory` with `createObjectStorage()` and `createMessageQueue()`. Implement `AwsFactory` and `AzureFactory`, each supplying its matching adapters. A `BackupWorkflow` accepts only `CloudFactory`. Write a unit test using a fake factory to test the workflow; then investigate the design error when an implementation accidentally creates AWS Storage and an Azure Queue in the same factory.
 
-### Tự kiểm tra
+### Self-Check
 
-1. Trong Factory Method, đối tượng nào **sở hữu thuật toán chung**, đối tượng nào **quyết định class sản phẩm**?
-2. Nếu client cần ba loại sản phẩm cùng theme, mẫu nào giúp tránh chọn từng loại rời rạc?
-3. Vì sao `static Sender create(Channel)` không tự động là Factory Method theo GoF?
-4. Với Abstract Factory, thêm **họ mới** và thêm **loại sản phẩm mới** ảnh hưởng tới mã nguồn khác nhau thế nào?
-5. Khi nào truyền một dependency bằng constructor là đủ, không cần dựng thêm tầng factory?
+1. In Factory Method, which object **owns the shared algorithm**, and which object **decides the product class**?
+2. If clients need three product types from the same theme, which pattern avoids choosing each type separately?
+3. Why is `static Sender create(Channel)` not automatically a GoF Factory Method?
+4. In Abstract Factory, how do adding a **new family** and adding a **new product type** affect source code differently?
+5. When is passing a dependency through a constructor sufficient, without introducing another factory layer?
 
-**Ghi nhớ:** **Factory Method** mở rộng *cách tạo một Product bên trong quy trình Creator thông qua subclass*. **Abstract Factory** đóng gói *việc tạo nhiều Product liên quan thành một họ nhất quán thông qua một đối tượng factory*. Hãy chọn theo **điểm biến thiên của bài toán**, không theo việc mã có chứa từ “Factory”.
+**Remember:** **Factory Method** extends *how a Product is created inside a Creator's workflow through subclasses*. **Abstract Factory** encapsulates *creating several related Products as one consistent family through a factory object*. Choose based on **the variation point in the problem**, rather than whether the code contains the word “Factory”.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-003">Builder và việc tạo đối tượng phức tạp</a>
+## <a id="design-patterns-003">Builder and Creating Complex Objects</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Builder và việc tạo đối tượng phức tạp trong Java
+# Builder and Creating Complex Objects in Java
 
-**Chủ đề:** Mẫu thiết kế (Design Patterns) — Builder.  
-**Mục tiêu:** hiểu vì sao Builder hữu ích khi một đối tượng có nhiều thành phần và ràng buộc, tự viết fluent Builder bằng Java, bảo đảm đối tượng sau khi tạo hợp lệ và biết khi nào nên chọn cách tạo đối tượng đơn giản hơn.
+**Topic:** Design Patterns — Builder.  
+**Goal:** Understand why Builder helps when objects have many components and constraints, implement a fluent Builder in Java, ensure that constructed objects are valid, and recognize when a simpler form of object creation is preferable.
 
-## 1. Vì sao việc khởi tạo đối tượng có thể trở nên khó kiểm soát?
+## 1. Why Can Object Initialization Become Difficult to Control?
 
-Khi một đối tượng chỉ có hai trường bắt buộc, constructor trực tiếp thường đủ rõ:
+When an object has only two required fields, a direct constructor is usually clear enough:
 
 ~~~java
 record Point(int x, int y) {}
@@ -1165,19 +1165,19 @@ record Point(int x, int y) {}
 Point point = new Point(10, 20);
 ~~~
 
-Nhưng hãy tưởng tượng yêu cầu tạo **đơn hàng** có các thông tin sau:
+Now imagine creating an **order** with the following information:
 
-| Thành phần | Bắt buộc? | Ràng buộc |
+| Element | Required? | Constraint |
 | --- | --- | --- |
-| Mã khách hàng | Có | Không được rỗng hoặc chỉ có khoảng trắng |
-| Địa chỉ giao | Có | Không được rỗng |
-| Danh sách mặt hàng | Có ít nhất một | Mỗi mặt hàng có SKU, số lượng dương và đơn giá không âm |
-| Cách giao hàng | Không | Mặc định **STANDARD**, có thể chọn **EXPRESS** |
-| Mã khuyến mãi | Không | Nếu cung cấp thì không được rỗng |
-| Gói quà | Không | Mặc định **false** |
-| Ghi chú giao hàng | Không | Mặc định chuỗi rỗng |
+| Customer ID | Yes | Must not be empty or whitespace only |
+| Shipping address | Yes | Must not be empty |
+| Item list | At least one item | Each item has an SKU, positive quantity, and nonnegative unit price |
+| Shipping method | No | Defaults to **STANDARD**, optionally **EXPRESS** |
+| Coupon code | No | Must not be blank if provided |
+| Gift wrapping | No | Defaults to **false** |
+| Delivery note | No | Defaults to the empty string |
 
-Nếu tất cả thành tham số constructor:
+If everything becomes a constructor argument:
 
 ~~~java
 // Khó nhận ra ý nghĩa của các giá trị ở giữa.
@@ -1186,7 +1186,7 @@ new Order("C01", "12 Nguyễn Huệ", items,
           true, "Gọi trước khi giao");
 ~~~
 
-Client phải nhớ thứ tự tham số, cách biểu diễn trường tùy chọn và các tổ hợp giá trị hợp lệ. Các kiểu cùng là **String** càng dễ bị truyền nhầm vị trí mà trình biên dịch không phát hiện. Nếu khắc phục bằng hàng loạt constructor quá tải (*telescoping constructors*) thì số lượng biến thể có thể tăng nhanh. Nếu thay bằng constructor rỗng rồi gọi setter, đối tượng có thể tồn tại ở trạng thái chưa hợp lệ trong lúc thiết lập:
+Clients must remember parameter order, optional-field representations, and valid combinations of values. Parameters that all use **String** are especially easy to swap without a compiler error. Adding many overloaded constructors (*telescoping constructors*) to fix this can make the number of variants grow rapidly. Alternatively, using an empty constructor followed by setters can leave an object temporarily invalid while it is configured:
 
 ~~~java
 MutableOrder order = new MutableOrder();
@@ -1195,11 +1195,11 @@ order.setCustomerId("C01");
 order.setShippingAddress("12 Nguyễn Huệ");
 ~~~
 
-**Builder** cung cấp một cách tổ chức quá trình dựng đối tượng: gom các lựa chọn cấu hình vào một builder, đặt tên rõ cho mỗi thao tác, xác thực trước khi hoàn tất và tạo đối tượng kết quả.
+**Builder** provides an organized object-construction process: collect configuration choices in a builder, give each operation a clear name, validate before completion, and create the resulting object.
 
-## 2. Builder là gì?
+## 2. What Is Builder?
 
-Builder là mẫu thiết kế tạo đối tượng (*creational pattern*). Ý tưởng chung là **tách các bước xây dựng khỏi đối tượng cuối cùng**. Trong Java, biến thể rất phổ biến là **fluent Builder**: mỗi phương thức thiết lập thông tin trả về chính builder để có thể gọi nối tiếp.
+Builder is a *creational pattern*. Its core idea is to **separate construction steps from the final object**. In Java, a common variant is the **fluent Builder**: each configuration method returns the builder itself to allow method chaining.
 
 ~~~java
 Order order = Order.builder("C01", "12 Nguyễn Huệ")
@@ -1211,9 +1211,9 @@ Order order = Order.builder("C01", "12 Nguyễn Huệ")
         .build();
 ~~~
 
-Luồng tư duy khi đọc đoạn mã: tạo đơn cho khách, thêm mặt hàng, chọn cách giao, đặt mã ưu đãi, yêu cầu gói quà rồi hoàn tất. Chữ ký phương thức thể hiện rõ ý nghĩa từng giá trị.
+Read the code as a sequence: create an order for a customer, add items, choose shipping, enter a coupon, request gift wrapping, and complete construction. Method signatures make the meaning of each value clear.
 
-Builder không bắt buộc phải có chuỗi fluent, nested class hoặc các tên phương thức cố định. GoF Builder cổ điển có thể gồm **Builder**, **ConcreteBuilder**, **Director** và **Product**; một fluent Builder dùng trong Java có thể chỉ cần **Product** cùng **Builder**, không cần Director. Tên gọi là phương tiện tổ chức quá trình tạo, không phải yêu cầu triển khai tất cả vai trò cho mọi bài toán.
+Builder does not require a fluent chain, a nested class, or fixed method names. The classic GoF Builder may include **Builder**, **ConcreteBuilder**, **Director**, and **Product**; a Java fluent Builder may need only **Product** and **Builder**, without a Director. The pattern name helps organize construction; it does not mandate implementing every role for every problem.
 
 ~~~mermaid
 flowchart LR
@@ -1223,19 +1223,19 @@ flowchart LR
     C --> D["Client sử dụng Order hoàn chỉnh"]
 ~~~
 
-### Những lợi ích cần nhận đúng
+### Benefits to Recognize Accurately
 
-- **Dễ đọc:** mỗi bước cấu hình có tên, ít nhầm thứ tự tham số.
-- **Kiểm tra tập trung:** Builder/constructor sản phẩm có thể xác nhận điều kiện xuyên nhiều trường trước khi trả về đối tượng.
-- **Tùy chọn và mặc định:** khách hàng chỉ cung cấp các lựa chọn khác mặc định.
-- **Đối tượng cuối cùng bất biến:** không cần public setter nếu giá trị đã hoàn chỉnh tại **build()**.
-- **Tái sử dụng quy trình tạo:** builder có thể hỗ trợ thêm bước hoặc biến thể tùy nghiệp vụ.
+- **Readability:** configuration steps are named, reducing mistakes in parameter order.
+- **Centralized validation:** the Builder/Product constructor can validate constraints spanning multiple fields before returning the object.
+- **Options and defaults:** clients provide only choices that differ from the defaults.
+- **Immutable final object:** public setters are unnecessary when values are complete at **build()**.
+- **Reusable construction process:** a builder can support additional steps or business-specific variants.
 
-**Không phải lợi ích tự động:** Builder không tự đảm bảo tính bất biến, đúng nghiệp vụ, thread-safe hoặc giảm mọi độ phức tạp. Những tính chất đó phụ thuộc vào code cụ thể.
+**Not automatic benefits:** Builder does not inherently guarantee immutability, business correctness, thread safety, or the elimination of complexity. Those properties depend on the actual code.
 
-## 3. Ví dụ Java 17+: tạo Order có ràng buộc rõ ràng
+## 3. Java 17+ Example: Creating an Order with Explicit Constraints
 
-Lưu đoạn mã sau vào **BuilderDemo.java** rồi chạy bằng JDK 17 trở lên. Ví dụ dùng **record** cho mặt hàng bất biến, **BigDecimal** để biểu diễn đơn giá chính xác, **List.copyOf** để chụp lại danh sách khi tạo đơn, và builder có các tham số bắt buộc ngay từ phương thức khởi đầu.
+Save the following code as **BuilderDemo.java** and run it with JDK 17 or later. The example uses a **record** for immutable line items, **BigDecimal** for precise unit prices, **List.copyOf** to snapshot the item list when creating an order, and a builder entry point that requires the mandatory parameters.
 
 ~~~java
 import java.math.BigDecimal;
@@ -1415,44 +1415,44 @@ public class BuilderDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac BuilderDemo.java
 java BuilderDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 C01 | EXPRESS | 285000 VND
 Số dòng mặt hàng: 2
 ~~~
 
-**Giải thích các điểm thiết kế:**
+**Explanation of the design choices:**
 
-1. **Constructor của Order là private.** Client không thể tạo **Order** bằng cách bỏ qua ranh giới xác thực.
-2. **Order.builder(customerId, shippingAddress)** yêu cầu hai thông tin tối thiểu. Trình biên dịch buộc người gọi cung cấp tham số, còn kiểm tra null/rỗng được thực hiện lúc chạy.
-3. **addItem(...)** tạo **LineItem** hợp lệ tại thời điểm thêm vào builder; **build()** kiểm tra điều kiện liên quan đến toàn bộ đơn hàng: phải có ít nhất một dòng.
-4. **shippingMode** có giá trị mặc định. **couponCode == null** thể hiện không có mã ưu đãi, **giftWrap == false** thể hiện không gói quà, **note == ""** là không có ghi chú. Các ý nghĩa đó phải được xác định rõ trong API.
-5. **Order** chỉ có trường **private final** và accessor. Không có setter thay đổi trạng thái sau khi tạo.
-6. **List.copyOf** tạo danh sách không cho chỉnh sửa qua accessor và tách danh sách của đơn khỏi danh sách nội bộ của builder. Vì **LineItem** dùng **String**, **int** và **BigDecimal** (đều bất biến trong ví dụ), nội dung từng phần tử cũng không bị chỉnh sửa thông qua reference mutable.
-7. **goodsTotalVnd()** là tổng tiền hàng trước phí vận chuyển và giảm giá. Builder không tự áp dụng coupon; quy tắc giảm giá thuộc xử lý nghiệp vụ riêng.
+1. **The Order constructor is private.** Clients cannot create an **Order** while bypassing the validation boundary.
+2. **Order.builder(customerId, shippingAddress)** requires two minimum pieces of information. The compiler enforces that arguments are supplied; null/blank validation occurs at runtime.
+3. **addItem(...)** creates a valid **LineItem** when it is added to the builder; **build()** validates the whole-order constraint: at least one line item is required.
+4. **shippingMode** has a default. **couponCode == null** means no coupon, **giftWrap == false** means no gift wrapping, and **note == ""** means no note. These meanings must be explicit in the API.
+5. **Order** has only **private final** fields and accessors. There are no setters to change its state after construction.
+6. **List.copyOf** produces a list that cannot be modified through its accessor and separates the order's list from the builder's internal list. Because **LineItem** uses **String**, **int**, and **BigDecimal** (all immutable in this example), individual elements cannot be altered through mutable references either.
+7. **goodsTotalVnd()** is the merchandise total before shipping charges and discounts. The Builder does not automatically apply coupons; discount rules belong in separate business processing.
 
-Mã sử dụng **BigDecimal** thay vì **double** cho tiền để tránh sai số nhị phân của phép tính dấu phẩy động. Trong dự án thật, hãy thống nhất quy tắc làm tròn, đơn vị tiền tệ, thuế và không dùng chuỗi coupon để ngầm coi đã áp dụng giảm giá.
+The code uses **BigDecimal** instead of **double** for money to avoid binary floating-point errors. In real projects, standardize rounding rules, currencies, and taxes, and do not treat the presence of a coupon string as proof that a discount has been applied.
 
-## 4. Hai thời điểm kiểm tra điều kiện: cấu hình và hoàn tất
+## 4. Two Validation Points: Configuration and Completion
 
-Đừng dồn một cách máy móc mọi kiểm tra vào **build()**, cũng đừng tin rằng việc từng setter riêng lẻ hợp lệ bảo đảm tổ hợp cuối cùng hợp lệ.
+Do not mechanically postpone every check until **build()**, and do not assume that individually valid setters guarantee a valid final combination.
 
-| Thời điểm | Nên kiểm tra gì? | Ví dụ |
+| When | What to validate | Example |
 | --- | --- | --- |
-| Khi khởi tạo builder | Giá trị bắt buộc độc lập | Mã khách hàng/địa chỉ không rỗng |
-| Khi gọi phương thức cấu hình | Tính hợp lệ của từng lựa chọn | Số lượng > 0, đơn giá không âm, chế độ giao không null |
-| Khi gọi **build()** | Bất biến liên quan nhiều thành phần | Phải có ít nhất một mặt hàng; ngày giao sau ngày đặt nếu nghiệp vụ yêu cầu |
-| Ở service nghiệp vụ | Quy tắc cần dữ liệu động hoặc hạ tầng | Tồn kho, hiệu lực mã ưu đãi, quyền đặt hàng, phí từ hãng vận chuyển |
+| When initializing the builder | Independent required values | Nonblank customer ID/address |
+| When invoking configuration methods | Validity of individual choices | Quantity > 0, nonnegative unit price, non-null shipping mode |
+| When invoking **build()** | Invariants involving multiple components | At least one item; delivery date after order date if business rules require it |
+| In the business service | Rules requiring dynamic data or infrastructure | Inventory, coupon validity, ordering permissions, carrier rates |
 
-Ví dụ với quy tắc tùy chọn: một đơn **EXPRESS** phải có số điện thoại liên hệ. Có thể thêm **contactPhone** vào builder và kiểm tra tổ hợp khi **build()**:
+For example, an optional rule may require an **EXPRESS** order to include a contact phone number. You can add **contactPhone** to the builder and validate the combination at **build()**:
 
 ~~~java
 // Minh họa đoạn điều kiện đặt trong constructor của Product:
@@ -1464,15 +1464,15 @@ if (builder.shippingMode == ShippingMode.EXPRESS
 }
 ~~~
 
-Đoạn này là **phần mở rộng minh họa**, không phải phần có thể copy nguyên xi vào **BuilderDemo.java** vì ví dụ hoàn chỉnh phía trên chưa khai báo **contactPhone**. Nếu triển khai, cần bổ sung field, method trong builder, field bất biến trong Order, accessor và test ràng buộc.
+This is an **illustrative extension**, not a snippet that can be pasted unchanged into **BuilderDemo.java**, because the complete example above does not yet declare **contactPhone**. To implement it, add a field and method to the builder, an immutable field to Order, an accessor, and tests for the constraint.
 
-Lưu ý quan trọng: xác minh tồn kho hoặc tính phí vận chuyển bên ngoài không nên tự động gọi mạng trong **build()** của value object nếu điều đó làm quá trình tạo đối tượng khó dự đoán, khó test hoặc có side effect. Để service phối hợp các phụ thuộc thích hợp rồi tạo hoặc xác nhận đơn hàng.
+Important: inventory checks or external shipping-rate calculations should not automatically make network calls inside a value object's **build()** if that makes construction unpredictable, difficult to test, or side-effectful. Let a service coordinate appropriate dependencies before creating or confirming the order.
 
-## 5. Hiểu đúng tính bất biến và việc tái sử dụng Builder
+## 5. Understanding Immutability and Builder Reuse
 
-**Builder thường mutable**, còn **Product có thể immutable**. Hai trạng thái đó không mâu thuẫn.
+**Builders are usually mutable**, while **Products may be immutable**. These properties do not conflict.
 
-Một builder có thể được sử dụng để tạo nhiều bản chụp đối tượng:
+A builder can be reused to create multiple object snapshots:
 
 ~~~java
 var builder = BuilderDemo.Order
@@ -1488,24 +1488,24 @@ System.out.println(first.items().size());   // 1
 System.out.println(second.items().size());  // 2
 ~~~
 
-Điều này hoạt động vì mỗi lần **build()** sao chép danh sách. Nếu constructor của Product chỉ giữ **builder.items** trực tiếp, thay đổi builder sau khi build cũng làm thay đổi sản phẩm trước đó — phá vỡ kỳ vọng bất biến.
+This works because every **build()** copies the list. If the Product constructor retains **builder.items** directly, modifying the builder after building will also change the previously created product, violating the expectation of immutability.
 
-Tuy nhiên, **List.copyOf chỉ là sao chép nông các phần tử**. Nếu danh sách chứa đối tượng mutable như **MutableAddress**, **ArrayList** con hoặc đối tượng có setter, người giữ reference tới các phần tử có thể vẫn sửa nội dung bên trong. Khi cần bất biến sâu hơn, hãy dùng value object immutable, defensive copy từng phần tử, hoặc tránh lộ reference mutable.
+However, **List.copyOf only makes a shallow copy of the elements**. If the list contains mutable objects such as **MutableAddress**, a nested **ArrayList**, or objects with setters, anyone holding references to those elements may still change their contents. For deeper immutability, use immutable value objects, defensively copy each element, or avoid exposing mutable references.
 
-**Builder mutable không mặc nhiên thread-safe.** Không chia sẻ một builder đang được cập nhật giữa các thread nếu không có giao thức đồng bộ/chống tranh chấp phù hợp. Cách đơn giản nhất là mỗi luồng/tác vụ dùng builder của riêng mình.
+**A mutable Builder is not inherently thread-safe.** Do not share a builder under modification across threads without suitable synchronization/concurrency controls. The simplest option is to give each thread/task its own builder.
 
-Các lỗi thường gặp:
+Common mistakes:
 
-- Public setter trên **Order** làm mất ý nghĩa “hoàn tất khi build”.
-- **build()** trả về chính builder hoặc trả về product giữ reference mutable do builder sở hữu.
-- Builder cho phép tạo product thiếu trường cần thiết mà không báo lỗi.
-- Mặc định âm thầm thay đổi theo thời gian khiến hành vi cũ bị bất ngờ.
-- Phép kiểm tra chỉ nằm ở một setter nhưng tổ hợp các bước cấu hình có thể vượt qua bất biến.
-- Dùng exception cho trường hợp nghiệp vụ hợp lệ nhưng thất bại thường xuyên mà không có contract rõ ràng; ở ứng dụng lớn có thể dùng kiểu kết quả validation chuyên biệt.
+- Public setters on **Order** undermine the idea of “complete at build time”.
+- **build()** returns the builder itself or a product that retains mutable references owned by the builder.
+- The Builder permits creating a product with missing required fields without reporting an error.
+- Defaults silently change over time, unexpectedly altering existing behavior.
+- Validation occurs in one setter, but combinations of configuration steps can bypass invariants.
+- Exceptions are used for valid but frequently failing business outcomes without a clear contract; larger applications may use a specialized validation-result type.
 
-## 6. Kiểm thử Builder bằng JUnit 5
+## 6. Testing Builder with JUnit 5
 
-Các test sau đặt trong **BuilderDemoTest.java** (có JUnit Jupiter trong classpath của dự án). Mục tiêu là xác nhận tính đúng đắn của đối tượng **đã xây dựng**, mặc định, bất biến và lỗi đầu vào.
+Put the following tests in **BuilderDemoTest.java** (with JUnit Jupiter on the project's classpath). The goal is to verify the correctness of the **constructed** object, defaults, invariants, and input errors.
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -1569,32 +1569,32 @@ class BuilderDemoTest {
 }
 ~~~
 
-Một bộ kiểm thử đầy đủ hơn nên bao phủ các biên: số lượng cực lớn, đơn giá âm, null, chuỗi trắng, các quy tắc liên trường, giá trị mặc định và cách xử lý khi builder được cấu hình lặp lại. Chọn mức độ test tương ứng với rủi ro nghiệp vụ; không cần viết test chỉ để chứng minh mỗi setter trả về builder nếu kết quả end-to-end đã bao phủ.
+A more complete test suite should cover boundaries: extremely large quantities, negative unit prices, nulls, blank strings, cross-field rules, defaults, and repeated builder configuration. Match the testing effort to business risk; there is no need to test that every setter returns the builder if end-to-end results already cover the behavior.
 
-## 7. So sánh các cách tạo đối tượng trong Java
+## 7. Comparing Object-Creation Approaches in Java
 
-| Cách tạo | Hợp khi | Điểm cần cân nhắc |
+| Approach | Appropriate when | Trade-off |
 | --- | --- | --- |
-| Constructor thông thường | Ít trường, tất cả đều rõ ràng và bắt buộc | Có thể khó đọc khi quá nhiều tham số cùng kiểu |
-| **record** | Value object nhỏ, thành phần rõ, cần equality theo giá trị | Không tự giải quyết tình trạng nhiều tùy chọn hay quy trình dựng nhiều bước |
-| Static factory | Muốn tên nghiệp vụ rõ, chọn implementation hoặc quản lý cách khởi tạo | Nếu có hàng chục tùy chọn, số factory có thể phình to |
-| Setter trên đối tượng mutable | Đối tượng thực sự cần thay đổi liên tục sau khởi tạo | Có thể lộ trạng thái trung gian không hợp lệ |
-| **Builder** | Nhiều trường tùy chọn, quy trình tạo có bước, cần valid/immutable product | Thêm code, trạng thái trung gian và chi phí học API |
-| Factory + Builder | Cần lựa chọn họ đối tượng/implementation rồi cấu hình nhiều tham số | Cân nhắc độ phức tạp tổng thể; hai mẫu không thay thế nhau |
+| Ordinary constructor | Few fields, all clear and required | Can become hard to read with many same-type parameters |
+| **record** | Small value object with clear components and value-based equality | Does not inherently solve many options or multistep construction |
+| Static factory | Clear business naming, implementation selection, or controlled instantiation is needed | Numerous options may cause factory overloads to proliferate |
+| Setters on a mutable object | The object truly needs to change continuously after creation | May expose invalid intermediate states |
+| **Builder** | Many optional fields, multistep creation, and a need for valid/immutable products | Extra code, intermediate state, and API learning cost |
+| Factory + Builder | Select an object family/implementation, then configure many parameters | Consider overall complexity; the patterns serve different purposes |
 
-**Factory trả lời chủ yếu “tạo loại đối tượng nào, bằng cơ chế nào?”; Builder trả lời “cung cấp thông tin và các bước để tạo đối tượng đó ra sao?”.** Có thể dùng cùng nhau nếu bài toán đòi hỏi, nhưng không cần kết hợp chỉ để tăng số mẫu thiết kế.
+**A Factory mainly answers “what type of object to create, and through which mechanism?”; Builder answers “what information and steps are needed to create that object?”.** Combine them when the problem requires both, not merely to increase the pattern count.
 
-Đặc biệt, Java **record** thích hợp với dữ liệu nhỏ như **LineItem**. Builder mang lại giá trị rõ hơn với aggregate **Order** có nhiều tùy chọn, danh sách và ràng buộc liên trường.
+In particular, Java **record** suits small data values such as **LineItem**. Builder offers more obvious value for an **Order** aggregate with many options, a list, and cross-field constraints.
 
-## 8. Fluent Builder, staged Builder và Director
+## 8. Fluent Builder, Staged Builder, and Director
 
-### Fluent Builder thông thường
+### Ordinary Fluent Builder
 
-Ví dụ **Order.Builder** ở trên cho phép gọi các bước tùy chọn theo thứ tự linh hoạt. Một số yêu cầu bắt buộc được ép thông qua **builder(customerId, shippingAddress)**, còn quy tắc “ít nhất một mặt hàng” được kiểm tra tại runtime khi **build()**.
+The **Order.Builder** example above lets callers invoke optional steps in flexible order. Some mandatory inputs are enforced through **builder(customerId, shippingAddress)**, while the “at least one item” requirement is checked at runtime by **build()**.
 
 ### Staged Builder / Step Builder
 
-Nếu một quy trình phức tạp cần ép người gọi thực hiện các bước theo thứ tự ở *thời điểm biên dịch*, có thể tách các interface từng giai đoạn:
+If a complex workflow must enforce the order of calls at *compile time*, split the API into stage-specific interfaces:
 
 ~~~java
 interface CustomerStep {
@@ -1611,11 +1611,11 @@ interface BuildStep {
 }
 ~~~
 
-Client chỉ thấy phương thức hợp lệ ở giai đoạn hiện tại. Cách này có thể giảm nguy cơ thiếu trường bắt buộc, nhưng tạo thêm nhiều interface, generic hoặc type phức tạp. Thường không đáng dùng cho object cấu hình bình thường. Ví dụ trên chỉ mô tả hình dạng các **stage interfaces**; cần một implementation tương ứng và kiểu **Order** thực tế trước khi sử dụng.
+Clients only see methods valid for the current stage. This can reduce missing mandatory fields, but it introduces more interfaces, generics, or complex types. It is rarely worthwhile for ordinary configuration objects. The snippet above only illustrates the **stage interfaces**; a matching implementation and a real **Order** type are required before use.
 
-### Director trong GoF Builder
+### Director in GoF Builder
 
-**Director** là đối tượng biết một trình tự xây dựng tiêu chuẩn. Nó gọi builder để tạo biến thể như “đơn quà tặng”, “báo cáo chi tiết”, “cấu hình mặc định cho môi trường test”:
+A **Director** knows a standard construction sequence. It invokes a builder to create variants such as “gift order,” “detailed report,” or “default test-environment configuration”:
 
 ~~~java
 static BuilderDemo.Order createGiftOrder(
@@ -1627,11 +1627,11 @@ static BuilderDemo.Order createGiftOrder(
 }
 ~~~
 
-Ở đây một static factory đủ diễn đạt “recipe” và không cần tạo class **Director** riêng. Nếu có nhiều loại builder cho những sản phẩm khác nhau nhưng cùng quy trình dựng, một Director độc lập mới có thể có ích.
+Here a static factory is enough to express the “recipe” without a separate **Director** class. An independent Director may help when multiple builder types produce different products through the same construction process.
 
-## 9. Builder khi kết hợp với Lombok, Spring hoặc thư viện khác
+## 9. Builder with Lombok, Spring, or Other Libraries
 
-Trong codebase dùng Lombok, **@Builder** có thể tạo API builder và giảm boilerplate:
+In codebases using Lombok, **@Builder** can generate a builder API and reduce boilerplate:
 
 ~~~java
 // Ví dụ ý tưởng, cần dependency Lombok và cấu hình annotation processing:
@@ -1643,100 +1643,100 @@ record ExportOptions(
 ) {}
 ~~~
 
-Đây không phải thay thế trực tiếp cho các kiểm tra ở ví dụ **Order**. Annotation sinh builder và cơ chế dựng, nhưng các bất biến nghiệp vụ, defensive copy của dữ liệu mutable, lựa chọn mặc định và điều kiện liên trường vẫn cần được thiết kế/chứng minh. Cũng cần hiểu tương tác giữa **@Builder**, record/constructor, **@Builder.Default** (trong các trường hợp được hỗ trợ) và code được sinh khi review.
+This is not a direct substitute for the validation in the **Order** example. The annotation generates a builder and construction mechanism, but business invariants, defensive copies of mutable data, default choices, and cross-field constraints still need to be designed and verified. Reviews should also consider interactions among **@Builder**, records/constructors, **@Builder.Default** (where supported), and generated code.
 
-Với Spring Boot, một lớp cấu hình có thể được bind từ YAML/properties qua constructor/record và có cơ chế validation của framework. Không nên thêm Builder cho mọi **@ConfigurationProperties** nếu constructor binding hoặc record đã đủ rõ; Builder phù hợp hơn khi client thực sự tạo đối tượng từng bước hoặc có nhiều cấu hình tùy chọn do code quyết định.
+With Spring Boot, a configuration class can be bound from YAML/properties through constructors/records with framework-provided validation. Do not add Builder to every **@ConfigurationProperties** when constructor binding or a record is clear enough; Builder better suits cases where client code genuinely constructs objects step by step or sets many optional code-defined choices.
 
-**Lưu ý hiệu năng:** tạo thêm builder là thêm một object ngắn hạn và các bước gọi phương thức. Thông thường ưu tiên tính đúng, độ rõ và khả năng bảo trì. Chỉ tối ưu allocation khi profiling chứng minh đây là điểm nghẽn thực tế.
+**Performance note:** a builder introduces another short-lived object and method calls. Usually prioritize correctness, clarity, and maintainability. Optimize allocations only when profiling demonstrates a real bottleneck.
 
-## 10. Thiết kế API Builder dễ dùng và dễ bảo trì
+## 10. Designing Builder APIs for Usability and Maintenance
 
-Một số quyết định nhỏ nhưng có ảnh hưởng lớn:
+Small decisions can have substantial effects:
 
-| Quyết định | Gợi ý | Lý do |
+| Decision | Suggestion | Rationale |
 | --- | --- | --- |
-| Trường bắt buộc | Đưa vào static factory **builder(required...)** hoặc dùng staged steps khi cần | Giảm khả năng quên và làm rõ entry point |
-| Giá trị mặc định | Định nghĩa minh bạch, nhất quán trong builder | Client không phải truyền lại giá trị phổ biến |
-| Danh sách/map | Tích lũy trong builder, sao chép phòng vệ khi build | Không lộ mutable state qua product |
-| Giá trị có kiểu | Ưu tiên **enum**, value object thay vì chuỗi không kiểm soát | Giảm trạng thái không hợp lệ |
-| Trường cùng tên | Dùng tên phương thức đúng ngôn ngữ nghiệp vụ | Tránh mơ hồ như **setFlag(true)** |
-| Exception | Báo lỗi gắn với trường hoặc bất biến vi phạm | Người gọi dễ sửa dữ liệu đầu vào |
-| Build nhiều lần | Quy định rõ có hỗ trợ hay không; nếu có, trả object độc lập | Tránh mutation vô tình |
-| Đồng thời | Builder thuộc phạm vi một tác vụ/thread, trừ khi có thiết kế đồng bộ rõ | Hạn chế data race |
-| Sao chép/biến thể | Cân nhắc **toBuilder()** chỉ khi có nhu cầu | Tránh copy bằng setter trên immutable product |
+| Required fields | Include them in the static **builder(required...)** factory or use staged steps when needed | Reduces omissions and clarifies the entry point |
+| Default values | Define them transparently and consistently in the builder | Clients need not resupply common values |
+| Lists/maps | Accumulate in the builder and make defensive copies at build time | Prevents exposing mutable state through the product |
+| Typed values | Prefer **enum** and value objects over uncontrolled strings | Reduces invalid states |
+| Similar field names | Use method names from the business domain | Avoids ambiguity such as **setFlag(true)** |
+| Exceptions | Report the affected field or violated invariant | Helps callers correct input |
+| Multiple builds | Specify whether they are supported; if so, return independent objects | Prevents accidental mutation |
+| Concurrency | Scope builders to one task/thread unless synchronization is explicitly designed | Limits data races |
+| Copying/variants | Consider **toBuilder()** only when necessary | Avoids copying through setters on an immutable product |
 
-Một cách triển khai rất hay gặp là **Builder nằm trong lớp Product**, nhưng không phải giới hạn của mẫu thiết kế. Builder bên ngoài phù hợp khi không sở hữu mã nguồn Product, cần nhiều chiến lược dựng, hoặc muốn giữ API Product gọn.
+A common implementation places the **Builder inside the Product class**, but this is not a limitation of the pattern. An external Builder works when the Product source is unavailable, several construction strategies are needed, or the Product API should remain compact.
 
-## 11. Khi nào không nên dùng Builder?
+## 11. When Should You Avoid Builder?
 
-Builder có chi phí viết và bảo trì. Hãy giữ cách tạo đơn giản khi:
+Builder has implementation and maintenance costs. Keep object creation simple when:
 
-- Một object có 2–3 tham số rõ ràng, không có nhiều tùy chọn hoặc trạng thái trung gian.
-- Dữ liệu chủ yếu là bản ghi bất biến nhỏ; **record** hoặc constructor là đủ.
-- Object là entity do framework ORM quản lý, có ràng buộc lifecycle/proxy khác với value object. Cần xem lại yêu cầu của framework thay vì áp Builder máy móc.
-- Mọi thay đổi là trạng thái hợp lệ trong quá trình sống của object; khi đó API mutation có kiểm soát, command hoặc aggregate method có thể là mô hình đúng hơn.
-- Tạo builder chỉ vì “dự án phải có Design Pattern”, trong khi người đọc cần thêm lớp để hiểu một phép gán.
+- An object has 2–3 clear parameters, with few options or intermediate states.
+- Data is mainly a small immutable record; a **record** or constructor suffices.
+- The object is an ORM-managed entity with lifecycle/proxy requirements unlike those of a value object. Examine the framework's requirements instead of applying Builder mechanically.
+- Every change is a valid state transition throughout the object's lifetime; controlled mutation APIs, commands, or aggregate methods may be more appropriate.
+- A builder is introduced only because “the project must use Design Patterns,” while readers now need another layer to understand an assignment.
 
-Một nguyên tắc thực dụng: **chọn Builder khi nó làm rõ một quá trình tạo phức tạp, bảo vệ bất biến, hoặc làm API gọi dễ hiểu hơn đáng kể so với constructor/factory**. Không đo chất lượng thiết kế bằng số lớp hoặc số pattern xuất hiện.
+A practical principle: **choose Builder when it clarifies a complex construction process, protects invariants, or makes the calling API substantially clearer than a constructor/factory**. Do not measure design quality by the number of classes or patterns.
 
-## 12. Bài tập thực hành
+## 12. Practical Exercise
 
-Thiết kế **ReportConfig** cho chức năng xuất báo cáo doanh thu:
+Design **ReportConfig** for exporting revenue reports:
 
-- **reportName**, **fromDate**, **toDate** là bắt buộc.
-- **format** mặc định **CSV**, có thể chọn **PDF**.
-- **includeCharts** mặc định false; PDF được phép có biểu đồ, CSV thì không.
-- Danh sách các phòng ban cần lọc có thể rỗng (nghĩa là tất cả), nhưng không chứa mã phòng ban null/rỗng.
-- Ngày bắt đầu không được sau ngày kết thúc.
+- **reportName**, **fromDate**, and **toDate** are required.
+- **format** defaults to **CSV**, with **PDF** as an option.
+- **includeCharts** defaults to false; PDF reports may contain charts, but CSV reports may not.
+- The list of departments to filter by may be empty (meaning all departments) but must not contain null/blank department codes.
+- The start date must not be after the end date.
 
-Hãy viết **ReportConfig.builder(reportName, fromDate, toDate)**, thêm **format(...)**, **includeCharts(...)**, **addDepartment(...)** và **build()**. Dùng **LocalDate**, **enum Format**, **List.copyOf** và các field **final** nếu phù hợp. Kiểm thử tối thiểu: mặc định CSV, khoảng ngày đảo ngược bị từ chối, CSV kèm biểu đồ bị từ chối, danh sách phòng ban trên Product không thay đổi được, và việc dùng lại builder không sửa ReportConfig đã tạo.
+Implement **ReportConfig.builder(reportName, fromDate, toDate)**, and add **format(...)**, **includeCharts(...)**, **addDepartment(...)**, and **build()**. Use **LocalDate**, **enum Format**, **List.copyOf**, and **final** fields where appropriate. At a minimum, test that CSV is the default, reversed date ranges are rejected, CSV with charts is rejected, the department list on the Product cannot be modified, and reusing a builder does not alter previously created ReportConfig instances.
 
-Tự đánh giá bằng ba câu hỏi: (1) người đọc lời gọi có hiểu từng lựa chọn không; (2) có cách nào tạo ReportConfig vi phạm bất biến không; (3) khi thêm tùy chọn mới, có cần sửa mọi vị trí constructor trong hệ thống không?
+Self-assess with three questions: (1) can readers understand each option at the call site; (2) is it possible to create a ReportConfig that violates an invariant; (3) when adding a new option, must every constructor call site in the system change?
 
-**Kết luận:** Builder hữu ích nhất khi biến quá trình tạo đối tượng nhiều tham số thành các bước có ý nghĩa, cô lập xác thực và tạo sản phẩm hoàn chỉnh. Hãy đảm bảo ranh giới giữa Builder mutable và Product immutable được thiết kế thực sự đúng, và chỉ chấp nhận độ phức tạp của mẫu khi lợi ích bảo trì rõ ràng.
+**Conclusion:** Builder is most valuable when it turns object creation with many parameters into meaningful steps, centralizes validation, and produces a complete product. Ensure the boundary between a mutable Builder and an immutable Product is implemented correctly, and accept the pattern's complexity only when maintenance benefits are clear.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-004">Singleton và rủi ro trạng thái dùng chung</a>
+## <a id="design-patterns-004">Singleton and the Risks of Shared State</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Singleton và rủi ro trạng thái dùng chung trong Java
+# Singleton and the Risks of Shared State in Java
 
-**Bối cảnh:** Một ứng dụng có rất nhiều nơi cần sử dụng một bộ cấu hình, logger hoặc bộ điều phối chung. Ta muốn tránh tạo đối tượng lặp lại không cần thiết. Nhưng nếu một đối tượng duy nhất còn lưu dữ liệu thay đổi theo từng người dùng hoặc từng yêu cầu, chuyện gì xảy ra khi nhiều luồng cùng truy cập?
+**Context:** An application has many components that need to use shared configuration, a logger, or a common coordinator. We want to avoid redundant object creation. But what happens when a single object also stores data that changes per user or per request while multiple threads access it?
 
-Bài học này giải thích đúng phạm vi của **Singleton**, các cách triển khai trong Java, vì sao **một instance không đồng nghĩa với thread-safe**, cách thiết kế trạng thái dùng chung an toàn, và khi nào nên chọn **dependency injection (DI)** thay vì một biến toàn cục.
+This lesson explains the actual scope of **Singleton**, Java implementation options, why **one instance does not imply thread safety**, how to design safe shared state, and when to prefer **dependency injection (DI)** over a global variable.
 
-## 1. Singleton là gì?
+## 1. What Is Singleton?
 
-**Singleton** là mẫu thiết kế khởi tạo (*creational design pattern*) hướng đến hai ý:
+**Singleton** is a *creational design pattern* with two goals:
 
-1. Kiểm soát việc tạo để chỉ có một instance của một kiểu trong **phạm vi được định nghĩa**.
-2. Cung cấp cách truy cập instance đó cho những thành phần cần sử dụng.
+1. Control creation so that only one instance of a type exists within a **defined scope**.
+2. Provide access to that instance for components that need it.
 
-Định nghĩa kinh điển thường mô tả một điểm truy cập toàn cục. Tuy nhiên, trong ứng dụng lớn, truy cập toàn cục khiến dependency bị ẩn; thường nên để container DI quản lý vòng đời và truyền dependency một cách tường minh.
+The classic definition usually includes a global access point. In larger applications, however, global access hides dependencies; it is often preferable for a DI container to manage the lifecycle and supply dependencies explicitly.
 
-Ví dụ bài toán phù hợp: cấu hình **đọc duy nhất sau khi khởi động**, tập luật bất biến, hoặc một dịch vụ chia sẻ dùng đúng tài nguyên với chính sách đồng bộ rõ ràng.
+Suitable examples include **read-only configuration after startup**, immutable rule sets, or a shared service that uses a specific resource with an explicit synchronization policy.
 
-Ví dụ dễ gây lỗi: giỏ hàng đang xử lý, người dùng đăng nhập hiện tại, request ID, tổng tiền đơn hàng đang tính, hoặc đối tượng chứa bộ đệm tạm thay đổi sau mỗi request. Các dữ liệu đó thuộc **phạm vi request/phiên hoặc biến cục bộ**, không thuộc Singleton toàn cục.
+Error-prone examples include a cart being processed, the current logged-in user, a request ID, the current order total, or an object holding a temporary buffer that changes after each request. Such data belongs to **request/session scope or local variables**, not to a global Singleton.
 
-### Phạm vi “một instance” không phải tuyệt đối
+### The Scope of “One Instance” Is Not Absolute
 
-- Với Singleton Java dựa trên `static`, instance thường là **một cho mỗi class loader** tải lớp đó. Nhiều class loader có thể có các bản riêng.
-- Nếu ứng dụng chạy nhiều process, container hoặc pod, mỗi tiến trình có Singleton riêng. Singleton **không** bảo đảm một instance trên cả cụm máy.
-- Với Spring, bean có scope `singleton` mặc định là **một instance cho mỗi bean definition trong mỗi IoC container**; điều này khác với khẳng định toàn JVM chỉ có một object thuộc lớp đó.
-- Nếu nghiệp vụ đòi hỏi điều phối toàn hệ thống (ví dụ số thứ tự giao dịch không trùng qua nhiều máy), hãy dùng cơ chế thích hợp như **database sequence, transaction, distributed lock hoặc coordinator**, thay vì dựa vào Singleton trong bộ nhớ.
+- For a Java Singleton based on `static`, there is usually **one instance per class loader** that loads the class. Different class loaders can have separate copies.
+- When an application runs in multiple processes, containers, or pods, each process has its own Singleton. Singleton **does not** guarantee one instance across a cluster.
+- In Spring, a `singleton`-scoped bean is **one instance per bean definition per IoC container**; this is different from claiming that a class has only one object throughout the JVM.
+- If the business requires system-wide coordination (for example, transaction sequence numbers unique across machines), use a suitable mechanism such as **database sequences, transactions, distributed locks, or coordinators**, rather than an in-memory Singleton.
 
-## 2. Ví dụ Singleton chỉ đọc: Initialization-on-demand holder
+## 2. Read-Only Singleton Example: Initialization-on-Demand Holder
 
-Khi thật sự cần API truy cập tĩnh, một cách gọn và thường an toàn trong Java là **static holder**. Java bảo đảm quá trình khởi tạo lớp được đồng bộ theo quy tắc class initialization.
+When static access is genuinely needed, a **static holder** is a concise and generally safe Java option. Java guarantees synchronized class initialization according to its class-initialization rules.
 
-Tạo file `AppSettings.java`:
+Create `AppSettings.java`:
 
 ```java
 import java.util.Map;
@@ -1777,36 +1777,36 @@ public final class AppSettings {
 }
 ```
 
-Chạy bằng Java 17+:
+Run with Java 17+:
 
 ```bash
 javac AppSettings.java
 java AppSettings
 ```
 
-**Điểm cần hiểu:**
+**Key points:**
 
-- `private` constructor ngăn mã Java thông thường bên ngoài gọi `new AppSettings()`.
-- `final` class ngăn kế thừa lớp đó theo cách thông thường.
-- Lớp `Holder` cung cấp **lazy initialization** và cơ chế công bố instance an toàn qua việc khởi tạo lớp; không cần tự viết khối `synchronized` trong `getInstance()`.
-- `Map.of(...)` tạo map không cho sửa phần tử. `String` cũng bất biến, nên dữ liệu cấu hình ví dụ không bị thay đổi trong quá trình sử dụng.
-- `private final Map` **không đủ** để bảo đảm bất biến nếu ta khởi tạo bằng `HashMap` rồi cho bên ngoài sửa nội dung của map. `final` chỉ ngăn gán lại **tham chiếu**, không tự khóa trạng thái của object được tham chiếu.
+- A `private` constructor prevents ordinary external Java code from calling `new AppSettings()`.
+- A `final` class prevents ordinary subclassing.
+- The `Holder` class provides **lazy initialization** and safe publication of the instance through class initialization, without manually adding a `synchronized` block to `getInstance()`.
+- `Map.of(...)` creates a map whose entries cannot be modified. `String` is also immutable, so the example's configuration values do not change during use.
+- A `private final Map` **is not sufficient** to guarantee immutability if initialized from a `HashMap` whose contents external code can still mutate. `final` only prevents reassigning the **reference**; it does not freeze the referenced object's state.
 
-Đây là ví dụ minh họa kỹ thuật, không phải lời khuyên đưa mọi cấu hình vào class `static`. Trong ứng dụng thực tế, cấu hình nên được inject vào thành phần cần nó để dễ kiểm thử và thay đổi theo môi trường.
+This illustrates a technique; it is not advice to put every configuration value in a `static` class. In production, inject configuration into the components that need it for easier testing and environment-specific changes.
 
-## 3. Một instance không đồng nghĩa với an toàn đa luồng
+## 3. One Instance Does Not Imply Thread Safety
 
-Hai khái niệm rất khác nhau:
+These are distinct concepts:
 
-| Thuộc tính | Câu hỏi nó giải quyết | Nó **không** tự bảo đảm |
+| Property | Question it addresses | What it **does not** guarantee |
 |---|---|---|
-| Singleton | Có bao nhiêu instance trong phạm vi quản lý? | Các phương thức được gọi đồng thời có an toàn không? |
-| Thread safety | Các thao tác đồng thời có bảo toàn bất biến, thứ tự và khả năng quan sát hợp lệ không? | Toàn chương trình chỉ có một instance |
-| Immutability | Trạng thái có thể thay đổi sau khi tạo không? | Mọi dependency tham chiếu đều bất biến |
-| Safe publication | Luồng khác có thấy trạng thái đã khởi tạo hợp lệ không? | Các thao tác cập nhật sau đó đều nguyên tử |
-| Transaction/concurrency control | Các thay đổi nhiều bước có giữ đúng quy tắc nghiệp vụ không? | Chỉ cần thêm `volatile` là đủ |
+| Singleton | How many instances exist within the managed scope? | Are concurrent method calls safe? |
+| Thread safety | Do concurrent operations preserve invariants, ordering, and valid visibility? | Only one instance exists throughout the program |
+| Immutability | Can state change after construction? | Every referenced dependency is immutable |
+| Safe publication | Can other threads see a properly initialized state? | Subsequent updates are atomic |
+| Transaction/concurrency control | Do multistep changes preserve business rules? | Adding `volatile` alone is sufficient |
 
-### Phản ví dụ: lưu trạng thái của request vào Singleton
+### Counterexample: Storing Request State in a Singleton
 
 ```java
 import java.math.BigDecimal;
@@ -1827,7 +1827,7 @@ final class UnsafeCheckoutService {
 }
 ```
 
-Giả sử luồng A xử lý khách `AN`, 100.000 VND; luồng B xử lý khách `BINH`, 900.000 VND:
+Suppose thread A processes customer `AN`, 100.000 VND, and thread B processes customer `BINH`, 900.000 VND:
 
 ```mermaid
 sequenceDiagram
@@ -1842,11 +1842,11 @@ sequenceDiagram
     S-->>A: "BINH:900000" (sai!)
 ```
 
-Đây là một **interleaving có thể xảy ra**, chưa cần bàn đến quy tắc Java Memory Model. Khi thiếu quan hệ đồng bộ, việc nhìn thấy giá trị trên các luồng còn có thể phức tạp hơn. Không thể dùng `Thread.sleep` để “sửa” tình huống này.
+This is a **possible interleaving**, even before considering the Java Memory Model. Without synchronization, visibility across threads can be even more complex. `Thread.sleep` cannot “fix” this situation.
 
-Lỗi không phụ thuộc vào việc Singleton viết bằng holder, `enum`, `synchronized getInstance()`, Spring bean hay constructor injection. **Nếu trạng thái thay đổi theo request nằm trong object dùng chung, thiết kế vẫn nguy hiểm.**
+The bug is independent of whether the Singleton uses a holder, `enum`, `synchronized getInstance()`, a Spring bean, or constructor injection. **If request-dependent mutable state lives in a shared object, the design remains unsafe.**
 
-### Cách sửa đúng: dùng biến cục bộ và dependency phù hợp
+### Correct Fix: Use Local Variables and Properly Scoped Dependencies
 
 ```java
 import java.math.BigDecimal;
@@ -1891,15 +1891,15 @@ public final class SafeCheckoutService {
 }
 ```
 
-`SafeCheckoutService` có thể được chia sẻ giữa nhiều request **vì bản thân nó không có trạng thái thay đổi theo request**. Nhưng điều kiện đi kèm là `gateway.charge(...)` cũng phải an toàn khi được gọi đồng thời; tính an toàn của thành phần phụ thuộc phải được xét riêng. Trong ứng dụng thật, việc xử lý thanh toán còn cần idempotency key, timeout, retry được kiểm soát và tránh log dữ liệu nhạy cảm.
+`SafeCheckoutService` can be shared by multiple requests **because it has no request-specific mutable state of its own**. However, `gateway.charge(...)` must also be safe under concurrent calls; the safety of dependencies must be evaluated separately. In production, payments also require idempotency keys, timeouts, controlled retries, and avoiding sensitive data in logs.
 
-**Nguyên tắc thực hành:** dữ liệu theo request → tham số, biến cục bộ hoặc dependency đúng scope. Dữ liệu bất biến dùng chung → có thể đặt trong object sống lâu. Dữ liệu thay đổi dùng chung → phải có bất biến, chiến lược đồng bộ và phương án kiểm thử rõ ràng.
+**Practical principle:** request-specific data → parameters, local variables, or correctly scoped dependencies. Shared immutable data → may live in long-lived objects. Shared mutable data → requires explicit invariants, synchronization strategy, and test plan.
 
-## 4. Khi Singleton bắt buộc mang trạng thái thay đổi
+## 4. When a Singleton Must Hold Mutable State
 
-Một số trạng thái có lý do chính đáng để chia sẻ: thống kê trong tiến trình, cache, pool tài nguyên hoặc một hàng đợi công việc. Khi đó, câu hỏi chính không còn là “lấy instance bằng cách nào” mà là “mọi phép cập nhật có đúng khi chạy đồng thời không?”.
+Some state has a legitimate reason to be shared: in-process metrics, caches, resource pools, or work queues. In those cases, the main question becomes “are all updates correct under concurrency?” rather than “how do we obtain the instance?”
 
-### Sai: thao tác cộng một không nguyên tử
+### Incorrect: Nonatomic Increment
 
 ```java
 final class UnsafeCounter {
@@ -1915,11 +1915,11 @@ final class UnsafeCounter {
 }
 ```
 
-Kể cả có đúng **một** `UnsafeCounter`, hai luồng vẫn có thể cùng đọc `total = 5`, cùng ghi `6`, và làm mất một lần tăng. Khai báo `volatile long total` chỉ cải thiện vấn đề visibility/ordering liên quan đến biến đó; phép `total++` vẫn không trở thành phép cộng nguyên tử.
+Even with exactly **one** `UnsafeCounter`, two threads can read `total = 5`, both write `6`, and lose an increment. Declaring `volatile long total` only improves visibility/ordering for that variable; `total++` still is not atomic.
 
-### Đúng cho bộ đếm trong một process: AtomicLong
+### Correct for an In-Process Counter: AtomicLong
 
-Tạo file `CounterDemo.java`:
+Create `CounterDemo.java`:
 
 ```java
 import java.util.ArrayList;
@@ -1975,29 +1975,29 @@ public class CounterDemo {
 }
 ```
 
-`enum RequestCounter` thể hiện dạng Singleton gọn: ngôn ngữ Java tạo các constant của enum với cơ chế khởi tạo an toàn; xử lý serialization của enum theo ngữ nghĩa riêng và ngăn tạo instance enum theo cách reflection thông thường. `AtomicLong` làm cho **mỗi phép tăng** là nguyên tử. Tuy nhiên:
+`enum RequestCounter` provides a compact Singleton: Java initializes enum constants safely, applies special enum serialization semantics, and prevents ordinary reflection-based enum instantiation. `AtomicLong` makes **each increment** atomic. However:
 
-- Bộ đếm chỉ thuộc **một JVM/class loader**; không gom thống kê từ các pod khác.
-- Giá trị mất khi tiến trình khởi động lại; không dùng làm mã giao dịch duy nhất bền vững.
-- Nếu có nhiều trường cần nhất quán với nhau, một `AtomicLong` không giải quyết giao dịch nhiều bước.
-- `enum` cũng không làm các kiểu trạng thái tùy ý trong nó trở nên thread-safe.
+- The counter belongs to **one JVM/class loader**; it does not aggregate metrics from other pods.
+- The value is lost on process restart; do not use it as a durable unique transaction ID.
+- If several fields must remain consistent with one another, a single `AtomicLong` does not solve multistep transactions.
+- `enum` does not make arbitrary state held within it thread-safe.
 
-Ví dụ này chứng minh việc tạo Singleton và việc cập nhật trạng thái là **hai quyết định thiết kế độc lập**.
+This example demonstrates that Singleton creation and state updates are **two independent design decisions**.
 
-## 5. Những bẫy đồng bộ thường gặp
+## 5. Common Concurrency Pitfalls
 
-| Vấn đề | Ví dụ | Cách kiểm soát |
+| Problem | Example | Mitigation |
 |---|---|---|
-| Lost update | `count++` trong nhiều luồng | `AtomicLong`, `synchronized`, `Lock` tùy bất biến |
-| Visibility | Một luồng ghi flag, luồng khác mãi không thấy | `volatile`, lock, atomic hoặc cơ chế đồng bộ phù hợp |
-| Collection thay đổi đồng thời | Nhiều luồng cùng ghi `HashMap` | `ConcurrentHashMap` hoặc khóa bảo vệ truy cập |
-| Nhiều bước phải nhất quán | Trừ tồn kho rồi ghi đơn hàng | Transaction/CAS/lock, xác định điểm nguyên tử |
-| Rò rỉ dữ liệu request | Field `currentUser`, `currentOrder` | Biến cục bộ, tham số hoặc đúng scope |
-| Dependency không thread-safe | Đưa object có trạng thái nội bộ không an toàn vào Singleton | Dùng API thread-safe, bảo vệ bằng khóa hoặc không chia sẻ |
-| Trạng thái giữa các lần test | Test A tăng counter, test B mong counter bằng 0 | Inject instance mới, fixture cô lập, tránh global mutable |
-| Xung đột qua nhiều instance ứng dụng | Mỗi pod cấp cùng mã số 101 | Cơ chế đồng bộ/danh tính ở lớp dữ liệu hoặc phân tán |
+| Lost update | `count++` across threads | `AtomicLong`, `synchronized`, or `Lock`, depending on invariants |
+| Visibility | One thread writes a flag that another never sees | `volatile`, locks, atomics, or appropriate synchronization |
+| Concurrent collection mutation | Multiple threads write to a `HashMap` | `ConcurrentHashMap` or locking around access |
+| Multiple steps must remain consistent | Decrement inventory, then persist an order | Transaction/CAS/lock, with an explicit atomicity boundary |
+| Request data leaks | Fields such as `currentUser`, `currentOrder` | Local variables, parameters, or correct scope |
+| Non-thread-safe dependency | A Singleton holds an object with unsafe internal state | Use a thread-safe API, protect it with locks, or avoid sharing it |
+| State persists between tests | Test A increments a counter, but test B expects zero | Inject a fresh instance, isolate fixtures, avoid global mutable state |
+| Conflicts across application instances | Each pod issues the same sequence number 101 | Coordinate identity/synchronization in the data or distributed layer |
 
-Đặc biệt, `ConcurrentHashMap` làm các phương thức riêng lẻ an toàn khi dùng đồng thời, **không tự biến chuỗi `get` + tính toán + `put` thành một giao dịch nguyên tử**. Khi tăng bộ đếm theo khóa, dùng `merge` hoặc `compute` thích hợp:
+In particular, `ConcurrentHashMap` makes individual operations safe under concurrency, but **does not turn a sequence of `get` + calculation + `put` into one atomic transaction**. To increment a counter by key, use suitable `merge` or `compute` operations:
 
 ```java
 import java.util.concurrent.ConcurrentHashMap;
@@ -2016,9 +2016,9 @@ final class OperationMetrics {
 }
 ```
 
-Ở đây, một lần gọi `merge` thực hiện phép cập nhật nguyên tử đối với khóa tương ứng theo hợp đồng `ConcurrentHashMap`. Việc đọc nhiều khóa liên tiếp vẫn **không** tạo ra một snapshot nhất quán toàn map. Nếu báo cáo yêu cầu số liệu chính xác tại cùng một thời điểm hoặc liên quan đến một transaction DB, cần cơ chế khác.
+Here a single `merge` call performs an atomic update for the corresponding key under the `ConcurrentHashMap` contract. Reading several keys consecutively still **does not** produce a consistent snapshot of the entire map. Accurate same-instant reporting or DB-transaction consistency requires a different mechanism.
 
-### Vì sao `synchronized getInstance()` không bảo vệ các phương thức?
+### Why Doesn't `synchronized getInstance()` Protect Other Methods?
 
 ```java
 public static synchronized SharedState getInstance() {
@@ -2027,13 +2027,13 @@ public static synchronized SharedState getInstance() {
 }
 ```
 
-Đoạn trên không bảo vệ những thao tác như `getInstance().addItem()` hoặc `getInstance().updateBalance()` **trừ khi chính các thao tác đó** được đồng bộ phù hợp. Nếu cần double-checked locking để lazy initialization, trường instance phải được công bố với các quy tắc memory visibility đúng (chẳng hạn `volatile`). Trong trường hợp thông thường, holder hoặc DI đơn giản và ít lỗi hơn.
+The snippet above does not protect operations such as `getInstance().addItem()` or `getInstance().updateBalance()` **unless those operations themselves** are appropriately synchronized. If double-checked locking is required for lazy initialization, the instance field must follow proper memory-visibility rules (such as `volatile`). In most cases, a holder or DI is simpler and less error-prone.
 
-## 6. Singleton trong Spring: scope và trạng thái
+## 6. Singleton in Spring: Scope and State
 
-Spring mặc định dùng scope `singleton` cho bean, nghĩa là các nơi inject cùng bean definition trong một application context nhận cùng object. Spring quản lý vòng đời, injection, proxy tùy cấu hình; phạm vi này **không phải bảo đảm một object duy nhất trên tất cả context/JVM**.
+By default, Spring uses `singleton` bean scope, meaning injection points for the same bean definition within an application context receive the same object. Spring manages lifecycle, injection, and proxies according to configuration; this scope **does not guarantee one object across all contexts/JVMs**.
 
-Ví dụ bean service không giữ dữ liệu request:
+Example of a service bean without request-specific state:
 
 ```java
 import java.math.BigDecimal;
@@ -2051,9 +2051,9 @@ public class PriceService {
 }
 ```
 
-Khi nhiều HTTP request gọi `PriceService.total(...)` đồng thời, không có field tạm theo request để ghi đè nhau. Trường hợp này có thể dùng singleton vì code **stateless**.
+When concurrent HTTP requests call `PriceService.total(...)`, there are no request-specific temporary fields that overwrite one another. A singleton works here because the code is **stateless**.
 
-Ngược lại, cách viết sau rất nguy hiểm:
+Conversely, the following approach is dangerous:
 
 ```java
 @Service
@@ -2070,27 +2070,27 @@ public class BadCartService {
 }
 ```
 
-Không nên “vá” bằng `synchronized` nếu bản chất dữ liệu thuộc từng user/request. Khóa toàn cục vừa làm nghẽn tải vừa vẫn dễ sai nếu request có nhiều lần gọi tách biệt.
+Do not attempt to “patch” this with `synchronized` when the data fundamentally belongs to a user/request. A global lock reduces throughput and can still produce incorrect behavior when requests make several separate calls.
 
-### Chọn đúng scope và vòng đời
+### Choosing the Right Scope and Lifecycle
 
-| Dữ liệu/Thành phần | Phạm vi thường phù hợp | Ghi chú |
+| Data/Component | Usually appropriate scope | Notes |
 |---|---|---|
-| Dịch vụ xử lý nghiệp vụ stateless | Spring singleton | Dependency bên trong cũng cần an toàn |
-| Thông tin chỉ dùng trong một lời gọi | Biến cục bộ, tham số | Đơn giản và tránh chia sẻ ngoài ý muốn |
-| Trạng thái của một HTTP request | `request` scope hoặc truyền tường minh | Request scope cần web-aware context |
-| Trạng thái gắn với HTTP session | `session` scope hoặc kho lưu phù hợp | Có vấn đề đồng thời khi cùng session mở nhiều tab |
-| Object phải mới cho mỗi lần lấy | `prototype` scope | Inject prototype trực tiếp vào singleton không tự tạo mới mỗi lần dùng |
-| Cache/pool dùng chung | Singleton kết hợp primitive/thiết kế thread-safe | Có giới hạn kích thước, timeout, eviction, giám sát |
-| Dữ liệu giao dịch bền vững | Database/transaction | Không lưu bản chuẩn duy nhất trong field của bean |
+| Stateless business service | Spring singleton | Internal dependencies must also be safe |
+| Data used only within one call | Local variables, parameters | Simple and avoids unintended sharing |
+| State of one HTTP request | `request` scope or explicit parameter passing | Request scope requires a web-aware context |
+| State associated with an HTTP session | `session` scope or suitable storage | Concurrent access is possible when one session opens multiple tabs |
+| An object must be new on each retrieval | `prototype` scope | Injecting a prototype directly into a singleton does not create a new instance each time it is used |
+| Shared cache/pool | Singleton with thread-safe primitives/design | Requires size limits, timeouts, eviction, and monitoring |
+| Durable transactional data | Database/transaction | Do not keep the sole authoritative copy in a bean field |
 
-Khi bean singleton cần dùng bean request-scoped, Spring phải có cơ chế lấy instance tương ứng ngữ cảnh đang hoạt động (ví dụ scoped proxy, `ObjectProvider` hoặc truyền dependency từ request layer). Việc chú thích scope một cách tùy tiện không tự giải quyết được các quy tắc phiên, bảo mật hoặc xử lý async.
+When a singleton bean needs a request-scoped bean, Spring requires a way to obtain the instance for the active context (for example, a scoped proxy, `ObjectProvider`, or dependency passing from the request layer). Adding scope annotations arbitrarily does not solve session rules, security, or asynchronous handling.
 
-## 7. Singleton và dependency injection: vấn đề kiểm thử
+## 7. Singleton and Dependency Injection: Testing Concerns
 
-Một trong những rủi ro lớn của `GlobalState.getInstance()` là **hidden dependency**. Constructor của lớp không cho biết lớp đó phụ thuộc hệ thống toàn cục, test dễ bị ảnh hưởng thứ tự chạy, và rất khó thay implementation riêng cho môi trường thử nghiệm.
+A major risk of `GlobalState.getInstance()` is its **hidden dependency**. The class constructor does not reveal its reliance on global facilities, tests may become order-dependent, and replacing an implementation for a test environment is difficult.
 
-**Ví dụ phụ thuộc ẩn:**
+**Example of a hidden dependency:**
 
 ```java
 final class NotificationService {
@@ -2100,9 +2100,9 @@ final class NotificationService {
 }
 ```
 
-Mã trên trực tiếp lấy service toàn cục. Trong unit test, ta khó đưa một fake client độc lập hoặc kiểm tra chính xác lần gọi mà không can thiệp global state.
+The code above retrieves a global service directly. Unit tests cannot easily supply an independent fake client or verify calls precisely without manipulating global state.
 
-**Thiết kế bằng constructor injection:**
+**Design with constructor injection:**
 
 ```java
 import java.util.Objects;
@@ -2133,21 +2133,21 @@ final class FakeMailClient implements MailClient {
 }
 ```
 
-Ở đây, có thể tạo `new NotificationService(new FakeMailClient())` trong từng test. Fake lưu biến `sent` **chỉ thuộc fixture của test đó**; fake không cần chia sẻ toàn ứng dụng và không cần tự đồng bộ nếu mỗi test gọi tuần tự. Với production, container có thể quản lý `MailClient` theo singleton nếu implementation phù hợp.
+Here each test can create `new NotificationService(new FakeMailClient())`. The fake's `sent` variable **belongs only to that test's fixture**; it need not be shared throughout the application or synchronized when each test calls it sequentially. In production, a container may manage `MailClient` as a singleton if its implementation is suitable.
 
-**Không nên tự động đánh đồng:**
+**Do not automatically equate these concepts:**
 
-- Singleton pattern: lớp tự kiểm soát instance và thường cung cấp điểm truy cập toàn cục.
-- Singleton scope của DI container: container quyết định chia sẻ một instance của bean; mã sử dụng có thể chỉ biết interface được inject.
-- Trạng thái toàn cục: dữ liệu hoặc dịch vụ được truy cập rộng rãi, có thể có hoặc không được quản lý bằng Singleton. Vấn đề chính là phạm vi, tính thay đổi và khả năng kiểm soát.
+- Singleton pattern: a class controls its own instance and usually provides a global access point.
+- DI container singleton scope: the container decides to share one bean instance; consuming code may only know an injected interface.
+- Global state: widely accessible data or services, which may or may not be managed through Singleton. The key concerns are scope, mutability, and control.
 
-Một component hoàn toàn stateless thường không cần pattern Singleton Java truyền thống; việc tái sử dụng instance có thể do DI container hoặc composition root quyết định.
+A completely stateless component usually does not need the traditional Java Singleton pattern; instance reuse can be chosen by the DI container or composition root.
 
-## 8. Kiểm thử sự an toàn của Singleton
+## 8. Testing Singleton Safety
 
-Kiểm thử nên đi từ các **bất biến nghiệp vụ** cụ thể, không chỉ từ việc gọi `getInstance()` hai lần.
+Tests should start from specific **business invariants**, rather than merely calling `getInstance()` twice.
 
-### Kiểm tra danh tính cùng class loader
+### Check Identity Within the Same Class Loader
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -2166,30 +2166,30 @@ class AppSettingsTest {
 }
 ```
 
-Phép `assertSame` xác minh hành vi một instance **ở ngữ cảnh test đó**. Nó không xác minh thread-safety của mọi method trong Singleton, cũng không chứng minh một instance trên cụm phân tán.
+`assertSame` verifies single-instance behavior **within that test context**. It does not verify that every Singleton method is thread-safe, nor does it prove that only one instance exists across a distributed cluster.
 
-### Kiểm tra cập nhật dưới tải cạnh tranh
+### Test Updates Under Concurrent Load
 
-Ví dụ `CounterDemo` ở mục 4 cho nhiều tác vụ tăng `AtomicLong` và chờ mọi `Future`. Với ứng dụng thật, nên kiểm tra cả trường hợp exception, timeout, đóng executor và các bất biến phối hợp nhiều field.
+The `CounterDemo` example in section 4 runs multiple tasks incrementing an `AtomicLong` and waits for every `Future`. In production, also test exceptions, timeouts, executor shutdown, and invariants involving multiple fields.
 
-Lưu ý quan trọng: unit test race có thể chạy qua dù code sai, vì lịch xen kẽ của thread không được bảo đảm. Có thể dùng latch/barrier để điều phối tình huống cạnh tranh và kiểm thử lặp lại, nhưng **kiểm thử không thay thế được lập luận về đồng bộ**. Tránh phép kiểm tra dựa vào `sleep(...)` hoặc thời gian chạy ngẫu nhiên.
+Important: a race-condition unit test can pass even when code is incorrect, because thread interleavings are nondeterministic. Latches/barriers can coordinate competing operations and repeated tests, but **tests cannot replace reasoning about synchronization**. Avoid assertions based on `sleep(...)` or arbitrary timing.
 
-Với global mutable Singleton, nhiều test cùng chạy song song có thể làm kết quả không ổn định. Tốt hơn là **inject stateful collaborator mới cho từng test**, hoặc thiết kế một cơ chế reset được bảo vệ và kiểm soát thứ tự nếu thật sự bắt buộc.
+When tests run in parallel, a globally mutable Singleton can make results unstable. Prefer to **inject a new stateful collaborator per test**, or design a controlled reset mechanism with guaranteed ordering if absolutely necessary.
 
-## 9. Vòng đời và tài nguyên cũng là trách nhiệm
+## 9. Lifecycle and Resource Management Are Also Responsibilities
 
-Singleton sống lâu thường giữ tài nguyên: connection pool, file watcher, scheduler, thread pool hoặc cache. Cần quan tâm:
+Long-lived Singletons often hold resources: connection pools, file watchers, schedulers, thread pools, or caches. Consider:
 
-- **Đóng tài nguyên** đúng lúc ứng dụng shutdown (`AutoCloseable`, callback lifecycle của container như `@PreDestroy`).
-- **Không giữ tham chiếu lâu dài** đến request/session/user khiến dữ liệu không được giải phóng.
-- **Giới hạn bộ nhớ** đối với cache (TTL, số mục, kích thước và eviction).
-- **Không nhét lock quá rộng** quanh I/O kéo dài; nguy cơ giảm thông lượng hoặc deadlock.
-- **Không dùng Singleton thay thế transaction DB** khi có nhiều tiến trình hoặc yêu cầu bền vững.
-- **Không tin rằng một object tự đảm bảo chính xác một lần xử lý**: retry, crash và nhiều worker cần thiết kế idempotency riêng.
+- **Close resources** at application shutdown (`AutoCloseable`, container lifecycle callbacks such as `@PreDestroy`).
+- **Avoid long-lived references** to requests/sessions/users that prevent data from being released.
+- **Bound memory usage** in caches (TTL, entry count, size, and eviction).
+- **Avoid overly broad locks** around long-running I/O, which reduce throughput or cause deadlocks.
+- **Do not use Singleton as a substitute for DB transactions** across processes or when durability is required.
+- **Do not assume one object guarantees exactly-once processing**: retries, crashes, and multiple workers require separate idempotency design.
 
-Singleton chứa nhiều dependency có vòng đời và trạng thái khác nhau đặc biệt khó vận hành. Việc tách trách nhiệm, giảm trạng thái và quản lý vòng đời trong container thường giúp dễ giám sát hơn.
+A Singleton containing dependencies with different lifecycles and state characteristics is particularly difficult to operate. Separating responsibilities, reducing state, and managing lifecycles in a container often improves observability.
 
-## 10. Khi nào nên dùng Singleton?
+## 10. When Should You Use Singleton?
 
 ```mermaid
 flowchart TD
@@ -2207,15 +2207,15 @@ flowchart TD
     J -->|Không| L[Atomic/lock/concurrent collection phù hợp]
 ```
 
-**Những dấu hiệu nên tránh Singleton thủ công:** số lượng user đang hoạt động; context hiện tại; data mutable lấy từ HTTP request; object cần fake/test thay thế; yêu cầu chạy nhiều instance; lớp biết quá nhiều dependency; biến toàn cục gây phụ thuộc thứ tự khởi tạo.
+**Signs to avoid a manual Singleton:** number of active users; current context; mutable data from HTTP requests; objects that must be replaced with fakes in tests; multi-instance deployment requirements; classes that know too many dependencies; globals that introduce initialization-order dependence.
 
-**Những trường hợp có thể hợp lý:** giá trị cấu hình được nạp một lần và bất biến, registry đọc nhiều/ghi ít với cơ chế đồng bộ rõ, facade đến một tài nguyên sống lâu do container quản lý, hoặc thống kê cục bộ trong process với `AtomicLong` và đặc tả về vòng đời.
+**Potentially valid cases:** configuration loaded once and kept immutable, a read-heavy/rarely updated registry with explicit synchronization, a facade for a long-lived resource managed by the container, or local in-process metrics using `AtomicLong` with defined lifecycle semantics.
 
-## 11. Bài tập áp dụng
+## 11. Applied Exercises
 
-### Bài 1 – Phát hiện race condition
+### Exercise 1 – Detect a Race Condition
 
-Một singleton service khai báo:
+A singleton service declares:
 
 ```java
 private String currentOrderId;
@@ -2226,73 +2226,73 @@ public void process(String orderId) {
 }
 ```
 
-Hãy mô tả một thứ tự xen kẽ của hai request khiến `audit` nhận sai order ID. Refactor dùng tham số cục bộ, không đưa dữ liệu request vào field chung. Giải thích vì sao khóa `synchronized process` là giải pháp có thể chạy nhưng không giải quyết đúng nhu cầu sở hữu dữ liệu.
+Describe an interleaving of two requests that makes `audit` receive the wrong order ID. Refactor the method to use local parameters rather than storing request data in a shared field. Explain why `synchronized process` can work mechanically but does not address the proper ownership of the data.
 
-### Bài 2 – Thiết kế bộ đếm
+### Exercise 2 – Design a Counter
 
-Triển khai `RequestMetrics` đếm số request theo loại. Đề xuất hai lựa chọn:
+Implement `RequestMetrics` to count requests by type. Propose two alternatives:
 
-- Dùng `ConcurrentHashMap<String, AtomicLong>` hoặc `ConcurrentHashMap.merge` để cập nhật theo khóa.
-- Lưu số liệu thống kê trong database hoặc dịch vụ metrics khi cần tổng hợp qua nhiều container.
+- Use `ConcurrentHashMap<String, AtomicLong>` or `ConcurrentHashMap.merge` for per-key updates.
+- Store metrics in a database or metrics service when aggregating across containers.
 
-Phân tích khác biệt ở khả năng reset, tính chính xác snapshot và độ bền dữ liệu.
+Analyze differences in reset behavior, snapshot accuracy, and durability.
 
-### Bài 3 – Refactor để dễ kiểm thử
+### Exercise 3 – Refactor for Testability
 
-Một `InvoiceService` gọi `TaxRules.getInstance()` trong mọi phương thức. Chuyển sang interface `TaxCalculator` inject qua constructor; viết fake tax calculator cho test. Giải thích trường hợp `TaxRules` bất biến vẫn có thể tái sử dụng một instance nhưng không cần để client biết đến `getInstance()`.
+An `InvoiceService` calls `TaxRules.getInstance()` in every method. Switch to a `TaxCalculator` interface injected through the constructor; implement a fake tax calculator for tests. Explain how an immutable `TaxRules` can still reuse one instance without exposing `getInstance()` to clients.
 
-### Bài 4 – Phạm vi Spring
+### Exercise 4 – Spring Scope
 
-Một singleton `OrderService` inject `ShoppingCart` dạng mutable prototype bằng constructor. Người học cần giải thích vì sao điều đó **không** bảo đảm một cart mới cho mỗi request, rồi đề xuất cách truyền cart qua tham số hoặc dùng scope/phương án tạo instance phù hợp.
+A singleton `OrderService` receives a mutable prototype `ShoppingCart` through constructor injection. Explain why this **does not** guarantee a fresh cart per request, and propose passing the cart as a parameter or using an appropriate scope/instance-creation mechanism.
 
-## 12. Những điều cần tự kiểm tra trước khi thiết kế
+## 12. Questions to Check Before Designing
 
-1. “Một” instance được hiểu trong phạm vi **class loader, IoC container, process hay toàn cụm**?
-2. Object chỉ có phương thức xử lý stateless hay giữ trạng thái mutable? Ai sở hữu trạng thái?
-3. Nếu hai thread gọi cùng phương thức, có tương tác vào field nào? Các phép cập nhật có nguyên tử không?
-4. `final`, `volatile`, `synchronized`, `AtomicLong` hay concurrent collections được chọn để bảo vệ **bất biến cụ thể nào**?
-5. Trường hợp dùng nhiều server, mất điện hoặc restart thì dữ liệu có phải còn nguyên hoặc thống nhất không?
-6. Test có thể tạo dependency riêng và chạy độc lập, song song hay không?
-7. Ai chịu trách nhiệm khởi tạo, cấu hình, dọn dẹp tài nguyên và quan sát lỗi?
+1. Is “one” instance scoped to a **class loader, IoC container, process, or entire cluster**?
+2. Does the object have only stateless processing methods or hold mutable state? Who owns that state?
+3. If two threads call the same method, which fields do they touch? Are updates atomic?
+4. Which **specific invariant** is being protected by the chosen `final`, `volatile`, `synchronized`, `AtomicLong`, or concurrent collection?
+5. With multiple servers, power failures, or restarts, must data persist or remain consistent?
+6. Can tests create separate dependencies and run independently and in parallel?
+7. Who owns initialization, configuration, resource cleanup, and error monitoring?
 
-**Ghi nhớ:** Singleton chỉ trả lời câu hỏi **số lượng và điểm truy cập instance trong một phạm vi**. Độ an toàn khi chia sẻ phụ thuộc vào **trạng thái, hợp đồng đồng thời, vòng đời và ranh giới triển khai**. Ưu tiên dữ liệu cục bộ, object bất biến và dependency injection; chỉ dùng trạng thái chia sẻ có chủ đích khi đã xác định cách đồng bộ và kiểm thử tương ứng.
+**Remember:** Singleton only answers questions about **instance count and access within a scope**. Sharing safety depends on **state, concurrency contracts, lifecycles, and deployment boundaries**. Prefer local data, immutable objects, and dependency injection; use intentional shared state only after defining suitable synchronization and tests.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-005">Adapter và tích hợp giao diện khác nhau</a>
+## <a id="design-patterns-005">Adapter and Integrating Different Interfaces</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Adapter Pattern trong Java: tích hợp các giao diện khác nhau
+# Adapter Pattern in Java: Integrating Different Interfaces
 
-**Nhóm:** OOP → Mẫu thiết kế  
-**Chủ đề:** Adapter và tích hợp giao diện khác nhau
+**Category:** OOP → Design Patterns  
+**Topic:** Adapter and integrating different interfaces
 
-## 1. Bài toán: hai hệ thống làm cùng việc nhưng không nói cùng “ngôn ngữ”
+## 1. The Problem: Two Systems Do the Same Job but Speak Different “Languages”
 
-Ứng dụng của bạn đã chuẩn hóa việc thanh toán qua interface `PaymentGateway` với đối tượng yêu cầu và kết quả rõ ràng. Sau đó doanh nghiệp phải tích hợp một SDK thanh toán cũ:
+Your application has standardized payments through a `PaymentGateway` interface with explicit request and result objects. The business then needs to integrate a legacy payment SDK:
 
-- Ứng dụng gửi số tiền bằng `BigDecimal`, đơn vị USD; SDK cũ nhận `long`, đơn vị **cent**.
-- Ứng dụng dùng `charge(PaymentRequest)`; SDK cũ dùng `execute(String merchantRef, long amountInCents)`.
-- Ứng dụng cần kết quả `APPROVED` hoặc `DECLINED`; SDK cũ trả mã chuỗi `"00"`, `"05"`, `"91"`.
-- Đổi toàn bộ mã `CheckoutService` để phụ thuộc SDK cũ sẽ làm chức năng nghiệp vụ bị ràng buộc vào nhà cung cấp.
+- The application sends amounts as `BigDecimal` in USD; the legacy SDK expects `long` in **cents**.
+- The application calls `charge(PaymentRequest)`; the legacy SDK calls `execute(String merchantRef, long amountInCents)`.
+- The application needs `APPROVED` or `DECLINED` results; the SDK returns string codes `"00"`, `"05"`, `"91"`.
+- Rewriting all of `CheckoutService` to depend on the legacy SDK would couple business functionality to that provider.
 
-**Adapter** tạo một lớp đứng giữa để biến giao diện mà SDK hiện có (*Adaptee*) thành giao diện mà ứng dụng mong đợi (*Target*). Bên sử dụng (*Client*) tiếp tục làm việc với `Target`. Lớp `Adapter` chịu trách nhiệm chuyển đổi lời gọi, tham số, phản hồi và lỗi trong phạm vi hợp đồng đã xác định.
+**Adapter** inserts an intermediary class that converts the interface provided by the existing SDK (*Adaptee*) into the interface expected by the application (*Target*). The consumer (*Client*) continues using `Target`. The `Adapter` class converts calls, parameters, responses, and errors within the defined contract.
 
-### Thành phần của mẫu Adapter
+### Adapter Pattern Participants
 
-| Vai trò | Trong ví dụ | Trách nhiệm |
+| Role | In this example | Responsibility |
 |---|---|---|
-| **Client** | `CheckoutService` | Gọi nghiệp vụ thanh toán thông qua interface thống nhất |
-| **Target** | `PaymentGateway` | Hợp đồng mà client hiểu: `charge(PaymentRequest)` |
-| **Adaptee** | `LegacyPaymentApi` / `LegacyPaymentSdk` | API cũ có chữ ký và quy ước dữ liệu riêng |
-| **Adapter** | `LegacyPaymentAdapter` | Triển khai `PaymentGateway` và ủy quyền tới API cũ sau khi chuyển đổi |
+| **Client** | `CheckoutService` | Invokes payment operations through a unified interface |
+| **Target** | `PaymentGateway` | Contract understood by the client: `charge(PaymentRequest)` |
+| **Adaptee** | `LegacyPaymentApi` / `LegacyPaymentSdk` | Legacy API with its own signatures and data conventions |
+| **Adapter** | `LegacyPaymentAdapter` | Implements `PaymentGateway` and delegates to the converted legacy API |
 
 ~~~mermaid
 classDiagram
@@ -2322,23 +2322,23 @@ classDiagram
     LegacyPaymentSdk ..|> LegacyPaymentApi : implements
 ~~~
 
-> Đây là **Object Adapter**: giữ tham chiếu tới đối tượng được bọc bằng *composition*. Một lớp adapter không nhất thiết phải thừa kế lớp của SDK.
+> This is an **Object Adapter**: it holds a reference to the wrapped object through *composition*. An adapter class does not have to inherit from the SDK class.
 
-## 2. Xác định hợp đồng trước khi viết adapter
+## 2. Define the Contract Before Writing the Adapter
 
-Cần thống nhất ý nghĩa dữ liệu trước khi chuyển đổi. Trong ví dụ học tập này:
+Agree on data semantics before converting anything. In this learning example:
 
-1. `PaymentRequest` chỉ đại diện giao dịch bằng **USD**, số tiền dương và biểu diễn chính xác được bằng cent trong phạm vi `long`; mã đơn hàng khác rỗng. Dữ liệu không đáp ứng điều kiện bị từ chối ngay khi tạo request.
-2. `PaymentGateway.charge` nhận request hợp lệ. Với phản hồi rõ ràng từ nhà cung cấp, nó trả `PaymentReceipt` có trạng thái `APPROVED` hoặc `DECLINED`.
-3. Mã `"00"` của SDK nghĩa là duyệt, `"05"` là từ chối, `"91"` là tạm thời không xác định được kết quả. **Các mã này chỉ là quy ước giả lập của ví dụ**, không đại diện cho mọi SDK thực tế.
-4. Phản hồi bị thiếu, mã không biết, hoặc lỗi hạ tầng phải được đưa ra dưới dạng lỗi rõ ràng. Không biến lỗi không xác định thành `DECLINED` hoặc `APPROVED`.
-5. Client không truy cập kiểu `LegacyReply`, mã lỗi nội bộ hay phương thức đặc thù của SDK.
+1. `PaymentRequest` represents only transactions in **USD**, with positive amounts exactly representable in cents within the `long` range, and a nonblank order ID. Invalid data is rejected at request construction.
+2. `PaymentGateway.charge` accepts a valid request. For a definitive provider response, it returns a `PaymentReceipt` with `APPROVED` or `DECLINED` status.
+3. The SDK code `"00"` means approved, `"05"` means declined, and `"91"` means the result is temporarily unknown. **These codes are simulated conventions for the example only**, not universal codes for real SDKs.
+4. Missing replies, unknown codes, and infrastructure failures must surface as explicit errors. Do not turn an unknown outcome into `DECLINED` or `APPROVED`.
+5. Clients never access `LegacyReply`, internal error codes, or SDK-specific methods.
 
-Ở hệ thống thật, đọc tài liệu chính thức của nhà cung cấp để xác nhận đơn vị tiền, trạng thái cuối cùng, quy tắc làm tròn, thời hạn timeout và yêu cầu idempotency. **Adapter không thể tự tạo ra bảo đảm mà dịch vụ ngoài không cung cấp**.
+In production, consult the provider's official documentation to verify monetary units, final statuses, rounding rules, timeout limits, and idempotency requirements. **An Adapter cannot manufacture guarantees absent from the external service**.
 
-## 3. Java 17+: ví dụ đầy đủ, chạy độc lập
+## 3. Java 17+: Complete Standalone Example
 
-Lưu toàn bộ code thành file **`AdapterDemo.java`**. SDK bên dưới chỉ là một **stub mô phỏng** để học thiết kế; nó không gửi tiền hoặc kết nối dịch vụ thực.
+Save all the code in **`AdapterDemo.java`**. The SDK below is only a **simulated stub** for learning design; it neither transfers funds nor connects to a real service.
 
 ~~~java
 import java.math.BigDecimal;
@@ -2505,14 +2505,14 @@ public class AdapterDemo {
 }
 ~~~
 
-Chạy bằng JDK 17 trở lên:
+Run with JDK 17 or later:
 
 ~~~bash
 javac AdapterDemo.java
 java AdapterDemo
 ~~~
 
-**Dòng dữ liệu thực tế của ví dụ:**
+**Actual Data Flow in the Example:**
 
 ~~~mermaid
 sequenceDiagram
@@ -2527,33 +2527,33 @@ sequenceDiagram
     A-->>C: PaymentReceipt(APPROVED, reference)
 ~~~
 
-`CheckoutService` chỉ phụ thuộc `PaymentGateway`. Nếu sau này chuyển sang SDK mới, lập trình viên chỉ cần cung cấp implementation khác cho `PaymentGateway` và thay cấu hình khởi tạo/dependency injection. Nghiệp vụ checkout không cần hiểu giao thức SDK cũ.
+`CheckoutService` depends only on `PaymentGateway`. If the application later switches SDKs, developers can supply another `PaymentGateway` implementation and change startup/dependency-injection configuration. Checkout business logic need not understand the legacy SDK protocol.
 
-### Tại sao `BigDecimal` và `longValueExact()`?
+### Why Use `BigDecimal` and `longValueExact()`?
 
-Thanh toán yêu cầu số tiền chính xác. Với `new BigDecimal("12.34")`:
+Payments require exact amounts. With `new BigDecimal("12.34")`:
 
 `12.34 USD × 100 = 1234 cents`
 
-Đoạn `movePointRight(2).longValueExact()` không tự làm tròn: `12.345` sẽ bị từ chối vì không biểu diễn nguyên cent. Đây là lựa chọn **hợp đồng dữ liệu**; nếu sản phẩm thực sự cần làm tròn, phải quy định chính xác mức làm tròn và nơi thực hiện, không tùy ý gọi `doubleValue()` rồi ép `long`.
+The expression `movePointRight(2).longValueExact()` does not round automatically: `12.345` is rejected because it cannot be represented as an integer number of cents. This is a **data-contract decision**; if rounding is actually required, its mode and location must be specified explicitly rather than arbitrarily calling `doubleValue()` and casting to `long`.
 
-## 4. Adapter thật sự chuyển đổi những gì?
+## 4. What Does an Adapter Actually Convert?
 
-| Khác biệt | Ở phía ứng dụng | Ở phía SDK cũ | Chuyển đổi tại adapter |
+| Difference | Application side | Legacy SDK side | Conversion in adapter |
 |---|---|---|---|
-| Chữ ký | `charge(PaymentRequest)` | `execute(String,long)` | Tách dữ liệu từ request rồi ủy quyền |
-| Đơn vị tiền | `BigDecimal` USD | `long` cents | Nhân 100 với phép chuyển chính xác |
-| Đầu ra | `PaymentReceipt` | `LegacyReply` | Tạo kiểu kết quả thuộc domain |
-| Kết quả | `APPROVED` / `DECLINED` | `"00"` / `"05"` | Ánh xạ mã đã thống nhất |
-| Chưa rõ kết quả | Lỗi miền tích hợp | `"91"` | Ném `GatewayUnavailableException` |
-| Phản hồi sai giao thức | Lỗi miền tích hợp | `null` / mã lạ | Ném `ProviderProtocolException` |
-| Phụ thuộc | `PaymentGateway` | `LegacyPaymentApi` | SDK chỉ xuất hiện ở composition root và adapter |
+| Signature | `charge(PaymentRequest)` | `execute(String,long)` | Extracts request data and delegates |
+| Monetary unit | `BigDecimal` USD | `long` cents | Multiplies by 100 with exact conversion |
+| Output | `PaymentReceipt` | `LegacyReply` | Creates a domain result type |
+| Outcome | `APPROVED` / `DECLINED` | `"00"` / `"05"` | Maps agreed-upon codes |
+| Unknown outcome | Integration-domain error | `"91"` | Throws `GatewayUnavailableException` |
+| Protocol-invalid response | Integration-domain error | `null` / unknown code | Throws `ProviderProtocolException` |
+| Dependency | `PaymentGateway` | `LegacyPaymentApi` | The SDK appears only in the composition root and adapter |
 
-Chú ý **`DECLINED` là một kết quả nghiệp vụ đã xác định**; sự cố mạng, timeout hay trạng thái không rõ không phải là “khách hàng bị từ chối”. Phân biệt hai trường hợp giúp tránh gửi thông báo sai hoặc thực hiện lại thanh toán bừa bãi.
+Remember that **`DECLINED` is a definitive business result**; a network failure, timeout, or unknown status does not mean “the customer was declined.” Distinguishing these cases prevents incorrect notifications or reckless payment retries.
 
-## 5. Kiểm thử ở đúng ranh giới tích hợp
+## 5. Test at the Correct Integration Boundary
 
-Để kiểm thử adapter không cần mạng thật, ví dụ trên đưa `LegacyPaymentApi` thành interface có thể thay bằng lambda. File `LegacyPaymentAdapterTest.java` dưới đây dùng JUnit Jupiter 5 (cần dependency JUnit Jupiter và cấu hình JUnit test runner trong Maven hoặc Gradle). Đặt test cùng package với demo; với cấu trúc một file Java mặc định ở trên, cả hai nằm trong default package để trình bày ngắn gọn.
+To test the adapter without a real network, the example exposes `LegacyPaymentApi` as an interface replaceable with a lambda. The `LegacyPaymentAdapterTest.java` file below uses JUnit Jupiter 5 (requiring the JUnit Jupiter dependency and JUnit test-runner configuration in Maven or Gradle). Put the test in the same package as the demo; both are shown in the default package for brevity in this single-file Java example.
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -2633,19 +2633,19 @@ class LegacyPaymentAdapterTest {
 }
 ~~~
 
-Những kiểm thử này xác minh **quy tắc chuyển đổi và ánh xạ**, không chứng minh SDK ngoài vận hành chính xác. Với tích hợp thật cần thêm contract test theo tài liệu API, sandbox integration test và kiểm thử tình huống hạ tầng: timeout trước/sau khi nhà cung cấp nhận yêu cầu, phản hồi trùng, webhook đến muộn, API thay đổi phiên bản.
+These tests verify **conversion and mapping rules**, not the correctness of the external SDK. Real integrations also need contract tests against API documentation, sandbox integration tests, and infrastructure scenarios: timeouts before/after the provider receives a request, duplicate responses, late webhooks, and API version changes.
 
-### Cách tránh thanh toán trùng khi lỗi mạng
+### Avoiding Duplicate Charges After Network Failures
 
-Nếu một lệnh `execute` timeout, ứng dụng có thể chưa biết tiền đã bị trừ hay chưa. Không nên tự động gọi lại chỉ vì adapter ném exception: việc retry có thể tạo giao dịch thứ hai.
+If an `execute` call times out, the application may not yet know whether funds were charged. Do not retry automatically merely because the adapter threw an exception: another attempt may create a second transaction.
 
-Giải pháp cần được thống nhất từ thiết kế hệ thống: dùng **idempotency key** khi provider hỗ trợ, lưu trạng thái giao dịch và khóa xử lý trùng, truy vấn trạng thái/reconcile với provider trước khi retry, đồng thời xử lý webhook idempotently. Trong ví dụ, `orderId` chỉ là `merchantRef`; **không có bảo đảm tự động chống trùng**, vì stub không triển khai cơ chế idempotency.
+The solution must be agreed at the system-design level: use **idempotency keys** when supported, persist transaction state and prevent duplicate processing, query/reconcile with the provider before retrying, and handle webhooks idempotently. In the example, `orderId` is merely the `merchantRef`; there is **no automatic duplicate-prevention guarantee** because the stub does not implement idempotency.
 
-## 6. Object Adapter và Class Adapter
+## 6. Object Adapter and Class Adapter
 
-Có hai hình thức Adapter thường được nhắc đến:
+Two common Adapter variants are:
 
-**Object Adapter (phổ biến trong Java):** Adapter *chứa* đối tượng Adaptee và gọi phương thức của nó. Đây là cách trong ví dụ:
+**Object Adapter (common in Java):** the Adapter *contains* an Adaptee object and calls its methods, as in the example:
 
 ~~~java
 final class LegacyPaymentAdapter implements PaymentGateway {
@@ -2654,11 +2654,11 @@ final class LegacyPaymentAdapter implements PaymentGateway {
 }
 ~~~
 
-Ưu điểm: ít phụ thuộc hệ phân cấp lớp, có thể bọc nhiều implementation cùng interface, dễ thay fake để kiểm thử, vẫn dùng được khi SDK dùng `final class` (miễn có cơ chế bọc hoặc một lớp wrapper thích hợp).
+Advantages: less dependency on class hierarchies, the ability to wrap multiple implementations of an interface, easier substitution of fakes in tests, and compatibility with an SDK using a `final class` (provided it can be wrapped directly or through an appropriate wrapper).
 
-**Class Adapter:** Adapter kế thừa lớp Adaptee đồng thời triển khai Target; Java có thể dùng `extends LegacyBaseSdk implements PaymentGateway` nếu lớp SDK cho phép kế thừa. Cách này khó áp dụng với `final`, gắn adapter chặt hơn vào chi tiết lớp cha và Java không hỗ trợ kế thừa nhiều lớp. Vì vậy **composition** thường là lựa chọn dễ bảo trì hơn.
+**Class Adapter:** an Adapter inherits from the Adaptee class while implementing Target. In Java, `extends LegacyBaseSdk implements PaymentGateway` is possible if the SDK class permits inheritance. This is hard to use with `final`, couples the adapter more tightly to superclass details, and Java does not support multiple class inheritance. Thus **composition** is generally easier to maintain.
 
-Ví dụ hình thức Class Adapter (chỉ phác họa, không cần ghép vào demo chạy độc lập):
+Example Class Adapter structure (a sketch that does not need to be added to the standalone demo):
 
 ~~~java
 class LegacyBaseSdk {
@@ -2674,23 +2674,23 @@ class InheritanceAdapter extends LegacyBaseSdk implements NewApi {
 }
 ~~~
 
-Dù chọn cách nào, điểm xác định mẫu Adapter vẫn là **biến giao diện cũ thành giao diện mới được client mong đợi**, không phải chỉ đơn giản “có một lớp bọc”.
+Whichever form is chosen, the defining feature of Adapter is **converting the old interface into the new one expected by the client**, rather than merely “having a wrapper class.”
 
-## 7. Adapter khác các mẫu thiết kế dễ nhầm thế nào?
+## 7. How Does Adapter Differ from Similar Patterns?
 
-| Mẫu | Mục đích chính | Tình huống nhận diện |
+| Pattern | Primary purpose | Recognition scenario |
 |---|---|---|
-| **Adapter** | Làm hai giao diện không tương thích làm việc được với nhau | Domain dùng `PaymentGateway`, SDK có `execute(ref,cents)` |
-| **Facade** | Cung cấp điểm truy cập đơn giản tới hệ thống con phức tạp | Một phương thức gom nhiều lời gọi thanh toán, kho, vận chuyển |
-| **Decorator** | Bổ sung hành vi, vẫn giữ nguyên giao diện đang bọc | Thêm logging/metrics/retry policy quanh một `PaymentGateway` |
-| **Proxy** | Đại diện và kiểm soát truy cập một đối tượng | Lazy initialization, phân quyền, remote access |
-| **Bridge** | Tách abstraction khỏi phần hiện thực để hai phía thay đổi độc lập | Nhiều kiểu thông báo và nhiều kênh gửi kết hợp linh hoạt |
+| **Adapter** | Enable incompatible interfaces to work together | Domain uses `PaymentGateway`, SDK exposes `execute(ref,cents)` |
+| **Facade** | Provide a simple entry point into a complex subsystem | One method combines several calls for payments, inventory, and shipping |
+| **Decorator** | Add behavior while retaining the wrapped interface | Add logging/metrics/retry policies around a `PaymentGateway` |
+| **Proxy** | Represent an object and control access to it | Lazy initialization, authorization, remote access |
+| **Bridge** | Separate an abstraction from its implementation so both can vary independently | Mix multiple notification types and delivery channels flexibly |
 
-Các mẫu có thể phối hợp: ví dụ `MetricsPaymentGateway` dạng Decorator bao quanh `LegacyPaymentAdapter`; bên ngoài vẫn là `PaymentGateway`. Không cần gán mọi lớp wrapper vào Adapter nếu mục tiêu thực tế chỉ là đo thời gian hay kiểm soát quyền truy cập.
+Patterns can be composed: for example, a Decorator such as `MetricsPaymentGateway` can wrap `LegacyPaymentAdapter`, with `PaymentGateway` still exposed externally. Not every wrapper should be called an Adapter if its actual purpose is timing operations or controlling access.
 
-## 8. Khi tích hợp nhiều SDK hoặc API phiên bản khác nhau
+## 8. Integrating Multiple SDKs or API Versions
 
-Giả sử thêm nhà cung cấp thứ hai có JSON HTTP thay vì SDK Java:
+Suppose a second provider uses HTTP JSON instead of a Java SDK:
 
 ~~~text
 CheckoutService
@@ -2705,7 +2705,7 @@ LegacyPaymentAdapter    HttpPaymentAdapter
  LegacyPaymentApi        HTTP/JSON API
 ~~~
 
-Mỗi adapter đóng gói một bộ ánh xạ riêng, nhưng đều phải bảo toàn hợp đồng `PaymentGateway`. Việc chọn adapter có thể đặt ở lớp cấu hình hoặc dependency injection, chẳng hạn Spring:
+Each adapter encapsulates its own mappings while preserving the `PaymentGateway` contract. Adapter selection can be configured or injected, for example with Spring:
 
 ~~~java
 // Phác họa wiring với Spring; cần có các bean tương ứng.
@@ -2720,57 +2720,57 @@ Mỗi adapter đóng gói một bộ ánh xạ riêng, nhưng đều phải bả
 // }
 ~~~
 
-Nếu hệ thống bắt đầu có hai cách diễn giải `DECLINED` khác nhau, hoặc một nhà cung cấp chỉ hỗ trợ “tạo yêu cầu và chờ callback”, hãy kiểm tra lại **hợp đồng chung**. Không nên giả vờ một API bất đồng bộ luôn cung cấp kết quả xác định tức thời. Khi cần, tách capability, chuyển kết quả thành `PENDING` theo hợp đồng mới và cập nhật client có chủ đích, hoặc thiết kế port chuyên biệt cho luồng bất đồng bộ.
+If the system encounters two different interpretations of `DECLINED`, or one provider only supports “submit a request and await a callback,” revisit the **shared contract**. Do not pretend an asynchronous API always yields an immediate definitive result. As appropriate, separate capabilities, introduce `PENDING` as part of a revised contract and deliberately update clients, or design a specialized port for the asynchronous workflow.
 
-Adapter thường là một phần của **Anti-Corruption Layer** trong DDD: giữ thuật ngữ, model, trạng thái và lỗi thuộc hệ thống ngoài tại biên tích hợp, tránh để chúng lan vào domain. Tuy nhiên Anti-Corruption Layer có thể bao gồm nhiều component hơn một adapter, như mapping, validation, translator và client/repository.
+An Adapter is often part of a DDD **Anti-Corruption Layer**: it keeps external terminology, models, states, and errors at the integration boundary rather than allowing them into the domain. An Anti-Corruption Layer can contain more than one adapter, however, including mapping, validation, translation, and client/repository components.
 
-## 9. Những lỗi thiết kế cần tránh
+## 9. Design Mistakes to Avoid
 
-1. **Trả trực tiếp `LegacyReply` ra domain.** Khi đó client vẫn biết mã `"00"`, `"05"`; Adapter chưa hoàn thành trách nhiệm che sự không tương thích.
-2. **Rải `if (provider == ...)` khắp nghiệp vụ.** Mỗi provider mới làm client phình to và dễ sai khác hành vi. Dùng một hợp đồng rõ ràng và các implementation thích hợp.
-3. **Ép kiểu tiền qua `double` hoặc làm tròn ngầm.** Ví dụ `(long)(12.345 * 100)` âm thầm làm mất phần thập phân. Phải công bố quy tắc tiền tệ trước.
-4. **Bắt mọi exception rồi trả `DECLINED`.** Lỗi hạ tầng và trạng thái chưa rõ có thể khiến hệ thống đối soát sai.
-5. **Gọi lại khi timeout mà chưa kiểm tra idempotency.** Với lệnh có tác dụng phụ, retry không kiểm soát có thể lặp thanh toán.
-6. **Tạo “adapter” chứa luôn nghiệp vụ đặt hàng, tính giá, lưu kho.** Chuyển đổi giao thức nên ở biên; quy tắc kinh doanh nên ở tầng phù hợp.
-7. **Bỏ qua bảo mật dữ liệu.** Không log số thẻ, token thanh toán hoặc thông tin bí mật; triển khai TLS, xác thực và quản lý secret theo yêu cầu API thật.
-8. **Coi sự tương thích chữ ký là đủ.** Nếu implementation thứ hai trả trạng thái, lỗi hoặc đảm bảo thời gian khác với interface, nó có thể phá những kỳ vọng hợp lệ của client.
+1. **Returning `LegacyReply` directly to the domain.** Clients then still know codes `"00"` and `"05"`; the Adapter has not hidden the incompatibility.
+2. **Scattering `if (provider == ...)` throughout business logic.** Each new provider bloats clients and increases inconsistent behavior. Use a clear contract with appropriate implementations.
+3. **Casting money through `double` or rounding implicitly.** For example, `(long)(12.345 * 100)` silently discards fractional digits. Declare monetary rules first.
+4. **Catching every exception and returning `DECLINED`.** Infrastructure failures and unknown statuses can cause incorrect reconciliation.
+5. **Retrying after a timeout without checking idempotency.** Uncontrolled retries of side-effectful commands can duplicate payments.
+6. **Creating an “adapter” that also handles orders, pricing, and inventory.** Protocol conversion belongs at the boundary; business rules belong in the appropriate layer.
+7. **Ignoring data security.** Do not log card numbers, payment tokens, or secrets; implement TLS, authentication, and secret management as required by the real API.
+8. **Assuming compatible signatures are enough.** If a second implementation returns different states, errors, or timing guarantees from the interface, it may violate legitimate client expectations.
 
-## 10. Checklist áp dụng Adapter trong dự án
+## 10. Checklist for Applying Adapter in a Project
 
-- [ ] Đã xác định **Target** là hợp đồng do ứng dụng kiểm soát, đủ rõ về đầu vào, đầu ra và lỗi.
-- [ ] Đã xác định đúng **Adaptee** (SDK/API cần tích hợp) và đọc quy ước chính thức của nó.
-- [ ] Có phép chuyển đổi đơn vị, kiểu dữ liệu và trạng thái rõ ràng, không mất thông tin quan trọng.
-- [ ] Các lỗi ngoại vi được ánh xạ sang lỗi hoặc trạng thái có ý nghĩa trong domain; không báo thành công giả.
-- [ ] Client phụ thuộc interface của ứng dụng; adapter giữ riêng chi tiết SDK.
-- [ ] Có unit test cho ánh xạ và giá trị biên, integration test ở sandbox cho contract bên ngoài.
-- [ ] Có chiến lược timeout, đối soát, retry và idempotency tương ứng với khả năng provider.
-- [ ] Khi thay provider, phần lớn thay đổi nằm ở adapter và cấu hình kết nối, không xâm nhập core business.
+- [ ] The **Target** is an application-controlled contract with explicit inputs, outputs, and errors.
+- [ ] The correct **Adaptee** (SDK/API to integrate) has been identified, and its official conventions reviewed.
+- [ ] Units, data types, and states have explicit conversions without losing important information.
+- [ ] External failures map to meaningful domain errors or states, without reporting false success.
+- [ ] Clients depend on the application interface; the adapter isolates SDK details.
+- [ ] Unit tests cover mappings and boundaries, and sandbox integration tests cover the external contract.
+- [ ] Timeouts, reconciliation, retries, and idempotency are handled according to provider capabilities.
+- [ ] Changing providers primarily affects adapters and connection configuration, without entering core business logic.
 
-### Bài tập tự luyện
+### Practice Exercise
 
-Viết `HttpPaymentAdapter implements PaymentGateway` cho một API giả lập nhận JSON `{"order":"ORDER-1","amountMinor":1234}` và trả `{"state":"accepted","reference":"REMOTE-1"}`. Ánh xạ `accepted → APPROVED`, `rejected → DECLINED`, `pending →` một tình huống chưa xác định theo **hợp đồng đã chọn**. Dùng fake HTTP client để kiểm thử JSON mapping, lỗi parse, timeout và transaction reference bị thiếu. Quan sát rằng `CheckoutService` vẫn không phải thay đổi.
+Implement `HttpPaymentAdapter implements PaymentGateway` for a simulated API accepting JSON `{"order":"ORDER-1","amountMinor":1234}` and returning `{"state":"accepted","reference":"REMOTE-1"}`. Map `accepted → APPROVED`, `rejected → DECLINED`, and `pending →` an unresolved outcome according to **the chosen contract**. Use a fake HTTP client to test JSON mapping, parsing errors, timeouts, and missing transaction references. Verify that `CheckoutService` still does not need to change.
 
-**Điểm cần nhớ:** Adapter không sửa “cách làm việc” của bên thứ ba; nó tạo một **ranh giới dịch thuật có hợp đồng**. Nghiệp vụ nói bằng thuật ngữ của ứng dụng, còn chi tiết nhà cung cấp nằm trong lớp tích hợp.
+**Key point:** Adapter does not change how third-party systems work; it creates a **contract-based translation boundary**. Business logic speaks the application's language, while provider details stay in the integration layer.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-006">Decorator và bổ sung hành vi</a>
+## <a id="design-patterns-006">Decorator and Adding Behavior</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Decorator và bổ sung hành vi trong Java
+# Decorator and Adding Behavior in Java
 
-> **Chủ đề:** OOP → Mẫu thiết kế → **Decorator Pattern**.  
-> **Mục tiêu:** hiểu cách mở rộng hành vi đối tượng bằng cách bọc (*wrap*) đối tượng khác cùng hợp đồng, phối hợp nhiều decorator, kiểm soát thứ tự thực thi và nhận biết tình huống không nên áp dụng.
+> **Topic:** OOP → Design Patterns → **Decorator Pattern**.  
+> **Objective:** Understand how to extend an object's behavior by *wrapping* another object with the same contract, compose several decorators, control execution order, and recognize cases where the pattern is inappropriate.
 
-## 1. Bài toán: thêm hành vi mà không sửa mọi implementation
+## 1. The Problem: Adding Behavior Without Modifying Every Implementation
 
-Giả sử ứng dụng có một thành phần gửi thông báo:
+Suppose an application has a notification-sending component:
 
 ~~~java
 interface MessageChannel {
@@ -2778,16 +2778,16 @@ interface MessageChannel {
 }
 ~~~
 
-Ban đầu, một **ConsoleChannel** ghi thông báo ra console để thử nghiệm. Sau đó xuất hiện yêu cầu:
+Initially, a **ConsoleChannel** prints notifications to the console for testing. Later, new requirements appear:
 
-- Thêm tiền tố **[APP]** vào nội dung trước khi gửi.
-- Chặn nội dung dài quá giới hạn.
-- Đếm số lời gọi xử lý thành công qua chuỗi gửi.
-- Sau này có thể có **EmailChannel**, **SmsChannel** hay adapter cho nhà cung cấp thứ ba.
+- Add an **[APP]** prefix to the content before sending.
+- Reject content exceeding a length limit.
+- Count calls that successfully complete the sending chain.
+- Later, introduce **EmailChannel**, **SmsChannel**, or third-party provider adapters.
 
-Một cách làm vội là bổ sung logic tiền tố, kiểm tra độ dài, đếm và ghi log vào mọi lớp gửi thông báo. Cách này lặp logic; mỗi thay đổi quy định chung lại kéo theo nhiều implementation. Cách khác là tạo các lớp con kiểu **LoggedEmailChannel**, **CheckedEmailChannel**, **CheckedLoggedEmailChannel**… Số tổ hợp kế thừa sẽ khó quản lý, đặc biệt khi hành vi phải bật/tắt linh hoạt.
+A hasty solution adds prefixing, length validation, counting, and logging logic to every notification class. This duplicates logic; each shared-rule change then affects multiple implementations. Another approach creates subclasses such as **LoggedEmailChannel**, **CheckedEmailChannel**, **CheckedLoggedEmailChannel**, and so on. The inheritance combinations become hard to maintain, especially when behaviors must be enabled or disabled flexibly.
 
-**Decorator** giải quyết tình huống này bằng **composition**: một đối tượng triển khai cùng interface với đối tượng được bọc, giữ tham chiếu đến đối tượng đó, rồi thêm hành vi trước hoặc sau khi ủy quyền lời gọi.
+**Decorator** addresses this through **composition**: an object implements the same interface as the wrapped object, holds a reference to it, and adds behavior before or after delegating the call.
 
 ~~~mermaid
 flowchart LR
@@ -2798,25 +2798,25 @@ flowchart LR
     Core --> Output["Đầu ra console"]
 ~~~
 
-Đường đi trong sơ đồ là thứ tự gọi **từ ngoài vào trong**. Khi lời gọi quay ra, các decorator bên ngoài có thể thực hiện thêm hành vi sau khi lớp bên trong hoàn tất.
+The diagram shows the call path **from outermost to innermost**. As calls return, outer decorators may perform further work after inner components finish.
 
-**Ý chính:** người gọi có thể sử dụng toàn bộ chuỗi qua cùng một interface **MessageChannel** mà không cần biết chính xác nó đang được bọc bởi bao nhiêu lớp.
+**Core idea:** callers can use the entire chain through the same **MessageChannel** interface without knowing how many wrappers it contains.
 
-## 2. Cấu trúc của Decorator
+## 2. Decorator Structure
 
-| Vai trò | Trong ví dụ thông báo | Trách nhiệm |
+| Role | In the notification example | Responsibility |
 | --- | --- | --- |
-| **Component** | **MessageChannel** | Định nghĩa hợp đồng chung mà client sử dụng |
-| **Concrete Component** | **ConsoleChannel** | Cung cấp hành vi gốc: nhận và xuất thông báo |
-| **Decorator** | **ChannelDecorator** | Giữ tham chiếu đến một **MessageChannel** khác và tiếp tục triển khai hợp đồng |
-| **Concrete Decorator** | **PrefixDecorator** | Biến đổi nội dung trước khi gửi |
-| **Concrete Decorator** | **LengthLimitDecorator** | Kiểm tra điều kiện trước khi chuyển tiếp |
-| **Concrete Decorator** | **CountingDecorator** | Theo dõi số lời gọi trở về thành công |
-| **Client** | **main** hoặc service nghiệp vụ | Lắp chuỗi wrapper và gọi giao diện chung |
+| **Component** | **MessageChannel** | Defines the shared contract used by clients |
+| **Concrete Component** | **ConsoleChannel** | Provides the original behavior: receiving and outputting notifications |
+| **Decorator** | **ChannelDecorator** | Holds a reference to another **MessageChannel** while implementing the same contract |
+| **Concrete Decorator** | **PrefixDecorator** | Transforms the content before sending |
+| **Concrete Decorator** | **LengthLimitDecorator** | Validates a constraint before forwarding |
+| **Concrete Decorator** | **CountingDecorator** | Tracks calls that return successfully |
+| **Client** | **main** or business service | Assembles wrapper chains and invokes the shared interface |
 
-Mỗi lớp bọc có quyền gọi delegate **trước**, **sau** hoặc **xung quanh** phần hành vi bổ sung. Nó cũng có thể từ chối chuyển tiếp khi một ràng buộc công khai bị vi phạm. Tuy nhiên, thay đổi tiền điều kiện/hậu điều kiện của hợp đồng cần được thiết kế và mô tả rõ; chỉ cần cùng interface về mặt cú pháp chưa đảm bảo mọi wrapper thay thế an toàn cho nhau.
+Each wrapper can invoke its delegate **before**, **after**, or **around** the added behavior. It may also refuse to forward a call when a documented constraint is violated. However, changes to contract preconditions/postconditions must be explicitly designed and described; matching an interface syntactically does not guarantee safe substitutability among wrappers.
 
-### Sơ đồ lớp
+### Class Diagram
 
 ~~~mermaid
 classDiagram
@@ -2852,11 +2852,11 @@ classDiagram
     ChannelDecorator <|-- CountingDecorator
 ~~~
 
-Không cần bắt buộc có lớp **ChannelDecorator** trung gian nếu chỉ có một wrapper nhỏ; mỗi decorator hoàn toàn có thể trực tiếp implements **MessageChannel** và nhận một **MessageChannel** trong constructor. Lớp trừu tượng trung gian chỉ có ích khi thực sự giảm lặp, chẳng hạn cùng logic kiểm tra delegate khác null.
+An intermediate **ChannelDecorator** base class is optional for a single small wrapper; each decorator may directly implement **MessageChannel** and accept a **MessageChannel** in its constructor. The intermediate abstract class helps only when it reduces genuine duplication, such as shared non-null delegate validation.
 
-## 3. Ví dụ Java 17 chạy độc lập
+## 3. Standalone Java 17 Example
 
-Tạo file **DecoratorDemo.java**. Ví dụ dùng **record Message** để thông điệp có giá trị bất biến, **AtomicInteger** để đếm lời gọi qua một wrapper, và **String.codePointCount** để giới hạn theo Unicode code point thay vì chỉ theo số đơn vị UTF-16 của **String.length()**.
+Create **DecoratorDemo.java**. The example uses a **Message record** for immutable message values, **AtomicInteger** to count calls through a wrapper, and **String.codePointCount** to enforce a Unicode code-point limit rather than simply counting UTF-16 code units using **String.length()**.
 
 ~~~java
 import java.util.Objects;
@@ -2993,36 +2993,36 @@ public class DecoratorDemo {
 }
 ~~~
 
-Chạy trong terminal với JDK 17 trở lên:
+Run in a terminal with JDK 17 or later:
 
 ~~~bash
 javac DecoratorDemo.java
 java DecoratorDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 SEND user-01: [APP] Hóa đơn đã phát hành
 Số lần xử lý không ném lỗi: 1
 ~~~
 
-Trong ví dụ này, **ConsoleChannel** chỉ mô phỏng gửi thông báo bằng cách in ra màn hình. Một lời gọi trả về bình thường **không tương đương** bảo đảm người nhận thực sự nhận được email/SMS. Vì vậy, bộ đếm được đặt tên **acceptedCalls**, không phải **deliveredMessages**. Khi tích hợp hệ thống thật, cần định nghĩa trạng thái đã tiếp nhận, đã gửi tới nhà cung cấp và đã giao thành công theo hợp đồng của nhà cung cấp.
+In this example, **ConsoleChannel** only simulates sending by printing to the console. A normal return **does not guarantee** that a recipient actually received an email/SMS. Therefore the counter is called **acceptedCalls**, not **deliveredMessages**. In a real integration, define accepted, submitted-to-provider, and successfully delivered states according to the provider's contract.
 
-**Diễn biến lời gọi:**
+**Call sequence:**
 
-1. Client gọi **CountingDecorator.send(message)**.
-2. **CountingDecorator** chuyển lời gọi vào **PrefixDecorator**.
-3. **PrefixDecorator** tạo một **Message** mới có tiền tố và gửi tiếp.
-4. **LengthLimitDecorator** đo độ dài của nội dung **sau khi thêm tiền tố**; vượt giới hạn thì ném **IllegalArgumentException** và không gọi thành phần gốc.
-5. **ConsoleChannel** in thông điệp.
-6. Nếu chuỗi trở về bình thường, **CountingDecorator** tăng bộ đếm; nếu lớp trong ném exception, bộ đếm không tăng.
+1. The client invokes **CountingDecorator.send(message)**.
+2. **CountingDecorator** forwards the call to **PrefixDecorator**.
+3. **PrefixDecorator** creates a new **Message** with the prefix and forwards it.
+4. **LengthLimitDecorator** measures the content length **after the prefix is added**; if it exceeds the limit, it throws **IllegalArgumentException** without invoking the underlying component.
+5. **ConsoleChannel** prints the message.
+6. If the chain returns normally, **CountingDecorator** increments its counter; if an inner layer throws, the counter remains unchanged.
 
-**Tính mở rộng:** muốn đổi cách gửi, thay **ConsoleChannel** bằng implementation **MessageChannel** khác mà vẫn có thể tái sử dụng các wrapper. Các wrapper không cần biết chi tiết thư viện HTTP, SMTP hay thiết bị đích.
+**Extensibility:** replace **ConsoleChannel** with another **MessageChannel** implementation while reusing the wrappers. Wrappers need not understand HTTP/SMTP libraries or destination devices.
 
-## 4. Thứ tự bọc quyết định hành vi
+## 4. Wrapping Order Determines Behavior
 
-Một trong những yếu tố dễ gây lỗi nhất của Decorator là **thứ tự**. Xét hai cách lắp:
+One of the most error-prone aspects of Decorator is **ordering**. Consider two assemblies:
 
 ~~~java
 // A: thêm tiền tố trước, sau đó kiểm tra nội dung cuối cùng.
@@ -3040,28 +3040,28 @@ MessageChannel pipelineB =
                 12);
 ~~~
 
-Với nội dung gồm **10** ký tự ASCII, tiền tố **[A]** kèm dấu cách dài **4** code points:
+With a body containing **10** ASCII characters, the **[A]** prefix plus a space takes **4** code points:
 
-- **pipelineA:** kiểm tra 14 code points, **từ chối** vì vượt 12.
-- **pipelineB:** kiểm tra 10 code points, **chấp nhận**; thành phần gốc nhận văn bản dài 14.
+- **pipelineA:** checks 14 code points and **rejects** the message because the limit is 12.
+- **pipelineB:** checks 10 code points and **accepts** the message; the underlying component receives 14 characters.
 
-Cả hai chuỗi đều đúng cú pháp Java, nhưng chỉ **pipelineA** bảo đảm thông điệp đầu ra không vượt 12 code points. Nếu dịch vụ ngoài giới hạn **số byte UTF-8**, số code point cũng **chưa đủ**: phải đo byte sau khi encode theo charset yêu cầu. Thực tế cần quy định rõ giới hạn đang nói tới byte, code point, UTF-16 code unit hay ký tự hiển thị.
+Both chains are valid Java, but only **pipelineA** ensures that the final output does not exceed 12 code points. If the external service limits **UTF-8 bytes**, counting code points is **still insufficient**: measure the encoded bytes with the required charset. Real systems must specify whether limits concern bytes, code points, UTF-16 code units, or displayed characters.
 
-Thứ tự quan trọng tương tự với nén/mã hóa, cache/phân quyền, retry/logging:
+Ordering matters similarly for compression/encryption, caching/authorization, and retries/logging:
 
-| Chuỗi bọc | Tác động có thể xảy ra | Cần quyết định |
+| Wrapping chain | Possible effect | Decision required |
 | --- | --- | --- |
-| Tiền tố → kiểm tra độ dài | Kiểm tra văn bản hoàn chỉnh | Giới hạn đo trước hay sau biến đổi? |
-| Cache → phân quyền | Nếu cache phục vụ trước bước phân quyền, có thể làm lộ dữ liệu | Phải xác thực/phân quyền đúng cho mỗi request và tách cache theo ngữ cảnh phù hợp |
-| Logging → retry | Wrapper log ngoài có thể chỉ thấy một lần gọi tổng thể | Muốn log một request hay từng lần thử? |
-| Retry → logging | Wrapper logging bên trong có thể chạy mỗi lần thử | Có được phép gọi lại thao tác và trùng side effect không? |
-| Nén → mã hóa | Thường nén dữ liệu trước khi mã hóa | Bên nhận phải giải mã rồi giải nén cùng định dạng |
+| Prefix → length validation | Checks the fully transformed text | Is the limit measured before or after transformation? |
+| Cache → authorization | A cache serving data before authorization can leak information | Authenticate/authorize each request correctly, and partition caches by suitable context |
+| Logging → retry | An outer logging wrapper may see only one overall call | Log one request or every attempt? |
+| Retry → logging | The inner logging wrapper may run on every attempt | Is retrying the operation allowed without duplicate side effects? |
+| Compression → encryption | Usually compresses before encrypting | The receiver must decrypt and then decompress using matching formats |
 
-Bảng mô tả ảnh hưởng về mặt cấu trúc. Với hệ thống thật, tính an toàn còn tùy contract, dữ liệu, cơ chế lưu trữ, lỗi và chính sách bảo mật của từng decorator. **Không thêm retry cho thao tác có side effect chỉ bằng việc bọc một lớp**; lệnh gửi tin, thanh toán hoặc ghi dữ liệu cần idempotency key hoặc cơ chế chống lặp phù hợp. Timeout có thể xảy ra sau khi bên nhận đã xử lý yêu cầu.
+The table illustrates structural consequences. In production, safety also depends on the contract, data, persistence, failures, and security policy of each decorator. **Do not add retries to side-effectful operations merely by wrapping them in another class**; sending messages, charging payments, and writing data require idempotency keys or appropriate duplicate-prevention mechanisms. A timeout may occur after the recipient has already processed the request.
 
-## 5. Kiểm thử từng decorator và cả chuỗi
+## 5. Testing Individual Decorators and Their Chain
 
-Một lợi thế của thiết kế theo interface là dễ thay thành phần gốc bằng một **fake** nhỏ để quan sát hành vi. Ví dụ JUnit 5 dưới đây đặt trong **DecoratorDemoTest.java**, cùng package với mã nguồn mẫu.
+One advantage of interface-based design is the ability to replace the underlying component with a small **fake** that records behavior. The JUnit 5 example below goes in **DecoratorDemoTest.java**, in the same package as the sample source.
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -3129,29 +3129,29 @@ class DecoratorDemoTest {
 }
 ~~~
 
-Các test trên không cần mạng hay máy chủ SMTP/SMS. Chúng kiểm tra chính xác điều wrapper hứa thực hiện: chuyển tiếp, biến đổi, ngăn chuyển tiếp và điều kiện tăng bộ đếm. JUnit Jupiter cần có trong classpath của dự án để chạy file test; **DecoratorDemo.java** độc lập không yêu cầu JUnit.
+These tests need no network or SMTP/SMS server. They verify exactly what each wrapper promises: forwarding, transformation, blocking delegation, and the condition for incrementing the counter. JUnit Jupiter must be on the project's classpath to run the test file; standalone **DecoratorDemo.java** does not require JUnit.
 
-Nên bổ sung test tích hợp khi kết nối provider thật để kiểm tra encoding, giới hạn payload, policy retry và ánh xạ trạng thái giao hàng. Kiểm thử fake không thể chứng minh nhà cung cấp thật luôn hành xử theo giả định của fake.
+Add integration tests when connecting to a real provider to check encoding, payload limits, retry policies, and delivery-state mapping. Fake-based tests cannot prove that the real provider always behaves according to the fake's assumptions.
 
-## 6. Decorator khác gì các cách mở rộng quen thuộc?
+## 6. How Does Decorator Differ from Other Extension Techniques?
 
-| Kỹ thuật | Cách hoạt động | Nên cân nhắc khi |
+| Technique | How it works | When to consider it |
 | --- | --- | --- |
-| **Decorator** | Một đối tượng **cùng interface** bọc đối tượng khác và thêm hành vi có thể ghép lớp | Bổ sung logging, metrics, validation, buffering, compression, transformation... cho từng instance |
-| **Kế thừa** | Subclass thay đổi/mở rộng hành vi của base class | Quan hệ subtype thực sự ổn định, ít tổ hợp độc lập |
-| **Proxy** | Cũng có thể cùng interface và ủy quyền, nhưng trọng tâm là **kiểm soát truy cập** tới đối tượng khác (lazy loading, remote access, access control...) | Client cần đối tượng đại diện/kiểm soát truy cập |
-| **Adapter** | Chuyển đổi **hợp đồng/interface** không tương thích sang hợp đồng client mong đợi | Tích hợp thư viện, API cũ hoặc provider có giao diện khác |
-| **Strategy** | Đóng gói các thuật toán **thay thế** và chọn thuật toán phù hợp | Có nhiều cách thực hiện cùng một nhiệm vụ |
-| **Chain of Responsibility** | Chuyển request qua chuỗi handler, thường mỗi handler chọn xử lý hoặc tiếp tục | Có nhiều bước xử lý với điều kiện dừng/chuyển tiếp riêng |
-| **AOP** | Khai báo cross-cutting advice tại các join point được framework hỗ trợ | Muốn áp quy tắc chung trên nhiều bean/method mà không bọc bằng tay |
+| **Decorator** | An object with the **same interface** wraps another object and adds composable behavior | Add logging, metrics, validation, buffering, compression, transformation, etc. per instance |
+| **Inheritance** | A subclass changes/extends the behavior of a base class | A genuine subtype relationship is stable and has few independent combinations |
+| **Proxy** | May share the interface and delegate, but primarily **controls access** to another object (lazy loading, remote access, access control, etc.) | Clients need a representative object or controlled access |
+| **Adapter** | Converts an incompatible **contract/interface** into the contract expected by clients | Integrate a library, legacy API, or provider with another interface |
+| **Strategy** | Encapsulates **alternative** algorithms and selects an appropriate one | Several ways exist to perform the same task |
+| **Chain of Responsibility** | Passes requests along handlers, each typically choosing to handle or forward | Several processing steps have their own stop/forward conditions |
+| **AOP** | Declares cross-cutting advice at framework-supported join points | Apply shared policies to many beans/methods without manually wrapping them |
 
-**Proxy và Decorator có cấu trúc giống nhau**, nên phải xem ý định thiết kế và trách nhiệm thực tế chứ không phân loại chỉ bằng sơ đồ. **Strategy** chọn *một cách thực hiện*; Decorator thêm các *lớp hành vi* xung quanh cách thực hiện được chọn. Hai mẫu có thể kết hợp.
+**Proxy and Decorator have similar structures**, so classify them by design intent and actual responsibility rather than diagrams alone. **Strategy** selects *one implementation approach*; Decorator adds *behavioral layers* around the selected implementation. They can be combined.
 
-Trong Spring, **@Transactional**, một số interceptor và proxy là cơ chế giải quyết các vấn đề cắt ngang, nhưng không đồng nghĩa mọi use case Decorator phải chuyển sang AOP. Với wrapper cần tùy biến theo từng instance hoặc có thứ tự rõ ở nơi lắp ráp, Decorator thuần Java dễ đọc và test hơn. Ngược lại, áp một policy thống nhất cho hàng trăm endpoint có thể phù hợp với filter/interceptor/AOP, tùy điểm chặn. Spring proxy AOP cũng có chi tiết cần lưu ý, chẳng hạn lời gọi nội bộ từ một phương thức tới phương thức khác của cùng object thường không đi qua proxy khi dùng proxy-based interception.
+In Spring, **@Transactional**, some interceptors, and proxies provide mechanisms for cross-cutting concerns, but that does not mean every Decorator use case should move to AOP. For per-instance customization or explicit assembly order, plain Java Decorators are easier to read and test. Conversely, a policy applied uniformly across hundreds of endpoints may fit filters/interceptors/AOP, depending on interception points. Spring proxy-based AOP also has subtleties: for example, internal calls from one method to another on the same object generally bypass the proxy.
 
-## 7. Ví dụ Decorator quen thuộc trong JDK
+## 7. Familiar Decorator Examples in the JDK
 
-Một ví dụ rõ ràng là **java.io.InputStream**:
+A clear example is **java.io.InputStream**:
 
 ~~~java
 import java.io.BufferedInputStream;
@@ -3169,28 +3169,28 @@ class InputExample {
 }
 ~~~
 
-**FileInputStream** đọc byte từ file; **BufferedInputStream** bọc một **InputStream** để bổ sung buffering trong quá trình đọc. Client tiếp tục gọi **read()** qua hợp đồng **InputStream**. Khi **try-with-resources** đóng wrapper, wrapper này thực hiện việc đóng luồng bên trong theo hợp đồng của nó.
+**FileInputStream** reads bytes from a file; **BufferedInputStream** wraps an **InputStream** to add buffering during reads. Clients continue invoking **read()** through the **InputStream** contract. When **try-with-resources** closes the wrapper, that wrapper closes the inner stream according to its contract.
 
-Từ ví dụ này cần rút ra hai điểm: (1) client không cần sửa chỉ vì một lớp bọc được thêm vào; (2) wrapper có thể quản lý tài nguyên/lifecycle, nên cần hiểu rõ trách nhiệm đóng, flush và thứ tự kết hợp thay vì coi các decorator hoàn toàn độc lập.
+Two lessons follow: (1) clients need no changes when a wrapper is added; (2) wrappers can manage resources/lifecycles, so understand closing, flushing, and composition order instead of assuming decorators are entirely independent.
 
-Một ví dụ liên quan là **Collections.unmodifiableList(list)** tạo view không cho sửa qua view đó, nhưng **không tạo bản sao**: thay đổi trên list gốc vẫn có thể phản ánh qua view. Nếu muốn snapshot không sửa qua reference gốc, hãy cân nhắc **List.copyOf(list)** cùng với tính bất biến của các phần tử. Đây là ví dụ điển hình cho việc wrapper bổ sung/giới hạn hành vi mà không nhất thiết copy dữ liệu.
+A related example is **Collections.unmodifiableList(list)**, which creates a view that cannot be modified through that view, but **does not create a copy**: changes to the original list may still appear in the view. For an independent snapshot, consider **List.copyOf(list)** and the immutability of its elements. This illustrates a wrapper that extends/restricts behavior without necessarily copying data.
 
-## 8. Thiết kế Decorator an toàn khi đưa vào dự án
+## 8. Designing Safe Decorators for Production
 
-### 8.1. Giữ đúng hợp đồng Component
+### 8.1. Preserve the Component Contract
 
-Wrapper cần giữ ý nghĩa của **send**, quy tắc xử lý lỗi và các bất biến mà client trông đợi. Chẳng hạn:
+A wrapper must preserve the meaning of **send**, error-handling rules, and invariants expected by clients. For example:
 
-- Một decorator không nên tự ý bỏ thông điệp rồi báo đã gửi nếu hợp đồng hứa thông báo sẽ được chuyển tới delegate hoặc trả lỗi rõ ràng.
-- Khi thêm giới hạn nội dung, hãy định nghĩa đó là một phần chính sách công khai của pipeline; client cần biết tình huống nào phát sinh validation error.
-- Nếu có kết quả bất đồng bộ (**CompletableFuture**), đừng chỉ đo/đếm ngay khi nhận được future; phải xác định muốn đo việc xếp lịch, việc future hoàn tất thành công hay việc provider xác nhận đã giao.
-- Nếu wrapper thêm tài nguyên cần đóng, nên biểu diễn lifecycle rõ ràng (chẳng hạn **AutoCloseable**) và tránh double-close, rò rỉ tài nguyên.
+- A decorator should not silently drop a message while reporting success if the contract promises delegation or an explicit error.
+- When adding content limits, define them as part of the pipeline's public policy; clients should know when validation errors occur.
+- For asynchronous results (**CompletableFuture**), do not immediately measure/count a future's creation; decide whether to measure scheduling, successful future completion, or provider-confirmed delivery.
+- If a wrapper owns resources that must be closed, make the lifecycle explicit (for example, **AutoCloseable**) and avoid double closing or leaks.
 
-### 8.2. Quyết định trách nhiệm khi gặp exception
+### 8.2. Decide How to Handle Exceptions
 
-Decorator chạy **trước** và **sau** delegate nên thời điểm phát sinh exception rất quan trọng. Trong **CountingDecorator** ở trên, bộ đếm tăng sau khi delegate trả về bình thường; nó không nói lên kết quả giao hàng ngoài đời.
+Decorators execute **before** and **after** delegates, so exception timing matters. In the **CountingDecorator** above, the counter increases after a normal return; it does not report real-world delivery.
 
-Với đo thời gian, **finally** thường phù hợp nếu muốn đo cả request thất bại:
+For timing, **finally** is often appropriate if failed requests should also be measured:
 
 ~~~java
 @Override
@@ -3205,35 +3205,35 @@ public void send(Message message) {
 }
 ~~~
 
-Đoạn trên chỉ minh họa **phần thân của một decorator đo thời gian**; để biên dịch độc lập cần khai báo lớp có **next**, hợp đồng **send** và phương thức **recordDuration**. Không dùng **finally** để ngầm biến thất bại thành thành công; exception vẫn cần được truyền hoặc chuyển đổi theo hợp đồng đã định nghĩa. Cũng cần hạn chế exception từ việc ghi metric làm che khuất exception chính.
+The snippet only illustrates **the body of a timing decorator**; standalone compilation also requires a class declaring **next**, the **send** contract, and **recordDuration**. Do not use **finally** to silently turn failure into success; exceptions must still propagate or be converted according to the defined contract. Also prevent metric-recording exceptions from masking primary failures.
 
-### 8.3. Cân nhắc trạng thái, đồng thời và phạm vi sử dụng
+### 8.3. Consider State, Concurrency, and Scope
 
-**PrefixDecorator** và **LengthLimitDecorator** trong ví dụ giữ cấu hình **final** và không tự thay đổi trạng thái. **CountingDecorator** dùng **AtomicInteger** nên riêng phép tăng và đọc bộ đếm được bảo vệ trước cập nhật đồng thời; điều đó **không khiến cả chuỗi thread-safe**. Tính an toàn còn phụ thuộc vào **next**, dữ liệu truyền qua, cách dùng tài nguyên ngoài và có hay không mutation khác.
+In the example, **PrefixDecorator** and **LengthLimitDecorator** hold **final** configuration and do not mutate their state. **CountingDecorator** uses **AtomicInteger**, so incrementing and reading the counter are individually safe under concurrent updates; that **does not make the entire chain thread-safe**. Safety also depends on **next**, the data passed through, external resources, and any other mutation.
 
-Nếu cache theo người dùng, bảo đảm key chứa đủ ngữ cảnh phân quyền và thời hạn phù hợp. Nếu logging, không ghi nội dung chứa thông tin cá nhân, token hoặc dữ liệu nhạy cảm theo mặc định. Nếu retry, yêu cầu khả năng chống thực hiện trùng. Nếu giới hạn tốc độ, phân biệt rate-limit theo instance, người dùng, tenant hay toàn hệ thống.
+When caching by user, ensure keys contain sufficient authorization context and suitable expiration. When logging, do not log personal information, tokens, or sensitive data by default. When retrying, require duplicate-execution protection. When rate-limiting, distinguish per-instance, per-user, per-tenant, and system-wide limits.
 
-### 8.4. Đừng để lắp ráp trở thành mê cung
+### 8.4. Avoid Turning Assembly into a Maze
 
-Một chuỗi quá dài, nhiều thứ tự cấu hình ngầm hoặc wrapper có tác dụng phụ không hiển nhiên có thể khó debug hơn giải pháp ban đầu. Nên:
+A very long chain, implicit configuration ordering, or wrappers with non-obvious side effects can be harder to debug than the original solution. Instead:
 
-1. Đặt tên từng decorator theo **hành vi cụ thể**, như **LengthLimitDecorator**, không đặt tên mơ hồ kiểu **EnhancedChannel**.
-2. Tập trung lắp ráp ở **composition root** hoặc một factory có tên rõ, đặc biệt khi chain được sử dụng chung.
-3. Ghi nhận thứ tự từ ngoài vào trong cùng lý do; viết test integration cho những tương tác có rủi ro.
-4. Tránh wrapper vừa logging, vừa cache, vừa retry, vừa đổi nội dung nếu các trách nhiệm biến thiên độc lập.
-5. Khi một hành vi dùng ở mọi nơi và không có biến thể, cân nhắc đưa vào service chung, interceptor hoặc chính implementation thay vì tạo quá nhiều lớp bọc.
+1. Name each decorator by its **specific behavior**, such as **LengthLimitDecorator**, rather than a vague name like **EnhancedChannel**.
+2. Centralize assembly in the **composition root** or a clearly named factory, especially for shared chains.
+3. Document outer-to-inner order and the reasons for it; write integration tests for risky interactions.
+4. Avoid a single wrapper that logs, caches, retries, and transforms content when those responsibilities vary independently.
+5. When behavior applies everywhere without variation, consider a shared service, interceptor, or the implementation itself instead of excessive wrappers.
 
-## 9. Khi nào nên và không nên chọn Decorator?
+## 9. When Should You Choose Decorator, and When Should You Avoid It?
 
-**Cân nhắc Decorator khi** cần bật/tắt hoặc ghép các hành vi quanh từng đối tượng, nhiều implementation phải chia sẻ logic bổ sung, sửa implementation gốc không khả thi hoặc không phù hợp, và cùng một hợp đồng có thể biểu diễn pipeline.
+**Consider Decorator when** behaviors must be enabled, disabled, or composed around individual objects, multiple implementations share extra logic, changing the original implementation is impossible or undesirable, and one contract can represent the pipeline.
 
-**Tránh dùng máy móc khi** chỉ cần một phép gọi đơn giản, một helper function là đủ, không có nhu cầu kết hợp hành vi, hoặc nhiều wrapper làm hợp đồng khó hiểu. Một quy tắc bắt buộc đối với mọi đối tượng có thể cần đặt ở ranh giới domain thay vì cho phép client vô tình quên bọc. Không dùng Decorator chỉ để né việc refactor một lớp đang có trách nhiệm lẫn lộn.
+**Avoid applying it mechanically when** a simple call or helper function is enough, behavior never needs composition, or multiple wrappers obscure the contract. A rule mandatory for all objects may belong at the domain boundary rather than depending on clients to remember a wrapper. Do not use Decorator merely to avoid refactoring a class with tangled responsibilities.
 
-Khả năng thay đổi động của Decorator mang lại lợi ích nhưng cũng cần cân đối với **KISS** (*Keep It Simple*) và nguyên tắc **composition over inheritance**: composition giúp linh hoạt, chứ không miễn trừ chi phí kiểm soát độ phức tạp.
+Decorator's dynamic flexibility is useful, but must be balanced against **KISS** (*Keep It Simple*) and **composition over inheritance**: composition improves flexibility but does not eliminate the cost of controlling complexity.
 
-## 10. Bài tập thực hành
+## 10. Practical Exercise
 
-Xây dựng hệ thống đọc tài liệu với hợp đồng:
+Build a document-reading system with this contract:
 
 ~~~java
 interface DocumentReader {
@@ -3241,70 +3241,70 @@ interface DocumentReader {
 }
 ~~~
 
-Có một **InMemoryDocumentReader** đọc từ **Map<String, String>**. Hãy viết ba decorator độc lập:
+An **InMemoryDocumentReader** reads from a **Map<String, String>**. Implement three independent decorators:
 
-- **TrimmingReader** xóa khoảng trắng đầu/cuối của nội dung trả về.
-- **CachingReader** lưu nội dung theo document ID sau lần đọc đầu tiên. Xác định rõ TTL/invalidation nếu dữ liệu có thể thay đổi; với bài tập, giả định dữ liệu gốc bất biến.
-- **CountingReader** đếm số lần gọi **read()** tới wrapper. Nêu rõ đếm request hay đếm lần truy cập vào nguồn thật.
+- **TrimmingReader** removes leading/trailing whitespace from returned content.
+- **CachingReader** caches content by document ID after the first read. Define TTL/invalidation if the data can change; for the exercise, assume the source data is immutable.
+- **CountingReader** counts calls to **read()** on the wrapper. Clarify whether this counts requests or accesses to the actual source.
 
-Lắp hai pipeline:
+Assemble two pipelines:
 
 ~~~text
 Counting → Caching → Trimming → InMemory
 Counting → Trimming → Caching → InMemory
 ~~~
 
-Gọi cùng document ID hai lần và so sánh: nguồn gốc được gọi mấy lần; nội dung nào được cache; nếu thay đổi quy tắc trimming thì vị trí cache làm thay đổi hành vi hay không? Tạo fake reader để kiểm thử thay vì phụ thuộc file hoặc mạng.
+Read the same document ID twice and compare: how often was the source called, what content was cached, and does moving the cache change behavior if trimming rules change? Use a fake reader for testing rather than depending on files or networks.
 
-**Tiêu chí đạt:**
+**Success criteria:**
 
-- Các decorator đều triển khai cùng interface **DocumentReader**.
-- Không sửa **InMemoryDocumentReader** khi bổ sung trim/cache/count.
-- Mỗi wrapper có một trách nhiệm được đặt tên rõ ràng; thứ tự pipeline có chủ đích.
-- Test chứng minh kết quả cuối, số lần delegate được gọi và hành vi khi nguồn ném exception.
-- Không dùng cache chia sẻ dữ liệu nhạy cảm xuyên người dùng khi key hoặc chính sách truy cập không phân biệt người sử dụng.
+- All decorators implement the same **DocumentReader** interface.
+- Adding trim/cache/count does not modify **InMemoryDocumentReader**.
+- Each wrapper has one clearly named responsibility; pipeline order is intentional.
+- Tests verify final results, delegate call counts, and behavior when the source throws an exception.
+- Do not share cached sensitive data between users when keys or access policies do not distinguish users.
 
-**Ghi nhớ:** Decorator mở rộng hành vi **bằng cách bọc đối tượng cùng hợp đồng**. Giá trị thực tế là có thể phối hợp các hành vi mà không cần tạo hàng loạt lớp con hoặc sửa mã lõi; thách thức thực tế là giữ đúng hợp đồng, quản lý thứ tự và làm rõ lỗi/trạng thái ở từng lớp bọc.
+**Remember:** Decorator extends behavior **by wrapping another object with the same contract**. Its practical value is composing behaviors without proliferating subclasses or changing core code; its practical challenges are preserving the contract, managing order, and clarifying errors/state at each wrapper layer.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-007">Facade và đơn giản hóa cách sử dụng</a>
+## <a id="design-patterns-007">Facade and Simplifying Usage</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Facade Pattern: đơn giản hóa cách sử dụng một hệ thống nhiều thành phần
+# Facade Pattern: Simplifying Access to a Multi-Component System
 
-> **Chủ đề:** Facade và đơn giản hóa cách sử dụng (Design Patterns – OOP).  
-> **Mục tiêu:** Nhận ra khi client đang phụ thuộc quá nhiều lớp con, thiết kế một điểm vào cấp cao gọn và có chủ đích, cài đặt Facade bằng Java, kiểm thử hợp đồng của nó và hiểu rõ những đánh đổi về coupling, ranh giới và xử lý lỗi.
+> **Topic:** Facade and simplifying usage (Design Patterns – OOP).  
+> **Objective:** Recognize when clients depend on too many subsystem classes, design a concise, intentional high-level entry point, implement Facade in Java, test its contract, and understand trade-offs involving coupling, boundaries, and error handling.
 
-## 1. Vấn đề Facade giải quyết
+## 1. The Problem Facade Solves
 
-Trong một ứng dụng thực tế, một thao tác người dùng thường đòi hỏi phối hợp nhiều dịch vụ hoặc thư viện con. Ví dụ, để **báo giá một giỏ hàng**, mã ở controller có thể phải:
+In a real application, a user operation often requires coordinating several services or subsystem libraries. For example, to **quote a shopping cart**, controller code may need to:
 
-1. Tìm thông tin sản phẩm.
-2. Kiểm tra tồn kho.
-3. Tính tiền hàng.
-4. Áp dụng chiết khấu dành cho thành viên.
-5. Tính phí giao hàng.
-6. Ghép kết quả thành báo giá.
+1. Look up product information.
+2. Check inventory.
+3. Calculate merchandise prices.
+4. Apply member discounts.
+5. Calculate shipping charges.
+6. Assemble the resulting quote.
 
-Nếu controller, tác vụ batch và API đối tác đều tự thực hiện chuỗi trên, mỗi client phải biết chi tiết về nhiều lớp, thứ tự gọi, quy tắc lỗi và cách tạo kết quả. Một thay đổi nhỏ về thứ tự áp dụng phí có thể buộc nhiều client sửa theo.
+If controllers, batch jobs, and partner APIs each perform this sequence themselves, every client must know several classes, call order, error rules, and result construction. Even a small change in the order in which fees are applied may force multiple clients to change.
 
-**Facade** là mẫu thiết kế cấu trúc (*structural pattern*) cung cấp **một giao diện cấp cao thống nhất, thuận tiện hơn** cho một hệ thống con vốn có nhiều giao diện riêng.
+**Facade** is a *structural pattern* that provides **a unified, more convenient high-level interface** to a subsystem that otherwise exposes many separate interfaces.
 
-- **Ý định:** đơn giản hóa cách sử dụng một khả năng cụ thể của subsystem.
-- **Vai trò:** client gọi Facade; Facade phối hợp các subsystem để hoàn tất thao tác cấp cao.
-- **Lợi ích:** giảm số dependency mà client phải biết và gom quy trình sử dụng chung về một chỗ.
-- **Giới hạn:** Facade không làm các lớp con “biến mất”; không tự bảo đảm transaction, retry, concurrency, tính đúng đắn nghiệp vụ hay bảo mật.
+- **Intent:** simplify access to a particular subsystem capability.
+- **Role:** the client invokes the Facade, which coordinates subsystems to complete a high-level operation.
+- **Benefit:** reduce the number of dependencies clients must know and centralize a shared usage workflow.
+- **Limitation:** Facade does not make underlying classes “disappear” or automatically guarantee transactions, retries, concurrency safety, business correctness, or security.
 
-Một câu mô tả đúng bài toán: “Nhiều client đang phải biết và lặp lại **quy trình phối hợp** giữa các lớp con; chúng ta cần một API đơn giản, ổn định cho thao tác thường dùng”.
+A good problem statement is: “Multiple clients need to know and repeat the **coordination workflow** among subsystem classes; we need a simple, stable API for common operations.”
 
-### Trước và sau khi có Facade
+### Before and After Introducing a Facade
 
 ```mermaid
 flowchart LR
@@ -3323,28 +3323,28 @@ flowchart LR
     end
 ```
 
-Ở phương án sau, **tổng độ phức tạp của subsystem không tự nhiên giảm đi**. Độ phức tạp được **đóng gói sau một ranh giới**, làm cho mã client ngắn và ít biết chi tiết hơn.
+In the second design, **the subsystem's total complexity does not automatically decrease**. That complexity is **encapsulated behind a boundary**, so client code becomes shorter and needs less internal knowledge.
 
-## 2. Thành phần của mẫu Facade
+## 2. Facade Pattern Participants
 
-| Thành phần | Trách nhiệm | Nên biết điều gì? |
+| Component | Responsibility | What should it know? |
 |---|---|---|
-| **Client** | Thực hiện thao tác người dùng, gọi API cấp cao | Nhu cầu báo giá, dữ liệu đầu vào, kết quả |
-| **Facade** | Phối hợp các bước thường dùng, xử lý/ánh xạ lỗi phù hợp | Hợp đồng của các subsystem và quy trình cấp cao |
-| **Subsystem classes** | Thực hiện các thao tác chuyên biệt | Catalog, tồn kho, chính sách giá, phí vận chuyển |
-| **Composition root / DI container** | Khởi tạo và lắp các dependency | Implementation nào được dùng trong môi trường hiện tại |
+| **Client** | Performs a user operation by calling the high-level API | Quotation needs, inputs, and results |
+| **Facade** | Coordinates common steps and appropriately handles/maps errors | Subsystem contracts and the high-level workflow |
+| **Subsystem classes** | Perform specialized operations | Catalog, inventory, pricing policies, shipping rates |
+| **Composition root / DI container** | Creates and wires dependencies | Which implementations are used in the current environment |
 
-Facade thường dùng **composition**: nó giữ reference tới các đối tượng cấp dưới, chứ không cần kế thừa chúng.
+Facade commonly uses **composition**: it holds references to subordinate objects without inheriting from them.
 
-Một API Facade tốt thể hiện mục đích rõ ràng, ví dụ `quote(sku, quantity, member)`; không chỉ biến thành hàng chục phương thức `getCatalog()`, `getInventory()`, `getDiscountCalculator()`. Các getter chỉ làm client tiếp tục phụ thuộc sâu vào subsystem.
+A good Facade API expresses an explicit purpose, such as `quote(sku, quantity, member)`; it should not merely expose dozens of getters like `getCatalog()`, `getInventory()`, and `getDiscountCalculator()`. Such getters leave clients deeply dependent on the subsystem.
 
-## 3. Ví dụ Java 17 chạy độc lập: báo giá thanh toán
+## 3. Standalone Java 17 Example: Checkout Quotation
 
-**Bối cảnh ví dụ:** một đơn hàng chỉ chứa một loại sản phẩm, giá tính bằng **VND nguyên**. Báo giá dành cho thành viên được giảm 5% tiền hàng; phí giao là 25.000 VND, miễn phí nếu **tiền hàng sau giảm** ít nhất 500.000 VND. Báo giá chỉ **kiểm tra** số tồn hiện tại, không giữ hàng hoặc trừ tồn kho.
+**Example context:** an order contains one product type, priced in **whole VND**. A member receives a 5% discount on merchandise; shipping costs 25.000 VND and is free when **the merchandise total after discounts** reaches at least 500.000 VND. A quote only **checks** current stock; it neither reserves nor deducts inventory.
 
-Quy tắc vừa nêu phải rõ ràng trước khi viết Facade: nếu phí giao dựa trên tiền hàng *trước* giảm, hoặc cho phép nhiều sản phẩm, API và thuật toán đều cần điều chỉnh theo nghiệp vụ.
+These rules must be clear before implementing the Facade: if shipping depends on the amount *before* discounts, or orders may contain multiple products, both the API and algorithm must change according to business requirements.
 
-Tạo file `FacadeDemo.java`, sau đó chạy:
+Create `FacadeDemo.java`, then run:
 
 ```bash
 javac FacadeDemo.java
@@ -3494,19 +3494,19 @@ public class FacadeDemo {
 }
 ```
 
-Đây là ví dụ tự chứa: không yêu cầu Spring, cơ sở dữ liệu hay thư viện ngoài JDK 17. Các class lồng trong `FacadeDemo` có scope phục vụ ví dụ; khi chuyển vào dự án thực tế có thể đặt mỗi class vào file/package phù hợp và công khai những API mà client cần.
+This is a self-contained example requiring neither Spring, a database, nor libraries beyond JDK 17. Nested classes in `FacadeDemo` have scopes suitable for the example; in a real project, place each class in the appropriate file/package and expose the APIs clients need.
 
-### Vì sao ví dụ trên là Facade?
+### Why Is This Example a Facade?
 
-1. **Một thao tác cấp cao:** client chỉ gọi `checkout.quote(...)` để lấy báo giá.
-2. **Ẩn trình tự phối hợp:** các bước tìm sản phẩm, kiểm tra tồn, tính giảm giá và vận chuyển nằm trong Facade.
-3. **Dùng lại trách nhiệm sẵn có:** `Catalog` quản lý việc tìm sản phẩm, `Inventory` trả lời về tồn kho; Facade không tự cài lại những chi tiết đó.
-4. **Chỉ trả kết quả cần thiết:** `Quote` diễn đạt chi tiết báo giá, không rò rỉ `Map` lưu tồn kho hay cấu trúc của catalog.
-5. **Lắp ráp bên ngoài:** Facade nhận dependency bằng constructor; việc chọn implementation ở `main` giúp thay adapter, mock hoặc fake khi kiểm thử.
+1. **One high-level operation:** the client calls only `checkout.quote(...)` to obtain a quote.
+2. **Hides coordination order:** product lookup, inventory checking, discount calculation, and shipping are all coordinated by the Facade.
+3. **Reuses existing responsibilities:** `Catalog` handles product lookup, and `Inventory` reports availability; the Facade does not reimplement these details.
+4. **Returns only necessary results:** `Quote` represents quotation details without exposing the inventory `Map` or catalog structure.
+5. **External assembly:** the Facade receives constructor-injected dependencies; choosing implementations in `main` enables adapters, mocks, or fakes in tests.
 
-**Điểm cần nhớ:** Facade có thể đóng vai trò entry point và điều phối nghiệp vụ, nhưng bản thân **mẫu Facade** được định nghĩa bởi việc **cung cấp bề mặt sử dụng đơn giản cho subsystem**. Nó không tự xác định đây là Domain Service, Application Service hay lớp transaction.
+**Key point:** Facade may serve as an entry point and coordinate business operations, but the **Facade pattern itself** means **providing a simpler interface to a subsystem**. It does not determine whether a class is a Domain Service, Application Service, or transaction boundary.
 
-## 4. Luồng xử lý của một lời gọi
+## 4. Execution Flow of One Call
 
 ```mermaid
 sequenceDiagram
@@ -3529,13 +3529,13 @@ sequenceDiagram
     F-->>C: Quote(total=367000)
 ```
 
-Lỗi được xử lý ở ranh giới hợp lý: SKU không tồn tại báo `IllegalArgumentException`, lượng không đủ báo `IllegalStateException`. API bên ngoài (ví dụ REST controller) có thể ánh xạ chúng thành mã HTTP phù hợp. Không nên xem hai loại exception trong bản demo là quy chuẩn bắt buộc: production nên dùng mô hình lỗi nghiệp vụ rõ hơn, có mã lỗi ổn định và kiểm thử được.
+Errors are handled at appropriate boundaries: an unknown SKU results in `IllegalArgumentException`, while insufficient stock results in `IllegalStateException`. An external API (such as a REST controller) may map these to suitable HTTP statuses. The demo's two exception types are not mandatory conventions; production code should use a clearer, testable business-error model with stable error codes.
 
-**Đường đi lỗi:** nếu sản phẩm không tồn tại hoặc tồn kho không đủ, Facade dừng trước khi tính giá tiếp. Đừng “nuốt” lỗi đọc tồn kho thành kết quả `false` khi hệ thống kho thật gặp timeout: **không đủ hàng** và **không kiểm tra được tồn kho** là hai trường hợp khác nhau.
+**Error path:** if a product is missing or stock is insufficient, the Facade stops before further pricing. Do not silently map an inventory-service timeout to `false`: **out of stock** and **unable to check inventory** are different conditions.
 
-## 5. Facade làm đơn giản API ở đâu?
+## 5. Where Does Facade Simplify the API?
 
-Trước Facade, mã dùng từ nhiều client có thể lặp quy trình (mã phác họa; giả sử các dependency đã được khởi tạo):
+Before Facade, several clients may repeat this workflow (illustrative code; dependencies are assumed to be initialized):
 
 ```java
 Product product = catalog.findRequired(sku);
@@ -3550,55 +3550,55 @@ BigDecimal fee = shipping.forAmountAfterDiscount(net);
 Quote quote = new Quote(subtotal, discount, fee, net.add(fee));
 ```
 
-Sau Facade:
+After Facade:
 
 ```java
 Quote quote = checkoutQuoteFacade.quote(sku, quantity, isMember);
 ```
 
-Điều đáng giá không đơn thuần là **ít dòng code**. Quan trọng hơn là client **không phải biết** thứ tự áp dụng chiết khấu và phí, cách đọc catalog hay API của từng subsystem.
+The benefit is not merely **fewer lines of code**. More significantly, clients **do not need to know** the order of discounts and fees, how the catalog is queried, or each subsystem's API.
 
-Khi logic “tính phí giao sau khi giảm giá” đổi vì một quyết định nghiệp vụ có chủ đích, một điểm điều phối có thể được sửa và kiểm thử tập trung. Facade giúp giảm **coupling của client với chi tiết phối hợp**, trong khi chính Facade vẫn phụ thuộc các subsystem mà nó sử dụng.
+When the rule “calculate shipping after discounts” changes because of a deliberate business decision, one coordination point can be updated and tested centrally. Facade reduces **client coupling to coordination details**, even though the Facade itself still depends on its subsystems.
 
-### Hai loại đơn giản hóa cần tách bạch
+### Two Kinds of Simplification to Distinguish
 
-- **Đơn giản hóa giao diện:** ít lời gọi hơn, tên API theo nhiệm vụ, input/output dễ hiểu hơn.
-- **Đơn giản hóa kiến trúc:** không nhất thiết xảy ra. Vẫn có catalog, kho, chiết khấu và phí giao, cùng nhiều quy định nghiệp vụ.
+- **Interface simplification:** fewer calls, task-oriented API names, and more understandable inputs/outputs.
+- **Architectural simplification:** not guaranteed. The catalog, inventory, discounts, and shipping still exist, along with many business rules.
 
-Một Facade kém thiết kế có thể biến thành nút thắt mới nếu mọi use case và mọi quy tắc bị dồn hết vào đó.
+A poorly designed Facade can become a new bottleneck if every use case and every rule is pushed into it.
 
-## 6. Facade khác Adapter, Decorator, Proxy và Mediator thế nào?
+## 6. How Does Facade Differ from Adapter, Decorator, Proxy, and Mediator?
 
-Các pattern đều có thể có một đối tượng “đứng giữa”, nhưng **ý định** khác nhau.
+These patterns can all involve an object “in the middle,” but their **intentions** differ.
 
-| Pattern | Ý định chính | Hình thức điển hình | Ví dụ |
+| Pattern | Primary intent | Typical structure | Example |
 |---|---|---|---|
-| **Facade** | Cung cấp API đơn giản cho nhiều thành phần/phân hệ | `checkout.quote(...)` phối hợp 4 subsystem | Một cửa báo giá giỏ hàng |
-| **Adapter** | Chuyển đổi **giao diện không tương thích** sang giao diện client cần | `VendorSmsAdapter implements SmsSender` gọi SDK khác tên hàm | Ẩn khác biệt API nhà cung cấp |
-| **Decorator** | Bổ sung hành vi mà vẫn giữ cùng hợp đồng của đối tượng được bọc | `CachedCatalog implements CatalogReader` delegate đến nguồn gốc | Thêm cache, metrics, logging có kiểm soát |
-| **Proxy** | Đại diện thay thế để quản lý truy cập/vòng đời/lời gọi đến đối tượng thực | `RemoteImageProxy` trì hoãn tải hoặc kiểm tra quyền | Lazy load, remote proxy, protection proxy |
-| **Mediator** | Trung gian hóa các quan hệ tương tác giữa nhiều đồng nghiệp | `DialogMediator` phối hợp nút, trường nhập, thông báo | Giảm các callback chéo giữa UI controls |
+| **Facade** | Provide a simple API for several components/subsystems | `checkout.quote(...)` coordinates four subsystems | A unified shopping-cart quotation API |
+| **Adapter** | Convert an **incompatible interface** to one required by clients | `VendorSmsAdapter implements SmsSender` invokes an SDK with different method names | Hide differences among provider APIs |
+| **Decorator** | Add behavior while preserving the wrapped object's contract | `CachedCatalog implements CatalogReader` delegates to the source | Add controlled caching, metrics, or logging |
+| **Proxy** | Stand in for an object to manage access, lifecycle, or calls | `RemoteImageProxy` delays loading or enforces authorization | Lazy loading, remote proxies, protection proxies |
+| **Mediator** | Centralize interactions among multiple collaborating objects | `DialogMediator` coordinates buttons, input fields, and notifications | Reduce cross-callbacks among UI controls |
 
-**Nhận diện bằng câu hỏi:**
+**Identify the pattern by asking:**
 
-- “Client đang phải gọi **quá nhiều bước** của subsystem?” → Facade.
-- “Thư viện này có **API khác** với giao diện ứng dụng cần?” → Adapter.
-- “Muốn **bọc thêm chức năng** cho cùng interface?” → Decorator.
-- “Muốn **kiểm soát việc truy cập** tới một đối tượng?” → Proxy.
-- “Nhiều đối tượng **gọi lẫn nhau theo mạng quan hệ rối**?” → Mediator.
+- “Must clients invoke **too many steps** in a subsystem?” → Facade.
+- “Does this library have **a different API** from the interface the application needs?” → Adapter.
+- “Do we need to **wrap extra behavior** around the same interface?” → Decorator.
+- “Do we need to **control access** to an object?” → Proxy.
+- “Do multiple objects **call each other through a tangled network of relationships**?” → Mediator.
 
-Một lớp có thể có nhiều vai trò thực tế, nhưng khi giải thích thiết kế nên gọi theo **lý do chủ yếu** khiến nó tồn tại. “Có lớp trung gian” chưa phải tiêu chí đủ để kết luận là Facade.
+A class can play several roles in practice, but when describing the design, name it after **the main reason** it exists. Merely “having an intermediary class” is insufficient to call something Facade.
 
-## 7. Facade có phải là Service Layer hoặc Controller không?
+## 7. Is Facade the Same as an Application Service, Domain Service, or Controller?
 
-Không đồng nghĩa.
+They are not equivalent.
 
-- **Controller** tiếp nhận HTTP/request, phân tích input, xác thực/ủy quyền ở tầng thích hợp và chuyển đổi response. Controller có thể dùng Facade để thực hiện nghiệp vụ cấp cao.
-- **Application Service** điều phối một use case, áp đặt ranh giới transaction và các chính sách luồng ứng dụng. Nó có thể **đồng thời đóng vai trò Facade** nếu cung cấp API đơn giản cho nhiều subsystem; nhưng không phải Application Service nào cũng nên mang tên `Facade`.
-- **Domain Service** chứa quy tắc nghiệp vụ không thuộc tự nhiên về một entity/value object nào. Không nên cho domain phụ thuộc SQL/HTTP chỉ vì muốn dùng Facade.
-- **Facade** nói về việc **giảm độ phức tạp khi client tương tác subsystem**. Nó không quy định tầng kiến trúc, framework, transaction hoặc bất biến nghiệp vụ phải đặt ở đâu.
+- A **Controller** accepts HTTP/requests, parses inputs, handles authentication/authorization at the appropriate layer, and transforms responses. It may use a Facade to perform a high-level business operation.
+- An **Application Service** coordinates a use case, enforces transaction boundaries, and applies application-flow policies. It may **also act as a Facade** when exposing a simple API over several subsystems, but not every Application Service should be named `Facade`.
+- A **Domain Service** contains business rules that do not naturally belong to a particular entity/value object. A domain should not depend on SQL/HTTP merely to introduce a Facade.
+- **Facade** concerns **reducing the complexity of client interaction with a subsystem**. It does not prescribe the architectural layer, framework, transactions, or placement of business invariants.
 
-Một ví dụ tổ chức:
+Example package organization:
 
 ```text
 application/
@@ -3615,11 +3615,11 @@ web/
   CheckoutController.java    # HTTP ↔ API ứng dụng
 ```
 
-Đừng sao chép mô hình package này máy móc. Với hệ thống nhỏ, một vài lớp và một Facade là đủ; với hệ thống lớn, Facade có thể nằm ở một **module API** riêng và phụ thuộc các port/hợp đồng do ứng dụng sở hữu.
+Do not copy this package structure mechanically. A small system may need only a few classes and one Facade; a larger system may place Facade in a separate **API module** that depends on application-owned ports/contracts.
 
-## 8. Tổ chức dependency để Facade dễ kiểm thử và thay công nghệ
+## 8. Organizing Dependencies for Testable, Technology-Independent Facades
 
-Trong demo, Facade nhận trực tiếp `Catalog`, `Inventory` và hai lớp tính toán. Trong ứng dụng thực tế, catalog có thể đọc từ MySQL, kho từ HTTP, hoặc API đối tác có nhiều môi trường. Khi các chi tiết này biến động, dùng interface mô tả khả năng client cần.
+In the demo, the Facade receives `Catalog`, `Inventory`, and two calculator classes directly. In a real application, the catalog might read MySQL, inventory may come from HTTP, or a partner API may have multiple environments. When these details vary, use interfaces that describe the capabilities clients need.
 
 ```java
 // Phác họa khi tách các class ra package rõ ràng:
@@ -3635,7 +3635,7 @@ interface StockAvailability {
 // JdbcProductLookup/HttpStockAvailability implements interface.
 ```
 
-Với Spring, có thể inject dependencies vào constructor và khai báo Facade thành bean:
+With Spring, dependencies can be constructor-injected and the Facade declared as a bean:
 
 ```java
 // Phác họa với Spring Boot. Imports tương ứng:
@@ -3655,38 +3655,38 @@ public class CheckoutQuoteFacade {
 }
 ```
 
-Đoạn Spring là **phác họa kiến trúc**, không phải code để ghép nguyên xi với `FacadeDemo` có lớp lồng cùng tên. Nếu có nhiều bean cùng interface, lựa chọn implementation cần được cấu hình rõ ràng (`@Qualifier`, `@Primary`, `@Bean`, v.v.).
+The Spring code is an **architectural sketch**, not code to paste unchanged into `FacadeDemo`, which already contains a nested class of the same name. If several beans implement the same interface, configure implementation selection explicitly (`@Qualifier`, `@Primary`, `@Bean`, etc.).
 
-**Facade không bắt buộc dùng interface.** Nếu chỉ có một cách điều phối và không có nhu cầu thay thế Facade, class `CheckoutQuoteFacade` thông thường là hợp lý. Tạo `ICheckoutQuoteFacade` chỉ để tăng số interface không làm thiết kế tốt hơn; abstraction có ích khi bảo vệ client khỏi dependency dễ biến động hoặc khi có hợp đồng rõ cho nhiều implementation.
+**Facade does not require an interface.** If there is one orchestration path and no reason to replace the Facade, a regular `CheckoutQuoteFacade` class is appropriate. Creating `ICheckoutQuoteFacade` merely to increase the interface count does not improve the design; abstraction helps when it shields clients from volatile dependencies or specifies a meaningful contract for multiple implementations.
 
-## 9. Đánh đổi và giới hạn cần biết
+## 9. Trade-offs and Limitations
 
-| Lợi ích | Giá phải trả / rủi ro |
+| Benefit | Cost / risk |
 |---|---|
-| Client chỉ cần nhớ vài thao tác cấp cao | Tăng thêm lớp và indirection, phải lần từ client qua Facade |
-| Giảm coupling trực tiếp giữa client và subsystem | Facade có thể trở thành điểm phụ thuộc tập trung, dễ phình to |
-| Tập trung thứ tự gọi và chính sách lỗi cho thao tác chung | Nếu Facade quá rộng, thay đổi một use case có thể tác động nhiều client |
-| Dễ fake/mocking ranh giới của client | Cần kiểm thử cả hợp đồng Facade và cách nó phối hợp subsystem |
-| Ẩn chi tiết kỹ thuật không liên quan với người dùng API | Có nguy cơ che mất timeout, partial failure và ngữ nghĩa dữ liệu |
-| Dễ chuẩn hóa API công khai của module | Versioning và backward compatibility trở thành trách nhiệm rõ ràng |
-| Có thể giữ các subsystem chuyên biệt, dễ dùng trực tiếp khi cần | Dễ bị lạm dụng thành “đường duy nhất”, cấm mọi tình huống nâng cao |
+| Clients need to remember only a few high-level operations | Adds a class and indirection; trace calls from clients through the Facade |
+| Reduces direct coupling between clients and subsystems | The Facade can become a central dependency and grow too large |
+| Centralizes call ordering and error policies for common operations | An overly broad Facade may affect many clients when one use case changes |
+| Makes it easier to fake/mock the client boundary | Requires tests for the Facade contract and its subsystem coordination |
+| Hides technical details irrelevant to API consumers | May conceal timeouts, partial failures, and data semantics |
+| Helps standardize a module's public API | Makes versioning and backward compatibility explicit responsibilities |
+| Allows specialized subsystems to remain available for direct use | Can be misused as an “only path” that forbids advanced use cases |
 
-### Facade không tự tạo transaction phân tán
+### Facade Does Not Create Distributed Transactions
 
-Ví dụ **báo giá** phía trên cố tình tránh ghi dữ liệu: kiểm tra tồn chỉ là **ảnh chụp tức thời**, không phải đặt hàng. Hai khách hàng có thể cùng được báo “còn hàng”, nhưng chỉ người đầu tiên đặt thành công. Điều đó không vi phạm hợp đồng nếu API được gọi rõ là **quote**, không phải **reserve/order**.
+The **quotation** example above intentionally avoids writes: checking inventory provides only a **point-in-time snapshot**, not a reservation. Two customers might both receive “available” quotes, yet only the first to place an order succeeds. This does not violate the contract when the API is explicitly named **quote**, rather than **reserve/order**.
 
-Nếu xây Facade `placeOrder(...)` có các bước giữ hàng, thanh toán và gửi thông báo:
+If a `placeOrder(...)` Facade reserves inventory, takes payment, and sends a notification:
 
-- Các thao tác có thể nằm ở **nhiều hệ thống**, không chung một DB transaction.
-- Lỗi sau khi thanh toán có thể tạo trạng thái dở dang.
-- Cần thiết kế **idempotency key**, trạng thái đơn, saga/compensation hoặc outbox tùy yêu cầu.
-- Retry phải phân biệt lỗi tạm thời và lỗi nghiệp vụ; không mặc định retry một charge sẽ an toàn.
+- These operations may span **multiple systems** without a shared DB transaction.
+- Failure after payment can leave a partially completed state.
+- Design **idempotency keys**, order states, saga/compensation, or outbox mechanisms as appropriate.
+- Retries must distinguish transient failures from business failures; do not assume retrying a charge is safe.
 
-Facade chỉ cung cấp **điểm phối hợp**. Nó không biến các thao tác mạng thành một giao dịch nguyên tử. Đừng “nuốt” lỗi partial failure rồi trả thành công.
+Facade supplies a **coordination point**. It does not make network operations an atomic transaction. Never swallow partial failures and report success.
 
-### Độ trễ cũng không tự biến mất
+### Latency Does Not Disappear Automatically
 
-Một lời gọi `facade.quote` có thể vẫn tạo bốn lời gọi tới DB/API ở dưới. Giảm số lời gọi **ở phía client** không bảo đảm giảm latency tổng:
+A call to `facade.quote` may still trigger four underlying DB/API calls. Fewer calls **from clients** do not guarantee lower total latency:
 
 ```text
 Tổng thời gian xấp xỉ:
@@ -3696,44 +3696,44 @@ Nếu các thành phần gọi dịch vụ từ xa, network latency,
 timeout, số lần retry và contention thường chi phối kết quả.
 ```
 
-Chỉ thực hiện song song những bước **thật sự độc lập** và hiểu giới hạn consistency. Ví dụ pricing sau discount phụ thuộc kết quả discount, không thể chạy bừa mọi thao tác cùng lúc.
+Parallelize only steps that are **truly independent**, with a clear understanding of consistency limits. For example, shipping calculated from a discounted price depends on the discount result; do not run every operation concurrently without analysis.
 
-## 10. Khi nào nên dùng, khi nào nên tránh?
+## 10. When to Use Facade and When to Avoid It
 
-**Rất phù hợp khi:**
+**Strong use cases:**
 
-- Một phân hệ có nhiều API nhỏ, nhưng hầu hết client chỉ cần 2–3 thao tác cấp cao.
-- Nhiều client đang lặp cùng một chuỗi gọi có thứ tự.
-- Muốn giảm việc controller/API consumer phải biết cấu trúc nội bộ của module.
-- Thư viện/SDK có API phức tạp, cần một điểm vào phục vụ nghiệp vụ phổ biến.
-- Muốn giới hạn tác động khi cấu trúc nội bộ subsystem đổi, trong khi contract phía ngoài ổn định.
+- A subsystem exposes many small APIs, while most clients need only 2–3 high-level operations.
+- Several clients repeat the same ordered sequence of calls.
+- Controllers/API consumers should know less about a module's internal structure.
+- A library/SDK exposes a complex API that needs an entry point for common business operations.
+- You want to limit the impact of subsystem changes while keeping the external contract stable.
 
-**Nên cân nhắc cách đơn giản hơn khi:**
+**Consider a simpler approach when:**
 
-- Client chỉ gọi một API đơn giản và không lặp quy trình.
-- Facade chỉ chuyển tiếp một lời gọi y hệt mà không cung cấp abstraction hoặc ranh giới hữu ích.
-- Mỗi client có quy trình hoàn toàn khác biệt; ép dùng chung một Facade khiến nó chứa hàng loạt `if` theo loại client.
-- Không thể mô tả rõ trách nhiệm, dẫn đến “God Facade” vừa tính giá, vừa ghi DB, gửi email, chạy báo cáo và làm mọi thứ.
-- Facade che lỗi hạ tầng bằng giá trị mặc định sai, làm người dùng hiểu nhầm dữ liệu đã chắc chắn.
+- Clients invoke only one simple API and do not repeat an orchestration flow.
+- The Facade merely forwards an identical call without a useful abstraction or boundary.
+- Different clients have entirely different workflows; forcing them into one Facade produces many client-type `if` branches.
+- Responsibilities cannot be clearly described, leading to a “God Facade” that prices orders, writes DB records, sends emails, runs reports, and does everything else.
+- The Facade hides infrastructure failures behind incorrect defaults, making users believe data is certain.
 
-### Thiết kế API Facade tốt
+### Designing a Good Facade API
 
-Một vài gợi ý thực hành:
+Practical guidelines:
 
-1. **Đặt tên từ mục đích sử dụng:** `quote`, `previewInvoice`, `generateReport`, `startCheckout`. Tránh phương thức `processEverything`.
-2. **Giữ input/output ổn định:** dùng DTO/value object phù hợp; đừng trả kết quả thô `ResultSet`, `Connection`, `HttpResponse` của một thư viện hạ tầng.
-3. **Không làm lộ object nội bộ tùy tiện:** nếu client phải lấy `getInventoryService()` để tiếp tục tự điều phối, Facade chưa thực sự đơn giản hóa.
-4. **Tách Facade theo nhóm client/use case nếu cần:** `CheckoutQuoteFacade` và `AdminPricingFacade` có thể cùng dùng subsystem mà giữ API riêng.
-5. **Không gom mọi công thức nghiệp vụ vào Facade:** giữ thuật toán/điều kiện chuyên biệt trong lớp có trách nhiệm phù hợp, Facade điều phối.
-6. **Quy ước rõ lỗi và trạng thái:** không tìm thấy, không đủ hàng, giá đã cũ, timeout, permission denied là những tình huống khác nhau.
-7. **Thiết kế thread-safety:** Facade kiểu singleton nên tránh giữ trạng thái request mutable trong field; ví dụ demo dùng biến cục bộ trong `quote`.
-8. **Có quan sát vận hành:** log/trace ở ranh giới tác vụ cấp cao, nhưng tránh log dữ liệu thanh toán hoặc thông tin nhạy cảm.
+1. **Name operations by intent:** `quote`, `previewInvoice`, `generateReport`, `startCheckout`. Avoid names like `processEverything`.
+2. **Keep inputs/outputs stable:** use appropriate DTOs/value objects; avoid returning raw infrastructure types such as `ResultSet`, `Connection`, and `HttpResponse`.
+3. **Avoid arbitrarily exposing internal objects:** if a client must call `getInventoryService()` to continue coordination itself, the Facade has not simplified the workflow.
+4. **Split Facades by client group/use case when needed:** `CheckoutQuoteFacade` and `AdminPricingFacade` may share subsystems while exposing different APIs.
+5. **Do not put every business formula inside the Facade:** keep specialized rules/algorithms in the classes that own them, and let the Facade coordinate.
+6. **Specify errors and states explicitly:** not found, out of stock, stale price, timeout, and permission denied are distinct cases.
+7. **Design thread safety:** singleton-style Facades should avoid request-specific mutable fields; the demo uses local variables within `quote`.
+8. **Provide operational observability:** log/trace high-level operation boundaries without logging payment data or other sensitive information.
 
-## 11. Kiểm thử Facade: kiểm tra kết quả lẫn thứ tự phối hợp
+## 11. Testing Facade: Verify Outcomes and Coordination Order
 
-Unit test không chỉ kiểm một class có tồn tại. Nó phải xác nhận **hợp đồng từ góc nhìn client**, bao gồm nhánh thành công, lỗi và bất biến.
+Unit tests should do more than verify that a class exists. They must assert **the contract from the client's perspective**, including successful paths, failures, and invariants.
 
-Ví dụ JUnit 5, đặt file test cùng package với `FacadeDemo` (các loại lồng có phạm vi package):
+JUnit 5 example: put the test in the same package as `FacadeDemo` (its nested types have package-level visibility):
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -3786,103 +3786,103 @@ class FacadeDemoTest {
 }
 ```
 
-Các test này dùng subsystem in-memory thật, đủ nhỏ để chạy nhanh. Nếu component bên dưới gọi database/HTTP, nên **fake các port** ở unit test và có integration test riêng cho adapter thật.
+These tests use small, real in-memory subsystems and run quickly. When underlying components access databases/HTTP, **fake the ports** in unit tests and add separate integration tests for real adapters.
 
-**Về thứ tự:** ví dụ có phụ thuộc dữ liệu rõ ràng — phải tính discount trước mới có giá sau giảm để tính shipping. Assert con số `513000` và `shippingVnd = 0` kiểm tra được ý nghĩa thứ tự đó. Nếu những bước có **side effect**, test cần kiểm tra không gửi thanh toán/ghi DB sau một lỗi xác thực, và policy rollback/compensation tùy yêu cầu. Không nên lạm dụng test “gọi đúng 4 phương thức ở thứ tự đúng” nếu trình tự đó là chi tiết triển khai không quan trọng với hành vi client.
+**About ordering:** the example has an explicit data dependency: discounts must be calculated first to obtain the discounted amount needed for shipping. Asserting `513000` and `shippingVnd = 0` tests this ordering's business meaning. If steps have **side effects**, tests should verify that payment/DB writes do not happen after validation failure, and validate rollback/compensation policies as required. Avoid over-testing “exactly four methods called in an exact order” when such ordering is an implementation detail irrelevant to client behavior.
 
-### Checklist chất lượng kiểm thử
+### Testing Quality Checklist
 
-| Trường hợp | Kỳ vọng |
+| Case | Expected outcome |
 |---|---|
-| Sản phẩm tồn tại, có đủ hàng, là thành viên | Báo giá đúng tiền hàng, giảm giá, vận chuyển và tổng |
-| Không phải thành viên | Không có chiết khấu; phí giao tính theo số tiền tương ứng |
-| Không có SKU hoặc lượng mua không hợp lệ | Lỗi đầu vào rõ ràng, không trả báo giá sai |
-| SKU không tồn tại | Lỗi “không tìm thấy”, không giả định giá 0 |
-| Không đủ tồn | Không sinh báo giá thành công |
-| Tồn kho/giá từ dịch vụ ngoài bị timeout | Trả lỗi truy xuất dữ liệu phù hợp; không tráo thành hết hàng |
-| Ranh giới miễn phí vận chuyển | Giá ngay dưới/bằng/ngay trên ngưỡng |
-| Có yêu cầu đa luồng | Không lưu dữ liệu request vào field dùng chung |
-| Thêm subsystem implementation mới | Hợp đồng Facade giữ ổn định, các test chính tiếp tục qua |
+| Product exists, stock suffices, customer is a member | Correct merchandise, discount, shipping, and total amounts |
+| Customer is not a member | No discount; shipping is based on the corresponding amount |
+| Missing SKU or invalid quantity | Clear input error without an incorrect quote |
+| SKU not found | “Not found” error, never assume a zero price |
+| Insufficient stock | No successful quote |
+| External inventory/pricing service times out | Proper data-access error; do not convert it into out-of-stock |
+| Free-shipping boundary | Amounts just below, at, and just above the threshold |
+| Concurrent requests are required | Request data is not stored in shared fields |
+| A new subsystem implementation is added | Facade contract remains stable and core tests still pass |
 
-## 12. Refactor sang Facade từng bước
+## 12. Refactoring Toward Facade Step by Step
 
-Giả sử một controller đang dài vì phải gọi 5 subsystem. Cách chuyển an toàn:
+Suppose a controller has become long because it calls five subsystems. A safe migration process is:
 
-1. **Khoanh một use case cụ thể:** “xem báo giá”, không bắt đầu bằng “tập hợp tất cả service vào Facade”.
-2. **Liệt kê thao tác và điều kiện:** xác định input, thứ tự, loại lỗi, dữ liệu trả về, side effect và những ranh giới bất biến.
-3. **Đặt một phương thức cấp cao:** `Quote quote(String sku, int quantity, boolean member)`.
-4. **Di chuyển logic phối hợp:** controller chỉ còn chuyển input và ánh xạ response; business rule thực sự vẫn ở lớp thích hợp.
-5. **Constructor-inject dependency:** tạo/lắp các đối tượng ở composition root hoặc DI container.
-6. **Duy trì hành vi bằng test:** so sánh kết quả trước và sau với các trường hợp biên và lỗi.
-7. **Chuyển từng client sang Facade:** tránh thay đồng thời mọi luồng lớn mà chưa đo tương thích.
-8. **Xóa sự điều phối trùng lặp** khi tất cả client liên quan đã dùng API mới và không còn phụ thuộc cũ.
-9. **Đo lại độ phức tạp:** coupling của client, API surface, thời gian test/debug, latency, tỷ lệ lỗi.
-10. **Rà soát phạm vi:** nếu Facade bắt đầu có quá nhiều phương thức độc lập, cân nhắc chia theo use case.
+1. **Scope one concrete use case:** “view quote,” rather than starting with “collect all services into a Facade.”
+2. **List operations and conditions:** specify inputs, order, error types, returned data, side effects, and invariant boundaries.
+3. **Introduce one high-level method:** `Quote quote(String sku, int quantity, boolean member)`.
+4. **Move coordination logic:** leave the controller to pass inputs and map responses; business rules remain in appropriate classes.
+5. **Constructor-inject dependencies:** create/wire objects at the composition root or DI container.
+6. **Preserve behavior through tests:** compare before/after outputs for boundary and failure cases.
+7. **Migrate clients gradually:** avoid changing every major flow simultaneously before checking compatibility.
+8. **Remove duplicate orchestration** after all relevant clients use the new API and the old dependency is gone.
+9. **Reassess complexity:** client coupling, API surface, test/debug time, latency, and error rates.
+10. **Review the scope:** if the Facade accumulates too many unrelated methods, consider splitting it by use case.
 
-Một Facade có thể cùng tồn tại với quyền truy cập **trực tiếp** vào subsystem cho những client cần chức năng chuyên sâu. Việc **cấm mọi truy cập khác** là quyết định module/API, không phải quy tắc bắt buộc của Facade Pattern.
+A Facade can coexist with **direct** subsystem access for clients needing advanced functionality. **Prohibiting all other access** is a module/API decision, not a mandatory Facade Pattern rule.
 
-## 13. Bài tập tự luyện
+## 13. Practice Exercises
 
-**Bài 1 – Facade cho xuất báo cáo.** Hệ thống có `DataFetcher`, `SalesAggregator`, `CsvRenderer`, `FileStore`. Viết `SalesReportFacade.exportMonthlyReport(YearMonth month)`; nêu cách truyền timezone, định dạng file, cách xử lý file lớn và lỗi ghi file. Không cần gom tất cả hàm truy vấn thành API public của Facade.
+**Exercise 1 – Report-export Facade.** The system has `DataFetcher`, `SalesAggregator`, `CsvRenderer`, and `FileStore`. Implement `SalesReportFacade.exportMonthlyReport(YearMonth month)`; specify how time zones and file formats are passed, how large files are handled, and how write failures are reported. There is no need to expose every query function through the Facade's public API.
 
-**Bài 2 – Refactor controller.** Một `OrderController` đang trực tiếp gọi `Catalog`, `Inventory`, `Discount` và `ShippingRates`. Tách API báo giá của ví dụ Java thành Facade, viết test so sánh kết quả và chỉ ra trách nhiệm còn giữ ở controller.
+**Exercise 2 – Refactor a controller.** An `OrderController` directly invokes `Catalog`, `Inventory`, `Discount`, and `ShippingRates`. Extract the Java example's quotation API into a Facade, write tests comparing outcomes, and identify which responsibilities remain in the controller.
 
-**Bài 3 – Lỗi phân tán.** Thay báo giá bằng đặt đơn thật với giữ kho, thu tiền và thông báo. Thiết kế bảng trạng thái đơn tối thiểu và thảo luận khả năng thanh toán thành công nhưng thông báo thất bại. Facade giải quyết phần **điều phối API** nào, phần nào cần outbox/saga/idempotency?
+**Exercise 3 – Distributed failure.** Replace quoting with real order placement that reserves inventory, charges payment, and sends notifications. Design a minimal order-state table and discuss successful payment followed by notification failure. Which **API coordination** belongs to Facade, and which parts require outbox/saga/idempotency?
 
-**Bài 4 – So sánh pattern.** Một thư viện thanh toán bên ngoài có `payWithRawSdkRequest(...)`. Ứng dụng muốn có `PaymentGateway.pay(PaymentRequest)` và một API `Checkout.placeOrder()` phối hợp kho, gateway, hóa đơn. Chỉ ra thành phần nào hợp lý là **Adapter**, thành phần nào là **Facade**.
+**Exercise 4 – Compare patterns.** An external payments library provides `payWithRawSdkRequest(...)`. The application wants `PaymentGateway.pay(PaymentRequest)` and a `Checkout.placeOrder()` API coordinating inventory, gateway, and invoices. Identify which component should be an **Adapter** and which should be a **Facade**.
 
-**Bài 5 – Review thiết kế.** Một class `SystemFacade` có 45 phương thức: gửi email, import CSV, tính điểm, tạo hóa đơn, tải ảnh và cập nhật mật khẩu. Tại sao dễ trở thành God Object? Đề xuất cách tách API theo chức năng hoặc bounded context, nêu hệ quả với client.
+**Exercise 5 – Design review.** A `SystemFacade` class has 45 methods covering email, CSV import, point calculation, invoicing, image downloads, and password changes. Why might this become a God Object? Propose splitting APIs by capability or bounded context, and explain the consequences for clients.
 
-## 14. Tự kiểm tra đã nắm được Facade chưa?
+## 14. Self-Check: Do You Understand Facade?
 
-- [ ] Tôi mô tả được **vấn đề cụ thể**: client biết quá nhiều API hoặc lặp trình tự phối hợp.
-- [ ] Tôi thiết kế được **API cấp cao có ý nghĩa**, ít tham số và trả dữ liệu cần thiết.
-- [ ] Tôi biết Facade dùng **composition** để phối hợp subsystem.
-- [ ] Tôi phân biệt được Facade với Adapter, Decorator, Proxy, Mediator.
-- [ ] Tôi không xem Facade như giải pháp tự động cho transaction, network latency, caching và thread-safety.
-- [ ] Tôi giữ business invariant, xử lý lỗi, kiểm thử và khả năng quan sát một cách tường minh.
-- [ ] Tôi biết khi nào một lớp Facade trở nên quá rộng và cần tách nhỏ.
-- [ ] Tôi sẵn sàng giữ giải pháp đơn giản khi client chỉ cần một lời gọi trực tiếp.
+- [ ] I can describe the **specific problem**: clients know too many APIs or repeat coordination sequences.
+- [ ] I can design a **meaningful high-level API** with few parameters and the required return data.
+- [ ] I understand how Facade uses **composition** to coordinate subsystems.
+- [ ] I can distinguish Facade from Adapter, Decorator, Proxy, and Mediator.
+- [ ] I do not treat Facade as an automatic solution for transactions, network latency, caching, or thread safety.
+- [ ] I make business invariants, error handling, tests, and observability explicit.
+- [ ] I know when a Facade class becomes too broad and should be split.
+- [ ] I am willing to keep a simpler solution when a client needs only one direct call.
 
-**Ghi nhớ:** Facade hữu ích khi nó tạo ra một **đường vào đơn giản, ổn định và giàu ý nghĩa** cho một khả năng có nhiều chi tiết phối hợp. Nó giảm kiến thức mà client phải mang theo, đồng thời chuyển trách nhiệm điều phối vào đúng một ranh giới có thể kiểm thử và bảo trì.
+**Remember:** Facade is useful when it provides a **simple, stable, meaningful entry point** to a capability that requires coordinating many details. It reduces the knowledge clients must carry and moves orchestration into one testable, maintainable boundary.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-008">Strategy và thay thế thuật toán</a>
+## <a id="design-patterns-008">Strategy and Interchangeable Algorithms</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Strategy Pattern trong Java: thay thế thuật toán bằng composition
+# Strategy Pattern in Java: Replacing Algorithms Through Composition
 
-> **Chủ đề:** OOP → Mẫu thiết kế → Strategy và thay thế thuật toán.  
-> **Mục tiêu:** Hiểu lý do dùng Strategy, nhận biết ba vai trò Context–Strategy–Concrete Strategy, tự triển khai trong Java, chuyển thuật toán ở thời điểm chạy, kiểm thử hợp đồng chung và biết khi nào không nên dùng thêm abstraction.
+> **Topic:** OOP → Design Patterns → Strategy and interchangeable algorithms.  
+> **Objective:** Understand why Strategy is useful, identify the Context–Strategy–Concrete Strategy roles, implement it in Java, select algorithms at runtime, test their shared contract, and recognize when extra abstraction is unnecessary.
 
-## 1. Strategy là gì?
+## 1. What Is Strategy?
 
-**Strategy** là mẫu thiết kế hành vi (*behavioral design pattern*) trong bộ mẫu GoF. Ý tưởng là **đóng gói các thuật toán có thể thay thế cho nhau thành những đối tượng cùng một hợp đồng**, rồi cho đối tượng sử dụng thuật toán (Context) làm việc thông qua hợp đồng đó.
+**Strategy** is a *behavioral design pattern* in the GoF catalog. The idea is to **encapsulate interchangeable algorithms as objects sharing the same contract**, then let the object using the algorithm (Context) work through that contract.
 
-Khi cần đổi cách xử lý, Context nhận một implementation khác thay vì tự chứa tất cả các nhánh `if/else` hoặc `switch` chi tiết. Thuật toán được thay thế có thể là cách tính phí, chọn tuyến vận chuyển, sắp xếp, áp khuyến mãi, xác thực, nén dữ liệu hoặc tính điểm.
+When processing needs to change, the Context receives another implementation instead of embedding detailed `if/else` or `switch` branches. An interchangeable algorithm might calculate fees, choose shipping routes, sort data, apply promotions, authenticate users, compress data, or assign scores.
 
-Ba vai trò cốt lõi:
+Three core roles:
 
-| Vai trò | Trách nhiệm | Trong ví dụ sẽ dùng |
+| Role | Responsibility | Used in this example |
 |---|---|---|
-| **Strategy** | Định nghĩa hoạt động chung và hợp đồng đầu vào/đầu ra | `DiscountStrategy` |
-| **Concrete Strategy** | Thực hiện một biến thể thuật toán | `NoDiscount`, `PercentageDiscount`, `FixedDiscount` |
-| **Context** | Điều phối nghiệp vụ và sử dụng Strategy qua interface | `Checkout` |
-| **Client / composition root** | Chọn Strategy thích hợp cho ngữ cảnh, truyền vào Context | `StrategyDemo.main` |
+| **Strategy** | Defines the shared operation and input/output contract | `DiscountStrategy` |
+| **Concrete Strategy** | Implements one algorithm variant | `NoDiscount`, `PercentageDiscount`, `FixedDiscount` |
+| **Context** | Coordinates business logic and invokes Strategy through its interface | `Checkout` |
+| **Client / composition root** | Selects the appropriate Strategy for the context and supplies it | `StrategyDemo.main` |
 
-**Điểm cốt lõi:** Context không cần biết thuật toán cụ thể đã triển khai như thế nào. Context chỉ dựa vào hành vi đã được Strategy cam kết.
+**Core point:** Context does not need to know how a concrete algorithm is implemented. It relies solely on the behavior guaranteed by Strategy.
 
-## 2. Vấn đề trước khi áp dụng Strategy
+## 2. The Problem Before Introducing Strategy
 
-Một website bán hàng có thể hỗ trợ ba chính sách giảm giá: không giảm, giảm theo tỷ lệ, giảm số tiền cố định. Nếu nhúng thuật toán ngay trong Checkout:
+An online store may support three discount policies: none, percentage-based, and fixed amount. If the algorithms are embedded directly in Checkout:
 
 ~~~java
 // Minh họa mã khó mở rộng — không phải chương trình hoàn chỉnh.
@@ -3900,16 +3900,16 @@ BigDecimal calculateDiscount(String type, BigDecimal subtotal) {
 }
 ~~~
 
-Ví dụ trên cố ý rút gọn và **chưa xử lý làm tròn tiền**. Vấn đề thiết kế xuất hiện khi số thuật toán, thông số và quy tắc ngày càng nhiều:
+The example is deliberately simplified and **does not yet handle monetary rounding**. Design problems arise as algorithms, configuration values, and rules proliferate:
 
-- Mỗi chính sách mới buộc sửa phương thức đang phục vụ nghiệp vụ chính.
-- Các biến thể trộn chung điều kiện lựa chọn với công thức tính; dễ sửa nhầm nhánh đang hoạt động.
-- Khó kiểm thử từng thuật toán một cách độc lập khi mọi thứ ở cùng một phương thức lớn.
-- Nếu nhiều màn hình hoặc use case cùng tính chiết khấu, các nhánh có thể bị lặp.
+- Each new policy requires changing the method serving the main business operation.
+- Variants mix selection conditions with calculation formulas, making existing branches easy to modify accidentally.
+- Testing each algorithm independently becomes difficult when everything lives in one large method.
+- If several screens or use cases calculate discounts, the branches may be duplicated.
 
-Không có nghĩa `if/else` luôn sai. Với **hai điều kiện ngắn, ổn định và không có nhu cầu thay đổi riêng**, một hàm đơn giản có thể rõ ràng hơn nhiều lớp. Strategy hữu ích khi **thuật toán thực sự là một trục biến thiên độc lập**.
+This does not mean `if/else` is always wrong. For **two short, stable conditions with no independent change requirements**, a simple function may be clearer than several classes. Strategy helps when **the algorithm is truly an independent axis of variation**.
 
-## 3. Cấu trúc Strategy
+## 3. Strategy Structure
 
 ~~~mermaid
 classDiagram
@@ -3945,22 +3945,22 @@ classDiagram
     StrategyDemo ..> DiscountStrategy : lựa chọn
 ~~~
 
-Mũi tên quan trọng là **`Checkout → DiscountStrategy`**: Context phụ thuộc vào abstraction. Các Concrete Strategy có thể được thêm vào mà không phải viết lại công thức điều phối của Context.
+The important arrow is **`Checkout → DiscountStrategy`**: the Context depends on an abstraction. New Concrete Strategies can be added without rewriting the Context's orchestration formula.
 
-Strategy thường dùng **composition**: Context **có một** đối tượng Strategy. Đây là một cách ưu tiên composition trước việc tạo nhiều subclass của chính Context, chứ không phải cấm inheritance trong mọi tình huống.
+Strategy usually uses **composition**: the Context **has a** Strategy object. This favors composition over creating multiple Context subclasses; it does not prohibit inheritance in every situation.
 
-## 4. Ví dụ Java 17 có thể chạy độc lập: chiến lược giảm giá
+## 4. Standalone Java 17 Example: Discount Strategies
 
-Ta định nghĩa hợp đồng rõ ràng trước khi viết implementation:
+Define a clear contract before writing implementations:
 
-- `subtotal` là số tiền không âm, có độ chính xác **đến đơn vị xu** (tối đa hai chữ số thập phân có ý nghĩa; có thể thêm các số 0).
-- `discountFor(subtotal)` trả giá trị không null, **không âm và không vượt subtotal**, với độ chính xác đến hai chữ số thập phân.
-- Strategy **không sửa subtotal**, không tự thực hiện thanh toán và không tạo các tác dụng phụ ngoài tính toán. `BigDecimal` vốn bất biến.
-- Context kiểm tra tổng tiền đầu vào và chặn kết quả vi phạm hợp đồng, giúp lỗi thuật toán được phát hiện gần nguồn hơn.
+- `subtotal` is nonnegative money represented **to the cent** (up to two meaningful decimal places; additional trailing zeros are allowed).
+- `discountFor(subtotal)` returns a non-null, **nonnegative amount no greater than subtotal**, with at most two meaningful decimal places.
+- Strategy **does not modify subtotal**, initiate payments, or create side effects beyond calculation. `BigDecimal` itself is immutable.
+- Context validates the input amount and rejects results that violate the contract so algorithm errors are detected near their source.
 
-> Đây là mô hình tiền tệ để học Strategy với đơn vị có hai chữ số thập phân. Sản phẩm thực tế cần quy định tiền tệ, đơn vị nhỏ nhất, thuế, làm tròn và phạm vi áp dụng khuyến mãi theo nghiệp vụ; không phải mọi đồng tiền đều có hai chữ số thập phân.
+> This is a two-decimal-place monetary model for teaching Strategy. Real products need business-defined currencies, smallest units, taxes, rounding rules, and promotion scopes; not all currencies have two fractional digits.
 
-Lưu toàn bộ ví dụ sau vào **`StrategyDemo.java`**:
+Save the full example as **`StrategyDemo.java`**:
 
 ~~~java
 import java.math.BigDecimal;
@@ -4110,14 +4110,14 @@ public class StrategyDemo {
 }
 ~~~
 
-Chạy trên JDK 17 trở lên:
+Run with JDK 17 or later:
 
 ~~~bash
 javac StrategyDemo.java
 java StrategyDemo
 ~~~
 
-Kết quả dự kiến:
+Expected output:
 
 ~~~text
 NONE -> discount=0.00, total=120.00
@@ -4125,27 +4125,27 @@ TEN_PERCENT -> discount=12.00, total=108.00
 FIXED_30 -> discount=30.00, total=90.00
 ~~~
 
-**Đọc từng thành phần của ví dụ:**
+**Reading the example component by component:**
 
-1. `DiscountStrategy` là một **hợp đồng thống nhất**, chỉ nói “tính mức giảm”; không áp đặt thuật toán.
-2. `NoDiscount`, `PercentageDiscount` và `FixedDiscount` cài đặt các thuật toán độc lập.
-3. `Checkout` nhận Strategy qua **constructor injection**. Nó kiểm tra quy tắc chung và gọi `strategy.discountFor(...)`. Không hề dùng `instanceof` hay biết tên class cụ thể.
-4. `StrategyDemo.main` lấy chiến lược phù hợp từ `Map`, khởi tạo Context và chạy cùng một quy trình. Đây là **lựa chọn thuật toán ở thời điểm chạy**, trước khi tạo Context.
-5. Nếu cần chính sách mới, ví dụ `LoyaltyDiscount`, ta viết thêm class thực thi `DiscountStrategy` rồi đăng ký ở nơi lựa chọn; phần lớn code `Checkout` không cần sửa.
+1. `DiscountStrategy` is a **unified contract** that specifies “calculate a discount” without prescribing an algorithm.
+2. `NoDiscount`, `PercentageDiscount`, and `FixedDiscount` implement independent algorithms.
+3. `Checkout` receives a Strategy through **constructor injection**. It validates shared rules and calls `strategy.discountFor(...)`. It never uses `instanceof` or depends on concrete class names.
+4. `StrategyDemo.main` selects a strategy from a `Map`, constructs the Context, and runs the same workflow. This demonstrates **runtime algorithm selection** before Context creation.
+5. For a new policy such as `LoyaltyDiscount`, add a class implementing `DiscountStrategy` and register it at the selection point; most `Checkout` code remains unchanged.
 
-Lưu ý: `Map` chỉ là **cơ chế chọn** Strategy. Bản thân Map/Registry không phải điều định nghĩa mẫu Strategy. Điều định nghĩa mẫu là việc **đưa một thuật toán có cùng contract vào Context**, thông qua một interface chung.
+Note that `Map` is merely a **mechanism for selecting** a Strategy. A Map/Registry does not define Strategy; what defines it is **supplying an algorithm with a shared contract to a Context** through a common interface.
 
-## 5. Strategy thay đổi vào lúc nào?
+## 5. When Can Strategy Change?
 
-Trong tài liệu GoF, Strategy có thể được chọn khi dựng Context hoặc thay bằng một implementation khác tùy nhu cầu. Hai cách phổ biến:
+In the GoF description, a Strategy may be chosen when creating the Context or replaced with a different implementation as needed. Two common approaches and an additional per-call option are:
 
-| Cách | Minh họa | Phù hợp |
+| Approach | Illustration | Appropriate when |
 |---|---|---|
-| **Chọn khi tạo Context (immutable)** | `new Checkout(new PercentageDiscount(rate))` | Mỗi request/phiên có chính sách riêng, dễ kiểm soát concurrency |
-| **Đổi Strategy trong Context** | `context.setStrategy(other)` | Một đối tượng dài hạn cần đổi thuật toán chủ động, có cơ chế quản lý trạng thái rõ ràng |
-| **Truyền Strategy cho mỗi phương thức** | `quote(subtotal, strategy)` | Cùng Context xử lý nhiều request độc lập, thuật toán là tham số của mỗi lần gọi |
+| **Select when creating Context (immutable)** | `new Checkout(new PercentageDiscount(rate))` | Each request/session has its own policy; concurrency is easier to control |
+| **Change Strategy within Context** | `context.setStrategy(other)` | A long-lived object deliberately switches algorithms with explicit state management |
+| **Pass Strategy to each method** | `quote(subtotal, strategy)` | One Context handles many independent requests, with algorithms as per-call arguments |
 
-Ví dụ đổi Strategy trực tiếp (không phải class `Checkout` ở phần trước):
+Example of switching Strategy directly (separate from the earlier `Checkout` class):
 
 ~~~java
 // Chỉ minh họa cơ chế thay đổi động trên một Context.
@@ -4166,13 +4166,13 @@ final class MutableQuoteService {
 }
 ~~~
 
-Khi cùng một `MutableQuoteService` được chia sẻ giữa nhiều HTTP request, `setStrategy` trên một request có thể ảnh hưởng request khác. Không nên dùng một singleton mutable cho chiến lược mang dữ liệu riêng của từng người dùng nếu chưa thiết kế đồng bộ/tránh race condition. Thực tế thường **chọn Strategy theo từng request rồi truyền rõ ràng**, hoặc dùng Context bất biến như `Checkout`.
+When one `MutableQuoteService` is shared by several HTTP requests, calling `setStrategy` for one request may affect another. Do not use a mutable singleton to store user-specific strategy selection without synchronization/race-condition controls. Usually **select a Strategy per request and pass it explicitly**, or use an immutable Context such as `Checkout`.
 
-Chú ý `MutableQuoteService` cố ý chưa kiểm tra quy tắc tiền tệ. Ví dụ đầy đủ đã giao việc kiểm tra hợp đồng cho `Checkout`; khi áp dụng thực tế, cần giữ đúng các kiểm tra đó.
+Note that `MutableQuoteService` intentionally omits monetary contract checks. The full example assigns those checks to `Checkout`; preserve them in real implementations.
 
-## 6. Cách viết Strategy bằng lambda trong Java
+## 6. Writing Strategy with Java Lambdas
 
-Vì `DiscountStrategy` có **một phương thức trừu tượng** (`@FunctionalInterface`), Java cho phép dùng lambda thay cho một class cụ thể khi thuật toán đủ ngắn và không cần state phức tạp.
+Because `DiscountStrategy` has **one abstract method** (`@FunctionalInterface`), Java can represent a short algorithm without complex state as a lambda instead of a concrete class.
 
 ~~~java
 DiscountStrategy weekendDiscount = subtotal ->
@@ -4184,35 +4184,35 @@ PriceQuote result = checkout.quote(new BigDecimal("200.00"));
 // Giảm 10.00, tổng còn 190.00
 ~~~
 
-Các dòng này dùng những type/import đã có trong `StrategyDemo.java`; có thể đặt bên trong `main` hoặc phương thức Java tương thích.
+These lines use the types/imports already defined in `StrategyDemo.java`; they can go inside `main` or a compatible Java method.
 
-**Chọn class riêng** nếu Strategy có nhiều bước, tham số cấu hình, dependency (dịch vụ, repository), logging riêng hoặc cần kiểm thử phức tạp. **Chọn lambda** nếu hành vi ngắn, tự giải thích được tên biến và không làm mờ quy tắc nghiệp vụ. Việc dùng lambda không làm mất bản chất của Strategy: vẫn là một implementation của hợp đồng `DiscountStrategy`.
+**Choose a dedicated class** when a Strategy has multiple steps, configuration parameters, dependencies (services or repositories), specialized logging, or complex tests. **Choose a lambda** when behavior is short, the variable name is self-explanatory, and business rules remain clear. A lambda is still a `DiscountStrategy` contract implementation.
 
-## 7. Strategy và nguyên lý OOP/SOLID
+## 7. Strategy and OOP/SOLID Principles
 
-Strategy thể hiện rất rõ ba ý tưởng OOP:
+Strategy clearly illustrates three OOP ideas:
 
-- **Đóng gói:** Mỗi biến thể thuật toán tự quản lý chi tiết tính toán.
-- **Đa hình:** Lời gọi `discountFor` được dispatch tới implementation được truyền vào.
-- **Composition:** Context giữ tham chiếu tới một đối tượng Strategy, không bắt buộc kế thừa Context.
+- **Encapsulation:** Each algorithm variant owns its calculation details.
+- **Polymorphism:** A call to `discountFor` dispatches to the injected implementation.
+- **Composition:** Context holds a Strategy reference without requiring inheritance of Context.
 
-Liên hệ SOLID:
+Connections to SOLID:
 
-| Nguyên lý | Strategy hỗ trợ ra sao | Lưu ý |
+| Principle | How Strategy helps | Caveat |
 |---|---|---|
-| **SRP** | Tách trách nhiệm điều phối checkout và tính từng loại giảm giá | Đừng tách class vô ích cho các biểu thức quá nhỏ |
-| **OCP** | Có thể thêm `LoyaltyDiscount` mà không sửa thuật toán chung của `Checkout` | Vẫn cần đăng ký/chọn biến thể ở composition root |
-| **LSP** | Các Strategy phải thực sự thay thế được theo contract `0 ≤ discount ≤ subtotal` | Có interface **không đồng nghĩa** mọi implementation hợp lệ |
-| **ISP** | Interface một thao tác, đủ cho nhu cầu của Context | Tránh interface lớn ép Strategy làm những việc không liên quan |
-| **DIP** | `Checkout` phụ thuộc `DiscountStrategy` thay vì class cụ thể | Cần chú ý hướng phụ thuộc giữa các module nếu chia package/module |
+| **SRP** | Separates checkout orchestration from individual discount calculations | Avoid useless classes for tiny expressions |
+| **OCP** | Add `LoyaltyDiscount` without changing the shared `Checkout` algorithm | The composition root still must register/select variants |
+| **LSP** | Strategies must actually be substitutable under `0 ≤ discount ≤ subtotal` | Having an interface **does not imply** every implementation is valid |
+| **ISP** | One-operation interface sufficient for Context | Avoid bloated interfaces that force unrelated responsibilities on Strategies |
+| **DIP** | `Checkout` depends on `DiscountStrategy` rather than a concrete class | Respect dependency direction among packages/modules when separating code |
 
-DI và Strategy cũng khác nhau: **DI** là cách cung cấp dependency từ ngoài vào; **Strategy** mô tả một **họ thuật toán có thể thay thế**. Trong ví dụ có cả hai: ta dùng constructor DI để đưa một Strategy vào Context.
+DI and Strategy are also different: **DI** describes supplying dependencies externally; **Strategy** describes a **family of interchangeable algorithms**. The example uses both by constructor-injecting a Strategy into its Context.
 
-## 8. Kiểm thử Strategy một cách có hệ thống
+## 8. Testing Strategy Systematically
 
-Việc tách thuật toán giúp kiểm thử hai lớp vấn đề: (a) công thức của từng Strategy; (b) hợp đồng chung và cách Context gọi Strategy. Các đoạn dưới đây dùng JUnit Jupiter (JUnit 5), đặt ở test source set, cùng package với `StrategyDemo.java`; cần dependency `junit-jupiter` và test runner của dự án.
+Algorithm separation enables two levels of tests: (a) each Strategy’s formula, and (b) the common contract and how Context invokes Strategy. The snippets below use JUnit Jupiter (JUnit 5) in the same package as `StrategyDemo.java` under the test source set; they require the project’s `junit-jupiter` dependency and test runner.
 
-### 8.1. Kiểm thử đơn vị từng thuật toán và tình huống biên
+### 8.1. Unit-Test Algorithms and Boundary Cases
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -4261,11 +4261,11 @@ class DiscountStrategyTest {
 }
 ~~~
 
-Trong test trên, `BigDecimal.equals` so sánh cả **scale**; `1.23` và `1.230` khác nhau theo `equals`. Ví dụ đã chuẩn hóa giá trị xuống hai chữ số thập phân để việc so sánh chính xác. Khi chỉ muốn kiểm tra giá trị số, có thể dùng `compareTo`.
+In the test above, `BigDecimal.equals` compares **scale** as well; `1.23` and `1.230` are different under `equals`. The example normalizes values to two decimal places for exact comparisons. If only numeric value matters, use `compareTo`.
 
-### 8.2. Một contract test dùng lại cho mọi Strategy
+### 8.2. Reusable Contract Tests for Every Strategy
 
-Mỗi Strategy mới cần tuân thủ cùng hợp đồng: đầu vào hợp lệ, đầu ra khác null, không âm, không vượt giá gốc. Dùng `@ParameterizedTest` để tránh viết lại cùng test khi thêm biến thể:
+Every new Strategy must honor the same contract: valid input, non-null output, nonnegative result, and a discount no greater than the original price. Use `@ParameterizedTest` to avoid duplicating tests when adding variants:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -4305,40 +4305,40 @@ class DiscountStrategyContractTest {
 }
 ~~~
 
-Đoạn cuối kiểm tra rằng mức giảm biểu diễn được chính xác đến hai chữ số thập phân; nếu một Strategy trả giá trị ba chữ số thập phân có ý nghĩa, `setScale(2, UNNECESSARY)` sẽ ném `ArithmeticException` và test thất bại. Đoạn test cần dependency bổ sung `junit-jupiter-params`. Đây là bộ **kiểm thử mẫu**, chưa bao phủ mọi giá trị; nên bổ sung kiểm thử thuộc tính, dữ liệu cực trị và các boundary đặc thù (đúng ngưỡng, ngay dưới/trên ngưỡng, đơn hàng lớn).
+The final assertion checks whether the discount is exactly representable with two decimal places; if a Strategy returns a value with three meaningful fractional digits, `setScale(2, UNNECESSARY)` throws `ArithmeticException` and the test fails. The test requires the additional `junit-jupiter-params` dependency. This is a **sample test suite**, not exhaustive coverage; add property-based tests, extreme values, and specific boundaries (at, just below, and just above thresholds, or large orders).
 
-Ở dự án thật, phép tính giá cần được kiểm thử cùng các quy tắc **làm tròn, giới hạn khuyến mãi, thuế và tiền tệ**. Hợp đồng Strategy là chính nơi các quy tắc chung nên được diễn đạt rõ.
+In production, pricing must be tested alongside **rounding, promotion limits, taxes, and currency rules**. The Strategy contract is where these shared rules should be stated explicitly.
 
-## 9. So sánh Strategy với những mẫu/hình thức dễ nhầm
+## 9. Comparing Strategy with Similar Patterns and Approaches
 
-| Cách tiếp cận | Ý tưởng chủ đạo | Khác Strategy ở đâu? |
+| Approach | Main idea | How it differs from Strategy |
 |---|---|---|
-| **Strategy** | Chọn một thuật toán từ nhiều implementation cùng contract | Context ủy quyền hành vi cho đối tượng Strategy |
-| **State** | Hành vi phụ thuộc trạng thái nội tại của Context; chuyển trạng thái là một phần mô hình | Các đối tượng State thường quản lý/chỉ đạo **chuyển trạng thái**, còn Strategy thường do client hoặc cấu hình chọn |
-| **Template Method** | Class cha cố định khung thuật toán; subclass override từng bước | Dùng **kế thừa**; Strategy chủ yếu dùng **composition/delegation** |
-| **Command** | Đóng gói một yêu cầu/hành động thành object | Thường hướng đến thực thi, queue, log, undo; Strategy hướng đến biến thể thuật toán |
-| **Factory Method / Factory** | Tạo đối tượng | Factory có thể **tạo hoặc chọn** Strategy, nhưng bản thân Strategy tập trung vào hành vi của object được chọn |
-| **Một `switch` đơn giản** | Chọn thuật toán bằng điều kiện trực tiếp | Ít class hơn; phù hợp khi ít nhánh, logic ngắn và hiếm thay đổi |
+| **Strategy** | Select an algorithm among implementations sharing a contract | Context delegates behavior to a Strategy object |
+| **State** | Behavior depends on the internal state of Context; transitions belong to the model | State objects typically govern **transitions**; Strategies are generally chosen by clients or configuration |
+| **Template Method** | A base class fixes the algorithm skeleton, subclasses override steps | Uses **inheritance**, while Strategy primarily uses **composition/delegation** |
+| **Command** | Encapsulates a request/action as an object | Often focuses on execution, queues, logs, or undo; Strategy varies an algorithm |
+| **Factory Method / Factory** | Creates objects | A Factory may **create or select** a Strategy, while Strategy focuses on behavior |
+| **A simple `switch`** | Selects algorithms with direct conditionals | Fewer classes; appropriate when branches are short, few, and rarely change |
 
-Một điểm cần thận trọng: Strategy và State có thể có **sơ đồ UML tương tự** (Context giữ interface, nhiều implementation). Phân biệt bằng **ý nghĩa mô hình**: chọn cách giải cùng một việc hay thể hiện một trạng thái cùng các chuyển tiếp của đối tượng.
+A caution: Strategy and State can have **similar UML diagrams** (Context holds an interface with multiple implementations). Distinguish them by **model semantics**: choosing a way to do the same task versus representing object state and transitions.
 
-### Khi Strategy chưa chắc là đáp án tốt
+### When Strategy May Not Be the Best Choice
 
-Không nên tự động tạo interface và năm class chỉ để thay một phép cộng ngắn. Cân nhắc:
-- Số biến thể có thật hay chỉ là giả định tương lai?
-- Logic của mỗi biến thể có đủ phức tạp hoặc thay đổi riêng để hưởng lợi từ tách class?
-- Contract có ổn định và dễ diễn đạt không?
-- Code dùng một lần hay được nhiều Context chia sẻ?
-- Thay đổi biến thể có cần runtime hay chỉ được cố định tại lúc build?
-- Chi phí tạo class, đăng ký, cấu hình và test có tương xứng không?
+Do not automatically create an interface and five classes to replace one short addition. Consider:
+- Are variants real, or only hypothetical future requirements?
+- Is each variant complex enough or independently changeable enough to benefit from a separate class?
+- Is the contract stable and easy to express?
+- Is the code used only once or shared by multiple Contexts?
+- Must variants change at runtime or only at build time?
+- Are the costs of classes, registration, configuration, and tests justified?
 
-Một hàm thuần hoặc `switch` vẫn có thể là thiết kế tốt. Có thể refactor sang Strategy khi sự biến thiên đã rõ.
+A pure function or `switch` can still be a good design. Refactor toward Strategy once the variation is evident.
 
-## 10. Nâng cao: chọn Strategy từ dữ liệu người dùng một cách an toàn
+## 10. Advanced: Safely Selecting Strategy from User Data
 
-Trong ví dụ main, `Map` lưu sẵn các instance được tin cậy. Khi loại chiến lược đến từ HTTP request, file cấu hình hoặc database, **không được** nạp class tùy ý bằng tên từ input rồi phản chiếu tạo instance. Hãy ánh xạ khóa hợp lệ tới những Strategy đã đăng ký/cấu hình.
+In the main example, `Map` holds pre-registered, trusted instances. When strategy names come from HTTP requests, configuration files, or databases, **do not** load arbitrary classes from input names via reflection. Map valid keys to explicitly registered/configured Strategies.
 
-Ví dụ mở rộng của `StrategyDemo.java`:
+Extension of `StrategyDemo.java`:
 
 ~~~java
 // strategies là Map<String, DiscountStrategy> trong main.
@@ -4355,68 +4355,68 @@ PriceQuote quote = new Checkout(strategy)
 System.out.println(quote.total()); // 180.00
 ~~~
 
-Với chính sách cần gọi database hoặc API bên ngoài, có thể viết Strategy là một class riêng và đưa dependency vào constructor. Khi nhiều Strategy dùng chung, chúng nên được thiết kế thread-safe hoặc tạo theo đúng scope sử dụng. Không lưu đơn hàng của user A trong field của một Strategy singleton nếu request user B cũng có thể dùng nó.
+For policies that call a database or external API, a Strategy may be a dedicated class receiving constructor-injected dependencies. Shared Strategies should be thread-safe or created at the right scope. Do not store the order of user A in a singleton Strategy field when the request of user B may also use it.
 
-Nếu chính sách được chọn từ cơ sở dữ liệu, nên lưu **mã nghiệp vụ và tham số** (ví dụ `DISCOUNT_RATE` và giá trị `0.10`) theo mô hình có kiểm soát; việc ánh xạ mã sang implementation thuộc tầng cấu hình/chọn Strategy. Luồng thực hiện một đơn hàng có thể cần ghi nhận **phiên bản chính sách** để tái hiện kết quả khi kiểm toán.
+When policies are selected from a database, store controlled **business codes and parameters** (such as `DISCOUNT_RATE` and `0.10`); mapping codes to implementations belongs in the Strategy selection/configuration layer. Order processing may need to record the **policy version** to reproduce audited results.
 
-## 11. Bài tập thực hành: chiến lược tính phí giao hàng
+## 11. Practical Exercise: Shipping Fee Strategies
 
-Bạn đang viết `ShippingService`. Cùng một đơn hàng có ba cách tính phí:
+You are implementing `ShippingService`. The same order has three shipping-fee algorithms:
 
-| Chiến lược | Luật ví dụ | Đầu ra với trọng lượng 3 kg |
+| Strategy | Example rule | Output for 3 kg |
 |---|---|---:|
 | `StandardShipping` | 15.000 VND + 5.000 VND/kg | 30.000 VND |
 | `ExpressShipping` | 30.000 VND + 10.000 VND/kg | 60.000 VND |
 | `FreeShipping` | 0 VND | 0 VND |
 
-Giả định khối lượng kg nguyên dương cho đơn giản. Hãy:
-1. Định nghĩa `ShippingStrategy` có `long feeFor(int weightKg)`.
-2. Cài đặt ba Concrete Strategy theo bảng. Trong production, phải quy định cách xử lý khối lượng thập phân, giới hạn, vùng địa lý và overflow khi nhân/cộng.
-3. Viết `ShippingService` nhận `ShippingStrategy` qua constructor, xác thực `weightKg > 0`, trả phí không âm.
-4. Chọn Strategy theo lựa chọn của người mua từ một `Map` hoặc `enum` tại composition root; không dùng chuỗi `if/else` bên trong `ShippingService`.
-5. Viết JUnit test cho cả ba phương thức và một contract test chung; thử bổ sung `SameDayShipping` mà không sửa core của `ShippingService`.
+Assume positive integer kilogram weights for simplicity. Then:
+1. Define `ShippingStrategy` with `long feeFor(int weightKg)`.
+2. Implement the three Concrete Strategies from the table. In production, define handling for fractional weights, limits, regions, and multiplication/addition overflow.
+3. Implement `ShippingService` accepting `ShippingStrategy` through its constructor, validating `weightKg > 0`, and returning a nonnegative fee.
+4. Select Strategy from buyer choices through a `Map` or `enum` at the composition root; do not embed `if/else` strings inside `ShippingService`.
+5. Write JUnit tests for all three methods and a shared contract test; try adding `SameDayShipping` without changing the `ShippingService` core.
 
-### Câu hỏi tự kiểm tra
+### Self-Check Questions
 
-1. `Checkout` có cần biết class `PercentageDiscount` không? Nếu có, đang phụ thuộc sai chỗ nào?
-2. Strategy quyết định **thuật toán tính tiền** hay chịu trách nhiệm **khởi tạo đối tượng**? Factory có thể tham gia vào đâu?
-3. Đổi Strategy cho một singleton bằng setter trong hệ thống nhiều request có thể gây lỗi gì?
-4. Vì sao Strategy mới phải giữ hợp đồng `0 ≤ discount ≤ subtotal` dù interface Java chỉ có chữ ký trả `BigDecimal`?
-5. Khi chỉ có hai biểu thức đơn giản, không có nhu cầu thay đổi, vì sao `switch` có thể là lựa chọn tốt?
+1. Must `Checkout` know the `PercentageDiscount` class? If it does, where is the dependency misplaced?
+2. Does Strategy choose **the pricing algorithm** or handle **object creation**? Where can Factory participate?
+3. What problems can arise if a singleton Strategy is changed through a setter under concurrent requests?
+4. Why must a new Strategy preserve `0 ≤ discount ≤ subtotal` even though the Java interface only declares a `BigDecimal` return type?
+5. With only two simple expressions and no changes required, why might a `switch` be preferable?
 
-**Kết luận thực hành:** **Strategy = một hợp đồng hành vi + nhiều implementation thuật toán + Context dùng composition để ủy quyền.** Chọn Strategy ở ranh giới cấu hình hoặc theo request; giữ Context tập trung vào nghiệp vụ chung và bảo vệ hợp đồng đầu vào/đầu ra. Pattern có giá trị khi các thuật toán thực sự cần biến thiên độc lập, không phải khi chỉ muốn loại bỏ mọi câu lệnh `if`.
+**Practical conclusion:** **Strategy = one behavioral contract + multiple algorithm implementations + a Context that delegates through composition.** Select the Strategy at configuration boundaries or per request; keep Context focused on shared business operations while enforcing input/output contracts. The pattern adds value when algorithms genuinely vary independently, not merely to eliminate every `if` statement.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-009">State và hành vi theo trạng thái</a>
+## <a id="design-patterns-009">State and State-Dependent Behavior</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# State Pattern: tổ chức hành vi theo trạng thái của đối tượng
+# State Pattern: Organizing Behavior by Object State
 
-**Chủ đề:** OOP → Mẫu thiết kế → **State và hành vi theo trạng thái**.
+**Topic:** OOP → Design Patterns → **State and state-dependent behavior**.
 
-**Mục tiêu:** hiểu vì sao cùng một lời gọi có thể có kết quả khác nhau tùy trạng thái hiện tại; viết được State Pattern bằng Java, thiết kế quy tắc chuyển trạng thái hợp lệ, kiểm thử luồng và nhận biết khi nào chỉ cần enum hoặc switch đơn giản.
+**Objective:** Understand why the same call may produce different outcomes depending on current state; implement State Pattern in Java, define valid transitions, test workflows, and recognize when an enum or simple switch suffices.
 
-## 1. Vì sao trạng thái lại ảnh hưởng đến hành vi?
+## 1. Why Does State Affect Behavior?
 
-Hãy xét một đơn hàng trực tuyến. Hệ thống cho phép người dùng hoặc nhân viên thực hiện các thao tác:
+Consider an online order. The system lets customers or staff perform operations such as:
 
-- **Xác nhận thanh toán** khi đơn mới tạo.
-- **Đánh dấu đã bàn giao vận chuyển** sau khi thanh toán được xác nhận.
-- **Hủy đơn** khi đơn vẫn đang chờ thanh toán.
+- **Confirm payment** for a newly created order.
+- **Mark the order as handed over for shipping** after payment confirmation.
+- **Cancel an order** while it is still awaiting payment.
 
-Cùng một yêu cầu **cancel()** có ý nghĩa khác nhau: đơn mới tạo thì được hủy, còn đơn đã giao vận chuyển thì không thể dùng cùng quy trình đó để hủy. Tương tự, một đơn đã thanh toán không nên xác nhận thanh toán lần thứ hai như thể chưa thu tiền.
+The same **cancel()** request has different meanings: a new order can be canceled, but a shipped order cannot be canceled through the same workflow. Likewise, a paid order should not have its payment reconfirmed as if no payment had occurred.
 
-Nói cách khác, **hành vi hợp lệ phụ thuộc vào trạng thái**. Nếu code bỏ qua trạng thái, hệ thống có thể nhận các thao tác không có nghĩa hoặc thực hiện quy trình sai.
+In other words, **valid behavior depends on state**. Ignoring state can let the system accept meaningless operations or execute an incorrect workflow.
 
-Ở phiên bản nhỏ, ta có thể kiểm tra trực tiếp:
+For a small version, a direct check works:
 
 ~~~java
 void confirmPayment() {
@@ -4428,24 +4428,24 @@ void confirmPayment() {
 }
 ~~~
 
-Đoạn code này hoàn toàn hợp lý khi chỉ có vài trạng thái và quy tắc ngắn. Nhưng khi thêm nhiều thao tác và biến thể, các điều kiện **if/switch** có thể xuất hiện rải rác trong các phương thức như **confirmPayment()**, **markShipped()**, **cancel()**, **allowedActions()**, **nextStep()**. Mỗi lần thêm trạng thái mới, ta phải tìm và sửa nhiều nơi; các nhánh dễ mâu thuẫn với nhau.
+This code is perfectly reasonable with only a few states and short rules. As operations and variants grow, **if/switch** conditions may spread across methods such as **confirmPayment()**, **markShipped()**, **cancel()**, **allowedActions()**, and **nextStep()**. Adding a state then requires editing multiple places, and branches can contradict one another.
 
-**State Pattern** là một cách tổ chức những hành vi đó: đặt logic của từng trạng thái vào một đối tượng riêng, rồi để đối tượng nghiệp vụ ủy quyền cho đối tượng trạng thái hiện tại.
+**State Pattern** organizes those behaviors by placing each state's logic in a dedicated object and letting the business object delegate to its current state object.
 
-## 2. State Pattern là gì?
+## 2. What Is State Pattern?
 
-State là một **mẫu thiết kế hành vi** (*behavioral design pattern*) cho phép một đối tượng thay đổi cách phản hồi với thao tác khi **trạng thái nội bộ** của nó thay đổi. Với người gọi, dường như đối tượng thay đổi hành vi, trong khi API công khai có thể giữ nguyên.
+State is a **behavioral design pattern** that lets an object respond differently to operations as its **internal state** changes. To callers, the object appears to change behavior while its public API can remain unchanged.
 
-Bốn vai trò thường gặp:
+Four common roles:
 
-| Vai trò | Ý nghĩa | Ví dụ |
+| Role | Meaning | Example |
 | --- | --- | --- |
-| **Context** | Đối tượng mà client sử dụng; giữ trạng thái hiện tại và ủy quyền hành vi | **Order** |
-| **State** | Hợp đồng cho các thao tác thay đổi theo trạng thái | **OrderState** |
-| **Concrete State** | Cài đặt hành vi cụ thể của một trạng thái | **CreatedState**, **PaidState**, **ShippedState**, **CancelledState** |
-| **Client** | Gọi API của Context, không cần điều khiển trực tiếp lớp trạng thái | Controller, service hoặc mã trong **main** |
+| **Context** | Object used by clients; holds the current state and delegates behavior | **Order** |
+| **State** | Contract for state-dependent operations | **OrderState** |
+| **Concrete State** | Implements behavior for one state | **CreatedState**, **PaidState**, **ShippedState**, **CancelledState** |
+| **Client** | Invokes Context APIs without directly controlling the state class | Controller, service, or code in **main** |
 
-Mối quan hệ tổng quát:
+General relationship:
 
 ~~~mermaid
 classDiagram
@@ -4476,24 +4476,24 @@ classDiagram
     OrderState <|.. CancelledState
 ~~~
 
-Ở đây **Order** không tự hỏi “trạng thái hiện tại là gì?” trong mọi thao tác. Nó gọi **state.confirmPayment(this)** hoặc **state.cancel(this)**. Mỗi state quyết định xử lý hợp lệ ra sao và chuyển sang state nào.
+Here **Order** does not have to ask “what is the current state?” in every operation. It invokes **state.confirmPayment(this)** or **state.cancel(this)**. Each state determines which behavior is allowed and which state follows.
 
-**Điểm quan trọng:** State Pattern không làm quy tắc nghiệp vụ biến mất. Nó đặt quy tắc vào các đơn vị dễ tìm, dễ kiểm tra, dễ mở rộng hơn khi sự khác biệt theo trạng thái đủ lớn.
+**Key point:** State Pattern does not remove business rules. When state-specific differences are substantial, it places those rules in units that are easier to find, test, and extend.
 
-## 3. Xác định máy trạng thái trước khi viết lớp
+## 3. Define the State Machine Before Writing Classes
 
-Trước khi viết Java, hãy liệt kê rõ các trạng thái và sự kiện chuyển đổi. Với ví dụ này, quy trình được đơn giản hóa thành bốn trạng thái:
+Before writing Java, list states and transition events. This example simplifies the workflow to four states:
 
-| Trạng thái hiện tại | Xác nhận thanh toán | Đánh dấu đã gửi | Hủy |
+| Current state | Confirm payment | Mark shipped | Cancel |
 | --- | --- | --- | --- |
-| **CREATED** — mới tạo | Chuyển **PAID** | Từ chối | Chuyển **CANCELLED** |
-| **PAID** — đã xác nhận tiền | Từ chối | Chuyển **SHIPPED** | Từ chối |
-| **SHIPPED** — đã bàn giao vận chuyển | Từ chối | Từ chối | Từ chối |
-| **CANCELLED** — đã hủy | Từ chối | Từ chối | Từ chối |
+| **CREATED** — newly created | Transition to **PAID** | Reject | Transition to **CANCELLED** |
+| **PAID** — payment confirmed | Reject | Transition to **SHIPPED** | Reject |
+| **SHIPPED** — handed over to shipping | Reject | Reject | Reject |
+| **CANCELLED** — canceled | Reject | Reject | Reject |
 
-**Giả định nghiệp vụ của ví dụ:** không hủy sau khi thanh toán vì trường hợp này cần quy trình hoàn tiền riêng. Hệ thống thật có thể cho phép yêu cầu hủy, hoàn tiền, trả hàng hoặc nhiều trạng thái trung gian hơn. Không nên sao chép bảng này thành chính sách thương mại chung cho mọi ứng dụng.
+**Example business assumption:** an order cannot be canceled after payment, because that case requires a separate refund workflow. Real systems may permit cancellation requests, refunds, returns, or additional intermediate states. Do not copy this table as a universal commerce policy.
 
-Sơ đồ chuyển trạng thái:
+State transition diagram:
 
 ~~~mermaid
 stateDiagram-v2
@@ -4505,29 +4505,29 @@ stateDiagram-v2
     CANCELLED --> [*]
 ~~~
 
-Trong sơ đồ, **SHIPPED** và **CANCELLED** không có chuyển tiếp trong *phạm vi mô hình minh họa*. Điều đó không có nghĩa đơn đã vận chuyển không thể tiếp tục sang **DELIVERED**, **RETURNED** hoặc trạng thái khác khi phát triển quy trình thực tế.
+In this diagram, **SHIPPED** and **CANCELLED** have no outgoing transitions *within the illustrative model*. That does not mean a shipped order cannot later become **DELIVERED**, **RETURNED**, or another state in a real workflow.
 
-### Phân biệt trạng thái, sự kiện và hành vi
+### Distinguish State, Event, and Behavior
 
-- **Trạng thái:** đơn hiện đang ở đâu trong vòng đời, chẳng hạn **PAID**.
-- **Sự kiện/lệnh:** có yêu cầu thực hiện điều gì, chẳng hạn **markShipped()**.
-- **Guard/điều kiện:** điều kiện nào phải đúng để chấp nhận lệnh, chẳng hạn đơn phải ở **PAID** và thông tin bàn giao đã được xác nhận.
-- **Chuyển trạng thái:** kết quả thay đổi từ **PAID** sang **SHIPPED**.
-- **Tác dụng phụ:** gửi email, gọi cổng thanh toán hoặc ghi database. Những việc này cần thiết kế riêng để tránh tác dụng phụ bị thực hiện hai lần.
+- **State:** where the order currently is in its lifecycle, such as **PAID**.
+- **Event/command:** an operation being requested, such as **markShipped()**.
+- **Guard/condition:** what must be true to accept a command, such as being in **PAID** with confirmed handover information.
+- **State transition:** a change from **PAID** to **SHIPPED**.
+- **Side effect:** sending email, calling a payment gateway, or writing to a database. Design these separately to prevent duplicate execution.
 
-State Pattern chủ yếu giúp tổ chức **hành vi và chuyển trạng thái**, chứ tự nó không bảo đảm giao dịch, xác thực, đồng bộ hay hiệu lực của sự kiện bên ngoài.
+State Pattern mainly organizes **behavior and transitions**; it does not guarantee transactions, authentication, synchronization, or validity of external events.
 
-## 4. Ví dụ Java 17+ hoàn chỉnh
+## 4. Complete Java 17+ Example
 
-Tạo file **OrderStateDemo.java**. Mã dưới đây độc lập, không cần Spring và không cần thư viện ngoài.
+Create **OrderStateDemo.java**. The code is standalone and requires neither Spring nor external libraries.
 
-**Thiết kế được chọn:**
+**Chosen design:**
 
-1. **Order** là Context, giữ **OrderState** hiện tại trong field **private**.
-2. **OrderState** định nghĩa các thao tác mà state có thể xử lý; mặc định từ chối chuyển trạng thái không hợp lệ.
-3. Mỗi concrete state chỉ override những hành vi được cho phép.
-4. Các đối tượng state được dùng chung dưới dạng singleton **vì chúng không có dữ liệu mutable riêng**.
-5. **allowedActions()** cung cấp thông tin giao diện về thao tác hợp lệ; kiểm tra thật vẫn được thực hiện ở phía domain.
+1. **Order** is the Context and keeps its current **OrderState** in a **private** field.
+2. **OrderState** defines operations a state can handle; the default implementation rejects invalid transitions.
+3. Each concrete state overrides only the operations it permits.
+4. State objects are shared as singletons **because they hold no mutable state of their own**.
+5. **allowedActions()** tells the UI which operations are allowed; the domain still enforces actual validity.
 
 ~~~java
 import java.util.Objects;
@@ -4728,14 +4728,14 @@ public class OrderStateDemo {
 }
 ~~~
 
-Chạy bằng JDK 17 trở lên:
+Run with JDK 17 or later:
 
 ~~~bash
 javac OrderStateDemo.java
 java OrderStateDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 CREATED
@@ -4746,45 +4746,45 @@ SHIPPED
 CANCELLED
 ~~~
 
-### Giải thích luồng hoạt động
+### Explanation of the Execution Flow
 
-- **new Order("ORD-001")** tạo Context ở **CREATED_STATE**.
-- Gọi **confirmPayment()**: **Order** ủy quyền cho **CreatedState**, state đó chuyển Order sang **PAID_STATE**.
-- Gọi **cancel()** từ **PAID_STATE**: không có override hợp lệ nên **OrderState.cancel()** ném **IllegalStateException**. Trạng thái vẫn **PAID**.
-- Gọi **markShipped()**: **PaidState** cho phép chuyển sang **SHIPPED_STATE**.
-- Một đơn mới khác có thể được hủy ngay ở trạng thái **CREATED** và chuyển sang **CANCELLED_STATE**.
+- **new Order("ORD-001")** creates the Context in **CREATED_STATE**.
+- Calling **confirmPayment()** makes **Order** delegate to **CreatedState**, which transitions the Order to **PAID_STATE**.
+- Calling **cancel()** in **PAID_STATE** finds no permitted override, so **OrderState.cancel()** throws **IllegalStateException**. The state remains **PAID**.
+- Calling **markShipped()** makes **PaidState** permit a transition to **SHIPPED_STATE**.
+- Another new order can be canceled while in **CREATED** and move to **CANCELLED_STATE**.
 
-Mã **confirmPayment()** mô phỏng việc ghi nhận rằng thanh toán đã được xác minh. **Không gọi phương thức này chỉ vì client gửi lên thông báo “tôi đã trả tiền”**: khi tích hợp thật, server cần kiểm tra sự kiện/callback đáng tin cậy hoặc trạng thái thanh toán ở hệ thống thanh toán trước khi ghi nhận thay đổi.
+The **confirmPayment()** method simulates recording verified payment. **Do not invoke it merely because a client sends a “I have paid” message**: in a real integration, the server must check a trusted event/callback or a verified payment status with the payment system before recording the change.
 
-### Vì sao dùng private State thay vì public setter?
+### Why Use a Private State Instead of a Public Setter?
 
-Nếu có **order.setStatus(OrderStatus.SHIPPED)**, bất kỳ nơi nào cũng có thể nhảy thẳng từ **CREATED** sang **SHIPPED** và bỏ qua quy tắc. Ví dụ dùng các **command method** có ý nghĩa như **confirmPayment()** và **markShipped()**; việc chuyển trạng thái trực tiếp bị đóng bên trong lớp **Order**.
+If **order.setStatus(OrderStatus.SHIPPED)** existed, any caller could jump directly from **CREATED** to **SHIPPED**, bypassing rules. The example uses meaningful **command methods** such as **confirmPayment()** and **markShipped()**, with direct transitions encapsulated inside **Order**.
 
-State object được chia sẻ an toàn về **mặt dữ liệu nội bộ của chính các state** vì chúng không giữ state mutable. Tuy nhiên, **Order** vẫn có field mutable **state** nên toàn bộ Order **không mặc nhiên thread-safe**. Điều này sẽ được xử lý ở phần vận hành.
+State objects can be shared safely **with respect to their own internal data**, because they have no mutable state. However, **Order** still has a mutable **state** field, so the entire Order **is not automatically thread-safe**. Production concurrency is discussed later.
 
-## 5. Cùng API, hành vi khác nhau theo trạng thái
+## 5. Same API, Different Behavior by State
 
-State Pattern không chỉ là “lưu enum dưới dạng class”. Nó đặc biệt có ích khi trạng thái quyết định **nhiều hành vi khác nhau**.
+State Pattern does more than “store an enum as a class.” It is especially useful when a state governs **many different behaviors**.
 
-Trong ví dụ:
+In this example:
 
-| Hành vi | CREATED | PAID | SHIPPED | CANCELLED |
+| Behavior | CREATED | PAID | SHIPPED | CANCELLED |
 | --- | --- | --- | --- | --- |
-| **confirmPayment()** | Đổi sang PAID | Báo lỗi | Báo lỗi | Báo lỗi |
-| **markShipped()** | Báo lỗi | Đổi sang SHIPPED | Báo lỗi | Báo lỗi |
-| **cancel()** | Đổi sang CANCELLED | Báo lỗi | Báo lỗi | Báo lỗi |
-| **allowedActions()** | Xác nhận tiền, hủy | Đánh dấu đã gửi | Trống | Trống |
-| **nextStep()** | Chờ xác nhận tiền | Chờ bàn giao | Đã bàn giao | Đã hủy |
+| **confirmPayment()** | Transition to PAID | Error | Error | Error |
+| **markShipped()** | Error | Transition to SHIPPED | Error | Error |
+| **cancel()** | Transition to CANCELLED | Error | Error | Error |
+| **allowedActions()** | Confirm payment, cancel | Mark shipped | Empty | Empty |
+| **nextStep()** | Await payment confirmation | Await shipping handover | Handed over to shipping | Canceled |
 
-Client gọi cùng một phương thức **nextStep()** nhưng nhận mô tả khác nhau từ state hiện tại. Nếu xuất hiện các hành vi riêng như **tính chi phí hủy**, **cho phép sửa địa chỉ**, **xác định SLA**, **kiểm tra quyền thao tác** hoặc **quy định sự kiện tiếp theo**, việc tổ chức chúng theo trạng thái có thể rõ hơn một khối lớn switch nằm rải ở nhiều lớp.
+A client invokes the same **nextStep()** method yet receives different descriptions from the current state. When there are state-specific behaviors such as **calculating cancellation charges**, **allowing address changes**, **determining SLAs**, **checking operation permissions**, or **deciding next events**, organizing them by state may be clearer than sprawling switches across classes.
 
-Với giao diện người dùng, **allowedActions()** hữu ích để ẩn hoặc vô hiệu nút không liên quan, nhưng **không phải kiểm soát bảo mật**. Server vẫn phải xác thực người dùng, kiểm tra quyền, ràng buộc nghiệp vụ và trạng thái thực tại thời điểm thực hiện lệnh. Dữ liệu trạng thái mà UI hiển thị có thể đã cũ.
+For a UI, **allowedActions()** helps hide or disable irrelevant buttons, but it is **not a security control**. The server must still authenticate the user, check permissions and business constraints, and verify current state when executing the command. State displayed by the UI may be stale.
 
-## 6. Kiểm thử quy tắc chuyển trạng thái
+## 6. Testing State Transition Rules
 
-State Pattern cần test **đường đi hợp lệ** lẫn **thao tác bị từ chối**. Một thay đổi enum hoặc sửa quyền của state rất dễ gây lỗi nếu không kiểm tra cả hai.
+State Pattern needs tests for both **valid paths** and **rejected operations**. Adding an enum value or changing state permissions can easily cause bugs if only happy paths are tested.
 
-Ví dụ với **JUnit 5 (Jupiter)**, đặt trong **OrderStateDemoTest.java** cùng package:
+Example with **JUnit 5 (Jupiter)**: place **OrderStateDemoTest.java** in the same package:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -4857,72 +4857,72 @@ class OrderStateDemoTest {
 }
 ~~~
 
-Các test này cần JUnit Jupiter trong classpath. **OrderStateDemo.java** tự chạy được mà không cần JUnit. Khi phát triển thật, bổ sung test cho các quy trình hoàn tiền, timeout, xác nhận lặp, khôi phục trạng thái từ database và thao tác đồng thời.
+These tests require JUnit Jupiter on the classpath. **OrderStateDemo.java** runs independently without JUnit. In production, add tests for refunds, timeouts, duplicate confirmations, restoring state from a database, and concurrent operations.
 
-### Test ma trận trạng thái
+### State-Matrix Tests
 
-Với hệ thống có nhiều trạng thái, nên tạo một **ma trận trạng thái × thao tác** và kiểm tra các ô được chấp nhận hoặc từ chối. Chỉ test một “happy path” từ đầu đến cuối sẽ bỏ sót các chuyển trạng thái bất hợp lệ. Khi các quy tắc là đặc tả nghiệp vụ quan trọng, hãy coi bảng chuyển trạng thái như một tài liệu thiết kế cần được review cùng code/test.
+For systems with many states, create a **state × operation matrix** and test which cells accept or reject an operation. A single end-to-end happy path misses invalid transitions. Treat the transition table as a design artifact reviewed alongside code/tests when these rules form important business requirements.
 
-## 7. State khác Strategy, enum và State Machine như thế nào?
+## 7. How Does State Differ from Strategy, Enum, and State Machines?
 
-Các khái niệm này liên quan nhưng không đồng nhất:
+These concepts are related but not identical:
 
-| Kỹ thuật | Cơ chế chủ yếu | Khi nào phù hợp |
+| Technique | Primary mechanism | Appropriate when |
 | --- | --- | --- |
-| **Enum + if/switch** | Lưu mã trạng thái; dùng điều kiện để quyết định hành vi | Ít trạng thái, ít thao tác, quy tắc đơn giản và ổn định |
-| **State Pattern** | Context ủy quyền cho đối tượng trạng thái; mỗi state quy định hành vi/chuyển tiếp | Nhiều hành vi phụ thuộc trạng thái, nhánh phức tạp hoặc dễ thay đổi |
-| **Strategy Pattern** | Client/Context dùng một thuật toán có thể thay thế | Nhiều cách thực hiện cùng một công việc: tính thuế, phí vận chuyển, định dạng xuất |
-| **Finite State Machine (FSM)** | Mô hình hình thức gồm trạng thái, sự kiện, điều kiện và chuyển tiếp | Cần đặc tả, xác minh, phát hiện trạng thái bất khả đạt hoặc quy trình phức tạp |
-| **Workflow/State Machine Framework** | Máy thực thi chuyển tiếp, guard, event, persistence, action theo cấu hình/code | Quy trình dài, phân nhánh, có nhiều bước bất đồng bộ và yêu cầu vận hành đặc thù |
+| **Enum + if/switch** | Stores a state code, uses conditionals to decide behavior | Few states and operations; simple, stable rules |
+| **State Pattern** | Context delegates to a state object; each state defines behavior/transitions | Many state-dependent behaviors, complex branches, or frequent changes |
+| **Strategy Pattern** | Client/Context uses an interchangeable algorithm | Multiple approaches to one task: taxes, shipping costs, export formats |
+| **Finite State Machine (FSM)** | Formal model of states, events, guards, and transitions | Need specifications, verification, detection of unreachable states, or complex flows |
+| **Workflow/State Machine Framework** | Executes configured/coded transitions, guards, events, persistence, and actions | Long, branching workflows with async steps and specific operational requirements |
 
-**State Pattern là một cách cài đặt máy trạng thái**, nhưng không phải mọi FSM đều cần State Pattern. Một bảng chuyển trạng thái và một hàm thuần túy có thể đủ cho quy trình nhỏ. Ngược lại, một thư viện workflow có thể áp dụng FSM bằng bảng dữ liệu hay cấu hình mà không tạo một concrete class cho từng state.
+**State Pattern is one way to implement a state machine**, but not every FSM needs State Pattern. A transition table and pure function may suffice for a small workflow. Conversely, a workflow library can implement an FSM using data tables/configuration without one concrete class per state.
 
-### State và Strategy đều dùng composition/polymorphism; khác mục đích
+### State and Strategy Both Use Composition/Polymorphism but Serve Different Purposes
 
-Giả sử **ShippingFeePolicy** có hai thuật toán **StandardFeePolicy** và **ExpressFeePolicy**. Chọn chính sách nào thường do cấu hình hoặc client quyết định; đó là hướng **Strategy**. Còn việc **Order** chuyển từ **CREATED** sang **PAID** bởi sự kiện xác nhận thanh toán là sự phát triển của **trạng thái vòng đời**; đó là hướng **State**.
+Suppose **ShippingFeePolicy** has two algorithms, **StandardFeePolicy** and **ExpressFeePolicy**. The client or configuration usually selects which policy to use; that suggests **Strategy**. An **Order** transitioning from **CREATED** to **PAID** following payment confirmation instead represents evolving **lifecycle state**, suggesting **State**.
 
-Điểm khác thường gặp: **Strategy** có thể được chọn từ bên ngoài mà không tự đổi sau lời gọi; **State** thường quyết định hoặc ảnh hưởng đến state tiếp theo của Context. Đây là khác biệt về **ý định**, không phải giới hạn cú pháp cứng nhắc.
+A common distinction: **Strategy** may be selected externally and remain unchanged after a call; **State** often determines or influences the next state of Context. This is about **intent**, not a rigid syntactic restriction.
 
-## 8. Ai được quyết định trạng thái tiếp theo?
+## 8. Who Decides the Next State?
 
-Trong ví dụ, **concrete state** gọi **order.transitionTo(...)**. Đây là một trong các cách thiết kế.
+In the example, each **concrete state** invokes **order.transitionTo(...)**. That is one valid design.
 
-Có ít nhất ba lựa chọn hợp lý:
+There are at least three reasonable options:
 
-1. **State tự yêu cầu chuyển:** concrete state biết trạng thái tiếp theo; code nằm gần hành vi quyết định. Ví dụ Java đã chọn cách này.
-2. **Context điều phối chuyển:** concrete state trả về một kết quả/sự kiện, Context áp dụng chuyển tiếp. Phù hợp khi Context phải bảo vệ thêm các bất biến hoặc thực hiện một chuỗi xử lý thống nhất.
-3. **Bộ điều phối bên ngoài:** workflow engine hoặc application service xét guard, thực hiện action và lưu state. Phù hợp khi quá trình liên quan transaction, nhiều aggregate, timeout hoặc event bất đồng bộ.
+1. **State requests the transition:** the concrete state knows the next state, keeping code close to the deciding behavior. The Java example uses this approach.
+2. **Context coordinates the transition:** the concrete state returns a result/event, and Context applies the transition. Useful when Context must enforce further invariants or execute a uniform workflow.
+3. **External coordinator:** a workflow engine or application service evaluates guards, executes actions, and persists state. Useful when processes involve transactions, several aggregates, timeouts, or asynchronous events.
 
-Không cần thêm lớp điều phối chỉ để “đúng mẫu”. Hãy chọn nơi đặt quy tắc khiến người đọc dễ tìm ra câu trả lời: **ở trạng thái nào, thao tác nào được phép, tại sao, và kết quả là gì?**
+Do not introduce a coordinator merely to “follow the pattern.” Put rules where readers can easily answer: **in which state, which operation is allowed, why, and with what result?**
 
-### Có nên dùng default method để từ chối thao tác?
+### Should Default Methods Reject Operations?
 
-Trong ví dụ, **OrderState** dùng default method ném lỗi. Điều đó có hai lợi ích: code của một state ngắn và tập trung vào điều được phép; hành vi từ chối nhất quán.
+In the example, **OrderState** uses default methods that throw errors. This keeps concrete state code concise and focused on allowed operations, while providing consistent rejection behavior.
 
-Tuy nhiên, nếu một state bỏ sót override do lỗi lập trình, mặc định ném lỗi cũng có thể che việc triển khai thiếu. Với nghiệp vụ quan trọng, cần test ma trận. Ở một thiết kế khác, có thể dùng interface buộc khai báo mọi hành vi hoặc một bảng chuyển tiếp dữ liệu để dễ audit. **Default method ở đây là lựa chọn minh họa, không phải yêu cầu bắt buộc của State Pattern.**
+However, if a state fails to override a method because of a programming error, the default rejection may conceal missing behavior. For critical business rules, test the entire matrix. Another design could require interfaces to declare every behavior or use a data-driven transition table for easier audits. **Default methods here are illustrative, not a requirement of State Pattern.**
 
-## 9. Thực tế: database, transaction và xử lý đồng thời
+## 9. Production: Databases, Transactions, and Concurrency
 
-Code trong bộ nhớ ở trên dạy rõ mô hình State, nhưng chưa phải một hệ thống đặt hàng hoàn chỉnh. Có ba ranh giới quan trọng.
+The in-memory example teaches the State model but is not a complete ordering system. Three boundaries matter.
 
-### 9.1. Lưu trạng thái bền vững
+### 9.1. Persist State Durably
 
-Nếu khởi động lại ứng dụng, field **state** trong RAM sẽ mất. Ứng dụng thật thường lưu một mã trạng thái như **CREATED**, **PAID** vào database. Khi đọc lại aggregate, hệ thống ánh xạ mã đã lưu thành State object tương ứng.
+When the application restarts, the **state** field in RAM disappears. Real applications commonly store a state code such as **CREATED** or **PAID** in a database. When loading the aggregate, the system maps the stored code to its corresponding State object.
 
-**Không nhất thiết phải serialize trực tiếp implementation của State**. Việc lưu mã trạng thái tách dữ liệu nghiệp vụ khỏi tên class Java và thuận tiện cho schema migration. Phần phục hồi trạng thái phải là API nội bộ có kiểm soát, không phải public setter cho bất cứ client nào nhảy giữa các trạng thái.
+**There is no need to serialize the State implementation directly.** Storing a state code separates business data from Java class names and supports schema migrations. State restoration should be a controlled internal API, not a public setter allowing any client to jump between states.
 
-### 9.2. Hai yêu cầu đồng thời có thể phá vỡ kỳ vọng
+### 9.2. Concurrent Requests Can Violate Expectations
 
-Giả sử cùng một đơn đang ở **CREATED**. Một request **confirmPayment()**, một request **cancel()** chạy gần như đồng thời. Nếu chúng cùng đọc trạng thái cũ và ghi trạng thái mới mà không có biện pháp điều phối, có thể xảy ra mất cập nhật (*lost update*) hoặc ghi nhận hai sự kiện nghiệp vụ mâu thuẫn.
+Suppose an order is in **CREATED**. One request invokes **confirmPayment()** while another invokes **cancel()** at nearly the same time. If both read the old state and write a new one without coordination, the result may include a *lost update* or two conflicting business events.
 
-Các biện pháp tùy kiến trúc bao gồm:
+Possible controls depend on the architecture:
 
-- Transaction và khóa database phù hợp với đặc điểm dữ liệu.
-- **Optimistic locking** với cột version; chỉ một update dựa trên version cũ được chấp nhận, request còn lại phải kiểm tra lại.
-- **Conditional update** có điều kiện trạng thái, chẳng hạn “chỉ đổi CREATED → PAID nếu trạng thái hiện vẫn là CREATED”.
-- Serialization các lệnh theo từng order ID khi kiến trúc thực sự cần.
+- Transactions and database locks appropriate to the data model.
+- **Optimistic locking** with a version column: only one update against the old version succeeds, while another request must recheck state.
+- **Conditional updates** with state preconditions, such as “change CREATED → PAID only if current state is still CREATED.”
+- Serializing commands per order ID if the architecture truly requires it.
 
-Ví dụ ý tưởng SQL (cú pháp và transaction thực tế phụ thuộc database):
+Illustrative SQL idea (actual syntax and transaction semantics depend on the database):
 
 ~~~sql
 UPDATE orders
@@ -4932,95 +4932,95 @@ WHERE id = :order_id
   AND version = :expected_version;
 ~~~
 
-Nếu số dòng được cập nhật là **0**, trạng thái/version không còn đúng hoặc đơn không tồn tại. Application cần phân biệt lý do và phản hồi phù hợp. **State Pattern trong JVM tự nó không cung cấp atomicity xuyên các request/instance.**
+If the affected row count is **0**, the state/version may have changed or the order may be missing. The application must distinguish causes and respond appropriately. **State Pattern inside the JVM does not provide atomicity across requests or instances.**
 
-### 9.3. Tác dụng phụ phải phù hợp kết quả transaction
+### 9.3. Side Effects Must Match Transaction Outcomes
 
-Một bước chuyển trạng thái có thể cần gửi email hoặc xuất sự kiện. Không nên mặc định gọi email trước khi commit transaction: nếu commit thất bại, khách có thể nhận email “đã thanh toán” dù trạng thái trong database vẫn chưa đổi.
+A transition may need to send an email or publish an event. Do not automatically send email before a transaction commits: if the commit fails, a customer may receive a “paid” email even though the database state was never updated.
 
-Tùy hệ thống, có thể dùng **transactional outbox** để lưu event trong cùng transaction với thay đổi trạng thái, sau đó có worker phát event. Consumer cần idempotency/deduplication phù hợp vì việc giao event có thể lặp.
+Depending on requirements, a **transactional outbox** can persist an event in the same transaction as the state change, then a worker publishes it. Consumers need suitable idempotency/deduplication because events may be delivered more than once.
 
-Đối với thanh toán, **confirmPayment** trong ví dụ chỉ minh họa chuyển từ **CREATED** sang **PAID** sau khi đã xác minh. Trong thực tế, phải có định danh giao dịch, chống xử lý callback lặp, xác minh chữ ký/sự kiện, xử lý tiền hoàn trả và các trạng thái thất bại/đang chờ. Các nghĩa vụ đó là thiết kế nghiệp vụ và hạ tầng, không thể được bảo đảm chỉ bằng việc chia thành State class.
+For payments, **confirmPayment** only illustrates a **CREATED** → **PAID** transition after verification. Real systems require transaction IDs, duplicate-callback protection, signature/event verification, refund handling, and pending/failed states. Those are business and infrastructure responsibilities, not guarantees obtained merely by creating State classes.
 
-## 10. Những lỗi thường gặp khi dùng State Pattern
+## 10. Common Mistakes with State Pattern
 
-| Lỗi | Hậu quả | Cách tránh |
+| Mistake | Consequence | Prevention |
 | --- | --- | --- |
-| Mỗi state chỉ trả về một tên enum, không có hành vi khác biệt | Thêm nhiều lớp mà không giảm độ phức tạp | Giữ **enum + switch** nếu đủ rõ |
-| Context có public **setState(...)** | Client vượt qua quy tắc chuyển trạng thái | Giấu state, phơi bày các phương thức nghiệp vụ có ý nghĩa |
-| Concrete state vừa xử lý nhiều nghiệp vụ không liên quan vừa gọi DB/email trực tiếp | Coupling lớn, khó test và transaction khó kiểm soát | Đặt side effect và phối hợp hạ tầng ở ranh giới có trách nhiệm rõ |
-| State instance dùng chung nhưng chứa dữ liệu mutable theo từng Order | Đơn này ảnh hưởng tới đơn khác, có nguy cơ race | State dùng chung nên stateless; dữ liệu theo đơn nằm trong Order hoặc state instance riêng |
-| Kiểm tra trạng thái bằng dữ liệu UI đã tải trước đó | Chấp nhận thao tác dựa trên state cũ | Kiểm tra lại khi xử lý request, cập nhật có điều kiện |
-| Cho phép chuyển tiếp tùy ý khi đọc từ DB | Phá bất biến vòng đời | Có cơ chế restore nội bộ riêng; validate dữ liệu và sự kiện |
-| Ném exception không nhất quán hoặc nuốt exception | Client không biết chuyển trạng thái thất bại | Định nghĩa kết quả lỗi và giữ nguyên state khi lệnh bị từ chối |
-| Quên các đường đi terminal/hoàn tiền/lỗi | Quy trình kẹt hoặc rẽ nhánh sai | Vẽ sơ đồ và review toàn bộ ma trận trạng thái |
-| Dùng State Pattern để thay cho xác thực/phân quyền | Người dùng vẫn có thể gọi API trái phép | Kiểm tra authorization tại server theo user + resource + operation |
+| Each state returns only an enum name without distinct behavior | More classes without less complexity | Keep **enum + switch** if it is clear enough |
+| Context exposes public **setState(...)** | Clients bypass transition rules | Encapsulate state and expose meaningful business commands |
+| Concrete states mix unrelated business operations with direct DB/email calls | High coupling, difficult tests and transaction control | Handle side effects and infrastructure at well-defined boundaries |
+| Shared State instances contain mutable data for individual Orders | Cross-order interference and race conditions | Shared States should be stateless; per-order data belongs to Order or a separate State instance |
+| State checks rely on UI data fetched earlier | Operations use stale state | Recheck during request handling, with conditional updates |
+| Restoring from the DB allows arbitrary transitions | Lifecycle invariants are violated | Use a separate internal restore mechanism; validate data and events |
+| Exceptions are inconsistent or swallowed | Clients cannot tell whether transitions failed | Define error outcomes and preserve state after rejected commands |
+| Terminal/refund/failure paths are forgotten | Workflows become stuck or branch incorrectly | Diagram and review the full state matrix |
+| State Pattern substitutes for authentication/authorization | Users may still call forbidden APIs | Check authorization on the server by user, resource, and operation |
 
-**Đừng nhầm thay đổi trạng thái với thay đổi loại đối tượng.** Một **Order** vẫn là cùng một đơn hàng, có cùng định danh, nhưng phản hồi khác nhau theo giai đoạn xử lý. Đây không phải việc xóa Order cũ rồi tạo một subtype Order mới mỗi khi thanh toán hoặc giao hàng.
+**Do not confuse a change of state with a change of object type.** An **Order** remains the same order with the same identity while responding differently at different processing stages. It is not destroyed and replaced with a new Order subtype after each payment or shipment.
 
-## 11. Khi nào nên áp dụng và khi nào nên dừng ở cách đơn giản?
+## 11. When to Apply State Pattern and When to Keep Things Simple
 
-**State Pattern đáng cân nhắc khi** hành vi thực sự thay đổi theo trạng thái ở nhiều phương thức, logic transition ngày càng rắc rối, các nhóm nghiệp vụ bổ sung trạng thái mới, hoặc trạng thái có các quy tắc riêng đủ lớn để đóng gói độc lập.
+**Consider State Pattern when** behavior truly varies by state across many methods, transition logic grows tangled, business teams add states, or state-specific rules are substantial enough to encapsulate independently.
 
-**Giữ enum/switch khi** chỉ có 2–3 trạng thái, vài quy tắc dễ đọc, phần lớn hành vi không khác nhau và không có áp lực thay đổi. Tạo bốn lớp chỉ để thay cho một switch ngắn chưa chắc làm code tốt hơn.
+**Keep enum/switch when** there are only 2–3 states, a few readable rules, mostly identical behavior, and little pressure to change. Four classes replacing a short switch may not improve the code.
 
-Quy trình chọn thiết kế thực dụng:
+A practical design-selection process:
 
-1. Liệt kê trạng thái và sự kiện; vẽ ma trận chuyển tiếp.
-2. Viết implementation đơn giản nhất vẫn đúng các bất biến.
-3. Khi nhiều hành vi bắt đầu phụ thuộc vào cùng state và nhánh lặp lại, nhóm logic vào State.
-4. Đặt test cho mọi chuyển tiếp quan trọng và trường hợp không hợp lệ.
-5. Xác định ranh giới transaction, persistence, quyền thao tác và tích hợp ngoài độc lập với mẫu thiết kế.
-6. Đo độ dễ đọc và chi phí sửa đổi của code hiện có; bỏ abstraction không giúp giải quyết vấn đề.
+1. List states and events; draw a transition matrix.
+2. Implement the simplest solution that still preserves invariants.
+3. When many behaviors depend on the same state and conditions recur, group logic into State objects.
+4. Test all important transitions and invalid cases.
+5. Define transaction, persistence, permission, and external-integration boundaries separately from the pattern.
+6. Measure readability and modification costs; remove abstractions that do not solve a problem.
 
-Số lượng state **không phải** tiêu chí duy nhất. Hai state nhưng mỗi state có logic phức tạp có thể cần State Pattern; nhiều state với bảng transition thuần dữ liệu có thể phù hợp hơn với một FSM engine hoặc bảng cấu hình.
+The number of states **is not** the only criterion. Two states with complex behavior may warrant State Pattern; many states with data-driven transitions may fit an FSM engine or configuration table better.
 
-## 12. Bài tập: vòng đời phiếu hỗ trợ khách hàng
+## 12. Exercise: Customer Support Ticket Lifecycle
 
-Một hệ thống hỗ trợ có các trạng thái: **NEW**, **ASSIGNED**, **RESOLVED**, **CLOSED**. Nghiệp vụ yêu cầu:
+A support system has states **NEW**, **ASSIGNED**, **RESOLVED**, and **CLOSED**. The business rules are:
 
-- Từ **NEW** được **assign(agentId)** sang **ASSIGNED** hoặc **close()** khi phiếu tạo nhầm.
-- Từ **ASSIGNED** được **resolve(solution)** sang **RESOLVED**.
-- Từ **RESOLVED** được **reopen()** về **ASSIGNED**, hoặc **close()** sang **CLOSED**.
-- **CLOSED** không cho thao tác thêm trong mô hình này.
+- From **NEW**, **assign(agentId)** transitions to **ASSIGNED**, or **close()** closes an erroneously created ticket.
+- From **ASSIGNED**, **resolve(solution)** transitions to **RESOLVED**.
+- From **RESOLVED**, **reopen()** goes back to **ASSIGNED**, or **close()** transitions to **CLOSED**.
+- **CLOSED** permits no additional operations in this model.
 
-Hãy tự làm:
+Implement the exercise:
 
-1. Vẽ **Mermaid stateDiagram-v2** và bảng transition đầy đủ (cả trường hợp bị từ chối).
-2. Viết **Ticket** (Context), **TicketState** và các concrete state bằng Java. Giữ **ticketId**, **agentId**, **solution** là dữ liệu nghiệp vụ của Ticket; đừng lưu dữ liệu theo phiếu vào một state singleton dùng chung.
-3. Thiết kế **assign**, **resolve**, **reopen**, **close** sao cho client không thể gọi public setter để bỏ qua transition.
-4. Viết test đường đi **NEW → ASSIGNED → RESOLVED → CLOSED**, đường **RESOLVED → ASSIGNED** và các lỗi như resolve trước assign, reopen khi CLOSED.
-5. Trả lời: nếu người dùng A và B cùng xử lý một phiếu, bạn sẽ bảo vệ transition bằng cách nào khi có database?
+1. Draw a **Mermaid stateDiagram-v2** and a complete transition table including rejected cases.
+2. Implement **Ticket** (Context), **TicketState**, and concrete states in Java. Keep **ticketId**, **agentId**, and **solution** as Ticket business data; never store per-ticket data in a shared singleton State.
+3. Design **assign**, **resolve**, **reopen**, and **close** so clients cannot bypass transitions through a public setter.
+4. Test the path **NEW → ASSIGNED → RESOLVED → CLOSED**, the path **RESOLVED → ASSIGNED**, and errors such as resolving before assignment or reopening a CLOSED ticket.
+5. Explain how you would protect database-backed transitions when users A and B act on the same ticket concurrently.
 
-**Tiêu chí hoàn thành:** mỗi event chỉ được chấp nhận ở trạng thái phù hợp, các lệnh bị từ chối không làm thay đổi trạng thái, code thể hiện rõ trách nhiệm từng state, và mọi phụ thuộc vào database/quyền người dùng được xử lý ở ranh giới thích hợp.
+**Completion criteria:** every event is accepted only in appropriate states, rejected commands leave state unchanged, responsibility for each state is explicit, and database/user-permission dependencies are handled at the proper boundary.
 
-**Ghi nhớ:** State Pattern tổ chức hành vi biến thiên theo **trạng thái hiện tại của cùng một đối tượng**. Khi dùng đúng, các quy tắc chuyển trạng thái dễ tìm, dễ kiểm thử và tránh những khối điều kiện lan rộng. Giá trị của nó đến từ yêu cầu nghiệp vụ cụ thể; việc kiểm soát persistence, giao dịch và đồng thời vẫn là trách nhiệm thiết kế hệ thống.
+**Remember:** State Pattern organizes behavior that varies by **the current state of the same object**. Used well, transition rules become easier to find and test, avoiding conditionals spread throughout code. Its value follows from real business requirements; persistence, transaction, and concurrency control remain system-design responsibilities.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-010">Observer và thông báo thay đổi</a>
+## <a id="design-patterns-010">Observer and Change Notifications</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Observer Pattern – thông báo khi trạng thái thay đổi
+# Observer Pattern – Notifying When State Changes
 
-> **Chủ đề:** Observer và thông báo thay đổi, thuộc nhóm mẫu thiết kế hành vi (*behavioral design patterns*). Mục tiêu của bài là biết **khi nào cần Observer**, thiết kế hợp đồng sự kiện và vòng đời đăng ký, cài đặt bằng Java, kiểm thử hành vi và nhận diện rủi ro khi chuyển từ callback trong một tiến trình sang hệ thống phân tán.
+> **Topic:** Observer and change notifications, a *behavioral design pattern*. This lesson explains **when Observer is useful**, how to design event contracts and subscription lifecycles, implement them in Java, test behavior, and recognize risks when moving from in-process callbacks to distributed systems.
 
-## 1. Vấn đề: một thay đổi, nhiều thành phần quan tâm
+## 1. The Problem: One Change, Many Interested Components
 
-Giả sử đơn hàng chuyển từ `CREATED` sang `PAID`. Nhiều bộ phận có thể muốn phản ứng:
+Suppose an order moves from `CREATED` to `PAID`. Several components may need to react:
 
-- Giao diện cập nhật nhãn trạng thái.
-- Hệ thống audit ghi nhận việc đổi trạng thái.
-- Module gửi thông báo cho khách hàng.
-- Bộ phận phân tích cập nhật chỉ số.
+- The user interface updates its status label.
+- An audit system records the state transition.
+- A notification module alerts the customer.
+- An analytics component updates metrics.
 
-Một cách triển khai là để `OrderService` gọi trực tiếp từng thành phần:
+One implementation has `OrderService` invoke each component directly:
 
 ```java
 // Mã minh họa vấn đề coupling; các tên bên dưới giả định đã có class.
@@ -5032,28 +5032,28 @@ void markPaid(String orderId) {
 }
 ```
 
-Những cuộc gọi này có thể hợp lý trong một ứng dụng rất nhỏ, nhưng nếu danh sách phản ứng thường xuyên thay đổi, `OrderService` phải biết ngày càng nhiều dịch vụ. Việc thêm một chức năng phụ (metrics, notification, UI) lại buộc sửa mã phát sinh thay đổi.
+These calls may be reasonable in a very small application, but when reactions frequently change, `OrderService` must know more and more services. Adding an auxiliary feature (metrics, notifications, UI) requires editing the code that produces the state change.
 
-**Observer Pattern** cho phép một đối tượng nguồn (*Subject/Publisher*) duy trì danh sách các đối tượng theo dõi (*Observers/Subscribers*). Khi có sự thay đổi đáng quan tâm, nguồn phát **thông báo** qua một hợp đồng thống nhất; các observer quyết định phải xử lý gì.
+**Observer Pattern** lets a source object (*Subject/Publisher*) maintain a list of interested objects (*Observers/Subscribers*). When a relevant change occurs, the source **notifies** them through a common contract, and each observer decides how to react.
 
-Nội dung cốt lõi của Observer:
+The essentials of Observer are:
 
-1. Observer có thể **đăng ký** quan tâm tới một loại thay đổi.
-2. Khi thay đổi xảy ra, Subject **phát thông báo**.
-3. Observer nhận thông báo và thực thi phản ứng riêng.
-4. Observer có thể **hủy đăng ký**, tránh giữ tham chiếu và nhận sự kiện không mong muốn.
+1. An Observer can **subscribe** to a type of change.
+2. When a change occurs, Subject **publishes a notification**.
+3. The Observer receives the notification and performs its own reaction.
+4. The Observer can **unsubscribe** to avoid retained references and unwanted events.
 
-Observer giúp **giảm phụ thuộc trực tiếp** giữa đối tượng phát sự kiện và những phản ứng phụ; nó **không xóa** mọi phụ thuộc, không đảm bảo thông báo được lưu bền hoặc được chuyển tới hệ thống khác khi có sự cố.
+Observer **reduces direct coupling** between event producers and secondary reactions. It **does not eliminate** all dependencies or guarantee that notifications are durable or reach another system after failures.
 
-## 2. Vai trò và cấu trúc
+## 2. Roles and Structure
 
-| Vai trò | Chức năng | Ví dụ |
+| Role | Function | Example |
 |---|---|---|
-| **Subject / Publisher** | Quản lý đăng ký và phát thông báo | `OrderService` phát `OrderStatusChanged` |
-| **Observer / Listener** | Hợp đồng nhận thông báo | `OrderStatusListener` |
-| **Concrete observers** | Phản ứng theo mục đích riêng | Audit, email notification, cập nhật UI |
-| **Event payload** | Mô tả *điều đã xảy ra*, thường là dữ liệu bất biến | `OrderStatusChanged(orderId, before, after)` |
-| **Subscription** | Đại diện cho đăng ký, cho phép hủy bỏ | `Subscription.close()` |
+| **Subject / Publisher** | Manages subscriptions and publishes notifications | `OrderService` emits `OrderStatusChanged` |
+| **Observer / Listener** | Contract for receiving notifications | `OrderStatusListener` |
+| **Concrete observers** | React for their specific purposes | Audit, email notifications, UI updates |
+| **Event payload** | Describes *what happened*, usually with immutable data | `OrderStatusChanged(orderId, before, after)` |
+| **Subscription** | Represents one registration and allows cancellation | `Subscription.close()` |
 
 ```mermaid
 classDiagram
@@ -5085,15 +5085,15 @@ classDiagram
     OrderStatusListener ..> OrderStatusChanged : consumes
 ```
 
-**Một điểm dễ nhầm:** sơ đồ mô tả hợp đồng cộng tác. Nó không đòi hỏi Observer phải kế thừa một abstract class nặng nề. Với Java hiện đại, một **functional interface** là đủ cho các listener đơn giản.
+**A common misconception:** the diagram describes a collaboration contract; Observer does not require inheriting from a heavyweight abstract class. In modern Java, a **functional interface** suffices for simple listeners.
 
-## 3. Java 17 hoàn chỉnh: đăng ký, phát sự kiện, hủy đăng ký
+## 3. Complete Java 17 Example: Subscribe, Publish, and Unsubscribe
 
-Ví dụ này mô phỏng thay đổi trạng thái của một đơn hàng trong **một luồng xử lý**. Trạng thái hợp lệ lần lượt là `CREATED → PAID → SHIPPED`. Không phát sự kiện khi gọi cập nhật với chính trạng thái hiện tại; những chuyển trạng thái sai bị từ chối.
+This example simulates order-state changes in **one execution thread**. Valid state progression is `CREATED → PAID → SHIPPED`. Updating to the current state emits no event; invalid transitions are rejected.
 
-Thiết kế sự kiện kiểu `record` bất biến, và thao tác đăng ký trả về một đối tượng `Subscription` để hủy theo đúng lần đăng ký.
+The event uses an immutable `record`, and registration returns a `Subscription` object tied to that specific registration.
 
-Tạo file `ObserverDemo.java` và chạy:
+Create `ObserverDemo.java` and run:
 
 ```bash
 javac ObserverDemo.java
@@ -5260,19 +5260,19 @@ public class ObserverDemo {
 }
 ```
 
-### Những quyết định quan trọng trong ví dụ
+### Important Design Decisions in the Example
 
-- **Không đặt logic audit/email vào `OrderService`:** service chỉ biết `OrderStatusListener`, không import SDK gửi email hay lớp dashboard.
-- **Event chứa dữ liệu đủ dùng:** observer biết đơn nào đổi và từ trạng thái nào sang trạng thái nào, không cần tự đoán biến động từ trạng thái toàn cục.
-- **Không phát khi không thay đổi:** lần gọi `SHIPPED → SHIPPED` là thao tác no-op, tránh hiệu ứng phụ trùng lặp trong kịch bản ví dụ.
-- **`Subscription` quản lý vòng đời:** `close()` xóa đúng một đăng ký khỏi danh sách. Gọi `close()` nhiều lần không tạo lỗi. Không cần cho Subject truy cập phương thức hủy theo toàn bộ người quan sát.
-- **`CopyOnWriteArrayList` giữ snapshot khi duyệt:** thêm/xóa listener trong lúc dispatch không làm ném `ConcurrentModificationException`. Listener được đăng ký hoặc hủy trong lúc dispatch có thể vẫn/không được nhận *event đang xử lý* tùy snapshot; không nên dựa vào hiệu lực tức thì trong callback.
-- **Xử lý lỗi là một lựa chọn thiết kế:** demo bắt `RuntimeException` và tiếp tục gọi listener còn lại; sự kiện lỗi chỉ được in ra stderr. Production cần phân loại lỗi, đo metrics và quy tắc retry/điều tra.
-- **Chỉ phục vụ single-thread cho trạng thái đơn hàng:** `HashMap` và chuỗi đọc–kiểm tra–ghi chưa được đồng bộ. `CopyOnWriteArrayList` chỉ hỗ trợ danh sách listener khi thay đổi đồng thời, **không** làm `OrderService` thread-safe.
+- **No audit/email logic inside `OrderService`:** the service knows only `OrderStatusListener`; it does not import email SDKs or dashboard classes.
+- **The event carries sufficient data:** observers know which order changed and the before/after states without inferring the difference from global state.
+- **No event without a change:** the `SHIPPED → SHIPPED` call is a no-op, avoiding duplicate side effects in this example.
+- **`Subscription` manages lifecycle:** `close()` removes exactly one registration. Repeated `close()` calls are harmless. Subject need not expose a global observer-removal API.
+- **`CopyOnWriteArrayList` snapshots iteration:** subscribing/unsubscribing during dispatch does not throw `ConcurrentModificationException`. A listener registered or removed during dispatch may or may not receive *the event currently in progress*, depending on the snapshot. Do not assume immediate callback effects.
+- **Error handling is a design choice:** the demo catches `RuntimeException` and continues notifying other listeners, writing errors only to stderr. Production requires error classification, metrics, and retry/investigation policies.
+- **Single-threaded order-state updates only:** `HashMap` and the read–validate–write sequence are unsynchronized. `CopyOnWriteArrayList` supports concurrent listener-list changes but **does not** make `OrderService` thread-safe.
 
-**Bản demo không thay thế hệ thống đặt hàng thực tế**: nó không lưu DB, không có transaction, không xử lý đồng thời nhiều người cập nhật một đơn, và không bảo đảm notification được phát lại sau khi process chết.
+**The demo is not a production ordering system**: it has no DB persistence or transactions, cannot safely coordinate concurrent updates to one order, and cannot replay notifications after process failure.
 
-## 4. Thứ tự gọi và thời điểm phát sự kiện
+## 4. Invocation Order and Event Timing
 
 ```mermaid
 sequenceDiagram
@@ -5291,24 +5291,24 @@ sequenceDiagram
     Note over S,N: Dispatch đồng bộ; callback chậm làm chậm caller
 ```
 
-Trong ví dụ, **thứ tự đăng ký** thường cũng là thứ tự lặp qua `CopyOnWriteArrayList` trong một lượt dispatch. Tuy nhiên, ứng dụng không nên đưa quy tắc nghiệp vụ sống còn vào việc “Observer A luôn chạy trước Observer B”. Một observer có thể được thêm, hủy, chạy lâu, ném lỗi hoặc kích hoạt một lần dispatch lồng nhau.
+In the example, **registration order** is usually also the `CopyOnWriteArrayList` iteration order during one dispatch. However, the application should not depend on “Observer A always runs before Observer B” for critical business rules. An observer may be registered, removed, slow, faulty, or may trigger nested dispatch.
 
-Nếu trình tự A phải hoàn tất thành công **trước** B để bảo đảm tính đúng đắn, đó thường là một **quy trình điều phối bắt buộc** thuộc use case hoặc workflow, không nên ngầm dựa vào thứ tự Observer.
+If A must complete successfully **before** B for correctness, that is generally **mandatory workflow coordination** belonging to the use case/workflow, not an implicit guarantee of Observer order.
 
-### Push hay Pull?
+### Push or Pull?
 
-Có hai cách tổ chức payload:
+There are two ways to structure event payloads:
 
-- **Push model:** nguồn phát gửi dữ liệu liên quan qua `OrderStatusChanged` như ví dụ. Observer dễ xử lý, nhưng contract của sự kiện phải được thiết kế và version cẩn thận.
-- **Pull model:** nguồn chỉ báo “đã đổi”; observer phải hỏi ngược Subject để lấy trạng thái mới. Payload nhỏ hơn nhưng tăng coupling và tạo nguy cơ đọc phải trạng thái đã đổi thêm lần nữa.
+- **Push model:** the publisher sends relevant data through `OrderStatusChanged`, as in the example. Processing is straightforward, but the event contract needs careful design and versioning.
+- **Pull model:** the publisher only announces “something changed,” and the observer queries Subject for current state. Payloads are smaller, but coupling increases and the observer may read a later state after further changes.
 
-Đối với các sự kiện cần audit hoặc cần phản ứng chính xác trên từng chuyển trạng thái, **payload bất biến mô tả điều đã xảy ra** thường dễ kiểm thử và ít gặp lỗi thời điểm hơn.
+For audit events or reactions tied to a particular transition, **an immutable payload describing what happened** is generally easier to test and less vulnerable to timing races.
 
-## 5. Kiểm thử Observer: đăng ký, hủy, trạng thái và lỗi
+## 5. Testing Observer: Subscription, Cancellation, State, and Errors
 
-Kiểm thử Observer cần chứng minh hành vi từ góc nhìn client, không chỉ “có listener được gọi”.
+Observer tests should prove behavior from the client perspective, not merely that “a listener was called.”
 
-Ví dụ JUnit 5; đặt file `ObserverDemoTest.java` trong cùng package với `ObserverDemo`:
+JUnit 5 example: place `ObserverDemoTest.java` in the same package as `ObserverDemo`:
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -5392,13 +5392,13 @@ class ObserverDemoTest {
 }
 ```
 
-Test cuối mô tả **chính sách lỗi đã chọn trong demo**: một listener ném `RuntimeException` nhưng các listener sau vẫn chạy. Nếu production cần *fail-fast* hay phải báo về caller việc thông báo chưa thành công, cần sửa **hợp đồng** và kiểm thử tương ứng, đồng thời bảo đảm không làm trạng thái domain bị hiểu sai.
+The last test illustrates **the error policy selected in this demo**: one listener throws `RuntimeException`, but subsequent listeners still run. If production needs *fail-fast* behavior or must tell the caller that notification failed, adjust the **contract** and tests accordingly without misrepresenting the domain state.
 
-Các test quan trọng khác có thể bổ sung: đăng ký cùng callback hai lần, hủy ngay trong callback, sự kiện gửi sau khi thay đổi thành công, xử lý khi một subscriber chạy rất chậm, và behavior trong trường hợp có nhiều thread. Không cần mock framework để kiểm thử cơ chế đơn giản này.
+Other useful tests include registering the same callback twice, unsubscribing inside a callback, publishing only after successful changes, handling very slow subscribers, and multithreaded behavior. A mock framework is unnecessary for testing this simple mechanism.
 
-## 6. Vòng đời đăng ký và rò rỉ bộ nhớ
+## 6. Subscription Lifecycles and Memory Leaks
 
-Subject thông thường **giữ tham chiếu mạnh** tới listener. Nếu listener tham chiếu đến UI controller hoặc một đối tượng lớn đã không còn cần thiết, nhưng vẫn nằm trong danh sách của Subject có vòng đời dài, GC có thể **không giải phóng được** các đối tượng liên quan.
+Subjects usually **hold strong references** to listeners. If a listener refers to a UI controller or large object no longer needed, but remains registered with a long-lived Subject, garbage collection may **fail to reclaim** those associated objects.
 
 ```mermaid
 flowchart LR
@@ -5407,48 +5407,48 @@ flowchart LR
     U["UI đóng"] -. "nếu không unsubscribe" .-> V
 ```
 
-Cách phòng tránh:
+Prevention measures:
 
-- Trả về **subscription token** và gọi `close()` khi đối tượng không còn theo dõi.
-- Liên kết subscription với lifecycle của UI, request scope hoặc component.
-- Trong API async hoặc framework, sử dụng cơ chế dispose/unsubscribe được framework hỗ trợ.
-- Tránh đăng ký lại cùng một listener sau mỗi lần render/request mà không kiểm soát số lượng.
-- Kiểm thử thao tác đóng/mở nhiều lần để tìm rò rỉ và nhận event trùng.
+- Return a **subscription token** and invoke `close()` when the object no longer observes changes.
+- Tie subscriptions to the lifecycle of the UI, request scope, or component.
+- For asynchronous APIs/frameworks, use framework-supported disposal/unsubscription mechanisms.
+- Avoid repeatedly registering the same listener after every render/request without bounding registration counts.
+- Test repeated open/close operations to detect leaks and duplicate events.
 
-**Weak references** có thể hữu ích trong một số framework, nhưng khiến observer bị GC bất ngờ nếu không có tham chiếu giữ sống; không phải thay thế mặc định cho việc quản lý lifecycle tường minh.
+**Weak references** can help in certain frameworks but may let observers be collected unexpectedly if no strong reference keeps them alive; they are not a general replacement for explicit lifecycle management.
 
-## 7. Callback đồng bộ, concurrency và reentrancy
+## 7. Synchronous Callbacks, Concurrency, and Reentrancy
 
-Observer Pattern mô tả quan hệ đăng ký–thông báo, **không mặc định nói “chạy bất đồng bộ”**.
+Observer Pattern describes a subscription–notification relationship; it **does not inherently mean “asynchronous execution.”**
 
-| Thuộc tính | Đồng bộ trong tiến trình (ví dụ) | Dispatch bất đồng bộ qua queue/executor |
+| Property | Synchronous in-process (example) | Asynchronous dispatch via queue/executor |
 |---|---|---|
-| Thời điểm xử lý | Ngay trên luồng của publisher | Một luồng/tác vụ khác |
-| Độ trễ của publisher | Cộng thời gian các observer | Có thể giảm thời gian chờ, nhưng thêm enqueue/điều phối |
-| Thứ tự | Có thể dựa vào thứ tự dispatch một lượt, không nên thành luật nghiệp vụ | Phụ thuộc queue, worker, partition và concurrency |
-| Lỗi listener | Có thể ném lên stack hoặc bắt tại publisher | Cần nơi ghi nhận lỗi, retry, dead-letter |
-| Backpressure | Listener chậm chặn publisher | Queue đầy, memory tăng hoặc reject task |
-| Vòng đời | Trong bộ nhớ process | Cần quản lý executor/queue và shutdown |
+| Processing time | Immediately on the publisher thread | On another thread/task |
+| Publisher latency | Sum of observer execution times | May reduce waiting, but adds enqueueing/coordination |
+| Ordering | One dispatch can follow listener order, but this should not become a business rule | Depends on queue, workers, partitions, and concurrency |
+| Listener errors | May propagate up the call stack or be caught by publisher | Need recording, retry, and dead-letter handling |
+| Backpressure | A slow listener blocks the publisher | Queues may fill, consume memory, or reject tasks |
+| Lifecycle | In-process memory | Requires executor/queue management and shutdown |
 
-### Những vấn đề đặc biệt cần quyết định
+### Special Cases Requiring Explicit Decisions
 
-**Reentrancy:** một listener có thể gọi lại `changeStatus` trong lúc Subject đang phát sự kiện. Khi đó lời gọi mới chạy lồng bên trong lời gọi cũ; observer khác có thể nhận event mới trước event cũ nếu không thiết kế rõ. Tránh callback tự kích hoạt vô hạn. Nếu cần bảo đảm thứ tự, hãy điều phối thay đổi bằng queue hoặc state machine với cơ chế serialization rõ.
+**Reentrancy:** a listener may call `changeStatus` again while Subject is dispatching. The new call then runs inside the original; another observer might receive the newer event before the older one unless ordering is designed explicitly. Prevent infinite self-triggering callbacks. If order matters, coordinate changes using a queue or state machine with explicit serialization.
 
-**Race condition:** hai thread đọc cùng `CREATED` rồi cùng thay đổi sẽ gây mất cập nhật hoặc event sai. Khóa/transaction/optimistic locking phải bảo vệ **toàn bộ thao tác kiểm tra–cập nhật**, không chỉ danh sách listeners. Ví dụ `CopyOnWriteArrayList` không làm `HashMap` được cập nhật an toàn.
+**Race condition:** two threads reading the same `CREATED` and updating it can cause lost updates or incorrect events. Locks, transactions, or optimistic locking must protect **the whole read–validate–update operation**, not only the listener list. `CopyOnWriteArrayList` does not make updates to `HashMap` safe.
 
-**Callback lâu:** gửi email hoặc gọi REST trực tiếp trong listener đồng bộ có thể kéo dài thời gian API phản hồi. Có thể chuyển side effect sang task/job; khi đó phải giải quyết hàng đợi đầy, retry, theo dõi lỗi và shutdown an toàn.
+**Slow callbacks:** sending email or invoking REST directly inside a synchronous listener can prolong API response times. Moving side effects to tasks/jobs requires handling full queues, retries, error visibility, and safe shutdown.
 
-**Lỗi:** ba lựa chọn phổ biến là *fail-fast*, *tiếp tục và tổng hợp lỗi*, hoặc *best effort và ghi nhận lỗi*. Không có một chính sách luôn đúng. Quan trọng là người gọi biết update chính đã thành công hay chưa và notification được cam kết ở mức nào.
+**Errors:** three common policies are *fail-fast*, *continue and aggregate errors*, or *best effort with error reporting*. No policy fits every application. Callers must know whether the main update succeeded and what notification guarantees exist.
 
-**Thứ tự và at-most-once:** không nên tự suy ra “có Observer thì mỗi người nhận chính xác một lần”. Đặc biệt sau sự cố, retry hoặc khi callback gọi lại, việc giao sự kiện có thể thiếu hoặc trùng.
+**Ordering and at-most-once:** never assume Observer means “each recipient gets exactly one event.” Failures, retries, and nested callbacks can lead to missing or duplicate deliveries.
 
-## 8. Observer, Event Bus và Publish–Subscribe khác nhau thế nào?
+## 8. How Do Observer, Event Bus, and Publish–Subscribe Differ?
 
-**Observer** trong thiết kế hướng đối tượng thường là quan hệ trực tiếp giữa nguồn và danh sách người quan sát, trong cùng process.
+**Observer** in object-oriented design usually connects a source directly to its registered listeners within one process.
 
-**Event bus (trong process)** thêm một nơi trung gian nhận sự kiện và phân phối theo loại. Producer chỉ biết bus, còn nhiều handler đăng ký với bus. Mô hình này giảm tham chiếu trực tiếp nhưng có thể làm khó tra cứu ai xử lý sự kiện nào nếu cấu hình rải rác.
+An **in-process event bus** adds an intermediary for receiving and routing events by type. Producers know only the bus, while handlers subscribe through it. This reduces direct references but can make it harder to identify which handlers consume which events when configuration is scattered.
 
-**Publish–subscribe qua message broker** (như Kafka hoặc RabbitMQ) tách producer và consumer qua mạng và thời gian. Đây là bài toán hệ thống phân tán: lưu bền thông điệp, xác nhận tiêu thụ, retry, thứ tự, nhóm consumer, poison message và idempotency.
+**Publish–subscribe through a message broker** (such as Kafka or RabbitMQ) separates producers from consumers across networks and time. This introduces distributed-systems concerns: durable messages, acknowledgments, retries, ordering, consumer groups, poison messages, and idempotency.
 
 ```mermaid
 flowchart TB
@@ -5463,30 +5463,30 @@ flowchart TB
     end
 ```
 
-| Câu hỏi | Observer trong process | Messaging phân tán |
+| Question | In-process Observer | Distributed messaging |
 |---|---|---|
-| Có qua mạng? | Thường không | Có |
-| Đòi hỏi broker riêng? | Không | Thường có |
-| Thông báo có tự được lưu bền? | Không | Tùy cấu hình và xác nhận ghi/đọc |
-| Process dừng giữa dispatch? | Observer còn lại có thể không nhận | Có thể phát lại theo semantics của hệ thống |
-| Cần xử lý trùng lặp? | Tùy code và retry | Thường cần idempotent consumer |
-| Ai quản lý lifecycle? | Subject và subscription | Broker/client/consumer group + ứng dụng |
-| Có đảm bảo “exactly once” end-to-end? | Không | Không mặc định; phụ thuộc phạm vi transaction và side effects |
+| Uses a network? | Usually no | Yes |
+| Requires a separate broker? | No | Usually |
+| Are notifications automatically durable? | No | Depends on configuration and write/read acknowledgments |
+| What if a process stops mid-dispatch? | Remaining observers may miss the event | Replay may be possible under system delivery semantics |
+| Must duplicates be handled? | Depends on code and retries | Idempotent consumers are usually needed |
+| Who manages lifecycle? | Subject and subscriptions | Broker/client/consumer group and application |
+| Is end-to-end “exactly once” guaranteed? | No | Not by default; depends on transaction scope and side effects |
 
-Không nên gọi “Observer qua Kafka” như thể chỉ cần thay danh sách listener bằng topic. Đó là **một thiết kế khác cấp**, thêm nhiều yêu cầu vận hành và tính nhất quán.
+Do not call Kafka messaging “Observer over Kafka” as if it were just a listener list replaced by a topic. It is a **different architectural level** with additional operational and consistency requirements.
 
-## 9. Sự kiện domain và thời điểm publish với database
+## 9. Domain Events and Publishing Timing with Databases
 
-Giả sử xử lý thanh toán có transaction:
+Suppose payment processing uses a transaction:
 
-1. Kiểm tra đơn hàng và điều kiện chuyển trạng thái.
-2. Ghi `PAID` vào database.
+1. Validate the order and transition preconditions.
+2. Persist `PAID` to the database.
 3. Commit.
-4. Thông báo cho bộ phận email/audit/analytics.
+4. Notify email/audit/analytics components.
 
-Nếu phát sự kiện **trước commit**, listener có thể đọc một trạng thái chưa tồn tại bền vững, hoặc nhận “đã thanh toán” dù transaction rollback. Nếu chỉ phát **sau commit** bằng lời gọi trong RAM, có cửa sổ sự cố: DB đã commit nhưng process chết trước khi publish → mất thông báo.
+If an event is published **before commit**, listeners may observe state that was never committed or receive “paid” even after rollback. Publishing **after commit** through an in-memory call creates a failure window: the DB commits but the process dies before publishing, losing the notification.
 
-Với yêu cầu tin cậy, xem xét **Transactional Outbox**:
+When reliability matters, consider a **Transactional Outbox**:
 
 ```mermaid
 sequenceDiagram
@@ -5505,61 +5505,61 @@ sequenceDiagram
     C->>C: Xử lý idempotent
 ```
 
-Outbox giải quyết **khoảng cách giữa cập nhật DB và ghi thông điệp** khi cả hai được ghi chung một transaction của DB. Nhưng relay có thể phát trùng nếu crash sau publish trước khi đánh dấu; consumer vẫn phải hỗ trợ **idempotency**. Không tự mặc định mọi event có thứ tự toàn cục hoặc được xử lý đúng một lần.
+Outbox addresses **the gap between DB updates and message writes** when both are recorded in one database transaction. But a relay may duplicate publication if it crashes after publishing but before marking the outbox row as sent; consumers still need **idempotency**. Do not assume global event ordering or exactly-once processing.
 
-Các event nên mô tả **sự thật đã xảy ra** bằng tên quá khứ, ví dụ `OrderPaid`, `OrderShipped`. Một lệnh như `SendEmail` lại diễn đạt **yêu cầu làm việc**; phân biệt event và command giúp contract rõ ràng.
+Events should describe **facts that already occurred** using past-tense names such as `OrderPaid` and `OrderShipped`. A command such as `SendEmail` expresses **work being requested**; distinguishing events from commands clarifies the contract.
 
-### Điều kiện tối thiểu cho event có thể chia sẻ
+### Minimum Requirements for Shareable Events
 
-- Mã sự kiện duy nhất `eventId` để chống trùng.
-- `aggregateId`/`orderId` để gắn với đối tượng nghiệp vụ.
-- Loại sự kiện, thời điểm phát `occurredAt`, có cân nhắc múi giờ UTC.
-- Phiên bản schema khi cần thay đổi hợp đồng lâu dài.
-- Payload tối thiểu, tránh dữ liệu nhạy cảm không cần thiết.
-- Quy tắc tương thích ngược và điều kiện consumer có thể retry an toàn.
+- Unique event ID `eventId` for deduplication.
+- `aggregateId`/`orderId` identifying the business entity.
+- Event type and occurrence time `occurredAt`, with UTC time-zone considerations.
+- Schema version when long-lived contracts need to evolve.
+- Minimal payload without unnecessary sensitive data.
+- Backward-compatibility rules and conditions under which consumers can retry safely.
 
-Những trường này là **khuyến nghị cho sự kiện bền vững/phân tán**, không bắt buộc với mỗi observer cục bộ trong bài học.
+These fields are **recommendations for durable/distributed events**, not mandatory for every local observer in this lesson.
 
-## 10. Observer so với các Design Pattern gần gũi
+## 10. Comparing Observer with Related Design Patterns
 
-| Pattern / cơ chế | Ý định | Khác biệt đáng nhớ |
+| Pattern / mechanism | Intent | Key distinction |
 |---|---|---|
-| **Observer** | Một nguồn thay đổi thông báo các listener đăng ký | Chủ yếu quan hệ one-to-many, phản ứng sau thay đổi |
-| **Strategy** | Hoán đổi thuật toán/chính sách để thực hiện một công việc | Thường chọn *một chiến lược xử lý*, không phải phát cho nhiều người quan tâm |
-| **Mediator** | Tập trung điều phối tương tác qua lại giữa các đồng nghiệp | Quản lý quan hệ phối hợp hai chiều/phức tạp, không đơn thuần “có thay đổi thì báo” |
-| **Command** | Đóng gói một yêu cầu hành động thành đối tượng | Command nói về việc *muốn làm*, event nói về việc *đã xảy ra* |
-| **Decorator** | Bổ sung hành vi qua lớp bọc giữ cùng interface | Bao quanh một đối tượng/đường gọi, không xây danh sách subscriber |
-| **Callback đơn lẻ** | Gọi một hàm khi tác vụ kết thúc | Có thể là phần tử của Observer, nhưng chưa nhất thiết có registry/vòng đời |
+| **Observer** | A changing source notifies registered listeners | Mainly one-to-many reactions after a change |
+| **Strategy** | Swaps algorithms/policies for a task | Usually chooses *one processing strategy* rather than notifying multiple interested parties |
+| **Mediator** | Centralizes interactions among collaborators | Manages complex/two-way coordination, not merely “change triggers notification” |
+| **Command** | Encapsulates a request for action as an object | Commands express *what is requested*; events express *what happened* |
+| **Decorator** | Adds behavior through a wrapper preserving the same interface | Wraps one object/call path rather than building a subscriber list |
+| **Single callback** | Invokes one function when an operation completes | May be part of Observer but need not have a registry or lifecycle |
 
-Ví dụ: khi nhấn nút đặt hàng, có thể dùng **Command** `PlaceOrder`, logic chọn cách giảm giá dùng **Strategy**, và sau khi trạng thái đổi thì **Observer** thông báo tới view/audit. Các pattern có thể phối hợp, nhưng mỗi cái phải giải quyết một vấn đề cụ thể.
+For example, clicking Place Order may use a **Command** named `PlaceOrder`, a discount algorithm selected with **Strategy**, and **Observer** notifications to views/audit after state changes. Patterns can collaborate, but each must solve a specific problem.
 
-## 11. Không phải phản ứng nào cũng nên là observer
+## 11. Not Every Reaction Should Be an Observer
 
-Phân biệt **hành động bắt buộc cho tính đúng đắn** và **phản ứng phát sinh**:
+Distinguish **actions required for correctness** from **secondary reactions**:
 
-| Tình huống | Thiết kế nên cân nhắc |
+| Situation | Design to consider |
 |---|---|
-| Phải trừ tồn kho thành công trước khi xác nhận đơn | Workflow/use case rõ ràng với transaction hoặc saga; đừng phụ thuộc thứ tự listener ngầm |
-| Cập nhật UI khi trạng thái ViewModel thay đổi | Observer/property listener rất phù hợp |
-| Ghi metrics best effort sau khi xử lý xong | Observer/listener có thể phù hợp |
-| Gửi email xác nhận có thể chậm, cần retry | Job queue, outbox hoặc consumer bền vững |
-| Audit bắt buộc không được mất | Lưu audit cùng transaction hoặc cơ chế bền vững tương đương |
-| Hai class luôn gọi nhau một-một đơn giản | Gọi phương thức trực tiếp có thể dễ hiểu hơn |
-| Hàng nghìn loại event đăng ký khắp nơi không kiểm soát | Cần catalog event, tracing, schema và giới hạn quyền đăng ký |
+| Inventory must be decremented before confirming an order | Explicit workflow/use case with transaction or saga; do not rely on implicit listener order |
+| Update the UI when ViewModel state changes | Observer/property listeners are well suited |
+| Record best-effort metrics after processing | Observer/listener may be suitable |
+| Confirmation email may be slow and requires retries | Job queue, outbox, or durable consumer |
+| Audit records must never be lost | Persist audit in the same transaction or an equivalent durable mechanism |
+| Two classes make a simple one-to-one call | A direct method call may be clearer |
+| Thousands of event types have uncontrolled registrations everywhere | Need event catalog, tracing, schema, and subscription permissions |
 
-Một **observer phát lỗi nhưng publisher đã thay đổi state** là trường hợp phải quy định từ trước. Nếu lỗi của observer phải khiến toàn bộ nghiệp vụ thất bại thì cấu trúc đồng bộ có rollback/compensation có thể cần thiết; tuyệt đối không mặc định “đã phát event” đồng nghĩa với “mọi hiệu ứng phụ đã xong”.
+An **observer failure after the publisher has already changed state** must be defined in advance. If an observer failure must fail the entire business operation, synchronous rollback/compensation may be required; never assume “event published” means “all side effects completed.”
 
-## 12. Kỹ thuật thiết kế API Observer dễ bảo trì
+## 12. Techniques for Maintainable Observer APIs
 
-**Đặt tên theo domain.** `OrderStatusChanged` tốt hơn event mơ hồ `SomethingUpdated` nếu consumer cần ý nghĩa nghiệp vụ. Đừng lạm dụng kiểu `Object payload` rồi ép kiểu bằng `instanceof` khắp nơi.
+**Use domain names.** `OrderStatusChanged` is more meaningful than a vague `SomethingUpdated` event if consumers depend on business semantics. Avoid an `Object payload` that requires `instanceof` casts everywhere.
 
-**Giữ payload bất biến.** Java `record` thuận tiện cho dữ liệu ít trường, nhưng record chỉ *bất biến nông*: nếu chứa `List` mutable hoặc class mutable, nên sao chép phòng vệ (`List.copyOf`) và thiết kế phần tử bất biến.
+**Keep payloads immutable.** Java `record` is convenient for small records but guarantees only *shallow immutability*. If a record contains mutable `List` values or mutable classes, make defensive copies (`List.copyOf`) and use immutable element types.
 
-**Xác định phạm vi nguồn.** Một `OrderService` riêng cho đơn hay một subject chung mọi đơn? Mỗi cách khác nhau về lọc sự kiện, vòng đời, quyền truy cập và memory.
+**Define subject scope.** Does `OrderService` belong to one order or observe all orders? Each design affects event filtering, lifecycle, access control, and memory.
 
-**Có chính sách trùng lặp.** Nếu cần phát *mỗi lần thao tác* ngay cả khi trạng thái không đổi, dùng event thể hiện “attempted action”, không giả vờ đó là `StatusChanged`. Nếu nhiều listener đăng ký cùng một callback, quyết định có cho phép duplicate subscriptions hay không.
+**Define duplication policy.** To emit an event *for every attempted operation* even when state does not change, use an “attempted action” event rather than pretending it is `StatusChanged`. If the same callback can be registered multiple times, specify whether duplicate subscriptions are allowed.
 
-**Quản lý unsubscribe.** Khi view đóng, session hết hạn hay module dỡ tải, subscription cần được giải phóng. Java `AutoCloseable` thích hợp dùng với `try-with-resources` trong scope ngắn:
+**Manage unsubscription.** When views close, sessions expire, or modules unload, release subscriptions. Java `AutoCloseable` works well with `try-with-resources` for short scopes:
 
 ```java
 try (ObserverDemo.Subscription sub =
@@ -5569,117 +5569,117 @@ try (ObserverDemo.Subscription sub =
 // sub.close() tự gọi khi ra khỏi khối
 ```
 
-Đoạn nhỏ trên giả định `service` đã tạo và có đơn `DH-10` trạng thái `CREATED`, không thể chạy độc lập.
+The small snippet assumes `service` already exists and has an order `DH-10` in `CREATED` state; it cannot run independently.
 
-**Quan sát được sự kiện.** Khi triển khai sản phẩm thật, bổ sung metrics số observer, thời gian callback, lỗi callback, độ trễ queue, correlation ID. Tránh log thông tin cá nhân/chi tiết thanh toán không cần thiết.
+**Observe event handling.** Production systems should measure observer counts, callback duration, callback errors, queue lag, and correlation IDs. Avoid unnecessary personal or payment details in logs.
 
-**Không đưa I/O chậm vào listener đồng bộ không giới hạn.** Callback gửi request mạng có thể treo, làm chậm tất cả các listener và caller. Có timeout, circuit breaker và/hoặc queue nếu cần — lựa chọn phải dựa vào yêu cầu sản phẩm.
+**Avoid unbounded slow I/O in synchronous listeners.** Network requests can hang callbacks, delaying all listeners and the caller. Use timeouts, circuit breakers, and/or queues where needed, based on product requirements.
 
-## 13. Quy trình refactor từ lời gọi cứng sang Observer
+## 13. Refactoring from Hardcoded Calls to Observer
 
-1. **Xác định một thay đổi có ý nghĩa:** ví dụ chuyển trạng thái đơn sang `PAID`.
-2. **Phân loại phản ứng:** tác vụ bắt buộc để commit thành công khác với tác vụ phụ như metrics/UI/notification.
-3. **Đặt contract sự kiện:** `OrderStatusChanged` chứa dữ liệu tối thiểu observer cần.
-4. **Tạo hợp đồng listener:** ví dụ `onStatusChanged(event)`; không để Subject biết các class nhận thông báo.
-5. **Quyết định dispatch policy:** đồng bộ hay async; lỗi của observer ảnh hưởng caller thế nào; có cần đảm bảo thứ tự không.
-6. **Tạo registry/subscription:** hỗ trợ hủy đăng ký, tránh giữ listener quá lâu.
-7. **Chỉ publish khi thay đổi hợp lệ và có ý nghĩa:** không tạo “ghost event” cho lệnh thất bại.
-8. **Viết test về hợp đồng:** một thay đổi thật, không thay đổi, trạng thái sai, nhiều observer, một observer lỗi, hủy đăng ký.
-9. **Đánh giá bền vững nếu có DB/mạng:** transaction boundary, outbox, retry, idempotency, consumer lag.
-10. **Theo dõi và thu gọn:** nếu mọi thứ trở nên khó lần theo, dùng event naming/catalog hoặc chuyển quy trình bắt buộc về application service.
+1. **Identify a meaningful change:** for example, transitioning an order to `PAID`.
+2. **Classify reactions:** actions required to commit successfully differ from secondary metrics/UI/notification tasks.
+3. **Define the event contract:** `OrderStatusChanged` contains the minimum data observers need.
+4. **Create the listener contract:** such as `onStatusChanged(event)`; Subject should not know concrete listener classes.
+5. **Choose dispatch policy:** synchronous or async, effect of observer failures on the caller, and whether ordering is guaranteed.
+6. **Create registry/subscriptions:** support cancellation and prevent retaining listeners too long.
+7. **Publish only after meaningful valid changes:** do not create “ghost events” for failed commands.
+8. **Write contract tests:** actual changes, no-ops, invalid transitions, multiple observers, listener failure, and unsubscription.
+9. **Evaluate durability for DB/network systems:** transaction boundaries, outbox, retries, idempotency, and consumer lag.
+10. **Monitor and simplify:** when tracing becomes difficult, use consistent event naming/catalogs or move mandatory steps back into application services.
 
-## 14. Cạm bẫy thường gặp
+## 14. Common Pitfalls
 
-| Cạm bẫy | Triệu chứng | Cách xử lý |
+| Pitfall | Symptom | Resolution |
 |---|---|---|
-| Không unsubscribe | Mỗi lần mở lại UI, một event tạo nhiều callback | Trả subscription handle, gắn vào lifecycle |
-| Callback làm I/O chậm | Một observer khiến request chậm toàn bộ | Dispatch phù hợp, queue/timeout |
-| Observer A gọi lại Subject | Event lồng nhau, thứ tự khó đoán hoặc recursion | Giới hạn reentrancy, dùng queue nếu cần |
-| Catch mọi ngoại lệ rồi bỏ qua | Mất notification mà không ai biết | Log/metrics/alert và error policy |
-| Cho observer sửa trực tiếp event mutable | Các listener sau nhìn thấy nội dung thay đổi | Event bất biến, phòng vệ collection |
-| Coi `CopyOnWriteArrayList` là thread-safe cho cả domain state | Trạng thái đơn bị race | Lock/transaction/CAS tại phần cập nhật trạng thái |
-| Dựa vào thứ tự đăng ký để quyết định nghiệp vụ | Đổi cấu hình làm sai luồng | Đưa bước bắt buộc vào workflow |
-| Publish trước commit | Observer nhận event dù transaction rollback | Publish sau commit hoặc outbox phù hợp |
-| Publish sau commit trong RAM và tưởng “không mất” | Crash giữa commit và publish gây mất event | Transactional Outbox khi cần bền vững |
-| Giả định exactly-once | Consumer lặp hiệu ứng phụ khi redelivery | Event ID, deduplication, idempotent consumer |
-| Event quá chung `onChange(Object)` | Ép kiểu runtime và coupling ngầm | Kiểu event rõ và có schema |
-| Dùng Observer cho mọi phép gọi | Khó debug, khó truy vết phụ thuộc | Giữ lời gọi trực tiếp cho tương tác rõ, bắt buộc |
+| Missing unsubscription | Each UI reopen creates multiple callbacks for one event | Return a subscription handle tied to lifecycle |
+| Slow I/O in callbacks | One observer delays the entire request | Suitable dispatch, queues/timeouts |
+| Observer A calls Subject recursively | Nested events, unpredictable ordering, or recursion | Limit reentrancy; queue events if necessary |
+| Catch and ignore every exception | Notifications disappear without visibility | Logging/metrics/alerts and a defined error policy |
+| Observers can mutate the shared event payload | Later listeners see changed content | Immutable events and defensive collection copies |
+| Treat `CopyOnWriteArrayList` as making all domain state thread-safe | Order states race | Locks/transactions/CAS around state updates |
+| Depend on registration order for business decisions | Configuration changes break workflows | Move mandatory steps into explicit orchestration |
+| Publish before commit | Observers receive events even if the transaction rolls back | Publish after commit or use an appropriate outbox |
+| Publish after commit in RAM and assume it is durable | A crash between commit and publish loses the event | Transactional Outbox where durability matters |
+| Assume exactly-once | Consumers repeat side effects on redelivery | Event IDs, deduplication, idempotent consumers |
+| Overly generic events such as `onChange(Object)` | Runtime casts and implicit coupling | Typed events with clear schemas |
+| Use Observer for every call | Difficult debugging and dependency tracing | Keep direct calls for clear mandatory interactions |
 
-## 15. Bài tập thực hành
+## 15. Practical Exercises
 
-**Bài 1 — Theo dõi thay đổi giá:** Xây `PriceCatalog` phát `PriceChanged(sku, oldPrice, newPrice)`. Có một observer cập nhật UI và một observer thu thập metric. Không phát sự kiện nếu giá không đổi; test đăng ký và hủy đăng ký.
+**Exercise 1 — Track price changes:** Build `PriceCatalog` emitting `PriceChanged(sku, oldPrice, newPrice)`. One observer updates the UI while another records metrics. Emit no event if the price is unchanged; test subscription and unsubscription.
 
-**Bài 2 — Đăng ký trùng:** Gọi `subscribe` hai lần với cùng một listener. Xác định số thông báo được nhận. Hủy một `Subscription` và kiểm tra đăng ký còn lại vẫn hoạt động. Giải thích vì sao mỗi lần đăng ký cần token có danh tính riêng.
+**Exercise 2 — Duplicate subscriptions:** Invoke `subscribe` twice with the same listener. Determine how many notifications arrive. Cancel one `Subscription` and verify the other remains active. Explain why each registration needs its own identity token.
 
-**Bài 3 — Observer gây lỗi:** Một listener ném exception, một listener còn lại thu event vào list. Viết test cho chính sách đã chọn (tiếp tục, fail-fast hoặc tổng hợp lỗi). Mô tả rõ người gọi sẽ quan sát trạng thái nghiệp vụ thế nào sau lỗi.
+**Exercise 3 — Observer failure:** One listener throws an exception while another records the event in a list. Test the chosen policy (continue, fail-fast, or aggregate errors). Describe what business state the caller observes after the failure.
 
-**Bài 4 — Đa luồng:** Hai thread cùng muốn đổi đơn từ `CREATED` sang `PAID`. Đề xuất cách cập nhật có điều kiện bằng database hoặc lock, và chỉ publish **một** sự kiện cho chuyển trạng thái thành công. Trình bày rủi ro nếu publish sau commit nhưng process chết.
+**Exercise 4 — Concurrency:** Two threads both attempt to change an order from `CREATED` to `PAID`. Propose a conditional update with DB or locking, and publish only **one** event for the successful transition. Explain the risk if the process dies after commit but before publish.
 
-**Bài 5 — Gửi email tin cậy:** Từ ví dụ đơn hàng, nâng yêu cầu thành “không được làm mất nhu cầu gửi email khi giao dịch đã commit; xử lý trùng lặp an toàn”. Vẽ sơ đồ outbox, relay, broker, consumer và đề xuất `eventId`/idempotency key.
+**Exercise 5 — Reliable email:** Extend the order example with the requirement “an email notification must not be lost after transaction commit; duplicates must be handled safely.” Diagram the outbox, relay, broker, and consumer, and propose an `eventId`/idempotency key.
 
-## 16. Tự kiểm tra đã hiểu Observer chưa?
+## 16. Self-Check: Do You Understand Observer?
 
-- [ ] Tôi chỉ ra được Subject, Observer, event, subscription và thời điểm publish.
-- [ ] Tôi biết khi nào **thông báo về thay đổi** khác với **gọi thao tác bắt buộc**.
-- [ ] Tôi phân biệt được callback đồng bộ trong Java với pub/sub qua broker.
-- [ ] Tôi xử lý được sự kiện không thay đổi, invalid transition và listener ném lỗi.
-- [ ] Tôi hiểu nguy cơ memory leak khi Subject giữ listener lâu hơn lifecycle của UI.
-- [ ] Tôi không nhầm an toàn của danh sách listener với an toàn cập nhật trạng thái nghiệp vụ.
-- [ ] Tôi xác định được policy về thứ tự, reentrancy, latency, error và retry.
-- [ ] Tôi biết vì sao outbox/idempotency cần thiết khi nâng yêu cầu thành giao sự kiện tin cậy giữa các dịch vụ.
+- [ ] I can identify Subject, Observer, events, subscriptions, and publish timing.
+- [ ] I know how **change notifications** differ from **required operations**.
+- [ ] I can distinguish synchronous Java callbacks from broker-based pub/sub.
+- [ ] I can handle unchanged state, invalid transitions, and faulty listeners.
+- [ ] I understand memory-leak risks when Subjects outlive their UI listeners.
+- [ ] I do not confuse listener-list safety with safe business-state updates.
+- [ ] I can choose policies for ordering, reentrancy, latency, errors, and retries.
+- [ ] I understand why outbox/idempotency is needed for reliable event delivery between services.
 
-**Ghi nhớ:** Observer cung cấp cách để *một nguồn thay đổi thông báo tới nhiều đối tượng quan tâm* mà không biết trực tiếp tất cả các phản ứng. Thiết kế tốt phải đi kèm vòng đời đăng ký, hợp đồng sự kiện, cách xử lý lỗi và mức bảo đảm thông báo đúng với bối cảnh — đặc biệt khi đi từ callback cục bộ sang hệ thống phân tán.
+**Remember:** Observer lets *one changing source notify multiple interested objects* without directly knowing all their reactions. A good design manages subscription lifecycles, event contracts, error handling, and notification guarantees appropriate to its context—especially when moving from local callbacks to distributed systems.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-011">Template Method và khung thuật toán</a>
+## <a id="design-patterns-011">Template Method and the Algorithm Skeleton</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Template Method trong Java: cố định khung thuật toán, tùy biến từng bước
+# Template Method in Java: Fixing an Algorithm Skeleton, Customizing Individual Steps
 
-> **Lộ trình:** OOP → Mẫu thiết kế → Template Method và khung thuật toán.  
-> **Mục tiêu:** Hiểu Template Method là gì, biết xác định bước cố định và bước biến thiên, triển khai lớp cha cùng các lớp con trong Java, kiểm tra thứ tự thực thi, phân biệt với Strategy/Factory Method và nhận biết khi nào kế thừa gây thêm chi phí.
+> **Learning path:** OOP → Design Patterns → Template Method and the algorithm skeleton.  
+> **Objective:** Understand Template Method, identify fixed versus variable steps, implement a superclass and subclasses in Java, verify execution order, distinguish Strategy/Factory Method, and recognize when inheritance adds cost.
 
-## 1. Template Method giải quyết vấn đề gì?
+## 1. What Problem Does Template Method Solve?
 
-Trong nhiều chương trình, các tác vụ có **cùng quy trình tổng thể** nhưng khác ở một vài bước. Ví dụ, khi xuất báo cáo doanh thu:
+Many programs perform tasks with **the same overall process** but different steps. Consider generating a sales report:
 
-1. Nhận và kiểm tra dữ liệu giao dịch.
-2. Tính tổng doanh thu.
-3. Tạo tiêu đề báo cáo.
-4. Biểu diễn từng giao dịch.
-5. Tạo dòng tổng kết.
-6. Bổ sung nội dung cuối báo cáo nếu cần.
+1. Receive and validate transaction data.
+2. Calculate total revenue.
+3. Generate the report heading.
+4. Render each transaction.
+5. Generate the summary line.
+6. Optionally add a footer.
 
-Báo cáo văn bản thuần và báo cáo Markdown đều phải thực hiện các bước này **đúng thứ tự**; chúng chỉ khác cách hiển thị tiêu đề, dòng giao dịch và tổng kết.
+Plain-text and Markdown reports must perform these steps **in the correct order**; only the presentation of headings, transaction lines, and summaries differs.
 
-Nếu mỗi loại báo cáo có một phương thức `generate()` tự viết toàn bộ quá trình, phần kiểm tra dữ liệu, tính tổng và thứ tự xử lý dễ bị sao chép. Một phiên bản có thể quên kiểm tra tiền âm hoặc bỏ dòng tổng kết.
+If each report type independently implements the complete `generate()` process, data validation, total calculation, and step order may be duplicated. One variant might forget to reject negative amounts or omit a summary.
 
-**Template Method** là mẫu thiết kế hành vi (*behavioral pattern*) theo GoF: định nghĩa **bộ khung của thuật toán trong một phương thức ở lớp cha**, đồng thời cho phép lớp con cài đặt hoặc ghi đè một số bước mà **không thay đổi cấu trúc chung của thuật toán**.
+**Template Method** is a GoF *behavioral pattern*: define **an algorithm skeleton in a superclass method** while letting subclasses implement or override selected steps **without changing the overall algorithm structure**.
 
-Cách đọc một thiết kế Template Method:
+How to read a Template Method design:
 
-| Thành phần | Vai trò |
+| Component | Role |
 |---|---|
-| **Abstract Class** | Lớp cha nắm quy trình và định nghĩa những bước mở rộng |
-| **Template Method** | Phương thức điều phối thứ tự bước; thường đặt `final` để không bị ghi đè |
-| **Concrete Operation** | Bước triển khai trọn vẹn tại lớp cha, dùng chung cho mọi biến thể |
-| **Primitive Operation** | Bước `abstract` buộc subclass cung cấp |
-| **Hook** | Bước có hành vi mặc định, subclass **có thể** ghi đè |
-| **Concrete Class** | Lớp con triển khai những phần khác nhau theo từng biến thể |
+| **Abstract Class** | Superclass owns the workflow and defines extension steps |
+| **Template Method** | Coordinates step order; often marked `final` to prevent overrides |
+| **Concrete Operation** | Fully implemented step in the superclass, shared by all variants |
+| **Primitive Operation** | An `abstract` step that subclasses must provide |
+| **Hook** | A step with default behavior that subclasses **may** override |
+| **Concrete Class** | Subclass implementing differences specific to a variant |
 
-Tên pattern đến từ **“mẫu quy trình”**, không phải “template” của generic type trong C++ hay một mẫu file giao diện.
+The pattern name refers to a **“workflow template”**, not a C++ generic-type template or a UI template file.
 
-## 2. Từ mã lặp đến một khung thống nhất
+## 2. From Duplicated Code to a Shared Skeleton
 
-Một thiết kế ban đầu thường là hai class độc lập:
+An initial design often has two independent classes:
 
 ~~~java
 // Phác thảo để thấy chỗ trùng lặp, không phải chương trình hoàn chỉnh.
@@ -5702,28 +5702,28 @@ class MarkdownReport {
 }
 ~~~
 
-Hai lớp phải tự bảo đảm cùng thứ tự `validate → calculateTotal → render`. Khi nghiệp vụ thêm một bước chung, chẳng hạn kiểm tra ID giao dịch hợp lệ, cả hai có nguy cơ phải sửa.
+Both classes must preserve the order `validate → calculateTotal → render`. If the business adds a shared step, such as checking transaction IDs, both may need modification.
 
-Ý tưởng refactor:
+Refactoring idea:
 
-- **Giữ trong lớp cha:** kiểm tra danh sách đầu vào, chụp snapshot, tính tổng, thứ tự các bước và trả kết quả.
-- **Cho lớp con tùy biến:** nội dung tiêu đề, cách trình bày một giao dịch, cách trình bày tổng kết.
-- **Dùng hook:** phần bổ sung cuối báo cáo có thể để trống hoặc được subclass định nghĩa.
+- **Keep in the superclass:** input-list validation, snapshotting, total calculation, step order, and result assembly.
+- **Customize in subclasses:** heading content, transaction representation, and summary format.
+- **Use a hook:** the optional report footer can default to empty or be customized by subclasses.
 
-Cơ chế này thường được diễn đạt bằng “**Hollywood Principle**”: *Don't call us, we'll call you*. Lớp cha quyết định khi nào gọi các bước do lớp con cung cấp; subclass không cần tự lắp lại toàn bộ luồng.
+This mechanism is often expressed as the “**Hollywood Principle**”: *Do not call us; we will call you*. The superclass chooses when to invoke steps provided by subclasses, so subclasses need not reconstruct the entire workflow.
 
-## 3. Ví dụ Java 17 đầy đủ: tạo báo cáo doanh thu
+## 3. Complete Java 17 Example: Generating Sales Reports
 
-Ví dụ chỉ dùng JDK. Mỗi giao dịch có mã giao dịch và số tiền VND với hai chữ số thập phân **để đơn giản hóa bài học**; đây là quy ước của demo, không phải một phát biểu rằng VND bắt buộc có hai chữ số thập phân trong mọi hệ thống thực.
+The example uses only the JDK. Every transaction has a transaction code and an amount in VND with two decimal places **to simplify the lesson**; this is a demo convention, not a claim that VND always requires two decimal digits.
 
-Hợp đồng đầu vào:
+Input contract:
 
-- Mã giao dịch chỉ chứa chữ `A–Z` viết hoa, chữ số hoặc dấu `-` để dễ biểu diễn an toàn trong văn bản/Markdown.
-- Số tiền không âm, không null và biểu diễn được đến hai chữ số thập phân.
-- Danh sách giao dịch không null; có thể rỗng. Không chấp nhận phần tử null.
-- Lớp con chỉ làm nhiệm vụ **format**; không được sửa số tiền hoặc ngầm bỏ giao dịch.
+- Transaction codes contain only uppercase `A–Z`, digits, or `-` for safe plain-text/Markdown rendering.
+- Amounts must be nonnegative, non-null, and exactly representable with two decimal places.
+- The transaction list must not be null and may be empty; null elements are forbidden.
+- Subclasses only **format** output; they must not modify amounts or silently drop transactions.
 
-Tạo tệp **`TemplateMethodDemo.java`** rồi chép toàn bộ đoạn sau:
+Create **`TemplateMethodDemo.java`** and copy the full example below:
 
 ~~~java
 import java.math.BigDecimal;
@@ -5869,14 +5869,14 @@ public class TemplateMethodDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac TemplateMethodDemo.java
 java TemplateMethodDemo
 ~~~
 
-Đầu ra:
+Output:
 
 ~~~text
 BÁO CÁO DOANH THU
@@ -5894,19 +5894,19 @@ Tổng 2 giao dịch: 150.50 VND
 _Tự động tạo báo cáo._
 ~~~
 
-**Vì sao đúng mẫu Template Method?**
+**Why Is This Template Method?**
 
-1. `SalesReportTemplate.generate()` sở hữu **thứ tự** các bước.
-2. `generate()` là `final` nên subclass không thể ghi đè để bỏ tính tổng, đảo thứ tự hoặc quên bước chung.
-3. `header()`, `row()` và `summary()` là các **primitive operations**: abstract, được gọi bởi template và được subclass triển khai.
-4. `footer()` là **hook** có mặc định `""`. `TextSalesReport` không cần ghi đè; `MarkdownSalesReport` chọn bổ sung dòng chú thích.
-5. `TextSalesReport`/`MarkdownSalesReport` chỉ quyết định **cách biểu diễn kết quả**, không điều khiển lại thuật toán.
+1. `SalesReportTemplate.generate()` owns the **order** of the steps.
+2. `generate()` is `final`, so subclasses cannot override it to skip total calculation, reorder steps, or forget shared processing.
+3. `header()`, `row()`, and `summary()` are **primitive operations**: abstract methods invoked by the template and implemented by subclasses.
+4. `footer()` is a **hook** defaulting to `""`. `TextSalesReport` need not override it; `MarkdownSalesReport` adds an optional note.
+5. `TextSalesReport`/`MarkdownSalesReport` determine **how results are presented**, not how to orchestrate the algorithm.
 
-Chú ý rằng `final` chỉ khóa việc override **phương thức template**, không tự động ngăn mọi lỗi subclass. Ví dụ, `row()` của một subclass vẫn có thể trả giá trị sai hoặc thực hiện tác dụng phụ không mong muốn. Hợp đồng và kiểm thử vẫn rất quan trọng.
+Note that `final` only prevents overriding **the template method**; it cannot automatically prevent all subclass bugs. For example, a subclass implementation of `row()` could return an incorrect value or produce unexpected side effects. Contracts and tests still matter.
 
-## 4. Sơ đồ lớp và chuỗi thực thi
+## 4. Class Diagram and Execution Sequence
 
-### 4.1. Cấu trúc lớp
+### 4.1. Class Structure
 
 ~~~mermaid
 classDiagram
@@ -5933,9 +5933,9 @@ classDiagram
     SalesReportTemplate <|-- MarkdownSalesReport
 ~~~
 
-Dấu `*` trong sơ đồ đánh dấu các bước abstract. `generate()` trong Java ở ví dụ được khai báo `final`; sơ đồ chỉ tóm tắt danh sách phương thức.
+The `*` marker in the diagram indicates abstract steps. The example Java code declares `generate()` as `final`; the diagram merely summarizes method signatures.
 
-### 4.2. Ai quyết định thứ tự?
+### 4.2. Who Controls the Order?
 
 ~~~mermaid
 sequenceDiagram
@@ -5957,26 +5957,26 @@ sequenceDiagram
     Context-->>Client: Chuỗi báo cáo hoàn chỉnh
 ~~~
 
-Khi gọi `new MarkdownSalesReport().generate(...)`, trình tự vẫn bắt đầu trong phương thức kế thừa từ `SalesReportTemplate`. Chỉ từng bước ảo được JVM dispatch tới implementation của đối tượng thật.
+When calling `new MarkdownSalesReport().generate(...)`, execution still starts in the method inherited from `SalesReportTemplate`. Only the individual virtual steps are dispatched by the JVM to the runtime implementation.
 
-## 5. Ba nhóm bước trong Template Method
+## 5. Three Groups of Steps in Template Method
 
-Thiết kế tốt thường phân biệt **bước bất biến**, **bước bắt buộc thay đổi** và **bước tùy chọn**:
+A good design distinguishes **invariant steps**, **required variation steps**, and **optional steps**:
 
-| Nhóm | Đặc điểm Java | Ví dụ | Cách dùng |
+| Group | Java characteristic | Example | Usage |
 |---|---|---|---|
-| **Bước chung** | `private` hoặc `final` method chứa logic đầy đủ | Snapshot, tính tổng, kiểm tra dữ liệu | Để ở lớp cha, không tạo điểm ghi đè nếu không cần |
-| **Bước abstract** | `protected abstract` | `header()`, `row(...)`, `summary(...)` | Subclass phải cung cấp implementation |
-| **Hook** | `protected` method có mặc định | `footer() { return ""; }` | Subclass chỉ override khi cần |
-| **Template Method** | Thường `public final` | `generate(...)` | Điều phối các bước theo một thứ tự có chủ ý |
+| **Shared step** | `private` or `final` method with complete logic | Snapshot, total calculation, data validation | Keep in the superclass; do not create an override point unnecessarily |
+| **Abstract step** | `protected abstract` | `header()`, `row(...)`, `summary(...)` | Subclasses must provide an implementation |
+| **Hook** | `protected` method with a default | `footer() { return ""; }` | Subclasses override only when needed |
+| **Template Method** | Often `public final` | `generate(...)` | Coordinates steps in a deliberate order |
 
-Từ “**thường**” quan trọng: GoF không bắt buộc mọi Template Method phải `final`. Java cho phép phương thức template không `final` và một số framework có chủ đích mở rộng cả quy trình. Tuy nhiên, nếu mục tiêu là **giữ nguyên khung thuật toán**, đánh dấu `final` giúp bảo vệ ý định thiết kế.
+The word “**often**” matters: GoF does not require every Template Method to be `final`. Java permits a template method that is not `final`, and some frameworks intentionally extend the entire process. When the goal is **preserving the algorithm skeleton**, marking it `final` protects the design intent.
 
-### 5.1. Hook dùng để làm gì?
+### 5.1. What Is a Hook For?
 
-Một hook là một điểm mở rộng **không bắt buộc**. Chẳng hạn, phần lớn báo cáo không cần footer, nhưng Markdown có thể thêm chú thích. Hook nên có hành vi mặc định an toàn, dễ hiểu, và không khiến lớp con buộc phải định nghĩa method rỗng.
+A hook is an **optional** extension point. Most reports need no footer, but Markdown may add a note. A hook should have safe, understandable default behavior without requiring subclasses to implement empty methods.
 
-Hook cũng có thể kiểm soát một quyết định:
+A hook may also control a decision:
 
 ~~~java
 // Ví dụ minh họa, giả sử đặt trong một abstract class khác.
@@ -5985,22 +5985,22 @@ protected boolean shouldAddTimestamp() {
 }
 ~~~
 
-Template Method có thể hỏi `shouldAddTimestamp()` tại điểm định trước. Cách này hợp lý khi chỉ có một tùy chọn nhỏ; nếu sinh ra hàng loạt hook liên thuộc, các tổ hợp override có thể trở nên khó dự đoán.
+The Template Method may invoke `shouldAddTimestamp()` at a predetermined point. This works for one small option; numerous interdependent hooks can create unpredictable combinations of overrides.
 
-### 5.2. Có nên để subclass can thiệp vào dữ liệu chung?
+### 5.2. Should Subclasses Modify Shared Data?
 
-Trong ví dụ, `row(Sale)` nhận một `record` bất biến. Subclass không thể sửa `Sale` tại chỗ, giúp bảo vệ dữ liệu nguồn. Nếu hook nhận một `List` có thể thay đổi, một subclass có thể xóa phần tử, sửa thứ tự hoặc ảnh hưởng bước tổng kết.
+In the example, `row(Sale)` receives an immutable `record`. The subclass cannot modify `Sale` in place, protecting input data. If a hook receives a mutable `List`, one subclass might remove elements, reorder them, or affect the summary step.
 
-Do đó nên:
+Therefore:
 
-- Dùng tham số bất biến, value object, hoặc bản sao phù hợp.
-- Phân biệt **mở rộng cách thể hiện** và **thay đổi quy tắc nghiệp vụ**.
-- Công bố rõ hook nào được phép thay đổi gì, và điều gì phải giữ nguyên.
-- Không đưa toàn bộ nội bộ của lớp cha ra `protected` chỉ để subclass có thể sử dụng: điều đó tăng coupling và làm refactor khó hơn.
+- Pass immutable parameters, value objects, or appropriate copies.
+- Distinguish **extending presentation** from **changing business rules**.
+- Clearly specify which hooks can change which values and what must remain invariant.
+- Do not expose the entire superclass internals as `protected` merely for subclass convenience; that increases coupling and complicates refactoring.
 
-## 6. Lỗi thiết kế dễ mắc
+## 6. Common Design Mistakes
 
-### Lỗi 1: mỗi subclass tự ghi đè toàn bộ template
+### Mistake 1: Every Subclass Overrides the Whole Template
 
 ~~~java
 abstract class ImportTask {
@@ -6017,9 +6017,9 @@ abstract class ImportTask {
 }
 ~~~
 
-Nếu mục đích là bắt buộc tuân thủ thứ tự `validate → parse → save`, có thể dùng `public final void execute()`. Nếu một subclass cần cố tình thay đổi thứ tự, đó có thể là dấu hiệu **khung thuật toán không thực sự ổn định**; xem lại abstraction thay vì sửa tùy tiện tại subclass.
+If the required order is `validate → parse → save`, consider `public final void execute()`. If a subclass legitimately needs a different order, **the algorithm skeleton may not actually be stable**; reconsider the abstraction instead of arbitrarily changing subclass code.
 
-### Lỗi 2: gọi phương thức có thể override trong constructor của lớp cha
+### Mistake 2: Calling Overridable Methods from a Superclass Constructor
 
 ~~~java
 abstract class UnsafeBase {
@@ -6039,57 +6039,57 @@ final class UnsafeChild extends UnsafeBase {
 }
 ~~~
 
-Trong Java, constructor của lớp cha chạy **trước** khi field initializer của lớp con hoàn tất. `configure()` có thể chạy khi `prefix == null`, dẫn tới `NullPointerException`. Tránh gọi hook/abstract override từ constructor; hãy gọi template sau khi object đã khởi tạo đầy đủ, hoặc thiết kế factory xây dựng object xong mới bắt đầu xử lý.
+In Java, the superclass constructor runs **before** subclass field initialization completes. `configure()` may execute while `prefix == null`, causing `NullPointerException`. Avoid calling hooks/abstract methods from constructors; invoke the template after full object initialization or use a factory that constructs objects before starting work.
 
-### Lỗi 3: ép lớp con phải hỗ trợ những bước không hợp lý
+### Mistake 3: Forcing Subclasses to Support Nonsensical Steps
 
-Nếu một `ImportTask` có bước `decrypt()` nhưng nhiều nguồn không bao giờ được mã hóa, ép mọi subclass triển khai `decrypt() { throw new UnsupportedOperationException(); }` là dấu hiệu hợp đồng không phù hợp.
+If an `ImportTask` defines `decrypt()` but many sources are never encrypted, requiring every subclass to implement `decrypt() { throw new UnsupportedOperationException(); }` suggests a poorly designed contract.
 
-Tùy nghiệp vụ, có thể dùng hook mặc định an toàn, tách abstraction theo khả năng, hoặc truyền một bộ giải mã Strategy. Không dùng hook trống một cách máy móc nếu việc “không giải mã” tạo rủi ro bảo mật.
+Depending on requirements, use a safe default hook, split abstractions by capability, or inject a decoding Strategy. Do not use empty hooks mechanically when skipping decryption could create security risks.
 
-### Lỗi 4: tạo quá nhiều hook phụ thuộc thứ tự
+### Mistake 4: Too Many Order-Dependent Hooks
 
-Một framework tự viết với hàng chục method như `beforeValidate`, `afterValidate`, `beforeParse`, `afterParse`, `onError`, `finally...` rất khó hiểu khi subclass override nhiều vị trí. Template Method hữu ích nhất khi **khung thực sự ổn định** và chỉ một số ít bước cần thay thế.
+A custom framework with dozens of methods such as `beforeValidate`, `afterValidate`, `beforeParse`, `afterParse`, `onError`, and `finally...` becomes hard to understand when subclasses override many steps. Template Method helps most when **the skeleton is genuinely stable** and only a few steps require replacement.
 
-### Lỗi 5: dùng kế thừa để xử lý mọi chiều biến thiên
+### Mistake 5: Using Inheritance for Every Variation Axis
 
-Giả sử đồng thời có hai định dạng đầu ra (Text/Markdown), hai ngôn ngữ (VI/EN) và ba cách xuất (file/email/API). Nếu đưa tất cả vào hệ thống subclass, số tổ hợp tiềm năng là `2 × 2 × 3 = 12`, dễ dẫn tới bùng nổ lớp.
+Suppose there are two output formats (Text/Markdown), two languages (VI/EN), and three delivery approaches (file/email/API). Encoding every combination as a subclass produces `2 × 2 × 3 = 12` possible variants and can lead to class explosion.
 
-Khi có **nhiều trục thay đổi độc lập**, cân nhắc composition: `ReportFormatter`, `Translator`, `ReportPublisher` được inject riêng. Template Method vẫn có thể quản lý khung xử lý chung ở một tầng ổn định, nhưng từng biến thể có thể do các đối tượng cộng tác đảm nhiệm.
+With **multiple independent axes of variation**, consider composition: inject `ReportFormatter`, `Translator`, and `ReportPublisher` separately. Template Method may still orchestrate a stable outer workflow while collaborator objects provide particular variants.
 
-## 7. Template Method so với Strategy, Factory Method và các kỹ thuật khác
+## 7. Comparing Template Method with Strategy, Factory Method, and Other Techniques
 
-| Tiêu chí | Template Method | Strategy | Factory Method |
+| Criterion | Template Method | Strategy | Factory Method |
 |---|---|---|---|
-| Mục đích | Giữ **khung một thuật toán**, cho subclass thay vài bước | Thay **toàn bộ thuật toán/hành vi** bằng đối tượng cộng tác | Cho subclass quyết định **loại đối tượng được tạo** |
-| Cơ chế chính | **Inheritance + dynamic dispatch** các bước override | **Composition + delegation** qua interface | **Inheritance + override** phương thức khởi tạo |
-| Điểm biến thiên | Các bước trong quy trình lớp cha | Một implementation Strategy được truyền vào Context | Phương thức tạo một Product |
-| Thay biến thể lúc chạy | Có thể đổi **đối tượng subclass**, nhưng không tự thay được cấu trúc quy trình bên trong cùng object | Thường dễ chọn/đổi Strategy thông qua DI hoặc parameter | Chọn Creator subclass hoặc dùng factory do Creator cung cấp |
-| Lợi ích | Không lặp phần luồng chung; duy trì thứ tự xử lý | Giảm phụ thuộc vào thuật toán; linh hoạt chọn hành vi | Cô lập việc tạo sản phẩm khỏi logic xử lý |
-| Rủi ro | Subclass coupling với lớp cha; hook quá nhiều | Nhiều Strategy nhỏ, cần cơ chế chọn | Nhiều Creator subclass chỉ để thay loại sản phẩm |
+| Purpose | Preserve **an algorithm skeleton** while subclasses vary selected steps | Replace **a complete algorithm/behavior** using a collaborator object | Let subclasses choose **the class to instantiate** |
+| Primary mechanism | **Inheritance + dynamic dispatch** of overridden steps | **Composition + delegation** through an interface | **Inheritance + overriding** a creation method |
+| Variation point | Steps inside the superclass workflow | Strategy implementation supplied to Context | Method that creates a Product |
+| Changing variants at runtime | Can select a **different subclass object**, but cannot dynamically alter the process structure within one object | Usually easy to select/swap Strategy through DI or parameters | Select a Creator subclass or use a factory supplied by the Creator |
+| Benefit | Avoid duplicated workflow steps while maintaining order | Decouple algorithms and flexibly choose behaviors | Isolate product creation from business processing |
+| Risk | Subclass coupling to superclass; excessive hooks | Too many small Strategies, plus selection mechanisms | Too many Creator subclasses solely to choose product types |
 
-**Nhận diện nhanh bằng ví dụ:**
+**Recognize the patterns through examples:**
 
-- `SalesReportTemplate.generate()` giữ `header → rows → summary → footer`: **Template Method**.
-- `PricingService` nhận `PricingStrategy` và gọi `calculate(...)`: **Strategy**.
-- `DocumentCreator` gọi `createDocument()` được subclass override để tạo `PdfDocument` hoặc `HtmlDocument`: **Factory Method**.
+- `SalesReportTemplate.generate()` fixes `header → rows → summary → footer`: **Template Method**.
+- `PricingService` receives `PricingStrategy` and calls `calculate(...)`: **Strategy**.
+- `DocumentCreator` calls `createDocument()`, overridden by subclasses to create `PdfDocument` or `HtmlDocument`: **Factory Method**.
 
-Một Template Method **có thể gọi Factory Method** ở một bước, ví dụ quy trình xuất tài liệu gọi `createRenderer()`; cũng có thể nhận Strategy để thực hiện một phần tính toán. Các pattern là công cụ phối hợp, không phải danh mục loại trừ nhau.
+A Template Method **may invoke a Factory Method** at a step, such as document export calling `createRenderer()`; it may also accept a Strategy for part of its calculations. Patterns are composable tools, not mutually exclusive categories.
 
-### Template Method hay Strategy cho một bài toán?
+### Template Method or Strategy for a Given Problem?
 
-Dùng các câu hỏi:
+Ask:
 
-1. Có một **thứ tự bước bắt buộc**, nhiều bước dùng chung và chỉ một số bước khác nhau? → **Template Method** đáng cân nhắc.
-2. Có nhiều **thuật toán hoàn chỉnh** cần hoán đổi, đặc biệt ở runtime hoặc theo từng request? → **Strategy** thường linh hoạt hơn.
-3. Có nhiều chiều biến thiên tương đối độc lập (định dạng, ngôn ngữ, đầu ra)? → Ưu tiên **composition** hoặc phối hợp Strategy với một quy trình chung.
-4. Thứ tự xử lý hay hợp đồng có thể bị lớp con phá vỡ không? → Hạn chế extension point, ghi rõ precondition/postcondition, kiểm thử mọi subclass.
+1. Is there a **mandatory step sequence** with many shared steps and only a few differences? → Consider **Template Method**.
+2. Are there multiple **complete algorithms** to interchange, especially at runtime or per request? → **Strategy** is usually more flexible.
+3. Are there several independent dimensions (format, language, output)? → Prefer **composition** or combine Strategy with a common workflow.
+4. Can subclasses violate processing order or the contract? → Limit extension points, specify preconditions/postconditions, and test every subclass.
 
-Kế thừa trong Template Method tạo liên kết khá chặt với lớp cha. Một thay đổi trong thứ tự hoặc ý nghĩa hook có thể ảnh hưởng tới nhiều subclass; ngược lại, Strategy cần thiết kế interface đủ rõ và thêm bước chọn/khởi tạo object.
+Template Method inheritance tightly couples subclasses to the superclass. Changing step order or hook semantics may affect many subclasses; Strategy instead requires a clear interface and object-selection/creation mechanism.
 
-## 8. Template Method khác một interface thông thường
+## 8. How Template Method Differs from an Ordinary Interface
 
-Một interface chỉ khai báo các thao tác:
+An interface only declares operations:
 
 ~~~java
 interface Exporter {
@@ -6097,23 +6097,23 @@ interface Exporter {
 }
 ~~~
 
-Nếu mỗi implementation của `Exporter` tự quyết định toàn bộ quá trình, chưa có **khung thuật toán dùng chung** ở một lớp cha. Đây là polymorphism qua interface, nhưng tự nó **chưa đủ** để kết luận đang dùng Template Method.
+If each implementation of `Exporter` independently decides the entire process, there is no **shared algorithm skeleton** in a superclass. That is interface-based polymorphism but **does not suffice** to identify Template Method.
 
-Một `abstract class` chứa `final generate()` gọi các bước `protected abstract`/hook là cấu trúc đặc trưng. Trong Java, interface có `default` method, nhưng cơ chế extension và state khác abstract class; vẫn cần xem xét **ai thực sự sở hữu skeleton** chứ không chỉ nhìn từ khóa.
+An `abstract class` containing a `final generate()` that invokes `protected abstract` steps/hooks is characteristic. Java interfaces can use `default` methods, but have different extension/state mechanisms from abstract classes; examine **who actually owns the skeleton**, not merely the keywords.
 
-## 9. Kiểm thử đúng tính chất của Template Method
+## 9. Testing the Actual Properties of Template Method
 
-Trong ứng dụng thật, không chỉ kiểm tra kết quả cuối cùng mà còn cần xác nhận:
+Production tests should verify more than the final result:
 
-- **Thứ tự bước** không bị thay đổi.
-- **Bước chung** được thực thi ở mọi subclass.
-- Các subclass tạo đầu ra đúng định dạng theo hợp đồng.
-- Hook mặc định hoạt động khi subclass không override.
-- Dữ liệu biên (danh sách rỗng, null, số tiền không hợp lệ) được xử lý đúng.
+- **Step order** is preserved.
+- **Shared steps** execute for every subclass.
+- Subclasses produce correctly formatted results under the contract.
+- The default hook works when a subclass does not override it.
+- Boundary data (empty list, null values, invalid amounts) is handled correctly.
 
-Các test dưới đây dùng JUnit Jupiter 5; đặt `TemplateMethodDemo.java` vào source chính và `SalesReportTemplateTest.java` vào source kiểm thử cùng package, có dependency `junit-jupiter` và test runner phù hợp.
+The following tests use JUnit Jupiter 5; place `TemplateMethodDemo.java` under the main source set and `SalesReportTemplateTest.java` under the test source set in the same package, with a `junit-jupiter` dependency and suitable test runner.
 
-### 9.1. Test dữ liệu, tổng kết và hook
+### 9.1. Test Data, Summaries, and Hooks
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -6167,9 +6167,9 @@ class SalesReportTemplateTest {
 }
 ~~~
 
-### 9.2. Test thứ tự các bước bằng một subclass ghi nhận lời gọi
+### 9.2. Test Step Order with a Subclass That Records Calls
 
-Test này hữu ích khi sau này ai đó sửa template và vô tình đảo vị trí các bước:
+This test catches accidental reordering when someone later changes the template:
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -6228,38 +6228,38 @@ class SalesReportOrderTest {
 }
 ~~~
 
-Lưu ý test về thứ tự chỉ chạy trên một subclass quan sát. Kiểm thử contract chung với tất cả subclass sản phẩm cũng cần thiết khi số biến thể tăng. Nếu một hook sinh tác dụng phụ thật (ghi DB, gửi mail), dùng fake dependency để tránh tạo tác động ngoài ý muốn trong unit test.
+The ordering test uses only one tracing subclass. When variants proliferate, shared contract tests should cover all product subclasses too. If a hook performs real side effects (database writes, emails), inject fake dependencies to avoid unwanted effects in unit tests.
 
-## 10. Khi dùng Template Method trong hệ thống thực
+## 10. Using Template Method in Real Systems
 
-Một số trường hợp khung tương đối ổn định:
+Examples with relatively stable algorithm skeletons:
 
-| Bài toán | Bước chung | Bước tùy biến |
+| Use case | Shared steps | Customized steps |
 |---|---|---|
-| Nhập dữ liệu ETL | Kiểm tra → đọc → chuyển đổi → lưu → tổng kết | Parse CSV/XML, chuẩn hóa từng loại bản ghi |
-| Xuất báo cáo | Lấy dữ liệu → tổng hợp → trình bày → xuất | Header, định dạng dòng, footer |
-| Chạy tác vụ batch | Khởi tạo → xử lý từng item → cập nhật trạng thái → kết thúc | Xử lý mỗi item, hook trước/sau batch |
-| Xử lý tài liệu | Kiểm tra quyền → đọc nội dung → biến đổi → ghi ra | Cách biến đổi/renderer |
-| Mẫu kiểm thử cơ sở | Setup chung → thực thi kịch bản → xác nhận chung → cleanup | Dữ liệu fixture, bước thực thi riêng |
+| ETL data import | Validate → read → transform → persist → summarize | Parse CSV/XML; normalize each record type |
+| Report generation | Fetch data → aggregate → present → export | Header, row format, footer |
+| Batch jobs | Initialize → process each item → update state → finish | Per-item processing, pre/post-batch hooks |
+| Document processing | Check permission → read content → transform → write | Transformation/renderer implementation |
+| Base test workflows | Shared setup → run scenario → assert invariants → clean up | Fixture data and scenario-specific steps |
 
-Đối với ví dụ **ETL**, có một điểm cần làm rõ: template chỉ cố định thứ tự **không có nghĩa tự bảo đảm giao dịch nguyên tử**. Nếu lưu nhiều bản ghi rồi có lỗi giữa chừng, kết quả có thể là ghi dở; cần transaction, rollback hoặc thiết kế idempotent tùy yêu cầu. Đừng gán năng lực của framework giao dịch cho pattern.
+For **ETL**, clarify that a template fixing step order **does not guarantee atomic transactions**. If a failure occurs midway through storing records, partial writes may remain; transactions, rollbacks, or idempotency must be designed according to requirements. Do not attribute framework transaction capabilities to the pattern.
 
-### Checklist thiết kế khung thuật toán
+### Algorithm-Skeleton Design Checklist
 
-1. Viết **tên và thứ tự** các bước trước khi tạo abstract class. Chỉ phần thật sự bất biến mới vào template.
-2. Mô tả **hợp đồng của từng extension point**: đầu vào, kết quả, ngoại lệ và tác dụng phụ được phép.
-3. Để phương thức template `final` nếu subclass không được sửa khung.
-4. Sử dụng `protected abstract` cho bước bắt buộc; hook có mặc định an toàn cho bước tùy chọn.
-5. Giữ validation, bảo vệ trạng thái và quy tắc chung ở lớp cha.
-6. Tránh gọi override trong constructor và tránh cho subclass can thiệp tự do vào dữ liệu mutable.
-7. Viết test cho **thứ tự gọi, bước chung, kết quả và các biến thể**, kể cả dữ liệu biên.
-8. Nếu các biến thể tăng theo nhiều chiều độc lập, đánh giá lại inheritance và chuyển một phần sang Strategy/composition.
+1. Write down **step names and order** before defining an abstract class. Put only truly invariant parts in the template.
+2. Document **each extension-point contract**: inputs, outputs, errors, and permitted side effects.
+3. Mark the template method `final` if subclasses must not alter the skeleton.
+4. Use `protected abstract` for required steps and hooks with safe defaults for optional steps.
+5. Keep validation, state protection, and shared rules in the superclass.
+6. Avoid overridable calls in constructors, and do not give subclasses unrestricted access to mutable data.
+7. Test **call order, shared steps, results, and variants**, including boundaries.
+8. If variants grow along multiple independent axes, reconsider inheritance and move some variation into Strategy/composition.
 
-## 11. Bài tập thực hành: khung xử lý file nhập sản phẩm
+## 11. Exercise: Product Import File Workflow
 
-Một hệ thống nhận file sản phẩm từ đối tác theo hai định dạng giả định: `CSV-SIMPLE` và `PIPE-SIMPLE`. Mỗi dòng chứa mã hàng và số lượng, nhưng cách tách trường khác nhau.
+A system accepts partner product files in two illustrative formats: `CSV-SIMPLE` and `PIPE-SIMPLE`. Every line contains a product ID and quantity, but fields are separated differently.
 
-Hãy thiết kế:
+Design the following:
 
 ~~~java
 abstract class ProductImportTemplate {
@@ -6281,59 +6281,59 @@ abstract class ProductImportTemplate {
 }
 ~~~
 
-Đây chỉ là **skeleton bài tập**, không phải một implementation hoàn chỉnh; người học cần định nghĩa `Product`, `persistAll` và xử lý lỗi cho đúng.
+This is only an **exercise skeleton**, not a complete implementation; learners must define `Product`, `persistAll`, and correct error handling.
 
-Yêu cầu bài tập:
+Exercise requirements:
 
-- Viết hai subclass `CsvProductImport` và `PipeProductImport`.
-- Lớp cha kiểm tra số lượng > 0 trước khi lưu.
-- Không cho subclass ghi đè `importText` để bỏ validation.
-- Viết test xác minh khi parse hoặc validate thất bại thì **chưa gọi bước lưu**.
-- Nếu cần bảo đảm toàn bộ file được lưu hoặc toàn bộ bị hủy, chỉ rõ nơi bắt đầu/kết thúc transaction trong thiết kế của bạn.
-- Thảo luận lúc nào thêm một `RecordParser` interface và dùng Strategy lại hợp lý hơn subclass theo định dạng.
+- Implement two subclasses, `CsvProductImport` and `PipeProductImport`.
+- The superclass checks that quantity is greater than 0 before persisting.
+- Subclasses must not override `importText` to bypass validation.
+- Write tests confirming that parsing/validation failures occur **before the persistence step is called**.
+- If the entire file must either be committed or rolled back, specify where transactions begin/end in your design.
+- Discuss when introducing a `RecordParser` interface and using Strategy would be clearer than format-based subclasses.
 
-### Câu hỏi tự kiểm tra
+### Self-Check Questions
 
-1. Phương thức nào trong ví dụ báo cáo là **Template Method**? Vì sao dùng `final`?
-2. `header()` là primitive operation hay hook? `footer()` là gì?
-3. Nếu Text và Markdown dùng **khác công thức tính tổng doanh thu**, việc thay riêng bước format đã còn đủ không? Cần thay đổi abstraction nào?
-4. Vì sao gọi một method có thể override từ constructor của abstract class có thể gây `NullPointerException`?
-5. Đổi thuật toán tính giá theo từng HTTP request nên cân nhắc Strategy hay tạo một subclass Template Method cho từng request? Vì sao?
-6. Abstract class dùng chung data validation có tự động là Template Method nếu không có phương thức điều phối skeleton không?
+1. Which method in the report example is the **Template Method**? Why is it `final`?
+2. Is `header()` a primitive operation or hook? What is `footer()`?
+3. If Text and Markdown need **different formulas for revenue totals**, is changing only formatting enough? Which abstraction would need to change?
+4. Why can invoking an overridable method from an abstract-class constructor cause a `NullPointerException`?
+5. Should you use Strategy or create a Template Method subclass per HTTP request to switch pricing algorithms? Why?
+6. Does an abstract class containing shared validation automatically qualify as Template Method without a method orchestrating an algorithm skeleton?
 
-**Điều cần nhớ:** Template Method để **lớp cha giữ quyền điều phối một quy trình ổn định**, còn lớp con chỉ **cài đặt những bước được cho phép thay đổi**. Sự rõ ràng về ranh giới giữa bước cố định, abstract step và hook mới là giá trị chính của pattern; không phải cứ dùng `abstract class` là đã áp dụng Template Method.
+**Remember:** Template Method gives **the superclass control over a stable workflow**, while subclasses only **implement approved variation points**. Clear boundaries between fixed operations, abstract steps, and hooks provide its value; an `abstract class` alone does not constitute Template Method.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-012">Command và đóng gói yêu cầu</a>
+## <a id="design-patterns-012">Command and Encapsulating Requests</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Command Pattern — Đóng gói yêu cầu thành đối tượng trong Java
+# Command Pattern — Encapsulating Requests as Objects in Java
 
-**Chương:** OOP → Mẫu thiết kế.  
-**Mục tiêu:** hiểu Command Pattern, tách nơi phát sinh yêu cầu khỏi nơi xử lý, tổ chức undo/redo, viết ví dụ Java có thể chạy và nhận diện giới hạn của lệnh bất đồng bộ hoặc có tác dụng phụ.
+**Chapter:** OOP → Design Patterns.  
+**Objective:** Understand Command Pattern, separate request producers from handlers, organize undo/redo, write a runnable Java example, and recognize the limitations of asynchronous commands and side-effectful operations.
 
-## 1. Bài toán: một thao tác có thể đến từ nhiều nơi
+## 1. The Problem: An Action Can Originate in Many Places
 
-Giả sử ứng dụng quản lý công việc cho phép:
+Suppose a task-management application allows users to:
 
-- Nhấn nút **Thêm công việc** hoặc dùng phím tắt.
-- Đánh dấu một công việc **đã hoàn thành**.
-- Hoàn tác thao tác gần nhất (**Undo**) và thực hiện lại (**Redo**).
-- Về sau, cùng thao tác có thể được gọi từ giao diện web, menu desktop, tác vụ tự động hoặc lịch xử lý.
+- Click **Add Task** or use a keyboard shortcut.
+- Mark a task as **completed**.
+- Undo the most recent action (**Undo**) and perform it again (**Redo**).
+- Later, invoke the same operation through a web interface, desktop menu, automated job, or scheduled process.
 
-Nếu nút giao diện trực tiếp chứa mọi logic sửa dữ liệu, mỗi cách gọi mới dễ lặp lại cùng một nghiệp vụ. Để triển khai undo, nút bấm lại phải hiểu chi tiết trạng thái trước khi thao tác.
+If UI buttons contain all data-modification logic, adding another invocation path tends to duplicate the business operation. Implementing undo then also forces the button code to understand pre-action state.
 
-**Command Pattern** giải quyết bằng cách **biến một yêu cầu thành đối tượng có hợp đồng thực thi**. Nơi phát yêu cầu chỉ cần gửi Command tới một bộ thực thi; Command biết cách gọi đối tượng thực hiện nghiệp vụ và có thể giữ dữ liệu cần cho hành vi bổ sung như lịch sử, ghi log, lập lịch hoặc hoàn tác.
+**Command Pattern** solves this by **turning a request into an object with an execution contract**. A request producer merely passes a Command to an invoker; the Command knows how to invoke the business Receiver and may retain data for history, logging, scheduling, or undo.
 
-Ví dụ về lời gọi:
+Example invocation:
 
 ~~~java
 manager.execute(new AddTaskCommand(board, "T1", "Học Command"));
@@ -6343,17 +6343,17 @@ manager.undo(); // Hoàn tác việc đánh dấu hoàn thành
 manager.redo(); // Thực hiện lại thao tác đó
 ~~~
 
-Trong đoạn này, **manager** không biết “thêm việc” hay “hoàn thành việc” cần thay đổi những field nào. Nó quản lý các Command theo một giao thức chung.
+In this snippet, **manager** does not know which fields must change to “add a task” or “complete a task.” It manages Commands through a common protocol.
 
-## 2. Những vai trò của Command Pattern
+## 2. Command Pattern Roles
 
-| Vai trò | Nhiệm vụ | Trong ví dụ |
+| Role | Responsibility | In this example |
 | --- | --- | --- |
-| **Command** | Hợp đồng cho một hành động được đóng gói | **Command** với **execute()**, **undo()** |
-| **Concrete Command** | Lưu các tham số cần thiết và gọi Receiver | **AddTaskCommand**, **CompleteTaskCommand** |
-| **Receiver** | Nơi thực sự chứa logic hoặc dữ liệu cần thay đổi | **TaskBoard** |
-| **Invoker** | Kích hoạt Command, quản lý lịch sử hoặc lịch chạy | **CommandManager** |
-| **Client** | Tạo Command, lựa chọn Receiver và yêu cầu thực hiện | **main**, controller, trình xử lý UI |
+| **Command** | Contract for an encapsulated action | **Command** with **execute()**, **undo()** |
+| **Concrete Command** | Stores required parameters and invokes the Receiver | **AddTaskCommand**, **CompleteTaskCommand** |
+| **Receiver** | Owns the business logic or data being modified | **TaskBoard** |
+| **Invoker** | Triggers Commands and manages history or scheduling | **CommandManager** |
+| **Client** | Creates Commands, selects Receivers, and requests execution | **main**, controller, UI handler |
 
 ~~~mermaid
 flowchart LR
@@ -6366,26 +6366,26 @@ flowchart LR
     Invoker <--> History["Undo / Redo stacks"]
 ~~~
 
-Sơ đồ nhấn mạnh quan hệ logic; **AddTaskCommand** và **CompleteTaskCommand** đều là các triển khai của hợp đồng **Command**. Khi lệnh thực thi, nó gọi phương thức thích hợp trên Receiver.
+The diagram emphasizes logical relationships; both **AddTaskCommand** and **CompleteTaskCommand** implement the **Command** contract. During execution, they invoke appropriate methods on the Receiver.
 
-**Điều quan trọng:** không nhất thiết mọi Command đều có **undo()**. Tài liệu GoF thường mô tả hợp đồng thực thi; khả năng hoàn tác là một mở rộng hay gặp. Ví dụ dưới đây cố ý dùng giao thức **execute/undo** vì yêu cầu nghiệp vụ có Undo/Redo.
+**Key point:** not every Command requires **undo()**. GoF descriptions usually focus on an execution contract; undo support is a common extension. This example deliberately uses **execute/undo** because its requirements include Undo/Redo.
 
-### Command không chỉ là một lời gọi được đổi tên
+### Command Is More Than a Renamed Function Call
 
-Nếu lệnh chỉ chứa **execute()** gọi một hàm duy nhất, **Runnable** hoặc lambda có thể đủ. Lợi ích rõ hơn khi lệnh là một đơn vị có thể nhận diện và quản lý: có tham số, chính sách lỗi, quyền thực hiện, ghi lịch sử, xếp hàng, hủy, retry hoặc audit. Không nên thêm hàng chục lớp Command cho những thao tác quá đơn giản nếu hệ thống không cần những khả năng đó.
+If a Command only implements **execute()** to invoke a single function, a **Runnable** or lambda may suffice. The benefits become clearer when a request needs identity and management: parameters, error policies, authorization, history, queues, cancellation, retries, or auditing. Avoid creating dozens of Command classes for trivial operations without those needs.
 
-## 3. Thiết kế lệnh và quy tắc Undo/Redo
+## 3. Designing Commands and Undo/Redo Rules
 
-Trước khi viết code, hãy định nghĩa rõ:
+Before writing code, specify:
 
-1. **AddTaskCommand** thêm công việc có mã và tiêu đề. Khi undo, xóa chính công việc đã thêm. Khi redo, tạo lại công việc.
-2. **CompleteTaskCommand** đặt **done = true**. Khi undo, khôi phục giá trị **done** trước đó (có thể là true hoặc false).
-3. **CommandManager.execute(command)** chỉ đưa lệnh vào lịch sử sau khi **execute()** trở về thành công; một lệnh mới xóa lịch sử redo.
-4. **undo()** lấy lệnh cuối trong lịch sử, gọi **undo()**, rồi mới chuyển nó sang redo stack.
-5. **redo()** lấy lệnh từ redo stack, gọi lại **execute()**, rồi mới đưa nó vào undo stack.
-6. Nếu lệnh ném exception, manager **không chuyển lệnh giữa hai stack**. Tuy vậy, điều đó *không tự bảo đảm* Receiver không bị thay đổi một phần trước khi exception xuất hiện.
+1. **AddTaskCommand** adds a task with an ID and title. Undo removes exactly that task; redo recreates it.
+2. **CompleteTaskCommand** sets **done = true**. Undo restores the prior value of **done** (which may be true or false).
+3. **CommandManager.execute(command)** adds a Command to history only after **execute()** succeeds, and a new command clears redo history.
+4. **undo()** peeks at the most recent history command, invokes **undo()**, then moves it to the redo stack.
+5. **redo()** peeks at the redo stack, invokes **execute()** again, then moves the command to the undo stack.
+6. If a command throws, the manager **does not move the command between stacks**. This alone *does not guarantee* that Receiver was not partially modified before the exception.
 
-Trong bài, Receiver là **TaskBoard** lưu trong bộ nhớ và chỉ được thay đổi qua một manager theo từng bước; đây là giả định quan trọng để lịch sử khớp với trạng thái. Nếu code bên ngoài sửa board giữa các lệnh, undo có thể không còn ý nghĩa hoặc bị thất bại.
+This example uses an in-memory **TaskBoard** updated sequentially through one manager. That assumption keeps history aligned with state. If external code modifies the board between commands, undo may become meaningless or fail.
 
 ~~~mermaid
 sequenceDiagram
@@ -6406,9 +6406,9 @@ sequenceDiagram
     Note over M: move from undo to redo
 ~~~
 
-## 4. Java 17 hoàn chỉnh: Command, Receiver và Invoker
+## 4. Complete Java 17 Example: Command, Receiver, and Invoker
 
-Tạo file **CommandDemo.java**. Chạy được trên JDK 17 trở lên, không cần Spring hoặc thư viện ngoài. Các lớp được lồng trong một file để tiện học; trong dự án thật có thể tách theo package.
+Create **CommandDemo.java**. It runs on JDK 17+ without Spring or external libraries. Classes are nested in one file for learning; production projects may split them into appropriate packages.
 
 ~~~java
 import java.util.ArrayDeque;
@@ -6622,14 +6622,14 @@ public class CommandDemo {
 }
 ~~~
 
-Biên dịch và chạy:
+Compile and run:
 
 ~~~bash
 javac CommandDemo.java
 java CommandDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 [TaskView[id=T1, title=Học Command Pattern, done=true]]
@@ -6637,52 +6637,52 @@ Kết quả:
 [TaskView[id=T1, title=Học Command Pattern, done=true]]
 ~~~
 
-### Phân tích chi tiết từng vai trò
+### Detailed Analysis of Each Role
 
-**TaskBoard (Receiver)** chịu trách nhiệm giữ dữ liệu và các bất biến cơ bản như không trùng mã, không tồn tại tiêu đề rỗng và không thao tác công việc không tồn tại. Command không cần biết cách lưu danh sách bên trong Receiver.
+**TaskBoard (Receiver)** owns the data and basic invariants: IDs must be unique, titles nonblank, and nonexistent tasks cannot be modified. Commands need not know how the Receiver stores its internal list.
 
-**AddTaskCommand** chứa đối tượng board, mã công việc, tiêu đề và cờ **active**. Sau khi thêm thành công, **active = true**. Undo xóa công việc đó rồi đặt lại cờ. Vì vậy, cùng instance có thể được redo sau khi undo. Đây là lựa chọn cụ thể của bài: không phải mọi Command ngoài đời đều có thể hoặc nên thực thi lặp lại.
+**AddTaskCommand** holds a board reference, task ID, title, and **active** flag. After a successful add, **active = true**. Undo removes the task and resets the flag, allowing the same instance to redo after undo. That is specific to this example: not every real Command can or should be executed repeatedly.
 
-**CompleteTaskCommand** ghi nhớ **previousDone** của chính lần thực thi gần nhất. Undo khôi phục giá trị cũ, thay vì luôn ép **false**. Đây là điểm quan trọng: hoàn tác phải khôi phục *trạng thái trước thao tác*, không đoán trạng thái.
+**CompleteTaskCommand** remembers **previousDone** from its latest execution. Undo restores that previous value rather than always forcing **false**. An important rule: undo should restore *the pre-operation state*, not guess it.
 
-**CommandManager** điều phối lịch sử nhưng không hiểu nghiệp vụ từng Command. Nó lưu **đối tượng lệnh**, không chỉ tên thao tác. Vì thế lệnh có thể giữ dữ liệu để undo. Lệnh mới thành công làm mất nhánh redo trước đó, giống hành vi phổ biến của trình soạn thảo.
+**CommandManager** coordinates history without understanding the business meaning of individual Commands. It stores **command objects**, not merely action names, allowing commands to retain data needed for undo. Executing a new command successfully discards the old redo branch, as is common in text editors.
 
-**TaskView** là **record** bất biến, dùng làm snapshot cho code bên ngoài. **List.copyOf(...)** tạo danh sách không cho sửa thông qua kết quả trả về. Vì các thành phần của record là **String/boolean**, bản thân phần tử trong ví dụ cũng không mang trạng thái mutable.
+**TaskView** is an immutable **record** used as a snapshot for external code. **List.copyOf(...)** returns an unmodifiable list. Because the record components are **String/boolean**, elements in this example carry no mutable state either.
 
-### Giới hạn của ví dụ
+### Limitations of the Example
 
-- **TaskBoard** và manager chạy trong một tiến trình, một luồng thực hiện tuần tự. Chúng không triển khai khóa, transaction, persistence hoặc phân quyền.
-- Phương thức mutation của **TaskBoard** được đặt **private**; các lớp lồng trong cùng top-level class có quyền truy cập private của nhau theo quy tắc Java. Trong codebase thật, hãy tổ chức API để chỉ application service/command handler có thẩm quyền sửa Receiver.
-- Manager **không kiểm soát việc một instance Command được truyền qua hai manager khác nhau**. Cờ **active** sẽ từ chối một số lần gọi sai, nhưng đây không phải một cơ chế sở hữu/lifecycle tổng quát.
-- Khi người dùng muốn “hoàn tác việc gửi email” hoặc “hoàn tác thanh toán”, thao tác thực tế có thể đã ra khỏi hệ thống. Khi đó **undo()** kiểu đảo trạng thái RAM không đủ; cần quy trình bù trừ, nếu có.
-- Việc giữ **lịch sử trong bộ nhớ** làm mất lịch sử khi khởi động lại; cần giải pháp lưu trữ riêng nếu tính năng yêu cầu phục hồi sau restart.
+- **TaskBoard** and the manager run sequentially in one thread and process. They implement no locks, transactions, persistence, or authorization.
+- **TaskBoard** mutation methods are **private**; nested classes of the same top-level class may access one another private members under Java rules. In production, design APIs so only authorized application services/command handlers can modify the Receiver.
+- The manager **does not prevent a Command instance from being passed to two different managers**. The **active** flag rejects some invalid calls but is not a general ownership/lifecycle mechanism.
+- When users request “undo sending an email” or “undo payment,” the real-world action may already have left the system. Then RAM-state reversal through **undo()** is insufficient; use a compensating business workflow where available.
+- Keeping **history in memory** loses it after restart; persistence is needed if recovery across restarts is required.
 
-## 5. Undo và Redo thực sự cần điều kiện gì?
+## 5. What Does Safe Undo/Redo Require?
 
-Khả năng undo an toàn phụ thuộc vào bản chất hành động.
+Safe undo depends on the nature of the action.
 
-| Lệnh | Cách hoàn tác có thể có | Những điều cần lưu ý |
+| Command | Possible inverse | Considerations |
 | --- | --- | --- |
-| Đổi trạng thái checkbox | Khôi phục giá trị trước đó | Receiver không bị thay đổi trái phép ở giữa |
-| Thêm dòng trong tài liệu | Xóa đúng đoạn đã chèn | Phải ghi lại vị trí, ID hoặc version để không xóa nhầm |
-| Xóa công việc | Lưu bản chụp cần thiết rồi tạo lại | Khôi phục đủ thuộc tính và thứ tự nếu cần |
-| Di chuyển file nội bộ | Di chuyển về vị trí cũ | Cần xử lý trùng tên, mất file, quyền truy cập |
-| Gửi email | Thường không thể thu hồi email đã gửi | Có thể cần tạo một *lệnh mới* gửi email đính chính |
-| Thanh toán thành công | Không đơn thuần đảo dấu số dư | Hoàn tiền là nghiệp vụ riêng, có ràng buộc và trạng thái độc lập |
+| Change checkbox state | Restore previous value | Receiver must not have been modified unexpectedly in between |
+| Insert a document line | Remove the exact inserted segment | Record location, ID, or version to avoid deleting the wrong segment |
+| Delete a task | Save a necessary snapshot, then recreate | Restore all required attributes and order |
+| Move an internal file | Move back to its previous location | Handle naming conflicts, missing files, and access permissions |
+| Send email | Usually cannot retract a delivered message | May need *a new command* to send a correction |
+| Complete payment | Cannot simply negate an account balance | Refund is a separate business workflow with its own constraints and states |
 
-Một lệnh **undoable** nên thỏa các kỳ vọng:
+An **undoable** command should meet these expectations:
 
-1. Có đủ thông tin trước thao tác để xác định hành vi bù trừ.
-2. Khi undo thành công, những bất biến nghiệp vụ cần thiết được bảo toàn.
-3. Khi undo thất bại, caller nhận lỗi rõ ràng; không giả vờ thành công.
-4. Nếu có sửa đổi xen kẽ, cần quyết định rõ cách phát hiện xung đột hoặc tái tính toán.
-5. Nếu có side effect ngoài hệ thống, phải có chính sách xử lý riêng.
+1. It retains enough information about the prior state to determine a valid inverse action.
+2. A successful undo preserves required business invariants.
+3. A failed undo reports a clear error to callers rather than pretending to succeed.
+4. Concurrent/intervening edits have explicit conflict detection or recalculation rules.
+5. Side effects outside the local system are handled under a separate policy.
 
-Đôi khi **memento/snapshot** hữu ích: lưu trạng thái trước khi thực thi để phục hồi. Với dữ liệu lớn, lưu toàn bộ snapshot cho mỗi command có thể tốn bộ nhớ; lưu phần chênh lệch (*delta*) hoặc một cách biểu diễn thao tác đảo ngược thường hiệu quả hơn, nhưng phức tạp hơn. Chọn giải pháp dựa trên nhu cầu và kích thước dữ liệu.
+A **memento/snapshot** can sometimes help: store the pre-execution state for restoration. For large data sets, full snapshots per command may consume too much memory; recording deltas or inverse-operation descriptions may be more efficient but more complex. Choose based on data size and needs.
 
-### Vì sao manager thay đổi stack sau khi lệnh thành công?
+### Why Does the Manager Change Stacks Only After Success?
 
-Giả sử **undo()** ném exception vì dữ liệu đã bị một tác vụ khác thay đổi. Nếu manager đã pop lệnh khỏi **undoStack** trước khi gọi undo thì lịch sử sẽ mất lệnh dù chưa hoàn tác được. Vì vậy, trong ví dụ:
+Suppose **undo()** throws because another task changed the data. If the manager pops the Command from **undoStack** before invoking undo, history loses that command even though no undo completed. The example therefore does the following:
 
 ~~~java
 Command command = undoStack.peek();
@@ -6691,11 +6691,11 @@ undoStack.pop();         // Chỉ sau khi thành công
 redoStack.push(command);
 ~~~
 
-**Lưu ý:** nếu **command.undo()** đã sửa dữ liệu một phần rồi ném lỗi, việc để nguyên stack vẫn chưa giải quyết được trạng thái Receiver. Với nhiều thay đổi cần thực hiện như một khối, hãy dùng transaction, command có phương thức xử lý lỗi phù hợp hoặc cơ chế rollback có kiểm chứng.
+**Caution:** if **command.undo()** partially modifies data and then throws, leaving the stack unchanged still does not repair Receiver state. For multistep atomic changes, use transactions, suitable command error handling, or a verified rollback mechanism.
 
-## 6. Kiểm thử Command và lịch sử
+## 6. Testing Commands and History
 
-Các kiểm thử sau dùng **JUnit 5 Jupiter**. Đặt trong **CommandDemoTest.java** cùng package với ví dụ.
+The following tests use **JUnit 5 Jupiter**. Place them in **CommandDemoTest.java** in the same package as the example.
 
 ~~~java
 import static org.junit.jupiter.api.Assertions.*;
@@ -6780,13 +6780,13 @@ class CommandDemoTest {
 }
 ~~~
 
-Test kiểm tra kết quả nghiệp vụ và lịch sử, không giả định manager gọi chính xác bao nhiêu hàm nội bộ. Nếu dự án có nhiều Command, có thể kiểm tra hợp đồng chung bằng test tham số hóa; thêm test riêng cho các quy tắc đặc thù, nhất là khi Command thay đổi nhiều đối tượng.
+Tests verify business results and history without assuming the manager invokes an exact number of internal methods. If many Command types exist, consider parameterized tests for shared contracts and specific tests for complex rules, particularly when Commands affect several objects.
 
-## 7. Command mở đường cho macro, queue và lịch thực hiện
+## 7. Command Enables Macros, Queues, and Scheduling
 
-### 7.1. Macro Command: một lệnh gồm nhiều lệnh
+### 7.1. Macro Command: One Command Containing Several Others
 
-Có thể viết lệnh kết hợp:
+Commands can be composed:
 
 ~~~java
 final class CompositeCommand implements CommandDemo.Command {
@@ -6812,11 +6812,11 @@ final class CompositeCommand implements CommandDemo.Command {
 }
 ~~~
 
-**Quan trọng:** đây chỉ là phiên bản minh họa ý tưởng **Composite Command**, **chưa bảo đảm atomicity**. Nếu lệnh thứ ba lỗi trong **execute()**, hai lệnh đầu có thể đã chạy; undo toàn bộ danh sách lúc đó cũng có thể sai. Để dùng thật, cần theo dõi các lệnh đã hoàn tất, undo phần đã thực hiện theo thứ tự ngược nếu phù hợp, hoặc đặt tất cả cập nhật vào transaction. Thậm chí rollback bù trừ có thể thất bại; phải định nghĩa trạng thái lỗi và cách khôi phục.
+**Important:** this snippet only illustrates a **Composite Command**; it **does not guarantee atomicity**. If the third command fails during **execute()**, the first two may already have completed, and undoing the whole list may then be incorrect. A production implementation must track completed commands and undo only those in reverse order when appropriate, or execute all updates in a transaction. Even compensating rollback can fail, so define failure states and recovery procedures.
 
-### 7.2. Queue Command: tách thời điểm nhận và xử lý yêu cầu
+### 7.2. Queueing Commands: Separate Receipt from Execution
 
-Vì Command đại diện một yêu cầu, Invoker có thể xếp hàng:
+Because Command represents a request, an Invoker can enqueue it:
 
 ~~~java
 java.util.Queue<CommandDemo.Command> queue =
@@ -6829,9 +6829,9 @@ CommandDemo.Command next = queue.remove();
 next.execute();
 ~~~
 
-Ví dụ trên chỉ là **queue trong RAM**, chưa phải hệ thống message queue bền vững. Đừng đưa nguyên một Java object chứa Receiver, kết nối database hoặc closure rồi giả định có thể serialize và chạy ở máy khác.
+The snippet shows an **in-memory queue**, not a durable message queue. Do not enqueue a Java object holding a Receiver, database connection, or closure and assume it can be serialized and executed on another machine.
 
-Trong hệ thống phân tán, thường dùng **mô tả lệnh** chứa dữ liệu như **commandId**, **type**, **taskId**, **payload**, **createdAt**, **expectedVersion**. Một handler ở phía tiêu thụ dựng lại nghiệp vụ từ mô tả đó và phụ thuộc cần thiết.
+Distributed systems commonly use **command descriptions** carrying fields such as **commandId**, **type**, **taskId**, **payload**, **createdAt**, and **expectedVersion**. A consumer-side handler reconstructs the business operation from that description and appropriate dependencies.
 
 ~~~java
 // Mô tả dữ liệu lệnh, không chứa tham chiếu TaskBoard.
@@ -6842,51 +6842,51 @@ record CompleteTaskRequest(
 ) {}
 ~~~
 
-Command object bên trong tiến trình và thông điệp yêu cầu qua queue **có thể khác kiểu**, dù cùng diễn đạt một hành động. Khi chuyển từ local queue sang broker, cần thiết kế riêng việc serialize, version schema, security, timeout, dead-letter, retry và observability.
+A local Command object and a request message sent through a queue **may have different types** despite representing the same action. Moving from a local queue to a broker requires explicit serialization, schema versioning, security, timeouts, dead letters, retries, and observability.
 
-### 7.3. Retry và idempotency
+### 7.3. Retries and Idempotency
 
-Một lệnh có thể được gửi lại khi mạng timeout dù phía xử lý thực tế đã hoàn tất. Nếu **AddTaskCommand** được thực hiện lại ở Receiver, thao tác có thể báo trùng ID. Với hệ thống thật, cần thiết kế:
+A command may be redelivered after a network timeout even though the handler already completed it. Re-executing **AddTaskCommand** against the Receiver may report a duplicate ID. Production systems should define:
 
-- **Command ID / idempotency key** xác định duy nhất một yêu cầu nghiệp vụ.
-- Quy tắc xử lý lặp: trả lại kết quả cũ, từ chối trùng hoặc bảo đảm không tạo side effect lần nữa theo contract.
-- Transaction/unique constraint hoặc cơ chế lưu trạng thái xử lý để nhiều worker không thực hiện trùng.
-- Chính sách retry dựa trên tính chất lỗi: lỗi tạm thời khác lỗi kiểm tra nghiệp vụ.
+- A **Command ID / idempotency key** uniquely identifying a business request.
+- Duplicate-processing rules: return an earlier result, reject duplicates, or prevent repeated side effects according to the contract.
+- Transactions/unique constraints or recorded processing state so concurrent workers cannot execute the same command twice.
+- Retry policies based on error types: transient failures differ from business-validation errors.
 
-**Đừng nhầm redo với retry**. **Redo** là hành động người dùng chọn để thực hiện lại sau khi undo; **retry** là nỗ lực xử lý lại một yêu cầu chưa xác định kết quả hoặc thất bại. Một Command có thể không an toàn nếu được tự động thực hiện hai lần.
+**Do not confuse redo with retry**. **Redo** is a user-requested repeat after undo; **retry** is another attempt to process a request with an unknown result or previous failure. Automatic execution twice may be unsafe for some Commands.
 
-## 8. So sánh Command với các khái niệm gần nó
+## 8. Comparing Command with Related Concepts
 
-| Khái niệm | Mục đích chính | Điểm phân biệt |
+| Concept | Main purpose | Distinguishing feature |
 | --- | --- | --- |
-| **Command Pattern** | Biến yêu cầu thành đối tượng để truyền, ghi nhận, lập lịch, quản lý vòng đời | Hướng đến **hành động được yêu cầu** |
-| **Strategy Pattern** | Đóng gói các thuật toán thay thế nhau | Hướng đến **cách thực hiện cùng một tác vụ** |
-| **Observer Pattern** | Phát thông báo cho nhiều bên đăng ký khi có sự kiện | Hướng đến **phản ứng khi sự kiện xảy ra** |
-| **State Pattern** | Hành vi thay đổi theo trạng thái hiện tại của cùng Context | Hướng đến **vòng đời/trạng thái của đối tượng** |
-| **Memento Pattern** | Lưu và phục hồi ảnh chụp trạng thái mà không lộ chi tiết nội bộ | Có thể kết hợp với Command để undo |
-| **Event** | Ghi nhận **điều đã xảy ra** | Khác Command, vốn diễn đạt **mong muốn hành động** |
-| **Runnable/Callable** | Abstraction hàm thực thi trong Java | Có thể đủ cho hành động đơn giản; không tự cung cấp danh tính nghiệp vụ, undo hoặc persistence |
+| **Command Pattern** | Turns requests into objects for passing, recording, scheduling, and lifecycle management | Focuses on **the action requested** |
+| **Strategy Pattern** | Encapsulates interchangeable algorithms | Focuses on **how to perform one task** |
+| **Observer Pattern** | Notifies several subscribers after an event | Focuses on **reactions to events** |
+| **State Pattern** | Changes behavior according to the state of the same Context | Focuses on **object lifecycle/state** |
+| **Memento Pattern** | Saves/restores snapshots without exposing internals | Can be combined with Command for undo |
+| **Event** | Records **what has happened** | Unlike Command, which expresses **an intended action** |
+| **Runnable/Callable** | Java execution-function abstractions | May suffice for simple actions; do not inherently provide business identity, undo, or persistence |
 
-Ví dụ:
+Examples:
 
-- **Command:** “Hãy hoàn thành công việc T1”.
-- **Event:** “Công việc T1 đã hoàn thành”.
-- **Strategy:** “Dùng thuật toán tính điểm ưu tiên A hay B cho công việc?”.
-- **State:** “Công việc đang NEW hay DONE nên những thao tác nào được cho phép?”.
+- **Command:** “Complete task T1.”
+- **Event:** “Task T1 was completed.”
+- **Strategy:** “Use priority-scoring algorithm A or B for this task?”
+- **State:** “Is this task NEW or DONE, and which operations are allowed?”
 
-Một handler có thể xử lý Command, thay đổi State rồi phát Event. Chúng phối hợp được với nhau nhưng không thay thế nhau.
+A handler may process a Command, change State, then publish an Event. These mechanisms work together, but they are not interchangeable.
 
-## 9. Dùng Command trong ứng dụng thực tế
+## 9. Using Command in Real Applications
 
-### 9.1. UI desktop và menu
+### 9.1. Desktop UI and Menus
 
-Một hành động như Save, Undo, Redo, Delete Selection có thể xuất hiện ở nút toolbar, menu ngữ cảnh và phím tắt. Những Invoker khác nhau tạo/kích hoạt cùng kiểu Command mà không sao chép logic nghiệp vụ.
+Actions such as Save, Undo, Redo, and Delete Selection may appear on toolbar buttons, context menus, and keyboard shortcuts. Different Invokers can create/execute the same Command type without duplicating business logic.
 
-Với **JavaFX** hoặc **Swing**, việc này đặc biệt tự nhiên: UI handler làm nhiệm vụ chuyển ý định người dùng thành command, còn Receiver/service chịu trách nhiệm thực thi. Trong ứng dụng rất nhỏ, action callback trực tiếp vẫn có thể phù hợp hơn mô hình nhiều lớp.
+This fits naturally with **JavaFX** or **Swing**: UI handlers convert user intent into commands while Receivers/services execute them. In very small applications, direct action callbacks may still be clearer than introducing several layers.
 
-### 9.2. Service backend và CQRS
+### 9.2. Backend Services and CQRS
 
-Trong backend Java/Spring, application service có thể đóng vai trò command handler:
+In a Java/Spring backend, an application service can serve as a command handler:
 
 ~~~java
 // Phác thảo kiến trúc, không phải class Spring chạy độc lập:
@@ -6906,158 +6906,158 @@ final class ApproveInvoiceHandler {
 }
 ~~~
 
-Đoạn này là **phác thảo** vì **InvoiceRepository** và nghiệp vụ hóa đơn chưa được định nghĩa. Nó cho thấy một biến thể thường gặp: **Command là DTO bất biến**, **Handler** thực hiện nghiệp vụ, khác ví dụ Command object tự mang theo Receiver và **execute()**. Hai cách đều dùng ý tưởng đóng gói yêu cầu nhưng có lựa chọn đánh đổi khác nhau.
+This is an **architectural sketch** because **InvoiceRepository** and invoice business rules have not been defined. It illustrates a common variation: a **Command as an immutable DTO**, with a **Handler** performing business logic, rather than a Command object holding a Receiver and exposing **execute()**. Both encapsulate requests but have different trade-offs.
 
-**CQRS** (Command Query Responsibility Segregation) phân tách đường xử lý thay đổi trạng thái khỏi đường truy vấn dữ liệu; nó không bắt buộc mọi dự án dùng command bus, event sourcing hoặc hai database. Một Command handler rõ ràng cũng có thể có ích trong kiến trúc thông thường.
+**CQRS** (Command Query Responsibility Segregation) separates state-changing operations from data queries; it does not require a command bus, event sourcing, or two databases in every project. Clear command handlers can also help in ordinary architectures.
 
-### 9.3. Giao dịch, concurrency và phân quyền
+### 9.3. Transactions, Concurrency, and Authorization
 
-Trong môi trường nhiều request:
+With concurrent requests:
 
-- Kiểm tra **authorization** theo actor, resource và operation ở phía server. Không cho phép client gửi tên class hay payload tùy ý để gọi bất cứ phương thức nào.
-- Sử dụng **version/optimistic locking** hoặc update có điều kiện để tránh hai lệnh ghi đè thay đổi của nhau.
-- Xác định ranh giới **transaction** của mỗi Command; một lịch sử stack RAM không thay thế giao dịch.
-- Nếu cần audit, ghi danh tính lệnh, tác nhân, thời điểm, tài nguyên, kết quả và thông tin lỗi theo chính sách bảo mật; tránh lưu dữ liệu nhạy cảm không cần thiết.
-- Nếu Command tạo side effect ngoài database, cân nhắc **outbox**, idempotency, saga/compensation và chính sách vận hành khi lỗi giữa chừng.
+- Enforce **authorization** for the actor, resource, and operation on the server. Never allow clients to supply arbitrary class names or payloads to invoke arbitrary methods.
+- Use **version/optimistic locking** or conditional updates so concurrent commands do not overwrite each other.
+- Define each Command **transaction** boundary; an in-memory history stack does not replace a transaction.
+- If audit is required, record command identity, actor, timestamp, resources, results, and error details under an appropriate security policy; avoid unnecessary sensitive data.
+- If a Command creates side effects beyond the database, consider **outbox**, idempotency, saga/compensation, and operational recovery policies.
 
-**Một lịch sử undo trên UI không nên được coi là cơ chế hủy giao dịch thanh toán thật.** Sau khi thay đổi có hiệu lực bên ngoài, “hoàn tác” phải là nghiệp vụ bù trừ được định nghĩa rõ, có kiểm toán và giới hạn quyền truy cập.
+**UI undo history must not be treated as a way to cancel a real payment transaction.** Once a change takes effect externally, undo requires a clearly defined compensating business operation with auditability and appropriate authorization.
 
-## 10. Khi nào nên và không nên dùng Command?
+## 10. When to Use Command and When to Avoid It
 
-**Nên cân nhắc Command nếu:**
+**Consider Command when:**
 
-- Cùng một hành động được gọi từ nhiều nơi và cần một hợp đồng thực thi thống nhất.
-- Có yêu cầu **undo/redo**, macro, lịch sử hoặc replay có kiểm soát.
-- Cần đưa yêu cầu vào queue, lên lịch, ghi audit hoặc áp retry/idempotency.
-- Muốn tách handler nghiệp vụ khỏi UI, controller, scheduler hoặc cơ chế truyền thông.
-- Muốn chuyển các thao tác sang đối tượng có định danh và dữ liệu rõ để kiểm thử độc lập.
+- The same operation originates from several places and needs a consistent execution contract.
+- You need **undo/redo**, macros, history, or controlled replay.
+- Requests need to be queued, scheduled, audited, or processed with retry/idempotency policies.
+- You want to separate business handlers from UI, controllers, schedulers, or transport mechanisms.
+- You want operations represented as independently testable objects with explicit identity and data.
 
-**Không nên dùng chỉ vì mọi thao tác đều là hàm**. Một phép tính thuần túy **calculateTotal()**, một helper nội bộ nhỏ hoặc một button callback không có vòng đời/hành vi quản lý đặc biệt có thể không cần cả một class Command, Manager và factory.
+**Do not use Command simply because every operation is a function.** A pure **calculateTotal()**, small internal helper, or button callback with no special lifecycle/management needs may not need a Command class, Manager, and factory.
 
-Nếu chỉ cần trì hoãn một callback trong cùng tiến trình, có thể dùng **Runnable**:
+If you merely need to defer a callback within one process, **Runnable** may suffice:
 
 ~~~java
 Runnable task = () -> System.out.println("Đã thực thi");
 task.run();
 ~~~
 
-Command Pattern phát huy giá trị khi ngoài “gọi sau” còn có **ý nghĩa nghiệp vụ, tham số, lifecycle, lịch sử, khả năng kiểm soát lỗi hoặc chính sách thực thi** cần được biểu diễn rõ.
+Command Pattern becomes valuable when beyond “execute later,” the request requires **business meaning, parameters, lifecycle, history, error control, or execution policies** to be made explicit.
 
-### Các lỗi thường gặp
+### Common Pitfalls
 
-| Lỗi | Tác động | Cách khắc phục |
+| Mistake | Effect | Remedy |
 | --- | --- | --- |
-| Command chứa cả giao diện, truy vấn DB, gửi email và quy tắc không liên quan | God object, khó test | Đặt nghiệp vụ ở Receiver/service; Command giữ mục đích và tham số |
-| Undo luôn “đặt cờ false” bất kể giá trị trước đó | Phá trạng thái gốc | Lưu giá trị cũ hoặc thao tác nghịch đảo chính xác |
-| Pop lịch sử trước khi biết undo thành công | Mất lệnh khi gặp lỗi | Chỉ cập nhật stack sau khi thao tác thành công |
-| Tái sử dụng một Command instance đang active | Thực thi lặp ngoài ý định | Định nghĩa vòng đời và trạng thái của từng lệnh |
-| Retry lệnh có side effect mà không có idempotency | Gửi trùng, ghi trùng, thu tiền hai lần | Command ID + guard/transaction phù hợp |
-| Xem command object trong RAM là message bền vững | Không serialize được Receiver và phụ thuộc | Dùng request DTO/handler và schema có phiên bản |
-| Lịch sử undo dùng chung nhiều user không phân biệt ngữ cảnh | Người này tác động lên lịch sử của người khác | Phân vùng theo phiên/người dùng/tài nguyên và kiểm tra quyền |
-| Lạm dụng Command cho thao tác không cần quản lý | Boilerplate và thêm tầng khó đọc | Giữ phương thức/lambda trực tiếp khi đủ rõ |
+| Command contains UI code, DB queries, email sending, and unrelated rules | God object, difficult to test | Keep business logic in Receiver/service; Command retains intent and parameters |
+| Undo always “sets the flag to false” regardless of previous value | Corrupts prior state | Save the previous value or a correct inverse operation |
+| History stack is popped before knowing undo succeeded | Loses commands on failure | Update stacks only after successful operations |
+| Reuse an active Command instance | Unintended repeated execution | Specify each Command lifecycle and state |
+| Retry side-effectful commands without idempotency | Duplicate sends, writes, or charges | Command ID plus suitable guards/transactions |
+| Treat an in-memory command object as a durable message | Receiver/dependencies cannot be serialized | Use request DTOs/handlers and versioned schemas |
+| Share undo history across unrelated users | One user can affect another user history | Partition by session/user/resource and enforce authorization |
+| Use Command for every trivial operation | Boilerplate and extra layers | Keep direct methods/lambdas when sufficiently clear |
 
-## 11. Bài tập thực hành
+## 11. Practical Exercise
 
-Thiết kế một trình chỉnh sửa văn bản đơn giản bằng Java, có **TextDocument** làm Receiver và **CommandManager** làm Invoker.
+Design a simple Java text editor with **TextDocument** as Receiver and **CommandManager** as Invoker.
 
-Các lệnh yêu cầu:
+Required commands:
 
-1. **AppendTextCommand(text):** thêm văn bản vào cuối tài liệu; khi undo, chỉ loại bỏ đoạn chính nó đã thêm, đúng vị trí.
-2. **ReplaceTextCommand(from, to):** thay đoạn văn bản đầu tiên khớp điều kiện; lưu đủ thông tin để undo chính xác.
-3. **ClearDocumentCommand:** xóa toàn bộ; có thể lưu snapshot trước khi xóa để phục hồi.
-4. Hỗ trợ undo/redo nhiều bước và xóa lịch sử redo khi thực thi một lệnh mới.
+1. **AppendTextCommand(text):** append text to the document; undo removes only the inserted text at its correct position.
+2. **ReplaceTextCommand(from, to):** replace the first matching segment; store sufficient information for exact undo.
+3. **ClearDocumentCommand:** remove all content, optionally saving a pre-clear snapshot for restoration.
+4. Support multistep undo/redo, clearing redo history when a new command executes.
 
-**Tình huống test nên có:** append hai lần rồi undo/redo; replace không tìm thấy đoạn cần thay; clear rồi phục hồi Unicode có dấu; lệnh lỗi không được ghi lịch sử; sửa tài liệu ngoài manager phải được từ chối hoặc gây lỗi xung đột rõ.
+**Recommended test cases:** append twice, then undo/redo; replace with no match; clear then restore accented Unicode; failed commands must not enter history; edits outside the manager should be rejected or reported as explicit conflicts.
 
-Thử mở rộng: lưu thông tin Command dưới dạng DTO có **commandId** và **expectedVersion** để áp lên tài liệu đã lưu database. Phân biệt phần dữ liệu tuần tự hóa được với Receiver/runtime service. Nếu hai người cùng sửa một tài liệu, hãy giải thích cách nhận biết và xử lý xung đột thay vì tin vào stack undo trong RAM.
+Try extending it: store a Command as a DTO with **commandId** and **expectedVersion**, applying it to a document persisted in a database. Distinguish serializable data from Receiver/runtime services. If two users edit the same document, explain conflict detection/handling rather than trusting an in-memory undo stack.
 
-**Tiêu chí đạt:** client gửi cùng một hợp đồng Command; Receiver giữ logic chỉnh sửa; lịch sử thay đổi chính xác sau khi lệnh hoàn tất; các thao tác undo/redo bảo toàn dữ liệu; có test cho đường hợp lệ, lỗi và xung đột.
+**Acceptance criteria:** clients submit Commands through one contract; Receiver owns editing logic; history changes only after operations complete; undo/redo preserve data; tests cover valid paths, failures, and conflicts.
 
-**Điểm cần nhớ:** Command Pattern là cách đóng gói **ý định thực hiện một hành động** để có thể chuyển giao, quản lý và xử lý qua một giao diện chung. Nó giúp tách Invoker khỏi Receiver, nhưng undo, retry, lưu lịch sử, phân quyền và tính nhất quán dữ liệu đều cần được thiết kế tường minh theo tính chất nghiệp vụ thực tế.
+**Remember:** Command Pattern encapsulates **the intent to perform an action** so a request can be passed, managed, and processed through one interface. It decouples Invokers from Receivers, while undo, retry, history persistence, authorization, and data consistency still require explicit design around the real business operation.
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="design-patterns-013">Khi mẫu thiết kế làm hệ thống phức tạp hơn cần thiết</a>
+## <a id="design-patterns-013">When Design Patterns Make a System More Complex Than Necessary</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Khi mẫu thiết kế làm hệ thống phức tạp hơn cần thiết
+# When Design Patterns Make a System More Complex Than Necessary
 
-> **Chủ đề:** Mẫu thiết kế trong OOP – nhận diện và xử lý tình trạng *overengineering*.  
-> **Mục tiêu:** Biết phân biệt sự linh hoạt thực sự cần thiết với abstraction dựa trên dự đoán; đánh giá chi phí của một Design Pattern, lựa chọn lời giải đủ đơn giản, kiểm thử và refactor khi bằng chứng cho thấy kiến trúc hiện tại quá nặng.
+> **Topic:** Design Patterns in OOP — identifying and addressing *overengineering*.  
+> **Objective:** Distinguish genuinely necessary flexibility from speculative abstractions; evaluate a Design Pattern's costs, choose a sufficiently simple solution, test it, and refactor when evidence shows that the current architecture is too heavy.
 
-## 1. Tại sao một mẫu thiết kế “đúng sách” vẫn có thể là thiết kế kém?
+## 1. Why Can a Textbook Design Pattern Still Be Poor Design?
 
-**Design Pattern** là một phương án giải quyết vấn đề thiết kế lặp lại trong bối cảnh phù hợp. Nó không phải mục tiêu tự thân. Một lớp `Factory`, một interface `Strategy`, một chuỗi `Decorator` hay một `Observer` đều có thể đúng về cấu trúc nhưng vẫn làm ứng dụng khó hiểu hơn nếu vấn đề mà chúng giải quyết **chưa tồn tại hoặc quá nhỏ**.
+**Design Pattern** is a reusable way to solve a recurring design problem in an appropriate context. It is not a goal in itself. A `Factory` class, `Strategy` interface, chain of `Decorator` instances, or `Observer` may all be structurally correct yet make the application harder to understand when the problem they address **does not yet exist or is too small**.
 
-Hãy tưởng tượng yêu cầu: “Ứng dụng nội bộ cần xuất một chuỗi CSV có ba cột”. Một thiết kế có thể gồm `IExporterFactory`, `AbstractExportBuilder`, `ExporterRegistry`, `CsvExportStrategy` và `ExportFacade`. Nhưng nếu chỉ có một định dạng, một nơi sử dụng và quy tắc ổn định, một hàm xuất CSV với kiểm thử tốt thường dễ đọc, sửa và vận hành hơn.
+Imagine the requirement: “An internal application must export a CSV string with three columns.” A design might include `IExporterFactory`, `AbstractExportBuilder`, `ExporterRegistry`, `CsvExportStrategy`, and `ExportFacade`. But with only one format, one caller, and stable rules, a well-tested CSV export function is usually easier to read, modify, and operate.
 
-**Overengineering** xảy ra khi chi phí cấu trúc (lớp, giao diện, cấu hình, quy trình điều phối) vượt lợi ích dự kiến trong bối cảnh hiện tại và tương lai có cơ sở. Điều đó không có nghĩa “ít class luôn tốt”; đôi khi abstraction giúp giảm độ phức tạp tổng thể của hệ thống. Câu hỏi đúng là:
+**Overengineering** occurs when structural costs (classes, interfaces, configuration, and orchestration) outweigh the expected benefits in the current and reasonably foreseeable context. This does not mean “fewer classes are always better”; an abstraction can sometimes reduce the system's overall complexity. The right question is:
 
-> Những gì pattern làm *dễ thay đổi, dễ kiểm thử hoặc an toàn hơn* có thực sự bù được những gì nó làm *khó điều hướng, khó cấu hình và khó dự đoán hơn* không?
+> Do the improvements a pattern provides in *changeability, testability, or safety* outweigh the added difficulty of *navigation, configuration, and predicting behavior*?
 
-### Những chi phí thường bị bỏ quên
+### Costs That Are Often Overlooked
 
-| Chi phí | Biểu hiện thực tế |
+| Cost | Practical symptom |
 |---|---|
-| **Nhận thức** | Muốn hiểu một phép tính phải mở interface, ba implementation, factory, registry và file cấu hình |
-| **Điều hướng** | Không nhìn vào call site để biết class nào chạy; phải theo DI container/annotation |
-| **Bảo trì** | Sửa một kiểu dữ liệu phải đồng bộ nhiều abstraction và test |
-| **Kiểm thử** | Bộ kiểm thử chứa nhiều mock cho luồng đơn giản, dễ kiểm tra lời gọi hơn là hành vi |
-| **Cấu hình** | Sai tên bean, key hoặc thứ tự decorator làm lỗi runtime |
-| **Rủi ro hợp đồng** | Implementation mới trả giá trị không hợp lệ hoặc mang ngữ nghĩa khác nhưng cùng interface |
-| **Hiệu năng** | Thêm cấp gián tiếp, allocation, lookup, remote call hoặc serialization tùy kiểu thiết kế; nhiều pattern thuần Java có overhead không đáng kể |
-| **Quyền sở hữu** | Nhóm không biết nên sửa quy tắc ở core, adapter hay factory |
-| **Vận hành** | Khó xác định implementation đang hoạt động, nơi phát lỗi, cách cấu hình và giám sát |
+| **Cognitive load** | Understanding one calculation requires opening an interface, three implementations, a factory, a registry, and a configuration file |
+| **Navigation** | The call site does not reveal which class executes; developers must trace DI container configuration/annotations |
+| **Maintenance** | Changing one data type requires synchronizing several abstractions and tests |
+| **Testing** | Tests use many mocks for a simple workflow and verify calls more readily than behavior |
+| **Configuration** | Incorrect bean names, keys, or decorator order cause runtime failures |
+| **Contract risks** | A new implementation returns invalid values or different semantics despite sharing the same interface |
+| **Performance** | Depending on the design, additional indirection, allocations, lookups, remote calls, or serialization; many pure-Java patterns have negligible overhead |
+| **Ownership** | The team cannot tell whether a rule belongs in the core, adapter, or factory |
+| **Operations** | Hard to identify the active implementation, source of failures, configuration, and monitoring |
 
-Không nên khẳng định “Design Pattern luôn làm chậm chương trình”: một lời gọi interface trong Java thường có thể được JVM tối ưu; chi phí lớn hơn nhiều có thể nằm ở network, database hoặc thiết kế thuật toán. Hãy **đo thực tế** nếu hiệu năng là lý do lựa chọn.
+Do not claim that “Design Patterns always slow programs down.” The JVM can often optimize a Java interface call; much greater costs may come from networks, databases, or algorithm design. **Measure actual performance** if it is part of the decision.
 
-## 2. Nhận diện khi nào abstraction là quá sớm
+## 2. Recognizing Premature Abstraction
 
-Một vài dấu hiệu mạnh:
+Several strong warning signs:
 
-1. **Interface có đúng một implementation**, không có yêu cầu thay thế, cô lập hạ tầng hay ranh giới module thực tế.
-2. **Factory chỉ gọi một constructor** không có quyết định tạo đối tượng hoặc bất biến cần bảo vệ.
-3. **Pattern được chọn trước khi mô tả vấn đề**: cuộc họp nói “áp dụng GoF” nhưng không chỉ ra thay đổi nào đang khó.
-4. **Lớp chỉ chuyển tiếp nguyên xi** tham số và kết quả qua 3–4 tầng, không thêm chính sách, ranh giới hoặc khả năng thay đổi.
-5. **Mở điểm extension cho giả định chưa có bằng chứng**, ví dụ plugin system cho ứng dụng chỉ có một cơ chế xử lý.
-6. **Hệ thống có nhiều cách cấu hình hơn số tình huống sử dụng**, tạo trạng thái không hợp lệ rất khó test.
-7. **Một thay đổi nhỏ chạm quá nhiều lớp**, dù mục tiêu ban đầu là “dễ mở rộng”.
-8. **Debug phải truy ngược chuỗi event/callback dài**, khó biết ai xử lý trước hoặc vì sao lỗi không đến caller.
+1. **An interface has exactly one implementation**, without a real need for substitution, infrastructure isolation, or a module boundary.
+2. **A factory merely calls one constructor**, with no object-creation decision or invariant to protect.
+3. **The pattern is selected before the problem is described**: a meeting calls for “applying GoF” without identifying a difficult change.
+4. **Classes merely forward unchanged** parameters and results through three or four layers, adding no policy, boundary, or variability.
+5. **Extension points are opened for unverified assumptions**, such as building a plugin system for an application with one processing mechanism.
+6. **More configuration combinations exist than actual use cases**, creating invalid states that are difficult to test.
+7. **A small change touches too many classes**, even though the original goal was “easy extensibility.”
+8. **Debugging requires tracing a long event/callback chain**, making ordering and missing errors difficult to understand.
 
-Mỗi dấu hiệu **không phải bằng chứng kết luận**. Một interface có một implementation vẫn hợp lý nếu đó là port ngăn business logic phụ thuộc database/SDK, hoặc là hợp đồng công khai của module. Một factory chỉ tạo một class nhưng đảm bảo validation/kiểm soát vòng đời vẫn có giá trị. Quan trọng là **lý do tồn tại và chi phí tổng thể**.
+Each sign **is not conclusive evidence**. An interface with one implementation can still make sense as a port keeping business logic independent of a database/SDK or as a module's public contract. A factory producing one class can still provide valuable validation or lifecycle control. What matters is **why it exists and its total cost**.
 
-### Đừng đánh đồng đơn giản với ngắn
+### Do Not Confuse Simplicity with Brevity
 
-Hai trăm dòng trong một phương thức, đầy cờ boolean và trạng thái ẩn, không nhất thiết đơn giản hơn năm class nhỏ có trách nhiệm rõ. Ngược lại, năm class chỉ để bọc một phép cộng cũng không mặc nhiên tốt hơn một hàm.
+A 200-line method full of boolean flags and hidden state is not necessarily simpler than five small classes with clear responsibilities. Conversely, five classes that merely wrap an addition are not inherently better than a function.
 
-- **Đơn giản**: dễ hiểu các điều kiện, dễ kiểm tra tính đúng, ít trạng thái và ít giả định ngầm.
-- **Ngắn**: ít dòng code hoặc ít file.
-- **Linh hoạt**: có thể thay một loại hành vi qua điểm mở rộng.
-- **Dễ bảo trì**: thay đổi thường gặp tác động ít nơi, test có ý nghĩa và lỗi dễ quan sát.
+- **Simple:** easy to understand conditions and verify correctness, with little state and few hidden assumptions.
+- **Short:** fewer lines of code or files.
+- **Flexible:** a variation point allows one kind of behavior to be replaced.
+- **Maintainable:** common changes affect few places, tests are meaningful, and failures are observable.
 
-Bốn thuộc tính này có thể hỗ trợ nhau nhưng **không tương đương**.
+These four qualities may reinforce each other, but they are **not equivalent**.
 
-## 3. Ví dụ Java 17: “ba mức phí” có cần Strategy và Factory?
+## 3. Java 17 Example: Do “Three Fee Levels” Need Strategy and Factory?
 
-Bài toán: ứng dụng giao hàng nội bộ có ba mức giao đã được quy định sẵn:
+The problem: an internal delivery application has three predetermined service levels:
 
-| Mã | Phí VND |
+| Code | Fee in VND |
 |---|---:|
 | `STANDARD` | 20.000 |
 | `EXPRESS` | 35.000 |
 | `PRIORITY` | 50.000 |
 
-Yêu cầu hiện tại: chỉ tra cứu phí theo mã, không có thuật toán độc lập, không có plugin từ bên ngoài và biểu phí hiếm thay đổi. Đầu vào là một trong ba giá trị enum.
+Current requirement: look up a fee by code. There are no independent algorithms, external plugins, or frequent tariff changes. The input is one of the three enum values.
 
-### 3.1. Thiết kế quá phức tạp cho bài toán này
+### 3.1. A Design That Is Too Complex for This Problem
 
-Ví dụ dưới là **phác họa**, minh họa vai trò và mức độ gián tiếp:
+The example below is a **sketch** illustrating the roles and amount of indirection:
 
 ```java
 interface DeliveryPriceStrategy {
@@ -7104,11 +7104,11 @@ final class PriceFacade {
 }
 ```
 
-Mọi class ở trên đều có thể tồn tại hợp lệ, nhưng **chưa giải quyết thêm nhu cầu thực tế nào**. Dù tạo ba strategy và một factory, vẫn phải sửa `DefaultPriceFactory` khi thêm mã mới. Logic tính phí chỉ là một hằng số cho mỗi mã. Bản thân `PriceFacade` cũng chỉ chuyển tiếp một lời gọi.
+All the classes above could be valid, but they **do not address any additional real requirement**. Even with three strategies and a factory, adding a new code still requires modifying `DefaultPriceFactory`. The fee calculation is just one constant per code. `PriceFacade` also simply forwards a call.
 
-### 3.2. Một giải pháp đủ tốt, biên dịch và chạy độc lập
+### 3.2. A Sufficiently Simple, Independently Compilable Solution
 
-Tạo file `SimpleDeliveryPricing.java`:
+Create the file `SimpleDeliveryPricing.java`:
 
 ```java
 public final class SimpleDeliveryPricing {
@@ -7148,35 +7148,35 @@ public final class SimpleDeliveryPricing {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac SimpleDeliveryPricing.java
 java SimpleDeliveryPricing
 ```
 
-**Vì sao cách này phù hợp?**
+**Why does this approach fit?**
 
-- `enum` bảo đảm tập giá trị hữu hạn, giúp tránh chuỗi sai chính tả trong phần core.
-- Giá của mỗi loại nằm cạnh tên loại, đọc được ngay khi mở một file.
-- Không phải tạo object strategy mỗi lần yêu cầu báo giá.
-- Bổ sung/đổi giá là thay đổi trực tiếp tại nơi bảng giá được sở hữu, với test tương ứng.
-- Logic không dựa vào framework, không cần DI/registry.
+- `enum` provides a finite set of values, helping prevent misspelled strings in core logic.
+- Each level's fee appears beside its name and can be read directly in one file.
+- There is no need to create a strategy object for every quote.
+- Adding or changing a fee is a direct change where the price table is owned, with corresponding tests.
+- Logic is framework-independent and needs no DI/registry.
 
-Cách này **không phải chuẩn chung cho mọi bảng giá**. Nếu phí phải thay đổi theo thời gian, theo khu vực hoặc do nhân viên kinh doanh cấu hình, hard-code trong enum trở thành giới hạn; khi đó nên cân nhắc **dữ liệu cấu hình/database** hoặc một hệ thống pricing rule phù hợp. Không cần nhảy ngay sang Strategy nếu mọi biến thể thực chất chỉ là giá trị dữ liệu.
+This approach **is not the universal solution for pricing tables**. If prices must vary by date or region or be configured by business users, hardcoded enum values become limiting. Then consider **configuration/database data** or an appropriate pricing-rule system. There is no need to jump directly to Strategy when the variations are merely data values.
 
-## 4. Một tình huống mà Strategy thật sự đáng dùng
+## 4. A Situation Where Strategy Is Worth Using
 
-Giả sử yêu cầu mới xuất hiện:
+Suppose new requirements arrive:
 
-- STANDARD: 20.000 VND cố định.
-- EXPRESS: 35.000 VND cộng thêm 8.000 VND mỗi kg, làm tròn khối lượng lên kg.
-- PRIORITY: giảm 50% phí cơ bản nếu tiền đơn đạt 1 triệu VND.
-- Các nhóm khác nhau phát triển quy tắc và có khả năng bổ sung biến thể thường xuyên.
+- STANDARD: a fixed 20.000 VND.
+- EXPRESS: 35.000 VND plus 8.000 VND per kilogram, with weight rounded up to the nearest kilogram.
+- PRIORITY: a 50% discount on the base fee when the order value reaches 1 million VND.
+- Different teams develop rules, with new variants likely to be added frequently.
 
-Bây giờ **hành vi tính toán khác biệt**, không chỉ bảng hằng số. Strategy có thể đưa các thuật toán ra khỏi phần điều phối.
+Now **the calculation behavior differs**, rather than just constants in a table. Strategy can separate these algorithms from orchestration.
 
-Ví dụ Java 17 độc lập, lưu trong `FlexibleDeliveryPricing.java`:
+Standalone Java 17 example, saved as `FlexibleDeliveryPricing.java`:
 
 ```java
 import java.util.Map;
@@ -7246,24 +7246,24 @@ public final class FlexibleDeliveryPricing {
 }
 ```
 
-**Điểm khác về bối cảnh:** interface `FeePolicy` giờ diễn đạt một thuật toán thực sự; các chính sách dùng input khác nhau, có test riêng và có lý do thay đổi riêng. `QuoteService` không cần chứa thêm biểu thức hoặc kiểm tra kiểu cụ thể khi tăng số chính sách. `Map` là phần **đăng ký**, có thể thay bằng DI/container khi dự án lớn lên. Bổ sung chính sách mới vẫn cần cập nhật wiring — điều này bình thường.
+**Contextual difference:** the `FeePolicy` interface now represents a real algorithm; the policies use different inputs, have their own tests, and have independent reasons to change. `QuoteService` need not accumulate expressions or type checks when more policies are added. `Map` handles **registration** and could be replaced with DI/container wiring as the project grows. Adding a policy still requires updating that wiring, which is normal.
 
-**Giới hạn ví dụ:** dùng số nguyên VND, `Math.multiplyExact`/`addExact` tránh tràn số trong phép tính EXPRESS; giả định `weightGrams` dương nên làm tròn theo công thức an toàn trong khoảng `int`. Với tiền tệ có phần thập phân, đa tiền tệ hoặc báo giá đa gói, cần loại giá trị và quy tắc làm tròn tương ứng. Không mặc định công thức demo là chính sách vận chuyển thực tế.
+**Example limitations:** it uses integer VND amounts; `Math.multiplyExact`/`addExact` prevent arithmetic overflow in the EXPRESS calculation, and positive `weightGrams` allows rounding by the formula safely within the `int` range. Currencies with fractional amounts, multiple currencies, or multi-package quotes require suitable value types and rounding rules. Do not treat these demonstration formulas as real shipping policy.
 
-### Lợi ích so với chi phí
+### Benefits Compared with Costs
 
-| Tiêu chí | Bảng phí enum | Strategy theo thuật toán |
+| Criterion | Enum-based fee table | Algorithm-based Strategy |
 |---|---|---|
-| Quy tắc chỉ là 3 hằng số | Ngắn, rõ ràng, ít cơ chế | Thừa nhiều lớp/nhánh lựa chọn |
-| Có nhiều công thức độc lập | `enum` dễ phải chứa logic ngày càng lớn | Mỗi thuật toán tự chịu trách nhiệm |
-| Thêm thuật toán bởi đội khác | Có thể đụng một file chung | Thêm `FeePolicy` và cập nhật đăng ký |
-| Test | Kiểm các giá trị phí | Kiểm từng chính sách và contract chung |
-| Tìm class chạy thực tế | Tra thẳng theo enum | Cần kiểm tra map/DI |
-| Phí do admin nhập, không có thuật toán mới | Dữ liệu cấu hình có thể tốt hơn | Strategy không tự giải quyết nhu cầu cấu hình |
+| The rules are only three constants | Short, clear, with few mechanisms | Unnecessary classes/selection layers |
+| Several independent formulas exist | The `enum` may accumulate more and more logic | Each algorithm owns its behavior |
+| Another team adds an algorithm | May require editing a shared file | Add a `FeePolicy` and update registration |
+| Testing | Verify fee values | Test each policy and shared contract |
+| Finding the runtime implementation | Look up the enum directly | Inspect the map/DI configuration |
+| Admin-entered prices, no new algorithms | Configuration data may be better | Strategy alone does not solve configurability |
 
-Không thể kết luận Strategy “tốt hơn” sau khi bối cảnh đã thay đổi. Bài học là **kiến trúc phải đi theo trục biến thiên có thật**.
+We cannot conclude that Strategy has become universally “better” merely because the context changed. The lesson is that **architecture should follow a real axis of variation**.
 
-## 5. Đọc sơ đồ phụ thuộc để thấy chi phí gián tiếp
+## 5. Read Dependency Diagrams to Understand Indirection Costs
 
 ```mermaid
 flowchart LR
@@ -7278,84 +7278,84 @@ flowchart LR
     end
 ```
 
-Sơ đồ không kết luận “ít mũi tên = tốt”. Nó cho thấy **số điểm cần tra cứu để hiểu lời gọi**. Nếu mỗi lớp thực sự cung cấp một ranh giới độc lập và có nhu cầu thay đổi riêng, các mũi tên này có thể hoàn toàn xứng đáng. Nếu mọi lớp chỉ chuyển tiếp lời gọi, chúng tăng chi phí mà không mang thêm ý nghĩa.
+The diagram does not claim “fewer arrows = better.” It illustrates **how many places must be inspected to understand a call**. If every layer provides a genuine independent boundary and has its own reason to change, the arrows may be justified. If every layer merely forwards calls, they add cost without meaning.
 
-## 6. Một số pattern dễ bị áp dụng quá mức
+## 6. Patterns Commonly Applied Too Broadly
 
-| Pattern | Dấu hiệu áp dụng quá mức | Khi thực sự phù hợp |
+| Pattern | Sign of overuse | When it actually fits |
 |---|---|---|
-| **Strategy** | Tạo interface và nhiều class cho các hằng số hoặc hai nhánh không đổi | Nhiều thuật toán có cách xử lý độc lập và thay đổi thường xuyên |
-| **Factory Method / Abstract Factory** | Factory chỉ bọc `new SimpleClass()`, không có lý do tạo object khác | Tạo object phức tạp hoặc họ object cần tương thích, thay thế theo môi trường |
-| **Builder** | Object có hai tham số bắt buộc rõ, nhưng cần builder nhiều bước | Nhiều lựa chọn tùy chọn, kiểm tra bất biến khi xây dựng, tránh constructor khó đọc |
-| **Singleton** | Dùng global mutable singleton chỉ để mọi nơi dễ lấy dependency | Thật sự cần quản lý một instance trong phạm vi phù hợp, vòng đời và đồng thời rõ ràng |
-| **Observer** | Một tác vụ quan trọng bị đẩy vào callback khó truy vết, chỉ có một consumer | Một thay đổi có nhiều thành phần độc lập quan tâm, có policy event/lifecycle rõ |
-| **Decorator** | Bọc 4 tầng nhưng mỗi tầng chỉ gọi `delegate` | Thêm hành vi cắt ngang với contract và thứ tự composition rõ |
-| **Adapter** | Bọc hai API vốn đã tương thích và không có ranh giới cần bảo vệ | Chuyển đổi API bên ngoài không tương thích thành hợp đồng phía client |
-| **Facade** | Một lớp chỉ forward cùng tham số tới một phương thức đơn giản | Client phải phối hợp nhiều subsystem/phân hệ phức tạp |
-| **Template Method** | Dùng thừa kế để chia sẻ 2 dòng mã, hierarchy sâu | Khung thuật toán thực sự ổn định với các bước có thể chuyên biệt |
-| **Command** | Mỗi lần gọi một phương thức tạo command class, handler, dispatcher không có yêu cầu khác | Queue, undo, retry, lưu lịch sử hoặc phân phối yêu cầu dưới dạng object |
-| **State** | Có đúng hai trạng thái và một nhánh lựa chọn không đổi | Chuyển trạng thái phức tạp, mỗi state có hành vi và transition riêng |
+| **Strategy** | Interfaces and multiple classes for constants or two unchanging branches | Several independently evolving algorithms |
+| **Factory Method / Abstract Factory** | Factory only wraps `new SimpleClass()` without a reason to create other objects | Complex creation or related product families that must remain compatible and vary by environment |
+| **Builder** | An object has two clear required parameters but uses a multistep builder | Many optional choices, validation of construction invariants, avoiding unreadable constructors |
+| **Singleton** | A mutable global singleton is used merely for convenient dependency access | One instance truly needs management within a defined scope, with clear lifecycle/concurrency rules |
+| **Observer** | A mandatory operation is hidden in a hard-to-trace callback with only one consumer | Several independent components react to one change, with explicit event/lifecycle policies |
+| **Decorator** | Four layers of wrappers where each only invokes `delegate` | Cross-cutting behavior with explicit contract and composition order |
+| **Adapter** | Two compatible APIs are wrapped despite no boundary needing protection | Convert an incompatible external API to a client-side contract |
+| **Facade** | A class forwards identical parameters to one simple method | A client must coordinate several complex subsystems |
+| **Template Method** | Inheritance shares only two lines of code across a deep hierarchy | A genuinely stable algorithm skeleton with specialized steps |
+| **Command** | Every method call gets a command class, handler, and dispatcher without other requirements | Queues, undo, retry, persistent history, or object-based request dispatch |
+| **State** | Only two states and one unchanging conditional | Complex transitions, with state-specific behavior and transition rules |
 
-Lưu ý: các trường hợp ở cột giữa là **tín hiệu xem lại**, không phải phán quyết tự động. Ví dụ `Command` có thể hợp lý dù chỉ một loại tác vụ nếu ứng dụng thật cần lưu lệnh bền vững để xử lý sau.
+Note: the middle column contains **signals to review**, not automatic verdicts. For example, `Command` can still make sense for one task type if the application needs durable commands for later processing.
 
-## 7. Nguyên tắc giúp giữ thiết kế vừa đủ
+## 7. Principles for Keeping a Design Appropriately Simple
 
 ### YAGNI – You Aren't Gonna Need It
 
-**Không cài chức năng chỉ vì “có thể sau này sẽ cần”.** Nếu chưa có yêu cầu runtime plugin, đừng tự thiết kế một plugin loader phức tạp. Nếu chưa có nhiều thuật toán, có thể bắt đầu bằng một hàm ngắn và tách ra sau khi xuất hiện biến thể thật.
+**Do not implement features just because “they might be needed someday.”** Without a real runtime-plugin requirement, avoid building a complex plugin loader. Without multiple algorithms, start with a short function and extract variants when they actually arise.
 
-YAGNI không có nghĩa bỏ qua yêu cầu đã biết hoặc những rủi ro lớn. Nếu API công khai rất khó thay đổi sau phát hành, việc chừa một ranh giới hợp lý ngay từ đầu có thể rẻ hơn phá vỡ tương thích về sau.
+YAGNI does not mean ignoring known requirements or major risks. If a public API is difficult to change after release, creating a sensible boundary early may cost less than breaking compatibility later.
 
 ### KISS – Keep It Simple
 
-Chọn lời giải **đơn giản nhất vẫn đáp ứng đầy đủ ràng buộc**. Đơn giản phải bao gồm độ đúng, bảo mật, khả năng kiểm thử và tính an toàn, chứ không chỉ ít file.
+Choose the **simplest solution that still meets all constraints**. Simplicity includes correctness, security, testability, and safety, not merely a small file count.
 
-Một `switch` có xử lý hết enum, một phương thức dữ liệu thuần và vài test rõ ràng có thể là thiết kế tốt. Khi `switch` tăng đến hàng chục thuật toán do nhiều đội bảo trì, đó là tín hiệu xem lại.
+An exhaustive `switch` over an enum, a pure data method, and a few clear tests can be good design. If the `switch` grows into dozens of algorithms maintained by multiple teams, revisit it.
 
-### DRY – tránh lặp *tri thức*, không phải mọi đoạn cú pháp
+### DRY – Avoid Duplicating *Knowledge*, Not Every Syntax Fragment
 
-Không nên trừu tượng hóa hai đoạn code giống nhau nếu chúng biểu diễn **hai quy tắc nghiệp vụ có thể thay đổi độc lập**. Gộp sớm dễ tạo tham số boolean, nhiều trường hợp đặc biệt và coupling giả tạo.
+Do not abstract two similar code fragments when they express **business rules that may change independently**. Combining them too early often leads to boolean parameters, special cases, and artificial coupling.
 
-Ngược lại, một bất biến bắt buộc như kiểm tra phí không âm được lặp khắp nơi có thể xứng đáng được đặt ở kiểu giá trị hoặc một điểm kiểm soát phù hợp.
+Conversely, an invariant such as rejecting negative fees, repeated throughout a codebase, may deserve enforcement in a value type or suitable shared boundary.
 
-### Rule of Three – heuristic, không phải luật
+### Rule of Three – A Heuristic, Not a Law
 
-Khi đã có **vài trường hợp tương tự thật**, việc xác định phần chung và phần riêng đáng tin cậy hơn so với trừu tượng hóa chỉ từ một ví dụ. Đừng đợi đúng ba lần nếu đã có yêu cầu rõ ràng hoặc chi phí đổi kiến trúc về sau rất lớn.
+After **several genuine similar cases** exist, identifying commonality and variation is more reliable than abstracting from a single example. Do not wait for exactly three repetitions when requirements are already clear or future architectural changes would be very costly.
 
-### Ưu tiên thay đổi đảo ngược được
+### Prefer Reversible Changes
 
-Trong code ứng dụng nội bộ, tạo một lớp nhỏ rồi refactor sau có thể rẻ. Với API công khai, định dạng sự kiện dùng bởi bên thứ ba hoặc dữ liệu đã lưu bền, quyết định sai có thể đắt: cân nhắc ranh giới, versioning và tính tương thích từ sớm.
+For internal application code, a small class followed by later refactoring may be inexpensive. For public APIs, event formats consumed by third parties, or durable stored data, the wrong decision can be expensive: consider boundaries, versioning, and compatibility early.
 
-## 8. Đừng nhầm khả năng mở rộng với số lượng interface
+## 8. Do Not Confuse Extensibility with Interface Count
 
-Một kiến trúc “mở rộng được” nên trả lời được:
+An “extensible” architecture should answer:
 
-- **Có thể thêm loại thay đổi nào mà không làm hỏng phần đang ổn định?**
-- **Ai sở hữu hợp đồng chung và bất biến của nó?**
-- **Đăng ký implementation mới ở đâu?**
-- **Có thể xác định implementation đang chạy bằng logging/metrics không?**
-- **Một implementation lỗi có thể gây hại cho hệ thống ở phạm vi nào?**
-- **Test nào bảo vệ hành vi cũ khi thêm lựa chọn mới?**
+- **Which new variations can be added without breaking stable parts?**
+- **Who owns the shared contract and its invariants?**
+- **Where are new implementations registered?**
+- **Can logs/metrics identify the implementation currently running?**
+- **How much damage can a faulty implementation cause?**
+- **Which tests protect existing behavior when adding a new option?**
 
-Nếu không giải thích được các câu hỏi này, rất có thể một tập hợp interface vẫn chỉ là **coupling được giấu phía sau DI**.
+If these questions cannot be answered, a collection of interfaces may amount to **coupling hidden behind DI**.
 
-### Một interface có một implementation có luôn sai?
+### Is an Interface with One Implementation Always Wrong?
 
-Không. Ví dụ `PaymentGateway` có một `BankApiGateway` nhưng là ranh giới hạ tầng thực sự: use case cần thanh toán, không cần import HTTP SDK và có thể dùng fake trong unit test. Hợp đồng nên được **định nghĩa theo nhu cầu nghiệp vụ**, không bê nguyên API SDK vào interface.
+No. For example, `PaymentGateway` with one `BankApiGateway` may be a real infrastructure boundary: a use case needs to process payments without importing an HTTP SDK and can use a fake in unit tests. Define the contract **according to business needs**, rather than copying SDK methods into the interface.
 
-Ngược lại, `IPriceAdder` chỉ có `PriceAdderImpl` gọi `a + b`, cả hai cùng package và không có ranh giới thay đổi, thường là một lớp indirection không cần thiết.
+Conversely, `IPriceAdder` with one `PriceAdderImpl` that merely calls `a + b`, both in the same package and with no variation boundary, is usually unnecessary indirection.
 
-## 9. Nhận diện “God Factory”, “God Facade” và registry quá rộng
+## 9. Recognizing God Factories, God Facades, and Overly Broad Registries
 
-Một sai lầm khác là áp dụng pattern thật, nhưng **mở rộng trách nhiệm của nó quá mức**:
+Another mistake is applying a legitimate pattern but **expanding its responsibility too far**:
 
-- **God Factory:** biết cách tạo mọi loại đối tượng trong cả hệ thống, cần sửa liên tục theo nhiều domain.
-- **God Facade:** gom đăng nhập, thanh toán, vận chuyển, thông báo, báo cáo vào một API lớn.
-- **Generic Repository vô hạn:** cố che mọi loại truy vấn, biến thành API có hàng chục tùy chọn, query động khó kiểm tra.
-- **Event bus dùng khắp nơi:** thay các lời gọi rõ ràng bằng sự kiện vô danh, khó lần theo kết quả và lỗi.
-- **DI registry bằng string tùy tiện:** sai key chỉ xuất hiện lúc chạy, cấu hình trở thành ngôn ngữ lập trình phụ khó debug.
+- **God Factory:** knows how to create every kind of object throughout the system and changes constantly for unrelated domains.
+- **God Facade:** groups authentication, payments, shipping, notifications, and reporting into one large API.
+- **Unbounded Generic Repository:** tries to hide all query types behind an API with dozens of options and hard-to-verify dynamic queries.
+- **Event bus everywhere:** replaces explicit calls with anonymous events that obscure outcomes and failures.
+- **String-based DI registry:** invalid keys only fail at runtime, and configuration becomes a secondary programming language that is difficult to debug.
 
-Khi lớp “trung tâm” có nhiều lý do thay đổi không liên quan, giải pháp có thể là **chia theo use case, bounded context hoặc capability** chứ không thêm một lớp điều phối tổng nữa.
+When a “central” class has many unrelated reasons to change, the solution may be **splitting by use case, bounded context, or capability**, rather than adding yet another coordination layer.
 
 ```mermaid
 flowchart TD
@@ -7371,11 +7371,11 @@ flowchart TD
     H -- "Có" --> G
 ```
 
-Đây là sơ đồ ra quyết định cho một trục biến thiên; những tình huống phức tạp còn cần xem xét concurrency, bảo mật, tương thích và độ bền dữ liệu.
+This flowchart offers a decision process for one axis of variation; more complex situations must also consider concurrency, security, compatibility, and data durability.
 
-## 10. Kiểm thử tốt không đòi hỏi pattern phức tạp
+## 10. Good Tests Do Not Require Complex Patterns
 
-Ví dụ JUnit 5 cho thiết kế enum ở phần 3, đặt file `SimpleDeliveryPricingTest.java` cạnh `SimpleDeliveryPricing.java`, cùng package:
+JUnit 5 example for the enum design in section 3: place `SimpleDeliveryPricingTest.java` beside `SimpleDeliveryPricing.java` in the same package:
 
 ```java
 import static org.junit.jupiter.api.Assertions.*;
@@ -7403,68 +7403,68 @@ class SimpleDeliveryPricingTest {
 }
 ```
 
-Khi dùng Strategy, nên thêm **contract test** cho mọi implementation: trả giá trị không âm, không đột biến input, tuân thủ đơn vị VND và cách báo lỗi. Nhưng không nên lập một bộ mock phức tạp chỉ để assert “factory được gọi đúng một lần” nếu nhu cầu người dùng chỉ là **tính đúng phí**.
+When using Strategy, add **contract tests** for every implementation: nonnegative results, no input mutation, proper VND units, and agreed error behavior. But avoid building a complicated set of mocks solely to assert that “the factory was called exactly once” if the user requirement is simply **correct fee calculation**.
 
-### Kiểm thử khi đơn giản hóa code cũ
+### Testing When Simplifying Existing Code
 
-Nếu refactor bỏ Factory/Decorator/Observer thừa, viết hoặc giữ các test **ở ranh giới hành vi**:
+When refactoring away unnecessary Factory/Decorator/Observer layers, write or retain tests **at behavioral boundaries**:
 
-1. Input hợp lệ trả cùng output.
-2. Input sai vẫn sinh loại lỗi/ngữ nghĩa tương ứng.
-3. Side effect và thứ tự bắt buộc không thay đổi.
-4. Với API công khai, chữ ký và khả năng tương thích được giữ hoặc chuyển đổi theo kế hoạch.
-5. Với đối tượng đa luồng, hành vi đồng thời và lifecycle không bị thay đổi âm thầm.
+1. Valid inputs produce the same outputs.
+2. Invalid inputs produce equivalent error types and semantics.
+3. Required side effects and ordering remain unchanged.
+4. For public APIs, signatures and compatibility are preserved or migrated according to a plan.
+5. For concurrent objects, concurrency behavior and lifecycles do not change silently.
 
-Không cần viết test xác nhận class trung gian còn tồn tại hay không: đó là chi tiết triển khai đang muốn thay đổi.
+There is no need to test whether an intermediary class still exists: that is an implementation detail being intentionally changed.
 
-## 11. Refactor một thiết kế “quá nhiều pattern” thế nào cho an toàn?
+## 11. How to Safely Refactor a Design with Too Many Patterns
 
-Giả sử hiện có:
+Suppose the current flow is:
 
 `OrderController → QuoteFacade → PricingFactory → StrategyRegistry → FixedPriceStrategy`
 
-và cả hệ thống chỉ có một quy tắc giá cố định được dùng tại một nơi. Đừng xóa nhiều lớp cùng lúc rồi hy vọng toàn bộ client tự hoạt động đúng. Áp dụng các bước:
+and the whole system has only one fixed pricing rule used in one place. Do not delete several layers simultaneously and hope all clients continue to behave correctly. Instead:
 
-1. **Xác nhận usage:** tìm tất cả caller, cách tạo object, API công khai, cấu hình bean, reflection/serialization và những hệ thống ngoài module có phụ thuộc.
-2. **Đóng băng hành vi bằng test:** kiểm tra kết quả, lỗi và side effect hiện có, kể cả trường hợp biên.
-3. **Chọn một API đích rõ ràng:** chẳng hạn `PricingService.quote(Order)` hoặc hàm thuần túy nếu không cần state.
-4. **Di chuyển logic về nơi sở hữu:** bỏ các lớp chỉ forward; giữ logic nghiệp vụ và adapter hạ tầng thực sự cần thiết.
-5. **Chuyển caller theo từng bước:** khi cần, giữ một adapter mỏng tạm thời để tương thích; không tạo ra một hệ thống song song vô hạn.
-6. **Loại bỏ cấu hình đã hết giá trị:** xóa mapping, bean, registry, reflection rule sau khi chứng minh không còn caller.
-7. **Chạy kiểm thử đúng phạm vi:** unit, integration và test hợp đồng công khai tương ứng.
-8. **Đo kết quả:** số điểm sửa khi đổi quy tắc, đường call stack, số file phải đọc, thời gian build/test và số lỗi runtime.
-9. **Viết lý do refactor:** lợi ích và chi phí, cùng tiêu chí mở lại điểm extension nếu một ngày nhu cầu thật phát sinh.
+1. **Verify usage:** find every caller, object-creation path, public API, bean configuration, reflection/serialization usage, and dependent systems outside the module.
+2. **Lock in behavior with tests:** verify current results, errors, and side effects, including boundary cases.
+3. **Choose a clear target API:** for example, `PricingService.quote(Order)`, or a pure function when state is unnecessary.
+4. **Move logic to its owner:** remove forwarding-only classes while preserving business rules and necessary infrastructure adapters.
+5. **Migrate callers incrementally:** keep a temporary thin compatibility adapter if necessary; do not establish a permanent parallel system.
+6. **Remove obsolete configuration:** delete mappings, beans, registries, and reflection rules after verifying that no callers depend on them.
+7. **Run appropriately scoped tests:** unit, integration, and public-contract tests as applicable.
+8. **Measure the result:** number of edit points for a rule change, call-stack depth, files required to understand the flow, build/test time, and runtime error rates.
+9. **Record the refactoring rationale:** benefits, costs, and criteria for reopening extension points if genuine requirements arise later.
 
-Đơn giản hóa nên **giảm khối lượng kiến thức và trạng thái cần quản lý**, không chỉ đổi tên hay gộp file. Nếu một abstraction bảo vệ hợp đồng nhiều đội đang dùng, xóa nó có thể gây coupling lớn hơn lợi ích.
+Simplification should **reduce knowledge and state that developers must manage**, rather than merely rename or merge files. Removing an abstraction that protects a contract used by several teams may create more coupling than it removes.
 
-## 12. Hai kiểu “đơn giản hóa” dễ sai
+## 12. Two Misguided Ways to Simplify
 
-### Chỉ gộp tất cả về một lớp
+### Putting Everything into One Class
 
-Một class 1.000 dòng xử lý mọi thứ có thể ít file hơn, nhưng làm tăng số lý do thay đổi và rủi ro hồi quy. Nếu loại bỏ một pattern, vẫn cần giữ **trách nhiệm rõ ràng** và tách các quy tắc thật sự độc lập.
+A 1,000-line class handling everything may use fewer files but increases independent reasons to change and regression risk. Removing a pattern still requires **clear responsibilities** and separation of genuinely independent rules.
 
-### Chỉ xóa interface để gọi implementation trực tiếp
+### Removing an Interface Just to Call the Implementation Directly
 
-Nếu việc xóa interface khiến application import SQL driver hoặc HTTP SDK, bạn có thể đang làm **rò rỉ hạ tầng** vào business logic. Điều nên xem lại là port có phù hợp nhu cầu hay không, chứ không phải xóa interface theo số lượng.
+If removing an interface forces application code to import an SQL driver or HTTP SDK, you may be **leaking infrastructure** into business logic. Evaluate whether the port meets actual needs, rather than removing interfaces based on a count.
 
-Một hướng hợp lý: giữ `PaymentGateway` do application sở hữu, bỏ hai tầng `GatewayFactoryFactory` và `GatewayProviderAdapterBuilder` chỉ chuyển tiếp lời gọi vô ích. Như vậy có thể **giữ DIP nhưng giảm overengineering**.
+A sensible approach is to retain application-owned `PaymentGateway` while removing `GatewayFactoryFactory` and `GatewayProviderAdapterBuilder` layers that merely forward calls. This can **preserve DIP while reducing overengineering**.
 
-## 13. So sánh chi phí dự kiến bằng một bảng quyết định
+## 13. Comparing Expected Costs with a Decision Table
 
-Cho một module cần thêm các cách tính giá mới:
+For a module that may add new pricing methods:
 
-| Câu hỏi | Nếu trả lời “có” | Tác động lên quyết định |
+| Question | If the answer is “yes” | Decision impact |
 |---|---|---|
-| Mỗi biến thể là thuật toán khác và được kiểm thử độc lập? | Có | Ủng hộ Strategy |
-| Chỉ khác vài hằng số được cập nhật bởi admin? | Có | Ủng hộ dữ liệu/config |
-| Có nhiều nhóm phát triển implementation cùng lúc? | Có | Ủng hộ hợp đồng ổn định |
-| API đã public cho bên thứ ba? | Có | Cân nhắc tương thích dài hạn |
-| Thay đổi chỉ một lần mỗi năm, 3 nhánh rõ ràng? | Có | Ủng hộ giải pháp trực tiếp |
-| Có rủi ro cấu hình sai implementation? | Có | Tăng chi phí Strategy/registry |
-| Phụ thuộc vào database hoặc dịch vụ ngoài? | Có | Cân nhắc port/adapter để cô lập hạ tầng |
-| Nhóm vận hành cần biết chính xác luồng chạy? | Có | Ưu tiên wiring tường minh, logs/traces |
+| Is each variant a different algorithm tested independently? | Yes | Supports Strategy |
+| Do only a few constants differ, updated by admins? | Yes | Favors data/configuration |
+| Do several teams develop implementations concurrently? | Yes | Favors stable contracts |
+| Is the API already public to third parties? | Yes | Consider long-term compatibility |
+| Does the rule change once per year, with three clear branches? | Yes | Favors a direct solution |
+| Is there a risk of configuring the wrong implementation? | Yes | Increases Strategy/registry costs |
+| Does the implementation depend on a database or external service? | Yes | Consider a port/adapter to isolate infrastructure |
+| Must operators know the exact runtime execution path? | Yes | Prefer explicit wiring and logs/traces |
 
-Không cần gán điểm số giả tạo để “chứng minh” pattern nào thắng. Một **Architecture Decision Record (ADR)** ngắn thường đủ khi quyết định ảnh hưởng lâu dài.
+You do not need an artificial score to “prove” which pattern wins. A short **Architecture Decision Record (ADR)** is often enough for a decision with long-term consequences.
 
 ```markdown
 # ADR: Giữ bảng phí giao hàng dưới dạng enum
@@ -7494,34 +7494,34 @@ Xem xét lại khi:
 - Phí trở thành dữ liệu do người dùng quản lý, cần chuyển sang config/DB.
 ```
 
-## 14. Bài tập thực hành
+## 14. Practical Exercises
 
-**Bài 1 — Lựa chọn abstraction.** Một ứng dụng có hai mức phí vận chuyển cố định và không dự kiến thay đổi. Viết một phiên bản dùng `enum` và một phiên bản dùng Strategy. So sánh số điểm thay đổi khi thêm mức phí, số class, cách kiểm thử và độ rõ của đường gọi.
+**Exercise 1 — Choosing an abstraction.** An application has two fixed shipping fees and expects no changes. Implement one version using `enum` and another using Strategy. Compare edit points when adding a fee level, class counts, testing approaches, and call-path clarity.
 
-**Bài 2 — Khi yêu cầu đổi.** Bổ sung cách tính “8.000 VND/kg, làm tròn lên” và một dịch vụ giảm phí khi tổng đơn vượt ngưỡng. Refactor code `SimpleDeliveryPricing` sang `FlexibleDeliveryPricing`, giữ test cho các mức phí trước khi thay thế và viết test cho ngưỡng biên.
+**Exercise 2 — When requirements change.** Add “8.000 VND/kg, rounded up” pricing and a service discount when the order total exceeds a threshold. Refactor `SimpleDeliveryPricing` into `FlexibleDeliveryPricing`, retaining tests for existing levels before replacement and adding threshold-boundary tests.
 
-**Bài 3 — God Facade.** Nhóm có class `ApplicationFacade` gồm 50 phương thức xử lý hóa đơn, người dùng, tìm kiếm, vận chuyển. Đề xuất nhóm API theo trách nhiệm; nêu trường hợp nên giữ facade nhỏ và trường hợp nên gọi trực tiếp application service.
+**Exercise 3 — God Facade.** A team has an `ApplicationFacade` class with 50 methods handling invoices, users, search, and shipping. Propose grouping APIs by responsibility; identify when to retain a small facade and when to call an application service directly.
 
-**Bài 4 — “Tự động” không có nghĩa đơn giản.** Một nhóm muốn áp `Observer` để phát “đơn hàng được thanh toán” rồi gửi email bắt buộc. Phân tích trường hợp listener lỗi, lỗi DB commit, phát trùng; chỉ ra khi nào cần workflow rõ và khi nào cần transactional outbox.
+**Exercise 4 — “Automatic” does not mean simple.** A team proposes using `Observer` to publish “order paid” and then send a mandatory email. Analyze listener failures, DB commit failures, and duplicate events; identify when explicit workflow orchestration or a transactional outbox is needed.
 
-**Bài 5 — Thực tế bảo trì.** Chọn một module có ít nhất ba abstraction liên tiếp. Vẽ call graph, liệt kê lý do từng tầng tồn tại, viết ADR giữ/bỏ mỗi tầng. Chỉ refactor sau khi có test kiểm chứng hành vi.
+**Exercise 5 — Real maintenance costs.** Choose a module with at least three consecutive abstraction layers. Draw its call graph, list why each layer exists, and write an ADR deciding whether to keep/remove each. Refactor only after tests confirm existing behavior.
 
-## 15. Checklist trước khi áp dụng một mẫu thiết kế
+## 15. Checklist Before Introducing a Design Pattern
 
-- [ ] Tôi mô tả được vấn đề đang xảy ra mà không cần gọi tên pattern.
-- [ ] Tôi nêu được **loại thay đổi nào** sẽ diễn ra và tần suất dự kiến có bằng chứng.
-- [ ] Tôi có một **phương án đơn giản** đủ đúng để so sánh.
-- [ ] Mỗi abstraction mới mang một trách nhiệm hoặc ranh giới hữu ích, không chỉ forward.
-- [ ] Tôi hiểu chi phí class, DI/config, callback, debug và kiểm thử tăng thêm.
-- [ ] Tôi biết giải pháp có còn dễ sử dụng nếu chỉ có một implementation không.
-- [ ] Tôi kiểm tra error handling, concurrency và hiệu ứng phụ ngoài chức năng chính.
-- [ ] Tôi có test hành vi và hợp đồng cho trường hợp hiện tại.
-- [ ] Tôi biết điều kiện cụ thể nào sẽ khiến quyết định thiết kế cần được xem xét lại.
-- [ ] Tôi có thể giải thích lựa chọn này cho đồng đội mà không chỉ nói “vì đây là GoF/SOLID”.
+- [ ] I can explain the actual problem without mentioning a pattern name.
+- [ ] I can identify **which kinds of change** are expected and support their frequency with evidence.
+- [ ] I have a **simple alternative** that meets correctness requirements for comparison.
+- [ ] Every new abstraction adds a useful responsibility or boundary rather than merely forwarding calls.
+- [ ] I understand the added costs of classes, DI/configuration, callbacks, debugging, and testing.
+- [ ] I know whether the solution remains easy to use with only one implementation.
+- [ ] I have considered error handling, concurrency, and side effects beyond the core functionality.
+- [ ] I have behavioral and contract tests for current cases.
+- [ ] I know the concrete conditions that would require revisiting this design decision.
+- [ ] I can explain the choice to teammates without merely saying “because GoF/SOLID”.
 
-**Ghi nhớ:** Mẫu thiết kế là một **công cụ đánh đổi**. Dùng pattern khi nó giải quyết vấn đề thay đổi, tương tác hoặc trách nhiệm **có thật** và bù được chi phí cấu trúc. Giữ giải pháp đơn giản khi nhu cầu đơn giản; refactor có kiểm thử khi bối cảnh thay đổi. Kiến trúc tốt là kiến trúc giúp hệ thống tiếp tục phát triển an toàn, chứ không phải kiến trúc có nhiều tên pattern nhất.
+**Remember:** A Design Pattern is a **tool with trade-offs**. Apply a pattern when it solves **a real problem** involving change, collaboration, or responsibilities and its benefits outweigh structural costs. Keep the solution simple while requirements are simple; refactor with tests when the context changes. Good architecture helps a system evolve safely, not accumulate the greatest number of pattern names.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

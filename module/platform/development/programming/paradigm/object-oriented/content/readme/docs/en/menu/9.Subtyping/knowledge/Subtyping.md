@@ -1,59 +1,59 @@
 <a id="back-to-top"></a>
 
-# Kiểu con
+# Subtyping
 
 ## Menu
-- [Phân biệt kế thừa mã với quan hệ kiểu con](#subtyping-001)
-- [Quan hệ “là một” và tính thay thế](#subtyping-002)
-- [Tương thích kiểu theo tên và theo cấu trúc](#subtyping-003)
-- [Kiểu khai báo và kiểu thực tế của đối tượng](#subtyping-004)
-- [Chuyển từ kiểu con sang kiểu cha](#subtyping-005)
-- [Ép về kiểu con và kiểm tra kiểu](#subtyping-006)
-- [Giữ đúng hợp đồng khi mở rộng kiểu](#subtyping-007)
-- [Phản ví dụ hình chữ nhật và hình vuông](#subtyping-008)
+- [Distinguishing code inheritance from subtyping](#subtyping-001)
+- [The “is-a” relationship and substitutability](#subtyping-002)
+- [Nominal and structural type compatibility](#subtyping-003)
+- [Declared types and runtime object types](#subtyping-004)
+- [Upcasting from a subtype to a supertype](#subtyping-005)
+- [Downcasting and type checking](#subtyping-006)
+- [Preserving contracts when extending types](#subtyping-007)
+- [The rectangle and square counterexample](#subtyping-008)
 
-## <a id="subtyping-001">Phân biệt kế thừa mã với quan hệ kiểu con</a>
+## <a id="subtyping-001">Distinguishing code inheritance from subtyping</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phân biệt kế thừa mã với quan hệ kiểu con trong Java
+# Distinguishing code inheritance from subtyping in Java
 
-Trong Java OOP, hai ý tưởng dễ bị gộp chung là **kế thừa mã (implementation inheritance / code reuse)** và **quan hệ kiểu con (subtyping)**. Chúng thường xuất hiện cùng lúc khi viết `extends`, nhưng giải quyết hai câu hỏi khác nhau:
+In Java OOP, two ideas are often conflated: **code inheritance (implementation inheritance / code reuse)** and **subtyping**. They often arise together when using `extends`, but address different questions:
 
-- **Kế thừa mã:** “Làm sao tận dụng lại một phần chương trình đã viết, tránh nhân bản thuật toán hoặc xử lý chung?”
-- **Quan hệ kiểu con:** “Đối tượng thuộc kiểu này có thể được dùng thay cho một kiểu trừu tượng khác mà vẫn giữ đúng hợp đồng không?”
+- **Code inheritance:** “How can we reuse existing program logic and avoid duplicating algorithms or common processing?”
+- **Subtyping:** “Can an object of this type be used in place of another abstraction while still fulfilling its contract?”
 
-Sự phân biệt quan trọng vì **tái sử dụng được code không đồng nghĩa với thay thế được về mặt hành vi**. Một lớp con có thể kế thừa phương thức, biên dịch hợp lệ, nhưng làm sai những kỳ vọng mà chương trình đang đặt vào lớp cha.
+This distinction matters because **reusing code does not imply behavioral substitutability**. A subclass may inherit methods and compile correctly while violating expectations that client code places on its superclass.
 
-Bài này tập trung vào cơ chế của Java, minh họa bằng interface, `extends`, `implements`, ủy quyền qua composition và nguyên lý thay thế Liskov (LSP).
+This lesson focuses on Java mechanisms, illustrated using interfaces, `extends`, `implements`, delegation through composition, and the Liskov Substitution Principle (LSP).
 
-## 1. Hai trục thiết kế không đồng nhất
+## 1. Two distinct design dimensions
 
-| Góc nhìn | Kế thừa mã | Quan hệ kiểu con |
+| Perspective | Code inheritance | Subtyping |
 | --- | --- | --- |
-| Mục đích | Tận dụng logic hoặc cấu trúc chung | Cho phép dùng một đối tượng dưới hợp đồng kiểu rộng hơn |
-| Câu hỏi | “Code nào có thể dùng lại?” | “Có thể thay A bằng B mà client vẫn đúng không?” |
-| Cơ chế điển hình | `extends`, lớp cơ sở, hoặc **composition/delegation** để tái sử dụng không cần kế thừa | `extends` class, `implements` interface, `extends` interface |
-| Điều phía sử dụng quan tâm | Chi tiết thực hiện, chi phí bảo trì | Phương thức, tiền/hậu điều kiện, bất biến, hành vi lỗi |
-| Rủi ro | Kết dính chặt lớp con với chi tiết lớp cha | Vi phạm hợp đồng dù tương thích chữ ký |
-| Khi nên ưu tiên | Có xử lý chung thật sự cần chia sẻ | Các kiểu cần được sử dụng thay thế theo một hợp đồng |
+| Purpose | Reuse common logic or structure | Allow an object to be used under a broader type contract |
+| Question | “What code can be reused?” | “Can A be replaced by B while the client remains correct?” |
+| Typical mechanism | `extends`, a base class, or **composition/delegation** for reuse without inheritance | `extends` a class, `implements` an interface, `extends` an interface |
+| Client concern | Implementation details and maintenance cost | Methods, preconditions/postconditions, invariants, and failure behavior |
+| Risk | Tight coupling between subclass and superclass details | Contract violations despite compatible signatures |
+| When to prefer it | There is genuinely shared processing to reuse | Types need to be interchangeable under a contract |
 
-**Về mặt ngôn ngữ Java:** khi `Child extends Parent`, `Child` là *subtype danh nghĩa* của `Parent` và có thể kế thừa các thành phần thích hợp từ cha. Không thể dùng `extends` để “chỉ lấy code mà tuyệt đối không tạo quan hệ kiểu con”. Nếu mục đích chỉ là tái sử dụng thuật toán, composition/delegation thường diễn đạt chính xác hơn.
+**In Java language terms:** when `Child extends Parent`, `Child` is a *nominal subtype* of `Parent` and may inherit applicable members from its parent. You cannot use `extends` to “reuse code without creating any subtype relationship whatsoever.” When the sole goal is algorithm reuse, composition/delegation usually expresses the intent more accurately.
 
-Khi `Worker implements Runnable`, `Worker` là kiểu con của `Runnable` dù interface chủ yếu mô tả chữ ký hành vi. Về nguyên tắc, subtype không bắt buộc phải xuất phát từ việc kế thừa **mã nguồn triển khai** của một superclass. Lưu ý Java interface hiện đại có thể có `default` method, nên không nên khẳng định mọi interface hoàn toàn không chứa code.
+When `Worker implements Runnable`, `Worker` is a subtype of `Runnable` even though the interface primarily specifies behavioral signatures. In principle, subtyping need not originate from inheriting **implementation source code** from a superclass. Modern Java interfaces can also contain `default` methods, so it would be inaccurate to say interfaces never contain code.
 
-Từ đây có ba khái niệm nên phân biệt rõ:
+Three concepts should therefore be distinguished:
 
-1. **Quan hệ subtype theo hệ kiểu Java:** trình biên dịch cho phép chuyển tham chiếu `Child` thành `Parent` hoặc một interface được implement.
-2. **Kế thừa implementation:** lớp con nhận lại code phù hợp của superclass (có thể override nơi được phép).
-3. **Subtype đúng về hành vi:** việc thay đối tượng không phá cam kết mà client được phép dựa vào; đây là nội dung cốt lõi của LSP.
+1. **Subtyping in Java's type system:** the compiler allows a `Child` reference to be used as `Parent` or as an implemented interface.
+2. **Implementation inheritance:** the subclass inherits applicable code from its superclass (and may override members where permitted).
+3. **Behavioral subtyping:** substituting objects does not violate guarantees that clients are entitled to rely on; this is the core of LSP.
 
-Hai điều đầu do cơ chế ngôn ngữ hỗ trợ. Điều thứ ba cần **thiết kế, mô tả hợp đồng và kiểm thử**.
+The first two are supported by language mechanisms. The third requires **design, explicit contracts, and testing**.
 
-## 2. Quan hệ kiểu con: phía gọi dựa vào hợp đồng
+## 2. Subtyping: callers rely on contracts
 
-Ví dụ `NotificationSender` mô tả một khả năng gửi thông báo ở mức nghiệp vụ:
+For example, `NotificationSender` represents the business capability of sending notifications:
 
 ```java
 // NotificationSender.java
@@ -71,7 +71,7 @@ public interface NotificationSender {
 }
 ```
 
-Một thành phần sử dụng chỉ biết `NotificationSender`:
+A client component knows only `NotificationSender`:
 
 ```java
 // NotificationService.java
@@ -90,15 +90,15 @@ public final class NotificationService {
 }
 ```
 
-`NotificationService` không cần biết thông báo đi qua email hay SMS. Một đối tượng thực hiện interface này có thể được truyền vào constructor. Đó là **quan hệ kiểu con được khai thác qua đa hình**.
+`NotificationService` does not need to know whether the message is delivered by email or SMS. Any object implementing that interface can be passed to its constructor. This is **subtyping used through polymorphism**.
 
-Điểm quyết định không phải hai implementation có cùng code hay không. Chúng cần chấp nhận cùng miền đầu vào mà interface đã hứa, báo lỗi nhất quán và tạo hiệu ứng được mô tả. Nếu bản SMS tự ý từ chối tất cả chuỗi dài trên 20 ký tự trong khi hợp đồng chung không đặt giới hạn, nó không còn là implementation thay thế được cho tất cả client hợp lệ.
+The deciding factor is not whether implementations share code. They must accept the input domain promised by the interface, report failures consistently, and produce the documented effects. If the SMS implementation arbitrarily rejects every string longer than 20 characters while the shared contract imposes no such limit, it can no longer substitute for every valid client.
 
-## 3. Tái sử dụng code bằng composition, không cần kế thừa lớp khác
+## 3. Reusing code with composition without inheriting another class
 
-Hai cách gửi thông báo đều cần chuẩn hóa và kiểm tra văn bản. Việc này có thể nằm trong một **đối tượng trợ giúp** thay vì ép cả email và SMS kế thừa một lớp cha chứa xử lý chung.
+Both notification channels need text normalization and validation. That work can live in a **helper object** instead of forcing email and SMS implementations to inherit from a common superclass merely to reuse processing.
 
-### Bộ xử lý dùng chung
+### Shared processing helper
 
 ```java
 // MessagePreparation.java
@@ -114,7 +114,7 @@ public final class MessagePreparation {
 }
 ```
 
-### Hai implementation cùng sử dụng helper
+### Two implementations using the same helper
 
 ```java
 // EmailSender.java
@@ -154,7 +154,7 @@ public final class SmsSender implements NotificationSender {
 }
 ```
 
-Thử sử dụng qua interface:
+Try them through the interface:
 
 ```java
 // Main.java
@@ -173,29 +173,29 @@ public class Main {
 }
 ```
 
-Biên dịch và chạy các tệp trong cùng thư mục:
+Compile and run the files from the same directory:
 
 ```bash
 javac NotificationSender.java NotificationService.java MessagePreparation.java EmailSender.java SmsSender.java Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 [EMAIL] an@example.test: Chào mừng bạn đến hệ thống!
 [SMS] 0900000000: Chào mừng bạn đến hệ thống!
 ```
 
-**Phân tích:**
+**Analysis:**
 
-- `EmailSender` và `SmsSender` đều là **subtype của `NotificationSender`** vì khai báo `implements`.
-- Hai lớp sử dụng lại `MessagePreparation.prepare(...)` bằng **composition/delegation**.
-- Không có quan hệ `EmailSender extends SmsSender` hay `EmailSender extends MessagePreparation`. Chia sẻ bộ xử lý không ngụ ý “email là một SMS” hoặc “email là một bộ chuẩn hóa”.
-- `NotificationService` dùng kiểu interface nên có thể nhận cả hai implementation. Sự thay thế đến từ hợp đồng của interface, không đến từ việc hai lớp cùng gọi helper.
-- Trong ví dụ console, tiền điều kiện có cùng cách kiểm tra; đầu ra khác nhãn kênh nhưng vẫn đáp ứng cam kết “phát một dòng”.
+- `EmailSender` and `SmsSender` are both **subtypes of `NotificationSender`** because they declare `implements`.
+- Both classes reuse `MessagePreparation.prepare(...)` through **composition/delegation**.
+- There is no `EmailSender extends SmsSender` or `EmailSender extends MessagePreparation` relationship. Sharing a helper does not imply that “email is an SMS” or “email is a text normalizer.”
+- `NotificationService` depends on an interface type and can therefore accept either implementation. Substitutability comes from the interface contract, not from the fact that both classes use the same helper.
+- In the console example, both enforce the same preconditions; their output channel labels differ, but each still satisfies the promise to “emit one line.”
 
-Sơ đồ phân biệt rõ **implements** với **has-a / uses-a**:
+The diagram clearly distinguishes **implements** from **has-a / uses-a**:
 
 ```mermaid
 classDiagram
@@ -225,11 +225,11 @@ classDiagram
     NotificationService --> NotificationSender : phụ thuộc hợp đồng
 ```
 
-Nếu sau này thay bộ chuẩn hóa bằng cách khác, hai sender vẫn giữ loại quan hệ của mình. Nếu thêm kênh thông báo, tạo implementation mới mà `NotificationService` không phải đổi.
+If normalization later changes, the sender classes retain their respective relationships. If a new notification channel is added, a new implementation can be created without changing `NotificationService`.
 
-## 4. `extends` thường kết hợp cả kế thừa mã và quan hệ subtype
+## 4. `extends` often combines code inheritance and subtyping
 
-`extends` có thể phù hợp nếu lớp con **thực sự là một trường hợp chuyên biệt hợp lệ** của lớp cha và các phần cài đặt chung là nền tảng ổn định.
+`extends` can be appropriate when a subclass **truly is a valid specialization** of its superclass and the shared implementation provides a stable foundation.
 
 ```java
 abstract class AbstractReport {
@@ -257,38 +257,38 @@ final class SalesReport extends AbstractReport {
 }
 ```
 
-Sử dụng:
+Usage:
 
 ```java
 AbstractReport report = new SalesReport();
 System.out.println(report.render());
 ```
 
-Kết quả:
+Output:
 
 ```text
 === Báo cáo bán hàng ===
 Doanh thu: 1.000.000 VND
 ```
 
-Ở đây:
+Here:
 
-- `SalesReport extends AbstractReport` tạo **quan hệ subtype**: biến `AbstractReport` có thể giữ `SalesReport`.
-- `SalesReport` **kế thừa mã thực hiện `render()`** của `AbstractReport`.
-- `render()` là `final` để giữ khung xử lý chung. Lớp con chỉ điền các điểm mở rộng `title()`, `body()`, giúp hạn chế việc vô tình thay đổi định dạng kết quả.
-- Đây là dạng **Template Method** đơn giản. Nếu mọi báo cáo thuộc họ này tuân thủ cùng định dạng, quan hệ kế thừa có lý do rõ ràng.
+- `SalesReport extends AbstractReport` creates **a subtype relationship**: an `AbstractReport` variable can hold a `SalesReport`.
+- `SalesReport` **inherits the `render()` implementation** from `AbstractReport`.
+- `render()` is `final` to preserve the shared processing sequence. The subclass fills in the extension points `title()` and `body()`, reducing the risk of accidentally changing the output format.
+- This is a simple **Template Method** pattern. If all reports in this family follow the same format, inheritance has a clear rationale.
 
-Tuy nhiên, **chỉ vì `render()` tái sử dụng được code không đủ để khẳng định mọi loại đối tượng in được đều nên kế thừa `AbstractReport`**. Một hóa đơn, biên lai hoặc nhãn vận chuyển có thể cần hợp đồng khác dù cùng có thao tác “tạo chuỗi hiển thị”.
+However, **the fact that `render()` is reusable is not enough to conclude that every printable object should inherit from `AbstractReport`**. An invoice, receipt, or shipping label may require a different contract, even if all can “produce a display string.”
 
-### Tại sao extends đôi khi gây kết dính mạnh?
+### Why can extends create tight coupling?
 
-Lớp con có thể phụ thuộc vào trình tự gọi method, field/protected API, bước kiểm tra và các giả định bên trong lớp cha. Thay đổi phương thức cha có thể vô tình làm lớp con chạy khác. Composition giữ việc tái sử dụng ở ranh giới đối tượng và thường giảm phụ thuộc vào chi tiết một superclass lớn.
+A subclass may depend on method call order, fields/protected APIs, validation steps, and internal superclass assumptions. Changes to superclass methods can unintentionally alter subclass behavior. Composition keeps reuse at an object boundary and usually reduces dependence on a large superclass's internals.
 
-Điều này không có nghĩa composition luôn tốt hơn extends; sự lựa chọn dựa trên **ngữ nghĩa quan hệ**, hợp đồng cần giữ và mức kiểm soát điểm mở rộng.
+This does not mean composition is always better than extends; choose based on **the meaning of the relationship**, the contract to preserve, and the degree of control over extension points.
 
-## 5. Phản ví dụ ngắn: subtype danh nghĩa nhưng không thay thế được
+## 5. Brief counterexample: a nominal subtype that cannot substitute
 
-Phát biểu hình học “hình vuông là hình chữ nhật” chưa đủ để bảo đảm `Square extends Rectangle` **đúng về hành vi**. Giả sử `Rectangle` cho phép `setWidth(w)` và `setHeight(h)` thay đổi hai chiều **độc lập**, còn `Square` buộc hai chiều luôn bằng nhau. Cả hai không thể cùng giữ những cam kết đó.
+The mathematical statement “a square is a rectangle” does not suffice to establish that `Square extends Rectangle` is **behaviorally valid**. Suppose `Rectangle` allows `setWidth(w)` and `setHeight(h)` to modify its dimensions **independently**, while `Square` requires equal dimensions. Both sets of promises cannot hold together.
 
 ~~~java
 // Ý tưởng tối giản: Rectangle có hai setter độc lập.
@@ -302,40 +302,40 @@ void resize(Rectangle shape) {
 }
 ~~~
 
-Nếu đối tượng thực là `Square` và mỗi setter cập nhật cả hai chiều, kết quả cuối thành `4 × 4 = 16`, khác kỳ vọng hợp lệ `5 × 4 = 20`. `extends` giúp code biên dịch vì subtype danh nghĩa đã được khai báo; **compiler không tự kiểm tra hậu điều kiện của setter**.
+If the runtime object is a `Square` and each setter updates both dimensions, the final result becomes `4 × 4 = 16`, not the validly expected `5 × 4 = 20`. The `extends` declaration lets the code compile through nominal subtyping; **the compiler does not check setter postconditions automatically**.
 
-| Quan sát | Kết luận |
+| Observation | Conclusion |
 | --- | --- |
-| `Square` kế thừa implementation và đúng chữ ký | Có subtype và khả năng dùng lại mã theo Java |
-| Client dựa vào hai setter độc lập | `Square` không giữ được hợp đồng |
-| Chỉ cần `area()` và dữ liệu hình bất biến | `Rectangle`, `Square` có thể cùng triển khai một `Shape` nhỏ hơn |
+| `Square` inherits implementation and has compatible signatures | Java provides a subtype and potential code reuse |
+| The client relies on two independent setters | `Square` violates the contract |
+| Only `area()` and immutable shape data are required | `Rectangle` and `Square` can implement a smaller `Shape` abstraction |
 
-Bài **Phản ví dụ hình chữ nhật và hình vuông** dành trọn hai chương trình Java chạy được, bảng so sánh từng phương án sửa, postcondition và contract test cho tình huống này. Ở đây, điểm cần rút ra là: *kế thừa mã và subtype theo cú pháp không chứng minh khả năng thay thế về nghiệp vụ*.
+The **rectangle and square counterexample** lesson provides two executable Java programs, detailed comparisons of fixes, postconditions, and contract tests for this scenario. Here, the takeaway is that *code inheritance and syntactic subtyping do not establish business-level substitutability*.
 
-## 6. LSP: ranh giới giữa tương thích kiểu và tương thích hành vi
+## 6. LSP: the boundary between type compatibility and behavioral compatibility
 
-Nguyên lý thay thế Liskov có thể hiểu thực dụng như sau:
+The Liskov Substitution Principle can be understood practically as follows:
 
-> Mã được viết đúng theo hợp đồng của kiểu cha phải tiếp tục đúng khi nhận một đối tượng kiểu con hợp lệ, không phải viết nhánh đặc biệt chỉ để tránh lỗi do kiểu con gây ra.
+> Code written correctly against the supertype contract must remain correct when given a valid subtype object, without special branches just to avoid problems introduced by the subtype.
 
-Một subtype về hành vi cần giữ các ràng buộc mà client được phép dựa vào:
+A behavioral subtype must preserve guarantees that clients may rely on:
 
-| Khía cạnh | Điều subtype cần tôn trọng | Ví dụ vi phạm |
+| Aspect | Requirement for a subtype | Violation example |
 | --- | --- | --- |
-| **Tiền điều kiện** | Không tự ý **siết chặt** điều kiện của các lời gọi hợp lệ | Cha nhận số nguyên dương; con chỉ nhận số từ 100 trở lên |
-| **Hậu điều kiện** | Không **làm yếu** kết quả đã hứa | Cha hứa trả danh sách đã sắp xếp; con trả thứ tự tùy ý |
-| **Bất biến** | Không phá quy tắc trạng thái quan sát được | Cha hứa số dư không âm; con cho phép âm |
-| **Lỗi** | Giữ những bảo đảm lỗi đã công bố | Cha hứa thao tác lỗi không thay đổi dữ liệu; con cập nhật dở dang |
-| **Hiệu ứng phụ** | Không thêm tác động trái với hợp đồng | Getter hứa chỉ đọc; con lại xóa bản ghi |
-| **Quy tắc thời điểm/đồng thời** | Giữ những bảo đảm nếu chúng là một phần của hợp đồng | API hứa cập nhật xong trước khi trả về; con chỉ gửi job async |
+| **Preconditions** | Do not arbitrarily **strengthen** requirements for valid calls | Parent accepts positive integers; child accepts only values of at least 100 |
+| **Postconditions** | Do not **weaken** promised results | Parent promises a sorted list; child returns arbitrary order |
+| **Invariants** | Do not violate observable state rules | Parent promises a nonnegative balance; child permits negative values |
+| **Failures** | Preserve published failure guarantees | Parent promises no mutation on failure; child leaves a partial update |
+| **Side effects** | Do not add effects forbidden by the contract | Getter promises read-only access; child deletes a record |
+| **Timing/concurrency rules** | Preserve guarantees when they are part of the contract | API promises completion before return; child only schedules an async job |
 
-LSP **không** yêu cầu mọi implementation trả cùng một kết quả cụ thể trong mọi tình huống. Nếu hợp đồng `Shape.area()` chỉ hứa diện tích chính xác của **hình đang biểu diễn**, các hình khác nhau có thể trả số khác nhau, miễn là mỗi implementation đáp ứng ý nghĩa và ràng buộc đã cam kết.
+LSP **does not** require every implementation to return the same specific result in every situation. If `Shape.area()` promises only the accurate area of **the represented shape**, different shapes may return different numbers as long as each implementation honors the meaning and constraints of its contract.
 
-Cũng không phải cứ override khác hành vi là vi phạm: mục đích của đa hình chính là hỗ trợ các hành vi cụ thể khác nhau **trong phạm vi hợp đồng chung**.
+Nor is every behavioral difference in an override a violation: polymorphism exists precisely to support different concrete behaviors **within a shared contract**.
 
-### Test hợp đồng để bắt vi phạm
+### Contract tests for detecting violations
 
-Với một interface quan trọng, có thể viết **cùng bộ kiểm tra** cho mọi implementation:
+For an important interface, you can run **the same test suite** against every implementation:
 
 ```java
 static void verifyShape(Shape shape) {
@@ -348,13 +348,13 @@ static void verifyShape(Shape shape) {
 }
 ```
 
-Bộ test minh họa này chỉ kiểm tra vài điều kiện quan sát được; để kiểm tra công thức diện tích đầy đủ cần trường hợp đã biết chiều/cạnh, test biên và xem xét hợp đồng thực tế. Khi dùng JUnit, cùng một test có thể nhận factory tạo nhiều implementation khác nhau.
+This sample test checks only a few observable conditions; a complete area-formula test would need cases with known dimensions, boundary tests, and the actual contract. With JUnit, the same test can accept factories for different implementations.
 
-Nếu test cho `Rectangle` bao gồm “`setWidth` không đổi `getHeight`”, `Square` ở phần trước sẽ thất bại. Không nên sửa test để bỏ điều kiện chỉ vì muốn duy trì cấu trúc kế thừa đã chọn; hãy xem lại quan hệ subtype.
+If a `Rectangle` test includes “`setWidth` leaves `getHeight` unchanged,” the earlier `Square` implementation will fail. Do not remove the condition from the test just to preserve an existing inheritance hierarchy; reconsider the subtype relationship.
 
-## 7. Có thể kế thừa hành vi mặc định từ interface không?
+## 7. Can interfaces provide inherited default behavior?
 
-Có. Từ Java 8, interface được phép có `default method`:
+Yes. Since Java 8, interfaces may declare `default method`:
 
 ```java
 interface Named {
@@ -379,27 +379,27 @@ final class Customer implements Named {
 }
 ```
 
-`Customer` là subtype của `Named` và nhận lại phần implementation mặc định của `displayName()`. Điều này chứng minh:
+`Customer` is a subtype of `Named` and inherits the default `displayName()` implementation. This demonstrates:
 
-- Interface là công cụ định nghĩa subtype/hợp đồng, nhưng **có thể đóng góp code**.
-- Quan hệ subtype không đồng nghĩa “tất cả method phải do class tự viết từ đầu”.
-- Bổ sung một `default` method phải cân nhắc tương thích với method đã có và quy tắc phân giải xung đột của Java.
+- An interface defines subtyping/contracts, but **can also contribute code**.
+- A subtype relationship does not mean “all methods must be written from scratch by the implementing class.”
+- Adding a `default` method requires checking compatibility with existing methods and Java's conflict-resolution rules.
 
-Không nên đánh đồng “kế thừa mã” với từ khóa `extends` duy nhất. Trong Java, class có thể tái sử dụng default method theo interface, kế thừa code từ abstract superclass, hoặc tái sử dụng logic qua delegation mà **không có quan hệ subtype với đối tượng được ủy quyền**.
+Do not equate “code inheritance” exclusively with the `extends` keyword. Java classes can reuse interface default methods, inherit code from abstract superclasses, or reuse logic through delegation **without being a subtype of the delegated object**.
 
-## 8. Tại sao “is-a” chỉ là bước kiểm tra ban đầu?
+## 8. Why is “is-a” only an initial check?
 
-Câu hỏi “X là một Y không?” (*is-a*) hữu ích để xem xét kế thừa, nhưng ngôn ngữ tự nhiên đôi khi đánh lừa ta. “Hình vuông là hình chữ nhật” về toán học chưa đủ để đảm bảo **một đối tượng `Square` có thể thay thế `Rectangle` với hai setter độc lập**.
+The question “Is X a Y?” (*is-a*) can help evaluate inheritance, but natural language can be misleading. “A square is a rectangle” is mathematically true yet insufficient to guarantee that **a `Square` object can replace a `Rectangle` with two independent setters**.
 
-Nên hỏi cụ thể hơn:
+Ask more specific questions:
 
-1. Tất cả thao tác mà client được quyền gọi trên kiểu cha có còn hợp lệ với kiểu con không?
-2. Tiền điều kiện của kiểu con có nghiêm ngặt hơn không?
-3. Kết quả, trạng thái và hành vi lỗi có đúng với hợp đồng kiểu cha không?
-4. Kiểu con có phải phá bất biến của mình để đáp ứng thao tác của kiểu cha không?
-5. Mục tiêu chỉ là sử dụng lại vài dòng xử lý, hay thật sự cần client nhìn đối tượng dưới kiểu cha?
+1. Does the subtype support every operation that clients may validly invoke on the supertype?
+2. Does the subtype impose stricter preconditions?
+3. Do its results, state, and failure behavior satisfy the supertype contract?
+4. Must the subtype violate its own invariants to support a supertype operation?
+5. Is the goal simply to reuse a few lines of processing, or must clients genuinely view the object as the supertype?
 
-Nếu mục tiêu là tái sử dụng logic mà câu trả lời về hợp đồng subtype không rõ ràng, hãy xem xét **composition**:
+If the goal is logic reuse and the subtype contract is unclear, consider **composition**:
 
 ```java
 final class CsvExporter {
@@ -421,11 +421,11 @@ final class TextEscaper {
 }
 ```
 
-`CsvExporter` **dùng** `TextEscaper`; nó không phải một loại `TextEscaper`. Cách này tận dụng xử lý thoát ký tự mà không tạo quan hệ kiểu con sai nghĩa.
+`CsvExporter` **uses** `TextEscaper`; it is not a kind of `TextEscaper`. This reuses escaping logic without introducing a semantically incorrect subtype relationship.
 
-## 9. Một số điểm cần nhớ về hệ kiểu Java
+## 9. Important details of Java's type system
 
-### Lớp con và interface đều tạo khả năng gán tham chiếu
+### Subclasses and interfaces both allow reference assignment
 
 ```java
 class Animal { }
@@ -444,9 +444,9 @@ RunnableTask task = new Job();      // Hợp lệ
 Object any = new Job();             // Object là kiểu cha của class
 ```
 
-Việc gán này minh họa **quan hệ subtype theo khai báo**. Nó không tự chứng minh lớp con giữ đúng toàn bộ hợp đồng nghiệp vụ.
+This assignment illustrates **declared subtyping**. It does not by itself prove that the subclass fulfills every business contract.
 
-### Class kế thừa class khác cùng interface
+### A class can extend another class and implement an interface
 
 ```java
 interface Auditable {
@@ -477,76 +477,76 @@ final class Invoice extends BaseEntity implements Auditable {
 }
 ```
 
-`Invoice` vừa là subtype của `BaseEntity`, vừa là subtype của `Auditable`. Nó kế thừa mã `getId()` của superclass, nhưng phần xử lý `audit()` tự thực hiện. Một class Java chỉ có thể `extends` trực tiếp **một class**, còn có thể `implements` nhiều interface.
+`Invoice` is a subtype of both `BaseEntity` and `Auditable`. It inherits the superclass's `getId()` code but implements `audit()` itself. A Java class can directly `extends` only **one class**, but it can `implements` multiple interfaces.
 
-### Generic không tự “đi theo” subtype của phần tử
+### Generic types do not automatically follow element subtyping
 
 ```java
 List<Cat> cats = new ArrayList<>();
 // List<Animal> animals = cats; // Không biên dịch
 ```
 
-Dù `Cat extends Animal`, `List<Cat>` **không** là subtype của `List<Animal>` vì generic Java bất biến (*invariant*) với tham số kiểu thông thường. Nếu API chỉ cần đọc các phần tử kiểu `Animal`, có thể dùng `List<? extends Animal>` với những giới hạn tương ứng về việc thêm phần tử.
+Although `Cat extends Animal`, `List<Cat>` is **not** a subtype of `List<Animal>` because ordinary Java generic type parameters are *invariant*. If an API only needs to read elements as `Animal`, it can use `List<? extends Animal>`, subject to the corresponding restrictions on adding elements.
 
-Điểm này nhắc rằng cần dựa trên **quy tắc hệ kiểu cụ thể**, không suy luận subtype bằng trực giác.
+This shows why you must follow **the specific type-system rules**, rather than infer subtyping by intuition.
 
-## 10. Khi nào nên chọn từng thiết kế?
+## 10. When should each design be chosen?
 
-| Nhu cầu chính | Thiết kế có thể phù hợp | Lý do |
+| Primary need | Potentially suitable design | Reason |
 | --- | --- | --- |
-| Nhiều loại dịch vụ khác nhau cần cùng API | Interface và các lớp `implements` | Quan hệ subtype rõ, hỗ trợ thay thế |
-| Hai lớp cần dùng chung thuật toán nhưng không cùng bản chất | Composition/delegation | Tận dụng mã mà không ép quan hệ `is-a` |
-| Một họ lớp thực sự cùng hợp đồng và quy trình | Abstract superclass với điểm mở rộng được kiểm soát | Vừa subtype, vừa tái sử dụng khung thực hiện |
-| Muốn thêm chức năng quanh đối tượng sẵn có | Decorator/composition | Có thể bọc hành vi mà không phụ thuộc inheritance |
-| Muốn nhiều đối tượng chia sẻ xử lý tiện ích thuần túy | Helper hoặc utility phù hợp | Không phải tạo superclass chỉ vì vài hàm |
-| Hợp đồng cha không phù hợp với kiểu con dự kiến | Tách interface chung nhỏ hơn hoặc thiết kế lại abstraction | Tránh phá LSP |
+| Different service implementations need the same API | Interface with classes that `implements` it | Clear subtyping and substitutability |
+| Two classes need the same algorithm but represent different concepts | Composition/delegation | Reuse code without forcing an `is-a` relationship |
+| A family of classes truly shares a contract and process | Abstract superclass with controlled extension points | Combines subtyping with reuse of the implementation framework |
+| Add functionality around an existing object | Decorator/composition | Wrap behavior without depending on inheritance |
+| Many objects need to share simple utility processing | Appropriate helper or utility | No need to create a superclass solely for a few methods |
+| Parent contract does not suit the proposed subtype | Extract a smaller shared interface or redesign the abstraction | Avoid violating LSP |
 
-Đừng chọn kế thừa chỉ để giảm số dòng code. Một cấu trúc có ít dòng trùng lặp nhưng hợp đồng sai thường tốn công sửa và bảo trì hơn việc tách đúng trách nhiệm.
+Do not choose inheritance merely to reduce the line count. A design with less duplicated code but the wrong contract often costs more to repair and maintain than a design with properly separated responsibilities.
 
-## 11. Bài tập suy luận
+## 11. Reasoning exercises
 
-**Bài 1 — subtype và code reuse.** Cho `interface Payable` với `long amountVnd()`. Hai lớp `Invoice` và `Refund` đều `implements Payable` nhưng sử dụng các thuật toán khác nhau. Chúng có quan hệ subtype với `Payable` không? Có. Chúng có bắt buộc kế thừa mã từ cùng một superclass không? Không.
+**Exercise 1 — subtyping and code reuse.** Given `interface Payable` with `long amountVnd()`, the `Invoice` and `Refund` classes both `implements Payable` but use different algorithms. Are both subtypes of `Payable`? Yes. Must both inherit code from the same superclass? No.
 
-**Bài 2 — thay một xử lý chung.** Hai lớp `JsonExporter` và `XmlExporter` cùng cần chuẩn hóa tên file. Hãy viết `FilenameValidator` rồi inject vào cả hai. Đưa ra lý do vì sao `JsonExporter extends FilenameValidator` không phản ánh đúng quan hệ nghiệp vụ.
+**Exercise 2 — replacing a shared operation.** Both `JsonExporter` and `XmlExporter` need to normalize filenames. Write `FilenameValidator` and inject it into both. Explain why `JsonExporter extends FilenameValidator` does not describe their business relationship correctly.
 
-**Bài 3 — kiểm tra LSP.** `ReadableFile` hứa `read()` trả toàn bộ nội dung và không thay đổi file. Một subtype override `read()` để xóa file sau khi trả kết quả. Phương thức biên dịch đúng chữ ký, nhưng làm sai cam kết **không thay đổi trạng thái**. Đề xuất thiết kế khác cho hành vi “đọc rồi xóa”.
+**Exercise 3 — checking LSP.** `ReadableFile` promises that `read()` returns all contents without modifying the file. A subtype overrides `read()` to delete the file after returning its contents. The method signature is valid, but it violates the promise of **no state changes**. Propose a separate design for “read then delete.”
 
-**Bài 4 — hình chữ nhật.** Chỉnh lại `RectanglePitfall` thành hai lớp bất biến thực hiện `Shape`. Tạo client tính tổng diện tích của một `List<Shape>` mà không cần `instanceof Rectangle` hoặc `instanceof Square`.
+**Exercise 4 — rectangles.** Refactor `RectanglePitfall` into two immutable classes implementing `Shape`. Write a client that totals the areas of a `List<Shape>` without `instanceof Rectangle` or `instanceof Square`.
 
-**Bài 5 — quyết định kế thừa.** Một lớp `CachedPriceRepository` muốn dùng lại cách tra cứu `DatabasePriceRepository`, nhưng cần cache và vẫn phải bảo đảm giá sau `updatePrice` được đọc thấy ngay. Hãy cân nhắc wrapper theo interface repository và cách vô hiệu hóa cache trước khi quyết định dùng `extends` hay composition. Giải thích điều kiện nào khiến một giải pháp không giữ hợp đồng quan sát được.
+**Exercise 5 — choosing inheritance.** `CachedPriceRepository` wants to reuse lookup logic from `DatabasePriceRepository` but needs caching while ensuring a price updated through `updatePrice` is immediately visible. Consider a wrapper implementing the repository interface and cache invalidation before choosing `extends` or composition. Explain what would cause either solution to violate the observable contract.
 
-### Checklist thiết kế
+### Design checklist
 
-Trước khi viết `extends`, tự hỏi: lớp con có thể thay thế lớp cha ở **mọi lời gọi hợp lệ** không? Bất biến của lớp con có mâu thuẫn với API lớp cha không? Nếu chỉ muốn dùng lại xử lý, có thể giữ một đối tượng trợ giúp thay vì kế thừa không? Phần chung nên là **hợp đồng** hay chỉ là **chi tiết thuật toán**?
+Before writing `extends`, ask whether the subclass can replace the superclass in **every valid call**. Do subclass invariants conflict with the superclass API? If the goal is only to reuse processing, could you keep a helper object instead of inheriting? Should the shared element be **a contract** or merely **an algorithm detail**?
 
-**Thông điệp chính:** trong Java, `extends` lớp vừa tạo quan hệ kiểu con vừa có thể kế thừa code, nhưng chỉ **tương thích hành vi** mới làm quan hệ kiểu con có ý nghĩa an toàn. `implements` diễn tả một hợp đồng; composition/delegation cho phép tái sử dụng implementation mà không áp đặt quan hệ kiểu con. Thiết kế tốt chọn quan hệ dựa trên điều client được phép kỳ vọng, không chỉ dựa trên việc có thể chia sẻ bao nhiêu dòng code.
+**Key message:** in Java, `extends` a class both establishes subtyping and may inherit code, but **behavioral compatibility** is what makes that subtype relationship safe. `implements` declares a contract; composition/delegation lets code be reused without imposing a subtype relationship. Good design follows what clients may legitimately expect, not merely how many lines of code can be shared.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="subtyping-002">Quan hệ “là một” và tính thay thế</a>
+## <a id="subtyping-002">The “is-a” relationship and substitutability</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Quan hệ “là một” và tính thay thế trong Java OOP
+# The “is-a” relationship and substitutability in Java OOP
 
-Khi thấy `Dog extends Animal` hoặc `ExpressShipping implements ShippingPolicy`, ta thường nói kiểu con có quan hệ **“là một” (*is-a*)** với kiểu cha. Trong lập trình, câu này có hai tầng ý nghĩa cần phân biệt:
+When we see `Dog extends Animal` or `ExpressShipping implements ShippingPolicy`, we often say the subtype has an **“is-a” relationship (*is-a*)** with the supertype. In programming, this has two levels of meaning:
 
-- **Quan hệ kiểu (subtyping):** Java cho phép sử dụng một biểu thức kiểu con tại vị trí đang yêu cầu kiểu cha hoặc interface phù hợp.
-- **Tính thay thế về hành vi (behavioral substitutability):** Sau khi thay đối tượng bằng một implementation khác, chương trình sử dụng hợp đồng chung vẫn hoạt động đúng theo những gì hợp đồng đã hứa.
+- **Subtyping:** Java permits a subtype expression wherever a compatible supertype or interface is expected.
+- **Behavioral substitutability:** Replacing an object with another implementation still lets code written against the common contract behave correctly according to its promises.
 
-Tầng thứ nhất phần lớn được trình biên dịch kiểm tra. Tầng thứ hai đòi hỏi người thiết kế định nghĩa và thực hiện **hợp đồng hành vi**: điều kiện đầu vào, điều được bảo đảm ở đầu ra, bất biến, lỗi, tác dụng phụ và các cam kết mà client dựa vào.
+The compiler largely checks the first level. The second requires designers to define and implement **behavioral contracts**: input conditions, output guarantees, invariants, failures, side effects, and promises that clients rely on.
 
-**Cốt lõi:** Có cú pháp `extends` hoặc `implements` chưa đủ để bảo đảm một quan hệ “là một” tốt về thiết kế. Kiểu con cần thật sự đảm nhiệm được vai trò của kiểu cha.
+**Core idea:** Using `extends` or `implements` does not by itself ensure a well-designed “is-a” relationship. A subtype must genuinely fulfill the supertype's role.
 
-## 1. Hiểu đúng “là một” trong Java
+## 1. Understanding “is-a” in Java
 
-Ví dụ:
+Example:
 
 ~~~java
 class Animal {
@@ -567,7 +567,7 @@ class Dog extends Animal {
 }
 ~~~
 
-Một đối tượng `Dog` cũng có thể được sử dụng như một `Animal`:
+A `Dog` object can also be used as an `Animal`:
 
 ~~~java
 Dog dog = new Dog();
@@ -577,14 +577,14 @@ System.out.println(animal.describe()); // Một con chó
 // animal.bark(); // Không biên dịch: Animal không có bark().
 ~~~
 
-Với đoạn này:
+In this code:
 
-1. **Object thực tế** là `Dog`; phép gán `animal = dog` không tạo một `Animal` mới.
-2. **Kiểu khai báo của biến** `animal` là `Animal`, nên compiler chỉ cho gọi những member có thể truy cập qua kiểu đó.
-3. **Phương thức instance được override** được chọn tại runtime theo object thực tế: `Dog.describe()`.
-4. `bark()` chỉ được khai báo trong `Dog`, không thuộc hợp đồng `Animal`, nên không gọi trực tiếp bằng tham chiếu `Animal`.
+1. The **runtime object** is a `Dog`; the assignment `animal = dog` does not create a new `Animal`.
+2. The **declared type of the variable** `animal` is `Animal`, so the compiler permits only members accessible through that type.
+3. **Overridden instance methods** are dispatched at runtime based on the actual object: `Dog.describe()`.
+4. `bark()` is declared only on `Dog` and is not part of the `Animal` contract, so it cannot be called directly through an `Animal` reference.
 
-Đây là nền tảng của **đa hình động (runtime polymorphism)**.
+This is the foundation of **runtime polymorphism**.
 
 ~~~mermaid
 classDiagram
@@ -598,38 +598,38 @@ classDiagram
     Animal <|-- Dog
 ~~~
 
-Trong Java, `extends` với class là cơ chế **kế thừa lớp**. Ngoài khả năng được nhìn như kiểu cha, subclass còn có quan hệ triển khai, constructor chaining và quy tắc override của Java. Một class chỉ có thể `extends` trực tiếp một class, nhưng có thể `implements` nhiều interface.
+In Java, `extends` on a class is a mechanism for **class inheritance**. Besides being usable as the supertype, subclasses participate in implementation inheritance, constructor chaining, and Java override rules. A class may directly `extends` only one class, but may `implements` several interfaces.
 
-Ví dụ `Printer implements Printable` có nghĩa **Printer làm được vai trò Printable**, dù `Printer` không cần là một loại máy móc nằm trong cùng cây class với các implementation khác.
+For example, `Printer implements Printable` means **Printer can fulfill the Printable role**, even if `Printer` does not belong to the same class hierarchy of machines as other implementations.
 
-## 2. Quan hệ kiểu và khả năng thay thế không hoàn toàn giống nhau
+## 2. Type relationships and behavioral substitutability are not identical
 
-| Câu hỏi | Tính thay thế theo kiểu Java | Tính thay thế theo hành vi |
+| Question | Java type substitutability | Behavioral substitutability |
 |---|---|---|
-| Kiểm tra chủ yếu ở đâu? | Compiler và hệ kiểu runtime | Thiết kế hợp đồng, kiểm thử, quan sát thực tế |
-| Điều kiện cơ bản | `Dog` là subtype của `Animal` | `Dog` giữ đúng lời hứa công khai của `Animal` |
-| Có cho phép thuật toán riêng? | Có | Có |
-| Có yêu cầu đầu ra giống hệt? | Không | Không, trừ khi hợp đồng đòi hỏi |
-| Có thể có lỗi mà compiler không phát hiện? | Có, như ép kiểu không hợp lệ | Có, như tự ý siết điều kiện hoặc trả kết quả sai nghĩa |
-| Căn cứ đánh giá | `extends`, `implements`, method signature, type rules | Preconditions, postconditions, invariants, exception/side effects |
+| Where is it primarily checked? | Compiler and runtime type system | Contract design, testing, and observed behavior |
+| Basic requirement | `Dog` is a subtype of `Animal` | `Dog` fulfills the public promises of `Animal` |
+| Are different algorithms allowed? | Yes | Yes |
+| Must outputs be identical? | No | No, unless the contract requires it |
+| Can the compiler miss problems? | Yes, such as invalid casts | Yes, such as strengthened preconditions or semantically incorrect results |
+| Evaluation basis | `extends`, `implements`, method signatures, and type rules | Preconditions, postconditions, invariants, exceptions/side effects |
 
-Chẳng hạn, một `ShippingPolicy` có thể báo mức phí khác nhau giữa gói tiêu chuẩn và hỏa tốc. Việc **mức phí khác nhau** không làm mất khả năng thay thế nếu hợp đồng cho phép mỗi gói có chính sách giá riêng. Nhưng nếu một implementation bất ngờ trả số âm khi hợp đồng quy định phí không âm, nó đã phá tính thay thế.
+For instance, a `ShippingPolicy` may quote different fees for standard and express services. **Different fees** do not prevent substitutability if the contract allows each policy to use its own pricing. But an implementation that unexpectedly returns a negative fee when the contract requires nonnegative fees violates substitutability.
 
-Ý tưởng này được biết đến qua **Nguyên tắc thay thế Liskov (Liskov Substitution Principle – LSP)**: những đối tượng của subtype phải có thể dùng thay cho đối tượng của supertype ở những nơi kỳ vọng supertype **mà không làm sai các thuộc tính đúng đắn đã được cam kết của chương trình**.
+This is captured by the **Liskov Substitution Principle (LSP)**: subtype objects should be usable wherever supertype objects are expected **without invalidating the program correctness properties promised by the contract**.
 
-## 3. Ví dụ Java hoàn chỉnh: hai chính sách cùng một hợp đồng
+## 3. Complete Java example: two policies, one contract
 
-Một ứng dụng bán hàng cần tính phí vận chuyển. Tầng đặt hàng chỉ cần một chính sách có khả năng **báo giá cho kiện hàng hợp lệ**; nó không cần biết mức giá được tính theo phương pháp nào.
+A sales application needs to calculate shipping fees. Its checkout layer only needs a policy that can **quote a valid parcel**; it does not need to know how the fee is calculated.
 
-Trong ví dụ này, hợp đồng quy định:
+In this example, the contract specifies:
 
-- Đầu vào là `Parcel` hợp lệ và khác `null`.
-- `quote(parcel)` trả về một `ShippingQuote` khác `null`, phí không âm, tính bằng VND.
-- Không được làm thay đổi `Parcel`.
-- Với đầu vào `null`, implementation ném `NullPointerException`.
-- Nếu phép tính vượt phạm vi `long`, implementation có thể ném `ArithmeticException`; không được âm thầm tràn số rồi báo phí sai.
+- The input must be a valid `Parcel`, not `null`.
+- `quote(parcel)` returns a `ShippingQuote` other than `null`, with a nonnegative fee in VND.
+- The implementation must not modify `Parcel`.
+- For `null` input, the implementation throws `NullPointerException`.
+- If a calculation exceeds the `long` range, the implementation may throw `ArithmeticException`; it must not silently overflow and report an incorrect fee.
 
-Tạo file **`Demo.java`**; mã chạy với Java 17 trở lên:
+Create **`Demo.java`**; this code runs with Java 17 or later:
 
 ~~~java
 import java.util.Objects;
@@ -753,28 +753,28 @@ final class CheckoutService {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac Demo.java
 java Demo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 STANDARD: 40000 VND
 EXPRESS: 66000 VND
 ~~~
 
-Phép tính với kiện hàng 1.500 gram, 10 km:
+Fee calculations for a parcel weighing 1.500 grams and traveling 10 km:
 
-| Chính sách | Phí cơ bản | Trọng lượng làm tròn 2 kg | Quãng đường 10 km | Tổng |
+| Policy | Base fee | Weight rounded to 2 kg | Distance of 10 km | Total |
 |---|---:|---:|---:|---:|
-| Tiêu chuẩn | 10.000 | 2 × 5.000 | 10 × 2.000 | **40.000 VND** |
-| Hỏa tốc | 20.000 | 2 × 8.000 | 10 × 3.000 | **66.000 VND** |
+| Standard | 10.000 | 2 × 5.000 | 10 × 2.000 | **40.000 VND** |
+| Express | 20.000 | 2 × 8.000 | 10 × 3.000 | **66.000 VND** |
 
-Mức phí khác nhau là **biến thể được hợp đồng cho phép**. Hai implementation vẫn thay thế được vì `CheckoutService` chỉ dựa vào một thao tác có cùng ý nghĩa: nhận kiện hàng hợp lệ và trả báo giá không âm theo VND.
+Different fees are **variations allowed by the contract**. The implementations remain substitutable because `CheckoutService` relies only on one shared operation: accept a valid parcel and return a nonnegative quote in VND.
 
 ~~~mermaid
 classDiagram
@@ -797,11 +797,11 @@ classDiagram
     CheckoutService --> ShippingPolicy : phụ thuộc
 ~~~
 
-Ở đây, subtype là **vai trò** `ShippingPolicy`. `StandardShipping` và `ExpressShipping` không nhất thiết cùng là một loại “đối tượng vật lý”; chúng là những chiến lược thực hiện cùng một khả năng.
+Here, the subtype represents the **role** `ShippingPolicy`. `StandardShipping` and `ExpressShipping` need not represent the same kind of physical object; they are strategies implementing one capability.
 
-## 4. Upcasting: truyền đối tượng con vào nơi nhận kiểu cha
+## 4. Upcasting: passing a subtype object where a supertype is expected
 
-Trong Java, phép gán hoặc truyền tham số từ subtype sang supertype phù hợp được gọi là **widening reference conversion**, thường được giải thích ngắn là *upcasting*:
+In Java, assigning or passing a reference from a subtype to a compatible supertype is a **widening reference conversion**, often simply called *upcasting*:
 
 ~~~java
 ShippingPolicy policy = new ExpressShipping();
@@ -810,9 +810,9 @@ CheckoutService service = new CheckoutService(policy);
 ShippingQuote result = service.calculate(new Parcel(800, 4));
 ~~~
 
-Phép chuyển kiểu này không làm biến thành một object mới, không sao chép dữ liệu và không “cắt bỏ” phần implementation. Object vẫn là `ExpressShipping`; biến `policy` chỉ cho phép sử dụng những thao tác công khai của `ShippingPolicy`.
+This conversion does not create a new object, copy data, or “slice off” part of the implementation. The object remains an `ExpressShipping`; the `policy` variable only exposes the public operations declared by `ShippingPolicy`.
 
-Ví dụ dễ kiểm tra bằng Java:
+A Java example to verify this:
 
 ~~~java
 interface SoundMaker {
@@ -838,9 +838,9 @@ System.out.println(maker == cat);  // true
 // maker.scratch(); // Lỗi biên dịch: không thuộc SoundMaker.
 ~~~
 
-Các dòng sử dụng đặt bên trong một phương thức Java thích hợp. Chính kiểu khai báo của tham chiếu giới hạn **những phương thức có thể gọi**, còn kiểu runtime của object quyết định **implementation của phương thức instance được override**.
+Place the example statements inside a suitable Java method. The reference's declared type determines **which methods can be called**, while the object's runtime type determines **the implementation of an overridden instance method**.
 
-Đừng nhầm với static method và field hiding:
+Do not confuse this with static methods and field hiding:
 
 ~~~java
 class Parent {
@@ -865,17 +865,17 @@ System.out.println(ref.kind);       // Parent: field theo kiểu tham chiếu.
 System.out.println(ref.describe()); // Child: method theo kiểu runtime.
 ~~~
 
-Kết quả cho thấy **field không override như instance method**. Vì vậy, thiết kế đa hình nên dựa vào phương thức/hợp đồng hơn là field công khai có cùng tên.
+The output shows that **fields are not overridden like instance methods**. Polymorphic design should therefore rely on methods and contracts, not public fields that happen to share names.
 
-## 5. Điều kiện trước, điều kiện sau và bất biến trong LSP
+## 5. Preconditions, postconditions, and invariants in LSP
 
-Để một implementation thực sự thay thế được supertype, cần tôn trọng những lời hứa được client sử dụng.
+For an implementation to substitute for a supertype, it must preserve the promises that clients rely on.
 
-### Không siết chặt precondition
+### Do not strengthen preconditions
 
-Nếu `ShippingPolicy` cam kết hỗ trợ mọi `Parcel` hợp lệ, một implementation mới **không thể tự ý** đòi `distanceKm <= 5` rồi từ chối tất cả đơn đi xa hơn, trừ khi hợp đồng chung đã cho phép hành vi từ chối đó.
+If `ShippingPolicy` promises to handle every valid `Parcel`, a new implementation **cannot arbitrarily** require `distanceKm <= 5` and reject all longer routes unless the shared contract explicitly allows that rejection.
 
-Đây là một implementation đáng nghi:
+The following implementation is questionable:
 
 ~~~java
 final class VeryLocalShipping implements ShippingPolicy {
@@ -892,13 +892,13 @@ final class VeryLocalShipping implements ShippingPolicy {
 }
 ~~~
 
-Nó **biên dịch được**, nhưng vi phạm hợp đồng ví dụ đã xác định rằng mọi `Parcel` hợp lệ đều được báo giá, ngoại trừ trường hợp tràn số học. Client có thể truyền kiện hàng 10 km — một đầu vào hợp lệ theo hợp đồng chung — nhưng implementation tự bổ sung điều kiện đầu vào mới.
+It **compiles**, but violates the example contract, which requires quoting every valid `Parcel` except in arithmetic overflow cases. A client can supply a 10-km parcel—valid under the common contract—but this implementation imposes a new input restriction.
 
-Nếu nghiệp vụ có chính sách vận chuyển chỉ phục vụ một số địa điểm, có thể thiết kế lại hợp đồng để biểu diễn **không hỗ trợ tuyến đường** như một kết quả hợp lệ, hoặc phân tách khả năng kiểm tra vùng phục vụ. Không nên giấu giới hạn mới trong subtype khiến client bất ngờ.
+If a shipping business serves only certain destinations, redesign the contract to represent **unsupported routes** as an allowed result or separate route-availability checking into its own capability. Do not hide new limits in a subtype and surprise callers.
 
-### Không làm yếu postcondition
+### Do not weaken postconditions
 
-Nếu hợp đồng hứa phí không âm, việc trả `null` hoặc một con số âm là sai. Ví dụ:
+If the contract promises nonnegative fees, returning `null` or a negative number is incorrect. For example:
 
 ~~~java
 final class NullShipping implements ShippingPolicy {
@@ -909,7 +909,7 @@ final class NullShipping implements ShippingPolicy {
 }
 ~~~
 
-Client có quyền dựa vào postcondition được công bố:
+Clients are entitled to rely on published postconditions:
 
 ~~~java
 ShippingQuote quote = policy.quote(parcel);
@@ -917,23 +917,23 @@ ShippingQuote quote = policy.quote(parcel);
 System.out.println(quote.feeVnd());
 ~~~
 
-Trong mã thực tế, nếu provider có thể từ chối hoặc hết dịch vụ, hãy thể hiện **trạng thái từ chối** bằng kiểu kết quả/exception đã được hợp đồng thống nhất. Không nên đánh tráo lỗi thành phí 0 nếu `0` mang nghĩa “miễn phí”.
+In production code, if a provider can reject a request or become unavailable, represent **rejection status** using a result type or exception agreed upon by the contract. Do not disguise an error as a fee of 0 when `0` means “free shipping.”
 
-### Giữ bất biến của supertype
+### Preserve supertype invariants
 
-Nếu một `Account` cam kết `balance >= 0`, lớp con không được làm `balance` âm qua những phương thức mới của mình. Một hành vi public bổ sung ở subtype cũng phải giữ trạng thái hợp lệ được supertype công bố.
+If an `Account` promises `balance >= 0`, a subclass must not make `balance` negative through its own new methods. Additional public subtype behavior must preserve the valid state promised by the supertype.
 
-Bất biến thường được bảo vệ qua constructor, kiểm tra trạng thái trước khi thay đổi và hạn chế cho subclass sửa trực tiếp field. Một interface không tự thực thi invariant bằng compiler; cần thiết kế implementation và kiểm thử.
+Invariants are typically protected by constructors, checks before mutation, and restrictions on subclasses directly modifying fields. An interface does not enforce invariants automatically through the compiler; the implementation must be designed and tested correctly.
 
-### Giữ quy tắc lỗi và tác dụng phụ có thể quan sát
+### Preserve observable failure behavior and side effects
 
-Một subtype không nên biến lời gọi vốn được hứa là chỉ tính toán thành thao tác âm thầm xóa dữ liệu. Nếu hợp đồng có quy tắc “không thực hiện I/O”, implementation mới không được bất ngờ gửi HTTP request hay ghi database.
+A subtype should not turn an operation promised to be purely computational into one that silently deletes data. If the contract specifies “no I/O,” a new implementation must not unexpectedly send an HTTP request or write to a database.
 
-Mặt khác, **không phải mọi khác biệt exception hoặc hiệu năng đều vi phạm LSP**. Điều cần xem là hợp đồng thực sự cam kết điều gì. Với kiểu `ShippingPolicy` ví dụ, `ArithmeticException` khi phép toán tràn đã là tình huống được công bố.
+Conversely, **not every difference in exceptions or performance violates LSP**. What matters is the actual contract. In the example `ShippingPolicy`, an `ArithmeticException` on arithmetic overflow is already documented.
 
-## 6. Một tên miền nghiệp vụ đúng chưa chắc có hợp đồng phù hợp
+## 6. A correct domain label does not guarantee a suitable contract
 
-Trong hình học, hình vuông thuộc tập hình chữ nhật. Nhưng xét `Rectangle` **mutable** công khai hai setter độc lập:
+In geometry, a square is a kind of rectangle. But consider a **mutable** `Rectangle` exposing two independent setters:
 
 ~~~java
 // Hợp đồng Rectangle: setWidth chỉ đổi width;
@@ -943,24 +943,24 @@ rectangle.setHeight(3);
 System.out.println(rectangle.area()); // 15
 ~~~
 
-Nếu `Square extends Rectangle` override mỗi setter để giữ `width == height`, sau hai lời gọi trên cả hai cạnh bằng `3`, diện tích thành `9`. Subtype đã **làm yếu hậu điều kiện** “chiều còn lại không đổi”. Nếu thay bằng cách ném lỗi khi hai chiều không bằng nhau, subtype lại **siết tiền điều kiện**: một đầu vào hợp lệ đối với `Rectangle` bị từ chối với `Square`.
+If `Square extends Rectangle` overrides each setter to preserve `width == height`, after those two calls both sides equal `3` and the area becomes `9`. The subtype has **weakened the postcondition** that “the other dimension remains unchanged.” If it throws instead when the dimensions differ, it **strengthens the precondition**: an input valid for `Rectangle` is rejected by `Square`.
 
-Điều này minh họa ranh giới giữa *is-a theo cách gọi tên* và khả năng thay thế theo API. Hướng phù hợp là đưa `area()` lên một `Shape` chung, hoặc tách khả năng thay đổi kích thước của rectangle/square theo hợp đồng riêng. Bài cuối chương xây hai chương trình chạy được và contract tests để kiểm chứng từng trường hợp.
+This illustrates the boundary between *is-a by name* and substitutability under an API. A suitable solution is to put `area()` in a shared `Shape` abstraction or separate the resizing capabilities of rectangles and squares into appropriate contracts. The final lesson builds two runnable programs and contract tests to verify each case.
 
-**Điểm riêng của bài hiện tại:** hãy đánh giá `ShippingPolicy` theo cùng tiêu chí: mọi implementation phải báo giá cho các kiện hàng hợp lệ được hợp đồng quy định; một biến thể có giá khác là hợp lệ, còn tự ý từ chối tuyến hợp lệ thì không.
+**The focus of this lesson:** evaluate `ShippingPolicy` by the same standard: every implementation must quote valid parcels defined by the contract; different fees are acceptable, but arbitrarily rejecting an allowed route is not.
 
-## 7. “Is-a” và “has-a”: khi nào ưu tiên composition?
+## 7. “Is-a” and “has-a”: when to prefer composition?
 
-Một quan hệ kế thừa tốt thường đáp ứng được cả cách hiểu miền nghiệp vụ lẫn hợp đồng hành vi.
+A sound inheritance relationship should make sense both in the business domain and under the behavioral contract.
 
-Các câu hỏi hữu ích:
+Useful questions:
 
-1. Một đối tượng con có **thực sự là một loại** của đối tượng cha trong cách dùng của hệ thống không?
-2. Mọi thao tác mà client có thể gọi trên kiểu cha có hợp lệ và có cùng ý nghĩa trên kiểu con không?
-3. Một bất biến ở kiểu con có mâu thuẫn với cách thay đổi trạng thái mà kiểu cha cho phép không?
-4. Ta đang muốn **thay thế theo hợp đồng**, hay chỉ đang muốn **tận dụng lại một ít code**?
+1. Is the child object **genuinely a kind of** parent object in the way this system uses it?
+2. Are all operations that clients may call on the parent valid and meaningful for the child?
+3. Do subclass invariants conflict with the state changes the parent permits?
+4. Do we need **substitutability under a contract**, or merely **a little code reuse**?
 
-Ví dụ, `Car extends Engine` là mô hình sai về ý nghĩa: xe **có một động cơ** (*has-a*), không phải **là một động cơ** (*is-a*). Sử dụng composition:
+For example, `Car extends Engine` is semantically wrong: a car **has an engine** (*has-a*); it is not **an engine** (*is-a*). Use composition:
 
 ~~~java
 final class Engine {
@@ -982,32 +982,32 @@ final class Car {
 }
 ~~~
 
-Code sử dụng:
+Usage:
 
 ~~~java
 Car car = new Car(new Engine());
 car.start();
 ~~~
 
-`Car` giữ một collaborator `Engine` và ủy quyền hành vi. Composition thường phù hợp khi mối quan hệ là **có/chứa/sử dụng** hoặc khi muốn thay chi tiết thực hiện mà không ép class thành subtype sai.
+`Car` keeps an `Engine` collaborator and delegates behavior to it. Composition is typically appropriate for **has/contains/uses** relationships or when the implementation must change without forcing a class into an invalid subtype relationship.
 
-Một quan hệ `extends` chỉ nhằm tái sử dụng code có thể khiến subclass phải nhận cả những thao tác của cha mà bản thân không thể đáp ứng đúng.
+An `extends` relationship chosen only for code reuse may force a subclass to expose superclass operations it cannot correctly fulfill.
 
-## 8. Các quy tắc Java khi override giúp bảo vệ một phần hợp đồng
+## 8. Java override rules preserve part of the contract
 
-Trình biên dịch Java thực thi một số giới hạn để giảm rủi ro khi subclass thay thế superclass.
+The Java compiler enforces some restrictions to reduce risks when subclasses substitute for superclasses.
 
-| Quy tắc override | Ví dụ/ý nghĩa |
+| Override rule | Example/meaning |
 |---|---|
-| Không giảm mức truy cập | Method cha `public` không được override thành `protected` |
-| Có thể dùng kiểu trả về hiệp biến | Method con có thể trả subtype phù hợp của kiểu trả về tham chiếu |
-| Không mở rộng checked exception trái phép | Method override không được khai báo checked exception rộng hơn quy tắc của method cha |
-| Không override `final` instance method | `final` chặn override |
-| Static method không override instance method | Static hiding và dynamic dispatch khác nhau |
-| `private` method của lớp cha không được override | Subclass có thể có method cùng tên độc lập |
-| `@Override` được compiler kiểm tra | Giúp phát hiện sai chữ ký hoặc nhầm quan hệ override |
+| Cannot reduce accessibility | A `public` parent method cannot be overridden as `protected` |
+| Covariant return types are allowed | A child method may return a compatible subtype of a reference return type |
+| Cannot improperly widen checked exceptions | An overriding method cannot declare checked exceptions broader than the parent's rules |
+| Cannot override a `final` instance method | `final` prevents overriding |
+| Static methods do not override instance methods | Static hiding differs from dynamic dispatch |
+| Parent `private` methods are not overridden | A subclass may declare an unrelated method with the same name |
+| The compiler checks `@Override` | Helps catch signature mistakes or confusion about overrides |
 
-Ví dụ kiểu trả về hiệp biến:
+Example of a covariant return type:
 
 ~~~java
 class Animal {
@@ -1024,9 +1024,9 @@ class Dog extends Animal {
 }
 ~~~
 
-Client có biến `Animal` vẫn có thể gọi `copy()` và nhận kết quả là `Animal` về mặt kiểu khai báo. Client có biến `Dog` biết rõ hơn rằng phương thức trả `Dog`.
+A client holding an `Animal` reference can still invoke `copy()` and receives an `Animal` according to the declared type. A client holding a `Dog` reference can rely on the method returning `Dog`.
 
-Ví dụ checked exception:
+Example with checked exceptions:
 
 ~~~java
 import java.io.IOException;
@@ -1049,19 +1049,19 @@ class CachedSource extends Source {
 // vì Exception rộng hơn IOException.
 ~~~
 
-Java cho phép override **giảm** phạm vi checked exception trong ví dụ trên, nhưng không cho thêm một checked exception không phù hợp với method gốc. Quy tắc ngôn ngữ hỗ trợ tính thay thế về mặt khai báo, song **không đủ** để chứng minh hành vi nghiệp vụ đúng.
+Java permits overrides to **narrow** checked exceptions here, but not add checked exceptions incompatible with the original method. Language rules help with declared-type substitutability, but are **insufficient** to establish correct business behavior.
 
-Lưu ý: một subtype vẫn có thể ném unchecked exception lúc chạy. Vì thế việc “không có lỗi biên dịch” chưa đủ để bảo đảm mọi pre/postcondition được giữ.
+Note: a subtype can still throw unchecked exceptions at runtime. Thus, “no compilation error” does not establish that all preconditions/postconditions are preserved.
 
-## 9. Downcasting: vì sao ép kiểu về subtype có thể phá tính linh hoạt?
+## 9. Downcasting: why can casting to a subtype reduce flexibility?
 
-Upcasting từ subtype sang supertype thường tự động:
+Upcasting from a subtype to a supertype is usually automatic:
 
 ~~~java
 ShippingPolicy policy = new StandardShipping();
 ~~~
 
-Nhưng ép từ supertype sang một subtype cụ thể cần kiểm tra vì biến supertype có thể đang trỏ tới implementation khác:
+But casting from a supertype to a particular subtype requires checking, since a supertype variable could refer to a different implementation:
 
 ~~~java
 ShippingPolicy policy = new ExpressShipping();
@@ -1070,7 +1070,7 @@ ShippingPolicy policy = new ExpressShipping();
 // Nếu chạy: ClassCastException.
 ~~~
 
-Java 17 hỗ trợ pattern matching với `instanceof` để kiểm tra an toàn:
+Java 17 supports pattern matching with `instanceof` for safe checks:
 
 ~~~java
 if (policy instanceof StandardShipping standard) {
@@ -1078,7 +1078,7 @@ if (policy instanceof StandardShipping standard) {
 }
 ~~~
 
-Cách dùng này hợp lệ về cú pháp, nhưng nếu một client liên tục viết:
+This usage is syntactically valid, but if a client repeatedly writes:
 
 ~~~java
 if (policy instanceof StandardShipping) {
@@ -1088,15 +1088,15 @@ if (policy instanceof StandardShipping) {
 }
 ~~~
 
-thì nó bắt đầu phụ thuộc vào implementation cụ thể. Thêm một subtype mới lại phải sửa client, đi ngược mục tiêu đa hình.
+it starts depending on concrete implementations. Adding a new subtype then requires changing the client, undermining polymorphism.
 
-Hãy tìm một thao tác chung thích hợp trong interface, hoặc tách chính sách lựa chọn implementation vào factory/configuration. Tuy vậy, `instanceof` vẫn có chỗ dùng khi xử lý kiểu thực tế là yêu cầu hợp lệ, như adapter tương thích ngược hoặc phân biệt một tập kiểu đóng.
+Look for an appropriate shared operation in the interface, or move the choice of implementation into a factory/configuration. `instanceof` still has valid uses when the actual type matters, such as backward-compatible adapters or distinguishing a closed set of types.
 
-**Không lạm dụng cast** chỉ để gọi phương thức ngoài hợp đồng. Nếu một khả năng chỉ thuộc một số implementation, cân nhắc interface vai trò riêng để mã cần khả năng đó có thể khai báo dependency chính xác.
+**Do not overuse casts** merely to access methods outside the contract. If only some implementations offer a capability, consider a separate role interface so clients can declare precisely which capability they require.
 
-## 10. Subtype của một đối tượng không có nghĩa collection cũng biến thành subtype
+## 10. A subtype relationship between objects does not imply one between collections
 
-Một bẫy Java generics:
+A Java generics pitfall:
 
 ~~~java
 class Animal {}
@@ -1107,11 +1107,11 @@ java.util.List<Dog> dogs = new java.util.ArrayList<>();
 // java.util.List<Animal> animals = dogs; // Lỗi biên dịch.
 ~~~
 
-Dù `Dog` là subtype của `Animal`, `List<Dog>` **không** là subtype của `List<Animal>`. Java generics mặc định **invariant**.
+Although `Dog` is a subtype of `Animal`, `List<Dog>` is **not** a subtype of `List<Animal>`. Java generics are **invariant** by default.
 
-Nếu phép gán này được phép, ta có thể thêm một `Cat` vào danh sách thực tế chỉ dành cho `Dog`, phá an toàn kiểu.
+If that assignment were allowed, a `Cat` could be added to an underlying list of `Dog` objects, violating type safety.
 
-Nếu muốn đọc các phần tử theo vai trò cha:
+To read elements through the parent role:
 
 ~~~java
 java.util.List<Dog> dogs = java.util.List.of(new Dog());
@@ -1122,9 +1122,9 @@ Animal first = animals.get(0);
 // animals.add(new Animal()); // Không hợp lệ về type safety.
 ~~~
 
-Wildcard `? extends Animal` cho phép đọc đối tượng như `Animal`, nhưng không thể tùy ý thêm một `Animal` cụ thể vì danh sách có thể đang thực sự chứa `Dog` hoặc một subtype khác.
+The wildcard `? extends Animal` allows elements to be read as `Animal`, but not arbitrary additions of a specific `Animal`, because the list might actually contain `Dog` or another subtype.
 
-Với nhu cầu thêm các `Dog` vào consumer:
+For a consumer that adds `Dog` elements:
 
 ~~~java
 static void addDogs(java.util.List<? super Dog> destination) {
@@ -1132,24 +1132,24 @@ static void addDogs(java.util.List<? super Dog> destination) {
 }
 ~~~
 
-Quy tắc thực hành thường gọi là **PECS**: *Producer Extends, Consumer Super*. Đây là quy tắc variance của Java generics, không nên đồng nhất với phép upcasting giữa hai **đối tượng đơn lẻ**.
+A common practical guideline is **PECS**: *Producer Extends, Consumer Super*. It is about variance in Java generics and should not be confused with upcasting between **individual objects**.
 
-### Mảng khác generics
+### Arrays differ from generics
 
-Mảng Java có tính **covariant**:
+Java arrays are **covariant**:
 
 ~~~java
 Animal[] animals = new Dog[1];
 // animals[0] = new Animal(); // ArrayStoreException lúc chạy.
 ~~~
 
-Dù phép gán mảng biên dịch, JVM phải kiểm tra kiểu phần tử runtime. Generics invariant ngăn nhiều lỗi tương tự từ giai đoạn biên dịch.
+Although the array assignment compiles, the JVM must check element types at runtime. Invariant generics prevent many similar errors at compile time.
 
-## 11. Thiết kế hợp đồng để subtype có thể thay thế một cách hữu ích
+## 11. Designing contracts that make subtypes usefully substitutable
 
-Trong ví dụ tính phí, `ShippingPolicy` tập trung vào một khả năng nhỏ. Nếu cần thêm chính sách chỉ hỗ trợ tuyến ngắn, có hai hướng thiết kế tùy nghiệp vụ:
+In the shipping example, `ShippingPolicy` focuses on one small capability. If a new policy serves only short routes, two designs are possible depending on the business:
 
-**Hướng A — Đổi hợp đồng để chấp nhận kết quả không phục vụ được.**
+**Option A — Change the contract to allow unsupported-service results.**
 
 ~~~java
 sealed interface QuoteResult
@@ -1159,27 +1159,27 @@ record QuoteSuccess(ShippingQuote quote) implements QuoteResult {}
 record UnsupportedRoute(String reason) implements QuoteResult {}
 ~~~
 
-Một hợp đồng khác có thể khai báo `QuoteResult quote(Parcel parcel)`, và tất cả implementation thống nhất khi nào trả `UnsupportedRoute`. Client phải xử lý được trạng thái đó.
+A different contract could define `QuoteResult quote(Parcel parcel)`, with all implementations agreeing when to return `UnsupportedRoute`. Clients must handle that state.
 
-**Hướng B — Phân vai trò theo khả năng.** Ví dụ `RouteSupport` chỉ có `boolean supports(Parcel)`, còn `ShippingPolicy` báo giá khi được lựa chọn hợp lệ. Tuy nhiên, nếu `supports()` và `quote()` xảy ra ở thời điểm khác nhau, dữ liệu/điều kiện có thể thay đổi; API cần quy định tính nhất quán phù hợp.
+**Option B — Separate capabilities by role.** For example, `RouteSupport` provides only `boolean supports(Parcel)`, while `ShippingPolicy` provides quotes after valid selection. However, conditions/data may change between `supports()` and `quote()`, so the API must define appropriate consistency guarantees.
 
-Không có cách nào bắt mọi nhà cung cấp phải xử lý một đối tượng đầu vào vốn nằm ngoài khả năng thực tế của họ mà vẫn giữ nguyên hợp đồng cũ. Hãy thiết kế **ngôn ngữ kết quả hoặc ranh giới trách nhiệm** phản ánh đúng nghiệp vụ.
+You cannot force every provider to handle input outside its actual capabilities while preserving the old contract unchanged. Design **result terminology or responsibility boundaries** that reflect the business accurately.
 
-### Đừng hiểu LSP thành “mọi subtype phải giống nhau”
+### LSP does not mean “all subtypes must be identical”
 
-Một `Comparator<String>` có thể sắp xếp từ A đến Z hoặc Z đến A; một `PaymentMethod` có thể thực hiện thanh toán bằng thẻ hoặc ví; một `ShippingPolicy` có thể tính nhiều mức phí.
+A `Comparator<String>` may sort A to Z or Z to A; a `PaymentMethod` may pay by card or wallet; and a `ShippingPolicy` may calculate different fees.
 
-Khác biệt là hợp lệ nếu client chỉ dựa vào những cam kết chung. LSP không yêu cầu cùng thuật toán, cùng dữ liệu nội bộ hoặc cùng giá trị đầu ra bất kể hoàn cảnh.
+Such differences are valid when clients rely only on shared guarantees. LSP does not require the same algorithm, internal data, or output values regardless of context.
 
-### Phương thức thêm trong subtype có được không?
+### Can a subtype add methods?
 
-Có. `Dog` có thể có `bark()` dù `Animal` không có. Thêm khả năng riêng không nhất thiết phá LSP, miễn là khi đối tượng được sử dụng như `Animal`, mọi lời hứa `Animal` tiếp tục được giữ. Client cần `bark()` phải sử dụng kiểu/vai trò phù hợp, chứ không nên giả định mọi `Animal` đều sủa.
+Yes. `Dog` may have `bark()` even though `Animal` does not. An additional capability does not necessarily violate LSP, provided the object still fulfills every `Animal` promise when used as an `Animal`. A client that needs `bark()` must depend on an appropriate type/role rather than assume every `Animal` barks.
 
-## 12. Kiểm thử tính thay thế bằng cùng một tập tình huống
+## 12. Test substitutability using the same scenarios
 
-Một cách làm thực tế là kiểm thử **hợp đồng chung** trên mọi implementation, sau đó có test riêng cho thuật toán của từng loại.
+A practical approach is to test **a shared contract** against every implementation, followed by tests specific to each algorithm.
 
-Với các class của `Demo.java`, thêm phương thức tĩnh sau vào class `Demo` nếu muốn chạy thử:
+For the classes in `Demo.java`, add the following static method to `Demo` to try this:
 
 ~~~java
 private static void verifyContract(ShippingPolicy policy) {
@@ -1203,7 +1203,7 @@ private static void verifyContract(ShippingPolicy policy) {
 }
 ~~~
 
-Dùng trong `main`:
+Call it from `main`:
 
 ~~~java
 verifyContract(new StandardShipping());
@@ -1211,39 +1211,39 @@ verifyContract(new ExpressShipping());
 System.out.println("Hai implementation vượt qua kiểm tra cơ bản");
 ~~~
 
-Đây chỉ là một tập kiểm tra tối thiểu. Nó **không chứng minh** công thức tính tiền luôn đúng, không chứng minh độ an toàn đồng thời và không bao quát mọi tình huống biên. Với hệ thống thật, cần thử nhiều trọng lượng/khoảng cách, giới hạn số học, quy tắc làm tròn, lỗi từ provider và điều kiện tương thích nghiệp vụ.
+This is only a minimal set of checks. It **does not prove** that every fee calculation is correct, establish thread safety, or cover all boundary cases. Real systems need tests for weights/distances, arithmetic limits, rounding rules, provider failures, and business compatibility.
 
-Điểm đáng chú ý: cùng một bộ test kiểm tra những **lời hứa chung**, còn test riêng provider xác nhận những phần **đặc thù implementation**.
+The key point is to test **shared promises** with one test suite and verify **implementation-specific behavior** with separate provider tests.
 
-## 13. Các dấu hiệu nên xem lại quan hệ “is-a”
+## 13. Warning signs that an “is-a” relationship needs review
 
-| Dấu hiệu | Nguy cơ | Cách cải thiện |
+| Warning sign | Risk | Improvement |
 |---|---|---|
-| Subclass phải ném `UnsupportedOperationException` cho nhiều method của cha | Subtype không đáp ứng vai trò được hứa | Tách interface nhỏ hoặc đổi hệ phân cấp |
-| Class con thêm precondition bất ngờ | Client hợp lệ bị từ chối | Thiết kế lại hợp đồng hoặc phân vai trò |
-| Class con bỏ bớt postcondition | Client đọc kết quả sai | Khôi phục cam kết, mở rộng kiểu kết quả hợp lệ |
-| Subclass thường kiểm tra/cast về một kiểu cụ thể | Mã dùng phụ thuộc implementation | Tìm abstraction phù hợp, inject vai trò |
-| Kế thừa chỉ để lấy vài utility methods | Quan hệ miền nghiệp vụ sai | Composition hoặc utility class |
-| Lớp cha cho sửa field mà lớp con phải duy trì invariant chặt hơn | Xung đột quy tắc trạng thái | Giảm setter, ưu tiên hành vi hoặc immutable value |
-| Client sử dụng `instanceof` để chọn nhánh cho mọi loại | Thêm subtype phải sửa client | Polymorphism hoặc factory/strategy đúng chỗ |
-| Test qua lớp cha thành công, qua lớp con thất bại trái hợp đồng | Vi phạm khả năng thay thế | Sửa implementation hoặc định nghĩa lại abstraction |
+| Subclass throws `UnsupportedOperationException` for many parent methods | Subtype cannot fulfill its promised role | Split into smaller interfaces or change the hierarchy |
+| Child class adds unexpected preconditions | Valid clients are rejected | Redesign the contract or separate roles |
+| Child class weakens postconditions | Clients receive incorrect results | Restore guarantees and expand the valid result type |
+| Subclass frequently checks/casts to a concrete type | Client code depends on implementation | Find a suitable abstraction and inject the required role |
+| Inheritance is used only to obtain utility methods | Domain relationship is incorrect | Composition or utility class |
+| Parent exposes field changes incompatible with a stricter child invariant | State rules conflict | Reduce setters; favor behaviors or immutable values |
+| Client uses `instanceof` for every variant | Adding a subtype requires client changes | Use polymorphism or a factory/strategy where appropriate |
+| Parent contract tests pass but child tests fail | Substitutability is violated | Fix the implementation or redefine the abstraction |
 
-Một câu hỏi thiết kế hữu ích: **“Nếu tôi chỉ biết kiểu cha, liệu tôi có thể dùng đối tượng con mà không phải đọc tên class thực tế hoặc thêm ngoại lệ đặc biệt không?”** Nếu thường xuyên phải trả lời “không”, quan hệ subtype cần xem lại.
+A useful design question is: **“If I only know the parent type, can I use the child object without inspecting its actual class name or adding special exceptions?”** If the answer is often “no,” reconsider the subtype relationship.
 
-## 14. Bài tập tự kiểm tra
+## 14. Self-assessment exercises
 
-**Bài 1: cùng đối tượng hay hai đối tượng?**
+**Exercise 1: same object or two objects?**
 
 ~~~java
 Dog dog = new Dog();
 Animal animal = dog;
 ~~~
 
-Giả sử `Dog extends Animal`. Hỏi có bao nhiêu object được tạo bởi đoạn code và `animal instanceof Dog` trả gì?
+Suppose `Dog extends Animal`. How many objects are created by the code, and what does `animal instanceof Dog` return?
 
-**Đáp án:** một object `Dog`; `animal instanceof Dog` là `true`. Upcasting không tạo object mới.
+**Answer:** one `Dog` object; `animal instanceof Dog` is `true`. Upcasting does not create a new object.
 
-**Bài 2: override và runtime dispatch**
+**Exercise 2: overriding and runtime dispatch**
 
 ~~~java
 class A {
@@ -1256,78 +1256,78 @@ A item = new B();
 System.out.println(item.name());
 ~~~
 
-**Đáp án:** `B`, vì `name()` là instance method được override. Đoạn khai báo biến và in kết quả cần đặt trong một phương thức thích hợp.
+**Answer:** `B`, because `name()` is an overridden instance method. Variable declarations and output statements must be placed in an appropriate method.
 
-**Bài 3: một subtype từ chối mọi đầu vào lớn hơn 5 kg dù hợp đồng cha nhận mọi trọng lượng dương. Có hợp lệ không?**
+**Exercise 3: a subtype rejects every input above 5 kg even though the parent contract accepts every positive weight. Is that valid?**
 
-**Đáp án:** Đây là việc siết precondition của subtype. Nếu hợp đồng cha thực sự hứa xử lý mọi trọng lượng dương thì subtype phá khả năng thay thế. Hãy đưa giới hạn vào hợp đồng hoặc mô hình hóa một kết quả không được hỗ trợ.
+**Answer:** This strengthens the subtype's preconditions. If the parent truly promises to handle all positive weights, the subtype violates substitutability. Put the limit into the shared contract or model an unsupported-result state.
 
-**Bài 4: `Square extends Rectangle` luôn là sai?**
+**Exercise 4: is `Square extends Rectangle` always wrong?**
 
-**Đáp án:** Không thể kết luận chỉ từ tên hai lớp. Với `Rectangle` mutable có `setWidth()` và `setHeight()` độc lập, `Square` khó giữ cả hợp đồng cha lẫn invariant hai cạnh bằng nhau. Với một `Shape` chỉ có `area()`, cả hai có thể triển khai hợp đồng một cách hợp lệ.
+**Answer:** The class names alone are insufficient. If mutable `Rectangle` exposes independent `setWidth()` and `setHeight()` methods, `Square` struggles to fulfill both the parent contract and the invariant of equal sides. With a `Shape` that only exposes `area()`, both can implement the contract legitimately.
 
-**Bài 5: có thể truyền `List<Dog>` cho phương thức nhận `List<Animal>` không?**
+**Exercise 5: can `List<Dog>` be passed to a method accepting `List<Animal>`?**
 
-**Đáp án:** Không trực tiếp, vì Java generics invariant. Nếu phương thức chỉ cần đọc, cân nhắc `List<? extends Animal>` hoặc cấu trúc generic thích hợp.
+**Answer:** Not directly, because Java generics are invariant. For a read-only use case, consider `List<? extends Animal>` or a suitable generic design.
 
-**Bài 6: khi nào dùng `implements` tốt hơn `extends`?**
+**Exercise 6: when is `implements` preferable to `extends`?**
 
-**Gợi ý:** Khi cần mô tả một **vai trò/khả năng chung** nhưng các implementation không có quan hệ kế thừa trạng thái/cài đặt tự nhiên. Ví dụ nhiều chiến lược vận chuyển cùng `implements ShippingPolicy`, còn công thức riêng của từng class.
+**Hint:** When describing a **shared role/capability** but implementations have no natural state/implementation inheritance relationship. For example, shipping strategies can each `implements ShippingPolicy` while retaining separate pricing formulas.
 
-**Bài 7: một subclass giữ nguyên chữ ký phương thức nhưng âm thầm sửa input object. Có thể gọi là thay thế được không?**
+**Exercise 7: a subclass retains method signatures but silently modifies input objects. Is it substitutable?**
 
-**Đáp án:** Nếu supertype cam kết không sửa đầu vào, thì không. Giữ chữ ký không đủ; side effect là phần có thể quan sát của hợp đồng.
+**Answer:** No, if the supertype promises not to modify input. Compatible signatures alone are insufficient; side effects are observable parts of a contract.
 
-## Cách áp dụng khi xây dựng một cây kiểu
+## Applying these ideas when building a type hierarchy
 
-Hãy xác định **hợp đồng được client sử dụng trước**, sau đó kiểm tra mỗi subtype bằng các câu hỏi:
+Define **the contract clients will use first**, then examine each subtype:
 
-1. **Is-a ở tầng nghiệp vụ:** kiểu con thực sự là một loại/vai trò của kiểu cha, hay chỉ “có” một thành phần thuộc kiểu cha?
-2. **Các lời gọi hợp lệ:** khi dùng qua kiểu cha, subtype có chấp nhận những đầu vào mà hợp đồng cha cho phép không?
-3. **Kết quả và lỗi:** subtype có giữ các cam kết về kiểu, ý nghĩa, invariant, điều kiện thành công và lỗi không?
-4. **Đa hình:** code sử dụng có thể làm việc qua supertype mà không phụ thuộc liên tục vào tên implementation không?
-5. **Kiểm chứng:** cùng một tập contract tests có chạy được trên các implementation không?
+1. **Business-level is-a:** is the subtype truly a kind of or a role of the supertype, or does it merely “have” a component of the parent type?
+2. **Valid calls:** does the subtype accept every input permitted by the supertype contract?
+3. **Results and failures:** does the subtype preserve guarantees about types, meaning, invariants, success conditions, and errors?
+4. **Polymorphism:** can client code use the supertype without repeatedly depending on implementation names?
+5. **Verification:** can the same contract tests run against all implementations?
 
-Một quan hệ `extends`/`implements` hữu ích khi nó cho phép **thay một đối tượng bằng một đối tượng khác đúng vai trò mà vẫn giữ các lời hứa chung**. Nếu cần liên tục thêm ngoại lệ hoặc sửa client theo từng class con, hãy cân nhắc trừu tượng nhỏ hơn, composition hoặc một mô hình kiểu khác phản ánh nghiệp vụ chính xác hơn.
+An `extends`/`implements` relationship is useful when it allows **one object to replace another in the same role while preserving shared promises**. If special cases or subtype-specific client changes keep accumulating, consider a smaller abstraction, composition, or a different type model that more accurately reflects the business.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="subtyping-003">Tương thích kiểu theo tên và theo cấu trúc</a>
+## <a id="subtyping-003">Nominal and structural type compatibility</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tương thích kiểu theo tên và theo cấu trúc trong Java OOP
+# Nominal and structural type compatibility in Java OOP
 
-Khi một phương thức nhận tham số kiểu `MessageSender`, đối tượng nào được phép truyền vào? Liệu chỉ cần đối tượng có phương thức `send(...)` đúng tên và tham số là đủ, hay lớp của nó phải **khai báo quan hệ** với `MessageSender`?
+When a method accepts a parameter of type `MessageSender`, which objects can be passed to it? Is having a method named `send(...)` with the right parameters sufficient, or must the object's class **declare a relationship** with `MessageSender`?
 
-Đó là khác biệt giữa **nominal typing** (tương thích kiểu theo tên/quan hệ khai báo) và **structural typing** (tương thích kiểu theo cấu trúc). Java sử dụng **nominal subtyping** cho quan hệ kiểu con giữa class/interface: để một kiểu được xem là kiểu con của interface/lớp khác, phải có quan hệ kế thừa hoặc triển khai được khai báo trong hệ phân cấp kiểu. Hai lớp tình cờ có cùng các phương thức **không tự động** tương thích.
+This is the difference between **nominal typing** (compatibility based on type identity and declared relationships) and **structural typing** (compatibility based on structure). Java uses **nominal subtyping** for relationships among classes and interfaces: for one type to be considered a subtype of another interface/class, it must have a declared implementation or inheritance relationship in the type hierarchy. Two classes that happen to offer the same methods are **not automatically** compatible.
 
-## 1. Hai cách xác định kiểu có tương thích
+## 1. Two ways to determine type compatibility
 
-**Theo tên (nominal)**: Java xem xét **danh tính kiểu và quan hệ kế thừa/triển khai đã khai báo**. Ví dụ `EmailSender implements MessageSender` nên `EmailSender` là kiểu con của `MessageSender`.
+**Nominal typing:** Java examines **type identity and declared inheritance/implementation relationships**. For example, `EmailSender implements MessageSender`, so `EmailSender` is a subtype of `MessageSender`.
 
-**Theo cấu trúc (structural)**: trong một hệ thống kiểu có cơ chế này, một giá trị có thể được chấp nhận khi nó cung cấp **tập thành viên phù hợp** mà nơi sử dụng đòi hỏi, dù không khai báo trực tiếp quan hệ `implements`. Chi tiết kiểm tra cấu trúc phụ thuộc từng ngôn ngữ, như kiểu tham số, kiểu trả về, quyền truy cập và các quy tắc khác.
+**Structural typing:** in a type system that supports it, a value can be accepted if it provides **the required set of members**, even without explicitly declaring `implements`. Structural checks depend on the language, including parameter types, return types, accessibility, and other rules.
 
-| Tiêu chí | Theo tên (nominal) | Theo cấu trúc (structural) |
+| Criterion | Nominal | Structural |
 | --- | --- | --- |
-| Dựa vào | Danh tính kiểu và quan hệ subtype được khai báo | Hình dạng/các thành viên mà kiểu cung cấp |
-| Hai lớp có cùng phương thức | Chưa chắc tương thích | Có thể tương thích nếu đáp ứng hợp đồng cấu trúc |
-| Quan hệ với hợp đồng | Thường được ghi rõ như `implements`, `extends` | Có thể được xác định ngầm khi kiểm tra kiểu |
-| Ví dụ ngôn ngữ | Java với quan hệ class/interface | TypeScript có hệ thống kiểu phần lớn theo cấu trúc; interface trong Go được thỏa mãn ngầm |
-| Ưu điểm | Hợp đồng công khai, chủ đích rõ ở định nghĩa kiểu | Linh hoạt với những kiểu đã có hình dạng phù hợp |
-| Điểm cần cân nhắc | Phải khai báo/gắn kết kiểu, hoặc cần adapter | Giống hình dạng chưa chắc giống ngữ nghĩa |
+| Based on | Type identity and declared subtype relationships | The shape/members offered by the type |
+| Two classes sharing the same methods | Not necessarily compatible | Potentially compatible if the structural contract is met |
+| Relationship to contracts | Often explicit via `implements` or `extends` | May be determined implicitly during type checking |
+| Language examples | Java class/interface relationships | TypeScript's mostly structural type system; interfaces in Go are implemented implicitly |
+| Advantage | Explicit public contracts and intentional type declarations | Flexible use of existing types with suitable structure |
+| Trade-off | Requires declarations/type coupling or adapters | Similar structure may hide different semantics |
 
-**Lưu ý:** “tương thích kiểu” nói chung còn bao gồm những quy tắc khác như chuyển kiểu nguyên thủy, boxing/unboxing hay generic. Bài này tập trung vào **tương thích kiểu con giữa các lớp và interface**, không khẳng định mọi phép gán hợp lệ trong Java đều là quan hệ kế thừa.
+**Note:** “type compatibility” broadly includes other rules, such as primitive conversions, boxing/unboxing, and generics. This lesson focuses on **subtype compatibility between classes and interfaces**; not every legal Java assignment results from inheritance.
 
-## 2. Java không chấp nhận chỉ vì phương thức trùng chữ ký
+## 2. Java does not accept matching method signatures alone
 
-Xét mã Java sau:
+Consider this Java code:
 
 ~~~java
 interface MessageSender {
@@ -1349,7 +1349,7 @@ class LegacySmsSdk {
 }
 ~~~
 
-Cả `EmailSender` và `LegacySmsSdk` đều có `public void send(String, String)`, nhưng chỉ `EmailSender` được công nhận là **kiểu con của `MessageSender`**:
+Both `EmailSender` and `LegacySmsSdk` have `public void send(String, String)`, but only `EmailSender` is recognized as **a subtype of `MessageSender`**:
 
 ~~~java
 MessageSender sender = new EmailSender();  // Hợp lệ.
@@ -1358,7 +1358,7 @@ MessageSender sender = new EmailSender();  // Hợp lệ.
 // MessageSender sender2 = new LegacySmsSdk();
 ~~~
 
-Lý do: định nghĩa `LegacySmsSdk` không có quan hệ `implements MessageSender` (trực tiếp hay được kế thừa từ một kiểu cha phù hợp). Java không “so hình dạng” từng class để suy ra interface này được triển khai chỉ vì phương thức tương tự.
+The reason is that `LegacySmsSdk` has no `implements MessageSender` relationship, either directly or inherited from a suitable supertype. Java does not compare the shapes of classes to infer implementation of an interface merely because similar methods exist.
 
 ~~~mermaid
 classDiagram
@@ -1375,13 +1375,13 @@ classDiagram
     MessageSender <|.. EmailSender
 ~~~
 
-Đường nét đứt với tam giác biểu thị `EmailSender implements MessageSender`. `LegacySmsSdk` đứng độc lập dù có chữ ký phương thức giống. Đây là điểm phân biệt trực quan giữa **“có hình dạng tương tự”** và **“đã xác lập quan hệ kiểu con”**.
+The dashed line with a triangle represents `EmailSender implements MessageSender`. `LegacySmsSdk` stands alone despite having the same method signature. This visually distinguishes **“similar structure”** from **“an established subtype relationship.”**
 
-## 3. Ví dụ hoàn chỉnh: dùng adapter để kết nối lớp không cùng hệ kiểu
+## 3. Complete example: an adapter connecting classes from different type hierarchies
 
-Trong dự án thực tế, một SDK bên thứ ba có thể đã tồn tại và ta không được sửa mã của nó để thêm `implements MessageSender`. Ta có thể viết một **adapter** triển khai interface của ứng dụng rồi ủy quyền thao tác cho SDK.
+In real projects, a third-party SDK may already exist, and we cannot modify it to add `implements MessageSender`. Instead, write an **adapter** that implements the application's interface and delegates to the SDK.
 
-Lưu đoạn sau vào tệp `NominalTypingDemo.java`, chạy bằng **Java 11+**:
+Save the following as `NominalTypingDemo.java` and run it with **Java 11+**:
 
 ~~~java
 import java.util.List;
@@ -1455,14 +1455,14 @@ public class NominalTypingDemo {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac NominalTypingDemo.java
 java NominalTypingDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 EMAIL -> KH-01: Đơn đã xác nhận
@@ -1471,13 +1471,13 @@ EMAIL -> KH-03: Khuyến mãi
 SMS -> KH-03: Khuyến mãi
 ~~~
 
-Trong ví dụ này:
+In this example:
 
-1. `NotificationService` yêu cầu tham số **`MessageSender`**, một hợp đồng của ứng dụng.
-2. `EmailSender` trực tiếp triển khai hợp đồng ấy.
-3. `LegacySmsSdk` cung cấp chức năng tương tự nhưng **không phải một `MessageSender`** trong hệ kiểu Java.
-4. `SmsSenderAdapter` là một kiểu con thật sự của `MessageSender` và gọi `sdk.send(...)` để thực thi.
-5. Dù `NotificationService` không biết đối tượng nhận là loại nào, lời gọi `send(...)` được phân phối tới implementation runtime tương ứng (**đa hình**).
+1. `NotificationService` requires a **`MessageSender`** parameter, an application-defined contract.
+2. `EmailSender` directly implements that contract.
+3. `LegacySmsSdk` offers similar functionality but **is not a `MessageSender`** in Java's type system.
+4. `SmsSenderAdapter` is an actual subtype of `MessageSender` and invokes `sdk.send(...)` to perform the operation.
+5. Although `NotificationService` does not know the concrete receiving class, `send(...)` dispatches to the corresponding runtime implementation (**polymorphism**).
 
 ~~~mermaid
 classDiagram
@@ -1503,11 +1503,11 @@ classDiagram
     NotificationService --> MessageSender : depends on
 ~~~
 
-**Adapter không làm `LegacySmsSdk` trở thành subtype.** Nó tạo ra một **đối tượng adapter** có subtype relationship hợp lệ và giữ tham chiếu tới đối tượng SDK. Nhờ đó không phải sửa thư viện ngoài, đồng thời ý nghĩa của hợp đồng `MessageSender` vẫn được kiểm soát ở ranh giới ứng dụng.
+**The adapter does not turn `LegacySmsSdk` into a subtype.** It creates **an adapter object** with a valid subtype relationship and a reference to the SDK object. This avoids modifying an external library and keeps control over the meaning of the `MessageSender` contract at the application boundary.
 
-## 4. Structural typing sẽ nhìn tình huống này khác thế nào?
+## 4. How would structural typing treat this situation differently?
 
-Để đối chiếu nguyên lý, đây là một ví dụ **TypeScript (không phải Java)**:
+For comparison, here is an example in **TypeScript (not Java)**:
 
 ~~~typescript
 type Sender = {
@@ -1524,19 +1524,19 @@ const sender: Sender = new LegacySmsSdk(); // Hợp lệ theo cấu trúc
 sender.send("KH-01", "Xin chào");
 ~~~
 
-`LegacySmsSdk` không cần khai báo `implements Sender` ở đây, vì kiểu của instance thỏa mãn hình dạng `Sender` mà TypeScript kiểm tra.
+`LegacySmsSdk` does not need to declare `implements Sender` here because its instance type has the shape that TypeScript checks for `Sender`.
 
-Trong Java, đoạn tương ứng sẽ **không** biên dịch nếu thiếu quan hệ subtype khai báo. Đây là khác biệt về **quy tắc hệ kiểu**, không phải chuyện cú pháp `implements` chỉ để trang trí.
+The corresponding Java code **would not** compile without a declared subtype relationship. This is a difference in **type-system rules**, not merely the absence of a decorative `implements` keyword.
 
-### “Giống cấu trúc” chưa chắc “giống ý nghĩa”
+### Similar structure does not guarantee similar meaning
 
-Hai lớp đều có `void send(String, String)`, nhưng một phương thức có thể là gửi thông báo, phương thức khác lại gửi dữ liệu vào hệ thống kiểm toán. Các chữ ký trùng nhau **không bảo đảm** ngữ nghĩa, hợp đồng lỗi, bảo mật, thứ tự tham số hay hiệu ứng phụ giống nhau.
+Two classes can both have `void send(String, String)` while one method sends a notification and the other sends data to an audit system. Matching signatures **do not guarantee** identical semantics, failure contracts, security, parameter order, or side effects.
 
-Nominal typing buộc lớp chủ động nhận một vai trò qua quan hệ được khai báo. Structural typing giúp tích hợp linh hoạt nhưng **vẫn cần thiết kế hợp đồng ngữ nghĩa rõ ràng**. Không hệ kiểu nào có thể tự chứng minh rằng một lời gọi thực hiện đúng nghiệp vụ chỉ qua tên và chữ ký.
+Nominal typing requires a class to intentionally accept a role through a declared relationship. Structural typing offers flexible integration but **still requires a clear semantic contract**. Neither type system can prove correct business behavior from method names and signatures alone.
 
-## 5. Kiểu con Java được xác định như thế nào?
+## 5. How are Java subtypes determined?
 
-Các trường hợp cốt lõi:
+Core cases:
 
 ~~~java
 class Animal {
@@ -1557,18 +1557,18 @@ class ReportTask implements RunnableTask {
 }
 ~~~
 
-| Phép gán | Kết quả | Lý do |
+| Assignment | Result | Reason |
 | --- | --- | --- |
-| `Animal animal = new Dog();` | Hợp lệ | `Dog extends Animal` |
-| `RunnableTask task = new ReportTask();` | Hợp lệ | `ReportTask implements RunnableTask` |
-| `Object obj = new Dog();` | Hợp lệ | Các class Java kế thừa từ `Object` trực tiếp/gián tiếp |
-| `Dog dog = new Animal();` | Không hợp lệ | Không phải mọi `Animal` là `Dog` |
-| `RunnableTask task = new Dog();` | Không hợp lệ | `Dog` không được khai báo là subtype của `RunnableTask` |
-| `Animal a = new ReportTask();` | Không hợp lệ | Không có quan hệ kiểu con giữa hai class |
+| `Animal animal = new Dog();` | Valid | `Dog extends Animal` |
+| `RunnableTask task = new ReportTask();` | Valid | `ReportTask implements RunnableTask` |
+| `Object obj = new Dog();` | Valid | Java classes inherit directly/indirectly from `Object` |
+| `Dog dog = new Animal();` | Invalid | Not every `Animal` is a `Dog` |
+| `RunnableTask task = new Dog();` | Invalid | `Dog` is not declared a subtype of `RunnableTask` |
+| `Animal a = new ReportTask();` | Invalid | There is no subtype relationship between these classes |
 
-**Subtype là quan hệ có hướng:** nếu `Dog extends Animal`, từ `Dog` có thể mở rộng lên `Animal` (*upcast*) mà không cần ép tường minh. Chiều ngược lại không tự hợp lệ.
+**Subtyping is directional:** given `Dog extends Animal`, a `Dog` can widen to `Animal` (*upcast*) without an explicit cast. The reverse conversion is not automatically valid.
 
-Quan hệ được truyền qua các cấp:
+Relationships are transitive across levels:
 
 ~~~java
 interface Identifiable {
@@ -1593,9 +1593,9 @@ Named a = new Customer();
 Identifiable b = new Customer(); // Hợp lệ qua Named extends Identifiable
 ~~~
 
-`Customer` không cần viết trực tiếp `implements Identifiable` bởi nó đã khai báo `implements Named` và `Named` kế thừa `Identifiable`. **Tương thích theo tên không có nghĩa là chỉ tìm đúng chữ `implements X` trên dòng class hiện tại**; Java tính cả quan hệ subtype hợp lệ qua chuỗi kế thừa class và interface.
+`Customer` need not explicitly write `implements Identifiable` because it already declares `implements Named`, and `Named` extends `Identifiable`. **Nominal compatibility does not mean checking only for the exact text `implements X` in the current class declaration**; Java follows valid subtype relationships along class and interface hierarchies.
 
-Cũng có trường hợp implementation được kế thừa từ superclass mà subclass khai báo `implements` interface:
+An implementation may also be inherited from a superclass when the subclass declares `implements`:
 
 ~~~java
 interface Greeter {
@@ -1613,9 +1613,9 @@ class GreeterAdapter extends BaseGreeter implements Greeter {
 }
 ~~~
 
-`GreeterAdapter` là `Greeter` nhờ **khai báo `implements`**, dù bản thân nó không ghi đè `greet()` một lần nữa.
+`GreeterAdapter` is a `Greeter` because it **declares `implements`**, even though it does not override `greet()` again.
 
-## 6. Hai interface có phương thức giống nhau vẫn là hai kiểu khác nhau
+## 6. Two interfaces with identical methods are still distinct types
 
 ~~~java
 interface Storable {
@@ -1640,7 +1640,7 @@ Storable s = new FileStore(); // Đúng.
 // Auditable a = new FileStore(); // Sai: không implements Auditable.
 ~~~
 
-Tuy `Storable` và `Auditable` có cùng một phương thức, Java vẫn coi chúng là **hai danh tính kiểu độc lập**. Nếu một lớp thực sự muốn đáp ứng cả hai:
+Although `Storable` and `Auditable` declare the same method, Java still treats them as **two independent type identities**. If a class genuinely fulfills both:
 
 ~~~java
 class DualStore implements Storable, Auditable {
@@ -1651,13 +1651,13 @@ class DualStore implements Storable, Auditable {
 }
 ~~~
 
-Một implementation `save(String)` có thể thỏa cả hai interface vì chữ ký trùng và tương thích, nhưng quan hệ với **cả hai interface được khai báo rõ ràng**.
+A single `save(String)` implementation can satisfy both interfaces because the signatures match, but relationships with **both interfaces are declared explicitly**.
 
-Điểm này giúp tránh hiểu nhầm: **cùng cấu trúc không tạo quan hệ subtype; nhưng khi quan hệ subtype đã tồn tại, một implementation có thể đáp ứng các hợp đồng có chữ ký tương thích**.
+The lesson is: **matching structure does not create a subtype relationship; once subtype relationships exist, one implementation may satisfy contracts with compatible signatures**.
 
-## 7. Java có “structural typing” qua lambda và method reference không?
+## 7. Does Java have “structural typing” through lambdas and method references?
 
-Java hỗ trợ **functional interface**: interface có một phương thức trừu tượng chức năng (SAM). Lambda và method reference có thể được chuyển thành giá trị của **kiểu functional interface đích** nếu chữ ký và quy tắc liên quan phù hợp.
+Java supports **functional interfaces**: interfaces with a single abstract method (SAM). Lambdas and method references can be converted to values of a **target functional interface type** when signatures and other rules match.
 
 ~~~java
 @FunctionalInterface
@@ -1684,9 +1684,9 @@ TextFormatter b = legacy::prefix;
 System.out.println(b.format("Đã lưu")); // [INFO] Đã lưu
 ~~~
 
-Điều này trông giống “chỉ cần phương thức có hình dạng phù hợp”, nhưng **không phải** Java tự động coi `PrefixFormatter` là subtype của `TextFormatter`. Thay vào đó, Java tạo/biểu diễn một giá trị của **functional interface đích** với hành vi gọi tới phương thức được tham chiếu.
+This resembles “having a method with the required shape,” but it **does not** make `PrefixFormatter` automatically a subtype of `TextFormatter`. Instead, Java creates/represents a value of the **target functional interface** whose behavior invokes the referenced method.
 
-Một lambda cũng cần **target type**:
+A lambda also requires a **target type**:
 
 ~~~java
 TextFormatter upper = text -> text.toUpperCase();
@@ -1694,13 +1694,13 @@ TextFormatter upper = text -> text.toUpperCase();
 System.out.println(upper.format("java")); // JAVA
 ~~~
 
-Lambda Java không có kiểu class tự chứa độc lập như một đối tượng `PrefixFormatter` được gán theo cấu trúc. Compiler cần một functional interface tương ứng làm đích, ví dụ khi gán biến hoặc truyền tham số.
+A Java lambda does not have an independently assignable concrete class type in the way a `PrefixFormatter` instance does under structural typing. The compiler needs a matching target functional interface, such as when assigning a variable or passing an argument.
 
-**Kết luận đúng:** method reference/lambda làm việc với **kiểu hàm có cấu trúc chữ ký phù hợp** ở vị trí chuyển đổi, nhưng quan hệ class/interface thông thường của Java vẫn chủ yếu là **nominal**.
+**Correct conclusion:** method references and lambdas use **compatible functional signatures** at conversion sites, while ordinary Java class/interface subtyping remains primarily **nominal**.
 
-## 8. Cần phân biệt subtype với “có thể ép kiểu”
+## 8. Distinguish subtyping from “being castable”
 
-Một phép ép kiểu tường minh **không tạo ra** quan hệ subtype còn thiếu.
+An explicit cast **does not create** a missing subtype relationship.
 
 ~~~java
 interface MessageSender {
@@ -1712,7 +1712,7 @@ class LegacySmsSdk {
 }
 ~~~
 
-Dòng sau có thể khiến compiler chấp nhận cú pháp khi ép qua `Object`, nhưng thất bại ở runtime:
+The next line may be syntactically accepted by the compiler when casting through `Object`, but it fails at runtime:
 
 ~~~java
 LegacySmsSdk legacy = new LegacySmsSdk();
@@ -1721,9 +1721,9 @@ LegacySmsSdk legacy = new LegacySmsSdk();
 MessageSender sender = (MessageSender) (Object) legacy;
 ~~~
 
-Đừng dùng cast như một cách bắt Java bỏ qua hợp đồng nominal. **Adapter** mới là giải pháp đúng nếu cần dùng một lớp đã có API phù hợp trong một giao diện của ứng dụng.
+Do not use casts to bypass Java's nominal contract. An **adapter** is the proper solution when an existing class has a similar API that must be exposed through an application interface.
 
-Ngược lại, một tham chiếu lớp cha thực sự giữ object lớp con thì có thể downcast an toàn khi đã kiểm tra:
+Conversely, a supertype reference actually holding a subclass object can be safely downcast after checking:
 
 ~~~java
 Animal animal = new Dog();
@@ -1734,18 +1734,18 @@ if (animal instanceof Dog) {
 }
 ~~~
 
-`instanceof` kiểm tra khả năng tương thích **theo kiểu thực tế** của đối tượng, không kiểm tra xem nó có tự nhiên sở hữu một tập tên phương thức nào đó hay không.
+`instanceof` tests **the object's actual type compatibility**, not whether it coincidentally offers a collection of method names.
 
-## 9. Generics: cùng quan hệ subtype nhưng collection chưa chắc gán được
+## 9. Generics: element subtyping does not guarantee collection assignability
 
-Nếu `EmailSender implements MessageSender`, thì:
+If `EmailSender implements MessageSender`, then:
 
 ~~~java
 EmailSender email = new EmailSender();
 MessageSender sender = email; // Đúng.
 ~~~
 
-Nhưng điều đó **không kéo theo**:
+But this **does not imply**:
 
 ~~~java
 List<EmailSender> emails = List.of(new EmailSender());
@@ -1754,9 +1754,9 @@ List<EmailSender> emails = List.of(new EmailSender());
 // List<MessageSender> senders = emails;
 ~~~
 
-Nếu cho phép gán trên, người gọi có thể tưởng mình được thêm `SmsSenderAdapter` vào một `List<EmailSender>`, gây phá vỡ tính an toàn kiểu.
+If that assignment were allowed, callers might think they can add `SmsSenderAdapter` to a `List<EmailSender>`, breaking type safety.
 
-Khi muốn một phương thức **chỉ đọc danh sách phần tử thuộc một subtype của `MessageSender`**, có thể dùng wildcard:
+When a method **only reads a list of elements that are subtypes of `MessageSender`**, use a wildcard:
 
 ~~~java
 static void announce(
@@ -1772,13 +1772,13 @@ List<EmailSender> emails = List.of(new EmailSender());
 announce(emails, "Thông báo");
 ~~~
 
-`? extends MessageSender` cho phép **đọc ra** dưới kiểu `MessageSender` nhưng không thể thêm một `MessageSender` tùy ý vào danh sách này (ngoại trừ `null` theo quy tắc của Java). Đây là cách variance ở generics hoạt động, **khác với** việc xác định quan hệ nominal/structural của chính `EmailSender` và `MessageSender`.
+`? extends MessageSender` allows elements to be **read** as `MessageSender` but does not allow adding an arbitrary `MessageSender` (except `null` under Java's rules). This is how variance works in generics, **distinct from** nominal/structural relationships between `EmailSender` and `MessageSender` themselves.
 
-Để dùng `List` trong các đoạn mã rời của phần này, cần `import java.util.List;` và các lớp/interface mẫu phải được định nghĩa trong phạm vi phù hợp.
+To use `List` in the separate snippets of this section, include `import java.util.List;` and define the sample classes/interfaces in an appropriate scope.
 
-## 10. Cùng hình dạng dữ liệu không làm hai record trở thành cùng kiểu
+## 10. Identical data shapes do not make two records the same type
 
-Với Java **17+**, hai `record` có thành phần cùng tên/cùng kiểu vẫn là hai **kiểu nominal khác nhau**:
+In Java **17+**, two `record` declarations with identical component names/types remain **different nominal types**:
 
 ~~~java
 record Point(int x, int y) {}
@@ -1793,21 +1793,21 @@ Position position = new Position(3, 5);
 System.out.println(point.equals(position)); // false
 ~~~
 
-`Point` và `Position` không cùng class, không có quan hệ subtype thích hợp. Dù dữ liệu có cấu trúc giống nhau, chúng có thể mang **ý nghĩa miền nghiệp vụ khác nhau**: tọa độ hình học, vị trí trên bản đồ, v.v.
+`Point` and `Position` are different classes without an applicable subtype relationship. Although their data has the same structure, they may have **different domain meanings**, such as geometric coordinates versus map locations.
 
-Có thể chuyển đổi **tường minh** khi thực sự muốn:
+You can convert them **explicitly** when appropriate:
 
 ~~~java
 Position p = new Position(point.x(), point.y());
 ~~~
 
-Đó là **tạo một object khác bằng ánh xạ dữ liệu**, không phải gán tham chiếu theo subtype. Thao tác này cần được quyết định rõ thay vì tự động coi hai khái niệm bằng nhau chỉ vì cùng field.
+That **creates a different object by mapping data**, rather than assigning a reference through subtyping. Make this conversion deliberately instead of automatically equating concepts that share fields.
 
-## 11. Thiết kế API dựa trên hợp đồng nominal
+## 11. Designing APIs around nominal contracts
 
-Một API Java thường rõ ràng hơn khi kiểu tham số bộc lộ **năng lực mà nó cần**, thay vì yêu cầu một class cụ thể hoặc dựa vào reflection kiểm tra phương thức cùng tên.
+A Java API is generally clearer when a parameter type expresses **the capability it requires** instead of demanding one concrete class or using reflection to inspect similarly named methods.
 
-Ví dụ:
+For example:
 
 ~~~java
 interface Exporter {
@@ -1828,9 +1828,9 @@ class ReportService {
 }
 ~~~
 
-`ReportService` chỉ cần biết đối tượng được truyền vào **tuân thủ hợp đồng `Exporter`**. Cách triển khai có thể là ghi CSV, xuất PDF hay chuyển tới một dịch vụ khác, miễn hành vi phù hợp. Hợp đồng nominal này hỗ trợ dependency injection và đa hình.
+`ReportService` only needs to know that the supplied object **fulfills the `Exporter` contract**. An implementation may write CSV, export PDF, or call another service, provided its behavior matches. The nominal contract supports dependency injection and polymorphism.
 
-Nếu thư viện ngoài có phương thức tương tự nhưng không thực hiện `Exporter`, dùng **adapter** hoặc **method reference** (nếu hợp đồng là functional interface và chữ ký phù hợp) có thể là những cách tích hợp:
+If an external library has a similar method but does not implement `Exporter`, integration options include an **adapter** or a **method reference** (if the contract is a functional interface and the signature matches):
 
 ~~~java
 // Ví dụ minh họa khi có một object legacy với phương thức
@@ -1838,27 +1838,27 @@ Nếu thư viện ngoài có phương thức tương tự nhưng không thực h
 Exporter exporter = legacy::save;
 ~~~
 
-Bản thân `legacy` **không trở thành subtype của `Exporter`**. Biểu thức method reference cung cấp một giá trị đáp ứng functional interface đích.
+`legacy` itself **does not become a subtype of `Exporter`**. The method-reference expression supplies a value implementing the target functional interface.
 
-Không nên lạm dụng reflection để gọi method chỉ dựa vào tên/đối số trong những nơi đã biết hợp đồng Java. Reflection có thể hữu ích trong framework hoặc plugin đặc thù, nhưng bỏ qua nhiều kiểm tra tĩnh, phức tạp hơn và dễ lỗi runtime.
+Avoid overusing reflection to invoke methods solely by their names/arguments where a known Java contract exists. Reflection can be useful for specialized frameworks or plugins, but bypasses many static checks, adds complexity, and increases the risk of runtime failures.
 
-## 12. Các trường hợp dễ nhầm
+## 12. Common misconceptions
 
-| Nhận định | Đúng hay sai? | Giải thích |
+| Statement | True or false? | Explanation |
 | --- | --- | --- |
-| “Hai class có cùng public method thì gán cho nhau được” | **Sai** trong Java thông thường | Thiếu quan hệ subtype nominal |
-| “Class phải ghi trực tiếp `implements I` mới là subtype của I” | **Sai** | Có thể kế thừa quan hệ qua lớp/interface cha |
-| “Một implementation kế thừa từ superclass có thể đáp ứng interface” | **Đúng** | Nếu class khai báo/nhận quan hệ interface hợp lệ và method kế thừa phù hợp |
-| “Lớp implements hai interface cùng method phải viết hai bản sao method” | **Sai** | Một implementation tương thích đủ đáp ứng cả hai |
-| “Lambda làm Java tự coi mọi object cùng hình dạng là subtype” | **Sai** | Lambda/method reference có chuyển đổi theo target functional interface |
-| “Ép kiểu có thể biến class không implements thành interface” | **Sai** | Runtime vẫn kiểm tra kiểu, có thể ném `ClassCastException` |
-| “`List<Sub>` là `List<Super>` khi Sub extends Super” | **Sai** | Generic Java mặc định bất biến |
-| “Hai record có field giống nhau luôn là cùng kiểu” | **Sai** | Record vẫn có danh tính kiểu riêng |
-| “Tương thích kiểu theo tên chỉ cần tên class viết giống nhau” | **Sai** | Là danh tính kiểu và quan hệ kiểu, không phải so chuỗi tên đơn giản |
+| “Classes with identical public methods are assignable to each other” | **False** in ordinary Java | No nominal subtype relationship |
+| “A class must directly declare `implements I` to be a subtype of I” | **False** | The relationship can be inherited through a parent class/interface |
+| “A subclass can inherit an implementation that satisfies an interface” | **True** | When it declares/inherits a valid interface relationship and the inherited method qualifies |
+| “A class implementing two interfaces with the same method must duplicate the method” | **False** | One compatible implementation can satisfy both |
+| “Lambdas make all structurally similar objects into Java subtypes” | **False** | Lambdas/method references are converted to target functional interface types |
+| “Casting turns a class without an interface implementation into that interface” | **False** | Runtime type checking still applies and may throw `ClassCastException` |
+| “`List<Sub>` is a `List<Super>` when Sub extends Super” | **False** | Java generics are invariant by default |
+| “Two records with the same fields are always the same type” | **False** | Records retain distinct nominal type identities |
+| “Nominal compatibility merely requires class names with identical spelling” | **False** | It depends on type identity and relationships, not simple string comparisons |
 
-## 13. Bài luyện tập có lời giải
+## 13. Practice questions with answers
 
-**Câu 1.** Điều gì xảy ra?
+**Question 1.** What happens?
 
 ~~~java
 interface Readable {
@@ -1874,79 +1874,79 @@ class FileSource {
 // Readable input = new FileSource();
 ~~~
 
-**Đáp án:** Dòng gán bị lỗi biên dịch. `FileSource` có phương thức cùng chữ ký nhưng không được khai báo là subtype của `Readable`. Có thể dùng một adapter `implements Readable` hoặc method reference `Readable input = new FileSource()::read;` vì `Readable` là functional interface.
+**Answer:** The assignment fails to compile. `FileSource` has a method with the same signature but is not declared a subtype of `Readable`. You can use an adapter that `implements Readable` or the method reference `Readable input = new FileSource()::read;`, since `Readable` is a functional interface.
 
-**Câu 2.** Nếu `class SecureFileSource extends FileSource implements Readable { }`, lớp này có bắt buộc override `read()` không?
+**Question 2.** If `class SecureFileSource extends FileSource implements Readable { }`, must it override `read()`?
 
-**Đáp án:** Không. `SecureFileSource` thỏa quan hệ nominal qua `implements Readable`, và thừa hưởng một implementation `public read()` phù hợp từ `FileSource`.
+**Answer:** No. `SecureFileSource` fulfills the nominal relationship through `implements Readable` and inherits a compatible `public read()` implementation from `FileSource`.
 
-**Câu 3.** Vì sao `MessageSender sender = new SmsSenderAdapter(sdk)` hợp lệ dù `sdk` không implements `MessageSender`?
+**Question 3.** Why is `MessageSender sender = new SmsSenderAdapter(sdk)` valid even though `sdk` does not implement `MessageSender`?
 
-**Đáp án:** Đối tượng **được gán** là instance của `SmsSenderAdapter`, class thực sự `implements MessageSender`. Adapter giữ `sdk` bên trong và ủy quyền, không thay danh tính kiểu của `sdk`.
+**Answer:** The **assigned object** is an instance of `SmsSenderAdapter`, whose class does `implements MessageSender`. The adapter holds `sdk` and delegates to it; it does not change `sdk`'s type identity.
 
-**Câu 4.** `interface A { void go(); }`, `interface B { void go(); }`, `class X implements A { public void go(){} }`. Có thể gán `B b = new X();` không?
+**Question 4.** Given `interface A { void go(); }`, `interface B { void go(); }`, and `class X implements A { public void go(){} }`, can you assign `B b = new X();`?
 
-**Đáp án:** Không. Hai interface cùng hình dạng nhưng không có quan hệ subtype với `X` theo kiểu `B`. Nếu `X` thực hiện cả hai, cần khai báo quan hệ đó (trực tiếp hoặc qua hierarchy phù hợp).
+**Answer:** No. The interfaces have identical shapes, but `X` has no subtype relationship to `B`. If `X` implements both, that relationship must be declared directly or through a suitable hierarchy.
 
-**Câu 5.** Tại sao có thể gán `Base x = new Derived();` nhưng không thể gán `List<Base> list = new ArrayList<Derived>();`?
+**Question 5.** Why can you assign `Base x = new Derived();` but not `List<Base> list = new ArrayList<Derived>();`?
 
-**Đáp án:** Dòng đầu dựa vào quan hệ lớp con–lớp cha. Dòng sau bị từ chối vì các thể hiện `List<Base>` và `List<Derived>` không có quan hệ subtype tương ứng trong generics bất biến của Java. Dùng wildcard đúng nhu cầu khi cần đọc các subtype.
+**Answer:** The first statement uses subclass-to-superclass assignability. The second is rejected because `List<Base>` and `List<Derived>` are not related through subtyping under Java's invariant generics. Use a wildcard suited to reading subtype elements.
 
-**Câu 6.** Trong TypeScript, một object có `send(receiver, content)` phù hợp có thể được dùng như `Sender` mà không khai báo `implements Sender`. Đó là hình thức tương thích gì?
+**Question 6.** In TypeScript, an object with a compatible `send(receiver, content)` can be used as `Sender` without declaring `implements Sender`. What form of compatibility is this?
 
-**Đáp án:** Theo cấu trúc (*structural*), dựa trên thành viên đáp ứng hợp đồng. Cùng đoạn logic suy luận không áp dụng cho class/interface thông thường của Java.
+**Answer:** Structural (*structural*) compatibility, based on the provided members fulfilling a contract. This reasoning does not apply to ordinary Java classes/interfaces.
 
-**Câu 7.** Khi hai hệ thống dùng hai lớp `Customer` khác nhau nhưng đều có `id` và `name`, có nên ép gán trực tiếp để tái sử dụng không?
+**Question 7.** If two systems use different `Customer` classes that both contain `id` and `name`, should they be directly cast/assigned for reuse?
 
-**Đáp án:** Không. Các kiểu có thể mang ràng buộc và ý nghĩa nghiệp vụ khác nhau. Nên ánh xạ dữ liệu một cách tường minh, dùng adapter hoặc định nghĩa hợp đồng chung ở ranh giới tích hợp khi thích hợp.
+**Answer:** No. The types may have different domain meanings and constraints. Map the data explicitly, use an adapter, or define a shared contract at the integration boundary as appropriate.
 
-## Tóm ý cần nắm
+## Main ideas to remember
 
-Trong Java, **tương thích kiểu con** là câu chuyện về **danh tính kiểu và quan hệ `extends`/`implements` hợp lệ**, không phải chỉ nhìn hai class có những phương thức/field giống nhau. Hệ thống kiểu theo cấu trúc có thể chấp nhận một giá trị từ hình dạng thành viên phù hợp mà không cần khai báo quan hệ trực tiếp; đó là lựa chọn thiết kế khác của ngôn ngữ.
+In Java, **subtype compatibility** depends on **type identity and valid `extends`/`implements` relationships**, not merely on two classes having the same methods or fields. Structural type systems can accept a value based on its members' shape without an explicit declared relationship; this is a different language design choice.
 
-Khi gặp lỗi *incompatible types*, hãy hỏi: **(1)** Kiểu khai báo của biểu thức là gì? **(2)** Có quan hệ subtype nominal tới kiểu đích không? **(3)** Đây là chuyển đổi đặc biệt của Java hay một generic invariant? **(4)** Nếu hai hệ thống không cùng hợp đồng, có nên tạo adapter/chuyển đổi thay vì ép kiểu? Trả lời các câu đó thường chỉ ra nguyên nhân chính xác của lỗi và phương án thiết kế rõ ràng hơn.
+When encountering an *incompatible types* error, ask: **(1)** What is the expression's declared type? **(2)** Is there a nominal subtype relationship to the target type? **(3)** Is this a special Java conversion or an invariant generic type? **(4)** If the systems lack a common contract, should you create an adapter/conversion instead of casting? These answers often reveal the precise reason for the error and a clearer design.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="subtyping-004">Kiểu khai báo và kiểu thực tế của đối tượng</a>
+## <a id="subtyping-004">Declared types and runtime object types</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Kiểu khai báo và kiểu thực tế của đối tượng trong Java
+# Declared types and runtime object types in Java
 
-Trong Java, một biến kiểu tham chiếu có thể được khai báo bằng **kiểu cha** hoặc **interface**, trong khi đối tượng mà biến đang tham chiếu lại thuộc một **lớp con cụ thể**. Đây là nền tảng của tính đa hình (polymorphism) và khả năng thay thế đối tượng theo hợp đồng.
+In Java, a reference variable may be declared using **a superclass** or **an interface**, while the referenced object is an instance of **a specific subclass**. This underpins polymorphism and contract-based object substitutability.
 
-Ví dụ:
+For example:
 
 ```java
 Animal animal = new Dog();
 ```
 
-Có hai thông tin phải tách bạch:
+Two pieces of information must remain distinct:
 
-- **Kiểu khai báo** (*declared type*, thường là kiểu tĩnh/*static type* của biểu thức biến): `Animal`.
-- **Kiểu thực tế** (*runtime type*, *dynamic type*) của đối tượng mà biến đang tham chiếu: `Dog`.
+- **Declared type** (*declared type*, often the *static type* of the variable expression): `Animal`.
+- **Actual type** (*runtime type*, *dynamic type*) of the object referenced: `Dog`.
 
-Hai kiểu có thể khác nhau nhưng không mâu thuẫn: `Dog` phải là kiểu con tương thích với `Animal` để phép gán này hợp lệ.
+The types can differ without conflict: `Dog` must be a compatible subtype of `Animal` for this assignment to be legal.
 
-## 1. Hai kiểu quyết định hai điều khác nhau
+## 1. Two types govern two different things
 
-| Khía cạnh | Kiểu khai báo | Kiểu thực tế |
+| Aspect | Declared type | Runtime type |
 |---|---|---|
-| Xác định từ đâu? | Khai báo biến/tham số/kiểu biểu thức khi biên dịch | Lớp của đối tượng thực sự được tạo và tham chiếu lúc chạy |
-| Ví dụ `Animal a = new Dog();` | `Animal` | `Dog` |
-| Quyết định thao tác nào được gọi trực tiếp qua biến? | Chủ yếu theo kiểu mà trình biên dịch biết | Không tự làm xuất hiện phương thức chỉ có ở subclass trong API kiểu cha |
-| Quyết định implementation của instance method đã override? | Xác định chữ ký có thể gọi | Chọn implementation ở runtime qua dynamic dispatch |
-| Có thay đổi theo phép gán lại biến? | Không, kiểu khai báo cố định | Có thể thay đổi đối tượng được tham chiếu |
-| Có tồn tại khi biến bằng `null`? | Có | Không có đối tượng nên không có runtime class |
+| Determined by | Variable/parameter declaration or expression type at compile time | The class of the object actually created and referenced at runtime |
+| Example `Animal a = new Dog();` | `Animal` | `Dog` |
+| Which operations can be invoked directly through the variable? | Primarily the type known by the compiler | Does not expose subclass-only methods through the superclass API |
+| Which overridden instance-method implementation runs? | Determines which signature can be called | Selects the implementation through runtime dynamic dispatch |
+| Can it change when the variable is reassigned? | No; the declaration fixes it | The referenced object may change |
+| Does it exist if the variable is `null`? | Yes | No object exists, so no runtime class |
 
-Ví dụ:
+For example:
 
 ```java
 Animal current = new Dog();
@@ -1954,13 +1954,13 @@ current = new Cat(); // Hợp lệ nếu Cat extends Animal
 // current vẫn có kiểu khai báo Animal.
 ```
 
-Trong khi đó, **kiểu thực tế của từng đối tượng không biến đổi** từ `Dog` thành `Cat`. Phép gán chỉ làm biến `current` tham chiếu đến **một đối tượng khác**.
+Meanwhile, **the runtime type of each object does not transform** from `Dog` into `Cat`. Reassignment merely makes `current` point to **a different object**.
 
-> Ghi nhớ: biến tham chiếu có **kiểu khai báo**; đối tượng được tham chiếu có **lớp runtime**. Một biến có thể lần lượt tham chiếu nhiều đối tượng thuộc các kiểu con tương thích.
+> Remember: a reference variable has a **declared type**; the referenced object has a **runtime class**. The same variable can successively refer to different objects of compatible subtypes.
 
-## 2. Ví dụ chạy độc lập: một interface, nhiều kiểu thực tế
+## 2. Standalone example: one interface, multiple runtime types
 
-Ta cần xây dựng chức năng thanh toán, nơi mã xử lý chỉ quan tâm một hợp đồng chung: đối tượng có thể cung cấp thông tin phương thức thanh toán và xác nhận yêu cầu thanh toán.
+We will build payment functionality whose processing code depends only on a common contract: an object can describe the payment method and confirm a payment request.
 
 File `DeclaredRuntimeTypeDemo.java` (Java 17+):
 
@@ -2057,14 +2057,14 @@ public class DeclaredRuntimeTypeDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac DeclaredRuntimeTypeDemo.java
 java DeclaredRuntimeTypeDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 Thẻ ****1234
@@ -2078,34 +2078,34 @@ Thanh toán qua ví: 30000 VND
 Không phải CardPayment
 ```
 
-### Phân tích từng giai đoạn
+### Analyzing each stage
 
-**Ban đầu:**
+**Initially:**
 
 ```java
 PaymentMethod method = new CardPayment("1234");
 ```
 
-- `PaymentMethod` là **kiểu khai báo** của `method`.
-- `CardPayment` là **kiểu thực tế** của đối tượng.
-- Hai lời gọi `method.description()` và `method.pay(...)` được compiler chấp nhận vì hai phương thức thuộc hợp đồng `PaymentMethod`.
-- Implementation được thực thi là phiên bản của `CardPayment`.
+- `PaymentMethod` is the **declared type** of `method`.
+- `CardPayment` is the object's **runtime type**.
+- The compiler accepts `method.description()` and `method.pay(...)` because both methods belong to the `PaymentMethod` contract.
+- The implementation executed is the `CardPayment` version.
 
-**Sau đó:**
+**Later:**
 
 ```java
 method = new EWalletPayment("WALLET-7");
 ```
 
-- Kiểu khai báo của `method` **vẫn là** `PaymentMethod`.
-- Đối tượng mà `method` tham chiếu giờ thuộc `EWalletPayment`.
-- Những lời gọi giống hệt `method.description()` và `method.pay(...)` nay dispatch đến implementation của `EWalletPayment`.
+- The declared type of `method` **remains** `PaymentMethod`.
+- The object referenced by `method` is now an `EWalletPayment`.
+- The same calls to `method.description()` and `method.pay(...)` now dispatch to the `EWalletPayment` implementation.
 
-Hàm `checkout(PaymentMethod, long)` không cần dùng `if/else` để hỏi đối tượng có phải thẻ hay ví. Đây là **đa hình qua interface**: cách sử dụng ổn định trong khi kiểu thực tế và implementation có thể khác nhau.
+The `checkout(PaymentMethod, long)` function needs no `if/else` to determine whether the object is a card or wallet. This is **interface-based polymorphism**: the calling pattern stays stable even as runtime types and implementations differ.
 
-Lưu ý đây là mô phỏng hành vi thanh toán, không kết nối hệ thống thanh toán thật.
+This example simulates payment behavior without connecting to real payment systems.
 
-## 3. Quan hệ giữa kiểu khai báo, đối tượng và lời gọi phương thức
+## 3. How declared types, objects, and method calls relate
 
 ```mermaid
 flowchart TD
@@ -2115,16 +2115,16 @@ flowchart TD
     B --> D["description()/pay()<br/>implementation của EWalletPayment"]
 ```
 
-Sơ đồ thể hiện **hai thời điểm liên tiếp**, không hàm ý biến có thể đồng thời tham chiếu hai đối tượng.
+The diagram shows **two consecutive moments**, not that a variable can point to two objects simultaneously.
 
-Phải tách hai quyết định:
+Two decisions must be distinguished:
 
-1. **Compile time:** Với biểu thức `method.pay(50000)`, chữ ký nào có thể gọi dựa vào **kiểu tĩnh** mà compiler biết?
-2. **Runtime:** Nếu phương thức instance được override/implemented, thân phương thức nào sẽ chạy dựa vào **kiểu thực tế** của đối tượng?
+1. **Compile time:** For the expression `method.pay(50000)`, which signature can be called based on the **static type** known by the compiler?
+2. **Runtime:** For an overridden/implemented instance method, which method body executes based on the object's **actual type**?
 
-Cách phân biệt này đặc biệt hữu ích khi làm việc với superclass, interface, dependency injection và các collection có phần tử mang kiểu cha.
+This distinction is especially useful with superclasses, interfaces, dependency injection, and collections whose elements are exposed through a parent type.
 
-## 4. Vì sao không gọi được phương thức riêng của lớp con?
+## 4. Why can't subclass-specific methods be called?
 
 ```java
 PaymentMethod payment = new CardPayment("5678");
@@ -2133,16 +2133,16 @@ PaymentMethod payment = new CardPayment("5678");
 // LỖI BIÊN DỊCH: PaymentMethod không khai báo lastFourDigits().
 ```
 
-Mặc dù **ta biết từ biểu thức `new`** rằng đối tượng được tạo là `CardPayment`, trình biên dịch kiểm tra `payment.lastFourDigits()` theo **kiểu khai báo của biến `payment`**. Interface `PaymentMethod` không có phương thức này.
+Even though **we know from the `new` expression** that the object is a `CardPayment`, the compiler checks `payment.lastFourDigits()` against **the declared type of `payment`**. The `PaymentMethod` interface has no such method.
 
-Nếu phương thức thực sự chỉ dành cho `CardPayment`, có thể sử dụng biến đúng kiểu:
+If the method truly belongs only to `CardPayment`, use a variable of that type:
 
 ```java
 CardPayment card = new CardPayment("5678");
 System.out.println(card.lastFourDigits()); // 5678
 ```
 
-Hoặc kiểm tra runtime type trước khi sử dụng tính năng riêng:
+Or check the runtime type before using the specialized capability:
 
 ```java
 PaymentMethod payment = new CardPayment("5678");
@@ -2152,11 +2152,11 @@ if (payment instanceof CardPayment card) {
 }
 ```
 
-Đây là **pattern matching for instanceof** (chuẩn từ Java 16, dùng được ở Java 17). Biến pattern `card` chỉ được sử dụng trong phạm vi mà compiler biết điều kiện kiểm tra đã thành công.
+This is **pattern matching for instanceof** (standard since Java 16 and usable in Java 17). The pattern variable `card` can be used only where the compiler knows the test has succeeded.
 
-**Góc độ thiết kế:** Nếu rất nhiều nơi phải kiểm tra `instanceof CardPayment` rồi mới xử lý thanh toán, hãy cân nhắc xem hành vi đó có thuộc **hợp đồng chung `PaymentMethod`** hay không. Không nên lạm dụng ép kiểu xuống để thay thế đa hình, nhưng cũng không nên đưa chi tiết riêng của thẻ vào interface nếu các phương thức thanh toán khác không có cùng ý nghĩa.
+**Design consideration:** If many callers need to check `instanceof CardPayment` to process payments, consider whether the action belongs in **the shared `PaymentMethod` contract**. Avoid excessive downcasting as a replacement for polymorphism, but do not put card-specific details into an interface if other payment methods have no equivalent meaning.
 
-## 5. Hai phép chuyển kiểu tham chiếu nhìn từ declared/runtime type
+## 5. Two reference conversions viewed through declared/runtime types
 
 ```java
 CardPayment card = new CardPayment("1234");
@@ -2165,7 +2165,7 @@ CardPayment same = (CardPayment) payment; // Downcast thành công
 System.out.println(card == same);         // true
 ```
 
-**Upcast** cho phép sử dụng kiểu rộng hơn theo `extends` hoặc `implements`, không đổi lớp runtime và không tạo object mới. **Downcast** yêu cầu xác nhận object thật sự thuộc kiểu con cần dùng:
+**Upcasting** allows a broader type through `extends` or `implements` without changing the runtime class or creating a new object. **Downcasting** requires verifying that the actual object belongs to the requested subtype:
 
 ```java
 PaymentMethod payment = new EWalletPayment("WALLET-7");
@@ -2176,11 +2176,11 @@ if (payment instanceof CardPayment card) {
 }
 ```
 
-Nếu ép thẳng `(CardPayment) payment` khi runtime object là `EWalletPayment`, JVM ném `ClassCastException`. Ép `null` sang kiểu tham chiếu hợp lệ nhận `null` nhưng gọi method sau đó vẫn ném `NullPointerException`. Bài **Upcasting** phân tích nhiều góc nhìn cùng một đối tượng; bài **Downcasting và kiểm tra kiểu** đi sâu vào `instanceof`, pattern variable, `getClass()` và type erasure. Tại đây chỉ cần nhớ **declared type giới hạn API, runtime type quyết định override**.
+If `(CardPayment) payment` is attempted while the runtime object is an `EWalletPayment`, the JVM throws `ClassCastException`. Casting `null` to a compatible reference type returns `null`, but calling a method afterward still throws `NullPointerException`. The **Upcasting** lesson explains multiple views of one object; the **Downcasting and type checking** lesson covers `instanceof`, pattern variables, `getClass()`, and type erasure. Here, remember only that **declared type limits the API, and runtime type determines overrides**.
 
-## 6. Overriding dùng kiểu runtime, nhưng overloading chọn từ kiểu compile-time
+## 6. Overriding uses runtime types, while overloading is resolved at compile time
 
-Đây là điểm đặc biệt dễ nhầm khi đọc code Java: **ghi đè (override)** và **nạp chồng (overload)** đều dùng tên phương thức, nhưng quy tắc chọn khác nhau.
+This is particularly easy to confuse in Java: **overriding** and **overloading** both involve method names, but selection rules differ.
 
 File `DispatchRulesDemo.java`:
 
@@ -2220,7 +2220,7 @@ public class DispatchRulesDemo {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 Woof
@@ -2229,28 +2229,28 @@ Overload: Dog
 Overload: Dog
 ```
 
-Giải thích:
+Explanation:
 
-- `declaredAsAnimal.sound()` chạy `Dog.sound()`, vì `sound()` là **phương thức instance được override** và đối tượng thực tế là `Dog`.
-- `inspect(declaredAsAnimal)` gọi overload nhận `Animal`, vì lựa chọn overload dựa trên kiểu **biểu thức đối số** compiler biết là `Animal`.
-- `inspect(declaredAsDog)` gọi overload nhận `Dog`.
-- `inspect((Dog) declaredAsAnimal)` chọn overload nhận `Dog` vì biểu thức ép kiểu có **kiểu tĩnh `Dog`**, với phép kiểm tra ép kiểu phù hợp ở runtime.
+- `declaredAsAnimal.sound()` executes `Dog.sound()`, because `sound()` is an **overridden instance method** and the runtime object is a `Dog`.
+- `inspect(declaredAsAnimal)` selects the overload accepting `Animal`, because overload resolution uses the argument's **expression type**, known to the compiler as `Animal`.
+- `inspect(declaredAsDog)` selects the overload accepting `Dog`.
+- `inspect((Dog) declaredAsAnimal)` selects the overload accepting `Dog`, because the cast expression has **static type `Dog`** and must also pass the appropriate runtime cast check.
 
-Cần phân biệt **giai đoạn chọn chữ ký overload** với **giai đoạn chọn implementation override**. Nếu một overload tự nó là phương thức instance có override, sau khi compiler chọn chữ ký overload, Java vẫn có thể dynamic dispatch cho implementation của chữ ký đó.
+Distinguish **overload signature selection** from **overridden implementation selection**. If the selected overload is itself an overridden instance method, Java may still dynamically dispatch the implementation of that signature.
 
-### So sánh nhanh
+### Quick comparison
 
-| Trường hợp | Chủ yếu dựa vào | Ví dụ |
+| Scenario | Primarily determined by | Example |
 |---|---|---|
-| Kiểm tra biến có thể gọi phương thức nào | Kiểu tĩnh của biểu thức | `Animal a` không gọi được phương thức chỉ có trong `Dog` |
-| Chọn overload (`foo(Animal)` hay `foo(Dog)`) | Kiểu tĩnh của đối số và quy tắc overload | `foo(a)` với `Animal a = new Dog()` chọn overload `Animal` |
-| Chọn implementation của phương thức instance được override | Kiểu runtime của receiver | `a.sound()` chạy `Dog.sound()` |
-| Truy cập field | Kiểu tĩnh của biểu thức nhận | Field không dynamic dispatch |
-| Chọn static method | Phân giải tĩnh theo kiểu khai báo/biểu thức | Static method không override kiểu runtime |
+| Checking which methods a variable may invoke | Static type of the expression | `Animal a` cannot call a method found only in `Dog` |
+| Selecting an overload (`foo(Animal)` versus `foo(Dog)`) | Static argument type and overload rules | `foo(a)` with `Animal a = new Dog()` selects the `Animal` overload |
+| Selecting an overridden instance-method implementation | Runtime type of the receiver | `a.sound()` invokes `Dog.sound()` |
+| Accessing a field | Static type of the receiving expression | Fields are not dynamically dispatched |
+| Selecting a static method | Static resolution by declared/expression type | Static methods do not override by runtime type |
 
-## 7. Trường và phương thức static không có dynamic dispatch
+## 7. Fields and static methods do not use dynamic dispatch
 
-Một instance method override được chọn theo runtime class; với **field** cùng tên, Java chọn theo kiểu tĩnh của biểu thức, còn **static method** được phân giải theo kiểu/lớp tại biên dịch.
+An overridden instance method is selected by runtime class; **fields** with the same name are selected according to the expression's static type, while **static methods** are resolved by type/class at compile time.
 
 ```java
 class Base {
@@ -2271,9 +2271,9 @@ System.out.println(Base.category());   // Base static
 System.out.println(Derived.category());// Derived static
 ```
 
-Đây là **field hiding** và **static method hiding**, không phải ghi đè đa hình. Nên dùng tên lớp khi gọi static method và tránh field trùng tên trong cây lớp. Phần tiếp theo dùng sự khác biệt này để giải thích lỗi khi đọc các biểu thức Java có overload và override.
+These are **field hiding** and **static method hiding**, not polymorphic overriding. Prefer class names when calling static methods and avoid same-named fields in class hierarchies. The next section uses these differences to explain mistakes in expressions involving overloads and overrides.
 
-## 8. Null không có kiểu thực tế của đối tượng
+## 8. Null has no object runtime type
 
 ```java
 PaymentMethod method = null;
@@ -2284,17 +2284,17 @@ System.out.println(method instanceof CardPayment); // false
 // method.getClass();    // Ném NullPointerException
 ```
 
-Biến `method` vẫn có kiểu khai báo `PaymentMethod`, nhưng hiện tại **không tham chiếu đến đối tượng** nào, nên không có lớp runtime để truy vấn.
+The variable `method` still has declared type `PaymentMethod`, but currently **references no object**, so there is no runtime class to inspect.
 
-Không nên gọi `method.getClass()` chỉ nhằm quyết định hành vi nghiệp vụ nếu polymorphism đã cung cấp hợp đồng chung. `getClass()` hữu ích khi debug hoặc cần kiểm tra đúng lớp runtime; trong một số framework, lớp runtime có thể là proxy/subclass do framework tạo ra, không nhất thiết là tên lớp domain mà bạn tưởng tượng.
+Do not call `method.getClass()` merely to decide business behavior when polymorphism already provides a shared contract. `getClass()` is useful for debugging or checking exact runtime classes; in some frameworks, the runtime class may be a framework-created proxy/subclass instead of the domain class name you expect.
 
-### Kiểu runtime không phải “kiểu của giá trị primitive”
+### Runtime type is not “the type of a primitive value”
 
-Các biến primitive cũng có kiểu compile-time (`int`, `double`, `boolean`), nhưng chúng không giữ tham chiếu tới đối tượng như biến `PaymentMethod`. Thảo luận `getClass()` và phân biệt kiểu khai báo/kiểu thực tế ở đây chủ yếu nói về **biến kiểu tham chiếu và đối tượng**.
+Primitive variables also have compile-time types (`int`, `double`, `boolean`), but they do not hold object references like a `PaymentMethod` variable. This discussion of `getClass()` and declared versus actual type primarily concerns **reference variables and objects**.
 
-## 9. Ứng dụng trong collection, API và dependency injection
+## 9. Uses in collections, APIs, and dependency injection
 
-### Collection chứa kiểu cha
+### Collections of supertypes
 
 ```java
 import java.util.ArrayList;
@@ -2309,26 +2309,26 @@ for (Animal animal : animals) {
 }
 ```
 
-Giả sử `Cat extends Animal` và override `sound()`, vòng lặp hoạt động như sau:
+Suppose `Cat extends Animal` and overrides `sound()`. The loop behaves as follows:
 
-- Biến lặp `animal` luôn có kiểu khai báo `Animal`.
-- Mỗi phần tử có thể là đối tượng `Dog` hoặc `Cat`.
-- `animal.sound()` dispatch theo lớp thực tế tương ứng.
+- The loop variable `animal` always has declared type `Animal`.
+- Each element may be a `Dog` or `Cat` object.
+- `animal.sound()` dispatches to the corresponding runtime class.
 
-Tuy nhiên, không thể gán `List<Dog>` cho `List<Animal>` chỉ vì `Dog extends Animal`:
+However, `List<Dog>` cannot be assigned to `List<Animal>` merely because `Dog extends Animal`:
 
 ```java
 List<Dog> dogs = new ArrayList<>();
 // List<Animal> all = dogs; // Lỗi biên dịch
 ```
 
-Java generics mặc định **invariant**: nếu cho phép phép gán đó thì có thể thêm `Cat` vào một `List<Dog>`. Khi chỉ cần đọc các đối tượng con như kiểu cha, có thể dùng `List<? extends Animal>` với các giới hạn ghi tương ứng.
+Java generics are **invariant** by default: allowing the assignment would let you insert a `Cat` into a `List<Dog>`. When only reading subclass objects as supertypes, use `List<? extends Animal>` subject to its write restrictions.
 
-Đừng nhầm **kiểu runtime của phần tử** với **tham số generic** của một collection. Do *type erasure*, `getClass()` của `ArrayList<String>` không cho biết tham số kiểu `String` như metadata generic runtime của chính instance.
+Do not confuse **the runtime type of an element** with **the generic type argument** of a collection. Because of *type erasure*, calling `getClass()` on an `ArrayList<String>` does not reveal `String` as runtime generic parameter metadata of that instance.
 
-### API nhận interface
+### APIs accepting interfaces
 
-Một service có thể khai báo phụ thuộc:
+A service may declare a dependency:
 
 ```java
 final class CheckoutService {
@@ -2345,13 +2345,13 @@ final class CheckoutService {
 }
 ```
 
-Trong thực tế, `CheckoutService` có thể nhận `CardPayment`, `EWalletPayment` hoặc một implementation khác đáp ứng hợp đồng. Nó **không cần** biết kiểu thực tế để thực hiện hành vi `pay(...)`. Đây là lợi ích thiết kế của việc khai báo theo **kiểu trừu tượng phù hợp**.
+In practice, `CheckoutService` may accept `CardPayment`, `EWalletPayment`, or another implementation fulfilling the contract. It **does not need** the actual type to call `pay(...)`. This is the design advantage of declaring dependencies using **a suitable abstract type**.
 
-Điều này cũng xuất hiện khi dùng dependency injection trong Spring: field hoặc tham số constructor thường khai báo interface, còn container đưa vào một implementation cụ thể. Điểm quan trọng không phải “Spring làm đổi kiểu biến”, mà là **biến giữ nguyên kiểu interface và tham chiếu một object runtime thuộc implementation được cung cấp**.
+The same applies to dependency injection in Spring: fields or constructor parameters often use interface types, while the container supplies a concrete implementation. The key is not that “Spring changes the variable's type,” but that **the variable retains its interface type and references a runtime object of the provided implementation**.
 
-## 10. Khi nào nên cast, khi nào nên thiết kế lại hợp đồng?
+## 10. When to cast and when to redesign a contract
 
-Một phép downcast hợp lệ không đồng nghĩa với thiết kế tốt. Xem ví dụ:
+A valid downcast is not automatically a good design. Consider:
 
 ```java
 void process(PaymentMethod method) {
@@ -2363,7 +2363,7 @@ void process(PaymentMethod method) {
 }
 ```
 
-Đoạn này hợp lý nếu chức năng **thực sự** cần dữ liệu chỉ có ở thẻ, chẳng hạn màn hình hiển thị bốn số cuối. Nhưng nếu mục đích chỉ là hiển thị **mô tả phương thức thanh toán**, tốt hơn dùng hợp đồng:
+This is reasonable if the feature **actually** needs card-only data, such as displaying the last four digits. But if the intent is simply to show **a payment-method description**, prefer the contract:
 
 ```java
 void showPayment(PaymentMethod method) {
@@ -2371,36 +2371,36 @@ void showPayment(PaymentMethod method) {
 }
 ```
 
-Điều kiện cân nhắc:
+Decision guidelines:
 
-| Nếu cần… | Thường nên… |
+| If you need to… | You should generally… |
 |---|---|
-| Thực thi một hành vi có ý nghĩa với mọi implementation | Khai báo hành vi trong interface/superclass rồi gọi đa hình |
-| Sử dụng khả năng riêng của một subtype | Kiểm tra `instanceof` hoặc dùng kiểu subtype ở đúng phạm vi |
-| Lặp chuỗi `instanceof` để chọn cùng một hành vi nghiệp vụ | Xem xét chuyển sang polymorphic method |
-| Tạo một đối tượng từ nhiều nguồn nhưng dùng chung API | Khai báo biến/tham số bằng kiểu cha hoặc interface |
-| Biết chính xác chỉ cần `CardPayment` và dùng API riêng của thẻ | Khai báo trực tiếp `CardPayment`, không upcast chỉ vì “cho OOP” |
+| Perform a behavior meaningful for every implementation | Declare it on the interface/superclass and invoke it polymorphically |
+| Use capabilities specific to one subtype | Check with `instanceof` or use the subtype within the proper scope |
+| Repeat a chain of `instanceof` cases to select the same business action | Consider replacing it with a polymorphic method |
+| Create an object from different sources with one shared API | Declare variables/parameters using a superclass or interface |
+| Use only `CardPayment` and its card-specific API | Declare `CardPayment` directly; do not upcast merely “for OOP” |
 
-**Nguyên tắc:** kiểu khai báo nên thể hiện **những năng lực caller cần**, không nhất thiết là lớp cụ thể đã được dùng để khởi tạo đối tượng.
+**Principle:** a declared type should express **the capabilities the caller needs**, not necessarily the concrete class used to construct the object.
 
-## 11. Những hiểu lầm hay gặp
+## 11. Common misunderstandings
 
-| Nhận định | Đúng/Sai | Giải thích |
+| Statement | True/false | Explanation |
 |---|---|---|
-| `Animal a = new Dog()` khiến đối tượng trở thành `Animal` | Sai | Đối tượng vẫn thuộc lớp runtime `Dog` |
-| Có thể gọi mọi method của `Dog` qua biến `Animal` | Sai | Compiler chỉ cho các method hợp lệ theo kiểu tĩnh |
-| `a.sound()` gọi override của `Dog` nếu `a` tham chiếu `Dog` | Đúng | Dynamic dispatch cho instance method |
-| Downcast làm thay đổi lớp runtime của đối tượng | Sai | Chỉ kiểm tra và thay đổi kiểu biểu thức tham chiếu |
-| Ép kiểu sai có thể ném `ClassCastException` | Đúng | Khi kiểu runtime không tương thích |
-| Overload được chọn dựa hoàn toàn vào lớp runtime của đối số | Sai | Lựa chọn overload dựa vào kiểu compile-time của biểu thức |
-| Field của lớp con override field lớp cha | Sai | Field có thể bị che khuất, không dispatch động |
-| Static method được override như instance method | Sai | Static method hiding/lexical resolution |
-| Biến bằng `null` không còn kiểu khai báo | Sai | Vẫn có kiểu khai báo; không có đối tượng runtime |
-| `List<Dog>` là subtype của `List<Animal>` | Sai | Generic collections mặc định invariant |
+| `Animal a = new Dog()` makes the object become an `Animal` | False | The object remains a runtime `Dog` |
+| Every `Dog` method is callable through an `Animal` variable | False | The compiler allows only methods valid for the static type |
+| `a.sound()` invokes the `Dog` override when `a` references a `Dog` | True | Dynamic dispatch of an instance method |
+| Downcasting changes the object's runtime class | False | It checks and changes the reference expression's type only |
+| An invalid cast may throw `ClassCastException` | True | When the runtime type is incompatible |
+| Overloads are chosen entirely by the argument's runtime class | False | Overload resolution uses the expression's compile-time type |
+| Subclass fields override superclass fields | False | Fields can be hidden, not dynamically dispatched |
+| Static methods are overridden like instance methods | False | Static method hiding/lexical resolution |
+| A `null` variable loses its declared type | False | It retains its declared type; no runtime object exists |
+| `List<Dog>` is a subtype of `List<Animal>` | False | Generic collections are invariant by default |
 
-## 12. Bài tập tự kiểm tra
+## 12. Self-assessment exercises
 
-### Bài 1 — Kết quả nào được in?
+### Exercise 1 — What is printed?
 
 ```java
 class Shape {
@@ -2419,9 +2419,9 @@ System.out.println(shape.draw());
 // System.out.println(shape.radius()); // Có biên dịch không?
 ```
 
-**Đáp án:** In `Circle`, vì phương thức instance được override theo kiểu runtime. `shape.radius()` **không biên dịch**, vì `Shape` không có method `radius()`. Có thể kiểm tra `shape instanceof Circle circle` rồi gọi `circle.radius()`.
+**Answer:** Prints `Circle` because the instance method uses the runtime override. `shape.radius()` **does not compile** because `Shape` has no `radius()` method. You can check `shape instanceof Circle circle` and then invoke `circle.radius()`.
 
-### Bài 2 — Đổi tham chiếu, đổi kiểu gì?
+### Exercise 2 — Reassign a reference: which type changes?
 
 ```java
 Shape current = new Circle();
@@ -2429,9 +2429,9 @@ current = new Shape();
 System.out.println(current.draw());
 ```
 
-**Đáp án:** In `Shape`. Biến `current` luôn có kiểu khai báo `Shape`; trước phép gán nó tham chiếu `Circle`, sau phép gán nó tham chiếu một `Shape` mới.
+**Answer:** Prints `Shape`. The variable `current` always has declared type `Shape`; before reassignment it refers to a `Circle`, and afterward to a new `Shape`.
 
-### Bài 3 — Overload hay override?
+### Exercise 3 — Overload or override?
 
 ```java
 class Animal {}
@@ -2449,36 +2449,36 @@ Animal animal = new Dog();
 show(animal);
 ```
 
-**Đáp án:** In `Animal`. Hai phương thức `show(...)` là overload; compiler chọn theo kiểu khai báo của biểu thức `animal`, không theo đối tượng `Dog` đang nằm sau tham chiếu.
+**Answer:** Prints `Animal`. The two `show(...)` methods are overloads; the compiler chooses using the declared type of expression `animal`, not the `Dog` object behind that reference.
 
-### Bài 4 — Nhận diện ép kiểu sai
+### Exercise 4 — Identify an invalid cast
 
 ```java
 PaymentMethod payment = new EWalletPayment("WALLET-9");
 CardPayment card = (CardPayment) payment;
 ```
 
-**Đáp án:** Biên dịch được vì các quan hệ kiểu cho phép thử ép từ interface sang lớp implementation, nhưng ném `ClassCastException` khi chạy vì đối tượng thực tế là `EWalletPayment`. Cần kiểm tra kiểu trước hoặc tránh downcast nếu hợp đồng chung đã đủ.
+**Answer:** It compiles because the type relationships permit attempting a cast from an interface to an implementation class, but throws `ClassCastException` at runtime because the actual object is an `EWalletPayment`. Check the type first or avoid downcasting if the shared contract suffices.
 
 ---
 
-**Ghi nhớ:** Trong `Parent p = new Child()`, **`Parent` là kiểu khai báo của biến, `Child` là kiểu thực tế của đối tượng**. Kiểu khai báo giới hạn những thành viên và overload mà compiler có thể chọn; kiểu thực tế quyết định implementation của phương thức instance được override khi chạy. Upcast không đổi đối tượng, downcast không tạo đối tượng mới và có thể thất bại. Thiết kế API dựa trên interface/superclass giúp tận dụng đa hình, còn `instanceof` và ép kiểu chỉ nên dùng khi thực sự cần hành vi riêng của subtype.
+**Remember:** In `Parent p = new Child()`, **`Parent` is the declared type of the variable and `Child` is the object's actual type**. The declared type limits members and overloads available to the compiler; the runtime type determines which overridden instance-method implementation executes. Upcasting does not change the object, downcasting does not create a new one and may fail. APIs based on interfaces/superclasses support polymorphism, while `instanceof` and casts should be used only for genuinely subtype-specific behavior.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="subtyping-005">Chuyển từ kiểu con sang kiểu cha</a>
+## <a id="subtyping-005">Upcasting from a subtype to a supertype</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Chuyển từ kiểu con sang kiểu cha trong Java (Upcasting)
+# Upcasting from a subtype to a supertype in Java
 
-Trong Java, **kiểu con** (*subtype*) có thể được sử dụng ở nơi chương trình yêu cầu **kiểu cha** (*supertype*), miễn là tồn tại quan hệ kế thừa hoặc triển khai interface hợp lệ. Chuyển một tham chiếu có kiểu con sang kiểu cha gọi là **upcasting**.
+In Java, **a subtype** (*subtype*) may be used where a program expects **a supertype** (*supertype*), provided a valid class inheritance or interface implementation relationship exists. Converting a subtype reference to a supertype is called **upcasting**.
 
 ```java
 class Animal {}
@@ -2488,13 +2488,13 @@ Dog dog = new Dog();
 Animal animal = dog;  // Upcasting ngầm định: Dog -> Animal
 ```
 
-Phép gán trên **không tạo thêm đối tượng `Animal`** và không biến `Dog` thành một đối tượng khác. Hai biến `dog` và `animal` cùng tham chiếu đến **một đối tượng `Dog`**, nhưng trình biên dịch kiểm tra các thao tác được phép thực hiện trên `animal` theo kiểu khai báo `Animal`.
+The assignment **does not create an additional `Animal` object** or turn `Dog` into a different object. Both `dog` and `animal` refer to **the same `Dog` object**, but the compiler checks operations permitted on `animal` against its declared type `Animal`.
 
-Đây là cơ sở của **đa hình (polymorphism)**: cùng một đoạn mã làm việc với kiểu cha hoặc interface nhưng nhận được các cách thực hiện khác nhau từ đối tượng cụ thể.
+This is the basis of **polymorphism**: the same code works with a supertype or interface while receiving different implementations from concrete objects.
 
-## 1. Khi nào có thể upcast?
+## 1. When is upcasting allowed?
 
-Trong Java, quan hệ subtype/supertype thông dụng xuất hiện qua `extends` và `implements`:
+In Java, subtype/supertype relationships commonly arise through `extends` and `implements`:
 
 ```java
 class Vehicle {}
@@ -2506,7 +2506,7 @@ interface Insurable {}
 class Taxi extends Car implements Insurable {}
 ```
 
-Một đối tượng `Taxi` có thể được nhìn qua các kiểu:
+A `Taxi` object can be viewed through these types:
 
 ```java
 Taxi taxi = new Taxi();
@@ -2516,20 +2516,20 @@ Insurable asInsurable = taxi;
 Object asObject = taxi;
 ```
 
-Các phép gán trên đều hợp lệ. `Taxi` kế thừa `Car`, `Car` kế thừa `Vehicle`, mọi đối tượng lớp thông thường cuối cùng đều có `Object` trong cây kế thừa, và `Taxi` implements `Insurable`.
+All these assignments are valid. `Taxi` inherits from `Car`, `Car` inherits from `Vehicle`, ordinary class objects ultimately have `Object` in their inheritance tree, and `Taxi` implements `Insurable`.
 
-Cùng một đối tượng có thể mang **nhiều kiểu tham chiếu**. Upcasting thường không cần cú pháp ép kiểu tường minh:
+A single object can have **multiple reference types**. Upcasting normally requires no explicit cast syntax:
 
 ```java
 Vehicle a = taxi;           // Nên dùng: rõ ràng, ngắn gọn
 Vehicle b = (Vehicle) taxi; // Hợp lệ nhưng cast này không cần thiết
 ```
 
-Một phép chuyển sang kiểu cha hợp lệ không làm mất phần dữ liệu thuộc lớp con. Kiểu cha chỉ **giới hạn những thành phần nhìn thấy được khi biên dịch thông qua tham chiếu đó**.
+A valid conversion to a supertype does not erase subclass data. The supertype merely **limits the members visible at compile time through that reference**.
 
-## 2. Ví dụ thực tế: khách hàng thường và khách hàng Premium
+## 2. Practical example: regular and Premium customers
 
-Đặt toàn bộ mã sau trong file **`Main.java`**, biên dịch bằng Java 17 hoặc Java 21.
+Put all the following code in **`Main.java`** and compile with Java 17 or Java 21.
 
 ```java
 import java.util.List;
@@ -2632,14 +2632,14 @@ public class Main {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 C-10
@@ -2653,9 +2653,9 @@ C-10 -> PREMIUM
 C-20 -> STANDARD
 ```
 
-### Vì sao kết quả như vậy?
+### Why does the output look this way?
 
-**Một đối tượng, nhiều tham chiếu:**
+**One object, multiple references:**
 
 ```mermaid
 flowchart LR
@@ -2665,33 +2665,33 @@ flowchart LR
     B["asObject: Object"] --> O
 ```
 
-- `asCustomer == premium` trả `true` vì hai tham chiếu cùng trỏ đến một đối tượng.
-- `asObject.getClass().getSimpleName()` trả `PremiumCustomer` vì đối tượng thực tế vẫn là `PremiumCustomer`, không phải một bản sao `Customer`.
-- `premium.addPoints(10)` cập nhật cùng đối tượng mà `asCustomer` đang tham chiếu.
-- `asCustomer.tier()` trả `PREMIUM` vì Java thực hiện phương thức `tier()` được **override** trong lớp con.
-- Vòng lặp `List<Customer>` có thể xử lý cả `Customer` và `PremiumCustomer` bằng một hợp đồng chung.
+- `asCustomer == premium` returns `true` because both references point to the same object.
+- `asObject.getClass().getSimpleName()` returns `PremiumCustomer` because the runtime object is still a `PremiumCustomer`, not a `Customer` copy.
+- `premium.addPoints(10)` updates the same object referenced by `asCustomer`.
+- `asCustomer.tier()` returns `PREMIUM` because Java dispatches the **overridden** `tier()` method in the subclass.
+- A `List<Customer>` loop can process both `Customer` and `PremiumCustomer` through a shared contract.
 
-Đây là hai khía cạnh cần tách biệt:
+Two aspects must be kept separate:
 
-| Khái niệm | Trong `Customer asCustomer = premium;` |
+| Concept | In `Customer asCustomer = premium;` |
 | --- | --- |
-| Kiểu khai báo của tham chiếu (*compile-time type*) | `Customer` |
-| Kiểu thực tế của đối tượng (*runtime class*) | `PremiumCustomer` |
-| Thành phần có thể gọi khi biên dịch | Thành phần có thể truy cập qua hợp đồng `Customer` |
-| Phiên bản phương thức instance đã override được chạy | Theo đối tượng thực tế: `PremiumCustomer` |
-| Có tạo bản sao hoặc cắt phần dữ liệu lớp con? | **Không** |
-| Tham chiếu có dùng chung trạng thái với biến ban đầu? | **Có** |
+| Declared reference type (*compile-time type*) | `Customer` |
+| Actual object type (*runtime class*) | `PremiumCustomer` |
+| Members callable at compile time | Members accessible through the `Customer` contract |
+| Executed version of an overridden instance method | Determined by actual object: `PremiumCustomer` |
+| Is a copy created or subclass data sliced off? | **No** |
+| Does the reference share state with the original variable? | **Yes** |
 
-## 3. Upcasting làm giới hạn API nhìn thấy, không xóa hành vi lớp con
+## 3. Upcasting limits the visible API without removing subclass behavior
 
-Trong ví dụ:
+In the example:
 
 ```java
 PremiumCustomer premium = new PremiumCustomer("C-10", 40);
 Customer customer = premium;
 ```
 
-Qua `customer`, ta gọi được các phương thức mà kiểu `Customer` công bố:
+Through `customer`, we can call methods exposed by `Customer`:
 
 ```java
 customer.id();
@@ -2699,16 +2699,16 @@ customer.tier();
 customer.greeting();
 ```
 
-Nhưng đoạn sau **không biên dịch**:
+But the following **does not compile**:
 
 ```java
 // customer.addPoints(10); // Customer không khai báo addPoints()
 // customer.points();      // Customer không khai báo points()
 ```
 
-Lý do không phải đối tượng mất trường `bonusPoints`; mà là trình biên dịch không thể bảo đảm **mọi `Customer`** đều có các khả năng đặc thù của `PremiumCustomer`.
+The object has not lost its `bonusPoints` field; instead, the compiler cannot guarantee that **every `Customer`** has capabilities specific to `PremiumCustomer`.
 
-Tương tự:
+Similarly:
 
 ```java
 Auditable auditable = premium;
@@ -2717,23 +2717,23 @@ auditable.auditLabel(); // Hợp lệ
 // auditable.tier();     // Không biên dịch: Auditable không khai báo tier()
 ```
 
-Interface `Auditable` cung cấp **một góc nhìn khác** trên cùng đối tượng, chỉ công bố khả năng cần thiết cho việc audit.
+The `Auditable` interface provides **another view** of the same object, exposing only the capability needed for auditing.
 
-Điểm thiết kế đáng giá: service xử lý danh sách khách hàng thường chỉ cần biết `Customer`; service ghi audit có thể chỉ cần `Auditable`; cả hai không cần phụ thuộc vào những phương thức riêng của lớp Premium.
+The design benefit: a service processing customers generally needs only `Customer`, while an auditing service might need only `Auditable`. Neither depends on Premium-specific methods.
 
-## 4. Dynamic dispatch: phương thức override chạy theo đối tượng thực tế
+## 4. Dynamic dispatch: overridden methods use the actual object
 
-Giả sử:
+Suppose:
 
 ```java
 Customer customer = new PremiumCustomer("C-11", 0);
 String tier = customer.tier();
 ```
 
-Quy trình chọn phương thức gồm hai phần:
+Method selection involves two stages:
 
-1. **Biên dịch:** Java kiểm tra `Customer` có phương thức `tier()` hợp lệ và có thể truy cập không.
-2. **Chạy chương trình:** với lời gọi phương thức instance được override, Java chọn triển khai tương ứng với đối tượng thực tế `PremiumCustomer`.
+1. **Compile time:** Java checks whether `Customer` exposes an accessible, valid `tier()` method.
+2. **Runtime:** For an overridden instance-method call, Java selects the implementation of the actual `PremiumCustomer` object.
 
 ```mermaid
 flowchart TD
@@ -2745,7 +2745,7 @@ flowchart TD
     C -->|Không| G["Lỗi biên dịch"]
 ```
 
-Điều này cho phép xây các hàm tổng quát:
+This enables general-purpose functions:
 
 ```java
 static void printTier(Customer customer) {
@@ -2753,20 +2753,20 @@ static void printTier(Customer customer) {
 }
 ```
 
-`printTier(new Customer("C-1"))` và `printTier(new PremiumCustomer("C-2", 10))` cùng biên dịch nhưng có thể in hai kết quả khác nhau. Đó là đa hình thông qua lớp cha.
+`printTier(new Customer("C-1"))` and `printTier(new PremiumCustomer("C-2", 10))` both compile but may print different results. This is polymorphism through a superclass.
 
-**Không phải mọi thành phần trong Java đều dispatch theo runtime type.** Phương thức `static`, truy cập trường và lựa chọn **overload** có những quy tắc khác; xem phần tiếp theo.
+**Not every Java member is dispatched by runtime type.** `static` methods, field access, and **overload** resolution follow other rules, as discussed next.
 
-## 5. Những điều upcasting không làm thay đổi
+## 5. What upcasting does not change
 
-Lúc `Customer asCustomer = premium`, object vẫn là `PremiumCustomer` và instance method được override như `tier()` vẫn chọn implementation `PremiumCustomer.tier()`. Nhưng không phải mọi cú pháp đều được chọn theo runtime type:
+With `Customer asCustomer = premium`, the object remains a `PremiumCustomer`, and overridden instance methods such as `tier()` still select `PremiumCustomer.tier()`. But not every language construct is resolved according to runtime type:
 
-| Biểu thức | Compiler/runtime lựa chọn |
+| Expression | Compiler/runtime choice |
 | --- | --- |
-| `asCustomer.tier()` | Phương thức thuộc API `Customer`; override dispatch theo object |
-| `asCustomer.someField` | Field theo **kiểu tĩnh** nếu truy cập hợp lệ; không override |
-| `Printer.print(asCustomer)` với overload `print(Customer)` và `print(PremiumCustomer)` | Chọn `print(Customer)` theo kiểu đối số tại biên dịch |
-| `SomeType.staticMethod()` | Phương thức static không dispatch động theo object |
+| `asCustomer.tier()` | Method exposed by the `Customer` API; overridden implementation dispatched based on the object |
+| `asCustomer.someField` | Field selected by the **static type** if accessible; fields are not overridden |
+| `Printer.print(asCustomer)` with overloads `print(Customer)` and `print(PremiumCustomer)` | Selects `print(Customer)` by compile-time argument type |
+| `SomeType.staticMethod()` | Static methods are not dynamically dispatched by the object |
 
 ```java
 class Parent {
@@ -2779,11 +2779,11 @@ Parent ref = new Child();
 System.out.println(ref.description()); // Child
 ```
 
-Để tận dụng đa hình, công bố hành vi chung qua phương thức trên superclass/interface; hạn chế field hiding và quá nhiều overload phụ thuộc kiểu cụ thể. Bài về **kiểu khai báo/kiểu thực tế** phân tích kỹ lựa chọn overload và field hiding.
+To benefit from polymorphism, expose shared behavior through superclass/interface methods; avoid field hiding and too many overloads dependent on concrete types. The **declared/runtime type** lesson explains overload selection and field hiding in depth.
 
-## 6. Upcasting sang interface đặc biệt hữu ích ở ranh giới module
+## 6. Upcasting to interfaces is especially useful at module boundaries
 
-Giả sử một lớp xử lý thanh toán có thể triển khai nhiều khả năng:
+Suppose a payment-processing class implements several capabilities:
 
 ```java
 interface PaymentProcessor {
@@ -2807,7 +2807,7 @@ final class CardGateway implements PaymentProcessor, RefundProcessor {
 }
 ```
 
-Ta có thể chuyển cùng đối tượng sang hai kiểu interface:
+The same object can be viewed through two interface types:
 
 ```java
 CardGateway gateway = new CardGateway();
@@ -2818,11 +2818,11 @@ System.out.println(payments.pay(100));  // true
 System.out.println(refunds.refund(100)); // true
 ```
 
-Một service chỉ cần thu tiền có thể nhận `PaymentProcessor` thay vì phụ thuộc trực tiếp vào `CardGateway`. Điều này giúp giảm kết nối giữa các module, dễ thay adapter khi cần và tránh cấp cho client một bề mặt API rộng không cần thiết.
+A service that only collects payments can accept `PaymentProcessor` instead of depending directly on `CardGateway`. This reduces coupling between modules, makes adapters easier to replace, and avoids giving clients an unnecessarily broad API.
 
-Tuy nhiên, **upcasting không phải cơ chế phân quyền bảo mật**. Nó giới hạn những phương thức gọi được thông qua kiểu tham chiếu tại thời điểm biên dịch, chứ không vô hiệu hóa API khác hay khả năng truy cập được cấp qua các đường khác. Hệ thống thanh toán thực vẫn cần kiểm tra quyền, transaction, idempotency và hợp đồng lỗi.
+However, **upcasting is not a security authorization mechanism**. It restricts which methods can be invoked through a reference type at compile time; it does not disable other APIs or access provided through other paths. Real payment systems still need authorization, transactions, idempotency, and failure contracts.
 
-## 7. Tại sao đi ngược chiều cần kiểm tra?
+## 7. Why does the reverse direction require checking?
 
 ```java
 Customer base = new PremiumCustomer("C-30", 10);
@@ -2830,13 +2830,13 @@ PremiumCustomer premium = (PremiumCustomer) base; // Hợp lệ
 System.out.println(premium.points());             // 10
 ```
 
-Nếu thay bằng `new Customer("C-30")`, cast về `PremiumCustomer` ném `ClassCastException`: **không phải mọi Customer đều là PremiumCustomer**. Cần dùng `instanceof PremiumCustomer p` (Java 16+) trước khi gọi `p.points()` nếu không bảo đảm kiểu runtime.
+If replaced with `new Customer("C-30")`, casting to `PremiumCustomer` throws `ClassCastException`: **not every Customer is a PremiumCustomer**. Use `instanceof PremiumCustomer p` (Java 16+) before calling `p.points()` when the runtime type is not guaranteed.
 
-Đây là ranh giới quan trọng của upcasting: sử dụng kiểu cha không đánh mất trạng thái con, nhưng API chỉ có ở con phải được truy cập qua subtype hợp lệ. Cơ chế kiểm tra, phân biệt `getClass()` và `instanceof`, các trường hợp `null` và generic erasure được thực hành sâu trong bài **Ép về kiểu con và kiểm tra kiểu**.
+This is an important limit of upcasting: viewing an object as its parent does not discard subclass state, but subclass-only APIs require a valid subtype reference. The **Downcasting and type checking** lesson explores checks, `getClass()` versus `instanceof`, `null`, and generic erasure in more depth.
 
-## 8. Upcasting và `null`
+## 8. Upcasting and `null`
 
-Chuyển kiểu tham chiếu không kiểm tra đối tượng có tồn tại:
+A reference conversion does not check that an object exists:
 
 ```java
 PremiumCustomer premium = null;
@@ -2844,20 +2844,20 @@ Customer customer = premium; // Hợp lệ
 System.out.println(customer == null); // true
 ```
 
-Không có `PremiumCustomer` nào được tạo ở đây. Phép gán `null` hợp lệ đối với kiểu tham chiếu, nhưng gọi `customer.tier()` sẽ gây `NullPointerException`.
+No `PremiumCustomer` is created here. Assigning `null` is valid for a reference type, but calling `customer.tier()` throws `NullPointerException`.
 
-Ngoài ra, mọi đối tượng `PremiumCustomer` là `Customer`, nhưng không phải mọi `Customer` đều là `PremiumCustomer`. Quan hệ subtype có hướng: chuyển **lên kiểu cha** thường ngầm định được; chuyển **xuống kiểu con** cần kiểm tra loại thực tế.
+Every `PremiumCustomer` is a `Customer`, but not every `Customer` is a `PremiumCustomer`. Subtyping is directional: converting **up to a supertype** is usually implicit; converting **down to a subtype** requires a runtime type check.
 
-## 9. Upcasting trong collection và generics: một điểm dễ nhầm
+## 9. Upcasting in collections and generics: a common confusion
 
-Phép gán một phần tử có kiểu con sang biến kiểu cha là hợp lệ:
+Assigning a subtype element to a supertype variable is valid:
 
 ```java
 PremiumCustomer premium = new PremiumCustomer("C-50", 5);
 Customer customer = premium;
 ```
 
-Nhưng `List<PremiumCustomer>` **không** là subtype của `List<Customer>`:
+But `List<PremiumCustomer>` is **not** a subtype of `List<Customer>`:
 
 ```java
 List<PremiumCustomer> premiumList = List.of(premium);
@@ -2866,9 +2866,9 @@ List<PremiumCustomer> premiumList = List.of(premium);
 // List<Customer> customers = premiumList;
 ```
 
-Java generics mặc định **invariant** ở tham số kiểu. Nếu cho phép gán như trên, code có thể thêm một `Customer` thường vào list mà nơi sở hữu chỉ kỳ vọng `PremiumCustomer`.
+Java generics are **invariant** in their type arguments by default. If the assignment were allowed, code could insert an ordinary `Customer` into a list whose owner expects only `PremiumCustomer` objects.
 
-Nếu chỉ cần đọc theo kiểu cha, dùng wildcard có upper bound:
+For reading through a supertype, use an upper-bounded wildcard:
 
 ```java
 List<? extends Customer> customers = premiumList;
@@ -2880,48 +2880,48 @@ for (Customer c : customers) {
 // customers.add(new Customer("C-60")); // Không biên dịch
 ```
 
-`? extends Customer` cho phép đọc phần tử theo kiểu `Customer`; không cho thêm tùy ý một `Customer` vào list đó (ngoại trừ `null` theo các quy tắc đặc biệt).
+`? extends Customer` permits reading elements as `Customer`, but forbids adding an arbitrary `Customer` to that list (except `null` under special rules).
 
-Nếu cần một list riêng thật sự có kiểu `List<Customer>`, có thể tạo mới từ các phần tử:
+If you need a separate list truly typed `List<Customer>`, create one from the elements:
 
 ```java
 List<Customer> separate = new java.util.ArrayList<>(premiumList);
 separate.add(new Customer("C-60")); // Hợp lệ trên list riêng
 ```
 
-Danh sách mới có **cấu trúc độc lập**, nhưng phần tử `premium` vẫn là cùng đối tượng được chia sẻ, không bị clone.
+The new list has an **independent structure**, but its `premium` element still refers to the same shared object and is not cloned.
 
-**Phân biệt:** `PremiumCustomer -> Customer` là chuyển kiểu tham chiếu của **một phần tử**; không có quy tắc tự động tương tự cho **tham số generic của toàn bộ collection**.
+**Distinction:** `PremiumCustomer -> Customer` is a reference-type conversion for **one element**; no equivalent automatic conversion applies to **generic type arguments of the entire collection**.
 
-## 10. Khi nào nên sử dụng upcasting?
+## 10. When should upcasting be used?
 
-| Nhu cầu | Cách dùng | Lợi ích |
+| Requirement | Approach | Benefit |
 | --- | --- | --- |
-| Hàm xử lý nhiều lớp con | Tham số `Customer` | Viết logic dùng chung và phát huy đa hình |
-| Service phụ thuộc một khả năng nhỏ | Tham số `PaymentProcessor` | Giấu adapter cụ thể và tránh phụ thuộc không cần |
-| Danh sách nhiều đối tượng cùng hệ phân cấp | `List<Customer>` chứa nhiều subtype | Duyệt/xử lý qua một API thống nhất |
-| Đổi triển khai mà giữ client | Biến, trường, tham số theo interface | Giảm phụ thuộc vào lớp cụ thể |
-| Kiểm thử với stub/fake | Truyền triển khai khác của interface | Không cần phụ thuộc implementation thật |
-| Cần gọi phương thức riêng của subtype | Xem lại hợp đồng, hoặc downcast có kiểm tra | Tránh cast nguy hiểm nếu có thiết kế đa hình tốt hơn |
+| Function processes many subclasses | `Customer` parameter | Share logic and use polymorphism |
+| Service needs a small capability | `PaymentProcessor` parameter | Hide concrete adapters and avoid needless dependencies |
+| Collection contains varied objects from one hierarchy | `List<Customer>` holding multiple subtypes | Iterate/process through a common API |
+| Change implementation without changing clients | Interface-typed variables, fields, and parameters | Reduce coupling to concrete classes |
+| Test with a stub/fake | Pass another implementation of the interface | No dependency on the real implementation required |
+| Need subtype-only operations | Reconsider the contract or check before downcasting | Avoid unsafe casts when a better polymorphic design exists |
 
-Không nhất thiết phải viết biến kiểu cha ở mọi nơi. Nếu đoạn mã thật sự cần toàn bộ khả năng đặc thù của `PremiumCustomer`, khai báo biến kiểu `PremiumCustomer` có thể rõ ràng hơn. **Upcasting hữu ích khi nó phản ánh đúng phạm vi trách nhiệm của code sử dụng.**
+You do not need supertype variables everywhere. If code truly requires every capability specific to `PremiumCustomer`, declaring a `PremiumCustomer` variable may be clearer. **Upcasting is useful when it reflects the actual responsibility of client code.**
 
-## 11. Lỗi thường gặp
+## 11. Common mistakes
 
-| Nhận định sai | Thực tế |
+| Incorrect assumption | Reality |
 | --- | --- |
-| `Customer x = premium;` tạo một `Customer` mới | Không; hai tham chiếu cùng trỏ đến đối tượng `PremiumCustomer` |
-| Upcasting xóa trường và phương thức của lớp con | Không; đối tượng không đổi, chỉ API được nhìn qua tham chiếu thay đổi |
-| Sau upcasting mọi lời gọi đều chạy phiên bản lớp cha | Phương thức instance override vẫn dispatch theo lớp thực tế |
-| `Customer` biến nào cũng ép về `PremiumCustomer` được | Sai; downcast cần đối tượng thật sự thuộc subtype đích |
-| Kiểu tham chiếu quyết định kết quả `getClass()` | `getClass()` phản ánh lớp thực tế của đối tượng |
-| `List<PremiumCustomer>` dùng trực tiếp như `List<Customer>` | Sai vì generic invariance; dùng wildcard khi phù hợp |
-| Biến kiểu interface chặn hoàn toàn quyền sử dụng API khác | Không; giới hạn khả năng gọi qua kiểu tham chiếu, không phải security boundary |
-| Có upcasting nghĩa là không cần kiểm tra hợp đồng lớp con | Subtype vẫn phải giữ ngữ nghĩa mà supertype cam kết để thay thế được |
+| `Customer x = premium;` creates a new `Customer` | No; both references point to the same `PremiumCustomer` object |
+| Upcasting removes subclass fields and methods | No; the object remains unchanged, only the API visible through the reference differs |
+| Every call after upcasting uses the superclass version | Overridden instance methods still dispatch by runtime class |
+| Any `Customer` variable can be cast to `PremiumCustomer` | False; downcasting requires an actual object of the target subtype |
+| The reference type determines `getClass()` | `getClass()` reflects the object's actual class |
+| `List<PremiumCustomer>` works directly as `List<Customer>` | False due to generic invariance; use wildcards where appropriate |
+| An interface-typed variable fully blocks access to other APIs | No; it limits method calls through that reference type, not a security boundary |
+| Upcasting makes checking subclass contracts unnecessary | Subtypes must still fulfill the semantics promised by supertypes to be substitutable |
 
-## 12. Bài tự kiểm tra
+## 12. Self-assessment exercises
 
-**Câu 1.** Đoạn sau có bao nhiêu đối tượng `Dog`?
+**Question 1.** How many `Dog` objects does the following code create?
 
 ```java
 Dog d = new Dog();
@@ -2929,49 +2929,49 @@ Animal a = d;
 Object o = a;
 ```
 
-**Đáp án:** Một đối tượng `Dog`; ba biến `d`, `a`, `o` cùng trỏ đến nó.
+**Answer:** One `Dog` object; all three variables `d`, `a`, and `o` reference it.
 
-**Câu 2.** `Customer c = new PremiumCustomer("P-1", 0);` rồi `c.tier()` trả về gì?
+**Question 2.** If `Customer c = new PremiumCustomer("P-1", 0);` calls `c.tier()`, what does it return?
 
-**Đáp án:** `PREMIUM`, vì `tier()` là phương thức instance được override trong `PremiumCustomer`.
+**Answer:** `PREMIUM`, because `tier()` is an overridden instance method in `PremiumCustomer`.
 
-**Câu 3.** Tại sao `c.points()` không biên dịch dù đối tượng thực tế là Premium?
+**Question 3.** Why does `c.points()` fail to compile even if the actual object is Premium?
 
-**Đáp án:** `Customer` không công bố `points()`. Trình biên dịch kiểm tra API của kiểu tham chiếu; nếu thật sự cần khả năng riêng, phải thiết kế lại hợp đồng hoặc kiểm tra kiểu rồi downcast.
+**Answer:** `Customer` does not expose `points()`. The compiler checks the reference type's API; if the specialized capability is truly required, redesign the contract or check and downcast.
 
-**Câu 4.** `PremiumCustomer p = (PremiumCustomer) new Customer("C-1");` có hợp lệ không?
+**Question 4.** Is `PremiumCustomer p = (PremiumCustomer) new Customer("C-1");` valid?
 
-**Đáp án:** Mã ép kiểu có thể biên dịch vì hai lớp có quan hệ kế thừa, nhưng tại runtime sẽ ném `ClassCastException`: đối tượng thực tế chỉ là `Customer`.
+**Answer:** The cast syntax may compile because the classes are related by inheritance, but runtime execution throws `ClassCastException`: the actual object is only a `Customer`.
 
-**Câu 5.** `List<PremiumCustomer>` có thể gán trực tiếp sang `List<Customer>` không?
+**Question 5.** Can `List<PremiumCustomer>` be assigned directly to `List<Customer>`?
 
-**Đáp án:** Không. Java generics invariant; nếu chỉ cần đọc theo kiểu cha, dùng `List<? extends Customer>`.
+**Answer:** No. Java generics are invariant; when only reading through the supertype, use `List<? extends Customer>`.
 
-**Câu 6.** Trong mã `Base b = new Derived();`, vì sao `b.describe()` và `b.label` có thể lấy giá trị từ các lớp khác nhau?
+**Question 6.** In `Base b = new Derived();`, why can `b.describe()` and `b.label` retrieve values from different classes?
 
-**Đáp án:** Phương thức instance override được dispatch theo **đối tượng thực tế**, còn truy cập trường được giải quyết theo **kiểu tham chiếu**.
+**Answer:** Overridden instance methods dispatch based on **the actual object**, while field access is resolved according to **the reference type**.
 
-**Ghi nhớ:** Upcasting là **đổi góc nhìn kiểu dữ liệu của một tham chiếu**, không phải biến đổi hoặc sao chép đối tượng. Java kiểm tra những phương thức được phép gọi theo supertype; khi chạy, phương thức instance override vẫn thực hiện theo subtype thực tế. Dùng upcasting tại nơi cần hợp đồng chung để khai thác đa hình, giảm phụ thuộc vào lớp cụ thể và tránh ép kiểu xuống không cần thiết.
+**Remember:** Upcasting **changes the type through which a reference is viewed**, without transforming or copying the object. Java checks callable methods against the supertype; overridden instance methods still execute according to the actual subtype at runtime. Use upcasting where a shared contract is needed to exploit polymorphism, reduce concrete dependencies, and avoid unnecessary downcasts.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="subtyping-006">Ép về kiểu con và kiểm tra kiểu</a>
+## <a id="subtyping-006">Downcasting and type checking</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Ép về kiểu con và kiểm tra kiểu trong Java
+# Downcasting and type checking in Java
 
-**Chủ đề:** OOP → Kiểu con → Ép về kiểu con và kiểm tra kiểu.
+**Topic:** OOP → Subtyping → Downcasting and type checking.
 
-Trong OOP, một biến có thể được khai báo theo kiểu cha hoặc interface nhưng đang tham chiếu tới **đối tượng thực thuộc kiểu con**. Điều này giúp lập trình đa hình, nhưng cũng đặt ra câu hỏi: làm sao sử dụng một phương thức chỉ tồn tại ở lớp con mà không gây lỗi ép kiểu? Câu trả lời liên quan tới **upcasting**, **downcasting**, toán tử `instanceof` và `ClassCastException`.
+In OOP, a variable can be declared using a superclass or interface while referencing **an actual subtype object**. This supports polymorphism but raises a question: how can a subclass-only method be used without an invalid cast? The answer involves **upcasting**, **downcasting**, the `instanceof` operator, and `ClassCastException`.
 
-## 1. Kiểu khai báo khác kiểu thực tế
+## 1. Declared type versus runtime type
 
 ```java
 class Animal {
@@ -2996,13 +2996,13 @@ animal.move();          // Chạy
 // animal.bark();       // Lỗi biên dịch: Animal không khai báo bark()
 ```
 
-| Khái niệm | Ví dụ | Tác dụng |
+| Concept | Example | Effect |
 |---|---|---|
-| Kiểu khai báo/compile-time type | `Animal` | Quyết định các thành viên mà trình biên dịch cho phép truy cập qua biến |
-| Kiểu thực tế/runtime type | `Dog` | Quyết định implementation của phương thức instance được override |
-| Quan hệ kiểu con | `Dog extends Animal` | Cho phép dùng `Dog` ở nơi nhận `Animal` |
+| Declared/compile-time type | `Animal` | Determines which members the compiler permits through the variable |
+| Actual/runtime type | `Dog` | Determines the implementation of overridden instance methods |
+| Subtype relationship | `Dog extends Animal` | Allows a `Dog` where an `Animal` is expected |
 
-**Điểm quan trọng:** `animal.move()` gọi `Dog.move()` bằng cơ chế dispatch đa hình, dù biến được khai báo `Animal`. Không cần downcast để Java tìm đúng implementation của một phương thức đã nằm trong hợp đồng kiểu cha.
+**Important:** `animal.move()` invokes `Dog.move()` through polymorphic dispatch even when the variable is declared `Animal`. No downcast is needed for Java to select the correct implementation of a method already in the supertype contract.
 
 ```mermaid
 flowchart LR
@@ -3011,9 +3011,9 @@ flowchart LR
     O --> B["bark(): chỉ Dog có"]
 ```
 
-Biến tham chiếu không chứa bản sao object. `Animal animal = new Dog()` chỉ tạo **một** đối tượng `Dog`.
+A reference variable does not contain a copy of an object. `Animal animal = new Dog()` creates only **one** `Dog` object.
 
-## 2. Upcasting: từ kiểu con sang kiểu cha
+## 2. Upcasting: from a subtype to a supertype
 
 ```java
 Dog dog = new Dog();
@@ -3021,13 +3021,13 @@ Animal animal = dog;             // Upcasting ngầm định
 Animal explicit = (Animal) dog;  // Hợp lệ nhưng không cần thiết
 ```
 
-Mọi `Dog` đều là `Animal` trong quan hệ kế thừa, vì thế phép gán được chấp nhận không cần cast. Khi upcast:
+Every `Dog` is an `Animal` under inheritance, so the assignment needs no cast. After upcasting:
 
-- Object **vẫn là Dog**, không biến thành Animal.
-- Những phương thức chỉ khai báo ở `Dog` không thể gọi trực tiếp qua biến `Animal`.
-- Những phương thức của `Animal` được override sẽ chạy phiên bản của đối tượng thực.
+- The object **is still a Dog**, not transformed into an Animal.
+- Methods declared only on `Dog` cannot be called directly through an `Animal` variable.
+- Overridden `Animal` methods execute the implementation of the actual object.
 
-Việc gán object cho interface mà lớp đó triển khai cũng là một phép chuyển lên abstraction:
+Assigning an object to an interface it implements is another conversion to an abstraction:
 
 ```java
 interface RunnableJob {
@@ -3045,9 +3045,9 @@ RunnableJob job = new EmailJob();
 job.execute(); // Sending email
 ```
 
-Đây là cách thường dùng để giảm phụ thuộc vào một lớp cụ thể.
+This is commonly used to reduce dependencies on concrete classes.
 
-## 3. Downcasting: từ kiểu cha xuống kiểu con
+## 3. Downcasting: from a supertype to a subtype
 
 ```java
 Animal animal = new Dog();
@@ -3056,7 +3056,7 @@ Dog dog = (Dog) animal; // Thành công vì runtime object là Dog
 dog.bark();             // Gâu gâu
 ```
 
-Downcasting cần ghi **kiểu đích trong dấu ngoặc**. Trình biên dịch cho phép thử chuyển kiểu nếu quan hệ kiểu có thể phù hợp, nhưng JVM vẫn phải kiểm tra đối tượng thực tế tại runtime.
+Downcasting requires the **target type in parentheses**. The compiler allows a cast attempt when the type relationship could permit it, but the JVM still checks the actual object at runtime.
 
 ```java
 class Cat extends Animal {}
@@ -3065,21 +3065,21 @@ Animal animal = new Cat();
 Dog dog = (Dog) animal; // ClassCastException
 ```
 
-Hai lớp `Dog` và `Cat` cùng kế thừa `Animal` không có nghĩa một `Cat` có thể được coi là `Dog`.
+The fact that both `Dog` and `Cat` inherit from `Animal` does not make a `Cat` usable as a `Dog`.
 
-| Tình huống | Java xử lý |
+| Scenario | Java behavior |
 |---|---|
-| `Animal a = new Dog();` | Upcast hợp lệ |
-| `Dog d = (Dog) a;` khi a trỏ tới Dog | Downcast hợp lệ |
-| `Dog d = (Dog) a;` khi a trỏ tới Cat | Biên dịch có thể thành công, runtime ném `ClassCastException` |
-| `Dog d = (Dog) null;` | Thành công và d nhận `null` |
-| `Integer i = (Integer) text;` khi `text` được khai báo `String` | Lỗi biên dịch vì các kiểu cụ thể không tương thích |
+| `Animal a = new Dog();` | Valid upcast |
+| `Dog d = (Dog) a;` when a references Dog | Valid downcast |
+| `Dog d = (Dog) a;` when a references Cat | May compile; runtime throws `ClassCastException` |
+| `Dog d = (Dog) null;` | Succeeds; d receives `null` |
+| `Integer i = (Integer) text;` when `text` is declared `String` | Compilation error because the concrete types are incompatible |
 
-Cast **không tạo object, không sao chép object và không thay đổi runtime type**. Nó chỉ kiểm tra rằng tham chiếu hiện tại có thể được nhìn nhận theo kiểu đích.
+A cast **does not create, copy, or change the runtime type of an object**. It only checks whether the current reference can be viewed as the target type.
 
-## 4. Kiểm tra an toàn bằng `instanceof`
+## 4. Safe checks with `instanceof`
 
-Với cú pháp truyền thống:
+With traditional syntax:
 
 ```java
 static void handle(Animal animal) {
@@ -3090,9 +3090,9 @@ static void handle(Animal animal) {
 }
 ```
 
-`instanceof` trả `true` khi tham chiếu không phải `null` và object thực tế là một instance tương thích với kiểu đích, **bao gồm cả lớp con của kiểu đó**.
+`instanceof` returns `true` when the reference is not `null` and the runtime object is compatible with the target type, **including subclasses of that type**.
 
-Từ **Java 16**, có thể dùng pattern matching cho `instanceof`:
+Since **Java 16**, pattern matching for `instanceof` is available:
 
 ```java
 static void handle(Animal animal) {
@@ -3102,7 +3102,7 @@ static void handle(Animal animal) {
 }
 ```
 
-Pattern variable `dog` chỉ được dùng tại nơi mà trình biên dịch xác định chắc chắn phép kiểm tra đã thành công. Ví dụ flow scoping:
+The pattern variable `dog` is usable only where the compiler knows that the check succeeded. For example, with flow scoping:
 
 ```java
 static void check(Animal animal) {
@@ -3113,9 +3113,9 @@ static void check(Animal animal) {
 }
 ```
 
-Không thể tùy tiện dùng `dog` ở mọi câu lệnh phía sau một `if` nếu còn đường điều khiển mà điều kiện `instanceof` có thể sai.
+You cannot use `dog` arbitrarily after an `if` when a control-flow path exists where `instanceof` was false.
 
-### `instanceof` xử lý null thế nào?
+### How does `instanceof` handle null?
 
 ```java
 Animal a = null;
@@ -3127,11 +3127,11 @@ Dog d = (Dog) a;                       // Hợp lệ: d == null
 // a.getClass(); // NullPointerException
 ```
 
-Cast `null` không gây `ClassCastException` với kiểu tham chiếu hợp lệ. Nhưng gọi phương thức qua tham chiếu `null` vẫn gây `NullPointerException`.
+Casting `null` to a valid reference type does not cause `ClassCastException`. Invoking a method through a `null` reference still causes `NullPointerException`.
 
-## 5. Ví dụ đầy đủ: phương tiện và chức năng riêng của từng kiểu con
+## 5. Complete example: vehicles with subtype-specific capabilities
 
-Giả sử mọi phương tiện có thể di chuyển, còn ô tô có thể mở cốp, xe đạp có thể bấm chuông. Lưu chương trình dưới đây thành **`SubtypeCheckDemo.java`** và chạy bằng Java 17 trở lên.
+Suppose all vehicles can move, but cars can open a trunk and bicycles can ring a bell. Save the following program as **`SubtypeCheckDemo.java`** and run it with Java 17 or later.
 
 ```java
 public class SubtypeCheckDemo {
@@ -3245,14 +3245,14 @@ public class SubtypeCheckDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac SubtypeCheckDemo.java
 java SubtypeCheckDemo
 ```
 
-Kết quả:
+Output:
 
 ```text
 true
@@ -3269,13 +3269,13 @@ Không có phương tiện
 Downcast sai: ClassCastException
 ```
 
-Giải thích:
+Explanation:
 
-1. `first` khai báo là `Vehicle`, nhưng đối tượng thật là `ElectricCar`.
-2. `ElectricCar extends Car`, vì vậy `first instanceof Car` là `true`.
-3. `first.move()` gọi phần override ở `ElectricCar` mà không cần ép kiểu.
-4. `first.getClass() == Car.class` là `false` vì lớp runtime **chính xác** là `ElectricCar`.
-5. Ép `first` thành `Bicycle` sai kiểu runtime, nên JVM ném `ClassCastException`.
+1. `first` is declared `Vehicle`, but the actual object is `ElectricCar`.
+2. `ElectricCar extends Car`, so `first instanceof Car` is `true`.
+3. `first.move()` invokes the override in `ElectricCar` without a cast.
+4. `first.getClass() == Car.class` is `false` because the **exact** runtime class is `ElectricCar`.
+5. Casting `first` to `Bicycle` is incompatible at runtime, so the JVM throws `ClassCastException`.
 
 ```mermaid
 flowchart TD
@@ -3289,23 +3289,23 @@ flowchart TD
     F -- Không --> H["Chỉ dùng hợp đồng Vehicle"]
 ```
 
-Sơ đồ cho thấy **chỉ những hành vi đặc thù** mới cần kiểm tra kiểu. `move()` là hành vi chung và nên dùng trực tiếp qua abstraction.
+The diagram shows that **only subtype-specific behaviors** require type checks. `move()` is common behavior and should be invoked through the abstraction.
 
-## 6. `getClass()` có giống `instanceof` không?
+## 6. Are `getClass()` and `instanceof` equivalent?
 
-**Không.** Hai phép kiểm tra trả lời các câu hỏi khác nhau.
+**No.** They answer different questions.
 
-| Biểu thức | Câu hỏi | Với đối tượng `ElectricCar` |
+| Expression | Question | For an `ElectricCar` object |
 |---|---|---|
-| `v instanceof Car` | Đối tượng là Car hoặc subtype của Car? | `true` |
-| `v instanceof ElectricCar` | Đối tượng là ElectricCar hoặc subtype tương thích? | `true` |
-| `v.getClass() == Car.class` | Runtime class chính xác là Car? | `false` |
-| `v.getClass() == ElectricCar.class` | Runtime class chính xác là ElectricCar? | `true` |
-| `v == null` | Không có đối tượng? | `false` |
+| `v instanceof Car` | Is the object a Car or a subtype of Car? | `true` |
+| `v instanceof ElectricCar` | Is the object an ElectricCar or a compatible subtype? | `true` |
+| `v.getClass() == Car.class` | Is the exact runtime class Car? | `false` |
+| `v.getClass() == ElectricCar.class` | Is the exact runtime class ElectricCar? | `true` |
+| `v == null` | Is there no object? | `false` |
 
-Dùng `instanceof` khi muốn chấp nhận cả subtype; chỉ dùng kiểm tra `getClass()` khi yêu cầu thật sự cần đúng một class runtime. Khác với `instanceof`, lời gọi `getClass()` trên `null` ném `NullPointerException`.
+Use `instanceof` when subtypes should be accepted; use an exact `getClass()` check only when the requirement genuinely demands one runtime class. Unlike `instanceof`, calling `getClass()` on `null` throws `NullPointerException`.
 
-Khi kiểu kiểm tra được giữ trong đối tượng `Class<?>`, có thể dùng:
+When the target type is stored in a `Class<?>` object, you can use:
 
 ```java
 Class<?> expected = Car.class;
@@ -3314,11 +3314,11 @@ Object object = new ElectricCar("EV-09", 4);
 System.out.println(expected.isInstance(object)); // true
 ```
 
-`Class.isInstance()` hữu ích khi kiểu đích được xác định động; với kiểu viết cố định trong mã, `instanceof` dễ đọc hơn.
+`Class.isInstance()` is useful when the target type is determined dynamically; `instanceof` is easier to read when the type is fixed in source code.
 
-## 7. Kiểm tra kiểu qua interface
+## 7. Type checking through interfaces
 
-Downcast không chỉ giới hạn ở các lớp liên quan bằng `extends`. Một đối tượng có thể triển khai thêm interface thể hiện khả năng tùy chọn:
+Downcasting is not limited to classes related through `extends`. An object may implement an additional interface representing an optional capability:
 
 ```java
 interface Printable {
@@ -3356,35 +3356,35 @@ class InterfaceExample {
 }
 ```
 
-Biến `Printable` không cho phép gọi trực tiếp `download()`. Tuy nhiên, nếu object thật có hỗ trợ `Downloadable`, pattern matching sẽ đưa khả năng đó vào nhánh tương ứng.
+A `Printable` variable does not allow direct calls to `download()`. But when the actual object supports `Downloadable`, pattern matching makes that capability available inside the corresponding branch.
 
-Khi **mọi đối tượng** đi vào một phương thức đều bắt buộc có khả năng download, hãy cân nhắc thay đổi hợp đồng tham số thay vì kiểm tra kiểu ở khắp nơi. `instanceof` phù hợp nhất khi có khả năng phụ chỉ tồn tại trên một số implementation.
+When **every object** passed to a method must support downloading, consider changing the parameter contract rather than checking types everywhere. `instanceof` is most appropriate for optional capabilities supported only by some implementations.
 
-## 8. Lỗi biên dịch và `ClassCastException`
+## 8. Compile-time errors versus `ClassCastException`
 
-`ClassCastException` là `RuntimeException`: phép chuyển kiểu được phép thử tại biên dịch, nhưng object không tương thích ở thời điểm chạy.
+`ClassCastException` is a `RuntimeException`: the cast can be attempted at compile time, but the object is incompatible at runtime.
 
 ```java
 Object value = "hello";
 Integer number = (Integer) value; // ClassCastException
 ```
 
-Ở đây `value` khai báo là `Object`, đủ rộng để compiler cho phép thử cast tới `Integer`. Nhưng object thật là `String`.
+Here `value` is declared `Object`, which is broad enough for the compiler to permit a cast attempt to `Integer`. But the actual object is a `String`.
 
-Trong khi đó:
+By contrast:
 
 ```java
 String value = "hello";
 // Integer number = (Integer) value; // Lỗi biên dịch
 ```
 
-Vì `String` và `Integer` đều là những class cụ thể không có quan hệ subtype phù hợp, trình biên dịch có thể xác định phép cast không thể hợp lệ.
+Because `String` and `Integer` are both concrete classes without a suitable subtype relationship, the compiler can determine that the cast cannot succeed.
 
-Đừng dùng `try/catch (ClassCastException)` để thay cho việc thiết kế điều kiện kiểu đúng. Trong mã thông thường, `instanceof` hoặc một abstraction tốt thường diễn đạt ý định rõ hơn.
+Do not use `try/catch (ClassCastException)` as a substitute for designing correct type conditions. In ordinary code, `instanceof` or a better abstraction usually conveys intent more clearly.
 
-## 9. Một ngoại lệ quan trọng: generics và type erasure
+## 9. An important exception: generics and type erasure
 
-Java không giữ đầy đủ tham số generic để kiểm tra bằng `instanceof` lúc chạy.
+Java does not retain complete generic type arguments for `instanceof` checks at runtime.
 
 ```java
 import java.util.List;
@@ -3401,15 +3401,15 @@ if (value instanceof List<?> elements) {
 // if (value instanceof List<String> strings) { ... }
 ```
 
-`List<?>` kiểm tra được **đối tượng có phải List không**. Nó không chứng minh rằng phần tử là `String`, `Integer` hay kiểu nào khác.
+`List<?>` can test **whether an object is a List**. It does not establish that its elements are `String`, `Integer`, or any other specific type.
 
-Phép cast như `(List<String>) value` có thể phát sinh cảnh báo **unchecked cast**; do type erasure, JVM không thể kiểm chứng toàn bộ kiểu phần tử chỉ tại vị trí cast. Lỗi có thể xuất hiện sau đó khi đọc phần tử và compiler chèn ép kiểu.
+A cast such as `(List<String>) value` can produce an **unchecked cast** warning; because of type erasure, the JVM cannot verify every element type at that cast site. A failure may occur later when an element is read and the compiler inserts a cast.
 
-Khi xử lý dữ liệu không tin cậy, nên kiểm tra cấu trúc và nội dung phần tử, thay vì cố tắt cảnh báo ép kiểu mà không có bằng chứng.
+When handling untrusted data, validate the structure and element contents instead of suppressing unchecked-cast warnings without evidence.
 
-## 10. Khi nào nên tránh downcasting?
+## 10. When should downcasting be avoided?
 
-Xem mã sau:
+Consider this code:
 
 ```java
 if (animal instanceof Dog dog) {
@@ -3419,7 +3419,7 @@ if (animal instanceof Dog dog) {
 }
 ```
 
-Nếu tất cả `Animal` đều cần có `sound()`, hãy cho đó là một phần hợp đồng chung thay vì kiểm tra từng subtype:
+If every `Animal` should have a `sound()` capability, make it part of the shared contract instead of checking each subtype:
 
 ```java
 abstract class Animal {
@@ -3452,103 +3452,103 @@ class SoundDemo {
 }
 ```
 
-Khi thêm một lớp con mới, `play` không cần viết thêm `else if`: dynamic dispatch chọn đúng hành vi.
+When a new subclass is added, `play` does not need another `else if` branch: dynamic dispatch selects the correct behavior.
 
-| Nhu cầu | Lựa chọn thường phù hợp |
+| Need | Usually appropriate approach |
 |---|---|
-| Cần hành vi chung của mọi subtype | Phương thức trên superclass/interface và override |
-| Chỉ một số object có khả năng đặc biệt | Interface khả năng riêng hoặc `instanceof` có kiểm tra |
-| Cần truy cập API chỉ tồn tại ở một subtype | Downcast an toàn khi thực sự cần |
-| Mã có hàng loạt `instanceof` cho cùng một hành động | Đánh giá lại mô hình đa hình |
-| Cần runtime class chính xác, không chấp nhận subtype | `getClass()` khi có yêu cầu cụ thể |
+| Shared behavior of all subtypes | Method on the superclass/interface with overrides |
+| Only some objects have a special capability | A dedicated capability interface or checked `instanceof` |
+| Need an API available only on one subtype | Safe downcasting when genuinely required |
+| Code has many `instanceof` checks for the same action | Reevaluate the polymorphic model |
+| Need the exact runtime class, excluding subtypes | `getClass()` when specifically required |
 
-Downcasting là **công cụ**, không phải mục tiêu. Nếu phải dùng nó liên tục để gọi một hành vi phổ biến, thiết kế abstraction có thể chưa phù hợp.
+Downcasting is **a tool**, not a goal. If you must use it repeatedly for common behavior, the abstraction may need redesign.
 
-## 11. Bài tập tự luyện
+## 11. Practice exercises
 
-1. Tạo `Animal animal = new Dog()`. Dự đoán `animal instanceof Animal`, `animal instanceof Dog`, `animal instanceof Cat` và `animal.getClass() == Animal.class`, rồi giải thích.
-2. Tạo `List<Animal>` gồm `Dog` và `Cat`. Viết vòng lặp chỉ gọi `bark()` với `Dog`, sử dụng `instanceof Dog dog` để tránh `ClassCastException`.
-3. Dùng `if (!(animal instanceof Dog dog)) return;`, giải thích vì sao `dog` được sử dụng sau `if` và sự khác biệt so với nhánh không có `return`.
-4. Thiết kế một interface `Refundable` có `refund()`; chỉ một số loại `PaymentMethod` triển khai nó. Viết phương thức nhận `PaymentMethod` và gọi `refund()` khi khả dụng.
-5. Chuyển đoạn code dùng `instanceof` để tính phí riêng từng kiểu `Order` sang đa hình bằng `calculateFee()` ở lớp cha hoặc interface.
-6. Giải thích vì sao `List<?>` có thể kiểm tra bằng `instanceof` nhưng `List<String>` không thể dùng trực tiếp như vậy và nguy cơ của unchecked cast.
+1. Create `Animal animal = new Dog()`. Predict `animal instanceof Animal`, `animal instanceof Dog`, `animal instanceof Cat`, and `animal.getClass() == Animal.class`, then explain.
+2. Create a `List<Animal>` containing `Dog` and `Cat`. Write a loop that calls `bark()` only for `Dog`, using `instanceof Dog dog` to avoid `ClassCastException`.
+3. Use `if (!(animal instanceof Dog dog)) return;`, explain why `dog` is available after the `if`, and contrast this with a branch without `return`.
+4. Design a `Refundable` interface with `refund()`; only some `PaymentMethod` types implement it. Write a method accepting `PaymentMethod` that invokes `refund()` when supported.
+5. Refactor code that uses `instanceof` to calculate fees for each `Order` type into polymorphism using `calculateFee()` on a superclass or interface.
+6. Explain why `List<?>` can be tested with `instanceof` while `List<String>` cannot be used directly that way, and describe the danger of unchecked casts.
 
-**Ghi nhớ:** Upcasting cho phép dùng một đối tượng kiểu con qua hợp đồng kiểu cha; downcasting chỉ hợp lệ khi **runtime object** thật sự tương thích với kiểu đích. `instanceof` kiểm tra trước khi sử dụng API riêng của subtype, còn **đa hình** nên được ưu tiên khi hành vi thuộc hợp đồng chung.
+**Remember:** Upcasting lets a subtype object be used through a supertype contract; downcasting is valid only when the **runtime object** is compatible with the target type. Use `instanceof` before accessing subtype-specific APIs, and favor **polymorphism** when behavior belongs to the shared contract.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="subtyping-007">Giữ đúng hợp đồng khi mở rộng kiểu</a>
+## <a id="subtyping-007">Preserving contracts when extending types</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Giữ đúng hợp đồng khi mở rộng kiểu trong Java OOP
+# Preserving contracts when extending types in Java OOP
 
-## 1. Một kiểu con có thể thay thế kiểu cha khi nào?
+## 1. When can a subtype replace its supertype?
 
-Giả sử một dịch vụ thanh toán nhận một đối tượng `DiscountPolicy` để tính số tiền khách phải trả. Ban đầu ứng dụng dùng chính sách không giảm giá; sau đó thay bằng chính sách giảm 20%. Nếu dịch vụ có thể sử dụng cả hai mà **không phải sửa cách gọi, thêm những kiểm tra bất ngờ, hoặc chịu kết quả sai quy tắc**, thiết kế đang đi đúng hướng.
+Suppose a checkout service accepts a `DiscountPolicy` to calculate how much a customer pays. Initially, the application uses a no-discount policy; later it substitutes a 20% discount. If the service can use both **without changing calls, adding unexpected checks, or getting results that violate its rules**, the design is on the right track.
 
-Trong OOP, “kiểu con” (*subtype*) không chỉ là chuyện Java cho phép khai báo `extends` hoặc `implements`. Quan trọng hơn là **đối tượng kiểu con phải giữ lời hứa về hành vi** mà mã sử dụng kiểu cha đang dựa vào.
+In OOP, a “subtype” (*subtype*) is not merely about Java permitting `extends` or `implements`. More crucially, **a subtype object must preserve the behavioral promises** that code using the supertype relies on.
 
-Đây là tinh thần của **Liskov Substitution Principle (LSP)**:
+This is the spirit of the **Liskov Substitution Principle (LSP)**:
 
-> Ở những vị trí chương trình mong đợi một đối tượng thuộc kiểu T, ta có thể dùng đối tượng thuộc kiểu con của T mà vẫn giữ được tính đúng đắn của các hành vi đã được T cam kết.
+> Wherever a program expects an object of type T, it should be able to use an object of a subtype of T while preserving the correctness properties guaranteed by T.
 
-Cụ thể, nếu client đã viết đúng theo hợp đồng của kiểu cha, việc thay một implementation hợp lệ bằng implementation khác không được phá các bảo đảm ấy.
+Specifically, if client code correctly follows the supertype contract, replacing one valid implementation with another must not break those guarantees.
 
-### Hợp đồng (*contract*) của một kiểu gồm những gì?
+### What does a type's (*contract*) include?
 
-Không chỉ gồm chữ ký phương thức:
+Method signatures alone are insufficient:
 
-| Thành phần | Câu hỏi cần trả lời |
+| Component | Question to answer |
 | --- | --- |
-| **Tiền điều kiện (precondition)** | Caller phải bảo đảm điều gì trước khi gọi? |
-| **Hậu điều kiện (postcondition)** | Nếu phương thức hoàn tất bình thường, nó cam kết điều gì? |
-| **Bất biến (invariant)** | Những điều kiện nào phải luôn đúng ở trạng thái quan sát được của đối tượng? |
-| **Ngoại lệ và cách xử lý lỗi** | Đầu vào nào bị từ chối, lỗi nào có thể phát sinh? |
-| **Tác động phụ (side effects)** | Lời gọi được phép thay đổi những gì? |
-| **Ý nghĩa của hành vi** | “Lưu”, “rút tiền”, “tính giá” thật sự có nghĩa gì? |
+| **Precondition** | What must callers ensure before invoking a method? |
+| **Postcondition** | What does the method guarantee if it completes normally? |
+| **Invariant** | Which conditions must always hold in the object's observable state? |
+| **Exceptions and failure behavior** | Which inputs are rejected and which failures can occur? |
+| **Side effects** | What is the call allowed to modify? |
+| **Meaning of behavior** | What does “save,” “withdraw,” or “calculate price” actually mean? |
 
-Một lớp con có thể **biên dịch thành công**, nhưng vẫn vi phạm hợp đồng vì thay đổi ý nghĩa nghiệp vụ hoặc đưa ra một giới hạn mới mà người sử dụng kiểu cha không được báo trước.
+A subclass may **compile successfully** yet violate the contract by changing business semantics or adding an unannounced restriction on callers of the supertype.
 
-## 2. Ba quy tắc quan trọng nhất
+## 2. Three most important rules
 
-Giả sử `Child` là kiểu con của `Parent`, cả hai cung cấp hành vi `operate(x)`.
+Suppose `Child` is a subtype of `Parent`, both exposing `operate(x)`.
 
-**(1) Không tăng yêu cầu đầu vào.** Kiểu con không được yêu cầu **tiền điều kiện mạnh hơn** tiền điều kiện kiểu cha. Nếu kiểu cha chấp nhận mọi số nguyên không âm, kiểu con không thể tự ý từ chối số `0` hoặc các số nhỏ hơn một ngưỡng.
+**(1) Do not increase input requirements.** A subtype must not impose **stronger preconditions** than its parent. If the parent accepts all nonnegative integers, the child cannot arbitrarily reject `0` or values below some threshold.
 
-**(2) Không giảm bảo đảm đầu ra.** Kiểu con không được cung cấp **hậu điều kiện yếu hơn**. Nếu kiểu cha cam kết kết quả thuộc một khoảng hợp lệ, kiểu con phải giữ kết quả trong khoảng đó. Nó có thể đưa ra bảo đảm chặt chẽ hơn, miễn vẫn thỏa hợp đồng chung.
+**(2) Do not reduce output guarantees.** A subtype must not offer **weaker postconditions**. If the parent guarantees a result within a valid range, the child must stay within it. It may offer stronger guarantees as long as the common contract is met.
 
-**(3) Giữ bất biến và các cam kết quan sát được.** Nếu đối tượng hứa rằng số dư không âm hoặc phương thức không sửa dữ liệu đầu vào, kiểu con không được phá điều kiện đó. Các ngoại lệ bất ngờ, trạng thái bị thay đổi ngoài dự kiến hoặc thao tác âm thầm không thực hiện cũng có thể làm sai hợp đồng.
+**(3) Preserve invariants and observable guarantees.** If an object promises nonnegative balances or a method promises not to mutate inputs, the child must not violate that rule. Unexpected exceptions, unwanted state changes, or silently omitted operations may also break the contract.
 
-Tóm tắt:
+Summary:
 
-| Khía cạnh | Kiểu con nên làm | Ví dụ vi phạm |
+| Aspect | What a subtype should do | Violation example |
 | --- | --- | --- |
-| Tiền điều kiện | Giữ nguyên hoặc cho phép *nhiều* đầu vào hơn nếu phù hợp | Kiểu cha chấp nhận giá trị 0, kiểu con yêu cầu giá trị từ 500.000 trở lên |
-| Hậu điều kiện | Giữ nguyên hoặc bảo đảm *mạnh* hơn | Kiểu cha trả tiền phải trả không vượt tiền gốc, kiểu con tính cao hơn tiền gốc |
-| Bất biến | Giữ tất cả bất biến đã cam kết | Một phương thức khiến số dư âm khi hợp đồng cấm |
-| Ngoại lệ | Không xuất hiện từ chối mới đối với các lời gọi vốn hợp lệ theo hợp đồng | Ném `UnsupportedOperationException` khi phương thức đáng lẽ phải hoạt động |
-| Tác động phụ | Tuân thủ giới hạn tác động đã mô tả | Phương thức chỉ tính toán nhưng âm thầm xóa dữ liệu |
+| Preconditions | Preserve requirements or allow *more* inputs when appropriate | Parent accepts 0; child requires at least 500.000 |
+| Postconditions | Preserve guarantees or provide *stronger* ones | Parent returns an amount no greater than original; child charges more |
+| Invariants | Preserve all promised invariants | A method makes balance negative despite a prohibition |
+| Exceptions | Do not introduce rejections for calls that are valid under the contract | Throws `UnsupportedOperationException` when the method should work |
+| Side effects | Respect documented effect boundaries | Pure calculation unexpectedly deletes data |
 
-Việc “cho phép thêm đầu vào” không có nghĩa được tự ý thay đổi cách xử lý đầu vào sai. Nếu hợp đồng nêu rõ loại ngoại lệ cho trường hợp không hợp lệ, các implementation cũng phải theo điều đó.
+“Accepting more inputs” does not permit arbitrary changes to how invalid inputs are handled. If the contract specifies an exception type for an invalid case, implementations must also honor it.
 
-## 3. Thiết kế một hợp đồng rõ ràng: DiscountPolicy
+## 3. Defining a clear contract: DiscountPolicy
 
-Xét giao diện tính số tiền phải thanh toán sau khi áp dụng giảm giá. Ta thỏa thuận trước:
+Consider an interface calculating amounts due after discounts. Agree on the following first:
 
-- `payableVnd(subtotalVnd)` nhận **mọi `long` không âm**, bao gồm `0`.
-- Đầu vào âm bị từ chối bằng `IllegalArgumentException`.
-- Khi hoàn tất bình thường, kết quả **không âm và không lớn hơn `subtotalVnd`**.
-- Kết quả dùng đơn vị **VND nguyên**; chính sách giảm phần trăm làm tròn phần tiền được giảm xuống đồng gần nhất.
-- Lời gọi chỉ tính toán, không sửa đơn hàng, tài khoản hay trạng thái nào khác.
+- `payableVnd(subtotalVnd)` accepts **every nonnegative `long`**, including `0`.
+- Negative inputs are rejected with `IllegalArgumentException`.
+- On normal completion, the result is **nonnegative and no greater than `subtotalVnd`**.
+- Results use **integer VND units**; percentage discounts round the discounted amount down to the nearest whole VND.
+- The call performs only calculations and does not modify an order, account, or other state.
 
-Hai implementation hợp lệ có thể tính ra **kết quả khác nhau**. LSP không yêu cầu tất cả kiểu con trả kết quả giống nhau; nó yêu cầu chúng cùng tuân thủ **những bảo đảm được công bố**.
+Two valid implementations may produce **different results**. LSP does not require all subtypes to return identical results; it requires them to honor **published guarantees**.
 
 ```mermaid
 classDiagram
@@ -3573,11 +3573,11 @@ classDiagram
     CheckoutService --> DiscountPolicy : uses
 ```
 
-`CheckoutService` chỉ biết `DiscountPolicy`. Nó không cần xác định đối tượng bên trong là `NoDiscount` hay `PercentageDiscount` trước khi gọi phương thức.
+`CheckoutService` knows only `DiscountPolicy`. It does not need to determine whether the internal object is a `NoDiscount` or `PercentageDiscount` before calling the method.
 
-## 4. Ví dụ Java hoàn chỉnh có thể chạy
+## 4. Complete runnable Java example
 
-Tạo file **`DiscountDemo.java`** (JDK 11 trở lên):
+Create **`DiscountDemo.java`** (JDK 11 or later):
 
 ```java
 import java.util.Objects;
@@ -3694,14 +3694,14 @@ public class DiscountDemo {
 }
 ```
 
-Chạy:
+Run:
 
 ```bash
 javac DiscountDemo.java
 java DiscountDemo
 ```
 
-Đầu ra dự kiến:
+Expected output:
 
 ```text
 1000
@@ -3710,27 +3710,27 @@ java DiscountDemo
 Contract tests: PASS
 ```
 
-### Vì sao đây là mở rộng kiểu đúng?
+### Why is this valid type extension?
 
-`NoDiscount` và `PercentageDiscount` đều `implements DiscountPolicy` và dùng `@Override` để hiện thực cùng hành vi công khai.
+`NoDiscount` and `PercentageDiscount` both `implements DiscountPolicy` and use `@Override` to implement the same public behavior.
 
-Khi `CheckoutService` nhận một `DiscountPolicy`, Java dùng **đa hình lúc chạy (dynamic dispatch)** để gọi đúng `payableVnd` của đối tượng thực tế. Dù cách tính khác nhau, cả hai giữ tiền điều kiện và hậu điều kiện chung.
+When `CheckoutService` receives a `DiscountPolicy`, Java uses **runtime polymorphism (dynamic dispatch)** to invoke `payableVnd` on the actual object. Although calculations differ, both preserve the common preconditions and postconditions.
 
-Ví dụ với 105 VND và mức giảm 20%:
-- Tiền giảm: làm tròn xuống `105 × 20 / 100 = 21` VND.
-- Tiền phải trả: `105 - 21 = 84` VND.
+For example, with 105 VND and a 20% discount:
+- Discount amount: round down `105 × 20 / 100 = 21` VND.
+- Amount payable: `105 - 21 = 84` VND.
 
-Công thức trong code chia phép nhân theo thương và phần dư của 100 để tránh tràn khi `subtotalVnd` gần `Long.MAX_VALUE`. Với `percentage` từ 0 tới 100, số tiền được giảm không vượt số tiền gốc, nên phép trừ cuối cùng vẫn hợp lệ.
+The code formula splits multiplication into quotient and remainder over 100 to avoid overflow when `subtotalVnd` approaches `Long.MAX_VALUE`. For `percentage` from 0 to 100, the discount cannot exceed the original amount, so the final subtraction is valid.
 
-### Constructor có quy tắc riêng với phương thức
+### Constructors have contracts distinct from methods
 
-`new PercentageDiscount(120)` không hợp lệ vì phần trăm vượt 100. Điều này **không phải** hành vi “tăng tiền điều kiện của `payableVnd`”. Đây là hợp đồng **khởi tạo đối tượng**: một instance `PercentageDiscount` chỉ tồn tại ở trạng thái hợp lệ nếu constructor thành công.
+`new PercentageDiscount(120)` is invalid because the percentage exceeds 100. This **does not** “strengthen the precondition for `payableVnd`.” It is the **construction contract**: a `PercentageDiscount` instance exists in a valid state only if its constructor succeeds.
 
-Sau khi khởi tạo thành công, `payableVnd` vẫn phải chấp nhận **mọi subtotal không âm**, không tự ý thêm một ngưỡng mới.
+After successful construction, `payableVnd` must still accept **every nonnegative subtotal** without introducing another threshold.
 
-## 5. Vi phạm tiền điều kiện: kiểu con tự thêm giới hạn
+## 5. Precondition violation: a subtype adds a new restriction
 
-Xét một implementation khác:
+Consider another implementation:
 
 ```java
 final class WrongMinimumDiscount implements DiscountPolicy {
@@ -3748,16 +3748,16 @@ final class WrongMinimumDiscount implements DiscountPolicy {
 }
 ```
 
-Đoạn này **biên dịch được**: nó hiện thực đúng chữ ký `long payableVnd(long)`. Nhưng nó vi phạm hợp đồng vì `DiscountPolicy` đã nói mọi subtotal từ `0` trở lên đều hợp lệ.
+This **compiles** because it correctly implements the signature `long payableVnd(long)`. However, it violates the contract because `DiscountPolicy` promises to accept every subtotal from `0` upward.
 
-`CheckoutService` có quyền gọi `checkout(100_000)`. Với `NoDiscount` hay `PercentageDiscount`, thao tác hoạt động. Với `WrongMinimumDiscount`, thao tác lại ném `IllegalStateException`. Client phải thêm điều kiện riêng cho kiểu con, làm mất khả năng thay thế.
+`CheckoutService` may legitimately call `checkout(100_000)`. With `NoDiscount` or `PercentageDiscount`, it succeeds. With `WrongMinimumDiscount`, it throws `IllegalStateException` instead. The client needs a subtype-specific condition, breaking substitutability.
 
-**Phương án đúng phụ thuộc vào nghiệp vụ:**
+**The correct solution depends on business requirements:**
 
-- Nếu đơn nhỏ không đủ điều kiện nhận khuyến mãi, có thể trả **nguyên subtotal** thay vì từ chối tính tiền.
-- Nếu một loại giao dịch thật sự chỉ chấp nhận đơn từ 500.000 VND và cần từ chối đơn nhỏ, hãy mô hình hóa nó thành **hợp đồng khác**, thay vì tuyên bố nó là một `DiscountPolicy` có hợp đồng rộng hơn.
+- If a small order does not qualify for a promotion, return **the original subtotal** rather than reject the calculation.
+- If a transaction truly requires a minimum of 500.000 VND and must reject smaller orders, model it under **a different contract** instead of claiming it is a `DiscountPolicy` with the broader contract.
 
-Ví dụ trả tiền gốc cho đơn không đủ ngưỡng:
+Example: return the original amount for orders below the threshold:
 
 ```java
 final class MinimumOrderPromotion implements DiscountPolicy {
@@ -3774,11 +3774,11 @@ final class MinimumOrderPromotion implements DiscountPolicy {
 }
 ```
 
-Cả hai nhánh đều trả giá trị trong khoảng `[0, subtotalVnd]`. Loại chính sách này chấp nhận **đầy đủ miền đầu vào** mà interface đã hứa, nên phù hợp để thay thế các policy khác.
+Both branches return values in `[0, subtotalVnd]`. This kind of policy accepts **the entire input domain** promised by the interface, making it substitutable for other policies.
 
-## 6. Vi phạm hậu điều kiện: trả kết quả sai cam kết
+## 6. Postcondition violation: returning a result that breaks guarantees
 
-Một implementation kiểu “phụ thu” vô tình được đưa vào hệ thống giảm giá:
+An implementation that unexpectedly applies a surcharge in a discount system:
 
 ```java
 final class WrongSurcharge implements DiscountPolicy {
@@ -3790,23 +3790,23 @@ final class WrongSurcharge implements DiscountPolicy {
 }
 ```
 
-Với `subtotalVnd = 10_000`, kết quả là `11_000`, lớn hơn số tiền đầu vào. Phương thức dùng đúng tên, đúng kiểu tham số, đúng kiểu trả về nhưng **không giữ hậu điều kiện** của `DiscountPolicy`.
+With `subtotalVnd = 10_000`, the result is `11_000`, greater than the input amount. The method has the right name, parameter type, and return type but **violates the postcondition** of `DiscountPolicy`.
 
-Nếu ứng dụng cần cả phụ thu lẫn giảm giá, nên thiết kế một hợp đồng khác như `PriceAdjustment`, với miền kết quả, cách xử lý phí và tràn số được xác định rõ; không ép một hành vi khác bản chất vào hợp đồng “giảm giá”.
+If the application needs both surcharges and discounts, define another contract such as `PriceAdjustment`, with result ranges, fee handling, and overflow behavior clearly specified. Do not force fundamentally different behavior into a “discount” contract.
 
-Trong ví dụ `CheckoutService`, việc kiểm tra giá trị trả về giúp phát hiện một phần lỗi tích hợp. Tuy nhiên, **kiểm tra phòng vệ ở caller không biến một implementation vi phạm thành kiểu con đúng**. Nếu implementation gây tác động phụ trước khi trả kết quả, một kiểm tra sau lời gọi không thể tự khôi phục mọi trạng thái đã bị sửa.
+In `CheckoutService`, checking the returned value can catch some integration bugs. But **defensive checks in the caller do not make a nonconforming implementation a valid behavioral subtype**. If it modifies state before returning, a post-call check cannot automatically undo those changes.
 
-## 7. Bất biến và ngoại lệ cũng là một phần của hợp đồng
+## 7. Invariants and exceptions are also part of the contract
 
-Giả sử lớp cơ sở `BankAccount` cam kết:
-- Số dư không âm.
-- `withdraw(amount)` chấp nhận mọi `amount > 0` không vượt số dư.
-- Khi rút thành công, số dư giảm **đúng `amount`**.
-- Nếu không đủ tiền, phương thức không thay đổi số dư.
+Suppose a base class `BankAccount` promises:
+- The balance is nonnegative.
+- `withdraw(amount)` accepts every `amount > 0` that does not exceed the balance.
+- After a successful withdrawal, the balance decreases by **exactly `amount`**.
+- Insufficient funds leave the balance unchanged.
 
-Một lớp con tự động trừ thêm phí nhưng không sửa hợp đồng, hoặc từ chối các khoản rút nhỏ hơn một ngưỡng khi tài khoản vẫn đủ tiền, có thể làm hỏng logic của client.
+A subclass that silently deducts another fee without updating the contract, or refuses withdrawals below a threshold despite sufficient funds, may break client logic.
 
-Ví dụ một chương trình kiểm tra:
+Consider a check in a program:
 
 ```java
 long before = account.getBalanceVnd();
@@ -3818,24 +3818,24 @@ if (after != before - 100_000) {
 }
 ```
 
-Đoạn kiểm tra hợp lệ **nếu** caller đã bảo đảm đủ tiền và kiểu cha đã cam kết rút đúng số tiền yêu cầu. Nếu lớp con trừ 101.000 đồng vì có phí, hậu điều kiện bị vi phạm.
+The check is valid **if** the caller ensured sufficient funds and the supertype promised to deduct exactly the requested amount. If the subtype deducts 101.000 VND because of a fee, the postcondition is violated.
 
-Ngược lại, nếu hợp đồng **ngay từ đầu** quy định rút tiền có thể phát sinh phí theo một biểu phí đã công bố, kết quả và cách kiểm tra phải theo hợp đồng rộng hơn đó. Không thể kết luận vi phạm LSP chỉ vì các implementation trả dữ liệu khác nhau; phải đối chiếu với **cam kết thực sự của kiểu cha**.
+Conversely, if the contract **from the outset** allows withdrawals to incur published fees, its results and validation must follow that broader contract. Differences in outputs do not automatically establish an LSP violation; compare them against **the supertype's actual promises**.
 
-### Ngoại lệ checked và unchecked
+### Checked and unchecked exceptions
 
-Java kiểm tra một phần tính hợp lệ của override tại thời điểm biên dịch:
+Java checks some override constraints at compile time:
 
-- Phương thức override không được khai báo thêm **checked exception rộng hơn** phương thức bị override cho cùng đường kế thừa.
-- Nhưng Java vẫn cho phép ném `RuntimeException`, ví dụ `UnsupportedOperationException`, từ một lời gọi vốn được kiểu cha cam kết sẽ thành công.
+- An overriding method may not declare **broader checked exceptions** than the overridden method permits in that inheritance path.
+- However, Java still allows throwing a `RuntimeException` such as `UnsupportedOperationException` from a call the supertype promises will succeed.
 
-Vì thế, **đúng quy tắc biên dịch chưa đủ để đúng quy tắc hành vi**. Hợp đồng cần mô tả trường hợp nào được phép từ chối, ngoại lệ nào có ý nghĩa nghiệp vụ và những hậu quả quan sát được khi thao tác thất bại.
+Thus, **compile-time compatibility alone does not imply behavioral compatibility**. A contract should document when an operation may be rejected, which exceptions represent business failures, and what observable effects occur on failure.
 
-Đặc biệt, nếu một interface chỉ định rõ một thao tác là **tùy chọn** (optional operation), việc implementation không hỗ trợ thao tác đó có thể vẫn đúng hợp đồng. Chẳng hạn, một số thao tác ghi trong Java Collections được quy định là tùy chọn, nên một danh sách không sửa được không mặc nhiên là vi phạm LSP chỉ vì ném `UnsupportedOperationException` khi thêm phần tử. Phải đọc đúng hợp đồng của API đang xét.
+In particular, when an interface explicitly declares an operation **optional**, an implementation that does not support it may still conform. For example, some mutating operations in Java Collections are specified as optional, so an unmodifiable list is not automatically an LSP violation just because it throws `UnsupportedOperationException` on addition. Always read the relevant API contract.
 
-## 8. Không thể “nâng cấp” quan hệ kiểu con chỉ bằng extends
+## 8. The extends declaration alone cannot “upgrade” a subtype relationship
 
-Ví dụ quen thuộc trong thiết kế:
+A familiar design example:
 
 ```java
 class Bird {
@@ -3853,9 +3853,9 @@ class Penguin extends Bird {
 }
 ```
 
-Về phân loại sinh học, chim cánh cụt là chim. Nhưng nếu hợp đồng của `Bird.fly()` là **mọi con chim đều có thể bay**, thì `Penguin` không thể thay thế một `Bird` trong client cần gọi `fly()`. Đây là dấu hiệu **mô hình lớp đã đặt hành vi chung quá rộng**.
+In biological classification, a penguin is a bird. But if `Bird.fly()` promises that **every bird can fly**, then `Penguin` cannot substitute for `Bird` in a client that calls `fly()`. This signals that **the class model defines overly broad shared behavior**.
 
-Một thiết kế khác:
+An alternative design:
 
 ```java
 interface Bird {
@@ -3886,15 +3886,15 @@ final class Penguin implements Bird {
 }
 ```
 
-Giờ đây những vị trí chỉ cần “chim có thể ăn” dùng `Bird`; vị trí cần khả năng bay dùng `Flyable`. `Penguin` không hứa điều nó không làm được.
+Now clients that only need “birds that can eat” use `Bird`, while clients requiring flight use `Flyable`. `Penguin` makes no promises it cannot fulfill.
 
-Bài học: **quan hệ “là một” trong đời thực chưa đủ để quyết định inheritance**. Một kiểu chỉ nên là kiểu con của kiểu khác nếu giữ được các hành vi mà client của kiểu cha có quyền kỳ vọng.
+Lesson: **an “is-a” relationship in the real world is not sufficient to choose inheritance**. A type should be a subtype of another only if it can preserve the behavior that clients of the supertype may legitimately expect.
 
-Không phải lúc nào cũng phải tách một interface cho mỗi phương thức; việc phân chia cần dựa trên khả năng và hợp đồng thật sự cần được chia sẻ.
+Not every method needs its own interface; divide roles based on actual shared capabilities and contracts.
 
-## 9. Vì sao Java báo lỗi khi override một số chữ ký, nhưng không phát hiện hết vi phạm?
+## 9. Why does Java catch certain signature overrides but not all violations?
 
-Java giúp kiểm tra **tính tương thích về kiểu**:
+Java helps check **type compatibility**:
 
 ```java
 class Parent {
@@ -3911,9 +3911,9 @@ class Child extends Parent {
 }
 ```
 
-Đây là một ví dụ về **covariant return type**: kiểu trả về `Integer` là kiểu con của `Number`, nên Java cho phép thay `Number` bằng `Integer` ở vị trí trả về.
+This illustrates **covariant return types**: `Integer` is a subtype of `Number`, so Java permits replacing a `Number` return type with `Integer` in an override.
 
-Ngược lại, Java **không** cho override bằng cách tự đổi kiểu tham số:
+In contrast, Java **does not** allow overriding a method merely by changing its parameter type:
 
 ```java
 class Parent {
@@ -3926,26 +3926,26 @@ class Child extends Parent {
 }
 ```
 
-Khi một biến khai báo kiểu `Parent` gọi `process` với `Number`, việc thêm overload `process(Integer)` ở `Child` không thay thế `process(Number)`. `@Override` sẽ giúp compiler cảnh báo nếu bạn thực sự định override nhưng chữ ký không khớp.
+When a variable of declared type `Parent` invokes `process` with a `Number`, adding a `process(Integer)` overload in `Child` does not override `process(Number)`. `@Override` makes the compiler report an error if you intended an override but the signature does not match.
 
-Java còn kiểm soát một số khía cạnh như phạm vi truy cập (không được thu hẹp access của phương thức override) và checked exceptions. Tuy nhiên, compiler **không chứng minh** được phương thức luôn trả kết quả nằm trong khoảng hợp lệ, không âm thầm xóa dữ liệu, hoặc không tăng tiền điều kiện.
+Java also checks details such as visibility (overrides may not narrow accessibility) and checked exceptions. But the compiler **cannot prove** that methods always return valid ranges, avoid silently deleting data, or refrain from strengthening preconditions.
 
-Vì vậy cần cả:
-1. **Kiểu và chữ ký hợp lệ** để Java cho phép thay thế.
-2. **Hợp đồng hành vi được giữ đúng** để client hoạt động như mong đợi.
+Both are therefore needed:
+1. **Valid types and signatures** so Java permits substitution.
+2. **Preserved behavioral contracts** so clients continue to behave correctly.
 
-## 10. Kiểm thử hợp đồng chung cho mọi implementation
+## 10. Testing the shared contract across all implementations
 
-Một cách thực tế là viết bộ kiểm thử sử dụng **kiểu cha/interface**, rồi chạy nguyên bộ kiểm thử với **từng implementation**.
+A practical approach is to write tests using **a supertype/interface** and execute the same test suite against **each implementation**.
 
-Ví dụ `verifyContract(DiscountPolicy policy)` ở phần trước kiểm tra:
-- `0` là đầu vào hợp lệ.
-- Số tiền nhỏ và thông thường đều xử lý được.
-- Giá trị cực lớn `Long.MAX_VALUE` không phá giới hạn kết quả.
-- Đầu vào âm được từ chối đúng loại ngoại lệ.
-- Kết quả luôn thuộc khoảng `[0, subtotalVnd]`.
+For example, the earlier `verifyContract(DiscountPolicy policy)` checks:
+- `0` is a valid input.
+- Both small and typical amounts are handled.
+- The extreme value `Long.MAX_VALUE` does not invalidate result bounds.
+- Negative input is rejected with the required exception type.
+- Results remain within `[0, subtotalVnd]`.
 
-Bộ kiểm thử có thể thêm kiểm tra các quy tắc đặc thù như không gây tác động phụ hoặc không thay đổi đối tượng bên ngoài, nếu đó là một phần hợp đồng. Các thuộc tính cần quan sát ngoài kết quả trả về phải được kiểm tra bằng trạng thái hoặc dependency giả lập tương ứng.
+Tests can also verify more specific guarantees such as no side effects or no mutation of external objects, when these are part of the contract. Observable properties beyond return values need matching state checks or mock dependencies.
 
 ```mermaid
 flowchart TD
@@ -3956,34 +3956,34 @@ flowchart TD
     E --> B
 ```
 
-Có thể mở rộng test bằng những trường hợp biên quan trọng khác: tỉ lệ `0%`, `100%`, subtotal không chia hết cho 100, giá trị sát `Long.MAX_VALUE`. Với JUnit, những test này có thể dùng một lớp test trừu tượng hoặc parameterized tests; cách tổ chức nào cũng nhằm **chạy cùng một bộ cam kết lên các đối tượng thay thế**.
+Additional important boundaries include discount rates of `0%` and `100%`, subtotals not divisible by 100, and values near `Long.MAX_VALUE`. JUnit tests may use abstract base test classes or parameterized tests; either approach aims to **run the same promised behavior against interchangeable objects**.
 
-Tuy nhiên, test chỉ kiểm tra những trường hợp đã được chọn, không chứng minh đúng với *mọi* đầu vào. Hãy kết hợp test với lập luận về thuật toán, các bất biến và kiểm tra phạm vi dữ liệu.
+However, tests exercise only selected scenarios and do not prove correctness for *every* input. Combine them with algorithm reasoning, invariants, and data-range validation.
 
-## 11. Khi thấy kiểu con vi phạm hợp đồng, nên sửa ở đâu?
+## 11. Where should a violated subtype contract be fixed?
 
-Đừng vội thêm một chuỗi `instanceof` hoặc `if (policy instanceof ...)` ở mọi caller. Cách đó khiến client phụ thuộc vào từng kiểu cụ thể và bỏ qua lợi ích của đa hình.
+Do not immediately add `instanceof` chains or `if (policy instanceof ...)` to every caller. That makes clients dependent on concrete types and loses the benefit of polymorphism.
 
-Một số lựa chọn:
+Options include:
 
-| Tình huống | Hướng xử lý hợp lý |
+| Scenario | Appropriate response |
 | --- | --- |
-| Kiểu con bổ sung yêu cầu mới không có trong hợp đồng | Bỏ yêu cầu bổ sung ở phương thức chung, hoặc tạo hợp đồng chuyên biệt |
-| Hai loại hành vi có ý nghĩa khác nhau | Thiết kế interface thể hiện đúng khả năng: `DiscountPolicy`, `SurchargePolicy`… |
-| Kiểu cha hứa quá nhiều thao tác mà một số kiểu con không hỗ trợ | Thu hẹp/tách hợp đồng theo khả năng thật sự của các loại đối tượng |
-| Kiểu con chỉ khác thuật toán, vẫn cùng cam kết | Giữ chung interface; dùng đa hình hoặc Strategy |
-| Cần biến thể hành vi tùy trạng thái | Diễn đạt quy tắc trạng thái trong hợp đồng chung hoặc chuyển việc điều phối sang service thích hợp |
-| Một kiểm tra riêng phát sinh ở nhiều caller | Xem lại hợp đồng thay vì buộc caller biết implementation nào đang chạy |
+| Subtype adds requirements absent from the contract | Remove the extra restriction from the shared method or define a specialized contract |
+| Two behaviors have different meanings | Define interfaces expressing their capabilities: `DiscountPolicy`, `SurchargePolicy`… |
+| Supertype promises too many operations that some subtypes cannot support | Narrow or split contracts by actual capabilities |
+| Subtype uses a different algorithm but preserves guarantees | Keep the shared interface; use polymorphism or Strategy |
+| Behavioral variants depend on state | Describe state rules in the shared contract or coordinate via an appropriate service |
+| Many callers need the same special-case checks | Revisit the contract instead of requiring callers to know the concrete implementation |
 
-**Nguyên tắc thiết kế:** hãy mô hình hóa kiểu con theo **hành vi mà nó có thể bảo đảm**, không chỉ theo tên gọi hay vẻ giống nhau của dữ liệu.
+**Design principle:** model subtypes based on **behaviors they can guarantee**, not merely names or similarities in data.
 
-## 12. Bài tập tự kiểm tra
+## 12. Self-assessment exercises
 
-**Bài 1 — dự đoán:** Với `DiscountPolicy` ở ví dụ, `PercentageDiscount(25).payableVnd(1_000)` trả gì? Trường hợp `payableVnd(0)` có được từ chối không?
+**Exercise 1 — predict:** With the example `DiscountPolicy`, what does `PercentageDiscount(25).payableVnd(1_000)` return? May `payableVnd(0)` be rejected?
 
-*Đáp án:* trả `750`; `0` là đầu vào hợp lệ và kết quả phải là `0`.
+*Answer:* Returns `750`; `0` is valid input and the result must be `0`.
 
-**Bài 2 — tìm vi phạm:** Một implementation mới được viết như sau:
+**Exercise 2 — find the violation:** Consider this new implementation:
 
 ```java
 final class WrongPolicy implements DiscountPolicy {
@@ -3997,41 +3997,41 @@ final class WrongPolicy implements DiscountPolicy {
 }
 ```
 
-*Gợi ý:* kiểu cha chấp nhận `0`, còn kiểu mới từ chối `0`. Hậu điều kiện với giá trị dương có thể đúng, nhưng tiền điều kiện đã bị tăng.
+*Hint:* The supertype accepts `0`, but the new type rejects `0`. Its postcondition might be valid for positive values, but it has strengthened the precondition.
 
-**Bài 3 — sửa cho đúng:** Hãy viết `FixedPolicy` thay `WrongPolicy`, xử lý mọi `subtotalVnd >= 0`, ném `IllegalArgumentException` cho giá trị âm, và trả một kết quả trong `[0, subtotalVnd]`. Chạy `verifyContract` với implementation này.
+**Exercise 3 — fix the implementation:** Write `FixedPolicy` instead of `WrongPolicy`, accept all `subtotalVnd >= 0`, throw `IllegalArgumentException` for negative inputs, and return a result in `[0, subtotalVnd]`. Run `verifyContract` against it.
 
-**Bài 4 — thiết kế:** Bạn có `Account` với phương thức `withdraw` cam kết mọi khoản rút dương không vượt số dư đều thành công. Hệ thống thêm tài khoản chỉ được xem số dư, không được rút tiền. Có nên để `ReadOnlyAccount extends Account` rồi override `withdraw` để ném lỗi? Vì sao? Hãy thử tách `BalanceReadable` và `Withdrawable` để diễn đạt đúng khả năng.
+**Exercise 4 — design:** An `Account` has `withdraw` and promises that all positive withdrawals not exceeding the balance succeed. The system adds an account whose balance can be viewed but from which funds cannot be withdrawn. Should `ReadOnlyAccount extends Account` override `withdraw` to throw? Why? Try splitting `BalanceReadable` and `Withdrawable` to represent the actual capabilities.
 
-**Bài 5 — thảo luận:** Nếu toàn bộ implementation của `DiscountPolicy` đều được phép trả giá trị lớn hơn subtotal để tính phụ phí, điều gì phải thay đổi? Chỉ sửa tên phương thức có đủ không, hay phải sửa hợp đồng, test và cách sử dụng của `CheckoutService`?
+**Exercise 5 — discuss:** If every `DiscountPolicy` implementation may return more than the subtotal to apply surcharges, what must change? Is renaming the method sufficient, or must the contract, tests, and `CheckoutService` usage also change?
 
-## Checklist khi thiết kế hoặc review kiểu con
+## Checklist for designing or reviewing subtypes
 
-- Kiểu cha/interface có mô tả chính xác miền đầu vào hợp lệ không?
-- Kiểu con có từ chối một trường hợp mà kiểu cha đã hứa xử lý không?
-- Kết quả trả về có giữ tất cả hậu điều kiện của kiểu cha không?
-- Trạng thái và ngoại lệ có thể quan sát được có giữ đúng cam kết không?
-- Client có cần dùng `instanceof` hoặc kiểm tra class cụ thể mới sử dụng an toàn không?
-- Có thể chạy **cùng một bộ contract tests** cho mọi implementation không?
-- Quan hệ kế thừa đang phản ánh **khả năng thay thế** hay chỉ là giống nhau về tên gọi/dữ liệu?
+- Does the supertype/interface accurately describe valid inputs?
+- Does the subtype reject a case the supertype promises to handle?
+- Does its result preserve every supertype postcondition?
+- Do observable state and exceptions honor the guarantees?
+- Must clients inspect concrete classes with `instanceof` to use it safely?
+- Can **the same contract tests** run against all implementations?
+- Does inheritance reflect **substitutability**, or merely similar names/data?
 
-**Kết luận:** Mở rộng kiểu đúng không chỉ là kế thừa được thuộc tính hoặc biên dịch được một phương thức `@Override`. Kiểu con phải **giữ hợp đồng của kiểu cha**: không thêm đòi hỏi bất ngờ cho đầu vào hợp lệ, không giảm bảo đảm đầu ra, không phá bất biến và không tạo tác động ngoài dự kiến. Khi điều đó được bảo đảm, đa hình mới giúp ứng dụng mở rộng hành vi mà không phải viết lại mã đang phụ thuộc vào kiểu trừu tượng.
+**Conclusion:** Correct type extension requires more than inheriting members or compiling an `@Override` method. A subtype must **preserve its supertype contract**: add no unexpected requirements for valid inputs, weaken no output guarantees, violate no invariants, and introduce no unpromised effects. Only then can polymorphism extend application behavior without rewriting code that depends on the abstraction.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="subtyping-008">Phản ví dụ hình chữ nhật và hình vuông</a>
+## <a id="subtyping-008">The rectangle and square counterexample</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phản ví dụ hình chữ nhật và hình vuông trong Java OOP
+# The rectangle and square counterexample in Java OOP
 
-Trong hình học, **hình vuông là một trường hợp đặc biệt của hình chữ nhật**: cả hai đều có bốn góc vuông, và hình vuông có thêm điều kiện bốn cạnh bằng nhau. Tuy nhiên, khi chuyển phát biểu toán học này sang mã Java:
+In geometry, **a square is a special case of a rectangle**: both have four right angles, while a square also requires all four sides to be equal. However, when translating this mathematical statement into Java:
 
 ~~~java
 class Square extends Rectangle {
@@ -4039,48 +4039,48 @@ class Square extends Rectangle {
 }
 ~~~
 
-ta có thể tạo ra một thiết kế **biên dịch được nhưng sai về hành vi**.
+we can create a design that **compiles but violates its behavioral contract**.
 
-Vấn đề không nằm ở kiến thức hình học. Nó nằm ở **hợp đồng sử dụng** mà kiểu `Rectangle` công bố. Nếu một hình chữ nhật cho phép thay đổi chiều rộng và chiều cao **độc lập**, thì hình vuông không thể đồng thời giữ hai yêu cầu sau:
+The issue is not geometric knowledge. It is **the client-facing contract** exposed by `Rectangle`. If a rectangle allows its width and height to be changed **independently**, then a square cannot simultaneously satisfy both requirements:
 
-1. Thay chiều rộng không tự ý đổi chiều cao, và ngược lại.
-2. Sau mọi thao tác hợp lệ, chiều rộng luôn bằng chiều cao.
+1. Changing the width must not silently change the height, and vice versa.
+2. After every valid operation, width must equal height.
 
-Đây là phản ví dụ nổi tiếng giúp hiểu **quan hệ “là một” (is-a)** và **Nguyên tắc thay thế Liskov (Liskov Substitution Principle – LSP)**: *một lớp con phải có thể dùng thay lớp cha trong những ngữ cảnh dựa vào hợp đồng lớp cha, mà không làm sai các điều đã được bảo đảm*.
+This well-known counterexample illustrates **the “is-a” relationship** and **the Liskov Substitution Principle (LSP)**: *a subclass must be usable wherever clients rely on its superclass contract without violating promised behavior*.
 
-## 1. Bài toán thật sự là hợp đồng của `Rectangle`
+## 1. The real issue is the `Rectangle` contract
 
-Giả sử hệ thống đồ họa có một lớp `Rectangle` **có thể thay đổi kích thước**. Ta công bố hợp đồng như sau:
+Suppose a graphics system has a **resizable** `Rectangle` class. We publish this contract:
 
-| Thao tác | Điều kiện đầu vào | Cam kết sau khi thành công |
+| Operation | Input conditions | Guarantee after success |
 |---|---|---|
-| `new Rectangle(w, h)` | `w > 0`, `h > 0` | Chiều rộng `w`, chiều cao `h` |
-| `setWidth(w)` | `w > 0` | Chiều rộng mới bằng `w`; **chiều cao không đổi** |
-| `setHeight(h)` | `h > 0` | Chiều cao mới bằng `h`; **chiều rộng không đổi** |
-| `getWidth()` | Không | Trả chiều rộng hiện tại |
-| `getHeight()` | Không | Trả chiều cao hiện tại |
-| `area()` | Không | Trả tích chiều rộng × chiều cao |
+| `new Rectangle(w, h)` | `w > 0`, `h > 0` | Width is `w`, height is `h` |
+| `setWidth(w)` | `w > 0` | New width equals `w`; **height stays unchanged** |
+| `setHeight(h)` | `h > 0` | New height equals `h`; **width stays unchanged** |
+| `getWidth()` | None | Returns current width |
+| `getHeight()` | None | Returns current height |
+| `area()` | None | Returns width × height |
 
-Bất biến của lớp cha:
+The superclass invariant:
 
 \[
-width > 0 \quad\text{và}\quad height > 0
+width > 0 \quad\text{and}\quad height > 0
 \]
 
-Với bất kỳ đối tượng `Rectangle` hợp lệ, hai câu lệnh:
+For any valid `Rectangle` object, the two statements:
 
 ~~~java
 rectangle.setWidth(5);
 rectangle.setHeight(3);
 ~~~
 
-phải dẫn đến kích thước **5 × 3**, diện tích **15**.
+must produce dimensions **5 × 3** and area **15**.
 
-Đó không chỉ là “cách viết code” của một implementation: nó là **điều mà code sử dụng quyền kỳ vọng**, nếu hợp đồng định nghĩa hai setter độc lập.
+This is not merely an implementation's “coding style”; it is **what clients are entitled to expect** when the contract specifies independent setters.
 
-## 2. Ví dụ Java chạy được: kế thừa gây vi phạm hợp đồng
+## 2. Runnable Java example: inheritance violates the contract
 
-Lưu file **`DemoBad.java`**. Chương trình này biên dịch và chạy được với Java 17+. Nó cố ý chứa một lỗi **thiết kế kế thừa** để quan sát hiện tượng.
+Save the file as **`DemoBad.java`**. The program compiles and runs on Java 17+. It intentionally contains an **inheritance design flaw** to demonstrate the problem.
 
 ~~~java
 public class DemoBad {
@@ -4192,14 +4192,14 @@ class Square extends Rectangle {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac DemoBad.java
 java DemoBad
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Rectangle: 15
@@ -4208,20 +4208,20 @@ Rectangle giữ hợp đồng: true
 Square giữ hợp đồng: false
 ~~~
 
-### Vì sao nhận được 9 thay vì 15?
+### Why is the result 9 instead of 15?
 
-Hàm `resizeAndCalculate` chỉ nhận một tham chiếu kiểu `Rectangle`. Nó không biết người gọi đưa vào `Rectangle` thông thường hay `Square`.
+The `resizeAndCalculate` function receives only a `Rectangle` reference. It does not know whether the caller supplies a regular `Rectangle` or a `Square`.
 
-Với `new Rectangle(2, 2)`:
+With `new Rectangle(2, 2)`:
 
-1. `setWidth(5)` → chiều rộng = 5; chiều cao vẫn = 2.
-2. `setHeight(3)` → chiều cao = 3; chiều rộng vẫn = 5.
+1. `setWidth(5)` → width = 5; height remains 2.
+2. `setHeight(3)` → height = 3; width remains 5.
 3. `area()` → 5 × 3 = **15**.
 
-Với `new Square(2)`, Java thực hiện **phương thức override của đối tượng thực tế**:
+With `new Square(2)`, Java invokes **overridden methods of the runtime object**:
 
-1. `setWidth(5)` → `Square.setWidth` đổi **cả hai** cạnh thành 5.
-2. `setHeight(3)` → `Square.setHeight` đổi **cả hai** cạnh thành 3.
+1. `setWidth(5)` → `Square.setWidth` changes **both** sides to 5.
+2. `setHeight(3)` → `Square.setHeight` changes **both** sides to 3.
 3. `area()` → 3 × 3 = **9**.
 
 ~~~mermaid
@@ -4234,53 +4234,53 @@ flowchart TD
     F --> G["Sai hợp đồng<br/>setter độc lập"]
 ~~~
 
-**Không có lỗi cú pháp Java** ở đây: `Square` override hợp lệ, giữ quyền truy cập `public` và trả về đúng kiểu `void`. Tuy nhiên, **hợp đồng hành vi đã bị phá vỡ**.
+There are **no Java syntax errors**: `Square` overrides validly, maintains `public` access, and returns the correct `void` type. Nevertheless, **the behavioral contract is violated**.
 
-Lưu ý: tên class `Square` không làm compiler tự động kiểm tra các định lý hình học. Hai lần gọi setter sau khi đối tượng hoàn thành khởi tạo là điểm phát sinh mâu thuẫn mà developer phải nhận ra qua thiết kế và kiểm thử. Constructor của `Rectangle` được viết **kiểm tra và gán field trực tiếp**, tránh gọi setter overridable khi constructor lớp con chưa hoàn tất; như vậy phản ví dụ tập trung đúng vào sự vi phạm hợp đồng của các lời gọi client.
+Note: the class name `Square` does not cause the compiler to prove geometric theorems automatically. The conflict appears when the client's setter calls occur after construction and must be identified through design and testing. The `Rectangle` constructor **validates and assigns fields directly**, avoiding calls to overridable setters before subclass construction completes. Thus, the example isolates the violation of the client-call contract.
 
-## 3. Vi phạm nguyên tắc Liskov ở chỗ nào?
+## 3. Where is the Liskov Substitution Principle violated?
 
-**Nguyên tắc thay thế Liskov** yêu cầu một subtype không khiến những chương trình dùng supertype bị sai, miễn là chương trình đó chỉ dựa vào các cam kết hợp lệ của supertype.
+The **Liskov Substitution Principle** requires that a subtype not make programs using the supertype incorrect, as long as those programs rely only on valid supertype guarantees.
 
-Với phản ví dụ trên, xung đột xảy ra ở hai mức.
+This counterexample conflicts at two levels.
 
-### 3.1. Lớp con thay đổi postcondition
+### 3.1. The subclass changes a postcondition
 
-Hợp đồng `Rectangle.setWidth(w)` nói:
+The `Rectangle.setWidth(w)` contract states:
 
-> Sau khi gọi thành công, chiều rộng bằng `w` và **chiều cao giữ nguyên**.
+> After a successful call, the width equals `w` and **height remains unchanged**.
 
-Nhưng `Square.setWidth(w)` làm chiều cao đổi theo. Nó đã **làm yếu hoặc vi phạm điều bảo đảm sau lời gọi** (*postcondition*) của lớp cha.
+But `Square.setWidth(w)` also changes the height. It has **weakened or violated the guarantee after the call** (*postcondition*) of the superclass.
 
-Tương tự, `Square.setHeight(h)` đổi cả chiều rộng, vi phạm postcondition của `Rectangle.setHeight(h)`.
+Similarly, `Square.setHeight(h)` also changes width and violates the postcondition of `Rectangle.setHeight(h)`.
 
-Điều này quan trọng hơn việc cả hai phương thức đều có tên `setWidth` hoặc có cùng chữ ký.
+This matters more than both methods being named `setWidth` or sharing signatures.
 
-### 3.2. Bất biến của subtype xung đột với khả năng của supertype
+### 3.2. Subtype invariants conflict with supertype capabilities
 
-Bất biến của `Square`:
+Invariant of `Square`:
 
 \[
 width = height > 0
 \]
 
-Bất biến của `Rectangle`:
+Invariant of `Rectangle`:
 
 \[
 width > 0,\quad height > 0
 \]
 
-Nhìn riêng các bất biến, điều kiện của `Square` **chặt hơn** và không mâu thuẫn với các giá trị hợp lệ của `Rectangle`. Vấn đề nằm ở các **phép biến đổi mà supertype cho phép**.
+Considering invariants alone, `Square` has a **stricter** condition that is compatible with valid `Rectangle` values. The problem lies in **the transformations permitted by the supertype**.
 
-`Rectangle` cho phép đạt trạng thái kích thước `5 × 3`. Nhưng `Square` không thể có trạng thái đó mà vẫn là hình vuông.
+`Rectangle` permits dimensions of `5 × 3`. But `Square` cannot represent those dimensions while remaining a square.
 
-Nếu cố giữ `width == height`, `Square` phải đổi ngữ nghĩa setter. Nếu giữ ngữ nghĩa setter độc lập, `Square` sẽ không còn là hình vuông sau một số thao tác.
+To preserve `width == height`, `Square` must change setter semantics. To preserve independent setter semantics, `Square` must stop being square after some operations.
 
-**Không tồn tại implementation thỏa đồng thời cả hai hợp đồng này** nếu vẫn giữ nguyên thiết kế mutable với hai setter độc lập.
+**No implementation can satisfy both contracts simultaneously** if the mutable design with independent setters remains unchanged.
 
-## 4. Có thể sửa bằng cách ném exception khi hai cạnh khác nhau không?
+## 4. Could throwing exceptions for unequal sides fix the design?
 
-Một đề xuất thường gặp là:
+A common proposal is:
 
 ~~~java
 @Override
@@ -4294,49 +4294,49 @@ public void setWidth(int width) {
 }
 ~~~
 
-Cách này giữ được invariant hình vuông, nhưng **không giải quyết tính thay thế**.
+This preserves the square invariant but **does not solve substitutability**.
 
-Ví dụ, đối với `Rectangle(2, 2)`, `setWidth(5)` hợp lệ vì `5 > 0`. Nhưng với `Square(2)`, cùng lời gọi lại ném lỗi.
+For example, on `Rectangle(2, 2)`, `setWidth(5)` is valid because `5 > 0`. But the same call on `Square(2)` throws.
 
-Tức là subtype đã **siết chặt precondition**: đòi thêm `width == getHeight()` trong khi supertype không đòi.
+The subtype has **strengthened the precondition** by requiring `width == getHeight()` when the supertype does not.
 
-Trong thiết kế hợp đồng, subtype không nên tự ý yêu cầu điều kiện đầu vào **mạnh hơn** hợp đồng cha hoặc cung cấp bảo đảm đầu ra **yếu hơn** hợp đồng cha.
+Under contract design, subtypes must not arbitrarily require **stronger** input conditions or provide **weaker** output guarantees than the parent contract.
 
-| Cách viết `Square` | Có giữ bất biến hình vuông? | Có giữ hợp đồng setter độc lập của `Rectangle`? |
+| `Square` implementation | Preserves the square invariant? | Preserves the independent-setter contract of `Rectangle`? |
 |---|---|---|
-| Đổi cả hai cạnh trong mỗi setter | Có | **Không** |
-| Từ chối đổi một cạnh khi làm hai cạnh khác nhau | Có | **Không** |
-| Chỉ đổi một cạnh như `Rectangle` | **Không** | Có cho setter, nhưng mất nghĩa `Square` |
-| Bỏ hai setter khỏi hợp đồng chung và thiết kế abstraction khác | Có thể | **Có thể**, với hợp đồng mới phù hợp |
+| Change both sides in every setter | Yes | **No** |
+| Reject a one-sided change that would produce unequal sides | Yes | **No** |
+| Change only one side as `Rectangle` does | **No** | Yes for setters, but no longer a `Square` |
+| Remove the two setters from the shared contract and design a different abstraction | Possible | **Possible**, under a suitable new contract |
 
-Không thể “chữa” lỗi LSP bằng việc ném thêm `UnsupportedOperationException` cho những thao tác mà lớp cha đã hứa hỗ trợ.
+You cannot “fix” an LSP violation by throwing additional `UnsupportedOperationException` errors for operations that the superclass promises to support.
 
-## 5. Quan hệ toán học không tự động là quan hệ kiểu tốt
+## 5. A mathematical relationship is not automatically a good type relationship
 
-Phát biểu toán học:
+The mathematical statement:
 
-> Hình vuông là hình chữ nhật có các cạnh bằng nhau.
+> A square is a rectangle with equal sides.
 
-khác với phát biểu OOP:
+differs from the OOP statement:
 
-> Mọi thao tác được cung cấp cho một **đối tượng Rectangle mutable** đều có thể sử dụng với một **đối tượng Square mutable** và giữ nguyên ý nghĩa.
+> Every operation offered by a **mutable Rectangle object** works on a **mutable Square object** with the same meaning.
 
-Một số tình huống cần phân biệt:
+Several cases should be distinguished:
 
-- **Hình học thuần túy:** square thuộc tập rectangle nếu định nghĩa rectangle có bốn góc vuông.
-- **Đối tượng bất biến biểu diễn hình:** có thể là một trường hợp đặc biệt với tập khả năng chung `area()`, `perimeter()`.
-- **Đối tượng mutable với hai setter độc lập:** Square không thể giữ cùng hợp đồng thay đổi kích thước với Rectangle.
-- **Đối tượng chỉ đọc:** nếu API chỉ cung cấp truy vấn như `area()`, `width()`, `height()`, thì không có xung đột do setter độc lập. Tuy nhiên, vẫn phải giữ toàn bộ hợp đồng truy vấn khác nếu có.
+- **Pure geometry:** a square belongs to the set of rectangles when a rectangle is defined by four right angles.
+- **Immutable shape objects:** they can share capabilities such as `area()` and `perimeter()`.
+- **Mutable objects with independent setters:** a Square cannot preserve the same resizing contract as a Rectangle.
+- **Read-only objects:** if the API only offers queries such as `area()`, `width()`, and `height()`, there is no conflict from independent setters. Other query contracts must still be preserved.
 
-**Bài học:** quyết định `extends` dựa trên **hành vi quan sát được và hợp đồng sử dụng**, không chỉ dựa vào tên lớp hoặc câu “trong đời thực A là một B”.
+**Lesson:** choose `extends` based on **observable behavior and client contracts**, not just class names or the phrase “A is a B in the real world.”
 
-## 6. Thiết kế tốt hơn: một interface chỉ nói về khả năng đo hình
+## 6. Better design: an interface exposing only shape-measurement capabilities
 
-Nếu client chỉ cần tính diện tích, không nên bắt nó phụ thuộc vào API thay đổi chiều rộng/chiều cao.
+If clients only need area calculations, they should not depend on an API for modifying width and height.
 
-Ta có thể biểu diễn hai hình dạng như hai **value object bất biến** độc lập, cùng thực hiện interface `Shape`.
+Represent the shapes as two independent **immutable value objects** that implement the same `Shape` interface.
 
-Lưu vào **`DemoGood.java`**, Java 17+:
+Save as **`DemoGood.java`** (Java 17+):
 
 ~~~java
 public class DemoGood {
@@ -4425,14 +4425,14 @@ record SquareShape(long side) implements Shape {
 }
 ~~~
 
-Chạy:
+Run:
 
 ~~~bash
 javac DemoGood.java
 java DemoGood
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Rectangle: area=15
@@ -4441,20 +4441,20 @@ Original: 5 x 3
 Changed: 7 x 3
 ~~~
 
-### Vì sao cách này không mắc cùng lỗi?
+### Why does this design avoid the same flaw?
 
-`Shape` chỉ cam kết những gì cả hai loại hình đều đáp ứng:
+`Shape` promises only what both shape types can fulfill:
 
-- `name()` trả tên loại hình có ý nghĩa.
-- `area()` trả diện tích theo các tham số hợp lệ.
+- `name()` returns a meaningful shape name.
+- `area()` returns the area for valid dimensions.
 
-Nó **không hứa** rằng mọi hình đều có hai chiều độc lập hoặc cho phép cập nhật chiều rộng/chiều cao bằng setter.
+It **does not promise** that all shapes have two independent dimensions or allow width/height changes through setters.
 
-`RectShape` và `SquareShape` cài đặt cùng một vai trò `Shape`, nhưng không cần kế thừa implementation và trạng thái của nhau.
+`RectShape` and `SquareShape` fulfill the same `Shape` role without inheriting one another's state or implementation.
 
-Các record giữ dữ liệu bất biến về mặt component. Để “thay kích thước”, chúng trả một đối tượng mới với các giá trị được constructor kiểm tra. Khi đó `SquareShape` chỉ có thao tác `withSide()`, tránh giả vờ hỗ trợ `withWidth()` thay đổi độc lập.
+The records store immutable component values. To “change dimensions,” they return a new object whose constructor validates the new values. `SquareShape` therefore offers only `withSide()`, avoiding the pretense of supporting independent `withWidth()` changes.
 
-`Math.multiplyExact` ngăn overflow âm thầm. Nếu diện tích vượt phạm vi `long`, phương thức sẽ ném `ArithmeticException`. Đây là điều phải tính đến nếu hợp đồng `area()` được dùng cho dữ liệu rất lớn.
+`Math.multiplyExact` prevents silent overflow. If an area exceeds the `long` range, it throws `ArithmeticException`. This must be considered if the `area()` contract permits very large dimensions.
 
 ~~~mermaid
 classDiagram
@@ -4479,13 +4479,13 @@ classDiagram
     Shape <|.. SquareShape
 ~~~
 
-Không phải “giải pháp chính xác duy nhất” là dùng record. Ý chính là **thu hẹp hợp đồng chung thành những khả năng thật sự chia sẻ được**, thay vì ép hình vuông tuân theo một API setter không phù hợp.
+Using a record is not “the only correct solution.” The main idea is to **narrow the common contract to genuinely shared capabilities** instead of forcing squares to follow an unsuitable setter API.
 
-## 7. Nếu vẫn cần các hình có thể thay đổi thì thiết kế thế nào?
+## 7. What if mutable shapes are still needed?
 
-Có hệ thống đồ họa thật sự cần thao tác kéo thả, resize và thay kích thước tại chỗ. Không phải cứ gặp phản ví dụ này là phải cấm mutable object.
+Real graphics systems may need dragging, resizing, and in-place dimension changes. This counterexample does not require prohibiting mutable objects.
 
-Một cách là phân tách **hợp đồng chung** khỏi **hợp đồng chỉnh sửa riêng**.
+One approach is to separate **the shared contract** from **specialized editing contracts**.
 
 ~~~java
 interface AreaMeasurable {
@@ -4502,18 +4502,18 @@ interface SquareResizer {
 }
 ~~~
 
-- Đối tượng hình chữ nhật mutable có thể thực hiện `AreaMeasurable` và `RectangleResizer`.
-- Đối tượng hình vuông mutable có thể thực hiện `AreaMeasurable` và `SquareResizer`.
-- Một client chỉ tính diện tích phụ thuộc vào `AreaMeasurable`.
-- Một client cần thay chiều rộng **độc lập** phụ thuộc vào `RectangleResizer`, và không yêu cầu đối tượng hình vuông phải làm điều ấy.
+- A mutable rectangle can implement `AreaMeasurable` and `RectangleResizer`.
+- A mutable square can implement `AreaMeasurable` and `SquareResizer`.
+- A client that only calculates area depends on `AreaMeasurable`.
+- A client that needs to change width **independently** depends on `RectangleResizer`, without requiring squares to do so.
 
-Có thể triển khai độc lập hai class, hoặc dùng **composition** để tái sử dụng công thức tính diện tích/thẩm định kích thước. Không cần đặt `Square extends Rectangle` chỉ để tái sử dụng vài dòng mã.
+Implement the two classes independently or use **composition** to reuse area calculations/dimension validation. There is no need for `Square extends Rectangle` merely to reuse a few lines of code.
 
-Điều quan trọng là không ép `Square` implements `RectangleResizer` rồi ném lỗi hoặc tự sửa chiều cao trái lời hứa.
+The key is not to make `Square` implement `RectangleResizer` and then either throw an error or silently change height contrary to its promise.
 
-### Một API resize với tỉ lệ cố định có thể dùng chung không?
+### Can an API for proportional resizing be shared?
 
-Có thể, **nếu hợp đồng được thiết kế phù hợp**. Ví dụ một interface chỉ có:
+Yes, **if the contract is designed accordingly**. For example, an interface offering only:
 
 ~~~java
 interface Scalable {
@@ -4521,28 +4521,28 @@ interface Scalable {
 }
 ~~~
 
-Nếu cả hai loại hình đều hỗ trợ phép phóng to/thu nhỏ đồng dạng với `factor > 0`, việc cùng implements `Scalable` có thể hợp lý.
+If both shapes support proportional scaling with `factor > 0`, it may be reasonable for both to implement `Scalable`.
 
-Nhưng phải xác định rõ cách làm tròn, trường hợp kích thước bằng 0, overflow và các quy tắc khác. Với kích thước nguyên, phóng tỉ lệ không nguyên có thể gây mất chính xác: một ví dụ triển khai thật cần cam kết nhất quán về điều này.
+However, rounding, dimensions of 0, overflow, and other rules must be explicitly defined. For integer dimensions, noninteger scale factors may lose precision: a real implementation needs a consistent guarantee.
 
-**Tính thay thế phụ thuộc hợp đồng được chọn**, không phụ thuộc một khẩu hiệu “hình vuông phải hay không được kế thừa hình chữ nhật”.
+**Substitutability depends on the chosen contract**, not on a slogan about whether a square should inherit from a rectangle.
 
-## 8. Khi nào `Square extends Rectangle` vẫn có thể chấp nhận được?
+## 8. When might `Square extends Rectangle` still be acceptable?
 
-Không phải mọi mô hình có quan hệ `Square extends Rectangle` đều sai tuyệt đối. Cần xem `Rectangle` định nghĩa **khả năng nào**.
+Not every model using `Square extends Rectangle` is categorically wrong. Examine **the capabilities** provided by `Rectangle`.
 
-Ví dụ nếu `Rectangle` là kiểu bất biến, chỉ cho đọc chiều rộng/chiều cao và diện tích, thì `Square` có thể là subtype về hành vi mà không đụng vào mâu thuẫn setter. Tuy nhiên:
+For instance, if `Rectangle` is immutable and only exposes width/height and area queries, then `Square` may be a behavioral subtype without conflicting setter contracts. However:
 
-- Các constructor và invariant phải đảm bảo `Square` luôn là hình vuông.
-- Không được để lộ phương thức nào từ lớp cha cho phép biến một square thành hình không vuông.
-- Các API đọc khác như `equals()`, `hashCode()`, `compareTo()` hoặc `perimeter()` phải được xem xét nếu hợp đồng cha công bố chúng.
-- Nếu quan hệ kế thừa khiến thiết kế khó thay đổi, hai kiểu riêng cùng implements `Shape` vẫn có thể đơn giản và rõ hơn.
+- Constructors and invariants must ensure that `Square` remains square.
+- No inherited method may allow turning a square into a nonsquare shape.
+- Other read APIs such as `equals()`, `hashCode()`, `compareTo()`, or `perimeter()` must also be considered if they are part of the parent contract.
+- If inheritance makes evolution difficult, separate types implementing the same `Shape` interface may remain simpler and clearer.
 
-**Kết luận đúng không phải “Square không bao giờ là Rectangle”, mà là “Square không thay thế được Rectangle nếu hợp đồng Rectangle cho phép chỉnh hai chiều độc lập”.**
+**The proper conclusion is not “Square can never be Rectangle,” but “Square cannot substitute for Rectangle when the Rectangle contract permits changing two dimensions independently.”**
 
-## 9. Hệ thống kiểu Java kiểm tra được gì, không kiểm tra được gì?
+## 9. What can Java's type system check, and what can it not?
 
-Ví dụ phản chứng cho thấy giới hạn của compiler:
+This counterexample illustrates the compiler's limits:
 
 ~~~java
 Rectangle value = new Square(2); // Upcasting: hợp lệ.
@@ -4550,28 +4550,28 @@ value.setWidth(5);               // Hợp lệ về mặt chữ ký.
 value.setHeight(3);              // Hợp lệ về mặt chữ ký.
 ~~~
 
-Java biết `Square` là subtype của `Rectangle` vì `extends`, và biết hai phương thức công khai tồn tại. Java **không chứng minh** postcondition “đặt width không đổi height”.
+Java knows `Square` is a subtype of `Rectangle` because of `extends`, and that both public methods exist. Java **does not prove** the postcondition that “setting width leaves height unchanged.”
 
-Các loại kiểm tra:
+What can be checked?
 
-| Kiểm tra | Java compiler thường làm được? | Cần thêm gì? |
+| Check | Can the Java compiler usually do this? | What else is needed? |
 |---|---|---|
-| Kiểu con có thể gán cho kiểu cha | Có | Thiết kế subtype đúng nghĩa |
-| Method override đúng chữ ký và quyền truy cập | Có, đặc biệt khi dùng `@Override` | Kiểm thử ý nghĩa thực tế |
-| `setWidth` không đổi `height` | Không tự động | Contract test, code review, thiết kế API |
-| `Square` luôn giữ hai cạnh bằng nhau | Không tự động | Invariant, validation, kiểm thử |
-| Lời gọi không siết precondition so với lớp cha | Không chứng minh tổng quát | Tài liệu hợp đồng và test |
-| Code client dùng subtype vẫn đúng | Không chứng minh tổng quát | Kiểm thử thay thế qua supertype |
+| Assign a subtype to a supertype | Yes | Correctly designed subtyping |
+| Override method signatures and accessibility | Yes, especially with `@Override` | Tests of actual meaning |
+| Ensure `setWidth` leaves `height` unchanged | Not automatically | Contract tests, code review, API design |
+| Ensure `Square` always has equal sides | Not automatically | Invariants, validation, tests |
+| Prove subtype does not strengthen preconditions | Cannot prove this generally | Contract documentation and tests |
+| Prove client code remains correct when using a subtype | Cannot prove this generally | Substitution tests through the supertype |
 
-Vì thế, một hệ thống có thiết kế kế thừa tốt thường đi kèm **contract tests**: cùng một bộ kiểm thử đặt lên mọi subtype dự kiến có thể thay thế nhau.
+Thus, a well-designed inheritance hierarchy often includes **contract tests**: the same test suite is applied to every subtype expected to be substitutable.
 
-Ví dụ `respectsIndependentSetters` trong `DemoBad.java` là một contract test rất nhỏ. Nó minh họa rõ hành vi lớp cha và lớp con khác nhau tại cùng một lời gọi.
+For example, `respectsIndependentSetters` in `DemoBad.java` is a small contract test. It clearly demonstrates how superclass and subclass behavior differs for the same calls.
 
-## 10. Kiểm thử phản ví dụ một cách hệ thống
+## 10. Testing the counterexample systematically
 
-Khi đánh giá một lớp con, hãy kiểm tra **những điều mà code dùng lớp cha được quyền kỳ vọng**, không chỉ kiểm tra giá trị cuối cùng trên một case.
+When assessing a subclass, test **what code using the superclass is entitled to expect**, rather than checking only a final value in one case.
 
-Với `Rectangle` mutable, nên có những kiểm tra như:
+For mutable `Rectangle`, useful checks include:
 
 ~~~java
 static void verifyRectangleContract(Rectangle rectangle) {
@@ -4603,22 +4603,22 @@ static void verifyRectangleContract(Rectangle rectangle) {
 }
 ~~~
 
-Đặt phương thức này trong `DemoBad` hoặc một test class có quyền sử dụng `Rectangle`, rồi gọi:
+Place this method in `DemoBad` or a test class that can access `Rectangle`, then call:
 
 ~~~java
 verifyRectangleContract(new Rectangle(2, 2)); // Thành công.
 verifyRectangleContract(new Square(2));       // AssertionError.
 ~~~
 
-Lời gọi thứ hai thất bại ngay ở bước `setWidth`, vì `Square` tự thay đổi chiều cao.
+The second call fails at `setWidth`, because `Square` changes the height as well.
 
-Đây không phải kiểm thử “hình vuông có diện tích đúng hay không”; `Square.area()` trả 9 cho hình vuông 3×3 là **đúng toán học**. Thứ sai là việc một instance được quảng bá là `Rectangle` lại không giữ được hợp đồng setter độc lập.
+This is not a test of whether “the square has the correct area.” The value 9 returned by `Square.area()` for a 3×3 square is **mathematically correct**. The error is that an instance presented as a `Rectangle` does not preserve the independent-setter contract.
 
-Một contract test thực tế cần thêm tình huống biên (0, số âm, giới hạn kiểu số, ngoại lệ) nếu hợp đồng công bố các quy tắc đó.
+A practical contract test should also cover boundaries (0, negative numbers, numeric type limits, exceptions) if the published contract includes those rules.
 
-## 11. Có nên phát hiện Square bằng `instanceof` trong client?
+## 11. Should clients detect Square with `instanceof`?
 
-Một giải pháp tình thế dễ gặp:
+A common workaround:
 
 ~~~java
 static int resize(Rectangle shape) {
@@ -4634,67 +4634,67 @@ static int resize(Rectangle shape) {
 }
 ~~~
 
-Cách này **né lỗi ở một nơi**, nhưng tạo vấn đề thiết kế:
+This **avoids the error in one place** but introduces design problems:
 
-1. Client phải biết cụ thể có subtype `Square`.
-2. Khi xuất hiện `FixedRatioRectangle` hoặc kiểu mới, client phải thêm nhánh đặc biệt.
-3. Nơi khác nhận `Rectangle` vẫn có thể vi phạm hợp đồng.
-4. Cách sửa được thực hiện ở phía người dùng, trong khi **hợp đồng lớp cha và quan hệ subtype vẫn bất nhất**.
+1. The client must know the concrete `Square` subtype.
+2. When `FixedRatioRectangle` or another type appears, the client must add a special branch.
+3. Other code accepting `Rectangle` can still violate the contract.
+4. The fix is in the client, while **the superclass contract and subtype relationship remain inconsistent**.
 
-`instanceof` không phải lúc nào cũng xấu. Nó hữu ích trong một số bài toán phân loại kiểu có chủ đích. Nhưng dùng nó **liên tục để sửa các hành vi mà subtype đáng ra phải cung cấp đúng** là dấu hiệu mô hình kế thừa cần được thay đổi.
+`instanceof` is not always bad. It is useful in some deliberate type-classification tasks. But using it **repeatedly to repair behavior that a subtype should provide correctly** signals that the inheritance model needs to change.
 
-## 12. So sánh các hướng thiết kế
+## 12. Comparing design alternatives
 
-| Phương án | Có giữ hình vuông đúng nghĩa? | Có đáp ứng setter Rectangle độc lập? | Đánh giá |
+| Option | Preserves a true square? | Satisfies independent Rectangle setters? | Assessment |
 |---|---|---|---|
-| `Square extends MutableRectangle`, hai setter đổi đồng thời hai cạnh | Có | Không | **Phản ví dụ LSP** |
-| `Square extends MutableRectangle`, từ chối setter phá invariant | Có | Không | **Siết precondition** |
-| `Square extends MutableRectangle`, setter đổi một cạnh | Không | Có | Mất invariant của Square |
-| Hai class độc lập cùng implements `Shape.area()` | Có | Không bắt buộc | Thiết kế hợp đồng chung phù hợp |
-| Hai class immutable, thao tác thay kích thước tạo object mới | Có | Không có setter trái ngữ nghĩa | Dễ giữ invariant và kiểm thử |
-| Mutable rectangle và mutable square có API resize riêng | Có | Chỉ rectangle cần hai setter độc lập | Phân tách vai trò rõ |
-| Immutable `Square` là subtype của immutable `Rectangle` chỉ đọc | Có thể | Không áp dụng | Khả thi nếu **mọi** hợp đồng cha đều được giữ |
+| `Square extends MutableRectangle` with both setters updating both sides | Yes | No | **LSP counterexample** |
+| `Square extends MutableRectangle` rejecting setters that violate its invariant | Yes | No | **Strengthens preconditions** |
+| `Square extends MutableRectangle` with one-sided setters | No | Yes | Violates the Square invariant |
+| Independent classes implementing `Shape.area()` | Yes | Not required | Suitable shared contract |
+| Two immutable classes returning new objects on resizing | Yes | No contradictory setters | Easier invariants and testing |
+| Mutable rectangles and squares with separate resizing APIs | Yes | Only rectangles need two independent setters | Clear role separation |
+| Immutable `Square` as subtype of read-only immutable `Rectangle` | Possible | Not applicable | Feasible if **every** superclass contract is preserved |
 
-Một lựa chọn thực dụng cho ứng dụng đồ họa là:
+A pragmatic option for graphics applications is:
 
-- Kiểu/hợp đồng chung nêu khả năng như `area()`, `bounds()`, `render()`.
-- Từng hình giữ invariant và quy tắc resize phù hợp riêng.
-- Dùng composition khi chỉ muốn tái sử dụng tính toán hoặc thành phần hiển thị.
-- Tránh kế thừa một API mutable quá rộng khi subtype không hỗ trợ đúng.
+- Shared types/contracts expose capabilities such as `area()`, `bounds()`, and `render()`.
+- Each shape maintains its own invariant and resizing rules.
+- Use composition when only computations or rendering components need reuse.
+- Avoid inheriting an overly broad mutable API that the subtype cannot fulfill.
 
-## 13. Bài tập tự kiểm tra
+## 13. Self-assessment exercises
 
-**Câu 1.** Trong `DemoBad`, vì sao `Square` trả về diện tích 9 thay vì 15 sau `setWidth(5)` và `setHeight(3)`?
+**Question 1.** In `DemoBad`, why does `Square` return area 9 instead of 15 after `setWidth(5)` and `setHeight(3)`?
 
-**Đáp án:** Hai setter được override để giữ hai cạnh bằng nhau. Cuối cùng cả width và height đều bằng 3. Kết quả 9 đúng cho hình vuông 3×3, nhưng sai với hợp đồng `Rectangle` cho phép thay hai chiều độc lập.
+**Answer:** The setters are overridden to maintain equal sides. Ultimately both width and height equal 3. Area 9 is correct for a 3×3 square, but wrong under the `Rectangle` contract allowing independent changes to dimensions.
 
-**Câu 2.** Một `Square` ném exception nếu `setWidth(w)` khác chiều cao hiện tại. Điều này giải quyết LSP chưa?
+**Question 2.** A `Square` throws an exception if `setWidth(w)` differs from its current height. Does this solve LSP?
 
-**Đáp án:** Chưa. Đối với `Rectangle`, mọi `w > 0` đều hợp lệ; subtype tự thêm điều kiện `w == height`. Đây là siết precondition.
+**Answer:** No. For `Rectangle`, every `w > 0` is valid; the subtype adds the condition `w == height`. This strengthens its precondition.
 
-**Câu 3.** Nếu `Rectangle` chỉ cung cấp `area()` và không có setter, việc dùng `Square` thay thế có nhất thiết sai không?
+**Question 3.** If `Rectangle` only exposes `area()` and has no setter, is substituting `Square` necessarily wrong?
 
-**Đáp án:** Không. Nếu hai kiểu cùng giữ mọi cam kết của abstraction chỉ đọc, không có mâu thuẫn setter độc lập. Cần xét hợp đồng thực tế, không chỉ tên hình.
+**Answer:** No. If both types fulfill all promises of the read-only abstraction, there is no conflict from independent setters. Examine the actual contract, not just shape names.
 
-**Câu 4.** Dùng `private` field trong `Rectangle` có tự giải quyết lỗi không?
+**Question 4.** Would `private` fields in `Rectangle` automatically fix the error?
 
-**Đáp án:** Không. `private` giúp bảo vệ truy cập dữ liệu trực tiếp, nhưng nếu public setter được override để thay đổi ý nghĩa, client vẫn gặp lỗi hành vi. Đóng gói field không thay cho thiết kế hợp đồng đúng.
+**Answer:** No. `private` protects direct field access, but a public setter overridden with different semantics still violates clients' behavioral expectations. Field encapsulation does not replace sound contract design.
 
-**Câu 5.** Có nên dùng `extends` chỉ để tận dụng vài dòng code tính diện tích?
+**Question 5.** Should you use `extends` solely to reuse a few lines of area-calculation code?
 
-**Đáp án:** Không nên nếu quan hệ hành vi không thật sự phù hợp. Có thể dùng interface chung, utility method, một collaborator hoặc composition để tái sử dụng logic mà không gánh thêm hợp đồng cha sai.
+**Answer:** Not when the behavioral relationship is unsuitable. A shared interface, utility method, collaborator, or composition can reuse logic without adopting the wrong superclass contract.
 
-**Câu 6.** Phần nào của LSP bị vi phạm trong `Square.setWidth` đổi luôn chiều cao?
+**Question 6.** Which part of LSP is violated when `Square.setWidth` also changes height?
 
-**Đáp án:** Postcondition của `Rectangle.setWidth` là chiều cao giữ nguyên sau khi đặt chiều rộng. Subclass không giữ được lời hứa này.
+**Answer:** The postcondition of `Rectangle.setWidth` promises that height remains unchanged after setting width. The subclass does not preserve that promise.
 
-## Kết luận cần nhớ
+## Conclusion to remember
 
-Phản ví dụ **Rectangle–Square** không phủ nhận quan hệ hình học “hình vuông là hình chữ nhật”. Nó minh họa rằng **quan hệ kiểu trong phần mềm được đánh giá bằng các thao tác và cam kết mà client có thể quan sát**.
+The **Rectangle–Square** counterexample does not deny the geometric fact that “a square is a rectangle.” It shows that **software type relationships must be evaluated using observable operations and guarantees that clients rely on**.
 
-Nếu `Rectangle` cho phép thay đổi width và height độc lập, `Square` không thể vừa kế thừa đúng hai hành vi ấy vừa duy trì invariant hai cạnh bằng nhau. Hãy xem xét hợp đồng từ góc nhìn người sử dụng, dùng contract tests để phát hiện vi phạm và thiết kế abstraction nhỏ, đúng vai trò. **Chỉ dùng quan hệ subtype khi đối tượng con thật sự có thể thay thế kiểu cha theo những lời hứa mà kiểu cha công bố.**
+If `Rectangle` allows width and height to change independently, `Square` cannot both inherit those behaviors correctly and maintain the invariant of equal sides. Review the contract from the client's perspective, use contract tests to detect violations, and design small abstractions that express appropriate roles. **Use a subtype relationship only when the child object can genuinely replace the supertype under its published promises.**
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)

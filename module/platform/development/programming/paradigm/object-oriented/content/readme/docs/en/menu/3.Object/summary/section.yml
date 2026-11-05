@@ -1,75 +1,75 @@
 version: 1
 type: LEARNING_ROADMAP
-title: ĐỐI TƯỢNG — LIÊN KẾT BÀI HỌC
-roadmapHeading: Mạch liên kết bài học
+title: OBJECTS — LESSON CONNECTIONS
+roadmapHeading: Learning Path Through the Lessons
 roadmap:
 - id: object-001
   order: 1
-  title: Danh tính, trạng thái và hành vi của đối tượng
-  description: Nhận diện instance qua identity, state và behavior; dùng Order minh họa biến đổi mà giữ danh tính.
+  title: Object Identity, State, and Behavior
+  description: Identify an instance by its identity, state, and behavior; use Order to illustrate state changes that preserve identity.
   transition:
     to: object-002
-    description: '**Từ ba mặt của object → đi sâu vào giá trị của biến và đối số**'
+    description: '**From the three aspects of an object → explore the values held by variables and arguments**'
 - id: object-002
   order: 2
-  title: Tham chiếu, giá trị và cách truyền đối tượng
-  description: Hiểu phép gán tham chiếu và Java pass-by-value qua sửa state, gán lại local và swap.
+  title: References, Values, and Passing Objects
+  description: Understand reference assignment and Java pass-by-value through state mutation, local reassignment, and swapping.
   transition:
     to: object-003
-    description: '**Từ tham số nhận bản sao reference → nhận diện aliasing**'
+    description: '**From parameters receiving copies of references → recognize aliasing**'
 - id: object-003
   order: 3
-  title: Nhiều tham chiếu cùng trỏ đến một đối tượng
-  description: Truy vết nhiều alias qua biến, field, collection và phương thức trên cùng instance mutable.
+  title: Multiple References to the Same Object
+  description: Trace aliases through variables, fields, collections, and methods that share a mutable instance.
   transition:
     to: object-004
-    description: '**Từ cùng instance → xét hai instance khác nhau vẫn có thể bằng về giá trị**'
+    description: '**From a shared instance → consider how distinct instances can still be equal in value**'
 - id: object-004
   order: 4
-  title: Phân biệt cùng đối tượng với bằng nhau về giá trị
-  description: So sánh identity với value equality, cài equals/hashCode đúng và dùng hash collections an toàn.
+  title: Object Identity vs. Value Equality
+  description: Compare identity with value equality, implement equals/hashCode correctly, and use hash-based collections safely.
   transition:
     to: object-005
-    description: '**Từ hợp đồng equality → xét state của object có thay đổi được không**'
+    description: '**From the equality contract → examine whether an object’s state can change**'
 - id: object-005
   order: 5
-  title: Đối tượng có thể thay đổi và đối tượng bất biến
-  description: Phân biệt mutation và tạo giá trị mới, thiết kế immutable cả ở thành phần lồng nhau.
+  title: Mutable and Immutable Objects
+  description: Distinguish mutation from creating a new value, and design immutability even for nested components.
   transition:
     to: object-006
-    description: '**Từ khả năng mutable → quyết định sao chép nông hay sâu**'
+    description: '**From mutability → decide between shallow and deep copying**'
 - id: object-006
   order: 6
-  title: Sao chép nông và sao chép sâu
-  description: Chọn copy đúng cấp với Customer, collection, mảng, graph có chu trình và dữ liệu định danh.
+  title: Shallow Copying and Deep Copying
+  description: Choose the appropriate copy depth for Customer, collections, arrays, cyclic graphs, and identity-sensitive data.
   transition:
     to: object-007
-    description: '**Từ copy tách biệt → phân tích chia sẻ state có chủ đích**'
+    description: '**From independent copies → analyze intentional state sharing**'
 - id: object-007
   order: 7
-  title: Chia sẻ đối tượng và tác động của thay đổi trạng thái
-  description: Theo dõi state lan qua các thành phần, snapshot và stale reference, làm rõ refresh và đồng bộ.
+  title: Object Sharing and the Effects of State Changes
+  description: Track how state changes propagate across components, snapshots, and stale references; clarify refresh and synchronization behavior.
   transition:
     to: object-008
-    description: '**Từ tham chiếu cùng chia sẻ → xử lý tham chiếu đang không có object**'
+    description: '**From shared references → handle references that currently point to no object**'
 - id: object-008
   order: 8
-  title: Giá trị rỗng và đối tượng chưa tồn tại
-  description: Phân biệt local chưa gán, null, empty object và kết quả không tìm thấy; dùng Optional đúng ngữ nghĩa.
+  title: Null Values and Missing Objects
+  description: Distinguish unassigned local variables, null, empty objects, and not-found results; use Optional with the correct semantics.
   transition:
     to: object-009
-    description: '**Từ object, alias và vắng mặt → ghép vào luồng tương tác nhiều đối tượng**'
+    description: '**From objects, aliases, and absence → connect them in a multi-object interaction flow**'
 - id: object-009
   order: 9
-  title: Theo dõi tương tác của các đối tượng trong một tình huống
-  description: Tổng hợp identity, tham chiếu và state vào checkout cùng sequence diagram và nhánh lỗi.
+  title: Tracing Object Interactions in a Scenario
+  description: Bring together identity, references, and state in a checkout flow with a sequence diagram and failure branches.
   transition: null
 comparisonMarkdown: |-
-  ## 2. Bảng đối chiếu các bài học
+  ## 2. Lesson Comparison Table
 
-  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | Criterion | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 | Lesson 6 | Lesson 7 | Lesson 8 | Lesson 9 |
   | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-  | Tên | Danh tính, trạng thái và hành vi của đối tượng | Tham chiếu, giá trị và cách truyền đối tượng | Nhiều tham chiếu cùng trỏ đến một đối tượng | Phân biệt cùng đối tượng với bằng nhau về giá trị | Đối tượng có thể thay đổi và đối tượng bất biến | Sao chép nông và sao chép sâu | Chia sẻ đối tượng và tác động của thay đổi trạng thái | Giá trị rỗng và đối tượng chưa tồn tại | Theo dõi tương tác của các đối tượng trong một tình huống |
-  | Vấn đề cần hiểu | Đối tượng nào tồn tại và nó có thể thay đổi thế nào? | Java sao chép gì khi gán hoặc truyền object? | Ai đang giữ cùng một tham chiếu object? | Cùng đối tượng hay bằng nhau theo hợp đồng? | State của instance có thể thay đổi sau khởi tạo không? | Bản sao còn chia sẻ đối tượng con nào? | Thay đổi ở object chung xuất hiện ở đâu, khi nào? | Không có reference, object rỗng hay lỗi tìm dữ liệu? | Ai gọi ai và trạng thái đổi như thế nào trong checkout? |
-  | Giá trị đối với OOP/module | Mô hình identity, trạng thái và hành vi có điều kiện. | Dự đoán chính xác mutation và reassignment. | Nhận diện các mutation lan qua alias. | Chọn phép so sánh và hash thích hợp. | Thiết kế mutable có kiểm soát hoặc immutable an toàn. | Áp dụng shallow/deep copy theo ownership. | Phân biệt live state, snapshot và owner cập nhật. | Tránh NPE và thiết kế absence rõ ràng. | Truy vết Cart, Inventory, PaymentGateway, Order và Notifier. |
-  | Tư duy hình thành | Nhìn object như một instance có vòng đời. | Tách giá trị biến khỏi đối tượng được tham chiếu. | Vẽ đồ thị tham chiếu tới từng đối tượng. | Định nghĩa ý nghĩa equality của entity/value object. | Xét toàn bộ đường làm thay đổi object graph. | Sao chép đúng phần mutable của đồ thị. | Lần theo đối tượng và thời điểm đọc lại. | Chọn kiểu biểu diễn đúng lý do vắng mặt. | Kết hợp call graph, log, state và ngoại lệ. |
+  | Name | Object Identity, State, and Behavior | References, Values, and Passing Objects | Multiple References to the Same Object | Object Identity vs. Value Equality | Mutable and Immutable Objects | Shallow Copying and Deep Copying | Object Sharing and the Effects of State Changes | Null Values and Missing Objects | Tracing Object Interactions in a Scenario |
+  | Key question | Which objects exist, and how can they change? | What does Java copy during assignment or when passing an object? | Who holds references to the same object? | Are two references to the same object, or are their objects equal by contract? | Can an instance's state change after initialization? | Which child objects are still shared by a copy? | Where and when do changes to a shared object become visible? | Is there no reference, an empty object, or a data lookup failure? | Who calls whom, and how does state change during checkout? |
+  | Value for OOP/the module | Model identity, state, and behavior governed by conditions. | Predict mutation and reassignment accurately. | Recognize mutations propagated through aliases. | Choose suitable comparison and hashing techniques. | Design controlled mutability or safe immutability. | Apply shallow/deep copying according to ownership. | Distinguish live state, snapshots, and the owner responsible for updates. | Avoid NPEs and model absence explicitly. | Trace Cart, Inventory, PaymentGateway, Order, and Notifier. |
+  | Mental model developed | View an object as an instance with a lifecycle. | Separate the value of a variable from its referenced object. | Draw a reference graph for each object. | Define equality semantics for entities and value objects. | Consider every path that can mutate an object graph. | Copy the mutable parts of a graph at the required depth. | Trace objects and when their state is read again. | Choose a representation that expresses why a value is absent. | Combine call graphs, logs, state, and exceptions. |

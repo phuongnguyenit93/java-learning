@@ -1,29 +1,29 @@
 <a id="back-to-top"></a>
 
-# Lớp
+# Classes
 
 ## Menu
-- [Cấu trúc lớp: thuộc tính và phương thức](#class-001)
-- [Khai báo lớp và tạo thể hiện](#class-002)
-- [Thành viên của thể hiện và thành viên dùng chung](#class-003)
-- [Phạm vi truy cập của thành viên](#class-004)
-- [Tham số, giá trị trả về và tác động của phương thức](#class-005)
-- [Thành viên chỉ đọc và thành viên có thể thay đổi](#class-006)
-- [Tham chiếu đến đối tượng hiện tại](#class-007)
-- [Thiết kế lớp qua ví dụ tài khoản ngân hàng](#class-008)
+- [Class structure: fields and methods](#class-001)
+- [Declaring classes and creating instances](#class-002)
+- [Instance members and shared members](#class-003)
+- [Member access levels](#class-004)
+- [Method parameters, return values, and effects](#class-005)
+- [Read-only and mutable members](#class-006)
+- [References to the current object](#class-007)
+- [Designing a class through a bank account example](#class-008)
 
-## <a id="class-001">Cấu trúc lớp: thuộc tính và phương thức</a>
+## <a id="class-001">Class structure: fields and methods</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Cấu trúc lớp trong Java: thuộc tính và phương thức
+# Class structure in Java: fields and methods
 
-Một **lớp (class)** là bản mô tả cho các đối tượng cùng loại. Trong lớp, **thuộc tính (field)** lưu trạng thái và **phương thức (method)** định nghĩa những việc đối tượng có thể thực hiện. Hai phần này phối hợp với nhau: phương thức đọc hoặc thay đổi thuộc tính theo những quy tắc mà lớp chịu trách nhiệm bảo vệ.
+A **class** is a blueprint for objects of the same type. Within a class, **fields** store state, and **methods** define what an object can do. These two parts work together: methods read or modify fields according to rules that the class is responsible for enforcing.
 
-Ví dụ, một mặt hàng trong kho có mã hàng, tên, đơn giá và số lượng tồn. Khi nhập hoặc bán hàng, số lượng thay đổi; mã hàng vẫn giữ nguyên. Thay vì cho mã bên ngoài sửa số lượng tùy ý, lớp `InventoryItem` cung cấp các phương thức `restock()` và `sell()` để kiểm tra trước khi thay đổi.
+For example, an inventory item has a stock-keeping code, name, unit price, and quantity on hand. Restocking or selling changes the quantity while the item code remains unchanged. Instead of letting external code change the quantity arbitrarily, the `InventoryItem` class provides `restock()` and `sell()` methods that validate the operation before making a change.
 
-## 1. Nhìn tổng thể cấu trúc một lớp
+## 1. Overview of a class's structure
 
 ```java
 public class Product {
@@ -51,20 +51,20 @@ public class Product {
 }
 ```
 
-Đây là một bản phác thảo cú pháp; ví dụ hoàn chỉnh ở phần sau bổ sung kiểm tra dữ liệu đầu vào.
+This is a syntax sketch; the complete example later adds input validation.
 
-| Thành phần | Ví dụ | Vai trò |
+| Component | Example | Role |
 | --- | --- | --- |
-| Khai báo lớp | `public class Product` | Định nghĩa kiểu đối tượng; tên lớp thường dùng PascalCase |
-| Thuộc tính | `private String name;` | Giữ dữ liệu thuộc về đối tượng |
-| Constructor | `public Product(...)` | Thiết lập trạng thái khi gọi `new Product(...)` |
-| Phương thức | `public void rename(...)` | Cung cấp thao tác mà đối tượng cho phép |
-| Tham số | `String newName` | Dữ liệu nhận vào khi gọi phương thức |
-| Kiểu trả về | `String`, `long`, `void` | Quy định kết quả trả về, hoặc `void` nếu không trả kết quả |
-| Bộ điều khiển truy cập | `private`, `public` | Quyết định nơi nào có thể sử dụng thành phần |
-| `this` | `this.name = newName` | Tham chiếu đến chính đối tượng đang thực thi phương thức |
+| Class declaration | `public class Product` | Defines an object type; class names typically use PascalCase |
+| Field | `private String name;` | Holds data belonging to an object |
+| Constructor | `public Product(...)` | Establishes the state when `new Product(...)` is called |
+| Method | `public void rename(...)` | Exposes an operation the object permits |
+| Parameter | `String newName` | Data received when a method is called |
+| Return type | `String`, `long`, `void` | Specifies the returned result, or `void` if no result is returned |
+| Access modifier | `private`, `public` | Determines where the member can be accessed |
+| `this` | `this.name = newName` | Refers to the object currently executing the method |
 
-Sơ đồ lớp mô tả các thành phần mà chưa cần đi vào cách chúng được triển khai:
+The class diagram shows the components without detailing their implementations:
 
 ```mermaid
 classDiagram
@@ -86,11 +86,11 @@ classDiagram
     }
 ```
 
-Trong ký hiệu UML, `+` là `public`, `-` là `private`; dấu `$` ở đây biểu thị thành phần `static`.
+In UML notation, `+` means `public` and `-` means `private`; here, `$` indicates a `static` member.
 
-## 2. Thuộc tính lưu trạng thái như thế nào?
+## 2. How do fields store state?
 
-Một field được khai báo **trực tiếp trong thân lớp, bên ngoài các phương thức**:
+A field is declared **directly in the class body, outside its methods**:
 
 ```java
 private final String sku;
@@ -99,29 +99,29 @@ private final long unitPriceVnd;
 private int quantity;
 ```
 
-- `sku` nhận giá trị khi khởi tạo và không được gán lại sau đó vì có `final`.
-- `name` có thể đổi thông qua phương thức được lớp kiểm soát.
-- `unitPriceVnd` dùng `long` để lưu số tiền nguyên theo đơn vị đồng; không dùng `double` cho một ví dụ cần số tiền nguyên chính xác.
-- `quantity` là trạng thái thay đổi khi nhập, bán hàng.
+- `sku` receives its value during initialization and cannot be reassigned afterward because it is `final`.
+- `name` can be changed through a method controlled by the class.
+- `unitPriceVnd` uses `long` to store an integer amount in Vietnamese dong; `double` is unsuitable for an example requiring exact integer monetary amounts.
+- `quantity` represents state that changes as items are restocked or sold.
 
-Mỗi lần `new InventoryItem(...)` tạo một đối tượng, đối tượng đó có **bộ giá trị riêng cho các instance field**. Bán hàng ở đối tượng A không tự làm giảm tồn kho của đối tượng B.
+Each call to `new InventoryItem(...)` creates an object with **its own set of instance field values**. Selling an item from object A does not automatically reduce object B's stock.
 
-### Instance field, static field và biến cục bộ
+### Instance fields, static fields, and local variables
 
-| Loại | Nơi khai báo | Sở hữu / vòng đời |
+| Kind | Declaration location | Ownership / lifetime |
 | --- | --- | --- |
-| Instance field | Trong lớp, không có `static` | Mỗi đối tượng giữ một giá trị riêng |
-| Static field | Trong lớp, có `static` | Thuộc về lớp, được chia sẻ giữa các đối tượng |
-| Local variable | Trong thân phương thức/khối lệnh | Chỉ tồn tại trong phạm vi thực thi của khối đó |
-| Parameter | Trong danh sách tham số phương thức | Là biến cục bộ nhận giá trị lúc gọi |
+| Instance field | In the class, without `static` | Each object holds its own value |
+| Static field | In the class, with `static` | Belongs to the class and is shared across objects |
+| Local variable | Inside a method or block | Exists only within that block's execution scope |
+| Parameter | In a method's parameter list | A local variable that receives a value when called |
 
-Ví dụ `private static final int MAX_QUANTITY = 1_000_000;` là một hằng giới hạn chung của lớp, không cần mỗi đối tượng giữ một bản sao về mặt ngữ nghĩa. `int units` trong `sell(int units)` là tham số, còn `int remaining = quantity - units;` (nếu khai báo trong phương thức) là biến cục bộ.
+For example, `private static final int MAX_QUANTITY = 1_000_000;` is a class-wide limit constant; conceptually, each object need not hold its own copy. `int units` in `sell(int units)` is a parameter, while `int remaining = quantity - units;` (if declared inside the method) is a local variable.
 
-`final` ngăn gán lại **biến/field đó** sau khi được khởi tạo, nhưng không có nghĩa mọi đối tượng được tham chiếu bởi field đều bất biến. `private` giới hạn quyền truy cập từ bên ngoài lớp; nó không tự động khiến dữ liệu hợp lệ, nên phương thức và constructor vẫn phải kiểm tra.
+`final` prevents reassignment of **that variable or field** after initialization, but does not mean that every object it references is immutable. `private` restricts access from outside the class; it does not automatically make data valid, so methods and constructors must still validate it.
 
-## 3. Phương thức xác định hành vi và giao diện sử dụng
+## 3. Methods define behavior and the public interface
 
-Một khai báo phương thức có dạng:
+A method declaration has this form:
 
 ```java
 public void restock(int units) {
@@ -129,7 +129,7 @@ public void restock(int units) {
 }
 ```
 
-Phân tích: `public` là mức truy cập; `void` là kiểu trả về; `restock` là tên; `int units` là tham số; phần trong `{ ... }` là logic thực thi. Một phương thức trả dữ liệu sẽ khai báo kiểu phù hợp và dùng `return`:
+Breaking it down: `public` is the access level; `void` is the return type; `restock` is the name; `int units` is the parameter; and the code inside `{ ... }` is the implementation. A method returning data declares an appropriate type and uses `return`:
 
 ```java
 public int getQuantity() {
@@ -137,17 +137,17 @@ public int getQuantity() {
 }
 ```
 
-Có thể phân nhóm theo **trách nhiệm**:
+Methods can be grouped by **responsibility**:
 
-- Phương thức truy vấn (`getQuantity()`, `totalInventoryValueVnd()`) cung cấp thông tin mà không chủ động sửa trạng thái.
-- Phương thức tác động (`restock()`, `sell()`, `rename()`) thực hiện hành vi và có thể làm thay đổi trạng thái.
-- Phương thức trợ giúp `private` tái sử dụng logic nội bộ, không trở thành API công khai của đối tượng.
+- Query methods (`getQuantity()`, `totalInventoryValueVnd()`) provide information without intentionally changing state.
+- Command methods (`restock()`, `sell()`, `rename()`) perform operations and may change state.
+- `private` helper methods reuse internal logic without becoming part of the object's public API.
 
-Tên phương thức nên là động từ hoặc cụm mô tả kết quả rõ ràng. Một phương thức có thể nhận nhiều tham số; Java cũng hỗ trợ **overloading** (cùng tên, khác danh sách kiểu/số lượng tham số). Chỉ khác kiểu trả về thì chưa đủ để overload.
+Method names should be verbs or phrases that clearly describe the result. A method can take multiple parameters; Java also supports **overloading** (the same method name with different parameter types or counts). Changing only the return type is insufficient for an overload.
 
-## 4. Ví dụ hoàn chỉnh: lớp quản lý tồn kho
+## 4. Complete example: an inventory management class
 
-Tạo file `InventoryItem.java`. Ví dụ dùng Java 11 trở lên vì có `String.isBlank()` và `String.strip()`.
+Create `InventoryItem.java`. This example requires Java 11 or later because it uses `String.isBlank()` and `String.strip()`.
 
 ```java
 public final class InventoryItem {
@@ -223,18 +223,18 @@ public final class InventoryItem {
 }
 ```
 
-Điểm cần quan sát trong cấu trúc trên:
+Key points to observe in the structure above:
 
-1. **Field `private`, phương thức `public`:** mã bên ngoài hỏi số lượng qua `getQuantity()` và thay đổi nó qua hành vi hợp lệ; không được thực hiện `item.quantity = -10`.
-2. **Constructor không có kiểu trả về:** tên trùng tên lớp. Nó đảm bảo các đối tượng vừa tạo đã có mã, tên, giá và số lượng hợp lệ.
-3. **`this.sku` và `sku`:** vế trái là field của đối tượng, vế phải là tham số constructor. `this` làm rõ hai biến trùng tên.
-4. **Trạng thái nhất quán:** `restock()` kiểm tra số dương và giới hạn trước khi cộng; `sell()` kiểm tra số dương và còn đủ hàng trước khi trừ. Khi kiểm tra thất bại, `quantity` chưa bị thay đổi.
-5. **Dữ liệu suy ra qua phương thức:** tổng giá trị kho bằng đơn giá nhân số lượng hiện tại nên được tính từ hai field. Không lưu thêm field `totalValue` dễ bị quên cập nhật. `Math.multiplyExact` báo lỗi nếu phép nhân `long` tràn số.
-6. **`static`:** `MAX_QUANTITY` và `requireText()` gắn với lớp vì không cần trạng thái của một mặt hàng cụ thể. Ngược lại, `sell()` dùng `quantity` của từng đối tượng, nên là instance method.
+1. **`private` fields and `public` methods:** external code reads the quantity through `getQuantity()` and changes it through valid operations; it cannot perform `item.quantity = -10`.
+2. **Constructors have no return type:** a constructor has the same name as its class. It ensures that newly created objects have valid codes, names, prices, and quantities.
+3. **`this.sku` versus `sku`:** the left side is the object's field, while the right side is the constructor parameter. `this` distinguishes the two variables with the same name.
+4. **Consistent state:** `restock()` checks for a positive amount and the upper limit before adding; `sell()` checks for a positive amount and sufficient stock before subtracting. If validation fails, `quantity` has not been changed.
+5. **Derived data through a method:** total inventory value equals unit price multiplied by current quantity, so it is calculated from the two fields. Storing an extra `totalValue` field would risk forgetting to update it. `Math.multiplyExact` signals an error if the `long` multiplication overflows.
+6. **`static`:** `MAX_QUANTITY` and `requireText()` belong to the class because neither requires the state of a particular item. By contrast, `sell()` uses each object's `quantity`, so it is an instance method.
 
-### Chạy thử đối tượng
+### Try running the object
 
-Tạo file `Main.java` cùng thư mục:
+Create `Main.java` in the same directory:
 
 ```java
 public class Main {
@@ -262,14 +262,14 @@ public class Main {
 }
 ```
 
-Biên dịch và chạy bằng:
+Compile and run with:
 
 ```bash
 javac InventoryItem.java Main.java
 java Main
 ```
 
-Luồng xử lý của `item.sell(3)`:
+The control flow for `item.sell(3)`:
 
 ```mermaid
 flowchart TD
@@ -281,9 +281,9 @@ flowchart TD
     D --> G["Kết thúc phương thức"]
 ```
 
-Ngay trước lời gọi, `quantity = 15`. Điều kiện được thỏa mãn nên field thành `12`. Với `sell(20)`, điều kiện đủ hàng sai, ngoại lệ được ném ra và số lượng **vẫn là 12**. Đây là giá trị thực tế của việc đặt logic ở phương thức thay vì cho bên ngoài sửa field trực tiếp.
+Immediately before the call, `quantity = 15`. The conditions are satisfied, so the field becomes `12`. With `sell(20)`, the sufficient-stock check fails, an exception is thrown, and the quantity **remains 12**. This illustrates the practical benefit of placing logic inside methods instead of allowing external code to modify fields directly.
 
-### Hai đối tượng từ cùng một lớp
+### Two objects of the same class
 
 ```java
 InventoryItem a = new InventoryItem("A", "Chuột", 200_000, 2);
@@ -295,71 +295,71 @@ System.out.println(a.getQuantity()); // 5
 System.out.println(b.getQuantity()); // 4
 ```
 
-`InventoryItem` là lớp; `a` và `b` tham chiếu tới **hai đối tượng khác nhau**. Cả hai có cùng tập tên field/phương thức nhưng trạng thái độc lập.
+`InventoryItem` is the class; `a` and `b` refer to **two distinct objects**. Both have the same set of field and method names but independent state.
 
-## 5. Phân biệt field, property và phương thức
+## 5. Distinguishing fields, properties, and methods
 
-Trong cách nói phổ thông về OOP, “thuộc tính” thường chỉ dữ liệu đặc trưng của đối tượng. Trong Java cơ bản, trường dữ liệu khai báo bằng `private int quantity;` được gọi chính xác là **field**. Một “property” trong ngôn ngữ thiết kế có thể là giá trị được công bố qua `getQuantity()` hoặc được tính qua `totalInventoryValueVnd()`; Java không có cú pháp property tự động giống một số ngôn ngữ khác.
+In everyday OOP terminology, an "attribute" often means data that characterizes an object. In basic Java, a data member declared as `private int quantity;` is specifically called a **field**. In design terminology, a "property" may be a value exposed through `getQuantity()` or calculated by `totalInventoryValueVnd()`; Java does not have automatic property syntax like some other languages.
 
-Không phải field nào cũng cần getter/setter. Nếu viết `setQuantity(int x)` công khai và chấp nhận mọi số nguyên, người dùng lớp có thể bỏ qua quy tắc nhập/bán hàng. Trong trường hợp này, hai hành vi `restock()` và `sell()` diễn tả nghiệp vụ và kiểm soát điều kiện tốt hơn. Tương tự, không cần setter cho `sku` vì danh tính mặt hàng đã được xác định lúc khởi tạo.
+Not every field needs a getter or setter. If a public `setQuantity(int x)` accepts any integer, callers can bypass the restocking and selling rules. Here, `restock()` and `sell()` express the business operations and enforce their conditions more effectively. Likewise, `sku` needs no setter because the item's identity is established at initialization.
 
-### Phạm vi truy cập thường gặp
+### Common access levels
 
-| Modifier | Truy cập điển hình | Khi nào phù hợp |
+| Modifier | Typical access | Appropriate use |
 | --- | --- | --- |
-| `private` | Chỉ trong chính lớp khai báo | Field và chi tiết triển khai nội bộ |
-| Không ghi modifier (package-private) | Trong cùng package | Cộng tác nội bộ giữa các lớp cùng package |
-| `protected` | Cùng package và trong lớp con theo quy tắc Java | Thành phần dành cho mở rộng bằng kế thừa |
-| `public` | Mọi nơi có quyền truy cập tới lớp | API mà nơi sử dụng lớp cần gọi |
+| `private` | Only within the declaring class | Fields and internal implementation details |
+| No modifier (package-private) | Within the same package | Internal collaboration among classes in a package |
+| `protected` | Within the same package and in subclasses under Java's rules | Members intended for extension through inheritance |
+| `public` | Anywhere the class itself is accessible | API used by callers of the class |
 
-Một lớp có nhiều field `private` nhưng vẫn thể hiện đầy đủ hành vi qua các phương thức `public`. Đây là nền tảng của **đóng gói (encapsulation)**: đối tượng giữ quyền kiểm soát trạng thái của chính nó.
+A class can have many `private` fields and still expose all its intended behavior through `public` methods. This is the foundation of **encapsulation**: an object retains control over its own state.
 
-## 6. Những lỗi thiết kế và lỗi Java dễ gặp
+## 6. Common design and Java mistakes
 
-| Tình huống | Vì sao có vấn đề | Cách cải thiện |
+| Situation | Why it causes problems | Improvement |
 | --- | --- | --- |
-| `public int quantity;` | Mã bên ngoài có thể đặt số lượng âm | Giữ `private`, cung cấp hành vi có kiểm tra |
-| Constructor gán trực tiếp tên rỗng | Đối tượng sinh ra ở trạng thái không hợp lệ | Kiểm tra tham số ngay khi tạo |
-| `setQuantity(...)` cho mọi nghiệp vụ | Caller phải tự ghi nhớ quy tắc nhập/bán | Đặt tên `restock`, `sell` theo hành vi |
-| Tạo field `totalValue` rồi quên đồng bộ | Dữ liệu dư thừa có thể sai | Tính bằng phương thức truy vấn |
-| Trùng tên tham số và field nhưng quên `this` | Gán nhầm vào tham số hoặc không cập nhật field | Dùng `this.field = parameter` |
-| Lầm `static` là dữ liệu của từng đối tượng | Mọi đối tượng cùng sử dụng một biến chung | Để dữ liệu riêng ở instance field |
-| Gọi phương thức instance mà chưa có đối tượng | Không có trạng thái cụ thể để xử lý | Tạo đối tượng bằng `new` trước |
-| Chỉ kiểm tra sau khi cập nhật field | Ngoại lệ có thể để lại trạng thái sai | Xác thực toàn bộ điều kiện trước khi thay đổi |
+| `public int quantity;` | External code can assign a negative quantity | Keep the field `private` and provide validated operations |
+| Constructor directly assigns an empty name | The object starts in an invalid state | Validate parameters during construction |
+| `setQuantity(...)` for every operation | Callers must remember the restocking and selling rules | Use behavior-oriented names such as `restock` and `sell` |
+| Adding a `totalValue` field and forgetting to synchronize it | Redundant data can become incorrect | Calculate it in a query method |
+| Parameter and field share a name, but `this` is omitted | Assignment may affect the parameter or fail to update the field | Use `this.field = parameter` |
+| Mistaking `static` for per-object data | Every object uses the same shared variable | Keep per-object data in instance fields |
+| Calling an instance method without an object | There is no specific object state to work with | First create an object with `new` |
+| Validating only after updating a field | An exception may leave the object in an invalid state | Validate all conditions before making changes |
 
-Cũng cần nhớ: method không nhất thiết phải sửa field; getter và các phép tính là hành vi hợp lệ. Ngược lại, một lớp có field và method chưa chắc đã được thiết kế tốt nếu trách nhiệm lộn xộn hoặc cho phép phá vỡ quy tắc dữ liệu.
+Remember that a method does not necessarily modify fields; getters and calculations are valid behavior. Conversely, merely having fields and methods does not make a class well designed if its responsibilities are muddled or it permits data rules to be violated.
 
-## 7. Tự kiểm tra hiểu biết
+## 7. Check your understanding
 
-Hãy thử thay đổi ví dụ theo ba yêu cầu sau:
+Try modifying the example to meet these three requirements:
 
-1. Thêm `getUnitPriceVnd()` trả về đơn giá, không cho bên ngoài chỉnh giá.
-2. Thêm `boolean canSell(int units)` để kiểm tra `units > 0 && units <= quantity` **mà không thay đổi** số lượng.
-3. Thử gọi `restock(0)`, `sell(-1)`, `sell(999)` và xác định kiểu ngoại lệ; kiểm tra tồn kho trước/sau mỗi lần gọi.
+1. Add `getUnitPriceVnd()` to return the unit price without allowing external callers to change it.
+2. Add `boolean canSell(int units)` to check `units > 0 && units <= quantity` **without changing** the quantity.
+3. Call `restock(0)`, `sell(-1)`, and `sell(999)` and identify the exception types; check the stock before and after each call.
 
-Khi đọc một lớp Java bất kỳ, hãy tự hỏi: **Field nào biểu diễn trạng thái? Field nào thuộc lớp qua `static`? Constructor đảm bảo điều gì? Phương thức nào đọc hoặc thay đổi trạng thái? Quy tắc nào ngăn đối tượng trở nên không hợp lệ?** Trả lời được những câu hỏi này là đã nắm được cấu trúc cơ bản của lớp gồm thuộc tính và phương thức.
+When reading any Java class, ask yourself: **Which fields represent state? Which fields belong to the class through `static`? What does the constructor guarantee? Which methods read or modify state? What rules prevent the object from becoming invalid?** If you can answer these questions, you understand the basic structure of a class with fields and methods.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-002">Khai báo lớp và tạo thể hiện</a>
+## <a id="class-002">Declaring classes and creating instances</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Khai báo lớp và tạo thể hiện trong Java
+# Declaring classes and creating instances in Java
 
-Trong lập trình hướng đối tượng (OOP), **lớp** (*class*) mô tả dữ liệu và hành vi chung của một nhóm đối tượng. **Thể hiện** (*instance*, hay đối tượng) là một đối tượng cụ thể được tạo theo định nghĩa của lớp đó.
+In object-oriented programming (OOP), a **class** describes the data and behavior shared by a group of objects. An **instance** (or object) is a specific object created from that class definition.
 
-Ví dụ, lớp `Workshop` có thể mô tả một buổi học gồm tên, sức chứa và số người đã đăng ký. Từ cùng một lớp, chương trình tạo hai thể hiện độc lập: một buổi “Java cơ bản” có hai chỗ và một buổi “Spring Boot” có một chỗ.
+For example, the `Workshop` class can represent a workshop with a name, capacity, and number of registered participants. From the same class, the program creates two independent instances: a "Java cơ bản" workshop with two seats and a "Spring Boot" workshop with one seat.
 
-## 1. Khai báo một lớp
+## 1. Declaring a class
 
-Cú pháp cơ bản:
+Basic syntax:
 
 ~~~java
 class TenLop {
@@ -369,46 +369,46 @@ class TenLop {
 }
 ~~~
 
-Một lớp Java thường có ba thành phần:
+A Java class typically has three components:
 
-| Thành phần | Vai trò | Ví dụ trong `Workshop` |
+| Component | Role | Example in `Workshop` |
 | --- | --- | --- |
-| Trường (*field*) | Lưu dữ liệu thuộc từng đối tượng | `name`, `capacity`, `registeredCount` |
-| Constructor | Kiểm tra và khởi tạo đối tượng | `Workshop(String name, int capacity)` |
-| Phương thức (*method*) | Cho phép đối tượng thực hiện hành vi | `register()`, `remainingSeats()` |
+| Field | Stores data belonging to each object | `name`, `capacity`, `registeredCount` |
+| Constructor | Validates and initializes an object | `Workshop(String name, int capacity)` |
+| Method | Allows an object to perform behavior | `register()`, `remainingSeats()` |
 
-Từ khóa `class` định nghĩa kiểu đối tượng mới. Tên lớp theo quy ước Java viết kiểu `PascalCase` (`Workshop`, `OrderItem`). Từ khóa `public` quy định phạm vi truy cập; một file nguồn thường chứa một lớp top-level `public`, và tên file phải trùng tên lớp đó (chẳng hạn `Main.java` cho `public class Main`).
+The `class` keyword defines a new object type. By Java convention, class names use `PascalCase` (`Workshop`, `OrderItem`). The `public` keyword controls accessibility; a source file typically contains one `public` top-level class, and its filename must match that class name (for example, `Main.java` for `public class Main`).
 
-**Khai báo lớp chưa tạo ra các thể hiện của lớp.** Các thể hiện chỉ xuất hiện khi chương trình thực hiện thao tác tạo đối tượng, điển hình là dùng `new`.
+**Declaring a class does not create instances of it.** Instances appear only when the program performs an object-creation operation, typically using `new`.
 
-## 2. Tạo thể hiện bằng `new`
+## 2. Creating instances with `new`
 
-Một biểu thức điển hình:
+A typical expression:
 
 ~~~java
 Workshop java = new Workshop("Java cơ bản", 2);
 ~~~
 
-Đọc từ trái sang phải:
+Read it from left to right:
 
-1. `Workshop` là **kiểu của biến**.
-2. `java` là **biến tham chiếu** dùng để truy cập đối tượng.
-3. `new Workshop(...)` tạo một thể hiện của `Workshop` và gọi constructor phù hợp.
-4. `"Java cơ bản"` và `2` là các đối số để khởi tạo tên và sức chứa.
-5. Toán tử gán `=` lưu **tham chiếu đến đối tượng** vào biến `java`.
+1. `Workshop` is the **variable's type**.
+2. `java` is a **reference variable** used to access the object.
+3. `new Workshop(...)` creates an instance of `Workshop` and invokes the matching constructor.
+4. `"Java cơ bản"` and `2` are arguments used to initialize the name and capacity.
+5. The assignment operator `=` stores **a reference to the object** in the variable `java`.
 
-Ta có thể khai báo tham chiếu rồi mới tạo đối tượng:
+You can declare a reference and create the object later:
 
 ~~~java
 Workshop course;                         // Chưa tham chiếu đến đối tượng nào
 course = new Workshop("Java cơ bản", 2); // Bắt đầu trỏ đến thể hiện mới
 ~~~
 
-Biến cục bộ `course` phải được gán giá trị trước khi sử dụng. Khác với biến cục bộ, một **trường tham chiếu** chưa khởi tạo tường minh có giá trị mặc định là `null`. Việc gọi phương thức thông qua tham chiếu `null` gây `NullPointerException`.
+The local variable `course` must be assigned before use. Unlike local variables, a **reference field** that has not been explicitly initialized defaults to `null`. Calling a method through a `null` reference causes a `NullPointerException`.
 
-## 3. Ví dụ hoàn chỉnh: đăng ký buổi học
+## 3. Complete example: workshop registration
 
-Đặt toàn bộ mã sau trong file **`Main.java`**. Ví dụ dùng Java 11 trở lên, vì có `String.isBlank()`.
+Place all the following code in **`Main.java`**. The example uses Java 11 or later because it calls `String.isBlank()`.
 
 ~~~java
 class Workshop {
@@ -472,14 +472,14 @@ public class Main {
 }
 ~~~
 
-Chạy tại thư mục chứa `Main.java`:
+Run these commands from the directory containing `Main.java`:
 
 ~~~bash
 javac Main.java
 java Main
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 Java cơ bản
@@ -494,15 +494,15 @@ false
 1
 ~~~
 
-**Diễn giải:** Đối tượng `java` có hai chỗ, nên hai lần `register()` đầu thành công, lần thứ ba thất bại. Đối tượng `spring` vẫn còn một chỗ: trạng thái của `java` không làm thay đổi `spring`. Khi gọi `alias.register()`, số chỗ còn lại của `spring` thành 0 vì hai biến cùng tham chiếu một đối tượng. Sau đó, `new Workshop("Spring Boot", 1)` tạo một thể hiện *khác*, dù đối số giống lần tạo `spring`.
+**Explanation:** The `java` object has two seats, so its first two `register()` calls succeed and the third fails. The `spring` object still has one seat: changing `java` does not affect `spring`. Calling `alias.register()` reduces `spring`'s remaining seats to 0 because both variables refer to the same object. Then `new Workshop("Spring Boot", 1)` creates a *different* instance, even though its arguments match those used to create `spring`.
 
-## 4. Constructor làm gì?
+## 4. What does a constructor do?
 
-Constructor là điểm khởi tạo một thể hiện. Nó **cùng tên với lớp** và **không có kiểu trả về**, kể cả `void`. Trong ví dụ trên, constructor bắt buộc tên không trống và sức chứa dương, rồi gán các trường của thể hiện.
+A constructor initializes an instance. It **has the same name as its class** and **has no return type**, not even `void`. In the example above, the constructor requires a nonblank name and a positive capacity, then assigns the instance's fields.
 
-Từ khóa `this` chỉ đối tượng hiện tại. Ở câu lệnh `this.name = name;`, phía trái là trường `name` của đối tượng; phía phải là tham số `name` được truyền vào constructor. Cách viết này tránh nhầm lẫn khi tên trường và tên tham số trùng nhau.
+The `this` keyword refers to the current object. In `this.name = name;`, the left side is the object's `name` field; the right side is the `name` parameter passed to the constructor. This form avoids ambiguity when a field and parameter share a name.
 
-Nếu không khai báo **bất kỳ constructor nào**, trình biên dịch cung cấp một constructor mặc định không tham số, với mức truy cập tương ứng mức truy cập của lớp. Nhưng **khi đã khai báo constructor có tham số**, Java không tự sinh thêm constructor không tham số:
+If you declare **no constructors at all**, the compiler supplies a default no-argument constructor whose access level matches the class's accessibility. But **once you declare a parameterized constructor**, Java does not automatically generate a no-argument constructor:
 
 ~~~java
 class Marker {
@@ -515,18 +515,18 @@ Marker a = new Marker(); // Hợp lệ: constructor mặc định
 // new Workshop();        // Lỗi biên dịch: thiếu 2 đối số
 ~~~
 
-Đoạn minh họa `Marker` là mã ví dụ độc lập, không chèn sau phần mã hoàn chỉnh bên ngoài phương thức `main`. Ta cũng có thể tự viết nhiều constructor khác chữ ký (*constructor overloading*) khi có nhiều cách khởi tạo hợp lệ, nhưng mỗi constructor phải bảo đảm trạng thái ban đầu hợp lệ.
+The `Marker` snippet is a standalone illustration; do not append it after the complete example outside the `main` method. You can also define multiple constructors with different signatures (*constructor overloading*) when several initialization paths are valid, but each constructor must ensure a valid initial state.
 
-## 5. Phân biệt lớp, thể hiện và tham chiếu
+## 5. Distinguishing classes, instances, and references
 
-| Khái niệm | Ý nghĩa | Ví dụ |
+| Concept | Meaning | Example |
 | --- | --- | --- |
-| Lớp | Bản định nghĩa về dữ liệu và hành vi | `class Workshop { ... }` |
-| Thể hiện | Một đối tượng được tạo theo lớp | Đối tượng “Java cơ bản” |
-| Biến tham chiếu | Biến dùng để truy cập đối tượng | `java`, `spring`, `alias` |
-| `new` | Biểu thức tạo đối tượng và gọi constructor | `new Workshop("Spring Boot", 1)` |
+| Class | A definition of data and behavior | `class Workshop { ... }` |
+| Instance | An object created from a class | The "Java cơ bản" object |
+| Reference variable | A variable used to access an object | `java`, `spring`, `alias` |
+| `new` | An expression that creates an object and invokes a constructor | `new Workshop("Spring Boot", 1)` |
 
-Sau các phép gán trong ví dụ, quan hệ tham chiếu có thể hình dung như sau:
+After the assignments in the example, the reference relationships can be visualized as follows:
 
 ~~~mermaid
 flowchart LR
@@ -536,85 +536,85 @@ flowchart LR
     D["separate"] --> W3["Workshop #3: Spring Boot"]
 ~~~
 
-Có ba đối tượng nhưng bốn biến tham chiếu. `spring` và `alias` cùng truy cập đối tượng #2; đối tượng #3 được tạo riêng.
+There are three objects but four reference variables. `spring` and `alias` both access object #2; object #3 was created separately.
 
-- `Workshop alias = spring;` **không sao chép đối tượng**. Nó sao chép giá trị tham chiếu.
-- `new Workshop(...)` thực hiện thêm một lần tạo thể hiện.
-- `alias == spring` là `true` vì hai tham chiếu trỏ đến cùng đối tượng.
-- `separate == spring` là `false` vì chúng là hai đối tượng khác nhau.
-- Với đối tượng, `==` so sánh **đồng nhất tham chiếu**; `equals()` có thể biểu diễn bằng nhau theo nội dung nếu lớp định nghĩa lại nó. `Workshop` ở đây không định nghĩa lại `equals()`.
+- `Workshop alias = spring;` **does not copy the object**. It copies the reference value.
+- `new Workshop(...)` performs another instance-creation operation.
+- `alias == spring` is `true` because the references point to the same object.
+- `separate == spring` is `false` because they point to different objects.
+- For objects, `==` checks **reference identity**; `equals()` can express content equality if the class overrides it. Here, `Workshop` does not override `equals()`.
 
-Không nên hình dung mỗi biến tham chiếu là một bản sao độc lập của đối tượng. Khi nhiều tham chiếu cùng trỏ đến một đối tượng có thể thay đổi, việc chỉnh sửa qua một tham chiếu sẽ được thấy qua các tham chiếu còn lại.
+Do not think of each reference variable as holding an independent copy of the object. When multiple references point to the same mutable object, changes made through one reference are visible through the others.
 
-## 6. Phạm vi truy cập và tính đóng gói ngay từ lúc khai báo
+## 6. Access control and encapsulation from the declaration stage
 
-Ba trường của `Workshop` được khai báo `private` để mã sử dụng không thể trực tiếp gán `registeredCount = 999` hoặc sửa sức chứa tùy tiện. Muốn đăng ký, chương trình gọi `register()`, nơi kiểm tra còn chỗ trước khi tăng số lượng.
+The three fields of `Workshop` are declared `private` so calling code cannot directly assign `registeredCount = 999` or change the capacity arbitrarily. To register, the program calls `register()`, which checks for available seats before incrementing the count.
 
-`final` trên `name` và `capacity` buộc mỗi trường được gán một lần trong quá trình khởi tạo và không thể gán lại sau đó. Nó **không** có nghĩa toàn bộ đối tượng bất biến, bởi `registeredCount` vẫn có thể thay đổi.
+`final` on `name` and `capacity` requires each field to be assigned once during initialization and prevents later reassignment. It does **not** make the entire object immutable, because `registeredCount` can still change.
 
-Trong ví dụ, `Workshop` không có `public` nên chỉ truy cập được trong cùng package. Các phương thức cũng có quyền truy cập mặc định (package-private), đủ để `Main` sử dụng vì cả hai ở cùng file/package. Khi tổ chức dự án thành nhiều package, cần chọn mức truy cập `public` cho API cần sử dụng từ package khác.
+In this example, `Workshop` is not declared `public`, so it is accessible only within its package. Its methods also have default (package-private) access, which is enough for `Main` because both are in the same file/package. When a project spans multiple packages, use `public` for APIs that must be accessed from another package.
 
-## 7. Các lỗi thường gặp
+## 7. Common mistakes
 
-| Tình huống | Nguyên nhân | Cách xử lý |
+| Situation | Cause | Solution |
 | --- | --- | --- |
-| `new Workshop()` không biên dịch | Lớp chỉ có constructor nhận hai tham số | Truyền đủ đối số hoặc tự khai báo constructor không tham số nếu phù hợp |
-| `Workshop x;` rồi gọi `x.register()` | Biến cục bộ chưa được gán | Khởi tạo bằng `new` hoặc gán tham chiếu hợp lệ trước khi dùng |
-| `Workshop x = null;` rồi gọi phương thức | `null` không trỏ đến đối tượng | Kiểm tra luồng khởi tạo, không gọi phương thức qua `null` |
-| Nghĩ `Workshop b = a;` sẽ nhân bản dữ liệu | Phép gán chỉ sao chép tham chiếu | Tạo đối tượng mới và sao chép dữ liệu có chủ đích nếu cần |
-| Khai báo `public class Workshop` ngay trong `Main.java` | Tên file không khớp tên lớp `public` | Đặt `Workshop` vào `Workshop.java`, hoặc giữ nó không `public` trong `Main.java` |
-| Viết `void Workshop(...)` | Đây là phương thức tên `Workshop`, không phải constructor | Bỏ kiểu trả về để khai báo constructor |
+| `new Workshop()` does not compile | The class only has a two-parameter constructor | Supply both arguments or explicitly declare a no-argument constructor if appropriate |
+| Declaring `Workshop x;` and then calling `x.register()` | The local variable has not been assigned | Initialize with `new` or assign a valid reference before use |
+| Declaring `Workshop x = null;` and then calling a method | `null` does not refer to an object | Check the initialization path and avoid calling methods through `null` |
+| Assuming `Workshop b = a;` duplicates the data | Assignment copies only the reference | Create a new object and deliberately copy the data if needed |
+| Declaring `public class Workshop` inside `Main.java` | The filename does not match the `public` class name | Move `Workshop` to `Workshop.java`, or keep it non-`public` inside `Main.java` |
+| Writing `void Workshop(...)` | This declares a method named `Workshop`, not a constructor | Omit the return type to declare a constructor |
 
-## 8. Tự kiểm tra hiểu bài
+## 8. Check your understanding
 
-1. Nếu tạo `Workshop a = new Workshop("A", 3);` và `Workshop b = new Workshop("B", 3);`, gọi `a.register()` có làm thay đổi `b.remainingSeats()` không? **Không**: đó là hai thể hiện độc lập.
-2. Nếu tiếp tục viết `Workshop c = a;`, thì `c == a` có giá trị gì? **`true`**, vì cả hai trỏ đến cùng một thể hiện.
-3. Muốn bảo đảm không tạo được buổi học với sức chứa bằng 0, kiểm tra ở đâu? **Trong constructor**, để từ đầu mỗi đối tượng được tạo hợp lệ.
-4. `new Workshop("A", 3)` tạo lớp mới hay đối tượng mới? **Đối tượng mới** của lớp `Workshop` đã được định nghĩa.
-5. Nếu chỉ viết `class Workshop { ... }` mà không thực hiện `new Workshop(...)`, đã có thể hiện `Workshop` nào do dòng khai báo ấy tạo ra chưa? **Chưa**.
+1. If you create `Workshop a = new Workshop("A", 3);` and `Workshop b = new Workshop("B", 3);`, does calling `a.register()` change `b.remainingSeats()`? **No**: these are two independent instances.
+2. If you then write `Workshop c = a;`, what is `c == a`? **`true`**, because both references point to the same instance.
+3. Where should you check that a workshop cannot be created with a capacity of 0? **In the constructor**, so every new object starts in a valid state.
+4. Does `new Workshop("A", 3)` create a new class or a new object? **A new object** of the already-defined `Workshop` class.
+5. If you only write `class Workshop { ... }` without executing `new Workshop(...)`, has that declaration created any `Workshop` instances? **No**.
 
-**Ghi nhớ khi viết Java:** Khai báo `class` để định nghĩa cấu trúc và hành vi; dùng `new` kèm constructor để tạo đối tượng; giữ tham chiếu để gọi phương thức; mỗi lần tạo thể hiện mới có trạng thái riêng, còn phép gán tham chiếu có thể khiến nhiều biến cùng truy cập một thể hiện.
+**Remember when writing Java:** Declare a `class` to define structure and behavior; use `new` and a constructor to create objects; retain references to call methods. Each new instance has its own state, while reference assignment can allow multiple variables to access the same instance.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-003">Thành viên của thể hiện và thành viên dùng chung</a>
+## <a id="class-003">Instance members and shared members</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thành viên của thể hiện và thành viên dùng chung trong Java
+# Instance members and shared members in Java
 
-Trong lập trình hướng đối tượng, **lớp (class)** mô tả kiểu đối tượng; còn **thể hiện (instance)** là một đối tượng cụ thể được tạo từ lớp đó. Khi khai báo trường dữ liệu (field) và phương thức (method), Java cho phép chọn thành viên thuộc **từng đối tượng** hoặc thuộc **lớp và được dùng chung** bằng từ khóa `static`.
+In object-oriented programming, a **class** describes an object type, while an **instance** is a specific object created from that class. When declaring fields and methods, Java lets you choose whether a member belongs to **each individual object** or **the class and is shared** by using the `static` keyword.
 
-Sự phân biệt này trả lời hai câu hỏi rất thực tế:
+This distinction answers two practical questions:
 
-- Dữ liệu này có thuộc riêng một đối tượng cụ thể không? Ví dụ: tên chủ tài khoản, số dư, trạng thái đơn hàng.
-- Dữ liệu/hành vi này có ý nghĩa chung cho cả kiểu đối tượng không? Ví dụ: bộ đếm số tài khoản đã tạo, giới hạn cố định, hàm tiện ích không cần trạng thái của một tài khoản.
+- Does this data belong to one particular object? Examples: an account holder's name, an account balance, or an order's status.
+- Is this data or behavior meaningful for the entire object type? Examples: a counter for accounts created, a fixed limit, or a utility function that needs no individual account state.
 
-## 1. Hai loại thành viên
+## 1. Two kinds of members
 
-| Tiêu chí | Thành viên của thể hiện (*instance member*) | Thành viên dùng chung (*static member*) |
+| Criterion | Instance member | Shared (static) member |
 |---|---|---|
-| Cách khai báo | Không có `static` | Có `static` |
-| Gắn với | Từng đối tượng | Lớp (trong phạm vi class loader tương ứng) |
-| Field được lưu | Mỗi đối tượng có một vị trí lưu riêng | Có một field dùng chung cho các đối tượng của lớp đó |
-| Cách truy cập nên dùng | `doiTuong.tenThanhVien` | `TenLop.tenThanhVien` |
-| Phương thức có thể truy cập trực tiếp | Field/phương thức instance và static | Thành viên static; muốn dùng instance phải có tham chiếu đối tượng |
-| Sử dụng `this` | Được trong ngữ cảnh instance | Không được trong ngữ cảnh static |
-| Trường hợp điển hình | `account.balance`, `account.deposit()` | `Account.getTotalCreated()`, `Math.max(a, b)` |
+| Declaration | Without `static` | With `static` |
+| Associated with | Each object | The class (within the corresponding class loader) |
+| Field storage | Each object has its own storage location | A single field is shared by that class's objects |
+| Preferred access syntax | `doiTuong.tenThanhVien` | `TenLop.tenThanhVien` |
+| Members a method can access directly | Instance and static fields/methods | Static members; instance members require an object reference |
+| Use of `this` | Allowed in an instance context | Not allowed in a static context |
+| Typical examples | `account.balance`, `account.deposit()` | `Account.getTotalCreated()`, `Math.max(a, b)` |
 
-**Chú ý:** `static` không đồng nghĩa với `public` hay `final`. Đây là ba ý nghĩa khác nhau: `static` xác định nơi thành viên thuộc về; `public/private` quy định quyền truy cập; `final` hạn chế việc gán lại hoặc ghi đè tùy loại thành viên.
+**Note:** `static` does not mean `public` or `final`. These have three distinct meanings: `static` determines what a member belongs to; `public/private` controls access; and `final` restricts reassignment or overriding, depending on the member type.
 
-## 2. Ví dụ thực hành: ví lưu vé xem sự kiện
+## 2. Practical example: an event ticket wallet
 
-Đặt yêu cầu: mỗi khách hàng có một ví lưu vé và giữ số vé riêng của mình. Đồng thời, hệ thống cần đếm tổng số vé đã bán trên tất cả các ví trong chương trình đang chạy.
+Suppose each customer has a wallet for event tickets and keeps track of their own tickets. At the same time, the system must count the total number of tickets sold across all wallets in the running program.
 
-Tạo một tệp **Demo.java** và chạy với Java 17 trở lên:
+Create a **Demo.java** file and run it with Java 17 or later:
 
 ```java
 public class Demo {
@@ -675,7 +675,7 @@ class TicketWallet {
 }
 ```
 
-Kết quả:
+Output:
 
 ```text
 An: 2
@@ -683,14 +683,14 @@ Bình: 1
 Tổng vé đã bán: 3
 ```
 
-Quan sát từng bước:
+Follow the steps:
 
-1. `new TicketWallet("An")` tạo ví An với `ownedTickets = 0`.
-2. `new TicketWallet("Bình")` tạo ví Bình với `ownedTickets = 0`. Hai ví là hai đối tượng khác nhau.
-3. `an.buyTickets(2)` làm `an.ownedTickets = 2` và `TicketWallet.totalSold = 2`.
-4. `binh.buyTickets(1)` làm `binh.ownedTickets = 1` và `TicketWallet.totalSold = 3`. Số vé của An vẫn là 2.
+1. `new TicketWallet("An")` creates An's wallet with `ownedTickets = 0`.
+2. `new TicketWallet("Bình")` creates Bình's wallet with `ownedTickets = 0`. The wallets are two distinct objects.
+3. `an.buyTickets(2)` sets `an.ownedTickets = 2` and `TicketWallet.totalSold = 2`.
+4. `binh.buyTickets(1)` sets `binh.ownedTickets = 1` and `TicketWallet.totalSold = 3`. An still owns 2 tickets.
 
-Hình dung mối quan hệ:
+Visualize the relationship:
 
 ```mermaid
 flowchart TB
@@ -701,11 +701,11 @@ flowchart TB
     B -->|"Dùng thành viên chung"| C
 ```
 
-Sơ đồ thể hiện **quyền sở hữu logic**, không phải bản đồ bố trí byte trong bộ nhớ JVM. Mỗi instance có các field riêng; cả hai nhìn thấy cùng một `TicketWallet.totalSold` trong phạm vi lớp được nạp đó.
+The diagram represents **logical ownership**, not a byte-level memory layout in the JVM. Each instance has its own fields; both see the same `TicketWallet.totalSold` within that loaded class.
 
-## 3. Field instance: trạng thái của từng đối tượng
+## 3. Instance fields: state belonging to each object
 
-Một field khai báo không có `static` là field instance:
+A field declared without `static` is an instance field:
 
 ```java
 class Lamp {
@@ -721,7 +721,7 @@ class Lamp {
 }
 ```
 
-Sử dụng:
+Usage:
 
 ```java
 Lamp bedroom = new Lamp();
@@ -733,13 +733,13 @@ System.out.println(bedroom.isOn()); // true
 System.out.println(kitchen.isOn()); // false
 ```
 
-Cả hai cùng là `Lamp` nhưng bật đèn phòng ngủ không thể tự làm thay đổi trạng thái của đèn nhà bếp. Đây là khả năng **đóng gói trạng thái riêng** rất quan trọng của OOP.
+Both objects are `Lamp` instances, but turning on the bedroom lamp does not automatically change the kitchen lamp's state. This ability to **encapsulate individual state** is fundamental to OOP.
 
-Field instance có giá trị mặc định khi đối tượng được khởi tạo (ví dụ `int = 0`, `boolean = false`, tham chiếu `= null`), trừ khi code gán giá trị khác. Mỗi lần tạo một đối tượng mới, các field instance được khởi tạo cho đối tượng mới ấy. Nếu hai field tham chiếu cùng trỏ đến một đối tượng khác, đối tượng được trỏ tới vẫn có thể được chia sẻ; “field riêng” không có nghĩa toàn bộ đồ thị dữ liệu đều độc lập.
+Instance fields receive default values when an object is initialized (for example, `int = 0`, `boolean = false`, and reference fields `= null`), unless code assigns other values. Each new object gets its own initialized instance fields. If two reference fields point to the same other object, that referenced object can still be shared; "separate fields" does not imply that the entire object graphs are independent.
 
-## 4. Field static: dữ liệu gắn với lớp
+## 4. Static fields: class-level data
 
-Khai báo `static` khi thông tin **thực sự áp dụng cho toàn lớp**:
+Declare a field `static` when the information **truly applies to the entire class**:
 
 ```java
 class Player {
@@ -770,9 +770,9 @@ System.out.println(p2.getNickname());     // Bear
 System.out.println(Player.getCreatedCount()); // 2
 ```
 
-`nickname` là thuộc tính của từng người chơi. `createdCount` là số lượng *lượt tạo instance* được constructor ghi nhận trong lần chạy hiện tại; không phải số người chơi còn sống, số bản ghi trong database hay số lượng trên tất cả máy chủ.
+`nickname` is an attribute of each player. `createdCount` records the number of *instance-creation events* counted by the constructor during the current run; it is not the number of live players, database records, or players across all servers.
 
-**Phân biệt `static` với hằng số:**
+**Distinguish `static` from constants:**
 
 ```java
 class Pricing {
@@ -781,11 +781,11 @@ class Pricing {
 }
 ```
 
-- `MAX_DISCOUNT_PERCENT` là hằng số kiểu nguyên, gắn với lớp, không thể gán lại.
-- `successfulOrders` cũng gắn với lớp nhưng có thể đổi theo thời gian; nó là **trạng thái dùng chung có thể thay đổi**.
-- `final` trên một biến tham chiếu chỉ ngăn biến trỏ sang đối tượng khác; không tự động làm đối tượng bên trong bất biến.
+- `MAX_DISCOUNT_PERCENT` is a class-level integer constant that cannot be reassigned.
+- `successfulOrders` also belongs to the class but can change over time; it is **mutable shared state**.
+- `final` on a reference variable only prevents it from referring to a different object; it does not automatically make the referenced object immutable.
 
-Ví dụ dễ nhầm:
+A potentially confusing example:
 
 ```java
 private static final java.util.List<String> NAMES =
@@ -795,11 +795,11 @@ private static final java.util.List<String> NAMES =
 // NAMES.add("An");                       // Vẫn hợp lệ: nội dung list có thể đổi.
 ```
 
-Nếu cần danh sách bất biến, có thể dùng `List.of("An", "Bình")` cùng quy tắc kiểm soát dữ liệu phù hợp.
+If you need an unmodifiable list, you can use `List.of("An", "Bình")` together with appropriate data-control rules.
 
-## 5. Phương thức instance và phương thức static
+## 5. Instance methods and static methods
 
-Phương thức instance thực thi trong ngữ cảnh **một đối tượng nhận lời gọi**, nên có thể dùng `this`, đọc/sửa field instance, và gọi các phương thức instance khác.
+An instance method executes in the context of **an object receiving the call**, so it can use `this`, read or modify instance fields, and call other instance methods.
 
 ```java
 class Rectangle {
@@ -827,9 +827,9 @@ System.out.println(r.area());                     // 12.0
 System.out.println(Rectangle.isValidSize(3, 4));  // true
 ```
 
-`area()` cần kích thước của **một hình chữ nhật cụ thể**. `isValidSize(width, height)` nhận đủ dữ liệu qua tham số, không cần biết một hình chữ nhật nào đang tồn tại; vì vậy có thể để `static`.
+`area()` needs the dimensions of **a particular rectangle**. `isValidSize(width, height)` receives all the required data through parameters and does not need an existing rectangle, so it can be `static`.
 
-Một phương thức `static` **không được trực tiếp** đọc field instance hoặc sử dụng `this`:
+A `static` method **cannot directly** read an instance field or use `this`:
 
 ```java
 class Student {
@@ -851,19 +851,19 @@ class Student {
 }
 ```
 
-Điều quan trọng: phương thức static **vẫn có thể sử dụng dữ liệu của đối tượng** nếu được cung cấp tham chiếu tới đối tượng (ví dụ qua tham số). Nó chỉ không có một `this` ngầm định.
+The key point is that a static method **can still use object data** if it is given an object reference (for example, as a parameter). It simply has no implicit `this`.
 
-Về cú pháp, Java cho phép gọi một phương thức static qua biểu thức tham chiếu đối tượng, nhưng nên gọi qua **tên lớp**: `TicketWallet.getTotalSold()`. Điều đó truyền đạt đúng ý nghĩa và tránh hiểu nhầm rằng mỗi ví có bộ đếm riêng.
+Java technically allows calling a static method through an object reference expression, but you should call it through the **class name**: `TicketWallet.getTotalSold()`. This expresses its meaning correctly and avoids suggesting that each wallet has its own counter.
 
-## 6. Khởi tạo và vòng đời: chuyện gì xảy ra khi tạo đối tượng?
+## 6. Initialization and lifecycle: what happens when an object is created?
 
-Trong một tình huống đơn giản (không xét quan hệ kế thừa), trình tự khái quát như sau:
+In a simple case (without considering inheritance), the general sequence is:
 
-1. Khi lớp được sử dụng theo cách yêu cầu khởi tạo, JVM thực hiện khởi tạo lớp: chạy các phép gán field static và khối `static { ... }` theo thứ tự trong mã nguồn. Việc này xảy ra một lần cho **mỗi lần khởi tạo lớp trong một class loader**, chứ không lặp lại mỗi lần `new`.
-2. Với mỗi lần `new`, Java cấp phát một instance, khởi tạo field instance và khối khởi tạo instance, rồi thực thi phần thân constructor.
-3. Khi thay đổi field static, các instance cùng thuộc lớp được nạp ấy quan sát trạng thái chung. Khi thay đổi field instance, trạng thái gắn với instance nhận tác động.
+1. When a class is used in a way that requires initialization, the JVM initializes the class: it executes static field initializers and `static { ... }` blocks in source order. This happens once **per class initialization within a class loader**, rather than every time `new` is used.
+2. On each `new` operation, Java allocates an instance, initializes its instance fields and instance initializer blocks, then executes the constructor body.
+3. When a static field changes, instances of that loaded class observe the shared state. When an instance field changes, only the state associated with that instance is affected.
 
-Ví dụ:
+Example:
 
 ```java
 class Sample {
@@ -885,11 +885,11 @@ System.out.println(b.local);      // 2
 System.out.println(Sample.shared); // 12
 ```
 
-Không nên hình dung `static` là “một biến duy nhất toàn bộ thế giới”. Những JVM/process khác nhau có trạng thái riêng; ứng dụng nhiều máy chủ không tự đồng bộ các field static. Mỗi class loader cũng có thể nạp cùng một tên lớp như những lớp riêng. Ngoài ra, field static **không phải nơi lưu dữ liệu bền vững**: khởi động lại ứng dụng không đảm bảo giữ giá trị trước đó.
+Do not imagine `static` as "one variable for the entire world." Different JVMs/processes have their own state; applications running on multiple servers do not automatically synchronize static fields. Separate class loaders can also load classes with the same name as distinct classes. Moreover, static fields **are not persistent storage**: restarting an application does not guarantee that their previous values will survive.
 
-## 7. Kế thừa: override instance method khác với static method hiding
+## 7. Inheritance: overriding instance methods versus hiding static methods
 
-Các phương thức instance có thể tham gia **đa hình động**: phiên bản được gọi phụ thuộc kiểu đối tượng thực tế. Phương thức static không được override theo nghĩa đó; khi một lớp con khai báo phương thức static cùng chữ ký, đây là **method hiding**.
+Instance methods can participate in **runtime polymorphism**: the implementation invoked depends on the actual object's type. Static methods are not overridden in this sense; when a subclass declares a static method with the same signature, this is **method hiding**.
 
 ```java
 class Animal {
@@ -919,13 +919,13 @@ System.out.println(pet.group());   // Animal: chọn static theo kiểu tham chi
 System.out.println(Dog.group());   // Dog: gọi rõ tên lớp.
 ```
 
-Dòng `pet.group()` chỉ nhằm minh họa quy tắc ngôn ngữ; trong code thực tế nên viết `Animal.group()` hoặc `Dog.group()`. Không đặt `@Override` lên phương thức static và đừng dựa vào static dispatch để triển khai hành vi cần đa hình.
+The `pet.group()` line illustrates a language rule; in real code, prefer `Animal.group()` or `Dog.group()`. Do not put `@Override` on a static method or rely on static dispatch to implement behavior that requires polymorphism.
 
-## 8. Rủi ro của trạng thái dùng chung: nhiều luồng và kiểm thử
+## 8. Risks of shared state: concurrency and testing
 
-Trường `static` có thể thay đổi giúp đếm hoặc chia sẻ cấu hình trong một JVM, nhưng cũng tạo ra điểm chung mà nhiều phần code có thể cùng tác động. Ví dụ `totalSold += quantity` là thao tác đọc–cộng–ghi, **không nguyên tử**. Nếu nhiều luồng mua vé cùng lúc, tổng có thể bị thiếu do cập nhật chồng lấn.
+A mutable `static` field can support counters or shared configuration within a JVM, but it also creates a shared point that multiple parts of the code can modify. For example, `totalSold += quantity` is a read-add-write operation and is **not atomic**. If multiple threads buy tickets concurrently, overlapping updates can cause the total to be too low.
 
-Khi thật sự cần một bộ đếm trong bộ nhớ JVM được nhiều luồng cập nhật, có thể dùng `AtomicInteger`:
+When you need a counter in JVM memory that multiple threads can update, you can use `AtomicInteger`:
 
 ```java
 import java.util.concurrent.atomic.AtomicInteger;
@@ -946,88 +946,88 @@ class SalesMetrics {
 }
 ```
 
-`AtomicInteger` bảo đảm các thao tác nguyên tử **trên chính bộ đếm này**, nhưng không tự bảo đảm tính nhất quán của cả quy trình mua vé, lưu đơn hàng, hoàn tiền hay các máy chủ khác nhau. Trong hệ thống thực tế, tổng doanh số có thể cần được xác định từ database hoặc dịch vụ quản lý giao dịch, tùy yêu cầu chính xác.
+`AtomicInteger` provides atomic operations **on this counter itself**, but does not automatically guarantee consistency across ticket purchases, order storage, refunds, or different servers. In a production system, total sales might need to be derived from a database or transaction-management service, depending on the required accuracy.
 
-Field static thay đổi được cũng có thể làm các bài kiểm thử ảnh hưởng lẫn nhau do trạng thái lưu lại giữa các test. Không nên biến mọi dữ liệu thành static chỉ để dễ truy cập.
+Mutable static fields can also cause tests to affect each other because state remains between tests. Do not make all data static merely for convenient access.
 
-## 9. Cách chọn trong thiết kế thực tế
+## 9. Choosing members in real-world designs
 
-| Nhu cầu | Nên chọn | Lý do |
+| Requirement | Recommended choice | Reason |
 |---|---|---|
-| Tên, trạng thái, số dư của một tài khoản | Instance field | Mỗi tài khoản có dữ liệu riêng |
-| `deposit(amount)`, `withdraw(amount)` | Instance method | Hành vi tác động lên một tài khoản xác định |
-| Giới hạn cố định chung, ví dụ `MAX_RETRY` | `static final` | Một quy tắc chung, không cần sao chép theo đối tượng |
-| Hàm thuần túy `Math.abs(x)` | Static method | Đầu ra chỉ phụ thuộc đầu vào, không cần `this` |
-| Bộ đếm đối tượng tạo trong một JVM | Có thể là static field | Được chia sẻ trong phạm vi lớp được nạp; chú ý đồng thời |
-| Số người dùng đăng ký trên toàn hệ thống | Kho dữ liệu/dịch vụ phù hợp | Phải đúng qua nhiều tiến trình, lần khởi động và máy chủ |
-| Dữ liệu thay đổi theo từng request hoặc người dùng | Thường là instance / request scope | Tránh rò rỉ trạng thái giữa những người dùng |
+| Name, status, or balance of an account | Instance field | Each account has its own data |
+| `deposit(amount)`, `withdraw(amount)` | Instance method | The behavior affects a specific account |
+| Shared fixed limit, such as `MAX_RETRY` | `static final` | One shared rule without per-object copies |
+| Pure function `Math.abs(x)` | Static method | The output depends only on inputs; no `this` is needed |
+| Counter of objects created within one JVM | Possibly a static field | Shared within the loaded class; watch for concurrency |
+| Number of registered users across a system | Suitable data store/service | Must remain accurate across processes, restarts, and servers |
+| Data that varies by request or user | Usually instance / request scope | Prevents state leaking between users |
 
-**Quy tắc quyết định:** Nếu xóa một instance thì ý nghĩa dữ liệu của instance đó cũng biến mất, dữ liệu thường là instance field. Nếu hành vi không cần đối tượng nhận lời gọi, cân nhắc static method. Nếu dữ liệu phải dùng chung và thay đổi, hãy xét phạm vi chia sẻ, khả năng đồng thời, vòng đời và nhu cầu lưu trữ trước khi chọn static field.
+**Rule of thumb:** If the meaning of data disappears when an instance is deleted, that data usually belongs in an instance field. If a behavior needs no receiving object, consider a static method. If data must be shared and mutable, consider sharing scope, concurrency, lifecycle, and storage requirements before choosing a static field.
 
-## 10. Tự kiểm tra hiểu bài
+## 10. Check your understanding
 
-**Câu 1.** Hai đối tượng `Counter` đều có field `int value` không static. Tăng `a.value` có làm `b.value` tăng?  
-**Đáp án:** Không, trừ khi có logic khác chủ động cập nhật `b`.
+**Question 1.** Two `Counter` objects each have a non-static `int value` field. Does incrementing `a.value` increment `b.value`?  
+**Answer:** No, unless other logic explicitly updates `b`.
 
-**Câu 2.** `static int count` có được tạo lại mỗi lần `new Counter()`?  
-**Đáp án:** Không. Nó thuộc lớp trong phạm vi class loader; constructor có thể cập nhật giá trị ấy nhưng không tạo một field static mới cho mỗi instance.
+**Question 2.** Is `static int count` recreated every time `new Counter()` is executed?  
+**Answer:** No. It belongs to the class within its class loader; the constructor may update its value, but does not create a new static field for each instance.
 
-**Câu 3.** Một phương thức static có thể truy cập `user.name` không?  
-**Đáp án:** Có, nếu nó có tham chiếu `user` hợp lệ và quyền truy cập cho phép. Điều bị cấm là truy cập `name` như thể đã có sẵn một `this`.
+**Question 3.** Can a static method access `user.name`?  
+**Answer:** Yes, if it has a valid `user` reference and sufficient access rights. What is prohibited is accessing `name` as though an implicit `this` were available.
 
-**Câu 4.** `static final List<String>` có luôn bất biến không?  
-**Đáp án:** Không. `final` chỉ ngăn gán lại biến tham chiếu; danh sách vẫn có thể thay đổi nếu đối tượng cho phép.
+**Question 4.** Is a `static final List<String>` always immutable?  
+**Answer:** No. `final` only prevents reassigning the reference variable; the list may still be mutable if the object permits modification.
 
-**Câu 5.** Có nên dùng field static để lưu tổng tiền thanh toán của mọi khách hàng trên nhiều máy chủ?  
-**Đáp án:** Không phù hợp làm nguồn dữ liệu chuẩn. Static field không đồng bộ xuyên JVM và không tự tồn tại bền vững sau khi khởi động lại.
+**Question 5.** Should a static field store the total payments from all customers across multiple servers?  
+**Answer:** It is unsuitable as the authoritative data source. Static fields are not synchronized across JVMs and do not persist automatically across restarts.
 
-**Ghi nhớ khi đọc code Java:** Hỏi thành viên được khai báo có `static` hay không, nó lưu trạng thái thuộc **ai**, có cần `this` hay không, và trạng thái ấy phải được chia sẻ trong **phạm vi nào**. Trả lời bốn câu hỏi này thường đủ để chọn giữa thành viên của thể hiện và thành viên dùng chung một cách đúng đắn.
+**Remember when reading Java code:** Ask whether a member is declared `static`, **whose** state it stores, whether it needs `this`, and **what scope** that state must be shared within. Answering these four questions is usually enough to choose correctly between instance and shared members.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-004">Phạm vi truy cập của thành viên</a>
+## <a id="class-004">Member access levels</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Phạm vi truy cập của thành viên trong Java
+# Member access levels in Java
 
-Khi thiết kế một lớp theo OOP, **phạm vi truy cập** (*access level*) xác định mã ở đâu được phép sử dụng thành viên của lớp đó: thuộc tính (*field*), phương thức (*method*), hàm tạo (*constructor*) và kiểu lồng nhau (*nested type*). Java kiểm soát quyền truy cập ngay lúc biên dịch, nhờ đó lớp có thể công khai các thao tác cần thiết nhưng giữ kín dữ liệu và chi tiết triển khai.
+When designing a class in OOP, an **access level** determines where code is allowed to use that class's members: fields, methods, constructors, and nested types. Java enforces access control at compile time, allowing a class to expose the operations callers need while hiding its data and implementation details.
 
-Ví dụ, đối tượng sinh viên có mã sinh viên cần được đọc từ bên ngoài, nhưng số tín chỉ không nên bị sửa tùy ý. Ta có thể công khai phương thức đọc, đồng thời hạn chế phương thức tăng tín chỉ để giữ các quy tắc nghiệp vụ.
+For example, a student object's ID must be readable externally, but its credit count should not be modified arbitrarily. You can expose a read method while restricting the method that adds credits to preserve business rules.
 
-## 1. Bốn mức truy cập thành viên
+## 1. Four member access levels
 
-| Khai báo | Ý nghĩa | Trường hợp sử dụng |
+| Declaration | Meaning | Use case |
 |---|---|---|
-| `private` | Chỉ truy cập trực tiếp bên trong lớp khai báo (kể cả các kiểu lồng nhau theo quy tắc Java) | Dữ liệu nội bộ, hàm hỗ trợ, kiểm tra đầu vào |
-| *package-private* (không ghi từ khóa) | Các lớp thuộc **cùng package** truy cập được | Hàm hỗ trợ nội bộ của một package |
-| `protected` | Các lớp cùng package truy cập được; lớp con ở package khác được truy cập với điều kiện riêng | Điểm mở rộng dành cho lớp kế thừa |
-| `public` | Mã ở mọi package có thể truy cập nếu bản thân kiểu chứa thành viên cũng truy cập được | API mà lớp muốn cung cấp ra ngoài |
+| `private` | Direct access only within the declaring class (including nested types under Java's rules) | Internal data, helper functions, input validation |
+| *package-private* (no keyword) | Accessible to classes in the **same package** | Helpers internal to a package |
+| `protected` | Accessible to classes in the same package; subclasses in other packages can access it subject to additional conditions | Extension points for subclasses |
+| `public` | Accessible from any package if the containing type is also accessible | API the class exposes to external callers |
 
-Trong Java, *package-private* là tên gọi của quyền truy cập mặc định khi **không viết access modifier**. Không có cú pháp `default int score;` cho field: `default` là từ khóa dùng trong những ngữ cảnh khác, chẳng hạn phương thức `default` của interface.
+In Java, *package-private* is the name for default access when **no access modifier is written**. There is no `default int score;` syntax for a field: `default` is a keyword used in other contexts, such as a `default` interface method.
 
-### Bảng quyền truy cập
+### Access matrix
 
-Giả sử thành viên được khai báo trong một lớp `public`, và mã muốn sử dụng cũng nhìn thấy lớp đó:
+Assume the member is declared in a `public` class and the accessing code can see that class:
 
-| Vị trí mã truy cập | `private` | Không ghi modifier | `protected` | `public` |
+| Accessing code's location | `private` | No modifier | `protected` | `public` |
 |---|:---:|:---:|:---:|:---:|
-| Bên trong chính lớp khai báo | ✅ | ✅ | ✅ | ✅ |
-| Lớp khác, cùng package | ❌ | ✅ | ✅ | ✅ |
-| Lớp con, khác package | ❌ | ❌ | ✅* | ✅ |
-| Lớp không kế thừa, khác package | ❌ | ❌ | ❌ | ✅ |
+| Within the declaring class | ✅ | ✅ | ✅ | ✅ |
+| Another class in the same package | ❌ | ✅ | ✅ | ✅ |
+| Subclass in a different package | ❌ | ❌ | ✅* | ✅ |
+| Unrelated class in a different package | ❌ | ❌ | ❌ | ✅ |
 
-**(*) Ngoại lệ quan trọng của `protected`:** Ở package khác, lớp con chỉ dùng thành viên kế thừa qua `this`, `super` hoặc biểu thức có kiểu phù hợp là lớp con đó (hay một lớp con của nó). Không thể lấy một tham chiếu có kiểu lớp cha bất kỳ rồi truy cập thành viên `protected` thông qua tham chiếu ấy.
+**(*) Important `protected` restriction:** From another package, a subclass can access an inherited member through `this`, `super`, or an expression whose type is that subclass (or one of its subclasses). It cannot access a `protected` member through an arbitrary reference whose type is the parent class.
 
-## 2. Ví dụ thực tế: quản lý sinh viên
+## 2. Real-world example: student management
 
-Xét cấu trúc package:
+Consider this package structure:
 
 ```text
 vn.edu.school
@@ -1040,7 +1040,7 @@ vn.edu.school
     └── StudentViewer.java
 ```
 
-### 2.1. Khai báo các mức truy cập trong một lớp
+### 2.1. Declaring access levels within a class
 
 **`domain/Student.java`**
 
@@ -1080,15 +1080,15 @@ public class Student {
 }
 ```
 
-Trong ví dụ này:
+In this example:
 
-- `studentId` và `credits` là `private`, nên các lớp bên ngoài không thể trực tiếp sửa chúng.
-- `getStudentId()`, `getCredits()` và constructor là `public`: mã khác có thể tạo và đọc thông tin đối tượng.
-- `internalNote` không có modifier, chỉ các lớp thuộc `vn.edu.school.domain` được truy cập trực tiếp.
-- `addCredits()` là `protected` để lớp con có thể mở rộng hành vi có kiểm tra.
-- `requireValidId()` là `private`: người sử dụng `Student` không cần biết cách kiểm tra mã.
+- `studentId` and `credits` are `private`, so outside classes cannot modify them directly.
+- `getStudentId()`, `getCredits()`, and the constructor are `public`: other code can create an object and read its information.
+- `internalNote` has no modifier, so only classes in `vn.edu.school.domain` can access it directly.
+- `addCredits()` is `protected` so subclasses can extend the validated behavior.
+- `requireValidId()` is `private`: callers of `Student` do not need to know how the ID is validated.
 
-### 2.2. Lớp khác cùng package
+### 2.2. Another class in the same package
 
 **`domain/StudentAudit.java`**
 
@@ -1106,9 +1106,9 @@ class StudentAudit {
 }
 ```
 
-Hai lớp được xem là cùng package khi khai báo **chính xác cùng tên package**; `vn.edu.school.domain` và `vn.edu.school.domain.audit` là hai package khác nhau. Tên package có quan hệ tiền tố không tạo quan hệ truy cập đặc biệt.
+Two classes belong to the same package only when they declare **exactly the same package name**; `vn.edu.school.domain` and `vn.edu.school.domain.audit` are different packages. Sharing a package-name prefix grants no special access.
 
-### 2.3. Lớp con thuộc package khác: điểm khó của protected
+### 2.3. A subclass in another package: the subtlety of protected
 
 **`exchange/ExchangeStudent.java`**
 
@@ -1135,11 +1135,11 @@ public class ExchangeStudent extends Student {
 }
 ```
 
-Trong package `vn.edu.school.exchange`, lớp `ExchangeStudent` được dùng `addCredits()` vì kế thừa `Student`. Nhưng biến `other` có kiểu `Student`, nên câu lệnh `other.addCredits(1)` không hợp lệ dù đang viết bên trong lớp con. Đây là lý do không nên hiểu `protected` đơn giản là “lớp con có thể truy cập mọi đối tượng lớp cha”.
+In the `vn.edu.school.exchange` package, `ExchangeStudent` can use `addCredits()` because it inherits from `Student`. However, the variable `other` has type `Student`, so `other.addCredits(1)` is invalid even inside the subclass. This is why `protected` should not be interpreted as "a subclass can access every parent-class object."
 
-Lưu ý: ví dụ cộng thêm 1 tín chỉ ở dòng `this.addCredits(1)` chỉ nhằm minh họa cú pháp truy cập. Trong chương trình thật, mỗi lần cộng tín chỉ phải tuân theo quy trình nghiệp vụ rõ ràng.
+Note: adding 1 credit with `this.addCredits(1)` only illustrates access syntax. In a real application, every credit adjustment must follow a well-defined business process.
 
-### 2.4. Lớp thông thường ở package khác
+### 2.4. An ordinary class in another package
 
 **`presentation/StudentViewer.java`**
 
@@ -1159,13 +1159,13 @@ public class StudentViewer {
 }
 ```
 
-`StudentViewer` chỉ sử dụng được API `public` của `Student`. Những giới hạn này giúp giao diện không thể bỏ qua kiểm tra nghiệp vụ bằng cách thay đổi trực tiếp dữ liệu.
+`StudentViewer` can use only the `public` API of `Student`. These restrictions prevent the presentation layer from bypassing business validation by changing data directly.
 
-## 3. Phạm vi truy cập và tính đóng gói
+## 3. Access control and encapsulation
 
-**Đóng gói (*encapsulation*)** không chỉ là đổi tất cả field thành `private` rồi tạo getter/setter. Mục tiêu là bảo vệ trạng thái hợp lệ của đối tượng, đồng thời chỉ cung cấp thao tác thực sự cần thiết.
+**Encapsulation** means more than making every field `private` and adding getters and setters. The goal is to protect an object's valid state while exposing only the operations that are actually needed.
 
-Một thiết kế dễ mắc lỗi:
+An error-prone design:
 
 ```java
 public class ExamResult {
@@ -1173,7 +1173,7 @@ public class ExamResult {
 }
 ```
 
-Thiết kế có kiểm soát:
+A controlled design:
 
 ```java
 public class ExamResult {
@@ -1196,15 +1196,15 @@ public class ExamResult {
 }
 ```
 
-`score` vẫn được đọc từ bên ngoài, nhưng việc sửa điểm bắt buộc đi qua `updateScore()`, nơi quy tắc từ 0 đến 100 luôn được áp dụng. Không nhất thiết tạo setter cho mọi field: với trạng thái không được sửa sau khởi tạo, có thể chỉ cần constructor và getter, kết hợp `private final`.
+`score` remains readable from outside the class, but modifying it must go through `updateScore()`, where the 0-to-100 rule is always enforced. You do not need a setter for every field: state that should remain unchanged after initialization may need only a constructor and getter together with `private final`.
 
-## 4. Một số quy tắc thường gặp
+## 4. Additional common rules
 
-**Phạm vi của lớp và phạm vi của thành viên là hai chuyện khác nhau.** Một lớp cấp cao nhất (*top-level class*) chỉ có thể khai báo `public` hoặc không ghi modifier (*package-private*), không khai báo `private` hay `protected`. Lớp lồng nhau (*nested class*) có thể dùng cả bốn mức. Dù phương thức là `public`, mã ngoài package cũng không sử dụng được nó thông qua một top-level class mà mã đó không thể truy cập.
+**Class accessibility and member accessibility are separate concerns.** A top-level class can be declared `public` or with no modifier (*package-private*), but not `private` or `protected`. A nested class may use any of the four levels. Even if a method is `public`, code outside the package cannot access it through a top-level class that is itself inaccessible.
 
-**Quy tắc áp dụng cho constructor.** Một constructor `private` thường dùng để kiểm soát cách tạo đối tượng (ví dụ static factory hoặc lớp tiện ích). Constructor `protected` có ích khi muốn hỗ trợ kế thừa. Nếu lớp không khai báo constructor nào, Java sinh constructor mặc định với mức truy cập tương ứng mức truy cập của lớp; đừng nhầm với việc tạo một constructor `public` thủ công.
+**Rules for constructors.** A `private` constructor is often used to control object creation (for example, with static factories or utility classes). A `protected` constructor can support inheritance. If a class declares no constructors, Java generates a default constructor with access corresponding to the class's accessibility; do not confuse this with explicitly writing a `public` constructor.
 
-**Ghi đè phương thức không được giảm quyền truy cập.** Nếu lớp cha khai báo phương thức `protected`, lớp con có thể ghi đè bằng `protected` hoặc `public`, nhưng không được đổi thành `private`.
+**Overriding cannot reduce method accessibility.** If a parent class declares a `protected` method, a subclass may override it as `protected` or `public`, but not as `private`.
 
 ```java
 class Parent {
@@ -1219,11 +1219,11 @@ class Child extends Parent {
 }
 ```
 
-**`private` không trở thành quyền truy cập của lớp con.** Lớp con không được trực tiếp sử dụng field hay method `private` của lớp cha; nếu cần hành vi đó, lớp cha nên cung cấp phương thức `protected` hoặc `public` phù hợp.
+**`private` does not grant access to subclasses.** A subclass cannot directly use its parent's `private` fields or methods; if that behavior is needed, the parent should expose an appropriate `protected` or `public` method.
 
-**Trong interface:** Các field khai báo trong interface mặc nhiên là `public static final`; các abstract method thông thường mặc nhiên là `public`. Interface cũng hỗ trợ `private` method để tái sử dụng logic nội bộ (từ Java 9), nhưng không dùng `protected` hay package-private để khai báo method của interface.
+**In interfaces:** Fields declared in an interface are implicitly `public static final`; ordinary abstract methods are implicitly `public`. Interfaces also support `private` methods for internal logic reuse (since Java 9), but do not allow `protected` or package-private interface methods.
 
-## 5. Chọn mức truy cập thế nào?
+## 5. How should you choose an access level?
 
 ```mermaid
 flowchart TD
@@ -1234,34 +1234,34 @@ flowchart TD
     C -->|Người dùng API ở mọi package| F[public]
 ```
 
-Hãy chọn **mức truy cập hẹp nhất đáp ứng đúng nhu cầu**. Ưu tiên `private` cho dữ liệu; chỉ mở `package-private`, `protected` hoặc `public` khi có lý do thiết kế rõ ràng. Tránh công khai field có thể sửa trực tiếp khi lớp phải duy trì ràng buộc nghiệp vụ.
+Choose **the narrowest access level that meets the requirement**. Prefer `private` for data; expose `package-private`, `protected`, or `public` access only when there is a clear design reason. Avoid exposing directly mutable fields when the class must maintain business constraints.
 
-## 6. Tự kiểm tra
+## 6. Check your understanding
 
-1. Lớp `A` có field `int count;`. Lớp `B` ở cùng package có đọc `count` được không? **Có**, vì field mặc định là package-private.
-2. Lớp `C extends A` nằm ở package khác có đọc `count` không? **Không**, vì package-private không mở cho lớp con ở package khác.
-3. Đổi `count` thành `protected`. Trong `C`, lệnh `this.count` có hợp lệ không? **Có**. Nhưng lệnh `new A().count` trong `C` vẫn **không hợp lệ** khi khác package.
-4. Field `private` có bị thay đổi qua phương thức `public` không? **Có thể**, nếu chính lớp cung cấp phương thức công khai thực hiện thay đổi đó. Quyền truy cập kiểm soát *nơi được truy cập trực tiếp*, không có nghĩa trạng thái vĩnh viễn bất biến.
+1. Class `A` has an `int count;` field. Can class `B` in the same package read `count`? **Yes**, because the field is package-private by default.
+2. Can `C extends A` in another package read `count`? **No**, because package-private access does not extend to subclasses in different packages.
+3. Change `count` to `protected`. Inside `C`, is `this.count` valid? **Yes**. But `new A().count` in `C` is still **invalid** across package boundaries.
+4. Can a `private` field be changed through a `public` method? **Possibly**, if the class itself provides a public method that makes the change. Access control governs *where direct access is allowed*; it does not mean that state is permanently immutable.
 
-**Ghi nhớ:** `private` bảo vệ chi tiết trong lớp; *package-private* chia sẻ trong package; `protected` hỗ trợ package và kế thừa có điều kiện; `public` tạo giao diện truy cập từ bên ngoài. Hãy thiết kế API theo trách nhiệm của lớp và các bất biến cần bảo vệ.
+**Remember:** `private` protects details within a class; *package-private* shares members within a package; `protected` supports package access and conditional subclass access; `public` exposes an interface to external code. Design APIs around the class's responsibilities and the invariants they must protect.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-005">Tham số, giá trị trả về và tác động của phương thức</a>
+## <a id="class-005">Method parameters, return values, and effects</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tham số, giá trị trả về và tác động của phương thức trong Java
+# Method parameters, return values, and effects in Java
 
-> **Ngữ cảnh:** OOP → Lớp (class). Phương thức mô tả hành vi của đối tượng. Khi gọi một phương thức, ta có thể truyền dữ liệu vào qua **tham số**, nhận **giá trị trả về** và quan sát các **tác động** lên trạng thái hoặc môi trường.
+> **Context:** OOP → Classes. Methods describe object behavior. When calling a method, we can supply data through **parameters**, receive a **return value**, and observe **effects** on state or the environment.
 
-## 1. Đọc cấu trúc một phương thức
+## 1. Reading a method's structure
 
 ```java
 public class Rectangle {
@@ -1279,27 +1279,27 @@ public class Rectangle {
 }
 ```
 
-Trong ví dụ:
+In this example:
 
-- `area` là **tên phương thức**, cho biết thao tác được yêu cầu.
-- `double width, double height` là **tham số hình thức** (parameters): tên và kiểu dữ liệu đầu vào được khai báo.
-- `3.5, 2.0` là **đối số** (arguments): giá trị thực tế được truyền khi gọi.
-- `double` trước `area` là **kiểu trả về**, còn `7.0` là **giá trị trả về** của lời gọi cụ thể.
-- `return width * height;` đưa kết quả về vị trí gọi và kết thúc lần chạy hiện tại của phương thức.
-- Phương thức `area` không sửa dữ liệu bên ngoài; việc `println` trong `main` mới có tác động in ra console.
+- `area` is the **method name**, indicating the requested operation.
+- `double width, double height` are the **formal parameters**: the declared names and types of the inputs.
+- `3.5, 2.0` are the **arguments**: the actual values passed at the call site.
+- `double` before `area` is the **return type**, while `7.0` is the **return value** of this particular call.
+- `return width * height;` sends the result back to the call site and ends the current method invocation.
+- The `area` method does not modify external data; the `println` call inside `main` produces the console-output effect.
 
-| Khái niệm | Câu hỏi cần trả lời | Ví dụ |
+| Concept | Question to answer | Example |
 |---|---|---|
-| Tham số | Phương thức cần dữ liệu gì? | `width`, `height` |
-| Đối số | Lúc gọi đã đưa giá trị nào vào? | `3.5`, `2.0` |
-| Giá trị trả về | Người gọi nhận lại kết quả nào? | `7.0` |
-| Tác động | Lời gọi đã làm thay đổi điều gì? | `area` không sửa trạng thái |
+| Parameter | What data does the method need? | `width`, `height` |
+| Argument | What values were supplied when calling? | `3.5`, `2.0` |
+| Return value | What result does the caller receive? | `7.0` |
+| Effect | What did the call change? | `area` does not modify state |
 
-**Giá trị trả về khác với tác động:** một phương thức có thể trả kết quả mà không sửa trạng thái, thay đổi trạng thái mà không trả kết quả, hoặc làm cả hai.
+**Return values differ from effects:** a method can return a result without changing state, change state without returning a result, or do both.
 
-## 2. Tham số: hợp đồng dữ liệu đầu vào
+## 2. Parameters: the input contract
 
-Một khai báo có hình thức:
+A declaration has this form:
 
 ```java
 [accessModifier] ReturnType methodName(Type1 param1, Type2 param2) {
@@ -1307,7 +1307,7 @@ Một khai báo có hình thức:
 }
 ```
 
-Các tham số nằm trong phạm vi phương thức; lời gọi phải cung cấp đối số tương thích về kiểu, số lượng và thứ tự (trừ một số trường hợp như varargs). Ví dụ:
+Parameters are in the method's scope; callers must supply arguments compatible in type, number, and order (except for cases such as varargs). For example:
 
 ```java
 public static String formatUser(String name, int age, boolean active) {
@@ -1323,11 +1323,11 @@ public static String formatUser(String name, int age, boolean active) {
 String label = formatUser("An", 20, true);
 ```
 
-Các lệnh kiểm tra đầu vào có ích vì thông tin hợp lệ là một phần của hợp đồng phương thức. Nếu một phương thức cần số tiền dương, kiểm tra điều kiện này trước khi sử dụng số tiền.
+Input validation matters because valid data is part of a method's contract. If a method requires a positive monetary amount, check that condition before using it.
 
-### Nạp chồng phương thức
+### Method overloading
 
-Java cho phép nhiều phương thức cùng tên nếu **danh sách tham số** khác nhau:
+Java allows multiple methods with the same name if their **parameter lists** differ:
 
 ```java
 static int multiply(int a, int b) {
@@ -1339,11 +1339,11 @@ static double multiply(double a, double b) {
 }
 ```
 
-Trình biên dịch xác định phiên bản được gọi dựa vào đối số và quy tắc chọn phương thức. Chỉ thay đổi **kiểu trả về** không tạo thành một overload hợp lệ.
+The compiler selects which version to call based on the arguments and method-resolution rules. Changing only the **return type** does not create a valid overload.
 
-### Tham số mặc định và varargs
+### Default parameters and varargs
 
-Java không có cú pháp tham số mặc định `method(int x = 10)`. Có thể dùng nạp chồng:
+Java has no default-parameter syntax such as `method(int x = 10)`. You can use overloading instead:
 
 ```java
 static String greeting(String name) {
@@ -1355,7 +1355,7 @@ static String greeting(String name, String prefix) {
 }
 ```
 
-Nếu số lượng đối số thay đổi, dùng varargs:
+For a variable number of arguments, use varargs:
 
 ```java
 static int sum(int... numbers) {
@@ -1370,19 +1370,19 @@ int x = sum();         // 0
 int y = sum(2, 4, 6);  // 12
 ```
 
-`int... numbers` được xử lý như một mảng bên trong phương thức. Tham số varargs phải đứng cuối danh sách tham số.
+`int... numbers` is treated as an array inside the method. A varargs parameter must be the last parameter in the list.
 
-## 3. Java luôn truyền tham số theo giá trị
+## 3. Java always passes arguments by value
 
-Trong Java, **mọi đối số đều được truyền theo giá trị (pass-by-value)**, kể cả khi đối số là một đối tượng. Điều được sao chép phụ thuộc kiểu dữ liệu:
+In Java, **all arguments are passed by value**, even when an argument is an object. What gets copied depends on the data type:
 
-| Tham số | Giá trị được sao chép | Hệ quả |
+| Parameter | Value copied | Consequence |
 |---|---|---|
-| `int`, `long`, `double`, `boolean`... | Dữ liệu nguyên thủy | Gán lại tham số không thay đổi biến gốc |
-| `StringBuilder`, `List`, đối tượng lớp... | Giá trị tham chiếu tới đối tượng | Có thể sửa cùng một đối tượng mutable mà người gọi giữ |
-| Tham chiếu được gán sang đối tượng mới | Chỉ bản sao tham chiếu trong phương thức | Biến tham chiếu của người gọi không bị đổi sang đối tượng mới |
+| `int`, `long`, `double`, `boolean`... | Primitive value | Reassigning the parameter does not change the original variable |
+| `StringBuilder`, `List`, class instances... | Object reference value | The method can mutate the same mutable object held by the caller |
+| Reference reassigned to a new object | Only the method's copy of the reference | The caller's reference variable does not point to the new object |
 
-Ví dụ Java chạy độc lập:
+A standalone Java example:
 
 ```java
 public class ParameterDemo {
@@ -1412,9 +1412,9 @@ flowchart LR
     B -. "gán lại tham số" .-> N["StringBuilder mới: New"]
 ```
 
-Ban đầu biến `note` ở `main` và tham số `note` cùng tham chiếu tới một đối tượng. Lệnh `append` thay đổi đối tượng đó nên người gọi nhìn thấy thay đổi. Còn phép gán `note = new StringBuilder(...)` chỉ thay đổi tham số nội bộ.
+Initially, the `note` variable in `main` and the `note` parameter both refer to the same object. The `append` call modifies that object, so the caller sees the change. In contrast, `note = new StringBuilder(...)` only changes the local parameter.
 
-Với `String`, chuỗi là đối tượng **bất biến**:
+With `String`, strings are **immutable** objects:
 
 ```java
 static void rename(String name) {
@@ -1426,7 +1426,7 @@ rename(name);
 System.out.println(name); // Lan
 ```
 
-Nếu cần nhận chuỗi mới, phải trả về rồi gán:
+To obtain a new string, return it and assign the result:
 
 ```java
 static String normalize(String input) {
@@ -1436,11 +1436,11 @@ static String normalize(String input) {
 name = normalize(name); // LAN
 ```
 
-Điều cốt lõi: Java **không truyền biến tham chiếu theo tham chiếu**. Nó truyền **bản sao của giá trị tham chiếu**.
+The key point: Java **does not pass reference variables by reference**. It passes **copies of reference values**.
 
-## 4. Giá trị trả về và câu lệnh return
+## 4. Return values and the return statement
 
-Kiểu trả về nằm trước tên phương thức. Với phương thức có kiểu trả về khác `void`, mỗi đường đi kết thúc bình thường phải trả giá trị phù hợp.
+The return type appears before the method name. For methods with a return type other than `void`, every path that completes normally must return a compatible value.
 
 ```java
 static String grade(int score) {
@@ -1454,19 +1454,19 @@ static String grade(int score) {
 }
 ```
 
-Ở đây, `return` lập tức kết thúc phương thức. Nhánh `throw` kết thúc bất thường, chuyển điều khiển sang nơi xử lý ngoại lệ.
+Here, `return` ends the method immediately. The `throw` branch completes abruptly and transfers control to exception handling.
 
-| Kiểu trả về | Ý nghĩa | Ví dụ |
+| Return type | Meaning | Example |
 |---|---|---|
-| `int`, `long`, `double` | Giá trị số | `return total;` |
-| `boolean` | Kết quả đúng/sai hoặc thành công/thất bại | `return balance >= amount;` |
-| `String` hoặc đối tượng | Dữ liệu kết quả | `return user;` |
-| `Optional<T>` | Có hoặc không có kết quả, với API lựa chọn cách biểu đạt này | `Optional<User>` |
-| `void` | Không trả giá trị | `return;` (thoát sớm) |
+| `int`, `long`, `double` | Numeric value | `return total;` |
+| `boolean` | True/false or success/failure result | `return balance >= amount;` |
+| `String` or object | Result data | `return user;` |
+| `Optional<T>` | Presence or absence of a result, when the API chooses this representation | `Optional<User>` |
+| `void` | No return value | `return;` (early exit) |
 
-`void` không đồng nghĩa với “không có tác động”. Phương thức `void` có thể cập nhật trạng thái, in thông tin hoặc lưu dữ liệu.
+`void` does not mean "no effects." A `void` method can update state, print information, or store data.
 
-### Trả về đối tượng có thể làm lộ trạng thái nội bộ
+### Returning objects can expose internal state
 
 ```java
 List<String> getNames() {
@@ -1474,7 +1474,7 @@ List<String> getNames() {
 }
 ```
 
-Giả sử `names` là `ArrayList`, lời gọi `getNames().clear()` sẽ xóa nội dung danh sách mà lớp sở hữu. Một lựa chọn an toàn hơn cho danh sách chuỗi là:
+If `names` is an `ArrayList`, calling `getNames().clear()` will erase the contents of the list owned by the class. A safer option for a list of strings is:
 
 ```java
 List<String> getNames() {
@@ -1482,28 +1482,28 @@ List<String> getNames() {
 }
 ```
 
-`List.copyOf` (Java 10+) tạo danh sách không thể sửa. Đây là bản sao **nông**: nếu các phần tử là đối tượng mutable, chúng vẫn có thể bị thay đổi thông qua tham chiếu khác. Vì vậy cần xét cả kiểu phần tử.
+`List.copyOf` (Java 10+) creates an unmodifiable list. This is a **shallow** copy: if its elements are mutable objects, they can still be changed through other references. The element types therefore matter too.
 
-## 5. Tác động của phương thức là gì?
+## 5. What are method effects?
 
-**Tác dụng phụ (side effect)** là thay đổi có thể quan sát được ngoài giá trị trả về: thay đổi trường của đối tượng, sửa collection đầu vào, ghi tệp, in ra console, cập nhật cơ sở dữ liệu, gửi yêu cầu mạng...
+A **side effect** is an observable change other than the return value: modifying an object's field, changing an input collection, writing a file, printing to the console, updating a database, sending a network request, and so on.
 
-| Thao tác | Có thể thay đổi gì? | Ghi chú |
+| Operation | What can change? | Note |
 |---|---|---|
-| `square(4)` trả `16` | Không có trạng thái ngoài | Ví dụ hàm thuần |
-| `account.getBalance()` | Không sửa tài khoản | Kết quả phụ thuộc trạng thái hiện thời |
-| `account.deposit(50)` | Trường `balance` | Tác động lên chính đối tượng |
-| `items.add("Java")` | Nội dung danh sách | Người giữ cùng danh sách nhìn thấy thay đổi |
-| `System.out.println(...)` | Console | I/O là tác dụng phụ |
-| `repository.save(entity)` | Dữ liệu lưu trữ | Có thể liên quan giao dịch hoặc lỗi I/O |
+| `square(4)` returns `16` | No external state | Example of a pure function |
+| `account.getBalance()` | Does not modify the account | Result depends on current state |
+| `account.deposit(50)` | The `balance` field | Affects the object itself |
+| `items.add("Java")` | List contents | Other holders of the list see the change |
+| `System.out.println(...)` | Console | I/O is a side effect |
+| `repository.save(entity)` | Stored data | May involve transactions or I/O failures |
 
-**Hàm thuần (pure function)** cho cùng kết quả khi có cùng đầu vào và không có side effect quan sát được. Một hàm đọc `balance` có thể không sửa gì nhưng vẫn phụ thuộc trạng thái đối tượng, vì thế chưa hẳn là hàm thuần theo nghĩa chặt.
+A **pure function** produces the same result for the same input and has no observable side effects. A function that reads `balance` may modify nothing but still depend on object state, so it is not necessarily pure in the strict sense.
 
-Ném ngoại lệ cũng làm thay đổi luồng điều khiển và là hành vi quan sát được. Khi thiết kế hợp đồng phương thức, cần nói rõ khả năng ném ngoại lệ bên cạnh giá trị trả về và các thay đổi trạng thái.
+Throwing an exception also changes control flow and is observable behavior. When designing a method contract, specify possible exceptions alongside return values and state changes.
 
-## 6. Ví dụ OOP thực tế: hợp đồng phương thức của bộ đếm tác vụ
+## 6. Practical OOP example: method contracts for a job counter
 
-Xét một bộ đếm số tác vụ đang chờ xử lý. Ví dụ này tách rõ **đầu vào**, **giá trị trả về** và **tác động lên trạng thái** ngay trong chữ ký và thân từng phương thức. Bộ đếm chỉ mô phỏng số lượng tác vụ, không thực thi công việc thật.
+Consider a counter for jobs waiting to be processed. This example distinguishes **inputs**, **return values**, and **effects on state** in each method's signature and body. The counter only simulates the number of jobs; it does not execute any real work.
 
 ~~~java
 public class MethodDemo {
@@ -1559,14 +1559,14 @@ public class MethodDemo {
 }
 ~~~
 
-Biên dịch và chạy sau khi lưu thành `MethodDemo.java`:
+After saving the code as `MethodDemo.java`, compile and run:
 
 ~~~bash
 javac MethodDemo.java
 java MethodDemo
 ~~~
 
-Kết quả:
+Output:
 
 ~~~text
 3
@@ -1578,11 +1578,11 @@ false
 0
 ~~~
 
-| Phương thức | Tham số | Giá trị trả về | Tác động hoặc lỗi |
+| Method | Parameters | Return value | Effect or error |
 | --- | --- | --- | --- |
-| `getPendingJobs()` | Không có | `int`: số việc chờ | Không sửa bộ đếm |
-| `addJobs(int count)` | Số tác vụ muốn thêm | `void` | Tăng số việc nếu `count > 0`; đối số sai gây `IllegalArgumentException`, tràn số gây `ArithmeticException` trước khi gán |
-| `completeOne()` | Không có | `boolean` | Trả `true` và giảm một tác vụ khi còn việc; trả `false` và giữ nguyên khi hết việc |
+| `getPendingJobs()` | None | `int`: number of pending jobs | Does not modify the counter |
+| `addJobs(int count)` | Number of jobs to add | `void` | Increases jobs if `count > 0`; an invalid argument throws `IllegalArgumentException`, and overflow throws `ArithmeticException` before assignment |
+| `completeOne()` | None | `boolean` | Returns `true` and removes one pending job when work remains; returns `false` and leaves state unchanged when there are no jobs |
 
 ~~~mermaid
 flowchart TD
@@ -1592,17 +1592,17 @@ flowchart TD
     D --> E["return true"]
 ~~~
 
-Giả sử ban đầu có một tác vụ: `addJobs(2)` làm bộ đếm từ 1 thành 3. `completeOne()` lần đầu trả `true` **và** giảm bộ đếm còn 2. Khi hết việc, phương thức trả `false` và không giảm dưới 0. `addJobs(-1)` thất bại **trước khi thay đổi** bộ đếm.
+Suppose there is initially one job: `addJobs(2)` raises the counter from 1 to 3. The first `completeOne()` returns `true` **and** reduces the counter to 2. When no jobs remain, the method returns `false` without reducing the count below 0. `addJobs(-1)` fails **before changing** the counter.
 
-`Math.addExact` giúp phát hiện tràn `int`, nhưng không biến phép kiểm tra–cập nhật thành thao tác an toàn giữa nhiều luồng. Ví dụ này giả định một luồng; chương trình thực tế cần thiết kế đồng bộ phù hợp nếu nhiều nơi cập nhật cùng một bộ đếm.
+`Math.addExact` detects `int` overflow, but does not make the check-and-update operation thread-safe. This example assumes one thread; a real application needs suitable synchronization if several threads update the same counter.
 
-Ở đây, trả về `true` hay `false` chỉ báo **kết quả của thao tác**, còn giảm `pendingJobs` là **tác động lên đối tượng**. Đọc chữ ký thôi chưa đủ để biết cả hai; cần xác định hợp đồng và điều kiện lỗi của phương thức.
+Here, returning `true` or `false` reports **the result of the operation**, while decrementing `pendingJobs` is **an effect on the object**. The signature alone does not reveal both; you need to understand the method's contract and error conditions.
 
-## 7. Trả đối tượng mới hay sửa đối tượng đầu vào?
+## 7. Return a new object or modify an input object?
 
-Hai phiên bản sau có ý nghĩa API khác nhau. Các ví dụ cần `import java.util.*;`.
+The following two versions have different API semantics. The examples require `import java.util.*;`.
 
-**Phiên bản A — trả danh sách mới:**
+**Version A — return a new list:**
 
 ```java
 static List<String> withAddedTag(List<String> original, String tag) {
@@ -1617,7 +1617,7 @@ List<String> newTags = withAddedTag(oldTags, "Java");
 // newTags = [OOP, Java]
 ```
 
-**Phiên bản B — sửa ngay danh sách nhận được:**
+**Version B — modify the supplied list directly:**
 
 ```java
 static void addTag(List<String> tags, String tag) {
@@ -1629,39 +1629,39 @@ addTag(tags, "Java");
 // tags = [OOP, Java]
 ```
 
-Cách A dễ dự đoán khi người gọi cần giữ nguyên đầu vào. Cách B thuận tiện khi thao tác chủ ý cập nhật danh sách. Không gọi `addTag` với `List.of(...)`, vì danh sách này không thể sửa; `add` sẽ ném `UnsupportedOperationException`.
+Approach A is easier to reason about when callers need to preserve their inputs. Approach B is convenient when the operation intentionally updates a list. Do not call `addTag` with `List.of(...)` because that list is unmodifiable; `add` would throw `UnsupportedOperationException`.
 
-Lưu ý: ở cách B, Java vẫn truyền một **bản sao tham chiếu** vào `addTag`. Hiệu ứng đến từ việc hai bên cùng nhìn thấy một đối tượng `ArrayList`, chứ không phải từ truyền biến theo tham chiếu.
+Note that in approach B, Java still passes **a copy of the reference** into `addTag`. The effect occurs because both sides see the same `ArrayList` object, not because the variable is passed by reference.
 
-## 8. Thiết kế phương thức có hợp đồng rõ ràng
+## 8. Designing methods with clear contracts
 
-Trước khi viết một phương thức, nên xác định bốn điều:
+Before writing a method, define four things:
 
-1. **Đầu vào:** cần những tham số nào, điều kiện hợp lệ là gì?
-2. **Đầu ra:** trả kiểu nào, có thể vắng mặt hoặc thất bại không?
-3. **Tác động:** sẽ sửa những trường nào, đối số nào, tài nguyên bên ngoài nào?
-4. **Lỗi:** ném ngoại lệ khi nào và trạng thái có được giữ nhất quán không?
+1. **Inputs:** which parameters are needed, and what makes them valid?
+2. **Output:** which type is returned, and can the result be absent or the operation fail?
+3. **Effects:** which fields, arguments, or external resources will be modified?
+4. **Errors:** when are exceptions thrown, and does the state remain consistent?
 
-| Mục đích | Chữ ký gợi ý | Hợp đồng |
+| Purpose | Suggested signature | Contract |
 |---|---|---|
-| Tính toán | `double calculateTotal(int quantity, double price)` | Trả kết quả |
-| Hỏi trạng thái | `boolean isEmpty()` | Chỉ truy vấn |
-| Thay đổi trạng thái | `void clear()` | Làm rỗng nội dung của đối tượng |
-| Thay đổi có kết quả | `boolean remove(String key)` | Báo phần tử có được xóa không |
-| Tìm kiếm có thể không thấy | `Optional<User> findUser(String id)` | Diễn đạt khả năng vắng mặt |
+| Calculation | `double calculateTotal(int quantity, double price)` | Returns a result |
+| State query | `boolean isEmpty()` | Only queries state |
+| State change | `void clear()` | Empties the object's contents |
+| Change with a result | `boolean remove(String key)` | Reports whether an element was removed |
+| Search that may find nothing | `Optional<User> findUser(String id)` | Expresses the possibility of no result |
 
-Một số quy tắc thực hành:
+Some practical guidelines:
 
-- **Tên phản ánh hành vi:** `calculate...`, `find...`, `get...` thường dùng cho truy vấn; `add...`, `update...`, `delete...` thường báo hiệu thay đổi. Đây là quy ước chứ không thay thế hợp đồng thực tế.
-- **Kiểm tra bất biến trước khi cập nhật:** chẳng hạn số dư phải không âm. Cố gắng tránh cập nhật dở dang rồi mới phát hiện đầu vào không hợp lệ.
-- **Không sửa ngầm dữ liệu của người gọi:** khi API cần sửa collection, hãy thể hiện trong tên, tài liệu và kiểm thử. Khi muốn độc lập, cân nhắc trả bản sao.
-- **Không phơi bày trường mutable nội bộ:** giữ các trường `private`, chỉ cung cấp cách truy cập phù hợp.
-- **Không lạm dụng `void` khi có kết quả cần báo:** phương thức rút tiền nên thể hiện rõ thành công, thất bại hoặc lỗi.
-- **Giảm số tham số không liên quan:** có thể đưa nhóm thông tin thành lớp hoặc record có ý nghĩa. Thay `process(x, true)` bằng API giúp người đọc hiểu `true` tượng trưng cho gì.
+- **Names reflect behavior:** `calculate...`, `find...`, and `get...` commonly signal queries; `add...`, `update...`, and `delete...` commonly signal changes. These are conventions, not substitutes for actual contracts.
+- **Check invariants before updating:** for example, a balance must remain nonnegative. Avoid making partial updates before discovering invalid inputs.
+- **Avoid silently modifying caller data:** when an API must modify a collection, make that clear in its name, documentation, and tests. Consider returning a copy when independence is required.
+- **Do not expose internal mutable fields:** keep fields `private` and provide suitable access methods.
+- **Do not overuse `void` when a result should be reported:** a withdrawal method should clearly indicate success, failure, or an error.
+- **Reduce unrelated parameters:** group related information into a meaningful class or record. Replace `process(x, true)` with an API that makes the meaning of `true` clear.
 
-Với hệ thống lớn, đôi khi nên tách **command** (thực hiện thay đổi) và **query** (chỉ trả dữ liệu). Đây là hướng thiết kế hữu ích, không phải luật cứng cho mọi lớp Java.
+In larger systems, it can be helpful to separate **commands** (which perform changes) from **queries** (which only return data). This is a useful design direction, not a rigid rule for every Java class.
 
-## 9. Những lỗi dễ gặp
+## 9. Common mistakes
 
 ```java
 // Sai kỳ vọng 1: tưởng n thay đổi ở bên ngoài.
@@ -1680,62 +1680,62 @@ original.trim(); // original vẫn là " java "
 String cleaned = original.trim(); // "java"
 ```
 
-Ngoài ra:
+Also remember:
 
-- `System.out.println(total)` chỉ in dữ liệu, còn `return total;` chuyển dữ liệu về vị trí lời gọi; hai thao tác có thể cùng tồn tại nhưng không thay thế nhau.
-- Nếu `return` xảy ra trước một lệnh, lệnh đó không được thực thi trên nhánh tương ứng.
-- Dùng `==` với hai tham chiếu đối tượng thường kiểm tra chúng có cùng trỏ tới một đối tượng không; nếu muốn so sánh nội dung `String`, thường dùng `equals`.
-- Đừng giả định một phương thức `get...` luôn là hàm thuần: nó có thể phụ thuộc trạng thái đang thay đổi, hoặc có tác động phụ nếu thiết kế kém.
+- `System.out.println(total)` only prints data, whereas `return total;` sends data back to the call site; both can occur, but neither replaces the other.
+- If `return` executes before a statement, that statement will not execute along the corresponding path.
+- Using `==` on two object references generally checks whether they point to the same object; to compare `String` contents, you would typically use `equals`.
+- Do not assume that a `get...` method is always pure: it may depend on changing state or produce side effects if poorly designed.
 
-## 10. Bài tập tự kiểm tra
+## 10. Self-check exercises
 
-1. Viết `TemperatureConverter.toFahrenheit(double celsius)`: cho biết tham số, kiểu trả về, kết quả với `0`, và liệu phương thức có làm thay đổi trạng thái không.
-2. Viết lớp `Counter` có trường `private int count`, hai phương thức `increment()` và `getCount()`. Giải thích đâu là hành vi cập nhật, đâu là truy vấn.
-3. Dự đoán kết quả khi truyền `int`, `StringBuilder`, `ArrayList<String>` vào một phương thức, rồi phân biệt lệnh **gán lại tham số** với lệnh **sửa đối tượng**.
-4. Cho lớp quản lý danh sách `tasks`, giải thích vì sao `return tasks;` có thể phá vỡ đóng gói và đề xuất phiên bản `getTasks()` an toàn hơn.
+1. Write `TemperatureConverter.toFahrenheit(double celsius)`: identify its parameter and return type, the result for `0`, and whether it changes any state.
+2. Write a `Counter` class with a `private int count` field and two methods, `increment()` and `getCount()`. Explain which updates state and which queries it.
+3. Predict the result of passing an `int`, `StringBuilder`, and `ArrayList<String>` into a method, then distinguish **reassigning a parameter** from **modifying an object**.
+4. Given a class that manages a `tasks` list, explain why `return tasks;` can break encapsulation and propose a safer `getTasks()` implementation.
 
-**Ghi nhớ:** **Tham số** mô tả dữ liệu đi vào; **return** đưa kết quả ra và kết thúc lời gọi; **tác động** mô tả những thay đổi có thể quan sát sau khi gọi. Muốn hiểu đúng một phương thức Java, luôn xét **cả giá trị nhận được lẫn trạng thái có thể bị thay đổi**.
+**Remember:** **Parameters** describe incoming data; **return** delivers a result and ends a call; **effects** describe observable changes after a call. To understand a Java method correctly, always consider **both its returned value and the state it may change**.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-006">Thành viên chỉ đọc và thành viên có thể thay đổi</a>
+## <a id="class-006">Read-only and mutable members</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thành viên chỉ đọc và thành viên có thể thay đổi trong lớp Java
+# Read-only and mutable members in Java classes
 
-Khi thiết kế một lớp (class), không phải dữ liệu nào của đối tượng cũng được phép sửa sau khi khởi tạo. Mã định danh sản phẩm thường cần giữ nguyên, còn tên hiển thị hoặc giá bán có thể thay đổi theo quy tắc nghiệp vụ. Java cho phép thiết kế hai nhóm thuộc tính này bằng cách kết hợp **đóng gói (encapsulation)**, từ khóa `final`, phương thức đọc (getter) và phương thức cập nhật (setter hoặc phương thức nghiệp vụ).
+When designing a class, not all object data should be modifiable after initialization. A product's identifier usually needs to remain unchanged, while its display name or selling price may change according to business rules. Java supports both categories of attributes through **encapsulation**, the `final` keyword, read methods (getters), and update methods (setters or domain-specific methods).
 
-> **Ý chính:** “Chỉ đọc” có thể có nghĩa là *người dùng lớp chỉ được xem*, hoặc *giá trị không được gán lại sau khi khởi tạo*. Hai ý này liên quan nhưng không đồng nhất. Cần xác định rõ ta muốn bảo vệ **tham chiếu**, **trạng thái đối tượng** hay **quyền cập nhật từ bên ngoài**.
+> **Key idea:** "Read-only" may mean *callers can only view a value* or *the value cannot be reassigned after initialization*. These ideas are related but not identical. Be clear about whether you are protecting **a reference**, **an object's state**, or **the right to update it externally**.
 
-## 1. Phân biệt các kiểu thành viên
+## 1. Distinguishing member types
 
-Trong Java, “thành viên của lớp” bao gồm trường dữ liệu (field), phương thức (method), lớp lồng nhau… Khi nói về thành viên “chỉ đọc/có thể thay đổi”, ta thường đang bàn về **thuộc tính/trạng thái** và API truy cập chúng.
+In Java, "class members" include fields, methods, nested classes, and more. When discussing "read-only/mutable" members, we usually mean **attributes/state** and the APIs that expose them.
 
-| Cách khai báo hoặc cung cấp API | Bên ngoài đọc? | Bên ngoài sửa trực tiếp? | Bên trong lớp có thể thay đổi? |
+| Declaration or exposed API | Readable externally? | Directly modifiable externally? | Changeable inside the class? |
 | --- | --- | --- | --- |
-| `private final String id` + `getId()` | Có | Không | Không thể gán lại `id` sau khi khởi tạo |
-| `private String name` + `getName()`, `setName()` | Có | Qua setter | Có, theo kiểm tra của setter |
-| `private int stock` + `getStock()`, `reserve()` | Có | Chỉ qua hành vi `reserve()` | Có, theo quy tắc nghiệp vụ |
-| `public String name` | Có | Có, gán trực tiếp | Có, khó kiểm soát |
-| `private final List<String> tags` + `getTags()` | Có | Tùy cách trả về danh sách | Tham chiếu không gán lại, phần tử có thể vẫn bị sửa nếu danh sách mutable |
+| `private final String id` + `getId()` | Yes | No | Cannot reassign `id` after initialization |
+| `private String name` + `getName()`, `setName()` | Yes | Through the setter | Yes, subject to setter validation |
+| `private int stock` + `getStock()`, `reserve()` | Yes | Only through the `reserve()` operation | Yes, according to business rules |
+| `public String name` | Yes | Yes, by direct assignment | Yes, hard to control |
+| `private final List<String> tags` + `getTags()` | Yes | Depends on how the list is returned | The reference cannot be reassigned, but elements may still be changed if the list is mutable |
 
-**Đóng gói** thường bắt đầu từ khai báo field `private`, sau đó chỉ công khai những phương thức thật sự cần thiết. Getter và setter là lựa chọn thiết kế, không phải quy định rằng thuộc tính nào cũng cần cả hai.
+**Encapsulation** usually starts by declaring fields `private`, then exposing only the methods that are genuinely necessary. Getters and setters are design choices, not a rule requiring both for every attribute.
 
-## 2. Ví dụ thực tế: sản phẩm có thuộc tính chỉ đọc và thuộc tính được cập nhật
+## 2. Practical example: a product with read-only and updatable attributes
 
-Giả sử hệ thống quản lý sản phẩm yêu cầu:
+Suppose a product management system requires:
 
-- **SKU**: mã sản phẩm, không được đổi sau khi tạo.
-- **createdAt**: thời điểm tạo, không được đổi.
-- **name**: tên hiển thị, được sửa nhưng không được rỗng.
-- **price**: giá bán, được sửa nhưng không được âm.
+- **SKU**: product code, which must not change after creation.
+- **createdAt**: creation timestamp, which must not change.
+- **name**: display name, which may be edited but must not be blank.
+- **price**: selling price, which may be edited but must not be negative.
 
 `Product.java` (Java 11+):
 
@@ -1800,7 +1800,7 @@ public class Product {
 }
 ~~~
 
-Cách sử dụng:
+Usage:
 
 ~~~java
 import java.math.BigDecimal;
@@ -1827,11 +1827,11 @@ public class Main {
 }
 ~~~
 
-Điểm quan trọng là **quyền sửa thuộc tính là quyết định của lớp**. Người dùng `Product` có thể đọc `sku` nhưng không có đường cập nhật công khai; với `price`, người dùng chỉ thay đổi được thông qua kiểm tra giá hợp lệ. Cách này giúp các đối tượng không dễ rơi vào trạng thái sai nghiệp vụ.
+The key point is that **the class decides who may modify an attribute**. Callers of `Product` can read `sku` but have no public way to update it; they can change `price` only through a method that validates the new price. This design helps prevent objects from entering invalid business states.
 
-## 3. `final` bảo vệ điều gì?
+## 3. What does `final` protect?
 
-Một field `final` chỉ được **gán giá trị đúng một lần** trong quá trình khởi tạo: ngay tại chỗ khai báo, trong khối khởi tạo hoặc trong constructor phù hợp. Sau khi gán, không thể gán lại field đó.
+A `final` field may be **assigned exactly once** during initialization: at its declaration, in an initializer block, or in an appropriate constructor. After assignment, that field cannot be reassigned.
 
 ~~~java
 public class Customer {
@@ -1856,7 +1856,7 @@ public class Customer {
 }
 ~~~
 
-Tuy nhiên, **`final` trên biến tham chiếu không làm cho đối tượng được trỏ tới trở nên bất biến**:
+However, **`final` on a reference variable does not make the referenced object immutable**:
 
 ~~~java
 import java.util.ArrayList;
@@ -1875,7 +1875,7 @@ public class Basket {
 }
 ~~~
 
-Đoạn gọi sau có thể sửa dữ liệu nội bộ mà không thông qua `add`:
+The following code can modify internal data without going through `add`:
 
 ~~~java
 Basket basket = new Basket();
@@ -1883,11 +1883,11 @@ basket.add("Sách");
 basket.getItems().clear(); // Xóa dữ liệu nội bộ!
 ~~~
 
-`items` không thể trỏ sang danh sách khác vì `final`, nhưng danh sách hiện tại vẫn có thể thay đổi. Tương tự, getter không có setter **chưa đủ** để đảm bảo đối tượng là bất biến.
+`items` cannot point to another list because it is `final`, but the existing list can still change. Likewise, a getter without a setter is **not enough** to guarantee that an object is immutable.
 
-## 4. Tạo API chỉ đọc an toàn với collection
+## 4. Creating safe read-only APIs for collections
 
-Nếu trạng thái cần là danh sách chỉ đọc, có thể tạo **bản sao không thể chỉnh sửa** ngay khi khởi tạo:
+If the desired state is a read-only list, you can create an **unmodifiable copy** during initialization:
 
 ~~~java
 import java.util.List;
@@ -1914,7 +1914,7 @@ public class Course {
 }
 ~~~
 
-Kiểm chứng:
+Verification:
 
 ~~~java
 import java.util.ArrayList;
@@ -1931,22 +1931,22 @@ System.out.println(course.getTopics()); // [OOP, Exception]
 course.getTopics().add("Spring");
 ~~~
 
-`List.copyOf` (Java 10+) tạo danh sách không sửa được và không phụ thuộc vào các thay đổi tiếp theo trên danh sách đầu vào. Lưu ý: đây là **bất biến nông (shallow)**. Nếu các phần tử là đối tượng mutable, bản thân phần tử vẫn có thể bị sửa qua tham chiếu; ví dụ trên an toàn vì `String` là immutable. `List.copyOf` cũng không chấp nhận phần tử `null`.
+`List.copyOf` (Java 10+) creates an unmodifiable list that does not reflect later changes to the input list. Note that this provides **shallow immutability**. If its elements are mutable objects, those objects can still be modified through other references; the example above is safe because `String` is immutable. `List.copyOf` also disallows `null` elements.
 
-So sánh nhanh:
+Quick comparison:
 
-| Cách trả về | Đặc điểm |
+| Return approach | Characteristics |
 | --- | --- |
-| `return internalList;` | Người gọi có thể thay đổi trực tiếp nếu là List mutable |
-| `return Collections.unmodifiableList(internalList);` | Không sửa qua view được, nhưng vẫn nhìn thấy thay đổi do danh sách gốc tạo ra |
-| `return List.copyOf(internalList);` | Danh sách kết quả không sửa được; tạo snapshot logic của các phần tử |
-| `return new ArrayList<>(internalList);` | Người gọi sửa bản sao được nhưng không ảnh hưởng danh sách bên trong (nếu phần tử không bị chia sẻ trạng thái mutable) |
+| `return internalList;` | Callers can modify it directly if it is a mutable List |
+| `return Collections.unmodifiableList(internalList);` | Callers cannot modify it through the view, but the view still reflects changes to the underlying list |
+| `return List.copyOf(internalList);` | The returned list is unmodifiable; it creates a logical snapshot of the elements |
+| `return new ArrayList<>(internalList);` | Callers can modify the copy without affecting the internal list (provided elements do not share mutable state) |
 
-Nếu lớp **cần tiếp tục quản lý một danh sách mutable bên trong**, có thể trả về `List.copyOf(items)` từ getter để cung cấp snapshot chỉ đọc mỗi lần gọi, trong khi vẫn dùng phương thức nghiệp vụ để cập nhật nội bộ.
+If a class **must continue managing a mutable list internally**, its getter can return `List.copyOf(items)` to provide a read-only snapshot on each call, while domain methods perform internal updates.
 
-## 5. Chỉ đọc từ bên ngoài vẫn có thể thay đổi ở bên trong
+## 5. Read-only from outside, but mutable inside
 
-Đôi khi giá trị được phép thay đổi nhưng **không nên có setter công khai**. Ví dụ lượng tồn kho chỉ giảm khi đặt hàng hợp lệ; nếu tạo `setStock(int)`, người gọi có thể bỏ qua quy trình đặt hàng.
+Sometimes a value is allowed to change but **should not have a public setter**. For example, inventory should decrease only for a valid order; exposing `setStock(int)` would let callers bypass the ordering process.
 
 ~~~java
 public class Inventory {
@@ -1987,9 +1987,9 @@ System.out.println(inventory.getAvailable()); // 7
 // inventory.setAvailable(999); // Không có API này
 ~~~
 
-Ở đây `available` **không phải field final**, vì số lượng thay đổi sau mỗi giao dịch. Nhưng đối với mã nguồn gọi từ bên ngoài, đây vẫn là thuộc tính **chỉ có quyền đọc trực tiếp qua getter**; mọi thay đổi phải đi qua `reserve` hoặc `restock`.
+Here, `available` is **not a final field** because its value changes after transactions. But external callers still have **read-only access through the getter**; every change must go through `reserve` or `restock`.
 
-Luồng trách nhiệm có thể hình dung như sau:
+The flow of responsibility can be visualized as follows:
 
 ~~~mermaid
 flowchart TD
@@ -2000,19 +2000,19 @@ flowchart TD
     D -->|Không| F["Ném ngoại lệ"]
 ~~~
 
-**Lưu ý về đồng thời:** ví dụ `Inventory` trên phù hợp để minh họa đóng gói trong môi trường đơn luồng. Nếu nhiều luồng hoặc nhiều request cùng đặt hàng, kiểm tra và trừ tồn kho phải được bảo vệ bằng cơ chế đồng bộ/giao dịch/locking thích hợp; `private`, getter hay `final` tự chúng không ngăn được race condition.
+**Concurrency note:** The `Inventory` example illustrates encapsulation in a single-threaded environment. If multiple threads or requests place orders concurrently, stock validation and decrementing must be protected by appropriate synchronization, transactions, or locking; `private`, getters, and `final` do not prevent race conditions on their own.
 
-## 6. Thuộc tính chỉ đọc, hằng số và immutable object có giống nhau không?
+## 6. Are read-only attributes, constants, and immutable objects the same?
 
-| Khái niệm | Ý nghĩa chính | Ví dụ |
+| Concept | Main meaning | Example |
 | --- | --- | --- |
-| Read-only API | Bên ngoài chỉ quan sát trạng thái, không được gán tùy ý | `getAvailable()` mà không có `setAvailable()` |
-| Final field | Không gán lại field sau khi khởi tạo | `private final String sku` |
-| Constant | Hằng số thường dùng chung trên lớp, phổ biến với `static final` | `public static final int MAX_ITEMS = 100;` |
-| Immutable object | Toàn bộ trạng thái quan sát được không thay đổi sau khi tạo | `String`, `BigDecimal`, lớp value object thiết kế đúng |
-| Mutable object | Một phần trạng thái có thể thay đổi theo thời gian | `Product` với `setPrice()` |
+| Read-only API | External code can observe state but cannot assign arbitrary values | `getAvailable()` without `setAvailable()` |
+| Final field | A field cannot be reassigned after initialization | `private final String sku` |
+| Constant | A value often shared across the class, commonly using `static final` | `public static final int MAX_ITEMS = 100;` |
+| Immutable object | All observable state remains unchanged after creation | `String`, `BigDecimal`, a properly designed value object class |
+| Mutable object | Some state can change over time | `Product` with `setPrice()` |
 
-Ví dụ hằng số:
+Constant example:
 
 ~~~java
 public final class CartRules {
@@ -2026,9 +2026,9 @@ public final class CartRules {
 // Dùng: CartRules.MAX_ITEMS
 ~~~
 
-Một `static final` tham chiếu tới đối tượng mutable vẫn **không tự biến đối tượng đó thành immutable**. Hằng số đối với kiểu nguyên thủy hoặc `String` là những trường hợp trực quan và an toàn hơn.
+A `static final` reference to a mutable object still **does not automatically make that object immutable**. Constants of primitive types or `String` are more straightforward and safer examples.
 
-Java 16+ còn có **record**, giúp biểu diễn dữ liệu chỉ đọc đơn giản:
+Java 16+ also provides **records**, which simplify representing read-only data:
 
 ~~~java
 import java.math.BigDecimal;
@@ -2056,67 +2056,67 @@ System.out.println(summary.price());
 // summary.setPrice(...); // Record không tự tạo setter
 ~~~
 
-Với `String` và `BigDecimal` đều bất biến, `ProductSummary` là value object bất biến theo các thành phần này. **Record chỉ bảo đảm bất biến nông**: nếu thành phần là `List` hoặc một đối tượng mutable thì cần defensive copy, kiểm soát getter/accessor hoặc thiết kế thành phần bất biến phù hợp.
+Because `String` and `BigDecimal` are both immutable, `ProductSummary` is an immutable value object with these components. **Records provide only shallow immutability**: if a component is a `List` or another mutable object, defensive copying, controlled accessors, or suitably immutable component design is needed.
 
-## 7. Chọn cách thiết kế theo nghiệp vụ
+## 7. Choosing a design based on business requirements
 
-Trước khi khai báo field, hãy xác định **ai được phép thay đổi**, **thời điểm thay đổi** và **điều kiện hợp lệ**:
+Before declaring a field, identify **who may change it**, **when it may change**, and **which values are valid**:
 
-| Thuộc tính | Thiết kế thường phù hợp | Lý do |
+| Attribute | Commonly suitable design | Reason |
 | --- | --- | --- |
-| Mã hóa đơn, mã sản phẩm | `private final` + getter | Danh tính ổn định sau khởi tạo |
-| Tên hiển thị | `private` + getter + setter kiểm tra đầu vào | Được phép sửa nhưng phải hợp lệ |
-| Số dư tài khoản | `private` + getter + `deposit()/withdraw()` | Tránh setter tùy ý làm mất quy tắc |
-| Ngày tạo | `private final Instant` + getter | Là mốc lịch sử không cần sửa |
-| Danh sách vai trò | Bản sao không sửa được hoặc API cập nhật có kiểm soát | Tránh người gọi can thiệp trực tiếp |
-| Tổng tiền tính từ chi tiết | Getter tính toán, không lưu field nếu không cần | Tránh dữ liệu dẫn xuất bị lệch |
+| Invoice or product code | `private final` + getter | Identity remains stable after initialization |
+| Display name | `private` + getter + validated setter | Updates are allowed but must be valid |
+| Account balance | `private` + getter + `deposit()/withdraw()` | Avoids arbitrary setters that bypass rules |
+| Creation date | `private final Instant` + getter | A historical timestamp that need not change |
+| List of roles | Unmodifiable copy or controlled update API | Prevents direct caller interference |
+| Total calculated from line items | Calculated getter; omit the field if unnecessary | Prevents derived data from going out of sync |
 
-**Những lỗi hay gặp khi mới học:**
+**Common beginner mistakes:**
 
-1. Mặc định sinh setter cho mọi field, kể cả mã định danh hoặc trạng thái nghiệp vụ quan trọng.
-2. Cho rằng `private` đồng nghĩa với immutable. Thực tế `private` chỉ giới hạn quyền truy cập trực tiếp.
-3. Cho rằng `final List<T>` khiến toàn bộ list và phần tử không thể sửa.
-4. Trả về array, collection hoặc `Date` mutable nội bộ mà không tạo bản sao khi cần.
-5. Chỉ kiểm tra giá trị trong constructor nhưng để setter ghi giá trị không hợp lệ.
-6. Dùng getter/setter cho thao tác mang ý nghĩa nghiệp vụ rõ ràng, thay vì đặt tên `reserve`, `cancel`, `activate`…
+1. Automatically generating setters for every field, including identifiers or important business state.
+2. Assuming `private` means immutable. In fact, `private` only restricts direct access.
+3. Assuming `final List<T>` makes the entire list and its elements unmodifiable.
+4. Returning internal arrays, collections, or mutable `Date` objects without copying them when necessary.
+5. Validating values only in the constructor while allowing setters to assign invalid values.
+6. Using generic getters/setters for operations with clear business meaning, instead of names such as `reserve`, `cancel`, or `activate`.
 
-## 8. Tự kiểm tra
+## 8. Check your understanding
 
-**Câu 1.** Field `private final String id` có getter nhưng không có setter là chỉ đọc theo nghĩa nào?
+**Question 1.** In what sense is a `private final String id` field with a getter but no setter read-only?
 
-Field `id` không được gán lại sau lúc khởi tạo; bên ngoài chỉ có thể xem giá trị thông qua getter. `String` cũng immutable nên không phát sinh vấn đề sửa trạng thái nội bộ của chuỗi.
+The `id` field cannot be reassigned after initialization; external code can only view its value through the getter. `String` is also immutable, so there is no risk of modifying the string's internal state.
 
-**Câu 2.** Field `private int stock` có getter và `reserve(int)` nhưng không có setter có phải “chỉ đọc” không?
+**Question 2.** Is a `private int stock` field with a getter and `reserve(int)`, but no setter, "read-only"?
 
-Chỉ đọc **đối với API truy cập trực tiếp từ bên ngoài**; trạng thái thật vẫn mutable và được cập nhật thông qua `reserve`. Đây là cách thường được ưu tiên khi thao tác phải tuân thủ quy tắc nghiệp vụ.
+It is read-only **through the API exposed to external callers**; the actual state remains mutable and is updated through `reserve`. This is often preferred when operations must follow business rules.
 
-**Câu 3.** Vì sao getter trả về `List` có thể phá vỡ ý định chỉ đọc dù field là `final`?
+**Question 3.** Why can a getter returning a `List` undermine read-only behavior even when the field is `final`?
 
-Vì `final` khóa **việc gán lại tham chiếu**, không khóa **nội dung đối tượng**. Nếu getter lộ danh sách mutable, người gọi có thể sửa trực tiếp. Hãy dùng immutable collection, defensive copy hoặc API truy cập được kiểm soát.
+Because `final` prevents **reassigning the reference**, not **modifying the object's contents**. If the getter exposes a mutable list, callers can change it directly. Use an immutable collection, a defensive copy, or a controlled access API.
 
-**Câu 4.** Khi nào nên chọn một object bất biến hoàn toàn?
+**Question 4.** When should you choose a fully immutable object?
 
-Khi dữ liệu mô tả một giá trị/snapshot cần ổn định (ví dụ thông tin tổng hợp dùng để truyền dữ liệu), ít có nhu cầu cập nhật từng field và có thể tạo object mới khi giá trị thay đổi. Với đối tượng có vòng đời và chuyển trạng thái nghiệp vụ, có thể chọn mutable có kiểm soát.
+When data represents a value or snapshot that should stay stable (for example, summary information transferred between components), individual fields rarely need updating, and a new object can be created when values change. For objects with lifecycles and business state transitions, controlled mutability may be more appropriate.
 
-**Ghi nhớ:** Quyền đọc/ghi nên xuất phát từ quy tắc của đối tượng. `final` giúp cố định một phép gán; `private` và getter/setter giúp kiểm soát API; defensive copy giúp bảo vệ dữ liệu tham chiếu; immutable object giúp trạng thái không đổi. Kết hợp đúng các công cụ đó mới tạo nên một lớp dễ sử dụng và khó bị cập nhật sai.
+**Remember:** Read/write permissions should follow an object's rules. `final` prevents reassignment; `private` and getters/setters help control the API; defensive copies protect referenced data; immutable objects keep state unchanged. Combining these tools appropriately creates a class that is easy to use and hard to update incorrectly.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-007">Tham chiếu đến đối tượng hiện tại</a>
+## <a id="class-007">References to the current object</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Tham chiếu đến đối tượng hiện tại trong Java: `this`
+# References to the current object in Java: `this`
 
-Trong Java, mỗi đối tượng có các trường lưu trạng thái và các phương thức thao tác trên trạng thái đó. Khi một **phương thức thể hiện** (*instance method*) hoặc **constructor** đang chạy, từ khóa `this` cho phép mã nguồn tham chiếu đến **chính đối tượng hiện tại**.
+In Java, each object has fields that store state and methods that operate on it. While an **instance method** or **constructor** is running, the `this` keyword allows the code to refer to **the current object itself**.
 
-Ví dụ: nếu gọi `lan.completeLesson()` thì `this` trong phương thức `completeLesson()` chính là đối tượng mà biến `lan` đang tham chiếu. Nếu gọi cùng phương thức trên `minh`, `this` lại là đối tượng do `minh` tham chiếu.
+For example, when you call `lan.completeLesson()`, `this` inside `completeLesson()` is the object referenced by the `lan` variable. When the same method is called on `minh`, `this` refers to the object referenced by `minh` instead.
 
 ```java
 MemberProfile lan = new MemberProfile("Lan");
@@ -2126,11 +2126,11 @@ lan.completeLesson();  // this trong lời gọi này là đối tượng Lan
 minh.completeLesson(); // this trong lời gọi này là đối tượng Minh
 ```
 
-**Điểm cốt lõi:** `this` không tạo ra đối tượng mới. Nó là cách mã bên trong một thể hiện nói đến chính thể hiện đó.
+**Key point:** `this` does not create a new object. It lets code inside an instance refer to that very instance.
 
-## 1. Dùng `this.field` để truy cập trường của đối tượng hiện tại
+## 1. Using `this.field` to access the current object's fields
 
-Xét lớp `MemberProfile`:
+Consider the `MemberProfile` class:
 
 ```java
 class MemberProfile {
@@ -2142,15 +2142,15 @@ class MemberProfile {
 }
 ```
 
-Trong constructor, tên tham số `username` trùng với tên trường:
+In the constructor, the `username` parameter has the same name as the field:
 
-- `this.username` là **trường thuộc đối tượng hiện tại**.
-- `username` ở vế phải là **tham số của constructor**.
-- `this.username = username;` lưu dữ liệu được truyền vào trong trạng thái của đối tượng.
+- `this.username` is **the current object's field**.
+- `username` on the right is **the constructor parameter**.
+- `this.username = username;` stores the supplied data in the object's state.
 
-Nếu viết `username = username;`, cả hai vế đều trỏ đến biến tham số. Trường `username` không được gán và sẽ giữ giá trị mặc định `null`. Đây là lỗi rất dễ bỏ sót vì câu lệnh vẫn có thể biên dịch.
+If you write `username = username;`, both sides refer to the parameter. The `username` field is left unassigned and retains its default value, `null`. This mistake is easy to miss because the statement can still compile.
 
-Quy tắc tương tự áp dụng khi biến cục bộ che khuất (*shadow*) một trường:
+The same rule applies when a local variable **shadows** a field:
 
 ```java
 class Counter {
@@ -2164,11 +2164,11 @@ class Counter {
 }
 ```
 
-Khi không có tên cục bộ hoặc tham số trùng với trường, có thể viết `count` thay cho `this.count` trong một phương thức thể hiện. Tuy nhiên, dùng `this.` có chủ đích giúp người đọc nhận ra đang thao tác trên trạng thái của đối tượng.
+When no local variable or parameter shares the field's name, you can write `count` instead of `this.count` inside an instance method. However, deliberately using `this.` helps readers recognize that the code operates on the object's state.
 
-## 2. Ví dụ thực tế: một đối tượng hồ sơ học viên tự cập nhật trạng thái
+## 2. Practical example: a learner profile updating its own state
 
-Đặt toàn bộ đoạn sau trong file **`Main.java`** và chạy với Java 11 trở lên (vì sử dụng `String.isBlank()`):
+Put all the following code in **`Main.java`** and run it with Java 11 or later (because it uses `String.isBlank()`):
 
 ```java
 class MemberProfile {
@@ -2260,14 +2260,14 @@ public class Main {
 }
 ```
 
-Lệnh biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac Main.java
 java Main
 ```
 
-Kết quả:
+Output:
 
 ```text
 Đà Nẵng
@@ -2279,23 +2279,23 @@ Báo cáo: Lan - Đà Nẵng - 2
 Chưa cập nhật
 ```
 
-**Phân tích các vai trò của `this` trong cùng một ví dụ:**
+**Examine the different roles of `this` in the same example:**
 
-| Mã nguồn | `this` đại diện hoặc thực hiện điều gì? |
+| Source code | What does `this` represent or do? |
 | --- | --- |
-| `this.username = username` | Phân biệt trường `username` với tham số cùng tên |
-| `this(username, "Chưa cập nhật")` | Gọi một constructor khác của **cùng lớp** |
-| `this.city = city` | Thay đổi trường `city` của đối tượng nhận lời gọi |
-| `this.completedLessons++` | Tăng số bài học của chính đối tượng này |
-| `return this` | Trả về tham chiếu tới chính đối tượng hiện tại để gọi tiếp phương thức |
-| `this == other` | Kiểm tra hai tham chiếu có cùng trỏ đến một đối tượng hay không |
-| `reporter.print(this)` | Truyền chính đối tượng hiện tại làm đối số cho một phương thức khác |
+| `this.username = username` | Distinguishes the `username` field from the parameter with the same name |
+| `this(username, "Chưa cập nhật")` | Calls another constructor of **the same class** |
+| `this.city = city` | Changes the receiving object's `city` field |
+| `this.completedLessons++` | Increments this object's completed-lesson count |
+| `return this` | Returns a reference to the current object so another method can be called |
+| `this == other` | Checks whether two references point to the same object |
+| `reporter.print(this)` | Passes the current object itself as an argument to another method |
 
-`sameReference = lan` **không** tạo hồ sơ mới, nên cả hai biến cùng thấy `completedLessons = 2`. Còn `new MemberProfile("Lan")` tạo một đối tượng khác dù tên học viên giống nhau. Vì vậy `lan.isSameInstance(anotherLan)` trả về `false`.
+`sameReference = lan` **does not** create a new profile, so both variables see `completedLessons = 2`. In contrast, `new MemberProfile("Lan")` creates a different object even though the learner's name is the same. Therefore, `lan.isSameInstance(anotherLan)` returns `false`.
 
-## 3. `this` phụ thuộc vào đối tượng đang nhận lời gọi
+## 3. `this` depends on the object receiving the call
 
-Sơ đồ sau biểu diễn mối quan hệ của các tham chiếu:
+The following diagram shows the relationships between references:
 
 ```mermaid
 flowchart LR
@@ -2304,27 +2304,27 @@ flowchart LR
     O["anotherLan"] --> B["MemberProfile #2<br/>Lan, Chưa cập nhật, 0 bài"]
 ```
 
-Trong lời gọi `lan.completeLesson()`, đối tượng #1 là đối tượng hiện tại. Nếu gọi `anotherLan.completeLesson()`, đối tượng #2 là đối tượng hiện tại. Cùng một phần mã phương thức có thể chạy với các giá trị `this` khác nhau.
+In the `lan.completeLesson()` call, object #1 is the current object. If you call `anotherLan.completeLesson()`, object #2 becomes the current object. The same method code can run with different values of `this`.
 
-Trong phương thức thể hiện, hai cách gọi sau thường tương đương:
+Within an instance method, the following two calls are usually equivalent:
 
 ```java
 completeLesson();
 this.completeLesson();
 ```
 
-Cả hai đều gọi phương thức `completeLesson()` trên đối tượng hiện tại. `this.` giúp nhấn mạnh đối tượng nhận lời gọi, nhưng không bắt buộc trong mọi trường hợp.
+Both invoke `completeLesson()` on the current object. `this.` emphasizes the receiving object but is not always required.
 
-Cần phân biệt:
+Distinguish these references:
 
-- `this`: đối tượng hiện tại.
-- `other` hoặc `member`: tham chiếu khác được truyền vào, có thể trỏ cùng đối tượng hoặc đối tượng khác.
-- `new MemberProfile(...)`: tạo một đối tượng mới.
-- `super`: dùng để truy cập thành phần của lớp cha hoặc gọi constructor lớp cha, không đồng nghĩa với `this`.
+- `this`: the current object.
+- `other` or `member`: another supplied reference that may point to the same object or a different one.
+- `new MemberProfile(...)`: creates a new object.
+- `super`: accesses parent-class members or invokes a parent-class constructor; it is not the same as `this`.
 
-## 4. `this(...)` dùng để gọi constructor khác trong cùng lớp
+## 4. Using `this(...)` to call another constructor in the same class
 
-Ngoài biểu thức `this.field` và `return this`, Java có cú pháp đặc biệt `this(...)`: **gọi một constructor khác trong cùng lớp** (*constructor chaining*).
+In addition to `this.field` and `return this`, Java provides the special `this(...)` syntax to **invoke another constructor in the same class** (*constructor chaining*).
 
 ```java
 class ReportConfig {
@@ -2349,7 +2349,7 @@ class ReportConfig {
 }
 ```
 
-Với Java 17/21, lời gọi `this(...)` phải là **câu lệnh đầu tiên** của constructor gọi nó. Không được viết lệnh khác trước `this(...)` trong constructor này:
+In Java 17/21, a `this(...)` call must be **the first statement** in the invoking constructor. You cannot place another statement before `this(...)` in that constructor:
 
 ```java
 // Ví dụ SAI trên Java 17/21:
@@ -2359,21 +2359,21 @@ ReportConfig() {
 }
 ```
 
-Các constructor không được gọi vòng lặp lẫn nhau. Một constructor cũng không thể đồng thời chứa cả lời gọi constructor `this(...)` và `super(...)` tường minh. Nếu không có lời gọi constructor tường minh, Java sẽ gọi `super()` ngầm định khi phù hợp.
+Constructors must not form circular invocation chains. A constructor also cannot contain both an explicit `this(...)` call and an explicit `super(...)` call. If no explicit constructor invocation is present, Java implicitly calls `super()` when applicable.
 
-| Cú pháp | Ý nghĩa |
+| Syntax | Meaning |
 | --- | --- |
-| `this.field` | Truy cập trường của đối tượng hiện tại |
-| `this.method()` | Gọi phương thức trên đối tượng hiện tại |
-| `this(...)` | Trong constructor: gọi constructor khác cùng lớp |
-| `super(...)` | Trong constructor: gọi constructor của lớp cha |
-| `super.method()` | Gọi cách cài đặt phương thức ở lớp cha khi phù hợp |
+| `this.field` | Accesses a field of the current object |
+| `this.method()` | Calls a method on the current object |
+| `this(...)` | In a constructor, invokes another constructor of the same class |
+| `super(...)` | In a constructor, invokes a parent-class constructor |
+| `super.method()` | Calls the parent-class method implementation when appropriate |
 
-**Lưu ý:** Điều kiện “đầu tiên” ở trên được nêu theo Java 17/21, là các phiên bản thông dụng để học Spring/Java. Những phiên bản Java mới hơn có thay đổi về cấu trúc constructor; khi dùng chúng cần đối chiếu chính xác phiên bản biên dịch.
+**Note:** The "first statement" restriction above applies to Java 17/21, common versions for learning Spring/Java. Newer Java versions introduce changes to constructor structure; when using them, consult the rules for the exact compiler version.
 
-## 5. Trả về `this` để viết lời gọi nối tiếp
+## 5. Returning `this` for method chaining
 
-Một phương thức có thể trả lại đối tượng đang nhận lời gọi:
+A method can return the object receiving the call:
 
 ```java
 MemberProfile moveTo(String city) {
@@ -2382,13 +2382,13 @@ MemberProfile moveTo(String city) {
 }
 ```
 
-Nhờ vậy:
+This allows:
 
 ```java
 lan.moveTo("Đà Nẵng").completeLesson().completeLesson();
 ```
 
-Tương đương với:
+This is equivalent to:
 
 ```java
 lan.moveTo("Đà Nẵng");
@@ -2396,13 +2396,13 @@ lan.completeLesson();
 lan.completeLesson();
 ```
 
-Đây là kỹ thuật *fluent API* / *method chaining*. **`return this` chỉ trả lại tham chiếu đến đối tượng hiện tại**, không sao chép đối tượng và không tạo bản bất biến mới. Trong ví dụ này, các lời gọi làm thay đổi trạng thái `lan`.
+This technique is called a *fluent API* or *method chaining*. **`return this` simply returns a reference to the current object**; it neither copies the object nor creates a new immutable version. In this example, the calls modify `lan`'s state.
 
-Không phải phương thức nào cũng nên trả về `this`. Phương thức truy vấn như `getCity()` nên trả dữ liệu cần đọc; phương thức cần báo lỗi hoặc kết quả giao dịch có thể trả một kiểu phù hợp hơn. Nếu thiết kế lớp bất biến (*immutable*), một thao tác thay đổi thường tạo và trả về **đối tượng mới** thay vì sửa đối tượng hiện tại.
+Not every method should return `this`. A query such as `getCity()` should return the requested data; a method that reports errors or transaction results may need a more suitable return type. In an **immutable** class, a change operation usually creates and returns **a new object** rather than modifying the current one.
 
-## 6. Truyền `this` sang một đối tượng khác
+## 6. Passing `this` to another object
 
-Trong ví dụ chính:
+In the main example:
 
 ```java
 void sendReport(Reporter reporter) {
@@ -2410,19 +2410,19 @@ void sendReport(Reporter reporter) {
 }
 ```
 
-Lời gọi `reporter.print(this)` truyền tham chiếu đến chính `MemberProfile` đang thực hiện `sendReport()`. Nhờ đó `Reporter` có thể đọc thông tin từ đối tượng nhận được.
+The `reporter.print(this)` call passes a reference to the `MemberProfile` object currently executing `sendReport()`. This lets `Reporter` read information from the supplied object.
 
-Một số tình huống tương tự:
+Similar use cases include:
 
-- Đăng ký một đối tượng làm listener: `eventBus.register(this)`.
-- Truyền một đối tượng cho bộ xử lý: `processor.process(this)`.
-- Gọi helper cần biết đối tượng hiện tại: `validator.validate(this)`.
+- Registering an object as a listener: `eventBus.register(this)`.
+- Passing an object to a processor: `processor.process(this)`.
+- Calling a helper that needs the current object: `validator.validate(this)`.
 
-**Cẩn thận khi truyền `this` ra ngoài ngay trong constructor.** Nếu một listener, luồng chạy khác hoặc thành phần bên ngoài sử dụng đối tượng trước khi constructor hoàn tất, nó có thể quan sát trạng thái chưa khởi tạo đầy đủ. Nên hoàn tất khởi tạo trước rồi mới đăng ký hoặc công bố đối tượng.
+**Be careful when exposing `this` from a constructor.** If a listener, another thread, or an external component uses the object before construction finishes, it may observe incompletely initialized state. Complete initialization before registering or publishing the object.
 
-## 7. Khi nào không được dùng `this`?
+## 7. When can `this` not be used?
 
-`this` gắn với một **thể hiện cụ thể**. Phương thức `static` thuộc cấp lớp và không có đối tượng nhận lời gọi ngầm định, nên không thể dùng `this` trong ngữ cảnh static:
+`this` belongs to a **specific instance**. A `static` method belongs to the class and has no implicit receiving object, so `this` cannot be used in a static context:
 
 ```java
 class MathHelper {
@@ -2433,7 +2433,7 @@ class MathHelper {
 }
 ```
 
-Tương tự, không thể dùng `this` trực tiếp trong khối khởi tạo `static` hoặc trình khởi tạo trường `static`. Phương thức static vẫn có thể thao tác với một đối tượng nếu đối tượng được **truyền tường minh** qua tham số:
+Likewise, `this` cannot be used directly in a `static` initializer block or a `static` field initializer. A static method can still work with an object when that object is **explicitly passed** as a parameter:
 
 ```java
 class ProfilePrinter {
@@ -2443,19 +2443,19 @@ class ProfilePrinter {
 }
 ```
 
-Bảng ghi nhớ:
+Reference table:
 
-| Ngữ cảnh | Dùng `this` được không? | Vì sao? |
+| Context | Can `this` be used? | Why? |
 | --- | --- | --- |
-| Phương thức instance | Có | Có đối tượng nhận lời gọi |
-| Constructor | Có, theo quy tắc khởi tạo | Đang xây dựng đối tượng hiện tại |
-| Khối khởi tạo instance | Có | Thuộc quá trình khởi tạo từng thể hiện |
-| Phương thức static | Không | Không có đối tượng hiện tại |
-| Khối hoặc trường khởi tạo static | Không | Thuộc lớp, không gắn với một thể hiện |
+| Instance method | Yes | There is a receiving object |
+| Constructor | Yes, subject to initialization rules | The current object is being constructed |
+| Instance initializer block | Yes | Part of initializing each instance |
+| Static method | No | There is no current object |
+| Static initializer block or field initializer | No | Belongs to the class, not an instance |
 
-## 8. Trường hợp nâng cao: `OuterClass.this` trong inner class
+## 8. Advanced case: `OuterClass.this` in an inner class
 
-Một **inner class không static** có đối tượng bao ngoài. Trong inner class, `this` tham chiếu đến **đối tượng inner class**, còn `OuterClass.this` tham chiếu đến đối tượng của lớp bao ngoài.
+A **non-static inner class** has an enclosing object. Inside the inner class, `this` refers to **the inner-class object**, while `OuterClass.this` refers to the enclosing class's object.
 
 ```java
 class Classroom {
@@ -2487,26 +2487,26 @@ public class InnerClassDemo {
 }
 ```
 
-Lưu đoạn ví dụ **riêng** vào `InnerClassDemo.java`, rồi chạy `javac InnerClassDemo.java` và `java InnerClassDemo`. Kết quả: `Mai thuộc lớp Java OOP`.
+Save this example **separately** as `InnerClassDemo.java`, then run `javac InnerClassDemo.java` and `java InnerClassDemo`. Output: `Mai thuộc lớp Java OOP`.
 
-Ở đây `this.name` là tên học viên, còn `Classroom.this.name` là tên lớp học. Đây là trường hợp cần ghi rõ đối tượng bên trong hay đối tượng bao ngoài mà mình muốn tham chiếu.
+Here, `this.name` is the student's name, while `Classroom.this.name` is the classroom's name. This is a case where you must distinguish whether you mean the inner object or its enclosing object.
 
-## 9. Lỗi hiểu sai thường gặp
+## 9. Common misconceptions
 
-| Nhầm lẫn | Cách hiểu đúng |
+| Misconception | Correct interpretation |
 | --- | --- |
-| `this` là một đối tượng mới | `this` tham chiếu đến đối tượng đã nhận lời gọi / đang được khởi tạo |
-| `this.username = username` và `username = username` luôn tương đương | Không khi tham số che khuất trường; câu sau chỉ tự gán tham số |
-| `this(...)` là gọi phương thức có tên `this` | Không; đó là lời gọi constructor khác trong cùng lớp |
-| `return this` tạo bản sao | Không; nó trả về cùng tham chiếu |
-| Gán `b = a` thì `b` có đối tượng riêng | Không; với kiểu tham chiếu, phép gán sao chép tham chiếu |
-| Có thể dùng `this` trong mọi hàm Java | Không; phương thức static không có `this` |
-| `this == other` so sánh nội dung hai đối tượng | Không; nó kiểm tra hai tham chiếu có trỏ cùng một đối tượng |
-| `OuterClass.this` và `this` luôn cùng đối tượng | Không; trong inner class, chúng có thể trỏ đến đối tượng khác nhau |
+| `this` is a new object | `this` refers to the object that received the call or is being initialized |
+| `this.username = username` and `username = username` are always equivalent | Not when a parameter shadows the field; the second statement assigns the parameter to itself |
+| `this(...)` calls a method named `this` | No; it invokes another constructor of the same class |
+| `return this` creates a copy | No; it returns the same reference |
+| Assigning `b = a` gives `b` its own object | No; for reference types, assignment copies the reference |
+| `this` can be used in every Java function | No; static methods have no `this` |
+| `this == other` compares object contents | No; it checks whether the references point to the same object |
+| `OuterClass.this` and `this` always refer to the same object | No; within an inner class, they can refer to different objects |
 
-## 10. Tự kiểm tra
+## 10. Check your understanding
 
-**Câu 1.** Cho:
+**Question 1.** Given:
 
 ```java
 class Box {
@@ -2520,79 +2520,79 @@ Box box = new Box(5);
 System.out.println(box.value);
 ```
 
-Kết quả là **`0`**, vì câu `value = value;` chỉ tác động lên tham số, trường `int value` vẫn nhận giá trị mặc định. Sửa thành `this.value = value;` thì kết quả là `5`.
+The result is **`0`**, because `value = value;` affects only the parameter, leaving the `int value` field at its default value. Changing it to `this.value = value;` makes the result `5`.
 
-**Câu 2.** Giả sử `MemberProfile a = new MemberProfile("A");` và `MemberProfile b = a;`. Nếu gọi `b.completeLesson()`, `a.getCompletedLessons()` là bao nhiêu? **`1`**, bởi `a` và `b` tham chiếu cùng đối tượng.
+**Question 2.** Suppose `MemberProfile a = new MemberProfile("A");` and `MemberProfile b = a;`. After `b.completeLesson()`, what does `a.getCompletedLessons()` return? **`1`**, because `a` and `b` refer to the same object.
 
-**Câu 3.** `this("vi", 20);` trong constructor khác `this.language = "vi";` ra sao? Câu đầu **ủy quyền cho constructor khác**, câu sau **gán trường** của đối tượng.
+**Question 3.** How does `this("vi", 20);` in a constructor differ from `this.language = "vi";`? The first **delegates to another constructor**; the second **assigns an object field**.
 
-**Câu 4.** Có thể viết `static void hello() { System.out.println(this); }` không? **Không**, vì static method không có thể hiện hiện tại.
+**Question 4.** Can you write `static void hello() { System.out.println(this); }`? **No**, because a static method has no current instance.
 
-**Câu 5.** Sau `MemberProfile result = a.moveTo("Huế");`, `result == a` là gì? **`true`**, vì `moveTo()` trả về `this` và không tạo đối tượng mới.
+**Question 5.** After `MemberProfile result = a.moveTo("Huế");`, what is `result == a`? **`true`**, because `moveTo()` returns `this` without creating a new object.
 
-Khi đọc hoặc viết mã Java, hãy tự hỏi: “Phương thức này đang chạy trên **đối tượng nào**?” Đối tượng đó chính là ý nghĩa của `this` tại vị trí tương ứng. Tư duy này giúp hiểu cách đối tượng giữ trạng thái riêng, cách constructor khởi tạo trạng thái và cách các lời gọi tác động lên cùng một thể hiện.
+When reading or writing Java code, ask yourself, "On **which object** is this method running?" That object is what `this` means at that location. Thinking this way helps you understand how objects hold separate state, how constructors initialize state, and how calls affect the same instance.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
 
 ---
 
-## <a id="class-008">Thiết kế lớp qua ví dụ tài khoản ngân hàng</a>
+## <a id="class-008">Designing a class through a bank account example</a>
 
 <details>
-<summary>Xem chi tiết</summary>
+<summary>View details</summary>
 
-# Thiết kế lớp qua ví dụ tài khoản ngân hàng (Java OOP)
+# Designing a class using a bank account example (Java OOP)
 
-## Bài toán: một tài khoản ngân hàng cần biết gì và làm được gì?
+## Problem: what must a bank account know and do?
 
-Giả sử chúng ta xây dựng phần lõi cho một ứng dụng mô phỏng ngân hàng bằng Java. Mỗi tài khoản có **số tài khoản**, **tên chủ tài khoản** và **số dư**. Người sử dụng có thể nạp tiền, rút tiền, chuyển tiền sang tài khoản khác và tra cứu số dư.
+Suppose we are building the core of a simulated banking application in Java. Each account has an **account number**, **account holder's name**, and **balance**. Users can deposit money, withdraw money, transfer money to another account, and check their balance.
 
-Điểm quan trọng của thiết kế hướng đối tượng là: **dữ liệu và các thao tác liên quan được đặt trong cùng một lớp**, và lớp chịu trách nhiệm giữ dữ liệu hợp lệ. Nếu bất kỳ mã nào cũng sửa trực tiếp `balance`, chương trình rất dễ xuất hiện số dư âm hoặc chuyển tiền sai.
+A key idea in object-oriented design is that **data and its related operations belong in the same class**, and the class is responsible for keeping data valid. If arbitrary code could modify `balance` directly, negative balances or incorrect transfers could easily occur.
 
-Bài này xây dựng một mô hình học tập có thể chạy bằng Java 11+, dùng tiền Việt Nam đồng (`VND`) dưới dạng số nguyên `long` để các ví dụ rõ ràng. Đây là mô hình trong bộ nhớ nhằm học **thiết kế lớp**, chưa phải hệ thống ngân hàng triển khai thực tế.
+This lesson builds an educational model that runs on Java 11+, using Vietnamese dong (`VND`) represented as `long` integers to keep the examples clear. It is an in-memory model for learning **class design**, not a production banking system.
 
-### Các yêu cầu nghiệp vụ
+### Business requirements
 
-| Tình huống | Quy tắc cần giữ |
+| Scenario | Rule to enforce |
 | --- | --- |
-| Mở tài khoản | Có số tài khoản hợp lệ, tên chủ không rỗng và số dư ban đầu không âm |
-| Nạp tiền | Số tiền nạp lớn hơn 0; không để phép cộng tràn `long` |
-| Rút tiền | Số tiền rút lớn hơn 0 và không vượt quá số dư |
-| Chuyển tiền | Tài khoản đích phải tồn tại, khác nguồn; nguồn đủ tiền, đích nhận được tiền mà không tràn số |
-| Tra cứu | Đọc được thông tin cần thiết nhưng mã bên ngoài không được tự ý gán số dư |
-| Thao tác thất bại | Các số dư phải giữ nguyên nếu điều kiện kiểm tra không đạt |
+| Open an account | Valid account number, nonblank holder name, and nonnegative initial balance |
+| Deposit | Deposit amount must be greater than 0; addition must not overflow `long` |
+| Withdraw | Withdrawal amount must be greater than 0 and must not exceed the balance |
+| Transfer | Destination account must exist and differ from the source; source must have sufficient funds, and destination must accept the amount without overflow |
+| Query | Necessary information can be read, but external code cannot arbitrarily assign a balance |
+| Failed operation | Balances must remain unchanged if validation conditions fail |
 
-Một điều kiện luôn đúng của đối tượng sau khi khởi tạo và sau mỗi thao tác hợp lệ được gọi là **bất biến (invariant)**. Với lớp này, bất biến quan trọng nhất là `balanceVnd >= 0`. Các thông tin định danh đã thiết lập cũng không thay đổi trong vòng đời đối tượng.
+A condition that always holds for an object after initialization and every valid operation is called an **invariant**. For this class, the most important invariant is `balanceVnd >= 0`. The established identity information also remains unchanged throughout the object's lifetime.
 
-## 1. Xác định lớp, thuộc tính và phương thức
+## 1. Identifying the class, fields, and methods
 
-Trước khi viết mã, chuyển câu mô tả nghiệp vụ thành các thành phần của lớp:
+Before writing code, translate the business description into class components:
 
-| Khái niệm nghiệp vụ | Thành phần Java đề xuất | Lý do |
+| Business concept | Suggested Java component | Reason |
 | --- | --- | --- |
-| Số tài khoản | `private final String accountNumber` | Định danh tài khoản; không cho gán lại sau khi tạo |
-| Chủ tài khoản | `private final String holderName` | Tên được xác nhận lúc mở tài khoản trong mô hình này |
-| Số dư (VND) | `private long balanceVnd` | Trạng thái riêng của mỗi đối tượng, thay đổi qua nghiệp vụ |
-| Mở tài khoản | Constructor `BankAccount(...)` | Thiết lập trạng thái ban đầu, kiểm tra dữ liệu |
-| Xem số dư | `getBalanceVnd()` | Cung cấp quyền đọc có kiểm soát |
-| Nạp tiền | `deposit(long amountVnd)` | Kiểm tra và tăng số dư |
-| Rút tiền | `withdraw(long amountVnd)` | Kiểm tra và giảm số dư |
-| Chuyển khoản | `transferTo(BankAccount destination, long amountVnd)` | Điều phối thay đổi trên hai đối tượng |
-| Kiểm tra số tiền | `requirePositive(long amountVnd)` | Logic kiểm tra dùng chung, chỉ dùng nội bộ |
+| Account number | `private final String accountNumber` | Identifies the account; cannot be reassigned after creation |
+| Account holder | `private final String holderName` | Name confirmed at account opening in this model |
+| Balance (VND) | `private long balanceVnd` | Per-object state that changes through business operations |
+| Open account | Constructor `BankAccount(...)` | Establishes and validates initial state |
+| Check balance | `getBalanceVnd()` | Provides controlled read access |
+| Deposit | `deposit(long amountVnd)` | Validates and increases the balance |
+| Withdraw | `withdraw(long amountVnd)` | Validates and decreases the balance |
+| Transfer | `transferTo(BankAccount destination, long amountVnd)` | Coordinates changes across two objects |
+| Validate amount | `requirePositive(long amountVnd)` | Shared validation logic for internal use only |
 
-**Tại sao chọn `private` cho các field?** Nếu khai báo `public long balanceVnd`, bên ngoài có thể làm điều này:
+**Why use `private` for fields?** If `public long balanceVnd` were declared, external code could do this:
 
 ```java
 // Ví dụ thiết kế SAI: giả sử balanceVnd được khai báo public
 account.balanceVnd = -500_000;
 ```
 
-Số dư lúc đó vi phạm quy tắc. Một setter tổng quát như `setBalanceVnd(-500_000)` cũng có thể gây cùng vấn đề nếu không có quy tắc nghiệp vụ. API `deposit`, `withdraw`, `transferTo` thể hiện **ý nghĩa hành động**, giúp tập trung kiểm tra vào một nơi.
+The balance would then violate the rules. A generic setter such as `setBalanceVnd(-500_000)` could cause the same problem if it lacked business validation. The `deposit`, `withdraw`, and `transferTo` API methods express **the meaning of each operation**, keeping validation in one place.
 
-Sơ đồ UML thể hiện phần cấu trúc chính:
+The UML diagram shows the main structure:
 
 ```mermaid
 classDiagram
@@ -2612,11 +2612,11 @@ classDiagram
     BankAccount "1" --> "1" BankAccount : chuyển tiền đến
 ```
 
-Ký hiệu `-` là `private`, `+` là `public` và `$` biểu thị thành phần `static`. Đường liên hệ cho biết phương thức chuyển tiền làm việc với **một đối tượng BankAccount khác**, không có nghĩa tài khoản nào cũng cố định một tài khoản đích.
+In the notation, `-` means `private`, `+` means `public`, and `$` indicates a `static` member. The association shows that the transfer method works with **another BankAccount object**; it does not mean that every account has one fixed destination account.
 
-## 2. Hiện thực lớp BankAccount
+## 2. Implementing the BankAccount class
 
-Tạo tệp **`BankAccount.java`** như sau. Để ví dụ chạy độc lập, lớp không phụ thuộc framework, cơ sở dữ liệu hay thư viện ngoài JDK.
+Create **`BankAccount.java`** as follows. To keep the example self-contained, the class does not depend on a framework, database, or libraries outside the JDK.
 
 ```java
 import java.util.Objects;
@@ -2716,29 +2716,29 @@ public final class BankAccount {
 }
 ```
 
-### Phân tích lựa chọn thiết kế
+### Analyzing the design decisions
 
-**`public final class BankAccount`:** đây là một lớp cụ thể; `final` ngăn lớp khác kế thừa nó. Trong bài học này, ta chủ động không mở rộng qua kế thừa để tập trung vào hợp đồng của tài khoản. `final` trên lớp **không** làm đối tượng bất biến: `balanceVnd` vẫn có thể thay đổi qua phương thức.
+**`public final class BankAccount`:** this is a concrete class; `final` prevents other classes from extending it. This lesson deliberately avoids inheritance to focus on the account contract. Declaring the class `final` **does not** make its objects immutable: `balanceVnd` can still change through methods.
 
-**`private final String accountNumber`:** `private` ngăn mã bên ngoài truy cập trực tiếp, còn `final` cho biết field được gán một lần trong constructor. Ví dụ dùng số tài khoản chỉ gồm chữ in hoa/chữ số và dài 6–20 ký tự; đây là **quy tắc minh họa**, không phải chuẩn số tài khoản của mọi ngân hàng.
+**`private final String accountNumber`:** `private` prevents direct external access, while `final` means the field is assigned once in the constructor. The example requires account numbers with 6–20 uppercase letters or digits; this is an **illustrative rule**, not a standard for every bank.
 
-**`private long balanceVnd`:** không dùng `final` vì số dư phải thay đổi theo nạp/rút/chuyển tiền. Field là trạng thái riêng của từng đối tượng. Giá trị được biểu diễn theo **đơn vị đồng**, vì thế `125_000` nghĩa là 125.000 VND.
+**`private long balanceVnd`:** this field is not `final` because the balance must change through deposits, withdrawals, and transfers. It represents each object's own state. Values are expressed in **Vietnamese dong**, so `125_000` means 125,000 VND.
 
-**Constructor `BankAccount(...)`:** không có kiểu trả về, có tên trùng với tên lớp và được gọi khi `new BankAccount(...)`. Constructor kiểm tra tất cả tham số trước khi gán field, ngăn tạo đối tượng có số dư âm hoặc tên không hợp lệ. `this.accountNumber` chỉ field của đối tượng; `accountNumber` bên phải là tham số.
+**Constructor `BankAccount(...)`:** it has no return type, shares its name with the class, and is invoked by `new BankAccount(...)`. The constructor validates all parameters before assigning fields, preventing objects with negative balances or invalid names. `this.accountNumber` denotes the object's field; `accountNumber` on the right is the parameter.
 
-**Getter:** `getBalanceVnd()` trả về `long`, là kiểu nguyên thủy, nên người gọi nhận được giá trị chứ không nhận quyền sửa field. Vì bài toán không cho tự ý chỉnh số dư, lớp **không có** `setBalanceVnd()`.
+**Getter:** `getBalanceVnd()` returns a primitive `long`, so callers receive the value without gaining permission to modify the field. Because the requirements prohibit arbitrary balance updates, the class **has no** `setBalanceVnd()`.
 
-**`deposit()`:** dùng `Math.addExact` để phát hiện tràn số. Nếu phép cộng không thể biểu diễn trong `long`, Java ném `ArithmeticException` và phép gán không thực hiện, số dư giữ nguyên.
+**`deposit()`:** uses `Math.addExact` to detect overflow. If the sum cannot be represented as a `long`, Java throws `ArithmeticException` before assignment, leaving the balance unchanged.
 
-**`withdraw()`:** kiểm tra số tiền trước khi trừ; `IllegalArgumentException` cho đối số bằng 0/âm và `IllegalStateException` khi trạng thái tài khoản không đủ tiền. Trong thiết kế sản phẩm thật, có thể tạo kiểu ngoại lệ nghiệp vụ riêng như `InsufficientFundsException`.
+**`withdraw()`:** validates the amount before subtracting; it throws `IllegalArgumentException` for arguments equal to 0 or negative values and `IllegalStateException` when the account has insufficient funds. A real product might define a domain-specific exception such as `InsufficientFundsException`.
 
-**`transferTo()`:** nhận một tham chiếu tới đối tượng `BankAccount` khác. Java cho phép một phương thức của lớp truy cập field `private` của *đối tượng khác cùng lớp*, vì `private` áp dụng theo **lớp khai báo**, không phải theo từng instance. Phép cộng ở tài khoản đích được tính trước để tránh trừ tiền nguồn rồi mới phát hiện tràn số.
+**`transferTo()`:** receives a reference to another `BankAccount` object. Java lets a class method access the `private` fields of *another object of the same class*, because `private` applies to **the declaring class**, not each individual instance. The destination balance is calculated first to avoid debiting the source before discovering an overflow.
 
-**`requirePositive()`:** là `private static` vì kiểm tra này chỉ phụ thuộc tham số, không cần `this` hay field của tài khoản. Phương thức trợ giúp vẫn là một phần của lớp, nhưng không được công khai ra ngoài.
+**`requirePositive()`:** is `private static` because this validation depends only on its parameter and needs neither `this` nor account fields. The helper still belongs to the class but is not exposed publicly.
 
-## 3. Khởi tạo và sử dụng hai đối tượng
+## 3. Creating and using two objects
 
-Tạo thêm tệp **`Main.java`** cùng thư mục:
+Create another file, **`Main.java`**, in the same directory:
 
 ```java
 public class Main {
@@ -2766,14 +2766,14 @@ public class Main {
 }
 ```
 
-Chạy bằng terminal khi đã cài JDK 11 trở lên:
+Run these commands in a terminal with JDK 11 or later installed:
 
 ```bash
 javac BankAccount.java Main.java
 java Main
 ```
 
-Kết quả dự kiến:
+Expected output:
 
 ```text
 An: 800000
@@ -2782,21 +2782,21 @@ Bị từ chối: Số dư không đủ để rút
 An sau lỗi: 800000
 ```
 
-Đối chiếu số dư từng bước:
+Track the balances step by step:
 
-| Thao tác | Tài khoản An | Tài khoản Bình |
+| Operation | An's account | Bình's account |
 | --- | ---: | ---: |
-| Ngay sau khởi tạo | 1.000.000 | 200.000 |
-| An nạp 300.000 | 1.300.000 | 200.000 |
-| An rút 100.000 | 1.200.000 | 200.000 |
-| An chuyển cho Bình 400.000 | **800.000** | **600.000** |
-| An cố rút 900.000 (bị từ chối) | **800.000** | **600.000** |
+| Immediately after initialization | 1.000.000 | 200.000 |
+| An deposits 300,000 | 1.300.000 | 200.000 |
+| An withdraws 100,000 | 1.200.000 | 200.000 |
+| An transfers 400,000 to Bình | **800.000** | **600.000** |
+| An attempts to withdraw 900,000 (rejected) | **800.000** | **600.000** |
 
-Phép chuyển tiền bảo toàn tổng số dư của hai tài khoản trong tình huống này: trước chuyển là 1.400.000 VND, sau chuyển vẫn là 1.400.000 VND. Nạp/rút là các giao dịch thay đổi tổng tiền trong tập hai tài khoản đang xét, còn chuyển chỉ dịch chuyển tiền từ đối tượng này sang đối tượng khác.
+The transfer preserves the combined balance of the two accounts in this scenario: it is 1,400,000 VND before the transfer and remains 1,400,000 VND afterward. Deposits and withdrawals change the total amount held by these two accounts, while transfers only move money from one object to another.
 
-## 4. Một lời gọi phương thức diễn ra ra sao?
+## 4. How does a method call execute?
 
-Giả sử `an` và `binh` là tham chiếu đến hai đối tượng khác nhau. Khi gọi `an.transferTo(binh, 400_000)`:
+Suppose `an` and `binh` refer to two different objects. When `an.transferTo(binh, 400_000)` is called:
 
 ```mermaid
 sequenceDiagram
@@ -2813,7 +2813,7 @@ sequenceDiagram
     An-->>Main: Hoàn tất
 ```
 
-Khi sai điều kiện, luồng xử lý dừng trước khi cập nhật:
+When a condition fails, the operation stops before updating state:
 
 ```mermaid
 flowchart TD
@@ -2831,13 +2831,13 @@ flowchart TD
     G --> H["Hai số dư mới hợp lệ"]
 ```
 
-Cơ chế này giữ nguyên số dư khi những phép kiểm tra thông thường thất bại **trong ví dụ đơn luồng**. Nó không bảo đảm giao dịch bền vững nếu máy bị tắt giữa lúc cập nhật hai biến, và cũng không an toàn khi nhiều luồng cùng sửa tài khoản.
+This mechanism leaves balances unchanged when ordinary validation fails **in the single-threaded example**. It does not guarantee a durable transaction if the machine shuts down between updates to the two variables, nor is it safe when multiple threads modify the accounts concurrently.
 
-## 5. Làm rõ các khái niệm OOP qua ví dụ
+## 5. Understanding OOP concepts through the example
 
-### Lớp và đối tượng
+### Classes and objects
 
-`BankAccount` là **lớp** (bản thiết kế). `an` và `binh` là các **biến tham chiếu** tới hai **đối tượng** được tạo bởi `new`. Mỗi đối tượng có riêng `accountNumber`, `holderName` và `balanceVnd`.
+`BankAccount` is the **class** (the blueprint). `an` and `binh` are **reference variables** referring to two **objects** created with `new`. Each object has its own `accountNumber`, `holderName`, and `balanceVnd`.
 
 ```java
 BankAccount first = new BankAccount("ACC003", "Lan", 500_000);
@@ -2847,11 +2847,11 @@ alias.deposit(50_000);
 System.out.println(first.getBalanceVnd()); // 550000
 ```
 
-Phép gán `alias = first` **không tạo đối tượng mới**. Hai tên cùng nhìn thấy một số dư vì cùng tham chiếu một instance. Ngược lại, dùng `new BankAccount(...)` lần nữa sẽ tạo instance độc lập.
+The assignment `alias = first` **does not create a new object**. Both names see the same balance because they refer to the same instance. By contrast, calling `new BankAccount(...)` again creates an independent instance.
 
-### Đóng gói (encapsulation)
+### Encapsulation
 
-Đóng gói kết hợp hai ý: giữ trạng thái bên trong lớp và cung cấp API có kiểm soát. `private` chỉ là công cụ giới hạn truy cập; thiết kế đúng còn cần các quy tắc ở constructor/phương thức.
+Encapsulation combines two ideas: keeping state inside the class and providing a controlled API. `private` is only an access-control tool; good design also requires rules in constructors and methods.
 
 ```java
 // Không biên dịch được vì balanceVnd là private:
@@ -2864,53 +2864,53 @@ an.setBalanceVnd(-1);
 an.withdraw(100_000);
 ```
 
-Trong ví dụ này, không có nghĩa mọi field trong mọi lớp đều phải `private` một cách máy móc. Điều cần đạt là các bất biến được bảo vệ, trách nhiệm của lớp rõ ràng và API hợp lý.
+This example does not mean that every field in every class must automatically be `private`. What matters is protecting invariants, defining clear class responsibilities, and providing a sensible API.
 
-### Trạng thái và hành vi
+### State and behavior
 
-- **Trạng thái:** `balanceVnd` là số dư *hiện tại*.
-- **Hành vi thay đổi trạng thái:** `deposit`, `withdraw` và `transferTo`.
-- **Hành vi truy vấn:** `getAccountNumber`, `getHolderName`, `getBalanceVnd`.
-- **Thông tin không đổi sau khởi tạo:** `accountNumber` và `holderName` trong phiên bản này, được đánh dấu `final`.
+- **State:** `balanceVnd` is the *current* balance.
+- **State-changing behavior:** `deposit`, `withdraw`, and `transferTo`.
+- **Query behavior:** `getAccountNumber`, `getHolderName`, and `getBalanceVnd`.
+- **Information unchanged after initialization:** `accountNumber` and `holderName` are marked `final` in this version.
 
-Như vậy, phương thức không nhất thiết phải làm thay đổi field. Một getter là hành vi truy vấn, còn một phương thức nghiệp vụ có thể tương tác với đối tượng khác.
+A method therefore does not necessarily modify fields. A getter is query behavior, while a business method may interact with another object.
 
-### Tính trừu tượng ở cấp độ API
+### Abstraction at the API level
 
-Nơi sử dụng chỉ cần biết `an.withdraw(100_000)` nghĩa là yêu cầu rút 100.000 đồng. Người gọi không phải tự tính số dư mới hoặc tự kiểm tra khoản tiền có hợp lệ. Nếu sau này có quy tắc giới hạn số tiền rút trong ngày, lớp hoặc dịch vụ nghiệp vụ thích hợp có thể đảm nhận quy tắc đó mà không bắt mọi nơi gọi tự lặp lại logic.
+Callers only need to know that `an.withdraw(100_000)` requests a withdrawal of 100,000 VND. They do not need to calculate the new balance or validate the amount themselves. If a daily withdrawal limit is introduced later, the class or an appropriate business service can enforce it without requiring every caller to duplicate the logic.
 
-### Chia đúng trách nhiệm
+### Assigning responsibilities appropriately
 
-Một lớp tài khoản **nên** biết trạng thái và quy tắc thay đổi trạng thái trong phạm vi mô hình. Nó **không nên** tự ôm mọi việc như đọc mật khẩu, gửi email, ghi dữ liệu SQL, tạo báo cáo PDF và vẽ giao diện. Trong hệ thống lớn, các trách nhiệm đó được phối hợp bởi các thành phần phù hợp.
+An account class **should** know its state and the rules for changing that state within the model. It **should not** handle everything itself, such as reading passwords, sending emails, writing SQL data, generating PDF reports, or rendering user interfaces. In larger systems, appropriate components coordinate those responsibilities.
 
-| Thành phần trong ứng dụng lớn | Trách nhiệm ví dụ |
+| Component in a larger application | Example responsibility |
 | --- | --- |
-| `BankAccount` (domain model) | Trạng thái tài khoản và những quy tắc nghiệp vụ cục bộ |
-| `TransferService` | Điều phối chuyển tiền, chính sách, phân quyền và giao dịch cơ sở dữ liệu |
-| `BankAccountRepository` | Đọc/ghi tài khoản từ nơi lưu trữ |
-| `TransactionRepository` | Lưu lịch sử giao dịch để truy vết |
-| API/controller | Nhận yêu cầu, kiểm tra dữ liệu đầu vào ở biên hệ thống và trả phản hồi |
+| `BankAccount` (domain model) | Account state and local business rules |
+| `TransferService` | Coordinates transfers, policies, authorization, and database transactions |
+| `BankAccountRepository` | Reads/writes accounts from/to storage |
+| `TransactionRepository` | Stores transaction history for traceability |
+| API/controller | Receives requests, validates inputs at the system boundary, and returns responses |
 
-Đây là hướng mở rộng kiến trúc, chưa phải các lớp cần có để chạy ví dụ nhỏ.
+These are architectural extension directions, not classes required to run this small example.
 
-## 6. Thử các tình huống biên
+## 6. Testing edge cases
 
-Một lớp tốt không chỉ chạy được ở tình huống thuận lợi; nó phải xác định rõ kết quả khi đầu vào không hợp lệ.
+A well-designed class must handle more than successful scenarios; it should define what happens when input is invalid.
 
-| Lời gọi | Kết quả mong đợi | Trạng thái |
+| Call | Expected result | State |
 | --- | --- | --- |
-| `new BankAccount("ACC004", "Mai", -1)` | `IllegalArgumentException` | Không tạo đối tượng hợp lệ |
-| `new BankAccount("A", "Mai", 0)` | `IllegalArgumentException` | Không tạo đối tượng hợp lệ |
-| `new BankAccount("ACC004", "   ", 0)` | `IllegalArgumentException` | Không tạo đối tượng hợp lệ |
-| `deposit(0)` / `deposit(-10)` | `IllegalArgumentException` | Số dư không đổi |
-| `withdraw(0)` / `withdraw(-10)` | `IllegalArgumentException` | Số dư không đổi |
-| `withdraw(x)` với `x > balanceVnd` | `IllegalStateException` | Số dư không đổi |
-| `transferTo(null, 100)` | `NullPointerException` | Số dư không đổi |
-| `transferTo(this, 100)` | `IllegalArgumentException` | Số dư không đổi |
-| `deposit(Long.MAX_VALUE)` với số dư dương | `ArithmeticException` | Số dư không đổi |
-| Chuyển vào tài khoản gần `Long.MAX_VALUE` gây tràn | `ArithmeticException` | Cả hai số dư không đổi |
+| `new BankAccount("ACC004", "Mai", -1)` | `IllegalArgumentException` | No valid object is created |
+| `new BankAccount("A", "Mai", 0)` | `IllegalArgumentException` | No valid object is created |
+| `new BankAccount("ACC004", "   ", 0)` | `IllegalArgumentException` | No valid object is created |
+| `deposit(0)` / `deposit(-10)` | `IllegalArgumentException` | Balance unchanged |
+| `withdraw(0)` / `withdraw(-10)` | `IllegalArgumentException` | Balance unchanged |
+| `withdraw(x)` where `x > balanceVnd` | `IllegalStateException` | Balance unchanged |
+| `transferTo(null, 100)` | `NullPointerException` | Balance unchanged |
+| `transferTo(this, 100)` | `IllegalArgumentException` | Balance unchanged |
+| `deposit(Long.MAX_VALUE)` with a positive balance | `ArithmeticException` | Balance unchanged |
+| Transfer into an account near `Long.MAX_VALUE` causing overflow | `ArithmeticException` | Both balances unchanged |
 
-Có thể kiểm tra các trường hợp lỗi mà không cần thêm thư viện:
+You can check error cases without adding libraries:
 
 ```java
 public class BoundaryCheck {
@@ -2941,26 +2941,26 @@ public class BoundaryCheck {
 }
 ```
 
-Biên dịch và chạy:
+Compile and run:
 
 ```bash
 javac BankAccount.java BoundaryCheck.java
 java BoundaryCheck
 ```
 
-Ví dụ kiểm tra trên minh họa hành vi. Khi phát triển ứng dụng thực tế, có thể chuyển các tình huống thành unit test với JUnit để chạy tự động.
+The checks above illustrate the behavior. In a real application, these scenarios can be turned into JUnit unit tests for automated execution.
 
-## 7. Tại sao không dùng double để lưu số tiền?
+## 7. Why not use double to store money?
 
-`double` sử dụng biểu diễn dấu phẩy động nhị phân; nhiều số thập phân không thể biểu diễn chính xác tuyệt đối.
+`double` uses binary floating-point representation; many decimal values cannot be represented exactly.
 
 ```java
 System.out.println(0.1 + 0.2); // 0.30000000000000004
 ```
 
-Với bài toán chỉ có **số tiền nguyên VND**, `long` là lựa chọn đơn giản: `500_000L` tương ứng 500.000 đồng. Khi phát triển hệ thống hỗ trợ số lẻ hoặc nhiều đơn vị tiền tệ, thường cần `BigDecimal` cùng một quy tắc về đơn vị, làm tròn và scale.
+For a problem involving only **whole VND amounts**, `long` is a simple choice: `500_000L` represents 500,000 dong. Systems that support fractional amounts or multiple currencies typically require `BigDecimal` along with consistent rules for units, rounding, and scale.
 
-Ví dụ riêng về phép cộng thập phân chính xác:
+A separate example of exact decimal addition:
 
 ```java
 import java.math.BigDecimal;
@@ -2971,37 +2971,37 @@ BigDecimal amount = new BigDecimal("0.10")
 System.out.println(amount); // 0.30
 ```
 
-Lưu ý: `new BigDecimal("0.10")` nhận chuỗi thập phân; `new BigDecimal(0.1)` lấy một giá trị `double` đã có sai số biểu diễn. `BigDecimal` cũng không tự giải quyết mọi quy tắc tiền tệ: vẫn cần chọn đơn vị, số chữ số thập phân và cách làm tròn rõ ràng.
+Note: `new BigDecimal("0.10")` accepts a decimal string; `new BigDecimal(0.1)` takes a `double` value that already contains a representation error. `BigDecimal` also does not automatically solve every monetary rule: you still need explicit choices for units, decimal places, and rounding.
 
-Trong hệ thống tài chính thực tế, có thể biểu diễn tiền bằng một kiểu giá trị `Money` gồm số tiền, loại tiền và các phép tính hợp lệ. Điều đó giúp tránh vô tình cộng VND với USD.
+In a real financial system, money can be represented by a `Money` value type that contains an amount, currency, and valid operations. This helps prevent accidentally adding VND to USD.
 
-## 8. Giới hạn cố ý của mô hình và hướng phát triển
+## 8. Intentional model limitations and future extensions
 
-Mã `BankAccount` ở trên chạy tốt để học **lớp, đối tượng, thuộc tính, phương thức, constructor, truy cập, đóng gói và bất biến**. Tuy nhiên, ngân hàng thực tế đòi hỏi nhiều lớp bảo vệ và đảm bảo hơn:
+The `BankAccount` code above works well for learning **classes, objects, fields, methods, constructors, access control, encapsulation, and invariants**. However, real banking requires additional layers of protection and guarantees:
 
-**Đồng thời (concurrency).** Hai luồng rút tiền trên cùng tài khoản có thể cùng đọc số dư cũ rồi cùng trừ, làm sai kết quả. Bản mẫu chưa có khóa hay kiểm soát tranh chấp. Không thể dùng `Math.addExact` để thay cho đồng bộ hóa.
+**Concurrency.** Two threads withdrawing from the same account could both read the old balance and then subtract funds, producing an incorrect result. This model has no locks or contention control. `Math.addExact` cannot replace synchronization.
 
-**Tính nguyên tử và bền vững khi chuyển tiền.** Trong ứng dụng thật, trừ bên nguồn và cộng bên đích phải nằm trong **một giao dịch dữ liệu nguyên tử**. Ghi vào hai field trong RAM không đủ: nếu tiến trình chết ở giữa, bộ nhớ mất hoặc cơ sở dữ liệu ghi dở, giao dịch không được bảo đảm. Có thể thiết kế `TransferService` kết hợp transaction của database và cơ chế chống xử lý trùng yêu cầu.
+**Atomicity and durability of transfers.** In a real application, debiting the source and crediting the destination must occur within **a single atomic data transaction**. Writing to two fields in RAM is insufficient: if the process crashes partway through, memory is lost or a database write is incomplete, the transfer is not guaranteed. A `TransferService` can coordinate database transactions and mechanisms to prevent duplicate request processing.
 
-**Bảo mật.** Việc sở hữu một tham chiếu `BankAccount` và gọi `withdraw()` chỉ là cách diễn đạt hành vi trong bài học. Nó không xác nhận danh tính, không kiểm tra quyền truy cập và không thể hiện xác thực giao dịch. Trong hệ thống thực, người dùng không được tự gọi thao tác ghi số dư mà không có kiểm tra quyền phía máy chủ.
+**Security.** Holding a `BankAccount` reference and calling `withdraw()` is only an illustration of behavior in this lesson. It does not verify identity, check authorization, or represent transaction authentication. In a real system, users must not be allowed to modify balances without server-side authorization checks.
 
-**Lưu vết và đối soát.** Số dư đơn lẻ không trả lời được “tiền đến từ đâu?”. Hệ thống vận hành cần bản ghi giao dịch, thời điểm, mã yêu cầu, khả năng kiểm toán và quy trình xử lý lỗi/hoàn tiền. Có thể dùng mô hình bút toán kép (double-entry ledger) khi phạm vi nghiệp vụ yêu cầu.
+**Audit trails and reconciliation.** A balance alone cannot answer "where did this money come from?" Operational systems need transaction records, timestamps, request IDs, auditability, and error/refund handling procedures. A double-entry ledger may be appropriate when business requirements call for it.
 
-**Quy tắc thay đổi theo nghiệp vụ.** Chủ tài khoản có thể đổi tên hợp pháp, tài khoản có thể bị khóa, áp dụng hạn mức, phí hoặc nhiều loại tiền. Những nhu cầu đó đòi hỏi mở rộng mô hình; đừng thay đổi field một cách tùy tiện khi chưa có chính sách rõ ràng.
+**Evolving business rules.** Account holders may legally change their names; accounts may be frozen or subject to limits, fees, or multiple currencies. These needs require extending the model; do not change fields arbitrarily without a clear policy.
 
-### Câu hỏi luyện tập
+### Practice questions
 
-1. Vì sao `balanceVnd` không được khai báo `public`, trong khi `getBalanceVnd()` là `public`?
-2. `final` trên `accountNumber` khác gì với `final` trên chính lớp `BankAccount`?
-3. Nếu `deposit(-50_000)` bị từ chối, số dư trước và sau lời gọi phải thế nào?
-4. Nếu tài khoản A có 300.000 đồng và tài khoản B có 200.000 đồng, kết quả `A.transferTo(B, 120_000)` là bao nhiêu? Điều gì xảy ra nếu yêu cầu chuyển 400.000?
-5. Vì sao `transferTo()` được phép đọc `destination.balanceVnd` dù field này khai báo `private`?
-6. Tại sao kiểm tra tràn ở tài khoản đích phải xảy ra **trước** khi trừ tài khoản nguồn?
-7. Nếu cần lưu mọi giao dịch vào database, nên bổ sung trách nhiệm đó trực tiếp vào `BankAccount` hay phối hợp với service/repository? Giải thích theo nguyên tắc một lớp có trách nhiệm rõ ràng.
+1. Why is `balanceVnd` not declared `public` while `getBalanceVnd()` is `public`?
+2. How does `final` on `accountNumber` differ from `final` on the `BankAccount` class itself?
+3. If `deposit(-50_000)` is rejected, what should the balance be before and after the call?
+4. If account A holds 300,000 dong and account B holds 200,000 dong, what is the result of `A.transferTo(B, 120_000)`? What happens if the requested transfer is 400,000?
+5. Why can `transferTo()` read `destination.balanceVnd` even though the field is declared `private`?
+6. Why must checking for overflow at the destination happen **before** debiting the source account?
+7. If every transaction must be stored in a database, should that responsibility be added directly to `BankAccount` or coordinated through a service/repository? Explain in terms of giving each class a clear responsibility.
 
-**Bài thực hành mở rộng:** Bổ sung trường `status` với hai trạng thái `ACTIVE` và `FROZEN`. Viết phương thức `freeze()`; chỉ tài khoản `ACTIVE` mới được rút hoặc chuyển tiền ra. Định nghĩa rõ tài khoản bị đóng băng có được nhận tiền hay không, rồi bổ sung kiểm tra ở đúng phương thức. Đây là cách thấy rõ lợi ích của thiết kế lớp: **quy tắc thay đổi tập trung tại nơi sở hữu trạng thái**.
+**Extension exercise:** Add a `status` field with two states, `ACTIVE` and `FROZEN`. Write a `freeze()` method; only `ACTIVE` accounts may withdraw or transfer money out. Clearly define whether a frozen account may receive money, then add validation to the appropriate methods. This demonstrates a benefit of class design: **rules for changes are centralized where the state is owned**.
 
 
 </details>
 
-- [Quay lại đầu trang](#back-to-top)
+- [Back to top](#back-to-top)
