@@ -2,7 +2,7 @@
     "CURRENT_STEP": {
         "DESCRIPTION": "Last successfully completed module generation step (0, numeric STEP, FINAL)",
         "TYPE": "string",
-        "VALUE": "0"
+        "VALUE": "3"
     },
     "MODULE_TYPE": {
         "DESCRIPTION": "Include 4 values. SERVLET for runnable Spring MVC/Servlet application, REACTIVE for runnable Spring WebFlux application, LIBRARY for Java module without Spring Boot main application, PLATFORM for configuration/dependency module without Java source",
@@ -26,7 +26,7 @@
     "SERVICE_NAME": {
         "DESCRIPTION": "Define name for this module. Use this name for task and many automation gradle",
         "TYPE": "string",
-        "VALUE": ""
+        "VALUE": "SPRING_BOOT_TESTING"
     },
     "SERVICE_NAME_DESCRIBE": {
         "DESCRIPTION": "Describe this module function",

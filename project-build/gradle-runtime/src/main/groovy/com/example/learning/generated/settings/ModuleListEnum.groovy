@@ -3,15 +3,6 @@ package com.example.learning.generated.settings
 
 enum ModuleListEnum {
 
-    ACTUATOR(
-            'module:platform:development:programming:framework:spring-boot:actuator',
-            'module/platform/development/programming/framework/spring-boot/actuator',
-            '',
-            '',
-            false,
-            []
-    ),
-
     ADMIN_SERVER(
             'module:microservice:module:infrastructure:admin-server',
             'module/microservice/module/infrastructure/admin-server',
@@ -34,15 +25,6 @@ enum ModuleListEnum {
             'module:microservice:module:infrastructure:api-gateway',
             'module/microservice/module/infrastructure/api-gateway',
             'SERVLET',
-            '',
-            false,
-            []
-    ),
-
-    APPLICATION_RUNTIME(
-            'module:platform:development:programming:framework:spring-boot:application-runtime',
-            'module/platform/development/programming/framework/spring-boot/application-runtime',
-            '',
             '',
             false,
             []
@@ -75,48 +57,12 @@ enum ModuleListEnum {
             []
     ),
 
-    AUTHENTICATION(
-            'module:platform:development:programming:framework:spring-security:authentication',
-            'module/platform/development/programming/framework/spring-security/authentication',
-            '',
-            '',
-            false,
-            []
-    ),
-
-    AUTHORIZATION(
-            'module:platform:development:programming:framework:spring-security:authorization',
-            'module/platform/development/programming/framework/spring-security/authorization',
-            '',
-            '',
-            false,
-            []
-    ),
-
-    AUTO_CONFIGURATION(
-            'module:platform:development:programming:framework:spring-boot:auto-configuration',
-            'module/platform/development/programming/framework/spring-boot/auto-configuration',
-            '',
-            '',
-            false,
-            []
-    ),
-
     AZURE_TRANSLATE(
             'module:platform:support:document:translate:azure',
             'module/platform/support/document/translate/azure',
             'SERVLET',
             'Translate using Azure service',
             true,
-            []
-    ),
-
-    BUILD_TOOLING_PACKAGING(
-            'module:platform:development:programming:framework:spring-boot:build-tooling-packaging',
-            'module/platform/development/programming/framework/spring-boot/build-tooling-packaging',
-            '',
-            '',
-            false,
             []
     ),
 
@@ -714,24 +660,6 @@ enum ModuleListEnum {
             []
     ),
 
-    EXTERNALIZED_CONFIGURATION(
-            'module:platform:development:programming:framework:spring-boot:externalized-configuration',
-            'module/platform/development/programming/framework/spring-boot/externalized-configuration',
-            '',
-            '',
-            false,
-            []
-    ),
-
-    FEDERATION(
-            'module:platform:development:programming:framework:spring-security:federation',
-            'module/platform/development/programming/framework/spring-security/federation',
-            '',
-            '',
-            false,
-            []
-    ),
-
     FLEXMARK_MARKDOWN(
             'module:platform:support:document:markdown:flexmark',
             'module/platform/support/document/markdown/flexmark',
@@ -845,15 +773,6 @@ enum ModuleListEnum {
             'module/platform/development/programming/paradigm/imperative',
             'LIBRARY',
             'Imperative Programming paradigm, state, commands and procedural organization',
-            false,
-            []
-    ),
-
-    INTEGRATION(
-            'module:platform:development:programming:framework:spring-boot:integration',
-            'module/platform/development/programming/framework/spring-boot/integration',
-            '',
-            '',
             false,
             []
     ),
@@ -1407,24 +1326,6 @@ enum ModuleListEnum {
             []
     ),
 
-    NATIVE_IMAGE(
-            'module:platform:development:programming:framework:spring-boot:native-image',
-            'module/platform/development/programming/framework/spring-boot/native-image',
-            '',
-            '',
-            false,
-            []
-    ),
-
-    OAUTH2_OIDC(
-            'module:platform:development:programming:framework:spring-security:oauth2-oidc',
-            'module/platform/development/programming/framework/spring-security/oauth2-oidc',
-            '',
-            '',
-            false,
-            []
-    ),
-
     OBJECT_MAPPING(
             'module:platform:development:data:data-mapping:object-mapping',
             'module/platform/development/data/data-mapping/object-mapping',
@@ -1474,15 +1375,6 @@ enum ModuleListEnum {
             'module:microservice:module:deployments:prometheus-grafana',
             'module/microservice/module/deployments/prometheus-grafana',
             'LIBRARY',
-            '',
-            false,
-            []
-    ),
-
-    REACTIVE(
-            'module:platform:development:programming:framework:spring-security:reactive',
-            'module/platform/development/programming/framework/spring-security/reactive',
-            '',
             '',
             false,
             []
@@ -1776,15 +1668,6 @@ enum ModuleListEnum {
             []
     ),
 
-    SERVLET(
-            'module:platform:development:programming:framework:spring-security:servlet',
-            'module/platform/development/programming/framework/spring-security/servlet',
-            '',
-            '',
-            false,
-            []
-    ),
-
     SOFTWARE_LIFECYCLE_MODELS(
             'module:platform:development:software-process:methodology:lifecycle-models',
             'module/platform/development/software-process/methodology/lifecycle-models',
@@ -1812,9 +1695,90 @@ enum ModuleListEnum {
             []
     ),
 
+    SPRING_BOOT_ACTUATOR(
+            'module:platform:development:programming:framework:spring-boot:actuator',
+            'module/platform/development/programming/framework/spring-boot/actuator',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_BOOT_APPLICATION_RUNTIME(
+            'module:platform:development:programming:framework:spring-boot:application-runtime',
+            'module/platform/development/programming/framework/spring-boot/application-runtime',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_BOOT_AUTO_CONFIGURATION(
+            'module:platform:development:programming:framework:spring-boot:auto-configuration',
+            'module/platform/development/programming/framework/spring-boot/auto-configuration',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_BOOT_BUILD_TOOLING_PACKAGING(
+            'module:platform:development:programming:framework:spring-boot:build-tooling-packaging',
+            'module/platform/development/programming/framework/spring-boot/build-tooling-packaging',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_BOOT_EXTERNALIZED_CONFIGURATION(
+            'module:platform:development:programming:framework:spring-boot:externalized-configuration',
+            'module/platform/development/programming/framework/spring-boot/externalized-configuration',
+            '',
+            '',
+            false,
+            []
+    ),
+
     SPRING_BOOT_FUNDAMENTALS(
             'module:platform:development:programming:framework:spring-boot:fundamentals',
             'module/platform/development/programming/framework/spring-boot/fundamentals',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_BOOT_INTEGRATION(
+            'module:platform:development:programming:framework:spring-boot:integration',
+            'module/platform/development/programming/framework/spring-boot/integration',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_BOOT_NATIVE_IMAGE(
+            'module:platform:development:programming:framework:spring-boot:native-image',
+            'module/platform/development/programming/framework/spring-boot/native-image',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_BOOT_TESTING(
+            'module:platform:development:programming:framework:spring-boot:testing',
+            'module/platform/development/programming/framework/spring-boot/testing',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_BOOT_WEB_RUNTIME(
+            'module:platform:development:programming:framework:spring-boot:web-runtime',
+            'module/platform/development/programming/framework/spring-boot/web-runtime',
             '',
             '',
             false,
@@ -1893,9 +1857,63 @@ enum ModuleListEnum {
             []
     ),
 
+    SPRING_SECURITY_AUTHENTICATION(
+            'module:platform:development:programming:framework:spring-security:authentication',
+            'module/platform/development/programming/framework/spring-security/authentication',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_SECURITY_AUTHORIZATION(
+            'module:platform:development:programming:framework:spring-security:authorization',
+            'module/platform/development/programming/framework/spring-security/authorization',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_SECURITY_FEDERATION(
+            'module:platform:development:programming:framework:spring-security:federation',
+            'module/platform/development/programming/framework/spring-security/federation',
+            '',
+            '',
+            false,
+            []
+    ),
+
     SPRING_SECURITY_FUNDAMENTALS(
             'module:platform:development:programming:framework:spring-security:fundamentals',
             'module/platform/development/programming/framework/spring-security/fundamentals',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_SECURITY_OAUTH2_OIDC(
+            'module:platform:development:programming:framework:spring-security:oauth2-oidc',
+            'module/platform/development/programming/framework/spring-security/oauth2-oidc',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_SECURITY_REACTIVE(
+            'module:platform:development:programming:framework:spring-security:reactive',
+            'module/platform/development/programming/framework/spring-security/reactive',
+            '',
+            '',
+            false,
+            []
+    ),
+
+    SPRING_SECURITY_SERVLET(
+            'module:platform:development:programming:framework:spring-security:servlet',
+            'module/platform/development/programming/framework/spring-security/servlet',
             '',
             '',
             false,
@@ -1974,29 +1992,11 @@ enum ModuleListEnum {
             []
     ),
 
-    TESTING(
-            'module:platform:development:programming:framework:spring-boot:testing',
-            'module/platform/development/programming/framework/spring-boot/testing',
-            '',
-            '',
-            false,
-            []
-    ),
-
     TRANSACTIONAL_OUTBOX(
             'module:platform:development:software-design:architecture:distributed-system:transactional-outbox',
             'module/platform/development/software-design/architecture/distributed-system/transactional-outbox',
             'LIBRARY',
             'Transactional Outbox pattern for reliable event publication across a database and a message broker',
-            false,
-            []
-    ),
-
-    WEB_RUNTIME(
-            'module:platform:development:programming:framework:spring-boot:web-runtime',
-            'module/platform/development/programming/framework/spring-boot/web-runtime',
-            '',
-            '',
             false,
             []
     );

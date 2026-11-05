@@ -83,16 +83,33 @@ class ModuleTranslationProgressService {
         if (ledgerFile.exists()) {
             throw new GradleException('BLOCKER: STEP11_PROGRESS_NOT_REGULAR_FILE: ' + ledgerFile)
         }
-        // A missing journal after workers have started is ambiguous: do not
-        // infer completion from edits or silently reset progress to PENDING.
-        Map validation = new ModuleTranslationCatalogService().execute(
-                context.root as File, context.module as File,
-                runId, 'VALIDATE', false, manifest.workerMode as String,
-                (manifest.maxWorkers as Number).intValue())
-        if (validation.translated != 0) {
-            throw new GradleException('BLOCKER: STEP11_PROGRESS_RECOVERY_REQUIRED: ' +
-                    'EN files already differ from baseline; reconstruct job ownership ' +
-                    'manually before starting a new journal.')
+        // A missing journal after workers have started is ambiguous.
+        // Compare targets to THIS run's immutable baseline, not to VI: a
+        // retranslation run may start with already-translated target files.
+        File module = context.module as File
+        (manifest.files as List<Map>).each { Map entry ->
+            String targetPath = entry.enPath as String
+            File source = new File(module, entry.viPath as String)
+            File target = new File(module, targetPath)
+            File baseline = new File(module, 'build/step11/' + runId +
+                    '/baseline/' + targetPath)
+            [source, target, baseline].each { File file ->
+                guard(module.toPath(), file.toPath())
+                if (!Files.isRegularFile(file.toPath(), LinkOption.NOFOLLOW_LINKS)) {
+                    throw new GradleException('BLOCKER: STEP11_PROGRESS_BASELINE_MISSING: ' +
+                            file)
+                }
+            }
+            if (ModuleTranslationCatalogService.sha(source.bytes) != entry.viSha256 ||
+                    ModuleTranslationCatalogService.sha(baseline.bytes) != entry.enSha256) {
+                throw new GradleException('BLOCKER: STEP11_PROGRESS_BASELINE_DRIFT: ' +
+                        targetPath)
+            }
+            if (ModuleTranslationCatalogService.sha(target.bytes) != entry.enSha256) {
+                throw new GradleException('BLOCKER: STEP11_PROGRESS_RECOVERY_REQUIRED: ' +
+                        'Target differs from this run baseline: ' + targetPath +
+                        '. Recover the prior worker state before creating a journal.')
+            }
         }
         String now = Instant.now().toString()
         List<Map> jobs = (manifest.jobs as List<Map>).collect { Map job ->
@@ -273,8 +290,8 @@ class ModuleTranslationProgressService {
                 !(manifest.workerMode in ['NORMAL', 'SPECIAL'])) {
             throw new GradleException('STEP11 progress manifest identity/shape mismatch.')
         }
-        List<Map> derived = ModuleTranslationCatalogService.workerJobs(manifest.files as List<Map>)
-        if (derived != manifest.jobs) {
+        if (!ModuleTranslationCatalogService.validJobs(
+                manifest.jobs, manifest.files as List<Map>)) {
             throw new GradleException('STEP11 progress manifest job ownership mismatch.')
         }
         File agent = new File(root, 'module-generate-agent')
@@ -382,7 +399,8 @@ class ModuleTranslationProgressService {
         Map manifest = ctx.manifest as Map
         new ModuleTranslationCatalogService().execute(ctx.root as File, ctx.module as File,
                 manifest.runId as String, 'VALIDATE', false,
-                manifest.workerMode as String, (manifest.maxWorkers as Number).intValue())
+                manifest.workerMode as String, (manifest.maxWorkers as Number).intValue(),
+                (manifest.targetLanguage ?: 'en') as String)
         File master = new File(ctx.module as File, 'master.json')
         if (!master.isFile()) throw new GradleException('STEP11 master.json missing.')
         Map document = new JsonSlurper().parse(master) as Map

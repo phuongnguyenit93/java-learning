@@ -12,8 +12,9 @@ import java.nio.file.StandardOpenOption
 import java.security.MessageDigest
 
 /**
- * STEP 11: a worker job owns exactly one file or a defined EN file group. The catalog prepares a
- * read-only baseline (in build/) and never edits an authored VI/EN file.
+ * STEP 11: each worker job owns exactly one complete target-language file.
+ * PREPARE snapshots the baseline and copies each file byte-for-byte into temp.
+ * Workers translate the temp copy and publish it through validated per-file delivery.
  * Semantic quality remains a Prime review, not an automated claim.
  */
 class ModuleTranslationCatalogService {
@@ -38,12 +39,16 @@ class ModuleTranslationCatalogService {
 
     Map execute(File repoRoot, File moduleRoot, String runId, String operation,
                 boolean apply, String workerMode = 'NORMAL',
-                Integer requestedWorkers = null) {
+                Integer requestedWorkers = null, String targetLanguage = 'en') {
         File root = repoRoot.canonicalFile
         File module = moduleRoot.canonicalFile
         checkModule(root, module)
         if (!(runId ==~ /[A-Za-z0-9][A-Za-z0-9_-]{0,63}/)) {
             throw new GradleException('translationRunId must be a safe 1..64-char identifier.')
+        }
+        String language = targetLanguage?.trim()?.toLowerCase(Locale.ROOT)
+        if (!(language ==~ /[a-z]{2,8}(?:-[a-z0-9]{2,8})?/) || language == 'vi') {
+            throw new GradleException('translationLanguage must be a target code (en, ja, fr...), not vi.')
         }
         String selected = operation?.toUpperCase(Locale.ROOT)
         if (!(selected in ['PREPARE', 'VALIDATE'])) {
@@ -69,47 +74,53 @@ class ModuleTranslationCatalogService {
         File runDirectory = new File(module, 'build/step11/' + runId)
         File manifest = new File(runDirectory, 'manifest.json')
         checkPath(module, manifest)
-        List<Map> inventory = inventory(module)
-        if (!inventory) throw new GradleException('No translatable EN files in module.')
+        List<Map> inventory = inventory(module, language)
+        if (!inventory) throw new GradleException('No translatable target files in module.')
         List<Map> jobs = workerJobs(inventory)
         File agentDirectory = new File(root, 'module-generate-agent')
-        if (agentDirectory.isDirectory()) {
+        if (new File(agentDirectory, 'worker').isDirectory()) {
             jobs.each { Map job ->
-                File rule = new File(agentDirectory, 'worker/' + (job.rule as String))
+                File rule = new File(agentDirectory,
+                        'worker/STEP_11_WORKER/' + (job.rule as String))
                 checkPath(root, rule)
                 if (!rule.isFile()) {
                     throw new GradleException('BLOCKER: STEP11_WORKER_RULE_MISSING: ' + rule)
                 }
             }
         }
-        verifyProtected(module)
         if (selected == 'PREPARE') {
             if (manifest.exists()) {
                 throw new GradleException('STEP 11 manifest already exists: ' + manifest +
                         '. Resume with VALIDATE, do not overwrite baseline.')
             }
-            inventory.each { Map entry ->
-                // Only the first preparation may require byte-identical VI/EN.
-                if (entry.viSha256 != entry.enSha256) {
-                    throw new GradleException('STEP 10 VI/EN clone not intact for ' +
-                            entry.enPath + '. Refusing a new translation baseline.')
-                }
-                ModuleTranslationValidationService.compare(entry.type as String,
-                        bytes(module, entry.viPath as String),
-                        bytes(module, entry.enPath as String))
-            }
+            // PREPARE is a whole-file snapshot, not a translation or QA gate.
+            // Target files may be untouched VI clones OR already translated
+            // content selected for retranslation. Never require VI==target.
             if (apply) {
+                // All temp paths are preflighted before creating any snapshot.
+                inventory.each { Map entry ->
+                    File work = workFile(root, location, runId, entry.enPath as String)
+                    if (work.exists()) {
+                        throw new GradleException('BLOCKER: STEP11_TEMP_ALREADY_EXISTS: ' +
+                                work + '. Recover the existing RUN_ID, never overwrite worker work.')
+                    }
+                }
                 Files.createDirectories(runDirectory.toPath())
                 File baseline = new File(runDirectory, 'baseline')
                 inventory.each { Map entry ->
+                    byte[] original = bytes(module, entry.enPath as String)
                     File output = new File(baseline, entry.enPath as String)
                     checkPath(module, output)
                     Files.createDirectories(output.parentFile.toPath())
-                    Files.write(output.toPath(), bytes(module, entry.enPath as String),
+                    Files.write(output.toPath(), original,
                             StandardOpenOption.CREATE_NEW)
+                    File work = workFile(root, location, runId, entry.enPath as String)
+                    Files.createDirectories(work.parentFile.toPath())
+                    Files.write(work.toPath(), original, StandardOpenOption.CREATE_NEW)
                 }
                 Map document = [module: location, runId: runId,
-                                baselinePhase: 'STEP_10_CLONED',
+                                baselinePhase: 'TARGET_SNAPSHOT',
+                                targetLanguage: language,
                                 workerMode: dispatchMode, maxWorkers: maxWorkers,
                                 files: inventory, jobs: jobs]
                 // File is created last; interrupted preparation must not appear complete.
@@ -120,19 +131,25 @@ class ModuleTranslationCatalogService {
             }
             return [status: apply ? 'PREPARED' : 'DRY_RUN', module: location,
                     total: inventory.size(), runId: runId, manifest: manifest,
+                    targetLanguage: language,
                     jobs: jobs, jobCount: jobs.size(),
                     workerMode: dispatchMode, maxWorkers: maxWorkers,
                     files: inventory.collect { Map item ->
                         [type: item.type, enPath: item.enPath,
-                         result: apply ? 'BASELINED' : 'WOULD_BASELINE']
+                         workPath: workFile(root, location, runId, item.enPath as String),
+                         result: apply ? 'STAGED' : 'WOULD_STAGE']
                     }]
         }
 
+        // Structural and protected-content comparisons are QA gates for
+        // VALIDATE/publish, not restrictions on copying existing target files.
+        verifyProtected(module, language)
         if (!manifest.isFile()) {
             throw new GradleException('STEP 11 manifest is missing: ' + manifest)
         }
         Map document = new JsonSlurper().parse(manifest) as Map
         if (document.module != location || document.runId != runId ||
+                (document.targetLanguage ?: 'en') != language ||
                 !(document.files instanceof List)) {
             throw new GradleException('Invalid STEP 11 manifest module/runId.')
         }
@@ -141,8 +158,8 @@ class ModuleTranslationCatalogService {
                 inventory.collect { it.type } != original.collect { it.type }) {
             throw new GradleException('VI/EN translation file inventory changed.')
         }
-        if (document.baselinePhase != 'STEP_10_CLONED' ||
-                document.jobs != jobs ||
+        if (!(document.baselinePhase in ['TARGET_SNAPSHOT', 'STEP_10_CLONED']) ||
+                !validJobs(document.jobs, inventory) ||
                 !(document.workerMode in ['NORMAL', 'SPECIAL']) ||
                 !(document.maxWorkers instanceof Number) || document.maxWorkers < 1) {
             throw new GradleException('STEP 11 worker assignment or baseline drift.')
@@ -168,29 +185,30 @@ class ModuleTranslationCatalogService {
                          afterSha256: sha(actual)])
         }
         return [status: 'VALIDATED_STRUCTURE', module: location, runId: runId,
+                targetLanguage: language,
                 total: original.size(), translated: translated, pending: pending,
                 semanticQaRequired: true, workerMode: document.workerMode,
-                maxWorkers: document.maxWorkers, jobs: jobs,
-                jobCount: jobs.size(), files: results]
+                maxWorkers: document.maxWorkers, jobs: document.jobs,
+                jobCount: (document.jobs as List).size(), files: results]
     }
 
-    private static void verifyProtected(File module) {
-        List<String> protectedFiles = ['content/readme/docs/en/LIST.md']
+    private static void verifyProtected(File module, String language) {
+        List<String> protectedFiles = [DOC + language + '/LIST.md']
         File docs = new File(module, DOC + 'vi/menu')
         for (String path : walk(docs)) {
             if (path ==~ /[^\/]+\/metadata\/knowledge-metadata\.yml/) {
-                protectedFiles.add(DOC + 'en/menu/' + path)
+                protectedFiles.add(DOC + language + '/menu/' + path)
             }
         }
         protectedFiles.each { String path ->
-            String vi = toVi(path)
+            String vi = toVi(path, language)
             byte[] expected = bytes(module, vi)
             if (path.endsWith('/LIST.md')) {
                 String converted = new String(expected, StandardCharsets.UTF_8)
                         .replace('content/readme/docs/vi/menu/',
-                                'content/readme/docs/en/menu/')
+                                'content/readme/docs/' + language + '/menu/')
                         .replace('README MODULE STRUCTURE (VI)',
-                                'README MODULE STRUCTURE (EN)')
+                                'README MODULE STRUCTURE (' + language.toUpperCase(Locale.ROOT) + ')')
                 expected = converted.getBytes(StandardCharsets.UTF_8)
             }
             if (!Arrays.equals(expected, bytes(module, path))) {
@@ -199,9 +217,8 @@ class ModuleTranslationCatalogService {
         }
     }
 
-    /** Deterministic queue. Only the files assigned here may be written by a job owner. */
+    /** Deterministic queue: exactly one target file per job, without grouped ownership. */
     static List<Map> workerJobs(List<Map> inventory) {
-        Map<String, Map> queued = new LinkedHashMap<>()
         Map<String, String> workerRule = [
                 'README'                         : 'STEP_11_WORKER_KNOWLEDGE.md',
                 'INTRODUCTION'                   : 'STEP_11_WORKER_COMMON.md',
@@ -217,45 +234,16 @@ class ModuleTranslationCatalogService {
                 'SWAGGER_API_EXECUTION'          : 'STEP_11_WORKER_SWAGGER_EXECUTION.md',
                 'SWAGGER_API_CASES'              : 'STEP_11_WORKER_SWAGGER_CASES.md'
         ]
-        inventory.each { Map entry ->
+        List<Map> jobs = inventory.collect { Map entry ->
             String type = entry.type as String
             String path = entry.enPath as String
             String rule = workerRule[type]
             if (!rule) {
                 throw new GradleException('No STEP 11 worker rule for translation type: ' + type)
             }
-            String key
-            if (type in ['INTRODUCTION', 'ROADMAP', 'REFERENCE']) {
-                key = 'COMMON'
-            } else if (type in ['SUMMARY_SECTION', 'SUMMARY_LESSONS']) {
-                def match = (path =~ /\/menu\/([^\/]+)\/summary\/(section|summaries)\.yml$/)
-                if (!match.find()) throw new GradleException('Unscoped Summary job: ' + path)
-                key = 'SUMMARY/' + match.group(1)
-            } else {
-                key = path
-            }
-            Map job = queued[key]
-            if (job == null) {
-                job = [id: key, rule: rule, files: []]
-                queued[key] = job
-            }
-            if (job.rule != rule) {
-                throw new GradleException('Conflicting translation worker rules: ' + key)
-            }
-            (job.files as List).add(path)
+            return [id: path, rule: rule, files: [path]]
         }
-        queued.each { String key, Map job ->
-            (job.files as List).sort()
-            if (key.startsWith('SUMMARY/')) {
-                Set names = (job.files as List<String>).collect {
-                    it.substring(it.lastIndexOf('/') + 1)
-                } as Set
-                if (names != (['section.yml', 'summaries.yml'] as Set)) {
-                    throw new GradleException('BLOCKER: INCOMPLETE_SUMMARY_PAIR ' + key)
-                }
-            }
-        }
-        List<Map> jobs = queued.values().toList().sort { Map a, Map b ->
+        jobs = jobs.sort { Map a, Map b ->
             a.id.toString() <=> b.id.toString()
         }
         Set<String> assigned = jobs.collectMany { it.files as List<String> } as Set
@@ -266,26 +254,52 @@ class ModuleTranslationCatalogService {
         return jobs
     }
 
-    static List<Map> inventory(File module) {
+    /** Also accepts immutable manifests from runs started before single-file dispatch. */
+    static boolean validJobs(Object jobs, List<Map> inventory) {
+        if (!(jobs instanceof List) || (jobs as List).any {
+            !(it instanceof Map) || !(it.files instanceof List) ||
+                    !(it.rule instanceof String) || !(it.id instanceof String) ||
+                    !(it.files as List).every { f -> f instanceof String } ||
+                    (it.files as List).isEmpty()
+        }) return false
+        List<String> files = (jobs as List<Map>).collectMany { it.files as List<String> }
+        if (files.size() != inventory.size() ||
+                (files as Set) != (inventory*.enPath as Set) ||
+                (jobs as List<Map>)*.id.toSet().size() != (jobs as List).size()) return false
+        Map<String, String> rules = workerJobs(inventory).collectEntries {
+            Map job -> [(job.id as String): job.rule as String]
+        }
+        return (jobs as List<Map>).every { Map job ->
+            (job.files as List<String>).every { String file ->
+                rules[file] == job.rule
+            }
+        }
+    }
+
+    static List<Map> inventory(File module, String language = 'en') {
         List<Map> entries = []
         Map<String, String> targets = new TreeMap<>()
         SINGLE.each { String key, String type ->
-            if (new File(module, toVi(key)).isFile()) targets[key] = type
+            if (new File(module, toVi(key, 'en')).isFile()) {
+                targets[toTarget(key, language)] = type
+            }
         }
         MODULE_ASSESSMENTS.each { String key, String type ->
-            if (new File(module, toVi(key)).isFile()) targets[key] = type
+            if (new File(module, toVi(key, 'en')).isFile()) {
+                targets[toTarget(key, language)] = type
+            }
         }
         File docs = new File(module, DOC + 'vi/menu')
         for (String path : walk(docs)) {
             if (path ==~ /[^\/]+\.md/ ||
                     path ==~ /[^\/]+\/knowledge\/[^\/]+\.md/) {
-                targets[DOC + 'en/menu/' + path] = 'README'
+                targets[DOC + language + '/menu/' + path] = 'README'
             } else if (path ==~ /[^\/]+\/quiz\/question\.yml/ &&
                     !new File(module, 'content/quiz/vi/quiz.yml').isFile()) {
-                targets[DOC + 'en/menu/' + path] = 'QUIZ'
+                targets[DOC + language + '/menu/' + path] = 'QUIZ'
             } else if (path ==~ /[^\/]+\/questions\/interview\.yml/ &&
                     !new File(module, 'content/interview/vi/interview.yml').isFile()) {
-                targets[DOC + 'en/menu/' + path] = 'INTERVIEW'
+                targets[DOC + language + '/menu/' + path] = 'INTERVIEW'
             } else if (path ==~ /[^\/]+\/questions\/summary\.yml/) {
                 // Old per-chapter data stays untouched after canonical module-wide
                 // assessments have replaced the old STEP 6/7 shape.
@@ -293,20 +307,34 @@ class ModuleTranslationCatalogService {
                     throw new GradleException('BLOCKER: LEGACY_SUMMARY_QUESTIONS_NOT_SUPPORTED: ' + path)
                 }
             } else if (path ==~ /[^\/]+\/summary\/section\.yml/) {
-                targets[DOC + 'en/menu/' + path] = 'SUMMARY_SECTION'
+                targets[DOC + language + '/menu/' + path] = 'SUMMARY_SECTION'
             } else if (path ==~ /[^\/]+\/summary\/summaries\.yml/) {
-                targets[DOC + 'en/menu/' + path] = 'SUMMARY_LESSONS'
+                targets[DOC + language + '/menu/' + path] = 'SUMMARY_LESSONS'
             }
         }
         File swagger = new File(module, SWAGGER + 'vi')
+        // A Summary chapter must still contain both source YAML shapes, even
+        // though its two files are assigned as separate worker jobs.
+        Map<String, Set<String>> summaryNames = [:].withDefault { new HashSet<String>() }
+        targets.keySet().findAll {
+            it ==~ /.*\/menu\/[^\/]+\/summary\/(section|summaries)\.yml/
+        }.each { String path ->
+            String chapter = path.substring(0, path.lastIndexOf('/'))
+            summaryNames[chapter].add(path.substring(path.lastIndexOf('/') + 1))
+        }
+        summaryNames.each { String chapter, Set<String> names ->
+            if (names != (['section.yml', 'summaries.yml'] as Set)) {
+                throw new GradleException('BLOCKER: INCOMPLETE_SUMMARY_PAIR ' + chapter)
+            }
+        }
         for (String path : walk(swagger)) {
             if (!API_TYPES.containsKey(path)) {
                 throw new GradleException('Unknown Swagger translation file: ' + path)
             }
-            targets[SWAGGER + 'en/' + path] = API_TYPES[path]
+            targets[SWAGGER + language + '/' + path] = API_TYPES[path]
         }
         targets.each { String en, String type ->
-            String vi = toVi(en)
+            String vi = toVi(en, language)
             File viFile = new File(module, vi)
             File enFile = new File(module, en)
             checkPath(module, viFile)
@@ -322,7 +350,7 @@ class ModuleTranslationCatalogService {
         for (String area : ['content/readme/docs', 'content/roadmap', 'content/reference',
                              SWAGGER[0..-2]]) {
             File vi = new File(module, area + '/vi')
-            File en = new File(module, area + '/en')
+            File en = new File(module, area + '/' + language)
             Set a = walk(vi) as Set
             Set b = walk(en) as Set
             if (area == 'content/readme/docs') {
@@ -342,8 +370,8 @@ class ModuleTranslationCatalogService {
             if (a != b) throw new GradleException('VI/EN tree mismatch: ' + area)
         }
         MODULE_ASSESSMENTS.each { String key, String type ->
-            File vi = new File(module, toVi(key))
-            File en = new File(module, key)
+            File vi = new File(module, toVi(key, 'en'))
+            File en = new File(module, toTarget(key, language))
             if (vi.exists() != en.exists()) {
                 throw new GradleException('Missing module assessment VI/EN pair: ' + key)
             }
@@ -377,8 +405,22 @@ class ModuleTranslationCatalogService {
         } finally { paths.close() }
     }
 
-    private static String toVi(String path) {
-        return path.replace('/en/', '/vi/')
+    private static String toVi(String path, String language) {
+        return path.replace('/' + language + '/', '/vi/')
+    }
+
+    private static String toTarget(String en, String language) {
+        return en.replace('/en/', '/' + language + '/')
+    }
+
+    /** Exact full-file working copy in a run-scoped Git-ignored temp subtree. */
+    static File workFile(File root, String location, String runId, String targetPath) {
+        File agent = new File(root, 'module-generate-agent')
+        File work = new File(agent, 'temp/step11/files/' + location +
+                '/' + runId + '/' + targetPath)
+        checkPath(root, agent)
+        checkPath(agent, work)
+        return work
     }
 
     private static byte[] bytes(File module, String relative) {

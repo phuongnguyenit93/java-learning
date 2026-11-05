@@ -10,6 +10,7 @@ import com.example.learning.task.sheets.task.SyncModuleContentToExcelTask
 import com.example.learning.task.sheets.task.CloneModuleViToEnTask
 import com.example.learning.task.sheets.task.ModuleTranslationAuditTask
 import com.example.learning.task.sheets.task.ModuleTranslationProgressTask
+import com.example.learning.task.sheets.task.ModuleTranslationFileDeliveryTask
 import com.example.learning.task.sheets.task.ModuleEnSheetPublishTask
 import com.example.learning.task.sheets.task.PublishOptionalVideoEnTask
 import com.example.learning.task.sheets.task.GenerateModuleExcelTask
@@ -79,6 +80,8 @@ class SheetsTaskPlugin
                         .orElse('NORMAL'))
                 task.workerCount.convention(project.providers.gradleProperty('translationWorkerCount')
                         .orElse(''))
+                task.targetLanguage.convention(project.providers.gradleProperty('translationLanguage')
+                        .orElse('en'))
             }
         }
 
@@ -96,6 +99,22 @@ class SheetsTaskPlugin
             task.note.convention(project.providers.gradleProperty('translationProgressNote')
                     .orElse(''))
             task.revision.convention(project.providers.gradleProperty('translationProgressRevision')
+                    .orElse(''))
+        }
+
+        project.tasks.register('publishModuleTranslationFile',
+                ModuleTranslationFileDeliveryTask) { task ->
+            task.group = 'sheets'
+            task.description = 'STEP 11: validate and publish ONE complete worker-edited temp file.'
+            task.mode.convention(project.providers.gradleProperty('translationMode')
+                    .orElse('DRY_RUN'))
+            task.runId.convention(project.providers.gradleProperty('translationRunId')
+                    .orElse(''))
+            task.targetLanguage.convention(project.providers.gradleProperty('translationLanguage')
+                    .orElse('en'))
+            task.filePath.convention(project.providers.gradleProperty('translationFile')
+                    .orElse(''))
+            task.workerId.convention(project.providers.gradleProperty('translationWorkerId')
                     .orElse(''))
         }
 

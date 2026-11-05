@@ -389,15 +389,15 @@ module
     │   │   │   │   └── scaling-operations
     │   │   │   ├── spring-boot
     │   │   │   │   ├── fundamentals [SPRING_BOOT_FUNDAMENTALS]
-    │   │   │   │   ├── externalized-configuration
-    │   │   │   │   ├── auto-configuration
-    │   │   │   │   ├── application-runtime
-    │   │   │   │   ├── web-runtime
-    │   │   │   │   ├── build-tooling-packaging
-    │   │   │   │   ├── actuator
-    │   │   │   │   ├── testing
-    │   │   │   │   ├── native-image
-    │   │   │   │   └── integration
+    │   │   │   │   ├── externalized-configuration [SPRING_BOOT_EXTERNALIZED_CONFIGURATION]
+    │   │   │   │   ├── auto-configuration [SPRING_BOOT_AUTO_CONFIGURATION]
+    │   │   │   │   ├── application-runtime [SPRING_BOOT_APPLICATION_RUNTIME]
+    │   │   │   │   ├── web-runtime [SPRING_BOOT_WEB_RUNTIME]
+    │   │   │   │   ├── build-tooling-packaging [SPRING_BOOT_BUILD_TOOLING_PACKAGING]
+    │   │   │   │   ├── actuator [SPRING_BOOT_ACTUATOR]
+    │   │   │   │   ├── testing [SPRING_BOOT_TESTING]
+    │   │   │   │   ├── native-image [SPRING_BOOT_NATIVE_IMAGE]
+    │   │   │   │   └── integration [SPRING_BOOT_INTEGRATION]
     │   │   │   ├── spring-cloud
     │   │   │   │   ├── configuration
     │   │   │   │   ├── contract
@@ -449,13 +449,13 @@ module
     │   │   │   ├── spring-modulith
     │   │   │   ├── spring-rest-docs
     │   │   │   ├── spring-security
-    │   │   │   │   ├── authentication
-    │   │   │   │   ├── authorization
-    │   │   │   │   ├── federation
+    │   │   │   │   ├── authentication [SPRING_SECURITY_AUTHENTICATION]
+    │   │   │   │   ├── authorization [SPRING_SECURITY_AUTHORIZATION]
+    │   │   │   │   ├── federation [SPRING_SECURITY_FEDERATION]
     │   │   │   │   ├── fundamentals [SPRING_SECURITY_FUNDAMENTALS]
-    │   │   │   │   ├── oauth2-oidc
-    │   │   │   │   ├── reactive
-    │   │   │   │   └── servlet
+    │   │   │   │   ├── oauth2-oidc [SPRING_SECURITY_OAUTH2_OIDC]
+    │   │   │   │   ├── reactive [SPRING_SECURITY_REACTIVE]
+    │   │   │   │   └── servlet [SPRING_SECURITY_SERVLET]
     │   │   │   ├── spring-session
     │   │   │   ├── spring-shell
     │   │   │   ├── spring-web-flow

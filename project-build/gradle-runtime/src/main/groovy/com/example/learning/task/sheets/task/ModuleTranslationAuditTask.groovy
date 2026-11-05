@@ -15,6 +15,7 @@ abstract class ModuleTranslationAuditTask extends DefaultTask {
     @Input abstract Property<String> getRunId()
     @Input abstract Property<String> getWorkerMode()
     @Input abstract Property<String> getWorkerCount()
+    @Input abstract Property<String> getTargetLanguage()
 
     @TaskAction
     void auditTranslation() {
@@ -40,7 +41,8 @@ abstract class ModuleTranslationAuditTask extends DefaultTask {
         }
         Map result = new ModuleTranslationCatalogService().execute(
                 project.rootProject.projectDir, project.projectDir,
-                runId.get(), operation.get(), requested == 'APPLY', workerMode.get(), count)
+                runId.get(), operation.get(), requested == 'APPLY',
+                workerMode.get(), count, targetLanguage.get())
         // The journal is a Prime-side recovery checkpoint, not part of the
         // immutable baseline and never owned by translation workers.
         if (operation.get() == 'PREPARE' && requested == 'APPLY') {
@@ -49,16 +51,16 @@ abstract class ModuleTranslationAuditTask extends DefaultTask {
             logger.lifecycle('[STEP-11-PROGRESS] {} revision={} file={}',
                     checkpoint.result, checkpoint.revision, checkpoint.path)
         }
-        logger.lifecycle('[STEP-11] {} module={} run={} total={} jobs={} mode={} maxWorkers={} ' +
+        logger.lifecycle('[STEP-11] {} module={} run={} language={} total={} jobs={} mode={} maxWorkers={} ' +
                 'translated={} pending={} manifest={} semanticQA={}',
-                result.status, result.module, result.runId,
+                result.status, result.module, result.runId, result.targetLanguage,
                 result.total, result.jobCount, result.workerMode, result.maxWorkers,
                 result.translated ?: 0, result.pending ?: 0,
                 result.manifest ?: 'EXISTING', result.semanticQaRequired ?: false)
         if (result.files) {
             (result.files as List).each { Map item ->
-                logger.lifecycle('[STEP-11-FILE] {} {} {}', item.type, item.enPath,
-                        item.result)
+                logger.lifecycle('[STEP-11-FILE] {} {} {} temp={}',
+                        item.type, item.enPath, item.result, item.workPath ?: '-')
             }
         }
         (result.jobs ?: []).each { Map job ->

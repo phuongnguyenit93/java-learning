@@ -62,18 +62,20 @@ class ModuleTranslationCatalogServiceTest {
                 'trial', 'PREPARE', true)
         assertEquals('PREPARED', prepared.status)
         assertTrue((prepared.manifest as File).isFile())
-        assertEquals(5, prepared.jobCount)
+        assertEquals(7, prepared.jobCount)
         assertEquals('NORMAL', prepared.workerMode)
         assertEquals(3, prepared.maxWorkers)
-        Map common = (prepared.jobs as List<Map>).find { it.id == 'COMMON' }
-        assertEquals(3, (common.files as List).size())
-        assertEquals('STEP_11_WORKER_COMMON.md', common.rule)
+        List<Map> common = (prepared.jobs as List<Map>).findAll {
+            it.rule == 'STEP_11_WORKER_COMMON.md'
+        }
+        assertEquals(3, common.size())
+        assertTrue((prepared.jobs as List<Map>).every { it.files.size() == 1 })
         assertEquals(1, (prepared.jobs as List<Map>).count {
             it.rule == 'STEP_11_WORKER_CASE_STUDY.md'
         })
         assertEquals('module/demo', new groovy.json.JsonSlurper()
                 .parse(prepared.manifest as File).module)
-        assertEquals('STEP_10_CLONED', new groovy.json.JsonSlurper()
+        assertEquals('TARGET_SNAPSHOT', new groovy.json.JsonSlurper()
                 .parse(prepared.manifest as File).baselinePhase)
         File quiz = new File(f.module as File,
                 'content/quiz/en/quiz.yml')
@@ -90,12 +92,52 @@ class ModuleTranslationCatalogServiceTest {
         assertEquals(7, checked.total)
         assertEquals(2, checked.translated)
         assertEquals(5, checked.pending)
-        assertEquals(5, checked.jobCount)
+        assertEquals(7, checked.jobCount)
         assertTrue(checked.semanticQaRequired)
         File snapshot = new File(f.module as File,
                 'build/step11/trial/baseline/content/quiz/en/quiz.yml')
         assertTrue(snapshot.getText('UTF-8').contains('Câu hỏi'))
         assertFalse(snapshot.getText('UTF-8').contains('English question'))
+        File work = ModuleTranslationCatalogService.workFile(f.root as File,
+                'module/demo', 'trial', 'content/quiz/en/quiz.yml')
+        assertTrue(work.isFile())
+        assertEquals(snapshot.getText('UTF-8'), work.getText('UTF-8'))
+    }
+
+    @Test
+    void resolvesTypedRulesOnlyFromDedicatedStep11WorkerFolder() {
+        Map f = fixture()
+        File root = f.root as File
+        File module = f.module as File
+        List<Map> jobs = ModuleTranslationCatalogService.workerJobs(
+                ModuleTranslationCatalogService.inventory(module))
+        Set<String> rules = jobs.collect { it.rule as String } as Set
+        rules.each { String rule ->
+            if (rule != 'STEP_11_WORKER_COMMON.md') {
+                write(root, 'module-generate-agent/worker/STEP_11_WORKER/' + rule,
+                        '# Rule')
+            }
+        }
+        // An outdated rule in worker/ must not substitute for the new path.
+        write(root, 'module-generate-agent/worker/STEP_11_WORKER_COMMON.md',
+                '# Obsolete path')
+        GradleException missing = assertThrows(GradleException) {
+            new ModuleTranslationCatalogService().execute(root, module,
+                    'rule-location', 'PREPARE', false)
+        }
+        assertTrue(missing.message.contains('STEP11_WORKER_RULE_MISSING'))
+        assertTrue(missing.message.contains(
+                'STEP_11_WORKER' + File.separator + 'STEP_11_WORKER_COMMON.md'))
+
+        write(root, 'module-generate-agent/worker/STEP_11_WORKER/' +
+                'STEP_11_WORKER_COMMON.md', '# Canonical rule')
+        Map prepared = new ModuleTranslationCatalogService().execute(
+                root, module, 'rule-location', 'PREPARE', false)
+        assertEquals('DRY_RUN', prepared.status)
+        assertEquals(jobs.size(), prepared.jobCount)
+        assertTrue((prepared.jobs as List<Map>).every {
+            !(it.rule as String).contains('/')
+        }) // Stable manifest values for already-prepared runs.
     }
 
     @Test
@@ -128,7 +170,7 @@ class ModuleTranslationCatalogServiceTest {
     }
 
     @Test
-    void summaryJobOwnsExactlyTwoSameChapterFiles() {
+    void summaryPairIsRequiredButEachFileGetsItsOwnWorkerJob() {
         Map f = fixture()
         File module = f.module as File
         for (String lang : ['vi', 'en']) {
@@ -139,11 +181,14 @@ class ModuleTranslationCatalogServiceTest {
         }
         List<Map> jobs = ModuleTranslationCatalogService.workerJobs(
                 ModuleTranslationCatalogService.inventory(module))
-        Map summary = jobs.find { (it.id as String).startsWith('SUMMARY/') }
-        assertEquals('STEP_11_WORKER_SUMMARY.md', summary.rule)
-        assertEquals(2, (summary.files as List).size())
-        assertTrue((summary.files as List).every { it.contains('/menu/1.Basic/summary/') })
-        assertEquals(6, jobs.size())
+        List<Map> summaries = jobs.findAll {
+            it.rule == 'STEP_11_WORKER_SUMMARY.md'
+        }
+        assertEquals(2, summaries.size())
+        assertTrue(summaries.every {
+            it.files.size() == 1 && it.id.contains('/menu/1.Basic/summary/')
+        })
+        assertEquals(9, jobs.size())
 
         new File(module,
                 'content/readme/docs/vi/menu/1.Basic/summary/summaries.yml').delete()
@@ -214,18 +259,64 @@ class ModuleTranslationCatalogServiceTest {
     }
 
     @Test
-    void cannotStartNewTranslationBaselineAfterTranslationHasBegun() {
+    void prepareCopiesAlreadyTranslatedTargetExactlyInsteadOfRequiringViClone() {
         Map f = fixture()
-        File source = new File(f.module as File,
+        File root = f.root as File
+        File module = f.module as File
+        File source = new File(module,
                 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md')
         source.setText(source.getText('UTF-8').replace('Nội dung',
                 'English description'), 'UTF-8')
-        try {
-            new ModuleTranslationCatalogService().execute(f.root as File,
-                    f.module as File, 'newrun', 'PREPARE', true)
-            fail('Translated module must not be baselined as STEP 13 clone')
-        } catch (GradleException error) {
-            assertTrue(error.message.contains('clone not intact'))
+        String before = ModuleTranslationCatalogService.sha(source.bytes)
+        assertNotEquals(ModuleTranslationCatalogService.sha(new File(module,
+                'content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md').bytes),
+                before)
+        ModuleTranslationCatalogService catalog = new ModuleTranslationCatalogService()
+        Map dry = catalog.execute(root, module, 'newrun', 'PREPARE', false)
+        assertEquals('DRY_RUN', dry.status)
+        assertFalse((dry.manifest as File).exists())
+        Map prepared = catalog.execute(root, module, 'newrun', 'PREPARE', true)
+        assertEquals('PREPARED', prepared.status)
+        assertEquals('TARGET_SNAPSHOT', new groovy.json.JsonSlurper()
+                .parse(prepared.manifest as File).baselinePhase)
+        File work = ModuleTranslationCatalogService.workFile(root, 'module/demo',
+                'newrun', 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md')
+        assertEquals(before, ModuleTranslationCatalogService.sha(work.bytes))
+        assertEquals(before, ModuleTranslationCatalogService.sha(source.bytes))
+        File baseline = new File(module, 'build/step11/newrun/baseline/' +
+                'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md')
+        assertEquals(before, ModuleTranslationCatalogService.sha(baseline.bytes))
+        Map progress = new ModuleTranslationProgressService().initialize(root,
+                module, 'newrun')
+        assertEquals('CREATED', progress.result)
+        assertEquals(prepared.jobCount, progress.pending)
+        assertEquals(0, catalog.execute(root, module, 'newrun',
+                'VALIDATE', false).translated)
+        assertThrows(GradleException) {
+            catalog.execute(root, module, 'newrun', 'PREPARE', true)
+        }
+    }
+
+    @Test
+    void prepareStagesExistingTargetEvenWhenItNeedsStructuralRepair() {
+        Map f = fixture()
+        File root = f.root as File
+        File module = f.module as File
+        File quiz = new File(module, 'content/quiz/en/quiz.yml')
+        quiz.setText(quiz.getText('UTF-8')
+                .replace('correctAnswerId: A', 'correctAnswerId: B'), 'UTF-8')
+        String expected = ModuleTranslationCatalogService.sha(quiz.bytes)
+        ModuleTranslationCatalogService catalog = new ModuleTranslationCatalogService()
+        Map prepared = catalog.execute(root, module, 'repair', 'PREPARE', true)
+        assertEquals('PREPARED', prepared.status)
+        File staged = ModuleTranslationCatalogService.workFile(root,
+                'module/demo', 'repair', 'content/quiz/en/quiz.yml')
+        assertEquals(expected, ModuleTranslationCatalogService.sha(staged.bytes))
+        assertEquals('CREATED', new ModuleTranslationProgressService()
+                .initialize(root, module, 'repair').result)
+        // Validation is still strict, but it happens AFTER extraction.
+        assertThrows(GradleException) {
+            catalog.execute(root, module, 'repair', 'VALIDATE', false)
         }
     }
 

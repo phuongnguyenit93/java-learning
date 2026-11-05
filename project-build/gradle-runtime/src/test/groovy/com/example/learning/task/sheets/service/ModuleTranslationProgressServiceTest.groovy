@@ -19,50 +19,51 @@ class ModuleTranslationProgressServiceTest {
         String run = 'recover-2026'
         Map prepared = new ModuleTranslationCatalogService().execute(
                 root, module, run, 'PREPARE', true, 'NORMAL', 2)
-        assertEquals(3, prepared.jobCount)
+        assertEquals(5, prepared.jobCount)
         ModuleTranslationProgressService tracker = new ModuleTranslationProgressService()
         Map created = tracker.initialize(root, module, run)
         assertEquals('CREATED', created.result)
         File journal = created.path as File
         assertTrue(journal.path.replace('\\', '/')
                 .contains('/module-generate-agent/temp/step11/module/demo/recover-2026.json'))
-        assertEquals(3, created.pending)
+        assertEquals(5, created.pending)
         assertEquals(0, created.revision)
         assertEquals('EXISTING', tracker.initialize(root, module, run).result)
         assertEquals(0, tracker.execute(root, module, run, 'SHOW').revision)
 
+        String baseJob = 'content/readme/docs/en/BASE.md'
         Map first = tracker.execute(root, module, run, 'ASSIGN',
-                'COMMON', 'worker-01', '', 0)
-        assertEquals('ASSIGNED', first.jobs.find { it.id == 'COMMON' }.status)
+                baseJob, 'worker-01', '', 0)
+        assertEquals('ASSIGNED', first.jobs.find { it.id == baseJob }.status)
         assertEquals(1, first.active)
         // Simulate Prime context loss: a new service reads persisted state.
         ModuleTranslationProgressService resumed = new ModuleTranslationProgressService()
         Map afterRestart = resumed.execute(root, module, run, 'SHOW')
-        assertEquals(['COMMON'], afterRestart.recoveryRequired)
-        assertEquals('worker-01', afterRestart.jobs.find { it.id == 'COMMON' }.workerId)
+        assertEquals([baseJob], afterRestart.recoveryRequired)
+        assertEquals('worker-01', afterRestart.jobs.find { it.id == baseJob }.workerId)
         assertThrows(GradleException) {
             resumed.execute(root, module, run, 'ASSIGN',
-                    'COMMON', 'worker-02', '', afterRestart.revision as Integer)
+                    baseJob, 'worker-02', '', afterRestart.revision as Integer)
         }
         assertThrows(GradleException) {
             resumed.execute(root, module, run, 'REQUEUE',
-                    'COMMON', '', '', afterRestart.revision as Integer)
+                    baseJob, '', '', afterRestart.revision as Integer)
         }
         Map requeued = resumed.execute(root, module, run, 'REQUEUE',
-                'COMMON', '', 'Confirmed worker-01 terminated; no writer remains.',
+                baseJob, '', 'Confirmed worker-01 terminated; no writer remains.',
                 afterRestart.revision as Integer)
-        assertEquals('PENDING', requeued.jobs.find { it.id == 'COMMON' }.status)
-        assertEquals(1, requeued.jobs.find { it.id == 'COMMON' }.attempts)
+        assertEquals('PENDING', requeued.jobs.find { it.id == baseJob }.status)
+        assertEquals(1, requeued.jobs.find { it.id == baseJob }.attempts)
         Map reassigned = resumed.execute(root, module, run, 'ASSIGN',
-                'COMMON', 'worker-02', '', requeued.revision as Integer)
-        assertEquals(2, reassigned.jobs.find { it.id == 'COMMON' }.attempts)
+                baseJob, 'worker-02', '', requeued.revision as Integer)
+        assertEquals(2, reassigned.jobs.find { it.id == baseJob }.attempts)
 
         translate(module, 'content/readme/docs/en/BASE.md',
                 'Giới thiệu', 'Introduction')
         Map reported = resumed.execute(root, module, run, 'REPORT',
-                'COMMON', 'worker-02', 'Translated and read back three files',
+                baseJob, 'worker-02', 'Translated and read back one complete file',
                 reassigned.revision as Integer)
-        assertEquals('REPORTED', reported.jobs.find { it.id == 'COMMON' }.status)
+        assertEquals('REPORTED', reported.jobs.find { it.id == baseJob }.status)
         assertEquals(1, reported.reported)
         assertThrows(GradleException) {
             resumed.execute(root, module, run, 'COMPLETE', '', '', '',
@@ -70,13 +71,13 @@ class ModuleTranslationProgressServiceTest {
         }
         assertThrows(GradleException) {
             resumed.execute(root, module, run, 'QA_PASS',
-                    'COMMON', '', '', reported.revision as Integer)
+                    baseJob, '', '', reported.revision as Integer)
         }
         Map passed = resumed.execute(root, module, run, 'QA_PASS',
-                'COMMON', '', 'Prime semantic/structure QA reviewed; no omitted fields.',
+                baseJob, '', 'Prime semantic/structure QA reviewed; no omitted fields.',
                 reported.revision as Integer)
         assertEquals(1, passed.qaPass)
-        assertEquals(2, passed.pending)
+        assertEquals(4, passed.pending)
 
         Map at = passed
         Map quizJob = (at.jobs as List<Map>).find {
@@ -118,7 +119,20 @@ class ModuleTranslationProgressServiceTest {
         at = resumed.execute(root, module, run, 'SKIP_NO_TRANSLATABLE_TEXT',
                 interviewJob.id as String, '', 'Prime reviewed; no translatable text (test fixture).',
                 at.revision as Integer)
-        assertEquals(3, at.qaPass)
+        // Remaining files have independent owner/QA lifecycles, even if they
+        // share the same COMMON worker rule.
+        for (Map pendingJob : (at.jobs as List<Map>).findAll {
+            it.status == 'PENDING'
+        }) {
+            at = resumed.execute(root, module, run, 'ASSIGN',
+                    pendingJob.id as String, 'worker-06', '', at.revision as Integer)
+            at = resumed.execute(root, module, run, 'REPORT',
+                    pendingJob.id as String, 'worker-06', '', at.revision as Integer)
+            at = resumed.execute(root, module, run, 'QA_PASS',
+                    pendingJob.id as String, '', 'Fixture reviewed for this isolated job.',
+                    at.revision as Integer)
+        }
+        assertEquals(5, at.qaPass)
         assertEquals(0, at.pending)
         assertThrows(GradleException) {
             resumed.execute(root, module, run, 'COMPLETE', '', '', '',
@@ -266,7 +280,8 @@ interviewQuestion:
         }
         ModuleTranslationCatalogService.workerJobs(
                 ModuleTranslationCatalogService.inventory(module)).each { Map job ->
-            write(root, 'module-generate-agent/worker/' + job.rule, '# fixture rule')
+            write(root, 'module-generate-agent/worker/STEP_11_WORKER/' +
+                    job.rule, '# fixture rule')
         }
         return [root: root, module: module]
     }

@@ -6,7 +6,7 @@
 
 ## 0. Vị trí trong workflow và quyền sở hữu
 
-- Thực hiện **sau STEP 9** (Swagger VI và các nguồn VI thuộc bước trước đã nghiệm thu), **trước STEP 11** (GPT Worker dịch EN). STEP 10 chỉ tạo bộ file EN ban đầu; STEP 11 dịch nội dung hiển thị, STEP 12 mới audit/enrich technical relations.
+- Thực hiện **sau STEP 9** (Swagger VI và các nguồn VI thuộc bước trước đã nghiệm thu), **trước STEP 11** (GPT Worker dịch EN). STEP 10 chỉ tạo bộ file EN ban đầu; STEP 11 dịch nội dung hiển thị, STEP 12 QA kỹ thuật/ngữ nghĩa rồi xuất Excel offline từ module.
 - **Prime-only**: Prime kiểm kê, chạy đúng một Gradle task module-local theo DRY_RUN → APPLY, kiểm tra manifest/readback và **bắt buộc cập nhật `master.json.CURRENT_STEP.VALUE = "10"` sau khi toàn bộ gate PASS**. **Không có worker STEP 10**, không sử dụng worker/STEP_10_WORKER.md.
 - **Không tạo Quiz mới**. Quiz module-wide đã thuộc STEP 6/7 tại content/quiz/vi/quiz.yml. Không gọi normalizeQuizQuestionsFromSheet hay generateModuleQuizFromSheetByLocation của luồng legacy STEP 10.
 - Không gọi Sheets API, không sửa Google Sheets, Excel, Java source/test, master.json ngoài CURRENT_STEP sau QA, tài nguyên Portal đã generate hoặc module khác.
@@ -31,7 +31,7 @@
 
 **Nguyên tắc không bỏ sót:**
 
-- Kiểm kê **toàn bộ cây content/** trước, không chỉ bốn vùng OWNED của hàm STEP 13 hiện nay; các nhánh mới phải được phát hiện và xuất hiện trong manifest.
+- Kiểm kê **toàn bộ cây content/** trước, không chỉ bốn vùng OWNED của hàm clone legacy trước đây; các nhánh mới phải được phát hiện và xuất hiện trong manifest.
 - Các đường dẫn không nằm dưới vi/en, ví dụ content/readme/docs/BASE.md hoặc LIST.md cũ, **không thể suy ra bản dịch bằng cách đổi segment**. Prime phải liệt kê chúng là UNLOCALIZED. File dùng chung thật sự được giữ nguyên; file thuộc nội dung cần dịch phải được phân loại/di trú rõ trước APPLY, không âm thầm bỏ qua hay tùy tiện nhân đôi.
 - Chỉ clone nguồn **canonical**. Không đưa staging như src/main/resources/swagger/temp/, build/, thư mục ẩn/temporary hoặc tài liệu generated ngoài nguồn vào EN. Các file này được giữ nguyên.
 - **Video không bị loại trừ nữa:** nếu VI Video đã tồn tại tại STEP 10 thì clone. Video không bắt buộc có vì vẫn được tạo riêng ở STEP_OPTIONAL_VIDEO sau FINAL; thiếu VI Video không được tự tạo placeholder. **Nếu Video EN cũ nằm trong thư mục docs/en được migrate mà VI không có Video tương ứng, file Video EN cũ cũng bị CLEAN**, đúng quy tắc không giữ file dư; chỉ backup để phục hồi nếu transaction lỗi.
@@ -50,7 +50,7 @@
    - **UNCHANGED:** cả cây EN (không chỉ các file trùng tên) khớp snapshot clone → không ghi lại.
    - **DIFFERENT:** EN khác VI/khác phép chuyển LIST cho phép → **được thay hoàn toàn bằng bản VI** theo chủ đích STEP 10; phải báo rõ file sẽ bị thay, backup tạm thời EN cũ để rollback rồi **xóa backup sau khi clone PASS**.
    - **EN_ONLY:** file không có VI tương ứng **trong cùng thư mục đang migrate** → **sẽ bị xóa sạch** khi thay subtree; file ngoài subtree scope không được đụng tới.
-6. Nếu EN đã dịch tại STEP 11 hoặc module đã qua STEP 11–15, preflight phải cảnh báo **CLEAN sẽ mất bản dịch hiện tại**, ghi manifest và backup tạm thời để rollback; **không có backup được giữ sau khi thành công**. Không tự chạy lại STEP 10 sau khi bắt đầu dịch như một tác vụ nền; chỉ chạy lại khi có chỉ thị rõ về reset EN và không được ghi lùi CURRENT_STEP.
+6. Nếu EN đã dịch tại STEP 11 hoặc module đã qua STEP 11–12, preflight phải cảnh báo **CLEAN sẽ mất bản dịch hiện tại**, ghi manifest và backup tạm thời để rollback; **không có backup được giữ sau khi thành công**. Không tự chạy lại STEP 10 sau khi bắt đầu dịch như một tác vụ nền; chỉ chạy lại khi có chỉ thị rõ về reset EN và không được ghi lùi CURRENT_STEP.
 7. Nếu source VI thiếu phần bắt buộc của workflow trước đó → BLOCKER ở bước sở hữu nguồn. Nếu một nhóm optional chưa có thì NOT_APPLICABLE, không tự tạo.
 8. DRY_RUN phải trình bày chính xác source/target, số file theo nhánh, bytes, hash, phép đổi LIST (nếu có), MISSING/UNCHANGED/DIFFERENT/EN_ONLY/UNLOCALIZED, **danh sách toàn bộ thư mục EN sẽ bị CLEAN**, cảnh báo và blocker. **DRY_RUN tuyệt đối không ghi file**.
 
@@ -58,15 +58,15 @@
 
 Chạy task `cloneModuleViToEn` phiên bản STEP 10 từ root java-learning với **đúng một module**:
 
-~~~powershell
+```powershell
 .\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:cloneModuleViToEn -PsheetMode=DRY_RUN --console=plain
-~~~
+```
 
 Chỉ khi DRY_RUN PASS, cơ chế rollback bằng backup tạm thời đã sẵn sàng, phạm vi CLEAN đúng module và **không còn blocker** (DIFFERENT/EN_ONLY trong thư mục EN đích **không phải blocker**, vì sẽ bị thay/xóa có chủ đích), Prime mới chạy:
 
-~~~powershell
+```powershell
 .\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:cloneModuleViToEn -PsheetMode=APPLY --console=plain
-~~~
+```
 
 **Hợp đồng của hàm:**
 
@@ -97,14 +97,11 @@ Báo cáo tối thiểu: MODULE_I3, GRADLE_PATH, SOURCE_STEP, VI_TOTAL, SCOPES, 
 
 **Không tự commit, push, deploy hoặc chuyển STEP 11/14 khi chỉ mới DRY_RUN.**
 
-## 5. Ranh giới với STEP 11–15 và workflow optional
+## 5. Ranh giới với STEP 11–12 và workflow optional
 
 - **STEP 11:** dịch các field hiển thị của toàn bộ nội dung EN bằng GPT worker theo job và rule chuyên biệt; không dịch ID, group/index, anchorList, đáp án đúng, Java code, URL hoặc Swagger technical fields. **Không gọi lại cloneModuleViToEn sau khi dịch bắt đầu.**
-- **STEP 12:** kiểm tra/enrich technical relations với preservation của text EN đã dịch; không re-clone/reimport ghi đè EN.
-- **STEP 13:** xuất snapshot Excel **VI**; STEP 10 không tạo hoặc sửa bất kỳ file content/sheet/** nào.
-- **STEP 14:** gate kiểm tra VI/EN **read-only sau khi dịch**, không còn nhiệm vụ clone hoặc dịch; QA technical identities và translated semantics.
-- **STEP 15:** đồng bộ dữ liệu EN về Sheet theo contract mới; không dựa riêng vào Quiz/Interview YAML legacy theo từng chương. Workbook VI/EN vẫn thuộc content/sheet/ và nằm ngoài clone.
+- **STEP 12:** Prime QA technical relations and VI/EN semantics, then one module-local `generateModuleExcel` task creates offline XLSX from canonical module (Video X:AA reserved blank). No Sheet exporter/publisher.
 - **STEP_OPTIONAL_VIDEO và STEP_OPTIONAL_VIDEO_TRANSLATE:** khi tạo Video VI sau FINAL thì sử dụng workflow optional độc lập để seed EN thiếu và dịch; **không chạy lại clone toàn module** vì cơ chế CLEAN của STEP 10 sẽ xóa mọi bản dịch EN thuộc thư mục được migrate.
-- Các tài liệu STEP 11–15 và Gradle translation catalog đã được điều chỉnh theo numbering mới. Nếu gặp hướng dẫn lịch sử trái với contract này, không dùng lại STEP 13 clone hoặc STEP 14 translation cũ.
+- STEP 13/14/15 documentation was retired; never use their former Sheet snapshot or online EN publishing flows. Export at STEP 12 is module→XLSX only.
 
 **Kết quả STEP 10:** tạo bản EN cấu trúc đầy đủ theo snapshot VI (nếu có), CLEAN những EN-only/bản dịch cũ nằm trong các thư mục đích được chọn, bảo toàn dữ liệu **ngoài scope** và nguồn VI, bàn giao cho STEP 11 Translation. Không dịch, không tạo nội dung mới, không cần worker.

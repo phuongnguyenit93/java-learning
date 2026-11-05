@@ -2,6 +2,7 @@ package com.example.learning.task.sheets.plugin
 
 import com.example.learning.task.sheets.task.ModuleTranslationAuditTask
 import com.example.learning.task.sheets.task.ModuleTranslationProgressTask
+import com.example.learning.task.sheets.task.ModuleTranslationFileDeliveryTask
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Test
 
@@ -21,6 +22,7 @@ class ModuleTranslationAuditPluginTest {
             assertEquals('DRY_RUN', task.mode.get())
             assertEquals('NORMAL', task.workerMode.get())
             assertEquals('', task.workerCount.get())
+            assertEquals('en', task.targetLanguage.get())
             assertEquals('sheets', task.group)
         }
         def tracking = project.tasks.named('trackModuleTranslation',
@@ -30,5 +32,15 @@ class ModuleTranslationAuditPluginTest {
         assertEquals('', tracking.jobId.get())
         assertEquals('', tracking.revision.get())
         assertEquals('sheets', tracking.group)
+        def publisher = project.tasks.named('publishModuleTranslationFile',
+                ModuleTranslationFileDeliveryTask).get()
+        assertEquals('DRY_RUN', publisher.mode.get())
+        assertEquals('en', publisher.targetLanguage.get())
+        assertEquals('', publisher.workerId.get())
+        assertEquals('', publisher.filePath.get())
+        assertEquals('sheets', publisher.group)
+        assertNull(project.tasks.findByName('extractModuleTranslationText'))
+        assertNull(project.tasks.findByName('mergeModuleTranslationText'))
+        assertNull(project.extensions.findByName('moduleTranslationText'))
     }
 }
