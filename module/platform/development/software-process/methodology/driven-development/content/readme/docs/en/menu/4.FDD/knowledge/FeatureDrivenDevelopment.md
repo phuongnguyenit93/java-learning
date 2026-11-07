@@ -1,1 +1,0 @@
-# Feature-Driven Development (FDD)

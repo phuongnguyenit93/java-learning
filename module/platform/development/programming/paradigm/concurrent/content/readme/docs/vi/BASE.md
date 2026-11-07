@@ -12,7 +12,7 @@ Trạng thái, hàm, thao tác bất đồng bộ và khái niệm luồng thự
 
 ## Ranh giới kiến thức
 
-Giải thích mô hình độc lập ngôn ngữ: shared memory, actors/message passing và CSP/channels. Thread, synchronized, virtual thread và Java Memory Model thuộc java/advance/concurrency; Reactive/Backpressure chuyên biệt thuộc reactive.
+Giải thích mô hình độc lập ngôn ngữ: shared memory, actors/message passing và CSP/channels. Thread, synchronized, virtual thread và Java Memory Model thuộc java/core/concurrency; Reactive/Backpressure chuyên biệt thuộc reactive.
 
 ## Lộ trình
 

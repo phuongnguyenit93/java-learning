@@ -14,6 +14,37 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/cloud'>📁 cloud</a></b></summary>
 <ul>
 <li>
+  <a href='./module/infrastructure/cloud/architecture'>🪄 architecture</a>
+</li>
+<li>
+  <a href='./module/infrastructure/cloud/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/cloud/providers'>📁 providers</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/cloud/providers/alibaba'>🪄 alibaba</a>
+</li>
+<li>
+  <a href='./module/infrastructure/cloud/providers/aws'>🪄 aws</a>
+</li>
+<li>
+  <a href='./module/infrastructure/cloud/providers/azure'>🪄 azure</a>
+</li>
+<li>
+  <a href='./module/infrastructure/cloud/providers/gcp'>🪄 gcp</a>
+</li>
+<li>
+  <a href='./module/infrastructure/cloud/providers/ibm'>🪄 ibm</a>
+</li>
+<li>
+  <a href='./module/infrastructure/cloud/providers/oracle'>🪄 oracle</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
   <a href='./module/infrastructure/cloud/serverless'>🪄 serverless</a>
 </li>
 </ul>
@@ -83,9 +114,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/devops/delivery-automation'>📁 delivery-automation</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/devops/delivery-automation/fundamentals'>🪄 fundamentals</a>
-</li>
-<li>
 <details>
   <summary><b><a href='./module/infrastructure/devops/delivery-automation/ci-cd'>📁 ci-cd</a></b></summary>
 <ul>
@@ -127,7 +155,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
-  <a href='./module/infrastructure/devops/delivery-automation/release-management'>🪄 release-management</a>
+  <a href='./module/infrastructure/devops/delivery-automation/delivery-performance'>🪄 delivery-performance</a>
 </li>
 </ul>
 </details>
@@ -136,9 +164,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <details>
   <summary><b><a href='./module/infrastructure/devops/runtime-delivery'>📁 runtime-delivery</a></b></summary>
 <ul>
-<li>
-  <a href='./module/infrastructure/devops/runtime-delivery/fundamentals'>🪄 fundamentals</a>
-</li>
 <li>
 <details>
   <summary><b><a href='./module/infrastructure/devops/runtime-delivery/containerization'>📁 containerization</a></b></summary>
@@ -181,18 +206,18 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/infrastructure/devops/runtime-delivery/deployment/deployment-strategy'>🪄 deployment-strategy</a>
 </li>
-</ul>
-</details>
-</li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/devops/runtime-delivery/gitops'>📁 gitops</a></b></summary>
+  <summary><b><a href='./module/infrastructure/devops/runtime-delivery/deployment/gitops'>📁 gitops</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/devops/runtime-delivery/gitops/fundamentals'>🪄 fundamentals</a>
+  <a href='./module/infrastructure/devops/runtime-delivery/deployment/gitops/fundamentals'>🪄 fundamentals</a>
 </li>
 <li>
-  <a href='./module/infrastructure/devops/runtime-delivery/gitops/argo-cd'>🪄 argo-cd</a>
+  <a href='./module/infrastructure/devops/runtime-delivery/deployment/gitops/argo-cd'>🪄 argo-cd</a>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>
@@ -274,6 +299,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/infrastructure/devops/reliability-operations/disaster-recovery'>🪄 disaster-recovery</a>
 </li>
+<li>
+  <a href='./module/infrastructure/devops/reliability-operations/operation-readiness'>🪄 operation-readiness</a>
+</li>
 </ul>
 </details>
 </li>
@@ -346,10 +374,16 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/system/database/connection-management'>📁 connection-management</a></b></summary>
 <ul>
 <li>
+  <a href='./module/infrastructure/system/database/connection-management/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
   <a href='./module/infrastructure/system/database/connection-management/hikari-cp'>🪄 hikari-cp</a>
 </li>
 </ul>
 </details>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/data-modeling'>🪄 data-modeling</a>
 </li>
 <li>
 <details>
@@ -417,50 +451,10 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/infrastructure/system/database/engine/relational/mysql'>🪄 mysql</a>
 </li>
 <li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/database/engine/relational/oracle'>📁 oracle</a></b></summary>
-<ul>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/database/engine/relational/oracle/advance'>📁 advance</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/database/engine/relational/oracle/advance/package'>🪄 package</a>
+  <a href='./module/infrastructure/system/database/engine/relational/oracle'>🪄 oracle</a>
 </li>
 <li>
-  <a href='./module/infrastructure/system/database/engine/relational/oracle/advance/procedure'>🪄 procedure</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/engine/relational/oracle/setup'>🪄 setup</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/database/engine/relational/postgresql'>📁 postgresql</a></b></summary>
-<ul>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/database/engine/relational/postgresql/advance'>📁 advance</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/database/engine/relational/postgresql/advance/functions'>🪄 functions</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/engine/relational/postgresql/advance/trigger'>🪄 trigger</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/engine/relational/postgresql/setup'>🪄 setup</a>
-</li>
-</ul>
-</details>
+  <a href='./module/infrastructure/system/database/engine/relational/postgresql'>🪄 postgresql</a>
 </li>
 </ul>
 </details>
@@ -493,19 +487,32 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/database/performance'>📁 performance</a></b></summary>
+  <summary><b><a href='./module/infrastructure/system/database/operations'>📁 operations</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/database/performance/database-caching'>🪄 database-caching</a>
+  <a href='./module/infrastructure/system/database/operations/backup-recovery'>🪄 backup-recovery</a>
 </li>
+<li>
+  <a href='./module/infrastructure/system/database/operations/database-security'>🪄 database-security</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/operations/maintenance-upgrade'>🪄 maintenance-upgrade</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/operations/monitoring-troubleshooting'>🪄 monitoring-troubleshooting</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/performance'>📁 performance</a></b></summary>
+<ul>
 <li>
   <a href='./module/infrastructure/system/database/performance/execution-plan'>🪄 execution-plan</a>
 </li>
 <li>
   <a href='./module/infrastructure/system/database/performance/indexing'>🪄 indexing</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/performance/locking'>🪄 locking</a>
 </li>
 <li>
   <a href='./module/infrastructure/system/database/performance/partitioning'>🪄 partitioning</a>
@@ -521,13 +528,54 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
+  <summary><b><a href='./module/infrastructure/system/database/replication-distribution'>📁 replication-distribution</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/database/replication-distribution/high-availability'>🪄 high-availability</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/replication-distribution/replication'>🪄 replication</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/replication-distribution/sharding'>🪄 sharding</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
   <summary><b><a href='./module/infrastructure/system/database/schema-migration'>📁 schema-migration</a></b></summary>
 <ul>
 <li>
   <a href='./module/infrastructure/system/database/schema-migration/flyway'>🪄 flyway</a>
 </li>
 <li>
+  <a href='./module/infrastructure/system/database/schema-migration/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
   <a href='./module/infrastructure/system/database/schema-migration/liquibase'>🪄 liquibase</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/sql'>🪄 sql</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/transaction-concurrency'>📁 transaction-concurrency</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/database/transaction-concurrency/conflict-retry'>🪄 conflict-retry</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/transaction-concurrency/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/transaction-concurrency/isolation-mvcc'>🪄 isolation-mvcc</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/transaction-concurrency/locking'>🪄 locking</a>
 </li>
 </ul>
 </details>
@@ -868,14 +916,51 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/system/security'>📁 security</a></b></summary>
 <ul>
 <li>
+  <a href='./module/infrastructure/system/security/api-security'>🪄 api-security</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/security/application-security'>📁 application-security</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/security/application-security/browser-security'>🪄 browser-security</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/application-security/business-logic-security'>🪄 business-logic-security</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/application-security/file-parser-security'>🪄 file-parser-security</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/application-security/injection-prevention'>🪄 injection-prevention</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/application-security/input-output-security'>🪄 input-output-security</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/application-security/server-request-security'>🪄 server-request-security</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
 <details>
   <summary><b><a href='./module/infrastructure/system/security/authentication'>📁 authentication</a></b></summary>
 <ul>
 <li>
+  <a href='./module/infrastructure/system/security/authentication/account-recovery'>🪄 account-recovery</a>
+</li>
+<li>
   <a href='./module/infrastructure/system/security/authentication/api-key-hmac-authentication'>🪄 api-key-hmac-authentication</a>
 </li>
 <li>
+  <a href='./module/infrastructure/system/security/authentication/authentication-abuse-prevention'>🪄 authentication-abuse-prevention</a>
+</li>
+<li>
   <a href='./module/infrastructure/system/security/authentication/certificate-authentication'>🪄 certificate-authentication</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/authentication/fundamentals'>🪄 fundamentals</a>
 </li>
 <li>
   <a href='./module/infrastructure/system/security/authentication/multi-factor-authentication'>🪄 multi-factor-authentication</a>
@@ -903,13 +988,13 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/infrastructure/system/security/authorization/abac'>🪄 abac</a>
 </li>
 <li>
+  <a href='./module/infrastructure/system/security/authorization/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
   <a href='./module/infrastructure/system/security/authorization/object-level-authorization'>🪄 object-level-authorization</a>
 </li>
 <li>
   <a href='./module/infrastructure/system/security/authorization/policy-based-access-control'>🪄 policy-based-access-control</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/security/authorization/privileged-access-management'>🪄 privileged-access-management</a>
 </li>
 <li>
   <a href='./module/infrastructure/system/security/authorization/rbac'>🪄 rbac</a>
@@ -918,7 +1003,54 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/security/cryptography'>📁 cryptography</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/security/cryptography/encryption'>🪄 encryption</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/cryptography/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/cryptography/hashing-mac-signatures'>🪄 hashing-mac-signatures</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/cryptography/password-hashing'>🪄 password-hashing</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/cryptography/secure-randomness'>🪄 secure-randomness</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/security/data-protection'>📁 data-protection</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/security/data-protection/classification-minimization'>🪄 classification-minimization</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/data-protection/encryption-at-rest'>🪄 encryption-at-rest</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/data-protection/masking-redaction'>🪄 masking-redaction</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/data-protection/privacy'>🪄 privacy</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/data-protection/retention-deletion'>🪄 retention-deletion</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
   <a href='./module/infrastructure/system/security/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/governance-risk'>🪄 governance-risk</a>
 </li>
 <li>
 <details>
@@ -928,13 +1060,19 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/infrastructure/system/security/identity-access-management/application-default-credentials'>🪄 application-default-credentials</a>
 </li>
 <li>
-  <a href='./module/infrastructure/system/security/identity-access-management/iam'>🪄 iam</a>
+  <a href='./module/infrastructure/system/security/identity-access-management/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/identity-access-management/identity-lifecycle'>🪄 identity-lifecycle</a>
 </li>
 <li>
   <a href='./module/infrastructure/system/security/identity-access-management/keycloak'>🪄 keycloak</a>
 </li>
 <li>
   <a href='./module/infrastructure/system/security/identity-access-management/oauth2-oidc'>🪄 oauth2-oidc</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/identity-access-management/privileged-access-management'>🪄 privileged-access-management</a>
 </li>
 <li>
   <a href='./module/infrastructure/system/security/identity-access-management/scim-provisioning'>🪄 scim-provisioning</a>
@@ -949,9 +1087,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/infrastructure/system/security/identity-access-management/sso-saml'>🪄 sso-saml</a>
 </li>
 <li>
-  <a href='./module/infrastructure/system/security/identity-access-management/token-lifecycle'>🪄 token-lifecycle</a>
-</li>
-<li>
   <a href='./module/infrastructure/system/security/identity-access-management/workload-identity-federation'>🪄 workload-identity-federation</a>
 </li>
 </ul>
@@ -962,6 +1097,12 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/system/security/key-management'>📁 key-management</a></b></summary>
 <ul>
 <li>
+  <a href='./module/infrastructure/system/security/key-management/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/key-management/key-lifecycle'>🪄 key-lifecycle</a>
+</li>
+<li>
   <a href='./module/infrastructure/system/security/key-management/kms-hsm'>🪄 kms-hsm</a>
 </li>
 <li>
@@ -971,9 +1112,18 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
+  <a href='./module/infrastructure/system/security/network-security'>🪄 network-security</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/platform-security'>🪄 platform-security</a>
+</li>
+<li>
 <details>
   <summary><b><a href='./module/infrastructure/system/security/secrets-management'>📁 secrets-management</a></b></summary>
 <ul>
+<li>
+  <a href='./module/infrastructure/system/security/secrets-management/fundamentals'>🪄 fundamentals</a>
+</li>
 <li>
   <a href='./module/infrastructure/system/security/secrets-management/hashicorp-vault'>🪄 hashicorp-vault</a>
 </li>
@@ -987,11 +1137,45 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
+  <a href='./module/infrastructure/system/security/security-assurance'>🪄 security-assurance</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/security/security-design'>📁 security-design</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/security/security-design/attack-surface'>🪄 attack-surface</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/security-design/secure-design-principles'>🪄 secure-design-principles</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/security-design/security-requirements'>🪄 security-requirements</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/security-design/threat-modeling'>🪄 threat-modeling</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/security-operations'>🪄 security-operations</a>
+</li>
+<li>
 <details>
   <summary><b><a href='./module/infrastructure/system/security/token-security'>📁 token-security</a></b></summary>
 <ul>
 <li>
+  <a href='./module/infrastructure/system/security/token-security/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
   <a href='./module/infrastructure/system/security/token-security/jwt'>🪄 jwt</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/token-security/opaque-token'>🪄 opaque-token</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/token-security/token-lifecycle'>🪄 token-lifecycle</a>
 </li>
 </ul>
 </details>
@@ -1315,31 +1499,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/platform/cloud'>📁 cloud</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/cloud/alibaba'>🪄 alibaba</a>
-</li>
-<li>
-  <a href='./module/platform/cloud/aws'>🪄 aws</a>
-</li>
-<li>
-  <a href='./module/platform/cloud/azure'>🪄 azure</a>
-</li>
-<li>
-  <a href='./module/platform/cloud/gcp'>🪄 gcp</a>
-</li>
-<li>
-  <a href='./module/platform/cloud/ibm'>🪄 ibm</a>
-</li>
-<li>
-  <a href='./module/platform/cloud/oracle'>🪄 oracle</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
   <summary><b><a href='./module/platform/code-quality'>📁 code-quality</a></b></summary>
 <ul>
 <li>
@@ -1389,7 +1548,14 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development'>📁 development</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/computer-science-fundamentals'>🪄 computer-science-fundamentals</a>
+<details>
+  <summary><b><a href='./module/platform/development/computer-science'>📁 computer-science</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/computer-science/fundamentals'>🪄 fundamentals</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
 <details>
@@ -1698,6 +1864,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/platform/development/programming/framework/project-reactor/netty'>🪄 netty</a>
 </li>
+<li>
+  <a href='./module/platform/development/programming/framework/project-reactor/testing'>🪄 testing</a>
+</li>
 </ul>
 </details>
 </li>
@@ -1709,10 +1878,22 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/programming/framework/spring-ai/core'>🪄 core</a>
 </li>
 <li>
+  <a href='./module/platform/development/programming/framework/spring-ai/embeddings-vector-store'>🪄 embeddings-vector-store</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-ai/evaluation-observability'>🪄 evaluation-observability</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-ai/mcp'>🪄 mcp</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-ai/memory-advisors'>🪄 memory-advisors</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/framework/spring-ai/rag'>🪄 rag</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-ai/tools-mcp'>🪄 tools-mcp</a>
+  <a href='./module/platform/development/programming/framework/spring-ai/tool-calling'>🪄 tool-calling</a>
 </li>
 </ul>
 </details>
@@ -1767,6 +1948,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/platform/development/programming/framework/spring-boot/integration'>🪄 integration</a>
 </li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-boot/observability'>🪄 observability</a>
+</li>
 </ul>
 </details>
 </li>
@@ -1775,6 +1959,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/programming/framework/spring-cloud'>📁 spring-cloud</a></b></summary>
 <ul>
 <li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/circuit-breaker'>🪄 circuit-breaker</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/framework/spring-cloud/configuration'>🪄 configuration</a>
 </li>
 <li>
@@ -1782,9 +1969,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-cloud/core'>🪄 core</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/framework/spring-cloud/data-flow'>🪄 data-flow</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-cloud/function'>🪄 function</a>
@@ -1802,7 +1986,17 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/programming/framework/spring-cloud/service-broker'>🪄 service-broker</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-cloud/service-communication'>🪄 service-communication</a>
+<details>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-cloud/service-communication'>📁 service-communication</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/service-communication/load-balancing'>🪄 load-balancing</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/service-discovery'>🪄 service-discovery</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-cloud/stream'>🪄 stream</a>
@@ -1818,7 +2012,13 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/programming/framework/spring-data'>📁 spring-data</a></b></summary>
 <ul>
 <li>
+  <a href='./module/platform/development/programming/framework/spring-data/cassandra'>🪄 cassandra</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/framework/spring-data/commons'>🪄 commons</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-data/couchbase'>🪄 couchbase</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-data/elasticsearch'>🪄 elasticsearch</a>
@@ -1827,13 +2027,32 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/programming/framework/spring-data/jpa'>🪄 jpa</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-data/mongo-db'>🪄 mongo-db</a>
+  <a href='./module/platform/development/programming/framework/spring-data/key-value'>🪄 key-value</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-data/non-relational'>🪄 non-relational</a>
+  <a href='./module/platform/development/programming/framework/spring-data/ldap'>🪄 ldap</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-data/relational'>🪄 relational</a>
+  <a href='./module/platform/development/programming/framework/spring-data/mongodb'>🪄 mongodb</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-data/neo4j'>🪄 neo4j</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-data/redis'>🪄 redis</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-data/relational'>📁 relational</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-data/relational/jdbc'>🪄 jdbc</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-data/relational/r2dbc'>🪄 r2dbc</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-data/rest'>🪄 rest</a>
@@ -1880,6 +2099,12 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-framework/testing'>🪄 testing</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-framework/application-events'>🪄 application-events</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-framework/expression-language'>🪄 expression-language</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-framework/jmx'>🪄 jmx</a>
@@ -1935,7 +2160,23 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/programming/framework/spring-ldap'>🪄 spring-ldap</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-modulith'>🪄 spring-modulith</a>
+<details>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-modulith'>📁 spring-modulith</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-modulith/application-events'>🪄 application-events</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-modulith/documentation-observability'>🪄 documentation-observability</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-modulith/module-model'>🪄 module-model</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-modulith/verification-testing'>🪄 verification-testing</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-rest-docs'>🪄 spring-rest-docs</a>
@@ -1957,13 +2198,32 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/programming/framework/spring-security/fundamentals'>🪄 fundamentals</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-security/oauth2-oidc'>🪄 oauth2-oidc</a>
+<details>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-security/oauth2-oidc'>📁 oauth2-oidc</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-security/oauth2-oidc/authorization-server'>🪄 authorization-server</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-security/oauth2-oidc/client-login'>🪄 client-login</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-security/oauth2-oidc/resources-server'>🪄 resources-server</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-security/protection'>🪄 protection</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-security/reactive'>🪄 reactive</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-security/servlet'>🪄 servlet</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-security/testing'>🪄 testing</a>
 </li>
 </ul>
 </details>
@@ -1973,6 +2233,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-shell'>🪄 spring-shell</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-vault'>🪄 spring-vault</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-web-flow'>🪄 spring-web-flow</a>
@@ -2036,7 +2299,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/programming/language/java/advance/compilation'>🪄 compilation</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/language/java/advance/concurrency'>🪄 concurrency</a>
+  <a href='./module/platform/development/programming/language/java/advance/compatibility-migration'>🪄 compatibility-migration</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/language/java/advance/crac'>🪄 crac</a>
@@ -2076,6 +2339,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/programming/language/java/core/collection'>🪄 collection</a>
 </li>
 <li>
+  <a href='./module/platform/development/programming/language/java/core/stream-api'>🪄 stream-api</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/language/java/core/annotation'>🪄 annotation</a>
 </li>
 <li>
@@ -2094,7 +2360,19 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/programming/language/java/core/localization'>🪄 localization</a>
 </li>
 <li>
+  <a href='./module/platform/development/programming/language/java/core/concurrency'>🪄 concurrency</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/language/java/core/functional-programming'>🪄 functional-programming</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/jdk-tooling'>🪄 jdk-tooling</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/module-system'>🪄 module-system</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/pattern-matching'>🪄 pattern-matching</a>
 </li>
 </ul>
 </details>
@@ -2283,6 +2561,12 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/platform/development/software-design/architecture/architectural-pattern/service-oriented-architecture'>🪄 service-oriented-architecture</a>
 </li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/cqrs'>🪄 cqrs</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/event-sourcing'>🪄 event-sourcing</a>
+</li>
 </ul>
 </details>
 </li>
@@ -2294,19 +2578,22 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/software-design/architecture/distributed-system/bulkhead'>🪄 bulkhead</a>
 </li>
 <li>
-  <a href='./module/platform/development/software-design/architecture/distributed-system/cqrs'>🪄 cqrs</a>
-</li>
-<li>
-  <a href='./module/platform/development/software-design/architecture/distributed-system/event-sourcing'>🪄 event-sourcing</a>
+  <a href='./module/platform/development/software-design/architecture/distributed-system/circuit-breaker'>🪄 circuit-breaker</a>
 </li>
 <li>
   <a href='./module/platform/development/software-design/architecture/distributed-system/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/distributed-system/idempotency'>🪄 idempotency</a>
 </li>
 <li>
   <a href='./module/platform/development/software-design/architecture/distributed-system/saga'>🪄 saga</a>
 </li>
 <li>
   <a href='./module/platform/development/software-design/architecture/distributed-system/sidecar'>🪄 sidecar</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/distributed-system/timeout-retry'>🪄 timeout-retry</a>
 </li>
 <li>
   <a href='./module/platform/development/software-design/architecture/distributed-system/transactional-outbox'>🪄 transactional-outbox</a>
@@ -2321,8 +2608,14 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/platform/development/software-design/architecture/domain-modeling/domain-driven-design'>🪄 domain-driven-design</a>
 </li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/domain-modeling/fundamentals'>🪄 fundamentals</a>
+</li>
 </ul>
 </details>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/documentation-decisions'>🪄 documentation-decisions</a>
 </li>
 </ul>
 </details>
@@ -2485,7 +2778,16 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/software-design/design-technique'>📁 design-technique</a></b></summary>
 <ul>
 <li>
+  <a href='./module/platform/development/software-design/design-technique/api-contract-design'>🪄 api-contract-design</a>
+</li>
+<li>
   <a href='./module/platform/development/software-design/design-technique/dependency-injection'>🪄 dependency-injection</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-technique/modularity'>🪄 modularity</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-technique/refactoring'>🪄 refactoring</a>
 </li>
 </ul>
 </details>
@@ -2500,6 +2802,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/platform/development/software-design/design-problem/code-smell'>🪄 code-smell</a>
 </li>
+<li>
+  <a href='./module/platform/development/software-design/design-problem/technical-debt'>🪄 technical-debt</a>
+</li>
 </ul>
 </details>
 </li>
@@ -2512,19 +2817,53 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
 <details>
+  <summary><b><a href='./module/platform/development/software-process/development-practices'>📁 development-practices</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-process/development-practices/acceptance-test-driven-development'>🪄 acceptance-test-driven-development</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-process/development-practices/behavior-driven-development'>🪄 behavior-driven-development</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-process/development-practices/test-driven-development'>🪄 test-driven-development</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/platform/development/software-process/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-process/maintenance-evolution'>🪄 maintenance-evolution</a>
+</li>
+<li>
+<details>
   <summary><b><a href='./module/platform/development/software-process/methodology'>📁 methodology</a></b></summary>
 <ul>
 <li>
   <a href='./module/platform/development/software-process/methodology/agile-development'>🪄 agile-development</a>
 </li>
 <li>
-  <a href='./module/platform/development/software-process/methodology/driven-development'>🪄 driven-development</a>
+  <a href='./module/platform/development/software-process/methodology/lifecycle-models'>🪄 lifecycle-models</a>
 </li>
 <li>
-  <a href='./module/platform/development/software-process/methodology/lifecycle-models'>🪄 lifecycle-models</a>
+  <a href='./module/platform/development/software-process/methodology/model-driven-development'>🪄 model-driven-development</a>
 </li>
 </ul>
 </details>
+</li>
+<li>
+  <a href='./module/platform/development/software-process/process-improvement'>🪄 process-improvement</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-process/quality-management'>🪄 quality-management</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-process/requirements-engineering'>🪄 requirements-engineering</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-process/work-management'>🪄 work-management</a>
 </li>
 </ul>
 </details>

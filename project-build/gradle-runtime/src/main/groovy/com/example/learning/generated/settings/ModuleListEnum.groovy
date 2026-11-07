@@ -220,8 +220,8 @@ enum ModuleListEnum {
     ),
 
     DEVOPS_ARGO_CD(
-            'module:infrastructure:devops:runtime-delivery:gitops:argo-cd',
-            'module/infrastructure/devops/runtime-delivery/gitops/argo-cd',
+            'module:infrastructure:devops:runtime-delivery:deployment:gitops:argo-cd',
+            'module/infrastructure/devops/runtime-delivery/deployment/gitops/argo-cd',
             'LIBRARY',
             'Argo CD for GitOps delivery: applications, sync, reconciliation, health, drift, promotion and rollback on Kubernetes',
             false,
@@ -300,15 +300,6 @@ enum ModuleListEnum {
             []
     ),
 
-    DEVOPS_DELIVERY_AUTOMATION_FUNDAMENTALS(
-            'module:infrastructure:devops:delivery-automation:fundamentals',
-            'module/infrastructure/devops/delivery-automation/fundamentals',
-            'LIBRARY',
-            'Delivery automation fundamentals: continuous integration, delivery flow, automation boundaries, feedback and promotion through delivery stages',
-            false,
-            []
-    ),
-
     DEVOPS_DEPLOYMENT_FUNDAMENTALS(
             'module:infrastructure:devops:runtime-delivery:deployment:fundamentals',
             'module/infrastructure/devops/runtime-delivery/deployment/fundamentals',
@@ -364,8 +355,8 @@ enum ModuleListEnum {
     ),
 
     DEVOPS_GITOPS_FUNDAMENTALS(
-            'module:infrastructure:devops:runtime-delivery:gitops:fundamentals',
-            'module/infrastructure/devops/runtime-delivery/gitops/fundamentals',
+            'module:infrastructure:devops:runtime-delivery:deployment:gitops:fundamentals',
+            'module/infrastructure/devops/runtime-delivery/deployment/gitops/fundamentals',
             'LIBRARY',
             'GitOps fundamentals: declarative desired state, Git as change source, reconciliation, drift detection, pull-based delivery and auditability',
             false,
@@ -471,29 +462,11 @@ enum ModuleListEnum {
             []
     ),
 
-    DEVOPS_RELEASE_MANAGEMENT(
-            'module:infrastructure:devops:delivery-automation:release-management',
-            'module/infrastructure/devops/delivery-automation/release-management',
-            'LIBRARY',
-            'Release management: release candidates, approvals, promotion, changelogs, immutability, rollback and release coordination',
-            false,
-            []
-    ),
-
     DEVOPS_RELIABILITY_OPERATIONS_FUNDAMENTALS(
             'module:infrastructure:devops:reliability-operations:fundamentals',
             'module/infrastructure/devops/reliability-operations/fundamentals',
             'LIBRARY',
             'Reliability and operations fundamentals: service health, operational readiness, feedback, failure handling, recovery and continuous improvement',
-            false,
-            []
-    ),
-
-    DEVOPS_RUNTIME_DELIVERY_FUNDAMENTALS(
-            'module:infrastructure:devops:runtime-delivery:fundamentals',
-            'module/infrastructure/devops/runtime-delivery/fundamentals',
-            'LIBRARY',
-            'Runtime delivery fundamentals: packaging, deployment targets, orchestration, rollout, runtime configuration and operational delivery flow',
             false,
             []
     ),
@@ -620,15 +593,6 @@ enum ModuleListEnum {
             'module/platform/development/programming/language/domain-specific-language',
             'LIBRARY',
             'Domain-Specific Language concepts, design, parsing and execution models',
-            false,
-            []
-    ),
-
-    DRIVEN_DEVELOPMENT_METHODOLOGIES(
-            'module:platform:development:software-process:methodology:driven-development',
-            'module/platform/development/software-process/methodology/driven-development',
-            'LIBRARY',
-            'Driven development approaches and practices including TDD, BDD, ATDD, FDD and MDD',
             false,
             []
     ),
@@ -813,15 +777,6 @@ enum ModuleListEnum {
             []
     ),
 
-    JAVA_ADVANCE_CONCURRENCY(
-            'module:platform:development:programming:language:java:advance:concurrency',
-            'module/platform/development/programming/language/java/advance/concurrency',
-            'SERVLET',
-            'Advanced Java concurrency, coordination and execution models',
-            false,
-            []
-    ),
-
     JAVA_ANNOTATION(
             'module:platform:development:programming:language:java:core:annotation',
             'module/platform/development/programming/language/java/core/annotation',
@@ -854,6 +809,15 @@ enum ModuleListEnum {
             'module/platform/development/programming/language/java/core/collection',
             'SERVLET',
             'Java collections framework',
+            false,
+            []
+    ),
+
+    JAVA_CORE_CONCURRENCY(
+            'module:platform:development:programming:language:java:core:concurrency',
+            'module/platform/development/programming/language/java/core/concurrency',
+            'SERVLET',
+            'Advanced Java concurrency, coordination and execution models',
             false,
             []
     ),
@@ -1016,6 +980,15 @@ enum ModuleListEnum {
             'module/platform/development/programming/language/java/advance/security-cryptography',
             'SERVLET',
             'Java security and cryptography APIs',
+            false,
+            []
+    ),
+
+    JAVA_STREAM_API(
+            'module:platform:development:programming:language:java:core:stream-api',
+            'module/platform/development/programming/language/java/core/stream-api',
+            'LIBRARY',
+            'Java Stream API',
             false,
             []
     ),
@@ -1488,15 +1461,6 @@ enum ModuleListEnum {
             []
     ),
 
-    SECURITY_AUTHORIZATION_PRIVILEGED_ACCESS_MANAGEMENT(
-            'module:infrastructure:system:security:authorization:privileged-access-management',
-            'module/infrastructure/system/security/authorization/privileged-access-management',
-            'LIBRARY',
-            'Security - Privileged Access Management (PAM)',
-            false,
-            []
-    ),
-
     SECURITY_AUTHORIZATION_RBAC(
             'module:infrastructure:system:security:authorization:rbac',
             'module/infrastructure/system/security/authorization/rbac',
@@ -1520,15 +1484,6 @@ enum ModuleListEnum {
             'module/infrastructure/system/security/identity-access-management/application-default-credentials',
             'LIBRARY',
             'Security - Application Default Credentials (ADC)',
-            false,
-            []
-    ),
-
-    SECURITY_IDENTITY_ACCESS_MANAGEMENT_IAM(
-            'module:infrastructure:system:security:identity-access-management:iam',
-            'module/infrastructure/system/security/identity-access-management/iam',
-            'LIBRARY',
-            'Security - Identity and Access Management (IAM)',
             false,
             []
     ),
@@ -1583,15 +1538,6 @@ enum ModuleListEnum {
             'module/infrastructure/system/security/identity-access-management/sso-saml',
             'LIBRARY',
             'Security - Single Sign-On (SSO) and SAML 2.0',
-            false,
-            []
-    ),
-
-    SECURITY_IDENTITY_ACCESS_MANAGEMENT_TOKEN_LIFECYCLE(
-            'module:infrastructure:system:security:identity-access-management:token-lifecycle',
-            'module/infrastructure/system/security/identity-access-management/token-lifecycle',
-            'LIBRARY',
-            'Security - Token Lifecycle',
             false,
             []
     ),

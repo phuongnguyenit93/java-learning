@@ -1,6 +1,15 @@
 module
 ├── infrastructure
 │   ├── cloud
+│   │   ├── architecture
+│   │   ├── fundamentals
+│   │   ├── providers
+│   │   │   ├── alibaba
+│   │   │   ├── aws
+│   │   │   ├── azure
+│   │   │   ├── gcp
+│   │   │   ├── ibm
+│   │   │   └── oracle
 │   │   └── serverless
 │   ├── devops
 │   │   ├── fundamentals [DEVOPS_FUNDAMENTALS] : DevOps fundamentals: lifecycle, culture, feedback loops, source-to-production flow, automation, delivery, operations and cross-cutting practices
@@ -17,7 +26,6 @@ module
 │   │   │       ├── branching-strategy [DEVOPS_BRANCHING_STRATEGY] : Branching strategy for team delivery: trunk-based development, GitHub Flow, Git Flow, branch lifetime, integration and protection tradeoffs
 │   │   │       └── monorepo-polyrepo [DEVOPS_MONOREPO_POLYREPO] : Repository topology strategy: monorepo versus polyrepo ownership, dependency boundaries, tooling, scaling and delivery tradeoffs
 │   │   ├── delivery-automation
-│   │   │   ├── fundamentals [DEVOPS_DELIVERY_AUTOMATION_FUNDAMENTALS] : Delivery automation fundamentals: continuous integration, delivery flow, automation boundaries, feedback and promotion through delivery stages
 │   │   │   ├── ci-cd
 │   │   │   │   ├── fundamentals [DEVOPS_CI_CD_FUNDAMENTALS] : CI/CD fundamentals: pipeline stages, triggers, jobs, quality gates, artifacts, environments, promotion and feedback loops
 │   │   │   │   ├── github-actions
@@ -29,9 +37,8 @@ module
 │   │   │   │   ├── maven-central
 │   │   │   │   ├── nexus
 │   │   │   │   └── container-registry [DEVOPS_CONTAINER_REGISTRY] : Container registry concepts: OCI images, repositories, tags versus digests, immutability, retention, authentication and promotion
-│   │   │   └── release-management [DEVOPS_RELEASE_MANAGEMENT] : Release management: release candidates, approvals, promotion, changelogs, immutability, rollback and release coordination
+│   │   │   └── delivery-performance
 │   │   ├── runtime-delivery
-│   │   │   ├── fundamentals [DEVOPS_RUNTIME_DELIVERY_FUNDAMENTALS] : Runtime delivery fundamentals: packaging, deployment targets, orchestration, rollout, runtime configuration and operational delivery flow
 │   │   │   ├── containerization
 │   │   │   │   ├── fundamentals [DEVOPS_CONTAINERIZATION_FUNDAMENTALS] : Containerization fundamentals: images, containers, isolation, layers, registries, runtime lifecycle and portability tradeoffs
 │   │   │   │   ├── docker
@@ -40,12 +47,12 @@ module
 │   │   │   │   ├── fundamentals [DEVOPS_ORCHESTRATION_FUNDAMENTALS] : Container orchestration fundamentals: scheduling, desired state, service discovery, scaling, rollout, recovery and control-plane concepts
 │   │   │   │   ├── kubernetes
 │   │   │   │   └── helm [DEVOPS_HELM] : Helm for Kubernetes packaging: charts, templates, values, releases, dependencies, upgrade and rollback workflows
-│   │   │   ├── deployment
-│   │   │   │   ├── fundamentals [DEVOPS_DEPLOYMENT_FUNDAMENTALS] : Deployment fundamentals: rollout lifecycle, deployment safety, environment promotion, rollback, verification and delivery risk
-│   │   │   │   └── deployment-strategy
-│   │   │   └── gitops
-│   │   │       ├── fundamentals [DEVOPS_GITOPS_FUNDAMENTALS] : GitOps fundamentals: declarative desired state, Git as change source, reconciliation, drift detection, pull-based delivery and auditability
-│   │   │       └── argo-cd [DEVOPS_ARGO_CD] : Argo CD for GitOps delivery: applications, sync, reconciliation, health, drift, promotion and rollback on Kubernetes
+│   │   │   └── deployment
+│   │   │       ├── fundamentals [DEVOPS_DEPLOYMENT_FUNDAMENTALS] : Deployment fundamentals: rollout lifecycle, deployment safety, environment promotion, rollback, verification and delivery risk
+│   │   │       ├── deployment-strategy
+│   │   │       └── gitops
+│   │   │           ├── fundamentals [DEVOPS_GITOPS_FUNDAMENTALS] : GitOps fundamentals: declarative desired state, Git as change source, reconciliation, drift detection, pull-based delivery and auditability
+│   │   │           └── argo-cd [DEVOPS_ARGO_CD] : Argo CD for GitOps delivery: applications, sync, reconciliation, health, drift, promotion and rollback on Kubernetes
 │   │   ├── infrastructure-management
 │   │   │   ├── fundamentals [DEVOPS_INFRASTRUCTURE_MANAGEMENT_FUNDAMENTALS] : Infrastructure management fundamentals: provisioning, configuration, environments, desired state, drift and infrastructure lifecycle automation
 │   │   │   ├── infrastructure-as-code
@@ -64,7 +71,8 @@ module
 │   │   │   ├── incident-management [DEVOPS_INCIDENT_MANAGEMENT] : Incident management: detection, triage, command, communication, mitigation, recovery and operational coordination
 │   │   │   ├── postmortem [DEVOPS_POSTMORTEM] : Blameless postmortems: timeline, contributing factors, corrective actions, learning loops and follow-through after incidents
 │   │   │   ├── capacity-planning [DEVOPS_CAPACITY_PLANNING] : Capacity planning: demand, saturation, headroom, scaling thresholds, forecasting, bottlenecks and cost-performance tradeoffs
-│   │   │   └── disaster-recovery [DEVOPS_DISASTER_RECOVERY] : Disaster recovery: failure domains, backups, restore verification, RTO, RPO, failover and recovery planning
+│   │   │   ├── disaster-recovery [DEVOPS_DISASTER_RECOVERY] : Disaster recovery: failure domains, backups, restore verification, RTO, RPO, failover and recovery planning
+│   │   │   └── operation-readiness
 │   │   ├── devsecops
 │   │   │   ├── fundamentals [DEVSECOPS_FUNDAMENTALS] : DevSecOps fundamentals: integrating security controls, feedback and ownership throughout the software delivery lifecycle
 │   │   │   ├── secret-scanning [DEVSECOPS_SECRET_SCANNING] : Secret scanning in source and delivery workflows: detection, prevention, remediation, rotation and false-positive handling
@@ -83,7 +91,9 @@ module
 │   └── system
 │       ├── database
 │       │   ├── connection-management
+│       │   │   ├── fundamentals
 │       │   │   └── hikari-cp [HIKARI_CP]
+│       │   ├── data-modeling
 │       │   ├── engine
 │       │   │   ├── analytical
 │       │   │   │   └── clickhouse
@@ -98,31 +108,37 @@ module
 │       │   │   ├── relational
 │       │   │   │   ├── mysql [DATABASE_MYSQL]
 │       │   │   │   ├── oracle [DATABASE_ORACLE]
-│       │   │   │   │   ├── advance
-│       │   │   │   │   │   ├── package
-│       │   │   │   │   │   └── procedure
-│       │   │   │   │   └── setup
 │       │   │   │   └── postgresql [DATABASE_POSTGRESQL]
-│       │   │   │       ├── advance
-│       │   │   │       │   ├── functions
-│       │   │   │       │   └── trigger
-│       │   │   │       └── setup
 │       │   │   ├── search
 │       │   │   │   └── elasticsearch
 │       │   │   └── time-series
 │       │   │       └── influxdb
 │       │   ├── fundamentals
+│       │   ├── operations
+│       │   │   ├── backup-recovery
+│       │   │   ├── database-security
+│       │   │   ├── maintenance-upgrade
+│       │   │   └── monitoring-troubleshooting
 │       │   ├── performance
-│       │   │   ├── database-caching
 │       │   │   ├── execution-plan
 │       │   │   ├── indexing
-│       │   │   ├── locking
 │       │   │   ├── partitioning
 │       │   │   ├── query-optimization
 │       │   │   └── statistics
-│       │   └── schema-migration
-│       │       ├── flyway [FLYWAY]
-│       │       └── liquibase
+│       │   ├── replication-distribution
+│       │   │   ├── high-availability
+│       │   │   ├── replication
+│       │   │   └── sharding
+│       │   ├── schema-migration
+│       │   │   ├── flyway [FLYWAY]
+│       │   │   ├── fundamentals
+│       │   │   └── liquibase
+│       │   ├── sql
+│       │   └── transaction-concurrency
+│       │       ├── conflict-retry
+│       │       ├── fundamentals
+│       │       ├── isolation-mvcc
+│       │       └── locking
 │       ├── network
 │       │   ├── api-gateway
 │       │   │   └── kong
@@ -196,9 +212,20 @@ module
 │       │       ├── jetty
 │       │       └── tomcat
 │       └── security
+│           ├── api-security
+│           ├── application-security
+│           │   ├── browser-security
+│           │   ├── business-logic-security
+│           │   ├── file-parser-security
+│           │   ├── injection-prevention
+│           │   ├── input-output-security
+│           │   └── server-request-security
 │           ├── authentication
+│           │   ├── account-recovery
 │           │   ├── api-key-hmac-authentication [SECURITY_AUTHENTICATION_API_KEY_HMAC_AUTHENTICATION] : Security - API Key and HMAC Authentication
+│           │   ├── authentication-abuse-prevention
 │           │   ├── certificate-authentication [SECURITY_AUTHENTICATION_CERTIFICATE_AUTHENTICATION] : Security - Certificate Authentication
+│           │   ├── fundamentals
 │           │   ├── multi-factor-authentication [SECURITY_AUTHENTICATION_MULTI_FACTOR_AUTHENTICATION] : Security - Multi-Factor Authentication
 │           │   ├── passkeys-webauthn [SECURITY_AUTHENTICATION_PASSKEYS_WEBAUTHN] : Security - Passkeys, WebAuthn and FIDO2
 │           │   ├── password-authentication [SECURITY_AUTHENTICATION_PASSWORD_AUTHENTICATION] : Security - Password Authentication
@@ -206,31 +233,60 @@ module
 │           │   └── token-based-authentication [SECURITY_AUTHENTICATION_TOKEN_BASED_AUTHENTICATION] : Security - Token-Based Authentication
 │           ├── authorization
 │           │   ├── abac [SECURITY_AUTHORIZATION_ABAC] : Security - Attribute-Based Access Control (ABAC)
+│           │   ├── fundamentals
 │           │   ├── object-level-authorization [SECURITY_AUTHORIZATION_OBJECT_LEVEL_AUTHORIZATION] : Security - Object-Level Authorization
 │           │   ├── policy-based-access-control [SECURITY_AUTHORIZATION_POLICY_BASED_ACCESS_CONTROL] : Security - Policy-Based Access Control
-│           │   ├── privileged-access-management [SECURITY_AUTHORIZATION_PRIVILEGED_ACCESS_MANAGEMENT] : Security - Privileged Access Management (PAM)
 │           │   └── rbac [SECURITY_AUTHORIZATION_RBAC] : Security - Role-Based Access Control (RBAC)
+│           ├── cryptography
+│           │   ├── encryption
+│           │   ├── fundamentals
+│           │   ├── hashing-mac-signatures
+│           │   ├── password-hashing
+│           │   └── secure-randomness
+│           ├── data-protection
+│           │   ├── classification-minimization
+│           │   ├── encryption-at-rest
+│           │   ├── masking-redaction
+│           │   ├── privacy
+│           │   └── retention-deletion
 │           ├── fundamentals [SECURITY_FUNDAMENTALS] : Security - Security Fundamentals
+│           ├── governance-risk
 │           ├── identity-access-management
 │           │   ├── application-default-credentials [SECURITY_IDENTITY_ACCESS_MANAGEMENT_APPLICATION_DEFAULT_CREDENTIALS] : Security - Application Default Credentials (ADC)
-│           │   ├── iam [SECURITY_IDENTITY_ACCESS_MANAGEMENT_IAM] : Security - Identity and Access Management (IAM)
+│           │   ├── fundamentals
+│           │   ├── identity-lifecycle
 │           │   ├── keycloak [SECURITY_IDENTITY_ACCESS_MANAGEMENT_KEYCLOAK] : Security - Keycloak
 │           │   ├── oauth2-oidc [SECURITY_IDENTITY_ACCESS_MANAGEMENT_OAUTH2_OIDC] : Security - OAuth 2.0 and OpenID Connect (OIDC)
+│           │   ├── privileged-access-management
 │           │   ├── scim-provisioning [SECURITY_IDENTITY_ACCESS_MANAGEMENT_SCIM_PROVISIONING] : Security - SCIM Provisioning and Identity Lifecycle
 │           │   ├── service-account [SECURITY_IDENTITY_ACCESS_MANAGEMENT_SERVICE_ACCOUNT] : Security - Service Account
 │           │   ├── spiffe-spire [SECURITY_IDENTITY_ACCESS_MANAGEMENT_SPIFFE_SPIRE] : Security - SPIFFE and SPIRE Workload Identity
 │           │   ├── sso-saml [SECURITY_IDENTITY_ACCESS_MANAGEMENT_SSO_SAML] : Security - Single Sign-On (SSO) and SAML 2.0
-│           │   ├── token-lifecycle [SECURITY_IDENTITY_ACCESS_MANAGEMENT_TOKEN_LIFECYCLE] : Security - Token Lifecycle
 │           │   └── workload-identity-federation [SECURITY_IDENTITY_ACCESS_MANAGEMENT_WORKLOAD_IDENTITY_FEDERATION] : Security - Workload Identity Federation
 │           ├── key-management
+│           │   ├── fundamentals
+│           │   ├── key-lifecycle
 │           │   ├── kms-hsm [SECURITY_KEY_MANAGEMENT_KMS_HSM] : Security - Key Management Service (KMS) and Hardware Security Module (HSM)
 │           │   └── pki-certificate-lifecycle [SECURITY_KEY_MANAGEMENT_PKI_CERTIFICATE_LIFECYCLE] : Security - Public Key Infrastructure (PKI) and Certificate Lifecycle
+│           ├── network-security
+│           ├── platform-security
 │           ├── secrets-management
+│           │   ├── fundamentals
 │           │   ├── hashicorp-vault [SECURITY_SECRETS_MANAGEMENT_HASHICORP_VAULT] : Security - HashiCorp Vault
 │           │   ├── secret-lifecycle [SECURITY_SECRETS_MANAGEMENT_SECRET_LIFECYCLE] : Security - Secret Lifecycle
 │           │   └── windows-dpapi [SECURITY_SECRETS_MANAGEMENT_WINDOWS_DPAPI] : Security - Windows Data Protection API (DPAPI)
+│           ├── security-assurance
+│           ├── security-design
+│           │   ├── attack-surface
+│           │   ├── secure-design-principles
+│           │   ├── security-requirements
+│           │   └── threat-modeling
+│           ├── security-operations
 │           ├── token-security
-│           │   └── jwt [SECURITY_TOKEN_SECURITY_JWT] : Security - JSON Web Token (JWT)
+│           │   ├── fundamentals
+│           │   ├── jwt [SECURITY_TOKEN_SECURITY_JWT] : Security - JSON Web Token (JWT)
+│           │   ├── opaque-token
+│           │   └── token-lifecycle
 │           └── zero-trust [SECURITY_ZERO_TRUST] : Security - Zero Trust Security Architecture
 ├── integration
 │   ├── api
@@ -300,13 +356,6 @@ module
 │           ├── payment-service
 │           └── product-service [PRODUCT_SERVICE]
 └── platform
-    ├── cloud
-    │   ├── alibaba
-    │   ├── aws
-    │   ├── azure
-    │   ├── gcp
-    │   ├── ibm
-    │   └── oracle
     ├── code-quality
     │   ├── continuous-inspection
     │   │   └── sonarqube
@@ -318,7 +367,8 @@ module
     │       ├── pmd
     │       └── spotbugs
     ├── development
-    │   ├── computer-science-fundamentals
+    │   ├── computer-science
+    │   │   └── fundamentals
     │   ├── data
     │   │   ├── data-mapping
     │   │   │   └── object-mapping [OBJECT_MAPPING] : Object-to-object mapping concepts and implementations including manual mapping, MapStruct and ModelMapper
@@ -386,11 +436,16 @@ module
     │   │   ├── framework
     │   │   │   ├── project-reactor
     │   │   │   │   ├── core
-    │   │   │   │   └── netty
+    │   │   │   │   ├── netty
+    │   │   │   │   └── testing
     │   │   │   ├── spring-ai
     │   │   │   │   ├── core
+    │   │   │   │   ├── embeddings-vector-store
+    │   │   │   │   ├── evaluation-observability
+    │   │   │   │   ├── mcp
+    │   │   │   │   ├── memory-advisors
     │   │   │   │   ├── rag
-    │   │   │   │   └── tools-mcp
+    │   │   │   │   └── tool-calling
     │   │   │   ├── spring-amqp
     │   │   │   ├── spring-batch
     │   │   │   │   ├── core-processing
@@ -405,27 +460,37 @@ module
     │   │   │   │   ├── actuator [SPRING_BOOT_ACTUATOR]
     │   │   │   │   ├── testing [SPRING_BOOT_TESTING]
     │   │   │   │   ├── native-image [SPRING_BOOT_NATIVE_IMAGE]
-    │   │   │   │   └── integration [SPRING_BOOT_INTEGRATION]
+    │   │   │   │   ├── integration [SPRING_BOOT_INTEGRATION]
+    │   │   │   │   └── observability
     │   │   │   ├── spring-cloud
+    │   │   │   │   ├── circuit-breaker
     │   │   │   │   ├── configuration
     │   │   │   │   ├── contract
     │   │   │   │   ├── core
-    │   │   │   │   ├── data-flow
     │   │   │   │   ├── function
     │   │   │   │   ├── gateway
     │   │   │   │   ├── kubernetes
     │   │   │   │   ├── provider-integration
     │   │   │   │   ├── service-broker
     │   │   │   │   ├── service-communication
+    │   │   │   │   │   └── load-balancing
+    │   │   │   │   ├── service-discovery
     │   │   │   │   ├── stream
     │   │   │   │   └── task
     │   │   │   ├── spring-data
+    │   │   │   │   ├── cassandra
     │   │   │   │   ├── commons
+    │   │   │   │   ├── couchbase
     │   │   │   │   ├── elasticsearch
     │   │   │   │   ├── jpa
-    │   │   │   │   ├── mongo-db
-    │   │   │   │   ├── non-relational
+    │   │   │   │   ├── key-value
+    │   │   │   │   ├── ldap
+    │   │   │   │   ├── mongodb
+    │   │   │   │   ├── neo4j
+    │   │   │   │   ├── redis
     │   │   │   │   ├── relational
+    │   │   │   │   │   ├── jdbc
+    │   │   │   │   │   └── r2dbc
     │   │   │   │   └── rest
     │   │   │   ├── spring-framework
     │   │   │   │   ├── core-container [SPRING_CORE_CONTAINER] : Spring Core Container, bean management, dependency injection, scopes, environment, profiles, conditional registration and configuration composition
@@ -440,6 +505,8 @@ module
     │   │   │   │   ├── messaging [SPRING_MESSAGING] : Spring Framework messaging foundation plus WebSocket/STOMP and RSocket application messaging infrastructure
     │   │   │   │   ├── jms [SPRING_JMS] : Spring Framework JMS access, JmsTemplate, listener containers, annotation-driven listeners and transaction integration
     │   │   │   │   ├── testing [SPRING_TESTING] : Spring TestContext Framework including context configuration, profiles, test properties, context caching, transactions and integration testing
+    │   │   │   │   ├── application-events
+    │   │   │   │   ├── expression-language
     │   │   │   │   ├── jmx
     │   │   │   │   └── mail
     │   │   │   ├── spring-graphql
@@ -455,6 +522,10 @@ module
     │   │   │   │   └── reliability-operations
     │   │   │   ├── spring-ldap
     │   │   │   ├── spring-modulith
+    │   │   │   │   ├── application-events
+    │   │   │   │   ├── documentation-observability
+    │   │   │   │   ├── module-model
+    │   │   │   │   └── verification-testing
     │   │   │   ├── spring-rest-docs
     │   │   │   ├── spring-security
     │   │   │   │   ├── authentication [SPRING_SECURITY_AUTHENTICATION]
@@ -462,10 +533,16 @@ module
     │   │   │   │   ├── federation [SPRING_SECURITY_FEDERATION]
     │   │   │   │   ├── fundamentals [SPRING_SECURITY_FUNDAMENTALS]
     │   │   │   │   ├── oauth2-oidc [SPRING_SECURITY_OAUTH2_OIDC]
+    │   │   │   │   │   ├── authorization-server
+    │   │   │   │   │   ├── client-login
+    │   │   │   │   │   └── resources-server
+    │   │   │   │   ├── protection
     │   │   │   │   ├── reactive [SPRING_SECURITY_REACTIVE]
-    │   │   │   │   └── servlet [SPRING_SECURITY_SERVLET]
+    │   │   │   │   ├── servlet [SPRING_SECURITY_SERVLET]
+    │   │   │   │   └── testing
     │   │   │   ├── spring-session
     │   │   │   ├── spring-shell
+    │   │   │   ├── spring-vault
     │   │   │   ├── spring-web-flow
     │   │   │   ├── spring-web-services
     │   │   │   └── springdoc
@@ -483,7 +560,7 @@ module
     │   │   │       │   ├── instrumentation [JAVA_INSTRUMENTATION] : Java instrumentation, agents and class transformation
     │   │   │       │   ├── runtime-diagnostics [JAVA_RUNTIME_DIAGNOSTICS] : Java runtime diagnostics, management and troubleshooting
     │   │   │       │   ├── compilation [JAVA_ADVANCE_COMPILATION] : Advanced Java compilation, compiler pipeline and bytecode generation
-    │   │   │       │   ├── concurrency [JAVA_ADVANCE_CONCURRENCY] : Advanced Java concurrency, coordination and execution models
+    │   │   │       │   ├── compatibility-migration
     │   │   │       │   └── crac
     │   │   │       ├── core
     │   │   │       │   ├── language-basics [JAVA_LANGUAGE_BASICS] : Java language basics
@@ -495,13 +572,18 @@ module
     │   │   │       │   ├── exception [JAVA_EXCEPTION] : Java exception handling
     │   │   │       │   ├── generics [JAVA_GENERICS] : Java generics
     │   │   │       │   ├── collection [JAVA_COLLECTION] : Java collections framework
+    │   │   │       │   ├── stream-api [JAVA_STREAM_API] : Java Stream API
     │   │   │       │   ├── annotation [JAVA_ANNOTATION] : Java annotations
     │   │   │       │   ├── reflection [JAVA_REFLECTION] : Java reflection
     │   │   │       │   ├── classloader [JAVA_CLASSLOADER] : Java class loading
     │   │   │       │   ├── date-time [JAVA_DATE_TIME] : Java date and time API
     │   │   │       │   ├── io [JAVA_IO] : Java I/O and NIO
     │   │   │       │   ├── localization [JAVA_LOCALIZATION] : Java localization and internationalization
-    │   │   │       │   └── functional-programming [JAVA_FUNCTIONAL_PROGRAMMING] : Java functional programming with functional interfaces, lambdas, method references, Optional and composition
+    │   │   │       │   ├── concurrency [JAVA_CORE_CONCURRENCY] : Advanced Java concurrency, coordination and execution models
+    │   │   │       │   ├── functional-programming [JAVA_FUNCTIONAL_PROGRAMMING] : Java functional programming with functional interfaces, lambdas, method references, Optional and composition
+    │   │   │       │   ├── jdk-tooling
+    │   │   │       │   ├── module-system
+    │   │   │       │   └── pattern-matching
     │   │   │       └── version
     │   │   │           ├── java5 [JAVA_VERSION_JAVA5] : Java 5
     │   │   │           ├── java6 [JAVA_VERSION_JAVA6] : Java 6
@@ -553,17 +635,22 @@ module
     │   │   │   │   ├── event-driven
     │   │   │   │   ├── microkernel
     │   │   │   │   ├── pipes-and-filters
-    │   │   │   │   └── service-oriented-architecture
+    │   │   │   │   ├── service-oriented-architecture
+    │   │   │   │   ├── cqrs
+    │   │   │   │   └── event-sourcing
     │   │   │   ├── distributed-system
     │   │   │   │   ├── bulkhead
-    │   │   │   │   ├── cqrs
-    │   │   │   │   ├── event-sourcing
+    │   │   │   │   ├── circuit-breaker
     │   │   │   │   ├── fundamentals
+    │   │   │   │   ├── idempotency
     │   │   │   │   ├── saga
     │   │   │   │   ├── sidecar
+    │   │   │   │   ├── timeout-retry
     │   │   │   │   └── transactional-outbox [TRANSACTIONAL_OUTBOX] : Transactional Outbox pattern for reliable event publication across a database and a message broker
-    │   │   │   └── domain-modeling
-    │   │   │       └── domain-driven-design [DOMAIN_DRIVEN_DESIGN] : Domain-Driven Design fundamentals, strategic design and tactical design
+    │   │   │   ├── domain-modeling
+    │   │   │   │   ├── domain-driven-design [DOMAIN_DRIVEN_DESIGN] : Domain-Driven Design fundamentals, strategic design and tactical design
+    │   │   │   │   └── fundamentals
+    │   │   │   └── documentation-decisions
     │   │   ├── design-pattern
     │   │   │   ├── behavioral
     │   │   │   │   ├── chain-of-responsibility
@@ -608,15 +695,29 @@ module
     │   │   │   ├── kiss
     │   │   │   └── yagni
     │   │   ├── design-technique
-    │   │   │   └── dependency-injection [DEPENDENCY_INJECTION] : Dependency Injection and Inversion of Control design concepts
+    │   │   │   ├── api-contract-design
+    │   │   │   ├── dependency-injection [DEPENDENCY_INJECTION] : Dependency Injection and Inversion of Control design concepts
+    │   │   │   ├── modularity
+    │   │   │   └── refactoring
     │   │   └── design-problem
     │   │       ├── anti-pattern
-    │   │       └── code-smell
+    │   │       ├── code-smell
+    │   │       └── technical-debt
     │   └── software-process
-    │       └── methodology
-    │           ├── agile-development [AGILE_DEVELOPMENT] : Agile software development principles, iterative delivery and related methods such as Scrum, Kanban, XP and Lean
-    │           ├── driven-development [DRIVEN_DEVELOPMENT_METHODOLOGIES] : Driven development approaches and practices including TDD, BDD, ATDD, FDD and MDD
-    │           └── lifecycle-models [SOFTWARE_LIFECYCLE_MODELS] : Software development lifecycle models including Waterfall, Iterative, Incremental, Spiral and V-Model
+    │       ├── development-practices
+    │       │   ├── acceptance-test-driven-development
+    │       │   ├── behavior-driven-development
+    │       │   └── test-driven-development
+    │       ├── fundamentals
+    │       ├── maintenance-evolution
+    │       ├── methodology
+    │       │   ├── agile-development [AGILE_DEVELOPMENT] : Agile software development principles, iterative delivery and related methods such as Scrum, Kanban, XP and Lean
+    │       │   ├── lifecycle-models [SOFTWARE_LIFECYCLE_MODELS] : Software development lifecycle models including Waterfall, Iterative, Incremental, Spiral and V-Model
+    │       │   └── model-driven-development
+    │       ├── process-improvement
+    │       ├── quality-management
+    │       ├── requirements-engineering
+    │       └── work-management
     ├── digital
     ├── social
     └── support

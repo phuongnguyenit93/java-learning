@@ -18,6 +18,8 @@ children:
     order: 90
   collection:
     order: 100
+  stream-api:
+    order: 105
   annotation:
     order: 110
   reflection:
@@ -30,3 +32,5 @@ children:
     order: 150
   localization:
     order: 160
+  concurrency:
+    order: 170

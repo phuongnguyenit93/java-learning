@@ -1,0 +1,92 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: tu-duy-pipeline
+    title: Tư duy pipeline
+    purpose: Hiểu cách Stream xử lý dữ liệu theo chuỗi thao tác.
+    objectives:
+      - Phân biệt nguồn, thao tác trung gian và kết thúc.
+      - Giải thích tính lazy và quy tắc dùng Stream một lần.
+  - id: tao-va-noi-stream
+    title: Tạo và nối Stream
+    purpose: Chọn nguồn dữ liệu phù hợp cho pipeline.
+    objectives:
+      - Tạo Stream từ collection, mảng, of và iterate.
+      - Nối Stream bằng concat; giới hạn nguồn vô hạn.
+  - id: loc-va-bien-doi
+    title: Lọc và biến đổi
+    purpose: Chuyển dữ liệu đầu vào thành dạng cần xử lý.
+    objectives:
+      - Lọc phần tử bằng filter.
+      - Phân biệt và áp dụng map, flatMap.
+  - id: sap-xep-va-gioi-han
+    title: Sắp xếp và giới hạn
+    purpose: Kiểm soát phần tử và thứ tự trong kết quả.
+    objectives:
+      - Dùng distinct và sorted với Comparator.
+      - Kết hợp skip, limit; dự đoán tác động của thứ tự thao tác.
+  - id: ket-thuc-va-optional
+    title: Kết thúc và Optional
+    purpose: Lấy kết quả và xử lý trường hợp không có phần tử.
+    objectives:
+      - Dùng count, anyMatch, allMatch và forEach.
+      - Tìm bằng findFirst, findAny; xử lý Optional an toàn.
+  - id: rut-gon-va-stream-so
+    title: Rút gọn và Stream số
+    purpose: Tổng hợp dữ liệu thành giá trị hoặc thống kê.
+    objectives:
+      - Viết reduce với identity và phép toán kết hợp.
+      - Dùng mapToInt, IntStream, LongStream, DoubleStream để tính toán.
+  - id: thu-thap-voi-collector
+    title: Thu thập với Collector
+    purpose: Tạo cấu trúc kết quả và nhóm dữ liệu.
+    objectives:
+      - Thu về List, Set, Map; xử lý khóa trùng khi dùng toMap.
+      - Dùng joining, groupingBy và partitioningBy.
+  - id: tinh-dung-va-song-song
+    title: Tính đúng và song song
+    purpose: Viết pipeline đáng tin cậy và chọn cách chạy phù hợp.
+    objectives:
+      - Tránh sửa nguồn và trạng thái dùng chung; đóng Stream I/O.
+      - So sánh sequential, parallel; đo hiệu năng trước khi chọn.

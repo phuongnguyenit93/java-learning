@@ -1,0 +1,18 @@
+# ============================================================
+# MODULE REFERENCE STRUCTURE
+# ============================================================
+#
+# Language: en
+# Author references for vi and en separately.
+# Empty references list means no authored content for this language.
+#
+# Example structure:
+#
+# references:
+#   - title: "Java Language Specification"
+#     url: "https://docs.oracle.com/javase/specs/"
+#     description: "Official Java language specification."
+#
+# Translate titles/descriptions with review, preserving URLs.
+# The build system must not overwrite authored content.
+references: []

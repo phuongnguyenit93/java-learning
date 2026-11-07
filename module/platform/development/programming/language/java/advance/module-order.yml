@@ -18,5 +18,3 @@ children:
     order: 80
   compilation:
     order: 90
-  concurrency:
-    order: 100
